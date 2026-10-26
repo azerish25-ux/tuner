@@ -1,0 +1,321 @@
+{
+  "schema_version": 1,
+  "locale": "hu",
+  "counts": {
+    "instruments": 60,
+    "tunings": 132,
+    "courses": 11,
+    "lessons": 526,
+    "songs_floor": 140,
+    "originals": 50
+  },
+  "review": {
+    "text": "ai_drafted",
+    "native": "not_verified",
+    "market_search": "not_verified",
+    "device": "not_verified",
+    "screenshots": "not_captured",
+    "app_preview": "not_rendered",
+    "iap_account_limits": "not_verified",
+    "game_center_account": "not_verified",
+    "release_ready": false,
+    "blockers": [
+      "Production privacy policy URL and verification not provided",
+      "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+      "Localized App Preview recordings and audio/sync/render review pending",
+      "App Store Connect product/locale limits and Game Center configuration/images unverified"
+    ],
+    "semantic": "ai_cross_reviewed_critical_facts",
+    "legal_back_translation": "not_performed_optional_under_ai_policy",
+    "song_title_alignment": {
+      "state": "pending_app_alignment",
+      "pending_app_alignment": [
+        "timbre.song.twinkle",
+        "timbre.song.odetojoy",
+        "timbre.song.jinglebells",
+        "timbre.song.saints",
+        "timbre.song.kiteweather",
+        "timbre.song.dashboard",
+        "timbre.song.lochlomond",
+        "timbre.song.mountain"
+      ],
+      "native_review": "not_verified"
+    },
+    "ai_cross_review": {
+      "scope": "Free tier, notification-conditioned two-day trial reminder, on-device never-recorded/uploaded audio, automatic renewal and 24-hour cancellation, anytime management, IAP benefits. Additional feature/count/terminology review for original nine and European/regional listings.",
+      "limitations": "AI review with inherited English source, not blinded back-translation, native-speaker, market, legal, account or visual approval."
+    },
+    "ai_source_aware": "reviewed",
+    "privacy_policy": "not_verified",
+    "review_policy": "ai_source_aware"
+  },
+  "game_center_leaderboard_names": {
+    "timbre.sniper.best": "Telitalálat",
+    "timbre.sniper.weekly": "Telitalálat ezen a héten",
+    "timbre.ear.level": "Hallásfejlesztési szint",
+    "timbre.streak": "Gyakorlási sorozat",
+    "timbre.song.twinkle": "Ragyogj, ragyogj, kis csillag",
+    "timbre.song.odetojoy": "Örömóda",
+    "timbre.song.jinglebells": "Jingle Bells",
+    "timbre.song.saints": "When the Saints Go Marching In",
+    "timbre.song.kiteweather": "Kite Weather",
+    "timbre.song.dashboard": "Dust on the Dashboard",
+    "timbre.song.lochlomond": "Loch Lomond",
+    "timbre.song.mountain": "She'll Be Coming 'Round the Mountain"
+  },
+  "game_center_achievement_names": {
+    "timbre.badge.first_tune": "Az első tiszta húr",
+    "timbre.badge.full_tune": "Mind a hat",
+    "timbre.badge.streak_7": "Tökéletes hét",
+    "timbre.badge.strings_100": "Száz húr",
+    "timbre.badge.bullseye": "Telitalálat",
+    "timbre.badge.sharpshooter": "Pontvadász",
+    "timbre.badge.golden_ear": "Aranyfül",
+    "timbre.badge.level_5": "Feltörekvő csillag",
+    "timbre.badge.multi": "Multiinstrumentalista",
+    "timbre.badge.streak_30": "Zenei hónap",
+    "timbre.badge.strings_1000": "Ezer húr",
+    "timbre.badge.first_lesson": "Első lecke",
+    "timbre.badge.lessons_25": "Törzsvendég",
+    "timbre.badge.lessons_100": "Éltanuló",
+    "timbre.badge.perfect_10": "Hibátlan",
+    "timbre.badge.full_25": "Hangolási rutin",
+    "timbre.badge.streak_3": "Bemelegítés",
+    "timbre.badge.streak_100": "Száz nap",
+    "timbre.badge.minutes_60": "Első óra",
+    "timbre.badge.minutes_600": "Tíz óra",
+    "timbre.badge.daily_1": "Napi program",
+    "timbre.badge.daily_30": "Szokások rabja",
+    "timbre.badge.sniper_win": "Fordulógyőztes",
+    "timbre.badge.bullseyes_50": "Pont középen",
+    "timbre.badge.ear_perfect": "Teljes pontszám",
+    "timbre.badge.ear_500": "Hallásmester",
+    "timbre.badge.units_1": "Egység teljesítve",
+    "timbre.badge.units_10": "Tíz egység",
+    "timbre.badge.course_done": "Diplomás",
+    "timbre.badge.songs_1": "Első dal",
+    "timbre.badge.songs_25": "Daloskönyv"
+  },
+  "game_center_achievement_descriptions": {
+    "timbre.badge.first_tune": "Hangold be az első húrodat",
+    "timbre.badge.full_tune": "Hangold be a hangszer összes húrját",
+    "timbre.badge.streak_7": "Gyakorolj hét egymást követő napon",
+    "timbre.badge.strings_100": "Hangolj be 100 húrt",
+    "timbre.badge.bullseye": "Érd el az első telitalálatodat",
+    "timbre.badge.sharpshooter": "Érj el 2 000 pontot a Telitalálatban",
+    "timbre.badge.golden_ear": "Válaszolj helyesen 50 hallásfejlesztő kérdésre",
+    "timbre.badge.level_5": "Érd el az 5. szintet",
+    "timbre.badge.multi": "Hangolj be három különböző hangszert",
+    "timbre.badge.streak_30": "Gyakorolj harminc egymást követő napon",
+    "timbre.badge.strings_1000": "Hangolj be 1 000 húrt",
+    "timbre.badge.first_lesson": "Végezd el az első leckédet",
+    "timbre.badge.lessons_25": "Végezz el 25 leckét",
+    "timbre.badge.lessons_100": "Végezz el 100 leckét",
+    "timbre.badge.perfect_10": "Szerezz három csillagot 10 leckében",
+    "timbre.badge.full_25": "Hangold be az összes húrt 25-ször",
+    "timbre.badge.streak_3": "Gyakorolj három egymást követő napon",
+    "timbre.badge.streak_100": "Gyakorolj 100 egymást követő napon",
+    "timbre.badge.minutes_60": "Gyakorolj összesen egy órát",
+    "timbre.badge.minutes_600": "Gyakorolj összesen tíz órát",
+    "timbre.badge.daily_1": "Végezz el egy napi programot",
+    "timbre.badge.daily_30": "Végezz el 30 napi programot",
+    "timbre.badge.sniper_win": "Nyerj egy fordulót a Telitalálatban",
+    "timbre.badge.bullseyes_50": "Érj el 50 telitalálatot",
+    "timbre.badge.ear_perfect": "Válaszolj helyesen mind a tíz kérdésre egy hallásfejlesztő fordulóban",
+    "timbre.badge.ear_500": "Válaszolj helyesen 500 hallásfejlesztő kérdésre",
+    "timbre.badge.units_1": "Végezd el egy egység összes leckéjét",
+    "timbre.badge.units_10": "Végezz el tíz egységet",
+    "timbre.badge.course_done": "Végezz el egy teljes kurzust",
+    "timbre.badge.songs_1": "Játszd el az első dalodat",
+    "timbre.badge.songs_25": "Játssz el 25 dalt"
+  },
+  "provenance": {
+    "game_center": "Badge text reused from matching app Localizable.strings; song board titles reused from Learn.strings. Newly renamed badge/board text authored for this store draft. No native review claimed.",
+    "game_center_songs": "Existing Learn.strings title reused when present. Otherwise established/localized title drafted; other named musical works retain source titles, not a claim of app translation. Reconcile with later Learn imports before release.",
+    "game_center_app_reuse": {
+      "app_locale": "hu",
+      "reused_fields": [
+        "timbre.badge.first_tune:game_center_achievement_names",
+        "timbre.badge.full_tune:game_center_achievement_names",
+        "timbre.badge.streak_7:game_center_achievement_names",
+        "timbre.badge.strings_100:game_center_achievement_names",
+        "timbre.badge.bullseye:game_center_achievement_names",
+        "timbre.badge.sharpshooter:game_center_achievement_names",
+        "timbre.badge.golden_ear:game_center_achievement_names",
+        "timbre.badge.level_5:game_center_achievement_names",
+        "timbre.badge.multi:game_center_achievement_names",
+        "timbre.badge.streak_30:game_center_achievement_names",
+        "timbre.badge.strings_1000:game_center_achievement_names",
+        "timbre.badge.first_lesson:game_center_achievement_names",
+        "timbre.badge.lessons_25:game_center_achievement_names",
+        "timbre.badge.lessons_100:game_center_achievement_names",
+        "timbre.badge.perfect_10:game_center_achievement_names",
+        "timbre.badge.full_25:game_center_achievement_names",
+        "timbre.badge.streak_3:game_center_achievement_names",
+        "timbre.badge.streak_100:game_center_achievement_names",
+        "timbre.badge.minutes_60:game_center_achievement_names",
+        "timbre.badge.minutes_600:game_center_achievement_names",
+        "timbre.badge.daily_1:game_center_achievement_names",
+        "timbre.badge.daily_30:game_center_achievement_names",
+        "timbre.badge.sniper_win:game_center_achievement_names",
+        "timbre.badge.bullseyes_50:game_center_achievement_names",
+        "timbre.badge.ear_perfect:game_center_achievement_names",
+        "timbre.badge.ear_500:game_center_achievement_names",
+        "timbre.badge.units_1:game_center_achievement_names",
+        "timbre.badge.units_10:game_center_achievement_names",
+        "timbre.badge.course_done:game_center_achievement_names",
+        "timbre.badge.songs_1:game_center_achievement_names",
+        "timbre.badge.songs_25:game_center_achievement_names",
+        "timbre.badge.first_tune:game_center_achievement_descriptions",
+        "timbre.badge.full_tune:game_center_achievement_descriptions",
+        "timbre.badge.streak_7:game_center_achievement_descriptions",
+        "timbre.badge.strings_100:game_center_achievement_descriptions",
+        "timbre.badge.bullseye:game_center_achievement_descriptions",
+        "timbre.badge.sharpshooter:game_center_achievement_descriptions",
+        "timbre.badge.golden_ear:game_center_achievement_descriptions",
+        "timbre.badge.level_5:game_center_achievement_descriptions",
+        "timbre.badge.multi:game_center_achievement_descriptions",
+        "timbre.badge.streak_30:game_center_achievement_descriptions",
+        "timbre.badge.strings_1000:game_center_achievement_descriptions",
+        "timbre.badge.first_lesson:game_center_achievement_descriptions",
+        "timbre.badge.lessons_25:game_center_achievement_descriptions",
+        "timbre.badge.lessons_100:game_center_achievement_descriptions",
+        "timbre.badge.perfect_10:game_center_achievement_descriptions",
+        "timbre.badge.full_25:game_center_achievement_descriptions",
+        "timbre.badge.streak_3:game_center_achievement_descriptions",
+        "timbre.badge.streak_100:game_center_achievement_descriptions",
+        "timbre.badge.minutes_60:game_center_achievement_descriptions",
+        "timbre.badge.minutes_600:game_center_achievement_descriptions",
+        "timbre.badge.daily_1:game_center_achievement_descriptions",
+        "timbre.badge.daily_30:game_center_achievement_descriptions",
+        "timbre.badge.sniper_win:game_center_achievement_descriptions",
+        "timbre.badge.bullseyes_50:game_center_achievement_descriptions",
+        "timbre.badge.ear_perfect:game_center_achievement_descriptions",
+        "timbre.badge.ear_500:game_center_achievement_descriptions",
+        "timbre.badge.units_1:game_center_achievement_descriptions",
+        "timbre.badge.units_10:game_center_achievement_descriptions",
+        "timbre.badge.course_done:game_center_achievement_descriptions",
+        "timbre.badge.songs_1:game_center_achievement_descriptions",
+        "timbre.badge.songs_25:game_center_achievement_descriptions"
+      ],
+      "note": "Available app values reused exactly; missing app values retain authored store drafts. Does not certify native or device review."
+    }
+  },
+  "name": "Timbre: Gitárhangoló",
+  "subtitle": "Hegedű, ukulele, basszusleckék",
+  "keywords": "hegedű,cselló,ukulele,mandolin,bendzsó,kromatikus,stroboszkóp,hallás,metronóm,akkord",
+  "promotional_text": "Ingyenes hangoló, reklám és fiók nélkül. Érezd a húrok hangolását, tanulj a játékodra figyelő leckékkel, és játssz több mint 140 dalt.",
+  "description": "Ingyenes hangoló. Reklám és fiók nélkül. Utána leckék, amelyek figyelnek a játékodra.\n\nA Timbre pontos hangolót és zenetanárt kínál. Hangolj 60 hangszert, és tanulj játék közben.\n\nHANGOLJ INGYEN\nMinden hangszer alap hangolása ingyenes: gitár, ukulele, hegedű, mandolin, bendzsó, oud, erhu és mások. Kromatikus és stroboszkópos hangoló centpontossággal. 132 hangolás Drop D-től és Open G-től DADGAD-ig, valamint saját hangolások.\nAz automatikus húrfelismerés kipipálja a behangolt húrokat. Egy pengetés minden húrt beolvas, és megmutatja, melyiket hangold először. Hangolj tapintással: a telefon a húr és a célhang közötti lebegés ritmusában rezeg, közeledésükkor lassul, egyezéskor megáll. Nem kell odanézned.\nStúdiófényű 3D gitárok, basszusgitárok, hegedű, cselló és mandolin mutatják a tekerendő hangolókulcsot. Kapodaszter, állítható A4 referencia, szolmizációs és szargam hangnevek.\n\nTANULJ JÁTÉK KÖZBEN\n526 lecke 11 kurzusban: gitár, ukulele, basszusgitár, hegedű, cselló, mandolin, bendzsó, ének, hallás, zeneelmélet és ritmus. Daloskönyvek ukuleléhez, mandolinhoz, hegedűhöz, csellóhoz és basszusgitárhoz is.\nA Timbre minden pengetést hall: a helyes akkordot, az időzítést és a néma húrt. Minden hangot centre és ezredmásodpercre pontosan értékel. A „Mutasd meg” új akkordokat játszik 3D gitáron, sorban elhelyezve az ujjakat. A hangjegypálya lelassul neked, majd fejlődéseddel gyorsul.\n\nTöbb mint 140 dal, mindegyik teljes feldolgozással: klasszikusok Jingle Bellstől Amazing Grace-ig, köztük 50 Originals, a Timbre számára mai stílusokban írva. Játssz a zenekarral a fejhallgatóban, miközben a szöveg felvillan. Illessz be vagy importálj saját akkordlapot, transzponáld, görgesd ütemre, és hallgasd mellette az eredetit az Apple Musicban.\n\nFOLYTASD\nCsillagok, XP, napi küldetések, sorozatok és jelvények. Game Center: heti Telitalálat-liga, dalranglisták és baráti kihívások. Apple Watch: csuklón érezhető metronóm és a mai gyakorlás áttekintése. Fő- és zárolt képernyős widgetek, élő tevékenység és Siri-parancsok.\nMetronóm hangsúlyokkal, felosztásokkal és tempógyakorlással; orgonapont, intonációgyakorló, akkord- és skálatár. Hallás: hangmagasság iránya, hangközök és akkordtípusok, továbbá 40 leckés kurzus.\n\nKEZDD INGYEN\nMinden hangszer alap hangolása ingyenes. Gitár, basszusgitár, ukulele, hegedű és cselló minden hangolásban ingyenes. Minden kurzus első egysége és néhány dal is ingyenes. A Timbre Pro minden leckét, dalt, hangolást és gyakorlóeszközt felold. Bekapcsolt értesítésekkel a Timbre két nappal az ingyenes próba vége előtt emlékeztet.\nA hang elemzése az iPhone-on történik, soha nincs rögzítve vagy feltöltve. Nincs fiók vagy reklám.\nAz előfizetések automatikusan megújulnak, ha nem mondod le őket legalább 24 órával az időszak vége előtt. Kezelés vagy lemondás bármikor: Beállítások → Apple-fiók → Előfizetések.\nFeltételek: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\nAdatvédelem: <privacy policy URL>",
+  "whats_new": "Üdv a Timbre-ben: ingyenes hangoló 60 hangszerhez és 526 lecke, amely figyel a játékodra.",
+  "iphone_screenshot_captions": [
+    {
+      "capture": "10b-tune-locked",
+      "caption": "Ingyenes, reklámmentes hangoló",
+      "supporting_line": "60 hangszer, centpontossággal"
+    },
+    {
+      "capture": "65-song-perform",
+      "caption": "Halld, hogyan játszottál",
+      "supporting_line": "Minden hang magassága és időzítése"
+    },
+    {
+      "capture": "52b-lesson-chord",
+      "caption": "Az első akkordod még ma",
+      "supporting_line": "A Timbre minden húrt hall"
+    },
+    {
+      "capture": "31b-instruments-folk",
+      "caption": "Hangold, amin játszol",
+      "supporting_line": "60 hangszer, 132 hangolás"
+    },
+    {
+      "capture": "63-songs",
+      "caption": "Játssz ismerős dalokat",
+      "supporting_line": "Több mint 140 dal: klasszikusok és Originals"
+    },
+    {
+      "capture": "50-learn",
+      "caption": "Tanulj saját tempódban",
+      "supporting_line": "526 lecke 11 kurzusban"
+    },
+    {
+      "capture": "62-lesson-results",
+      "caption": "Napi öt perc is számít",
+      "supporting_line": "Csillagok, sorozatok, napi küldetések"
+    },
+    {
+      "capture": "11b-tune-strum",
+      "caption": "Egy pengetés, minden húr",
+      "supporting_line": "Lásd, melyik húrt hangold először"
+    },
+    {
+      "capture": "32-journey",
+      "caption": "Lásd a fejlődésed",
+      "supporting_line": "Pontosság, húrok hangja, jelvények"
+    }
+  ],
+  "ipad_screenshot_captions": [
+    {
+      "capture": "ipad-landscape-tune",
+      "caption": "Ingyenes, reklámmentes hangoló",
+      "supporting_line": "60 hangszer, centpontossággal"
+    },
+    {
+      "capture": "ipad-landscape-instruments",
+      "caption": "Hangold, amin játszol",
+      "supporting_line": "Hegedűtől oudig, szitártól erhuig"
+    },
+    {
+      "capture": "ipad-landscape-songs",
+      "caption": "Játssz ismerős dalokat",
+      "supporting_line": "Több mint 140 dal: klasszikusok és Originals"
+    },
+    {
+      "capture": "ipad-landscape-practice",
+      "caption": "Napi öt perc is számít",
+      "supporting_line": "Napi gyakorlás, küldetések, hallásjátékok"
+    }
+  ],
+  "app_preview_captions": {
+    "main": {
+      "lock": "Ingyenes hangoló. Reklám nélkül",
+      "tuned": "Minden húr ellenőrizve",
+      "showme": "Nézd meg a játékot 3D-ben",
+      "highway": "Játssz dalokat a zenekarral",
+      "results": "Halld az eredményed",
+      "songs": "Több mint 140 megtanulható dal",
+      "end": "Hangolj. Tanulj. Játssz dalokat.",
+      "end-note": "Ingyenes hangoló · Reklám és fiók nélkül"
+    },
+    "violin": {
+      "lock": "Hangold a hegedűdet ingyen",
+      "tuned": "G, D, A, E: mind behangolva",
+      "highway": "Játssz dalokat hegedűn",
+      "results": "Halld az eredményed",
+      "songs": "Több mint 140 megtanulható dal",
+      "end": "Hegedűhangoló és leckék",
+      "end-note": "Ingyenes hangoló · Reklám és fiók nélkül"
+    }
+  },
+  "iap_display_names": {
+    "timbre_pro_annual": "Timbre Pro, éves",
+    "timbre_pro_monthly": "Timbre Pro, havi",
+    "timbre_plus_lifetime": "Timbre Pro, örökre"
+  },
+  "iap_descriptions": {
+    "timbre_pro_annual": "Minden lecke, dal, hangolás és gyakorlóeszköz",
+    "timbre_pro_monthly": "Minden lecke, dal, hangolás és gyakorlóeszköz",
+    "timbre_plus_lifetime": "A teljes Pro egyszeri fizetéssel"
+  },
+  "custom_product_page_keywords": {
+    "violin": [
+      "hegedű"
+    ],
+    "cello": [
+      "cselló"
+    ],
+    "ukulele": [
+      "ukulele"
+    ]
+  }
+}

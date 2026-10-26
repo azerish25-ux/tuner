@@ -1,0 +1,226 @@
+{
+  "schema_version": 1,
+  "locale": "ms",
+  "counts": {
+    "instruments": 60,
+    "tunings": 132,
+    "courses": 11,
+    "lessons": 526,
+    "songs_floor": 140,
+    "originals": 50
+  },
+  "review": {
+    "text": "ai_drafted",
+    "native": "not_verified",
+    "market_search": "not_verified",
+    "device": "not_verified",
+    "screenshots": "not_captured",
+    "app_preview": "not_rendered",
+    "iap_account_limits": "not_verified",
+    "game_center_account": "not_verified",
+    "release_ready": false,
+    "blockers": [
+      "Production privacy policy URL and verification not provided",
+      "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+      "Localized App Preview recordings and audio/sync/render review pending",
+      "App Store Connect product/locale limits and Game Center configuration/images unverified"
+    ],
+    "semantic": "ai_cross_reviewed_critical_facts",
+    "legal_back_translation": "not_performed_optional_under_ai_policy",
+    "song_title_alignment": "listing_only_ai_draft",
+    "ai_cross_review": {
+      "scope": "Free tier, notification-conditioned two-day trial reminder, on-device never-recorded/uploaded audio, automatic renewal and 24-hour cancellation, anytime management, IAP benefits. Additional feature/count/terminology review for original nine and European/regional listings.",
+      "limitations": "AI review with inherited English source, not blinded back-translation, native-speaker, market, legal, account or visual approval."
+    },
+    "ai_source_aware": "reviewed",
+    "privacy_policy": "not_verified",
+    "review_policy": "ai_source_aware"
+  },
+  "game_center_leaderboard_names": {
+    "timbre.sniper.best": "Bullseye",
+    "timbre.sniper.weekly": "Bullseye minggu ini",
+    "timbre.ear.level": "Tahap latihan telinga",
+    "timbre.streak": "Rentetan latihan",
+    "timbre.song.twinkle": "Bintang Kecil Berkelip",
+    "timbre.song.odetojoy": "Pujian Kegembiraan",
+    "timbre.song.jinglebells": "Jingle Bells",
+    "timbre.song.saints": "When the Saints Go Marching In",
+    "timbre.song.kiteweather": "Cuaca Layang-Layang",
+    "timbre.song.dashboard": "Debu di Papan Pemuka",
+    "timbre.song.lochlomond": "Loch Lomond",
+    "timbre.song.mountain": "She’ll Be Coming ’Round the Mountain"
+  },
+  "game_center_achievement_names": {
+    "timbre.badge.first_tune": "Talaan pertama",
+    "timbre.badge.full_tune": "Keenam-enam tali",
+    "timbre.badge.streak_7": "Minggu sempurna",
+    "timbre.badge.strings_100": "Seratus tali",
+    "timbre.badge.bullseye": "Bullseye",
+    "timbre.badge.sharpshooter": "Skor tinggi",
+    "timbre.badge.golden_ear": "Telinga emas",
+    "timbre.badge.level_5": "Bintang meningkat",
+    "timbre.badge.multi": "Pemain pelbagai alat",
+    "timbre.badge.streak_30": "Sebulan bermuzik",
+    "timbre.badge.strings_1000": "Seribu tali",
+    "timbre.badge.first_lesson": "Pelajaran pertama",
+    "timbre.badge.lessons_25": "Tekun",
+    "timbre.badge.lessons_100": "Cendekiawan",
+    "timbre.badge.perfect_10": "Tanpa cela",
+    "timbre.badge.full_25": "Tabiat menala",
+    "timbre.badge.streak_3": "Mula memanas",
+    "timbre.badge.streak_100": "Seratus hari",
+    "timbre.badge.minutes_60": "Jam pertama",
+    "timbre.badge.minutes_600": "Sepuluh jam",
+    "timbre.badge.daily_1": "Set harian",
+    "timbre.badge.daily_30": "Amalan tetap",
+    "timbre.badge.sniper_win": "Pemenang pusingan",
+    "timbre.badge.bullseyes_50": "Tepat di tengah",
+    "timbre.badge.ear_perfect": "Sapu bersih",
+    "timbre.badge.ear_500": "Pendengar mahir",
+    "timbre.badge.units_1": "Unit selesai",
+    "timbre.badge.units_10": "Sepuluh unit",
+    "timbre.badge.course_done": "Tamat pengajian",
+    "timbre.badge.songs_1": "Lagu pertama",
+    "timbre.badge.songs_25": "Buku lagu"
+  },
+  "game_center_achievement_descriptions": {
+    "timbre.badge.first_tune": "Tala tali pertama anda",
+    "timbre.badge.full_tune": "Tala setiap tali pada satu alat",
+    "timbre.badge.streak_7": "Bermain tujuh hari berturut-turut",
+    "timbre.badge.strings_100": "Tala 100 tali",
+    "timbre.badge.bullseye": "Capai pusat sasaran buat kali pertama",
+    "timbre.badge.sharpshooter": "Dapatkan 2,000 mata dalam Bullseye",
+    "timbre.badge.golden_ear": "Jawab 50 soalan telinga dengan betul",
+    "timbre.badge.level_5": "Capai tahap 5",
+    "timbre.badge.multi": "Tala tiga alat yang berbeza",
+    "timbre.badge.streak_30": "Bermain tiga puluh hari berturut-turut",
+    "timbre.badge.strings_1000": "Tala 1,000 tali",
+    "timbre.badge.first_lesson": "Selesaikan pelajaran pertama anda",
+    "timbre.badge.lessons_25": "Selesaikan 25 pelajaran",
+    "timbre.badge.lessons_100": "Selesaikan 100 pelajaran",
+    "timbre.badge.perfect_10": "Dapatkan tiga bintang dalam 10 pelajaran",
+    "timbre.badge.full_25": "Tala semua tali sebanyak 25 kali",
+    "timbre.badge.streak_3": "Bermain tiga hari berturut-turut",
+    "timbre.badge.streak_100": "Bermain 100 hari berturut-turut",
+    "timbre.badge.minutes_60": "Berlatih selama satu jam keseluruhannya",
+    "timbre.badge.minutes_600": "Berlatih selama sepuluh jam keseluruhannya",
+    "timbre.badge.daily_1": "Selesaikan satu set harian",
+    "timbre.badge.daily_30": "Selesaikan 30 set harian",
+    "timbre.badge.sniper_win": "Menangi satu pusingan Bullseye",
+    "timbre.badge.bullseyes_50": "Capai pusat sasaran 50 kali",
+    "timbre.badge.ear_perfect": "Jawab kesemua sepuluh soalan dengan betul dalam satu pusingan telinga",
+    "timbre.badge.ear_500": "Jawab 500 soalan telinga dengan betul",
+    "timbre.badge.units_1": "Selesaikan setiap pelajaran dalam satu unit",
+    "timbre.badge.units_10": "Selesaikan sepuluh unit",
+    "timbre.badge.course_done": "Selesaikan satu kursus penuh",
+    "timbre.badge.songs_1": "Mainkan lagu pertama anda",
+    "timbre.badge.songs_25": "Mainkan 25 lagu"
+  },
+  "name": "Timbre: Penala Gitar",
+  "subtitle": "Belajar Ukulele & Violin",
+  "keywords": "selo,bes,mandolin,banjo,kromatik,strob,latihan telinga,metronom,kord",
+  "promotional_text": "Penala percuma, tanpa iklan atau akaun. Rasai setiap tali tepat nadanya, kemudian belajar dengan pelajaran yang mendengar permainan anda dan 140+ lagu.",
+  "description": "Penala percuma, tanpa iklan atau akaun. Kemudian pelajaran yang mendengar anda bermain.\n\nTimbre menggabungkan penala tepat dengan guru muzik. Tala mana-mana daripada 60 alat dalam beberapa saat, kemudian ikuti pelajaran yang mendengar dan menilai permainan anda.\n\nTALA SECARA PERCUMA\n• Penalaan standard setiap alat percuma, daripada gitar, ukulele dan violin hingga mandolin, banjo, oud dan erhu.\n• Penala kromatik dan strob dengan ketepatan sen. 132 penalaan, daripada Drop D dan Open G hingga DADGAD, serta penalaan anda sendiri.\n• Pengesanan tali automatik, dengan tanda semak apabila setiap tali tepat. Satu petikan membaca semua tali dan menunjukkan tali yang perlu ditala dahulu.\n• Tala melalui rasa: telefon berdenyut mengikut layangan antara tali dan nada sasaran, semakin perlahan apabila menghampiri lalu berhenti apabila tepat. Tala tanpa melihat.\n• Gitar, bes, violin, selo dan mandolin 3D bercahaya studio, dengan pasak yang perlu dipusing ditunjukkan pada kepala alat.\n• Kapo, rujukan A4 boleh laras, serta nama not solfa dan sargam.\n\nBELAJAR DENGAN BERMAIN\n• 526 pelajaran dalam 11 kursus: gitar, ukulele, bes, violin, selo, mandolin, banjo, vokal, latihan telinga, teori muzik dan irama. Buku lagu untuk ukulele, mandolin, violin, selo dan bes juga tersedia.\n• Timbre mendengar setiap petikan: kord yang betul, masanya dan tali yang tidak berbunyi. Setiap not dinilai hingga ke sen dan milisaat.\n• “Tunjukkan” memainkan setiap kord baharu pada gitar 3D, dengan jari diletakkan mengikut urutan. Laluan not iringan diperlahankan untuk anda, kemudian dipercepat semula apabila anda semakin mahir.\n\nMAINKAN LAGU\n• 140+ lagu dalam susunan lengkap: klasik daripada Jingle Bells hingga Amazing Grace, serta 50 lagu asli yang ditulis untuk Timbre dalam gaya masa kini.\n• Main bersama kumpulan muzik melalui fon kepala sementara lirik diserlahkan.\n• Lagu anda: tampal atau import carta kord, ubah nada, tatal mengikut masa, dan dengar lagu asal di Apple Music di sebelahnya.\n\nTERUS BERLATIH\n• Bintang, XP, misi harian, rentetan dan lencana.\n• Game Center: liga Bullseye mingguan, papan kedudukan lagu dan cabaran rakan.\n• Apple Watch: metronom yang dirasai pada pergelangan tangan dan latihan hari ini sepintas lalu.\n• Widget Skrin Utama dan Skrin Kunci, Aktiviti Langsung dan pintasan Siri.\n• Metronom dengan aksen, pembahagian rentak dan latihan kelajuan; nada berterusan, latihan ketepatan nada serta pustaka kord dan skala.\n• Latihan telinga: arah pic, selang dan jenis kord, serta kursus telinga 40 pelajaran.\n\nMULA SECARA PERCUMA\nPenalaan standard setiap alat percuma. Gitar, bes, ukulele, violin dan selo percuma dalam setiap penalaan. Unit pertama setiap kursus dan pilihan lagu juga percuma. Timbre Pro membuka semua pelajaran, lagu, penalaan dan alat latihan. Dengan pemberitahuan dihidupkan, Timbre mengingatkan anda dua hari sebelum percubaan percuma tamat.\n\nPrivasi sejak awal: audio dianalisis pada iPhone anda, tidak pernah dirakam atau dimuat naik. Tiada akaun atau iklan.\n\nLangganan diperbaharui secara automatik melainkan dibatalkan sekurang-kurangnya 24 jam sebelum tempoh berakhir. Urus atau batalkan bila-bila masa melalui Seting → Akaun Apple → Langganan.\nTerma: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\nPrivasi: <privacy policy URL>",
+  "whats_new": "Selamat datang ke Timbre: penala percuma untuk 60 alat dan 526 pelajaran yang mendengar anda bermain.",
+  "iphone_screenshot_captions": [
+    {
+      "capture": "10b-tune-locked",
+      "caption": "Penala percuma. Tiada iklan.",
+      "supporting_line": "60 alat, tepat hingga ke sen"
+    },
+    {
+      "capture": "65-song-perform",
+      "caption": "Dengar cara anda bermain",
+      "supporting_line": "Pic dan masa setiap not"
+    },
+    {
+      "capture": "52b-lesson-chord",
+      "caption": "Main kord pertama hari ini",
+      "supporting_line": "Timbre mendengar setiap tali"
+    },
+    {
+      "capture": "31b-instruments-folk",
+      "caption": "Tala apa sahaja yang dimainkan",
+      "supporting_line": "60 alat, 132 penalaan"
+    },
+    {
+      "capture": "63-songs",
+      "caption": "Main lagu yang anda kenali",
+      "supporting_line": "140+ lagu, klasik hingga lagu asli"
+    },
+    {
+      "capture": "50-learn",
+      "caption": "Belajar mengikut rentak anda",
+      "supporting_line": "526 pelajaran dalam 11 kursus"
+    },
+    {
+      "capture": "62-lesson-results",
+      "caption": "Lima minit sehari berbaloi",
+      "supporting_line": "Bintang, rentetan dan misi harian"
+    },
+    {
+      "capture": "11b-tune-strum",
+      "caption": "Satu petikan semak semua tali",
+      "supporting_line": "Lihat tali yang perlu ditala dahulu"
+    },
+    {
+      "capture": "32-journey",
+      "caption": "Lihat kemajuan anda",
+      "supporting_line": "Ketepatan, bunyi tali dan lencana"
+    }
+  ],
+  "ipad_screenshot_captions": [
+    {
+      "capture": "ipad-landscape-tune",
+      "caption": "Penala percuma. Tiada iklan.",
+      "supporting_line": "60 alat, tepat hingga ke sen"
+    },
+    {
+      "capture": "ipad-landscape-instruments",
+      "caption": "Tala apa sahaja yang dimainkan",
+      "supporting_line": "Violin hingga oud, sitar hingga erhu"
+    },
+    {
+      "capture": "ipad-landscape-songs",
+      "caption": "Main lagu yang anda kenali",
+      "supporting_line": "140+ lagu, klasik hingga lagu asli"
+    },
+    {
+      "capture": "ipad-landscape-practice",
+      "caption": "Lima minit sehari berbaloi",
+      "supporting_line": "Set harian, misi dan permainan telinga"
+    }
+  ],
+  "app_preview_captions": {
+    "main": {
+      "lock": "Penala percuma. Tiada iklan.",
+      "tuned": "Setiap tali diperiksa",
+      "showme": "Lihat cara bermain dalam 3D",
+      "highway": "Main lagu bersama kumpulan",
+      "results": "Dengar prestasi anda",
+      "songs": "140+ lagu untuk dipelajari",
+      "end": "Tala. Belajar. Main lagu.",
+      "end-note": "Penala percuma · Tiada iklan · Tiada akaun"
+    },
+    "violin": {
+      "lock": "Tala violin anda secara percuma",
+      "tuned": "G, D, A, E: semuanya tepat",
+      "highway": "Main lagu pada violin anda",
+      "results": "Dengar prestasi anda",
+      "songs": "140+ lagu untuk dipelajari",
+      "end": "Penala violin dan pelajaran",
+      "end-note": "Penala percuma · Tiada iklan · Tiada akaun"
+    }
+  },
+  "iap_display_names": {
+    "timbre_pro_annual": "Timbre Pro, tahunan",
+    "timbre_pro_monthly": "Timbre Pro, bulanan",
+    "timbre_plus_lifetime": "Timbre Pro, seumur hidup"
+  },
+  "iap_descriptions": {
+    "timbre_pro_annual": "Semua pelajaran, lagu, talaan, alat latihan",
+    "timbre_pro_monthly": "Semua pelajaran, lagu, talaan, alat latihan",
+    "timbre_plus_lifetime": "Semua ciri Pro, bayar sekali"
+  },
+  "custom_product_page_keywords": {}
+}

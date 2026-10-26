@@ -1,0 +1,310 @@
+{
+  "schema_version": 1,
+  "locale": "ar-SA",
+  "counts": {
+    "instruments": 60,
+    "tunings": 132,
+    "courses": 11,
+    "lessons": 526,
+    "songs_floor": 140,
+    "originals": 50
+  },
+  "review": {
+    "text": "ai_drafted",
+    "native": "not_verified",
+    "market_search": "not_verified",
+    "device": "not_verified",
+    "screenshots": "not_captured",
+    "app_preview": "not_rendered",
+    "iap_account_limits": "not_verified",
+    "game_center_account": "not_verified",
+    "release_ready": false,
+    "blockers": [
+      "Production privacy policy URL and verification not provided",
+      "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+      "Localized App Preview recordings and audio/sync/render review pending",
+      "App Store Connect product/locale limits and Game Center configuration/images unverified"
+    ],
+    "semantic": "ai_cross_reviewed_critical_facts",
+    "legal_back_translation": "not_performed_optional_under_ai_policy",
+    "song_title_alignment": {
+      "state": "pending_app_alignment",
+      "pending_app_alignment": [
+        "timbre.song.twinkle",
+        "timbre.song.odetojoy",
+        "timbre.song.jinglebells",
+        "timbre.song.saints",
+        "timbre.song.kiteweather",
+        "timbre.song.dashboard",
+        "timbre.song.lochlomond",
+        "timbre.song.mountain"
+      ],
+      "native_review": "not_verified"
+    },
+    "ai_cross_review": {
+      "scope": "Free tier, notification-conditioned two-day trial reminder, on-device never-recorded/uploaded audio, automatic renewal and 24-hour cancellation, anytime management, IAP benefits. Additional feature/count/terminology review for original nine and European/regional listings.",
+      "limitations": "AI review with inherited English source, not blinded back-translation, native-speaker, market, legal, account or visual approval."
+    },
+    "ai_source_aware": "reviewed",
+    "privacy_policy": "not_verified",
+    "review_policy": "ai_source_aware"
+  },
+  "game_center_leaderboard_names": {
+    "timbre.sniper.best": "في الصميم",
+    "timbre.sniper.weekly": "في الصميم هذا الأسبوع",
+    "timbre.ear.level": "مستوى تدريب السمع",
+    "timbre.streak": "سلسلة التمرين",
+    "timbre.song.twinkle": "تلألئي يا نجمة صغيرة",
+    "timbre.song.odetojoy": "نشيد الفرح",
+    "timbre.song.jinglebells": "أجراس ترنّ",
+    "timbre.song.saints": "عندما يسير القديسون",
+    "timbre.song.kiteweather": "طقس الطائرات الورقية",
+    "timbre.song.dashboard": "غبار على لوحة القيادة",
+    "timbre.song.lochlomond": "لوخ لوموند",
+    "timbre.song.mountain": "ستأتي حول الجبل"
+  },
+  "game_center_achievement_names": {
+    "timbre.badge.first_tune": "أول وتر مضبوط",
+    "timbre.badge.full_tune": "الأوتار الستة",
+    "timbre.badge.streak_7": "أسبوع مثالي",
+    "timbre.badge.strings_100": "مئة وتر",
+    "timbre.badge.bullseye": "في الصميم",
+    "timbre.badge.sharpshooter": "صاحب نتيجة عالية",
+    "timbre.badge.golden_ear": "أذن ذهبية",
+    "timbre.badge.level_5": "نجم صاعد",
+    "timbre.badge.multi": "عازف متعدد الآلات",
+    "timbre.badge.streak_30": "شهر من الموسيقى",
+    "timbre.badge.strings_1000": "ألف وتر",
+    "timbre.badge.first_lesson": "الدرس الأول",
+    "timbre.badge.lessons_25": "المواظب",
+    "timbre.badge.lessons_100": "العالِم",
+    "timbre.badge.perfect_10": "بلا أخطاء",
+    "timbre.badge.full_25": "عادة الضبط",
+    "timbre.badge.streak_3": "إحماء",
+    "timbre.badge.streak_100": "مئة يوم",
+    "timbre.badge.minutes_60": "الساعة الأولى",
+    "timbre.badge.minutes_600": "عشر ساعات",
+    "timbre.badge.daily_1": "الخطة اليومية",
+    "timbre.badge.daily_30": "أسير العادة",
+    "timbre.badge.sniper_win": "الفائز بالجولة",
+    "timbre.badge.bullseyes_50": "في المنتصف تمامًا",
+    "timbre.badge.ear_perfect": "العلامة الكاملة",
+    "timbre.badge.ear_500": "سيّد الإصغاء",
+    "timbre.badge.units_1": "وحدة مكتملة",
+    "timbre.badge.units_10": "عشر وحدات",
+    "timbre.badge.course_done": "خرّيج",
+    "timbre.badge.songs_1": "أول أغنية",
+    "timbre.badge.songs_25": "كتاب الأغاني"
+  },
+  "game_center_achievement_descriptions": {
+    "timbre.badge.first_tune": "اضبط أول وتر لك",
+    "timbre.badge.full_tune": "اضبط كل أوتار آلة موسيقية",
+    "timbre.badge.streak_7": "تمرّن سبعة أيام متتالية",
+    "timbre.badge.strings_100": "اضبط 100 وتر",
+    "timbre.badge.bullseye": "أصب المركز لأول مرة",
+    "timbre.badge.sharpshooter": "حقق 2,000 في لعبة في الصميم",
+    "timbre.badge.golden_ear": "أجب عن 50 سؤالًا من أسئلة الأذن إجابة صحيحة",
+    "timbre.badge.level_5": "صِل إلى المستوى 5",
+    "timbre.badge.multi": "اضبط ثلاث آلات مختلفة",
+    "timbre.badge.streak_30": "تمرّن ثلاثين يومًا متتالية",
+    "timbre.badge.strings_1000": "اضبط 1,000 وتر",
+    "timbre.badge.first_lesson": "أكمل درسك الأول",
+    "timbre.badge.lessons_25": "أكمل 25 درسًا",
+    "timbre.badge.lessons_100": "أكمل 100 درس",
+    "timbre.badge.perfect_10": "احصل على ثلاث نجوم في 10 دروس",
+    "timbre.badge.full_25": "اضبط كل الأوتار 25 مرة",
+    "timbre.badge.streak_3": "تمرّن ثلاثة أيام متتالية",
+    "timbre.badge.streak_100": "تمرّن 100 يوم متتالية",
+    "timbre.badge.minutes_60": "تمرّن ساعة واحدة في المجموع",
+    "timbre.badge.minutes_600": "تمرّن عشر ساعات في المجموع",
+    "timbre.badge.daily_1": "أنهِ خطة يومية",
+    "timbre.badge.daily_30": "أنهِ 30 خطة يومية",
+    "timbre.badge.sniper_win": "اربح جولة في لعبة في الصميم",
+    "timbre.badge.bullseyes_50": "حقّق 50 إصابة في الصميم",
+    "timbre.badge.ear_perfect": "أجب عن الأسئلة العشرة كلها إجابة صحيحة في جولة أذن",
+    "timbre.badge.ear_500": "أجب عن 500 سؤال من أسئلة الأذن إجابة صحيحة",
+    "timbre.badge.units_1": "أكمل كل دروس وحدة",
+    "timbre.badge.units_10": "أكمل عشر وحدات",
+    "timbre.badge.course_done": "أكمل دورة كاملة",
+    "timbre.badge.songs_1": "اعزف أول أغنية لك",
+    "timbre.badge.songs_25": "اعزف 25 أغنية"
+  },
+  "name": "Timbre: ضبط الغيتار ودروس",
+  "subtitle": "تعلّم أغاني الكمان واليوكليلي",
+  "keywords": "تشيلو,باس,مندولين,بانجو,كروماتي,ستروب,تدريب السمع,مترونوم,وتر",
+  "promotional_text": "ضابط مجاني بلا إعلانات أو حساب. اشعر بضبط كل وتر، ثم تعلّم بدروس تستمع لعزفك على الآلات الوترية، واعزف أكثر من 140 أغنية.",
+  "description": "ضابط مجاني بلا إعلانات أو حساب، ودروس تستمع إليك وأنت تعزف.\n\nيجمع Timbre بين ضابط دقيق ومدرّس موسيقى. اضبط أيًا من 60 آلة في ثوانٍ، واعزف دروسًا تخبرك بدقة كيف كان أداؤك.\n\nاضبط مجانًا\n• الضبط القياسي لكل آلة مجاني، من الغيتار واليوكليلي والكمان إلى المندولين والبانجو والعود والإرهو.\n• ضابط كروماتي وستروب بدقة السنت. 132 ضبطًا، من Drop D وOpen G إلى DADGAD، مع إمكانية إنشاء ضبطك الخاص.\n• تعرّف تلقائي على الأوتار وعلامة تحقق لكل وتر يستقر. تمريرة واحدة تقرأ كل الأوتار وتبيّن أيها تضبط أولًا.\n• اضبط بالإحساس: ينبض الهاتف مع الخفقان بين وترِك ونغمته، ويبطؤ كلما اقتربا ويتوقف عند التطابق، لتضبط دون النظر.\n• غيتارات وباس وكمان وتشيلو ومندولين ثلاثية الأبعاد بإضاءة استوديو، مع تحديد المفتاح المطلوب تدويره.\n• كابو، ومرجع A4 قابل للتعديل، وأسماء النغمات بالصولفيج والسارغام.\n\nتعلّم بالعزف\n• 526 درسًا في 11 دورة: الغيتار واليوكليلي والباس والكمان والتشيلو والمندولين والبانجو والغناء وتدريب السمع ونظرية الموسيقى والإيقاع، وكتب أغانٍ لليوكليلي والمندولين والكمان والتشيلو والباس.\n• يسمع Timbre كل تمريرة: صحة التآلف وتوقيته والوتر الذي لم يرنّ. يُقيَّم كل صوت بدقة السنت وتوقيته بالمللي ثانية.\n• «أرني» يعزف كل تآلف جديد على غيتار ثلاثي الأبعاد، مع وضع الأصابع بالترتيب. مسار النغمات يبطؤ لك، ثم يتسارع مع تحسّنك.\n\nاعزف الأغاني\n• أكثر من 140 أغنية بتوزيعات كاملة، تشمل كلاسيكيات من Jingle Bells إلى Amazing Grace و50 أغنية أصلية كُتبت لـTimbre بأساليب معاصرة.\n• اعزف مع الفرقة في سماعات الرأس فيما تضيء الكلمات.\n• أغانيك: الصق أو استورد أي مخطط تآلفات، وانقله طبقيًا ومرّره مع الإيقاع، واستمع بجانبه إلى الأصل على Apple Music.\n\nواصل التمرين\n• نجوم وXP ومهام يومية وسلاسل متواصلة وشارات.\n• Game Center: دوري في الصميم أسبوعي، ولوحات صدارة للأغاني وتحديات الأصدقاء.\n• Apple Watch: مترونوم تشعر به على معصمك ولمحة عن تمرين اليوم.\n• أدوات للشاشة الرئيسية وشاشة القفل، ونشاط مباشر واختصارات Siri.\n• مترونوم مع نبرات وتقسيمات ومدرّب سرعة، ونغمة ممتدة ومدرّب دقة النغمة ومكتبة تآلفات وسلالم.\n• تدريب السمع: اتجاه النغمة والمسافات وأنواع التآلفات، ودورة سمع من 40 درسًا.\n\nابدأ مجانًا\nالضبط القياسي لكل آلة مجاني، والغيتار والباس واليوكليلي والكمان والتشيلو مجانية في كل ضبط. الوحدة الأولى من كل دورة ومجموعة أغانٍ مجانية أيضًا. يفتح Timbre Pro كل درس وأغنية وضبط وأدوات التمرين الكاملة. عند تفعيل الإشعارات، يذكّرك Timbre قبل نهاية التجربة المجانية بيومين.\n\nالخصوصية أساس التصميم: يُحلَّل الصوت على iPhone ولا يُسجَّل أو يُرفع مطلقًا. لا حساب ولا إعلانات.\n\nتتجدد الاشتراكات تلقائيًا ما لم تُلغَ قبل نهاية الفترة بـ24 ساعة على الأقل. أدرها أو ألغها في أي وقت: الإعدادات → حساب Apple → الاشتراكات.\nالشروط: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\nالخصوصية: <privacy policy URL>",
+  "whats_new": "مرحبًا بك في Timbre: ضابط مجاني لـ60 آلة و526 درسًا يستمع لعزفك.",
+  "iphone_screenshot_captions": [
+    {
+      "capture": "10b-tune-locked",
+      "caption": "ضابط مجاني. بلا إعلانات.",
+      "supporting_line": "60 آلة، بدقة السنت"
+    },
+    {
+      "capture": "65-song-perform",
+      "caption": "اسمع كيف كان عزفك",
+      "supporting_line": "نغمة وتوقيت كل صوت"
+    },
+    {
+      "capture": "52b-lesson-chord",
+      "caption": "اعزف أول تآلف اليوم",
+      "supporting_line": "Timbre يسمع كل وتر"
+    },
+    {
+      "capture": "31b-instruments-folk",
+      "caption": "اضبط أي آلة تعزفها",
+      "supporting_line": "60 آلة، 132 ضبطًا"
+    },
+    {
+      "capture": "63-songs",
+      "caption": "اعزف أغاني تعرفها",
+      "supporting_line": "أكثر من 140 أغنية، كلاسيكية وأصلية"
+    },
+    {
+      "capture": "50-learn",
+      "caption": "تعلّم بوتيرتك",
+      "supporting_line": "526 درسًا في 11 دورة"
+    },
+    {
+      "capture": "62-lesson-results",
+      "caption": "خمس دقائق يوميًا تُثمر",
+      "supporting_line": "نجوم وسلاسل ومهام يومية"
+    },
+    {
+      "capture": "11b-tune-strum",
+      "caption": "تمريرة تفحص كل الأوتار",
+      "supporting_line": "اعرف أي وتر تضبط أولًا"
+    },
+    {
+      "capture": "32-journey",
+      "caption": "شاهد تقدّمك",
+      "supporting_line": "الدقة وصفاء الأوتار والشارات"
+    }
+  ],
+  "ipad_screenshot_captions": [
+    {
+      "capture": "ipad-landscape-tune",
+      "caption": "ضابط مجاني. بلا إعلانات.",
+      "supporting_line": "60 آلة، بدقة السنت"
+    },
+    {
+      "capture": "ipad-landscape-instruments",
+      "caption": "اضبط أي آلة تعزفها",
+      "supporting_line": "من الكمان إلى العود والسيتار والإرهو"
+    },
+    {
+      "capture": "ipad-landscape-songs",
+      "caption": "اعزف أغاني تعرفها",
+      "supporting_line": "أكثر من 140 أغنية، كلاسيكية وأصلية"
+    },
+    {
+      "capture": "ipad-landscape-practice",
+      "caption": "خمس دقائق يوميًا تُثمر",
+      "supporting_line": "تمرين يومي ومهام وألعاب سمع"
+    }
+  ],
+  "app_preview_captions": {
+    "main": {
+      "lock": "ضابط مجاني. بلا إعلانات.",
+      "tuned": "فحص كل وتر",
+      "showme": "شاهد العزف ثلاثي الأبعاد",
+      "highway": "اعزف الأغاني مع الفرقة",
+      "results": "اسمع كيف كان أداؤك",
+      "songs": "أكثر من 140 أغنية للتعلّم",
+      "end": "اضبط. تعلّم. اعزف الأغاني.",
+      "end-note": "ضابط مجاني · بلا إعلانات · بلا حساب"
+    },
+    "violin": {
+      "lock": "اضبط كمانك مجانًا",
+      "tuned": "G, D, A, E: كلها مضبوطة",
+      "highway": "اعزف الأغاني على كمانك",
+      "results": "اسمع كيف كان أداؤك",
+      "songs": "أكثر من 140 أغنية للتعلّم",
+      "end": "ضابط كمان ودروس",
+      "end-note": "ضابط مجاني · بلا إعلانات · بلا حساب"
+    }
+  },
+  "iap_display_names": {
+    "timbre_pro_annual": "Timbre Pro، سنوي",
+    "timbre_pro_monthly": "Timbre Pro، شهري",
+    "timbre_plus_lifetime": "Timbre Pro، مدى الحياة"
+  },
+  "iap_descriptions": {
+    "timbre_pro_annual": "كل الدروس والأغاني والضبط وأدوات التمرين",
+    "timbre_pro_monthly": "كل الدروس والأغاني والضبط وأدوات التمرين",
+    "timbre_plus_lifetime": "كل مزايا Pro بدفعة واحدة"
+  },
+  "custom_product_page_keywords": {},
+  "provenance": {
+    "game_center": "Badge text reused from matching app Localizable.strings; song board titles reused from Learn.strings. Newly renamed badge/board text authored for this store draft. No native review claimed.",
+    "game_center_app_reuse": {
+      "app_locale": "ar",
+      "reused_fields": [
+        "timbre.badge.first_tune:game_center_achievement_names",
+        "timbre.badge.full_tune:game_center_achievement_names",
+        "timbre.badge.streak_7:game_center_achievement_names",
+        "timbre.badge.strings_100:game_center_achievement_names",
+        "timbre.badge.bullseye:game_center_achievement_names",
+        "timbre.badge.sharpshooter:game_center_achievement_names",
+        "timbre.badge.golden_ear:game_center_achievement_names",
+        "timbre.badge.level_5:game_center_achievement_names",
+        "timbre.badge.multi:game_center_achievement_names",
+        "timbre.badge.streak_30:game_center_achievement_names",
+        "timbre.badge.strings_1000:game_center_achievement_names",
+        "timbre.badge.first_lesson:game_center_achievement_names",
+        "timbre.badge.lessons_25:game_center_achievement_names",
+        "timbre.badge.lessons_100:game_center_achievement_names",
+        "timbre.badge.perfect_10:game_center_achievement_names",
+        "timbre.badge.full_25:game_center_achievement_names",
+        "timbre.badge.streak_3:game_center_achievement_names",
+        "timbre.badge.streak_100:game_center_achievement_names",
+        "timbre.badge.minutes_60:game_center_achievement_names",
+        "timbre.badge.minutes_600:game_center_achievement_names",
+        "timbre.badge.daily_1:game_center_achievement_names",
+        "timbre.badge.daily_30:game_center_achievement_names",
+        "timbre.badge.sniper_win:game_center_achievement_names",
+        "timbre.badge.bullseyes_50:game_center_achievement_names",
+        "timbre.badge.ear_perfect:game_center_achievement_names",
+        "timbre.badge.ear_500:game_center_achievement_names",
+        "timbre.badge.units_1:game_center_achievement_names",
+        "timbre.badge.units_10:game_center_achievement_names",
+        "timbre.badge.course_done:game_center_achievement_names",
+        "timbre.badge.songs_1:game_center_achievement_names",
+        "timbre.badge.songs_25:game_center_achievement_names",
+        "timbre.badge.first_tune:game_center_achievement_descriptions",
+        "timbre.badge.full_tune:game_center_achievement_descriptions",
+        "timbre.badge.streak_7:game_center_achievement_descriptions",
+        "timbre.badge.strings_100:game_center_achievement_descriptions",
+        "timbre.badge.bullseye:game_center_achievement_descriptions",
+        "timbre.badge.sharpshooter:game_center_achievement_descriptions",
+        "timbre.badge.golden_ear:game_center_achievement_descriptions",
+        "timbre.badge.level_5:game_center_achievement_descriptions",
+        "timbre.badge.multi:game_center_achievement_descriptions",
+        "timbre.badge.streak_30:game_center_achievement_descriptions",
+        "timbre.badge.strings_1000:game_center_achievement_descriptions",
+        "timbre.badge.first_lesson:game_center_achievement_descriptions",
+        "timbre.badge.lessons_25:game_center_achievement_descriptions",
+        "timbre.badge.lessons_100:game_center_achievement_descriptions",
+        "timbre.badge.perfect_10:game_center_achievement_descriptions",
+        "timbre.badge.full_25:game_center_achievement_descriptions",
+        "timbre.badge.streak_3:game_center_achievement_descriptions",
+        "timbre.badge.streak_100:game_center_achievement_descriptions",
+        "timbre.badge.minutes_60:game_center_achievement_descriptions",
+        "timbre.badge.minutes_600:game_center_achievement_descriptions",
+        "timbre.badge.daily_1:game_center_achievement_descriptions",
+        "timbre.badge.daily_30:game_center_achievement_descriptions",
+        "timbre.badge.sniper_win:game_center_achievement_descriptions",
+        "timbre.badge.bullseyes_50:game_center_achievement_descriptions",
+        "timbre.badge.ear_perfect:game_center_achievement_descriptions",
+        "timbre.badge.ear_500:game_center_achievement_descriptions",
+        "timbre.badge.units_1:game_center_achievement_descriptions",
+        "timbre.badge.units_10:game_center_achievement_descriptions",
+        "timbre.badge.course_done:game_center_achievement_descriptions",
+        "timbre.badge.songs_1:game_center_achievement_descriptions",
+        "timbre.badge.songs_25:game_center_achievement_descriptions"
+      ],
+      "note": "Available app values reused exactly; missing app values retain authored store drafts. Does not certify native or device review."
+    }
+  }
+}

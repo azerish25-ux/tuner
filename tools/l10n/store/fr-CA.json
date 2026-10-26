@@ -1,0 +1,321 @@
+{
+  "schema_version": 1,
+  "locale": "fr-CA",
+  "counts": {
+    "instruments": 60,
+    "tunings": 132,
+    "courses": 11,
+    "lessons": 526,
+    "songs_floor": 140,
+    "originals": 50
+  },
+  "review": {
+    "text": "ai_drafted",
+    "native": "not_verified",
+    "market_search": "not_verified",
+    "device": "not_verified",
+    "screenshots": "not_captured",
+    "app_preview": "not_rendered",
+    "iap_account_limits": "not_verified",
+    "game_center_account": "not_verified",
+    "release_ready": false,
+    "blockers": [
+      "Production privacy policy URL and verification not provided",
+      "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+      "Localized App Preview recordings and audio/sync/render review pending",
+      "App Store Connect product/locale limits and Game Center configuration/images unverified"
+    ],
+    "semantic": "ai_cross_reviewed_critical_facts",
+    "legal_back_translation": "not_performed_optional_under_ai_policy",
+    "song_title_alignment": {
+      "state": "app_text_reused",
+      "pending_app_alignment": [],
+      "native_review": "not_verified"
+    },
+    "ai_cross_review": {
+      "scope": "Free tier, notification-conditioned two-day trial reminder, on-device never-recorded/uploaded audio, automatic renewal and 24-hour cancellation, anytime management, IAP benefits. Additional feature/count/terminology review for original nine and European/regional listings.",
+      "limitations": "AI review with inherited English source, not blinded back-translation, native-speaker, market, legal, account or visual approval."
+    },
+    "ai_source_aware": "reviewed",
+    "privacy_policy": "not_verified",
+    "review_policy": "ai_source_aware"
+  },
+  "game_center_leaderboard_names": {
+    "timbre.sniper.best": "Tir parfait",
+    "timbre.sniper.weekly": "Tir parfait cette semaine",
+    "timbre.ear.level": "Niveau d’entraînement de l’oreille",
+    "timbre.streak": "Série de pratique",
+    "timbre.song.twinkle": "Ah ! vous dirai-je, maman",
+    "timbre.song.odetojoy": "Ode à la joie",
+    "timbre.song.jinglebells": "Jingle Bells",
+    "timbre.song.saints": "When the Saints Go Marching In",
+    "timbre.song.kiteweather": "Un temps à cerf-volant",
+    "timbre.song.dashboard": "Poussière sur le tableau de bord",
+    "timbre.song.lochlomond": "Loch Lomond",
+    "timbre.song.mountain": "She'll Be Coming 'Round the Mountain"
+  },
+  "game_center_achievement_names": {
+    "timbre.badge.first_tune": "Première corde juste",
+    "timbre.badge.full_tune": "Les six cordes",
+    "timbre.badge.streak_7": "Semaine parfaite",
+    "timbre.badge.strings_100": "Cent cordes",
+    "timbre.badge.bullseye": "Tir parfait",
+    "timbre.badge.sharpshooter": "Grand score",
+    "timbre.badge.golden_ear": "Oreille d'or",
+    "timbre.badge.level_5": "Étoile montante",
+    "timbre.badge.multi": "Multi-instrumentiste",
+    "timbre.badge.streak_30": "Un mois de musique",
+    "timbre.badge.strings_1000": "Mille cordes",
+    "timbre.badge.first_lesson": "Première leçon",
+    "timbre.badge.lessons_25": "Fidèle",
+    "timbre.badge.lessons_100": "Puits de science",
+    "timbre.badge.perfect_10": "Sans faute",
+    "timbre.badge.full_25": "Rituel d'accordage",
+    "timbre.badge.streak_3": "Échauffement",
+    "timbre.badge.streak_100": "Cent jours",
+    "timbre.badge.minutes_60": "Première heure",
+    "timbre.badge.minutes_600": "Dix heures",
+    "timbre.badge.daily_1": "Programme du jour",
+    "timbre.badge.daily_30": "Être d'habitudes",
+    "timbre.badge.sniper_win": "Vainqueur de manche",
+    "timbre.badge.bullseyes_50": "Dans le mille",
+    "timbre.badge.ear_perfect": "Carton plein",
+    "timbre.badge.ear_500": "Maître de l'écoute",
+    "timbre.badge.units_1": "Unité terminée",
+    "timbre.badge.units_10": "Dix unités",
+    "timbre.badge.course_done": "Diplômé",
+    "timbre.badge.songs_1": "Première chanson",
+    "timbre.badge.songs_25": "Carnet de chansons"
+  },
+  "game_center_achievement_descriptions": {
+    "timbre.badge.first_tune": "Accordez votre première corde",
+    "timbre.badge.full_tune": "Accordez toutes les cordes d'un instrument",
+    "timbre.badge.streak_7": "Pratiquez sept jours d'affilée",
+    "timbre.badge.strings_100": "Accordez 100 cordes",
+    "timbre.badge.bullseye": "Réussissez votre premier tir parfait",
+    "timbre.badge.sharpshooter": "Marquez 2 000 points dans Tir parfait",
+    "timbre.badge.golden_ear": "Répondez juste à 50 questions d'écoute",
+    "timbre.badge.level_5": "Atteignez le niveau 5",
+    "timbre.badge.multi": "Accordez trois instruments différents",
+    "timbre.badge.streak_30": "Pratiquez trente jours d'affilée",
+    "timbre.badge.strings_1000": "Accordez 1 000 cordes",
+    "timbre.badge.first_lesson": "Terminez votre première leçon",
+    "timbre.badge.lessons_25": "Terminez 25 leçons",
+    "timbre.badge.lessons_100": "Terminez 100 leçons",
+    "timbre.badge.perfect_10": "Obtenez trois étoiles sur 10 leçons",
+    "timbre.badge.full_25": "Accordez toutes les cordes 25 fois",
+    "timbre.badge.streak_3": "Pratiquez trois jours d'affilée",
+    "timbre.badge.streak_100": "Pratiquez 100 jours d'affilée",
+    "timbre.badge.minutes_60": "Pratiquez une heure au total",
+    "timbre.badge.minutes_600": "Pratiquez dix heures au total",
+    "timbre.badge.daily_1": "Terminez un programme du jour",
+    "timbre.badge.daily_30": "Terminez 30 programmes du jour",
+    "timbre.badge.sniper_win": "Gagnez une manche de Tir parfait",
+    "timbre.badge.bullseyes_50": "Réussissez 50 tirs parfaits",
+    "timbre.badge.ear_perfect": "Répondez juste aux dix questions d'une manche d'écoute",
+    "timbre.badge.ear_500": "Répondez juste à 500 questions d'écoute",
+    "timbre.badge.units_1": "Terminez toutes les leçons d'une unité",
+    "timbre.badge.units_10": "Terminez dix unités",
+    "timbre.badge.course_done": "Terminez un cours entier",
+    "timbre.badge.songs_1": "Jouez votre première chanson",
+    "timbre.badge.songs_25": "Jouez 25 chansons"
+  },
+  "name": "Timbre : Accordeur Guitare",
+  "subtitle": "Leçons violon, ukulélé, basse",
+  "keywords": "violon,violoncelle,ukulélé,mandoline,banjo,chromatique,stroboscope,oreille,métronome,accord",
+  "promotional_text": "Accordeur gratuit, sans pub ni compte. Ressentez chaque corde s’accorder, puis jouez avec des leçons à l’écoute et plus de 140 chansons.",
+  "description": "Un accordeur gratuit, sans pub ni compte. Puis des leçons qui vous écoutent jouer.\n\nTimbre réunit un accordeur précis et un professeur de musique. Accordez 60 instruments, puis découvrez exactement comment vous avez joué.\n\nACCORDEZ GRATUITEMENT\n• L’accordage standard de chaque instrument est gratuit : guitare, ukulélé, violon, mandoline, banjo, oud, erhu et bien d’autres.\n• Accordeur chromatique et stroboscopique précis au centième de demi-ton ; 132 accordages, de Drop D et Open G à DADGAD, plus les vôtres.\n• Détection automatique des cordes, cochées dès qu’elles sont accordées. Un seul balayage lit toutes les cordes et indique laquelle accorder d’abord.\n• Accordez au toucher : le téléphone pulse au rythme du battement entre la corde et sa note, ralentit à leur approche et s’arrête à l’accord juste. Inutile de regarder.\n• Guitares, basses, violon, violoncelle et mandoline en 3D, éclairés comme en studio, avec la cheville à tourner indiquée.\n• Capodastre, référence A4 réglable, noms de notes en solfège et sargam.\n\nAPPRENEZ EN JOUANT\n• 526 leçons dans 11 cours : guitare, ukulélé, basse, violon, violoncelle, mandoline, banjo, chant, oreille, théorie et rythme. Plus des recueils pour ukulélé, mandoline, violon, violoncelle et basse.\n• Timbre entend chaque coup : le bon accord, au bon moment, et la corde qui n’a pas sonné. Chaque note est évaluée au centième de demi-ton et à la milliseconde.\n• « Montrez-moi » joue chaque nouvel accord sur une guitare 3D, les doigts se posant dans l’ordre. La piste de notes ralentit pour vous, puis accélère à mesure que vous progressez.\n\nJOUEZ DES CHANSONS\n• Plus de 140 chansons en arrangements complets : des classiques de Jingle Bells à Amazing Grace, et 50 Originals écrits pour Timbre dans les styles actuels.\n• Jouez avec le groupe dans votre casque pendant que les paroles s’illuminent.\n• Vos chansons : collez ou importez une grille d’accords, transposez-la, faites-la défiler en rythme et écoutez l’original sur Apple Music à côté.\n\nGARDEZ L’ÉLAN\n• Étoiles, XP, quêtes quotidiennes, séries et badges.\n• Game Center : ligue Tir parfait hebdomadaire, classements de chansons et défis entre amis.\n• Apple Watch : métronome ressenti au poignet et aperçu de votre pratique du jour.\n• Widgets d’accueil et d’écran verrouillé, activité en direct et raccourcis Siri.\n• Métronome avec accents, subdivisions et entraînement au tempo ; bourdon, travail de justesse, bibliothèque d’accords et de gammes.\n• Oreille : direction des hauteurs, intervalles et types d’accords, plus un cours de 40 leçons.\n\nCOMMENCEZ GRATUITEMENT\nL’accordage standard de chaque instrument est gratuit ; guitare, basse, ukulélé, violon et violoncelle le sont dans tous les accordages. La première unité de chaque cours et une sélection de chansons sont gratuites aussi. Timbre Pro débloque toutes les leçons, chansons, tous les accordages et outils de pratique. Avec les notifications activées, Timbre vous rappelle la fin d’un essai gratuit deux jours avant.\n\nConfidentialité dès la conception : l’audio est analysé sur votre iPhone, jamais enregistré ni téléversé. Sans compte ni pub.\n\nLes abonnements se renouvellent automatiquement sauf résiliation au moins 24 heures avant la fin de la période. Gérez-les ou résiliez-les à tout moment dans Réglages → Compte Apple → Abonnements.\nConditions : https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\nConfidentialité : <privacy policy URL>",
+  "whats_new": "Bienvenue dans Timbre : un accordeur gratuit pour 60 instruments et 526 leçons qui vous écoutent jouer.",
+  "iphone_screenshot_captions": [
+    {
+      "capture": "10b-tune-locked",
+      "caption": "Accordeur gratuit. Sans pub.",
+      "supporting_line": "60 instruments, au centième de demi-ton"
+    },
+    {
+      "capture": "65-song-perform",
+      "caption": "Écoutez votre jeu",
+      "supporting_line": "Justesse et rythme de chaque note"
+    },
+    {
+      "capture": "52b-lesson-chord",
+      "caption": "Votre premier accord, ce jour",
+      "supporting_line": "Timbre entend chaque corde"
+    },
+    {
+      "capture": "31b-instruments-folk",
+      "caption": "Accordez votre instrument",
+      "supporting_line": "60 instruments, 132 accordages"
+    },
+    {
+      "capture": "63-songs",
+      "caption": "Jouez des chansons connues",
+      "supporting_line": "Plus de 140 chansons, classiques et Originals"
+    },
+    {
+      "capture": "50-learn",
+      "caption": "Apprenez à votre rythme",
+      "supporting_line": "526 leçons dans 11 cours"
+    },
+    {
+      "capture": "62-lesson-results",
+      "caption": "Cinq minutes par jour comptent",
+      "supporting_line": "Étoiles, séries et quêtes quotidiennes"
+    },
+    {
+      "capture": "11b-tune-strum",
+      "caption": "Un balayage, toutes les cordes",
+      "supporting_line": "Quelle corde accorder en premier ?"
+    },
+    {
+      "capture": "32-journey",
+      "caption": "Voyez vos progrès",
+      "supporting_line": "Précision, son des cordes, badges"
+    }
+  ],
+  "ipad_screenshot_captions": [
+    {
+      "capture": "ipad-landscape-tune",
+      "caption": "Accordeur gratuit. Sans pub.",
+      "supporting_line": "60 instruments, au centième de demi-ton"
+    },
+    {
+      "capture": "ipad-landscape-instruments",
+      "caption": "Accordez votre instrument",
+      "supporting_line": "Du violon à l’oud, du sitar à l’erhu"
+    },
+    {
+      "capture": "ipad-landscape-songs",
+      "caption": "Jouez des chansons connues",
+      "supporting_line": "Plus de 140 chansons, classiques et Originals"
+    },
+    {
+      "capture": "ipad-landscape-practice",
+      "caption": "Cinq minutes par jour comptent",
+      "supporting_line": "Programme quotidien, quêtes et jeux d’oreille"
+    }
+  ],
+  "app_preview_captions": {
+    "main": {
+      "lock": "Accordeur gratuit. Sans pub.",
+      "tuned": "Chaque corde vérifiée",
+      "showme": "Voyez le jeu en 3D",
+      "highway": "Jouez avec le groupe",
+      "results": "Écoutez votre résultat",
+      "songs": "Plus de 140 chansons à apprendre",
+      "end": "Accordez. Apprenez. Jouez.",
+      "end-note": "Accordeur gratuit · Sans pub · Sans compte"
+    },
+    "violin": {
+      "lock": "Accordez votre violon gratuitement",
+      "tuned": "G, D, A, E : tout est accordé",
+      "highway": "Jouez des chansons au violon",
+      "results": "Écoutez votre résultat",
+      "songs": "Plus de 140 chansons à apprendre",
+      "end": "Accordeur et leçons de violon",
+      "end-note": "Accordeur gratuit · Sans pub · Sans compte"
+    }
+  },
+  "iap_display_names": {
+    "timbre_pro_annual": "Timbre Pro, annuel",
+    "timbre_pro_monthly": "Timbre Pro, mensuel",
+    "timbre_plus_lifetime": "Timbre Pro, à vie"
+  },
+  "iap_descriptions": {
+    "timbre_pro_annual": "Tout : leçons, chansons, accordages et outils",
+    "timbre_pro_monthly": "Tout : leçons, chansons, accordages et outils",
+    "timbre_plus_lifetime": "Tout Pro, en un seul paiement"
+  },
+  "custom_product_page_keywords": {
+    "violin": [
+      "violon"
+    ],
+    "cello": [
+      "violoncelle"
+    ],
+    "ukulele": [
+      "ukulélé"
+    ]
+  },
+  "provenance": {
+    "regional_adaptation": "Canadian French editorial draft. Téléverser, compte Apple and neutral vous retained; no local pricing or unsupported regional claim. Native Canadian market review pending.",
+    "base_locale": "fr-FR",
+    "game_center_songs": "Existing Learn.strings title reused when present. Otherwise established/localized title drafted; other named musical works retain source titles, not a claim of app translation. Reconcile with later Learn imports before release.",
+    "game_center_app_reuse": {
+      "app_locale": "fr",
+      "reused_fields": [
+        "timbre.badge.first_tune:game_center_achievement_names",
+        "timbre.badge.full_tune:game_center_achievement_names",
+        "timbre.badge.streak_7:game_center_achievement_names",
+        "timbre.badge.strings_100:game_center_achievement_names",
+        "timbre.badge.bullseye:game_center_achievement_names",
+        "timbre.badge.sharpshooter:game_center_achievement_names",
+        "timbre.badge.golden_ear:game_center_achievement_names",
+        "timbre.badge.level_5:game_center_achievement_names",
+        "timbre.badge.multi:game_center_achievement_names",
+        "timbre.badge.streak_30:game_center_achievement_names",
+        "timbre.badge.strings_1000:game_center_achievement_names",
+        "timbre.badge.first_lesson:game_center_achievement_names",
+        "timbre.badge.lessons_25:game_center_achievement_names",
+        "timbre.badge.lessons_100:game_center_achievement_names",
+        "timbre.badge.perfect_10:game_center_achievement_names",
+        "timbre.badge.full_25:game_center_achievement_names",
+        "timbre.badge.streak_3:game_center_achievement_names",
+        "timbre.badge.streak_100:game_center_achievement_names",
+        "timbre.badge.minutes_60:game_center_achievement_names",
+        "timbre.badge.minutes_600:game_center_achievement_names",
+        "timbre.badge.daily_1:game_center_achievement_names",
+        "timbre.badge.daily_30:game_center_achievement_names",
+        "timbre.badge.sniper_win:game_center_achievement_names",
+        "timbre.badge.bullseyes_50:game_center_achievement_names",
+        "timbre.badge.ear_perfect:game_center_achievement_names",
+        "timbre.badge.ear_500:game_center_achievement_names",
+        "timbre.badge.units_1:game_center_achievement_names",
+        "timbre.badge.units_10:game_center_achievement_names",
+        "timbre.badge.course_done:game_center_achievement_names",
+        "timbre.badge.songs_1:game_center_achievement_names",
+        "timbre.badge.songs_25:game_center_achievement_names",
+        "timbre.badge.first_tune:game_center_achievement_descriptions",
+        "timbre.badge.full_tune:game_center_achievement_descriptions",
+        "timbre.badge.streak_7:game_center_achievement_descriptions",
+        "timbre.badge.strings_100:game_center_achievement_descriptions",
+        "timbre.badge.bullseye:game_center_achievement_descriptions",
+        "timbre.badge.sharpshooter:game_center_achievement_descriptions",
+        "timbre.badge.golden_ear:game_center_achievement_descriptions",
+        "timbre.badge.level_5:game_center_achievement_descriptions",
+        "timbre.badge.multi:game_center_achievement_descriptions",
+        "timbre.badge.streak_30:game_center_achievement_descriptions",
+        "timbre.badge.strings_1000:game_center_achievement_descriptions",
+        "timbre.badge.first_lesson:game_center_achievement_descriptions",
+        "timbre.badge.lessons_25:game_center_achievement_descriptions",
+        "timbre.badge.lessons_100:game_center_achievement_descriptions",
+        "timbre.badge.perfect_10:game_center_achievement_descriptions",
+        "timbre.badge.full_25:game_center_achievement_descriptions",
+        "timbre.badge.streak_3:game_center_achievement_descriptions",
+        "timbre.badge.streak_100:game_center_achievement_descriptions",
+        "timbre.badge.minutes_60:game_center_achievement_descriptions",
+        "timbre.badge.minutes_600:game_center_achievement_descriptions",
+        "timbre.badge.daily_1:game_center_achievement_descriptions",
+        "timbre.badge.daily_30:game_center_achievement_descriptions",
+        "timbre.badge.sniper_win:game_center_achievement_descriptions",
+        "timbre.badge.bullseyes_50:game_center_achievement_descriptions",
+        "timbre.badge.ear_perfect:game_center_achievement_descriptions",
+        "timbre.badge.ear_500:game_center_achievement_descriptions",
+        "timbre.badge.units_1:game_center_achievement_descriptions",
+        "timbre.badge.units_10:game_center_achievement_descriptions",
+        "timbre.badge.course_done:game_center_achievement_descriptions",
+        "timbre.badge.songs_1:game_center_achievement_descriptions",
+        "timbre.badge.songs_25:game_center_achievement_descriptions",
+        "timbre.song.twinkle",
+        "timbre.song.odetojoy",
+        "timbre.song.jinglebells",
+        "timbre.song.saints",
+        "timbre.song.kiteweather",
+        "timbre.song.dashboard",
+        "timbre.song.lochlomond",
+        "timbre.song.mountain"
+      ],
+      "note": "Available app values reused exactly; missing app values retain authored store drafts. Does not certify native or device review."
+    }
+  }
+}

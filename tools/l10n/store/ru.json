@@ -1,0 +1,320 @@
+{
+  "schema_version": 1,
+  "locale": "ru",
+  "counts": {
+    "instruments": 60,
+    "tunings": 132,
+    "courses": 11,
+    "lessons": 526,
+    "songs_floor": 140,
+    "originals": 50
+  },
+  "review": {
+    "text": "ai_drafted",
+    "native": "not_verified",
+    "market_search": "not_verified",
+    "device": "not_verified",
+    "screenshots": "not_captured",
+    "app_preview": "not_rendered",
+    "iap_account_limits": "not_verified",
+    "game_center_account": "not_verified",
+    "release_ready": false,
+    "blockers": [
+      "Production privacy policy URL and verification not provided",
+      "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+      "Localized App Preview recordings and audio/sync/render review pending",
+      "App Store Connect product/locale limits and Game Center configuration/images unverified"
+    ],
+    "semantic": "ai_cross_reviewed_critical_facts",
+    "legal_back_translation": "not_performed_optional_under_ai_policy",
+    "song_title_alignment": {
+      "state": "app_text_reused",
+      "pending_app_alignment": [],
+      "native_review": "not_verified"
+    },
+    "ai_cross_review": {
+      "scope": "Free tier, notification-conditioned two-day trial reminder, on-device never-recorded/uploaded audio, automatic renewal and 24-hour cancellation, anytime management, IAP benefits. Additional feature/count/terminology review for original nine and European/regional listings.",
+      "limitations": "AI review with inherited English source, not blinded back-translation, native-speaker, market, legal, account or visual approval."
+    },
+    "ai_source_aware": "reviewed",
+    "privacy_policy": "not_verified",
+    "review_policy": "ai_source_aware"
+  },
+  "game_center_leaderboard_names": {
+    "timbre.sniper.best": "В яблочко",
+    "timbre.sniper.weekly": "В яблочко на этой неделе",
+    "timbre.ear.level": "Уровень тренировки слуха",
+    "timbre.streak": "Серия занятий",
+    "timbre.song.twinkle": "Twinkle, Twinkle, Little Star",
+    "timbre.song.odetojoy": "Ода к радости",
+    "timbre.song.jinglebells": "Jingle Bells",
+    "timbre.song.saints": "Когда святые маршируют",
+    "timbre.song.kiteweather": "Погода для змеев",
+    "timbre.song.dashboard": "Пыль на приборной панели",
+    "timbre.song.lochlomond": "Loch Lomond",
+    "timbre.song.mountain": "She'll Be Coming 'Round the Mountain"
+  },
+  "game_center_achievement_names": {
+    "timbre.badge.first_tune": "Первая чистая струна",
+    "timbre.badge.full_tune": "Все шесть",
+    "timbre.badge.streak_7": "Идеальная неделя",
+    "timbre.badge.strings_100": "Сто струн",
+    "timbre.badge.bullseye": "В яблочко",
+    "timbre.badge.sharpshooter": "Рекордсмен",
+    "timbre.badge.golden_ear": "Золотой слух",
+    "timbre.badge.level_5": "Восходящая звезда",
+    "timbre.badge.multi": "Мультиинструменталист",
+    "timbre.badge.streak_30": "Месяц музыки",
+    "timbre.badge.strings_1000": "Тысяча струн",
+    "timbre.badge.first_lesson": "Первый урок",
+    "timbre.badge.lessons_25": "Постоянный ученик",
+    "timbre.badge.lessons_100": "Отличник",
+    "timbre.badge.perfect_10": "Безупречно",
+    "timbre.badge.full_25": "Привычка настраивать",
+    "timbre.badge.streak_3": "Разминка",
+    "timbre.badge.streak_100": "Сто дней",
+    "timbre.badge.minutes_60": "Первый час",
+    "timbre.badge.minutes_600": "Десять часов",
+    "timbre.badge.daily_1": "Ежедневный план",
+    "timbre.badge.daily_30": "Человек привычки",
+    "timbre.badge.sniper_win": "Победитель раунда",
+    "timbre.badge.bullseyes_50": "Точно в центр",
+    "timbre.badge.ear_perfect": "Без единой ошибки",
+    "timbre.badge.ear_500": "Мастер слуха",
+    "timbre.badge.units_1": "Раздел пройден",
+    "timbre.badge.units_10": "Десять разделов",
+    "timbre.badge.course_done": "Выпускник",
+    "timbre.badge.songs_1": "Первая песня",
+    "timbre.badge.songs_25": "Песенник"
+  },
+  "game_center_achievement_descriptions": {
+    "timbre.badge.first_tune": "Настройте свою первую струну",
+    "timbre.badge.full_tune": "Настройте все струны инструмента",
+    "timbre.badge.streak_7": "Занимайтесь семь дней подряд",
+    "timbre.badge.strings_100": "Настройте 100 струн",
+    "timbre.badge.bullseye": "Впервые попадите в яблочко",
+    "timbre.badge.sharpshooter": "Наберите 2 000 в игре «В яблочко»",
+    "timbre.badge.golden_ear": "Верно ответьте на 50 вопросов на слух",
+    "timbre.badge.level_5": "Достигните 5-го уровня",
+    "timbre.badge.multi": "Настройте три разных инструмента",
+    "timbre.badge.streak_30": "Занимайтесь тридцать дней подряд",
+    "timbre.badge.strings_1000": "Настройте 1 000 струн",
+    "timbre.badge.first_lesson": "Пройдите первый урок",
+    "timbre.badge.lessons_25": "Пройдите 25 уроков",
+    "timbre.badge.lessons_100": "Пройдите 100 уроков",
+    "timbre.badge.perfect_10": "Получите три звезды в 10 уроках",
+    "timbre.badge.full_25": "Настройте все струны 25 раз",
+    "timbre.badge.streak_3": "Занимайтесь три дня подряд",
+    "timbre.badge.streak_100": "Занимайтесь 100 дней подряд",
+    "timbre.badge.minutes_60": "Позанимайтесь в общей сложности один час",
+    "timbre.badge.minutes_600": "Позанимайтесь в общей сложности десять часов",
+    "timbre.badge.daily_1": "Выполните один ежедневный план",
+    "timbre.badge.daily_30": "Выполните 30 ежедневных планов",
+    "timbre.badge.sniper_win": "Выиграйте раунд в игре «В яблочко»",
+    "timbre.badge.bullseyes_50": "Попадите в яблочко 50 раз",
+    "timbre.badge.ear_perfect": "Ответьте верно на все десять вопросов раунда на слух",
+    "timbre.badge.ear_500": "Верно ответьте на 500 вопросов на слух",
+    "timbre.badge.units_1": "Пройдите все уроки раздела",
+    "timbre.badge.units_10": "Пройдите десять разделов",
+    "timbre.badge.course_done": "Пройдите курс целиком",
+    "timbre.badge.songs_1": "Сыграйте свою первую песню",
+    "timbre.badge.songs_25": "Сыграйте 25 песен"
+  },
+  "name": "Timbre: Тюнер для гитары",
+  "subtitle": "Уроки скрипки, укулеле и баса",
+  "keywords": "скрипка,виолончель,укулеле,мандолина,банджо,хроматический,стробоскоп,слух,метроном,аккорд",
+  "promotional_text": "Бесплатный тюнер без рекламы и аккаунта. Почувствуйте настройку каждой струны, затем учитесь с уроками, которые слушают, и играйте более 140 песен.",
+  "description": "Бесплатный тюнер. Без рекламы и аккаунта. А затем — уроки, которые слушают вашу игру.\n\nTimbre объединяет точный тюнер и учителя музыки. Настраивайте 60 инструментов и узнавайте, как именно вы сыграли.\n\nНАСТРАИВАЙТЕ БЕСПЛАТНО\n• Стандартный строй каждого инструмента бесплатен: гитара, укулеле, скрипка, мандолина, банджо, уд, эрху и другие.\n• Хроматический и стробоскопический тюнер с точностью до цента. 132 строя, от Drop D и Open G до DADGAD, плюс собственные.\n• Автоопределение струн с отметкой каждой настроенной. Один удар по струнам считывает их все и показывает, какую настроить первой.\n• Настройка на ощупь: телефон пульсирует в ритме биений между струной и целевой нотой, замедляется при сближении и замирает при совпадении. Можно не смотреть на экран.\n• 3D-гитары, басы, скрипка, виолончель и мандолина со студийным светом и подсказкой, какой колок повернуть.\n• Каподастр, регулируемый эталон A4, названия нот сольфеджио и саргам.\n\nУЧИТЕСЬ ИГРАЯ\n• 526 уроков в 11 курсах: гитара, укулеле, бас, скрипка, виолончель, мандолина, банджо, вокал, слух, теория музыки и ритм. Плюс песенники для укулеле, мандолины, скрипки, виолончели и баса.\n• Timbre слышит каждый удар: верный ли аккорд, вовремя ли он сыгран и какая струна не прозвучала. Каждая нота оценивается по высоте до цента и по времени до миллисекунды.\n• «Покажите» играет новый аккорд на 3D-гитаре, ставя пальцы по порядку. Дорожка нот замедляется под вас и ускоряется по мере роста навыка.\n\nИГРАЙТЕ ПЕСНИ\n• Более 140 песен в полных аранжировках: классика от Jingle Bells до Amazing Grace и 50 Originals, написанных для Timbre в современных стилях.\n• Играйте с группой в наушниках, пока подсвечиваются слова.\n• Ваши песни: вставляйте или импортируйте аккордовые схемы, транспонируйте, прокручивайте в темпе и слушайте рядом оригинал в Apple Music.\n\nПРОДОЛЖАЙТЕ\n• Звёзды, XP, ежедневные задания, серии дней и значки.\n• Game Center: еженедельная лига «В яблочко», таблицы лидеров песен и вызовы друзьям.\n• Apple Watch: метроном, ощутимый на запястье, и обзор сегодняшней практики.\n• Виджеты экрана «Домой» и блокировки, Live Activity и команды Siri.\n• Метроном с акцентами, делениями и тренировкой скорости; бурдон, тренажёр чистоты интонации, библиотека аккордов и гамм.\n• Слух: направление высоты, интервалы и виды аккордов, а также курс из 40 уроков.\n\nНАЧНИТЕ БЕСПЛАТНО\nСтандартный строй любого инструмента бесплатен. Гитара, бас, укулеле, скрипка и виолончель бесплатны во всех строях. Первый раздел каждого курса и подборка песен тоже бесплатны. Timbre Pro открывает все уроки, песни, строи и инструменты практики. Если уведомления включены, Timbre напоминает за два дня до окончания бесплатного пробного периода.\n\nКонфиденциальность по замыслу: звук анализируется на вашем iPhone, никогда не записывается и не загружается. Без аккаунта и рекламы.\n\nПодписка продлевается автоматически, если не отменить её минимум за 24 часа до конца периода. Управление и отмена в любое время: Настройки → Аккаунт Apple → Подписки.\nУсловия: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\nКонфиденциальность: <privacy policy URL>",
+  "whats_new": "Добро пожаловать в Timbre: бесплатный тюнер для 60 инструментов и 526 уроков, которые слушают вашу игру.",
+  "iphone_screenshot_captions": [
+    {
+      "capture": "10b-tune-locked",
+      "caption": "Тюнер бесплатно. Без рекламы.",
+      "supporting_line": "60 инструментов, с точностью до цента"
+    },
+    {
+      "capture": "65-song-perform",
+      "caption": "Услышьте, как вы сыграли",
+      "supporting_line": "Высота и ритм каждой ноты"
+    },
+    {
+      "capture": "52b-lesson-chord",
+      "caption": "Первый аккорд уже сегодня",
+      "supporting_line": "Timbre слышит каждую струну"
+    },
+    {
+      "capture": "31b-instruments-folk",
+      "caption": "Настройте свой инструмент",
+      "supporting_line": "60 инструментов, 132 строя"
+    },
+    {
+      "capture": "63-songs",
+      "caption": "Играйте знакомые песни",
+      "supporting_line": "Более 140 песен: классика и Originals"
+    },
+    {
+      "capture": "50-learn",
+      "caption": "Учитесь в своём темпе",
+      "supporting_line": "526 уроков в 11 курсах"
+    },
+    {
+      "capture": "62-lesson-results",
+      "caption": "Пять минут в день дают рост",
+      "supporting_line": "Звёзды, серии и ежедневные задания"
+    },
+    {
+      "capture": "11b-tune-strum",
+      "caption": "Один удар — все струны",
+      "supporting_line": "Какая струна требует настройки первой"
+    },
+    {
+      "capture": "32-journey",
+      "caption": "Наблюдайте свой прогресс",
+      "supporting_line": "Точность, звучание струн, значки"
+    }
+  ],
+  "ipad_screenshot_captions": [
+    {
+      "capture": "ipad-landscape-tune",
+      "caption": "Тюнер бесплатно. Без рекламы.",
+      "supporting_line": "60 инструментов, с точностью до цента"
+    },
+    {
+      "capture": "ipad-landscape-instruments",
+      "caption": "Настройте свой инструмент",
+      "supporting_line": "От скрипки до уда, от ситара до эрху"
+    },
+    {
+      "capture": "ipad-landscape-songs",
+      "caption": "Играйте знакомые песни",
+      "supporting_line": "Более 140 песен: классика и Originals"
+    },
+    {
+      "capture": "ipad-landscape-practice",
+      "caption": "Пять минут в день дают рост",
+      "supporting_line": "Ежедневные упражнения, задания и игры на слух"
+    }
+  ],
+  "app_preview_captions": {
+    "main": {
+      "lock": "Тюнер бесплатно. Без рекламы.",
+      "tuned": "Каждая струна проверена",
+      "showme": "Посмотрите исполнение в 3D",
+      "highway": "Играйте песни с группой",
+      "results": "Услышьте свой результат",
+      "songs": "Более 140 песен для обучения",
+      "end": "Настраивайте. Учитесь. Играйте.",
+      "end-note": "Бесплатный тюнер · Без рекламы и аккаунта"
+    },
+    "violin": {
+      "lock": "Настройте скрипку бесплатно",
+      "tuned": "G, D, A, E: всё настроено",
+      "highway": "Играйте песни на скрипке",
+      "results": "Услышьте свой результат",
+      "songs": "Более 140 песен для обучения",
+      "end": "Тюнер и уроки для скрипки",
+      "end-note": "Бесплатный тюнер · Без рекламы и аккаунта"
+    }
+  },
+  "iap_display_names": {
+    "timbre_pro_annual": "Timbre Pro, на год",
+    "timbre_pro_monthly": "Timbre Pro, на месяц",
+    "timbre_plus_lifetime": "Timbre Pro, навсегда"
+  },
+  "iap_descriptions": {
+    "timbre_pro_annual": "Все уроки, песни, строи и средства практики",
+    "timbre_pro_monthly": "Все уроки, песни, строи и средства практики",
+    "timbre_plus_lifetime": "Всё в Pro за один платёж"
+  },
+  "custom_product_page_keywords": {
+    "violin": [
+      "скрипка"
+    ],
+    "cello": [
+      "виолончель"
+    ],
+    "ukulele": [
+      "укулеле"
+    ]
+  },
+  "provenance": {
+    "game_center": "Badge text reused from matching app Localizable.strings; song board titles reused from Learn.strings. Newly renamed badge/board text authored for this store draft. No native review claimed.",
+    "game_center_songs": "Existing Learn.strings title reused when present. Otherwise established/localized title drafted; other named musical works retain source titles, not a claim of app translation. Reconcile with later Learn imports before release.",
+    "game_center_app_reuse": {
+      "app_locale": "ru",
+      "reused_fields": [
+        "timbre.badge.first_tune:game_center_achievement_names",
+        "timbre.badge.full_tune:game_center_achievement_names",
+        "timbre.badge.streak_7:game_center_achievement_names",
+        "timbre.badge.strings_100:game_center_achievement_names",
+        "timbre.badge.bullseye:game_center_achievement_names",
+        "timbre.badge.sharpshooter:game_center_achievement_names",
+        "timbre.badge.golden_ear:game_center_achievement_names",
+        "timbre.badge.level_5:game_center_achievement_names",
+        "timbre.badge.multi:game_center_achievement_names",
+        "timbre.badge.streak_30:game_center_achievement_names",
+        "timbre.badge.strings_1000:game_center_achievement_names",
+        "timbre.badge.first_lesson:game_center_achievement_names",
+        "timbre.badge.lessons_25:game_center_achievement_names",
+        "timbre.badge.lessons_100:game_center_achievement_names",
+        "timbre.badge.perfect_10:game_center_achievement_names",
+        "timbre.badge.full_25:game_center_achievement_names",
+        "timbre.badge.streak_3:game_center_achievement_names",
+        "timbre.badge.streak_100:game_center_achievement_names",
+        "timbre.badge.minutes_60:game_center_achievement_names",
+        "timbre.badge.minutes_600:game_center_achievement_names",
+        "timbre.badge.daily_1:game_center_achievement_names",
+        "timbre.badge.daily_30:game_center_achievement_names",
+        "timbre.badge.sniper_win:game_center_achievement_names",
+        "timbre.badge.bullseyes_50:game_center_achievement_names",
+        "timbre.badge.ear_perfect:game_center_achievement_names",
+        "timbre.badge.ear_500:game_center_achievement_names",
+        "timbre.badge.units_1:game_center_achievement_names",
+        "timbre.badge.units_10:game_center_achievement_names",
+        "timbre.badge.course_done:game_center_achievement_names",
+        "timbre.badge.songs_1:game_center_achievement_names",
+        "timbre.badge.songs_25:game_center_achievement_names",
+        "timbre.badge.first_tune:game_center_achievement_descriptions",
+        "timbre.badge.full_tune:game_center_achievement_descriptions",
+        "timbre.badge.streak_7:game_center_achievement_descriptions",
+        "timbre.badge.strings_100:game_center_achievement_descriptions",
+        "timbre.badge.bullseye:game_center_achievement_descriptions",
+        "timbre.badge.sharpshooter:game_center_achievement_descriptions",
+        "timbre.badge.golden_ear:game_center_achievement_descriptions",
+        "timbre.badge.level_5:game_center_achievement_descriptions",
+        "timbre.badge.multi:game_center_achievement_descriptions",
+        "timbre.badge.streak_30:game_center_achievement_descriptions",
+        "timbre.badge.strings_1000:game_center_achievement_descriptions",
+        "timbre.badge.first_lesson:game_center_achievement_descriptions",
+        "timbre.badge.lessons_25:game_center_achievement_descriptions",
+        "timbre.badge.lessons_100:game_center_achievement_descriptions",
+        "timbre.badge.perfect_10:game_center_achievement_descriptions",
+        "timbre.badge.full_25:game_center_achievement_descriptions",
+        "timbre.badge.streak_3:game_center_achievement_descriptions",
+        "timbre.badge.streak_100:game_center_achievement_descriptions",
+        "timbre.badge.minutes_60:game_center_achievement_descriptions",
+        "timbre.badge.minutes_600:game_center_achievement_descriptions",
+        "timbre.badge.daily_1:game_center_achievement_descriptions",
+        "timbre.badge.daily_30:game_center_achievement_descriptions",
+        "timbre.badge.sniper_win:game_center_achievement_descriptions",
+        "timbre.badge.bullseyes_50:game_center_achievement_descriptions",
+        "timbre.badge.ear_perfect:game_center_achievement_descriptions",
+        "timbre.badge.ear_500:game_center_achievement_descriptions",
+        "timbre.badge.units_1:game_center_achievement_descriptions",
+        "timbre.badge.units_10:game_center_achievement_descriptions",
+        "timbre.badge.course_done:game_center_achievement_descriptions",
+        "timbre.badge.songs_1:game_center_achievement_descriptions",
+        "timbre.badge.songs_25:game_center_achievement_descriptions",
+        "timbre.song.twinkle",
+        "timbre.song.odetojoy",
+        "timbre.song.jinglebells",
+        "timbre.song.saints",
+        "timbre.song.kiteweather",
+        "timbre.song.dashboard",
+        "timbre.song.lochlomond",
+        "timbre.song.mountain"
+      ],
+      "note": "Available app values reused exactly; missing app values retain authored store drafts. Does not certify native or device review."
+    }
+  }
+}

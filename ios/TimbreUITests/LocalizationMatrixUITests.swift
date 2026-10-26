@@ -39,6 +39,9 @@ final class LocalizationMatrixUITests: XCTestCase {
                 XCTAssertTrue(element.waitForExistence(timeout: 5), "\(language): missing translated \(field)")
             }
             capture(application, name: "l10n-\(language)-welcome")
+            if language == "bg" {
+                try assertNoClipping(application, identifiers: ["onboarding.headline"], labels: [try XCTUnwrap(labels["headline"])])
+            }
             application.terminate()
             application.launchEnvironment["TIMBRE_SKIP_ONBOARDING"] = "1"
             application.launch()
@@ -49,8 +52,37 @@ final class LocalizationMatrixUITests: XCTestCase {
                 XCTAssertTrue(tabs.buttons[value].exists, "\(language): missing translated tab \(field)")
             }
             capture(application, name: "l10n-\(language)-tuner")
+            if language == "bg" { try assertInstrumentFits(application) }
             application.terminate()
+            if language == "bg" {
+                application.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
+                application.launch()
+                let instrument = application.buttons["tune.instrument"]
+                XCTAssertTrue(instrument.waitForExistence(timeout: 30))
+                capture(application, name: "l10n-\(language)-tuner-ax5")
+                try assertInstrumentFits(application)
+                application.terminate()
+            }
             print("TIMBRE_L10N_MATRIX_TESTED \(language)")
+        }
+    }
+
+    private func assertInstrumentFits(_ app: XCUIApplication) throws {
+        let instrument = app.buttons["tune.instrument"]
+        let settings = app.buttons["settings.open"]
+        XCTAssertTrue(instrument.isHittable)
+        XCTAssertTrue(settings.isHittable)
+        XCTAssertFalse(instrument.frame.intersects(settings.frame), "The title and settings must not overlap")
+        XCTAssertGreaterThanOrEqual(instrument.frame.minX, app.frame.minX)
+        XCTAssertLessThanOrEqual(instrument.frame.maxX, app.frame.maxX)
+        try assertNoClipping(app, identifiers: ["tune.instrument", "tune.instrument.name"], labels: [instrument.label])
+    }
+
+    /// Keep the clipping gate scoped to the labels under test; the screenshot also needs visual inspection.
+    private func assertNoClipping(_ app: XCUIApplication, identifiers: Set<String>, labels: Set<String>) throws {
+        try app.performAccessibilityAudit(for: .textClipped) { issue in
+            let snapshot = try? issue.element?.snapshot()
+            return !identifiers.contains(snapshot?.identifier ?? "") && !labels.contains(snapshot?.label ?? "")
         }
     }
 

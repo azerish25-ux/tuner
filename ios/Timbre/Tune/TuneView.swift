@@ -208,11 +208,17 @@ struct TuneView: View {
     }
 
     private var header: some View {
-        HStack(alignment: .center, spacing: 8) {
+        // Longer instrument names wrap; at accessibility sizes the controls leave them the full width.
+        let layout = dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 8))
+            : AnyLayout(HStackLayout(alignment: .center, spacing: 8))
+        return layout {
             VStack(alignment: .leading, spacing: 2) {
                 Button { store.showInstrumentPicker = true } label: {
                     HStack(spacing: 6) {
-                        Text(store.instrumentDisplayName).font(.title3.weight(.semibold)).foregroundStyle(Palette.ink).lineLimit(1)
+                        Text(store.instrumentDisplayName).font(.title3.weight(.semibold)).foregroundStyle(Palette.ink)
+                            .multilineTextAlignment(.leading).fixedSize(horizontal: false, vertical: true)
+                            .accessibilityIdentifier("tune.instrument.name")
                         Image(systemName: "chevron.down").font(.caption.weight(.bold)).foregroundStyle(Palette.inkSoft)
                     }
                     .contentShape(Rectangle())
@@ -221,7 +227,7 @@ struct TuneView: View {
                 .accessibilityIdentifier("tune.instrument")
                 tuningLine
             }
-            Spacer(minLength: 4)
+            .frame(maxWidth: .infinity, alignment: .leading)
             // The cluster every tab shares (streak and level, both to Progress), then the tuner's own settings:
             // 44 pt targets throughout. The simple tuner keeps only the settings.
             HStack(spacing: 2) {

@@ -191,7 +191,8 @@ def prompt(repo, loc, batch_path, glossary_path):
     table = report.read_strings(repo / f"ios/Timbre/Resources/{loc}.lproj/Localizable.strings")
     lines = [f"- {json.dumps(k, ensure_ascii=False)} → {json.dumps(table[k], ensure_ascii=False)}" for k in ANCHORS if k in table]
     if batch["kind"] == "lessons":
-        learned = json.loads((repo / "tools/l10n/learn" / f"{loc}.json").read_text(encoding="utf-8"))
+        learn_path = repo / "tools/l10n/learn" / f"{loc}.json"
+        learned = json.loads(learn_path.read_text(encoding="utf-8")) if learn_path.exists() else {}
         english = report.read_strings(repo / "ios/Timbre/Resources/en.lproj/Learn.strings")
         picked = [(english[k], learned[k]) for k in english if learned.get(k) and 80 <= len(english[k]) <= 220][:6]
         lines += [f"- {json.dumps(e, ensure_ascii=False)} → {json.dumps(t, ensure_ascii=False)}" for e, t in picked]

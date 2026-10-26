@@ -1,0 +1,320 @@
+{
+  "schema_version": 1,
+  "locale": "pt-BR",
+  "counts": {
+    "instruments": 60,
+    "tunings": 132,
+    "courses": 11,
+    "lessons": 526,
+    "songs_floor": 140,
+    "originals": 50
+  },
+  "review": {
+    "text": "ai_drafted",
+    "native": "not_verified",
+    "market_search": "not_verified",
+    "device": "not_verified",
+    "screenshots": "not_captured",
+    "app_preview": "not_rendered",
+    "iap_account_limits": "not_verified",
+    "game_center_account": "not_verified",
+    "release_ready": false,
+    "blockers": [
+      "Production privacy policy URL and verification not provided",
+      "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+      "Localized App Preview recordings and audio/sync/render review pending",
+      "App Store Connect product/locale limits and Game Center configuration/images unverified"
+    ],
+    "semantic": "ai_cross_reviewed_critical_facts",
+    "legal_back_translation": "not_performed_optional_under_ai_policy",
+    "song_title_alignment": {
+      "state": "app_text_reused",
+      "pending_app_alignment": [],
+      "native_review": "not_verified"
+    },
+    "ai_cross_review": {
+      "scope": "Free tier, notification-conditioned two-day trial reminder, on-device never-recorded/uploaded audio, automatic renewal and 24-hour cancellation, anytime management, IAP benefits. Additional feature/count/terminology review for original nine and European/regional listings.",
+      "limitations": "AI review with inherited English source, not blinded back-translation, native-speaker, market, legal, account or visual approval."
+    },
+    "ai_source_aware": "reviewed",
+    "privacy_policy": "not_verified",
+    "review_policy": "ai_source_aware"
+  },
+  "game_center_leaderboard_names": {
+    "timbre.sniper.best": "Na mosca",
+    "timbre.sniper.weekly": "Na mosca nesta semana",
+    "timbre.ear.level": "Nível de percepção musical",
+    "timbre.streak": "Sequência de prática",
+    "timbre.song.twinkle": "Brilha, Brilha, Estrelinha",
+    "timbre.song.odetojoy": "Ode à Alegria",
+    "timbre.song.jinglebells": "Jingle Bells",
+    "timbre.song.saints": "When the Saints Go Marching In",
+    "timbre.song.kiteweather": "Dia de Pipa",
+    "timbre.song.dashboard": "Poeira no Painel",
+    "timbre.song.lochlomond": "Loch Lomond",
+    "timbre.song.mountain": "She'll Be Coming 'Round the Mountain"
+  },
+  "game_center_achievement_names": {
+    "timbre.badge.first_tune": "Afinada de primeira",
+    "timbre.badge.full_tune": "Todas as seis",
+    "timbre.badge.streak_7": "Semana perfeita",
+    "timbre.badge.strings_100": "Cem cordas",
+    "timbre.badge.bullseye": "Na mosca",
+    "timbre.badge.sharpshooter": "Pontuação alta",
+    "timbre.badge.golden_ear": "Ouvido de ouro",
+    "timbre.badge.level_5": "Estrela em ascensão",
+    "timbre.badge.multi": "Multi-instrumentista",
+    "timbre.badge.streak_30": "Mês de música",
+    "timbre.badge.strings_1000": "Mil cordas",
+    "timbre.badge.first_lesson": "Primeira lição",
+    "timbre.badge.lessons_25": "Constante",
+    "timbre.badge.lessons_100": "Estudioso",
+    "timbre.badge.perfect_10": "Impecável",
+    "timbre.badge.full_25": "Rotina de afinação",
+    "timbre.badge.streak_3": "Aquecendo",
+    "timbre.badge.streak_100": "Cem dias",
+    "timbre.badge.minutes_60": "Primeira hora",
+    "timbre.badge.minutes_600": "Dez horas",
+    "timbre.badge.daily_1": "Plano diário",
+    "timbre.badge.daily_30": "Animal de hábitos",
+    "timbre.badge.sniper_win": "Vencedor da rodada",
+    "timbre.badge.bullseyes_50": "Bem no centro",
+    "timbre.badge.ear_perfect": "Nota máxima",
+    "timbre.badge.ear_500": "Mestre da audição",
+    "timbre.badge.units_1": "Unidade concluída",
+    "timbre.badge.units_10": "Dez unidades",
+    "timbre.badge.course_done": "Formatura",
+    "timbre.badge.songs_1": "Primeira música",
+    "timbre.badge.songs_25": "Cancioneiro"
+  },
+  "game_center_achievement_descriptions": {
+    "timbre.badge.first_tune": "Afine sua primeira corda",
+    "timbre.badge.full_tune": "Afine todas as cordas de um instrumento",
+    "timbre.badge.streak_7": "Pratique sete dias seguidos",
+    "timbre.badge.strings_100": "Afine 100 cordas",
+    "timbre.badge.bullseye": "Acerte seu primeiro alvo na mosca",
+    "timbre.badge.sharpshooter": "Faça 2.000 pontos em Na mosca",
+    "timbre.badge.golden_ear": "Acerte 50 perguntas auditivas",
+    "timbre.badge.level_5": "Alcance o nível 5",
+    "timbre.badge.multi": "Afine três instrumentos diferentes",
+    "timbre.badge.streak_30": "Pratique trinta dias seguidos",
+    "timbre.badge.strings_1000": "Afine 1.000 cordas",
+    "timbre.badge.first_lesson": "Conclua sua primeira lição",
+    "timbre.badge.lessons_25": "Conclua 25 lições",
+    "timbre.badge.lessons_100": "Conclua 100 lições",
+    "timbre.badge.perfect_10": "Ganhe três estrelas em 10 lições",
+    "timbre.badge.full_25": "Afine todas as cordas 25 vezes",
+    "timbre.badge.streak_3": "Pratique três dias seguidos",
+    "timbre.badge.streak_100": "Pratique 100 dias seguidos",
+    "timbre.badge.minutes_60": "Pratique uma hora no total",
+    "timbre.badge.minutes_600": "Pratique dez horas no total",
+    "timbre.badge.daily_1": "Conclua um plano diário",
+    "timbre.badge.daily_30": "Conclua 30 planos diários",
+    "timbre.badge.sniper_win": "Vença uma rodada de Na mosca",
+    "timbre.badge.bullseyes_50": "Acerte 50 vezes na mosca",
+    "timbre.badge.ear_perfect": "Acerte as dez perguntas de uma rodada auditiva",
+    "timbre.badge.ear_500": "Acerte 500 perguntas auditivas",
+    "timbre.badge.units_1": "Conclua todas as lições de uma unidade",
+    "timbre.badge.units_10": "Conclua dez unidades",
+    "timbre.badge.course_done": "Conclua um curso inteiro",
+    "timbre.badge.songs_1": "Toque sua primeira música",
+    "timbre.badge.songs_25": "Toque 25 músicas"
+  },
+  "name": "Timbre: Afinador de Violão",
+  "subtitle": "Aulas: ukulele, violino, baixo",
+  "keywords": "violino,violoncelo,ukulele,bandolim,banjo,cromático,estroboscópio,ouvido,metrônomo,acorde",
+  "promotional_text": "Afinador grátis, sem anúncios nem conta. Sinta cada corda se afinar e aprenda com aulas que ouvem você tocar e mais de 140 músicas.",
+  "description": "Afinador grátis, sem anúncios nem conta. Depois, aulas que ouvem você tocar.\n\nTimbre reúne um afinador preciso e um professor de música. Afine 60 instrumentos e saiba exatamente como foi sua execução.\n\nAFINE DE GRAÇA\n• A afinação padrão de cada instrumento é grátis: violão, ukulele, violino, bandolim, banjo, oud, erhu e mais.\n• Afinador cromático e estroboscópico com precisão em cents; 132 afinações, de Drop D e Open G a DADGAD, além das suas.\n• Detecção automática de cordas, com marcação ao afinar cada uma. Uma batida lê todas as cordas e indica qual afinar primeiro.\n• Afine pelo tato: o celular pulsa com o batimento entre a corda e a nota, desacelera quando se aproximam e para ao afinar. Assim, você afina sem olhar.\n• Violões, baixos, violino, violoncelo e bandolim em 3D com iluminação de estúdio e indicação da tarraxa a girar.\n• Capotraste, referência A4 ajustável e nomes de notas em solfejo e sargam.\n\nAPRENDA TOCANDO\n• 526 aulas em 11 cursos: violão, ukulele, baixo, violino, violoncelo, bandolim, banjo, canto, percepção musical, teoria e ritmo. Mais cancioneiros para ukulele, bandolim, violino, violoncelo e baixo.\n• Timbre ouve cada batida: o acorde certo, no tempo e qual corda não soou. Cada nota é avaliada em cents e milissegundos enquanto você toca.\n• “Mostre-me” toca cada novo acorde em um violão 3D, com os dedos pousando em ordem. A pista de notas desacelera para você e volta a acelerar conforme você melhora.\n\nTOQUE MÚSICAS\n• Mais de 140 músicas com arranjos completos: clássicos de Jingle Bells a Amazing Grace e 50 Originals escritos para Timbre em estilos atuais.\n• Toque com a banda nos fones enquanto a letra se ilumina.\n• Suas músicas: cole ou importe uma cifra, transponha, role no ritmo e ouça o original ao lado no Apple Music.\n\nMANTENHA O RITMO\n• Estrelas, XP, missões diárias, sequências e conquistas.\n• Game Center: liga semanal de Na mosca, classificações de músicas e desafios entre amigos.\n• Apple Watch: metrônomo que você sente no pulso e resumo da prática de hoje.\n• Widgets na Tela de Início e Bloqueada, Atividade ao Vivo e atalhos da Siri.\n• Metrônomo com acentos, subdivisões e treino de velocidade; nota pedal, treino de afinação e biblioteca de acordes e escalas.\n• Percepção musical: direção da altura, intervalos e tipos de acordes, além de um curso de 40 aulas.\n\nCOMECE GRÁTIS\nA afinação padrão de todo instrumento é grátis; violão, baixo, ukulele, violino e violoncelo são grátis em todas as afinações. A primeira unidade de cada curso e uma seleção de músicas também são grátis. Timbre Pro libera todas as aulas, músicas, afinações e ferramentas de prática. Com as notificações ativadas, Timbre avisa dois dias antes do fim de um teste grátis.\n\nPrivacidade desde o início: o áudio é analisado no iPhone, nunca gravado nem enviado. Sem conta nem anúncios.\n\nAssinaturas são renovadas automaticamente, a menos que sejam canceladas pelo menos 24 horas antes do fim do período. Gerencie ou cancele a qualquer momento em Ajustes → Conta Apple → Assinaturas.\nTermos: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\nPrivacidade: <privacy policy URL>",
+  "whats_new": "Boas-vindas ao Timbre: afinador grátis para 60 instrumentos e 526 aulas que ouvem você tocar.",
+  "iphone_screenshot_captions": [
+    {
+      "capture": "10b-tune-locked",
+      "caption": "Afinador grátis. Sem anúncios.",
+      "supporting_line": "60 instrumentos, precisão em cents"
+    },
+    {
+      "capture": "65-song-perform",
+      "caption": "Ouça como você tocou",
+      "supporting_line": "Altura e tempo de cada nota"
+    },
+    {
+      "capture": "52b-lesson-chord",
+      "caption": "Seu primeiro acorde, hoje",
+      "supporting_line": "Timbre ouve cada corda"
+    },
+    {
+      "capture": "31b-instruments-folk",
+      "caption": "Afine o que você toca",
+      "supporting_line": "60 instrumentos, 132 afinações"
+    },
+    {
+      "capture": "63-songs",
+      "caption": "Toque músicas conhecidas",
+      "supporting_line": "Mais de 140 músicas: clássicos e Originals"
+    },
+    {
+      "capture": "50-learn",
+      "caption": "Aprenda no seu ritmo",
+      "supporting_line": "526 aulas em 11 cursos"
+    },
+    {
+      "capture": "62-lesson-results",
+      "caption": "Cinco minutos por dia contam",
+      "supporting_line": "Estrelas, sequências e missões diárias"
+    },
+    {
+      "capture": "11b-tune-strum",
+      "caption": "Uma batida, todas as cordas",
+      "supporting_line": "Veja qual corda afinar primeiro"
+    },
+    {
+      "capture": "32-journey",
+      "caption": "Veja sua evolução",
+      "supporting_line": "Precisão, som das cordas, conquistas"
+    }
+  ],
+  "ipad_screenshot_captions": [
+    {
+      "capture": "ipad-landscape-tune",
+      "caption": "Afinador grátis. Sem anúncios.",
+      "supporting_line": "60 instrumentos, precisão em cents"
+    },
+    {
+      "capture": "ipad-landscape-instruments",
+      "caption": "Afine o que você toca",
+      "supporting_line": "Do violino ao oud, do sitar ao erhu"
+    },
+    {
+      "capture": "ipad-landscape-songs",
+      "caption": "Toque músicas conhecidas",
+      "supporting_line": "Mais de 140 músicas: clássicos e Originals"
+    },
+    {
+      "capture": "ipad-landscape-practice",
+      "caption": "Cinco minutos por dia contam",
+      "supporting_line": "Rotina diária, missões e jogos de ouvido"
+    }
+  ],
+  "app_preview_captions": {
+    "main": {
+      "lock": "Afinador grátis. Sem anúncios.",
+      "tuned": "Cada corda conferida",
+      "showme": "Veja como tocar em 3D",
+      "highway": "Toque músicas com a banda",
+      "results": "Ouça seu resultado",
+      "songs": "Mais de 140 músicas para aprender",
+      "end": "Afine. Aprenda. Toque músicas.",
+      "end-note": "Afinador grátis · Sem anúncios · Sem conta"
+    },
+    "violin": {
+      "lock": "Afine seu violino grátis",
+      "tuned": "G, D, A, E: tudo afinado",
+      "highway": "Toque músicas no violino",
+      "results": "Ouça seu resultado",
+      "songs": "Mais de 140 músicas para aprender",
+      "end": "Afinador e aulas de violino",
+      "end-note": "Afinador grátis · Sem anúncios · Sem conta"
+    }
+  },
+  "iap_display_names": {
+    "timbre_pro_annual": "Timbre Pro, anual",
+    "timbre_pro_monthly": "Timbre Pro, mensal",
+    "timbre_plus_lifetime": "Timbre Pro, vitalício"
+  },
+  "iap_descriptions": {
+    "timbre_pro_annual": "Todas as aulas, canções, afinações e recursos",
+    "timbre_pro_monthly": "Todas as aulas, canções, afinações e recursos",
+    "timbre_plus_lifetime": "Tudo no Pro, pago uma vez"
+  },
+  "custom_product_page_keywords": {
+    "violin": [
+      "violino"
+    ],
+    "cello": [
+      "violoncelo"
+    ],
+    "ukulele": [
+      "ukulele"
+    ]
+  },
+  "provenance": {
+    "game_center": "Badge text reused from matching app Localizable.strings; song board titles reused from Learn.strings. Newly renamed badge/board text authored for this store draft. No native review claimed.",
+    "game_center_songs": "Existing Learn.strings title reused when present. Otherwise established/localized title drafted; other named musical works retain source titles, not a claim of app translation. Reconcile with later Learn imports before release.",
+    "game_center_app_reuse": {
+      "app_locale": "pt",
+      "reused_fields": [
+        "timbre.badge.first_tune:game_center_achievement_names",
+        "timbre.badge.full_tune:game_center_achievement_names",
+        "timbre.badge.streak_7:game_center_achievement_names",
+        "timbre.badge.strings_100:game_center_achievement_names",
+        "timbre.badge.bullseye:game_center_achievement_names",
+        "timbre.badge.sharpshooter:game_center_achievement_names",
+        "timbre.badge.golden_ear:game_center_achievement_names",
+        "timbre.badge.level_5:game_center_achievement_names",
+        "timbre.badge.multi:game_center_achievement_names",
+        "timbre.badge.streak_30:game_center_achievement_names",
+        "timbre.badge.strings_1000:game_center_achievement_names",
+        "timbre.badge.first_lesson:game_center_achievement_names",
+        "timbre.badge.lessons_25:game_center_achievement_names",
+        "timbre.badge.lessons_100:game_center_achievement_names",
+        "timbre.badge.perfect_10:game_center_achievement_names",
+        "timbre.badge.full_25:game_center_achievement_names",
+        "timbre.badge.streak_3:game_center_achievement_names",
+        "timbre.badge.streak_100:game_center_achievement_names",
+        "timbre.badge.minutes_60:game_center_achievement_names",
+        "timbre.badge.minutes_600:game_center_achievement_names",
+        "timbre.badge.daily_1:game_center_achievement_names",
+        "timbre.badge.daily_30:game_center_achievement_names",
+        "timbre.badge.sniper_win:game_center_achievement_names",
+        "timbre.badge.bullseyes_50:game_center_achievement_names",
+        "timbre.badge.ear_perfect:game_center_achievement_names",
+        "timbre.badge.ear_500:game_center_achievement_names",
+        "timbre.badge.units_1:game_center_achievement_names",
+        "timbre.badge.units_10:game_center_achievement_names",
+        "timbre.badge.course_done:game_center_achievement_names",
+        "timbre.badge.songs_1:game_center_achievement_names",
+        "timbre.badge.songs_25:game_center_achievement_names",
+        "timbre.badge.first_tune:game_center_achievement_descriptions",
+        "timbre.badge.full_tune:game_center_achievement_descriptions",
+        "timbre.badge.streak_7:game_center_achievement_descriptions",
+        "timbre.badge.strings_100:game_center_achievement_descriptions",
+        "timbre.badge.bullseye:game_center_achievement_descriptions",
+        "timbre.badge.sharpshooter:game_center_achievement_descriptions",
+        "timbre.badge.golden_ear:game_center_achievement_descriptions",
+        "timbre.badge.level_5:game_center_achievement_descriptions",
+        "timbre.badge.multi:game_center_achievement_descriptions",
+        "timbre.badge.streak_30:game_center_achievement_descriptions",
+        "timbre.badge.strings_1000:game_center_achievement_descriptions",
+        "timbre.badge.first_lesson:game_center_achievement_descriptions",
+        "timbre.badge.lessons_25:game_center_achievement_descriptions",
+        "timbre.badge.lessons_100:game_center_achievement_descriptions",
+        "timbre.badge.perfect_10:game_center_achievement_descriptions",
+        "timbre.badge.full_25:game_center_achievement_descriptions",
+        "timbre.badge.streak_3:game_center_achievement_descriptions",
+        "timbre.badge.streak_100:game_center_achievement_descriptions",
+        "timbre.badge.minutes_60:game_center_achievement_descriptions",
+        "timbre.badge.minutes_600:game_center_achievement_descriptions",
+        "timbre.badge.daily_1:game_center_achievement_descriptions",
+        "timbre.badge.daily_30:game_center_achievement_descriptions",
+        "timbre.badge.sniper_win:game_center_achievement_descriptions",
+        "timbre.badge.bullseyes_50:game_center_achievement_descriptions",
+        "timbre.badge.ear_perfect:game_center_achievement_descriptions",
+        "timbre.badge.ear_500:game_center_achievement_descriptions",
+        "timbre.badge.units_1:game_center_achievement_descriptions",
+        "timbre.badge.units_10:game_center_achievement_descriptions",
+        "timbre.badge.course_done:game_center_achievement_descriptions",
+        "timbre.badge.songs_1:game_center_achievement_descriptions",
+        "timbre.badge.songs_25:game_center_achievement_descriptions",
+        "timbre.song.twinkle",
+        "timbre.song.odetojoy",
+        "timbre.song.jinglebells",
+        "timbre.song.saints",
+        "timbre.song.kiteweather",
+        "timbre.song.dashboard",
+        "timbre.song.lochlomond",
+        "timbre.song.mountain"
+      ],
+      "note": "Available app values reused exactly; missing app values retain authored store drafts. Does not certify native or device review."
+    }
+  }
+}

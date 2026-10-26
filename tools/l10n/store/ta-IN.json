@@ -1,0 +1,310 @@
+{
+  "schema_version": 1,
+  "locale": "ta-IN",
+  "counts": {
+    "instruments": 60,
+    "tunings": 132,
+    "courses": 11,
+    "lessons": 526,
+    "songs_floor": 140,
+    "originals": 50
+  },
+  "review": {
+    "text": "ai_drafted",
+    "native": "not_verified",
+    "market_search": "not_verified",
+    "device": "not_verified",
+    "screenshots": "not_captured",
+    "app_preview": "not_rendered",
+    "iap_account_limits": "not_verified",
+    "game_center_account": "not_verified",
+    "release_ready": false,
+    "blockers": [
+      "Production privacy policy URL and verification not provided",
+      "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+      "Localized App Preview recordings and audio/sync/render review pending",
+      "App Store Connect product/locale limits and Game Center configuration/images unverified"
+    ],
+    "semantic": "ai_cross_reviewed_critical_facts",
+    "legal_back_translation": "not_performed_optional_under_ai_policy",
+    "song_title_alignment": {
+      "state": "pending_app_alignment",
+      "pending_app_alignment": [
+        "timbre.song.twinkle",
+        "timbre.song.odetojoy",
+        "timbre.song.jinglebells",
+        "timbre.song.saints",
+        "timbre.song.kiteweather",
+        "timbre.song.dashboard",
+        "timbre.song.lochlomond",
+        "timbre.song.mountain"
+      ],
+      "native_review": "not_verified"
+    },
+    "ai_cross_review": {
+      "scope": "Free tier, notification-conditioned two-day trial reminder, on-device never-recorded/uploaded audio, automatic renewal and 24-hour cancellation, anytime management, IAP benefits. Additional feature/count/terminology review for original nine and European/regional listings.",
+      "limitations": "AI review with inherited English source, not blinded back-translation, native-speaker, market, legal, account or visual approval."
+    },
+    "ai_source_aware": "reviewed",
+    "privacy_policy": "not_verified",
+    "review_policy": "ai_source_aware"
+  },
+  "game_center_leaderboard_names": {
+    "timbre.sniper.best": "துல்லியக் குறி",
+    "timbre.sniper.weekly": "இந்த வார துல்லியக் குறி",
+    "timbre.ear.level": "செவிப்பயிற்சி நிலை",
+    "timbre.streak": "பயிற்சித் தொடர்ச்சி",
+    "timbre.song.twinkle": "மின்னும் சின்ன நட்சத்திரமே",
+    "timbre.song.odetojoy": "மகிழ்ச்சிக் கீதம்",
+    "timbre.song.jinglebells": "ஜிங்கிள் பெல்ஸ்",
+    "timbre.song.saints": "புனிதர்கள் அணிவகுத்து வரும்போது",
+    "timbre.song.kiteweather": "பட்டம் பறக்கும் வானிலை",
+    "timbre.song.dashboard": "டாஷ்போர்டில் தூசி",
+    "timbre.song.lochlomond": "லாக் லோமண்ட்",
+    "timbre.song.mountain": "அவள் மலையைச் சுற்றி வருவாள்"
+  },
+  "game_center_achievement_names": {
+    "timbre.badge.first_tune": "முதல் நரம்பு டியூனில்",
+    "timbre.badge.full_tune": "ஆறும்",
+    "timbre.badge.streak_7": "சரியான வாரம்",
+    "timbre.badge.strings_100": "நூறு நரம்புகள்",
+    "timbre.badge.bullseye": "துல்லியக் குறி",
+    "timbre.badge.sharpshooter": "அதிக மதிப்பெண் பெற்றவர்",
+    "timbre.badge.golden_ear": "தங்கச் செவி",
+    "timbre.badge.level_5": "வளரும் நட்சத்திரம்",
+    "timbre.badge.multi": "பல்கருவி இசைக்கலைஞர்",
+    "timbre.badge.streak_30": "இசையின் ஒரு மாதம்",
+    "timbre.badge.strings_1000": "ஆயிரம் நரம்புகள்",
+    "timbre.badge.first_lesson": "முதல் பாடம்",
+    "timbre.badge.lessons_25": "தொடர் பயிற்சியாளர்",
+    "timbre.badge.lessons_100": "அறிஞர்",
+    "timbre.badge.perfect_10": "குறையற்றது",
+    "timbre.badge.full_25": "டியூனிங் பழக்கம்",
+    "timbre.badge.streak_3": "வார்ம்-அப்",
+    "timbre.badge.streak_100": "நூறு நாட்கள்",
+    "timbre.badge.minutes_60": "முதல் மணி நேரம்",
+    "timbre.badge.minutes_600": "பத்து மணி நேரம்",
+    "timbre.badge.daily_1": "தினசரி தொகுப்பு",
+    "timbre.badge.daily_30": "பழக்கத்தின் அடிமை",
+    "timbre.badge.sniper_win": "சுற்று வெற்றியாளர்",
+    "timbre.badge.bullseyes_50": "சரியாக மையத்தில்",
+    "timbre.badge.ear_perfect": "முழு மதிப்பெண்",
+    "timbre.badge.ear_500": "செவி மாஸ்டர்",
+    "timbre.badge.units_1": "அலகு நிறைவு",
+    "timbre.badge.units_10": "பத்து அலகுகள்",
+    "timbre.badge.course_done": "பட்டதாரி",
+    "timbre.badge.songs_1": "முதல் பாடல்",
+    "timbre.badge.songs_25": "பாடல் புத்தகம்"
+  },
+  "game_center_achievement_descriptions": {
+    "timbre.badge.first_tune": "உங்கள் முதல் நரம்பை டியூன் செய்யுங்கள்",
+    "timbre.badge.full_tune": "ஒரு இசைக்கருவியின் ஒவ்வொரு நரம்பையும் டியூன் செய்யுங்கள்",
+    "timbre.badge.streak_7": "தொடர்ந்து ஏழு நாட்கள் பயிற்சி செய்யுங்கள்",
+    "timbre.badge.strings_100": "100 நரம்புகளை டியூன் செய்யுங்கள்",
+    "timbre.badge.bullseye": "முதல் துல்லியக் குறியை அடையவும்",
+    "timbre.badge.sharpshooter": "துல்லியக் குறியில் 2,000 மதிப்பெண் பெறவும்",
+    "timbre.badge.golden_ear": "50 செவிக் கேள்விகளுக்குச் சரியாகப் பதிலளியுங்கள்",
+    "timbre.badge.level_5": "நிலை 5-ஐ அடையுங்கள்",
+    "timbre.badge.multi": "மூன்று வெவ்வேறு இசைக்கருவிகளை டியூன் செய்யுங்கள்",
+    "timbre.badge.streak_30": "தொடர்ந்து முப்பது நாட்கள் பயிற்சி செய்யுங்கள்",
+    "timbre.badge.strings_1000": "1,000 நரம்புகளை டியூன் செய்யுங்கள்",
+    "timbre.badge.first_lesson": "உங்கள் முதல் பாடத்தை முடியுங்கள்",
+    "timbre.badge.lessons_25": "25 பாடங்களை முடியுங்கள்",
+    "timbre.badge.lessons_100": "100 பாடங்களை முடியுங்கள்",
+    "timbre.badge.perfect_10": "10 பாடங்களில் மூன்று நட்சத்திரங்கள் பெறுங்கள்",
+    "timbre.badge.full_25": "ஒவ்வொரு நரம்பையும் 25 முறை டியூன் செய்யுங்கள்",
+    "timbre.badge.streak_3": "தொடர்ந்து மூன்று நாட்கள் பயிற்சி செய்யுங்கள்",
+    "timbre.badge.streak_100": "தொடர்ந்து 100 நாட்கள் பயிற்சி செய்யுங்கள்",
+    "timbre.badge.minutes_60": "மொத்தம் ஒரு மணி நேரம் பயிற்சி செய்யுங்கள்",
+    "timbre.badge.minutes_600": "மொத்தம் பத்து மணி நேரம் பயிற்சி செய்யுங்கள்",
+    "timbre.badge.daily_1": "ஒரு தினசரி தொகுப்பை முடியுங்கள்",
+    "timbre.badge.daily_30": "30 தினசரி தொகுப்புகளை முடியுங்கள்",
+    "timbre.badge.sniper_win": "துல்லியக் குறியில் ஒரு சுற்றை வெல்லவும்",
+    "timbre.badge.bullseyes_50": "50 துல்லியக் குறிகளை அடியுங்கள்",
+    "timbre.badge.ear_perfect": "செவிச் சுற்றில் பத்து கேள்விகளுக்கும் சரியாகப் பதிலளியுங்கள்",
+    "timbre.badge.ear_500": "500 செவிக் கேள்விகளுக்குச் சரியாகப் பதிலளியுங்கள்",
+    "timbre.badge.units_1": "ஓர் அலகின் அனைத்துப் பாடங்களையும் முடியுங்கள்",
+    "timbre.badge.units_10": "பத்து அலகுகளை முடியுங்கள்",
+    "timbre.badge.course_done": "ஒரு முழு பாடநெறியை முடியுங்கள்",
+    "timbre.badge.songs_1": "உங்கள் முதல் பாடலை இசையுங்கள்",
+    "timbre.badge.songs_25": "25 பாடல்களை இசையுங்கள்"
+  },
+  "provenance": {
+    "game_center": "Badge text reused from matching app Localizable.strings; song board titles reused from Learn.strings. Newly renamed badge/board text authored for this store draft. No native review claimed.",
+    "game_center_app_reuse": {
+      "app_locale": "ta",
+      "reused_fields": [
+        "timbre.badge.first_tune:game_center_achievement_names",
+        "timbre.badge.full_tune:game_center_achievement_names",
+        "timbre.badge.streak_7:game_center_achievement_names",
+        "timbre.badge.strings_100:game_center_achievement_names",
+        "timbre.badge.bullseye:game_center_achievement_names",
+        "timbre.badge.sharpshooter:game_center_achievement_names",
+        "timbre.badge.golden_ear:game_center_achievement_names",
+        "timbre.badge.level_5:game_center_achievement_names",
+        "timbre.badge.multi:game_center_achievement_names",
+        "timbre.badge.streak_30:game_center_achievement_names",
+        "timbre.badge.strings_1000:game_center_achievement_names",
+        "timbre.badge.first_lesson:game_center_achievement_names",
+        "timbre.badge.lessons_25:game_center_achievement_names",
+        "timbre.badge.lessons_100:game_center_achievement_names",
+        "timbre.badge.perfect_10:game_center_achievement_names",
+        "timbre.badge.full_25:game_center_achievement_names",
+        "timbre.badge.streak_3:game_center_achievement_names",
+        "timbre.badge.streak_100:game_center_achievement_names",
+        "timbre.badge.minutes_60:game_center_achievement_names",
+        "timbre.badge.minutes_600:game_center_achievement_names",
+        "timbre.badge.daily_1:game_center_achievement_names",
+        "timbre.badge.daily_30:game_center_achievement_names",
+        "timbre.badge.sniper_win:game_center_achievement_names",
+        "timbre.badge.bullseyes_50:game_center_achievement_names",
+        "timbre.badge.ear_perfect:game_center_achievement_names",
+        "timbre.badge.ear_500:game_center_achievement_names",
+        "timbre.badge.units_1:game_center_achievement_names",
+        "timbre.badge.units_10:game_center_achievement_names",
+        "timbre.badge.course_done:game_center_achievement_names",
+        "timbre.badge.songs_1:game_center_achievement_names",
+        "timbre.badge.songs_25:game_center_achievement_names",
+        "timbre.badge.first_tune:game_center_achievement_descriptions",
+        "timbre.badge.full_tune:game_center_achievement_descriptions",
+        "timbre.badge.streak_7:game_center_achievement_descriptions",
+        "timbre.badge.strings_100:game_center_achievement_descriptions",
+        "timbre.badge.bullseye:game_center_achievement_descriptions",
+        "timbre.badge.sharpshooter:game_center_achievement_descriptions",
+        "timbre.badge.golden_ear:game_center_achievement_descriptions",
+        "timbre.badge.level_5:game_center_achievement_descriptions",
+        "timbre.badge.multi:game_center_achievement_descriptions",
+        "timbre.badge.streak_30:game_center_achievement_descriptions",
+        "timbre.badge.strings_1000:game_center_achievement_descriptions",
+        "timbre.badge.first_lesson:game_center_achievement_descriptions",
+        "timbre.badge.lessons_25:game_center_achievement_descriptions",
+        "timbre.badge.lessons_100:game_center_achievement_descriptions",
+        "timbre.badge.perfect_10:game_center_achievement_descriptions",
+        "timbre.badge.full_25:game_center_achievement_descriptions",
+        "timbre.badge.streak_3:game_center_achievement_descriptions",
+        "timbre.badge.streak_100:game_center_achievement_descriptions",
+        "timbre.badge.minutes_60:game_center_achievement_descriptions",
+        "timbre.badge.minutes_600:game_center_achievement_descriptions",
+        "timbre.badge.daily_1:game_center_achievement_descriptions",
+        "timbre.badge.daily_30:game_center_achievement_descriptions",
+        "timbre.badge.sniper_win:game_center_achievement_descriptions",
+        "timbre.badge.bullseyes_50:game_center_achievement_descriptions",
+        "timbre.badge.ear_perfect:game_center_achievement_descriptions",
+        "timbre.badge.ear_500:game_center_achievement_descriptions",
+        "timbre.badge.units_1:game_center_achievement_descriptions",
+        "timbre.badge.units_10:game_center_achievement_descriptions",
+        "timbre.badge.course_done:game_center_achievement_descriptions",
+        "timbre.badge.songs_1:game_center_achievement_descriptions",
+        "timbre.badge.songs_25:game_center_achievement_descriptions"
+      ],
+      "note": "Available app values reused exactly; missing app values retain authored store drafts. Does not certify native or device review."
+    }
+  },
+  "name": "Timbre: கிட்டார் டியூனர்",
+  "subtitle": "யுகுலேலே, வயலின் கற்கலாம்",
+  "keywords": "செல்லோ,பேஸ்,மாண்டலின்,பாஞ்சோ,குரோமேட்டிக்,ஸ்ட்ரோப்,செவிப்பயிற்சி,மெட்ரோனோம்,கார்டு",
+  "promotional_text": "இலவச டியூனர். விளம்பரமும் கணக்கும் இல்லை. ஒவ்வொரு தந்தியும் சுருதி சேர்வதை உணருங்கள். உங்கள் வாசிப்பைக் கேட்கும் பாடங்களும் 140+ பாடல்களும்.",
+  "description": "இலவச டியூனர். விளம்பரமும் கணக்கும் இல்லை. அடுத்து உங்கள் வாசிப்பைக் கேட்கும் பாடங்கள்.\n\nTimbre துல்லியமான டியூனரும் இசை ஆசிரியரும் சேர்ந்த செயலி. 60 கருவிகளில் எதையும் நொடிகளில் சுருதி சேர்த்து, வாசிப்பைக் கேட்டு சரியாக மதிப்பிடும் பாடங்களில் கற்கலாம்.\n\nஇலவசமாகச் சுருதி சேருங்கள்\n• கிட்டார், யுகுலேலே, வயலின் முதல் மாண்டலின், பாஞ்சோ, ஊத், எர்ஹு வரை ஒவ்வொரு கருவியின் வழக்கமான சுருதி அமைப்பும் இலவசம்.\n• சென்ட் அளவுத் துல்லியத்துடன் குரோமேட்டிக், ஸ்ட்ரோப் டியூனர். Drop D, Open G, DADGAD உட்பட 132 சுருதி அமைப்புகள்; உங்களுடையதையும் உருவாக்கலாம்.\n• தந்தியைத் தானாக அறிந்து சுருதி சேர்ந்ததும் குறியிடும். ஒரே ஸ்ட்ரம் எல்லாத் தந்திகளையும் படித்து முதலில் எதைச் சரிசெய்ய வேண்டும் எனக் காட்டும்.\n• உணர்ந்து சுருதி சேருங்கள்: தந்திக்கும் இலக்கு சுரத்துக்கும் இடையிலான துடிப்புடன் ஃபோன் அதிரும்; நெருங்கும்போது மெதுவாகி சேர்ந்ததும் நிற்கும். பார்க்காமலேயே சுருதி சேர்க்கலாம்.\n• ஸ்டுடியோ ஒளியில் 3D கிட்டார், பேஸ், வயலின், செல்லோ, மாண்டலின்; தலைப்பகுதியில் திருப்ப வேண்டிய முறுக்காணி காட்டப்படும்.\n• கேப்போ, மாற்றக்கூடிய A4 குறிப்பு சுரம், சோல்ஃபேஜ், சர்கம் சுரப்பெயர்கள்.\n\nவாசித்துக் கற்கலாம்\n• 11 வகுப்புத் தொடர்களில் 526 பாடங்கள்: கிட்டார், யுகுலேலே, பேஸ், வயலின், செல்லோ, மாண்டலின், பாஞ்சோ, வாய்ப்பாட்டு, செவிப்பயிற்சி, இசைக் கோட்பாடு, தாளம். யுகுலேலே, மாண்டலின், வயலின், செல்லோ, பேஸிற்குப் பாடல் நூல்களும் உள்ளன.\n• Timbre ஒவ்வொரு ஸ்ட்ரமையும் கேட்கும்: சரியான கார்டு, நேரம், ஒலிக்காத தந்தி. ஒவ்வொரு சுரத்தின் உயரமும் சென்ட் அளவிலும் நேரம் மில்லிசெகண்டிலும் மதிப்பிடப்படும்.\n• “காட்டுங்கள்” புதிய கார்டை 3D கிட்டாரில் வாசிக்கும்; விரல்கள் வரிசையாக அமரும். சேர்ந்து வாசிக்கும் சுரப்பாதை உங்களுக்காக மெதுவாகி, முன்னேறும்போது மீண்டும் வேகமாகும்.\n\nபாடல்கள் வாசியுங்கள்\n• 140+ பாடல்கள், ஒவ்வொன்றுக்கும் முழு இசை ஏற்பாடு: Jingle Bells முதல் Amazing Grace வரை பழைய பிரபல பாடல்களும் இன்றைய பாணிகளில் Timbreக்காக எழுதப்பட்ட 50 சொந்தப் பாடல்களும்.\n• ஹெட்ஃபோனில் இசைக்குழுவுடன் வாசியுங்கள்; பாடல்வரிகள் ஒளிரும்.\n• உங்கள் பாடல்கள்: கார்டு அட்டவணையை ஒட்டவும் அல்லது இறக்குமதி செய்யவும்; சுரமாற்றம், நேரத்துடன் உருட்டல், அருகில் Apple Musicல் மூலப் பாடலைக் கேட்டல்.\n\nபயிற்சியைத் தொடருங்கள்\n• நட்சத்திரங்கள், XP, தினசரிப் பணிகள், தொடர்நாட்கள், பதக்கங்கள்.\n• Game Center: வாராந்திர துல்லியக் குறி லீக், பாடல் முன்னிலைப் பட்டியல்கள், நண்பர் சவால்கள்.\n• Apple Watch: மணிக்கட்டில் உணரும் மெட்ரோனோம், இன்றைய பயிற்சி ஒரு பார்வையில்.\n• முகப்பு, பூட்டுத் திரை விட்ஜெட்கள், நேரலைச் செயல்பாடு, Siri குறுக்குவழிகள்.\n• அழுத்தங்கள், உட்பிரிவுகள், வேகப் பயிற்சியாளர் கொண்ட மெட்ரோனோம்; ஆதார சுருதி, சுரத்துல்லியப் பயிற்சியாளர், கார்டு மற்றும் ஸ்கேல் தொகுப்பு.\n• செவிப்பயிற்சி: சுரத்தின் திசை, இடைவெளிகள், கார்டு வகைகள்; 40 பாடங்கள் கொண்ட செவிப்பயிற்சித் தொடரும்.\n\nஇலவசமாகத் தொடங்குங்கள்\nஒவ்வொரு கருவியின் வழக்கமான சுருதி அமைப்பும் இலவசம். கிட்டார், பேஸ், யுகுலேலே, வயலின், செல்லோவின் அனைத்து சுருதி அமைப்புகளும் இலவசம். ஒவ்வொரு தொடரின் முதல் அலகும் சில பாடல்களும் இலவசம். Timbre Pro அனைத்துப் பாடங்கள், பாடல்கள், சுருதி அமைப்புகள், பயிற்சிக் கருவிகளைத் திறக்கும். அறிவிப்புகள் இயக்கப்பட்டிருந்தால் இலவசச் சோதனை முடிவதற்கு இரண்டு நாட்களுக்கு முன் Timbre நினைவூட்டும்.\n\nதனியுரிமையுடன் வடிவமைப்பு: ஒலி உங்கள் iPhoneல் பகுப்பாய்வு செய்யப்படும்; ஒருபோதும் பதிவோ பதிவேற்றமோ செய்யப்படாது. கணக்கும் விளம்பரமும் இல்லை.\n\nகாலம் முடிவதற்குக் குறைந்தது 24 மணிநேரம் முன் ரத்துசெய்யாவிட்டால் சந்தா தானாகப் புதுப்பிக்கப்படும். அமைப்புகள் → Apple கணக்கு → சந்தாக்களில் எப்போது வேண்டுமானாலும் நிர்வகிக்கலாம் அல்லது ரத்துசெய்யலாம்.\nவிதிகள்: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\nதனியுரிமை: <privacy policy URL>",
+  "whats_new": "Timbreக்கு வரவேற்கிறோம்: 60 கருவிகளுக்கான இலவச டியூனரும் உங்கள் வாசிப்பைக் கேட்கும் 526 பாடங்களும்.",
+  "iphone_screenshot_captions": [
+    {
+      "capture": "10b-tune-locked",
+      "caption": "இலவசம். விளம்பரம் இல்லை.",
+      "supporting_line": "60 கருவிகள், சென்ட் அளவுத் துல்லியம்"
+    },
+    {
+      "capture": "65-song-perform",
+      "caption": "வாசித்ததைக் கேளுங்கள்",
+      "supporting_line": "ஒவ்வொரு சுரத்தின் உயரமும் நேரமும்"
+    },
+    {
+      "capture": "52b-lesson-chord",
+      "caption": "முதல் கார்டை இன்று வாசியுங்கள்",
+      "supporting_line": "Timbre ஒவ்வொரு தந்தியையும் கேட்கும்"
+    },
+    {
+      "capture": "31b-instruments-folk",
+      "caption": "கருவியைச் சுருதி சேருங்கள்",
+      "supporting_line": "60 கருவிகள், 132 சுருதி அமைப்புகள்"
+    },
+    {
+      "capture": "63-songs",
+      "caption": "தெரிந்த பாடல்கள் வாசியுங்கள்",
+      "supporting_line": "140+ பாடல்கள், பழையவை முதல் சொந்தப் படைப்புகள் வரை"
+    },
+    {
+      "capture": "50-learn",
+      "caption": "உங்கள் வேகத்தில் கற்கலாம்",
+      "supporting_line": "11 தொடர்களில் 526 பாடங்கள்"
+    },
+    {
+      "capture": "62-lesson-results",
+      "caption": "தினம் ஐந்து நிமிடம் பலன் தரும்",
+      "supporting_line": "நட்சத்திரங்கள், தொடர்நாட்கள், தினசரிப் பணிகள்"
+    },
+    {
+      "capture": "11b-tune-strum",
+      "caption": "ஒரே ஸ்ட்ரம், எல்லாத் தந்தியும்",
+      "supporting_line": "முதலில் எந்தத் தந்தியைச் சரிசெய்வது எனப் பாருங்கள்"
+    },
+    {
+      "capture": "32-journey",
+      "caption": "முன்னேற்றத்தைப் பாருங்கள்",
+      "supporting_line": "துல்லியம், தந்தி ஒலி, பதக்கங்கள்"
+    }
+  ],
+  "ipad_screenshot_captions": [
+    {
+      "capture": "ipad-landscape-tune",
+      "caption": "இலவசம். விளம்பரம் இல்லை.",
+      "supporting_line": "60 கருவிகள், சென்ட் அளவுத் துல்லியம்"
+    },
+    {
+      "capture": "ipad-landscape-instruments",
+      "caption": "கருவியைச் சுருதி சேருங்கள்",
+      "supporting_line": "வயலின் முதல் ஊத், சிதார் முதல் எர்ஹு"
+    },
+    {
+      "capture": "ipad-landscape-songs",
+      "caption": "தெரிந்த பாடல்கள் வாசியுங்கள்",
+      "supporting_line": "140+ பாடல்கள், பழையவை முதல் சொந்தப் படைப்புகள் வரை"
+    },
+    {
+      "capture": "ipad-landscape-practice",
+      "caption": "தினம் ஐந்து நிமிடம் பலன் தரும்",
+      "supporting_line": "தினசரித் தொகுப்பு, பணிகள், செவிப்பயிற்சி விளையாட்டுகள்"
+    }
+  ],
+  "app_preview_captions": {
+    "main": {
+      "lock": "இலவசம். விளம்பரம் இல்லை.",
+      "tuned": "ஒவ்வொரு தந்தியும் சரிபார்ப்பு",
+      "showme": "3Dயில் வாசிப்பைப் பாருங்கள்",
+      "highway": "இசைக்குழுவுடன் பாடல்கள் வாசியுங்கள்",
+      "results": "எப்படி வாசித்தீர்கள் எனக் கேளுங்கள்",
+      "songs": "கற்க 140+ பாடல்கள்",
+      "end": "சுருதி சேருங்கள். கற்கலாம். பாடல்கள் வாசியுங்கள்.",
+      "end-note": "இலவச டியூனர் · விளம்பரம் இல்லை · கணக்கு இல்லை"
+    },
+    "violin": {
+      "lock": "வயலினை இலவசமாகச் சுருதி சேருங்கள்",
+      "tuned": "G, D, A, E: எல்லாம் சுருதியில்",
+      "highway": "வயலினில் பாடல்கள் வாசியுங்கள்",
+      "results": "எப்படி வாசித்தீர்கள் எனக் கேளுங்கள்",
+      "songs": "கற்க 140+ பாடல்கள்",
+      "end": "வயலின் டியூனரும் பாடங்களும்",
+      "end-note": "இலவச டியூனர் · விளம்பரம் இல்லை · கணக்கு இல்லை"
+    }
+  },
+  "iap_display_names": {
+    "timbre_pro_annual": "Timbre Pro, ஆண்டு",
+    "timbre_pro_monthly": "Timbre Pro, மாதம்",
+    "timbre_plus_lifetime": "Timbre Pro, வாழ்நாள்"
+  },
+  "iap_descriptions": {
+    "timbre_pro_annual": "பாடம், பாடல், சுருதி, பயிற்சிக் கருவி எல்லாம்",
+    "timbre_pro_monthly": "பாடம், பாடல், சுருதி, பயிற்சிக் கருவி எல்லாம்",
+    "timbre_plus_lifetime": "Pro அனைத்தும், ஒருமுறை கட்டணம்"
+  },
+  "custom_product_page_keywords": {}
+}

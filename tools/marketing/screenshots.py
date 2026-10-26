@@ -6,8 +6,8 @@ python3 tools/marketing/screenshots.py --check
 
 The frames live in one place only: the tables under "## Screenshots" in docs/ios/APP-STORE-LISTING.md ("### iPhone
 6.9"", "### iPad 13"", and one "### iPhone 6.9": <page>" per Custom Product Page), each row a caption, a supporting
-line, the capture it frames and its look (`layout accent`). Localized captions live in APP-STORE-LISTING-LOCALIZED.md,
-a table per locale with the same captures in the same order; the look always comes from the English row.
+line, the capture it frames and its look (`layout accent`). Localized captions live in tools/l10n/store/<locale>.json,
+with the same captures in the same order; the look always comes from the English row.
 
 <captures> is the iOS workflow's exported xcresult attachments (manifest.json beside the PNGs) or any folder of PNGs
 named after their captures (`10b-tune-locked.png`). A localized set needs a localized tour: run the UI tests with
@@ -18,8 +18,8 @@ a set, captions of at most 30 characters, captures the UI tests really take (eac
 tables naming the English captures in the English order, every count a caption, supporting line, promotional text,
 description or App Preview caption quotes (lessons, courses, instruments, tunings, songs, Originals) equal to the
 build's own (curriculum.json, catalog.json; "N+" means at least N and not far below), and the name, subtitle,
-keywords, promotional text and description within Apple's limits. Untranslated captions (marked "TRANSLATE:") are
-listed, not failed; rendering a locale refuses them unless --allow-english.
+keywords, promotional text and description within Apple's limits. All 50 JSON drafts are checked strictly;
+missing or untranslated content fails. Legacy Markdown rendering remains a fallback for fixture tests.
 
 Rendering picks the captures a table names and composes each one (a capture is turned upright from its EXIF orientation
 first: XCUIScreen stores a landscape iPad capture as a portrait bitmap tagged orientation 8). iPhone output is
@@ -59,7 +59,7 @@ COUNT = re.compile(r"(?<![\d\-])(\d[\d,]*)(\+?)\s+(lessons|courses|instruments|t
 # "N+" may sit under the build's count, but not far under: a floor this stale reads as a smaller app.
 PLUS_SLACK = 0.8
 UNTRANSLATED = "TRANSLATE:"
-LOCALES = ["de-DE", "fr-FR", "es-MX", "pt-BR", "it", "ja", "ko", "zh-Hans", "ru"]
+LOCALES = [r["locale"] for r in json.loads((ROOT / "tools/l10n/store-locales.json").read_text())["locales"] if r["locale"] != "en-US"]
 
 # Where each capture's hero sits, as fractions of the upright capture:
 #   y0      the top of what a zoom, flip or plain card shows (the rest of the screen runs on below it)
@@ -165,6 +165,8 @@ def plan(device: str, page: str | None = None, locale: str | None = None) -> lis
     english = _rows(table[1]) if table else []
     if not locale or locale.lower() in ("en", "en-us"):
         return english
+    if page:
+        raise ValueError("Localized Custom Product Page asset sets are not authored; default captions must not be substituted.")
     localized = _localized_rows(locale, device)
     looks = {capture: look for capture, _, _, look in english}
     return [(capture, caption, line, looks.get(capture, "")) for capture, caption, line, _ in localized]
@@ -173,6 +175,11 @@ def plan(device: str, page: str | None = None, locale: str | None = None) -> lis
 def _localized_rows(locale: str, device: str) -> list[tuple]:
     """A locale's caption table for a device, from APP-STORE-LISTING-LOCALIZED.md ("## de-DE: …" then
     "### Screenshot captions: iPhone")."""
+    store_path = ROOT / "tools/l10n/store" / f"{locale}.json"
+    if store_path.exists():
+        data = json.loads(store_path.read_text(encoding="utf-8"))
+        return [(row["capture"], row["caption"], row["supporting_line"], "")
+                for row in data.get(device + "_screenshot_captions", [])]
     if not LOCALIZED.exists():
         return []
     inside = False
@@ -391,50 +398,16 @@ def listing_problems(counts: dict) -> list[str]:
 def localized_problems(counts: dict) -> tuple[list[str], list[str]]:
     """Each locale's name, subtitle and keywords within the limits, the translators' source's variables known, and its
     caption tables matching the English sets."""
-    found: list[str] = []
-    untranslated: list[str] = []
-    if not LOCALIZED.exists():
-        return [f"no {LOCALIZED.name}"], []
-    text = LOCALIZED.read_text(encoding="utf-8")
-    for variable in set(re.findall(r"\{(\w+)\}", text)):
-        if variable not in counts:
-            found.append(f"localized source: {{{variable}}} is not one of {', '.join(sorted(counts))}")
-    sections = re.split(r"^## ", text, flags=re.M)
-    page_table = _table_after(text, "Custom Product Page keywords by locale")
-    for locale in LOCALES:
-        section = next((s for s in sections if s.split(":", 1)[0].strip().lower() == locale.lower()), None)
-        if section is None:
-            found.append(f"{locale}: no section")
-            continue
-        for name, limit in (("Name", 30), ("Subtitle", 30), ("Keywords", 100)):
-            value = _block_after("## " + section, name)
-            if value is None:
-                found.append(f"{locale}: no {name.lower()} block")
-            elif len(unicodedata.normalize("NFC", value)) > limit:
-                found.append(f"{locale}: the {name.lower()} is {len(value)} characters (at most {limit})")
-        field = {w.strip().lower() for w in (_block_after("## " + section, "Keywords") or "").split(",") if w.strip()}
-        row = next((cells for cells in page_table[1:] if cells and cells[0].strip("`").lower() == locale.lower()), None)
-        if page_table and row is None:
-            found.append(f"{locale}: no row in the Custom Product Page keywords table")
-        for page, cell in zip(page_table[0][1:] if page_table else [], (row or [])[1:]):
-            for word in ([] if cell.startswith("—") else [w.strip() for w in cell.split(",") if w.strip()]):
-                if word.lower() not in field:
-                    found.append(f"{locale}: the {page} page's “{word}” isn't in the locale's keyword field")
-        english_rows = {device: plan(device) for device in ("iphone", "ipad")}
-        for device in ("iphone", "ipad"):
-            rows = _localized_rows(locale, device)
-            problems, todo = table_problems(f"{locale} {device}", rows, counts, english=english_rows[device])
-            found += problems
-            untranslated += todo
-            # A cell still to translate holds the English row's current words, so the translator works from them.
-            for number, (capture, caption, line, _) in enumerate(rows, 1):
-                if number > len(english_rows[device]):
-                    break
-                source = english_rows[device][number - 1]
-                for cell, current in ((caption, source[1]), (line, source[2])):
-                    if cell.startswith(UNTRANSLATED) and cell.removeprefix(UNTRANSLATED).strip() != current:
-                        found.append(f"{locale} {device} #{number}: “{cell}” isn't the English row's current text “{current}”")
-    return found, untranslated
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("store_metadata", ROOT / "tools/l10n/store.py")
+    store = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(store)
+    problems = store.check_all()
+    source = store.load("en-US")
+    for key, value in source["counts"].items():
+        if counts.get(key) != value:
+            problems.append(f"store source: {key} says {value}; build has {counts.get(key)}")
+    return problems, []
 
 
 def source_problems(counts: dict) -> list[str]:

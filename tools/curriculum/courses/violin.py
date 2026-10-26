@@ -231,7 +231,7 @@ TRAVELER_SONG = fiddle_song(80, f"{TRAVELER_1} {TRAVELER_CADENCE}", TRAVELER_2, 
 
 
 # The first song, unit 1 (free): Mary Had a Little Lamb on three notes in A, C sharp, B and A on the A string (open,
-# first finger, second finger close behind it), plucked first and then bowed. Unit 3 places the same two fingers.
+# first finger, second finger another whole step above it), plucked first and then bowed. Unit 3 places the same two fingers.
 MARY_FIRST = tunes.mary3(9)
 MARY_FIRST_SONG = song(V, 76, tunes.mary3_parts(9, "A A E A A A E A"), shapes=SHAPES, words=tunes.MARY_CREDIT,
                        max_fret=REACH, fingers=FINGER)
@@ -320,10 +320,10 @@ UNIT_1 = unit("vln-1", "Hello, violin", "Hold it, bow it, tune it, play the open
     ], minutes=5, xp=30, kind="challenge"),
     lesson("vln-1-7", "Mary Had a Little Lamb", [
         explain("Your first song", "Mary Had a Little Lamb lives on the A string: open A, first finger a whole step up for "
-                "B, second finger close behind it for C sharp. Pluck it first, then bow it.",
+                "B, second finger another whole step up for C sharp. Pluck it first, then bow it.",
                 board([(2, 0), (2, 2, 1), (2, 4, 2)])),
         play([("B4", 2)], hint="First finger on the A string, a whole step up. That's B."),
-        play([("C#5", 2)], hint="Second finger close behind your first. That's C sharp."),
+        play([("C#5", 2)], hint="Second finger a whole step above your first. That's C sharp."),
         play(["C#5", "B4", "A4", "B4", "C#5", "C#5", "C#5"], hint="C sharp, B, A, B, then C sharp three times."),
         tune(MARY_FIRST[0], bpm=60, title="First half"),
         MARY_FIRST_SONG.along("Verse 1", bpm=66, title=THE_VERSE),

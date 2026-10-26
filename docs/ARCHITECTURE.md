@@ -870,8 +870,7 @@ terms (`YourSongsPolicy`). Owner setup: [APPLE-DELIVERY.md §8](ios/APPLE-DELIVE
   language.
 - Note names follow `NoteNames.active` (set from `UserSettings.notation`; defaults from the language until the player
   picks, `applyNotationDefault`: German letters for German).
-- String tables: `<locale>.lproj/Localizable.strings` and `.stringsdict` (interface), `Learn.strings` (lessons, in nine
-  lesson languages), `AppShortcuts.strings`, `InfoPlist.strings`. The pipeline is in [l10n/HANDOFF.md](l10n/HANDOFF.md)
+- String tables: `<locale>.lproj/Localizable.strings` and `.stringsdict` (interface), `Learn.strings` (lessons required in all 49 app languages; missing translations temporarily fall back to English), `AppShortcuts.strings`, `InfoPlist.strings`. The pipeline is in [l10n/HANDOFF.md](l10n/HANDOFF.md)
   and [TOOLS.md](TOOLS.md).
 
 ## 13. Design system

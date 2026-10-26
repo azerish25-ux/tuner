@@ -1,0 +1,321 @@
+{
+  "schema_version": 1,
+  "locale": "nl-NL",
+  "counts": {
+    "instruments": 60,
+    "tunings": 132,
+    "courses": 11,
+    "lessons": 526,
+    "songs_floor": 140,
+    "originals": 50
+  },
+  "review": {
+    "text": "ai_drafted",
+    "native": "not_verified",
+    "market_search": "not_verified",
+    "device": "not_verified",
+    "screenshots": "not_captured",
+    "app_preview": "not_rendered",
+    "iap_account_limits": "not_verified",
+    "game_center_account": "not_verified",
+    "release_ready": false,
+    "blockers": [
+      "Production privacy policy URL and verification not provided",
+      "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+      "Localized App Preview recordings and audio/sync/render review pending",
+      "App Store Connect product/locale limits and Game Center configuration/images unverified"
+    ],
+    "semantic": "ai_cross_reviewed_critical_facts",
+    "legal_back_translation": "not_performed_optional_under_ai_policy",
+    "song_title_alignment": {
+      "state": "pending_app_alignment",
+      "pending_app_alignment": [
+        "timbre.song.twinkle",
+        "timbre.song.odetojoy",
+        "timbre.song.jinglebells",
+        "timbre.song.saints",
+        "timbre.song.kiteweather",
+        "timbre.song.dashboard",
+        "timbre.song.lochlomond",
+        "timbre.song.mountain"
+      ],
+      "native_review": "not_verified"
+    },
+    "ai_cross_review": {
+      "scope": "Free tier, notification-conditioned two-day trial reminder, on-device never-recorded/uploaded audio, automatic renewal and 24-hour cancellation, anytime management, IAP benefits. Additional feature/count/terminology review for original nine and European/regional listings.",
+      "limitations": "AI review with inherited English source, not blinded back-translation, native-speaker, market, legal, account or visual approval."
+    },
+    "ai_source_aware": "reviewed",
+    "privacy_policy": "not_verified",
+    "review_policy": "ai_source_aware"
+  },
+  "game_center_leaderboard_names": {
+    "timbre.sniper.best": "Voltreffer",
+    "timbre.sniper.weekly": "Voltreffer deze week",
+    "timbre.ear.level": "Niveau gehoortraining",
+    "timbre.streak": "Oefenreeks",
+    "timbre.song.twinkle": "Twinkel, twinkel, kleine ster",
+    "timbre.song.odetojoy": "Ode aan de vreugde",
+    "timbre.song.jinglebells": "Jingle Bells",
+    "timbre.song.saints": "When the Saints Go Marching In",
+    "timbre.song.kiteweather": "Kite Weather",
+    "timbre.song.dashboard": "Dust on the Dashboard",
+    "timbre.song.lochlomond": "Loch Lomond",
+    "timbre.song.mountain": "She'll Be Coming 'Round the Mountain"
+  },
+  "game_center_achievement_names": {
+    "timbre.badge.first_tune": "Eerste zuivere snaar",
+    "timbre.badge.full_tune": "Alle zes",
+    "timbre.badge.streak_7": "Perfecte week",
+    "timbre.badge.strings_100": "Honderd snaren",
+    "timbre.badge.bullseye": "Voltreffer",
+    "timbre.badge.sharpshooter": "Hoge score",
+    "timbre.badge.golden_ear": "Gouden oor",
+    "timbre.badge.level_5": "Rijzende ster",
+    "timbre.badge.multi": "Multi-instrumentalist",
+    "timbre.badge.streak_30": "Maand vol muziek",
+    "timbre.badge.strings_1000": "Duizend snaren",
+    "timbre.badge.first_lesson": "Eerste les",
+    "timbre.badge.lessons_25": "Volhouder",
+    "timbre.badge.lessons_100": "Geleerde",
+    "timbre.badge.perfect_10": "Foutloos",
+    "timbre.badge.full_25": "Stemgewoonte",
+    "timbre.badge.streak_3": "Opwarmen",
+    "timbre.badge.streak_100": "Honderd dagen",
+    "timbre.badge.minutes_60": "Eerste uur",
+    "timbre.badge.minutes_600": "Tien uur",
+    "timbre.badge.daily_1": "Dagprogramma",
+    "timbre.badge.daily_30": "Gewoontedier",
+    "timbre.badge.sniper_win": "Rondewinnaar",
+    "timbre.badge.bullseyes_50": "Precies in het midden",
+    "timbre.badge.ear_perfect": "Volle score",
+    "timbre.badge.ear_500": "Gehoormeester",
+    "timbre.badge.units_1": "Deel voltooid",
+    "timbre.badge.units_10": "Tien delen",
+    "timbre.badge.course_done": "Afgestudeerd",
+    "timbre.badge.songs_1": "Eerste nummer",
+    "timbre.badge.songs_25": "Liedjesboek"
+  },
+  "game_center_achievement_descriptions": {
+    "timbre.badge.first_tune": "Stem je eerste snaar",
+    "timbre.badge.full_tune": "Stem alle snaren van een instrument",
+    "timbre.badge.streak_7": "Oefen zeven dagen op rij",
+    "timbre.badge.strings_100": "Stem 100 snaren",
+    "timbre.badge.bullseye": "Raak je eerste voltreffer",
+    "timbre.badge.sharpshooter": "Scoor 2.000 in Voltreffer",
+    "timbre.badge.golden_ear": "Beantwoord 50 gehoorvragen goed",
+    "timbre.badge.level_5": "Bereik niveau 5",
+    "timbre.badge.multi": "Stem drie verschillende instrumenten",
+    "timbre.badge.streak_30": "Oefen dertig dagen op rij",
+    "timbre.badge.strings_1000": "Stem 1.000 snaren",
+    "timbre.badge.first_lesson": "Rond je eerste les af",
+    "timbre.badge.lessons_25": "Rond 25 lessen af",
+    "timbre.badge.lessons_100": "Rond 100 lessen af",
+    "timbre.badge.perfect_10": "Haal drie sterren bij 10 lessen",
+    "timbre.badge.full_25": "Stem alle snaren 25 keer",
+    "timbre.badge.streak_3": "Oefen drie dagen op rij",
+    "timbre.badge.streak_100": "Oefen 100 dagen op rij",
+    "timbre.badge.minutes_60": "Oefen in totaal één uur",
+    "timbre.badge.minutes_600": "Oefen in totaal tien uur",
+    "timbre.badge.daily_1": "Rond één dagprogramma af",
+    "timbre.badge.daily_30": "Rond 30 dagprogramma's af",
+    "timbre.badge.sniper_win": "Win een ronde Voltreffer",
+    "timbre.badge.bullseyes_50": "Scoor 50 voltreffers",
+    "timbre.badge.ear_perfect": "Beantwoord alle tien de vragen goed in een gehoorronde",
+    "timbre.badge.ear_500": "Beantwoord 500 gehoorvragen goed",
+    "timbre.badge.units_1": "Rond alle lessen in een deel af",
+    "timbre.badge.units_10": "Rond tien delen af",
+    "timbre.badge.course_done": "Rond een hele cursus af",
+    "timbre.badge.songs_1": "Speel je eerste nummer",
+    "timbre.badge.songs_25": "Speel 25 nummers"
+  },
+  "provenance": {
+    "game_center": "Badge text reused from matching app Localizable.strings; song board titles reused from Learn.strings. Newly renamed badge/board text authored for this store draft. No native review claimed.",
+    "game_center_songs": "Existing Learn.strings title reused when present. Otherwise established/localized title drafted; other named musical works retain source titles, not a claim of app translation. Reconcile with later Learn imports before release.",
+    "game_center_app_reuse": {
+      "app_locale": "nl",
+      "reused_fields": [
+        "timbre.badge.first_tune:game_center_achievement_names",
+        "timbre.badge.full_tune:game_center_achievement_names",
+        "timbre.badge.streak_7:game_center_achievement_names",
+        "timbre.badge.strings_100:game_center_achievement_names",
+        "timbre.badge.bullseye:game_center_achievement_names",
+        "timbre.badge.sharpshooter:game_center_achievement_names",
+        "timbre.badge.golden_ear:game_center_achievement_names",
+        "timbre.badge.level_5:game_center_achievement_names",
+        "timbre.badge.multi:game_center_achievement_names",
+        "timbre.badge.streak_30:game_center_achievement_names",
+        "timbre.badge.strings_1000:game_center_achievement_names",
+        "timbre.badge.first_lesson:game_center_achievement_names",
+        "timbre.badge.lessons_25:game_center_achievement_names",
+        "timbre.badge.lessons_100:game_center_achievement_names",
+        "timbre.badge.perfect_10:game_center_achievement_names",
+        "timbre.badge.full_25:game_center_achievement_names",
+        "timbre.badge.streak_3:game_center_achievement_names",
+        "timbre.badge.streak_100:game_center_achievement_names",
+        "timbre.badge.minutes_60:game_center_achievement_names",
+        "timbre.badge.minutes_600:game_center_achievement_names",
+        "timbre.badge.daily_1:game_center_achievement_names",
+        "timbre.badge.daily_30:game_center_achievement_names",
+        "timbre.badge.sniper_win:game_center_achievement_names",
+        "timbre.badge.bullseyes_50:game_center_achievement_names",
+        "timbre.badge.ear_perfect:game_center_achievement_names",
+        "timbre.badge.ear_500:game_center_achievement_names",
+        "timbre.badge.units_1:game_center_achievement_names",
+        "timbre.badge.units_10:game_center_achievement_names",
+        "timbre.badge.course_done:game_center_achievement_names",
+        "timbre.badge.songs_1:game_center_achievement_names",
+        "timbre.badge.songs_25:game_center_achievement_names",
+        "timbre.badge.first_tune:game_center_achievement_descriptions",
+        "timbre.badge.full_tune:game_center_achievement_descriptions",
+        "timbre.badge.streak_7:game_center_achievement_descriptions",
+        "timbre.badge.strings_100:game_center_achievement_descriptions",
+        "timbre.badge.bullseye:game_center_achievement_descriptions",
+        "timbre.badge.sharpshooter:game_center_achievement_descriptions",
+        "timbre.badge.golden_ear:game_center_achievement_descriptions",
+        "timbre.badge.level_5:game_center_achievement_descriptions",
+        "timbre.badge.multi:game_center_achievement_descriptions",
+        "timbre.badge.streak_30:game_center_achievement_descriptions",
+        "timbre.badge.strings_1000:game_center_achievement_descriptions",
+        "timbre.badge.first_lesson:game_center_achievement_descriptions",
+        "timbre.badge.lessons_25:game_center_achievement_descriptions",
+        "timbre.badge.lessons_100:game_center_achievement_descriptions",
+        "timbre.badge.perfect_10:game_center_achievement_descriptions",
+        "timbre.badge.full_25:game_center_achievement_descriptions",
+        "timbre.badge.streak_3:game_center_achievement_descriptions",
+        "timbre.badge.streak_100:game_center_achievement_descriptions",
+        "timbre.badge.minutes_60:game_center_achievement_descriptions",
+        "timbre.badge.minutes_600:game_center_achievement_descriptions",
+        "timbre.badge.daily_1:game_center_achievement_descriptions",
+        "timbre.badge.daily_30:game_center_achievement_descriptions",
+        "timbre.badge.sniper_win:game_center_achievement_descriptions",
+        "timbre.badge.bullseyes_50:game_center_achievement_descriptions",
+        "timbre.badge.ear_perfect:game_center_achievement_descriptions",
+        "timbre.badge.ear_500:game_center_achievement_descriptions",
+        "timbre.badge.units_1:game_center_achievement_descriptions",
+        "timbre.badge.units_10:game_center_achievement_descriptions",
+        "timbre.badge.course_done:game_center_achievement_descriptions",
+        "timbre.badge.songs_1:game_center_achievement_descriptions",
+        "timbre.badge.songs_25:game_center_achievement_descriptions"
+      ],
+      "note": "Available app values reused exactly; missing app values retain authored store drafts. Does not certify native or device review."
+    }
+  },
+  "name": "Timbre: Gitaarstemmer",
+  "subtitle": "Leer viool, ukelele en bas",
+  "keywords": "viool,cello,ukelele,mandoline,banjo,chromatisch,stroboscoop,gehoor,metronoom,akkoord",
+  "promotional_text": "Gratis stemmen, zonder reclame of account. Voel elke snaar op stemming komen en speel met lessen die luisteren en meer dan 140 nummers.",
+  "description": "Gratis stemapparaat, zonder reclame of account. Daarna lessen die naar je spel luisteren.\n\nTimbre combineert een nauwkeurig stemapparaat met een muziekleraar. Stem elk van 60 instrumenten en leer door te spelen.\n\nGRATIS STEMMEN\nDe standaardstemming van elk instrument is gratis: gitaar, ukelele, viool, mandoline, banjo, oed, erhu en meer. Chromatisch en stroboscopisch stemmen tot op de cent. 132 stemmingen, van Drop D en Open G tot DADGAD, plus je eigen stemmingen.\nAutomatische snaarherkenning vinkt elke gestemde snaar af. Eén aanslag leest alle snaren en laat zien welke eerst moet. Voel de stemming: je telefoon pulseert met de zweving tussen snaar en doeltoon, steeds trager tot hij bij de juiste toon stilvalt. Stem zonder te kijken.\n3D-gitaren, bassen, viool, cello en mandoline in studiobelichting tonen welke stemknop je draait. Met capo, instelbare A4-referentie, solfège en sargam-notennamen.\n\nLEREN DOOR TE SPELEN\n526 lessen in 11 cursussen: gitaar, ukelele, bas, viool, cello, mandoline, banjo, zang, gehoortraining, muziektheorie en ritme. Ook liedboeken voor ukelele, mandoline, viool, cello en bas.\nTimbre hoort elke aanslag: het juiste akkoord, op tijd, en welke snaar niet klonk. Elke noot wordt beoordeeld tot op de cent en milliseconde. ‘Laat zien’ speelt nieuwe akkoorden op een 3D-gitaar, met vingers die in volgorde landen. De meespeelbaan vertraagt voor jou en versnelt weer als je beter wordt.\n\nMeer dan 140 nummers, elk met een volledig arrangement: klassiekers van Jingle Bells tot Amazing Grace, waaronder ook 50 Originals in hedendaagse stijlen voor Timbre geschreven. Speel met de band in je koptelefoon terwijl de tekst oplicht. Plak of importeer je eigen akkoordenschema, transponeer het, laat het op tempo scrollen en luister ernaast naar het origineel op Apple Music.\n\nBLIJF SPELEN\nSterren, XP, dagelijkse opdrachten, reeksen en badges. Game Center met een wekelijkse Voltreffer-competitie, ranglijsten voor nummers en vriendenuitdagingen. Apple Watch met voelbare metronoom en je oefendag in één oogopslag. Widgets voor begin- en toegangsscherm, liveactiviteit en Siri-opdrachten.\nMetronoom met accenten, onderverdelingen en tempotrainer; bourdon, intonatietrainer en akkoord- en toonladderbibliotheek. Gehoortraining voor toonhoogterichting, intervallen en akkoordsoorten, plus een cursus van 40 lessen.\n\nGRATIS BEGINNEN\nElke standaardstemming is gratis. Gitaar, bas, ukelele, viool en cello zijn in alle stemmingen gratis. De eerste eenheid van elke cursus en een selectie nummers zijn ook gratis. Timbre Pro opent alle lessen, nummers, stemmingen en oefentools. Met meldingen aan herinnert Timbre je twee dagen voor een gratis proefperiode eindigt.\nAudio wordt op je iPhone geanalyseerd, nooit opgenomen of geüpload. Geen account, geen reclame.\nAbonnementen worden automatisch verlengd tenzij je minstens 24 uur voor het einde opzegt. Beheer of annuleer op elk moment in Instellingen → Apple Account → Abonnementen.\nVoorwaarden: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\nPrivacy: <privacy policy URL>",
+  "whats_new": "Welkom bij Timbre: gratis stemmen voor 60 instrumenten en 526 lessen die naar je spel luisteren.",
+  "iphone_screenshot_captions": [
+    {
+      "capture": "10b-tune-locked",
+      "caption": "Gratis stemmen. Geen reclame.",
+      "supporting_line": "60 instrumenten, tot op de cent"
+    },
+    {
+      "capture": "65-song-perform",
+      "caption": "Hoor precies hoe je speelde",
+      "supporting_line": "Toonhoogte en timing van elke noot"
+    },
+    {
+      "capture": "52b-lesson-chord",
+      "caption": "Je eerste akkoord, vandaag",
+      "supporting_line": "Timbre hoort elke snaar"
+    },
+    {
+      "capture": "31b-instruments-folk",
+      "caption": "Stem wat je speelt",
+      "supporting_line": "60 instrumenten, 132 stemmingen"
+    },
+    {
+      "capture": "63-songs",
+      "caption": "Speel bekende nummers",
+      "supporting_line": "Meer dan 140 nummers: klassiekers en Originals"
+    },
+    {
+      "capture": "50-learn",
+      "caption": "Leer in je eigen tempo",
+      "supporting_line": "526 lessen in 11 cursussen"
+    },
+    {
+      "capture": "62-lesson-results",
+      "caption": "Vijf minuten per dag tellen",
+      "supporting_line": "Sterren, reeksen en dagelijkse opdrachten"
+    },
+    {
+      "capture": "11b-tune-strum",
+      "caption": "Eén aanslag, alle snaren",
+      "supporting_line": "Zie welke snaar je eerst stemt"
+    },
+    {
+      "capture": "32-journey",
+      "caption": "Zie jezelf vooruitgaan",
+      "supporting_line": "Nauwkeurigheid, snaarklank, badges"
+    }
+  ],
+  "ipad_screenshot_captions": [
+    {
+      "capture": "ipad-landscape-tune",
+      "caption": "Gratis stemmen. Geen reclame.",
+      "supporting_line": "60 instrumenten, tot op de cent"
+    },
+    {
+      "capture": "ipad-landscape-instruments",
+      "caption": "Stem wat je speelt",
+      "supporting_line": "Van viool tot oed, van sitar tot erhu"
+    },
+    {
+      "capture": "ipad-landscape-songs",
+      "caption": "Speel bekende nummers",
+      "supporting_line": "Meer dan 140 nummers: klassiekers en Originals"
+    },
+    {
+      "capture": "ipad-landscape-practice",
+      "caption": "Vijf minuten per dag tellen",
+      "supporting_line": "Dagelijkse oefeningen, opdrachten en gehoorspellen"
+    }
+  ],
+  "app_preview_captions": {
+    "main": {
+      "lock": "Gratis stemmen. Geen reclame.",
+      "tuned": "Elke snaar gecontroleerd",
+      "showme": "Bekijk het spel in 3D",
+      "highway": "Speel nummers met de band",
+      "results": "Hoor hoe je het deed",
+      "songs": "Meer dan 140 nummers om te leren",
+      "end": "Stem. Leer. Speel nummers.",
+      "end-note": "Gratis stemmen · Geen reclame · Geen account"
+    },
+    "violin": {
+      "lock": "Stem je viool gratis",
+      "tuned": "G, D, A, E: alles gestemd",
+      "highway": "Speel nummers op je viool",
+      "results": "Hoor hoe je het deed",
+      "songs": "Meer dan 140 nummers om te leren",
+      "end": "Vioolstemmer en lessen",
+      "end-note": "Gratis stemmen · Geen reclame · Geen account"
+    }
+  },
+  "iap_display_names": {
+    "timbre_pro_annual": "Timbre Pro, jaarlijks",
+    "timbre_pro_monthly": "Timbre Pro, maandelijks",
+    "timbre_plus_lifetime": "Timbre Pro, levenslang"
+  },
+  "iap_descriptions": {
+    "timbre_pro_annual": "Alle lessen, songs, stemmingen en oefentools",
+    "timbre_pro_monthly": "Alle lessen, songs, stemmingen en oefentools",
+    "timbre_plus_lifetime": "Alles in Pro, één keer betalen"
+  },
+  "custom_product_page_keywords": {
+    "violin": [
+      "viool"
+    ],
+    "cello": [
+      "cello"
+    ],
+    "ukulele": [
+      "ukelele"
+    ]
+  }
+}

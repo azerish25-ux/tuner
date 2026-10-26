@@ -10,37 +10,48 @@ Every launch-critical string is translated in every locale.
 
 ## What is missing now
 
-- **App interface:** 488 distinct strings are missing somewhere, 23,424 locale-string pairs in all.
-- **Lessons:** 13,203 locale-string pairs across the 9 lesson languages (German (de), Spanish (es), French (fr), Italian (it), Japanese (ja), Korean (ko), Portuguese (pt), Russian (ru), Chinese (Simplified) (zh-CN)).
-- **Changed English:** 1,122 of these locale-string pairs replace a string whose English was edited. The TODO entry carries the old English and its old translation under `previous`, to update rather than start over.
+- **App interface:** 0 distinct strings are missing somewhere, 0 locale-string pairs in all.
+- **Lessons:** 237,365 locale-string pairs across the 48 lesson languages (Arabic (ar), Bulgarian (bg), Bengali (bn), Catalan (ca), Czech (cs), Danish (da), German (de), Greek (el), Spanish (es), Estonian (et), Persian (fa), Finnish (fi), French (fr), Gujarati (gu), Hebrew (he), Hindi (hi), Croatian (hr), Hungarian (hu), Indonesian (id), Icelandic (is), Italian (it), Japanese (ja), Kannada (kn), Korean (ko), Lithuanian (lt), Latvian (lv), Malayalam (ml), Marathi (mr), Dutch (nl), Norwegian (no), Punjabi (pa), Polish (pl), Portuguese (pt), Romanian (ro), Russian (ru), Slovak (sk), Slovenian (sl), Swedish (sv), Swahili (sw), Tamil (ta), Telugu (te), Thai (th), Turkish (tr), Ukrainian (uk), Urdu (ur), Vietnamese (vi), Chinese (Simplified) (zh-CN), Zulu (zu)).
+- **Rejected:** 245 delivered translations failed a check (format arguments, numbers or ♯/♭ differ from the English). The entry says why under `problem`.
 
 | Locales | App strings missing | Lesson strings missing |
 |---|---:|---:|
-| de, es, fr, it, ja, ko, pt, ru, zh-CN | 488 | 1467 |
-| ar, bg, bn, ca, cs, da, el, et, fa, fi, gu, he, hi, hr, hu, id, is, kn, lt, lv, ml, mr, nl, no, pa, pl, ro, sk, sl, sv, sw, ta, te, th, tr, uk, ur, vi, zu | 488 | — |
+| ar, bg, bn, ca, cs, da, el, et, fa, fi, gu, he, hi, hr, hu, id, is, kn, lt, lv, ml, mr, nl, no, pa, pl, ro, sk, sl, sv, sw, ta, te, th, tr, uk, ur, vi, zu | 0 | 6080 |
+| de | 0 | 38 |
+| pt | 0 | 34 |
+| it | 0 | 33 |
+| fr, ru | 0 | 32 |
+| es | 0 | 26 |
+| ko | 0 | 22 |
+| zh-CN | 0 | 17 |
+| ja | 0 | 11 |
 
 Where the missing lesson strings are (the same in every lesson language):
 
 | Course | Strings | Where (strings) |
 |---|---:|---|
-| Guitar | 515 | unit 1 (12), unit 2 (7), unit 3 (5), unit 4 (6), unit 5 (6), unit 6 (9), unit 7 (9), unit 8 (5), unit 9 (4), unit 10 (8), unit 11 (9), unit 12 (8), unit 13 (8), unit 14 (6), unit 15 (9), unit 16 (11), unit 17 (55), unit 18 (63), unit 19 (53), unit 20 (69), unit 21 (79), unit 22 (74) |
-| Ukulele | 199 | course title (1), unit 1 (7), unit 2 (1), unit 4 (2), unit 6 (2), unit 7 (40), unit 8 (42), unit 9 (61), unit 10 (43) |
-| Bass | 4 | unit 1 (4) |
-| Violin | 10 | unit 1 (5), unit 3 (1), unit 4 (2), unit 5 (2) |
-| Cello | 8 | unit 1 (5), unit 4 (1), unit 5 (2) |
-| Mandolin | 3 | unit 1 (3) |
-| Banjo | 4 | unit 1 (2), unit 3 (2) |
-| Singing | 6 | unit 1 (4), unit 5 (2) |
-| Songs | 35 | course title (1), unit 1 (2), unit 2 (16), unit 3 (7), unit 4 (2), unit 5 (5), unit 6 (2) |
-| Originals | 197 | unit 1 (1), unit 2 (33), unit 3 (38), unit 5 (33), unit 6 (1), unit 7 (31), unit 8 (28), unit 10 (32) |
-| Standards & Classics | 416 | course title (2), unit 1 (43), unit 2 (41), unit 3 (43), unit 4 (53), unit 5 (44), unit 6 (48), unit 7 (54), unit 8 (48), unit 9 (40) |
+| Guitar | 1489 | course title (2), unit 1 (70), unit 2 (83), unit 3 (71), unit 4 (60), unit 5 (56), unit 6 (67), unit 7 (56), unit 8 (55), unit 9 (65), unit 10 (65), unit 11 (88), unit 12 (65), unit 13 (84), unit 14 (61), unit 15 (67), unit 16 (68), unit 17 (55), unit 18 (65), unit 19 (55), unit 20 (72), unit 21 (83), unit 22 (76) |
+| Ukulele | 452 | course title (2), unit 1 (69), unit 2 (33), unit 3 (42), unit 4 (48), unit 5 (33), unit 6 (35), unit 7 (40), unit 8 (43), unit 9 (62), unit 10 (45) |
+| Bass | 267 | course title (2), unit 1 (29), unit 2 (44), unit 3 (49), unit 4 (49), unit 5 (50), unit 6 (44) |
+| Violin | 412 | course title (2), unit 1 (73), unit 2 (55), unit 3 (69), unit 4 (64), unit 5 (70), unit 6 (79) |
+| Cello | 195 | course title (2), unit 1 (37), unit 2 (7), unit 3 (42), unit 4 (47), unit 5 (60) |
+| Mandolin | 299 | course title (2), unit 1 (58), unit 2 (55), unit 3 (44), unit 4 (43), unit 5 (47), unit 6 (50) |
+| Banjo | 252 | course title (2), unit 1 (47), unit 2 (41), unit 3 (39), unit 4 (34), unit 5 (40), unit 6 (49) |
+| Ear Training | 313 | course title (2), unit 1 (24), unit 2 (28), unit 3 (36), unit 4 (35), unit 5 (28), unit 6 (36), unit 7 (43), unit 8 (81) |
+| Music Theory | 691 | course title (2), unit 1 (72), unit 2 (89), unit 3 (70), unit 4 (83), unit 5 (101), unit 6 (78), unit 7 (90), unit 8 (106) |
+| Rhythm | 270 | course title (2), unit 1 (56), unit 2 (40), unit 3 (51), unit 4 (40), unit 5 (37), unit 6 (44) |
+| Singing | 303 | course title (2), unit 1 (66), unit 2 (40), unit 3 (49), unit 4 (43), unit 5 (41), unit 6 (62) |
+| Songs | 298 | course title (1), unit 1 (48), unit 2 (51), unit 3 (65), unit 4 (36), unit 5 (52), unit 6 (45) |
+| Originals | 352 | course title (2), unit 1 (45), unit 2 (34), unit 3 (38), unit 4 (31), unit 5 (33), unit 6 (36), unit 7 (31), unit 8 (28), unit 9 (42), unit 10 (32) |
+| Standards & Classics | 417 | course title (2), unit 1 (43), unit 2 (41), unit 3 (44), unit 4 (53), unit 5 (44), unit 6 (48), unit 7 (54), unit 8 (48), unit 9 (40) |
 | Ukulele Songbook | 30 | course title (2), unit 1 (5), unit 2 (3), unit 3 (3), unit 4 (3), unit 5 (2), unit 7 (1), unit 8 (2), unit 9 (1), unit 10 (1), unit 19 (1), unit 20 (3), unit 22 (1), unit 24 (1), unit 25 (1) |
 | Mandolin Songbook | 8 | course title (2), unit 1 (3), unit 7 (2), unit 12 (1) |
 | Violin Songbook | 8 | course title (2), unit 1 (3), unit 7 (2), unit 12 (1) |
 | Cello Songbook | 9 | course title (1), unit 1 (3), unit 3 (1), unit 7 (3), unit 13 (1) |
 | Bass Songbook | 15 | course title (2), unit 1 (2), unit 3 (3), unit 8 (1), unit 11 (3), unit 20 (1), unit 25 (3) |
 
-Lessons ship in the lesson languages only; the other locales show lessons in English by design. Interface strings ship in every locale.
+Lessons and interface are required in all 49 app languages (English source + 48 translations). English fallback is temporary missing content, never completed localization.
+English-identical lesson strings need explicit source-bound independent semantic review in `tools/l10n/lesson-invariants.json` (locale/key, exact `source`, `reason`, actual `reviewed_by`). Proper names, original song titles, notation and credits may legitimately remain unchanged; review the entire string, never approve untranslated surrounding prose or fabricate reviewer evidence.
 
 ## What to translate
 
@@ -89,6 +100,7 @@ python3 tools/l10n/report.py --import tools/l10n/todo   # merge filled TODO file
 python3 tools/l10n/report.py --check --strict     # what CI runs: fails when this page is out of date
 python3 tools/l10n/critical.py --baseline         # what CI runs: fails on a new untranslated critical string
 python3 tools/l10n/shipping.py                    # coverage per locale, and the languages that ship
+python3 tools/l10n/lessons.py --strict             # full applied lesson coverage in all 48 targets
 ```
 
 `--import DIR` reads every `<locale>.json` in DIR (the TODO format), checks each translation, merges the good ones into `tools/l10n/translations/<locale>.json` and `tools/l10n/learn/<locale>.json`, then runs the two apply scripts and regenerates the handoff. By hand, the apply steps are:
@@ -106,4 +118,4 @@ Which languages ship is the owner's decision: `CFBundleLocalizations` in `ios/pr
 
 Interface strings are found by `tools/l10n/swiftstrings.py`, a scanner that reads Swift without Xcode. It infers the type of each interpolation (`%lld` for Int, `%@` for text); when a new string's key carries `key_check`, the inferred specifier is a guess. Confirm it with Xcode's export: run the *Localization export* workflow (`l10n.yml`) and pass its `en.xliff` with `--xliff`.
 
-Stale entries: 156 keys that some locale still holds have no English in the app any more (5,772 locale-key pairs; the keys are listed under `stale` in `tools/l10n/todo/index.json`). They are harmless, and they are where `changed` entries find their old translations.
+Stale entries: 158 keys that some locale still holds have no English in the app any more (5,790 locale-key pairs; the keys are listed under `stale` in `tools/l10n/todo/index.json`). They are harmless, and they are where `changed` entries find their old translations.

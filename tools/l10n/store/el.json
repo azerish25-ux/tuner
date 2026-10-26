@@ -1,0 +1,321 @@
+{
+  "schema_version": 1,
+  "locale": "el",
+  "counts": {
+    "instruments": 60,
+    "tunings": 132,
+    "courses": 11,
+    "lessons": 526,
+    "songs_floor": 140,
+    "originals": 50
+  },
+  "review": {
+    "text": "ai_drafted",
+    "native": "not_verified",
+    "market_search": "not_verified",
+    "device": "not_verified",
+    "screenshots": "not_captured",
+    "app_preview": "not_rendered",
+    "iap_account_limits": "not_verified",
+    "game_center_account": "not_verified",
+    "release_ready": false,
+    "blockers": [
+      "Production privacy policy URL and verification not provided",
+      "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+      "Localized App Preview recordings and audio/sync/render review pending",
+      "App Store Connect product/locale limits and Game Center configuration/images unverified"
+    ],
+    "semantic": "ai_cross_reviewed_critical_facts",
+    "legal_back_translation": "not_performed_optional_under_ai_policy",
+    "song_title_alignment": {
+      "state": "pending_app_alignment",
+      "pending_app_alignment": [
+        "timbre.song.twinkle",
+        "timbre.song.odetojoy",
+        "timbre.song.jinglebells",
+        "timbre.song.saints",
+        "timbre.song.kiteweather",
+        "timbre.song.dashboard",
+        "timbre.song.lochlomond",
+        "timbre.song.mountain"
+      ],
+      "native_review": "not_verified"
+    },
+    "ai_cross_review": {
+      "scope": "Free tier, notification-conditioned two-day trial reminder, on-device never-recorded/uploaded audio, automatic renewal and 24-hour cancellation, anytime management, IAP benefits. Additional feature/count/terminology review for original nine and European/regional listings.",
+      "limitations": "AI review with inherited English source, not blinded back-translation, native-speaker, market, legal, account or visual approval."
+    },
+    "ai_source_aware": "reviewed",
+    "privacy_policy": "not_verified",
+    "review_policy": "ai_source_aware"
+  },
+  "game_center_leaderboard_names": {
+    "timbre.sniper.best": "Διάνα",
+    "timbre.sniper.weekly": "Διάνα αυτή την εβδομάδα",
+    "timbre.ear.level": "Επίπεδο εξάσκησης αυτιού",
+    "timbre.streak": "Σερί εξάσκησης",
+    "timbre.song.twinkle": "Φέγγε, φέγγε, αστεράκι",
+    "timbre.song.odetojoy": "Ωδή στη χαρά",
+    "timbre.song.jinglebells": "Jingle Bells",
+    "timbre.song.saints": "When the Saints Go Marching In",
+    "timbre.song.kiteweather": "Kite Weather",
+    "timbre.song.dashboard": "Dust on the Dashboard",
+    "timbre.song.lochlomond": "Loch Lomond",
+    "timbre.song.mountain": "She'll Be Coming 'Round the Mountain"
+  },
+  "game_center_achievement_names": {
+    "timbre.badge.first_tune": "Πρώτη κουρδισμένη",
+    "timbre.badge.full_tune": "Και οι έξι",
+    "timbre.badge.streak_7": "Τέλεια εβδομάδα",
+    "timbre.badge.strings_100": "Εκατό χορδές",
+    "timbre.badge.bullseye": "Διάνα",
+    "timbre.badge.sharpshooter": "Υψηλή βαθμολογία",
+    "timbre.badge.golden_ear": "Χρυσό αυτί",
+    "timbre.badge.level_5": "Ανερχόμενο αστέρι",
+    "timbre.badge.multi": "Πολυοργανίστας",
+    "timbre.badge.streak_30": "Μήνας μουσικής",
+    "timbre.badge.strings_1000": "Χίλιες χορδές",
+    "timbre.badge.first_lesson": "Πρώτο μάθημα",
+    "timbre.badge.lessons_25": "Τακτικός μαθητής",
+    "timbre.badge.lessons_100": "Αριστούχος",
+    "timbre.badge.perfect_10": "Άψογα",
+    "timbre.badge.full_25": "Τελετουργικό κουρδίσματος",
+    "timbre.badge.streak_3": "Προθέρμανση",
+    "timbre.badge.streak_100": "Εκατό ημέρες",
+    "timbre.badge.minutes_60": "Πρώτη ώρα",
+    "timbre.badge.minutes_600": "Δέκα ώρες",
+    "timbre.badge.daily_1": "Ημερήσιο πρόγραμμα",
+    "timbre.badge.daily_30": "Άνθρωπος της ρουτίνας",
+    "timbre.badge.sniper_win": "Νικητής γύρου",
+    "timbre.badge.bullseyes_50": "Ακριβώς στο κέντρο",
+    "timbre.badge.ear_perfect": "Άριστα",
+    "timbre.badge.ear_500": "Μάστορας της ακοής",
+    "timbre.badge.units_1": "Ενότητα ολοκληρώθηκε",
+    "timbre.badge.units_10": "Δέκα ενότητες",
+    "timbre.badge.course_done": "Απόφοιτος",
+    "timbre.badge.songs_1": "Πρώτο τραγούδι",
+    "timbre.badge.songs_25": "Τραγουδολόγιο"
+  },
+  "game_center_achievement_descriptions": {
+    "timbre.badge.first_tune": "Κουρδίστε την πρώτη σας χορδή",
+    "timbre.badge.full_tune": "Κουρδίστε όλες τις χορδές ενός οργάνου",
+    "timbre.badge.streak_7": "Εξασκηθείτε επτά ημέρες στη σειρά",
+    "timbre.badge.strings_100": "Κουρδίστε 100 χορδές",
+    "timbre.badge.bullseye": "Πετύχετε την πρώτη σας διάνα",
+    "timbre.badge.sharpshooter": "Πετύχετε 2.000 στη Διάνα",
+    "timbre.badge.golden_ear": "Απαντήστε σωστά σε 50 ερωτήσεις ακοής",
+    "timbre.badge.level_5": "Φτάστε στο επίπεδο 5",
+    "timbre.badge.multi": "Κουρδίστε τρία διαφορετικά όργανα",
+    "timbre.badge.streak_30": "Εξασκηθείτε τριάντα ημέρες στη σειρά",
+    "timbre.badge.strings_1000": "Κουρδίστε 1.000 χορδές",
+    "timbre.badge.first_lesson": "Ολοκληρώστε το πρώτο σας μάθημα",
+    "timbre.badge.lessons_25": "Ολοκληρώστε 25 μαθήματα",
+    "timbre.badge.lessons_100": "Ολοκληρώστε 100 μαθήματα",
+    "timbre.badge.perfect_10": "Κερδίστε τρία αστέρια σε 10 μαθήματα",
+    "timbre.badge.full_25": "Κουρδίστε όλες τις χορδές 25 φορές",
+    "timbre.badge.streak_3": "Εξασκηθείτε τρεις ημέρες στη σειρά",
+    "timbre.badge.streak_100": "Εξασκηθείτε 100 ημέρες στη σειρά",
+    "timbre.badge.minutes_60": "Εξασκηθείτε συνολικά για μία ώρα",
+    "timbre.badge.minutes_600": "Εξασκηθείτε συνολικά για δέκα ώρες",
+    "timbre.badge.daily_1": "Ολοκληρώστε ένα ημερήσιο πρόγραμμα",
+    "timbre.badge.daily_30": "Ολοκληρώστε 30 ημερήσια προγράμματα",
+    "timbre.badge.sniper_win": "Κερδίστε έναν γύρο στη Διάνα",
+    "timbre.badge.bullseyes_50": "Πετύχετε 50 διάνες",
+    "timbre.badge.ear_perfect": "Απαντήστε σωστά και στις δέκα ερωτήσεις ενός γύρου ακοής",
+    "timbre.badge.ear_500": "Απαντήστε σωστά σε 500 ερωτήσεις ακοής",
+    "timbre.badge.units_1": "Ολοκληρώστε όλα τα μαθήματα μιας ενότητας",
+    "timbre.badge.units_10": "Ολοκληρώστε δέκα ενότητες",
+    "timbre.badge.course_done": "Ολοκληρώστε έναν ολόκληρο κύκλο μαθημάτων",
+    "timbre.badge.songs_1": "Παίξτε το πρώτο σας τραγούδι",
+    "timbre.badge.songs_25": "Παίξτε 25 τραγούδια"
+  },
+  "provenance": {
+    "game_center": "Badge text reused from matching app Localizable.strings; song board titles reused from Learn.strings. Newly renamed badge/board text authored for this store draft. No native review claimed.",
+    "game_center_songs": "Existing Learn.strings title reused when present. Otherwise established/localized title drafted; other named musical works retain source titles, not a claim of app translation. Reconcile with later Learn imports before release.",
+    "game_center_app_reuse": {
+      "app_locale": "el",
+      "reused_fields": [
+        "timbre.badge.first_tune:game_center_achievement_names",
+        "timbre.badge.full_tune:game_center_achievement_names",
+        "timbre.badge.streak_7:game_center_achievement_names",
+        "timbre.badge.strings_100:game_center_achievement_names",
+        "timbre.badge.bullseye:game_center_achievement_names",
+        "timbre.badge.sharpshooter:game_center_achievement_names",
+        "timbre.badge.golden_ear:game_center_achievement_names",
+        "timbre.badge.level_5:game_center_achievement_names",
+        "timbre.badge.multi:game_center_achievement_names",
+        "timbre.badge.streak_30:game_center_achievement_names",
+        "timbre.badge.strings_1000:game_center_achievement_names",
+        "timbre.badge.first_lesson:game_center_achievement_names",
+        "timbre.badge.lessons_25:game_center_achievement_names",
+        "timbre.badge.lessons_100:game_center_achievement_names",
+        "timbre.badge.perfect_10:game_center_achievement_names",
+        "timbre.badge.full_25:game_center_achievement_names",
+        "timbre.badge.streak_3:game_center_achievement_names",
+        "timbre.badge.streak_100:game_center_achievement_names",
+        "timbre.badge.minutes_60:game_center_achievement_names",
+        "timbre.badge.minutes_600:game_center_achievement_names",
+        "timbre.badge.daily_1:game_center_achievement_names",
+        "timbre.badge.daily_30:game_center_achievement_names",
+        "timbre.badge.sniper_win:game_center_achievement_names",
+        "timbre.badge.bullseyes_50:game_center_achievement_names",
+        "timbre.badge.ear_perfect:game_center_achievement_names",
+        "timbre.badge.ear_500:game_center_achievement_names",
+        "timbre.badge.units_1:game_center_achievement_names",
+        "timbre.badge.units_10:game_center_achievement_names",
+        "timbre.badge.course_done:game_center_achievement_names",
+        "timbre.badge.songs_1:game_center_achievement_names",
+        "timbre.badge.songs_25:game_center_achievement_names",
+        "timbre.badge.first_tune:game_center_achievement_descriptions",
+        "timbre.badge.full_tune:game_center_achievement_descriptions",
+        "timbre.badge.streak_7:game_center_achievement_descriptions",
+        "timbre.badge.strings_100:game_center_achievement_descriptions",
+        "timbre.badge.bullseye:game_center_achievement_descriptions",
+        "timbre.badge.sharpshooter:game_center_achievement_descriptions",
+        "timbre.badge.golden_ear:game_center_achievement_descriptions",
+        "timbre.badge.level_5:game_center_achievement_descriptions",
+        "timbre.badge.multi:game_center_achievement_descriptions",
+        "timbre.badge.streak_30:game_center_achievement_descriptions",
+        "timbre.badge.strings_1000:game_center_achievement_descriptions",
+        "timbre.badge.first_lesson:game_center_achievement_descriptions",
+        "timbre.badge.lessons_25:game_center_achievement_descriptions",
+        "timbre.badge.lessons_100:game_center_achievement_descriptions",
+        "timbre.badge.perfect_10:game_center_achievement_descriptions",
+        "timbre.badge.full_25:game_center_achievement_descriptions",
+        "timbre.badge.streak_3:game_center_achievement_descriptions",
+        "timbre.badge.streak_100:game_center_achievement_descriptions",
+        "timbre.badge.minutes_60:game_center_achievement_descriptions",
+        "timbre.badge.minutes_600:game_center_achievement_descriptions",
+        "timbre.badge.daily_1:game_center_achievement_descriptions",
+        "timbre.badge.daily_30:game_center_achievement_descriptions",
+        "timbre.badge.sniper_win:game_center_achievement_descriptions",
+        "timbre.badge.bullseyes_50:game_center_achievement_descriptions",
+        "timbre.badge.ear_perfect:game_center_achievement_descriptions",
+        "timbre.badge.ear_500:game_center_achievement_descriptions",
+        "timbre.badge.units_1:game_center_achievement_descriptions",
+        "timbre.badge.units_10:game_center_achievement_descriptions",
+        "timbre.badge.course_done:game_center_achievement_descriptions",
+        "timbre.badge.songs_1:game_center_achievement_descriptions",
+        "timbre.badge.songs_25:game_center_achievement_descriptions"
+      ],
+      "note": "Available app values reused exactly; missing app values retain authored store drafts. Does not certify native or device review."
+    }
+  },
+  "name": "Timbre: Κουρδιστήρι κιθάρας",
+  "subtitle": "Μάθε βιολί, γιουκαλίλι, μπάσο",
+  "keywords": "βιολί,τσέλο,γιουκαλίλι,μαντολίνο,μπάντζο,χρωματικό,στροβοσκόπιο,αυτί,μετρονόμος,συγχορδία",
+  "promotional_text": "Δωρεάν κουρδιστήρι, χωρίς διαφημίσεις ή λογαριασμό. Νιώσε κάθε χορδή να κουρδίζεται, μάθε με μαθήματα που ακούν και παίξε πάνω από 140 τραγούδια.",
+  "description": "Δωρεάν κουρδιστήρι. Χωρίς διαφημίσεις ή λογαριασμό. Έπειτα μαθήματα που ακούν το παίξιμό σου.\n\nΤο Timbre συνδυάζει ακριβές κουρδιστήρι και δάσκαλο μουσικής. Κούρδισε 60 όργανα και μάθε παίζοντας.\n\nΚΟΥΡΔΙΣΕ ΔΩΡΕΑΝ\nΤο κανονικό κούρδισμα κάθε οργάνου είναι δωρεάν: κιθάρα, γιουκαλίλι, βιολί, μαντολίνο, μπάντζο, ούτι, ερχού και άλλα. Χρωματικό και στροβοσκοπικό κουρδιστήρι με ακρίβεια cent. 132 κουρδίσματα, από Drop D και Open G έως DADGAD, και δικά σου.\nΗ αυτόματη αναγνώριση χορδών σημειώνει κάθε κουρδισμένη χορδή. Ένα χτύπημα διαβάζει όλες τις χορδές και δείχνει ποια να κουρδίσεις πρώτη. Κούρδισε με την αφή: το τηλέφωνο πάλλεται με τους διακροτηματισμούς ανάμεσα στη χορδή και τη νότα-στόχο, επιβραδύνει όσο πλησιάζουν και σταματά όταν ταιριάξουν. Δεν χρειάζεται να κοιτάς.\nΚιθάρες, μπάσα, βιολί, τσέλο και μαντολίνο 3D με φωτισμό στούντιο δείχνουν το κλειδί που θα γυρίσεις. Καποτάστο, ρυθμιζόμενη αναφορά A4, ονόματα νοτών σολφέζ και σαργκάμ.\n\nΜΑΘΕ ΠΑΙΖΟΝΤΑΣ\n526 μαθήματα σε 11 κύκλους: κιθάρα, γιουκαλίλι, μπάσο, βιολί, τσέλο, μαντολίνο, μπάντζο, φωνή, εκπαίδευση ακοής, θεωρία και ρυθμός. Και συλλογές τραγουδιών για γιουκαλίλι, μαντολίνο, βιολί, τσέλο και μπάσο.\nΤο Timbre ακούει κάθε χτύπημα: τη σωστή συγχορδία, τον χρόνο και τη χορδή που δεν ήχησε. Αξιολογεί κάθε νότα σε cent και χιλιοστά του δευτερολέπτου. Το «Δείξτε μου» παίζει νέες συγχορδίες σε κιθάρα 3D, τοποθετώντας τα δάχτυλα με τη σειρά. Η διαδρομή νοτών επιβραδύνει για σένα και επιταχύνει όσο βελτιώνεσαι.\n\nΠάνω από 140 τραγούδια, καθένα με πλήρη ενορχήστρωση: κλασικά από Jingle Bells έως Amazing Grace, με 50 Originals γραμμένα για το Timbre σε σύγχρονα ύφη μέσα στο σύνολο. Παίξε με την μπάντα στα ακουστικά καθώς φωτίζονται οι στίχοι. Επικόλλησε ή εισήγαγε δικό σου φύλλο συγχορδιών, κάνε μεταφορά τόνου, κύλιση στον ρυθμό και άκου δίπλα το πρωτότυπο στο Apple Music.\n\nΣΥΝΕΧΙΣΕ\nΑστέρια, XP, καθημερινές αποστολές, σερί και σήματα. Game Center: εβδομαδιαία λίγκα Διάνα, πίνακες τραγουδιών και προκλήσεις φίλων. Apple Watch: μετρονόμος που νιώθεις στον καρπό και η σημερινή εξάσκηση με μια ματιά. Widget αρχικής οθόνης και κλειδώματος, ζωντανή δραστηριότητα και συντομεύσεις Siri.\nΜετρονόμος με τονισμούς, υποδιαιρέσεις και εξάσκηση ταχύτητας· ισοκράτημα, εξάσκηση τονικής ακρίβειας, βιβλιοθήκη συγχορδιών και κλιμάκων. Εκπαίδευση ακοής: κατεύθυνση ύψους, διαστήματα και είδη συγχορδιών, συν κύκλος 40 μαθημάτων.\n\nΞΕΚΙΝΑ ΔΩΡΕΑΝ\nΤο κανονικό κούρδισμα όλων των οργάνων είναι δωρεάν. Κιθάρα, μπάσο, γιουκαλίλι, βιολί και τσέλο είναι δωρεάν σε όλα τα κουρδίσματα. Η πρώτη ενότητα κάθε κύκλου και επιλεγμένα τραγούδια είναι επίσης δωρεάν. Το Timbre Pro ανοίγει όλα τα μαθήματα, τραγούδια, κουρδίσματα και εργαλεία. Με τις γνωστοποιήσεις ενεργές, το Timbre σε ειδοποιεί δύο ημέρες πριν λήξει μια δωρεάν δοκιμή.\nΟ ήχος αναλύεται στο iPhone σου, δεν ηχογραφείται ούτε μεταφορτώνεται ποτέ. Χωρίς λογαριασμό ή διαφημίσεις.\nΟι συνδρομές ανανεώνονται αυτόματα αν δεν ακυρωθούν τουλάχιστον 24 ώρες πριν τη λήξη. Διαχείριση ή ακύρωση οποτεδήποτε: Ρυθμίσεις → Λογαριασμός Apple → Συνδρομές.\nΌροι: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\nΑπόρρητο: <privacy policy URL>",
+  "whats_new": "Καλώς ήρθες στο Timbre: δωρεάν κουρδιστήρι για 60 όργανα και 526 μαθήματα που ακούν το παίξιμό σου.",
+  "iphone_screenshot_captions": [
+    {
+      "capture": "10b-tune-locked",
+      "caption": "Δωρεάν. Χωρίς διαφημίσεις.",
+      "supporting_line": "60 όργανα, ακρίβεια cent"
+    },
+    {
+      "capture": "65-song-perform",
+      "caption": "Άκου πώς έπαιξες",
+      "supporting_line": "Ύψος και χρόνος κάθε νότας"
+    },
+    {
+      "capture": "52b-lesson-chord",
+      "caption": "Η πρώτη σου συγχορδία σήμερα",
+      "supporting_line": "Το Timbre ακούει κάθε χορδή"
+    },
+    {
+      "capture": "31b-instruments-folk",
+      "caption": "Κούρδισε ό,τι παίζεις",
+      "supporting_line": "60 όργανα, 132 κουρδίσματα"
+    },
+    {
+      "capture": "63-songs",
+      "caption": "Παίξε γνωστά τραγούδια",
+      "supporting_line": "Πάνω από 140 τραγούδια: κλασικά και Originals"
+    },
+    {
+      "capture": "50-learn",
+      "caption": "Μάθε στον ρυθμό σου",
+      "supporting_line": "526 μαθήματα σε 11 κύκλους"
+    },
+    {
+      "capture": "62-lesson-results",
+      "caption": "Πέντε λεπτά τη μέρα μετρούν",
+      "supporting_line": "Αστέρια, σερί και καθημερινές αποστολές"
+    },
+    {
+      "capture": "11b-tune-strum",
+      "caption": "Ένα χτύπημα, όλες οι χορδές",
+      "supporting_line": "Δες ποια χορδή να κουρδίσεις πρώτη"
+    },
+    {
+      "capture": "32-journey",
+      "caption": "Δες την πρόοδό σου",
+      "supporting_line": "Ακρίβεια, ήχος χορδών, σήματα"
+    }
+  ],
+  "ipad_screenshot_captions": [
+    {
+      "capture": "ipad-landscape-tune",
+      "caption": "Δωρεάν. Χωρίς διαφημίσεις.",
+      "supporting_line": "60 όργανα, ακρίβεια cent"
+    },
+    {
+      "capture": "ipad-landscape-instruments",
+      "caption": "Κούρδισε ό,τι παίζεις",
+      "supporting_line": "Από βιολί ως ούτι, από σιτάρ ως ερχού"
+    },
+    {
+      "capture": "ipad-landscape-songs",
+      "caption": "Παίξε γνωστά τραγούδια",
+      "supporting_line": "Πάνω από 140 τραγούδια: κλασικά και Originals"
+    },
+    {
+      "capture": "ipad-landscape-practice",
+      "caption": "Πέντε λεπτά τη μέρα μετρούν",
+      "supporting_line": "Καθημερινή εξάσκηση, αποστολές και παιχνίδια ακοής"
+    }
+  ],
+  "app_preview_captions": {
+    "main": {
+      "lock": "Δωρεάν. Χωρίς διαφημίσεις.",
+      "tuned": "Κάθε χορδή ελεγμένη",
+      "showme": "Δες το παίξιμο σε 3D",
+      "highway": "Παίξε τραγούδια με την μπάντα",
+      "results": "Άκου το αποτέλεσμά σου",
+      "songs": "Πάνω από 140 τραγούδια να μάθεις",
+      "end": "Κούρδισε. Μάθε. Παίξε.",
+      "end-note": "Δωρεάν κουρδιστήρι · Χωρίς διαφημίσεις ή λογαριασμό"
+    },
+    "violin": {
+      "lock": "Κούρδισε δωρεάν το βιολί σου",
+      "tuned": "G, D, A, E: όλα κουρδισμένα",
+      "highway": "Παίξε τραγούδια στο βιολί",
+      "results": "Άκου το αποτέλεσμά σου",
+      "songs": "Πάνω από 140 τραγούδια να μάθεις",
+      "end": "Κουρδιστήρι και μαθήματα βιολιού",
+      "end-note": "Δωρεάν κουρδιστήρι · Χωρίς διαφημίσεις ή λογαριασμό"
+    }
+  },
+  "iap_display_names": {
+    "timbre_pro_annual": "Timbre Pro, ετήσιο",
+    "timbre_pro_monthly": "Timbre Pro, μηνιαίο",
+    "timbre_plus_lifetime": "Timbre Pro, εφ’ όρου ζωής"
+  },
+  "iap_descriptions": {
+    "timbre_pro_annual": "Όλα: μαθήματα, τραγούδια, κούρδισμα, εργαλεία",
+    "timbre_pro_monthly": "Όλα: μαθήματα, τραγούδια, κούρδισμα, εργαλεία",
+    "timbre_plus_lifetime": "Όλο το Pro με μία πληρωμή"
+  },
+  "custom_product_page_keywords": {
+    "violin": [
+      "βιολί"
+    ],
+    "cello": [
+      "τσέλο"
+    ],
+    "ukulele": [
+      "γιουκαλίλι"
+    ]
+  }
+}

@@ -1,0 +1,1743 @@
+{
+  "schema_version": 2,
+  "reviewed_on": "2026-10-26",
+  "scope": "All 50 listing locales; entire listing payload, including primary English snapshot",
+  "review_policy": {
+    "mode": "ai_source_aware",
+    "selected_by": "owner",
+    "authorization": "Owner elected AI review instead of mandatory human sign-off for this localization work.",
+    "scope": "listing_text_only",
+    "default_without_selection": "human",
+    "limitations": [
+      "Not native-speaker or instrument-player certification",
+      "Not blinded legal back-translation or legal compliance certification",
+      "No measured keyword popularity or market research",
+      "No localized device, glyph, RTL, screenshot or video verification",
+      "No account configuration, submission or App Store approval"
+    ]
+  },
+  "source": {
+    "locale": "en-US",
+    "content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+    "version": {
+      "schema_version": 1,
+      "counts": {
+        "instruments": 60,
+        "tunings": 132,
+        "courses": 11,
+        "lessons": 526,
+        "songs_floor": 140,
+        "originals": 50
+      }
+    }
+  },
+  "native_review": "not_verified",
+  "device_review": "not_verified",
+  "blinded_legal_back_translation": "not_performed",
+  "market_validation": "not_performed",
+  "account_changes": "none",
+  "independent_review": {
+    "reviewer": "Independent AI semantic review (2026-10-26)",
+    "method": "Independent source-aware AI semantic review of all consumer-facing fields; source available, not blinded",
+    "identified_corrections": 94,
+    "applied_corrections": 94,
+    "application_method": "All 94 exact old values checked before any write; all 50 resulting payload hashes matched independently proposed hashes.",
+    "artifacts": {
+      "evidence": {
+        "file": "tools/l10n/store-review-independent.json",
+        "sha256": "124420e14c40bb0dfc476519a3ca68180c53018315529c3ab84a9930fe994766"
+      },
+      "corrections": {
+        "file": "tools/l10n/store-corrections.json",
+        "sha256": "fffbbe661169c61ec6663be724018eb1667b663d4e4c965bba9e52d719905cfa"
+      }
+    },
+    "policy_recommendation_sha256": "d69ee544571082357801fd0d03e2ab1514a908718f0345d4a55474fe331cff17"
+  },
+  "remaining_gates": [
+    "Production privacy policy URL and verification not provided",
+    "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+    "Localized App Preview recordings and audio/sync/render review pending",
+    "App Store Connect product/locale limits and Game Center configuration/images unverified"
+  ],
+  "optional_unperformed_review": [
+    "Native-speaker/instrument-player review",
+    "Market ASO research",
+    "Independent blinded legal back-translation"
+  ],
+  "locales": {
+    "en-US": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 0,
+      "resolved_corrections": 0,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "en-AU": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "c03a0dfb62ab5aabc3432f3f9e24c841126150b8c5f49ceec873c689160730d8",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 0,
+      "resolved_corrections": 0,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "en-CA": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "9d6807d331608b52fd0d23e39c03b4da63102f19e0b7143303a39707f50737ac",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 0,
+      "resolved_corrections": 0,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "en-GB": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "8adfab55c2e9d9ece12e14eb3441924269e9e6bd34fb676d4508eae319edf1c1",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 0,
+      "resolved_corrections": 0,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "de-DE": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "1c6dc6f1d4d29b45038334d4fd50b715cbc76ad2fd313c6a1b6283467c153558",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "fr-FR": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "87c861ab01a699847abaaaca796db9eec451406746b0dd6ebaf83e24bc3187b8",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 4,
+      "resolved_corrections": 4,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "es-MX": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "b52dca05a39c195726b5ec285ffb30bbca7a2d42fc39e127e6e49cdeda77708c",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "it": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "df71d01984a0ad722263e21b36fae832cedf1f779c48bed4aaa4eda15b0359ba",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "pt-BR": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "c2f19924967717171e4509f5ab875d4ee925aeab207220c2eb40682c9e12347a",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "ru": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "11c55f08449db76f9b590f287b1b4f4242061c7949388dd49fa76fd87029ade3",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "ja": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "e8acdd76c82248cef6724cbb85298217637f2baabc0129b600a88746bc07bae9",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "ko": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "4b75bff6bd0f75a4e404c4c97063d9948036b5cd8d5d42ec33480959c1b2056c",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "zh-Hans": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "7eafb29bc6043111a25ace16fd03d9b577725d2db3c8dbc5e88ee9227cdb5408",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 3,
+      "resolved_corrections": 3,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "es-ES": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "be6ed6e7baf0802f1bc829715ce90ffa71d471eae6aeacea84fda70d3b840ea2",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "fr-CA": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "a33a96eea9a35f24bdd7d01f2db6cc6a47666d29136eff66005d029c7ca680f3",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 4,
+      "resolved_corrections": 4,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "pt-PT": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "32d62dd7823c3341d9200e65aed59337f88b4792128f8d7cdc0988f656693001",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "ar-SA": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "9e8863d534a414c144a470404b3591ee21a6b030aca64ea37dac5eccbc3dc6a8",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 3,
+      "resolved_corrections": 3,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "he": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "bed742f28287a3cba3f17dfc80d2383faf81857a247d69ecd39d289cf844492d",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "ca": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "24b2750ba6aa81da9f3214a52fa80a316d5235f0dd10beee2365e9673d8e94be",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "cs": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "5da587674213b35e201c0be126d8c585fb198f51c211080063b448c6633b6151",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "da": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "6ea75ed985945ded6611a8bd75ff7e3ff4f6ccb067a7880aa08f04689afa1a4a",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "nl-NL": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "c3ec3eec6afebf1f176d8a7fb190f6d68b3c22b3163f2a033e6c7ef413e2e3b7",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "no": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "b58cf211ec67681e405531548e2cff417a301a77e3a36d607f31712e942803f5",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "sv": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "bad59314ce5ef6edf8b8ea37dc3dac097d43171c80d2ee07642497ce52838f01",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "fi": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "fff9c0d34d76d1621bda2f70bdfb0b07c82c5bfdc2f6155eb6b96f12a80cede4",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "el": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "a6475215c562538f102b01eef96e546617d655b522211e5f959919ee8d85962a",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "tr": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "704fa9f842fd786efd5f10da43cd36816fe67a02b0e5f8c6b930903ef62e91f4",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "hr": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "21bf64c9feea295d63fad7eed313fb9f4de185994be9f86d3204ef902e9d4815",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "hu": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "de4be93cf0455948714412b20addfd011e9c2021b05a649a2367cccebf1d9f0a",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "pl": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "ee71db1725695e21b98326f7c0ac43184f1545731a5d915273b67338e722e665",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "ro": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "7b9a56ae8555bf68e47021c66763ff58cf36efe505b9f0da1a26c5f425cffa77",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "sk": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "c571659330281c2037233bf8e1551a7abe2f695aa9f354912430b1528ca70c47",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "sl-SI": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "1de371c3dabcdeac8014f723bd3fe8b9a51d4ec566a50f1984e1e0318d939905",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "uk": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "77626c8bcc5bb539b058d8ac21f516a43d9d0b484ccf0bb67cbcbd09df7d1a30",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "id": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "6a63b5dfd8481cc198d1b664abfb50ab9da9149dc61ed67ee6266293e5d016b7",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "ms": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "0381867f6285d2978b276e59b1a67545e64205d8c47499f27e36f1c64f63bf66",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 0,
+      "resolved_corrections": 0,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "vi": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "2c417187a871495c2e392a6f3cd5754fd325f547374cc955c58091a694e391f9",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "th": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "1ae1bd63f395102f96931ef7c12295d9dbb00f336809373b3b879d2d74cdf9de",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "zh-Hant": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "009c761551490879807a8c0fa0fdc429764359a4f084106143146c970de05d32",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 1,
+      "resolved_corrections": 1,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "hi": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "6436816a34425b989107a1b42bf3cb5bdea8c42080782d38cf46a3bd4379e551",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "ur-PK": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "ac600c3a3796748ecc351fedb1ef42d3fa5fb520277025067304683c95826bf7",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "bn-BD": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "e25418463840934a7d66aa7639b3e3773d1d381fd00d279cbc7a2ef72415e78b",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "gu-IN": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "92e0a5904b112f6dd765d3ea97cfb9ded360eb48037ec08999faf7c3a2bff0db",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "mr-IN": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "f19632592cea3f719a6fa951e60bada5b042ba59f1c29494c2f3feb682112177",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "pa-IN": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "82e0366c8f1540c0e90a8a27770e41b6867e188e86dc0ed1f50be33afcea2253",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "kn-IN": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "5ccc0e4bdc49ab97accbbe211fe39ec50a51addf01c8cb21d5ff4d6b3a6bbb2f",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "ml-IN": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "cee12a1bcea95686e0afd4ecafbb067e4f61ea6525e8716b6d504c8c17a721e5",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "ta-IN": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "03f58955ed26337a4d75023775c4f62b29f1f2cb026b76b3428bf6422e4fe30b",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "te-IN": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "46b67e3bbf21619e0510985e71d3349b078b4b9031ebbc48f2372e0743512814",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    },
+    "or-IN": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "b79fc25f6854143177f5e25bd9afe066feae3a9723227d4dfaa536ad50817c1d",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 1,
+      "resolved_corrections": 1,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+    }
+  },
+  "previous_critical_fact_review": {
+    "schema_version": 1,
+    "reviewed_on": "2026-10-26",
+    "scope": "49 non-primary listing drafts; en-US preserved from source",
+    "native_review": "not_verified",
+    "device_review": "not_verified",
+    "blinded_legal_back_translation": "not_performed",
+    "market_validation": "not_performed",
+    "account_changes": "none",
+    "corrections": [
+      "Separated 60-instrument tuner support from limited teaching-course scope in 15 European intros.",
+      "Made 140+ distinct-song count inclusive of 50 Originals in 16 European summaries.",
+      "Rewrote European Portuguese in consistent tu register; retained matching app badge text unchanged.",
+      "Restored explicit anytime subscription management where absent.",
+      "Corrected glossary mismatches in Catalan, Spanish, Italian, Japanese, Czech and Greek; Danish privacy label no longer means anonymity.",
+      "IAP descriptions retain lessons, songs, tunings and practice tools; all tightened to current official generic 45-character cap."
+    ],
+    "remaining_gates": [
+      "Production privacy policy URL",
+      "Native musician and market-search review",
+      "Independent blinded legal back-translation",
+      "Actual localized captures and font/RTL/layout review",
+      "Localized App Preview recording and sync/audio/render review",
+      "App Store Connect product/locale limits and Game Center configuration/images",
+      "Reconcile GC song names after app lesson imports; use store.py --sync-game-center"
+    ],
+    "locales": {
+      "ar-SA": {
+        "description_sha256": "ed0537e05149180153a94877cbaf9d27eeba2a4be231dfa8ec30f74d6f325ff1",
+        "iap_descriptions_sha256": "d8155fd8ae3048c473d47a9494a397662781c491a0d96afd6c47667b4499a42d",
+        "reviewer": "translate_all_store_listings",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "bn-BD": {
+        "description_sha256": "021f9c86e96df85b57ffcfaf225f753e8e67e14aec3a2b9db4bedf66232b6239",
+        "iap_descriptions_sha256": "6b022f6349260b24dde96697e7ee1a5e4152ebb276cd4b48bfb319bf4b1d2fa5",
+        "reviewer": "translate_all_store_listings",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "ca": {
+        "description_sha256": "126eb6d4c26a99e322ae61b2c7c3981786a58f4622a6b785d1b8b14f1648570d",
+        "iap_descriptions_sha256": "f4cded4f5c7d78cd9150f0b85eaedfdd81c25676d11e952f15af1a1f32f8e9a8",
+        "reviewer": "store_asian",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "cs": {
+        "description_sha256": "443b82ccbb17be13d6c22257ff62ea6e82352ce356fbb9db13a10becdfca1d77",
+        "iap_descriptions_sha256": "f6c874a85ca391952bd99ad7d275336900e6837bcdd5dc1fce27c778c04ac625",
+        "reviewer": "store_asian",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "da": {
+        "description_sha256": "5bdf911c6e3d8ff36d1488c86e124065e190c06a439eb59c38bf0d88567df4c4",
+        "iap_descriptions_sha256": "6d23cd4309306b76e651a09b876d9613638b26c7142ad20329444b7b863fcced",
+        "reviewer": "store_asian",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "de-DE": {
+        "description_sha256": "3d503a70d6de4b85ab28bd9bcceff760957181ada5ba4641ac202e9950ecac31",
+        "iap_descriptions_sha256": "0dac2a508c50224f1bc09b8711e86eef8db1f73b7f5d8b6dbadac861adb19d8a",
+        "reviewer": "store_asian",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "el": {
+        "description_sha256": "941bef2197615c8345ed23a47ed0223649808587621c625f1a825f7e6cd30571",
+        "iap_descriptions_sha256": "37d62412c65df59c3570e8ed781f8f5ad0798928309e4d6c5ecb5886c2ba0bcf",
+        "reviewer": "store_asian",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "en-AU": {
+        "description_sha256": "72a2083e8a5a83c1a43fa2356e75a4da081fd88f65772ed93da35c9023c83ad6",
+        "iap_descriptions_sha256": "51110cfc6efee1e35040ed0289272f8f84bc4ada3e172d60275f349180606b25",
+        "reviewer": "store_asian",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "en-CA": {
+        "description_sha256": "72a2083e8a5a83c1a43fa2356e75a4da081fd88f65772ed93da35c9023c83ad6",
+        "iap_descriptions_sha256": "51110cfc6efee1e35040ed0289272f8f84bc4ada3e172d60275f349180606b25",
+        "reviewer": "store_asian",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "en-GB": {
+        "description_sha256": "72a2083e8a5a83c1a43fa2356e75a4da081fd88f65772ed93da35c9023c83ad6",
+        "iap_descriptions_sha256": "51110cfc6efee1e35040ed0289272f8f84bc4ada3e172d60275f349180606b25",
+        "reviewer": "store_asian",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "es-ES": {
+        "description_sha256": "ff81ceb9c4d91517968bb377d15ac9202a3466386e2ceea4aa8be3c1f91ae757",
+        "iap_descriptions_sha256": "5486baf3d7f000e145cb7018c433cef2acac8c0085343d37d5c468c2d48965d4",
+        "reviewer": "store_asian",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "es-MX": {
+        "description_sha256": "2d10cfeeeb2c22eac968e82ce07e3d6baadc625815c3ce392d34227e99bcfe90",
+        "iap_descriptions_sha256": "5486baf3d7f000e145cb7018c433cef2acac8c0085343d37d5c468c2d48965d4",
+        "reviewer": "store_asian",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "fi": {
+        "description_sha256": "ce25d18c5bb996046e041d92f9db59639a41fb0e37632e9307fa12dc3eed67fb",
+        "iap_descriptions_sha256": "f94a47e407f4391906633ef84834757fe4423ba4e98192ca6ed2359124727a7b",
+        "reviewer": "store_asian",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "fr-CA": {
+        "description_sha256": "61c9eed4cf4c78b2f21311faa8ec8d41d3d10982111d4659958fc3eb5c9ff449",
+        "iap_descriptions_sha256": "f784b84aab4d7812c1b4b58e98f7037d3344f23910d5e2b36dbde08b5210caef",
+        "reviewer": "store_asian",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "fr-FR": {
+        "description_sha256": "61c9eed4cf4c78b2f21311faa8ec8d41d3d10982111d4659958fc3eb5c9ff449",
+        "iap_descriptions_sha256": "f784b84aab4d7812c1b4b58e98f7037d3344f23910d5e2b36dbde08b5210caef",
+        "reviewer": "store_asian",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "gu-IN": {
+        "description_sha256": "9147b4372ca4448035a74eb91403c868a5055832c5f4e072829bf475e1288e9c",
+        "iap_descriptions_sha256": "8a975ae783612f1ddcaa20c44737028381053d246111ecdb0b38c268bd559216",
+        "reviewer": "translate_all_store_listings",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "he": {
+        "description_sha256": "4c94a396c945259e5af0a161a725e1d7b293e1773ba5fb471f23ccbe832d7757",
+        "iap_descriptions_sha256": "9271f0151fc47c3ddf6a67a917227d92902df8313951ed386a2e6343e6ff907a",
+        "reviewer": "translate_all_store_listings",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "hi": {
+        "description_sha256": "8a7d27a0f0415d8088f4c3b0dbb787f1bf8838d85d5ab364d1b2a43ed2d9baf1",
+        "iap_descriptions_sha256": "48e36469173f8bddf8e0ba7b8d9aee87439bbf03994f06b9783bb4c300e383f6",
+        "reviewer": "translate_all_store_listings",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "hr": {
+        "description_sha256": "29227916202fa90230513cd94a695382d4e0d62efb722acea3a36d366916489b",
+        "iap_descriptions_sha256": "2989efc5c546c5b3d90e816888f81fc4bd72ab8aa968e4ca1a3465125542c483",
+        "reviewer": "store_asian",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "hu": {
+        "description_sha256": "088a31f455ca6dace6576ce92fffc63d19bc676d87cc1042c4442d1942378d04",
+        "iap_descriptions_sha256": "29c37d2726ec4311927c3124312cbac6788b1fa47de7a34db84c6fab9dc6179b",
+        "reviewer": "store_asian",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "id": {
+        "description_sha256": "30609acb59ee30d29c5b5a105269a2ffd918778912ed1335f8e4625ac34f1a22",
+        "iap_descriptions_sha256": "1767a19ad497dc73dc7d3f0b404cdd925da26e421551d6d1a3583d800f7a75d3",
+        "reviewer": "translate_all_store_listings",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "it": {
+        "description_sha256": "c7902ce118f1c86da040f6e113c4a3507bc9f46bcda1355b3ed738464ed4205c",
+        "iap_descriptions_sha256": "f5653f73d753b8b3b593cb89641c7c5d594474a069d8bb92e234387d9db21bad",
+        "reviewer": "store_asian",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "ja": {
+        "description_sha256": "4f3a1edfd684b4a6b6c535a39ff8b684bb3d2c20d4b57cf322064d5a56e63b47",
+        "iap_descriptions_sha256": "d90b5ef14a43bc90dc7be41bc2232778f5b4064d51a0b27a4e90a6050fc0b2ff",
+        "reviewer": "store_asian",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "kn-IN": {
+        "description_sha256": "751f8356c6dbf953c18453435fa8bffc2d93af32850d5a5d9dde678404db7456",
+        "iap_descriptions_sha256": "cfac13c6f9f5c92f93cdbc63c6bee72f835eae9f48807244b9efd4238071b03a",
+        "reviewer": "translate_all_store_listings",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "ko": {
+        "description_sha256": "88db11eb2b615c663f7648724747b066ec13f587013a462e8596f865004bf09b",
+        "iap_descriptions_sha256": "64300cf4214ef036b4f44753da6a9a66dfbe6dbe3e55207cec3fd2c62af7a954",
+        "reviewer": "store_asian",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "ml-IN": {
+        "description_sha256": "0af8494a890cf74ad0da191a7c5c7f29ae36b6ed2543df132ef44df886652ab7",
+        "iap_descriptions_sha256": "9c807d8e7540b1905eb74cc5e597ae3a27be3e3e3e10fd23747b0d04c2f3b72f",
+        "reviewer": "translate_all_store_listings",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "mr-IN": {
+        "description_sha256": "c24a999b404e47051b7d57b1ee4dfef6df99a036d8187b8ef3c0e7410b9c0f36",
+        "iap_descriptions_sha256": "14f9633363545649e06a68e86eea2ed71e10455bbcd4d64fe269ddd4d1c6c791",
+        "reviewer": "translate_all_store_listings",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "ms": {
+        "description_sha256": "9406e9e15444ee371015012cd5356eea6126a0db451b5180df89b981c079937c",
+        "iap_descriptions_sha256": "af34b6f09a628b69b894d32939bfe9d32a66b8e6e1992a587970dded3b454e5b",
+        "reviewer": "translate_all_store_listings",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "nl-NL": {
+        "description_sha256": "100172a55e4ba1ec4a2db766b4631e5dd989a9adf27b930789db3e8c92e728ff",
+        "iap_descriptions_sha256": "8abfb39e4b1ab0d3f09205abf0b7ccc103b7e3abcbe017efc7af9e02edefde7c",
+        "reviewer": "store_asian",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "no": {
+        "description_sha256": "9f08d2fb3cd6d45157e200efe33dfa7ac475f344aad8526eef90586b8442fcde",
+        "iap_descriptions_sha256": "58e54b0a6a2225ab5c40c6d1e485d5107f19faad254e677988b600022e0c8fed",
+        "reviewer": "store_asian",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "or-IN": {
+        "description_sha256": "a62d385acfcc09ce0baf8f5362be527e5a7ad5368b7ab641ffc6cbb2eafb57a6",
+        "iap_descriptions_sha256": "008b328e16cf4140862fd3eb861662a93355344e4d4c4d1982f5a2edd2efefb8",
+        "reviewer": "translate_all_store_listings",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "pa-IN": {
+        "description_sha256": "94a735aa4f1e898dba3fd4e0ae32b655aa1869c3507b4d3938e78374eba4e93c",
+        "iap_descriptions_sha256": "abebf6122d32c06875590006f2b569d1dce6dc70e14e86eb03c80f9bf2169d95",
+        "reviewer": "translate_all_store_listings",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "pl": {
+        "description_sha256": "d8a59ee7811c44de468aeb87fcfaa0b62c2b5ff5a84e9dcf4be35f26d3f9b7e4",
+        "iap_descriptions_sha256": "0ef814abdf604146290e49895f30da33666af37a6f7ef2976a2ff922f253a516",
+        "reviewer": "store_asian",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "pt-BR": {
+        "description_sha256": "86f8a17198829e8e9873f2af0a9853b30b6eee8e9e4789e744d5d0158bac9076",
+        "iap_descriptions_sha256": "db5cf5ec55dcfcfe42f93484b9e1d881cf7831503e8d316a00fdd13f87ab4460",
+        "reviewer": "store_asian",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "pt-PT": {
+        "description_sha256": "0f44102bddd7975ccc61b09ef84618eb359838fc00815d8664fd0672dcd267a6",
+        "iap_descriptions_sha256": "17095dbeb8fe477d45a380f3375975bafc1f75c12d0a5e9564414dd258ac9b05",
+        "reviewer": "store_asian",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "ro": {
+        "description_sha256": "95ddb728146fd7a6fd8b5aeec949e1c1c18f0ff8909636d354d644dec6a41632",
+        "iap_descriptions_sha256": "b363786a208d62b73eeb36c38aa9124fa4310648d6b7f53f81efbf9d0c524064",
+        "reviewer": "store_asian",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "ru": {
+        "description_sha256": "896fa0933be5d10fd90e923a20022175a7215c20291f688f6ac1862efbc40d64",
+        "iap_descriptions_sha256": "28e90d7b80edb95c1332cd595075352783882e3f7113925f1d95bc20699f1dd8",
+        "reviewer": "store_asian",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "sk": {
+        "description_sha256": "3a074c63f1423ef44c8ce95490924d6c6a16a1b24a633388e044fb35effb2060",
+        "iap_descriptions_sha256": "8a474bd2a9e1460517543042af9117d3aed0dad1d982df723295bcf9e22081ba",
+        "reviewer": "store_asian",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "sl-SI": {
+        "description_sha256": "576dc0c66bae19a9ff0f64086f6e8efb319e0ac056d88c83d36b322859e21d8a",
+        "iap_descriptions_sha256": "2b954b3bdb80e66c8d3a509535e73fbf6304e0c999650ba4ff0ef67db34ee284",
+        "reviewer": "store_asian",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "sv": {
+        "description_sha256": "d0d79d6126a6b1ff6e174ba682c1147aa60f8b764e4aded228154f97e6650173",
+        "iap_descriptions_sha256": "a099aae18bc902296838f8459afaf2ce1173cce67a54a03647c47bb815950506",
+        "reviewer": "store_asian",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "ta-IN": {
+        "description_sha256": "997e4b0d1681bf796dc6eef83cce3e16dfa6db121eae8e0ea06c8c12e45ca0b5",
+        "iap_descriptions_sha256": "caddb96d64a12f8fbb49f626bc5b7933b0dc04b9114400345ec2a6f98b53144d",
+        "reviewer": "translate_all_store_listings",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "te-IN": {
+        "description_sha256": "d5478ffc01e2b2d30881ecfabacd4dc6baeed3dfa7a75f3518f8f6850233d273",
+        "iap_descriptions_sha256": "c4e51148a2ad0be5f6daf721424a6fe18df8d02ba3f001f7fc3e9d6ef4b9737f",
+        "reviewer": "translate_all_store_listings",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "th": {
+        "description_sha256": "2a752f7fe219ce7a1530db8b02d29ff254143e39da8e67784f25d1fe78e58d2d",
+        "iap_descriptions_sha256": "f4474cfcbedf21b6b046ef5071b542ef0ef9bb473aacf14f4c565abe0eb21962",
+        "reviewer": "translate_all_store_listings",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "tr": {
+        "description_sha256": "991bb5fe1b220047df8f299b66050386784b3172f3aec9dd0cc3a7e69f4194a4",
+        "iap_descriptions_sha256": "477ff6bc5120e009eb7e69f5267dc68ec36d2390272a4a70d51098fb2ec9a95b",
+        "reviewer": "store_asian",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "uk": {
+        "description_sha256": "33bd443219df935e5046805c9d9a29156a941d215baf9e54bdd5b4a4061dcd35",
+        "iap_descriptions_sha256": "f0a4786f243b42840c7c7ca9a3b85beb1c2f86a3e37ad49b5b28c0b9ffa5a9c4",
+        "reviewer": "store_asian",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "ur-PK": {
+        "description_sha256": "ba020057a909df7aeccfa4fe4c54bd6979886c47f2d4f8d914da011df16d329a",
+        "iap_descriptions_sha256": "eb2ace97fa65f37ce392a3ea5d91fb331d483d9a2713d62bea8e7a4f5310f109",
+        "reviewer": "translate_all_store_listings",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "vi": {
+        "description_sha256": "fbed6fca0639a717ce15451d09346e7bacb6fd0d76f86fc76b309d112e6c036b",
+        "iap_descriptions_sha256": "2cfcaedc20dcbca1f53ce2eb6a68b84d9701092faba39e8d907545e0eb87725f",
+        "reviewer": "translate_all_store_listings",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "zh-Hans": {
+        "description_sha256": "1e7c68159e8acb089579da37f840c6a0d448642a7abf1c0c5e183282d151814d",
+        "iap_descriptions_sha256": "642f46b4a92a708c722061981145b9074196559742d0f9277c93524c46b41c7d",
+        "reviewer": "store_asian",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      },
+      "zh-Hant": {
+        "description_sha256": "f74aed97c49af6a54cd74fa5078a96705c87ad85e31a85db98be6388c5af3e63",
+        "iap_descriptions_sha256": "8ea92e671f73925ade764155729689e20c6c536509f9758ab58a97779a6d296d",
+        "reviewer": "translate_all_store_listings",
+        "method": "AI semantic cross-review; source available, not blinded",
+        "critical_fact_findings": "No remaining critical free-tier/privacy/renewal reversal identified in reviewed text. Native and independent legal review remain required."
+      }
+    }
+  },
+  "historical_review_note": "previous_critical_fact_review is preserved as historical evidence only. Its human-only mandatory wording and partial hashes are superseded by the explicit current review_policy and all-50 current-content evidence."
+}

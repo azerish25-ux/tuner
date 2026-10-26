@@ -57,6 +57,14 @@ final class LocalizationLaunchUITests: XCTestCase {
         XCTAssertFalse(labeled("Timbre listens and tells you exactly how you did\\.").exists, "the line under the headline is English")
     }
 
+    func testAGermanRegionalPhoneAutomaticallyWelcomesInGerman() {
+        launch(language: "de-DE", locale: "de_DE", onboarded: false)
+        let start = element("onboarding.start")
+        XCTAssertTrue(start.waitForExistence(timeout: 25))
+        XCTAssertEqual(start.label, "Los geht's")
+        shot("l10n-de-DE-automatic-welcome")
+    }
+
     func testAGermanDeviceNamesTheTabsInGerman() {
         launch(language: "de", locale: "de_DE", onboarded: true)
         let tabs = app.tabBars.firstMatch

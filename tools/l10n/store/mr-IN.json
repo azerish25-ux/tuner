@@ -1,0 +1,310 @@
+{
+  "schema_version": 1,
+  "locale": "mr-IN",
+  "counts": {
+    "instruments": 60,
+    "tunings": 132,
+    "courses": 11,
+    "lessons": 526,
+    "songs_floor": 140,
+    "originals": 50
+  },
+  "review": {
+    "text": "ai_drafted",
+    "native": "not_verified",
+    "market_search": "not_verified",
+    "device": "not_verified",
+    "screenshots": "not_captured",
+    "app_preview": "not_rendered",
+    "iap_account_limits": "not_verified",
+    "game_center_account": "not_verified",
+    "release_ready": false,
+    "blockers": [
+      "Production privacy policy URL and verification not provided",
+      "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+      "Localized App Preview recordings and audio/sync/render review pending",
+      "App Store Connect product/locale limits and Game Center configuration/images unverified"
+    ],
+    "semantic": "ai_cross_reviewed_critical_facts",
+    "legal_back_translation": "not_performed_optional_under_ai_policy",
+    "song_title_alignment": {
+      "state": "pending_app_alignment",
+      "pending_app_alignment": [
+        "timbre.song.twinkle",
+        "timbre.song.odetojoy",
+        "timbre.song.jinglebells",
+        "timbre.song.saints",
+        "timbre.song.kiteweather",
+        "timbre.song.dashboard",
+        "timbre.song.lochlomond",
+        "timbre.song.mountain"
+      ],
+      "native_review": "not_verified"
+    },
+    "ai_cross_review": {
+      "scope": "Free tier, notification-conditioned two-day trial reminder, on-device never-recorded/uploaded audio, automatic renewal and 24-hour cancellation, anytime management, IAP benefits. Additional feature/count/terminology review for original nine and European/regional listings.",
+      "limitations": "AI review with inherited English source, not blinded back-translation, native-speaker, market, legal, account or visual approval."
+    },
+    "ai_source_aware": "reviewed",
+    "privacy_policy": "not_verified",
+    "review_policy": "ai_source_aware"
+  },
+  "game_center_leaderboard_names": {
+    "timbre.sniper.best": "अचूक नेम",
+    "timbre.sniper.weekly": "या आठवड्याचे अचूक नेम",
+    "timbre.ear.level": "श्रवण प्रशिक्षक पातळी",
+    "timbre.streak": "सलग सराव",
+    "timbre.song.twinkle": "चमचमणारा लहान तारा",
+    "timbre.song.odetojoy": "आनंदाचे गीत",
+    "timbre.song.jinglebells": "जिंगल बेल्स",
+    "timbre.song.saints": "जेव्हा संत चालत येतात",
+    "timbre.song.kiteweather": "पतंगांचा मौसम",
+    "timbre.song.dashboard": "डॅशबोर्डवर धूळ",
+    "timbre.song.lochlomond": "लॉक लोमंड",
+    "timbre.song.mountain": "ती डोंगराला वळसा घालून येईल"
+  },
+  "game_center_achievement_names": {
+    "timbre.badge.first_tune": "पहिली तार सुरात",
+    "timbre.badge.full_tune": "सर्व सहा",
+    "timbre.badge.streak_7": "परिपूर्ण आठवडा",
+    "timbre.badge.strings_100": "शंभर तारा",
+    "timbre.badge.bullseye": "अचूक नेम",
+    "timbre.badge.sharpshooter": "उच्च स्कोअर करणारे",
+    "timbre.badge.golden_ear": "सोनेरी कान",
+    "timbre.badge.level_5": "उगवता तारा",
+    "timbre.badge.multi": "बहुवाद्य कलाकार",
+    "timbre.badge.streak_30": "संगीताचा महिना",
+    "timbre.badge.strings_1000": "हजार तारा",
+    "timbre.badge.first_lesson": "पहिला धडा",
+    "timbre.badge.lessons_25": "नियमित साधक",
+    "timbre.badge.lessons_100": "विद्वान",
+    "timbre.badge.perfect_10": "निर्दोष",
+    "timbre.badge.full_25": "ट्यूनिंगची सवय",
+    "timbre.badge.streak_3": "वॉर्म-अप",
+    "timbre.badge.streak_100": "शंभर दिवस",
+    "timbre.badge.minutes_60": "पहिला तास",
+    "timbre.badge.minutes_600": "दहा तास",
+    "timbre.badge.daily_1": "रोजचा संच",
+    "timbre.badge.daily_30": "सवयीचा गुलाम",
+    "timbre.badge.sniper_win": "फेरीचा विजेता",
+    "timbre.badge.bullseyes_50": "अगदी मध्यावर",
+    "timbre.badge.ear_perfect": "पूर्ण गुण",
+    "timbre.badge.ear_500": "श्रवण गुरू",
+    "timbre.badge.units_1": "घटक पूर्ण",
+    "timbre.badge.units_10": "दहा घटक",
+    "timbre.badge.course_done": "पदवीधर",
+    "timbre.badge.songs_1": "पहिले गाणे",
+    "timbre.badge.songs_25": "गाण्यांचे पुस्तक"
+  },
+  "game_center_achievement_descriptions": {
+    "timbre.badge.first_tune": "तुमची पहिली तार ट्यून करा",
+    "timbre.badge.full_tune": "वाद्याच्या सर्व तारा ट्यून करा",
+    "timbre.badge.streak_7": "सलग सात दिवस सराव करा",
+    "timbre.badge.strings_100": "100 तारा ट्यून करा",
+    "timbre.badge.bullseye": "तुमचा पहिला अचूक नेम साधा",
+    "timbre.badge.sharpshooter": "अचूक नेममध्ये 2,000 स्कोअर करा",
+    "timbre.badge.golden_ear": "कानाच्या सरावात 50 प्रश्नांची बरोबर उत्तरे द्या",
+    "timbre.badge.level_5": "स्तर 5 गाठा",
+    "timbre.badge.multi": "तीन वेगवेगळी वाद्ये ट्यून करा",
+    "timbre.badge.streak_30": "सलग तीस दिवस सराव करा",
+    "timbre.badge.strings_1000": "1,000 तारा ट्यून करा",
+    "timbre.badge.first_lesson": "तुमचा पहिला धडा पूर्ण करा",
+    "timbre.badge.lessons_25": "25 धडे पूर्ण करा",
+    "timbre.badge.lessons_100": "100 धडे पूर्ण करा",
+    "timbre.badge.perfect_10": "10 धड्यांमध्ये तीन स्टार मिळवा",
+    "timbre.badge.full_25": "प्रत्येक तार 25 वेळा ट्यून करा",
+    "timbre.badge.streak_3": "सलग तीन दिवस सराव करा",
+    "timbre.badge.streak_100": "सलग 100 दिवस सराव करा",
+    "timbre.badge.minutes_60": "एकूण एक तास सराव करा",
+    "timbre.badge.minutes_600": "एकूण दहा तास सराव करा",
+    "timbre.badge.daily_1": "रोजचा एक संच पूर्ण करा",
+    "timbre.badge.daily_30": "रोजचे 30 संच पूर्ण करा",
+    "timbre.badge.sniper_win": "अचूक नेमची एक फेरी जिंका",
+    "timbre.badge.bullseyes_50": "50 अचूक नेम साधा",
+    "timbre.badge.ear_perfect": "कानाच्या फेरीत सर्व दहा प्रश्नांची बरोबर उत्तरे द्या",
+    "timbre.badge.ear_500": "कानाच्या सरावात 500 प्रश्नांची बरोबर उत्तरे द्या",
+    "timbre.badge.units_1": "एका घटकातील सर्व धडे पूर्ण करा",
+    "timbre.badge.units_10": "दहा घटक पूर्ण करा",
+    "timbre.badge.course_done": "एक संपूर्ण कोर्स पूर्ण करा",
+    "timbre.badge.songs_1": "तुमचे पहिले गाणे वाजवा",
+    "timbre.badge.songs_25": "25 गाणी वाजवा"
+  },
+  "name": "Timbre: गिटार ट्यूनर",
+  "subtitle": "युकुलेले आणि व्हायोलिन शिका",
+  "keywords": "सेलो,बास,मँडोलिन,बँजो,क्रोमॅटिक,स्ट्रोब,श्रवण प्रशिक्षण,मेट्रोनोम,कॉर्ड",
+  "promotional_text": "मोफत ट्यूनर, जाहिरात नाही, खाते नाही. प्रत्येक तार सुरात येताना अनुभवा. मग तुमचे वादन ऐकणारे धडे आणि 140+ गाण्यांसह शिका.",
+  "description": "मोफत ट्यूनर, जाहिरात नाही, खाते नाही. आणि तुमचे वादन ऐकणारे धडे.\n\nTimbre म्हणजे अचूक ट्यूनर आणि संगीत शिक्षक एकत्र. 60 वाद्यांपैकी कोणतेही काही सेकंदांत ट्यून करा, मग तुमचे वादन ऐकून नेमका प्रतिसाद देणाऱ्या धड्यांत वाजवा.\n\nमोफत ट्यूनिंग\n• गिटार, युकुलेले, व्हायोलिनपासून मँडोलिन, बँजो, ऊद आणि एरहूपर्यंत प्रत्येक वाद्याचे प्रमाणित ट्यूनिंग मोफत.\n• सेंटपर्यंत अचूक क्रोमॅटिक आणि स्ट्रोब ट्यूनर; Drop D, Open G, DADGAD सहित 132 ट्यूनिंग आणि तुमची स्वतःची ट्यूनिंग.\n• तारांची आपोआप ओळख आणि सुरात आल्यावर खूण. एका स्ट्रममध्ये सर्व तारा वाचा आणि आधी कोणती ट्यून करायची ते पाहा.\n• स्पर्शाने ट्यून करा: तार आणि तिचा लक्ष्य स्वर यांतील स्पंदनाप्रमाणे फोन थरथरतो; स्वर जवळ येताना हळू होतो आणि जुळल्यावर थांबतो. न पाहताही ट्यून करा.\n• स्टुडिओ प्रकाशातील 3D गिटार, बास, व्हायोलिन, सेलो आणि मँडोलिन; हेडस्टॉकवर फिरवायची खुंटी दिसते.\n• कॅपो, बदलता A4 संदर्भ, सोल्फेज आणि सरगम स्वरनावे.\n\nवाजवून शिका\n• 11 अभ्यासक्रमांत 526 धडे: गिटार, युकुलेले, बास, व्हायोलिन, सेलो, मँडोलिन, बँजो, गायन, श्रवण प्रशिक्षण, संगीत सिद्धांत आणि लय. युकुलेले, मँडोलिन, व्हायोलिन, सेलो आणि बासच्या गीतपुस्तिकाही.\n• Timbre प्रत्येक स्ट्रम ऐकतो: योग्य कॉर्ड, वेळ आणि कोणती तार वाजली नाही. प्रत्येक स्वराची उंची सेंटपर्यंत व वेळ मिलिसेकंदापर्यंत तपासली जाते.\n• “दाखवा” प्रत्येक नवा कॉर्ड 3D गिटारवर वाजवतो, बोटे क्रमाने बसतात. सोबत वाजवण्याचा स्वरमार्ग तुमच्यासाठी हळू होतो आणि सुधारल्यावर पुन्हा वेगवान होतो.\n\nगाणी वाजवा\n• 140+ गाणी, प्रत्येकाचे पूर्ण अरेंजमेंट: Jingle Bells ते Amazing Grace अशी जुनी लोकप्रिय गाणी आणि आजच्या शैलीत Timbreसाठी लिहिलेली 50 मूळ गाणी.\n• हेडफोनमध्ये बँडसोबत वाजवा, शब्द उजळत जातात.\n• तुमची गाणी: कॉर्ड चार्ट पेस्ट किंवा आयात करा, स्वरांतर करा, वेळेनुसार स्क्रोल करा आणि शेजारी Apple Musicवर मूळ गाणे ऐका.\n\nसराव सुरू ठेवा\n• तारे, XP, रोजची आव्हाने, सलग दिवस आणि बॅज.\n• Game Center: साप्ताहिक अचूक नेम लीग, गाण्यांचे लीडरबोर्ड आणि मित्रांची आव्हाने.\n• Apple Watch: मनगटावर जाणवणारा मेट्रोनोम आणि आजचा सराव एका नजरेत.\n• होम व लॉक स्क्रीन विजेट, लाइव्ह ॲक्टिव्हिटी आणि Siri शॉर्टकट.\n• जोर, उपविभाग व वेग प्रशिक्षक असलेला मेट्रोनोम; आधार स्वर, स्वरशुद्धता प्रशिक्षक, कॉर्ड व स्केल संग्रह.\n• श्रवण प्रशिक्षण: स्वराची दिशा, अंतराल आणि कॉर्ड प्रकार; 40 धड्यांचा श्रवण अभ्यासक्रमही.\n\nमोफत सुरुवात\nप्रत्येक वाद्याचे प्रमाणित ट्यूनिंग मोफत आहे. गिटार, बास, युकुलेले, व्हायोलिन आणि सेलोची सर्व ट्यूनिंग मोफत. प्रत्येक अभ्यासक्रमाचा पहिला घटक आणि काही गाणीही मोफत. Timbre Pro सर्व धडे, गाणी, ट्यूनिंग आणि सराव साधने उघडतो. सूचना चालू असतील तर मोफत चाचणी संपण्याच्या दोन दिवस आधी Timbre आठवण करून देतो.\n\nगोपनीयता जपणारी रचना: ऑडिओ तुमच्या iPhoneवर तपासला जातो, कधीही रेकॉर्ड किंवा अपलोड होत नाही. खाते नाही, जाहिरात नाही.\n\nकालावधी संपण्याच्या किमान 24 तास आधी रद्द न केल्यास सदस्यता आपोआप नूतनीकृत होते. सेटिंग्ज → Apple खाते → सदस्यता येथे कधीही व्यवस्थापित किंवा रद्द करा.\nअटी: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\nगोपनीयता: <privacy policy URL>",
+  "whats_new": "Timbreमध्ये स्वागत: 60 वाद्यांसाठी मोफत ट्यूनर आणि तुमचे वादन ऐकणारे 526 धडे.",
+  "iphone_screenshot_captions": [
+    {
+      "capture": "10b-tune-locked",
+      "caption": "मोफत ट्यूनर. जाहिरात नाही.",
+      "supporting_line": "60 वाद्ये, सेंटपर्यंत अचूक"
+    },
+    {
+      "capture": "65-song-perform",
+      "caption": "कसे वाजवले ते ऐका",
+      "supporting_line": "प्रत्येक स्वराची उंची आणि वेळ"
+    },
+    {
+      "capture": "52b-lesson-chord",
+      "caption": "आज पहिला कॉर्ड वाजवा",
+      "supporting_line": "Timbre प्रत्येक तार ऐकतो"
+    },
+    {
+      "capture": "31b-instruments-folk",
+      "caption": "जे वाजवाल ते ट्यून करा",
+      "supporting_line": "60 वाद्ये, 132 ट्यूनिंग"
+    },
+    {
+      "capture": "63-songs",
+      "caption": "ओळखीची गाणी वाजवा",
+      "supporting_line": "140+ गाणी, क्लासिक ते मूळ रचना"
+    },
+    {
+      "capture": "50-learn",
+      "caption": "तुमच्या गतीने शिका",
+      "supporting_line": "11 अभ्यासक्रमांत 526 धडे"
+    },
+    {
+      "capture": "62-lesson-results",
+      "caption": "रोजची पाच मिनिटे मोलाची",
+      "supporting_line": "तारे, सलग दिवस आणि रोजची आव्हाने"
+    },
+    {
+      "capture": "11b-tune-strum",
+      "caption": "एक स्ट्रम, सर्व तारा तपासा",
+      "supporting_line": "आधी कोणती तार ट्यून करायची पाहा"
+    },
+    {
+      "capture": "32-journey",
+      "caption": "तुमची प्रगती पाहा",
+      "supporting_line": "अचूकता, तारांचा नाद आणि बॅज"
+    }
+  ],
+  "ipad_screenshot_captions": [
+    {
+      "capture": "ipad-landscape-tune",
+      "caption": "मोफत ट्यूनर. जाहिरात नाही.",
+      "supporting_line": "60 वाद्ये, सेंटपर्यंत अचूक"
+    },
+    {
+      "capture": "ipad-landscape-instruments",
+      "caption": "जे वाजवाल ते ट्यून करा",
+      "supporting_line": "व्हायोलिन ते ऊद, सतार ते एरहू"
+    },
+    {
+      "capture": "ipad-landscape-songs",
+      "caption": "ओळखीची गाणी वाजवा",
+      "supporting_line": "140+ गाणी, क्लासिक ते मूळ रचना"
+    },
+    {
+      "capture": "ipad-landscape-practice",
+      "caption": "रोजची पाच मिनिटे मोलाची",
+      "supporting_line": "दैनिक संच, आव्हाने आणि श्रवण खेळ"
+    }
+  ],
+  "app_preview_captions": {
+    "main": {
+      "lock": "मोफत ट्यूनर. जाहिरात नाही.",
+      "tuned": "प्रत्येक तार तपासली",
+      "showme": "3Dमध्ये वाजवताना पाहा",
+      "highway": "बँडसोबत गाणी वाजवा",
+      "results": "कसा सराव झाला ते ऐका",
+      "songs": "शिकण्यासाठी 140+ गाणी",
+      "end": "ट्यून करा. शिका. गाणी वाजवा.",
+      "end-note": "मोफत ट्यूनर · जाहिरात नाही · खाते नाही"
+    },
+    "violin": {
+      "lock": "व्हायोलिन मोफत ट्यून करा",
+      "tuned": "G, D, A, E: सर्व सुरात",
+      "highway": "व्हायोलिनवर गाणी वाजवा",
+      "results": "कसा सराव झाला ते ऐका",
+      "songs": "शिकण्यासाठी 140+ गाणी",
+      "end": "व्हायोलिन ट्यूनर आणि धडे",
+      "end-note": "मोफत ट्यूनर · जाहिरात नाही · खाते नाही"
+    }
+  },
+  "iap_display_names": {
+    "timbre_pro_annual": "Timbre Pro, वार्षिक",
+    "timbre_pro_monthly": "Timbre Pro, मासिक",
+    "timbre_plus_lifetime": "Timbre Pro, आजीवन"
+  },
+  "iap_descriptions": {
+    "timbre_pro_annual": "सर्व धडे, गाणी, ट्यूनिंग आणि सराव साधने",
+    "timbre_pro_monthly": "सर्व धडे, गाणी, ट्यूनिंग आणि सराव साधने",
+    "timbre_plus_lifetime": "Proमधील सर्व काही, एकदाच पैसे भरा"
+  },
+  "custom_product_page_keywords": {},
+  "provenance": {
+    "game_center": "Badge text reused from matching app Localizable.strings; song board titles reused from Learn.strings. Newly renamed badge/board text authored for this store draft. No native review claimed.",
+    "game_center_app_reuse": {
+      "app_locale": "mr",
+      "reused_fields": [
+        "timbre.badge.first_tune:game_center_achievement_names",
+        "timbre.badge.full_tune:game_center_achievement_names",
+        "timbre.badge.streak_7:game_center_achievement_names",
+        "timbre.badge.strings_100:game_center_achievement_names",
+        "timbre.badge.bullseye:game_center_achievement_names",
+        "timbre.badge.sharpshooter:game_center_achievement_names",
+        "timbre.badge.golden_ear:game_center_achievement_names",
+        "timbre.badge.level_5:game_center_achievement_names",
+        "timbre.badge.multi:game_center_achievement_names",
+        "timbre.badge.streak_30:game_center_achievement_names",
+        "timbre.badge.strings_1000:game_center_achievement_names",
+        "timbre.badge.first_lesson:game_center_achievement_names",
+        "timbre.badge.lessons_25:game_center_achievement_names",
+        "timbre.badge.lessons_100:game_center_achievement_names",
+        "timbre.badge.perfect_10:game_center_achievement_names",
+        "timbre.badge.full_25:game_center_achievement_names",
+        "timbre.badge.streak_3:game_center_achievement_names",
+        "timbre.badge.streak_100:game_center_achievement_names",
+        "timbre.badge.minutes_60:game_center_achievement_names",
+        "timbre.badge.minutes_600:game_center_achievement_names",
+        "timbre.badge.daily_1:game_center_achievement_names",
+        "timbre.badge.daily_30:game_center_achievement_names",
+        "timbre.badge.sniper_win:game_center_achievement_names",
+        "timbre.badge.bullseyes_50:game_center_achievement_names",
+        "timbre.badge.ear_perfect:game_center_achievement_names",
+        "timbre.badge.ear_500:game_center_achievement_names",
+        "timbre.badge.units_1:game_center_achievement_names",
+        "timbre.badge.units_10:game_center_achievement_names",
+        "timbre.badge.course_done:game_center_achievement_names",
+        "timbre.badge.songs_1:game_center_achievement_names",
+        "timbre.badge.songs_25:game_center_achievement_names",
+        "timbre.badge.first_tune:game_center_achievement_descriptions",
+        "timbre.badge.full_tune:game_center_achievement_descriptions",
+        "timbre.badge.streak_7:game_center_achievement_descriptions",
+        "timbre.badge.strings_100:game_center_achievement_descriptions",
+        "timbre.badge.bullseye:game_center_achievement_descriptions",
+        "timbre.badge.sharpshooter:game_center_achievement_descriptions",
+        "timbre.badge.golden_ear:game_center_achievement_descriptions",
+        "timbre.badge.level_5:game_center_achievement_descriptions",
+        "timbre.badge.multi:game_center_achievement_descriptions",
+        "timbre.badge.streak_30:game_center_achievement_descriptions",
+        "timbre.badge.strings_1000:game_center_achievement_descriptions",
+        "timbre.badge.first_lesson:game_center_achievement_descriptions",
+        "timbre.badge.lessons_25:game_center_achievement_descriptions",
+        "timbre.badge.lessons_100:game_center_achievement_descriptions",
+        "timbre.badge.perfect_10:game_center_achievement_descriptions",
+        "timbre.badge.full_25:game_center_achievement_descriptions",
+        "timbre.badge.streak_3:game_center_achievement_descriptions",
+        "timbre.badge.streak_100:game_center_achievement_descriptions",
+        "timbre.badge.minutes_60:game_center_achievement_descriptions",
+        "timbre.badge.minutes_600:game_center_achievement_descriptions",
+        "timbre.badge.daily_1:game_center_achievement_descriptions",
+        "timbre.badge.daily_30:game_center_achievement_descriptions",
+        "timbre.badge.sniper_win:game_center_achievement_descriptions",
+        "timbre.badge.bullseyes_50:game_center_achievement_descriptions",
+        "timbre.badge.ear_perfect:game_center_achievement_descriptions",
+        "timbre.badge.ear_500:game_center_achievement_descriptions",
+        "timbre.badge.units_1:game_center_achievement_descriptions",
+        "timbre.badge.units_10:game_center_achievement_descriptions",
+        "timbre.badge.course_done:game_center_achievement_descriptions",
+        "timbre.badge.songs_1:game_center_achievement_descriptions",
+        "timbre.badge.songs_25:game_center_achievement_descriptions"
+      ],
+      "note": "Available app values reused exactly; missing app values retain authored store drafts. Does not certify native or device review."
+    }
+  }
+}

@@ -1,0 +1,321 @@
+{
+  "schema_version": 1,
+  "locale": "sk",
+  "counts": {
+    "instruments": 60,
+    "tunings": 132,
+    "courses": 11,
+    "lessons": 526,
+    "songs_floor": 140,
+    "originals": 50
+  },
+  "review": {
+    "text": "ai_drafted",
+    "native": "not_verified",
+    "market_search": "not_verified",
+    "device": "not_verified",
+    "screenshots": "not_captured",
+    "app_preview": "not_rendered",
+    "iap_account_limits": "not_verified",
+    "game_center_account": "not_verified",
+    "release_ready": false,
+    "blockers": [
+      "Production privacy policy URL and verification not provided",
+      "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+      "Localized App Preview recordings and audio/sync/render review pending",
+      "App Store Connect product/locale limits and Game Center configuration/images unverified"
+    ],
+    "semantic": "ai_cross_reviewed_critical_facts",
+    "legal_back_translation": "not_performed_optional_under_ai_policy",
+    "song_title_alignment": {
+      "state": "pending_app_alignment",
+      "pending_app_alignment": [
+        "timbre.song.twinkle",
+        "timbre.song.odetojoy",
+        "timbre.song.jinglebells",
+        "timbre.song.saints",
+        "timbre.song.kiteweather",
+        "timbre.song.dashboard",
+        "timbre.song.lochlomond",
+        "timbre.song.mountain"
+      ],
+      "native_review": "not_verified"
+    },
+    "ai_cross_review": {
+      "scope": "Free tier, notification-conditioned two-day trial reminder, on-device never-recorded/uploaded audio, automatic renewal and 24-hour cancellation, anytime management, IAP benefits. Additional feature/count/terminology review for original nine and European/regional listings.",
+      "limitations": "AI review with inherited English source, not blinded back-translation, native-speaker, market, legal, account or visual approval."
+    },
+    "ai_source_aware": "reviewed",
+    "privacy_policy": "not_verified",
+    "review_policy": "ai_source_aware"
+  },
+  "game_center_leaderboard_names": {
+    "timbre.sniper.best": "Do čierneho",
+    "timbre.sniper.weekly": "Do čierneho tento týždeň",
+    "timbre.ear.level": "Úroveň sluchového tréningu",
+    "timbre.streak": "Séria cvičení",
+    "timbre.song.twinkle": "Svieť, hviezdička, svieť",
+    "timbre.song.odetojoy": "Óda na radosť",
+    "timbre.song.jinglebells": "Rolničky",
+    "timbre.song.saints": "When the Saints Go Marching In",
+    "timbre.song.kiteweather": "Kite Weather",
+    "timbre.song.dashboard": "Dust on the Dashboard",
+    "timbre.song.lochlomond": "Loch Lomond",
+    "timbre.song.mountain": "She'll Be Coming 'Round the Mountain"
+  },
+  "game_center_achievement_names": {
+    "timbre.badge.first_tune": "Prvá naladená struna",
+    "timbre.badge.full_tune": "Všetkých šesť",
+    "timbre.badge.streak_7": "Dokonalý týždeň",
+    "timbre.badge.strings_100": "Sto strún",
+    "timbre.badge.bullseye": "Do čierneho",
+    "timbre.badge.sharpshooter": "Rekordér",
+    "timbre.badge.golden_ear": "Zlaté ucho",
+    "timbre.badge.level_5": "Vychádzajúca hviezda",
+    "timbre.badge.multi": "Multiinštrumentalista",
+    "timbre.badge.streak_30": "Mesiac s hudbou",
+    "timbre.badge.strings_1000": "Tisíc strún",
+    "timbre.badge.first_lesson": "Prvá lekcia",
+    "timbre.badge.lessons_25": "Stálica",
+    "timbre.badge.lessons_100": "Premiant",
+    "timbre.badge.perfect_10": "Bezchybne",
+    "timbre.badge.full_25": "Ladiaci rituál",
+    "timbre.badge.streak_3": "Rozcvička",
+    "timbre.badge.streak_100": "Sto dní",
+    "timbre.badge.minutes_60": "Prvá hodina",
+    "timbre.badge.minutes_600": "Desať hodín",
+    "timbre.badge.daily_1": "Denný plán",
+    "timbre.badge.daily_30": "Tvor zvyku",
+    "timbre.badge.sniper_win": "Víťaz kola",
+    "timbre.badge.bullseyes_50": "Presne doprostred",
+    "timbre.badge.ear_perfect": "Plný počet",
+    "timbre.badge.ear_500": "Majster počúvania",
+    "timbre.badge.units_1": "Oddiel hotový",
+    "timbre.badge.units_10": "Desať oddielov",
+    "timbre.badge.course_done": "Absolvent",
+    "timbre.badge.songs_1": "Prvá pieseň",
+    "timbre.badge.songs_25": "Spevník"
+  },
+  "game_center_achievement_descriptions": {
+    "timbre.badge.first_tune": "Nalaďte svoju prvú strunu",
+    "timbre.badge.full_tune": "Nalaďte všetky struny nástroja",
+    "timbre.badge.streak_7": "Cvičte sedem dní v rade",
+    "timbre.badge.strings_100": "Nalaďte 100 strún",
+    "timbre.badge.bullseye": "Prvýkrát trafte stred terča",
+    "timbre.badge.sharpshooter": "Získajte 2 000 v hre „Do čierneho“",
+    "timbre.badge.golden_ear": "Správne odpovedzte na 50 otázok na sluch",
+    "timbre.badge.level_5": "Dosiahnite úroveň 5",
+    "timbre.badge.multi": "Nalaďte tri rôzne nástroje",
+    "timbre.badge.streak_30": "Cvičte tridsať dní v rade",
+    "timbre.badge.strings_1000": "Nalaďte 1 000 strún",
+    "timbre.badge.first_lesson": "Dokončite prvú lekciu",
+    "timbre.badge.lessons_25": "Dokončite 25 lekcií",
+    "timbre.badge.lessons_100": "Dokončite 100 lekcií",
+    "timbre.badge.perfect_10": "Získajte tri hviezdy v 10 lekciách",
+    "timbre.badge.full_25": "Nalaďte všetky struny 25-krát",
+    "timbre.badge.streak_3": "Cvičte tri dni v rade",
+    "timbre.badge.streak_100": "Cvičte 100 dní v rade",
+    "timbre.badge.minutes_60": "Cvičte celkovo jednu hodinu",
+    "timbre.badge.minutes_600": "Cvičte celkovo desať hodín",
+    "timbre.badge.daily_1": "Dokončite jeden denný plán",
+    "timbre.badge.daily_30": "Dokončite 30 denných plánov",
+    "timbre.badge.sniper_win": "Vyhrajte kolo v hre „Do čierneho“",
+    "timbre.badge.bullseyes_50": "Trafte sa do čierneho 50-krát",
+    "timbre.badge.ear_perfect": "Správne odpovedzte na všetkých desať otázok v kole na sluch",
+    "timbre.badge.ear_500": "Správne odpovedzte na 500 otázok na sluch",
+    "timbre.badge.units_1": "Dokončite všetky lekcie v oddiele",
+    "timbre.badge.units_10": "Dokončite desať oddielov",
+    "timbre.badge.course_done": "Dokončite celý kurz",
+    "timbre.badge.songs_1": "Zahrajte svoju prvú pieseň",
+    "timbre.badge.songs_25": "Zahrajte 25 piesní"
+  },
+  "provenance": {
+    "game_center": "Badge text reused from matching app Localizable.strings; song board titles reused from Learn.strings. Newly renamed badge/board text authored for this store draft. No native review claimed.",
+    "game_center_songs": "Existing Learn.strings title reused when present. Otherwise established/localized title drafted; other named musical works retain source titles, not a claim of app translation. Reconcile with later Learn imports before release.",
+    "game_center_app_reuse": {
+      "app_locale": "sk",
+      "reused_fields": [
+        "timbre.badge.first_tune:game_center_achievement_names",
+        "timbre.badge.full_tune:game_center_achievement_names",
+        "timbre.badge.streak_7:game_center_achievement_names",
+        "timbre.badge.strings_100:game_center_achievement_names",
+        "timbre.badge.bullseye:game_center_achievement_names",
+        "timbre.badge.sharpshooter:game_center_achievement_names",
+        "timbre.badge.golden_ear:game_center_achievement_names",
+        "timbre.badge.level_5:game_center_achievement_names",
+        "timbre.badge.multi:game_center_achievement_names",
+        "timbre.badge.streak_30:game_center_achievement_names",
+        "timbre.badge.strings_1000:game_center_achievement_names",
+        "timbre.badge.first_lesson:game_center_achievement_names",
+        "timbre.badge.lessons_25:game_center_achievement_names",
+        "timbre.badge.lessons_100:game_center_achievement_names",
+        "timbre.badge.perfect_10:game_center_achievement_names",
+        "timbre.badge.full_25:game_center_achievement_names",
+        "timbre.badge.streak_3:game_center_achievement_names",
+        "timbre.badge.streak_100:game_center_achievement_names",
+        "timbre.badge.minutes_60:game_center_achievement_names",
+        "timbre.badge.minutes_600:game_center_achievement_names",
+        "timbre.badge.daily_1:game_center_achievement_names",
+        "timbre.badge.daily_30:game_center_achievement_names",
+        "timbre.badge.sniper_win:game_center_achievement_names",
+        "timbre.badge.bullseyes_50:game_center_achievement_names",
+        "timbre.badge.ear_perfect:game_center_achievement_names",
+        "timbre.badge.ear_500:game_center_achievement_names",
+        "timbre.badge.units_1:game_center_achievement_names",
+        "timbre.badge.units_10:game_center_achievement_names",
+        "timbre.badge.course_done:game_center_achievement_names",
+        "timbre.badge.songs_1:game_center_achievement_names",
+        "timbre.badge.songs_25:game_center_achievement_names",
+        "timbre.badge.first_tune:game_center_achievement_descriptions",
+        "timbre.badge.full_tune:game_center_achievement_descriptions",
+        "timbre.badge.streak_7:game_center_achievement_descriptions",
+        "timbre.badge.strings_100:game_center_achievement_descriptions",
+        "timbre.badge.bullseye:game_center_achievement_descriptions",
+        "timbre.badge.sharpshooter:game_center_achievement_descriptions",
+        "timbre.badge.golden_ear:game_center_achievement_descriptions",
+        "timbre.badge.level_5:game_center_achievement_descriptions",
+        "timbre.badge.multi:game_center_achievement_descriptions",
+        "timbre.badge.streak_30:game_center_achievement_descriptions",
+        "timbre.badge.strings_1000:game_center_achievement_descriptions",
+        "timbre.badge.first_lesson:game_center_achievement_descriptions",
+        "timbre.badge.lessons_25:game_center_achievement_descriptions",
+        "timbre.badge.lessons_100:game_center_achievement_descriptions",
+        "timbre.badge.perfect_10:game_center_achievement_descriptions",
+        "timbre.badge.full_25:game_center_achievement_descriptions",
+        "timbre.badge.streak_3:game_center_achievement_descriptions",
+        "timbre.badge.streak_100:game_center_achievement_descriptions",
+        "timbre.badge.minutes_60:game_center_achievement_descriptions",
+        "timbre.badge.minutes_600:game_center_achievement_descriptions",
+        "timbre.badge.daily_1:game_center_achievement_descriptions",
+        "timbre.badge.daily_30:game_center_achievement_descriptions",
+        "timbre.badge.sniper_win:game_center_achievement_descriptions",
+        "timbre.badge.bullseyes_50:game_center_achievement_descriptions",
+        "timbre.badge.ear_perfect:game_center_achievement_descriptions",
+        "timbre.badge.ear_500:game_center_achievement_descriptions",
+        "timbre.badge.units_1:game_center_achievement_descriptions",
+        "timbre.badge.units_10:game_center_achievement_descriptions",
+        "timbre.badge.course_done:game_center_achievement_descriptions",
+        "timbre.badge.songs_1:game_center_achievement_descriptions",
+        "timbre.badge.songs_25:game_center_achievement_descriptions"
+      ],
+      "note": "Available app values reused exactly; missing app values retain authored store drafts. Does not certify native or device review."
+    }
+  },
+  "name": "Timbre: Gitarová ladička",
+  "subtitle": "Uč sa husle, ukulele a basu",
+  "keywords": "husle,violončelo,ukulele,mandolína,banjo,chromatická,stroboskop,sluch,metronóm,akord",
+  "promotional_text": "Ladička zadarmo, bez reklám a účtu. Cíť ladenie každej struny, uč sa s lekciami, ktoré počúvajú, a hraj vyše 140 piesní.",
+  "description": "Ladička zadarmo. Bez reklám a účtu. Potom lekcie, ktoré počúvajú tvoju hru.\n\nTimbre spája presnú ladičku s učiteľom hudby. Nalaď 60 nástrojov a uč sa hraním.\n\nLAĎ ZADARMO\nŠtandardné ladenie každého nástroja je zadarmo: gitara, ukulele, husle, mandolína, banjo, oud, erhu a ďalšie. Chromatická a stroboskopická ladička s presnosťou na cent. 132 ladení od Drop D a Open G po DADGAD aj vlastné ladenia.\nAutomatické rozpoznanie strún označí každú naladenú. Jeden úder prečíta všetky struny a ukáže, ktorú ladiť najskôr. Laď hmatom: telefón pulzuje so záznejmi medzi strunou a cieľovým tónom, pri približovaní spomaľuje a pri naladení zastane. Nemusíš sa pozerať.\nŠtúdiovo osvetlené 3D gitary, basy, husle, violončelo a mandolína ukazujú kolík na otočenie. Kapodaster, nastaviteľná referencia A4, názvy tónov solfège a sargam.\n\nUČ SA HRANÍM\n526 lekcií v 11 kurzoch: gitara, ukulele, basa, husle, violončelo, mandolína, banjo, spev, sluch, hudobná teória a rytmus. Aj spevníky pre ukulele, mandolínu, husle, violončelo a basu.\nTimbre počuje každý úder: správny akord, načasovanie aj strunu, ktorá nezaznela. Každý tón hodnotí na cent a milisekundu. „Ukážte mi“ hrá nové akordy na 3D gitare a kladie prsty postupne. Dráha nôt spomalí pre teba a zrýchli s tvojím zlepšením.\n\nVyše 140 piesní, každá s úplným aranžmánom: klasika od Jingle Bells po Amazing Grace, vrátane 50 Originals napísaných pre Timbre v dnešných štýloch. Hraj s kapelou v slúchadlách, kým sa rozsvietia slová. Vlož alebo importuj vlastný akordový zápis, transponuj, posúvaj v rytme a vedľa počúvaj originál v Apple Music.\n\nPOKRAČUJ\nHviezdy, XP, denné úlohy, série a odznaky. Game Center: týždenná liga „Do čierneho“, rebríčky piesní a výzvy priateľom. Apple Watch: metronóm na zápästí a prehľad dnešného cvičenia. Widgety plochy a zamknutej obrazovky, živá aktivita a skratky Siri.\nMetronóm s prízvukmi, delením a tréningom tempa; bordún, tréning intonácie, knižnica akordov a stupníc. Sluch: smer výšky tónu, intervaly a druhy akordov, plus kurz so 40 lekciami.\n\nZAČNI ZADARMO\nŠtandardné ladenia všetkých nástrojov sú zadarmo. Gitara, basa, ukulele, husle a violončelo sú zadarmo vo všetkých ladeniach. Zadarmo je aj prvá časť každého kurzu a výber piesní. Timbre Pro odomyká všetky lekcie, piesne, ladenia a cvičebné nástroje. So zapnutými hláseniami Timbre pripomenie koniec bezplatnej skúšobnej lehoty dva dni vopred.\nZvuk sa analyzuje na iPhone, nikdy sa nenahráva ani neodosiela. Bez účtu a reklám.\nPredplatné sa obnovuje automaticky, ak ho nezrušíš aspoň 24 hodín pred koncom obdobia. Správa a zrušenie kedykoľvek: Nastavenia → Apple účet → Predplatné.\nPodmienky: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\nSúkromie: <privacy policy URL>",
+  "whats_new": "Vitaj v Timbre: ladička zadarmo pre 60 nástrojov a 526 lekcií, ktoré počúvajú tvoju hru.",
+  "iphone_screenshot_captions": [
+    {
+      "capture": "10b-tune-locked",
+      "caption": "Ladička zadarmo. Bez reklám.",
+      "supporting_line": "60 nástrojov, presnosť na cent"
+    },
+    {
+      "capture": "65-song-perform",
+      "caption": "Vypočuj si, ako hráš",
+      "supporting_line": "Výška a načasovanie každého tónu"
+    },
+    {
+      "capture": "52b-lesson-chord",
+      "caption": "Prvý akord ešte dnes",
+      "supporting_line": "Timbre počuje každú strunu"
+    },
+    {
+      "capture": "31b-instruments-folk",
+      "caption": "Nalaď, na čom hráš",
+      "supporting_line": "60 nástrojov, 132 ladení"
+    },
+    {
+      "capture": "63-songs",
+      "caption": "Hraj známe piesne",
+      "supporting_line": "Vyše 140 piesní: klasika aj Originals"
+    },
+    {
+      "capture": "50-learn",
+      "caption": "Uč sa vlastným tempom",
+      "supporting_line": "526 lekcií v 11 kurzoch"
+    },
+    {
+      "capture": "62-lesson-results",
+      "caption": "Päť minút denne sa počíta",
+      "supporting_line": "Hviezdy, série a denné úlohy"
+    },
+    {
+      "capture": "11b-tune-strum",
+      "caption": "Jeden úder, všetky struny",
+      "supporting_line": "Zisti, ktorú strunu ladiť prvú"
+    },
+    {
+      "capture": "32-journey",
+      "caption": "Sleduj svoje zlepšenie",
+      "supporting_line": "Presnosť, zvuk strún, odznaky"
+    }
+  ],
+  "ipad_screenshot_captions": [
+    {
+      "capture": "ipad-landscape-tune",
+      "caption": "Ladička zadarmo. Bez reklám.",
+      "supporting_line": "60 nástrojov, presnosť na cent"
+    },
+    {
+      "capture": "ipad-landscape-instruments",
+      "caption": "Nalaď, na čom hráš",
+      "supporting_line": "Od huslí po oud, od sitára po erhu"
+    },
+    {
+      "capture": "ipad-landscape-songs",
+      "caption": "Hraj známe piesne",
+      "supporting_line": "Vyše 140 piesní: klasika aj Originals"
+    },
+    {
+      "capture": "ipad-landscape-practice",
+      "caption": "Päť minút denne sa počíta",
+      "supporting_line": "Denné cvičenia, úlohy a sluchové hry"
+    }
+  ],
+  "app_preview_captions": {
+    "main": {
+      "lock": "Ladička zadarmo. Bez reklám.",
+      "tuned": "Každá struna skontrolovaná",
+      "showme": "Pozri si hru v 3D",
+      "highway": "Hraj piesne s kapelou",
+      "results": "Vypočuj si svoj výsledok",
+      "songs": "Vyše 140 piesní na učenie",
+      "end": "Laď. Uč sa. Hraj piesne.",
+      "end-note": "Ladička zadarmo · Bez reklám · Bez účtu"
+    },
+    "violin": {
+      "lock": "Nalaď husle zadarmo",
+      "tuned": "G, D, A, E: všetko naladené",
+      "highway": "Hraj piesne na husliach",
+      "results": "Vypočuj si svoj výsledok",
+      "songs": "Vyše 140 piesní na učenie",
+      "end": "Husľová ladička a lekcie",
+      "end-note": "Ladička zadarmo · Bez reklám · Bez účtu"
+    }
+  },
+  "iap_display_names": {
+    "timbre_pro_annual": "Timbre Pro, ročne",
+    "timbre_pro_monthly": "Timbre Pro, mesačne",
+    "timbre_plus_lifetime": "Timbre Pro, navždy"
+  },
+  "iap_descriptions": {
+    "timbre_pro_annual": "Všetky lekcie, piesne, ladenia a pomôcky",
+    "timbre_pro_monthly": "Všetky lekcie, piesne, ladenia a pomôcky",
+    "timbre_plus_lifetime": "Všetko v Pro za jednu platbu"
+  },
+  "custom_product_page_keywords": {
+    "violin": [
+      "husle"
+    ],
+    "cello": [
+      "violončelo"
+    ],
+    "ukulele": [
+      "ukulele"
+    ]
+  }
+}

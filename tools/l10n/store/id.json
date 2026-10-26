@@ -1,0 +1,310 @@
+{
+  "schema_version": 1,
+  "locale": "id",
+  "counts": {
+    "instruments": 60,
+    "tunings": 132,
+    "courses": 11,
+    "lessons": 526,
+    "songs_floor": 140,
+    "originals": 50
+  },
+  "review": {
+    "text": "ai_drafted",
+    "native": "not_verified",
+    "market_search": "not_verified",
+    "device": "not_verified",
+    "screenshots": "not_captured",
+    "app_preview": "not_rendered",
+    "iap_account_limits": "not_verified",
+    "game_center_account": "not_verified",
+    "release_ready": false,
+    "blockers": [
+      "Production privacy policy URL and verification not provided",
+      "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+      "Localized App Preview recordings and audio/sync/render review pending",
+      "App Store Connect product/locale limits and Game Center configuration/images unverified"
+    ],
+    "semantic": "ai_cross_reviewed_critical_facts",
+    "legal_back_translation": "not_performed_optional_under_ai_policy",
+    "song_title_alignment": {
+      "state": "pending_app_alignment",
+      "pending_app_alignment": [
+        "timbre.song.twinkle",
+        "timbre.song.odetojoy",
+        "timbre.song.jinglebells",
+        "timbre.song.saints",
+        "timbre.song.kiteweather",
+        "timbre.song.dashboard",
+        "timbre.song.lochlomond",
+        "timbre.song.mountain"
+      ],
+      "native_review": "not_verified"
+    },
+    "ai_cross_review": {
+      "scope": "Free tier, notification-conditioned two-day trial reminder, on-device never-recorded/uploaded audio, automatic renewal and 24-hour cancellation, anytime management, IAP benefits. Additional feature/count/terminology review for original nine and European/regional listings.",
+      "limitations": "AI review with inherited English source, not blinded back-translation, native-speaker, market, legal, account or visual approval."
+    },
+    "ai_source_aware": "reviewed",
+    "privacy_policy": "not_verified",
+    "review_policy": "ai_source_aware"
+  },
+  "game_center_leaderboard_names": {
+    "timbre.sniper.best": "Tepat sasaran",
+    "timbre.sniper.weekly": "Tepat sasaran minggu ini",
+    "timbre.ear.level": "Level pelatih telinga",
+    "timbre.streak": "Latihan beruntun",
+    "timbre.song.twinkle": "Bintang Kecil Berkelip",
+    "timbre.song.odetojoy": "Ode untuk Sukacita",
+    "timbre.song.jinglebells": "Jingle Bells",
+    "timbre.song.saints": "When the Saints Go Marching In",
+    "timbre.song.kiteweather": "Cuaca Layang-Layang",
+    "timbre.song.dashboard": "Debu di Dasbor",
+    "timbre.song.lochlomond": "Loch Lomond",
+    "timbre.song.mountain": "She’ll Be Coming ’Round the Mountain"
+  },
+  "game_center_achievement_names": {
+    "timbre.badge.first_tune": "Senar pertama selaras",
+    "timbre.badge.full_tune": "Keenamnya",
+    "timbre.badge.streak_7": "Minggu sempurna",
+    "timbre.badge.strings_100": "Seratus senar",
+    "timbre.badge.bullseye": "Tepat sasaran",
+    "timbre.badge.sharpshooter": "Peraih skor tinggi",
+    "timbre.badge.golden_ear": "Telinga emas",
+    "timbre.badge.level_5": "Bintang muda",
+    "timbre.badge.multi": "Multi-instrumentalis",
+    "timbre.badge.streak_30": "Sebulan bermusik",
+    "timbre.badge.strings_1000": "Seribu senar",
+    "timbre.badge.first_lesson": "Pelajaran pertama",
+    "timbre.badge.lessons_25": "Rajin",
+    "timbre.badge.lessons_100": "Cendekia",
+    "timbre.badge.perfect_10": "Tanpa cela",
+    "timbre.badge.full_25": "Kebiasaan menyetel",
+    "timbre.badge.streak_3": "Pemanasan",
+    "timbre.badge.streak_100": "Seratus hari",
+    "timbre.badge.minutes_60": "Jam pertama",
+    "timbre.badge.minutes_600": "Sepuluh jam",
+    "timbre.badge.daily_1": "Set harian",
+    "timbre.badge.daily_30": "Pecinta rutinitas",
+    "timbre.badge.sniper_win": "Pemenang ronde",
+    "timbre.badge.bullseyes_50": "Tepat di tengah",
+    "timbre.badge.ear_perfect": "Nilai sempurna",
+    "timbre.badge.ear_500": "Master pendengaran",
+    "timbre.badge.units_1": "Unit tuntas",
+    "timbre.badge.units_10": "Sepuluh unit",
+    "timbre.badge.course_done": "Lulusan",
+    "timbre.badge.songs_1": "Lagu pertama",
+    "timbre.badge.songs_25": "Buku lagu"
+  },
+  "game_center_achievement_descriptions": {
+    "timbre.badge.first_tune": "Setel senar pertama Anda",
+    "timbre.badge.full_tune": "Setel setiap senar sebuah instrumen",
+    "timbre.badge.streak_7": "Berlatih tujuh hari beruntun",
+    "timbre.badge.strings_100": "Setel 100 senar",
+    "timbre.badge.bullseye": "Raih tepat sasaran pertama",
+    "timbre.badge.sharpshooter": "Raih 2.000 di Tepat sasaran",
+    "timbre.badge.golden_ear": "Jawab benar 50 soal pendengaran",
+    "timbre.badge.level_5": "Capai level 5",
+    "timbre.badge.multi": "Setel tiga instrumen berbeda",
+    "timbre.badge.streak_30": "Berlatih tiga puluh hari beruntun",
+    "timbre.badge.strings_1000": "Setel 1.000 senar",
+    "timbre.badge.first_lesson": "Selesaikan pelajaran pertama Anda",
+    "timbre.badge.lessons_25": "Selesaikan 25 pelajaran",
+    "timbre.badge.lessons_100": "Selesaikan 100 pelajaran",
+    "timbre.badge.perfect_10": "Raih tiga bintang di 10 pelajaran",
+    "timbre.badge.full_25": "Setel setiap senar 25 kali",
+    "timbre.badge.streak_3": "Berlatih tiga hari beruntun",
+    "timbre.badge.streak_100": "Berlatih 100 hari beruntun",
+    "timbre.badge.minutes_60": "Berlatih selama satu jam secara total",
+    "timbre.badge.minutes_600": "Berlatih selama sepuluh jam secara total",
+    "timbre.badge.daily_1": "Selesaikan satu set harian",
+    "timbre.badge.daily_30": "Selesaikan 30 set harian",
+    "timbre.badge.sniper_win": "Menangkan satu ronde Tepat sasaran",
+    "timbre.badge.bullseyes_50": "Tepat sasaran 50 kali",
+    "timbre.badge.ear_perfect": "Jawab benar kesepuluh soal dalam satu ronde pendengaran",
+    "timbre.badge.ear_500": "Jawab benar 500 soal pendengaran",
+    "timbre.badge.units_1": "Selesaikan semua pelajaran dalam satu unit",
+    "timbre.badge.units_10": "Selesaikan sepuluh unit",
+    "timbre.badge.course_done": "Selesaikan satu kursus penuh",
+    "timbre.badge.songs_1": "Mainkan lagu pertama Anda",
+    "timbre.badge.songs_25": "Mainkan 25 lagu"
+  },
+  "provenance": {
+    "game_center": "Badge text reused from matching app Localizable.strings; song board titles reused from Learn.strings. Newly renamed badge/board text authored for this store draft. No native review claimed.",
+    "game_center_app_reuse": {
+      "app_locale": "id",
+      "reused_fields": [
+        "timbre.badge.first_tune:game_center_achievement_names",
+        "timbre.badge.full_tune:game_center_achievement_names",
+        "timbre.badge.streak_7:game_center_achievement_names",
+        "timbre.badge.strings_100:game_center_achievement_names",
+        "timbre.badge.bullseye:game_center_achievement_names",
+        "timbre.badge.sharpshooter:game_center_achievement_names",
+        "timbre.badge.golden_ear:game_center_achievement_names",
+        "timbre.badge.level_5:game_center_achievement_names",
+        "timbre.badge.multi:game_center_achievement_names",
+        "timbre.badge.streak_30:game_center_achievement_names",
+        "timbre.badge.strings_1000:game_center_achievement_names",
+        "timbre.badge.first_lesson:game_center_achievement_names",
+        "timbre.badge.lessons_25:game_center_achievement_names",
+        "timbre.badge.lessons_100:game_center_achievement_names",
+        "timbre.badge.perfect_10:game_center_achievement_names",
+        "timbre.badge.full_25:game_center_achievement_names",
+        "timbre.badge.streak_3:game_center_achievement_names",
+        "timbre.badge.streak_100:game_center_achievement_names",
+        "timbre.badge.minutes_60:game_center_achievement_names",
+        "timbre.badge.minutes_600:game_center_achievement_names",
+        "timbre.badge.daily_1:game_center_achievement_names",
+        "timbre.badge.daily_30:game_center_achievement_names",
+        "timbre.badge.sniper_win:game_center_achievement_names",
+        "timbre.badge.bullseyes_50:game_center_achievement_names",
+        "timbre.badge.ear_perfect:game_center_achievement_names",
+        "timbre.badge.ear_500:game_center_achievement_names",
+        "timbre.badge.units_1:game_center_achievement_names",
+        "timbre.badge.units_10:game_center_achievement_names",
+        "timbre.badge.course_done:game_center_achievement_names",
+        "timbre.badge.songs_1:game_center_achievement_names",
+        "timbre.badge.songs_25:game_center_achievement_names",
+        "timbre.badge.first_tune:game_center_achievement_descriptions",
+        "timbre.badge.full_tune:game_center_achievement_descriptions",
+        "timbre.badge.streak_7:game_center_achievement_descriptions",
+        "timbre.badge.strings_100:game_center_achievement_descriptions",
+        "timbre.badge.bullseye:game_center_achievement_descriptions",
+        "timbre.badge.sharpshooter:game_center_achievement_descriptions",
+        "timbre.badge.golden_ear:game_center_achievement_descriptions",
+        "timbre.badge.level_5:game_center_achievement_descriptions",
+        "timbre.badge.multi:game_center_achievement_descriptions",
+        "timbre.badge.streak_30:game_center_achievement_descriptions",
+        "timbre.badge.strings_1000:game_center_achievement_descriptions",
+        "timbre.badge.first_lesson:game_center_achievement_descriptions",
+        "timbre.badge.lessons_25:game_center_achievement_descriptions",
+        "timbre.badge.lessons_100:game_center_achievement_descriptions",
+        "timbre.badge.perfect_10:game_center_achievement_descriptions",
+        "timbre.badge.full_25:game_center_achievement_descriptions",
+        "timbre.badge.streak_3:game_center_achievement_descriptions",
+        "timbre.badge.streak_100:game_center_achievement_descriptions",
+        "timbre.badge.minutes_60:game_center_achievement_descriptions",
+        "timbre.badge.minutes_600:game_center_achievement_descriptions",
+        "timbre.badge.daily_1:game_center_achievement_descriptions",
+        "timbre.badge.daily_30:game_center_achievement_descriptions",
+        "timbre.badge.sniper_win:game_center_achievement_descriptions",
+        "timbre.badge.bullseyes_50:game_center_achievement_descriptions",
+        "timbre.badge.ear_perfect:game_center_achievement_descriptions",
+        "timbre.badge.ear_500:game_center_achievement_descriptions",
+        "timbre.badge.units_1:game_center_achievement_descriptions",
+        "timbre.badge.units_10:game_center_achievement_descriptions",
+        "timbre.badge.course_done:game_center_achievement_descriptions",
+        "timbre.badge.songs_1:game_center_achievement_descriptions",
+        "timbre.badge.songs_25:game_center_achievement_descriptions"
+      ],
+      "note": "Available app values reused exactly; missing app values retain authored store drafts. Does not certify native or device review."
+    }
+  },
+  "name": "Timbre: Tuner Gitar",
+  "subtitle": "Belajar Ukulele & Biola",
+  "keywords": "selo,bas,mandolin,banjo,kromatis,stroboskop,latihan telinga,metronom,akor",
+  "promotional_text": "Tuner gratis, tanpa iklan atau akun. Rasakan tiap senar selaras, lalu belajar lewat pelajaran yang mendengarkan permainanmu dan 140+ lagu.",
+  "description": "Tuner gratis, tanpa iklan atau akun. Lalu pelajaran yang mendengarkan permainanmu.\n\nTimbre menyatukan tuner presisi dan guru musik. Stem salah satu dari 60 instrumen dalam hitungan detik, lalu ikuti pelajaran yang mendengar dan menilai permainanmu dengan tepat.\n\nSTEM GRATIS\n• Seteman standar setiap instrumen gratis, dari gitar, ukulele dan biola hingga mandolin, banjo, oud dan erhu.\n• Tuner kromatis dan stroboskop dengan ketelitian sen. 132 seteman, dari Drop D dan Open G hingga DADGAD, ditambah seteman buatanmu.\n• Deteksi senar otomatis dengan tanda centang saat setiap senar tepat. Satu genjrengan membaca semua senar sekaligus dan menunjukkan mana yang perlu distem dahulu.\n• Stem lewat sentuhan: ponsel berdenyut mengikuti layangan antara senar dan nada tujuannya, melambat saat mendekat, lalu diam saat tepat. Kamu bisa menyetem tanpa melihat.\n• Gitar, bas, biola, selo dan mandolin 3D dengan pencahayaan studio, serta penunjuk pasak yang perlu diputar pada kepala instrumen.\n• Kapo, acuan A4 yang dapat diatur, serta nama not solfège dan sargam.\n\nBELAJAR SAMBIL BERMAIN\n• 526 pelajaran dalam 11 kursus: gitar, ukulele, bas, biola, selo, mandolin, banjo, vokal, latihan telinga, teori musik dan ritme. Juga buku lagu untuk ukulele, mandolin, biola, selo dan bas.\n• Timbre mendengar setiap genjrengan: akor yang benar, waktunya dan senar yang tidak berbunyi. Setiap not dinilai hingga ketelitian sen dan milidetik.\n• “Lihat contoh” memainkan akor baru pada gitar 3D, jari-jari diletakkan berurutan. Jalur not untuk bermain bersama melambat untukmu, lalu kembali cepat seiring kemajuanmu.\n\nMAINKAN LAGU\n• 140+ lagu dengan aransemen lengkap: klasik dari Jingle Bells hingga Amazing Grace, serta 50 lagu orisinal yang ditulis untuk Timbre dalam gaya masa kini.\n• Main bersama band melalui headphone saat lirik menyala.\n• Lagumu: tempel atau impor bagan akor, transposisikan, gulir sesuai tempo, dan dengarkan versi asli di Apple Music di sampingnya.\n\nTERUS BERLATIH\n• Bintang, XP, misi harian, rentetan dan lencana.\n• Game Center: liga Tepat sasaran mingguan, papan peringkat lagu dan tantangan teman.\n• Apple Watch: metronom yang terasa di pergelangan dan latihan hari ini sekilas.\n• Widget Layar Utama dan Layar Terkunci, Aktivitas Langsung dan pintasan Siri.\n• Metronom dengan aksen, subdivisi dan pelatih kecepatan; nada dengung, pelatih intonasi serta pustaka akor dan tangga nada.\n• Latihan telinga: arah nada, interval dan jenis akor, serta kursus telinga 40 pelajaran.\n\nMULAI GRATIS\nSeteman standar setiap instrumen gratis. Gitar, bas, ukulele, biola dan selo gratis dalam semua seteman. Unit pertama setiap kursus dan pilihan lagu juga gratis. Timbre Pro membuka semua pelajaran, lagu, seteman dan alat latihan. Jika pemberitahuan aktif, Timbre mengingatkan dua hari sebelum uji coba gratis berakhir.\n\nDirancang untuk privasi: audio dianalisis di iPhone-mu, tidak pernah direkam atau diunggah. Tanpa akun dan iklan.\n\nLangganan diperpanjang otomatis kecuali dibatalkan setidaknya 24 jam sebelum periode berakhir. Kelola atau batalkan kapan saja di Pengaturan → Akun Apple → Langganan.\nKetentuan: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\nPrivasi: <privacy policy URL>",
+  "whats_new": "Selamat datang di Timbre: tuner gratis untuk 60 instrumen dan 526 pelajaran yang mendengarkan permainanmu.",
+  "iphone_screenshot_captions": [
+    {
+      "capture": "10b-tune-locked",
+      "caption": "Tuner gratis. Tanpa iklan.",
+      "supporting_line": "60 instrumen, teliti hingga sen"
+    },
+    {
+      "capture": "65-song-perform",
+      "caption": "Dengar hasil permainanmu",
+      "supporting_line": "Nada dan waktu setiap not"
+    },
+    {
+      "capture": "52b-lesson-chord",
+      "caption": "Main akor pertama hari ini",
+      "supporting_line": "Timbre mendengar setiap senar"
+    },
+    {
+      "capture": "31b-instruments-folk",
+      "caption": "Stem apa pun yang kamu mainkan",
+      "supporting_line": "60 instrumen, 132 seteman"
+    },
+    {
+      "capture": "63-songs",
+      "caption": "Mainkan lagu yang kamu kenal",
+      "supporting_line": "140+ lagu, klasik hingga orisinal"
+    },
+    {
+      "capture": "50-learn",
+      "caption": "Belajar sesuai kecepatanmu",
+      "supporting_line": "526 pelajaran dalam 11 kursus"
+    },
+    {
+      "capture": "62-lesson-results",
+      "caption": "Lima menit sehari berarti",
+      "supporting_line": "Bintang, rentetan dan misi harian"
+    },
+    {
+      "capture": "11b-tune-strum",
+      "caption": "Satu genjrengan, semua senar",
+      "supporting_line": "Lihat senar yang perlu distem dahulu"
+    },
+    {
+      "capture": "32-journey",
+      "caption": "Lihat kemajuanmu",
+      "supporting_line": "Akurasi, bunyi senar dan lencana"
+    }
+  ],
+  "ipad_screenshot_captions": [
+    {
+      "capture": "ipad-landscape-tune",
+      "caption": "Tuner gratis. Tanpa iklan.",
+      "supporting_line": "60 instrumen, teliti hingga sen"
+    },
+    {
+      "capture": "ipad-landscape-instruments",
+      "caption": "Stem apa pun yang kamu mainkan",
+      "supporting_line": "Biola hingga oud, sitar hingga erhu"
+    },
+    {
+      "capture": "ipad-landscape-songs",
+      "caption": "Mainkan lagu yang kamu kenal",
+      "supporting_line": "140+ lagu, klasik hingga orisinal"
+    },
+    {
+      "capture": "ipad-landscape-practice",
+      "caption": "Lima menit sehari berarti",
+      "supporting_line": "Set harian, misi dan permainan telinga"
+    }
+  ],
+  "app_preview_captions": {
+    "main": {
+      "lock": "Tuner gratis. Tanpa iklan.",
+      "tuned": "Setiap senar diperiksa",
+      "showme": "Lihat permainan dalam 3D",
+      "highway": "Mainkan lagu bersama band",
+      "results": "Dengar hasil permainanmu",
+      "songs": "140+ lagu untuk dipelajari",
+      "end": "Stem. Belajar. Mainkan lagu.",
+      "end-note": "Tuner gratis · Tanpa iklan · Tanpa akun"
+    },
+    "violin": {
+      "lock": "Stem biolamu gratis",
+      "tuned": "G, D, A, E: semua selaras",
+      "highway": "Mainkan lagu dengan biolamu",
+      "results": "Dengar hasil permainanmu",
+      "songs": "140+ lagu untuk dipelajari",
+      "end": "Tuner biola dan pelajaran",
+      "end-note": "Tuner gratis · Tanpa iklan · Tanpa akun"
+    }
+  },
+  "iap_display_names": {
+    "timbre_pro_annual": "Timbre Pro, tahunan",
+    "timbre_pro_monthly": "Timbre Pro, bulanan",
+    "timbre_plus_lifetime": "Timbre Pro, seumur hidup"
+  },
+  "iap_descriptions": {
+    "timbre_pro_annual": "Semua pelajaran, lagu, seteman, alat latihan",
+    "timbre_pro_monthly": "Semua pelajaran, lagu, seteman, alat latihan",
+    "timbre_plus_lifetime": "Semua fitur Pro, sekali bayar"
+  },
+  "custom_product_page_keywords": {}
+}

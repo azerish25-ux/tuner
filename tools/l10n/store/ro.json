@@ -1,0 +1,321 @@
+{
+  "schema_version": 1,
+  "locale": "ro",
+  "counts": {
+    "instruments": 60,
+    "tunings": 132,
+    "courses": 11,
+    "lessons": 526,
+    "songs_floor": 140,
+    "originals": 50
+  },
+  "review": {
+    "text": "ai_drafted",
+    "native": "not_verified",
+    "market_search": "not_verified",
+    "device": "not_verified",
+    "screenshots": "not_captured",
+    "app_preview": "not_rendered",
+    "iap_account_limits": "not_verified",
+    "game_center_account": "not_verified",
+    "release_ready": false,
+    "blockers": [
+      "Production privacy policy URL and verification not provided",
+      "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+      "Localized App Preview recordings and audio/sync/render review pending",
+      "App Store Connect product/locale limits and Game Center configuration/images unverified"
+    ],
+    "semantic": "ai_cross_reviewed_critical_facts",
+    "legal_back_translation": "not_performed_optional_under_ai_policy",
+    "song_title_alignment": {
+      "state": "pending_app_alignment",
+      "pending_app_alignment": [
+        "timbre.song.twinkle",
+        "timbre.song.odetojoy",
+        "timbre.song.jinglebells",
+        "timbre.song.saints",
+        "timbre.song.kiteweather",
+        "timbre.song.dashboard",
+        "timbre.song.lochlomond",
+        "timbre.song.mountain"
+      ],
+      "native_review": "not_verified"
+    },
+    "ai_cross_review": {
+      "scope": "Free tier, notification-conditioned two-day trial reminder, on-device never-recorded/uploaded audio, automatic renewal and 24-hour cancellation, anytime management, IAP benefits. Additional feature/count/terminology review for original nine and European/regional listings.",
+      "limitations": "AI review with inherited English source, not blinded back-translation, native-speaker, market, legal, account or visual approval."
+    },
+    "ai_source_aware": "reviewed",
+    "privacy_policy": "not_verified",
+    "review_policy": "ai_source_aware"
+  },
+  "game_center_leaderboard_names": {
+    "timbre.sniper.best": "În plin",
+    "timbre.sniper.weekly": "În plin săptămâna aceasta",
+    "timbre.ear.level": "Nivel de antrenament auditiv",
+    "timbre.streak": "Seria de exersare",
+    "timbre.song.twinkle": "Strălucește, mică stea",
+    "timbre.song.odetojoy": "Odă bucuriei",
+    "timbre.song.jinglebells": "Jingle Bells",
+    "timbre.song.saints": "When the Saints Go Marching In",
+    "timbre.song.kiteweather": "Kite Weather",
+    "timbre.song.dashboard": "Dust on the Dashboard",
+    "timbre.song.lochlomond": "Loch Lomond",
+    "timbre.song.mountain": "She'll Be Coming 'Round the Mountain"
+  },
+  "game_center_achievement_names": {
+    "timbre.badge.first_tune": "Prima coardă acordată",
+    "timbre.badge.full_tune": "Toate cele șase",
+    "timbre.badge.streak_7": "Săptămâna perfectă",
+    "timbre.badge.strings_100": "O sută de corzi",
+    "timbre.badge.bullseye": "În plin",
+    "timbre.badge.sharpshooter": "Scor mare",
+    "timbre.badge.golden_ear": "Ureche de aur",
+    "timbre.badge.level_5": "Stea în ascensiune",
+    "timbre.badge.multi": "Multiinstrumentist",
+    "timbre.badge.streak_30": "O lună de muzică",
+    "timbre.badge.strings_1000": "O mie de corzi",
+    "timbre.badge.first_lesson": "Prima lecție",
+    "timbre.badge.lessons_25": "Cursant fidel",
+    "timbre.badge.lessons_100": "Elev eminent",
+    "timbre.badge.perfect_10": "Impecabil",
+    "timbre.badge.full_25": "Obiceiul acordării",
+    "timbre.badge.streak_3": "Încălzire",
+    "timbre.badge.streak_100": "O sută de zile",
+    "timbre.badge.minutes_60": "Prima oră",
+    "timbre.badge.minutes_600": "Zece ore",
+    "timbre.badge.daily_1": "Setul zilnic",
+    "timbre.badge.daily_30": "Om al obiceiurilor",
+    "timbre.badge.sniper_win": "Câștigător de rundă",
+    "timbre.badge.bullseyes_50": "Fix în centru",
+    "timbre.badge.ear_perfect": "Punctaj maxim",
+    "timbre.badge.ear_500": "Maestru al auzului",
+    "timbre.badge.units_1": "Unitate încheiată",
+    "timbre.badge.units_10": "Zece unități",
+    "timbre.badge.course_done": "Absolvent",
+    "timbre.badge.songs_1": "Prima melodie",
+    "timbre.badge.songs_25": "Culegere de cântece"
+  },
+  "game_center_achievement_descriptions": {
+    "timbre.badge.first_tune": "Acordează-ți prima coardă",
+    "timbre.badge.full_tune": "Acordează toate corzile unui instrument",
+    "timbre.badge.streak_7": "Exersează șapte zile la rând",
+    "timbre.badge.strings_100": "Acordează 100 de corzi",
+    "timbre.badge.bullseye": "Nimerește prima dată în plin",
+    "timbre.badge.sharpshooter": "Obține 2.000 de puncte la În plin",
+    "timbre.badge.golden_ear": "Răspunde corect la 50 de întrebări de auz",
+    "timbre.badge.level_5": "Atinge nivelul 5",
+    "timbre.badge.multi": "Acordează trei instrumente diferite",
+    "timbre.badge.streak_30": "Exersează treizeci de zile la rând",
+    "timbre.badge.strings_1000": "Acordează 1.000 de corzi",
+    "timbre.badge.first_lesson": "Finalizează prima lecție",
+    "timbre.badge.lessons_25": "Finalizează 25 de lecții",
+    "timbre.badge.lessons_100": "Finalizează 100 de lecții",
+    "timbre.badge.perfect_10": "Obține trei stele la 10 lecții",
+    "timbre.badge.full_25": "Acordează toate corzile de 25 de ori",
+    "timbre.badge.streak_3": "Exersează trei zile la rând",
+    "timbre.badge.streak_100": "Exersează 100 de zile la rând",
+    "timbre.badge.minutes_60": "Exersează o oră în total",
+    "timbre.badge.minutes_600": "Exersează zece ore în total",
+    "timbre.badge.daily_1": "Finalizează un set zilnic",
+    "timbre.badge.daily_30": "Finalizează 30 de seturi zilnice",
+    "timbre.badge.sniper_win": "Câștigă o rundă de În plin",
+    "timbre.badge.bullseyes_50": "Lovește în plin de 50 de ori",
+    "timbre.badge.ear_perfect": "Răspunde corect la toate cele zece întrebări dintr-o rundă de auz",
+    "timbre.badge.ear_500": "Răspunde corect la 500 de întrebări de auz",
+    "timbre.badge.units_1": "Finalizează toate lecțiile dintr-o unitate",
+    "timbre.badge.units_10": "Finalizează zece unități",
+    "timbre.badge.course_done": "Finalizează un curs întreg",
+    "timbre.badge.songs_1": "Cântă prima ta melodie",
+    "timbre.badge.songs_25": "Cântă 25 de melodii"
+  },
+  "provenance": {
+    "game_center": "Badge text reused from matching app Localizable.strings; song board titles reused from Learn.strings. Newly renamed badge/board text authored for this store draft. No native review claimed.",
+    "game_center_songs": "Existing Learn.strings title reused when present. Otherwise established/localized title drafted; other named musical works retain source titles, not a claim of app translation. Reconcile with later Learn imports before release.",
+    "game_center_app_reuse": {
+      "app_locale": "ro",
+      "reused_fields": [
+        "timbre.badge.first_tune:game_center_achievement_names",
+        "timbre.badge.full_tune:game_center_achievement_names",
+        "timbre.badge.streak_7:game_center_achievement_names",
+        "timbre.badge.strings_100:game_center_achievement_names",
+        "timbre.badge.bullseye:game_center_achievement_names",
+        "timbre.badge.sharpshooter:game_center_achievement_names",
+        "timbre.badge.golden_ear:game_center_achievement_names",
+        "timbre.badge.level_5:game_center_achievement_names",
+        "timbre.badge.multi:game_center_achievement_names",
+        "timbre.badge.streak_30:game_center_achievement_names",
+        "timbre.badge.strings_1000:game_center_achievement_names",
+        "timbre.badge.first_lesson:game_center_achievement_names",
+        "timbre.badge.lessons_25:game_center_achievement_names",
+        "timbre.badge.lessons_100:game_center_achievement_names",
+        "timbre.badge.perfect_10:game_center_achievement_names",
+        "timbre.badge.full_25:game_center_achievement_names",
+        "timbre.badge.streak_3:game_center_achievement_names",
+        "timbre.badge.streak_100:game_center_achievement_names",
+        "timbre.badge.minutes_60:game_center_achievement_names",
+        "timbre.badge.minutes_600:game_center_achievement_names",
+        "timbre.badge.daily_1:game_center_achievement_names",
+        "timbre.badge.daily_30:game_center_achievement_names",
+        "timbre.badge.sniper_win:game_center_achievement_names",
+        "timbre.badge.bullseyes_50:game_center_achievement_names",
+        "timbre.badge.ear_perfect:game_center_achievement_names",
+        "timbre.badge.ear_500:game_center_achievement_names",
+        "timbre.badge.units_1:game_center_achievement_names",
+        "timbre.badge.units_10:game_center_achievement_names",
+        "timbre.badge.course_done:game_center_achievement_names",
+        "timbre.badge.songs_1:game_center_achievement_names",
+        "timbre.badge.songs_25:game_center_achievement_names",
+        "timbre.badge.first_tune:game_center_achievement_descriptions",
+        "timbre.badge.full_tune:game_center_achievement_descriptions",
+        "timbre.badge.streak_7:game_center_achievement_descriptions",
+        "timbre.badge.strings_100:game_center_achievement_descriptions",
+        "timbre.badge.bullseye:game_center_achievement_descriptions",
+        "timbre.badge.sharpshooter:game_center_achievement_descriptions",
+        "timbre.badge.golden_ear:game_center_achievement_descriptions",
+        "timbre.badge.level_5:game_center_achievement_descriptions",
+        "timbre.badge.multi:game_center_achievement_descriptions",
+        "timbre.badge.streak_30:game_center_achievement_descriptions",
+        "timbre.badge.strings_1000:game_center_achievement_descriptions",
+        "timbre.badge.first_lesson:game_center_achievement_descriptions",
+        "timbre.badge.lessons_25:game_center_achievement_descriptions",
+        "timbre.badge.lessons_100:game_center_achievement_descriptions",
+        "timbre.badge.perfect_10:game_center_achievement_descriptions",
+        "timbre.badge.full_25:game_center_achievement_descriptions",
+        "timbre.badge.streak_3:game_center_achievement_descriptions",
+        "timbre.badge.streak_100:game_center_achievement_descriptions",
+        "timbre.badge.minutes_60:game_center_achievement_descriptions",
+        "timbre.badge.minutes_600:game_center_achievement_descriptions",
+        "timbre.badge.daily_1:game_center_achievement_descriptions",
+        "timbre.badge.daily_30:game_center_achievement_descriptions",
+        "timbre.badge.sniper_win:game_center_achievement_descriptions",
+        "timbre.badge.bullseyes_50:game_center_achievement_descriptions",
+        "timbre.badge.ear_perfect:game_center_achievement_descriptions",
+        "timbre.badge.ear_500:game_center_achievement_descriptions",
+        "timbre.badge.units_1:game_center_achievement_descriptions",
+        "timbre.badge.units_10:game_center_achievement_descriptions",
+        "timbre.badge.course_done:game_center_achievement_descriptions",
+        "timbre.badge.songs_1:game_center_achievement_descriptions",
+        "timbre.badge.songs_25:game_center_achievement_descriptions"
+      ],
+      "note": "Available app values reused exactly; missing app values retain authored store drafts. Does not certify native or device review."
+    }
+  },
+  "name": "Timbre: Acordor de chitară",
+  "subtitle": "Învață vioară, ukulele și bas",
+  "keywords": "vioară,violoncel,ukulele,mandolină,banjo,cromatic,stroboscop,auz,metronom,acord",
+  "promotional_text": "Acordor gratuit, fără reclame sau cont. Simte fiecare coardă acordându-se, învață cu lecții care te ascultă și cântă peste 140 de melodii.",
+  "description": "Acordor gratuit. Fără reclame sau cont. Apoi lecții care te ascultă cântând.\n\nTimbre unește un acordor precis și un profesor de muzică. Acordează 60 de instrumente și învață cântând.\n\nACORDEAZĂ GRATUIT\nAcordajul standard al fiecărui instrument este gratuit: chitară, ukulele, vioară, mandolină, banjo, oud, erhu și altele. Acordor cromatic și stroboscopic precis la cent. 132 de acordaje, de la Drop D și Open G la DADGAD, plus cele proprii.\nDetectarea automată bifează fiecare coardă acordată. O singură mișcare citește toate corzile și arată pe care s-o acordezi prima. Acordează prin atingere: telefonul pulsează cu bătăile dintre coardă și nota țintă, încetinește când se apropie și se oprește când coincid. Nu trebuie să privești.\nChitare, basuri, vioară, violoncel și mandolină 3D, cu lumină de studio, arată cheia de rotit. Capodastru, referință A4 reglabilă, nume de note în solfegiu și sargam.\n\nÎNVAȚĂ CÂNTÂND\n526 de lecții în 11 cursuri: chitară, ukulele, bas, vioară, violoncel, mandolină, banjo, voce, auz, teorie și ritm. Și culegeri pentru ukulele, mandolină, vioară, violoncel și bas.\nTimbre aude fiecare atac: acordul corect, momentul și coarda care nu a sunat. Evaluează fiecare notă la cent și milisecundă. „Arată-mi” cântă acordurile noi pe o chitară 3D, așezând degetele în ordine. Traseul notelor încetinește pentru tine și accelerează pe măsură ce progresezi.\n\nPeste 140 de melodii, fiecare cu un aranjament complet: clasice de la Jingle Bells la Amazing Grace, inclusiv 50 Originals scrise pentru Timbre în stiluri actuale. Cântă cu trupa în căști în timp ce versurile se luminează. Lipește sau importă propria fișă de acorduri, transpune, derulează în ritm și ascultă originalul alături în Apple Music.\n\nCONTINUĂ\nStele, XP, misiuni zilnice, serii și insigne. Game Center: ligă săptămânală „În plin”, clasamente de melodii și provocări cu prietenii. Apple Watch: metronom simțit la încheietură și practica de azi dintr-o privire. Widgeturi pe ecranele principal și blocat, activitate live și scurtături Siri.\nMetronom cu accente, subdiviziuni și antrenament de viteză; bordun, antrenament de intonație, bibliotecă de acorduri și game. Auz: direcția înălțimii, intervale și tipuri de acorduri, plus un curs de 40 de lecții.\n\nÎNCEPE GRATUIT\nAcordajele standard sunt gratuite pentru toate instrumentele. Chitara, basul, ukulele, vioara și violoncelul sunt gratuite în toate acordajele. Prima unitate din fiecare curs și o selecție de melodii sunt tot gratuite. Timbre Pro deblochează toate lecțiile, melodiile, acordajele și instrumentele de practică. Cu notificările activate, Timbre îți amintește cu două zile înainte de sfârșitul unei perioade de probă gratuite.\nSunetul este analizat pe iPhone, niciodată înregistrat sau încărcat. Fără cont și reclame.\nAbonamentele se reînnoiesc automat dacă nu sunt anulate cu cel puțin 24 de ore înainte de sfârșitul perioadei. Gestionează sau anulează oricând: Configurări → Cont Apple → Abonamente.\nCondiții: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\nConfidențialitate: <privacy policy URL>",
+  "whats_new": "Bun venit în Timbre: acordor gratuit pentru 60 de instrumente și 526 de lecții care te ascultă cântând.",
+  "iphone_screenshot_captions": [
+    {
+      "capture": "10b-tune-locked",
+      "caption": "Acordor gratuit. Fără reclame.",
+      "supporting_line": "60 de instrumente, precizie la cent"
+    },
+    {
+      "capture": "65-song-perform",
+      "caption": "Ascultă cum ai cântat",
+      "supporting_line": "Înălțimea și timpul fiecărei note"
+    },
+    {
+      "capture": "52b-lesson-chord",
+      "caption": "Primul tău acord, chiar azi",
+      "supporting_line": "Timbre aude fiecare coardă"
+    },
+    {
+      "capture": "31b-instruments-folk",
+      "caption": "Acordează ce cânți",
+      "supporting_line": "60 de instrumente, 132 de acordaje"
+    },
+    {
+      "capture": "63-songs",
+      "caption": "Cântă melodii cunoscute",
+      "supporting_line": "Peste 140 de melodii: clasice și Originals"
+    },
+    {
+      "capture": "50-learn",
+      "caption": "Învață în ritmul tău",
+      "supporting_line": "526 de lecții în 11 cursuri"
+    },
+    {
+      "capture": "62-lesson-results",
+      "caption": "Cinci minute zilnic contează",
+      "supporting_line": "Stele, serii și misiuni zilnice"
+    },
+    {
+      "capture": "11b-tune-strum",
+      "caption": "O mișcare, toate corzile",
+      "supporting_line": "Vezi ce coardă să acordezi prima"
+    },
+    {
+      "capture": "32-journey",
+      "caption": "Vezi cum progresezi",
+      "supporting_line": "Precizie, sunetul corzilor, insigne"
+    }
+  ],
+  "ipad_screenshot_captions": [
+    {
+      "capture": "ipad-landscape-tune",
+      "caption": "Acordor gratuit. Fără reclame.",
+      "supporting_line": "60 de instrumente, precizie la cent"
+    },
+    {
+      "capture": "ipad-landscape-instruments",
+      "caption": "Acordează ce cânți",
+      "supporting_line": "De la vioară la oud, de la sitar la erhu"
+    },
+    {
+      "capture": "ipad-landscape-songs",
+      "caption": "Cântă melodii cunoscute",
+      "supporting_line": "Peste 140 de melodii: clasice și Originals"
+    },
+    {
+      "capture": "ipad-landscape-practice",
+      "caption": "Cinci minute zilnic contează",
+      "supporting_line": "Practică zilnică, misiuni și jocuri de auz"
+    }
+  ],
+  "app_preview_captions": {
+    "main": {
+      "lock": "Acordor gratuit. Fără reclame.",
+      "tuned": "Fiecare coardă verificată",
+      "showme": "Vezi interpretarea în 3D",
+      "highway": "Cântă melodii cu trupa",
+      "results": "Ascultă rezultatul tău",
+      "songs": "Peste 140 de melodii de învățat",
+      "end": "Acordează. Învață. Cântă.",
+      "end-note": "Acordor gratuit · Fără reclame · Fără cont"
+    },
+    "violin": {
+      "lock": "Acordează vioara gratuit",
+      "tuned": "G, D, A, E: toate acordate",
+      "highway": "Cântă melodii la vioară",
+      "results": "Ascultă rezultatul tău",
+      "songs": "Peste 140 de melodii de învățat",
+      "end": "Acordor și lecții de vioară",
+      "end-note": "Acordor gratuit · Fără reclame · Fără cont"
+    }
+  },
+  "iap_display_names": {
+    "timbre_pro_annual": "Timbre Pro, anual",
+    "timbre_pro_monthly": "Timbre Pro, lunar",
+    "timbre_plus_lifetime": "Timbre Pro, pe viață"
+  },
+  "iap_descriptions": {
+    "timbre_pro_annual": "Lecții, piese, acordaje și unelte: toate",
+    "timbre_pro_monthly": "Lecții, piese, acordaje și unelte: toate",
+    "timbre_plus_lifetime": "Tot Pro, cu o singură plată"
+  },
+  "custom_product_page_keywords": {
+    "violin": [
+      "vioară"
+    ],
+    "cello": [
+      "violoncel"
+    ],
+    "ukulele": [
+      "ukulele"
+    ]
+  }
+}

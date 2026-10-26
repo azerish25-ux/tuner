@@ -1,0 +1,226 @@
+{
+  "schema_version": 1,
+  "locale": "zh-Hant",
+  "counts": {
+    "instruments": 60,
+    "tunings": 132,
+    "courses": 11,
+    "lessons": 526,
+    "songs_floor": 140,
+    "originals": 50
+  },
+  "review": {
+    "text": "ai_drafted",
+    "native": "not_verified",
+    "market_search": "not_verified",
+    "device": "not_verified",
+    "screenshots": "not_captured",
+    "app_preview": "not_rendered",
+    "iap_account_limits": "not_verified",
+    "game_center_account": "not_verified",
+    "release_ready": false,
+    "blockers": [
+      "Production privacy policy URL and verification not provided",
+      "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+      "Localized App Preview recordings and audio/sync/render review pending",
+      "App Store Connect product/locale limits and Game Center configuration/images unverified"
+    ],
+    "semantic": "ai_cross_reviewed_critical_facts",
+    "legal_back_translation": "not_performed_optional_under_ai_policy",
+    "song_title_alignment": "listing_only_ai_draft",
+    "ai_cross_review": {
+      "scope": "Free tier, notification-conditioned two-day trial reminder, on-device never-recorded/uploaded audio, automatic renewal and 24-hour cancellation, anytime management, IAP benefits. Additional feature/count/terminology review for original nine and European/regional listings.",
+      "limitations": "AI review with inherited English source, not blinded back-translation, native-speaker, market, legal, account or visual approval."
+    },
+    "ai_source_aware": "reviewed",
+    "privacy_policy": "not_verified",
+    "review_policy": "ai_source_aware"
+  },
+  "game_center_leaderboard_names": {
+    "timbre.sniper.best": "Bullseye",
+    "timbre.sniper.weekly": "本週 Bullseye",
+    "timbre.ear.level": "聽力訓練等級",
+    "timbre.streak": "連續練習紀錄",
+    "timbre.song.twinkle": "小星星",
+    "timbre.song.odetojoy": "歡樂頌",
+    "timbre.song.jinglebells": "聖誕鈴聲",
+    "timbre.song.saints": "聖者進行曲",
+    "timbre.song.kiteweather": "風箏天氣",
+    "timbre.song.dashboard": "儀表板上的灰塵",
+    "timbre.song.lochlomond": "洛蒙德湖",
+    "timbre.song.mountain": "她將繞過山頭而來"
+  },
+  "game_center_achievement_names": {
+    "timbre.badge.first_tune": "初次調準",
+    "timbre.badge.full_tune": "六弦全齊",
+    "timbre.badge.streak_7": "完美一週",
+    "timbre.badge.strings_100": "百根琴弦",
+    "timbre.badge.bullseye": "正中紅心",
+    "timbre.badge.sharpshooter": "高分玩家",
+    "timbre.badge.golden_ear": "金耳朵",
+    "timbre.badge.level_5": "明日之星",
+    "timbre.badge.multi": "多樂器演奏者",
+    "timbre.badge.streak_30": "音樂之月",
+    "timbre.badge.strings_1000": "千根琴弦",
+    "timbre.badge.first_lesson": "第一堂課",
+    "timbre.badge.lessons_25": "持之以恆",
+    "timbre.badge.lessons_100": "學者",
+    "timbre.badge.perfect_10": "完美無瑕",
+    "timbre.badge.full_25": "調音習慣",
+    "timbre.badge.streak_3": "暖身起步",
+    "timbre.badge.streak_100": "一百天",
+    "timbre.badge.minutes_60": "第一小時",
+    "timbre.badge.minutes_600": "十小時",
+    "timbre.badge.daily_1": "每日練習",
+    "timbre.badge.daily_30": "習慣成自然",
+    "timbre.badge.sniper_win": "回合贏家",
+    "timbre.badge.bullseyes_50": "正中中心",
+    "timbre.badge.ear_perfect": "全對過關",
+    "timbre.badge.ear_500": "聆聽高手",
+    "timbre.badge.units_1": "單元完成",
+    "timbre.badge.units_10": "十個單元",
+    "timbre.badge.course_done": "畢業生",
+    "timbre.badge.songs_1": "第一首歌",
+    "timbre.badge.songs_25": "歌本"
+  },
+  "game_center_achievement_descriptions": {
+    "timbre.badge.first_tune": "調準你的第一根琴弦",
+    "timbre.badge.full_tune": "調準一件樂器的所有琴弦",
+    "timbre.badge.streak_7": "連續演奏七天",
+    "timbre.badge.strings_100": "調準100根琴弦",
+    "timbre.badge.bullseye": "首次命中正中心",
+    "timbre.badge.sharpshooter": "在 Bullseye 取得2,000分",
+    "timbre.badge.golden_ear": "答對50道聽力題",
+    "timbre.badge.level_5": "達到等級5",
+    "timbre.badge.multi": "為三種不同樂器調音",
+    "timbre.badge.streak_30": "連續演奏三十天",
+    "timbre.badge.strings_1000": "調準1,000根琴弦",
+    "timbre.badge.first_lesson": "完成你的第一堂課",
+    "timbre.badge.lessons_25": "完成25堂課",
+    "timbre.badge.lessons_100": "完成100堂課",
+    "timbre.badge.perfect_10": "在10堂課獲得三顆星",
+    "timbre.badge.full_25": "將所有琴弦調準25次",
+    "timbre.badge.streak_3": "連續演奏三天",
+    "timbre.badge.streak_100": "連續演奏100天",
+    "timbre.badge.minutes_60": "累計練習一小時",
+    "timbre.badge.minutes_600": "累計練習十小時",
+    "timbre.badge.daily_1": "完成一組每日練習",
+    "timbre.badge.daily_30": "完成30組每日練習",
+    "timbre.badge.sniper_win": "贏得一回合 Bullseye",
+    "timbre.badge.bullseyes_50": "命中正中心50次",
+    "timbre.badge.ear_perfect": "在一回合聽力練習中答對全部十題",
+    "timbre.badge.ear_500": "答對500道聽力題",
+    "timbre.badge.units_1": "完成一個單元的所有課堂",
+    "timbre.badge.units_10": "完成十個單元",
+    "timbre.badge.course_done": "完成一整門課程",
+    "timbre.badge.songs_1": "演奏你的第一首歌",
+    "timbre.badge.songs_25": "演奏25首歌曲"
+  },
+  "name": "Timbre：吉他調音器與課程",
+  "subtitle": "學習演奏烏克麗麗與小提琴歌曲",
+  "keywords": "大提琴,貝斯,曼陀林,班卓琴,半音,頻閃,聽力訓練,節拍器,和弦",
+  "promotional_text": "免費調音，沒有廣告，不用帳號。感受每根琴弦調準，再透過聆聽演奏的課程學習吉他、烏克麗麗、小提琴、大提琴、貝斯、曼陀林或班卓琴，並彈奏140多首歌曲。",
+  "description": "免費調音，沒有廣告，不用帳號。接著，用會聆聽你演奏的課程學習。\n\nTimbre 將精準調音器與音樂老師合而為一。幾秒內為60種樂器調音，再透過會聆聽的課程，清楚了解自己的演奏表現。\n\n免費為樂器調音\n• 每種樂器的標準調弦都免費：從吉他、烏克麗麗、小提琴，到曼陀林、班卓琴、烏德琴和二胡。\n• 精準至音分的半音與頻閃調音器。\n• 132種調弦，從 Drop D、Open G 到 DADGAD，還能自訂。\n• 自動辨識琴弦，每根調準後都會打勾。掃弦一次即可讀取所有琴弦，告訴你先調哪一根。\n• 用觸覺調音：手機隨琴弦與目標音之間的拍頻震動，越接近越慢，調準時停止，讓你不看螢幕也能調音。\n• 棚燈照明的3D吉他、貝斯、小提琴、大提琴和曼陀林，琴頭會標出該轉動的弦鈕。\n• 支援移調夾、可調整的 A4 基準音，以及唱名與印度唱名。\n\n邊彈邊學\n• 11門課程、526堂課：吉他、烏克麗麗、貝斯、小提琴、大提琴、曼陀林、班卓琴、歌唱、聽力訓練、樂理與節奏，另有烏克麗麗、曼陀林、小提琴、大提琴與貝斯歌本。\n• Timbre 聽見每次掃弦：和弦是否正確、節奏是否準時，以及哪根弦沒有發聲。每個音的音高精準評估至音分，時間至毫秒。\n•「示範給我看」用3D吉他演奏每個新和弦，手指依序落下。跟彈音符軌道會為你放慢，再隨進步加快。\n\n彈奏歌曲\n• 140多首完整編曲：從《Jingle Bells》到《Amazing Grace》等經典，以及為 Timbre 以當代風格創作的50首原創歌曲。\n• 戴上耳機與樂團合奏，歌詞會隨之亮起。\n• 你的歌曲：貼上或匯入和弦譜、移調、依拍速捲動，並在旁邊用 Apple Music 聆聽原曲。\n\n持續練習\n• 星星、XP、每日任務、連續練習紀錄與徽章。\n• Game Center：每週 Bullseye 聯賽、歌曲排行榜與朋友挑戰。\n• Apple Watch：在手腕感受節拍器，一眼查看今天的練習。\n• 主畫面與鎖定畫面小工具、即時動態與 Siri 捷徑。\n• 節拍器含重音、細分節拍與速度訓練；持續音、音準訓練，以及和弦與音階資料庫。\n• 聽力訓練：音高方向、音程與和弦性質，另有40堂聽力課程。\n\n免費開始\n每種樂器的標準調弦都免費，吉他、貝斯、烏克麗麗、小提琴和大提琴的所有調弦也免費。每門課的第一單元與部分歌曲同樣免費。Timbre Pro 解鎖所有課程、歌曲、調弦與完整練習工具。開啟通知後，Timbre 會在免費試用結束前兩天提醒你。\n\n以隱私為本：音訊只在你的 iPhone 上分析，絕不錄音或上傳。不用帳號，沒有廣告。\n\n除非在訂閱期間結束前至少24小時取消，否則訂閱會自動續訂。隨時前往「設定」→「Apple 帳號」→「訂閱項目」管理或取消。\n條款：https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\n隱私權：<privacy policy URL>",
+  "whats_new": "歡迎使用 Timbre：60種樂器的免費調音器，以及會聆聽你演奏的526堂課。",
+  "iphone_screenshot_captions": [
+    {
+      "capture": "10b-tune-locked",
+      "caption": "免費調音，沒有廣告",
+      "supporting_line": "60種樂器，精準至音分"
+    },
+    {
+      "capture": "65-song-perform",
+      "caption": "聽見自己的演奏表現",
+      "supporting_line": "每個音的音高與時間"
+    },
+    {
+      "capture": "52b-lesson-chord",
+      "caption": "今天就彈出第一個和弦",
+      "supporting_line": "Timbre 聽見每根琴弦"
+    },
+    {
+      "capture": "31b-instruments-folk",
+      "caption": "為你演奏的樂器調音",
+      "supporting_line": "60種樂器，132種調弦"
+    },
+    {
+      "capture": "63-songs",
+      "caption": "彈奏熟悉的歌曲",
+      "supporting_line": "140多首歌曲，從經典到原創"
+    },
+    {
+      "capture": "50-learn",
+      "caption": "按自己的步調學習",
+      "supporting_line": "11門課程，526堂課"
+    },
+    {
+      "capture": "62-lesson-results",
+      "caption": "每天五分鐘，累積進步",
+      "supporting_line": "星星、連續紀錄與每日任務"
+    },
+    {
+      "capture": "11b-tune-strum",
+      "caption": "掃弦一次，檢查所有琴弦",
+      "supporting_line": "看看先調哪根琴弦"
+    },
+    {
+      "capture": "32-journey",
+      "caption": "看見自己的進步",
+      "supporting_line": "準確度、琴弦發聲與徽章"
+    }
+  ],
+  "ipad_screenshot_captions": [
+    {
+      "capture": "ipad-landscape-tune",
+      "caption": "免費調音，沒有廣告",
+      "supporting_line": "60種樂器，精準至音分"
+    },
+    {
+      "capture": "ipad-landscape-instruments",
+      "caption": "為你演奏的樂器調音",
+      "supporting_line": "從小提琴到烏德琴，西塔琴到二胡"
+    },
+    {
+      "capture": "ipad-landscape-songs",
+      "caption": "彈奏熟悉的歌曲",
+      "supporting_line": "140多首歌曲，從經典到原創"
+    },
+    {
+      "capture": "ipad-landscape-practice",
+      "caption": "每天五分鐘，累積進步",
+      "supporting_line": "每日練習、任務與聽力遊戲"
+    }
+  ],
+  "app_preview_captions": {
+    "main": {
+      "lock": "免費調音，沒有廣告",
+      "tuned": "每根琴弦都確認",
+      "showme": "用3D看演奏示範",
+      "highway": "與樂團一起彈奏歌曲",
+      "results": "聽聽自己的表現",
+      "songs": "140多首歌曲等你學",
+      "end": "調音。學習。彈歌曲。",
+      "end-note": "免費調音器 · 無廣告 · 不用帳號"
+    },
+    "violin": {
+      "lock": "免費為小提琴調音",
+      "tuned": "G、D、A、E：全部調準",
+      "highway": "用小提琴演奏歌曲",
+      "results": "聽聽自己的表現",
+      "songs": "140多首歌曲等你學",
+      "end": "小提琴調音器與課程",
+      "end-note": "免費調音器 · 無廣告 · 不用帳號"
+    }
+  },
+  "iap_display_names": {
+    "timbre_pro_annual": "Timbre Pro，年訂閱",
+    "timbre_pro_monthly": "Timbre Pro，月訂閱",
+    "timbre_plus_lifetime": "Timbre Pro，永久使用"
+  },
+  "iap_descriptions": {
+    "timbre_pro_annual": "所有課程、歌曲、調弦與練習工具",
+    "timbre_pro_monthly": "所有課程、歌曲、調弦與練習工具",
+    "timbre_plus_lifetime": "Pro 所有功能，一次付費"
+  },
+  "custom_product_page_keywords": {}
+}

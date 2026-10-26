@@ -48,7 +48,7 @@ translation validation success and are not waived.
 
 ## Outstanding quality checks
 
-- Complete all 48 interface locales, nine lesson locales and all 50 Apple-supported listing locales.
+- Complete all 48 interface locales, all 48 target lesson locales and all 50 Apple-supported listing locales.
 - Independently review remaining translations, terminology and length warnings.
 - Verify compiled keys and preserve placeholder order, digits, plurals and syntax.
 - Review localized simulator screenshots, RTL, VoiceOver and layout.
@@ -103,3 +103,31 @@ Independent source review completed for the matrix implementation. All 13 local
 Python tests pass (fixture validation, real 48-language tables, workflow coverage
 and store-locale requirements). Swift compilation and actual simulator execution
 remain unverified until GitHub Actions finishes.
+
+## Full UI and expanded lesson checkpoint (2026-10-26)
+
+This section supersedes the earlier checkpoint counts above.
+
+- All 48 target locales now have zero mechanically missing app UI entries.
+  Independent AI review covered the new UI drafts and corrections; compiler-export
+  evidence resolved the known interpolation-key mismatches before import.
+- All 13,203 newly authored lesson entries in the original nine target languages
+  received independent source-aware AI review. The 114 review corrections and
+  subsequent 48 terminology/violin-source addenda were applied. Remaining shared
+  titles are explicitly pending semantic review, not silently counted complete.
+- Lessons are now required in every one of the 48 target languages. The additional
+  39-language drafting effort is ongoing; unimported drafts are not shipped coverage.
+  The strict external-delivery lesson gate intentionally fails until all are ready.
+- Source-bound notation/name exceptions require actual independent review evidence.
+  Directional formatting marks cannot disguise unchanged English as translated text.
+- Legal, permission and VoiceOver string coverage passes the strict mechanical gate
+  for all 48 targets. This does not establish legal advice or spoken accessibility QA.
+- Simulator run 40250346596 at commit 3fc8ef1 has five successful six-language
+  groups at this checkpoint; two groups remain running and one had an accessibility
+  initialization failure before tests. The separate accessibility audit retry remains
+  running. These results do not certify the newer full-UI candidate.
+- Actual Arabic/Persian/Hebrew/Urdu/Bulgarian/Bengali launch captures were inspected.
+  Persian ownership wording and Bulgarian headline/instrument truncation were fixed
+  with source regression checks; fresh simulator captures remain required.
+- No human native-speaker certification, full-app device signoff, completed store
+  submission, or finished all-language lessons is claimed.

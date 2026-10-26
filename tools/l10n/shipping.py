@@ -20,7 +20,8 @@ reaches the bar. The delivery workflow (apple-delivery.yml, input `ship_min_cove
 checkout without committing it.
 
 Coverage is the share of the app's interface strings (Localizable, InfoPlist, AppShortcuts and the plurals) a locale
-has; lesson strings are reported beside it for the lesson languages and don't count toward the bar.
+has; lesson strings are required in every locale and reported separately. The independent lessons.py --strict gate
+requires full lesson coverage across all 48 targets; the UI percentage bar is not a completion certificate.
 """
 from __future__ import annotations
 
@@ -67,8 +68,8 @@ def coverage(model: dict) -> dict:
     ui_total = max(1, model["ui_total"])
     learn_total = max(1, model["learn_total"])
     for loc, entry in model["locales"].items():
-        ui_missing = sum(1 for item in entry["todo"] if item["table"] != "Learn.strings")
-        lessons_missing = sum(1 for item in entry["todo"] if item["table"] == "Learn.strings")
+        ui_missing = sum(1 for item in entry["todo"] + entry.get("awaiting_apply", []) if item["table"] != "Learn.strings")
+        lessons_missing = sum(1 for item in entry["todo"] + entry.get("awaiting_apply", []) if item["table"] == "Learn.strings")
         lessons = loc in model["lesson_locales"]
         out[loc] = {"ui": 1 - ui_missing / ui_total, "ui_missing": ui_missing,
                     "lessons": (1 - lessons_missing / learn_total) if lessons else None, "lessons_missing": lessons_missing}

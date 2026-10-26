@@ -1,10 +1,10 @@
 # Translating Timbre with GPT
 
-The operating manual for producing Timbre's translations with GPT (a large language model) and human reviewers, so that what comes back passes the repository's checks on the first import, clears the App Store gate, and reads like an app written in the language. It covers what is translated where, the exact input and output of a translation, the rules the import enforces and the ones it can't, ready-to-use prompts, a small helper that batches the TODO files for GPT and checks its answers, the apply-and-verify loop, QA, and the store listing.
+The operating manual for producing Timbre's translations with GPT (a large language model) and independent reviewers, so that what comes back passes the repository's checks on the first import, clears the App Store gate, and reads like an app written in the language. It covers what is translated where, the exact input and output of a translation, the rules the import enforces and the ones it can't, ready-to-use prompts, a small helper that batches the TODO files for GPT and checks its answers, the apply-and-verify loop, QA, and the store listing.
 
 Three files go with it:
 
-- [HANDOFF.md](HANDOFF.md): the generated brief, with today's counts (`tools/l10n/report.py` writes it). Its field definitions and import rules hold here unchanged. Its opening line, "Translations are done by people, never by a machine", predates this plan; under this manual GPT drafts, the checks below gate every string mechanically, and a native reviewer signs off every launch-critical string and a sample of the rest ([§8.5](#85-human-review)).
+- [HANDOFF.md](HANDOFF.md): the generated brief, with today's counts (`tools/l10n/report.py` writes it). Its field definitions and import rules hold here unchanged. Its opening line, "Translations are done by people, never by a machine", predates this plan; under this manual GPT drafts, the checks below gate every string mechanically, and independent semantic review checks every launch-critical string and a sample of the rest ([§8.5](#85-human-review)).
 - [GLOSSARY-TEMPLATE.md](GLOSSARY-TEMPLATE.md): the term list fixed once per locale and given to GPT with every batch.
 - [tools/curriculum/STYLE.md](../../tools/curriculum/STYLE.md): the English voice the translations carry over.
 
@@ -27,11 +27,11 @@ Historical implementation details below were checked against the code at commit 
 
 Per locale, in this order:
 
-1. **Glossary.** Copy [GLOSSARY-TEMPLATE.md](GLOSSARY-TEMPLATE.md) to `docs/l10n/glossary/<locale>.md`, pre-fill it from the current tables, decide the rest, have a native reviewer sign it off.
+1. **Glossary.** Copy [GLOSSARY-TEMPLATE.md](GLOSSARY-TEMPLATE.md) to `docs/l10n/glossary/<locale>.md`, pre-fill it from the current tables, decide the rest, have an independent reviewer check it.
 2. **Batches.** `python3 gpt_l10n.py split <repo> <locale>` cuts `tools/l10n/todo/<locale>.json` into batches of one kind each (legal, permission, VoiceOver, funnel, the rest of the interface, whole lessons) ([§6](#6-the-batch-helper)).
 3. **Translate.** For each batch: the system prompt ([§5.1](#51-system-prompt)) plus the batch message the helper writes ([§5.2](#52-batch-message)); GPT answers in JSON ([§5.3](#53-output-format)).
 4. **Merge.** `python3 gpt_l10n.py merge <repo> <locale> <answers>` runs the import's own checks plus stricter ones and writes the answers that pass into the TODO file's `translation` fields. Errors go back to GPT; warnings go to the reviewer.
-5. **Review.** A GPT review pass over the merged text ([§5.5](#55-review-pass)), then the human sample ([§8.5](#85-human-review)). Corrections go into the same `translation` fields.
+5. **Review.** A GPT review pass over the merged text ([§5.5](#55-review-pass)), then the independent review sample ([§8.5](#85-human-review)). Corrections go into the same `translation` fields.
 6. **Import and gates.** `python3 tools/l10n/report.py --import tools/l10n/todo`, then the gates ([§7](#7-apply-and-verify)). Commit.
 7. **See it.** Screenshots and a pass on a phone in the language ([§8](#8-qa)).
 8. **Listing** (every Apple-supported listing locale; currently 50 including primary English): [§9](#9-the-app-store-listing).
@@ -47,8 +47,8 @@ Per locale, in this order:
 | Plurals | `en.lproj/Localizable.stringsdict` (7 entries today) | `<locale>.lproj/Localizable.stringsdict` | `Localizable.stringsdict` | all 48 |
 | Siri and Shortcuts phrases | `AppShortcut` phrases in `ios/Timbre/Intents/` | `AppShortcuts.strings` | `AppShortcuts.strings` | all 48 |
 | System permission prompts, home-screen name | the Timbre target's Info.plist keys in `ios/project.yml` (`NSMicrophoneUsageDescription`, `NSAppleMusicUsageDescription`, `CFBundleDisplayName`) | `InfoPlist.strings` | `InfoPlist.strings`, `launch: permission` | all 48 |
-| Lessons: course, unit and lesson titles, lesson cards, prompts, quiz answers and explanations, hints, unit summaries, course subtitles, song section chips, lyric credits | `tools/curriculum/courses/*.py` → `tools/curriculum/build.py` → `en.lproj/Learn.strings` (keys are a hash of the English, so an edited sentence gets a new key) | `tools/l10n/learn/<locale>.json` → `apply_learn.py` → `<locale>.lproj/Learn.strings` | `Learn.strings` | the 9 lesson languages |
-| App Store listing: name, subtitle, keywords, promotional text, description, What's New, screenshot captions, App Preview captions | `docs/ios/APP-STORE-LISTING.md`, and its "Source for translators" (counts as variables) in `docs/ios/APP-STORE-LISTING-LOCALIZED.md` | `APP-STORE-LISTING-LOCALIZED.md`, pasted into App Store Connect; captions rendered by `tools/marketing/screenshots.py` | none (no TODO file) | all 50 Apple-supported listing locales |
+| Lessons: course, unit and lesson titles, lesson cards, prompts, quiz answers and explanations, hints, unit summaries, course subtitles, song section chips, lyric credits | `tools/curriculum/courses/*.py` → `tools/curriculum/build.py` → `en.lproj/Learn.strings` (keys are a hash of the English, so an edited sentence gets a new key) | `tools/l10n/learn/<locale>.json` → `apply_learn.py` → `<locale>.lproj/Learn.strings` | `Learn.strings` | all 48 non-English app locales |
+| App Store listing: name, subtitle, keywords, promotional text, description, What's New, screenshot captions, App Preview captions | `docs/ios/APP-STORE-LISTING.md`, and its "Source for translators" (counts as variables) in `docs/ios/APP-STORE-LISTING-LOCALIZED.md` | `tools/l10n/store/<Apple-locale>.json`; release evidence is separate; captions rendered by `tools/marketing/screenshots.py` | none (no TODO file) | all 50 Apple-supported listing locales |
 | Other App Store Connect text: in-app purchase display names and descriptions, Game Center leaderboard and achievement names | the tables in `APP-STORE-LISTING.md`; `ios/Timbre/Services/GameCenterIDs.swift` (achievement titles and details are the app's own badge texts) | App Store Connect only | none | as the listing |
 
 Not translated: sung lyrics (the public-domain originals, or Timbre's own for the Originals), App Review notes (English), product and file names. "What's New" exists only as the App Store version text; the app has no What's New screen of its own.
@@ -56,14 +56,17 @@ Not translated: sung lyrics (the public-domain originals, or Timbre's own for th
 ### 2.2 Locales
 
 - **49 string tables**: English, the source, and 48 translations: ar, bg, bn, ca, cs, da, de, el, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, is, it, ja, kn, ko, lt, lv, ml, mr, nl, no, pa, pl, pt, ro, ru, sk, sl, sv, sw, ta, te, th, tr, uk, ur, vi, zh-CN, zu. `tools/verify-ios-resources.py` asserts there are 49 `.lproj` folders. All 48 ship today (`CFBundleLocalizations` in `ios/project.yml`).
-- **The 9 major locales**, de, es, fr, it, ja, ko, pt, ru and zh-CN: the interface, the lessons (they have `tools/l10n/learn/<locale>.json` and a `Learn.strings`), and existing partial store blocks (as de-DE, es-MX, fr-FR, it, ja, ko, pt-BR, ru and zh-Hans). These nine lesson locales are unchanged; they no longer define the store scope.
-- **The 39 others**: the app interface only (store requirements are separate). Lessons show in English there by design; `report.py` gives them no lesson TODO.
+- **All 49 app languages include lessons**: English source plus all 48 translation targets. The original nine delivered lesson maps (de, es, fr, it, ja, ko, pt, ru, zh-CN) remain partial; they do not limit the requirement.
+- **The 39 newly required lesson targets** each need all 6,080 current lesson keys: **237,120 additional locale-string pairs**. Missing maps/tables still produce lesson TODOs. Do not manufacture English copies: fallback is temporary missing content, not completed translation.
+- **Automatic language**: fresh settings use `TimbreLocalization.system`, so iOS selects the phone/app preferred localization and regional fallback through `Bundle.main`. An explicit in-app language choice remains respected; selecting System restores automatic behavior. Missing lesson text is a content gap, not evidence the language resolver failed.
 - **Right to left**: ar, fa, he, ur ([§4.11](#411-right-to-left-ar-fa-he-ur)).
 - **Variants**: one table per language serves every region. `es` serves Spain and Latin America (the current table uses Spain's iOS wording, "Ajustes"; the existing store block is es-MX, "Configuración"; es-ES is also required), `pt` serves Brazil and Portugal (the current table is Brazilian, "você"), `zh-CN` is Simplified Chinese, `no` is Norwegian Bokmål. The glossary records the variant.
 
-**Store scope:** all 50 Apple locales in [store-locales.json](../../tools/l10n/store-locales.json), with exact API shortcodes, app mappings, primary English fallback policy and source URLs. Eight app languages (`fa`, `bg`, `et`, `is`, `lt`, `lv`, `sw`, `zu`) have no Apple listing locale: do not invent one. Malay (`ms`), Odia (`or-IN`) and Traditional Chinese (`zh-Hant`) listings are required but do not add app UI languages or justify claiming UI support. English regional listings and French, Portuguese and Spanish regional variants are distinct metadata deliverables. The app remains 49 languages (English + 48 translations), with nine translated lesson languages.
+**Store scope:** all 50 Apple locales in [store-locales.json](../../tools/l10n/store-locales.json), with exact API shortcodes, app mappings, primary English fallback policy and source URLs. Eight app languages (`fa`, `bg`, `et`, `is`, `lt`, `lv`, `sw`, `zu`) have no Apple listing locale: do not invent one. Malay (`ms`), Odia (`or-IN`) and Traditional Chinese (`zh-Hant`) listings are required but do not add app UI languages or justify claiming UI support. English regional listings and French, Portuguese and Spanish regional variants are distinct metadata deliverables. The app remains 49 languages (English + 48 translations), with lessons required in all 49.
 
-### 2.3 What is missing (at 0bbf273)
+### 2.3 Historical baseline (at 0bbf273; superseded by generated handoff)
+
+Current requirements include the additional 237,120 lesson pairs above. Run `python3 tools/l10n/lessons.py --strict` for applied coverage and consult the generated [HANDOFF.md](HANDOFF.md) for current queues. Copied-English entries, including shared titles needing independent review, are conservatively unresolved. No native review is implied by a mechanical pass. Legitimate English-identical proper names, original titles, notation or credits can be approved per locale/key in `tools/l10n/lesson-invariants.json`: exact current `source`, a reason covering the entire string, and the actual `reviewed_by` identity. No wildcard approvals or fabricated review records.
 
 639 interface strings in every one of the 48 locales (30,672 locale-string pairs), of which 151 are launch-critical, and 1,467 lesson strings in each lesson language (13,203 pairs). Every locale has 67.7 % of the interface (`python3 tools/l10n/shipping.py`). 1,410 of the pairs are `changed`: the English was edited and the old translation comes along to update.
 
@@ -78,14 +81,14 @@ The TODO files are already in this order: `report.py` puts the launch-critical e
 | 3 | VoiceOver | `launch: voiceover` | 93 | as 1 |
 | 4 | Onboarding, welcome to paywall | `launch: funnel` | 46 | No gate, but it is the first thing every new user reads, and `LocalizationLaunchUITests` checks the German welcome ([§8.2](#82-the-localization-launch-tests)). |
 | 5 | The rest of the interface | none | 488 | The shipping bar: `shipping.py --min 95` ships a locale only when 95 % of its interface is translated ([§7.6](#76-shipping-fewer-locales)). |
-| 6 | Lessons (9 locales) | `table: Learn.strings` | 1,467 | Nothing gates them: an untranslated lesson string shows in English. |
+| 6 | Lessons (all 48 target locales) | `table: Learn.strings` | up to 6,080 | `lessons.py --strict`: every target must have complete applied lesson text before external delivery; English fallback is incomplete. |
 | 7 | Store listing (all 50 Apple locales) | none | 13 caption rows plus the text blocks | `screenshots.py --check` ([§9](#9-the-app-store-listing)). |
 
 Across locales, the order that gets an upload through soonest:
 
 1. Steps 1–4 for all 48 locales. Then `critical.py --strict` passes with every locale shipped.
 2. Step 5 for the 9 major locales: they are complete.
-3. Step 6 for the 9 lesson locales. Step 7 for **all 50 listing locales**, starting with the nine existing partial blocks and primary English, then the 40 additional listings.
+3. Step 6 for all 48 target lesson locales. Step 7 for **all 50 listing locales**, starting with the nine existing partial blocks and primary English, then the 40 additional listings.
 4. Step 5 for the other 39, shipping each one as it reaches the bar.
 
 Until a locale has steps 1–3, either it doesn't ship (`shipping.py --min … --critical --apply`) or the upload fails.
@@ -562,7 +565,7 @@ python3 gpt_l10n.py prompt ~/src/tuner de batches/de-review-001.json ~/src/tuner
 python3 gpt_l10n.py merge  ~/src/tuner de batches/de-review-0*.out.json
 ```
 
-The review message asks GPT to return every item, unchanged when right, corrected with a `note` otherwise; `merge` writes the corrections back (they pass the same checks). Run it with a different model or a fresh conversation than the translation, so it doesn't approve its own reasoning. Every `note` from either pass goes to the human reviewer.
+The review message asks GPT to return every item, unchanged when right, corrected with a `note` otherwise; `merge` writes the corrections back (they pass the same checks). Run it with a different model or a fresh conversation than the translation, so it doesn't approve its own reasoning. Every `note` from either pass goes to the independent reviewer.
 
 ### 5.6 Context beyond the batch
 
@@ -594,7 +597,7 @@ From the repository root, on a branch (`git switch -c l10n/de-gpt`; pushing a br
 # 0. Start from a current TODO file. If the English changed since it was generated, CI fails anyway until this runs.
 python3 tools/l10n/report.py
 
-# 1. Batches, GPT, merge (§6). Then the review pass and the human review (§5.5, §8.5) on the TODO file.
+# 1. Batches, GPT, merge (§6). Then the review pass and the independent review (§5.5, §8.5) on the TODO file.
 
 # 2. Import: checks every filled entry again, merges the good ones into tools/l10n/translations and tools/l10n/learn,
 #    applies all tables, regenerates the TODO files, pending.json and HANDOFF.md.
@@ -642,7 +645,7 @@ The import prints one line per refused translation ("de Localizable.strings 'Bea
 - **Localization export** (`.github/workflows/l10n.yml`, Actions → Localization export → Run workflow, or any push to a branch named `l10n/…`): exports the English from source with Xcode (`xcodebuild -exportLocalizations`), runs `report.py --check --xliff` and `critical.py --xliff` with Xcode's own keys, and publishes `en.xliff`, the handoff files, `report.log`, `critical.log` and `critical-missing.json` to `ci-results/l10n` (a side branch publishes to `ci-results/l10n--<branch name with dashes>`): `git fetch origin ci-results/l10n` and read them from `FETCH_HEAD`.
 - **App Store delivery** (`.github/workflows/apple-delivery.yml`): `critical.py --strict` over the shipped locales, after the optional `ship_min_coverage` bar. Only an internal TestFlight build (`internal_testflight_untranslated`) skips it, and that build can't be submitted.
 
-**Expanded completion gate:** keep GitHub Actions translation work scoped to all 49 app languages (English source + 48 targets), the existing nine lesson languages, and a separate all-50 listing queue. The app TODO importer does not import store metadata. A green app translation job, manifest test or existing screenshot check does not prove all listings complete. Track per-locale/per-field drafts, placeholder removal, mechanical validation, independent AI review, native review and device/render review separately; retain failed/pending work for the next run. No App Store account changes or submission are implied by generating or checking translations.
+**Expanded completion gate:** keep GitHub Actions translation work scoped to all 49 app languages (English source + 48 targets), all 48 target lesson languages, and a separate all-50 listing queue. The app TODO importer does not import store metadata. A green app translation job, manifest test or existing screenshot check does not prove all listings complete. Track per-locale/per-field drafts, placeholder removal, mechanical validation, independent AI review, native review and device/render review separately; retain failed/pending work for the next run. No App Store account changes or submission are implied by generating or checking translations.
 
 ### 7.4 Confirm guessed keys (key_check)
 
@@ -749,7 +752,7 @@ Reviewers read on a phone: an internal TestFlight build carries every translatio
 
 ### 8.5 Human review
 
-A native speaker who plays an instrument reviews, with the glossary, the batch JSON (English, context, translation) and the app. Corrections go into the TODO file's `translation` before the import (preferred), or afterwards into `tools/l10n/translations/<locale>.json` (a key that isn't there yet can be added: `apply.py` replaces the table's line) or `tools/l10n/learn/<locale>.json`, followed by `python3 tools/l10n/apply.py tools/l10n/translations` or `python3 tools/l10n/apply_learn.py`, then `python3 tools/l10n/report.py`.
+The owner selected independent AI semantic review for this translation effort in place of human review. Use a separate review context from the drafting pass, compare against English and the glossary, and record corrections and actual evidence. This is not native-speaker certification, a market-search study, legal advice, blinded back-translation, or device QA. Those checks remain separate and must never be marked completed without evidence. Human review by a musician remains recommended before broad release. The review sample below applies to the selected reviewer; app/device checks still require actual rendering. Corrections go into the TODO file's `translation` before the import (preferred), or afterwards into `tools/l10n/translations/<locale>.json` (a key that isn't there yet can be added: `apply.py` replaces the table's line) or `tools/l10n/learn/<locale>.json`, followed by `python3 tools/l10n/apply.py tools/l10n/translations` or `python3 tools/l10n/apply_learn.py`, then `python3 tools/l10n/report.py`.
 
 | What | Review |
 |---|---|
@@ -760,7 +763,7 @@ A native speaker who plays an instrument reviews, with the glossary, the batch J
 | Every `WARN` of the helper and every GPT `note` | 100 % |
 | Rest of the interface | 20 % in the 9 major locales, 10 % elsewhere, picked at random, plus every string with a `layout` |
 | Lessons | One whole lesson per unit read in the app, plus 10 % at random; every song title against the glossary |
-| Store listing | 100 %, by someone who knows the market's search terms |
+| Store listing | 100 % under the explicit store text-review policy (§9.1); human/market review is optional under owner-selected AI mode |
 
 When a sample finds more than 2 % substantive errors (meaning, a glossary term, register, a fact), review all strings of that kind for the locale, and fix the cause in the glossary or the prompt before the next batch.
 
@@ -782,7 +785,9 @@ for line in open(f"tools/l10n/todo/{loc}.json", encoding="utf-8"):
         if isinstance(item.get("translation"), str) and item["translation"]:
             pairs[item["source"]] = item["translation"]   # filled, not imported yet
 learn = report.read_strings(report.RES / "en.lproj/Learn.strings")
-done = json.load(open(f"tools/l10n/learn/{loc}.json", encoding="utf-8")) if loc in report.lesson_locales() else {}
+from pathlib import Path
+learn_path = Path(f"tools/l10n/learn/{loc}.json")
+done = json.loads(learn_path.read_text(encoding="utf-8")) if learn_path.exists() else {}
 pairs.update({learn[k]: v for k, v in done.items() if k in learn})
 for line in open(glossary, encoding="utf-8"):
     cells = [c.strip() for c in line.strip().strip("|").split("|")]
@@ -809,68 +814,49 @@ For the 11 legal strings and the permission prompts of each locale, a separate G
 
 ## 9. The App Store listing
 
-**Required scope: every Apple-supported listing locale, currently 50 including `en-US`.** The authoritative inventory is [store-locales.json](../../tools/l10n/store-locales.json), verified on 2026-10-26 against [Apple’s supported languages](https://developer.apple.com/help/app-store-connect/reference/app-information/app-store-localizations) and [Apple’s API shortcodes](https://developer.apple.com/documentation/appstoreconnectapi/managing-metadata-in-your-app-by-using-locale-shortcodes). The expanded scope does not change the 49 app languages or nine lesson locales (§2.2).
+**Required scope: every Apple-supported listing locale, currently 50 including `en-US`.** The authoritative inventory is [store-locales.json](../../tools/l10n/store-locales.json), verified on 2026-10-26 against [Apple’s supported languages](https://developer.apple.com/help/app-store-connect/reference/app-information/app-store-localizations) and [Apple’s API shortcodes](https://developer.apple.com/documentation/appstoreconnectapi/managing-metadata-in-your-app-by-using-locale-shortcodes). Listing scope does not change the 49 app languages or all-49 lesson requirement (§2.2).
 
-The English source is `docs/ios/APP-STORE-LISTING.md`; localized work belongs in `docs/ios/APP-STORE-LISTING-LOCALIZED.md`. Existing nine blocks remain partial: name/subtitle/keywords exist, but long text is stale and captions contain placeholders. **The 40 other non-primary listings are pending**, not translated by adding an inventory row. Every locale requires name, subtitle, keywords, promotional text, description, What's New, iPhone/iPad screenshot and App Preview captions, IAP display names/descriptions, and Game Center leaderboard/achievement names and descriptions. For an asset or product genuinely not used, record an explicit reviewed not-applicable reason rather than silently dropping the field.
+The English source remains `docs/ios/APP-STORE-LISTING.md`. All 50 machine-readable listing payloads are in `tools/l10n/store/<Apple-locale>.json`, including its `en-US` snapshot. [APP-STORE-LISTING-LOCALIZED.md](../ios/APP-STORE-LISTING-LOCALIZED.md) documents their evidence and release gates; old nine-locale Markdown blocks are no longer the translation deliverable. Each payload includes name, subtitle, keywords, promotional text, description, What's New, 13 iPhone/iPad caption pairs, both App Preview cuts, three IAP names/descriptions, 12 Game Center boards and 31 achievement name/description pairs.
 
-Use the source’s count variables (`{instruments}`, `{tunings}`, `{courses}`, `{lessons}`, `{songs_floor}`, `{originals}`) and current build values. `TRANSLATE:`, empty text, stale blocks, unresolved variables, `<privacy policy URL>` and copied-English fallback never count as finished. Preserve the privacy placeholder while drafting, but replace it with the verified production URL before release. AI-generated, AI-reviewed, native-reviewed and device/render-reviewed are different evidence states; do not claim one from another. Current tools cover only their existing subset until extended; a green check is not all-50 coverage or permission to submit.
+### 9.1 Review policy and evidence
 
-### 9.1 Fields and limits
+The owner explicitly elected source-aware AI review instead of mandatory human text sign-off. `store-review.json` records `review_policy.mode: ai_source_aware`; absent an explicit selection, the validator defaults to the conservative `human` policy. All 50 full payloads have independent source-aware AI review, and all 94 identified corrections were applied with exact-old guards and matched the reviewer’s proposed hashes. Named reviewer/method, current-payload hashes, exact source hash/version/counts, correction resolution, the 50-locale inventory and hash-bound original evidence artifacts are checked mechanically.
 
-| Field | Limit | Checked by `screenshots.py --check` for the localized locales |
-|---|---:|---|
-| Name | 30 | length (NFC characters) |
-| Subtitle | 30 | length |
-| Keywords | 100 | length; every Custom Product Page word of the locale is in the field |
-| Promotional text | 170 | not checked |
-| Description | 4,000 | not checked |
-| What's New | 4,000 | not checked |
-| Screenshot caption | 30 (the repository's design limit) | length; same captures in the English order; no number the English row doesn't quote; `TRANSLATE:` rows listed, not failed |
-| Supporting line | none | no number the English row doesn't quote |
-| App Preview captions | none | not checked (only when the preview is localized) |
+AI review is **not** native-speaker certification, blinded legal back-translation, legal compliance certification, measured keyword popularity or device/account/visual verification. The native, market and legal-review states stay unverified or unperformed. Those additional text reviews are optional under the owner-selected AI policy, not silently marked passed. The historical human-only store requirements elsewhere in this manual are superseded for store text by this explicit policy.
 
-The unchecked fields are checked by the translator: count characters with Python's `len()` on the NFC string, as the listing does, and compare every count against the variables table.
+A new import, source change or `--sync-game-center` operation that changes payloads invalidates their AI review hashes. Independently review the changed text and resolve findings before updating evidence; never simply regenerate hashes to claim a review occurred.
 
-### 9.2 Keywords
+```sh
+python3 tools/l10n/store.py                    # all 50 payloads + current AI evidence
+python3 tools/l10n/store.py --sync-manifest    # record factual validation, never release approval
+python3 tools/l10n/store.py --release          # still fails for missing real release evidence
+python3 tools/l10n/store.py --release --review-policy human # audit conservative policy
+python3 tools/marketing/screenshots.py --check
+```
 
-Apple's rules, as `APP-STORE-LISTING.md` and `APP-STORE-LISTING-LOCALIZED.md` apply them:
+### 9.2 Fields, counts and limits
 
-- At most 100 characters; comma-separated with no space after a comma (a space only inside a two-word term).
-- Singular forms only (Apple matches plurals); no category names ("music"); no word already in that locale's name or subtitle, except an instrument word a Custom Product Page needs (a page can be assigned only keywords from its localization's field); in ja, ko and zh-Hans no keyword may be a substring of the name or subtitle, with the same exception.
-- No duplicates; no competitors' or other apps' names, no trademarks that aren't Apple's or Timbre's.
-- Search terms come from what people in that market type, not from the English list: GPT can propose candidates, a native who knows the market decides, and App Store Connect's search popularity confirms once the locale is live.
+`store.py` validates all 50 locales, and `screenshots.py --check` invokes that validator. NFC code-point limits are name/subtitle 30, keywords 100, promotional text 170, description/What's New 4,000, screenshot headlines 30 (design constraint), IAP names 2–30 and descriptions 45, Game Center titles 100 and descriptions 500 (actual account verification still required). Capture order, preview clip IDs, all product/achievement IDs, missing text, unresolved translation/count markers, required source counts and unsupported numeric claims are checked.
 
-`screenshots.py --check` enforces the no-space, no-duplicate and name-or-subtitle rules only for the English listing; for the localized fields it checks the length and the Custom Product Page words. The rest is the translator's check. Each locale's page words are in the "Custom Product Page keywords by locale" table; a word marked "— add …" must go into the field before that page can be found in the language.
+Use the source’s count variables (`{instruments}`, `{tunings}`, `{courses}`, `{lessons}`, `{songs_floor}`, `{originals}`) and current build values while authoring. Store JSON contains resolved values, never stale counts or unresolved variables. Empty strings, `TRANSLATE:` or copied-English fallback do not satisfy translation coverage. English regional variants deliberately share reviewed source wording, not missing-language fallback. The standard EULA URL is unchanged in every locale.
 
-### 9.3 Promotional text, description, What's New
+`<privacy policy URL>` remains explicit during drafting. It is a **release blocker**, not a translation omission to disguise. Replace it only with the verified production URL, update the English source and snapshot consistently, and renew review evidence for changed payloads.
 
-GPT gets the English source block with its variables, the locale's existing name, subtitle and keywords when present (otherwise draft these too), its stale earlier text when present (folded under "Earlier text", for wording that still fits), the glossary, and these rules from the listing doc:
+### 9.3 Keywords and regional wording
 
-- Same facts as the English, no stronger: the free tier, no ads, no account, audio never recorded, the trial reminder ("with notifications on, Timbre reminds you two days before a free trial ends").
-- Adapted, not word for word, with the app's own terms (the glossary): drone, streak, quest, badge, unit, course.
-- The variables filled with the values of the table; no other number.
-- `<privacy policy URL>` stays as it is; the Terms link is Apple's standard EULA in every locale.
-- The legal line uses Apple's own wording for Settings › Apple Account › Subscriptions in that language (each locale's Notes give it).
-- No language count ("available in 49 languages"): the listing doesn't count languages until every shipped locale is complete.
+Keywords are comma-separated, at most 100 characters, without spaces beside commas or duplicate terms. The validator rejects name/subtitle repetitions except explicitly mapped Custom Product Page terms, and verifies that assigned page terms belong to the field and to one page only. It cannot prove search popularity, idiom, competitor/trademark suitability or regional search behavior. The current AI-reviewed candidates are not measured market findings; market ASO research is optional and unperformed under the selected policy.
 
-The result replaces the locale's stale blocks as `### Promotional text`, `### Description` and `### What's New` code blocks in its section.
+Keep descriptions equivalent to the source: distinguish 60-instrument tuning from the limited teaching-course scope, include 50 Originals within 140+ songs, preserve every free-tier condition, the notification-conditioned two-day trial reminder, on-device audio that is never recorded/uploaded, automatic renewal, the 24-hour cancellation window and anytime subscription management. Use glossary and app terms without implying app UI support for listing-only Malay, Odia or Traditional Chinese. Never claim a language count as completed merely because locale files exist.
 
-### 9.4 Screenshot captions
+### 9.4 Screenshots and App Preview
 
-In the locale's two caption tables, replace each `TRANSLATE: …` cell with the translation:
+The renderers read locale JSON, retaining original capture/clip inventory and visual looks. Render localized screenshots with `python3 tools/marketing/screenshots.py <captures> <out> --locale de-DE` (plus `--ipad` for iPad); use `preview.py render --out <recording-folder> --locale de-DE` for recorded previews. Matching localized captures/recordings and glyph-capable fonts are required. Metadata does not translate pixels, prove RTL shaping or create a finished video. Inspect truncation, overlap, search-size legibility, audio and synchronization. Custom Product Page asset sets are separate from the 13 default caption pairs.
 
-- A caption at most 30 characters; the supporting line as short as the English.
-- Numbers as literal values, not variables (the renderer draws the cell as written), and only numbers the English row quotes ("60 instruments, to the cent" may say 60, nothing else).
-- No `|` (it would split the table cell); keep the capture column and the row order.
-- ja, ko, zh-Hans and ru captions are drawn in a system font with those glyphs (Sora has none), or the one `--font` names.
+### 9.5 IAP, Game Center and mandatory release gates
 
-Then `python3 tools/marketing/screenshots.py --check`, the localized captures ([§8.3](#83-screenshots-in-the-language)) and `python3 tools/marketing/screenshots.py <captures> <out> --locale de-DE` (and `--ipad`).
+Reuse matching app badge and song-title translations where available. Run `store.py --sync-game-center` only after app imports, then review every changed payload; do not independently rename localized song titles away from `Learn.strings`. Listing-only languages use reviewed store text without claiming app UI support. Review notes stay English.
 
-### 9.5 Other App Store Connect text
-
-- In-app purchase display names and descriptions, per locale (the English table is in `APP-STORE-LISTING.md`; App Store Connect shows the limits).
-- Game Center (every listing locale; use reviewed English-source translations when no matching app UI table exists, without claiming UI language support): leaderboard names ("Bullseye", "Bullseye this week", "Ear trainer level", "Practice streak", featured songs' titles) and the 31 achievements, whose titles and descriptions are the app's own badge texts: reuse the locale's translations from `Localizable.strings` so the app and Game Center agree.
-- Review notes stay in English.
+Regardless of text-review policy, release requires a verified HTTPS production privacy URL present in each description, real localized device/glyph/RTL/layout checks, screenshot capture/render review, localized preview recording/audio/render evidence, actual App Store Connect IAP localization/product limits and Game Center configuration/images. Verified statuses must have evidence references bound to the current payload. Structural/numeric gates and English-source integrity remain mandatory. All current listings remain `release_ready: false`; text completion and a green draft gate do not authorize upload, account changes or submission.
 
 ## 10. Traps the tooling doesn't catch
 
@@ -884,5 +870,5 @@ What can still go wrong after every check above passes, and what to do about it:
 6. **Localized store frames #3 and #7** come out `-wrong` in a localized capture run, because their checks read English text (`ios/TimbreUITests/TimbreUITests.swift`, the comment on `language`): a full localized set can't be rendered until those checks read identifiers.
 7. **Wrong terms in the shipped tables**, which the anchors and `refs` may show GPT: "Intonation" (the drone trainer) is translated as the guitar-setup adjustment in ca (Octavació), es (Octavación), ja (オクターブ調整), pt (Oitavado) and zh-CN (八度音准); the register is mixed in he, hr, ro, sl and tr; "Bullseye" is translated everywhere although HANDOFF.md says to keep game names. The glossary overrules the tables; a clean-up batch for those keys means editing `tools/l10n/translations/<locale>.json` and running `apply.py`, since they aren't in the TODO files.
 8. **Shared keys**: "Next", "Again" and "Slower" are on-screen labels and Siri's command words; one translation has to serve both ([§4.14](#414-grammar-around-arguments)).
-9. **Localized listing text** (promotional text, description, What's New) and the localized keyword rules beyond length are not checked by `screenshots.py` ([§9.1](#91-fields-and-limits), [§9.2](#92-keywords)); the 40 additional non-primary listing locales are required but outside its current nine-locale implementation. The manifest test checks scope/mapping only, not translated text or review evidence.
+9. **Store semantic and visual quality** cannot be proven by the all-50 text validator. Current-payload/source hashes protect independent AI review evidence from silently going stale; actual localized assets, device checks, production privacy and account configuration remain separate release gates (§9).
 10. **`ship_min_coverage`** in the delivery workflow doesn't require the critical strings: a locale above the bar without them fails the upload instead of being left out ([§7.6](#76-shipping-fewer-locales)).

@@ -1,0 +1,321 @@
+{
+  "schema_version": 1,
+  "locale": "tr",
+  "counts": {
+    "instruments": 60,
+    "tunings": 132,
+    "courses": 11,
+    "lessons": 526,
+    "songs_floor": 140,
+    "originals": 50
+  },
+  "review": {
+    "text": "ai_drafted",
+    "native": "not_verified",
+    "market_search": "not_verified",
+    "device": "not_verified",
+    "screenshots": "not_captured",
+    "app_preview": "not_rendered",
+    "iap_account_limits": "not_verified",
+    "game_center_account": "not_verified",
+    "release_ready": false,
+    "blockers": [
+      "Production privacy policy URL and verification not provided",
+      "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+      "Localized App Preview recordings and audio/sync/render review pending",
+      "App Store Connect product/locale limits and Game Center configuration/images unverified"
+    ],
+    "semantic": "ai_cross_reviewed_critical_facts",
+    "legal_back_translation": "not_performed_optional_under_ai_policy",
+    "song_title_alignment": {
+      "state": "pending_app_alignment",
+      "pending_app_alignment": [
+        "timbre.song.twinkle",
+        "timbre.song.odetojoy",
+        "timbre.song.jinglebells",
+        "timbre.song.saints",
+        "timbre.song.kiteweather",
+        "timbre.song.dashboard",
+        "timbre.song.lochlomond",
+        "timbre.song.mountain"
+      ],
+      "native_review": "not_verified"
+    },
+    "ai_cross_review": {
+      "scope": "Free tier, notification-conditioned two-day trial reminder, on-device never-recorded/uploaded audio, automatic renewal and 24-hour cancellation, anytime management, IAP benefits. Additional feature/count/terminology review for original nine and European/regional listings.",
+      "limitations": "AI review with inherited English source, not blinded back-translation, native-speaker, market, legal, account or visual approval."
+    },
+    "ai_source_aware": "reviewed",
+    "privacy_policy": "not_verified",
+    "review_policy": "ai_source_aware"
+  },
+  "game_center_leaderboard_names": {
+    "timbre.sniper.best": "Tam isabet",
+    "timbre.sniper.weekly": "Bu hafta Tam isabet",
+    "timbre.ear.level": "Kulak eğitimi seviyesi",
+    "timbre.streak": "Çalışma serisi",
+    "timbre.song.twinkle": "Parla, parla, küçük yıldız",
+    "timbre.song.odetojoy": "Neşeye Övgü",
+    "timbre.song.jinglebells": "Jingle Bells",
+    "timbre.song.saints": "When the Saints Go Marching In",
+    "timbre.song.kiteweather": "Kite Weather",
+    "timbre.song.dashboard": "Dust on the Dashboard",
+    "timbre.song.lochlomond": "Loch Lomond",
+    "timbre.song.mountain": "She'll Be Coming 'Round the Mountain"
+  },
+  "game_center_achievement_names": {
+    "timbre.badge.first_tune": "İlk tel akortta",
+    "timbre.badge.full_tune": "Altısı birden",
+    "timbre.badge.streak_7": "Kusursuz hafta",
+    "timbre.badge.strings_100": "Yüz tel",
+    "timbre.badge.bullseye": "Tam isabet",
+    "timbre.badge.sharpshooter": "Yüksek puan",
+    "timbre.badge.golden_ear": "Altın kulak",
+    "timbre.badge.level_5": "Yükselen yıldız",
+    "timbre.badge.multi": "Çok enstrümanlı",
+    "timbre.badge.streak_30": "Müzik dolu bir ay",
+    "timbre.badge.strings_1000": "Bin tel",
+    "timbre.badge.first_lesson": "İlk ders",
+    "timbre.badge.lessons_25": "Müdavim",
+    "timbre.badge.lessons_100": "Bilgin",
+    "timbre.badge.perfect_10": "Kusursuz",
+    "timbre.badge.full_25": "Akort alışkanlığı",
+    "timbre.badge.streak_3": "Isınma turu",
+    "timbre.badge.streak_100": "Yüz gün",
+    "timbre.badge.minutes_60": "İlk saat",
+    "timbre.badge.minutes_600": "On saat",
+    "timbre.badge.daily_1": "Günlük set",
+    "timbre.badge.daily_30": "Alışkanlık kölesi",
+    "timbre.badge.sniper_win": "Tur galibi",
+    "timbre.badge.bullseyes_50": "Tam ortaya",
+    "timbre.badge.ear_perfect": "Tam puan",
+    "timbre.badge.ear_500": "Dinleme ustası",
+    "timbre.badge.units_1": "Ünite tamam",
+    "timbre.badge.units_10": "On ünite",
+    "timbre.badge.course_done": "Mezun",
+    "timbre.badge.songs_1": "İlk şarkı",
+    "timbre.badge.songs_25": "Şarkı defteri"
+  },
+  "game_center_achievement_descriptions": {
+    "timbre.badge.first_tune": "İlk telini akort et",
+    "timbre.badge.full_tune": "Bir enstrümanın tüm tellerini akort et",
+    "timbre.badge.streak_7": "Yedi gün üst üste çalış",
+    "timbre.badge.strings_100": "100 tel akort et",
+    "timbre.badge.bullseye": "İlk tam isabetini yap",
+    "timbre.badge.sharpshooter": "Tam isabet oyununda 2.000 puan al",
+    "timbre.badge.golden_ear": "50 kulak sorusunu doğru yanıtla",
+    "timbre.badge.level_5": "5. seviyeye ulaş",
+    "timbre.badge.multi": "Üç farklı enstrümanı akort et",
+    "timbre.badge.streak_30": "Otuz gün üst üste çalış",
+    "timbre.badge.strings_1000": "1.000 tel akort et",
+    "timbre.badge.first_lesson": "İlk dersini bitir",
+    "timbre.badge.lessons_25": "25 ders bitir",
+    "timbre.badge.lessons_100": "100 ders bitir",
+    "timbre.badge.perfect_10": "10 derste üç yıldız kazan",
+    "timbre.badge.full_25": "Tüm telleri 25 kez akort et",
+    "timbre.badge.streak_3": "Üç gün üst üste çalış",
+    "timbre.badge.streak_100": "100 gün üst üste çalış",
+    "timbre.badge.minutes_60": "Toplamda bir saat çalış",
+    "timbre.badge.minutes_600": "Toplamda on saat çalış",
+    "timbre.badge.daily_1": "Bir günlük seti bitir",
+    "timbre.badge.daily_30": "30 günlük seti bitir",
+    "timbre.badge.sniper_win": "Tam isabet oyununda bir tur kazan",
+    "timbre.badge.bullseyes_50": "50 tam isabet yap",
+    "timbre.badge.ear_perfect": "Kulak turunda on sorunun hepsini doğru yanıtla",
+    "timbre.badge.ear_500": "500 kulak sorusunu doğru yanıtla",
+    "timbre.badge.units_1": "Bir ünitedeki tüm dersleri bitir",
+    "timbre.badge.units_10": "On üniteyi bitir",
+    "timbre.badge.course_done": "Bir kursun tamamını bitir",
+    "timbre.badge.songs_1": "İlk şarkını çal",
+    "timbre.badge.songs_25": "25 şarkı çal"
+  },
+  "provenance": {
+    "game_center": "Badge text reused from matching app Localizable.strings; song board titles reused from Learn.strings. Newly renamed badge/board text authored for this store draft. No native review claimed.",
+    "game_center_songs": "Existing Learn.strings title reused when present. Otherwise established/localized title drafted; other named musical works retain source titles, not a claim of app translation. Reconcile with later Learn imports before release.",
+    "game_center_app_reuse": {
+      "app_locale": "tr",
+      "reused_fields": [
+        "timbre.badge.first_tune:game_center_achievement_names",
+        "timbre.badge.full_tune:game_center_achievement_names",
+        "timbre.badge.streak_7:game_center_achievement_names",
+        "timbre.badge.strings_100:game_center_achievement_names",
+        "timbre.badge.bullseye:game_center_achievement_names",
+        "timbre.badge.sharpshooter:game_center_achievement_names",
+        "timbre.badge.golden_ear:game_center_achievement_names",
+        "timbre.badge.level_5:game_center_achievement_names",
+        "timbre.badge.multi:game_center_achievement_names",
+        "timbre.badge.streak_30:game_center_achievement_names",
+        "timbre.badge.strings_1000:game_center_achievement_names",
+        "timbre.badge.first_lesson:game_center_achievement_names",
+        "timbre.badge.lessons_25:game_center_achievement_names",
+        "timbre.badge.lessons_100:game_center_achievement_names",
+        "timbre.badge.perfect_10:game_center_achievement_names",
+        "timbre.badge.full_25:game_center_achievement_names",
+        "timbre.badge.streak_3:game_center_achievement_names",
+        "timbre.badge.streak_100:game_center_achievement_names",
+        "timbre.badge.minutes_60:game_center_achievement_names",
+        "timbre.badge.minutes_600:game_center_achievement_names",
+        "timbre.badge.daily_1:game_center_achievement_names",
+        "timbre.badge.daily_30:game_center_achievement_names",
+        "timbre.badge.sniper_win:game_center_achievement_names",
+        "timbre.badge.bullseyes_50:game_center_achievement_names",
+        "timbre.badge.ear_perfect:game_center_achievement_names",
+        "timbre.badge.ear_500:game_center_achievement_names",
+        "timbre.badge.units_1:game_center_achievement_names",
+        "timbre.badge.units_10:game_center_achievement_names",
+        "timbre.badge.course_done:game_center_achievement_names",
+        "timbre.badge.songs_1:game_center_achievement_names",
+        "timbre.badge.songs_25:game_center_achievement_names",
+        "timbre.badge.first_tune:game_center_achievement_descriptions",
+        "timbre.badge.full_tune:game_center_achievement_descriptions",
+        "timbre.badge.streak_7:game_center_achievement_descriptions",
+        "timbre.badge.strings_100:game_center_achievement_descriptions",
+        "timbre.badge.bullseye:game_center_achievement_descriptions",
+        "timbre.badge.sharpshooter:game_center_achievement_descriptions",
+        "timbre.badge.golden_ear:game_center_achievement_descriptions",
+        "timbre.badge.level_5:game_center_achievement_descriptions",
+        "timbre.badge.multi:game_center_achievement_descriptions",
+        "timbre.badge.streak_30:game_center_achievement_descriptions",
+        "timbre.badge.strings_1000:game_center_achievement_descriptions",
+        "timbre.badge.first_lesson:game_center_achievement_descriptions",
+        "timbre.badge.lessons_25:game_center_achievement_descriptions",
+        "timbre.badge.lessons_100:game_center_achievement_descriptions",
+        "timbre.badge.perfect_10:game_center_achievement_descriptions",
+        "timbre.badge.full_25:game_center_achievement_descriptions",
+        "timbre.badge.streak_3:game_center_achievement_descriptions",
+        "timbre.badge.streak_100:game_center_achievement_descriptions",
+        "timbre.badge.minutes_60:game_center_achievement_descriptions",
+        "timbre.badge.minutes_600:game_center_achievement_descriptions",
+        "timbre.badge.daily_1:game_center_achievement_descriptions",
+        "timbre.badge.daily_30:game_center_achievement_descriptions",
+        "timbre.badge.sniper_win:game_center_achievement_descriptions",
+        "timbre.badge.bullseyes_50:game_center_achievement_descriptions",
+        "timbre.badge.ear_perfect:game_center_achievement_descriptions",
+        "timbre.badge.ear_500:game_center_achievement_descriptions",
+        "timbre.badge.units_1:game_center_achievement_descriptions",
+        "timbre.badge.units_10:game_center_achievement_descriptions",
+        "timbre.badge.course_done:game_center_achievement_descriptions",
+        "timbre.badge.songs_1:game_center_achievement_descriptions",
+        "timbre.badge.songs_25:game_center_achievement_descriptions"
+      ],
+      "note": "Available app values reused exactly; missing app values retain authored store drafts. Does not certify native or device review."
+    }
+  },
+  "name": "Timbre: Gitar Akort Aleti",
+  "subtitle": "Keman, ukulele ve bas öğren",
+  "keywords": "keman,çello,ukulele,mandolin,banjo,kromatik,stroboskop,kulak,metronom,akor",
+  "promotional_text": "Ücretsiz akort aleti; reklam ve hesap yok. Her telin akordunu hisset, seni dinleyen derslerle öğren ve 140’tan fazla şarkı çal.",
+  "description": "Ücretsiz akort aleti. Reklam ve hesap yok. Ardından çalmanı dinleyen dersler.\n\nTimbre, hassas bir akort aletini müzik öğretmeniyle birleştirir. 60 enstrümanı akort et, çalarken nasıl gittiğini öğren.\n\nÜCRETSİZ AKORT\nHer enstrümanın standart akordu ücretsiz: gitar, ukulele, keman, mandolin, banjo, ud, erhu ve diğerleri. Sent hassasiyetinde kromatik ve stroboskopik akort. Drop D ve Open G’den DADGAD’e 132 akort, ayrıca kendi akortların.\nOtomatik tel algılama, akort edilen her teli işaretler. Tek bir vuruş tüm telleri okur ve önce hangisini akort edeceğini gösterir. Hissederek akort et: telefon, tel ile hedef nota arasındaki vuruya göre titreşir; yaklaştıkça yavaşlar, eşleşince durur. Ekrana bakman gerekmez.\nStüdyo ışıklı 3D gitarlar, baslar, keman, çello ve mandolin çevrilecek burguyu gösterir. Kapo, ayarlanabilir A4 referansı, solfej ve sargam nota adları.\n\nÇALARAK ÖĞREN\n11 kursta 526 ders: gitar, ukulele, bas, keman, çello, mandolin, banjo, ses, kulak eğitimi, müzik teorisi ve ritim. Ukulele, mandolin, keman, çello ve bas için şarkı kitapları da var.\nTimbre her vuruşu duyar: doğru akor, zamanlama ve hangi telin ses vermediği. Her notayı sent ve milisaniye hassasiyetinde değerlendirir. “Göster” yeni akorları 3D gitarda çalar, parmaklar sırayla yerleşir. Nota yolu senin için yavaşlar, geliştikçe hızlanır.\n\n140’tan fazla şarkı, her biri tam düzenlemeyle: Jingle Bells’ten Amazing Grace’e klasikler ve bu toplamın içinde Timbre için günümüz tarzlarında yazılmış 50 Originals. Sözler aydınlanırken kulaklığında grupla çal. Kendi akor çizelgeni yapıştır veya içe aktar, transpoze et, ritimle kaydır ve yanında Apple Music’te orijinalini dinle.\n\nDEVAM ET\nYıldızlar, XP, günlük görevler, seriler ve rozetler. Game Center: haftalık Tam isabet ligi, şarkı sıralamaları ve arkadaş meydan okumaları. Apple Watch: bileğinde hissettiğin metronom ve bugünkü pratiğe bakış. Ana ekran ve kilit ekranı araç takımları, Canlı Etkinlik ve Siri kestirmeleri.\nVurgulu, alt bölümlü ve hız eğitmenli metronom; dem sesi, entonasyon eğitmeni, akor ve dizi kitaplığı. Kulak eğitimi: ses perdesinin yönü, aralıklar ve akor türleri, ayrıca 40 derslik kurs.\n\nÜCRETSİZ BAŞLA\nHer enstrümanın standart akordu ücretsizdir. Gitar, bas, ukulele, keman ve çello tüm akortlarda ücretsizdir. Her kursun ilk ünitesi ve seçili şarkılar da ücretsizdir. Timbre Pro tüm dersleri, şarkıları, akortları ve pratik araçlarını açar. Bildirimler açıkken Timbre, ücretsiz deneme bitmeden iki gün önce hatırlatır.\nSes iPhone’unda analiz edilir, asla kaydedilmez veya yüklenmez. Hesap ve reklam yok.\nAbonelikler, dönem sonundan en az 24 saat önce iptal edilmedikçe otomatik yenilenir. İstediğin zaman yönetmek veya iptal etmek için: Ayarlar → Apple Hesabı → Abonelikler.\nKoşullar: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\nGizlilik: <privacy policy URL>",
+  "whats_new": "Timbre’ye hoş geldin: 60 enstrüman için ücretsiz akort aleti ve çalmanı dinleyen 526 ders.",
+  "iphone_screenshot_captions": [
+    {
+      "capture": "10b-tune-locked",
+      "caption": "Ücretsiz akort. Reklam yok.",
+      "supporting_line": "60 enstrüman, sent hassasiyeti"
+    },
+    {
+      "capture": "65-song-perform",
+      "caption": "Nasıl çaldığını duy",
+      "supporting_line": "Her notanın perdesi ve zamanlaması"
+    },
+    {
+      "capture": "52b-lesson-chord",
+      "caption": "İlk akorunu bugün çal",
+      "supporting_line": "Timbre her teli duyar"
+    },
+    {
+      "capture": "31b-instruments-folk",
+      "caption": "Çaldığın enstrümanı akort et",
+      "supporting_line": "60 enstrüman, 132 akort"
+    },
+    {
+      "capture": "63-songs",
+      "caption": "Bildiğin şarkıları çal",
+      "supporting_line": "140’tan fazla şarkı: klasikler ve Originals"
+    },
+    {
+      "capture": "50-learn",
+      "caption": "Kendi hızında öğren",
+      "supporting_line": "11 kursta 526 ders"
+    },
+    {
+      "capture": "62-lesson-results",
+      "caption": "Günde beş dakika birikir",
+      "supporting_line": "Yıldızlar, seriler ve günlük görevler"
+    },
+    {
+      "capture": "11b-tune-strum",
+      "caption": "Tek vuruş, tüm teller",
+      "supporting_line": "Önce hangi teli akort edeceğini gör"
+    },
+    {
+      "capture": "32-journey",
+      "caption": "Gelişimini gör",
+      "supporting_line": "Doğruluk, tel sesi, rozetler"
+    }
+  ],
+  "ipad_screenshot_captions": [
+    {
+      "capture": "ipad-landscape-tune",
+      "caption": "Ücretsiz akort. Reklam yok.",
+      "supporting_line": "60 enstrüman, sent hassasiyeti"
+    },
+    {
+      "capture": "ipad-landscape-instruments",
+      "caption": "Çaldığın enstrümanı akort et",
+      "supporting_line": "Kemandan uda, sitardan erhuya"
+    },
+    {
+      "capture": "ipad-landscape-songs",
+      "caption": "Bildiğin şarkıları çal",
+      "supporting_line": "140’tan fazla şarkı: klasikler ve Originals"
+    },
+    {
+      "capture": "ipad-landscape-practice",
+      "caption": "Günde beş dakika birikir",
+      "supporting_line": "Günlük pratik, görevler ve kulak oyunları"
+    }
+  ],
+  "app_preview_captions": {
+    "main": {
+      "lock": "Ücretsiz akort. Reklam yok.",
+      "tuned": "Her tel kontrol edildi",
+      "showme": "3D çalınışını gör",
+      "highway": "Grupla şarkı çal",
+      "results": "Nasıl yaptığını duy",
+      "songs": "Öğreneceğin 140’tan fazla şarkı",
+      "end": "Akort et. Öğren. Şarkı çal.",
+      "end-note": "Ücretsiz akort · Reklam yok · Hesap yok"
+    },
+    "violin": {
+      "lock": "Kemanını ücretsiz akort et",
+      "tuned": "G, D, A, E: hepsi akortlu",
+      "highway": "Kemanında şarkı çal",
+      "results": "Nasıl yaptığını duy",
+      "songs": "Öğreneceğin 140’tan fazla şarkı",
+      "end": "Keman akort aleti ve dersler",
+      "end-note": "Ücretsiz akort · Reklam yok · Hesap yok"
+    }
+  },
+  "iap_display_names": {
+    "timbre_pro_annual": "Timbre Pro, yıllık",
+    "timbre_pro_monthly": "Timbre Pro, aylık",
+    "timbre_plus_lifetime": "Timbre Pro, ömür boyu"
+  },
+  "iap_descriptions": {
+    "timbre_pro_annual": "Tüm ders, şarkı, akort ve pratik araçları",
+    "timbre_pro_monthly": "Tüm ders, şarkı, akort ve pratik araçları",
+    "timbre_plus_lifetime": "Tek ödemeyle tüm Pro özellikleri"
+  },
+  "custom_product_page_keywords": {
+    "violin": [
+      "keman"
+    ],
+    "cello": [
+      "çello"
+    ],
+    "ukulele": [
+      "ukulele"
+    ]
+  }
+}

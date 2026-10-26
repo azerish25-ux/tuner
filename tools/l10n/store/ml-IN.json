@@ -1,0 +1,310 @@
+{
+  "schema_version": 1,
+  "locale": "ml-IN",
+  "counts": {
+    "instruments": 60,
+    "tunings": 132,
+    "courses": 11,
+    "lessons": 526,
+    "songs_floor": 140,
+    "originals": 50
+  },
+  "review": {
+    "text": "ai_drafted",
+    "native": "not_verified",
+    "market_search": "not_verified",
+    "device": "not_verified",
+    "screenshots": "not_captured",
+    "app_preview": "not_rendered",
+    "iap_account_limits": "not_verified",
+    "game_center_account": "not_verified",
+    "release_ready": false,
+    "blockers": [
+      "Production privacy policy URL and verification not provided",
+      "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+      "Localized App Preview recordings and audio/sync/render review pending",
+      "App Store Connect product/locale limits and Game Center configuration/images unverified"
+    ],
+    "semantic": "ai_cross_reviewed_critical_facts",
+    "legal_back_translation": "not_performed_optional_under_ai_policy",
+    "song_title_alignment": {
+      "state": "pending_app_alignment",
+      "pending_app_alignment": [
+        "timbre.song.twinkle",
+        "timbre.song.odetojoy",
+        "timbre.song.jinglebells",
+        "timbre.song.saints",
+        "timbre.song.kiteweather",
+        "timbre.song.dashboard",
+        "timbre.song.lochlomond",
+        "timbre.song.mountain"
+      ],
+      "native_review": "not_verified"
+    },
+    "ai_cross_review": {
+      "scope": "Free tier, notification-conditioned two-day trial reminder, on-device never-recorded/uploaded audio, automatic renewal and 24-hour cancellation, anytime management, IAP benefits. Additional feature/count/terminology review for original nine and European/regional listings.",
+      "limitations": "AI review with inherited English source, not blinded back-translation, native-speaker, market, legal, account or visual approval."
+    },
+    "ai_source_aware": "reviewed",
+    "privacy_policy": "not_verified",
+    "review_policy": "ai_source_aware"
+  },
+  "game_center_leaderboard_names": {
+    "timbre.sniper.best": "ബുൾസ്ഐ",
+    "timbre.sniper.weekly": "ഈ ആഴ്ചയിലെ ബുൾസ്ഐ",
+    "timbre.ear.level": "ശ്രവണ പരിശീലന നില",
+    "timbre.streak": "പരിശീലന തുടർച്ച",
+    "timbre.song.twinkle": "മിന്നും കൊച്ചു താരമേ",
+    "timbre.song.odetojoy": "ആനന്ദഗീതം",
+    "timbre.song.jinglebells": "ജിംഗിൾ ബെൽസ്",
+    "timbre.song.saints": "വിശുദ്ധർ നടന്നു വരുമ്പോൾ",
+    "timbre.song.kiteweather": "പട്ടത്തിന്റെ കാലാവസ്ഥ",
+    "timbre.song.dashboard": "ഡാഷ്ബോർഡിലെ പൊടി",
+    "timbre.song.lochlomond": "ലോക് ലോമണ്ട്",
+    "timbre.song.mountain": "അവൾ മലയെ ചുറ്റി വരും"
+  },
+  "game_center_achievement_names": {
+    "timbre.badge.first_tune": "ആദ്യ സ്ട്രിംഗ് ട്യൂണിൽ",
+    "timbre.badge.full_tune": "ആറും",
+    "timbre.badge.streak_7": "തികഞ്ഞ ആഴ്ച",
+    "timbre.badge.strings_100": "നൂറ് സ്ട്രിംഗുകൾ",
+    "timbre.badge.bullseye": "ബുൾസ്ഐ",
+    "timbre.badge.sharpshooter": "ഉയർന്ന സ്കോർ നേടിയ ആൾ",
+    "timbre.badge.golden_ear": "സ്വർണ്ണച്ചെവി",
+    "timbre.badge.level_5": "ഉദിച്ചുയരുന്ന താരം",
+    "timbre.badge.multi": "ബഹുവാദ്യ കലാകാരൻ",
+    "timbre.badge.streak_30": "സംഗീതത്തിന്റെ ഒരു മാസം",
+    "timbre.badge.strings_1000": "ആയിരം സ്ട്രിംഗുകൾ",
+    "timbre.badge.first_lesson": "ആദ്യ പാഠം",
+    "timbre.badge.lessons_25": "സ്ഥിരം പഠിതാവ്",
+    "timbre.badge.lessons_100": "പണ്ഡിതൻ",
+    "timbre.badge.perfect_10": "കുറ്റമറ്റത്",
+    "timbre.badge.full_25": "ട്യൂണിംഗ് ശീലം",
+    "timbre.badge.streak_3": "വാം-അപ്പ്",
+    "timbre.badge.streak_100": "നൂറ് ദിവസം",
+    "timbre.badge.minutes_60": "ആദ്യ മണിക്കൂർ",
+    "timbre.badge.minutes_600": "പത്ത് മണിക്കൂർ",
+    "timbre.badge.daily_1": "ദൈനംദിന സെറ്റ്",
+    "timbre.badge.daily_30": "ശീലത്തിന്റെ അടിമ",
+    "timbre.badge.sniper_win": "റൗണ്ട് വിജയി",
+    "timbre.badge.bullseyes_50": "കൃത്യം നടുവിൽ",
+    "timbre.badge.ear_perfect": "മുഴുവൻ മാർക്ക്",
+    "timbre.badge.ear_500": "ശ്രവണ ഗുരു",
+    "timbre.badge.units_1": "യൂണിറ്റ് പൂർത്തിയായി",
+    "timbre.badge.units_10": "പത്ത് യൂണിറ്റുകൾ",
+    "timbre.badge.course_done": "ബിരുദധാരി",
+    "timbre.badge.songs_1": "ആദ്യ പാട്ട്",
+    "timbre.badge.songs_25": "പാട്ടുപുസ്തകം"
+  },
+  "game_center_achievement_descriptions": {
+    "timbre.badge.first_tune": "നിങ്ങളുടെ ആദ്യ സ്ട്രിംഗ് ട്യൂൺ ചെയ്യുക",
+    "timbre.badge.full_tune": "ഒരു ഉപകരണത്തിലെ എല്ലാ സ്ട്രിംഗുകളും ട്യൂൺ ചെയ്യുക",
+    "timbre.badge.streak_7": "തുടർച്ചയായി ഏഴ് ദിവസം പരിശീലിക്കുക",
+    "timbre.badge.strings_100": "100 സ്ട്രിംഗുകൾ ട്യൂൺ ചെയ്യുക",
+    "timbre.badge.bullseye": "ആദ്യ ബുൾസ്ഐ നേടുക",
+    "timbre.badge.sharpshooter": "ബുൾസ്ഐയിൽ 2,000 സ്കോർ നേടുക",
+    "timbre.badge.golden_ear": "ചെവി ചോദ്യങ്ങളിൽ 50 എണ്ണത്തിന് ശരിയായി ഉത്തരം നൽകുക",
+    "timbre.badge.level_5": "ലെവൽ 5-ൽ എത്തുക",
+    "timbre.badge.multi": "മൂന്ന് വ്യത്യസ്ത ഉപകരണങ്ങൾ ട്യൂൺ ചെയ്യുക",
+    "timbre.badge.streak_30": "തുടർച്ചയായി മുപ്പത് ദിവസം പരിശീലിക്കുക",
+    "timbre.badge.strings_1000": "1,000 സ്ട്രിംഗുകൾ ട്യൂൺ ചെയ്യുക",
+    "timbre.badge.first_lesson": "നിങ്ങളുടെ ആദ്യ പാഠം പൂർത്തിയാക്കുക",
+    "timbre.badge.lessons_25": "25 പാഠങ്ങൾ പൂർത്തിയാക്കുക",
+    "timbre.badge.lessons_100": "100 പാഠങ്ങൾ പൂർത്തിയാക്കുക",
+    "timbre.badge.perfect_10": "10 പാഠങ്ങളിൽ മൂന്ന് സ്റ്റാർ നേടുക",
+    "timbre.badge.full_25": "എല്ലാ സ്ട്രിംഗുകളും 25 തവണ ട്യൂൺ ചെയ്യുക",
+    "timbre.badge.streak_3": "തുടർച്ചയായി മൂന്ന് ദിവസം പരിശീലിക്കുക",
+    "timbre.badge.streak_100": "തുടർച്ചയായി 100 ദിവസം പരിശീലിക്കുക",
+    "timbre.badge.minutes_60": "ആകെ ഒരു മണിക്കൂർ പരിശീലിക്കുക",
+    "timbre.badge.minutes_600": "ആകെ പത്ത് മണിക്കൂർ പരിശീലിക്കുക",
+    "timbre.badge.daily_1": "ഒരു ദൈനംദിന സെറ്റ് പൂർത്തിയാക്കുക",
+    "timbre.badge.daily_30": "30 ദൈനംദിന സെറ്റുകൾ പൂർത്തിയാക്കുക",
+    "timbre.badge.sniper_win": "ബുൾസ്ഐയിൽ ഒരു റൗണ്ട് ജയിക്കുക",
+    "timbre.badge.bullseyes_50": "50 ബുൾസ്ഐ നേടുക",
+    "timbre.badge.ear_perfect": "ചെവി റൗണ്ടിൽ പത്ത് ചോദ്യങ്ങൾക്കും ശരിയായി ഉത്തരം നൽകുക",
+    "timbre.badge.ear_500": "ചെവി ചോദ്യങ്ങളിൽ 500 എണ്ണത്തിന് ശരിയായി ഉത്തരം നൽകുക",
+    "timbre.badge.units_1": "ഒരു യൂണിറ്റിലെ എല്ലാ പാഠങ്ങളും പൂർത്തിയാക്കുക",
+    "timbre.badge.units_10": "പത്ത് യൂണിറ്റുകൾ പൂർത്തിയാക്കുക",
+    "timbre.badge.course_done": "ഒരു മുഴുവൻ കോഴ്സ് പൂർത്തിയാക്കുക",
+    "timbre.badge.songs_1": "നിങ്ങളുടെ ആദ്യ പാട്ട് വായിക്കുക",
+    "timbre.badge.songs_25": "25 പാട്ടുകൾ വായിക്കുക"
+  },
+  "provenance": {
+    "game_center": "Badge text reused from matching app Localizable.strings; song board titles reused from Learn.strings. Newly renamed badge/board text authored for this store draft. No native review claimed.",
+    "game_center_app_reuse": {
+      "app_locale": "ml",
+      "reused_fields": [
+        "timbre.badge.first_tune:game_center_achievement_names",
+        "timbre.badge.full_tune:game_center_achievement_names",
+        "timbre.badge.streak_7:game_center_achievement_names",
+        "timbre.badge.strings_100:game_center_achievement_names",
+        "timbre.badge.bullseye:game_center_achievement_names",
+        "timbre.badge.sharpshooter:game_center_achievement_names",
+        "timbre.badge.golden_ear:game_center_achievement_names",
+        "timbre.badge.level_5:game_center_achievement_names",
+        "timbre.badge.multi:game_center_achievement_names",
+        "timbre.badge.streak_30:game_center_achievement_names",
+        "timbre.badge.strings_1000:game_center_achievement_names",
+        "timbre.badge.first_lesson:game_center_achievement_names",
+        "timbre.badge.lessons_25:game_center_achievement_names",
+        "timbre.badge.lessons_100:game_center_achievement_names",
+        "timbre.badge.perfect_10:game_center_achievement_names",
+        "timbre.badge.full_25:game_center_achievement_names",
+        "timbre.badge.streak_3:game_center_achievement_names",
+        "timbre.badge.streak_100:game_center_achievement_names",
+        "timbre.badge.minutes_60:game_center_achievement_names",
+        "timbre.badge.minutes_600:game_center_achievement_names",
+        "timbre.badge.daily_1:game_center_achievement_names",
+        "timbre.badge.daily_30:game_center_achievement_names",
+        "timbre.badge.sniper_win:game_center_achievement_names",
+        "timbre.badge.bullseyes_50:game_center_achievement_names",
+        "timbre.badge.ear_perfect:game_center_achievement_names",
+        "timbre.badge.ear_500:game_center_achievement_names",
+        "timbre.badge.units_1:game_center_achievement_names",
+        "timbre.badge.units_10:game_center_achievement_names",
+        "timbre.badge.course_done:game_center_achievement_names",
+        "timbre.badge.songs_1:game_center_achievement_names",
+        "timbre.badge.songs_25:game_center_achievement_names",
+        "timbre.badge.first_tune:game_center_achievement_descriptions",
+        "timbre.badge.full_tune:game_center_achievement_descriptions",
+        "timbre.badge.streak_7:game_center_achievement_descriptions",
+        "timbre.badge.strings_100:game_center_achievement_descriptions",
+        "timbre.badge.bullseye:game_center_achievement_descriptions",
+        "timbre.badge.sharpshooter:game_center_achievement_descriptions",
+        "timbre.badge.golden_ear:game_center_achievement_descriptions",
+        "timbre.badge.level_5:game_center_achievement_descriptions",
+        "timbre.badge.multi:game_center_achievement_descriptions",
+        "timbre.badge.streak_30:game_center_achievement_descriptions",
+        "timbre.badge.strings_1000:game_center_achievement_descriptions",
+        "timbre.badge.first_lesson:game_center_achievement_descriptions",
+        "timbre.badge.lessons_25:game_center_achievement_descriptions",
+        "timbre.badge.lessons_100:game_center_achievement_descriptions",
+        "timbre.badge.perfect_10:game_center_achievement_descriptions",
+        "timbre.badge.full_25:game_center_achievement_descriptions",
+        "timbre.badge.streak_3:game_center_achievement_descriptions",
+        "timbre.badge.streak_100:game_center_achievement_descriptions",
+        "timbre.badge.minutes_60:game_center_achievement_descriptions",
+        "timbre.badge.minutes_600:game_center_achievement_descriptions",
+        "timbre.badge.daily_1:game_center_achievement_descriptions",
+        "timbre.badge.daily_30:game_center_achievement_descriptions",
+        "timbre.badge.sniper_win:game_center_achievement_descriptions",
+        "timbre.badge.bullseyes_50:game_center_achievement_descriptions",
+        "timbre.badge.ear_perfect:game_center_achievement_descriptions",
+        "timbre.badge.ear_500:game_center_achievement_descriptions",
+        "timbre.badge.units_1:game_center_achievement_descriptions",
+        "timbre.badge.units_10:game_center_achievement_descriptions",
+        "timbre.badge.course_done:game_center_achievement_descriptions",
+        "timbre.badge.songs_1:game_center_achievement_descriptions",
+        "timbre.badge.songs_25:game_center_achievement_descriptions"
+      ],
+      "note": "Available app values reused exactly; missing app values retain authored store drafts. Does not certify native or device review."
+    }
+  },
+  "name": "Timbre: ഗിറ്റാർ ട്യൂണർ",
+  "subtitle": "യുകുലേലെ, വയലിൻ പഠിക്കൂ",
+  "keywords": "ചെല്ലോ,ബാസ്,മാൻഡലിൻ,ബാൻജോ,ക്രോമാറ്റിക്,സ്ട്രോബ്,ശ്രവണ പരിശീലനം,മെട്രോനോം,കോർഡ്",
+  "promotional_text": "സൗജന്യ ട്യൂണർ. പരസ്യമോ അക്കൗണ്ടോ വേണ്ട. ഓരോ തന്ത്രിയും ശ്രുതിയിൽ എത്തുന്നത് അനുഭവിക്കൂ. നിങ്ങളുടെ വായന കേൾക്കുന്ന പാഠങ്ങളും 140+ പാട്ടുകളും.",
+  "description": "സൗജന്യ ട്യൂണർ. പരസ്യമോ അക്കൗണ്ടോ വേണ്ട. പിന്നെ നിങ്ങൾ വായിക്കുന്നത് കേൾക്കുന്ന പാഠങ്ങൾ.\n\nTimbre കൃത്യമായ ട്യൂണറും സംഗീത അധ്യാപകനും ഒന്നിച്ചാണ്. 60 വാദ്യങ്ങളിൽ ഏതിനെയും നിമിഷങ്ങളിൽ ട്യൂൺ ചെയ്യൂ; വായന കേട്ട് കൃത്യമായ പ്രതികരണം നൽകുന്ന പാഠങ്ങളിൽ പഠിക്കൂ.\n\nസൗജന്യമായി ട്യൂൺ ചെയ്യൂ\n• ഗിറ്റാർ, യുകുലേലെ, വയലിൻ മുതൽ മാൻഡലിൻ, ബാൻജോ, ഊദ്, എർഹു വരെ എല്ലാ വാദ്യങ്ങളുടെയും സാധാരണ ട്യൂണിംഗ് സൗജന്യം.\n• സെന്റ് വരെ കൃത്യതയുള്ള ക്രോമാറ്റിക്, സ്ട്രോബ് ട്യൂണർ. Drop D, Open G, DADGAD ഉൾപ്പെടെ 132 ട്യൂണിംഗുകൾ, സ്വന്തം ട്യൂണിംഗുകളും.\n• തന്ത്രികളെ സ്വയം തിരിച്ചറിയും; ശ്രുതി ചേരുമ്പോൾ അടയാളം. ഒറ്റ സ്ട്രം എല്ലാ തന്ത്രികളും വായിച്ച് ആദ്യം ഏത് ട്യൂൺ ചെയ്യണമെന്ന് കാണിക്കും.\n• അനുഭവിച്ച് ട്യൂൺ ചെയ്യൂ: തന്ത്രിക്കും ലക്ഷ്യസ്വരത്തിനുമിടയിലെ സ്പന്ദനത്തിനൊപ്പം ഫോൺ വിറയ്ക്കുന്നു; അവ അടുക്കുമ്പോൾ മന്ദമാകുകയും ചേരുമ്പോൾ നിൽക്കുകയും ചെയ്യുന്നു. നോക്കാതെ ട്യൂൺ ചെയ്യാം.\n• സ്റ്റുഡിയോ വെളിച്ചത്തിലുള്ള 3D ഗിറ്റാറുകൾ, ബാസുകൾ, വയലിൻ, ചെല്ലോ, മാൻഡലിൻ; ഹെഡ്‌സ്റ്റോക്കിൽ തിരിക്കേണ്ട പെഗ് കാണിക്കും.\n• കാപ്പോ, മാറ്റാവുന്ന A4 റഫറൻസ്, സോൾഫേജ്, സർഗം സ്വരനാമങ്ങൾ.\n\nവായിച്ച് പഠിക്കൂ\n• 11 കോഴ്സുകളിൽ 526 പാഠങ്ങൾ: ഗിറ്റാർ, യുകുലേലെ, ബാസ്, വയലിൻ, ചെല്ലോ, മാൻഡലിൻ, ബാൻജോ, ആലാപനം, ശ്രവണ പരിശീലനം, സംഗീത സിദ്ധാന്തം, താളം. യുകുലേലെ, മാൻഡലിൻ, വയലിൻ, ചെല്ലോ, ബാസ് ഗാനപുസ്തകങ്ങളും.\n• Timbre ഓരോ സ്ട്രവും കേൾക്കും: ശരിയായ കോർഡ്, സമയം, മുഴങ്ങാതിരുന്ന തന്ത്രി. ഓരോ സ്വരത്തിന്റെയും ഉയരം സെന്റിലും സമയം മില്ലിസെക്കൻഡിലും വിലയിരുത്തും.\n• “കാണിക്കുക” പുതിയ കോർഡ് 3D ഗിറ്റാറിൽ വായിക്കുന്നു; വിരലുകൾ ക്രമത്തിൽ പതിക്കുന്നു. ഒപ്പം വായിക്കാനുള്ള സ്വരപാത നിങ്ങൾക്കായി വേഗം കുറയ്ക്കും; മെച്ചപ്പെടുമ്പോൾ വീണ്ടും കൂട്ടും.\n\nപാട്ടുകൾ വായിക്കൂ\n• 140+ പാട്ടുകൾ, ഓരോന്നിനും പൂർണ്ണ അറേഞ്ച്മെന്റ്: Jingle Bells മുതൽ Amazing Grace വരെയുള്ള പഴയ പ്രിയഗാനങ്ങളും ഇന്നത്തെ ശൈലികളിൽ Timbreക്കായി എഴുതിയ 50 മൗലിക ഗാനങ്ങളും.\n• ഹെഡ്‌ഫോണിൽ ബാൻഡിനൊപ്പം വായിക്കൂ; വരികൾ തെളിയുന്നു.\n• നിങ്ങളുടെ പാട്ടുകൾ: കോർഡ് ചാർട്ട് ഒട്ടിക്കുകയോ ഇറക്കുമതി ചെയ്യുകയോ ചെയ്യൂ, ശ്രുതി മാറ്റൂ, സമയത്തിനൊപ്പം സ്ക്രോൾ ചെയ്യൂ; അരികിൽ Apple Musicൽ അസൽ ഗാനം കേൾക്കൂ.\n\nപരിശീലനം തുടരൂ\n• നക്ഷത്രങ്ങൾ, XP, ദൈനംദിന ദൗത്യങ്ങൾ, തുടർച്ചകൾ, ബാഡ്ജുകൾ.\n• Game Center: പ്രതിവാര ബുൾസ്ഐ ലീഗ്, ഗാന ലീഡർബോർഡുകൾ, സുഹൃത്തുക്കളുടെ വെല്ലുവിളികൾ.\n• Apple Watch: കൈത്തണ്ടയിൽ അനുഭവിക്കുന്ന മെട്രോനോമും ഇന്നത്തെ പരിശീലനം ഒറ്റനോട്ടത്തിലും.\n• ഹോം, ലോക്ക് സ്ക്രീൻ വിഡ്ജറ്റുകൾ, ലൈവ് ആക്ടിവിറ്റി, Siri ഷോർട്ട്കട്ടുകൾ.\n• ഊന്നൽ, ഉപവിഭാഗങ്ങൾ, വേഗ പരിശീലകൻ എന്നിവയുള്ള മെട്രോനോം; ഡ്രോൺ, സ്വരശുദ്ധി പരിശീലകൻ, കോർഡ്-സ്കെയിൽ ശേഖരം.\n• ശ്രവണ പരിശീലനം: സ്വരത്തിന്റെ ദിശ, ഇടവേളകൾ, കോർഡ് തരങ്ങൾ; 40 പാഠങ്ങളുള്ള ശ്രവണ കോഴ്സും.\n\nസൗജന്യമായി തുടങ്ങൂ\nഎല്ലാ വാദ്യങ്ങളുടെയും സാധാരണ ട്യൂണിംഗ് സൗജന്യം. ഗിറ്റാർ, ബാസ്, യുകുലേലെ, വയലിൻ, ചെല്ലോ എന്നിവയുടെ എല്ലാ ട്യൂണിംഗും സൗജന്യം. ഓരോ കോഴ്സിന്റെയും ആദ്യ യൂണിറ്റും ചില പാട്ടുകളും സൗജന്യം. Timbre Pro എല്ലാ പാഠങ്ങളും പാട്ടുകളും ട്യൂണിംഗുകളും പരിശീലന ഉപകരണങ്ങളും തുറക്കും. അറിയിപ്പുകൾ ഓണാണെങ്കിൽ സൗജന്യ പരീക്ഷണം അവസാനിക്കുന്നതിന് രണ്ട് ദിവസം മുമ്പ് Timbre ഓർമ്മിപ്പിക്കും.\n\nസ്വകാര്യത മുൻനിർത്തി: ഓഡിയോ നിങ്ങളുടെ iPhoneൽ വിശകലനം ചെയ്യുന്നു; ഒരിക്കലും റെക്കോർഡ് ചെയ്യുകയോ അപ്‌ലോഡ് ചെയ്യുകയോ ഇല്ല. അക്കൗണ്ടോ പരസ്യമോ ഇല്ല.\n\nകാലാവധി അവസാനിക്കുന്നതിന് കുറഞ്ഞത് 24 മണിക്കൂർ മുമ്പ് റദ്ദാക്കാത്തപക്ഷം സബ്സ്ക്രിപ്ഷൻ സ്വയം പുതുക്കും. ക്രമീകരണങ്ങൾ → Apple അക്കൗണ്ട് → സബ്സ്ക്രിപ്ഷനുകൾ വഴി എപ്പോൾ വേണമെങ്കിലും നിയന്ത്രിക്കുകയോ റദ്ദാക്കുകയോ ചെയ്യൂ.\nനിബന്ധനകൾ: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\nസ്വകാര്യത: <privacy policy URL>",
+  "whats_new": "Timbreലേക്ക് സ്വാഗതം: 60 വാദ്യങ്ങൾക്ക് സൗജന്യ ട്യൂണറും നിങ്ങളുടെ വായന കേൾക്കുന്ന 526 പാഠങ്ങളും.",
+  "iphone_screenshot_captions": [
+    {
+      "capture": "10b-tune-locked",
+      "caption": "സൗജന്യം. പരസ്യമില്ല.",
+      "supporting_line": "60 വാദ്യങ്ങൾ, സെന്റ് വരെ കൃത്യത"
+    },
+    {
+      "capture": "65-song-perform",
+      "caption": "എങ്ങനെ വായിച്ചെന്ന് കേൾക്കൂ",
+      "supporting_line": "ഓരോ സ്വരത്തിന്റെയും ഉയരവും സമയവും"
+    },
+    {
+      "capture": "52b-lesson-chord",
+      "caption": "ആദ്യ കോർഡ് ഇന്ന് വായിക്കൂ",
+      "supporting_line": "Timbre ഓരോ തന്ത്രിയും കേൾക്കും"
+    },
+    {
+      "capture": "31b-instruments-folk",
+      "caption": "നിങ്ങളുടെ വാദ്യം ട്യൂൺ ചെയ്യൂ",
+      "supporting_line": "60 വാദ്യങ്ങൾ, 132 ട്യൂണിംഗുകൾ"
+    },
+    {
+      "capture": "63-songs",
+      "caption": "പരിചിത പാട്ടുകൾ വായിക്കൂ",
+      "supporting_line": "140+ പാട്ടുകൾ, പഴയതും മൗലികവും"
+    },
+    {
+      "capture": "50-learn",
+      "caption": "സ്വന്തം വേഗത്തിൽ പഠിക്കൂ",
+      "supporting_line": "11 കോഴ്സുകളിൽ 526 പാഠങ്ങൾ"
+    },
+    {
+      "capture": "62-lesson-results",
+      "caption": "ദിനം അഞ്ചു മിനിറ്റ്, പുരോഗതി",
+      "supporting_line": "നക്ഷത്രങ്ങൾ, തുടർച്ചകൾ, ദിനദൗത്യങ്ങൾ"
+    },
+    {
+      "capture": "11b-tune-strum",
+      "caption": "ഒറ്റ സ്ട്രം, എല്ലാ തന്ത്രിയും",
+      "supporting_line": "ആദ്യം ഏത് തന്ത്രി ട്യൂൺ ചെയ്യണമെന്ന് കാണൂ"
+    },
+    {
+      "capture": "32-journey",
+      "caption": "പുരോഗതി കാണൂ",
+      "supporting_line": "കൃത്യത, തന്ത്രിയുടെ നാദം, ബാഡ്ജുകൾ"
+    }
+  ],
+  "ipad_screenshot_captions": [
+    {
+      "capture": "ipad-landscape-tune",
+      "caption": "സൗജന്യം. പരസ്യമില്ല.",
+      "supporting_line": "60 വാദ്യങ്ങൾ, സെന്റ് വരെ കൃത്യത"
+    },
+    {
+      "capture": "ipad-landscape-instruments",
+      "caption": "നിങ്ങളുടെ വാദ്യം ട്യൂൺ ചെയ്യൂ",
+      "supporting_line": "വയലിൻ മുതൽ ഊദ്, സിതാർ മുതൽ എർഹു"
+    },
+    {
+      "capture": "ipad-landscape-songs",
+      "caption": "പരിചിത പാട്ടുകൾ വായിക്കൂ",
+      "supporting_line": "140+ പാട്ടുകൾ, പഴയതും മൗലികവും"
+    },
+    {
+      "capture": "ipad-landscape-practice",
+      "caption": "ദിനം അഞ്ചു മിനിറ്റ്, പുരോഗതി",
+      "supporting_line": "ദിനസെറ്റ്, ദൗത്യങ്ങൾ, ശ്രവണ കളികൾ"
+    }
+  ],
+  "app_preview_captions": {
+    "main": {
+      "lock": "സൗജന്യം. പരസ്യമില്ല.",
+      "tuned": "എല്ലാ തന്ത്രിയും പരിശോധിച്ചു",
+      "showme": "3Dയിൽ വായിക്കുന്നത് കാണൂ",
+      "highway": "ബാൻഡിനൊപ്പം പാട്ടുകൾ വായിക്കൂ",
+      "results": "എങ്ങനെയുണ്ടെന്ന് കേൾക്കൂ",
+      "songs": "പഠിക്കാൻ 140+ പാട്ടുകൾ",
+      "end": "ട്യൂൺ ചെയ്യൂ. പഠിക്കൂ. പാട്ടുകൾ വായിക്കൂ.",
+      "end-note": "സൗജന്യ ട്യൂണർ · പരസ്യമില്ല · അക്കൗണ്ടില്ല"
+    },
+    "violin": {
+      "lock": "വയലിൻ സൗജന്യമായി ട്യൂൺ ചെയ്യൂ",
+      "tuned": "G, D, A, E: എല്ലാം ശ്രുതിയിൽ",
+      "highway": "വയലിനിൽ പാട്ടുകൾ വായിക്കൂ",
+      "results": "എങ്ങനെയുണ്ടെന്ന് കേൾക്കൂ",
+      "songs": "പഠിക്കാൻ 140+ പാട്ടുകൾ",
+      "end": "വയലിൻ ട്യൂണറും പാഠങ്ങളും",
+      "end-note": "സൗജന്യ ട്യൂണർ · പരസ്യമില്ല · അക്കൗണ്ടില്ല"
+    }
+  },
+  "iap_display_names": {
+    "timbre_pro_annual": "Timbre Pro, വാർഷികം",
+    "timbre_pro_monthly": "Timbre Pro, പ്രതിമാസം",
+    "timbre_plus_lifetime": "Timbre Pro, ആജീവനാന്തം"
+  },
+  "iap_descriptions": {
+    "timbre_pro_annual": "പാഠം, പാട്ട്, ട്യൂണിംഗ്, അഭ്യാസോപകരണം എല്ലാം",
+    "timbre_pro_monthly": "പാഠം, പാട്ട്, ട്യൂണിംഗ്, അഭ്യാസോപകരണം എല്ലാം",
+    "timbre_plus_lifetime": "Proയിലെ എല്ലാം, ഒറ്റത്തവണ പണമടയ്ക്കൂ"
+  },
+  "custom_product_page_keywords": {}
+}

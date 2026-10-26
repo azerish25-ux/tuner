@@ -18,7 +18,7 @@ English comes from
     Localizable.stringsdict  en.lproj/Localizable.stringsdict (plurals)
     AppShortcuts.strings  the App Shortcut phrases in the Swift sources
     InfoPlist.strings     the Timbre target's Info.plist strings in ios/project.yml
-    Learn.strings         en.lproj/Learn.strings (tools/curriculum/build.py), for the lesson languages only
+    Learn.strings         en.lproj/Learn.strings (tools/curriculum/build.py), for every app language
 
 Launch-critical strings come first in every TODO file and on the handoff page (`launch` on the entry): the paywall's
 purchase terms, the permission prompts and what VoiceOver says (tools/l10n/critical.py, which the App Store upload
@@ -31,6 +31,8 @@ from __future__ import annotations
 import argparse
 import ast
 import difflib
+import functools
+import unicodedata
 import json
 import math
 import os
@@ -116,8 +118,8 @@ def locales() -> list:
 
 
 def lesson_locales() -> list:
-    found = {p.parent.name[:-6] for p in RES.glob("*.lproj/Learn.strings")} | {p.stem for p in (HERE / "learn").glob("*.json")}
-    return sorted(found - {"en"})
+    """Required targets, not discovered deliveries: absent lesson files still need translation."""
+    return locales()
 
 
 def translatable(key: str) -> bool:
@@ -414,8 +416,31 @@ def learn_history(english: dict, stale_keys: set) -> dict:
 
 # --------------------------------------------------------------------------------------------- the report
 
+@functools.lru_cache(maxsize=1)
+def lesson_invariants() -> dict:
+    """Explicit independently reviewed identities; source binding invalidates approval after English edits."""
+    path = HERE / "lesson-invariants.json"
+    return json.loads(path.read_text(encoding="utf-8"))["locales"] if path.exists() else {}
+
+
+def reviewed_lesson_identity(loc: str, key: str, source: str) -> bool:
+    row = lesson_invariants().get(loc, {}).get(key, {})
+    return (row.get("source") == source
+            and all(isinstance(row.get(field), str) and row[field].strip()
+                    for field in ("reason", "reviewed_by")))
+
+
+# Directional layout marks must never disguise copied English as a translation.
+_BIDI_CONTROLS = dict.fromkeys(map(ord, "\u061c\u200e\u200f\u202a\u202b\u202c\u202d\u202e\u2066\u2067\u2068\u2069"))
+
+
+def lesson_identity_text(value: str) -> str:
+    """Comparison only: registry binding and protected-token checks retain the original strings."""
+    return unicodedata.normalize("NFC", value).translate(_BIDI_CONTROLS).strip().casefold()
+
+
 def check(table: str, key: str, source: str, value, loc: str) -> list:
-    """Why a translation can't ship (the same checks apply.py and apply_learn.py make), or []."""
+    """Mechanical import/coverage checks, plus source-bound review of English-identical lessons."""
     if table == "Localizable.stringsdict":
         if not isinstance(value, dict) or "other" not in value:
             return ["a plural needs a JSON object with at least an \"other\" form"]
@@ -424,6 +449,11 @@ def check(table: str, key: str, source: str, value, loc: str) -> list:
     if not isinstance(value, str) or not value.strip():
         return ["empty"]
     if table == LEARN:
+        normalized_value = lesson_identity_text(value)
+        if not normalized_value:
+            return ["empty after ignoring directional layout marks"]
+        if normalized_value == lesson_identity_text(source) and not reviewed_lesson_identity(loc, key, source):
+            return ["identical to English; translation or explicit independent semantic review required"]
         return [("the numbers differ from the English" if p == "numbers" else
                  "the line breaks differ from the English" if p == "\n" else
                  f"the count of {p} differs from the English") for p in apply_learn.problems(source, value, loc)]
@@ -540,6 +570,8 @@ def build(xliff: Path | None = None, launch: bool = False) -> dict:
                 have = key in tables[loc][table] or key in dicts[loc]
             else:
                 have = key in tables[loc][table]
+            if have and table == LEARN:
+                have = not check(table, key, item["source"], tables[loc][table][key], loc)
             if have:
                 continue
             entry = clean(item)
@@ -793,8 +825,12 @@ def render_handoff(report: dict) -> str:
         for course, number, units in breakdown:
             w(f"| {course} | {number} | {units} |")
         w("")
-    w("Lessons ship in the lesson languages only; the other locales show lessons in English by design. Interface "
-      "strings ship in every locale.")
+    w("Lessons and interface are required in all 49 app languages (English source + 48 translations). "
+      "English fallback is temporary missing content, never completed localization.")
+    w("English-identical lesson strings need explicit source-bound independent semantic review in "
+      "`tools/l10n/lesson-invariants.json` (locale/key, exact `source`, `reason`, actual `reviewed_by`). "
+      "Proper names, original song titles, notation and credits may legitimately remain unchanged; "
+      "review the entire string, never approve untranslated surrounding prose or fabricate reviewer evidence.")
     w("")
     w("## What to translate")
     w("")
@@ -862,6 +898,7 @@ def render_handoff(report: dict) -> str:
     w("python3 tools/l10n/report.py --check --strict     # what CI runs: fails when this page is out of date")
     w("python3 tools/l10n/critical.py --baseline         # what CI runs: fails on a new untranslated critical string")
     w("python3 tools/l10n/shipping.py                    # coverage per locale, and the languages that ship")
+    w("python3 tools/l10n/lessons.py --strict             # full applied lesson coverage in all 48 targets")
     w("```")
     w("")
     w("`--import DIR` reads every `<locale>.json` in DIR (the TODO format), checks each translation, merges the good "
@@ -1058,7 +1095,7 @@ def main() -> int:
         return 0
     changed = write(files, stale_todo)
     for ui, lessons, group in group_locales(report):
-        lesson_text = f"{lessons} lesson strings" if group[0] in report["lesson_locales"] else "lessons in English by design"
+        lesson_text = f"{lessons} lesson strings" if group[0] in report["lesson_locales"] else "lesson translations required"
         print(f"{', '.join(group)}: {ui} app strings missing; {lesson_text}")
     print(f"{changed} files updated" if changed else "handoff up to date")
     return 0

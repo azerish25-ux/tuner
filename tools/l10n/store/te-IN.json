@@ -1,0 +1,310 @@
+{
+  "schema_version": 1,
+  "locale": "te-IN",
+  "counts": {
+    "instruments": 60,
+    "tunings": 132,
+    "courses": 11,
+    "lessons": 526,
+    "songs_floor": 140,
+    "originals": 50
+  },
+  "review": {
+    "text": "ai_drafted",
+    "native": "not_verified",
+    "market_search": "not_verified",
+    "device": "not_verified",
+    "screenshots": "not_captured",
+    "app_preview": "not_rendered",
+    "iap_account_limits": "not_verified",
+    "game_center_account": "not_verified",
+    "release_ready": false,
+    "blockers": [
+      "Production privacy policy URL and verification not provided",
+      "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+      "Localized App Preview recordings and audio/sync/render review pending",
+      "App Store Connect product/locale limits and Game Center configuration/images unverified"
+    ],
+    "semantic": "ai_cross_reviewed_critical_facts",
+    "legal_back_translation": "not_performed_optional_under_ai_policy",
+    "song_title_alignment": {
+      "state": "pending_app_alignment",
+      "pending_app_alignment": [
+        "timbre.song.twinkle",
+        "timbre.song.odetojoy",
+        "timbre.song.jinglebells",
+        "timbre.song.saints",
+        "timbre.song.kiteweather",
+        "timbre.song.dashboard",
+        "timbre.song.lochlomond",
+        "timbre.song.mountain"
+      ],
+      "native_review": "not_verified"
+    },
+    "ai_cross_review": {
+      "scope": "Free tier, notification-conditioned two-day trial reminder, on-device never-recorded/uploaded audio, automatic renewal and 24-hour cancellation, anytime management, IAP benefits. Additional feature/count/terminology review for original nine and European/regional listings.",
+      "limitations": "AI review with inherited English source, not blinded back-translation, native-speaker, market, legal, account or visual approval."
+    },
+    "ai_source_aware": "reviewed",
+    "privacy_policy": "not_verified",
+    "review_policy": "ai_source_aware"
+  },
+  "game_center_leaderboard_names": {
+    "timbre.sniper.best": "బుల్స్‌ఐ",
+    "timbre.sniper.weekly": "ఈ వారం బుల్స్‌ఐ",
+    "timbre.ear.level": "శ్రవణ శిక్షణ స్థాయి",
+    "timbre.streak": "ప్రాక్టీస్ స్ట్రీక్",
+    "timbre.song.twinkle": "మిణుకు మిణుకు చిన్న తార",
+    "timbre.song.odetojoy": "ఆనంద గీతం",
+    "timbre.song.jinglebells": "జింగిల్ బెల్స్",
+    "timbre.song.saints": "సాధువులు కవాతుగా వచ్చినప్పుడు",
+    "timbre.song.kiteweather": "గాలిపటాల వాతావరణం",
+    "timbre.song.dashboard": "డ్యాష్‌బోర్డుపై దుమ్ము",
+    "timbre.song.lochlomond": "లాక్ లోమండ్",
+    "timbre.song.mountain": "ఆమె కొండ చుట్టూ వస్తుంది"
+  },
+  "game_center_achievement_names": {
+    "timbre.badge.first_tune": "మొదటి తీగ ట్యూన్‌లో",
+    "timbre.badge.full_tune": "మొత్తం ఆరు",
+    "timbre.badge.streak_7": "పరిపూర్ణ వారం",
+    "timbre.badge.strings_100": "వంద తీగలు",
+    "timbre.badge.bullseye": "బుల్స్‌ఐ",
+    "timbre.badge.sharpshooter": "అధిక స్కోర్ సాధించినవారు",
+    "timbre.badge.golden_ear": "బంగారు చెవి",
+    "timbre.badge.level_5": "ఎదుగుతున్న తార",
+    "timbre.badge.multi": "బహు-వాయిద్య కళాకారుడు",
+    "timbre.badge.streak_30": "సంగీత మాసం",
+    "timbre.badge.strings_1000": "వెయ్యి తీగలు",
+    "timbre.badge.first_lesson": "మొదటి పాఠం",
+    "timbre.badge.lessons_25": "రెగ్యులర్",
+    "timbre.badge.lessons_100": "పండితుడు",
+    "timbre.badge.perfect_10": "దోషరహితం",
+    "timbre.badge.full_25": "ట్యూనింగ్ అలవాటు",
+    "timbre.badge.streak_3": "వార్మ్-అప్",
+    "timbre.badge.streak_100": "వంద రోజులు",
+    "timbre.badge.minutes_60": "మొదటి గంట",
+    "timbre.badge.minutes_600": "పది గంటలు",
+    "timbre.badge.daily_1": "రోజువారీ సెట్",
+    "timbre.badge.daily_30": "అలవాటుకు బానిస",
+    "timbre.badge.sniper_win": "రౌండ్ విజేత",
+    "timbre.badge.bullseyes_50": "సరిగ్గా మధ్యలో",
+    "timbre.badge.ear_perfect": "పూర్తి మార్కులు",
+    "timbre.badge.ear_500": "శ్రవణ గురువు",
+    "timbre.badge.units_1": "యూనిట్ పూర్తి",
+    "timbre.badge.units_10": "పది యూనిట్లు",
+    "timbre.badge.course_done": "పట్టభద్రుడు",
+    "timbre.badge.songs_1": "మొదటి పాట",
+    "timbre.badge.songs_25": "పాటల పుస్తకం"
+  },
+  "game_center_achievement_descriptions": {
+    "timbre.badge.first_tune": "మీ మొదటి తీగను ట్యూన్ చేయండి",
+    "timbre.badge.full_tune": "వాయిద్యంలోని ప్రతి తీగను ట్యూన్ చేయండి",
+    "timbre.badge.streak_7": "వరుసగా ఏడు రోజులు ప్రాక్టీస్ చేయండి",
+    "timbre.badge.strings_100": "100 తీగలను ట్యూన్ చేయండి",
+    "timbre.badge.bullseye": "మీ మొదటి బుల్స్‌ఐ సాధించండి",
+    "timbre.badge.sharpshooter": "బుల్స్‌ఐ ఆటలో 2,000 స్కోర్ చేయండి",
+    "timbre.badge.golden_ear": "50 చెవి ప్రశ్నలకు సరిగ్గా జవాబివ్వండి",
+    "timbre.badge.level_5": "స్థాయి 5 చేరుకోండి",
+    "timbre.badge.multi": "మూడు వేర్వేరు వాయిద్యాలను ట్యూన్ చేయండి",
+    "timbre.badge.streak_30": "వరుసగా ముప్పై రోజులు ప్రాక్టీస్ చేయండి",
+    "timbre.badge.strings_1000": "1,000 తీగలను ట్యూన్ చేయండి",
+    "timbre.badge.first_lesson": "మీ మొదటి పాఠాన్ని పూర్తి చేయండి",
+    "timbre.badge.lessons_25": "25 పాఠాలు పూర్తి చేయండి",
+    "timbre.badge.lessons_100": "100 పాఠాలు పూర్తి చేయండి",
+    "timbre.badge.perfect_10": "10 పాఠాల్లో మూడు స్టార్‌లు సంపాదించండి",
+    "timbre.badge.full_25": "ప్రతి తీగను 25 సార్లు ట్యూన్ చేయండి",
+    "timbre.badge.streak_3": "వరుసగా మూడు రోజులు ప్రాక్టీస్ చేయండి",
+    "timbre.badge.streak_100": "వరుసగా 100 రోజులు ప్రాక్టీస్ చేయండి",
+    "timbre.badge.minutes_60": "మొత్తం ఒక గంట ప్రాక్టీస్ చేయండి",
+    "timbre.badge.minutes_600": "మొత్తం పది గంటలు ప్రాక్టీస్ చేయండి",
+    "timbre.badge.daily_1": "ఒక రోజువారీ సెట్ పూర్తి చేయండి",
+    "timbre.badge.daily_30": "30 రోజువారీ సెట్‌లు పూర్తి చేయండి",
+    "timbre.badge.sniper_win": "బుల్స్‌ఐ ఆటలో ఒక రౌండ్ గెలవండి",
+    "timbre.badge.bullseyes_50": "50 బుల్స్‌ఐలు కొట్టండి",
+    "timbre.badge.ear_perfect": "చెవి రౌండ్‌లో పది ప్రశ్నలకూ సరిగ్గా జవాబివ్వండి",
+    "timbre.badge.ear_500": "500 చెవి ప్రశ్నలకు సరిగ్గా జవాబివ్వండి",
+    "timbre.badge.units_1": "ఒక యూనిట్‌లోని అన్ని పాఠాలు పూర్తి చేయండి",
+    "timbre.badge.units_10": "పది యూనిట్లు పూర్తి చేయండి",
+    "timbre.badge.course_done": "ఒక పూర్తి కోర్సును పూర్తి చేయండి",
+    "timbre.badge.songs_1": "మీ మొదటి పాటను వాయించండి",
+    "timbre.badge.songs_25": "25 పాటలు వాయించండి"
+  },
+  "provenance": {
+    "game_center": "Badge text reused from matching app Localizable.strings; song board titles reused from Learn.strings. Newly renamed badge/board text authored for this store draft. No native review claimed.",
+    "game_center_app_reuse": {
+      "app_locale": "te",
+      "reused_fields": [
+        "timbre.badge.first_tune:game_center_achievement_names",
+        "timbre.badge.full_tune:game_center_achievement_names",
+        "timbre.badge.streak_7:game_center_achievement_names",
+        "timbre.badge.strings_100:game_center_achievement_names",
+        "timbre.badge.bullseye:game_center_achievement_names",
+        "timbre.badge.sharpshooter:game_center_achievement_names",
+        "timbre.badge.golden_ear:game_center_achievement_names",
+        "timbre.badge.level_5:game_center_achievement_names",
+        "timbre.badge.multi:game_center_achievement_names",
+        "timbre.badge.streak_30:game_center_achievement_names",
+        "timbre.badge.strings_1000:game_center_achievement_names",
+        "timbre.badge.first_lesson:game_center_achievement_names",
+        "timbre.badge.lessons_25:game_center_achievement_names",
+        "timbre.badge.lessons_100:game_center_achievement_names",
+        "timbre.badge.perfect_10:game_center_achievement_names",
+        "timbre.badge.full_25:game_center_achievement_names",
+        "timbre.badge.streak_3:game_center_achievement_names",
+        "timbre.badge.streak_100:game_center_achievement_names",
+        "timbre.badge.minutes_60:game_center_achievement_names",
+        "timbre.badge.minutes_600:game_center_achievement_names",
+        "timbre.badge.daily_1:game_center_achievement_names",
+        "timbre.badge.daily_30:game_center_achievement_names",
+        "timbre.badge.sniper_win:game_center_achievement_names",
+        "timbre.badge.bullseyes_50:game_center_achievement_names",
+        "timbre.badge.ear_perfect:game_center_achievement_names",
+        "timbre.badge.ear_500:game_center_achievement_names",
+        "timbre.badge.units_1:game_center_achievement_names",
+        "timbre.badge.units_10:game_center_achievement_names",
+        "timbre.badge.course_done:game_center_achievement_names",
+        "timbre.badge.songs_1:game_center_achievement_names",
+        "timbre.badge.songs_25:game_center_achievement_names",
+        "timbre.badge.first_tune:game_center_achievement_descriptions",
+        "timbre.badge.full_tune:game_center_achievement_descriptions",
+        "timbre.badge.streak_7:game_center_achievement_descriptions",
+        "timbre.badge.strings_100:game_center_achievement_descriptions",
+        "timbre.badge.bullseye:game_center_achievement_descriptions",
+        "timbre.badge.sharpshooter:game_center_achievement_descriptions",
+        "timbre.badge.golden_ear:game_center_achievement_descriptions",
+        "timbre.badge.level_5:game_center_achievement_descriptions",
+        "timbre.badge.multi:game_center_achievement_descriptions",
+        "timbre.badge.streak_30:game_center_achievement_descriptions",
+        "timbre.badge.strings_1000:game_center_achievement_descriptions",
+        "timbre.badge.first_lesson:game_center_achievement_descriptions",
+        "timbre.badge.lessons_25:game_center_achievement_descriptions",
+        "timbre.badge.lessons_100:game_center_achievement_descriptions",
+        "timbre.badge.perfect_10:game_center_achievement_descriptions",
+        "timbre.badge.full_25:game_center_achievement_descriptions",
+        "timbre.badge.streak_3:game_center_achievement_descriptions",
+        "timbre.badge.streak_100:game_center_achievement_descriptions",
+        "timbre.badge.minutes_60:game_center_achievement_descriptions",
+        "timbre.badge.minutes_600:game_center_achievement_descriptions",
+        "timbre.badge.daily_1:game_center_achievement_descriptions",
+        "timbre.badge.daily_30:game_center_achievement_descriptions",
+        "timbre.badge.sniper_win:game_center_achievement_descriptions",
+        "timbre.badge.bullseyes_50:game_center_achievement_descriptions",
+        "timbre.badge.ear_perfect:game_center_achievement_descriptions",
+        "timbre.badge.ear_500:game_center_achievement_descriptions",
+        "timbre.badge.units_1:game_center_achievement_descriptions",
+        "timbre.badge.units_10:game_center_achievement_descriptions",
+        "timbre.badge.course_done:game_center_achievement_descriptions",
+        "timbre.badge.songs_1:game_center_achievement_descriptions",
+        "timbre.badge.songs_25:game_center_achievement_descriptions"
+      ],
+      "note": "Available app values reused exactly; missing app values retain authored store drafts. Does not certify native or device review."
+    }
+  },
+  "name": "Timbre: గిటార్ ట్యూనర్",
+  "subtitle": "యుకులేలే, వయొలిన్ నేర్చుకోండి",
+  "keywords": "సెల్లో,బాస్,మాండొలిన్,బాంజో,క్రోమాటిక్,స్ట్రోబ్,శ్రవణ శిక్షణ,మెట్రోనోమ్,కార్డ్",
+  "promotional_text": "ఉచిత ట్యూనర్. ప్రకటనలు, ఖాతా అవసరం లేదు. ప్రతి తీగ శ్రుతిలోకి రావడం అనుభూతి చెందండి. మీ వాయిద్యాన్ని వినే పాఠాలు, 140+ పాటలతో నేర్చుకోండి.",
+  "description": "ఉచిత ట్యూనర్. ప్రకటనలు, ఖాతా అవసరం లేదు. ఆపై మీరు వాయించేది వినే పాఠాలు.\n\nTimbreలో కచ్చితమైన ట్యూనర్, సంగీత ఉపాధ్యాయుడు కలిసి ఉంటారు. 60 వాయిద్యాల్లో దేనినైనా క్షణాల్లో శ్రుతి చేసి, మీ వాయిద్యాన్ని విని కచ్చితమైన అభిప్రాయం ఇచ్చే పాఠాల్లో నేర్చుకోండి.\n\nఉచితంగా శ్రుతి చేయండి\n• గిటార్, యుకులేలే, వయొలిన్ నుంచి మాండొలిన్, బాంజో, ఊద్, ఎర్హు వరకు ప్రతి వాయిద్యం ప్రామాణిక శ్రుతి ఉచితం.\n• సెంట్ స్థాయి కచ్చితత్వంతో క్రోమాటిక్, స్ట్రోబ్ ట్యూనర్. Drop D, Open G, DADGAD సహా 132 ట్యూనింగ్‌లు, మీ సొంత ట్యూనింగ్‌లు కూడా.\n• తీగను స్వయంగా గుర్తించి శ్రుతి కలిసినప్పుడు గుర్తు పెడుతుంది. ఒక్క స్ట్రమ్ అన్ని తీగలను చదివి మొదట ఏది శ్రుతి చేయాలో చూపుతుంది.\n• అనుభూతితో శ్రుతి చేయండి: తీగకు, లక్ష్య స్వరానికి మధ్య స్పందనకు అనుగుణంగా ఫోన్ కంపిస్తుంది; దగ్గరయ్యేకొద్దీ నెమ్మదించి కలిసినప్పుడు ఆగుతుంది. చూడకుండానే శ్రుతి చేయవచ్చు.\n• స్టూడియో వెలుతురులో 3D గిటార్‌లు, బాస్‌లు, వయొలిన్, సెల్లో, మాండొలిన్; హెడ్‌స్టాక్‌పై తిప్పాల్సిన పెగ్ చూపుతుంది.\n• కాపో, మార్చగల A4 ఆధార స్వరం, సోల్ఫేజ్, సర్గమ్ స్వరనామాలు.\n\nవాయిస్తూ నేర్చుకోండి\n• 11 కోర్సుల్లో 526 పాఠాలు: గిటార్, యుకులేలే, బాస్, వయొలిన్, సెల్లో, మాండొలిన్, బాంజో, గాత్రం, శ్రవణ శిక్షణ, సంగీత సిద్ధాంతం, లయ. యుకులేలే, మాండొలిన్, వయొలిన్, సెల్లో, బాస్ పాటల పుస్తకాలు కూడా.\n• Timbre ప్రతి స్ట్రమ్ వింటుంది: సరైన కార్డ్, సమయం, మోగని తీగ. ప్రతి స్వరం ఎత్తు సెంట్ వరకు, సమయం మిల్లీసెకండ్ వరకు అంచనా వేస్తుంది.\n• “చూపించండి” కొత్త కార్డ్‌ను 3D గిటార్‌పై వాయిస్తుంది; వేళ్లు వరుసగా పడతాయి. కలిసి వాయించే స్వరమార్గం మీకోసం నెమ్మదించి, మెరుగుపడేకొద్దీ తిరిగి వేగం పెంచుతుంది.\n\nపాటలు వాయించండి\n• 140+ పాటలు, ప్రతిదానికీ పూర్తి అరేంజ్‌మెంట్: Jingle Bells నుంచి Amazing Grace వరకు పాత ప్రసిద్ధ పాటలు, నేటి శైలుల్లో Timbre కోసం రాసిన 50 సొంత పాటలు.\n• హెడ్‌ఫోన్‌లలో బ్యాండ్‌తో కలిసి వాయించండి; పాట పదాలు వెలుగుతాయి.\n• మీ పాటలు: కార్డ్ చార్ట్‌ను అతికించండి లేదా దిగుమతి చేయండి, స్వరం మార్చండి, సమయానికి స్క్రోల్ చేయండి; పక్కనే Apple Musicలో అసలు పాట వినండి.\n\nప్రాక్టీస్ కొనసాగించండి\n• నక్షత్రాలు, XP, రోజువారీ పనులు, వరుస రోజులు, బ్యాడ్జ్‌లు.\n• Game Center: వారపు బుల్స్‌ఐ లీగ్, పాటల లీడర్‌బోర్డ్‌లు, స్నేహితుల సవాళ్లు.\n• Apple Watch: మణికట్టుపై అనుభూతి చెందే మెట్రోనోమ్, నేటి ప్రాక్టీస్ ఒక చూపులో.\n• హోమ్, లాక్ స్క్రీన్ విడ్జెట్‌లు, లైవ్ యాక్టివిటీ, Siri షార్ట్‌కట్‌లు.\n• ఉద్ఘాటనలు, ఉపవిభాగాలు, వేగ శిక్షకుడితో మెట్రోనోమ్; డ్రోన్, స్వరశుద్ధి శిక్షకుడు, కార్డ్-స్కేల్ గ్రంథాలయం.\n• శ్రవణ శిక్షణ: స్వరం దిశ, అంతరాలు, కార్డ్ రకాలు; 40 పాఠాల శ్రవణ కోర్సు కూడా.\n\nఉచితంగా ప్రారంభించండి\nప్రతి వాయిద్యం ప్రామాణిక శ్రుతి ఉచితం. గిటార్, బాస్, యుకులేలే, వయొలిన్, సెల్లో అన్ని ట్యూనింగ్‌లు ఉచితం. ప్రతి కోర్సులో మొదటి యూనిట్, కొన్ని పాటలు కూడా ఉచితం. Timbre Pro అన్ని పాఠాలు, పాటలు, ట్యూనింగ్‌లు, ప్రాక్టీస్ సాధనాలను తెరుస్తుంది. నోటిఫికేషన్‌లు ఆన్‌లో ఉంటే ఉచిత ట్రయల్ ముగిసే రెండు రోజుల ముందు Timbre గుర్తుచేస్తుంది.\n\nగోప్యతతో రూపకల్పన: ఆడియో మీ iPhoneలో విశ్లేషించబడుతుంది; ఎప్పుడూ రికార్డ్ లేదా అప్‌లోడ్ చేయబడదు. ఖాతా, ప్రకటనలు లేవు.\n\nవ్యవధి ముగియడానికి కనీసం 24 గంటల ముందు రద్దు చేయకపోతే సబ్‌స్క్రిప్షన్ స్వయంగా పునరుద్ధరించబడుతుంది. సెట్టింగ్‌లు → Apple ఖాతా → సబ్‌స్క్రిప్షన్‌లలో ఎప్పుడైనా నిర్వహించండి లేదా రద్దు చేయండి.\nనిబంధనలు: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\nగోప్యత: <privacy policy URL>",
+  "whats_new": "Timbreకు స్వాగతం: 60 వాయిద్యాలకు ఉచిత ట్యూనర్, మీ వాయిద్యాన్ని వినే 526 పాఠాలు.",
+  "iphone_screenshot_captions": [
+    {
+      "capture": "10b-tune-locked",
+      "caption": "ఉచితం. ప్రకటనలు లేవు.",
+      "supporting_line": "60 వాయిద్యాలు, సెంట్ వరకు కచ్చితం"
+    },
+    {
+      "capture": "65-song-perform",
+      "caption": "ఎలా వాయించారో వినండి",
+      "supporting_line": "ప్రతి స్వరం ఎత్తు, సమయం"
+    },
+    {
+      "capture": "52b-lesson-chord",
+      "caption": "నేడే తొలి కార్డ్ వాయించండి",
+      "supporting_line": "Timbre ప్రతి తీగను వింటుంది"
+    },
+    {
+      "capture": "31b-instruments-folk",
+      "caption": "మీ వాయిద్యం శ్రుతి చేయండి",
+      "supporting_line": "60 వాయిద్యాలు, 132 ట్యూనింగ్‌లు"
+    },
+    {
+      "capture": "63-songs",
+      "caption": "తెలిసిన పాటలు వాయించండి",
+      "supporting_line": "140+ పాటలు, పాతవాటి నుంచి సొంతవి"
+    },
+    {
+      "capture": "50-learn",
+      "caption": "మీ వేగంతో నేర్చుకోండి",
+      "supporting_line": "11 కోర్సుల్లో 526 పాఠాలు"
+    },
+    {
+      "capture": "62-lesson-results",
+      "caption": "రోజూ ఐదు నిమిషాలతో పురోగతి",
+      "supporting_line": "నక్షత్రాలు, వరుస రోజులు, రోజువారీ పనులు"
+    },
+    {
+      "capture": "11b-tune-strum",
+      "caption": "ఒక స్ట్రమ్, అన్ని తీగలు",
+      "supporting_line": "మొదట ఏ తీగ శ్రుతి చేయాలో చూడండి"
+    },
+    {
+      "capture": "32-journey",
+      "caption": "మీ మెరుగుదల చూడండి",
+      "supporting_line": "కచ్చితత్వం, తీగ ధ్వని, బ్యాడ్జ్‌లు"
+    }
+  ],
+  "ipad_screenshot_captions": [
+    {
+      "capture": "ipad-landscape-tune",
+      "caption": "ఉచితం. ప్రకటనలు లేవు.",
+      "supporting_line": "60 వాయిద్యాలు, సెంట్ వరకు కచ్చితం"
+    },
+    {
+      "capture": "ipad-landscape-instruments",
+      "caption": "మీ వాయిద్యం శ్రుతి చేయండి",
+      "supporting_line": "వయొలిన్ నుంచి ఊద్, సితార్ నుంచి ఎర్హు"
+    },
+    {
+      "capture": "ipad-landscape-songs",
+      "caption": "తెలిసిన పాటలు వాయించండి",
+      "supporting_line": "140+ పాటలు, పాతవాటి నుంచి సొంతవి"
+    },
+    {
+      "capture": "ipad-landscape-practice",
+      "caption": "రోజూ ఐదు నిమిషాలతో పురోగతి",
+      "supporting_line": "రోజువారీ సెట్, పనులు, శ్రవణ ఆటలు"
+    }
+  ],
+  "app_preview_captions": {
+    "main": {
+      "lock": "ఉచితం. ప్రకటనలు లేవు.",
+      "tuned": "ప్రతి తీగ తనిఖీ",
+      "showme": "3Dలో వాయించడం చూడండి",
+      "highway": "బ్యాండ్‌తో పాటలు వాయించండి",
+      "results": "ఎలా చేశారో వినండి",
+      "songs": "నేర్చుకునేందుకు 140+ పాటలు",
+      "end": "శ్రుతి చేయండి. నేర్చుకోండి. పాటలు వాయించండి.",
+      "end-note": "ఉచిత ట్యూనర్ · ప్రకటనలు లేవు · ఖాతా లేదు"
+    },
+    "violin": {
+      "lock": "వయొలిన్ ఉచితంగా శ్రుతి చేయండి",
+      "tuned": "G, D, A, E: అన్నీ శ్రుతిలో",
+      "highway": "వయొలిన్‌పై పాటలు వాయించండి",
+      "results": "ఎలా చేశారో వినండి",
+      "songs": "నేర్చుకునేందుకు 140+ పాటలు",
+      "end": "వయొలిన్ ట్యూనర్, పాఠాలు",
+      "end-note": "ఉచిత ట్యూనర్ · ప్రకటనలు లేవు · ఖాతా లేదు"
+    }
+  },
+  "iap_display_names": {
+    "timbre_pro_annual": "Timbre Pro, వార్షికం",
+    "timbre_pro_monthly": "Timbre Pro, నెలవారీ",
+    "timbre_plus_lifetime": "Timbre Pro, జీవితకాలం"
+  },
+  "iap_descriptions": {
+    "timbre_pro_annual": "అన్ని పాఠాలు, పాటలు, శ్రుతులు, అభ్యాస సాధనాలు",
+    "timbre_pro_monthly": "అన్ని పాఠాలు, పాటలు, శ్రుతులు, అభ్యాస సాధనాలు",
+    "timbre_plus_lifetime": "Proలో అన్నీ, ఒక్కసారి చెల్లింపు"
+  },
+  "custom_product_page_keywords": {}
+}

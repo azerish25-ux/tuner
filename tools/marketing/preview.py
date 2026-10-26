@@ -528,7 +528,7 @@ def sync_sheet(syncs: list[Sync], small: Path, dest: Path) -> None:
 # MARK: captions
 
 
-def captions(cut: str | None) -> dict[str, tuple[str, str]]:
+def captions(cut: str | None, locale: str | None = None) -> dict[str, tuple[str, str]]:
     """Clip name -> (caption, accent) from the listing's "### App Preview" table for this cut (the main preview's
     table, or the one whose heading names the cut, e.g. "### App Preview: violin page")."""
     found: dict[str, tuple[str, str]] = {}
@@ -553,6 +553,13 @@ def captions(cut: str | None) -> dict[str, tuple[str, str]]:
             caption = cells[1].replace("**", "").strip()
             accent = cells[2].strip("` ").lower() if len(cells) > 2 and cells[2].strip() else DEFAULT_TINTS.get(name, "mint")
             found[name] = (caption, accent)
+    if locale and locale not in ("en", "en-US"):
+        path = ROOT / "tools/l10n/store" / f"{locale}.json"
+        data = json.loads(path.read_text(encoding="utf-8"))
+        translated = data["app_preview_captions"]["violin" if wanted == "violin" else "main"]
+        if set(translated) != set(found) or any(not value for value in translated.values()):
+            raise ValueError(f"Incomplete App Preview captions for {locale}")
+        found = {key: (translated[key], accent) for key, (_, accent) in found.items()}
     return found
 
 
@@ -1007,7 +1014,7 @@ def render_command(args) -> None:
     retakes += lock.retakes
 
     # The frames: a caption band per clip, and the end card.
-    words = captions(cut_name)
+    words = captions(cut_name, getattr(args, "locale", None))
     art_dir = out / "frames"
     art_dir.mkdir(exist_ok=True)
     frame_paths = []
@@ -1175,6 +1182,7 @@ def main() -> None:
     stop.add_argument("--out", required=True)
     render = sub.add_parser("render", help="cut the marked clips into the App Preview")
     render.add_argument("--out", required=True)
+    render.add_argument("--locale", help="listing locale for captions; requires matching localized recording and glyph/layout review")
     render.add_argument("--log", action="append", help="xcodebuild log with the test's PREVIEW-* lines (repeatable)")
     render.add_argument("--attachments", help="exported xcresult attachments (the preview-clips note)")
     render.add_argument("--audio", help="the folder the app wrote what it played to (default: the test's PREVIEW-APP)")

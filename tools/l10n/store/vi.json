@@ -1,0 +1,310 @@
+{
+  "schema_version": 1,
+  "locale": "vi",
+  "counts": {
+    "instruments": 60,
+    "tunings": 132,
+    "courses": 11,
+    "lessons": 526,
+    "songs_floor": 140,
+    "originals": 50
+  },
+  "review": {
+    "text": "ai_drafted",
+    "native": "not_verified",
+    "market_search": "not_verified",
+    "device": "not_verified",
+    "screenshots": "not_captured",
+    "app_preview": "not_rendered",
+    "iap_account_limits": "not_verified",
+    "game_center_account": "not_verified",
+    "release_ready": false,
+    "blockers": [
+      "Production privacy policy URL and verification not provided",
+      "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+      "Localized App Preview recordings and audio/sync/render review pending",
+      "App Store Connect product/locale limits and Game Center configuration/images unverified"
+    ],
+    "semantic": "ai_cross_reviewed_critical_facts",
+    "legal_back_translation": "not_performed_optional_under_ai_policy",
+    "song_title_alignment": {
+      "state": "pending_app_alignment",
+      "pending_app_alignment": [
+        "timbre.song.twinkle",
+        "timbre.song.odetojoy",
+        "timbre.song.jinglebells",
+        "timbre.song.saints",
+        "timbre.song.kiteweather",
+        "timbre.song.dashboard",
+        "timbre.song.lochlomond",
+        "timbre.song.mountain"
+      ],
+      "native_review": "not_verified"
+    },
+    "ai_cross_review": {
+      "scope": "Free tier, notification-conditioned two-day trial reminder, on-device never-recorded/uploaded audio, automatic renewal and 24-hour cancellation, anytime management, IAP benefits. Additional feature/count/terminology review for original nine and European/regional listings.",
+      "limitations": "AI review with inherited English source, not blinded back-translation, native-speaker, market, legal, account or visual approval."
+    },
+    "ai_source_aware": "reviewed",
+    "privacy_policy": "not_verified",
+    "review_policy": "ai_source_aware"
+  },
+  "game_center_leaderboard_names": {
+    "timbre.sniper.best": "Hồng tâm",
+    "timbre.sniper.weekly": "Hồng tâm tuần này",
+    "timbre.ear.level": "Cấp luyện tai",
+    "timbre.streak": "Chuỗi luyện tập",
+    "timbre.song.twinkle": "Ngôi sao nhỏ lấp lánh",
+    "timbre.song.odetojoy": "Khúc ca niềm vui",
+    "timbre.song.jinglebells": "Jingle Bells",
+    "timbre.song.saints": "When the Saints Go Marching In",
+    "timbre.song.kiteweather": "Trời thả diều",
+    "timbre.song.dashboard": "Bụi trên bảng điều khiển",
+    "timbre.song.lochlomond": "Loch Lomond",
+    "timbre.song.mountain": "She’ll Be Coming ’Round the Mountain"
+  },
+  "game_center_achievement_names": {
+    "timbre.badge.first_tune": "Dây đầu chuẩn tông",
+    "timbre.badge.full_tune": "Đủ sáu dây",
+    "timbre.badge.streak_7": "Tuần hoàn hảo",
+    "timbre.badge.strings_100": "Trăm dây",
+    "timbre.badge.bullseye": "Hồng tâm",
+    "timbre.badge.sharpshooter": "Người đạt điểm cao",
+    "timbre.badge.golden_ear": "Đôi tai vàng",
+    "timbre.badge.level_5": "Ngôi sao đang lên",
+    "timbre.badge.multi": "Nghệ sĩ đa nhạc cụ",
+    "timbre.badge.streak_30": "Một tháng âm nhạc",
+    "timbre.badge.strings_1000": "Nghìn dây",
+    "timbre.badge.first_lesson": "Bài học đầu tiên",
+    "timbre.badge.lessons_25": "Chăm chỉ",
+    "timbre.badge.lessons_100": "Học giả",
+    "timbre.badge.perfect_10": "Không tì vết",
+    "timbre.badge.full_25": "Thói quen lên dây",
+    "timbre.badge.streak_3": "Khởi động",
+    "timbre.badge.streak_100": "Trăm ngày",
+    "timbre.badge.minutes_60": "Giờ đầu tiên",
+    "timbre.badge.minutes_600": "Mười giờ",
+    "timbre.badge.daily_1": "Bài tập hằng ngày",
+    "timbre.badge.daily_30": "Con người của thói quen",
+    "timbre.badge.sniper_win": "Người thắng vòng",
+    "timbre.badge.bullseyes_50": "Trúng ngay tâm",
+    "timbre.badge.ear_perfect": "Điểm tuyệt đối",
+    "timbre.badge.ear_500": "Bậc thầy lắng nghe",
+    "timbre.badge.units_1": "Vượt chương",
+    "timbre.badge.units_10": "Mười chương",
+    "timbre.badge.course_done": "Tốt nghiệp",
+    "timbre.badge.songs_1": "Bài hát đầu tiên",
+    "timbre.badge.songs_25": "Tuyển tập bài hát"
+  },
+  "game_center_achievement_descriptions": {
+    "timbre.badge.first_tune": "Lên dây cho dây đầu tiên của bạn",
+    "timbre.badge.full_tune": "Lên dây tất cả các dây của một nhạc cụ",
+    "timbre.badge.streak_7": "Luyện tập 7 ngày liên tiếp",
+    "timbre.badge.strings_100": "Lên dây 100 dây",
+    "timbre.badge.bullseye": "Trúng hồng tâm đầu tiên",
+    "timbre.badge.sharpshooter": "Đạt 2.000 điểm Hồng tâm",
+    "timbre.badge.golden_ear": "Trả lời đúng 50 câu luyện tai",
+    "timbre.badge.level_5": "Đạt cấp 5",
+    "timbre.badge.multi": "Lên dây ba nhạc cụ khác nhau",
+    "timbre.badge.streak_30": "Luyện tập 30 ngày liên tiếp",
+    "timbre.badge.strings_1000": "Lên dây 1.000 dây",
+    "timbre.badge.first_lesson": "Hoàn thành bài học đầu tiên",
+    "timbre.badge.lessons_25": "Hoàn thành 25 bài học",
+    "timbre.badge.lessons_100": "Hoàn thành 100 bài học",
+    "timbre.badge.perfect_10": "Đạt ba sao ở 10 bài học",
+    "timbre.badge.full_25": "Lên dây tất cả các dây 25 lần",
+    "timbre.badge.streak_3": "Luyện tập 3 ngày liên tiếp",
+    "timbre.badge.streak_100": "Luyện tập 100 ngày liên tiếp",
+    "timbre.badge.minutes_60": "Luyện tập tổng cộng 1 giờ",
+    "timbre.badge.minutes_600": "Luyện tập tổng cộng 10 giờ",
+    "timbre.badge.daily_1": "Hoàn thành 1 bài tập hằng ngày",
+    "timbre.badge.daily_30": "Hoàn thành 30 bài tập hằng ngày",
+    "timbre.badge.sniper_win": "Thắng một vòng Hồng tâm",
+    "timbre.badge.bullseyes_50": "Bắn trúng hồng tâm 50 lần",
+    "timbre.badge.ear_perfect": "Trả lời đúng cả 10 câu trong một vòng luyện tai",
+    "timbre.badge.ear_500": "Trả lời đúng 500 câu luyện tai",
+    "timbre.badge.units_1": "Hoàn thành mọi bài học trong một chương",
+    "timbre.badge.units_10": "Hoàn thành mười chương",
+    "timbre.badge.course_done": "Hoàn thành trọn một khóa học",
+    "timbre.badge.songs_1": "Chơi bài hát đầu tiên của bạn",
+    "timbre.badge.songs_25": "Chơi 25 bài hát"
+  },
+  "provenance": {
+    "game_center": "Badge text reused from matching app Localizable.strings; song board titles reused from Learn.strings. Newly renamed badge/board text authored for this store draft. No native review claimed.",
+    "game_center_app_reuse": {
+      "app_locale": "vi",
+      "reused_fields": [
+        "timbre.badge.first_tune:game_center_achievement_names",
+        "timbre.badge.full_tune:game_center_achievement_names",
+        "timbre.badge.streak_7:game_center_achievement_names",
+        "timbre.badge.strings_100:game_center_achievement_names",
+        "timbre.badge.bullseye:game_center_achievement_names",
+        "timbre.badge.sharpshooter:game_center_achievement_names",
+        "timbre.badge.golden_ear:game_center_achievement_names",
+        "timbre.badge.level_5:game_center_achievement_names",
+        "timbre.badge.multi:game_center_achievement_names",
+        "timbre.badge.streak_30:game_center_achievement_names",
+        "timbre.badge.strings_1000:game_center_achievement_names",
+        "timbre.badge.first_lesson:game_center_achievement_names",
+        "timbre.badge.lessons_25:game_center_achievement_names",
+        "timbre.badge.lessons_100:game_center_achievement_names",
+        "timbre.badge.perfect_10:game_center_achievement_names",
+        "timbre.badge.full_25:game_center_achievement_names",
+        "timbre.badge.streak_3:game_center_achievement_names",
+        "timbre.badge.streak_100:game_center_achievement_names",
+        "timbre.badge.minutes_60:game_center_achievement_names",
+        "timbre.badge.minutes_600:game_center_achievement_names",
+        "timbre.badge.daily_1:game_center_achievement_names",
+        "timbre.badge.daily_30:game_center_achievement_names",
+        "timbre.badge.sniper_win:game_center_achievement_names",
+        "timbre.badge.bullseyes_50:game_center_achievement_names",
+        "timbre.badge.ear_perfect:game_center_achievement_names",
+        "timbre.badge.ear_500:game_center_achievement_names",
+        "timbre.badge.units_1:game_center_achievement_names",
+        "timbre.badge.units_10:game_center_achievement_names",
+        "timbre.badge.course_done:game_center_achievement_names",
+        "timbre.badge.songs_1:game_center_achievement_names",
+        "timbre.badge.songs_25:game_center_achievement_names",
+        "timbre.badge.first_tune:game_center_achievement_descriptions",
+        "timbre.badge.full_tune:game_center_achievement_descriptions",
+        "timbre.badge.streak_7:game_center_achievement_descriptions",
+        "timbre.badge.strings_100:game_center_achievement_descriptions",
+        "timbre.badge.bullseye:game_center_achievement_descriptions",
+        "timbre.badge.sharpshooter:game_center_achievement_descriptions",
+        "timbre.badge.golden_ear:game_center_achievement_descriptions",
+        "timbre.badge.level_5:game_center_achievement_descriptions",
+        "timbre.badge.multi:game_center_achievement_descriptions",
+        "timbre.badge.streak_30:game_center_achievement_descriptions",
+        "timbre.badge.strings_1000:game_center_achievement_descriptions",
+        "timbre.badge.first_lesson:game_center_achievement_descriptions",
+        "timbre.badge.lessons_25:game_center_achievement_descriptions",
+        "timbre.badge.lessons_100:game_center_achievement_descriptions",
+        "timbre.badge.perfect_10:game_center_achievement_descriptions",
+        "timbre.badge.full_25:game_center_achievement_descriptions",
+        "timbre.badge.streak_3:game_center_achievement_descriptions",
+        "timbre.badge.streak_100:game_center_achievement_descriptions",
+        "timbre.badge.minutes_60:game_center_achievement_descriptions",
+        "timbre.badge.minutes_600:game_center_achievement_descriptions",
+        "timbre.badge.daily_1:game_center_achievement_descriptions",
+        "timbre.badge.daily_30:game_center_achievement_descriptions",
+        "timbre.badge.sniper_win:game_center_achievement_descriptions",
+        "timbre.badge.bullseyes_50:game_center_achievement_descriptions",
+        "timbre.badge.ear_perfect:game_center_achievement_descriptions",
+        "timbre.badge.ear_500:game_center_achievement_descriptions",
+        "timbre.badge.units_1:game_center_achievement_descriptions",
+        "timbre.badge.units_10:game_center_achievement_descriptions",
+        "timbre.badge.course_done:game_center_achievement_descriptions",
+        "timbre.badge.songs_1:game_center_achievement_descriptions",
+        "timbre.badge.songs_25:game_center_achievement_descriptions"
+      ],
+      "note": "Available app values reused exactly; missing app values retain authored store drafts. Does not certify native or device review."
+    }
+  },
+  "name": "Timbre: Chỉnh dây guitar",
+  "subtitle": "Học ukulele và vĩ cầm",
+  "keywords": "cello,bass,mandolin,banjo,chromatic,strobe,luyện tai,máy đếm nhịp,hợp âm",
+  "promotional_text": "Chỉnh dây miễn phí, không quảng cáo, không tài khoản. Cảm nhận từng dây đúng cao độ, rồi học qua bài học biết lắng nghe và hơn 140 bài hát.",
+  "description": "Chỉnh dây miễn phí, không quảng cáo, không tài khoản. Rồi đến những bài học lắng nghe bạn chơi.\n\nTimbre kết hợp máy chỉnh dây chính xác và giáo viên âm nhạc. Chỉnh một trong 60 nhạc cụ trong vài giây, rồi chơi trong các bài học lắng nghe và nhận xét chính xác phần trình diễn.\n\nCHỈNH DÂY MIỄN PHÍ\n• Kiểu lên dây chuẩn của mọi nhạc cụ đều miễn phí, từ guitar, ukulele và vĩ cầm đến mandolin, banjo, oud và erhu.\n• Máy chỉnh dây chromatic và strobe chính xác đến cent. 132 kiểu lên dây, từ Drop D, Open G đến DADGAD, cùng kiểu riêng của bạn.\n• Tự nhận diện dây, đánh dấu khi từng dây đúng cao độ. Một lần quạt đọc mọi dây và chỉ ra dây cần chỉnh trước.\n• Chỉnh bằng cảm giác: điện thoại rung theo phách đập giữa dây và cao độ đích, chậm dần khi gần đúng rồi dừng khi khớp. Bạn có thể chỉnh mà không cần nhìn.\n• Guitar, bass, vĩ cầm, cello và mandolin 3D dưới ánh sáng phòng thu, chỉ rõ khóa cần xoay trên đầu đàn.\n• Capo, cao độ tham chiếu A4 tùy chỉnh, tên nốt solfège và sargam.\n\nHỌC BẰNG CÁCH CHƠI\n• 526 bài học trong 11 khóa: guitar, ukulele, bass, vĩ cầm, cello, mandolin, banjo, thanh nhạc, luyện tai, nhạc lý và tiết tấu. Thêm tuyển tập bài hát cho ukulele, mandolin, vĩ cầm, cello và bass.\n• Timbre nghe từng lần quạt: hợp âm có đúng không, có đúng nhịp không và dây nào chưa vang. Mỗi nốt được chấm cao độ đến cent và thời gian đến mili giây.\n• “Xem mẫu” chơi hợp âm mới trên guitar 3D, đặt từng ngón theo thứ tự. Đường nốt để chơi cùng chậm lại cho bạn, rồi nhanh dần khi bạn tiến bộ.\n\nCHƠI BÀI HÁT\n• Hơn 140 bài hát có bản phối đầy đủ: từ Jingle Bells đến Amazing Grace, cùng 50 bài gốc viết riêng cho Timbre theo phong cách đương đại.\n• Chơi cùng ban nhạc qua tai nghe khi lời bài hát sáng lên.\n• Bài hát của bạn: dán hoặc nhập bản hợp âm, chuyển giọng, cuộn theo thời gian và nghe bản gốc trên Apple Music bên cạnh.\n\nDUY TRÌ LUYỆN TẬP\n• Sao, XP, nhiệm vụ hằng ngày, chuỗi ngày và huy hiệu.\n• Game Center: giải Hồng tâm hằng tuần, bảng xếp hạng bài hát và thử thách bạn bè.\n• Apple Watch: máy đếm nhịp cảm nhận trên cổ tay và xem nhanh bài tập hôm nay.\n• Tiện ích Màn hình chính và Màn hình khóa, Hoạt động trực tiếp và phím tắt Siri.\n• Máy đếm nhịp với trọng âm, chia nhịp và bộ luyện tốc độ; âm nền kéo dài, bộ luyện cao độ chuẩn, thư viện hợp âm và âm giai.\n• Luyện tai: hướng cao độ, quãng và tính chất hợp âm, cùng khóa luyện tai 40 bài.\n\nBẮT ĐẦU MIỄN PHÍ\nKiểu lên dây chuẩn của mọi nhạc cụ đều miễn phí. Guitar, bass, ukulele, vĩ cầm và cello miễn phí với mọi kiểu lên dây. Phần đầu của mỗi khóa và một số bài hát cũng miễn phí. Timbre Pro mở mọi bài học, bài hát, kiểu lên dây và toàn bộ công cụ luyện tập. Khi bật thông báo, Timbre nhắc bạn hai ngày trước khi thời gian dùng thử miễn phí kết thúc.\n\nThiết kế vì riêng tư: âm thanh được phân tích trên iPhone của bạn, không bao giờ ghi âm hay tải lên. Không tài khoản, không quảng cáo.\n\nĐăng ký tự gia hạn trừ khi hủy ít nhất 24 giờ trước khi hết kỳ. Quản lý hoặc hủy bất cứ lúc nào tại Cài đặt → Tài khoản Apple → Đăng ký.\nĐiều khoản: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\nQuyền riêng tư: <privacy policy URL>",
+  "whats_new": "Chào mừng đến với Timbre: chỉnh dây miễn phí cho 60 nhạc cụ và 526 bài học lắng nghe bạn chơi.",
+  "iphone_screenshot_captions": [
+    {
+      "capture": "10b-tune-locked",
+      "caption": "Miễn phí. Không quảng cáo.",
+      "supporting_line": "60 nhạc cụ, chính xác đến cent"
+    },
+    {
+      "capture": "65-song-perform",
+      "caption": "Nghe phần chơi của bạn",
+      "supporting_line": "Cao độ và thời gian từng nốt"
+    },
+    {
+      "capture": "52b-lesson-chord",
+      "caption": "Chơi hợp âm đầu tiên hôm nay",
+      "supporting_line": "Timbre nghe từng dây"
+    },
+    {
+      "capture": "31b-instruments-folk",
+      "caption": "Chỉnh nhạc cụ bạn chơi",
+      "supporting_line": "60 nhạc cụ, 132 kiểu lên dây"
+    },
+    {
+      "capture": "63-songs",
+      "caption": "Chơi bài hát quen thuộc",
+      "supporting_line": "Hơn 140 bài hát, kinh điển đến bài gốc"
+    },
+    {
+      "capture": "50-learn",
+      "caption": "Học theo tốc độ của bạn",
+      "supporting_line": "526 bài học trong 11 khóa"
+    },
+    {
+      "capture": "62-lesson-results",
+      "caption": "Năm phút mỗi ngày tích lũy dần",
+      "supporting_line": "Sao, chuỗi ngày và nhiệm vụ hằng ngày"
+    },
+    {
+      "capture": "11b-tune-strum",
+      "caption": "Một lần quạt kiểm tra mọi dây",
+      "supporting_line": "Xem dây nào cần chỉnh trước"
+    },
+    {
+      "capture": "32-journey",
+      "caption": "Thấy mình tiến bộ",
+      "supporting_line": "Độ chính xác, tiếng dây và huy hiệu"
+    }
+  ],
+  "ipad_screenshot_captions": [
+    {
+      "capture": "ipad-landscape-tune",
+      "caption": "Miễn phí. Không quảng cáo.",
+      "supporting_line": "60 nhạc cụ, chính xác đến cent"
+    },
+    {
+      "capture": "ipad-landscape-instruments",
+      "caption": "Chỉnh nhạc cụ bạn chơi",
+      "supporting_line": "Vĩ cầm đến oud, sitar đến erhu"
+    },
+    {
+      "capture": "ipad-landscape-songs",
+      "caption": "Chơi bài hát quen thuộc",
+      "supporting_line": "Hơn 140 bài hát, kinh điển đến bài gốc"
+    },
+    {
+      "capture": "ipad-landscape-practice",
+      "caption": "Năm phút mỗi ngày tích lũy dần",
+      "supporting_line": "Bộ bài hằng ngày, nhiệm vụ và trò luyện tai"
+    }
+  ],
+  "app_preview_captions": {
+    "main": {
+      "lock": "Miễn phí. Không quảng cáo.",
+      "tuned": "Kiểm tra từng dây",
+      "showme": "Xem chơi trong 3D",
+      "highway": "Chơi bài hát cùng ban nhạc",
+      "results": "Nghe kết quả của bạn",
+      "songs": "Hơn 140 bài hát để học",
+      "end": "Chỉnh dây. Học. Chơi bài hát.",
+      "end-note": "Chỉnh miễn phí · Không quảng cáo · Không tài khoản"
+    },
+    "violin": {
+      "lock": "Chỉnh vĩ cầm miễn phí",
+      "tuned": "G, D, A, E: tất cả đúng cao độ",
+      "highway": "Chơi bài hát trên vĩ cầm",
+      "results": "Nghe kết quả của bạn",
+      "songs": "Hơn 140 bài hát để học",
+      "end": "Chỉnh vĩ cầm và bài học",
+      "end-note": "Chỉnh miễn phí · Không quảng cáo · Không tài khoản"
+    }
+  },
+  "iap_display_names": {
+    "timbre_pro_annual": "Timbre Pro, hằng năm",
+    "timbre_pro_monthly": "Timbre Pro, hằng tháng",
+    "timbre_plus_lifetime": "Timbre Pro, trọn đời"
+  },
+  "iap_descriptions": {
+    "timbre_pro_annual": "Mọi bài học, bài hát, lên dây và công cụ tập",
+    "timbre_pro_monthly": "Mọi bài học, bài hát, lên dây và công cụ tập",
+    "timbre_plus_lifetime": "Toàn bộ Pro, trả một lần"
+  },
+  "custom_product_page_keywords": {}
+}

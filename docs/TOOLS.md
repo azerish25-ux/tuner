@@ -123,7 +123,7 @@ by `report.py`). This section lists the scripts and the data files.
 |---|---|
 | `tools/l10n/todo/<locale>.json` (48 locales) and `todo/index.json` | What each locale still needs, launch-critical strings first; the files translators fill in |
 | `tools/l10n/translations/<locale>.json` | Delivered interface translations by table |
-| `tools/l10n/learn/<locale>.json` | Delivered lesson translations for the nine lesson languages (de, es, fr, it, ja, ko, pt, ru, zh-CN) |
+| `tools/l10n/learn/<locale>.json` | Delivered lesson translations for all 48 target app languages (missing maps remain required TODOs) |
 | `tools/l10n/pending.json` | Every interface string some locale lacks |
 | `tools/l10n/critical-baseline.json` | Known gaps the pull-request gate tolerates (today 11 legal, 1 permission, 94 VoiceOver strings; a reviewed decision to ship English there for now) |
 | `tools/l10n/plurals-en.json` | English plural forms for counted strings (used by `xcstrings.py`) |

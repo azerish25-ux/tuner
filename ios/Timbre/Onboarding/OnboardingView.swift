@@ -327,11 +327,10 @@ struct OnboardingView: View {
             }
             .frame(maxHeight: .infinity)
             VStack(alignment: .leading, spacing: 12) {
-                // Two lines at the usual sizes (shrinking a little on a narrow phone); as many as it needs at the
-                // accessibility sizes.
+                // Translations may need more than the English copy's two lines, even at the usual text sizes.
                 Text("Tune in seconds.\nThen learn to play.").font(Typeface.display(40)).tracking(-1).foregroundStyle(Palette.ink)
-                    .lineLimit(typeSize.isAccessibilitySize ? nil : 2).minimumScaleFactor(0.75)
                     .fixedSize(horizontal: false, vertical: true).accessibilityAddTraits(.isHeader)
+                    .accessibilityIdentifier("onboarding.headline")
                 Text("Timbre listens and tells you exactly how you did.")
                     .font(.body).foregroundStyle(Palette.inkSoft).fixedSize(horizontal: false, vertical: true)
             }

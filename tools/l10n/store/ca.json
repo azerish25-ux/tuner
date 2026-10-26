@@ -1,0 +1,321 @@
+{
+  "schema_version": 1,
+  "locale": "ca",
+  "counts": {
+    "instruments": 60,
+    "tunings": 132,
+    "courses": 11,
+    "lessons": 526,
+    "songs_floor": 140,
+    "originals": 50
+  },
+  "review": {
+    "text": "ai_drafted",
+    "native": "not_verified",
+    "market_search": "not_verified",
+    "device": "not_verified",
+    "screenshots": "not_captured",
+    "app_preview": "not_rendered",
+    "iap_account_limits": "not_verified",
+    "game_center_account": "not_verified",
+    "release_ready": false,
+    "blockers": [
+      "Production privacy policy URL and verification not provided",
+      "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+      "Localized App Preview recordings and audio/sync/render review pending",
+      "App Store Connect product/locale limits and Game Center configuration/images unverified"
+    ],
+    "semantic": "ai_cross_reviewed_critical_facts",
+    "legal_back_translation": "not_performed_optional_under_ai_policy",
+    "song_title_alignment": {
+      "state": "pending_app_alignment",
+      "pending_app_alignment": [
+        "timbre.song.twinkle",
+        "timbre.song.odetojoy",
+        "timbre.song.jinglebells",
+        "timbre.song.saints",
+        "timbre.song.kiteweather",
+        "timbre.song.dashboard",
+        "timbre.song.lochlomond",
+        "timbre.song.mountain"
+      ],
+      "native_review": "not_verified"
+    },
+    "ai_cross_review": {
+      "scope": "Free tier, notification-conditioned two-day trial reminder, on-device never-recorded/uploaded audio, automatic renewal and 24-hour cancellation, anytime management, IAP benefits. Additional feature/count/terminology review for original nine and European/regional listings.",
+      "limitations": "AI review with inherited English source, not blinded back-translation, native-speaker, market, legal, account or visual approval."
+    },
+    "ai_source_aware": "reviewed",
+    "privacy_policy": "not_verified",
+    "review_policy": "ai_source_aware"
+  },
+  "game_center_leaderboard_names": {
+    "timbre.sniper.best": "Diana",
+    "timbre.sniper.weekly": "Diana aquesta setmana",
+    "timbre.ear.level": "Nivell d’entrenament auditiu",
+    "timbre.streak": "Ratxa de pràctica",
+    "timbre.song.twinkle": "Brilla, brilla, estel petit",
+    "timbre.song.odetojoy": "Oda a l’alegria",
+    "timbre.song.jinglebells": "Jingle Bells",
+    "timbre.song.saints": "When the Saints Go Marching In",
+    "timbre.song.kiteweather": "Kite Weather",
+    "timbre.song.dashboard": "Dust on the Dashboard",
+    "timbre.song.lochlomond": "Loch Lomond",
+    "timbre.song.mountain": "She'll Be Coming 'Round the Mountain"
+  },
+  "game_center_achievement_names": {
+    "timbre.badge.first_tune": "Primera afinada",
+    "timbre.badge.full_tune": "Les sis",
+    "timbre.badge.streak_7": "Setmana perfecta",
+    "timbre.badge.strings_100": "Cent cordes",
+    "timbre.badge.bullseye": "Diana",
+    "timbre.badge.sharpshooter": "Gran puntuació",
+    "timbre.badge.golden_ear": "Orella d'or",
+    "timbre.badge.level_5": "Estrella emergent",
+    "timbre.badge.multi": "Multiinstrumentista",
+    "timbre.badge.streak_30": "Un mes de música",
+    "timbre.badge.strings_1000": "Mil cordes",
+    "timbre.badge.first_lesson": "Primera lliçó",
+    "timbre.badge.lessons_25": "Constant",
+    "timbre.badge.lessons_100": "Erudit",
+    "timbre.badge.perfect_10": "Impecable",
+    "timbre.badge.full_25": "Rutina d'afinació",
+    "timbre.badge.streak_3": "Escalfant",
+    "timbre.badge.streak_100": "Cent dies",
+    "timbre.badge.minutes_60": "Primera hora",
+    "timbre.badge.minutes_600": "Deu hores",
+    "timbre.badge.daily_1": "Pla diari",
+    "timbre.badge.daily_30": "Animal d'hàbits",
+    "timbre.badge.sniper_win": "Guanyador de ronda",
+    "timbre.badge.bullseyes_50": "Just al mig",
+    "timbre.badge.ear_perfect": "Ple",
+    "timbre.badge.ear_500": "Mestre de l'oïda",
+    "timbre.badge.units_1": "Unitat superada",
+    "timbre.badge.units_10": "Deu unitats",
+    "timbre.badge.course_done": "Graduació",
+    "timbre.badge.songs_1": "Primera cançó",
+    "timbre.badge.songs_25": "Cançoner"
+  },
+  "game_center_achievement_descriptions": {
+    "timbre.badge.first_tune": "Afina la teva primera corda",
+    "timbre.badge.full_tune": "Afina totes les cordes d'un instrument",
+    "timbre.badge.streak_7": "Practica set dies seguits",
+    "timbre.badge.strings_100": "Afina 100 cordes",
+    "timbre.badge.bullseye": "Encerta la teva primera diana",
+    "timbre.badge.sharpshooter": "Aconsegueix 2.000 punts a Diana",
+    "timbre.badge.golden_ear": "Encerta 50 preguntes d'oïda",
+    "timbre.badge.level_5": "Arriba al nivell 5",
+    "timbre.badge.multi": "Afina tres instruments diferents",
+    "timbre.badge.streak_30": "Practica trenta dies seguits",
+    "timbre.badge.strings_1000": "Afina 1.000 cordes",
+    "timbre.badge.first_lesson": "Completa la teva primera lliçó",
+    "timbre.badge.lessons_25": "Completa 25 lliçons",
+    "timbre.badge.lessons_100": "Completa 100 lliçons",
+    "timbre.badge.perfect_10": "Aconsegueix tres estrelles en 10 lliçons",
+    "timbre.badge.full_25": "Afina totes les cordes 25 vegades",
+    "timbre.badge.streak_3": "Practica tres dies seguits",
+    "timbre.badge.streak_100": "Practica 100 dies seguits",
+    "timbre.badge.minutes_60": "Practica una hora en total",
+    "timbre.badge.minutes_600": "Practica deu hores en total",
+    "timbre.badge.daily_1": "Completa un pla diari",
+    "timbre.badge.daily_30": "Completa 30 plans diaris",
+    "timbre.badge.sniper_win": "Guanya una ronda de Diana",
+    "timbre.badge.bullseyes_50": "Fes 50 dianes",
+    "timbre.badge.ear_perfect": "Encerta les deu preguntes d'una ronda d'oïda",
+    "timbre.badge.ear_500": "Encerta 500 preguntes d'oïda",
+    "timbre.badge.units_1": "Completa totes les lliçons d'una unitat",
+    "timbre.badge.units_10": "Completa deu unitats",
+    "timbre.badge.course_done": "Completa un curs sencer",
+    "timbre.badge.songs_1": "Toca la teva primera cançó",
+    "timbre.badge.songs_25": "Toca 25 cançons"
+  },
+  "provenance": {
+    "game_center": "Badge text reused from matching app Localizable.strings; song board titles reused from Learn.strings. Newly renamed badge/board text authored for this store draft. No native review claimed.",
+    "game_center_songs": "Existing Learn.strings title reused when present. Otherwise established/localized title drafted; other named musical works retain source titles, not a claim of app translation. Reconcile with later Learn imports before release.",
+    "game_center_app_reuse": {
+      "app_locale": "ca",
+      "reused_fields": [
+        "timbre.badge.first_tune:game_center_achievement_names",
+        "timbre.badge.full_tune:game_center_achievement_names",
+        "timbre.badge.streak_7:game_center_achievement_names",
+        "timbre.badge.strings_100:game_center_achievement_names",
+        "timbre.badge.bullseye:game_center_achievement_names",
+        "timbre.badge.sharpshooter:game_center_achievement_names",
+        "timbre.badge.golden_ear:game_center_achievement_names",
+        "timbre.badge.level_5:game_center_achievement_names",
+        "timbre.badge.multi:game_center_achievement_names",
+        "timbre.badge.streak_30:game_center_achievement_names",
+        "timbre.badge.strings_1000:game_center_achievement_names",
+        "timbre.badge.first_lesson:game_center_achievement_names",
+        "timbre.badge.lessons_25:game_center_achievement_names",
+        "timbre.badge.lessons_100:game_center_achievement_names",
+        "timbre.badge.perfect_10:game_center_achievement_names",
+        "timbre.badge.full_25:game_center_achievement_names",
+        "timbre.badge.streak_3:game_center_achievement_names",
+        "timbre.badge.streak_100:game_center_achievement_names",
+        "timbre.badge.minutes_60:game_center_achievement_names",
+        "timbre.badge.minutes_600:game_center_achievement_names",
+        "timbre.badge.daily_1:game_center_achievement_names",
+        "timbre.badge.daily_30:game_center_achievement_names",
+        "timbre.badge.sniper_win:game_center_achievement_names",
+        "timbre.badge.bullseyes_50:game_center_achievement_names",
+        "timbre.badge.ear_perfect:game_center_achievement_names",
+        "timbre.badge.ear_500:game_center_achievement_names",
+        "timbre.badge.units_1:game_center_achievement_names",
+        "timbre.badge.units_10:game_center_achievement_names",
+        "timbre.badge.course_done:game_center_achievement_names",
+        "timbre.badge.songs_1:game_center_achievement_names",
+        "timbre.badge.songs_25:game_center_achievement_names",
+        "timbre.badge.first_tune:game_center_achievement_descriptions",
+        "timbre.badge.full_tune:game_center_achievement_descriptions",
+        "timbre.badge.streak_7:game_center_achievement_descriptions",
+        "timbre.badge.strings_100:game_center_achievement_descriptions",
+        "timbre.badge.bullseye:game_center_achievement_descriptions",
+        "timbre.badge.sharpshooter:game_center_achievement_descriptions",
+        "timbre.badge.golden_ear:game_center_achievement_descriptions",
+        "timbre.badge.level_5:game_center_achievement_descriptions",
+        "timbre.badge.multi:game_center_achievement_descriptions",
+        "timbre.badge.streak_30:game_center_achievement_descriptions",
+        "timbre.badge.strings_1000:game_center_achievement_descriptions",
+        "timbre.badge.first_lesson:game_center_achievement_descriptions",
+        "timbre.badge.lessons_25:game_center_achievement_descriptions",
+        "timbre.badge.lessons_100:game_center_achievement_descriptions",
+        "timbre.badge.perfect_10:game_center_achievement_descriptions",
+        "timbre.badge.full_25:game_center_achievement_descriptions",
+        "timbre.badge.streak_3:game_center_achievement_descriptions",
+        "timbre.badge.streak_100:game_center_achievement_descriptions",
+        "timbre.badge.minutes_60:game_center_achievement_descriptions",
+        "timbre.badge.minutes_600:game_center_achievement_descriptions",
+        "timbre.badge.daily_1:game_center_achievement_descriptions",
+        "timbre.badge.daily_30:game_center_achievement_descriptions",
+        "timbre.badge.sniper_win:game_center_achievement_descriptions",
+        "timbre.badge.bullseyes_50:game_center_achievement_descriptions",
+        "timbre.badge.ear_perfect:game_center_achievement_descriptions",
+        "timbre.badge.ear_500:game_center_achievement_descriptions",
+        "timbre.badge.units_1:game_center_achievement_descriptions",
+        "timbre.badge.units_10:game_center_achievement_descriptions",
+        "timbre.badge.course_done:game_center_achievement_descriptions",
+        "timbre.badge.songs_1:game_center_achievement_descriptions",
+        "timbre.badge.songs_25:game_center_achievement_descriptions"
+      ],
+      "note": "Available app values reused exactly; missing app values retain authored store drafts. Does not certify native or device review."
+    }
+  },
+  "name": "Timbre: Afinador de guitarra",
+  "subtitle": "Aprèn violí, ukelele i baix",
+  "keywords": "violí,violoncel,ukelele,mandolina,banjo,cromàtic,estroboscopi,oïda,metrònom,acord",
+  "promotional_text": "Afinador gratuït, sense anuncis ni compte. Sent com s’afina cada corda, aprèn amb lliçons que t’escolten i toca més de 140 cançons.",
+  "description": "Afinador gratuït. Sense anuncis ni compte. Després, lliçons que t’escolten tocar.\n\nTimbre uneix un afinador precís i un professor de música. Afina 60 instruments i aprèn tocant.\n\nAFINA GRATIS\nL’afinació estàndard de cada instrument és gratuïta: guitarra, ukelele, violí, mandolina, banjo, llaüt àrab, erhu i més. Afinador cromàtic i estroboscòpic amb precisió de cents. 132 afinacions, de Drop D i Open G a DADGAD, a més de les teves.\nLa detecció automàtica marca cada corda afinada. Un sol rasgueig llegeix totes les cordes i mostra quina afinar primer. Afina pel tacte: el telèfon pulsa amb els batecs entre la corda i la nota objectiu, més lentament quan s’acosten i s’atura quan coincideixen. No cal mirar.\nGuitarres, baixos, violí, violoncel i mandolina 3D amb llum d’estudi mostren la clavilla que cal girar. Celleta, referència A4 ajustable i noms de notes en solfeig i sargam.\n\nAPRÈN TOCANT\n526 lliçons en 11 cursos: guitarra, ukelele, baix, violí, violoncel, mandolina, banjo, cant, oïda, teoria musical i ritme. També cançoners per a ukelele, mandolina, violí, violoncel i baix.\nTimbre sent cada rasgueig: l’acord correcte, a temps, i quina corda no ha sonat. Avalua cada nota al cent i al mil·lisegon. «Mostra-m’ho» toca els acords nous en una guitarra 3D, posant els dits en ordre. La pista de notes s’alenteix per a tu i accelera quan millores.\n\nMés de 140 cançons, cadascuna amb un arranjament complet: clàssics de Jingle Bells a Amazing Grace, incloent-hi 50 Originals escrits per a Timbre en estils actuals. Toca amb el grup als auriculars mentre les paraules s’il·luminen. Enganxa o importa el teu full d’acords, transposa’l, desplaça’l al ritme i escolta l’original al costat a Apple Music.\n\nCONTINUA\nEstrelles, XP, missions diàries, ratxes i insígnies. Game Center: lliga setmanal de Diana, classificacions de cançons i reptes entre amics. Apple Watch: metrònom que sents al canell i la pràctica d’avui d’un cop d’ull. Ginys d’inici i bloqueig, activitat en directe i dreceres de Siri.\nMetrònom amb accents, subdivisions i entrenador de velocitat; bordó, entrenador d’entonació, biblioteca d’acords i escales. Oïda: direcció de l’altura, intervals i tipus d’acords, més un curs de 40 lliçons.\n\nCOMENÇA GRATIS\nL’afinació estàndard de tots els instruments és gratuïta. Guitarra, baix, ukelele, violí i violoncel són gratuïts en totes les afinacions. La primera unitat de cada curs i una selecció de cançons també són gratuïtes. Timbre Pro desbloqueja totes les lliçons, cançons, afinacions i eines de pràctica. Amb les notificacions activades, Timbre t’avisa dos dies abans que s’acabi una prova gratuïta.\nL’àudio s’analitza a l’iPhone, mai no es grava ni es puja. Sense compte ni anuncis.\nLes subscripcions es renoven automàticament tret que les cancel·lis com a mínim 24 hores abans del final del període. Gestiona o cancel·la en qualsevol moment: Configuració → Compte d’Apple → Subscripcions.\nCondicions: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\nPrivacitat: <privacy policy URL>",
+  "whats_new": "Benvingut a Timbre: afinador gratuït per a 60 instruments i 526 lliçons que t’escolten tocar.",
+  "iphone_screenshot_captions": [
+    {
+      "capture": "10b-tune-locked",
+      "caption": "Afina gratis. Sense anuncis.",
+      "supporting_line": "60 instruments, precisió de cents"
+    },
+    {
+      "capture": "65-song-perform",
+      "caption": "Escolta com has tocat",
+      "supporting_line": "Altura i temps de cada nota"
+    },
+    {
+      "capture": "52b-lesson-chord",
+      "caption": "El teu primer acord, avui",
+      "supporting_line": "Timbre escolta cada corda"
+    },
+    {
+      "capture": "31b-instruments-folk",
+      "caption": "Afina el que toquis",
+      "supporting_line": "60 instruments, 132 afinacions"
+    },
+    {
+      "capture": "63-songs",
+      "caption": "Toca cançons conegudes",
+      "supporting_line": "Més de 140 cançons: clàssics i Originals"
+    },
+    {
+      "capture": "50-learn",
+      "caption": "Aprèn al teu ritme",
+      "supporting_line": "526 lliçons en 11 cursos"
+    },
+    {
+      "capture": "62-lesson-results",
+      "caption": "Cinc minuts al dia sumen",
+      "supporting_line": "Estrelles, ratxes i missions diàries"
+    },
+    {
+      "capture": "11b-tune-strum",
+      "caption": "Un rasgueig, totes les cordes",
+      "supporting_line": "Mira quina corda afinar primer"
+    },
+    {
+      "capture": "32-journey",
+      "caption": "Mira com millores",
+      "supporting_line": "Precisió, so de les cordes, insígnies"
+    }
+  ],
+  "ipad_screenshot_captions": [
+    {
+      "capture": "ipad-landscape-tune",
+      "caption": "Afina gratis. Sense anuncis.",
+      "supporting_line": "60 instruments, precisió de cents"
+    },
+    {
+      "capture": "ipad-landscape-instruments",
+      "caption": "Afina el que toquis",
+      "supporting_line": "Del violí al llaüt, del sitar a l’erhu"
+    },
+    {
+      "capture": "ipad-landscape-songs",
+      "caption": "Toca cançons conegudes",
+      "supporting_line": "Més de 140 cançons: clàssics i Originals"
+    },
+    {
+      "capture": "ipad-landscape-practice",
+      "caption": "Cinc minuts al dia sumen",
+      "supporting_line": "Pràctica diària, missions i jocs d’oïda"
+    }
+  ],
+  "app_preview_captions": {
+    "main": {
+      "lock": "Afinador gratis. Sense anuncis.",
+      "tuned": "Cada corda comprovada",
+      "showme": "Mira com es toca en 3D",
+      "highway": "Toca cançons amb el grup",
+      "results": "Escolta el teu resultat",
+      "songs": "Més de 140 cançons per aprendre",
+      "end": "Afina. Aprèn. Toca cançons.",
+      "end-note": "Afinador gratis · Sense anuncis · Sense compte"
+    },
+    "violin": {
+      "lock": "Afina el violí gratis",
+      "tuned": "G, D, A, E: tot afinat",
+      "highway": "Toca cançons amb el violí",
+      "results": "Escolta el teu resultat",
+      "songs": "Més de 140 cançons per aprendre",
+      "end": "Afinador i lliçons de violí",
+      "end-note": "Afinador gratis · Sense anuncis · Sense compte"
+    }
+  },
+  "iap_display_names": {
+    "timbre_pro_annual": "Timbre Pro, anual",
+    "timbre_pro_monthly": "Timbre Pro, mensual",
+    "timbre_plus_lifetime": "Timbre Pro, per sempre"
+  },
+  "iap_descriptions": {
+    "timbre_pro_annual": "Tot: lliçons, cançons, afinacions i eines",
+    "timbre_pro_monthly": "Tot: lliçons, cançons, afinacions i eines",
+    "timbre_plus_lifetime": "Tot Pro, amb un sol pagament"
+  },
+  "custom_product_page_keywords": {
+    "violin": [
+      "violí"
+    ],
+    "cello": [
+      "violoncel"
+    ],
+    "ukulele": [
+      "ukelele"
+    ]
+  }
+}

@@ -1,0 +1,321 @@
+{
+  "schema_version": 1,
+  "locale": "fi",
+  "counts": {
+    "instruments": 60,
+    "tunings": 132,
+    "courses": 11,
+    "lessons": 526,
+    "songs_floor": 140,
+    "originals": 50
+  },
+  "review": {
+    "text": "ai_drafted",
+    "native": "not_verified",
+    "market_search": "not_verified",
+    "device": "not_verified",
+    "screenshots": "not_captured",
+    "app_preview": "not_rendered",
+    "iap_account_limits": "not_verified",
+    "game_center_account": "not_verified",
+    "release_ready": false,
+    "blockers": [
+      "Production privacy policy URL and verification not provided",
+      "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+      "Localized App Preview recordings and audio/sync/render review pending",
+      "App Store Connect product/locale limits and Game Center configuration/images unverified"
+    ],
+    "semantic": "ai_cross_reviewed_critical_facts",
+    "legal_back_translation": "not_performed_optional_under_ai_policy",
+    "song_title_alignment": {
+      "state": "pending_app_alignment",
+      "pending_app_alignment": [
+        "timbre.song.twinkle",
+        "timbre.song.odetojoy",
+        "timbre.song.jinglebells",
+        "timbre.song.saints",
+        "timbre.song.kiteweather",
+        "timbre.song.dashboard",
+        "timbre.song.lochlomond",
+        "timbre.song.mountain"
+      ],
+      "native_review": "not_verified"
+    },
+    "ai_cross_review": {
+      "scope": "Free tier, notification-conditioned two-day trial reminder, on-device never-recorded/uploaded audio, automatic renewal and 24-hour cancellation, anytime management, IAP benefits. Additional feature/count/terminology review for original nine and European/regional listings.",
+      "limitations": "AI review with inherited English source, not blinded back-translation, native-speaker, market, legal, account or visual approval."
+    },
+    "ai_source_aware": "reviewed",
+    "privacy_policy": "not_verified",
+    "review_policy": "ai_source_aware"
+  },
+  "game_center_leaderboard_names": {
+    "timbre.sniper.best": "Napakymppi",
+    "timbre.sniper.weekly": "Napakymppi tällä viikolla",
+    "timbre.ear.level": "Säveltapailutaso",
+    "timbre.streak": "Harjoitusputki",
+    "timbre.song.twinkle": "Tuiki, tuiki, tähtönen",
+    "timbre.song.odetojoy": "Oodi ilolle",
+    "timbre.song.jinglebells": "Kulkuset",
+    "timbre.song.saints": "When the Saints Go Marching In",
+    "timbre.song.kiteweather": "Kite Weather",
+    "timbre.song.dashboard": "Dust on the Dashboard",
+    "timbre.song.lochlomond": "Loch Lomond",
+    "timbre.song.mountain": "She'll Be Coming 'Round the Mountain"
+  },
+  "game_center_achievement_names": {
+    "timbre.badge.first_tune": "Ensimmäinen vireessä",
+    "timbre.badge.full_tune": "Kaikki kuusi",
+    "timbre.badge.streak_7": "Täydellinen viikko",
+    "timbre.badge.strings_100": "Sata kieltä",
+    "timbre.badge.bullseye": "Napakymppi",
+    "timbre.badge.sharpshooter": "Huippupisteet",
+    "timbre.badge.golden_ear": "Kultakorva",
+    "timbre.badge.level_5": "Nouseva tähti",
+    "timbre.badge.multi": "Moni-instrumentalisti",
+    "timbre.badge.streak_30": "Musiikkikuukausi",
+    "timbre.badge.strings_1000": "Tuhat kieltä",
+    "timbre.badge.first_lesson": "Ensimmäinen oppitunti",
+    "timbre.badge.lessons_25": "Vakiokävijä",
+    "timbre.badge.lessons_100": "Oppinut",
+    "timbre.badge.perfect_10": "Virheetön",
+    "timbre.badge.full_25": "Viritysrutiini",
+    "timbre.badge.streak_3": "Lämmittely",
+    "timbre.badge.streak_100": "Sata päivää",
+    "timbre.badge.minutes_60": "Ensimmäinen tunti",
+    "timbre.badge.minutes_600": "Kymmenen tuntia",
+    "timbre.badge.daily_1": "Päivittäinen sarja",
+    "timbre.badge.daily_30": "Tapojen orja",
+    "timbre.badge.sniper_win": "Kierrosvoittaja",
+    "timbre.badge.bullseyes_50": "Täsmälleen keskelle",
+    "timbre.badge.ear_perfect": "Täydet pisteet",
+    "timbre.badge.ear_500": "Kuuntelumestari",
+    "timbre.badge.units_1": "Osa suoritettu",
+    "timbre.badge.units_10": "Kymmenen osaa",
+    "timbre.badge.course_done": "Valmistunut",
+    "timbre.badge.songs_1": "Ensimmäinen kappale",
+    "timbre.badge.songs_25": "Laulukirja"
+  },
+  "game_center_achievement_descriptions": {
+    "timbre.badge.first_tune": "Viritä ensimmäinen kielesi",
+    "timbre.badge.full_tune": "Viritä soittimen kaikki kielet",
+    "timbre.badge.streak_7": "Harjoittele seitsemän päivää putkeen",
+    "timbre.badge.strings_100": "Viritä 100 kieltä",
+    "timbre.badge.bullseye": "Osu ensimmäiseen napakymppiin",
+    "timbre.badge.sharpshooter": "Saa 2 000 pistettä pelissä Napakymppi",
+    "timbre.badge.golden_ear": "Vastaa oikein 50 kuuntelukysymykseen",
+    "timbre.badge.level_5": "Saavuta taso 5",
+    "timbre.badge.multi": "Viritä kolme eri soitinta",
+    "timbre.badge.streak_30": "Harjoittele kolmekymmentä päivää putkeen",
+    "timbre.badge.strings_1000": "Viritä 1 000 kieltä",
+    "timbre.badge.first_lesson": "Suorita ensimmäinen oppituntisi",
+    "timbre.badge.lessons_25": "Suorita 25 oppituntia",
+    "timbre.badge.lessons_100": "Suorita 100 oppituntia",
+    "timbre.badge.perfect_10": "Ansaitse kolme tähteä 10 oppitunnilla",
+    "timbre.badge.full_25": "Viritä kaikki kielet 25 kertaa",
+    "timbre.badge.streak_3": "Harjoittele kolme päivää putkeen",
+    "timbre.badge.streak_100": "Harjoittele 100 päivää putkeen",
+    "timbre.badge.minutes_60": "Harjoittele yhteensä tunnin",
+    "timbre.badge.minutes_600": "Harjoittele yhteensä kymmenen tuntia",
+    "timbre.badge.daily_1": "Suorita yksi päivittäinen harjoitussarja",
+    "timbre.badge.daily_30": "Suorita 30 päivittäistä harjoitussarjaa",
+    "timbre.badge.sniper_win": "Voita kierros pelissä Napakymppi",
+    "timbre.badge.bullseyes_50": "Tee 50 napakymppiä",
+    "timbre.badge.ear_perfect": "Vastaa oikein kaikkiin kymmeneen kysymykseen korvakierroksella",
+    "timbre.badge.ear_500": "Vastaa oikein 500 kuuntelukysymykseen",
+    "timbre.badge.units_1": "Suorita kaikki osan oppitunnit",
+    "timbre.badge.units_10": "Suorita kymmenen osaa",
+    "timbre.badge.course_done": "Suorita kokonainen kurssi",
+    "timbre.badge.songs_1": "Soita ensimmäinen kappaleesi",
+    "timbre.badge.songs_25": "Soita 25 kappaletta"
+  },
+  "provenance": {
+    "game_center": "Badge text reused from matching app Localizable.strings; song board titles reused from Learn.strings. Newly renamed badge/board text authored for this store draft. No native review claimed.",
+    "game_center_songs": "Existing Learn.strings title reused when present. Otherwise established/localized title drafted; other named musical works retain source titles, not a claim of app translation. Reconcile with later Learn imports before release.",
+    "game_center_app_reuse": {
+      "app_locale": "fi",
+      "reused_fields": [
+        "timbre.badge.first_tune:game_center_achievement_names",
+        "timbre.badge.full_tune:game_center_achievement_names",
+        "timbre.badge.streak_7:game_center_achievement_names",
+        "timbre.badge.strings_100:game_center_achievement_names",
+        "timbre.badge.bullseye:game_center_achievement_names",
+        "timbre.badge.sharpshooter:game_center_achievement_names",
+        "timbre.badge.golden_ear:game_center_achievement_names",
+        "timbre.badge.level_5:game_center_achievement_names",
+        "timbre.badge.multi:game_center_achievement_names",
+        "timbre.badge.streak_30:game_center_achievement_names",
+        "timbre.badge.strings_1000:game_center_achievement_names",
+        "timbre.badge.first_lesson:game_center_achievement_names",
+        "timbre.badge.lessons_25:game_center_achievement_names",
+        "timbre.badge.lessons_100:game_center_achievement_names",
+        "timbre.badge.perfect_10:game_center_achievement_names",
+        "timbre.badge.full_25:game_center_achievement_names",
+        "timbre.badge.streak_3:game_center_achievement_names",
+        "timbre.badge.streak_100:game_center_achievement_names",
+        "timbre.badge.minutes_60:game_center_achievement_names",
+        "timbre.badge.minutes_600:game_center_achievement_names",
+        "timbre.badge.daily_1:game_center_achievement_names",
+        "timbre.badge.daily_30:game_center_achievement_names",
+        "timbre.badge.sniper_win:game_center_achievement_names",
+        "timbre.badge.bullseyes_50:game_center_achievement_names",
+        "timbre.badge.ear_perfect:game_center_achievement_names",
+        "timbre.badge.ear_500:game_center_achievement_names",
+        "timbre.badge.units_1:game_center_achievement_names",
+        "timbre.badge.units_10:game_center_achievement_names",
+        "timbre.badge.course_done:game_center_achievement_names",
+        "timbre.badge.songs_1:game_center_achievement_names",
+        "timbre.badge.songs_25:game_center_achievement_names",
+        "timbre.badge.first_tune:game_center_achievement_descriptions",
+        "timbre.badge.full_tune:game_center_achievement_descriptions",
+        "timbre.badge.streak_7:game_center_achievement_descriptions",
+        "timbre.badge.strings_100:game_center_achievement_descriptions",
+        "timbre.badge.bullseye:game_center_achievement_descriptions",
+        "timbre.badge.sharpshooter:game_center_achievement_descriptions",
+        "timbre.badge.golden_ear:game_center_achievement_descriptions",
+        "timbre.badge.level_5:game_center_achievement_descriptions",
+        "timbre.badge.multi:game_center_achievement_descriptions",
+        "timbre.badge.streak_30:game_center_achievement_descriptions",
+        "timbre.badge.strings_1000:game_center_achievement_descriptions",
+        "timbre.badge.first_lesson:game_center_achievement_descriptions",
+        "timbre.badge.lessons_25:game_center_achievement_descriptions",
+        "timbre.badge.lessons_100:game_center_achievement_descriptions",
+        "timbre.badge.perfect_10:game_center_achievement_descriptions",
+        "timbre.badge.full_25:game_center_achievement_descriptions",
+        "timbre.badge.streak_3:game_center_achievement_descriptions",
+        "timbre.badge.streak_100:game_center_achievement_descriptions",
+        "timbre.badge.minutes_60:game_center_achievement_descriptions",
+        "timbre.badge.minutes_600:game_center_achievement_descriptions",
+        "timbre.badge.daily_1:game_center_achievement_descriptions",
+        "timbre.badge.daily_30:game_center_achievement_descriptions",
+        "timbre.badge.sniper_win:game_center_achievement_descriptions",
+        "timbre.badge.bullseyes_50:game_center_achievement_descriptions",
+        "timbre.badge.ear_perfect:game_center_achievement_descriptions",
+        "timbre.badge.ear_500:game_center_achievement_descriptions",
+        "timbre.badge.units_1:game_center_achievement_descriptions",
+        "timbre.badge.units_10:game_center_achievement_descriptions",
+        "timbre.badge.course_done:game_center_achievement_descriptions",
+        "timbre.badge.songs_1:game_center_achievement_descriptions",
+        "timbre.badge.songs_25:game_center_achievement_descriptions"
+      ],
+      "note": "Available app values reused exactly; missing app values retain authored store drafts. Does not certify native or device review."
+    }
+  },
+  "name": "Timbre: Kitaraviritin",
+  "subtitle": "Opi viulua, ukulelea ja bassoa",
+  "keywords": "viulu,sello,ukulele,mandoliini,banjo,kromaattinen,stroboskooppi,säveltapailu,metronomi,sointu",
+  "promotional_text": "Ilmainen viritin ilman mainoksia tai tiliä. Tunne kielten virittyminen, opi soittoasi kuuntelevilla oppitunneilla ja soita yli 140 kappaletta.",
+  "description": "Ilmainen viritin. Ei mainoksia eikä tiliä. Sen jälkeen oppitunteja, jotka kuuntelevat soittoasi.\n\nTimbre yhdistää tarkan virittimen ja musiikinopettajan. Viritä 60 soitinta ja opi soittamalla.\n\nVIRITÄ ILMAISEKSI\nJokaisen soittimen perusviritys on ilmainen: kitara, ukulele, viulu, mandoliini, banjo, oud, erhu ja muut. Kromaattinen ja stroboskooppiviritin sentin tarkkuudella. 132 viritystä Drop D:stä ja Open G:stä DADGADiin sekä omat viritykset.\nAutomaattinen kielentunnistus merkitsee viritetyt kielet. Yksi pyyhkäisy lukee kaikki kielet ja näyttää, mikä viritetään ensin. Viritä tuntoaistilla: puhelin sykkii kielen ja tavoitesävelen huojunnan tahdissa, hidastuu niiden lähestyessä ja pysähtyy vireessä. Näyttöä ei tarvitse katsoa.\nStudiovalaistut 3D-kitarat, bassot, viulu, sello ja mandoliini näyttävät käännettävän viritystapin. Capo, säädettävä A4-viitesävel sekä solfege- ja sargam-sävelnimet.\n\nOPI SOITTAMALLA\n526 oppituntia 11 kurssilla: kitara, ukulele, basso, viulu, sello, mandoliini, banjo, laulu, säveltapailu, musiikinteoria ja rytmi. Myös laulukirjat ukulelelle, mandoliinille, viululle, sellolle ja bassolle.\nTimbre kuulee jokaisen pyyhkäisyn: oikean soinnun, ajoituksen ja mikä kieli ei soinut. Jokainen sävel arvioidaan sentin ja millisekunnin tarkkuudella. ”Näytä” soittaa uudet soinnut 3D-kitaralla ja asettaa sormet järjestyksessä. Nuottirata hidastuu tarvittaessa ja nopeutuu taitosi kehittyessä.\n\nYli 140 kappaletta, jokaisesta kokonainen sovitus: klassikoita Jingle Bellsistä Amazing Graceen sekä mukana 50 Timbrelle nykytyyleillä kirjoitettua Originals-kappaletta. Soita kuulokkeissa bändin mukana sanojen korostuessa. Liitä tai tuo oma sointukaavio, transponoi, vieritä tahdissa ja kuuntele vieressä alkuperäistä Apple Musicissa.\n\nJATKA HARJOITTELUA\nTähtiä, XP:tä, päivätehtäviä, putkia ja merkkejä. Game Centerin viikoittainen Napakymppi-liiga, kappaleiden tulostaulut ja ystävähaasteet. Apple Watchin ranteessa tuntuva metronomi ja päivän harjoittelu yhdellä silmäyksellä. Koti- ja lukitusnäytön widgetit, live-aktiviteetti ja Siri-pikakomennot.\nMetronomi, jossa aksentit, alijaot ja nopeusharjoittelu; borduna, intonaatioharjoittelu sekä sointu- ja asteikkokirjasto. Säveltapailu: sävelkorkeuden suunta, intervallit ja sointutyypit sekä 40 oppitunnin kurssi.\n\nALOITA ILMAISEKSI\nKaikki perusviritykset ovat ilmaisia. Kitara, basso, ukulele, viulu ja sello ovat ilmaisia kaikissa virityksissä. Myös jokaisen kurssin ensimmäinen jakso ja valikoima kappaleita ovat ilmaisia. Timbre Pro avaa kaikki oppitunnit, kappaleet, viritykset ja harjoittelutyökalut. Ilmoitusten ollessa käytössä Timbre muistuttaa kaksi päivää ennen ilmaisen kokeilun päättymistä.\nÄäni analysoidaan iPhonessa, eikä sitä tallenneta tai lähetetä palvelimelle. Ei tiliä tai mainoksia.\nTilaukset uusiutuvat automaattisesti, ellei niitä peruta vähintään 24 tuntia ennen jakson loppua. Hallitse tai peru milloin tahansa: Asetukset → Apple-tili → Tilaukset.\nEhdot: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\nTietosuoja: <privacy policy URL>",
+  "whats_new": "Tervetuloa Timbreen: ilmainen viritin 60 soittimelle ja 526 oppituntia, jotka kuuntelevat soittoasi.",
+  "iphone_screenshot_captions": [
+    {
+      "capture": "10b-tune-locked",
+      "caption": "Ilmainen. Ei mainoksia.",
+      "supporting_line": "60 soitinta, sentin tarkkuus"
+    },
+    {
+      "capture": "65-song-perform",
+      "caption": "Kuule, miten soitit",
+      "supporting_line": "Jokaisen sävelen korkeus ja ajoitus"
+    },
+    {
+      "capture": "52b-lesson-chord",
+      "caption": "Ensimmäinen sointusi tänään",
+      "supporting_line": "Timbre kuulee jokaisen kielen"
+    },
+    {
+      "capture": "31b-instruments-folk",
+      "caption": "Viritä oma soittimesi",
+      "supporting_line": "60 soitinta, 132 viritystä"
+    },
+    {
+      "capture": "63-songs",
+      "caption": "Soita tuttuja kappaleita",
+      "supporting_line": "Yli 140 kappaletta: klassikot ja Originals"
+    },
+    {
+      "capture": "50-learn",
+      "caption": "Opi omaan tahtiisi",
+      "supporting_line": "526 oppituntia 11 kurssilla"
+    },
+    {
+      "capture": "62-lesson-results",
+      "caption": "Viisi minuuttia joka päivä",
+      "supporting_line": "Tähtiä, putkia ja päivätehtäviä"
+    },
+    {
+      "capture": "11b-tune-strum",
+      "caption": "Yksi pyyhkäisy, kaikki kielet",
+      "supporting_line": "Näe, mikä kieli viritetään ensin"
+    },
+    {
+      "capture": "32-journey",
+      "caption": "Näe edistymisesi",
+      "supporting_line": "Tarkkuus, kielten sointi, merkit"
+    }
+  ],
+  "ipad_screenshot_captions": [
+    {
+      "capture": "ipad-landscape-tune",
+      "caption": "Ilmainen. Ei mainoksia.",
+      "supporting_line": "60 soitinta, sentin tarkkuus"
+    },
+    {
+      "capture": "ipad-landscape-instruments",
+      "caption": "Viritä oma soittimesi",
+      "supporting_line": "Viulusta oudiin, sitarista erhuun"
+    },
+    {
+      "capture": "ipad-landscape-songs",
+      "caption": "Soita tuttuja kappaleita",
+      "supporting_line": "Yli 140 kappaletta: klassikot ja Originals"
+    },
+    {
+      "capture": "ipad-landscape-practice",
+      "caption": "Viisi minuuttia joka päivä",
+      "supporting_line": "Päiväharjoituksia, tehtäviä ja kuulon pelejä"
+    }
+  ],
+  "app_preview_captions": {
+    "main": {
+      "lock": "Ilmainen. Ei mainoksia.",
+      "tuned": "Jokainen kieli tarkistettu",
+      "showme": "Katso soitto 3D:nä",
+      "highway": "Soita kappaleita bändin kanssa",
+      "results": "Kuule, miten onnistuit",
+      "songs": "Yli 140 opeteltavaa kappaletta",
+      "end": "Viritä. Opi. Soita kappaleita.",
+      "end-note": "Ilmainen viritin · Ei mainoksia · Ei tiliä"
+    },
+    "violin": {
+      "lock": "Viritä viulusi ilmaiseksi",
+      "tuned": "G, D, A, E: kaikki vireessä",
+      "highway": "Soita kappaleita viulullasi",
+      "results": "Kuule, miten onnistuit",
+      "songs": "Yli 140 opeteltavaa kappaletta",
+      "end": "Viuluviritin ja oppitunteja",
+      "end-note": "Ilmainen viritin · Ei mainoksia · Ei tiliä"
+    }
+  },
+  "iap_display_names": {
+    "timbre_pro_annual": "Timbre Pro, vuositilaus",
+    "timbre_pro_monthly": "Timbre Pro, kuukausitilaus",
+    "timbre_plus_lifetime": "Timbre Pro, pysyvä"
+  },
+  "iap_descriptions": {
+    "timbre_pro_annual": "Kaikki tunnit, laulut, viritykset ja työkalut",
+    "timbre_pro_monthly": "Kaikki tunnit, laulut, viritykset ja työkalut",
+    "timbre_plus_lifetime": "Kaikki Pro-ominaisuudet kertamaksulla"
+  },
+  "custom_product_page_keywords": {
+    "violin": [
+      "viulu"
+    ],
+    "cello": [
+      "sello"
+    ],
+    "ukulele": [
+      "ukulele"
+    ]
+  }
+}

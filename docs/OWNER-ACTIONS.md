@@ -140,6 +140,8 @@ Each one is a step in [RELEASE-CHECKLIST.md](ios/RELEASE-CHECKLIST.md). Tick the
 
 ## 5. Translations (Release decision, then Growth)
 
+**Owner decision, 26 October 2026:** all 49 app languages (English + 48 translations), including all lesson content, selected automatically from the phone language unless the user explicitly overrides it. The earlier English-only/nine-language rollout suggestions below are historical, superseded proposals, not current authorization. All 39 newly required lesson locales need 6,080 keys each (237,120 additional pairs). See [current handoff](l10n/HANDOFF.md); `python3 tools/l10n/lessons.py --strict` must pass before external delivery. Native-language and device review are still required.
+
 **Where it stands** (from `tools/l10n/shipping.py` and `critical.py`, 25 October 2026):
 
 | | Strings | Locale-string pairs |

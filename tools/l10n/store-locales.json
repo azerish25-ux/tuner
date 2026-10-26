@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "verified_on": "2026-10-26",
   "scope": "every_apple_supported_listing_locale",
   "listing_locale_count": 50,
@@ -8,7 +8,8 @@
   "sources": {
     "supported_locales": "https://developer.apple.com/help/app-store-connect/reference/app-information/app-store-localizations",
     "locale_shortcodes": "https://developer.apple.com/documentation/appstoreconnectapi/managing-metadata-in-your-app-by-using-locale-shortcodes",
-    "locale_shortcodes_markdown": "https://developer.apple.com/documentation/appstoreconnectapi/managing-metadata-in-your-app-by-using-locale-shortcodes.md"
+    "locale_shortcodes_markdown": "https://developer.apple.com/documentation/appstoreconnectapi/managing-metadata-in-your-app-by-using-locale-shortcodes.md",
+    "iap_metadata_limits": "https://developer.apple.com/help/app-store-connect/reference/in-app-purchases-and-subscriptions/in-app-purchase-information/"
   },
   "required_fields": [
     "name",
@@ -64,9 +65,22 @@
       "apple_api_language": "Arabic",
       "app_locale": "ar",
       "app_fallback": null,
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/ar-SA.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "bn-BD",
@@ -74,9 +88,22 @@
       "apple_api_language": "Bengali",
       "app_locale": "bn",
       "app_fallback": null,
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/bn-BD.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "ca",
@@ -84,9 +111,22 @@
       "apple_api_language": "Catalan",
       "app_locale": "ca",
       "app_fallback": null,
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/ca.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "zh-Hans",
@@ -94,9 +134,22 @@
       "apple_api_language": "Chinese (Simplified)",
       "app_locale": "zh-CN",
       "app_fallback": null,
-      "state": "existing_partial_stale",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/zh-Hans.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "zh-Hant",
@@ -104,9 +157,22 @@
       "apple_api_language": "Chinese (Traditional)",
       "app_locale": null,
       "app_fallback": "en",
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/zh-Hant.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "hr",
@@ -114,9 +180,22 @@
       "apple_api_language": "Croatian",
       "app_locale": "hr",
       "app_fallback": null,
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/hr.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "cs",
@@ -124,9 +203,22 @@
       "apple_api_language": "Czech",
       "app_locale": "cs",
       "app_fallback": null,
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/cs.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "da",
@@ -134,9 +226,22 @@
       "apple_api_language": "Danish",
       "app_locale": "da",
       "app_fallback": null,
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/da.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "nl-NL",
@@ -144,9 +249,22 @@
       "apple_api_language": "Dutch",
       "app_locale": "nl",
       "app_fallback": null,
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/nl-NL.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "en-AU",
@@ -154,9 +272,22 @@
       "apple_api_language": "English (Australia)",
       "app_locale": "en",
       "app_fallback": null,
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/en-AU.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "en-CA",
@@ -164,9 +295,22 @@
       "apple_api_language": "English (Canada)",
       "app_locale": "en",
       "app_fallback": null,
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/en-CA.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "en-GB",
@@ -174,9 +318,22 @@
       "apple_api_language": "English (U.K.)",
       "app_locale": "en",
       "app_fallback": null,
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/en-GB.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "en-US",
@@ -186,7 +343,20 @@
       "app_fallback": null,
       "state": "english_source",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/en-US.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "fi",
@@ -194,9 +364,22 @@
       "apple_api_language": "Finnish",
       "app_locale": "fi",
       "app_fallback": null,
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/fi.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "fr-FR",
@@ -204,9 +387,22 @@
       "apple_api_language": "French",
       "app_locale": "fr",
       "app_fallback": null,
-      "state": "existing_partial_stale",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/fr-FR.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "fr-CA",
@@ -214,9 +410,22 @@
       "apple_api_language": "French (Canada)",
       "app_locale": "fr",
       "app_fallback": null,
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/fr-CA.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "de-DE",
@@ -224,9 +433,22 @@
       "apple_api_language": "German",
       "app_locale": "de",
       "app_fallback": null,
-      "state": "existing_partial_stale",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/de-DE.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "el",
@@ -234,9 +456,22 @@
       "apple_api_language": "Greek",
       "app_locale": "el",
       "app_fallback": null,
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/el.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "gu-IN",
@@ -244,9 +479,22 @@
       "apple_api_language": "Gujarati",
       "app_locale": "gu",
       "app_fallback": null,
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/gu-IN.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "he",
@@ -254,9 +502,22 @@
       "apple_api_language": "Hebrew",
       "app_locale": "he",
       "app_fallback": null,
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/he.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "hi",
@@ -264,9 +525,22 @@
       "apple_api_language": "Hindi",
       "app_locale": "hi",
       "app_fallback": null,
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/hi.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "hu",
@@ -274,9 +548,22 @@
       "apple_api_language": "Hungarian",
       "app_locale": "hu",
       "app_fallback": null,
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/hu.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "id",
@@ -284,9 +571,22 @@
       "apple_api_language": "Indonesian",
       "app_locale": "id",
       "app_fallback": null,
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/id.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "it",
@@ -294,9 +594,22 @@
       "apple_api_language": "Italian",
       "app_locale": "it",
       "app_fallback": null,
-      "state": "existing_partial_stale",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/it.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "ja",
@@ -304,9 +617,22 @@
       "apple_api_language": "Japanese",
       "app_locale": "ja",
       "app_fallback": null,
-      "state": "existing_partial_stale",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/ja.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "kn-IN",
@@ -314,9 +640,22 @@
       "apple_api_language": "Kannada",
       "app_locale": "kn",
       "app_fallback": null,
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/kn-IN.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "ko",
@@ -324,9 +663,22 @@
       "apple_api_language": "Korean",
       "app_locale": "ko",
       "app_fallback": null,
-      "state": "existing_partial_stale",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/ko.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "ms",
@@ -334,9 +686,22 @@
       "apple_api_language": "Malay",
       "app_locale": null,
       "app_fallback": "en",
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/ms.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "ml-IN",
@@ -344,9 +709,22 @@
       "apple_api_language": "Malayalam",
       "app_locale": "ml",
       "app_fallback": null,
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/ml-IN.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "mr-IN",
@@ -354,9 +732,22 @@
       "apple_api_language": "Marathi",
       "app_locale": "mr",
       "app_fallback": null,
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/mr-IN.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "no",
@@ -364,9 +755,22 @@
       "apple_api_language": "Norwegian",
       "app_locale": "no",
       "app_fallback": null,
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/no.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "or-IN",
@@ -374,9 +778,22 @@
       "apple_api_language": "Oriya",
       "app_locale": null,
       "app_fallback": "en",
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/or-IN.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "pl",
@@ -384,9 +801,22 @@
       "apple_api_language": "Polish",
       "app_locale": "pl",
       "app_fallback": null,
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/pl.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "pt-BR",
@@ -394,9 +824,22 @@
       "apple_api_language": "Portuguese (Brazil)",
       "app_locale": "pt",
       "app_fallback": null,
-      "state": "existing_partial_stale",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/pt-BR.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "pt-PT",
@@ -404,9 +847,22 @@
       "apple_api_language": "Portuguese (Portugal)",
       "app_locale": "pt",
       "app_fallback": null,
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/pt-PT.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "pa-IN",
@@ -414,9 +870,22 @@
       "apple_api_language": "Punjabi",
       "app_locale": "pa",
       "app_fallback": null,
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/pa-IN.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "ro",
@@ -424,9 +893,22 @@
       "apple_api_language": "Romanian",
       "app_locale": "ro",
       "app_fallback": null,
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/ro.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "ru",
@@ -434,9 +916,22 @@
       "apple_api_language": "Russian",
       "app_locale": "ru",
       "app_fallback": null,
-      "state": "existing_partial_stale",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/ru.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "sk",
@@ -444,9 +939,22 @@
       "apple_api_language": "Slovak",
       "app_locale": "sk",
       "app_fallback": null,
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/sk.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "sl-SI",
@@ -454,9 +962,22 @@
       "apple_api_language": "Slovenian",
       "app_locale": "sl",
       "app_fallback": null,
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/sl-SI.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "es-MX",
@@ -464,9 +985,22 @@
       "apple_api_language": "Spanish (Mexico)",
       "app_locale": "es",
       "app_fallback": null,
-      "state": "existing_partial_stale",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/es-MX.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "es-ES",
@@ -474,9 +1008,22 @@
       "apple_api_language": "Spanish (Spain)",
       "app_locale": "es",
       "app_fallback": null,
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/es-ES.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "sv",
@@ -484,9 +1031,22 @@
       "apple_api_language": "Swedish",
       "app_locale": "sv",
       "app_fallback": null,
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/sv.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "ta-IN",
@@ -494,9 +1054,22 @@
       "apple_api_language": "Tamil",
       "app_locale": "ta",
       "app_fallback": null,
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/ta-IN.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "te-IN",
@@ -504,9 +1077,22 @@
       "apple_api_language": "Telugu",
       "app_locale": "te",
       "app_fallback": null,
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/te-IN.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "th",
@@ -514,9 +1100,22 @@
       "apple_api_language": "Thai",
       "app_locale": "th",
       "app_fallback": null,
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/th.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "tr",
@@ -524,9 +1123,22 @@
       "apple_api_language": "Turkish",
       "app_locale": "tr",
       "app_fallback": null,
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/tr.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "uk",
@@ -534,9 +1146,22 @@
       "apple_api_language": "Ukrainian",
       "app_locale": "uk",
       "app_fallback": null,
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/uk.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "ur-PK",
@@ -544,9 +1169,22 @@
       "apple_api_language": "Urdu",
       "app_locale": "ur",
       "app_fallback": null,
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/ur-PK.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     },
     {
       "locale": "vi",
@@ -554,9 +1192,24 @@
       "apple_api_language": "Vietnamese",
       "app_locale": "vi",
       "app_fallback": null,
-      "state": "pending",
+      "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
-      "device_review": "not_verified"
+      "device_review": "not_verified",
+      "content_file": "tools/l10n/store/vi.json",
+      "draft_validation": {
+        "passed": true,
+        "error_count": 0
+      },
+      "release_ready": false,
+      "release_blockers": [
+        "Production privacy policy URL and verification not provided",
+        "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
+        "Localized App Preview recordings and audio/sync/render review pending",
+        "App Store Connect product/locale limits and Game Center configuration/images unverified"
+      ],
+      "ai_source_aware_review": "current"
     }
-  ]
+  ],
+  "content_directory": "tools/l10n/store",
+  "review_policy": "ai_source_aware"
 }

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the Apple 2026-10-26 requirements snapshot, NOT translation completion."""
+"""Validate exact Apple inventory and truthful per-locale draft evidence, never release approval."""
 import json
 from pathlib import Path
 import unittest
@@ -42,8 +42,12 @@ class StoreLocaleRequirementsTests(unittest.TestCase):
 
     def test_requirements_are_not_claimed_translations(self):
         self.assertEqual(set(self.manifest['existing_localized_blocks']), LEGACY)
-        self.assertEqual(sum(r['state'] == 'pending' for r in self.rows), 40)
-        self.assertEqual({r['locale'] for r in self.rows if r['state'] == 'existing_partial_stale'}, LEGACY)
+        self.assertTrue(all(r['state'] == 'ai_draft_structurally_valid' for r in self.rows if r['locale'] != 'en-US'))
+        for row in self.rows:
+            self.assertTrue((ROOT / row['content_file']).exists())
+            self.assertTrue(row['draft_validation']['passed'])
+            self.assertFalse(row['release_ready'])
+            self.assertTrue(row['release_blockers'])
         self.assertEqual({r['locale'] for r in self.rows if r['state'] == 'english_source'}, {'en-US'})
         for row in self.rows:
             self.assertEqual(row['native_review'], 'not_verified')

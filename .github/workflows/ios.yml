@@ -55,6 +55,13 @@ jobs:
         run: |
           set -o pipefail
           python3 tools/verify-ios-resources.py 2>&1 | tee ci-out/resources.log
+      - name: Lesson scope tests and all-language coverage evidence
+        if: success() || failure()
+        run: |
+          set -o pipefail
+          python3 -m unittest discover -s tools/l10n/tests -p 'test_*.py'
+          python3 tools/l10n/lessons.py --out ci-out/l10n/lessons.json | tee ci-out/lessons.log
+        # Report-only in development: the external delivery gate below requires complete translations.
       - name: Translation handoff is current
         # docs/l10n/HANDOFF.md and tools/l10n/todo must match the English in the code: run
         # `python3 tools/l10n/report.py` after adding or editing a string and commit what it writes. Fresh TODO files

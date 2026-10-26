@@ -98,6 +98,10 @@ jobs:
           set -euo pipefail
           python3 tools/l10n/shipping.py --min "$SHIP_MIN_COVERAGE" --apply | tee shipping.txt
           { echo "### Languages in this build"; echo; echo '```'; tail -3 shipping.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+      - name: Full lesson coverage in all 49 app languages
+        if: ${{ !inputs.internal_testflight_untranslated }}
+        run: python3 tools/l10n/lessons.py --strict
+        # A UI percentage or a reduced shipping set never waives the all-language lesson requirement.
       - name: Legal, permission and VoiceOver strings in every shipped language
         # The paywall's renewal terms, the permission prompts and VoiceOver's words must be translated in every
         # language the app ships (tools/l10n/critical.py). Ship fewer languages (ship_min_coverage, or
