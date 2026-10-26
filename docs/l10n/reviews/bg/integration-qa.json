@@ -1,0 +1,103 @@
+{
+ "source_keys": 6083,
+ "source_key_text_exact": true,
+ "source_sha256": "718a9431e97997dcad904b99eb00f0072385142d63ebb7ffc1c27ff374ca6de3",
+ "helper_sha256": "b74452e7165145c82449bf7fc70a0a114282a69ed875a18a7ba46e7ff0c70731",
+ "review_manifest_sha256": "5fa85f61722e7ef18cc27f54b39fd4b0935a3d37562a24302f7ef2dc54e6258c",
+ "author_manifest_sha256": "124f24a601c92ee77e9a6fc637d9c94a222010cdb91522036fce8c3ead633b9b",
+ "verified_review_artifacts": 220,
+ "verified_author_artifacts": 337,
+ "guarded_corrections": 17,
+ "approved_identities": 235,
+ "primary_reviewer_counts": {
+  "Bulgarian independent AI reviewer 1": 5783,
+  "Bulgarian independent AI reviewer 2": 300
+ },
+ "helper_required_complete_contexts": 1545,
+ "supplemental_complete_contexts": 20,
+ "in_memory_hard_errors": 0,
+ "protected_contract_errors": 0,
+ "nonidentity_soft_warnings": 0,
+ "native_human_or_device_certification": false,
+ "post_import": {
+  "applied_current_lesson_keys": 6083,
+  "applied_map_matches_reviewed_final": true,
+  "resource_sha256": "2d49a8de0c713abdd65b82826bb8ee9a4146857403132b3f832184128a4f7983",
+  "localization_unit_tests": {
+   "command": "python3 -m unittest discover -s tools/l10n/tests -p 'test_*.py'",
+   "tests": 146,
+   "status": "passed"
+  },
+  "gates": {
+   "resources": {
+    "command": [
+     "python3",
+     "tools/verify-ios-resources.py"
+    ],
+    "exit_code": 0
+   },
+   "lessons_strict": {
+    "command": [
+     "python3",
+     "tools/l10n/lessons.py",
+     "--strict"
+    ],
+    "exit_code": 1
+   },
+   "drafts": {
+    "command": [
+     "python3",
+     "tools/l10n/drafts/verify.py"
+    ],
+    "exit_code": 0
+   },
+   "hygiene": {
+    "command": [
+     "python3",
+     "tools/ci/comment_hygiene.py"
+    ],
+    "exit_code": 0
+   },
+   "diff_check": {
+    "command": [
+     "git",
+     "diff",
+     "--check"
+    ],
+    "exit_code": 0
+   },
+   "critical_baseline": {
+    "command": [
+     "python3",
+     "tools/l10n/critical.py",
+     "--baseline",
+     "--github"
+    ],
+    "exit_code": 0
+   },
+   "critical_strict": {
+    "command": [
+     "python3",
+     "tools/l10n/critical.py",
+     "--strict"
+    ],
+    "exit_code": 0
+   },
+   "handoff": {
+    "command": [
+     "python3",
+     "tools/l10n/report.py",
+     "--check",
+     "--strict"
+    ],
+    "exit_code": 0
+   }
+  },
+  "all_target_languages_complete": 39,
+  "all_target_languages_required": 48,
+  "remaining_lesson_pairs": 54747,
+  "release_gate_status": "incomplete; remaining nine target locales are not waived",
+  "source_curriculum_ci_unchanged": true,
+  "native_human_device_audio_certification": false
+ }
+}

@@ -1,0 +1,28 @@
+{
+  "current_keys": 6083,
+  "source_sha256": "718a9431e97997dcad904b99eb00f0072385142d63ebb7ffc1c27ff374ca6de3",
+  "frozen_review_manifest_sha256": "5fa85f61722e7ef18cc27f54b39fd4b0935a3d37562a24302f7ef2dc54e6258c",
+  "files": {
+    "README.md": "56defbdbf6cdb503ef95c65aa973323cbd74e744859d9c1dc7ad96e6393c0584",
+    "context-coverage.json": "95af5f5692cc617910d981661f51d824b875982ba2e1823c44bfc7aa3961982b",
+    "corrections.json": "3cbd0296282fd23269631b017ade1d241ed3052badce6d4a119c54221a72eb90",
+    "coverage.json": "8b81f7c236e74e13befd4c5416823bf6759ef57b3c4187de2b3ad1ada437c2f5",
+    "integration-qa.json": "8f2f51b44e68a5f09b410d20ea397e70e68dddc14c53f48bf31303c1c973df92",
+    "invariant-decisions.json": "893552a830e30e9bae372841221071e2bf651a51d9ca6f841efc8049d699bec2",
+    "invariants.json": "eddd4f2dd723b1c69edecacfe343fda245557f51f85e9bcb989251a926efb51a",
+    "review-summary.md": "4cdc5fbdea3ca69539592d4cadbb3aa8517c4f03c1ea631a878068378beb6f45",
+    "review-time-qa.json": "b4473b600f4ec62a02a0fc7a79ba9b698866c8466810a308f7a71dc8833419f4"
+  },
+  "applied_map": {
+    "path": "tools/l10n/learn/bg.json",
+    "sha256": "4fa390107e45b1ec1f5367d88e1c23d6a90ef76140f885e5feebc4f760115cc1"
+  },
+  "reconciled_glossary": {
+    "path": "docs/l10n/glossary/bg.md",
+    "sha256": "4d02fedc8b73b49b81ea08a3823bea0093f1b707b653f497a006d05722e58eca"
+  },
+  "applied_resource": {
+    "path": "ios/Timbre/Resources/bg.lproj/Learn.strings",
+    "sha256": "2d49a8de0c713abdd65b82826bb8ee9a4146857403132b3f832184128a4f7983"
+  }
+}

@@ -148,3 +148,103 @@ Status: AI-drafted and AI-reviewed, 2026-10-25. Native-human sign-off and device
 | Next, Again, Slower | Напред / Отново / По-бавно |
 | Practice | Упражнения |
 | Feel | Вибрации, not emotions |
+
+## 5. Current lesson-author decisions (2026-10-26)
+
+Historical author-stage status: the frozen lesson draft was unreviewed when authored. Complete independent AI semantic review is now integrated; the review supplement below takes precedence. Native-human and device review remain pending.
+
+- Formal/plural imperatives throughout; no assumed handedness. “Picking hand” is the hand with the pick, not automatically the right hand.
+- Note/chord letters remain Latin, including B natural. Named accidentals remain words: диез, бемол. Never introduce a ♯/♭ or numeric chord label where the source spells it out.
+- Interval qualities: major = голям, minor = малък; chord/key qualities: мажорен/минорен. Major seventh chord = голям мажорен септакорд / мажорен акорд с голяма септима; minor seventh chord = малък минорен септакорд / минорен акорд с малка септима; dominant seventh = доминантсептакорд.
+- Beat in duration/count answers = удар; numbered metrical positions = време (първото време). Bare shared “One/Two” are standalone counting labels, not gender-dependent noun phrases. Up/Down = Нагоре/Надолу, covering pitch and picking directions. Same/Different = Еднакви/Различни, comparing the heard pair of notes or chords.
+- Triad = тризвучие; inversion = обръщение; root = основен тон; degree = степен; Dorian = дорийски; Mixolydian = миксолидийски.
+- Physical guitar bridge = магаренце; song bridge = бридж. Shared physical/song roles must be inspected before choosing a shared target.
+- Pentatonic box = пентатонична позиция (shortened позиция when already clear). Hammer-on = хамър-он; pull-off = пул-оф; slide = слайд; bend = бенд; trill = трилер; shuffle = шафъл; Travis picking = техника „Травис“; comping = съпровод.
+- Source “short bend” means under-bent pitch, rendered недотеглен бенд, not short duration. Source fretting-finger/picking ambiguity is resolved explicitly without changing notes or digit groups.
+- The E A D G B E English mnemonic remains an identified English mnemonic within translated Bulgarian explanation so its initials still work; rhythmic Humpty Dumpty syllables become там-та, там-та. Sixteenth counting uses едно-е-и-а, keeping four subdivisions.
+- Traditional original titles are retained consistently unless a clear established Bulgarian title is chosen: Ode to Joy = Ода на радостта. Exact-source whole titles/credits/notation remain **candidates, never author approvals**.
+
+### Original song names already chosen in the guitar course
+
+| English | Bulgarian |
+|---|---|
+| Letters in a Shoebox | Писма в кутия за обувки |
+| Dust on the Dashboard | Прах по таблото |
+| Low Tide Radio | Радио при отлив |
+| Kite Weather | Време за хвърчила |
+| Halogen | Халоген |
+| Ghost Light | Призрачна светлина |
+| Rust Belt Shuffle | Шафъл от Ръждивия пояс |
+| Basement Weather | Времето в мазето |
+| Glass Satellites | Стъклени спътници |
+| Porchlight | Светлина на верандата |
+| Neon Laundromat | Неонова пералня |
+| Saltwater Sunday | Солена неделя |
+| Spray Paint Sunrise | Изгрев със спрей |
+| Sparkler Season | Сезон на бенгалския огън |
+| Gravel Road Two-Step | Две стъпки по чакъла |
+| Lantern Hill | Хълмът на фенерите |
+| Roller Rink | Ролер пързалка |
+| Late Checkout | Късно напускане |
+| Market Day | Пазарен ден |
+| Slow Motion Strobe | Бавен стробоскоп |
+| Jukebox Moon | Джубокс луна |
+
+Frozen prompts contain the original glossary snapshot. This dated author addendum records later decisions without rewriting those historical inputs.
+
+### Remaining original titles and final lesson terminology
+
+| English | Bulgarian |
+|---|---|
+| Moth and Ember | Нощна пеперуда и жарава |
+| First Frost | Първа слана |
+| Hammock Season | Сезон на хамаците |
+| Glow-in-the-Dark Stars | Светещи в тъмното звезди |
+| Echo Canyon | Каньонът на ехото |
+| Open Windows | Отворени прозорци |
+| Scoreboard Lights | Светлините на таблото |
+| Carousel at Closing Time | Въртележка преди затваряне |
+| Cedar Smoke | Кедров дим |
+| Rain on the Skylight | Дъжд по капандурата |
+| Pocket Change | Дребни в джоба |
+| Kitchen Slow Dance | Бавен танц в кухнята |
+| Houseplants | Стайни растения |
+| Static on Channel Nine | Шум по девети канал |
+| Boardwalk Comet | Комета по крайбрежната алея |
+| Mile Marker Zero | Нулева миля |
+| Last Bell | Последният звънец |
+| Copper Wire | Медна жица |
+| Cold Lake | Студено езеро |
+| Parking Lot Cathedral | Катедрала на паркинга |
+| Keeper's Daughter | Дъщерята на пазача |
+| Snow Globe Town | Град в снежно кълбо |
+| Thistle and Thread | Бодил и конец |
+| Late Bus Home | Късен автобус към дома |
+| Velvet Hour | Кадифен час |
+| Rooftop Choir | Хор на покрива |
+| Bright Side of the Block | Слънчевата страна на квартала |
+| Over You Soon | Скоро ще те забравя |
+| Constellation Prize | Награда от съзвездия |
+
+- Final course labels follow section 3: Трениране на слуха, Стандарти и класика, Песнопойка за [instrument].
+- Bare interval-only Second/Third/Fourth = Секунда/Терца/Кварта; explicit finger choices = Втори/Трети/Четвърти пръст. “Major and minor intervals” = Големи и малки интервали, separate from chord-only “Major and minor everywhere” = Мажор и минор навсякъде.
+- Banjo: roll = рол (plural ролове), forward roll = преден рол, alternating thumb roll = рол с редуващ се палец, pinch = двойно щипване, clawhammer = клоухамър, drone = бурдон, bum-ditty = бум-дити. Mandolin chop = отсечен удар; crosspicking = кроспикинг.
+- Bow slur = лига за легато; rhythmic tie = лига за удължаване. Violin/cello bridge = столче, distinct from guitar магаренце and song бридж. Violin High 2/Low 2 describe finger placement: Висок 2/Нисък 2.
+- Treble/bass clef = сол/фа ключ; staff = петолиние; space = междулиние; ledger line = допълнителна линия. English initial-letter staff mnemonics remain identifiable English phrases, explained in Bulgarian; their initials encode Latin pitch names.
+- Solfège uses до, ре, ми, фа, сол, ла, си; source ti becomes си. The movable-do interpretation is stated at its introduction, because do denotes the tonic in every key here, not fixed C.
+- The English bar/measure synonym quiz is language-dependent: localized question explicitly asks for the English synonym, and choices carry Bulgarian glosses (Beat (удар), Rest (пауза), Measure (такт)). This avoids a tautological Bulgarian question with indistinguishable translated terms.
+- Three-part counting: 1-три-ла, 2-три-ла; final ла is the late swung subdivision, equivalent to source “let.” Sixteenths keep four syllabic slots: едно-е-и-а. Quoted original sung lyric cues remain in the song's language; surrounding explanation is Bulgarian. Single lyric-word answer choices carry Bulgarian glosses where appropriate.
+- Century expressions such as 1700s mean the whole century beginning 1700, not its first decade. Use “столетието, започващо с 1700” and preserve the original numeric token. 1840s/1950s are decade references and use 1840-те/1950-те.
+- Additional established titles: Minuet in G = Менует в G; Brahms' Lullaby = Приспивна песен на Брамс; The Swan = Лебедът; Canon in D = Канон в D; Für Elise = На Елиза; Silent Night = Тиха нощ; Eine kleine Nachtmusik = Малка нощна музика; In the Hall of the Mountain King = В пещерата на планинския цар; The Blue Danube = На хубавия син Дунав; Morning Mood = Утро; Spring = Пролет; The Four Seasons = Годишните времена; Jupiter = Юпитер; The Planets = Планетите; Rondo alla Turca = Рондо ала турка.
+- The author approved no invariant. Subsequent independent AI review has individually adjudicated retained strings and reviewed specialist technique terms, movable-do pedagogy, mnemonics/lyrics and compact hints; see the review supplement. Native-human and device verification remain pending.
+
+## Independent lesson review supplement (2026-10-26)
+
+Complete independent AI review: 6,083 exact pairs, 1,545 helper-required complete contexts and 20 supplemental contexts; 17 corrections and 235 individual identity decisions. See [review evidence](../reviews/bg/README.md). These reviewed decisions supersede conflicting historical author notes; no native-human or device certification is claimed.
+
+- Silent first beat means a rest, not a quiet beat. Chords four/six are scale-degree IV/vi, not temporal order. A pull-off keeps both fretting fingers on the same string. Change a chord when the thumb attacks, not with the thumb.
+- Clawhammer describes the loosely curled whole hand, not a fingernail-shaped hand; title, physical instruction and answer are aligned. Crosspicking describes flowing musical motion, not tumbling.
+- Up/Down remain Нагоре/Надолу for melodic and physical pick directions; One beat remains Един удар. Interval qualities голяма/малка remain distinct from chord qualities мажорен/минорен.
+- Guitar hardware магаренце, bowed-instrument hardware столче and song-form бридж remain context-specific. Каденца is retained for cadence. Latin note names stay unchanged; solfege „до“ is quoted where needed to distinguish it from the preposition до.
+- The bar/measure quiz explicitly asks for an English synonym and supplies Bulgarian glosses for Beat, Rest and Measure. It does not treat the localized equivalents as distinct Bulgarian synonyms.
+- All 50 original titles match their 154 final-map references. Two English note-initial mnemonics and the seven-syllable lyric/note cue have individual whole-string educational rationales, not blanket English exemptions.

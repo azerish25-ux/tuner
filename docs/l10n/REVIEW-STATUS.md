@@ -394,3 +394,38 @@ Chord and result-frame checks now use semantic state identifiers without alterin
 ## Results-capture boundary diagnosis
 
 The German chord frame passed on 6290561. The German results image retained full opaque level-card colors even inside the test’s assumed fade region, so the initial interpretation as visible overlap is not established. The new check reads the actual DEBUG-only viewport/fade state, rejects missing or invalid probe data, preserves active-fade clipping checks, and allows at most one point of accessibility-rectangle rounding. Fresh simulator proof is pending; the earlier -wrong image is not relabelled as valid.
+
+
+## Bulgarian and Vietnamese independent lesson integration
+
+Bulgarian and Vietnamese now each apply all 6,083 exact current lesson strings.
+Bulgarian includes 17 guarded corrections and 235 individually reasoned identity
+approvals from its two actual independent AI reviewers. Vietnamese includes 60
+corrections and 287 individual approvals from its three actual independent AI
+reviewers. Original per-pair, correction and identity provenance is retained in
+`reviews/bg/` and `reviews/vi/`; no predecessor judgments were reattributed.
+
+Both integrations verified the complete frozen author/review artifact inventories,
+exact current English key/text set, every old/new guard, final maps, primary evidence
+hashes and all 1,545 helper-required complete-context target hashes per locale.
+Bulgarian also retains 20 supplemental context reads; unique non-shared contexts
+represented by primary reading are not falsely counted as extra separate displays.
+The Vietnamese deceptive-cadence glossary now uses **kết tránh**; the reviewed
+terminology supplements take precedence over historical author notes. Native-human,
+device-layout and audio-performance certification are not claimed.
+
+Applied lesson coverage is now **39 of 48 target languages plus English**. The
+release gate remains incomplete for ca, et, hr, is, lt, lv, sk, sl and uk: **54,747
+unresolved lesson pairs**. These gaps are not waived or counted as translated.
+
+A separate preservation-only snapshot keeps Slovak checkpoint 004's 465 drafted
+rows (444 author-merged and 21 held identity candidates) in `drafts/ongoing/sk.json`.
+The completed 6,083-row Estonian author draft, including 369 proposed identity
+retentions and truthful three-author provenance, is preserved in `drafts/final/et.json`.
+Both are explicitly unreviewed and unimported; author holds are not invariant approvals.
+
+Validation: all 146 localization unit tests pass, as do resource verification,
+strict handoff freshness, baseline and strict critical-string gates, draft integrity,
+comment hygiene and diff checks. The all-language lesson release gate correctly
+remains red for the nine unfinished targets above. No English source, curriculum
+or CI change was made for this integration.

@@ -148,3 +148,21 @@ Status: AI-drafted and AI-reviewed, 2026-10-25. Native-human sign-off and device
 | Next, Again, Slower | Ďalej / Znova / Pomalšie |
 | Practice | Cvičenie |
 | Feel | Vibrácie; not emotion |
+
+## Lesson author decisions, current draft (independent review pending)
+
+Use formal/plural instructions (vy) consistently. Preserve the curriculum's Latin A–G note naming, including B; do not substitute the regional H convention because displays and quiz notation remain source-bound.
+
+Original song titles must be translated consistently across labels and lesson references:
+- Letters in a Shoebox → Listy v krabici od topánok
+- Dust on the Dashboard → Prach na palubnej doske
+- Low Tide Radio → Rádio pri odlive
+- Kite Weather → Počasie na šarkany (inflect naturally in sentences)
+
+Songs → Piesne; Originals → Autorské piesne. Navigation prose: v časti Piesne, v kategórii Autorské piesne. Major/minor musical quality → dur/mol. Down/up physical or pitch direction → nadol/nahor; rhythmic spoken pattern may use shorter dolu/hore. Beat → doba; bar → takt; eighth notes → osminové noty; chord progression → akordový sled.
+
+E–A–D–G–B–E mnemonic adaptation: Eva a Dávid grilujú bez elektriny. Each initial is bound to the original string order. This is an author proposal, not independent approval.
+- Halogen → Halogén
+- Ghost Light → Svetlo duchov
+- Sharp in prose → krížik, sharpened note names G sharp/F sharp → Gis/Fis. This does not replace literal displayed G♯/F♯ notation symbols.
+- Traditional song names When the Saints Go Marching In, Amazing Grace, Greensleeves and Clementine are proposed retained work identifiers. Every exact-source row is held for individual independent review; retention is not a blanket exemption for instructions, generic titles or credits such as Traditional spiritual.

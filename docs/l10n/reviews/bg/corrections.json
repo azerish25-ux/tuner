@@ -1,0 +1,380 @@
+[
+ {
+  "locale": "bg",
+  "index": 380,
+  "key": "L8546634af5",
+  "source": "A pickup is a few notes that lead into a strong beat. Here beat one is silent, and C, E and F lead into a long G.",
+  "old": "Затактът е няколко ноти, водещи към силно време. Тук първото време е тихо, а C, E и F водят към дълга G.",
+  "new": "Затактът е няколко ноти, водещи към силно време. Тук на първото време има пауза, а C, E и F водят към дълга G.",
+  "reason": "Instruction means beat one is silent, not merely quiet; explicitly identify the rest before the pickup.",
+  "source_sha256": "8ce756cc65277dfe934c6ea3e04457ca40dbcac87b5dd4e646e355d4833b1a38",
+  "old_sha256": "9f48e43f9dfce7fb868af40a4ae51c56626a1c8271249f08a223d8ddcbe71a16",
+  "new_sha256": "82b843451924914325cc4517ba18808b4ffcbe1cfdb0944e1de2cb23419ca33c",
+  "reviewer": "Bulgarian independent AI reviewer 1",
+  "origin": "primary-pair-review",
+  "context_confirmation_reviewer": "Bulgarian independent AI reviewer 1",
+  "complete_context_evidence": [
+   {
+    "id": "EXTRA-001",
+    "source_context_sha256": "d5650d399621602cd059a264f3dbc989aecfd5a78705316a65c2b40e6e507c07"
+   }
+  ],
+  "status": "guarded-correction-approved-for-parent-integration"
+ },
+ {
+  "locale": "bg",
+  "index": 750,
+  "key": "L9cf127a892",
+  "source": "Visit the four chord early",
+  "old": "Посетете четвъртия акорд рано",
+  "new": "Посетете акорда на четвъртата степен рано",
+  "reason": "The four chord is IV, built on scale degree four, not the fourth chord in temporal order.",
+  "source_sha256": "788c1dbcb44716ee536714c3b3d610fbefc49bf56323e2051957ac39f78f4616",
+  "old_sha256": "5e119d9eb373828753686fe33d8a330c93e5803dfc7f18857cdbfee13864190a",
+  "new_sha256": "12f4d56b4ef3b958f0ae07f401dd299876200203af158f38bb69052cf3d4a325",
+  "reviewer": "Bulgarian independent AI reviewer 1",
+  "origin": "primary-pair-review",
+  "context_confirmation_reviewer": "Bulgarian independent AI reviewer 1",
+  "complete_context_evidence": [
+   {
+    "id": "EXTRA-003",
+    "source_context_sha256": "9a798ad3561f225d5ccd6ccecb3994782cf65eee8fd30d3ba12cce733301282b"
+   }
+  ],
+  "status": "guarded-correction-approved-for-parent-integration"
+ },
+ {
+  "locale": "bg",
+  "index": 751,
+  "key": "L99fad30698",
+  "source": "In a quick change, bar 2 jumps to the four chord and straight back. In A: A7, D7, A7, A7. It adds motion right from the start.",
+  "old": "При бързата смяна такт 2 прескача към четвъртия акорд и веднага се връща. В A: A7, D7, A7, A7. Това добавя движение още от началото.",
+  "new": "При бързата смяна такт 2 прескача към акорда на четвъртата степен и веднага се връща. В A: A7, D7, A7, A7. Това добавя движение още от началото.",
+  "reason": "Specify scale-degree IV; четвъртия акорд ambiguously denotes sequence position.",
+  "source_sha256": "218fb02c2e6cfc136196e50852e00520fd019ef066340e6569f6d2909831b887",
+  "old_sha256": "a860a96a3d9885c6615d0eaa675636f44eb9acdfb203ce658ba1883b2d489ab8",
+  "new_sha256": "03c6a00cb768d397bc6c80ff3760d24b00ec250ae89f4621e3b61736c5a64bcd",
+  "reviewer": "Bulgarian independent AI reviewer 1",
+  "origin": "primary-pair-review",
+  "context_confirmation_reviewer": "Bulgarian independent AI reviewer 1",
+  "complete_context_evidence": [
+   {
+    "id": "EXTRA-003",
+    "source_context_sha256": "9a798ad3561f225d5ccd6ccecb3994782cf65eee8fd30d3ba12cce733301282b"
+   }
+  ],
+  "status": "guarded-correction-approved-for-parent-integration"
+ },
+ {
+  "locale": "bg",
+  "index": 753,
+  "key": "Lcc7e435ee7",
+  "source": "The four chord in A is D7. The quick change visits it in bar 2, then returns to A7.",
+  "old": "Четвъртият акорд в A е D7. Бързата смяна го посещава в такт 2, после се връща към A7.",
+  "new": "Акордът на четвъртата степен в A е D7. Бързата смяна го посещава в такт 2, после се връща към A7.",
+  "reason": "The four chord is IV, not the fourth sequential chord; keep question and explanation musically precise.",
+  "source_sha256": "b8eeca7885ba0a8d340139415a7a9519237c345ef76cd9ddfd9898409e95c8f4",
+  "old_sha256": "72c72d6056b9a7fb8239dde77834864dd99c4729b1f7a3290862cb1620556bf6",
+  "new_sha256": "9e5498434ef79d2afef2afc85f941b06090b4002dbb4485aa42754cd9b53266a",
+  "reviewer": "Bulgarian independent AI reviewer 1",
+  "origin": "primary-pair-review",
+  "context_confirmation_reviewer": "Bulgarian independent AI reviewer 1",
+  "complete_context_evidence": [
+   {
+    "id": "CTX-0652",
+    "source_context_sha256": "2c2b4a95881cdb5ae5ef4b568237d1723927ec846b9c86b64bb37f871d1d6d20"
+   }
+  ],
+  "status": "guarded-correction-approved-for-parent-integration"
+ },
+ {
+  "locale": "bg",
+  "index": 820,
+  "key": "La833694ea5",
+  "source": "A pull-off drops to a lower note. With both fingers down, pick the higher note, then flick the top finger off sideways so it plucks the string as it leaves.",
+  "old": "Пул-офът слиза към по-ниска нота. С двата пръста върху струните изсвирете високата нота, после дръпнете горния пръст настрани, така че при отлепването да щипне струната.",
+  "new": "Пул-офът слиза към по-ниска нота. С двата пръста върху струната изсвирете високата нота, после дръпнете горния пръст настрани, така че при отлепването да щипне струната.",
+  "reason": "Both pull-off fingers must be on the same string; plural струните gives the wrong physical placement.",
+  "source_sha256": "7ae4cb8da114c65b59a8005e429697971ce669bfa01e7281d455b71407185570",
+  "old_sha256": "92dc1da1cd22a77f9e39bddb9af14718d310b17f9fa54532e228753abc6343e0",
+  "new_sha256": "a89506c175c3a75a1423e820646b7a1b6b0e5be93b883afb976e51afc62d97b8",
+  "reviewer": "Bulgarian independent AI reviewer 1",
+  "origin": "primary-pair-review",
+  "context_confirmation_reviewer": "Bulgarian independent AI reviewer 1",
+  "complete_context_evidence": [
+   {
+    "id": "EXTRA-004",
+    "source_context_sha256": "48330ec9516535417525be1803686681aa1560466afdf055565ceb052d37b68f"
+   }
+  ],
+  "status": "guarded-correction-approved-for-parent-integration"
+ },
+ {
+  "locale": "bg",
+  "index": 1194,
+  "key": "Leacb886dc3",
+  "source": "Roller Rink's loop is the one, six, four and five of G. Which chord is the six?",
+  "old": "Цикълът на „Ролер пързалка“ е едно, шест, четири и пет в G. Кой акорд е шест?",
+  "new": "Цикълът на „Ролер пързалка“ е едно, шест, четири и пет в G. Кой акорд е на шестата степен?",
+  "reason": "Clarify the six chord as the chord on scale degree six, not a bare number or sequential sixth chord.",
+  "source_sha256": "68d5990da28997b510a5b41a7b275c0b767216fe3e66fae7d117934fb7fa7d2f",
+  "old_sha256": "0924f5ea52dbf2eec91366ecfba377c1ad88f87baada9a61f8bb6afe5cc49902",
+  "new_sha256": "5dae019623eded948966aad915910781e6f7a2ff5cf8e6e739a5941465f0ca9c",
+  "reviewer": "Bulgarian independent AI reviewer 1",
+  "origin": "primary-pair-review",
+  "context_confirmation_reviewer": "Bulgarian independent AI reviewer 1",
+  "complete_context_evidence": [
+   {
+    "id": "CTX-0071",
+    "source_context_sha256": "0bd3e3d11866e266ae5c8e48e187b9355a4bb7a270024784d9a20d8e145b3071"
+   }
+  ],
+  "status": "guarded-correction-approved-for-parent-integration"
+ },
+ {
+  "locale": "bg",
+  "index": 1249,
+  "key": "Ld035dda7cc",
+  "source": "Late Checkout is a Timbre Original: lo-fi in C on Dm7, G7, Cmaj7 and Am7. That's a ii–V–I, plus the six chord to start it over. Comp it with your barred sevenths and the Charleston. The whole song is in Songs, under Originals.",
+  "old": "„Късно напускане“ е авторска песен на Timbre — лоу-фай в C с Dm7, G7, Cmaj7 и Am7. Това е ii–V–I плюс шестият акорд за ново начало. Съпроводете с вашите септакорди с баре и чарлстон. Цялата песен е в „Песни“, под „Авторски песни“.",
+  "new": "„Късно напускане“ е авторска песен на Timbre — лоу-фай в C с Dm7, G7, Cmaj7 и Am7. Това е ii–V–I плюс акордът на шестата степен за ново начало. Съпроводете с вашите септакорди с баре и чарлстон. Цялата песен е в „Песни“, под „Авторски песни“.",
+  "reason": "The six chord means scale-degree vi, not the sixth chord of the sequence.",
+  "source_sha256": "ad2e207bd18ba6f0d17acb8bc6460b46939f3d4dbf147bcf9512e27ebbe33704",
+  "old_sha256": "34d661aea2a93ed038ce1a54b24fe79768cf3eddbe1af41bf0df5c691546364d",
+  "new_sha256": "959548f783548dcc7a5a690c7dfc8409f98182d2356e89eb990701a26362fe98",
+  "reviewer": "Bulgarian independent AI reviewer 1",
+  "origin": "primary-pair-review",
+  "context_confirmation_reviewer": "Bulgarian independent AI reviewer 1",
+  "complete_context_evidence": [
+   {
+    "id": "EXTRA-005",
+    "source_context_sha256": "18c31f9636d43f26452690f10798868c88095f20eaaf9f6d17991efb202163ad"
+   }
+  ],
+  "status": "guarded-correction-approved-for-parent-integration"
+ },
+ {
+  "locale": "bg",
+  "index": 1855,
+  "key": "L77c8e74c56",
+  "source": "Change on the thumb",
+  "old": "Сменете с палеца",
+  "new": "Сменете при удара с палеца",
+  "reason": "The thumb determines when to change the fretting-hand chord, not the finger used to make the change; с палеца alone gives ambiguous physical instruction.",
+  "source_sha256": "2011f5f8a9eebcd86e0d4d2c5eef10f0bcc25a5f8ea5b359f5352ea0d372c016",
+  "old_sha256": "331e0a472d02a69d1ae6e44e9bd1ce9c1fb0dc431192921f5a819d354df3534c",
+  "new_sha256": "5b483b46162545193db29c348d4c2a8959fe241ef3f4c72a6e3d689cac19d3f2",
+  "reviewer": "Bulgarian independent AI reviewer 1",
+  "origin": "primary-pair-review",
+  "context_confirmation_reviewer": "Bulgarian independent AI reviewer 1",
+  "complete_context_evidence": [
+   {
+    "id": "EXTRA-009",
+    "source_context_sha256": "997e493b5bcc23d0162344f9e8e5ce1bed63f5fe4c9c8c13a03b72b39ae9005c"
+   }
+  ],
+  "status": "guarded-correction-approved-for-parent-integration"
+ },
+ {
+  "locale": "bg",
+  "key": "L6e5c726d4d",
+  "source": "A three-note pattern repeated across a bar of eight makes the accent shift each time. That is the rolling feel.",
+  "old": "Модел от три ноти, повтарян в такт от осем, измества акцента всеки път. Оттам идва усещането за търкаляне.",
+  "new": "Модел от три ноти, повтарян в такт от осем, измества акцента всеки път. Оттам идва усещането за плавно преливане.",
+  "reason": "Rolling feel describes the flowing crosspicking texture, not physical rolling/tumbling; replace the literal търкаляне with the idiomatic musical преливане, consistent with the neighboring forward-roll explanation.",
+  "source_sha256": "f46b2f679e3c608142e8f2bdb5fa1be9618da48894b27a3a6315f418c16ee83f",
+  "old_sha256": "e890484676997f18cc758fdb2a29fd05415d0f4c92e4edfec7d3202b07880253",
+  "new_sha256": "21053d1c9453fe14a102073795a0c55b5551f48ae1618d020df8912192da1dcc",
+  "reviewer": "Bulgarian independent AI reviewer 2",
+  "index": 3105,
+  "origin": "child-primary-pair-review",
+  "context_confirmation_reviewer": "Bulgarian independent AI reviewer 1",
+  "complete_context_evidence": [
+   {
+    "id": "CTX-0918",
+    "source_context_sha256": "e648e600263222dc678723d02d9ed0bde1129ca8e9c120c67effbaccbc900f26"
+   }
+  ],
+  "status": "guarded-correction-approved-for-parent-integration"
+ },
+ {
+  "locale": "bg",
+  "index": 3252,
+  "key": "Lb2b38f116f",
+  "source": "The open fifth string",
+  "old": "От отворената пета струна",
+  "new": "Отворената пета струна",
+  "reason": "Shared answer is a direct object in CTX-0935 (what the thumb plays), but the old preposition От only fits the origin question in CTX-0740. A bare noun phrase answers both without grammatical conflict.",
+  "source_sha256": "a5cd472bb622059ce097af1d28e5022e20d9f86c41457bf4f70ce8c381c88775",
+  "old_sha256": "e2595420c26d46b73e9118405b822904ced84d24fa83b56352f1d8265da2060a",
+  "new_sha256": "9048fa1696e25dcfbbf7bd6dc88fb30ec54669265404480c11f80bd6aea343f8",
+  "reviewer": "Bulgarian independent AI reviewer 1",
+  "origin": "complete-context-review",
+  "context_confirmation_reviewer": "Bulgarian independent AI reviewer 1",
+  "complete_context_evidence": [
+   {
+    "id": "CTX-0740",
+    "source_context_sha256": "2fddf916ad3e9d72249ae6a18254a7e57252842a014cb28113be7480606ff511"
+   },
+   {
+    "id": "CTX-0935",
+    "source_context_sha256": "f325d6ec52dc068e5c0b211d230243ec14a3710bc8f32973ba3231b0f37ecb58"
+   }
+  ],
+  "status": "guarded-correction-approved-for-parent-integration"
+ },
+ {
+  "locale": "bg",
+  "key": "L2e9170d9ae",
+  "source": "Claw shape",
+  "old": "Форма на нокът",
+  "new": "Свита ръка",
+  "reason": "Claw means the curled shape of the hand here, not an individual fingernail; the existing title says nail shape and misidentifies the physical instruction.",
+  "source_sha256": "fe6c4e40267b0a92a0568faebf246f258c48c4d986f108b0bc7f94f9c1d22f6b",
+  "old_sha256": "4d302d8f383a4d3971b857a50e73be7e5aa5d5ac4780c85fece5f8ad31e42455",
+  "new_sha256": "cc518ff04dde1426c857b760cff11ffe0938b5ebc5923014732392c8c5ee7952",
+  "reviewer": "Bulgarian independent AI reviewer 2",
+  "index": 3318,
+  "origin": "child-primary-pair-review",
+  "context_confirmation_reviewer": "Bulgarian independent AI reviewer 1",
+  "complete_context_evidence": [
+   {
+    "id": "EXTRA-015",
+    "source_context_sha256": "bbf7dff9407b66fac6c3ac3f649165a111d6b96ed84d6b9f53e6161bba5a08e2"
+   }
+  ],
+  "status": "guarded-correction-approved-for-parent-integration"
+ },
+ {
+  "locale": "bg",
+  "key": "Lad8b46c5e0",
+  "source": "Clawhammer uses no picks. Curl your hand into a loose claw and strike down on a string with the back of your index or middle fingernail, moving from the wrist and forearm.",
+  "old": "При клоухамър не се използват перца. Свийте отпуснатата ръка като нокът и ударете надолу по струната с външната страна на нокътя на показалеца или средния пръст, с движение от китката и предмишницата.",
+  "new": "При клоухамър не се използват перца. Свийте леко отпуснатата ръка като лапа и ударете надолу по струната с външната страна на нокътя на показалеца или средния пръст, с движение от китката и предмишницата.",
+  "reason": "A relaxed claw-shaped hand is intended; като нокът incorrectly asks for a fingernail-shaped hand. Use a curled paw analogy while preserving relaxation, nail surface, striking direction, and wrist/forearm movement.",
+  "source_sha256": "c78d08fc6724479feb303b52e2edead8f4a0ed040d81f64d2d7fb88f391486ce",
+  "old_sha256": "c01e01f0ecbb5c17c02bb6f390b2104a9950e57ed0731b1aed3a82a52a34a2b7",
+  "new_sha256": "4526ceb818c93a5cb2392de3d0bd457ac982a09c5682c6643564a5127c9b89c4",
+  "reviewer": "Bulgarian independent AI reviewer 2",
+  "index": 3319,
+  "origin": "child-primary-pair-review",
+  "context_confirmation_reviewer": "Bulgarian independent AI reviewer 1",
+  "complete_context_evidence": [
+   {
+    "id": "EXTRA-015",
+    "source_context_sha256": "bbf7dff9407b66fac6c3ac3f649165a111d6b96ed84d6b9f53e6161bba5a08e2"
+   }
+  ],
+  "status": "guarded-correction-approved-for-parent-integration"
+ },
+ {
+  "locale": "bg",
+  "index": 3363,
+  "key": "Ladf64025c0",
+  "source": "A loose claw, striking down",
+  "old": "Отпусната ръка като нокът, която удря надолу",
+  "new": "Отпусната ръка със свити пръсти, удряща надолу",
+  "reason": "Claw denotes the loosely curled whole hand, not a fingernail-shaped hand.",
+  "source_sha256": "4e3bb7b60b8b3ec74f038f6da739b89e855956db1767b8be2e147dc9b5ba8d68",
+  "old_sha256": "1acc0f1317812c788ea4683c18b1fa778c445a911baef3a18bc722843083bdfe",
+  "new_sha256": "979fa1a76ae76e2c5266557eb27692d014c4018d65102f8e921ac9c2a8645681",
+  "reviewer": "Bulgarian independent AI reviewer 1",
+  "origin": "primary-pair-review",
+  "context_confirmation_reviewer": "Bulgarian independent AI reviewer 1",
+  "complete_context_evidence": [
+   {
+    "id": "CTX-1462",
+    "source_context_sha256": "bd4a88dd0e9965ccdd27e4028ca449af776246d62e6a2a310f5b4767b2a866fa"
+   }
+  ],
+  "status": "guarded-correction-approved-for-parent-integration"
+ },
+ {
+  "locale": "bg",
+  "index": 4210,
+  "key": "Lfc641f96c3",
+  "source": "Is A C E major or minor?",
+  "old": "A C E мажорно или минорно е?",
+  "new": "A C E мажорен или минорен акорд е?",
+  "reason": "Explicit акорд resolves the unexplained neuter form and matches the shared masculine chord-quality alternatives confirmed in CTX-0505.",
+  "source_sha256": "fa3d1e5ccb04571ccd85e70823dd7f668c31888ebbbecee63372ba494e9a80c5",
+  "old_sha256": "cd842be130abcb745c7afcf0612eaecd0789d1adfa2cb53cb2b516decdecf7df",
+  "new_sha256": "ea494aae11d448ba37afae406f88cb2869600c2d57ff486f6188d132c1674d98",
+  "reviewer": "Bulgarian independent AI reviewer 1",
+  "origin": "primary-pair-review",
+  "context_confirmation_reviewer": "Bulgarian independent AI reviewer 1",
+  "complete_context_evidence": [
+   {
+    "id": "CTX-0505",
+    "source_context_sha256": "696eccb436020b641da828168126d72b0a70af00bbc12b24f9814d90b1ac0780"
+   }
+  ],
+  "status": "guarded-correction-approved-for-parent-integration"
+ },
+ {
+  "locale": "bg",
+  "index": 4378,
+  "key": "L04f8cd7955",
+  "source": "Tap with the click",
+  "old": "Докосвайте с щракването",
+  "new": "Докосвайте при щракването",
+  "reason": "Tap in time with each click; с щракването is unnatural and can suggest using the click as an instrument.",
+  "source_sha256": "c8d0d50a916446b8dc970ea0f2c84787917167e29f3f939a623155a2749d1e04",
+  "old_sha256": "95524efc64af67e9bf0f453d0050fba11d586e1af3a5b5516bdfde3e0ae25b42",
+  "new_sha256": "d714d8ef0b70a1684585e16f31bc0380ee0699f226d9274ecbfbc01dfb20da21",
+  "reviewer": "Bulgarian independent AI reviewer 1",
+  "origin": "primary-pair-review",
+  "context_confirmation_reviewer": "Bulgarian independent AI reviewer 1",
+  "complete_context_evidence": [
+   {
+    "id": "EXTRA-018",
+    "source_context_sha256": "4a219c817bd525ccd51a6fcd0c47e39a39776b5e129f800d2f158ad1899dfd94"
+   }
+  ],
+  "status": "guarded-correction-approved-for-parent-integration"
+ },
+ {
+  "locale": "bg",
+  "index": 4772,
+  "key": "L6829fbcb04",
+  "source": "Do to do: C up to the next C.",
+  "old": "От до до до: от C нагоре до следващото C.",
+  "new": "От „до“ до „до“: от C нагоре до следващото C.",
+  "reason": "Quotation marks disambiguate solfege syllable до from the Bulgarian preposition до.",
+  "source_sha256": "5e3497a7ef7cc599963f5f0d14a33fde4ddbbdae2e66abd42b82650508d3c8bd",
+  "old_sha256": "e7ee94b9ad86efed87c9b9fd9dcd725c4ef094a4aa2d43721374bdcdf874a39c",
+  "new_sha256": "ced14a8406356ee4e7ecc112768b1bd8aa75965e473ccae184649eee40e3179d",
+  "reviewer": "Bulgarian independent AI reviewer 1",
+  "origin": "primary-pair-review",
+  "context_confirmation_reviewer": "Bulgarian independent AI reviewer 1",
+  "complete_context_evidence": [
+   {
+    "id": "EXTRA-020",
+    "source_context_sha256": "b13d616fc254d15071b4f510701a417553179dbfb1175eb97fdd94fba32e4737"
+   }
+  ],
+  "status": "guarded-correction-approved-for-parent-integration"
+ },
+ {
+  "locale": "bg",
+  "index": 4796,
+  "key": "Ladc7896c15",
+  "source": "How many notes are in a major scale, do to do?",
+  "old": "Колко тона има в мажорната гама от до до до?",
+  "new": "Колко тона има в мажорната гама от „до“ до „до“?",
+  "reason": "Quotation marks disambiguate the two solfege endpoints from the intervening Bulgarian preposition до.",
+  "source_sha256": "cbe93909c9003cc967598eac04ea904f6e6ead5918d3b0dad999e970e7be0bdc",
+  "old_sha256": "381f0290c467315514568981e21b509fffed82c808b13bf89590ea103e67236f",
+  "new_sha256": "29ff1e380a35d701fdda852f9b45aff1356c03820bcc5a634138ed81d3b9815a",
+  "reviewer": "Bulgarian independent AI reviewer 1",
+  "origin": "primary-pair-review",
+  "context_confirmation_reviewer": "Bulgarian independent AI reviewer 1",
+  "complete_context_evidence": [
+   {
+    "id": "CTX-0599",
+    "source_context_sha256": "22c3237e623d2aa193f73482be06a471f37dd7a54eb91bb6cf1327c4d77084e8"
+   }
+  ],
+  "status": "guarded-correction-approved-for-parent-integration"
+ }
+]
