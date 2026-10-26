@@ -17,8 +17,8 @@
   ],
   "ci_workflow": ".github/workflows/localized-capture-check.yml",
   "limits": [
-    "New additional selectors are locally contract-tested, not simulator-verified.",
-    "General tour/tab selectors and iPad localization still need work.",
+    "New semantic selectors and phone/tablet navigation are locally contract-tested, not yet simulator-verified.",
+    "Some non-store tour assertions still use English text; full tour needs further checks.",
     "No all50 listing screenshot/preview completion claimed.",
     "German and Arabic two-frame pilot success does not certify every screen, locale or device."
   ],
@@ -32,6 +32,7 @@
   "additional_implementation": [
     "Instrument family chips use stable catalog IDs; rail drag follows actual off-screen target side for LTR/RTL.",
     "Performance combo count, score and lyrics use semantic identifiers while preserving localized accessibility labels. Missing HUD/score regions fail rather than vacuously passing empty-region comparison.",
-    "Strum capture checks actual tune verdict, not English Tune prefix."
+    "Strum capture checks actual tune verdict, not English Tune prefix.",
+    "Phone and tablet tab navigation resolve exact current exported labels, including translated Songs course titles. Both accept requested language/locale; non-English missing fixture fails instead of silently using English."
   ]
 }

@@ -84,6 +84,36 @@ class LocalizedCaptureChecksTests(unittest.TestCase):
         self.assertIn('.accessibilityLabel(Text("Lyrics"))', lyrics)
         self.assertIn('.accessibilityIdentifier("performance.lyrics")', lyrics)
 
+    def test_tablet_and_phone_share_explicit_language_and_tab_fixture(self):
+        phone = (ROOT / 'ios/TimbreUITests/TimbreUITests.swift').read_text()
+        tablet = (ROOT / 'ios/TimbreUITests/TabletScreenshotsUITests.swift').read_text()
+        helper = (ROOT / 'ios/TimbreUITests/CaptureLocalization.swift').read_text()
+        workflow = (ROOT / '.github/workflows/localized-capture-check.yml').read_text()
+        self.assertIn('return language == "en" ? name : nil', helper)
+        for code in [phone, tablet]:
+            self.assertIn('CaptureLocalization.tabLabel(name)', code)
+            self.assertIn('CaptureLocalization.language', code)
+            self.assertIn('CaptureLocalization.locale', code)
+            self.assertNotIn('app.buttons[name]', code)
+            self.assertNotIn('app.buttons["Done"]', code)
+        self.assertNotIn('app.tabBars.buttons[name]', phone)
+        self.assertIn('CaptureLocalizationExpected.json', workflow)
+        self.assertLess(workflow.index('CaptureLocalizationExpected.json'), workflow.index('(cd ios && xcodegen generate)'))
+        self.assertIn('-only-testing:TimbreUITests/TimbreUITests/testCaptureLocalizationNavigationFixture', workflow)
+
+    def test_capture_fixture_supports_english_source_and_all_translation_targets(self):
+        import sys
+        sys.path.insert(0, str(ROOT / 'tools/l10n'))
+        import matrix_fixture
+        import report
+        locales = sorted(p.stem for p in report.RES.glob('*.lproj'))
+        expected = matrix_fixture.fixture(locales)
+        self.assertEqual(len(expected), 49)
+        self.assertEqual(expected['en']['headline'], matrix_fixture.KEYS['headline'])
+        for labels in expected.values():
+            for key in ['tune', 'learn', 'songs', 'practice', 'progress']:
+                self.assertTrue(labels[key].strip())
+
     def test_focused_ci_checks_ltr_rtl_and_requires_real_valid_attachments(self):
         source = (ROOT / '.github/workflows/localized-capture-check.yml').read_text()
         for language in ['en', 'de', 'ar']:

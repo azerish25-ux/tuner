@@ -72,7 +72,9 @@ def fixture(locales):
         table = report.read_strings(path)
         values = {}
         for field, key in KEYS.items():
-            value = table.get(key)
+            # English uses literal source keys when its sparse table has no override.
+            # Translation targets must still contain an actual value.
+            value = table.get(key, key if locale == 'en' else None)
             if not value or not value.strip() or (locale != 'en' and field in ('headline', 'subline') and value == key):
                 raise ValueError(f'{locale}: untranslated matrix field {field}')
             values[field] = value

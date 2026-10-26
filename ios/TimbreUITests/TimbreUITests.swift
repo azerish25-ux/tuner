@@ -25,8 +25,8 @@ final class TimbreUITests: XCTestCase {
     /// (`TEST_RUNNER_TIMBRE_UI_LANGUAGE=de TEST_RUNNER_TIMBRE_UI_LOCALE=de_DE xcodebuild test …`, then
     /// `tools/marketing/screenshots.py … --locale de-DE`). Chord completion and results frames use semantic identifiers,
     /// not English captions. Other tour selectors still need localization coverage; this does not certify every frame.
-    private static let language = ProcessInfo.processInfo.environment["TIMBRE_UI_LANGUAGE"].flatMap { $0.isEmpty ? nil : $0 } ?? "en"
-    private static let locale = ProcessInfo.processInfo.environment["TIMBRE_UI_LOCALE"].flatMap { $0.isEmpty ? nil : $0 } ?? "en_US"
+    private static let language = CaptureLocalization.language
+    private static let locale = CaptureLocalization.locale
 
     override func tearDownWithError() throws {
         if (testRun?.totalFailureCount ?? 0) > 0 { shot("zz-failure-\(name)") }
@@ -66,8 +66,16 @@ final class TimbreUITests: XCTestCase {
         app.descendants(matching: .any).matching(NSPredicate(format: "label MATCHES %@", pattern)).firstMatch
     }
     /// Taps a tab, retrying while a sheet is still dismissing and swallows the tap.
+    private func tabButton(_ name: String) -> XCUIElement {
+        guard let label = CaptureLocalization.tabLabel(name) else {
+            XCTFail("Missing capture tab fixture for \(Self.language): \(name)")
+            return app.tabBars.buttons["__missing_capture_tab_fixture__"].firstMatch
+        }
+        return app.tabBars.buttons[label].firstMatch
+    }
+
     private func tab(_ name: String) {
-        let button = app.tabBars.buttons[name].firstMatch
+        let button = tabButton(name)
         for attempt in 0..<4 {
             button.tap()
             if button.isSelected { return }
@@ -84,7 +92,7 @@ final class TimbreUITests: XCTestCase {
     }
     /// Opens the instrument browser (the tuner's picker sheet) unless it is already up.
     private func openPicker() {
-        let picker = app.navigationBars["Choose instrument"]
+        let picker = element("instruments.done")
         if picker.exists || element("instruments.search").exists { return }
         tab("Tune")
         let button = element("tune.instrument")
@@ -412,9 +420,9 @@ final class TimbreUITests: XCTestCase {
     /// Closes the instrument browser (and a paywall over it) and waits for the sheet to go.
     private func closePicker() {
         closePaywall()
-        let picker = app.navigationBars["Choose instrument"]
+        let picker = element("instruments.done")
         for _ in 0..<3 where picker.exists {
-            let done = app.buttons["Done"].firstMatch
+            let done = element("instruments.done")
             if done.exists { done.tap() }
             _ = picker.waitForNonExistence(timeout: 4)
         }
@@ -513,7 +521,7 @@ final class TimbreUITests: XCTestCase {
         hold(until: cycle.addingTimeInterval(Demo.drifting)); shot("10-tune-3d")
         element("string.3").tap(); settle(1.5); shot("11-tune-string-selected")
         element("tune.instrument").tap(); settle(1.5); shot("12-instrument-picker")
-        app.buttons["Done"].firstMatch.tap(); settle()
+        element("instruments.done").tap(); settle()
         element("settings.open").tap(); settle(1.5); shot("13-settings")
         // Pro upsell from inside the settings sheet presents the paywall on top of it.
         element("settings.pro").tap()
@@ -561,15 +569,15 @@ final class TimbreUITests: XCTestCase {
         // The Guitar family filter: a full grid of guitars, each on its own stage, under the title bar. A tap on the
         // family chip is deterministic; scrolling the sheet could dismiss it or tap a Pro card. (Frame #7 was this grid
         // until Strum to tune took its place: test13StoreStrum.)
-        let guitars = app.buttons["Guitar"].firstMatch
+        let guitars = element("instruments.family.guitar")
         if guitars.waitForExistence(timeout: 5) { guitars.tap(); settle(1.5) }
         shot("31-instruments-scrolled")
         closePicker()
         // App Store frame #9: Progress, with nothing over it, once its cards have come in.
         tab("Progress"); settle(0.8)
         let picture = stillScreenshot()
-        let progress = app.tabBars.buttons["Progress"].firstMatch
-        let front = progress.exists && progress.isSelected && !element("paywall.purchase").exists && !app.navigationBars["Choose instrument"].exists
+        let progress = tabButton("Progress")
+        let front = progress.exists && progress.isSelected && !element("paywall.purchase").exists && !element("instruments.done").exists
         storeFrame("32-journey", picture: picture, ok: front, "Progress isn't the screen in front (the browser or a paywall is still up)")
         app.swipeUp(); settle(); shot("33-journey-scrolled")
     }
@@ -775,6 +783,14 @@ final class TimbreUITests: XCTestCase {
         storeFrame("62b-lesson-results-violin", picture: results, ok: headline && room.fits,
                    headline ? room.summary
                             : "the violin results don't show three stars: the play-along wasn't played clean")
+    }
+
+    func testCaptureLocalizationNavigationFixture() {
+        for tab in ["Tune", "Learn", "Songs", "Practice", "Progress"] {
+            XCTAssertNotNil(CaptureLocalization.tabLabel(tab), "Missing tab \(tab) for \(Self.language)")
+            XCTAssertFalse(CaptureLocalization.tabLabel(tab)?.isEmpty ?? true)
+        }
+        XCTAssertNil(CaptureLocalization.tabLabel("not-a-tab"))
     }
 
     func testStoreResultsBoundsCalculation() {

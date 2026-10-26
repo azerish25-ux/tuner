@@ -17,7 +17,7 @@ final class TabletScreenshotsUITests: XCTestCase {
         app.launchEnvironment["TIMBRE_SCENE"] = "tune-locked"
         // The tuner's probe (stage.state) says when the 3D model has replaced its studio render.
         app.launchEnvironment["TIMBRE_DEBUG_STATE"] = "1"
-        app.launchArguments = ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
+        app.launchArguments = ["-AppleLanguages", "(\(CaptureLocalization.language))", "-AppleLocale", CaptureLocalization.locale]
     }
 
     override func tearDownWithError() throws {
@@ -138,7 +138,11 @@ final class TabletScreenshotsUITests: XCTestCase {
 
     /// Taps a tab (the iPad's tab bar sits at the top) until `until` shows; `shot` then waits for its entrance to settle.
     private func tab(_ name: String, until id: String) {
-        let button = app.buttons[name].firstMatch
+        guard let label = CaptureLocalization.tabLabel(name) else {
+            XCTFail("Missing tablet capture tab fixture for \(CaptureLocalization.language): \(name)")
+            return
+        }
+        let button = app.buttons[label].firstMatch
         let target = element(id)
         for _ in 0..<3 {
             if button.waitForExistence(timeout: 5) { button.tap() }
@@ -259,7 +263,7 @@ final class TabletScreenshotsUITests: XCTestCase {
     /// Closes the picker (a full page on iPad) with Done and waits for it to go; a swipe is the fallback.
     private func closePicker() {
         let search = element("instruments.search")
-        let done = app.buttons["Done"].firstMatch
+        let done = element("instruments.done")
         if done.waitForExistence(timeout: 6) { done.tap() } else { app.swipeDown(velocity: .fast) }
         if !search.waitForNonExistence(timeout: 6) { app.swipeDown(velocity: .fast); _ = search.waitForNonExistence(timeout: 4) }
         settle(1)
