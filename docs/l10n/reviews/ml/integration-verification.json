@@ -1,0 +1,53 @@
+{
+  "locale": "ml",
+  "source_keys": 6082,
+  "reviewed_baseline_rows": 6080,
+  "context_addendum_rows": 4,
+  "corrections": 246,
+  "invariants": 308,
+  "verified_owner_manifest_artifacts": 139,
+  "verified_frozen_input_files": 296,
+  "current_source_matches": 6082,
+  "opposite_author_reviewed_targets": 6082,
+  "guarded_baseline_acceptances": 6080,
+  "notation_closures": 11,
+  "mechanical_errors": [],
+  "width_warnings": [
+    {
+      "key": "Lc5c7f22d3a",
+      "problem": "longer than max_length 24 (33)"
+    }
+  ],
+  "canonical_metadata_order_nonlearn_unchanged": true,
+  "public_identity_labels": [
+    "AI participant A",
+    "AI participant B",
+    "AI participant C",
+    "AI participant D"
+  ],
+  "native_human_device_certified": false,
+  "original_owner_manifest_sha256": "692a59043ba88ede188f82479010233867d5e4ae5638f6a917ad9d7b4c22fd6a",
+  "actual_live_lesson_audit": {
+    "required": 6082,
+    "complete": 6082,
+    "missing": [],
+    "rejected": {}
+  },
+  "all_308_identity_approvals_reject_changed_source": true,
+  "all_308_identity_rows_rejected_without_registry": true,
+  "locale_renderer_idempotent": true,
+  "public_artifact_resource_hashes_verified": true,
+  "sanitized_internal_paths_absent": true,
+  "targeted_tests": {
+    "test_lesson_bidi_identity.py": {
+      "passed": 7
+    },
+    "test_lessons.py": {
+      "passed": 10
+    },
+    "test_context_split.py": {
+      "passed": 17
+    }
+  },
+  "git_diff_check": "passed"
+}

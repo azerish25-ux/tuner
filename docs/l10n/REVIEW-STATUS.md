@@ -229,3 +229,29 @@ app tests cover fallback and retained course-title behavior. New simulator verif
 is still required. The extreme AX5 tuner screenshot shows broader overlap/truncation
 that remains unresolved; passing a scoped header check is not full-screen approval.
 Evidence: `visual-review/launch-a64f907.json`.
+
+## Malayalam, Punjabi and ordinal-context checkpoint
+
+The live lesson maps now cover 20 target locales plus English, with 6,082 keys each.
+Malayalam adds 246 independently reviewed corrections and 308 exact source-bound
+invariants; Punjabi adds 94 corrections and 298 invariants. Their review bundles are
+under `reviews/ml/` and `reviews/pa/`. Malayalam retains one semantically accepted
+33-codepoint chip against a 24-codepoint hint; actual layout remains to be verified.
+The other 28 target lesson languages are not yet complete.
+
+The bare Second/Third/Fourth sources previously mixed finger and interval meanings.
+Exactly 18 finger options now reuse existing explicit finger keys, leaving the bare
+keys interval-only. Independent review approved 42 live replacements and 12 retains,
+plus four French/Chinese Fifth/Sixth interval corrections. Punjabi's three conditional
+ordinal targets were imported only after the exact reviewed source remap was verified.
+No answers, note data, patterns, IDs or other curriculum data changed; English stays
+byte-identical. Evidence and regression guards are in `ordinal-context/`.
+
+On a291229, core, app and release jobs passed. Accessibility failed with contrast
+findings and unfinished Songs Dynamic Type/clipped-text audits; failures remain open,
+not waived. The actual paywall screenshot still shows a trial badge obscuring part of
+the annual price. Evidence is in `visual-review/accessibility-a291229.json`; a later
+layout repair requires fresh simulator verification. No global accessibility or native
+linguistic certification is claimed. Store text remains independently AI reviewed;
+locale-specific assets, live store/account requirements and final device QA remain
+separate gates rather than presumed complete.

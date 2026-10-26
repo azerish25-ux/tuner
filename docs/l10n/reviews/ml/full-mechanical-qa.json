@@ -1,0 +1,24 @@
+{
+  "baseline_count": 6080,
+  "integration_count": 6082,
+  "opposite_author_reviewed_rows": 6082,
+  "corrected_baseline_rows": 246,
+  "approved_invariants_pending_parent_gate": 308,
+  "nonidentity_errors": [],
+  "width_warnings": [
+    {
+      "key": "Lc5c7f22d3a",
+      "problem": "longer than max_length 24 (33)"
+    }
+  ],
+  "remaining_translation_blockers": [],
+  "layout_followup": "One explicitly reviewed small-chip width warning requires parent layout/device follow-up; no device certification.",
+  "source_context_addendum_rows": 4,
+  "resolved_baseline_holds": [
+    "Lf6586312d9",
+    "Lced02810fc"
+  ],
+  "metadata_order_nonlearn_unchanged": true,
+  "ascii_digits_newlines_notation_checker_pass": true,
+  "native_human_device_certified": false
+}

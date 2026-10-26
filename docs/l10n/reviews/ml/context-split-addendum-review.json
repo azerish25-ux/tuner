@@ -1,0 +1,111 @@
+{
+  "source_file_sha256": "fd80add0795fb009260cd3ceb3988b2ca4c643b5c020408ab1dc2bb2f4c5dfaf",
+  "rows": [
+    {
+      "key": "Lf94a998e29",
+      "table": "Learn.strings",
+      "source": "Strings: 1, 2, 3 and 4",
+      "source_sha256": "a9c0f5eaf3a697599b3602ce970b13b1f3fbfa5800b0f02cee313043a39f4d1a",
+      "old_target": "തന്തികൾ: 1, 2, 3, 4",
+      "old_target_sha256": "84160510ff5990a404611ea753eaccb0bb8694dfc533811a4197e10d76b05ba0",
+      "accepted_final_target": "തന്തികൾ: 1, 2, 3, 4",
+      "accepted_final_target_sha256": "84160510ff5990a404611ea753eaccb0bb8694dfc533811a4197e10d76b05ba0",
+      "decision": "accepted",
+      "reason": "Explicit instrument-string list; the Malayalam noun disambiguates context, ASCII string numbers remain in order, and comma list punctuation is natural. No rhythmic offbeat is introduced.",
+      "checks": {
+        "semantics": "pass",
+        "notation": "pass",
+        "punctuation": "pass",
+        "voice": "pass",
+        "glossary": "pass",
+        "digits_newlines_symbols": "pass"
+      },
+      "correction": null,
+      "remaining_blocker": null,
+      "reviewer": "AI participant B",
+      "review_kind": "independent AI full-row semantic review",
+      "native_or_device_certified": false
+    },
+    {
+      "key": "L4f162aedb4",
+      "table": "Learn.strings",
+      "source": "Middle section",
+      "source_sha256": "3bb8d1b80c1fb7c14b7404bf6e3c408d1f07d8022175ee18f2667497b875255f",
+      "old_target": "മധ്യഭാഗം",
+      "old_target_sha256": "57941100a94a8318a60a55cf4b107417a7ad3274c3efae4f134f1c66e587ae82",
+      "accepted_final_target": "മധ്യഭാഗം",
+      "accepted_final_target_sha256": "57941100a94a8318a60a55cf4b107417a7ad3274c3efae4f134f1c66e587ae82",
+      "decision": "accepted",
+      "reason": "Song-form middle section is rendered as മധ്യഭാഗം, not the middle finger.",
+      "checks": {
+        "semantics": "pass",
+        "notation": "pass",
+        "punctuation": "pass",
+        "voice": "pass",
+        "glossary": "pass",
+        "digits_newlines_symbols": "pass"
+      },
+      "correction": null,
+      "remaining_blocker": null,
+      "reviewer": "AI participant B",
+      "review_kind": "independent AI full-row semantic review",
+      "native_or_device_certified": false
+    },
+    {
+      "key": "Lf6586312d9",
+      "table": "Learn.strings",
+      "source": "1, 2, 3 and 4",
+      "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+      "old_target": "1, 2, 3 ആൻഡ് 4",
+      "old_target_sha256": "1b3321f3151e21f87fcabbcf30898664e715edb69f29753f2a362b4f301bed18",
+      "accepted_final_target": "1, 2, 3 ആൻഡ് 4",
+      "accepted_final_target_sha256": "1b3321f3151e21f87fcabbcf30898664e715edb69f29753f2a362b4f301bed18",
+      "decision": "accepted",
+      "reason": "Parent-verified rhythm distractor: 1, 2, 3 ആൻഡ് 4 preserves the spoken offbeat exactly; ആൻഡ് is one subdivision and is not a list conjunction.",
+      "checks": {
+        "semantics": "pass",
+        "notation": "pass",
+        "punctuation": "pass",
+        "voice": "pass",
+        "glossary": "pass",
+        "digits_newlines_symbols": "pass"
+      },
+      "correction": null,
+      "remaining_blocker": null,
+      "reviewer": "AI participant B",
+      "review_kind": "independent AI full-row semantic review",
+      "native_or_device_certified": false
+    },
+    {
+      "key": "Lced02810fc",
+      "table": "Learn.strings",
+      "source": "Middle",
+      "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+      "old_target": "നടുവിരൽ",
+      "old_target_sha256": "c2c09ea1306f0493735dba71641c892d8bade5011cdc69bffba8c31c3caa6b86",
+      "accepted_final_target": "നടുവിരൽ",
+      "accepted_final_target_sha256": "c2c09ea1306f0493735dba71641c892d8bade5011cdc69bffba8c31c3caa6b86",
+      "decision": "accepted",
+      "reason": "Parent-confirmed retained finger-only key is correctly നടുവിരൽ; it is no longer reused for a song section.",
+      "checks": {
+        "semantics": "pass",
+        "notation": "pass",
+        "punctuation": "pass",
+        "voice": "pass",
+        "glossary": "pass",
+        "digits_newlines_symbols": "pass"
+      },
+      "correction": null,
+      "remaining_blocker": null,
+      "reviewer": "AI participant B",
+      "review_kind": "independent AI full-row semantic review",
+      "native_or_device_certified": false
+    }
+  ],
+  "summary": {
+    "rows": 4,
+    "corrected": 0,
+    "remaining_blockers": 0
+  },
+  "application_note": "These four contextual decisions do not authorize mutating baseline source metadata. Apply only through the parent-owned integrated source delta; original ambiguous baseline rows remain held."
+}

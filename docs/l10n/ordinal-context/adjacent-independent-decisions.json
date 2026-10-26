@@ -1,0 +1,776 @@
+[
+  {
+    "locale": "fr",
+    "key": "L0e4a8a8ead",
+    "source": "Fifth",
+    "source_sha256": "b612a40113eac372f7794b600086655dcb6ef6e6c451d9e6b140ed6dd5097d47",
+    "old": "Cinquième",
+    "old_sha256": "d56ebdd46efd26c0ab423c445316e51c4a96fa7b498389049849c58f52ea3840",
+    "suggested_new": "Quinte",
+    "status": "adjacent-finding-only-excluded-from-patches-and-validation-counts",
+    "reason": "Exact key occurs only in interval questions; current translation is a generic ordinal instead of the interval name. Parent may separately review these four values.",
+    "context_pointers": [
+      "/courses/8/units/5/lessons/0/steps/1/options/2",
+      "/courses/8/units/5/lessons/0/steps/5/options/1",
+      "/courses/8/units/5/lessons/0/steps/6/options/1",
+      "/courses/10/units/3/lessons/1/steps/2/options/1",
+      "/courses/10/units/3/lessons/1/steps/5/options/1",
+      "/courses/10/units/3/lessons/2/steps/1/options/1",
+      "/courses/10/units/3/lessons/2/steps/5/options/1",
+      "/courses/10/units/3/lessons/3/steps/2/options/1",
+      "/courses/10/units/3/lessons/3/steps/5/options/1"
+    ],
+    "independent_decision": "approve-separate-interval-fix",
+    "new_sha256": "f7aadb225efe5cf6e6501bbacfe1ad24b49a2dde9619b170d232f9364cda2f39",
+    "candidate_file_sha256": "2e2ed6f118ac0a983f130e56fa923d24b604a41af2e9e575a720b171050e2375",
+    "repository_applied": false,
+    "enclosing_contexts": [
+      {
+        "pointer": "/courses/8/units/5/lessons/0/steps/1/options/2",
+        "step": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lea6e3097da",
+            "t": "C up to G is a..."
+          },
+          "options": [
+            {
+              "k": "Lefb3a32162",
+              "t": "Third"
+            },
+            {
+              "k": "L7a3a4a4221",
+              "t": "Fourth"
+            },
+            {
+              "k": "L0e4a8a8ead",
+              "t": "Fifth"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "Lec28679d6a",
+            "t": "C, D, E, F, G: five letters."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/5/lessons/0/steps/5/options/1",
+        "step": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L12446dd7c8",
+            "t": "F up to D is a..."
+          },
+          "options": [
+            {
+              "k": "L7a3a4a4221",
+              "t": "Fourth"
+            },
+            {
+              "k": "L0e4a8a8ead",
+              "t": "Fifth"
+            },
+            {
+              "k": "L212e6bf39f",
+              "t": "Sixth"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "L0e9f06e0f4",
+            "t": "F, G, A, B, C, D: six letters."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/5/lessons/0/steps/6/options/1",
+        "step": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L23098234bf",
+            "t": "A up to E♭ is a..."
+          },
+          "options": [
+            {
+              "k": "L7a3a4a4221",
+              "t": "Fourth"
+            },
+            {
+              "k": "L0e4a8a8ead",
+              "t": "Fifth"
+            },
+            {
+              "k": "L212e6bf39f",
+              "t": "Sixth"
+            }
+          ],
+          "answer": 1,
+          "why": {
+            "k": "L86b3a72f1e",
+            "t": "A, B, C, D, E: five letters. The flat doesn't change the count."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/10/units/3/lessons/1/steps/2/options/1",
+        "step": {
+          "type": "listen",
+          "prompt": {
+            "k": "La65af49fcb",
+            "t": "Third or fifth?"
+          },
+          "sound": [
+            [
+              60
+            ],
+            [
+              67
+            ]
+          ],
+          "options": [
+            {
+              "k": "Lefb3a32162",
+              "t": "Third"
+            },
+            {
+              "k": "L0e4a8a8ead",
+              "t": "Fifth"
+            }
+          ],
+          "answer": 1
+        }
+      },
+      {
+        "pointer": "/courses/10/units/3/lessons/1/steps/5/options/1",
+        "step": {
+          "type": "listen",
+          "prompt": {
+            "k": "La65af49fcb",
+            "t": "Third or fifth?"
+          },
+          "sound": [
+            [
+              62
+            ],
+            [
+              65
+            ]
+          ],
+          "options": [
+            {
+              "k": "Lefb3a32162",
+              "t": "Third"
+            },
+            {
+              "k": "L0e4a8a8ead",
+              "t": "Fifth"
+            }
+          ],
+          "answer": 0
+        }
+      },
+      {
+        "pointer": "/courses/10/units/3/lessons/2/steps/1/options/1",
+        "step": {
+          "type": "listen",
+          "prompt": {
+            "k": "Lbb6c27409b",
+            "t": "Octave or fifth?"
+          },
+          "sound": [
+            [
+              60
+            ],
+            [
+              72
+            ]
+          ],
+          "options": [
+            {
+              "k": "L103165a25e",
+              "t": "Octave"
+            },
+            {
+              "k": "L0e4a8a8ead",
+              "t": "Fifth"
+            }
+          ],
+          "answer": 0
+        }
+      },
+      {
+        "pointer": "/courses/10/units/3/lessons/2/steps/5/options/1",
+        "step": {
+          "type": "listen",
+          "prompt": {
+            "k": "Lbb6c27409b",
+            "t": "Octave or fifth?"
+          },
+          "sound": [
+            [
+              62
+            ],
+            [
+              69
+            ]
+          ],
+          "options": [
+            {
+              "k": "L103165a25e",
+              "t": "Octave"
+            },
+            {
+              "k": "L0e4a8a8ead",
+              "t": "Fifth"
+            }
+          ],
+          "answer": 1
+        }
+      },
+      {
+        "pointer": "/courses/10/units/3/lessons/3/steps/2/options/1",
+        "step": {
+          "type": "listen",
+          "prompt": {
+            "k": "La65af49fcb",
+            "t": "Third or fifth?"
+          },
+          "sound": [
+            [
+              64
+            ],
+            [
+              67
+            ]
+          ],
+          "options": [
+            {
+              "k": "Lefb3a32162",
+              "t": "Third"
+            },
+            {
+              "k": "L0e4a8a8ead",
+              "t": "Fifth"
+            }
+          ],
+          "answer": 0
+        }
+      },
+      {
+        "pointer": "/courses/10/units/3/lessons/3/steps/5/options/1",
+        "step": {
+          "type": "listen",
+          "prompt": {
+            "k": "Lbb6c27409b",
+            "t": "Octave or fifth?"
+          },
+          "sound": [
+            [
+              65
+            ],
+            [
+              72
+            ]
+          ],
+          "options": [
+            {
+              "k": "L103165a25e",
+              "t": "Octave"
+            },
+            {
+              "k": "L0e4a8a8ead",
+              "t": "Fifth"
+            }
+          ],
+          "answer": 1
+        }
+      }
+    ],
+    "enclosing_contexts_sha256": "03038bae48dc961b4cc171be09a6e576a38a273495b2f98d0c07b70c5f75377e",
+    "independent_reason": "The retained choices compare musical pitch intervals, not fingering, sequence position or scale-degree labels. Use the interval noun, without specifying a quality absent from the English."
+  },
+  {
+    "locale": "fr",
+    "key": "L212e6bf39f",
+    "source": "Sixth",
+    "source_sha256": "ac4def911f828a63319722f7c25f0af6501d761fb1b6d809ba80d0dd9c9f2331",
+    "old": "Sixième",
+    "old_sha256": "564e1df80c1b2c7e51830b65720d90ca85589ef39e775f8480d5baab04a6d42c",
+    "suggested_new": "Sixte",
+    "status": "adjacent-finding-only-excluded-from-patches-and-validation-counts",
+    "reason": "Exact key occurs only in interval questions; current translation is a generic ordinal instead of the interval name. Parent may separately review these four values.",
+    "context_pointers": [
+      "/courses/8/units/5/lessons/0/steps/5/options/2",
+      "/courses/8/units/5/lessons/0/steps/6/options/2"
+    ],
+    "independent_decision": "approve-separate-interval-fix",
+    "new_sha256": "f090066da293b361e0777e3221e3aad4c4828e3c435e360cbfd67d1753a45827",
+    "candidate_file_sha256": "2e2ed6f118ac0a983f130e56fa923d24b604a41af2e9e575a720b171050e2375",
+    "repository_applied": false,
+    "enclosing_contexts": [
+      {
+        "pointer": "/courses/8/units/5/lessons/0/steps/5/options/2",
+        "step": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L12446dd7c8",
+            "t": "F up to D is a..."
+          },
+          "options": [
+            {
+              "k": "L7a3a4a4221",
+              "t": "Fourth"
+            },
+            {
+              "k": "L0e4a8a8ead",
+              "t": "Fifth"
+            },
+            {
+              "k": "L212e6bf39f",
+              "t": "Sixth"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "L0e9f06e0f4",
+            "t": "F, G, A, B, C, D: six letters."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/5/lessons/0/steps/6/options/2",
+        "step": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L23098234bf",
+            "t": "A up to E♭ is a..."
+          },
+          "options": [
+            {
+              "k": "L7a3a4a4221",
+              "t": "Fourth"
+            },
+            {
+              "k": "L0e4a8a8ead",
+              "t": "Fifth"
+            },
+            {
+              "k": "L212e6bf39f",
+              "t": "Sixth"
+            }
+          ],
+          "answer": 1,
+          "why": {
+            "k": "L86b3a72f1e",
+            "t": "A, B, C, D, E: five letters. The flat doesn't change the count."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      }
+    ],
+    "enclosing_contexts_sha256": "de4dffe0fcf51e8f70dec81eaf6d9b0e0271be4162af52759806ad629c50e231",
+    "independent_reason": "The retained choices compare musical pitch intervals, not fingering, sequence position or scale-degree labels. Use the interval noun, without specifying a quality absent from the English."
+  },
+  {
+    "locale": "zh-CN",
+    "key": "L0e4a8a8ead",
+    "source": "Fifth",
+    "source_sha256": "b612a40113eac372f7794b600086655dcb6ef6e6c451d9e6b140ed6dd5097d47",
+    "old": "第五",
+    "old_sha256": "61220d38feb0ef76e8939c10a199e836a50cb86b9823272ad65283874e66693e",
+    "suggested_new": "五度",
+    "status": "adjacent-finding-only-excluded-from-patches-and-validation-counts",
+    "reason": "Exact key occurs only in interval questions; current translation is a generic ordinal instead of the interval name. Parent may separately review these four values.",
+    "context_pointers": [
+      "/courses/8/units/5/lessons/0/steps/1/options/2",
+      "/courses/8/units/5/lessons/0/steps/5/options/1",
+      "/courses/8/units/5/lessons/0/steps/6/options/1",
+      "/courses/10/units/3/lessons/1/steps/2/options/1",
+      "/courses/10/units/3/lessons/1/steps/5/options/1",
+      "/courses/10/units/3/lessons/2/steps/1/options/1",
+      "/courses/10/units/3/lessons/2/steps/5/options/1",
+      "/courses/10/units/3/lessons/3/steps/2/options/1",
+      "/courses/10/units/3/lessons/3/steps/5/options/1"
+    ],
+    "independent_decision": "approve-separate-interval-fix",
+    "new_sha256": "a7c1503e35d79ff1032db98143797c604c1ad257af2e880a251b51069a2120f9",
+    "candidate_file_sha256": "53bdd5b9c65998e94f436511d99d9bdbc36acf063325f9903ac2d2007401fae2",
+    "repository_applied": false,
+    "enclosing_contexts": [
+      {
+        "pointer": "/courses/8/units/5/lessons/0/steps/1/options/2",
+        "step": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lea6e3097da",
+            "t": "C up to G is a..."
+          },
+          "options": [
+            {
+              "k": "Lefb3a32162",
+              "t": "Third"
+            },
+            {
+              "k": "L7a3a4a4221",
+              "t": "Fourth"
+            },
+            {
+              "k": "L0e4a8a8ead",
+              "t": "Fifth"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "Lec28679d6a",
+            "t": "C, D, E, F, G: five letters."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/5/lessons/0/steps/5/options/1",
+        "step": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L12446dd7c8",
+            "t": "F up to D is a..."
+          },
+          "options": [
+            {
+              "k": "L7a3a4a4221",
+              "t": "Fourth"
+            },
+            {
+              "k": "L0e4a8a8ead",
+              "t": "Fifth"
+            },
+            {
+              "k": "L212e6bf39f",
+              "t": "Sixth"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "L0e9f06e0f4",
+            "t": "F, G, A, B, C, D: six letters."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/5/lessons/0/steps/6/options/1",
+        "step": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L23098234bf",
+            "t": "A up to E♭ is a..."
+          },
+          "options": [
+            {
+              "k": "L7a3a4a4221",
+              "t": "Fourth"
+            },
+            {
+              "k": "L0e4a8a8ead",
+              "t": "Fifth"
+            },
+            {
+              "k": "L212e6bf39f",
+              "t": "Sixth"
+            }
+          ],
+          "answer": 1,
+          "why": {
+            "k": "L86b3a72f1e",
+            "t": "A, B, C, D, E: five letters. The flat doesn't change the count."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/10/units/3/lessons/1/steps/2/options/1",
+        "step": {
+          "type": "listen",
+          "prompt": {
+            "k": "La65af49fcb",
+            "t": "Third or fifth?"
+          },
+          "sound": [
+            [
+              60
+            ],
+            [
+              67
+            ]
+          ],
+          "options": [
+            {
+              "k": "Lefb3a32162",
+              "t": "Third"
+            },
+            {
+              "k": "L0e4a8a8ead",
+              "t": "Fifth"
+            }
+          ],
+          "answer": 1
+        }
+      },
+      {
+        "pointer": "/courses/10/units/3/lessons/1/steps/5/options/1",
+        "step": {
+          "type": "listen",
+          "prompt": {
+            "k": "La65af49fcb",
+            "t": "Third or fifth?"
+          },
+          "sound": [
+            [
+              62
+            ],
+            [
+              65
+            ]
+          ],
+          "options": [
+            {
+              "k": "Lefb3a32162",
+              "t": "Third"
+            },
+            {
+              "k": "L0e4a8a8ead",
+              "t": "Fifth"
+            }
+          ],
+          "answer": 0
+        }
+      },
+      {
+        "pointer": "/courses/10/units/3/lessons/2/steps/1/options/1",
+        "step": {
+          "type": "listen",
+          "prompt": {
+            "k": "Lbb6c27409b",
+            "t": "Octave or fifth?"
+          },
+          "sound": [
+            [
+              60
+            ],
+            [
+              72
+            ]
+          ],
+          "options": [
+            {
+              "k": "L103165a25e",
+              "t": "Octave"
+            },
+            {
+              "k": "L0e4a8a8ead",
+              "t": "Fifth"
+            }
+          ],
+          "answer": 0
+        }
+      },
+      {
+        "pointer": "/courses/10/units/3/lessons/2/steps/5/options/1",
+        "step": {
+          "type": "listen",
+          "prompt": {
+            "k": "Lbb6c27409b",
+            "t": "Octave or fifth?"
+          },
+          "sound": [
+            [
+              62
+            ],
+            [
+              69
+            ]
+          ],
+          "options": [
+            {
+              "k": "L103165a25e",
+              "t": "Octave"
+            },
+            {
+              "k": "L0e4a8a8ead",
+              "t": "Fifth"
+            }
+          ],
+          "answer": 1
+        }
+      },
+      {
+        "pointer": "/courses/10/units/3/lessons/3/steps/2/options/1",
+        "step": {
+          "type": "listen",
+          "prompt": {
+            "k": "La65af49fcb",
+            "t": "Third or fifth?"
+          },
+          "sound": [
+            [
+              64
+            ],
+            [
+              67
+            ]
+          ],
+          "options": [
+            {
+              "k": "Lefb3a32162",
+              "t": "Third"
+            },
+            {
+              "k": "L0e4a8a8ead",
+              "t": "Fifth"
+            }
+          ],
+          "answer": 0
+        }
+      },
+      {
+        "pointer": "/courses/10/units/3/lessons/3/steps/5/options/1",
+        "step": {
+          "type": "listen",
+          "prompt": {
+            "k": "Lbb6c27409b",
+            "t": "Octave or fifth?"
+          },
+          "sound": [
+            [
+              65
+            ],
+            [
+              72
+            ]
+          ],
+          "options": [
+            {
+              "k": "L103165a25e",
+              "t": "Octave"
+            },
+            {
+              "k": "L0e4a8a8ead",
+              "t": "Fifth"
+            }
+          ],
+          "answer": 1
+        }
+      }
+    ],
+    "enclosing_contexts_sha256": "03038bae48dc961b4cc171be09a6e576a38a273495b2f98d0c07b70c5f75377e",
+    "independent_reason": "The retained choices compare musical pitch intervals, not fingering, sequence position or scale-degree labels. Use the interval noun, without specifying a quality absent from the English."
+  },
+  {
+    "locale": "zh-CN",
+    "key": "L212e6bf39f",
+    "source": "Sixth",
+    "source_sha256": "ac4def911f828a63319722f7c25f0af6501d761fb1b6d809ba80d0dd9c9f2331",
+    "old": "第六",
+    "old_sha256": "ab883413872cda643da230b5f2ee212e999af53285692376f3021b40ca907173",
+    "suggested_new": "六度",
+    "status": "adjacent-finding-only-excluded-from-patches-and-validation-counts",
+    "reason": "Exact key occurs only in interval questions; current translation is a generic ordinal instead of the interval name. Parent may separately review these four values.",
+    "context_pointers": [
+      "/courses/8/units/5/lessons/0/steps/5/options/2",
+      "/courses/8/units/5/lessons/0/steps/6/options/2"
+    ],
+    "independent_decision": "approve-separate-interval-fix",
+    "new_sha256": "90a5d87cdf50cd556dcd9a4215ab933ce08dc1b94da3c2f7c59a9e928eff9234",
+    "candidate_file_sha256": "53bdd5b9c65998e94f436511d99d9bdbc36acf063325f9903ac2d2007401fae2",
+    "repository_applied": false,
+    "enclosing_contexts": [
+      {
+        "pointer": "/courses/8/units/5/lessons/0/steps/5/options/2",
+        "step": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L12446dd7c8",
+            "t": "F up to D is a..."
+          },
+          "options": [
+            {
+              "k": "L7a3a4a4221",
+              "t": "Fourth"
+            },
+            {
+              "k": "L0e4a8a8ead",
+              "t": "Fifth"
+            },
+            {
+              "k": "L212e6bf39f",
+              "t": "Sixth"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "L0e9f06e0f4",
+            "t": "F, G, A, B, C, D: six letters."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/5/lessons/0/steps/6/options/2",
+        "step": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L23098234bf",
+            "t": "A up to E♭ is a..."
+          },
+          "options": [
+            {
+              "k": "L7a3a4a4221",
+              "t": "Fourth"
+            },
+            {
+              "k": "L0e4a8a8ead",
+              "t": "Fifth"
+            },
+            {
+              "k": "L212e6bf39f",
+              "t": "Sixth"
+            }
+          ],
+          "answer": 1,
+          "why": {
+            "k": "L86b3a72f1e",
+            "t": "A, B, C, D, E: five letters. The flat doesn't change the count."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      }
+    ],
+    "enclosing_contexts_sha256": "de4dffe0fcf51e8f70dec81eaf6d9b0e0271be4162af52759806ad629c50e231",
+    "independent_reason": "The retained choices compare musical pitch intervals, not fingering, sequence position or scale-degree labels. Use the interval noun, without specifying a quality absent from the English."
+  }
+]

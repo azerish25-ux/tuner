@@ -1,0 +1,49 @@
+{
+  "locale": "ml",
+  "baseline_source_count": 6080,
+  "integrated_source_count": 6082,
+  "status": "AI draft; independent semantic review pending; not native/device certified",
+  "applied_to_baseline": false,
+  "items": [
+    {
+      "key": "Lf94a998e29",
+      "source": "Strings: 1, 2, 3 and 4",
+      "translation": "തന്തികൾ: 1, 2, 3, 4",
+      "change": "new_key",
+      "context_evidence": "Fingerpicking quiz answer listing instrument strings; ordinary conjunction, not a spoken offbeat.",
+      "table": "Learn.strings",
+      "check_errors": [],
+      "check_warnings": []
+    },
+    {
+      "key": "L4f162aedb4",
+      "source": "Middle section",
+      "translation": "മധ്യഭാഗം",
+      "change": "new_key",
+      "context_evidence": "Song section label, not a finger.",
+      "table": "Learn.strings",
+      "check_errors": [],
+      "check_warnings": []
+    },
+    {
+      "key": "Lf6586312d9",
+      "source": "1, 2, 3 and 4",
+      "translation": "1, 2, 3 ആൻഡ് 4",
+      "change": "retained_key_contextual_correction",
+      "context_evidence": "Parent verified rhythm.py rhy-2-2 quiz How do you count this pattern? This is distractor choice 1. The word and is one spoken offbeat subdivision, not a list conjunction. Preserve the distractor pattern.",
+      "table": "Learn.strings",
+      "check_errors": [],
+      "check_warnings": []
+    },
+    {
+      "key": "Lced02810fc",
+      "source": "Middle",
+      "translation": "നടുവിരൽ",
+      "change": "retained_key_contextual_correction",
+      "context_evidence": "Parent split leaves this key finger-only. Baseline Banjo Unit 1 bjo-1-3 Thumb, index, middle step 3 quiz answer.",
+      "table": "Learn.strings",
+      "check_errors": [],
+      "check_warnings": []
+    }
+  ]
+}

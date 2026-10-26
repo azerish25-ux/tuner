@@ -20,7 +20,7 @@ Every row is mandatory. The "Current table" hints come from reading the shipped 
 | Units | സെന്റുകൾ; മിനിറ്റ്; സെക്കൻഡ്; മില്ലിസെക്കൻഡ്. Hz, BPM, ¢, XP unchanged |  |
 | Capitalization | No case; preserve brand spelling |  |
 | Note names in the interface | Runtime supplies notes; do not invent note names |  |
-| Note names in lessons (lesson languages only) | Not a lesson locale; preserve C, F♯, B♭, Em, G7 if referenced |  |
+| Note names in lessons (lesson languages only) | Lessons are required; preserve C, F♯, B♭, Em, G7 if referenced |  |
 | Sharp / flat / double sharp / double flat as words | ഷാർപ്പ് / ഫ്ലാറ്റ് / ഡബിൾ ഷാർപ്പ് / ഡബിൾ ഫ്ലാറ്റ് |  |
 | Tuning direction | താഴ്ന്നത് / ഉയർന്നത് for tuner direction; loan labels remain exact refs |  |
 | iOS Settings path (legal text) | ക്രമീകരണങ്ങൾ › Apple അക്കൗണ്ട് › സബ്സ്ക്രിപ്ഷനുകൾ. AI-reviewed; device verification pending |  |
@@ -60,7 +60,7 @@ Every row is mandatory. The "Current table" hints come from reading the shipped 
 | Chord view / Neck view | What VoiceOver calls the Show me switch | VoiceOver | `Chord view`, `Neck view` | കോർഡ് കാഴ്ച / നെക്ക് കാഴ്ച |  |
 | Show me | The 3D demonstration of a chord or notes on the neck | lessons | `Show me` | കാണിക്കുക | Sits on a small capsule: short. |
 | Strum to tune | One strum reads every string at once | tuner, listing | `Strum to tune` | ട്യൂൺ ചെയ്യാൻ സ്ട്രം ചെയ്യുക |  |
-| Tune by feel / Feel | The phone pulses with the beat between the string and its note, slower as they meet, still at the lock | tuner, settings | `Tune by feel`, `Feel` | കമ്പനത്തിലൂടെ ട്യൂൺ ചെയ്യുക / കമ്പനം അനുഭവിക്കുക | "Feel it", "Feel the beat" use the same sense. |
+| Tune by feel / Feel | The phone pulses with the beat between the string and its note, slower as they meet, still at the lock | tuner, settings | `Tune by feel`, `Feel` | കമ്പനത്തിലൂടെ ട്യൂൺ ചെയ്യുക / കമ്പനം | "Feel it", "Feel the beat" use the same sense. |
 | Bullseye | The pitch game (hit the centre ring); also leaderboard names | Practice, Game Center | `Bullseye` | ബുൾസ്ഐ | Every current table translates it (de Volltreffer, fr Tir parfait, ja ど真ん中, ru В яблочко …) although HANDOFF.md says to keep game names. Decide once; every string naming the game ("Win a round of Bullseye", "Score 2,000 in Bullseye") uses this. |
 | Ear trainer / Ear training | The ear games and the ear course | Practice, Learn | `Ear training` | ചെവി പരിശീലനം |  |
 | Drone | A sustained reference tone to play or sing against | Practice, lessons | `Drone` | ഡ്രോൺ | de Bordun, fr Bourdon, es Nota pedal, ja ドローン (current tables). |
@@ -187,3 +187,23 @@ Write the translation that applies in Timbre, and the one GPT must avoid.
 | Next, Again, Slower | on-screen labels and also Siri command words (`ios/Timbre/Intents/PracticeIntents.swift`): one translation serves both | — | അടുത്തത് / വീണ്ടും / പതുക്കെ | Use the sense above |
 | Practice | the tab and the activity | a medical or legal practice | പരിശീലനം | a medical or legal practice |
 | Feel | the haptic tuning feature, feeling the beat | emotions | കമ്പനം അനുഭവിക്കുക (haptics; not emotion) | emotions |
+
+## 5. Lesson draft decisions (2026-10-26; AI draft, independent review pending)
+
+- A played musical note is **സ്വരം**; a written note symbol may be **നോട്ട്**. Pitch is **ശ്രുതി**. Preserve all literal Latin note letters and chord symbols.
+- Count spoken beat words in Malayalam script: **ഒന്ന്, രണ്ട്, മൂന്ന്, നാല്**. Subdivision syllables use Malayalam script (for example **ഒന്ന്-ആൻഡ്**); do not add numeric digits where English spells a number.
+- An English initial-letter mnemonic may remain verbatim only when explicitly taught, with a Malayalam explanation of its initial letters. Sung-word locators remain the actual sung words, introduced or explained in Malayalam. These are not permissions for untranslated explanatory prose.
+- Song titles without a well-established Malayalam title and all Timbre Originals keep the exact English title consistently in headings and prose. Standalone title/name/notation identities are invariant candidates, not approved translations; keep them in batch evidence for independent review, never change punctuation to evade the identity check.
+- **count** (beat counting) and **list** are distinct senses. The parent-owned source split has separately reviewed Malayalam targets: timed **1, 2, 3 and 4** → **1, 2, 3 ആൻഡ് 4**; string list **Strings: 1, 2, 3 and 4** → **തന്തികൾ: 1, 2, 3, 4**. **Middle** as a finger label → **നടുവിരൽ**; **Middle section** → **മധ്യഭാഗം**. These are staged in the source-context addendum, not inserted into the frozen baseline.
+
+- Lesson terms fixed across the instrument and ear-training batches: root **മൂലസ്വരം**; scale degree **സ്വരപടി**; triad **ത്രിസ്വര കോർഡ്**; inversion **വിപര്യയം**; phrase **സംഗീതവാക്യം**; fill **നിറവ്**; note highway **സ്വരപാത**.
+- Named intervals use ordinal + **സ്വരാന്തരം**, e.g. **മൈനർ രണ്ടാം സ്വരാന്തരം**, **മേജർ രണ്ടാം സ്വരാന്തരം**, **മൂന്നാം സ്വരാന്തരം**, **അഞ്ചാം സ്വരാന്തരം**; perfect is **പെർഫെക്റ്റ്**. Chord members are **മൂന്നാം സ്വരം**, **അഞ്ചാം സ്വരം**. Time duration remains **സെക്കൻഡ്**, not the interval label.
+- Duration names: **ക്വാർട്ടർ നോട്ട്**, **ഹാഫ് നോട്ട്**, **ഹോൾ നോട്ട്**, **എയ്ത്ത് നോട്ട്**, **സിക്സ്റ്റീന്ത് നോട്ട്**. Spoken subdivision **ഒന്ന്-ഇ-ആൻഡ്-അ**; banjo bum-ditty **ബം-ഡിറ്റ്-ടി**.
+
+- Sung solfège syllables: **ഡോ, റെ, മി, ഫാ, സോൾ, ലാ, ടി**. These are distinct from unchanged Latin note letters in notation.
+
+- “X is a Timbre Original”: **X എന്നത് Timbre ആപ്പിലെ സ്വന്തം പാട്ടാണ്**. The app noun carries the ending; do not inflect the brand or omit the linking noun.
+
+- Syncopation is **സിങ്കോപ്പേഷൻ**, with adjectival **സിങ്കോപ്പേറ്റഡ്**. Use this spelling consistently, not the short-ഒ variant.
+- Musical “home” is **ആധാരം / ആധാര സ്വരം / ആധാര കോർഡ്** as context requires, not a literal house. Distinguish pitch height (**ഉയർന്ന / താഴ്ന്ന ശ്രുതി**) from physical string, fret or keyboard position.
+- In the singing lessons, “breathe low” cues belly/lower-rib expansion: **വയറ് വികസിപ്പിച്ച് ശ്വസിക്കുക**, with the fuller explanation **വയറും താഴത്തെ വാരിയെല്ലുകളും വികസിക്കുക**. Avoid a literal instruction to breathe downward.

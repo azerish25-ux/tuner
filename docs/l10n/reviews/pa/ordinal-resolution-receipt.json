@@ -1,0 +1,39 @@
+{
+  "locale": "pa",
+  "status": "All three historical ordinal conditions met for the exact live source hash; Punjabi integration remains parent-owned.",
+  "source_applied_by": "Parent /root, confirmed in collaboration message 2026-10-26",
+  "package_builder_applied_source": false,
+  "independent_source_reviewer": "Independent AI context participant (AI)",
+  "independent_review_manifest": "inputs/ordinal-independent/manifest.json",
+  "parent_application_receipt": "inputs/parent-application/ordinal-applied-receipt.json",
+  "historical_conditional_approval": "inputs/independent-review/first-half/ordinal-existing-key-remap-conditional-approval.json",
+  "live_curriculum_sha256": "9d17bcb3e3b78e4ca203c6c9bd4caa87f9a6f86346ee8c4ed683b93d86b43639",
+  "english_sha256": "94328042f9d1334dba75f26e6e1889abc048a0f1f95c849d95c01b1f9136bfa2",
+  "finger_redirects_verified": 18,
+  "remaining_interval_occurrences_verified": 15,
+  "all_other_curriculum_bytes_equal_exact_projection": true,
+  "authoring_after_hashes_verified": [
+    {
+      "file": "tools/curriculum/courses/cello.py",
+      "before_sha256": "1416150e1384ce1f74d6dbf118c3acce3a71f0882823c1f5b0f90698b9cf1159",
+      "required_after_sha256": "e08348c1f4d8e21ee4938982699657af88eb4ff027d1d67590956636eb0b2914"
+    },
+    {
+      "file": "tools/curriculum/courses/guitar.py",
+      "before_sha256": "762a0e21d341ff26262e8f8fb9983fc560c1ee1fa11cc10e02d7c60f94ec50ef",
+      "required_after_sha256": "028b8df892ba58bf7502f55ab74fdf508f7d2c528754455ccbb62ee1d989de05"
+    },
+    {
+      "file": "tools/curriculum/courses/violin.py",
+      "before_sha256": "df6f047b3e38045f6b34867e360d3275e6da36ea37787cf9efcc883dd959699a",
+      "required_after_sha256": "ee4f908bd034185911686d04e655c9d4d0a7d9f0871f358f297609a0bbcbfb30"
+    }
+  ],
+  "explicit_finger_Punjabi_targets_retained": true,
+  "resolved_keys": [
+    "L2a4bcae654",
+    "L7a3a4a4221",
+    "Lefb3a32162"
+  ],
+  "Punjabi_targets_applied_to_repository_by_packager": false
+}

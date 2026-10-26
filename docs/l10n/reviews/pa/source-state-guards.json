@@ -1,0 +1,29 @@
+{
+  "repository": "integration workspace",
+  "english_file": "ios/Timbre/Resources/en.lproj/Learn.strings",
+  "english_sha256": "94328042f9d1334dba75f26e6e1889abc048a0f1f95c849d95c01b1f9136bfa2",
+  "curriculum_file": "ios/Sources/TimbreCore/Resources/curriculum.json",
+  "observed_before_curriculum_sha256": "5385cc11952cce0d76d4f46eb1f61238c9af72f7f46ae94c6b8a25200fc6be1d",
+  "required_after_curriculum_sha256": "9d17bcb3e3b78e4ca203c6c9bd4caa87f9a6f86346ee8c4ed683b93d86b43639",
+  "required_authoring_files": [
+    {
+      "file": "tools/curriculum/courses/cello.py",
+      "before_sha256": "1416150e1384ce1f74d6dbf118c3acce3a71f0882823c1f5b0f90698b9cf1159",
+      "required_after_sha256": "e08348c1f4d8e21ee4938982699657af88eb4ff027d1d67590956636eb0b2914"
+    },
+    {
+      "file": "tools/curriculum/courses/guitar.py",
+      "before_sha256": "762a0e21d341ff26262e8f8fb9983fc560c1ee1fa11cc10e02d7c60f94ec50ef",
+      "required_after_sha256": "028b8df892ba58bf7502f55ab74fdf508f7d2c528754455ccbb62ee1d989de05"
+    },
+    {
+      "file": "tools/curriculum/courses/violin.py",
+      "before_sha256": "df6f047b3e38045f6b34867e360d3275e6da36ea37787cf9efcc883dd959699a",
+      "required_after_sha256": "ee4f908bd034185911686d04e655c9d4d0a7d9f0871f358f297609a0bbcbfb30"
+    }
+  ],
+  "observed_live_curriculum_sha256": "9d17bcb3e3b78e4ca203c6c9bd4caa87f9a6f86346ee8c4ed683b93d86b43639",
+  "observed_remap_applied_by_parent": true,
+  "source_patch_independent_review": "inputs/ordinal-independent/manifest.json",
+  "source_resolution_receipt": "ordinal-resolution-receipt.json"
+}

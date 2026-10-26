@@ -1,0 +1,20 @@
+{
+  "partitions": [
+    {
+      "partition": "001-030",
+      "manifest_sha256": "3f9696c9318803636f52b5f462a9914eab9e3b471efe7ee0749fea34b0e6013c",
+      "verified_files": 92
+    },
+    {
+      "partition": "031-045",
+      "manifest_sha256": "5270765e2b40e94352eebebe3d429ad7ce1c937e4c7c5ea5a17cb4d7305a0179",
+      "verified_files": 106
+    },
+    {
+      "partition": "046-059",
+      "manifest_sha256": "6912b0c89bff4d96e0e6c42f933eb7f574e7659e03431a58681b5f51c9b80cd5",
+      "verified_files": 98
+    }
+  ],
+  "frozen_inputs_unchanged": true
+}

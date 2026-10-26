@@ -1,0 +1,205 @@
+{
+  "locale": "pa",
+  "reviewed_decisions": 4,
+  "new_keys": 2,
+  "retained_changed": 1,
+  "retained_unchanged": 1,
+  "repository_applied": false,
+  "items": [
+    {
+      "locale": "pa",
+      "table": "Learn.strings",
+      "key": "Lf94a998e29",
+      "source": "Strings: 1, 2, 3 and 4",
+      "source_sha256": "a9c0f5eaf3a697599b3602ce970b13b1f3fbfa5800b0f02cee313043a39f4d1a",
+      "old": null,
+      "old_sha256": null,
+      "new": "ਤਾਰਾਂ: 1, 2, 3 ਅਤੇ 4",
+      "new_sha256": "5fc909eba8d00571b249454d5653dc133545d6bc7a1ccf5a83c4832048ea0880",
+      "kind": "new-context-key",
+      "decision": "approve6082-only",
+      "reason": "A list of instrument strings, not a timed count.",
+      "current_occurrences": [
+        {
+          "path": "/courses/1/units/8/lessons/5/steps/1/options/0",
+          "scope": [
+            "ukulele",
+            "uke-9",
+            "uke-9-6"
+          ],
+          "source": "Strings: 1, 2, 3 and 4"
+        }
+      ],
+      "current_occurrence_count": 1,
+      "frozen_baseline_presence": false,
+      "reviewers": [
+        "Independent AI reviewer A",
+        "Independent AI reviewer B"
+      ],
+      "materialization": "included only in packaged 6082 integration map",
+      "repository_applied": false
+    },
+    {
+      "locale": "pa",
+      "table": "Learn.strings",
+      "key": "L4f162aedb4",
+      "source": "Middle section",
+      "source_sha256": "3bb8d1b80c1fb7c14b7404bf6e3c408d1f07d8022175ee18f2667497b875255f",
+      "old": null,
+      "old_sha256": null,
+      "new": "ਵਿਚਕਾਰਲਾ ਹਿੱਸਾ",
+      "new_sha256": "fa7b3b70b4070d4505f651b2481c54203c45667cca97f9f85ccef32498eec57b",
+      "kind": "new-context-key",
+      "decision": "approve6082-only",
+      "reason": "A song section, not the middle finger.",
+      "current_occurrences": [
+        {
+          "path": "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+          "scope": [
+            "standards",
+            "std-9",
+            "std-rondo-alla-turca"
+          ],
+          "source": "Middle section"
+        },
+        {
+          "path": "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+          "scope": [
+            "ukulele-songbook",
+            "uke-sb-std-9",
+            "uke-sb-std-rondo-alla-turca"
+          ],
+          "source": "Middle section"
+        },
+        {
+          "path": "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+          "scope": [
+            "mandolin-songbook",
+            "man-sb-std-9",
+            "man-sb-std-rondo-alla-turca"
+          ],
+          "source": "Middle section"
+        },
+        {
+          "path": "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+          "scope": [
+            "violin-songbook",
+            "vln-sb-std-9",
+            "vln-sb-std-rondo-alla-turca"
+          ],
+          "source": "Middle section"
+        },
+        {
+          "path": "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+          "scope": [
+            "cello-songbook",
+            "vc-sb-std-9",
+            "vc-sb-std-rondo-alla-turca"
+          ],
+          "source": "Middle section"
+        },
+        {
+          "path": "/courses/18/units/22/lessons/1/arrangement/sections/3/name",
+          "scope": [
+            "bass-songbook",
+            "bass-sb-std-9",
+            "bass-sb-std-rondo-alla-turca"
+          ],
+          "source": "Middle section"
+        }
+      ],
+      "current_occurrence_count": 6,
+      "frozen_baseline_presence": false,
+      "reviewers": [
+        "Independent AI reviewer A",
+        "Independent AI reviewer B"
+      ],
+      "materialization": "included only in packaged 6082 integration map",
+      "repository_applied": false
+    },
+    {
+      "locale": "pa",
+      "table": "Learn.strings",
+      "key": "Lf6586312d9",
+      "source": "1, 2, 3 and 4",
+      "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+      "old": "1, 2, 3 ਅਤੇ 4",
+      "old_sha256": "7eb2c4483fa616704fa01ff410a1ea2d5a59e3cd2c8ef5f9530ed5a5db8599a5",
+      "new": "1, 2, 3 ਤੇ 4",
+      "new_sha256": "d12a52014d7dd973c2cd38625e665cecd0f8ca5c9797e8a633c72e973427e44c",
+      "kind": "retained-context-correction",
+      "decision": "approve6082-only",
+      "reason": "Rhythm-only context in 6082 integration; one-syllable ਤੇ preserves the and subdivision.",
+      "current_occurrences": [
+        {
+          "path": "/courses/9/units/1/lessons/1/steps/2/options/1",
+          "scope": [
+            "rhythm",
+            "rhy-2",
+            "rhy-2-2"
+          ],
+          "source": "1, 2, 3 and 4"
+        }
+      ],
+      "current_occurrence_count": 1,
+      "frozen_baseline_presence": true,
+      "reviewers": [
+        "Independent AI reviewer A",
+        "Independent AI reviewer B"
+      ],
+      "materialization": "included only in packaged 6082 integration map",
+      "repository_applied": false
+    },
+    {
+      "locale": "pa",
+      "table": "Learn.strings",
+      "key": "Lced02810fc",
+      "source": "Middle",
+      "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+      "old": "ਵਿਚਕਾਰਲੀ ਉਂਗਲ",
+      "old_sha256": "b4e84358014e397cc5e374ffa76588a323455d8a8c2802490fa017f9bdd66dfc",
+      "new": "ਵਿਚਕਾਰਲੀ ਉਂਗਲ",
+      "new_sha256": "b4e84358014e397cc5e374ffa76588a323455d8a8c2802490fa017f9bdd66dfc",
+      "kind": "retained-context-confirmation",
+      "decision": "approve6082-only",
+      "reason": "Finger-only context in 6082 integration.",
+      "current_occurrences": [
+        {
+          "path": "/courses/6/units/0/lessons/2/steps/2/options/0",
+          "scope": [
+            "banjo",
+            "bjo-1",
+            "bjo-1-3"
+          ],
+          "source": "Middle"
+        },
+        {
+          "path": "/courses/6/units/0/lessons/4/steps/2/options/1",
+          "scope": [
+            "banjo",
+            "bjo-1",
+            "bjo-1-5"
+          ],
+          "source": "Middle"
+        },
+        {
+          "path": "/courses/6/units/1/lessons/1/steps/3/options/1",
+          "scope": [
+            "banjo",
+            "bjo-2",
+            "bjo-2-2"
+          ],
+          "source": "Middle"
+        }
+      ],
+      "current_occurrence_count": 3,
+      "frozen_baseline_presence": true,
+      "reviewers": [
+        "Independent AI reviewer A",
+        "Independent AI reviewer B"
+      ],
+      "materialization": "included only in packaged 6082 integration map",
+      "repository_applied": false
+    }
+  ]
+}

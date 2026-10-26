@@ -1,0 +1,236 @@
+{
+  "rows": [
+    {
+      "id": "ml-039.out:s112:Lf8adc1eed0",
+      "source": "The key signature shows B♭. Which Bs are played as B♭?",
+      "translation": "കീ സിഗ്നേച്ചറിൽ B♭ ഉണ്ട്. ഏതു B കളാണ് B♭ ആയി വായിക്കുന്നത്?",
+      "source_notes": {
+        "B♭": 2
+      },
+      "translation_notes": {
+        "B♭": 2,
+        "B": 1
+      },
+      "key": "Lf8adc1eed0",
+      "source_sha256": "3b9b718564467c9d5dc8d88ede83410a67c36be147978c70e6b6c598c38503ad",
+      "target_sha256": "86e15525e2c28956a849e18ee536a1473639e3a29e43bce931ab699449ec997d",
+      "decision": "accepted",
+      "reason": "English plural Bs is represented by literal B plus Malayalam plural wording; both B♭ instances remain.",
+      "reviewer": "AI participant A",
+      "native_or_device_certified": false
+    },
+    {
+      "id": "ml-049.out:s032:L1872354e80",
+      "source": "D at fret 3 on string 2, then climb from open G: A, B, C, D. Then two open Gs.",
+      "translation": "തന്തി 2 ലെ ഫ്രെറ്റ് 3 ൽ D, പിന്നെ തുറന്ന G യിൽനിന്ന് ഉയരുക: A, B, C, D. തുടർന്ന് തുറന്ന G രണ്ടുതവണ.",
+      "source_notes": {
+        "D": 2,
+        "G": 1,
+        "B": 1,
+        "C": 1
+      },
+      "translation_notes": {
+        "D": 2,
+        "G": 2,
+        "B": 1,
+        "C": 1
+      },
+      "key": "L1872354e80",
+      "source_sha256": "6e6a79f5190086c5cc6aa6cd93d8fdcea8d4c441f123bfe84a7932298f5a73c4",
+      "target_sha256": "b897ed1ff684d2db767d00ebbcb730a51191f07b6d3fd5cb8f9f351fc06895a6",
+      "decision": "accepted",
+      "reason": "English plural Gs is represented as open G twice; the full D/A/B/C/D phrase and both G references remain.",
+      "reviewer": "AI participant A",
+      "native_or_device_certified": false
+    },
+    {
+      "id": "ml-050.out:s020:L00f1e4a733",
+      "source": "D at fret 3 on string 2 and open string 4 are both D. How far apart are they?",
+      "translation": "തന്തി 2 ലെ ഫ്രെറ്റ് 3 ഉം തുറന്ന തന്തി 4 ഉം D ആണ്. അവയ്ക്കിടയിലെ അകലം എത്ര?",
+      "source_notes": {
+        "D": 2
+      },
+      "translation_notes": {
+        "D": 1
+      },
+      "key": "L00f1e4a733",
+      "source_sha256": "044071dcbbf10910fc715b3cba49e51009c48e498ca74ddee7410246fd2f04ba",
+      "target_sha256": "eefd4309db518e55f1e53874d9ea4c205f60e5b2f8f0f9e9bc05eea4a78d5517",
+      "decision": "accepted",
+      "reason": "The shared predicate states both named string/fret positions are D once, instead of repeating the same label; both positions and their octave comparison remain unchanged.",
+      "reviewer": "AI participant A",
+      "native_or_device_certified": false
+    },
+    {
+      "id": "ml-050.out:s023:Lb20b5d720b",
+      "source": "An octave is the same letter, eight steps higher or lower. The two Ds blend, but one sounds brighter.",
+      "translation": "ഒരേ പേരിൽ എട്ട് പടി മുകളിലോ താഴെയോ ഉള്ള സ്വരമാണ് ഒക്ടേവ്. രണ്ട് D സ്വരങ്ങളും ലയിക്കുന്നു; പക്ഷേ ഒന്ന് കൂടുതൽ തെളിമയോടെ കേൾക്കുന്നു.",
+      "source_notes": {},
+      "translation_notes": {
+        "D": 1
+      },
+      "key": "Lb20b5d720b",
+      "source_sha256": "8dff982d6a69ccdc1acc70d474595b30501ee27bfd1d964fdbbfa1358f88981f",
+      "target_sha256": "77a4f4d700434e176909a90d1f41fe3e20f5769f7effbe5e3a8ac043222698cd",
+      "decision": "accepted",
+      "reason": "English plural Ds becomes two D notes in Malayalam; no musical token was introduced or omitted.",
+      "reviewer": "AI participant A",
+      "native_or_device_certified": false
+    },
+    {
+      "id": "ml-054.out:s051:L5e0badd310",
+      "source": "The first line: open D, E, four open Gs, a dip to B on string 5, then home to G.",
+      "translation": "ആദ്യ വരി: തുറന്ന D, E, നാല് തുറന്ന G സ്വരങ്ങൾ, തന്തി 5 ലെ B യിലേക്ക് താഴുക, പിന്നെ ആധാര സ്വരമായ G യിലേക്ക്.",
+      "source_notes": {
+        "D": 1,
+        "E": 1,
+        "B": 1,
+        "G": 1
+      },
+      "translation_notes": {
+        "D": 1,
+        "E": 1,
+        "G": 2,
+        "B": 1
+      },
+      "key": "L5e0badd310",
+      "source_sha256": "81a7226d1c80f97661d59eeb107cba61619dee682c702b704a6bcbeb5a331ae3",
+      "target_sha256": "f727d262724a184bbbfcc4408d4f2fa82c96474ab994404dfa1162f4103c0bc9",
+      "decision": "accepted",
+      "reason": "English plural Gs becomes four open G notes; the later home G is a separate preserved occurrence.",
+      "reviewer": "AI participant A",
+      "native_or_device_certified": false
+    },
+    {
+      "id": "ml-054.out:s073:L300573ec25",
+      "source": "In Dublin's fair city: open D, four open Gs, up to open B and back to G.",
+      "translation": "“In Dublin's fair city” എന്ന വരി: തുറന്ന D, നാല് തുറന്ന G സ്വരങ്ങൾ, തുറന്ന B യിലേക്ക് ഉയർന്ന് G യിലേക്ക് മടങ്ങുക.",
+      "source_notes": {
+        "D": 1,
+        "B": 1,
+        "G": 1
+      },
+      "translation_notes": {
+        "D": 1,
+        "G": 2,
+        "B": 1
+      },
+      "key": "L300573ec25",
+      "source_sha256": "b2f2268095a9be333b935535542d4296ba2ec9d55d2c72f40b50fcf66f0d0bdf",
+      "target_sha256": "255cce88d06c19e8045f029446f6f910aff2af3b205fd5848235f1f3296965fd",
+      "decision": "accepted",
+      "reason": "English plural Gs becomes four open G notes; the final return to G remains.",
+      "reviewer": "AI participant A",
+      "native_or_device_certified": false
+    },
+    {
+      "id": "ml-054.out:s103:L69c68aba96",
+      "source": "Speed, bonnie boat, like a bird on the wing: open D, E, D, three open Gs, then A, B, A and up to D.",
+      "translation": "വരി “Speed, bonnie boat, like a bird on the wing”: തുറന്ന D, E, D, തുറന്ന G മൂന്നുവട്ടം; A, B, A, D യിലേക്ക് ഉയരുക.",
+      "source_notes": {
+        "D": 3,
+        "E": 1,
+        "B": 1
+      },
+      "translation_notes": {
+        "D": 3,
+        "E": 1,
+        "G": 1,
+        "B": 1
+      },
+      "key": "L69c68aba96",
+      "source_sha256": "35c76c2737f11791aa26a30e9d03cd7d3680c622fd31bf4ec476eb1c85455b91",
+      "target_sha256": "f8f6eaf0bb3e1ad937c773863e6378034ffedb7c58fbe8a6a5c7f96fd5152561",
+      "decision": "accepted",
+      "reason": "English plural Gs becomes open G three times; the D/E/D and A/B/A/D sequences remain exact.",
+      "reviewer": "AI participant A",
+      "native_or_device_certified": false
+    },
+    {
+      "id": "ml-055.out:s004:L89c21ba2e6",
+      "source": "O Tannenbaum, o Tannenbaum: open D, three open Gs, then A at fret 2 and three open Bs.",
+      "translation": "വരി “O Tannenbaum, o Tannenbaum”: തുറന്ന D, തുറന്ന G മൂന്നുവട്ടം, പിന്നെ ഫ്രെറ്റ് 2 ലെ A, തുറന്ന B മൂന്നുവട്ടം.",
+      "source_notes": {
+        "D": 1
+      },
+      "translation_notes": {
+        "D": 1,
+        "G": 1,
+        "B": 1
+      },
+      "key": "L89c21ba2e6",
+      "source_sha256": "638aeed231f9954e3cb58d8c53d6e585ed7c2d294919ceecbf03dd6c09117d2c",
+      "target_sha256": "abd66db2461e2fd25de393c04f3d98cc5954d240adef4ea6ce001d39a50b4b76",
+      "decision": "accepted",
+      "reason": "English plurals Gs and Bs become G three times and B three times; all pitches, counts and fret 2 remain.",
+      "reviewer": "AI participant A",
+      "native_or_device_certified": false
+    },
+    {
+      "id": "ml-055.out:s059:Ldbdc65cb5e",
+      "source": "A long open G, then A, C, B, A, and two Ds at fret 3 on string 2.",
+      "translation": "നീണ്ട തുറന്ന G, പിന്നെ A, C, B, A, തന്തി 2 ൽ ഫ്രെറ്റ് 3 ലെ D രണ്ടുവട്ടം.",
+      "source_notes": {
+        "G": 1,
+        "C": 1,
+        "B": 1
+      },
+      "translation_notes": {
+        "G": 1,
+        "C": 1,
+        "B": 1,
+        "D": 1
+      },
+      "key": "Ldbdc65cb5e",
+      "source_sha256": "5543338876eb6c2ed2715d1a7e4f839b8621edc57b1b78989c2f0bc292f651ac",
+      "target_sha256": "f6bdc8e74a554d2913a7d035f8b9824973e6abcd7dd76a2c5595c2e83a38be39",
+      "decision": "accepted",
+      "reason": "English plural Ds becomes D twice; all earlier G/A/C/B/A notes and string/fret references remain.",
+      "reviewer": "AI participant A",
+      "native_or_device_certified": false
+    },
+    {
+      "id": "ml-056.out:s092:Lf3f836de8c",
+      "source": "Four open Gs, then a leap to open E on string 1, down to D at fret 3 on string 2 and open B.",
+      "translation": "തുറന്ന G നാലുവട്ടം; തന്തി 1 ലെ തുറന്ന E യിലേക്ക് ചാടുക; തന്തി 2, ഫ്രെറ്റ് 3 ലെ D, തുറന്ന B എന്നിവയിലേക്ക് താഴുക.",
+      "source_notes": {
+        "E": 1,
+        "D": 1,
+        "B": 1
+      },
+      "translation_notes": {
+        "G": 1,
+        "E": 1,
+        "D": 1,
+        "B": 1
+      },
+      "key": "Lf3f836de8c",
+      "source_sha256": "61006fa2a26f38bee739df32f2e501ec2e458b18f69d8c1114d70fd89682d088",
+      "target_sha256": "7d75a856ecb3f120146a9068d96b6f8a44b1e6ce2e41095f24a73713efbaa152",
+      "decision": "accepted",
+      "reason": "English plural Gs becomes open G four times; E/D/B and all string/fret references remain.",
+      "reviewer": "AI participant A",
+      "native_or_device_certified": false
+    },
+    {
+      "id": "ml-058.out:s035:L8b6c78e799",
+      "source": "A sharp, at fret 3 on string 3, sits a half step below open B and leans right back into it.",
+      "translation": "തന്തി 3 ൽ ഫ്രെറ്റ് 3 ലെ A ഷാർപ്പ് തുറന്ന B യേക്കാൾ അര സ്വരം താഴെയാണ്; അത് നേരെ B യിലേക്ക് മടങ്ങാൻ ചായുന്നു.",
+      "source_notes": {
+        "B": 1
+      },
+      "translation_notes": {
+        "B": 2
+      },
+      "key": "L8b6c78e799",
+      "source_sha256": "7bcbe7c2096a951e27f8697022635e55b67eac4f5690cfef7a9226d66d0337d8",
+      "target_sha256": "2d51bbff6caaa9f0f66d3c7f151a5f0cf146adffe10055d81258a717e21c24eb",
+      "decision": "accepted",
+      "reason": "The English pronoun it is explicitly resolved to B in Malayalam; this adds a repeated pitch name, not a new musical instruction.",
+      "reviewer": "AI participant A",
+      "native_or_device_certified": false
+    }
+  ],
+  "count": 11,
+  "remaining_notation_suspects": []
+}

@@ -1,0 +1,27 @@
+{
+  "locale": "pa",
+  "count": 2,
+  "items": [
+    {
+      "key": "Lf50861df80",
+      "source": "The ii–V–I",
+      "translation": "ii–V–I",
+      "source_sha256": "4765d68c2ac1d427bc508da6036d34307eef31a581a24b33e4d7409b55997f98",
+      "translation_sha256": "1ce467e8700944cb7387b565c4d8ac71742f1dcbd9ebb0515a33b90eadc03141",
+      "reviewer": "Independent AI reviewer A",
+      "evidence_file": "inputs/independent-review/first-half/coverage.json",
+      "decision": "Existing independent approved-unchanged target retained; not a new packager semantic approval."
+    },
+    {
+      "key": "L8763a0c59a",
+      "source": "G G E G A G E.",
+      "translation": "G G E G A G E।",
+      "source_sha256": "30a3ae2860bd20b7e1737ffb7a96d5a1aa778232c0da1d3e336f87e861b1708f",
+      "translation_sha256": "8417e6062249610b6c7f2022aad3f285a98d0e4cb76e4bfd917b53c6340c5de8",
+      "reviewer": "Independent AI reviewer A",
+      "evidence_file": "inputs/independent-review/first-half/coverage.json",
+      "decision": "Existing independent approved-unchanged target retained; not a new packager semantic approval."
+    }
+  ],
+  "scope": "Two independently approved changed notation-only targets, not blanket permission for English prose."
+}

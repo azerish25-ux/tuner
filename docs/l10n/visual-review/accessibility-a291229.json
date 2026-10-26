@@ -1,0 +1,29 @@
+{
+  "commit": "a291229720411cdfcf3e412730baad498f819adb",
+  "run_id": 40273905146,
+  "job_id": 121413405711,
+  "artifact_id": 12630413200,
+  "artifact_sha256": "6b3fc01cc17a3daa0d0c0d4448e2e91396e52d6c80df872273f0852c41a8c3e4",
+  "verification": "downloaded ZIP hash verified; actual Songs and paywall screenshots inspected",
+  "app_core_release": "passed",
+  "accessibility": "failed",
+  "localized_launch_tests": "6 passed, zero failures",
+  "accessibility_tests": "5 tests,43 recorded failures; no waiver applied",
+  "observations": [
+    {
+      "screen": "paywall",
+      "screenshot": "502BCD78-69F7-41E1-8871-235A570A3207.png",
+      "finding": "Annual free-trial badge visibly overlaps the annual price; opaque card alone did not resolve overlap. Adaptive layout repair in progress, not device-verified."
+    },
+    {
+      "screen": "Songs",
+      "screenshot": "C0138DAB-0F5F-4A2A-ADA5-6CF1A416741C.png",
+      "finding": "Default screenshot captured; combined audit and isolated Dynamic Type/clipped text audits time out. Contrast findings include header and song-cover text. Not resolved or waived."
+    },
+    {
+      "screen": "Practice/Progress",
+      "finding": "Contrast findings remain; no device approval claimed."
+    }
+  ],
+  "limitations": "This is evidence for a291229, not a pass for later commits. UI completeness does not imply accessibility or store asset approval."
+}

@@ -20,7 +20,7 @@ Every row is mandatory. The "Current table" hints come from reading the shipped 
 | Units | ਸੈਂਟ; ਮਿੰਟ; ਸਕਿੰਟ; ਮਿਲੀਸਕਿੰਟ. Hz, BPM, ¢, XP unchanged |  |
 | Capitalization | No case; preserve brand spelling |  |
 | Note names in the interface | Runtime supplies note names; do not invent them |  |
-| Note names in lessons (lesson languages only) | Not a lesson locale; preserve C, F♯, B♭, Em, G7 if referenced |  |
+| Note names in lessons (lesson languages only) | Lessons are required; preserve C, F♯, B♭, Em, G7 if referenced |  |
 | Sharp / flat / double sharp / double flat as words | ਸ਼ਾਰਪ / ਫਲੈਟ / ਡਬਲ ਸ਼ਾਰਪ / ਡਬਲ ਫਲੈਟ |  |
 | Tuning direction | ਨੀਵਾਂ / ਉੱਚਾ for tuner direction; not accidentals |  |
 | iOS Settings path (legal text) | ਸੈਟਿੰਗਾਂ › Apple ਖਾਤਾ › ਸਬਸਕ੍ਰਿਪਸ਼ਨਾਂ. AI-reviewed; device verification pending |  |
@@ -60,7 +60,7 @@ Every row is mandatory. The "Current table" hints come from reading the shipped 
 | Chord view / Neck view | What VoiceOver calls the Show me switch | VoiceOver | `Chord view`, `Neck view` | ਕੋਰਡ ਦ੍ਰਿਸ਼ / ਨੈੱਕ ਦ੍ਰਿਸ਼ |  |
 | Show me | The 3D demonstration of a chord or notes on the neck | lessons | `Show me` | ਦਿਖਾਓ | Sits on a small capsule: short. |
 | Strum to tune | One strum reads every string at once | tuner, listing | `Strum to tune` | ਟਿਊਨ ਕਰਨ ਲਈ ਸਟ੍ਰਮ ਕਰੋ |  |
-| Tune by feel / Feel | The phone pulses with the beat between the string and its note, slower as they meet, still at the lock | tuner, settings | `Tune by feel`, `Feel` | ਕੰਪਨ ਨਾਲ ਟਿਊਨ ਕਰੋ / ਕੰਪਨ ਮਹਿਸੂਸ ਕਰੋ | "Feel it", "Feel the beat" use the same sense. |
+| Tune by feel / Feel | The phone pulses with the beat between the string and its note, slower as they meet, still at the lock | tuner, settings | `Tune by feel`, `Feel` | ਕੰਪਨ ਨਾਲ ਟਿਊਨ ਕਰੋ / ਕੰਪਨ | "Feel it", "Feel the beat" use the same sense. |
 | Bullseye | The pitch game (hit the centre ring); also leaderboard names | Practice, Game Center | `Bullseye` | ਸਟੀਕ ਨਿਸ਼ਾਨਾ | Every current table translates it (de Volltreffer, fr Tir parfait, ja ど真ん中, ru В яблочко …) although HANDOFF.md says to keep game names. Decide once; every string naming the game ("Win a round of Bullseye", "Score 2,000 in Bullseye") uses this. |
 | Ear trainer / Ear training | The ear games and the ear course | Practice, Learn | `Ear training` | ਕੰਨ ਦੀ ਸਿਖਲਾਈ |  |
 | Drone | A sustained reference tone to play or sing against | Practice, lessons | `Drone` | ਆਧਾਰ ਸੁਰ | de Bordun, fr Bourdon, es Nota pedal, ja ドローン (current tables). |
@@ -109,7 +109,7 @@ Every row is mandatory. The "Current table" hints come from reading the shipped 
 | half step, whole step, interval, third, fifth, octave |  | lessons | `Octave` | ਅੱਧਾ ਸੁਰ / ਪੂਰਾ ਸੁਰ / ਸੁਰ ਅੰਤਰ / ਤੀਜਾ / ਪੰਜਵਾਂ / ਸਪਤਕ |  |
 | bar | A measure (bar 2 of the song); not a UI bar | UI 7, lessons 167 | `Bar %lld` | ਬਾਰ |  |
 | beat, tempo, downbeat, count |  | UI 29, lessons 251 | `Tempo` | ਤਾਲ / ਟੈਂਪੋ / ਪਹਿਲਾ ਤਾਲ / ਗਿਣਤੀ |  |
-| strum, downstroke, upstroke, chop, chunk, mute | Strumming and muted strokes | UI 21, lessons 120 | `Strum` | ਸਟ੍ਰਮ / ਹੇਠਲਾ ਸਟ੍ਰੋਕ / ਉੱਪਰਲਾ ਸਟ੍ਰੋਕ / ਦਬਿਆ ਸਟ੍ਰੋਕ / ਦਬਿਆ ਸਟ੍ਰੋਕ / ਮਿਊਟ | A muted stroke is judged as muted, not as a miss. |
+| strum, downstroke, upstroke, chop, chunk, mute | Strumming and muted strokes | UI 21, lessons 120 | `Strum` | ਸਟ੍ਰਮ / ਹੇਠਲਾ ਸਟ੍ਰੋਕ / ਉੱਪਰਲਾ ਸਟ੍ਰੋਕ / ਚੌਪ / ਦਬਿਆ ਸਟ੍ਰੋਕ / ਮਿਊਟ | A muted stroke is judged as muted, not as a miss. |
 | pick | A plectrum, or picking strings; in UI often "choose" | UI 8, lessons 77 |  | ਪਿਕ (plectrum); ਚੁਣੋ (choose); ਤਾਰ ਵਜਾਓ (picking) | Translate by sense; check `context`. |
 | fingerpicking, hammer-on, pull-off, slide, bend, vibrato | Techniques | lessons |  | ਫਿੰਗਰਪਿਕਿੰਗ / ਹੈਮਰ-ਆਨ / ਪੁੱਲ-ਆਫ਼ / ਸਲਾਈਡ / ਬੈਂਡ / ਵਾਈਬ੍ਰਾਟੋ | Use the terms guitar teachers in the language use; loanwords are fine where usual. |
 | bowing, open-string bowing | Violin and cello | lessons |  | ਗਜ਼ ਨਾਲ ਵਜਾਉਣਾ / ਖੁੱਲ੍ਹੀ ਤਾਰ ਉੱਤੇ ਗਜ਼ ਫੇਰਨਾ |  |
@@ -187,3 +187,21 @@ Write the translation that applies in Timbre, and the one GPT must avoid.
 | Next, Again, Slower | on-screen labels and also Siri command words (`ios/Timbre/Intents/PracticeIntents.swift`): one translation serves both | — | ਅੱਗੇ / ਫਿਰ / ਹੌਲੀ | Use the sense above |
 | Practice | the tab and the activity | a medical or legal practice | ਅਭਿਆਸ | a medical or legal practice |
 | Feel | the haptic tuning feature, feeling the beat | emotions | ਕੰਪਨ ਮਹਿਸੂਸ ਕਰੋ (haptics; not emotion) | emotions |
+
+## 5. Lesson-draft refinements (AI decisions; independent review pending)
+
+- Duration uses **ਨੋਟ**: whole note **ਪੂਰਾ ਨੋਟ**, half note **ਅੱਧਾ ਨੋਟ**, quarter note **ਚੌਥਾਈ ਨੋਟ**, eighth note **ਅੱਠਵਾਂ ਨੋਟ**, sixteenth note **ਸੋਲ੍ਹਵਾਂ ਨੋਟ**. These name time values, never scale degrees. Pitch or scale membership uses **ਸੁਰ**; scale degree is **ਸਕੇਲ ਦਾ ਦਰਜਾ**. A third/fifth as an interval is **ਤੀਜਾ/ਪੰਜਵਾਂ ਸੁਰ ਅੰਤਰ**, and as a chord tone **ਤੀਜਾ/ਪੰਜਵਾਂ ਸੁਰ**.
+- Timing is **ਤਾਲ ਨਾਲ ਮਿਲਾਪ / ਸਮੇਂ ਦੀ ਪਕੜ**, not bodily stillness. Keep a steady beat = **ਤਾਲ ਇਕਸਾਰ ਰੱਖੋ**. Keep the hand still = **ਹੱਥ ਟਿਕਿਆ ਰੱਖੋ**.
+- High/low strings by pitch: **ਉੱਚੇ/ਨੀਵੇਂ ਸੁਰਾਂ ਵਾਲੀਆਂ ਤਾਰਾਂ**. Physical top/bottom must explicitly follow the actual instrument orientation; ukulele string 4 is physically upper but high G, and string 3 is lowest in standard re-entrant tuning (**ਰੀ-ਐਂਟਰੈਂਟ ਟਿਊਨਿੰਗ**).
+- Spoken eighth subdivisions: **ਇੱਕ-ਤੇ-ਦੋ-ਤੇ**. Spoken sixteenth subdivisions: **ਇੱਕ-ਇ-ਤੇ-ਅ, ਦੋ-ਇ-ਤੇ-ਅ** (four short syllables per beat). Preserve every ASCII digit when the source uses digits. Swing/shuffle mnemonic **ਹਮ-ਟੀ, ਡਮ-ਟੀ**, with the first syllable long and second short, is explained rather than treated as straight subdivisions.
+- Strum abbreviations D/U are English directions, not pitches: retain when shown as notation and explain **D=ਹੇਠਾਂ, U=ਉੱਪਰ**. English-initial open-string mnemonics retain their original words plus an explanation that initial letters encode the note names; do not pretend Punjabi initials encode them.
+- Original sung words used to locate a passage stay quoted in English, followed by **ਬੋਲਾਂ ਦੇ ਸੁਰ / ਦੇ ਸੁਰ** or another Punjabi locator; the lyric itself is not replaced by a singable translation.
+- Additional terms: root **ਮੂਲ ਸੁਰ**; tonic/home **ਆਧਾਰ ਸੁਰ**; arpeggio **ਆਰਪੈਜੀਓ**; triad **ਤਿੰਨ-ਸੁਰੀ ਕੋਰਡ**; inversion **ਉਲਟਾਅ**; lick **ਲਿੱਕ**; riff **ਰਿਫ਼**; arrangement **ਸੰਗੀਤਕ ਤਰਤੀਬ**; texture **ਆਵਾਜ਼ੀ ਬਣਤਰ**; fill **ਫਿੱਲ**; comping **ਸੰਗਤ**; common tone **ਸਾਂਝਾ ਸੁਰ**; Dorian **ਡੋਰੀਅਨ**; Mixolydian **ਮਿਕਸੋਲਿਡੀਅਨ**; Travis picking **ਟ੍ਰੈਵਿਸ ਪਿਕਿੰਗ**; trill **ਟ੍ਰਿਲ**; shuffle **ਸ਼ਫ਼ਲ**; syncopation **ਸਿੰਕੋਪੇਸ਼ਨ**; palm muting **ਹਥੇਲੀ ਨਾਲ ਮਿਊਟ ਕਰਨਾ**; rest stroke (bass plucking) **ਟਿਕਦਾ ਸਟ੍ਰੋਕ**.
+- Titles of unestablished traditional songs and Timbre Originals remain in English throughout titles and prose; translate appended teaching descriptions. Exact notation, pure proper titles and bare name/year credits remain candidates for independent key-specific invariant review, not author-approved exceptions.
+
+- Bowed-string terms: bow **ਗਜ਼**; down-bow/up-bow **ਡਾਊਨ-ਬੋ / ਅੱਪ-ਬੋ**, with frog-to-tip / tip-to-frog direction explained; frog **ਫ੍ਰੌਗ**; rosin **ਰੋਜ਼ਿਨ**; fingerboard **ਫਿੰਗਰਬੋਰਡ**; pizzicato **ਪਿਜ਼ੀਕਾਟੋ**; slur **ਸਲਰ** (multiple notes within one bow stroke); shift **ਸਥਿਤੀ ਬਦਲਣਾ**; extension **ਐਕਸਟੈਂਸ਼ਨ** (widening the left hand). Violin high/low second finger **ਉੱਚੀ/ਨੀਵੀਂ 2** describes finger position and pitch, never note duration.
+- Chop is the named short chord technique **ਚੌਪ** (reggae/mandolin), while chunk is described **ਦਬਿਆ ਸਟ੍ਰੋਕ**; the explanations retain the distinct muting action. Tremolo **ਟ੍ਰੈਮੋਲੋ** is rapid repeated picking, not vibrato. Crosspicking **ਕਰਾਸਪਿਕਿੰਗ**.
+- Banjo: roll **ਰੋਲ**, forward roll **ਫਾਰਵਰਡ ਰੋਲ**, pinch **ਪਿੰਚ**, clawhammer **ਕਲੌਹੈਮਰ**, bum-ditty **ਬਮ-ਡਿ-ਟੀ** (long-short-short).
+- Theory/ear terms: unison **ਇਕਸੁਰ**; audiation **ਆਡੀਏਸ਼ਨ**; perfect interval **ਪੂਰਨ ਸੁਰ ਅੰਤਰ**; diminished **ਡਿਮਿਨਿਸ਼ਡ**; augmented **ਆਗਮੈਂਟਡ**; dominant seventh **ਡੌਮੀਨੈਂਟ ਸੈਵੰਥ**; solfège syllables **ਦੋ / ਰੇ / ਮੀ / ਫਾ / ਸੋਲ / ਲਾ / ਟੀ**. Physical piano key **ਚਾਬੀ** (plural **ਚਾਬੀਆਂ**), distinct from tonality **ਸੁਰ**. Staff **ਸਟਾਫ਼**, treble clef **ਟ੍ਰੈਬਲ ਕਲੈਫ਼**, ledger line **ਲੈਜਰ ਲਾਈਨ**.
+- Notation/rhythm: time signature **ਤਾਲ-ਮਾਪ ਚਿੰਨ੍ਹ**; key signature **ਸੁਰ-ਚਿੰਨ੍ਹ**; measure **ਮੇਜ਼ਰ** when teaching the synonym, otherwise **ਬਾਰ**; enharmonic **ਐਨਹਾਰਮੋਨਿਕ**; chord progression **ਕੋਰਡ-ਕ੍ਰਮ**; offbeat **ਔਫ਼ਬੀਟ**. Cadences: authentic **ਔਥੈਂਟਿਕ**, plagal **ਪਲੇਗਲ**, half **ਅੱਧੀ**, deceptive **ਭਰਮਾਉਂਦੀ**. Triplet counting uses **1-ਟਿ-ਟਾ**, three short subdivisions, with **ਟਾ** the last part.
+- Pickup in rhythm is a **ਸ਼ੁਰੂਆਤੀ ਪਿਕਅੱਪ ਸੁਰ**, explained as **ਪਹਿਲੇ ਪੂਰੇ ਬਾਰ ਤੋਂ ਪਹਿਲਾਂ ਦਾ ਸੁਰ**; never literal **ਚੁੱਕ**. An instrument's electronic pickup remains **ਪਿਕਅੱਪ** in its physical context. Canonical fret spelling is **ਫ੍ਰੈੱਟ**.

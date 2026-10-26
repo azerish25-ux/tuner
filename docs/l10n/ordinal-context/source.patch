@@ -1,0 +1,78 @@
+--- a/tools/curriculum/courses/cello.py
++++ b/tools/curriculum/courses/cello.py
+@@ -449,7 +449,7 @@
+         tune(TWINKLE_2, bpm=66, title="Middle line"),
+         listen("Which line is this?", [["A3"], ["A3"], ["G3"], ["G3"], ["F#3"], ["F#3"], ["E3"]],
+                ["The middle line", "The opening line"], 0),
+-        quiz("Which finger plays B on the A string?", ["First", "Second", "Third"], 0),
++        quiz("Which finger plays B on the A string?", ["First", "Second finger", "Third finger"], 0),
+         tune(" ".join([TWINKLE_1, TWINKLE_2, TWINKLE_1]), bpm=72, title="Twinkle, Twinkle, Little Star"),
+         TWINKLE_SONG.take("Twinkle, Twinkle, Little Star"),
+     ], minutes=TWINKLE_SONG.minutes(), xp=30, kind="song", arrangement=TWINKLE_SONG.meta()),
+@@ -467,7 +467,7 @@
+                 "octaves ring."),
+         listen("Third finger to fourth: what kind of step?", [["F#3"], ["G3"]], ["A half step", "A whole step"], 0),
+         play([("G3", 2), ("G2", 3), ("D4", 1), ("D3", 2)], hint="Two octave checks: G with open G, then fourth-finger D with open D."),
+-        quiz("Which finger plays C sharp on the A string?", ["Third", "Second", "Fourth"], 0),
++        quiz("Which finger plays C sharp on the A string?", ["Third finger", "Second finger", "Fourth finger"], 0),
+         tune("D4 C#4 B3 A3 | G3 F#3 E3 D3 | D3 E3 F#3 G3 | A3:4", bpm=72, title="Scale down and up"),
+         tune(LIGHTLY_B + " " + LIGHTLY_END, bpm=80, title="Lightly Row, second part"),
+         tune(TWINKLE_1, bpm=80, title="Twinkle, a little faster"),
+@@ -486,7 +486,7 @@
+                 "fingers on both strings.",
+                 bass(G_MAJOR)),
+         play(G_MAJOR, hint="Up the G major scale. Same shape on both strings."),
+-        quiz("Which finger plays C on the G string?", ["Fourth", "Third", "Second"], 0),
++        quiz("Which finger plays C on the G string?", ["Fourth finger", "Third finger", "Second finger"], 0),
+         tune("G2 A2 B2 C3 | D3 E3 F#3 G3 | G3 F#3 E3 D3 | C3 B2 A2 G2", bpm=66, title="G major scale"),
+     ]),
+     lesson("vc-4-2", "The C string", [
+@@ -589,7 +589,7 @@
+         play([("D4", 1), ("E4", 1), ("F4", 1)], hint="D, E, F: fingers 1, 3, 4. Up here the notes sit a little closer together.", pos=FOURTH),
+         listen("From E to the next note: what kind of step?", [["E4"], ["F4"]], ["A half step", "A whole step"], 0),
+         play([("A3", 1), ("B3", 1), ("D4", 1), ("E4", 1)], hint="Open A, B, shift on first finger to D, then E with third.", pos=FOURTH),
+-        quiz("In fourth position on the A string, which finger plays E?", ["Third", "First", "Fourth"], 0),
++        quiz("In fourth position on the A string, which finger plays E?", ["Third finger", "First", "Fourth finger"], 0),
+         tune(UP_AND_BACK_4, bpm=60, title="Up to fourth position and back", pos=FOURTH),
+     ]),
+     lesson("vc-5-3", "Fourth position on D", [
+--- a/tools/curriculum/courses/guitar.py
++++ b/tools/curriculum/courses/guitar.py
+@@ -318,7 +318,7 @@
+         notes(G, [("B3", 2)], hint="Pluck string 2 open. That's B."),
+         notes(G, [("C4", 2)], hint="String 2, fret 1, first finger. That's C."),
+         notes(G, [("D4", 2)], hint="String 2, fret 3, third finger. That's D."),
+-        quiz("Which finger plays fret 3?", ["First", "Second", "Third", "Fourth"], 2, ONE_FINGER),
++        quiz("Which finger plays fret 3?", ["First", "Second finger", "Third finger", "Fourth finger"], 2, ONE_FINGER),
+         explain("Thumb behind the neck", "Rest your thumb on the back of the neck, behind your second finger. "
+                 "Your fingers can then arch and land on their tips."),
+         along(G, "B3:1 C4:1 D4:2 D4:1 C4:1 B3:2", bpm=66, title="Up and back on string 2"),
+@@ -676,7 +676,7 @@
+                 "The same rule holds: the finger matches the fret.", fretboard(G, [(3, 0), (3, 2, 2)])),
+         notes(G, [("G3", 3)], hint="Pluck string 3 open. That's G."),
+         notes(G, [("A3", 3)], hint="String 3, fret 2, second finger. That's A."),
+-        quiz("Which finger plays fret 2?", ["First", "Second", "Third"], 1, ONE_FINGER),
++        quiz("Which finger plays fret 2?", ["First", "Second finger", "Third finger"], 1, ONE_FINGER),
+         notes(G, ["G3", "A3", "B3", "C4", "D4"], hint="G and A on string 3, then B, C and D on string 2."),
+         along(G, "G3:1 A3:1 B3:1 C4:1 D4:2 C4:1 B3:1 A3:2 G3:2", bpm=66, title="G up to D and back"),
+     ], minutes=4, xp=20),
+--- a/tools/curriculum/courses/violin.py
++++ b/tools/curriculum/courses/violin.py
+@@ -462,7 +462,7 @@
+         tune(TWINKLE_2, bpm=66, title="Middle line"),
+         listen("Which line is this?", [["E5"], ["E5"], ["D5"], ["D5"], ["C#5"], ["C#5"], ["B4"]],
+                ["The middle line", "The opening line"], 0),
+-        quiz("Which finger plays F sharp on the E string?", ["First", "Second", "Third"], 0),
++        quiz("Which finger plays F sharp on the E string?", ["First", "Second finger", "Third finger"], 0),
+         tune(" ".join([TWINKLE_1, TWINKLE_2, TWINKLE_1]), bpm=72, title="Twinkle, Twinkle, Little Star"),
+         TWINKLE_SONG.take("Twinkle, Twinkle, Little Star"),
+     ], minutes=TWINKLE_SONG.minutes(), xp=30, kind="song", arrangement=TWINKLE_SONG.meta()),
+@@ -639,7 +639,7 @@
+         play([("A4", 2), ("F#4", 3), ("D4", 3), ("F#4", 3)], hint="Open A, high-2 F sharp on D, open D, F sharp. Rock your elbow between strings."),
+         tune(SOLDIER_1, bpm=60, title="First half"),
+         tune(SOLDIER_2, bpm=60, title="Second half"),
+-        quiz("Which finger plays G on the E string?", ["Low 2", "High 2", "Third"], 0,
++        quiz("Which finger plays G on the E string?", ["Low 2", "High 2", "Third finger"], 0,
+              "Soldier's Joy is in D major, so G is natural: high 2 for F sharp on D, low 2 for G on E."),
+         tune(SOLDIER_1 + " " + SOLDIER_2, bpm=66, title="Soldier's Joy"),
+         SOLDIER_SONG.along("Part B", bpm=60, title="Second part"),
