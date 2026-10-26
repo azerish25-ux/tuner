@@ -762,13 +762,35 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "1de371c3dabcdeac8014f723bd3fe8b9a51d4ec566a50f1984e1e0318d939905",
+    "proposed_content_sha256": "ddbbf6e92174543ceea9a71d7fc246306343fc10bc6473403779a0a314005479",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "supplemental_reviews": [
+      {
+        "date": "2026-10-26",
+        "reviewer": "Slovenian independent AI terminology reviewer",
+        "method": "source-aware guarded instrument morphology delta review",
+        "prior_reviewed_content_sha256": "1de371c3dabcdeac8014f723bd3fe8b9a51d4ec566a50f1984e1e0318d939905",
+        "reviewed_content_sha256": "ddbbf6e92174543ceea9a71d7fc246306343fc10bc6473403779a0a314005479",
+        "fields": [
+          "subtitle",
+          "description"
+        ],
+        "identified_corrections": 2,
+        "resolved_corrections": 2,
+        "unresolved_corrections": [],
+        "references": [
+          "https://www.zrss.si/arhiv_clankov/ukulele-v-vrtcu/",
+          "https://fran.si/iskanje?View=1&Query=ukulela"
+        ],
+        "native_review": false,
+        "device_review": false
+      }
     ]
   },
   "uk": {

@@ -39,17 +39,17 @@
   "independent_review": {
     "reviewer": "Independent AI semantic review (2026-10-26)",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; source available, not blinded",
-    "identified_corrections": 94,
-    "applied_corrections": 94,
-    "application_method": "All 94 exact old values checked before any write; all 50 resulting payload hashes matched independently proposed hashes.",
+    "identified_corrections": 96,
+    "applied_corrections": 96,
+    "application_method": "Original94 exact-old corrections preserved;2 subsequent source-aware Slovenian instrument-morphology corrections appended with exact source/old/new guards and per-locale hash lineage.",
     "artifacts": {
       "evidence": {
         "file": "tools/l10n/store-review-independent.json",
-        "sha256": "124420e14c40bb0dfc476519a3ca68180c53018315529c3ab84a9930fe994766"
+        "sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8"
       },
       "corrections": {
         "file": "tools/l10n/store-corrections.json",
-        "sha256": "fffbbe661169c61ec6663be724018eb1667b663d4e4c965bba9e52d719905cfa"
+        "sha256": "4c2cd827f13702d1f6e342f3038e963f3d166a38fc3d46ba2967cef98cec0951"
       }
     },
     "policy_recommendation_sha256": "d69ee544571082357801fd0d03e2ab1514a908718f0345d4a55474fe331cff17"
@@ -902,10 +902,10 @@
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "1de371c3dabcdeac8014f723bd3fe8b9a51d4ec566a50f1984e1e0318d939905",
+      "reviewed_content_sha256": "ddbbf6e92174543ceea9a71d7fc246306343fc10bc6473403779a0a314005479",
       "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 2,
-      "resolved_corrections": 2,
+      "identified_corrections": 4,
+      "resolved_corrections": 4,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -922,7 +922,29 @@
         "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
         "Review detects identified issues, not a guarantee of idiomatic perfection"
       ],
-      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification.",
+      "supplemental_reviews": [
+        {
+          "date": "2026-10-26",
+          "reviewer": "Slovenian independent AI terminology reviewer",
+          "method": "source-aware guarded instrument morphology delta review",
+          "prior_reviewed_content_sha256": "1de371c3dabcdeac8014f723bd3fe8b9a51d4ec566a50f1984e1e0318d939905",
+          "reviewed_content_sha256": "ddbbf6e92174543ceea9a71d7fc246306343fc10bc6473403779a0a314005479",
+          "fields": [
+            "subtitle",
+            "description"
+          ],
+          "identified_corrections": 2,
+          "resolved_corrections": 2,
+          "unresolved_corrections": [],
+          "references": [
+            "https://www.zrss.si/arhiv_clankov/ukulele-v-vrtcu/",
+            "https://fran.si/iskanje?View=1&Query=ukulela"
+          ],
+          "native_review": false,
+          "device_review": false
+        }
+      ]
     },
     "uk": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
