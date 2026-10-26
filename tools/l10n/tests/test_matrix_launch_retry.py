@@ -63,6 +63,13 @@ class MatrixLaunchRetryTests(unittest.TestCase):
         self.assertEqual(status, 1)
         self.assertEqual(args, '')
 
+    def test_assertion_quoting_process_id_message_never_retries(self):
+        for prefix in ['XCTAssertTrue failed - ', 'XCTUnwrap failed: ', 'failed - ']:
+            with self.subTest(prefix=prefix):
+                status, args = self.run_classifier([prefix + 'Application does not have a process ID'])
+                self.assertEqual(status, 1)
+                self.assertEqual(args, '')
+
     def test_build_failure_has_no_retry_tests(self):
         eligible, other = launch_retry.classify('error: cannot find symbol\n** TEST BUILD FAILED **')
         self.assertEqual((eligible, other), ([], []))

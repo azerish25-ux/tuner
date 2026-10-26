@@ -23,6 +23,7 @@ ERROR = re.compile(r"\berror: -\[(?P<module>\w+)\.(?P<cls>\w+) (?P<test>\w+)\] :
 LAUNCH = re.compile(r"Failed to launch .* via Xcode|Timed out while launching application|does not have a process ID")
 
 
+TEST_ASSERTION = re.compile(r"^(?:XCT(?:Assert\w*|Unwrap|Fail)\b|failed\s*-)", re.IGNORECASE)
 BACKGROUND_ASSERTION = re.compile(
     r"^Failed to get background assertion for target app with pid [1-9]\d*: "
     r"Timed out while acquiring background assertion\.$"
@@ -41,7 +42,7 @@ def classify(text: str) -> tuple[list[str], list[str]]:
             name = f"{match['module']}/{match['cls']}/{match['test']}"
             if name not in failed:
                 failed.append(name)
-    launch_only = [name for name in failed if errors.get(name) and all(LAUNCH.search(m) or BACKGROUND_ASSERTION.fullmatch(m) for m in errors[name])]
+    launch_only = [name for name in failed if errors.get(name) and all(not TEST_ASSERTION.search(m) and (LAUNCH.search(m) or BACKGROUND_ASSERTION.fullmatch(m)) for m in errors[name])]
     others = [name for name in failed if name not in launch_only]
     return launch_only, others
 
