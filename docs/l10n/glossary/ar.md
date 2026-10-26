@@ -469,3 +469,7 @@ For the bar/measure synonym lesson, use مازورة and حقل موسيقي; av
 ## Independent review additions (2026-10-26)
 
 Keep complete LTR notation, progressions, names/year credits and original sung locators inside a single directional isolate when used in an RTL paragraph. Isolating separate tokens can reverse their order. Retain exact sung original words only as quoted teaching locators with Arabic instruction; never treat ordinary English prose as an invariant. This is AI semantic review, not device rendering or native-reader certification.
+
+## Reviewed shared musical-item ordinals
+
+These exact shared-key decisions supersede conflicting earlier draft labels. The first = المثال الأول; The second = المثال الثاني. Refer to musical-example order, never displayed answer-button position. Complete current contexts and source-bound correction evidence are in ../reviews/shared-ordinal-labels/. Independent AI review only, not native-human/device certification.

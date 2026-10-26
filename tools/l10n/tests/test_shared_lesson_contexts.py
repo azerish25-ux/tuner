@@ -34,6 +34,28 @@ class SharedLessonContextsTests(unittest.TestCase):
                              {'steps:along', 'steps:explain', 'steps:quiz'})
             self.assertTrue(any('body' in x['text'] for x in result['Lbridge']))
 
+    def test_nested_arrangement_labels_are_visible_without_music_arrays(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            path = root / 'ios/Sources/TimbreCore/Resources/curriculum.json'
+            path.parent.mkdir(parents=True)
+            intro = {'k': 'Lintro', 't': 'Intro'}
+            lesson = {'title': {'k': 'Lsong', 't': 'Song'},
+                      'steps': [{'type': 'explain', 'title': intro}],
+                      'arrangement': {'sections': [{'name': intro, 'kind': 'intro'},
+                                                   {'name': {'k': 'Lverse', 't': 'Verse 1'}, 'kind': 'verse'}],
+                                      'notes': [{'m': 60, 'y': 'private sung lyric'}],
+                                      'chords': [{'name': 'G7', 'beat': 0}]}}
+            path.write_text(json.dumps({'courses': [{'units': [{'lessons': [lesson]}]}]}))
+            rows = gpt_l10n.shared_lesson_contexts(root)['Lintro']
+            arrangement = next(x for x in rows if x['field'] == 'arrangement/sections/*/name')
+            self.assertEqual(arrangement['text']['arrangement.sections'],
+                             [{'name': 'Intro'}, {'name': 'Verse 1'}])
+            serialized = json.dumps(rows)
+            self.assertNotIn('private sung lyric', serialized)
+            self.assertNotIn('G7', serialized)
+            self.assertEqual(sum(x['occurrences'] for x in rows), 2)
+
     def test_real_shared_directions_keep_physical_prompt_context(self):
         result = gpt_l10n.shared_lesson_contexts(Path(__file__).resolve().parents[3])
         rows = result['L2038bdec92']

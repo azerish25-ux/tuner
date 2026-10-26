@@ -5,15 +5,18 @@ manual's human-review step. No human native-speaker, legal, accessibility-listen
 or market review is claimed. Automated checks cannot establish perfect fluency
 or release readiness. This work does not authorize App Store submission.
 
-## Current checkpoint — 26 October 2026, 10:18 UTC
+## Current checkpoint — 26 October 2026, 10:57 UTC
 
 - Interface resources: all 49 app languages have literal-key coverage; this is not a universal device/semantic certification.
-- Lessons: 26 translated targets plus English now cover all 6,083 current source keys. Finnish, Danish, Swedish, Dutch and Norwegian were imported after full independent AI review, 842 guarded corrections and 1,940 exact-source retention approvals. Bridge and interval source splits and the sustained-tremolo repair reconcile their frozen drafts with current content.
+- Lessons: 28 translated targets plus English now cover all 6,083 current source keys. Finnish, Danish, Swedish, Dutch and Norwegian were imported after full independent AI review, 842 guarded corrections and 1,940 exact-source retention approvals. Bridge and interval source splits and the sustained-tremolo repair reconcile their frozen drafts with current content.
 - Romanian is now imported after full independent AI review: 164 guarded corrections, 370 exact source-bound retention approvals, and all 6,083 current targets independently hash-verified.
-- Hebrew and Thai complete 6,083-key author drafts are preserved and undergoing fresh independent review. Telugu, Swahili, Zulu and Greek remain author drafts. 16 further targets have not yet entered lesson drafting.
+- Hebrew and Thai are now independently reviewed and imported: 14 and 13 guarded corrections, 231 and 261 exact retention approvals respectively; all 6,083 current targets verified in each.
+- Telugu is fully drafted and undergoing independent review. Swahili authoring is complete with final author QA in progress. Zulu, Greek, Polish and Czech drafting continue. 14 further targets have not yet entered lesson drafting.
+- 18 additional first/second musical-item label corrections across nine earlier locales passed independent review of all 369 locale/context rows. Some changes fix demonstrated referent/gender defects; others improve precision.
+- Context tooling now exposes nested arrangement section names in semantic bundles. Source curriculum is unchanged; frozen review inputs remain preserved.
 - Store text: all 50 Apple-supported locale payloads have independent AI text review. Localized screenshot/preview renders, production privacy URL and account-side checks are not complete; release_ready remains false.
 - GitHub run 40288874201 on 31305f6 passed 58 app tests and 3 smoke tests, including all configured regional language cases and the corrected tuner string identifier. Its accessibility audit still failed contrast checks.
-- Matrix run 40286089721 passed six groups; two groups failed simulator lifecycle operations. Retrying is not a pass or assertion waiver.
+- Matrix run 40286089721 now passed seven groups after the Indic retry; its RTL group remains failed with simulator lifecycle timeout. Current integration requests a fresh full matrix with the bounded recovery fix; queued/running is not passing.
 - Historical sections below describe their own earlier checkpoints, not current coverage.
 
 ## Imported checkpoint: German launch strings

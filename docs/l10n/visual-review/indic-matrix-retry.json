@@ -1,0 +1,17 @@
+{
+  "run": 40286089721,
+  "source_commit": "1aad3601547d8545f77130fd86f9398a9f8a89c7",
+  "job": 121517431919,
+  "locales": [
+    "hi",
+    "gu",
+    "kn",
+    "ml",
+    "mr",
+    "pa"
+  ],
+  "conclusion": "success",
+  "verified_at_utc": "2026-10-26T10:56:37Z",
+  "scope": "Rerun of the previously failed Indic group. Seven of eight groups now successful; RTL group remains failed with framework lifecycle timeout.",
+  "limits": "This older-source result does not verify subsequent Hebrew/Thai lesson imports or the new retry recovery. A new full matrix is requested by the current integration commit."
+}

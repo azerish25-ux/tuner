@@ -233,3 +233,7 @@ Source “What's another word for a bar?” becomes **Vilket ord betyder samma s
 
 ### Remaining review boundary
 One soft length warning remains: “Pekfinger, långfinger, pekfinger, långfinger” is 44 characters against 42. Full finger names are intentionally retained for comprehension pending visual review. Mechanical QA does not establish linguistic, native-musician, accessibility or device approval. Shared-key context evidence, all exact-source candidates and adapted mnemonics/titles must be independently checked.
+
+## Reviewed shared musical-item ordinals
+
+These exact shared-key decisions supersede conflicting earlier draft labels. The first = Det första exemplet; The second = Det andra exemplet. Refer to musical-example order, never displayed answer-button position. Complete current contexts and source-bound correction evidence are in ../reviews/shared-ordinal-labels/. Independent AI review only, not native-human/device certification.

@@ -1,0 +1,95 @@
+{
+ "reviewer": "Thai independent AI lesson reviewer",
+ "status": "reviewed; resolved corrections listed separately",
+ "resolved": [
+  {
+   "keys": [
+    "L7653b6c98c"
+   ],
+   "reason": "Terminology consistency: use the frozen glossary’s desert rock = ร็อกทะเลทราย rather than an alternate loan spelling; musical facts unchanged."
+  },
+  {
+   "keys": [
+    "Lfe8a5399be"
+   ],
+   "reason": "Fifties means the fifties era, not a digit-by-digit five-zero label. Use natural Thai ยุคห้าสิบ and the explicit glossary decision while preserving spelled-number source contract."
+  },
+  {
+   "keys": [
+    "Lf6d6d4ae3e"
+   ],
+   "reason": "Fifties means the fifties era, not a digit-by-digit five-zero label. Use natural Thai ยุคห้าสิบ and the explicit glossary decision while preserving spelled-number source contract."
+  },
+  {
+   "keys": [
+    "Lfae102196b"
+   ],
+   "reason": "The dot names the augmentation-dot symbol itself. Use natural Thai/glossary จุด; ประจุด describes dotted notes, while จุดประ reverses that expression."
+  },
+  {
+   "keys": [
+    "Le1c78df7f7"
+   ],
+   "reason": "In this roll, top is the high-pitched end at string 1, not the physically uppermost ukulele string 4. Clarify สายเสียงสูงสุด and make finger-name shorthand explicit; retain every literal number once."
+  },
+  {
+   "keys": [
+    "L3eda3584fa"
+   ],
+   "reason": "Two octave checks means two separate octave comparisons, G and A, not a two-octave range. Make the count modify the checks clearly."
+  },
+  {
+   "keys": [
+    "Ld3be936b27"
+   ],
+   "reason": "Source asks listeners to pause and think of less fortunate people. หยุดคิดถึง can instead mean stop thinking of them; explicit หยุดสักครู่แล้วนึกถึง preserves the intended sequence and avoids reversal."
+  },
+  {
+   "keys": [
+    "Lee4113f0b3"
+   ],
+   "reason": "Shared heading covers instrument practice, rhythm tapping and six singing challenges. นำมาเล่นร่วมกัน can suggest playing together and is instrument/ensemble-biased; revised generic heading means combine what was learned and works across every displayed role."
+  },
+  {
+   "keys": [
+    "L289be5274b"
+   ],
+   "reason": "Slide-into-note distractor denotes the lower-pitched fret, not a fret physically underneath/on another string. Replace spatial ข้างล่าง with comparative ต่ำกว่า for the intended fret direction."
+  },
+  {
+   "keys": [
+    "L27118c734d"
+   ],
+   "reason": "Use the same Thai spoken and syllable และ at the midpoint of each beat as the eighth-note lessons and the later four-e-and-a exercise. Preserve four equal sixteenth positions, e/a syllables, notes, digits and punctuation; this does not change the rhythm or rock-and-roll genre wording."
+  },
+  {
+   "keys": [
+    "L4579927219"
+   ],
+   "reason": "Use the same Thai spoken and syllable และ at the midpoint of each beat as the eighth-note lessons and the later four-e-and-a exercise. Preserve four equal sixteenth positions, e/a syllables, notes, digits and punctuation; this does not change the rhythm or rock-and-roll genre wording."
+  },
+  {
+   "keys": [
+    "Lc4eb4d4416"
+   ],
+   "reason": "Use the same Thai spoken and syllable และ at the midpoint of each beat as the eighth-note lessons and the later four-e-and-a exercise. Preserve four equal sixteenth positions, e/a syllables, notes, digits and punctuation; this does not change the rhythm or rock-and-roll genre wording."
+  },
+  {
+   "keys": [
+    "L3de72cca33"
+   ],
+   "reason": "Use the same Thai spoken and syllable และ at the midpoint of each beat as the eighth-note lessons and the later four-e-and-a exercise. Preserve four equal sixteenth positions, e/a syllables, notes, digits and punctuation; this does not change the rhythm or rock-and-roll genre wording."
+  }
+ ],
+ "accepted_context_decisions": [
+  "Modern neutral Thai teacher register without gendered particles.",
+  "ขึ้น/ลง remain neutral for both melodic contour and physical picking direction; bare ordinal intervals and named fingers remain distinct.",
+  "ท่อนบริดจ์ is song form; หย่อง is instrument hardware. คอร์ดเมเจอร์และไมเนอร์รอบตัว and คู่เสียงเมเจอร์และไมเนอร์ are current source-bound separate senses.",
+  "One beat remains duration/count/missing-beat compatible. Bar/measure synonym quiz consistently introduces the transliterated English synonyms, with Thai Beat/Rest choices.",
+  "The later lesson-author glossary decisions supersede duplicate legacy glossary entries such as คู่แปด versus อ็อกเทฟ.",
+  "All original-song titles and their lesson/body/quiz uses were checked. Ghost Light as แสงภูต is accepted within the supplied original-song context, which does not establish the technical theatre-lamp sense.",
+  "Historical centuries preserve literal 1700/1800 digits and explicitly say the full hundred-year span; source decades retain decade sense.",
+  "All 51 nested arrangement section labels were separately inspected against their exact roles, not inferred solely from title/credit bundles."
+ ],
+ "counting_convention": "and is และ in both eighth- and sixteenth-note Thai counting; e/a remain อี/อะ. Rock and roll stays ร็อกแอนด์โรล."
+}

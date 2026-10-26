@@ -189,3 +189,7 @@ Retained exact repertoire titles in this review (each has its own source-bound r
 
 ## 4. Words that mislead
 Tune as a verb means tuning, as a noun a melody. Sharp/flat on the tuner mean too high/low, not accidentals. Bar means measure; key means tonality. Pick means plectrum or plucking in music, choose in UI. Lock means a stable in-tune confirmation, not a padlock. Take is one recorded performance, not taking a lesson. Run means a practice streak or an uninterrupted passage, not running. Chart means an instrumental chord diagram/sheet unless progress statistics explicitly demand a graph. Intonation is playing in tune over a drone, never octave/saddle adjustment. Practice is musical practice. Feel is haptic vibration, not emotion. A challenge to a friend differs from the unit's final challenge lesson; preserve context.
+
+## Reviewed shared musical-item ordinals
+
+These exact shared-key decisions supersede conflicting earlier draft labels. The first = Il primo esempio; The second = Il secondo esempio. Refer to musical-example order, never displayed answer-button position. Complete current contexts and source-bound correction evidence are in ../reviews/shared-ordinal-labels/. Independent AI review only, not native-human/device certification.

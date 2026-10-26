@@ -1,0 +1,85 @@
+{
+ "blocking": false,
+ "items": [
+  {
+   "key": "L7755242089",
+   "source": "A power chord plays only the root and the fifth, the note five letters up. Neither major nor minor, it stays punchy, even loud. E5 is the bottom of E minor.",
+   "source_sha256": "600f105f7686167a33af97431112e18d82c1cd6842177ceabf8f6cf2426ea59c",
+   "final_sha256": "78041a5dbb938727fd07b74503ac9484a1b4f7baf0e4ef8dd443cdbdaf59b1ac",
+   "topic": "Inclusive counting shorthand",
+   "note": "Source describes a fifth as five letters up/above. A literal reader might count five transitions rather than five names including both endpoints. Hebrew is faithful; later theory explicitly counts both ends. Optional source-owner clarification, not a target defect.",
+   "status": "nonblocking-source-owner-note",
+   "reviewer": "Hebrew independent AI lesson reviewer"
+  },
+  {
+   "key": "L8c00bae676",
+   "source": "B7 is five letters up from E. Five letters up from A is E, so E7 takes its place.",
+   "source_sha256": "fb339a709c9c2367239b417a889854f4d94f443cfe1c9ee184560bf68afca75a",
+   "final_sha256": "39c7432c32375ac83489516361ce92dca2c759fdc7294ea67329b1340262c7ec",
+   "topic": "Inclusive counting shorthand",
+   "note": "Source describes a fifth as five letters up/above. A literal reader might count five transitions rather than five names including both endpoints. Hebrew is faithful; later theory explicitly counts both ends. Optional source-owner clarification, not a target defect.",
+   "status": "nonblocking-source-owner-note",
+   "reviewer": "Hebrew independent AI lesson reviewer"
+  },
+  {
+   "key": "L74c9c1f9c1",
+   "source": "From low to high: G, D, A, E. Each string is five letter names above the last, an interval called a fifth. Try: Good Dogs Always Eat.",
+   "source_sha256": "ef9f0e2a02ac120f605053c145c2cdbcafd015856a542fd30feea8b09e16cde0",
+   "final_sha256": "8a4e99869e1d00be0f6730cbce8e1034e91ca5cd5daf1071879efec00d700068",
+   "topic": "Inclusive counting shorthand",
+   "note": "Source describes a fifth as five letters up/above. A literal reader might count five transitions rather than five names including both endpoints. Hebrew is faithful; later theory explicitly counts both ends. Optional source-owner clarification, not a target defect.",
+   "status": "nonblocking-source-owner-note",
+   "reviewer": "Hebrew independent AI lesson reviewer"
+  },
+  {
+   "key": "La6f5916eae",
+   "source": "From low to high: C, G, D, A. Each string is five letter names above the last, an interval called a fifth. Try: Cats Go Dancing Around.",
+   "source_sha256": "c9f340672a77dceecf4b4522111d0fbb2d2ecb7e6dac7c4685295fba3eca0fb7",
+   "final_sha256": "21ff9dcfd7b0727ee28348fb5ea7cd1f03d05541fa294d3d901c9b5f3440ee7b",
+   "topic": "Inclusive counting shorthand",
+   "note": "Source describes a fifth as five letters up/above. A literal reader might count five transitions rather than five names including both endpoints. Hebrew is faithful; later theory explicitly counts both ends. Optional source-owner clarification, not a target defect.",
+   "status": "nonblocking-source-owner-note",
+   "reviewer": "Hebrew independent AI lesson reviewer"
+  },
+  {
+   "key": "L3aa3fb08ad",
+   "source": "E, D, C: three steps down to home.",
+   "source_sha256": "37148fb2cc07b5710a28492f6234366e3d9b57ef287603def31af8419ee2e887",
+   "final_sha256": "7b025571c716a940e45c4a6cc4e907d4adade6408f9205291cfb009e0b93c9be",
+   "topic": "Three notes versus three transitions",
+   "note": "Source calls E, D, C three steps down although it contains two adjacent transitions. Target retains the source shorthand; optional source-owner precision.",
+   "status": "nonblocking-source-owner-note",
+   "reviewer": "Hebrew independent AI lesson reviewer"
+  },
+  {
+   "key": "Lcb89454ade",
+   "source": "Open B, D at fret 3, open E and back. Then G and G sharp on string 3, sliding into open B.",
+   "source_sha256": "0fb2c0ca1b74296e5969c419f25ab41bf564377fe85cf91c48bba81b00aa5056",
+   "final_sha256": "a2bc2eec40746aeede840f777ad1edf659e7b43ca50b0c9afbaa6c0df24ee271",
+   "topic": "Chromatic approach across strings",
+   "note": "Source slide wording approaches open B from G/G-sharp on string 3. Hebrew frames smooth approach rather than requiring a literal fretted slide across strings; musical intent is preserved.",
+   "status": "nonblocking-source-owner-note",
+   "reviewer": "Hebrew independent AI lesson reviewer"
+  },
+  {
+   "key": "L4b49795891",
+   "source": "A sharp sits between A and B, at fret 3 on string 3. It slides up into open B, the bluesy lift that gives gospel its sound.",
+   "source_sha256": "96c216f8fbdde5e031184126e85b0c1e3e9cfe96a5bb82894476dec071b1c86e",
+   "final_sha256": "5491b768e6f3e73c7f3e5a95ec0f632943d9ece8d24098506403140c037f0319",
+   "topic": "Chromatic approach across strings",
+   "note": "Source A-sharp on string 3 slides into open B. Target keeps the pitch-motion metaphor; an actual one-finger slide to a different open string is not mechanically literal. Source-owner technique wording may be clarified.",
+   "status": "nonblocking-source-owner-note",
+   "reviewer": "Hebrew independent AI lesson reviewer"
+  },
+  {
+   "key": "L497ebafb13",
+   "source": "From A, put finger 4 on string 2, fret 3 for Asus4. Lift the finger off string 2 and let it ring open for Asus2. Both fall back to A.",
+   "source_sha256": "d5fd6fd28554ca7bbd6c2d926500342c93e37711f8476e9048c6181417e88eb2",
+   "final_sha256": "174b6c7f77313e2795de4f79b35df8d073a07f484ccecbf8bba0b9550948e64c",
+   "topic": "Sus chord finger release",
+   "note": "Source lift-finger transition from Asus4 toward Asus2 can depend on which underlying fingers remain down. Target preserves source instruction; source fingering demonstration may merit checking.",
+   "status": "nonblocking-source-owner-note",
+   "reviewer": "Hebrew independent AI lesson reviewer"
+  }
+ ]
+}

@@ -216,3 +216,7 @@ Write the translation that applies in Timbre, and the one GPT must avoid.
 | Next, Again, Slower | on-screen labels and also Siri command words (`ios/Timbre/Intents/PracticeIntents.swift`): one translation serves both | — | Далее / Ещё раз / Медленнее | Avoid the unrelated sense in the Not column. |
 | Practice | the tab and the activity | a medical or legal practice | Занятия | Avoid the unrelated sense in the Not column. |
 | Feel | the haptic tuning feature, feeling the beat | emotions | Вибрация | Avoid the unrelated sense in the Not column. |
+
+## Reviewed shared musical-item ordinals
+
+These exact shared-key decisions supersede conflicting earlier draft labels. The first = Первый пример; The second = Второй пример. Refer to musical-example order, never displayed answer-button position. Complete current contexts and source-bound correction evidence are in ../reviews/shared-ordinal-labels/. Independent AI review only, not native-human/device certification.

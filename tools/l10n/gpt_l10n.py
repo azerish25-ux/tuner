@@ -139,6 +139,13 @@ def shared_lesson_contexts(repo):
                     words = [x["t"] for x in item if isinstance(x, dict) and "k" in x and "t" in x]
                     if words:
                         found[field] = words
+                    else:
+                        # Arrangement sections contain localized names inside dictionaries,
+                        # rather than being a direct list of localized values like quiz options.
+                        nested = [text_fields(x) for x in item if isinstance(x, dict)]
+                        nested = [x for x in nested if x]
+                        if nested:
+                            found[field] = nested
         return found
 
     def walk(value, pointer="", context=None, context_pointer="", role=""):

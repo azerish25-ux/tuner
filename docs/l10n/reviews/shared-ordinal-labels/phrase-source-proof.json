@@ -1,0 +1,41 @@
+{
+ "lesson": "std-all-through-the-night",
+ "step_index": 2,
+ "step": {
+  "type": "quiz",
+  "prompt": {
+   "k": "Lb2a3156229",
+   "t": "Which phrase of the verse climbs highest?"
+  },
+  "options": [
+   {
+    "k": "Ld25d5e886c",
+    "t": "The third"
+   },
+   {
+    "k": "L957dc77c43",
+    "t": "The first"
+   },
+   {
+    "k": "L88a7e776b6",
+    "t": "The last"
+   }
+  ],
+  "answer": 0,
+  "why": {
+   "k": "L8e0d30c372",
+   "t": "The third phrase, soft the drowsy hours, rises to C, D and E. The other three phrases share one tune."
+  },
+  "visual": {
+   "type": "none"
+  }
+ },
+ "ui_evidence": {
+  "file": "ios/Timbre/Learn/LessonPlayer.swift",
+  "lines": [
+   854,
+   858
+  ],
+  "behavior": "ForEach(Array(options.enumerated()), id: \\.offset) displays the source options in order in both layout branches."
+ }
+}

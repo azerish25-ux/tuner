@@ -1,0 +1,47 @@
+{
+ "reviewer": "Thai independent AI lesson reviewer",
+ "source_rows": 6083,
+ "reviewed_rows": 6083,
+ "effective_rows": 6083,
+ "corrections": 13,
+ "identities_individually_approved": 261,
+ "distinct_shared_context_groups": 1386,
+ "shared_keys": 604,
+ "shared_records": 3982,
+ "option_keys": 1224,
+ "option_records": 2284,
+ "context_keys_union": 1451,
+ "exact_context_record_coverage": 6266,
+ "all_context_records_covered": true,
+ "section_label_count": 51,
+ "section_occurrences": 4113,
+ "frozen_manifest_sha256": "0905c00734441a2d43f9d7cfe729aac53a404c7b3dbc85fa419a5e18452b93b4",
+ "frozen_files_verified": 292,
+ "current_source_sha256": "718a9431e97997dcad904b99eb00f0072385142d63ebb7ffc1c27ff374ca6de3",
+ "current_curriculum_sha256": "f5399d3d13edd2f94b660648e7dd23aceef66a21e095567988bbb6bd38995bf1",
+ "hard_errors": [],
+ "character_budget_warnings": [],
+ "notation_review": "All note/chord/instruction pairs read semantically in primary and applicable shared contexts; raw token scanners are diagnostics, not a substitute for those judgments. English article A and plural note spellings were interpreted in context.",
+ "limitations": [
+  "AI semantic review, not native-human certification",
+  "No device, audio-performance, or historical-fact certification",
+  "No live publisher edits or localization import, no Git actions"
+ ],
+ "digit_order_dispositions": [
+  {
+   "key": "L237070b1ce",
+   "source": "How many bars of E7 open the 12-bar blues?",
+   "target": "บลูส์ 12 ห้องเริ่มด้วย E7 กี่ห้อง",
+   "reason": "Thai places the 12-bar-blues noun before the E7 question. E7 remains the chord and 12 remains the form length; every literal digit token and referent is preserved.",
+   "reviewer": "Thai independent AI lesson reviewer"
+  },
+  {
+   "key": "L8f17a64c02",
+   "source": "String 3: pick fret 5 with finger 1, then hammer finger 3 onto fret 7.",
+   "target": "สาย 3: ใช้นิ้ว 1 กดเฟร็ต 5 แล้วดีด จากนั้นแฮมเมอร์นิ้ว 3 ลงเฟร็ต 7",
+   "reason": "Thai explicitly places finger 1 pressing fret 5 before picking, then finger 3 hammering onto fret 7, all on string 3. Reordering finger/fret phrases correctly disambiguates the physical instruction without changing any numeric referent.",
+   "reviewer": "Thai independent AI lesson reviewer"
+  }
+ ],
+ "pass": true
+}

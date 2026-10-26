@@ -1,0 +1,9 @@
+{
+  "change": "Include localized names inside nested arrangement.sections lists in semantic text bundles.",
+  "prior_behavior": "Key, role, field and location were present, but source label itself was absent from text bundle; primary source/target pairs were still available.",
+  "source_change": false,
+  "source_keys": 6083,
+  "music_arrays": "Notes, sounds, raw chords and sung lyric data remain excluded from text-context output.",
+  "regression": "Nested Intro and Verse 1 names now visible; notes/chords absent; duplicate occurrence counting preserved.",
+  "existing_review_evidence": "Frozen context packets are not rewritten. Hebrew review explicitly supplements all26 section label meanings and1382 context bindings; future reviews use enriched helper."
+}
