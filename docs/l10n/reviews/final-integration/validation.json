@@ -1,0 +1,73 @@
+{
+  "platform": "Windows; Python 3.15; Xcode unavailable",
+  "checks": [
+    {
+      "command": "python -m unittest discover -s tools/l10n/tests -p test_*.py",
+      "exit_code": 0,
+      "stdout": "<temporary test directory>/batch.prompt.txt: 1041 characters",
+      "stderr": "........................................................................................................................................................\n----------------------------------------------------------------------\nRan 152 tests in 10.463s\n\nOK"
+    },
+    {
+      "command": "python tools/l10n/report.py --check --strict",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "python tools/l10n/lessons.py --strict",
+      "exit_code": 0,
+      "stdout": "ar: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nbg: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nbn: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nca: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\ncs: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nda: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nde: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nel: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nes: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\net: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nfa: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nfi: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nfr: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\ngu: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nhe: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nhi: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nhr: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nhu: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nid: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nis: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nit: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nja: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nkn: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nko: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nlt: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nlv: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nml: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nmr: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nnl: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nno: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\npa: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\npl: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\npt: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nro: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nru: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nsk: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nsl: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nsv: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nsw: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nta: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nte: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nth: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\ntr: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nuk: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nur: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nvi: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nzh-CN: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nzu: 6083/6083 lessons; 0 absent, 0 rejected/English-identical\nCOMPLETE: 48 target locales, 0 unresolved lesson pairs",
+      "stderr": ""
+    },
+    {
+      "command": "python tools/l10n/critical.py --strict",
+      "exit_code": 0,
+      "stdout": "Shipped locales checked: 48 (ar, bg, bn, ca, cs, da, de, el, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, is, it, ja, kn, ko, lt, lv, ml, mr, nl, no, pa, pl, pt, ro, ru, sk, sl, sv, sw, ta, te, th, tr, uk, ur, vi, zh-CN, zu)\nlegal: 0 strings missing in at least one shipped locale (0 locale × string gaps)\npermission: 0 strings missing in at least one shipped locale (0 locale × string gaps)\nvoiceover: 0 strings missing in at least one shipped locale (0 locale × string gaps)\nOK",
+      "stderr": ""
+    },
+    {
+      "command": "python tools/l10n/critical.py --baseline",
+      "exit_code": 0,
+      "stdout": "Shipped locales checked: 48 (ar, bg, bn, ca, cs, da, de, el, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, is, it, ja, kn, ko, lt, lv, ml, mr, nl, no, pa, pl, pt, ro, ru, sk, sl, sv, sw, ta, te, th, tr, uk, ur, vi, zh-CN, zu)\nlegal: 0 strings missing in at least one shipped locale (0 locale × string gaps)\npermission: 0 strings missing in at least one shipped locale (0 locale × string gaps)\nvoiceover: 0 strings missing in at least one shipped locale (0 locale × string gaps)\nOK: no gap beyond the baseline (0 known gaps; the App Store gate requires none).",
+      "stderr": ""
+    },
+    {
+      "command": "python tools/verify-ios-resources.py",
+      "exit_code": 0,
+      "stdout": "OK: 60 instruments, 132 tunings, 73 photos/146 images, 49 locales, 1 licensed font family, 7 3D models; all literal localization keys exist; 300 instrument samples (11.4 MB, 15 sets, bngguitars, freepats, growlybass, jmartin, vcsl, virtuosity, vsco2).",
+      "stderr": ""
+    },
+    {
+      "command": "python tools/l10n/store.py",
+      "exit_code": 0,
+      "stdout": "50 listing locales checked: 0 problems. Draft text/review gate only; native, legal, market, device, assets and account evidence remain separate.",
+      "stderr": ""
+    },
+    {
+      "command": "python tools/marketing/screenshots.py --check",
+      "exit_code": 0,
+      "stdout": "build: 526 lessons, 11 courses, 60 instruments, 132 tunings, 146 songs, 50 originals, 140 songs_floor\niphone 1. Free tuner. No ads. | 60 instruments, to the cent | 10b-tune-locked | breakout mint\niphone 2. Hear exactly how you played | Pitch and timing on every note | 65-song-perform | zoom sky\niphone 3. Play your first chord today | Timbre hears every string | 52b-lesson-chord | callout lime\niphone 4. Tune whatever you play | 60 instruments, 132 tunings | 31b-instruments-folk | wall spotlight\niphone 5. Play songs you know | 140+ songs, classics to Originals | 63-songs | light orchid\niphone 6. Learn at your own pace | 526 lessons in 11 courses | 50-learn | offset violet\niphone 7. Five minutes a day adds up | Stars, streaks and daily quests | 62-lesson-results | zoom gold\niphone 8. One strum checks every string | See which string to tune first | 11b-tune-strum | flip mint\niphone 9. See yourself get better | Accuracy, string health, badges | 32-journey | offset-left flame\nipad 1. Free tuner. No ads. | 60 instruments, to the cent | ipad-landscape-tune | side mint\nipad 2. Tune whatever you play | Violin to oud, sitar to erhu | ipad-landscape-instruments | side-right spotlight\nipad 3. Play songs you know | 140+ songs, classics to Originals | ipad-landscape-songs | light orchid\nipad 4. Five minutes a day adds up | A daily set, quests and ear games | ipad-landscape-practice | side violet\niphone · violin 1. Tune your violin, free | G, D, A and E, to the cent | 49d-tune-violin-locked | breakout orchid\niphone · violin 2. Play songs on your violin | From Jingle Bells to Ode to Joy | 65b-song-perform-violin | zoom sky\niphone · violin 3. Hear exactly how you played | Pitch and timing on every note | 62b-lesson-results-violin | zoom gold\niphone · violin 4. Play songs you know | 140+ songs, classics to Originals | 63-songs | light orchid\niphone · violin 5. Learn at your own pace | 526 lessons in 11 courses | 50-learn | offset violet\niphone · cello 1. Tune your cello, free | C, G, D and A, to the cent | 49e-tune-cello-locked | breakout orchid\niphone · cello 2. Tune whatever you play | 60 instruments, 132 tunings | 31b-instruments-folk | wall spotlight\niphone · cello 3. Play songs you know | 140+ songs, classics to Originals | 63-songs | light orchid\niphone · cello 4. See yourself get better | Accuracy, string health, badges | 32-journey | offset-left flame\niphone · ukulele 1. Tune your ukulele, free | G, C, E and A, to the cent | 17b-tune-ukulele-locked | breakout mint\niphone · ukulele 2. Play songs you know | 140+ songs, classics to Originals | 63-songs | light orchid\niphone · ukulele 3. Tune whatever you play | 60 instruments, 132 tunings | 31b-instruments-folk | wall spotlight\niphone · ukulele 4. See yourself get better | Accuracy, string health, badges | 32-journey | offset-left flame\n50 listing locales checked: all pass",
+      "stderr": ""
+    },
+    {
+      "command": "python tools/l10n/xcstrings.py --check",
+      "exit_code": 0,
+      "stdout": "Localizable.xcstrings: 2082 keys, 49 locales, 365 plural localizations\nAppShortcuts.xcstrings: 18 keys, 48 locales, 0 plural localizations\nInfoPlist.xcstrings: 3 keys, 49 locales, 0 plural localizations\nOK: every value of every table survives the conversion",
+      "stderr": ""
+    },
+    {
+      "command": "python tools/l10n/drafts/verify.py",
+      "exit_code": 0,
+      "stdout": "PASS: partial draft hashes and source bindings; semantic review and import remain pending\nPASS: complete draft hashes/coverage only; independent semantic approval remains pending",
+      "stderr": ""
+    },
+    {
+      "command": "python tools/ci/comment_hygiene.py",
+      "exit_code": 0,
+      "stdout": "WARNING ios/Timbre/Paywall/PaywallWinBack.swift:132: [inline-orb] '.background(Circle().fill(Palette.starGold.opacity(0.14)': 1 in this file, 0 allowed by the baseline. A glyph on a translucent tinted circle is the retired orb tile drawn by hand: use the bare glyph.\n    .background(Circle().fill(Palette.starGold.opacity(0.14)))\nHygiene lint: review-ref 0, bug-ref 0, qa-ref 0, store-frame 0, wip 0, process-ref 0, icon-orb 0, inline-orb 9, status-colour 81, type-scale 0, test-coupling 7 (baseline allows 96)\nFailing on new occurrences: review-ref, bug-ref, qa-ref, store-frame, wip, process-ref, icon-orb, type-scale\nOK: no new error-level occurrences",
+      "stderr": ""
+    }
+  ],
+  "native_build_simulator_device": "not run locally; published GitHub Actions results are separate",
+  "sanitization": "Only the local temporary-directory prefix in unittest stdout was redacted; command, test count, diagnostics and exit status retained."
+}

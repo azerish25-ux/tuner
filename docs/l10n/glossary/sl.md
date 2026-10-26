@@ -32,7 +32,7 @@ Status: AI-drafted and AI-reviewed terminology decisions; not human-reviewed or 
 | Speed trainer | `Speed trainer` | Trener hitrosti |
 | Chords | `Chords` | Akordi |
 | Scales | `Scales` | Lestvice |
-| Play along | `Play along` | Igrajte v ritmu |
+| Play along | `Play along` | Igraj zraven |
 | Haptics | `Haptics` | Haptika |
 | Tune up | `Tune up` | Uglasitev |
 | Tuning | `Tuning` | Uglasitev |
@@ -56,7 +56,7 @@ Status: AI-drafted and AI-reviewed terminology decisions; not human-reviewed or 
 | Restore purchases | `Restore purchases` | Obnovi nakupe |
 | Terms | `Terms` | Pogoji |
 | Next | `Next` | Sledi |
-| Again | `Again` | Again |
+| Again | `Again` | Znova |
 | Slower | `Slower` | Počasneje |
 | Songs | | Pesmi |
 | Quest | | Naloga |
@@ -125,3 +125,62 @@ Instrument courses use the catalogue instrument names. Songs uses the term above
 
 ## 4. Words that mislead
 Tune means bringing pitch to the target; a tune is a melody. Sharp/flat direction uses the existing flat/sharp labels (too low/high), not accidental names. Bar means musical measure, key means tonality, pick means plectrum/plucking or choose according to context. Lock means pitch confirmation, not a padlock. Take means recorded attempt, run a streak or passage attempt, not running. Chart means chord diagram/sheet unless statistical context. Intonation means pitch accuracy over a sustained tone, not saddle adjustment or speech stress. Practice means musical practice; Feel means vibration feedback, not emotion. Chop/chunk are muted rhythmic strokes, never a missed note.
+
+## Reviewed Original titles — 26 October 2026
+
+These coordinated title choices supersede earlier general title-retention instructions. All 6,083 lesson pairs received independent source-aware AI review; historical draft/review-pending statements above describe the author checkpoint. Reuse the selected titles in lesson references and Game Center. This does not establish native-human or device approval.
+
+| English title | Selected title |
+|---|---|
+| Kite Weather | Vreme za zmaje |
+| Porchlight | Luč na verandi |
+| Moth and Ember | Vešča in žerjavica |
+| Low Tide Radio | Radio ob oseki |
+| Dust on the Dashboard | Prah na armaturi |
+| Lantern Hill | Grič svetilk |
+| Gravel Road Two-Step | Two-step po makadamu |
+| First Frost | Prva slana |
+| Hammock Season | Čas visečih mrež |
+| Glow-in-the-Dark Stars | Zvezde, ki svetijo v temi |
+| Sparkler Season | Čas iskric |
+| Roller Rink | Kotalkališče |
+| Echo Canyon | Kanjon odmevov |
+| Open Windows | Odprta okna |
+| Scoreboard Lights | Luči na semaforju |
+| Rust Belt Shuffle | Shuffle rjastega pasu |
+| Carousel at Closing Time | Vrtiljak ob zapiranju |
+| Cedar Smoke | Cedrov dim |
+| Rain on the Skylight | Dež na strešnem oknu |
+| Neon Laundromat | Neonska pralnica |
+| Late Checkout | Pozna odjava |
+| Saltwater Sunday | Nedelja ob morju |
+| Pocket Change | Drobiž v žepu |
+| Kitchen Slow Dance | Počasni ples v kuhinji |
+| Houseplants | Sobne rastline |
+| Static on Channel Nine | Šum na devetem kanalu |
+| Basement Weather | Kletno vreme |
+| Jukebox Moon | Luna iz džuboksa |
+| Boardwalk Comet | Komet na obalni promenadi |
+| Mile Marker Zero | Miljnik nič |
+| Last Bell | Zadnji zvonec |
+| Copper Wire | Bakrena žica |
+| Cold Lake | Hladno jezero |
+| Parking Lot Cathedral | Katedrala na parkirišču |
+| Halogen | Halogen |
+| Letters in a Shoebox | Pisma v škatli za čevlje |
+| Keeper's Daughter | Svetilničarjeva hči |
+| Snow Globe Town | Mesto v snežni krogli |
+| Thistle and Thread | Osat in nit |
+| Ghost Light | Luč za duhove |
+| Late Bus Home | Pozni avtobus domov |
+| Glass Satellites | Stekleni sateliti |
+| Market Day | Tržni dan |
+| Velvet Hour | Žametna ura |
+| Rooftop Choir | Zbor na strehi |
+| Slow Motion Strobe | Stroboskop v počasnem posnetku |
+| Bright Side of the Block | Svetla stran soseske |
+| Over You Soon | Kmalu te prebolim |
+| Spray Paint Sunrise | Zora iz spreja |
+| Constellation Prize | Ozvezdje za nagrado |
+
+Three-note patterns use vzorec s tremi toni; a three-note melody is melodija s tremi toni. Use barré consistently, with Slovenian endings where needed, and šestosminski takt for six-eight. Counting in two means štetje na dve dobi. Bare numeral answer labels Ena/Dve are citation forms shared across count-noun genders.

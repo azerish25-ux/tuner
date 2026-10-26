@@ -148,3 +148,73 @@ Status: AI-drafted and AI-reviewed, 2026-10-25. Native-human sign-off and device
 | Next, Again, Slower | Далі / Ще раз / Повільніше |
 | Practice | Заняття, not professional practice |
 | Feel | Вібрація, not emotion |
+
+## Imported lesson review — 26 October 2026
+
+# Ukrainian terminology supplement
+
+- Preserve the formal/plural **ви** register throughout teaching instructions.
+- **Für Elise → До Елізи**: use this established Ukrainian title consistently in lesson titles and interval mnemonics.
+- **First / First finger / Second finger / Third finger / Fourth finger**: shared quiz answers are nominative **Перший палець / Другий палець / Третій палець / Четвертий палець**. Matching shared questions use **Який палець грає…?**. Separate instrument-specific keys can retain their own grammatical case.
+- A harmonic four/six chord means **акорд четвертого/шостого ступеня**, not the fourth/sixth chord in chronological order.
+- 1700s/1800s denote whole centuries. The review makes **XVIII/XIX століття** explicit while keeping the required literal source digit groups in parentheses.
+- Letter note symbols remain unchanged. Spelled-out accidentals inflect naturally: **до F дієза**, **із B бемолем**, **на F дієзі**.
+- Movable-do lesson syllables preserve the source distinction: **до, ре, мі, фа, соль, ля, ті**. They are not an instruction to respell A–G literal lesson notation.
+- Original sung lyrics, syllabified tokens and quiz choices that identify exact sung words remain in the sung language. The complete 206-item registry supplies per-key reasons; it grants no blanket lyric/prose exemption.
+
+## Reviewed Original titles — 26 October 2026
+
+These coordinated title choices supersede earlier general title-retention instructions. All 6,083 lesson pairs received independent source-aware AI review; historical draft/review-pending statements above describe the author checkpoint. Reuse the selected titles in lesson references and Game Center. This does not establish native-human or device approval.
+
+| English title | Selected title |
+|---|---|
+| Kite Weather | Погода для повітряних зміїв |
+| Porchlight | Світло на ґанку |
+| Moth and Ember | Нічний метелик і жарина |
+| Low Tide Radio | Радіо відпливу |
+| Dust on the Dashboard | Пил на панелі приладів |
+| Lantern Hill | Ліхтарний пагорб |
+| Gravel Road Two-Step | Тустеп на гравійній дорозі |
+| First Frost | Перший мороз |
+| Hammock Season | Пора гамаків |
+| Glow-in-the-Dark Stars | Зірки, що світяться в темряві |
+| Sparkler Season | Пора бенгальських вогнів |
+| Roller Rink | Ролердром |
+| Echo Canyon | Каньйон відлуння |
+| Open Windows | Відчинені вікна |
+| Scoreboard Lights | Вогні табло |
+| Rust Belt Shuffle | Шафл Іржавого поясу |
+| Carousel at Closing Time | Карусель перед закриттям |
+| Cedar Smoke | Кедровий дим |
+| Rain on the Skylight | Дощ по мансардному вікну |
+| Neon Laundromat | Неонова пральня |
+| Late Checkout | Пізній виїзд |
+| Saltwater Sunday | Неділя біля моря |
+| Pocket Change | Дріб'язок у кишені |
+| Kitchen Slow Dance | Повільний танець на кухні |
+| Houseplants | Кімнатні рослини |
+| Static on Channel Nine | Шум на дев'ятому каналі |
+| Basement Weather | Погода в підвалі |
+| Jukebox Moon | Місяць у джукбоксі |
+| Boardwalk Comet | Комета над променадом |
+| Mile Marker Zero | Нульова миля |
+| Last Bell | Останній дзвоник |
+| Copper Wire | Мідний дріт |
+| Cold Lake | Холодне озеро |
+| Parking Lot Cathedral | Собор на автостоянці |
+| Halogen | Галоген |
+| Letters in a Shoebox | Листи в коробці від взуття |
+| Keeper's Daughter | Донька доглядача |
+| Snow Globe Town | Містечко в сніговій кулі |
+| Thistle and Thread | Будяк і нитка |
+| Ghost Light | Примарне світло |
+| Late Bus Home | Пізній автобус додому |
+| Glass Satellites | Скляні супутники |
+| Market Day | Базарний день |
+| Velvet Hour | Оксамитова година |
+| Rooftop Choir | Хор на даху |
+| Slow Motion Strobe | Стробоскоп у сповільненні |
+| Bright Side of the Block | Світлий бік кварталу |
+| Over You Soon | Скоро забуду тебе |
+| Spray Paint Sunrise | Світанок із балончика |
+| Constellation Prize | Сузір'я в нагороду |

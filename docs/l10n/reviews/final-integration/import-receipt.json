@@ -1,0 +1,41 @@
+{
+  "locale_results": {
+    "is": {
+      "pairs": 6083,
+      "corrections": 84,
+      "invariants": 317,
+      "review_map_file": "docs/l10n/reviews/is/candidate-map.json",
+      "review_map_sha256": "6e6dd0420799dd9f59d0b040e2f35284a1e70bbb32b139435a33f02bae9a62ca",
+      "frozen_draft_sha256": "a2e98bf7f02c90fb8b9862a4b43fbc24f66e76f700762ed71e97d19d38d2542b"
+    },
+    "sk": {
+      "pairs": 6083,
+      "corrections": 40,
+      "invariants": 312,
+      "review_map_file": "docs/l10n/reviews/sk/final-map.json",
+      "review_map_sha256": "8ef581d55e8868b3d6fd46167f2be956cb923135e09bb15b1a0cb5808bc87dd8",
+      "frozen_draft_sha256": "66c052d7a3e4d6c2d8196fd79bc2d41c6929f2d701504697ce68c17629dc7191"
+    },
+    "sl": {
+      "pairs": 6083,
+      "corrections": 35,
+      "invariants": 321,
+      "review_map_file": "docs/l10n/reviews/sl/final.json",
+      "review_map_sha256": "876b46a131b59a6d7c4b7d66051cc6970a38e1157d0d17ffbeddc4188e9888cc",
+      "frozen_draft_sha256": "5e447f31bcf368eacf306b3c926fe3d775e799f06dc77991c2bdafeecdbd48a0"
+    },
+    "uk": {
+      "pairs": 6083,
+      "corrections": 63,
+      "invariants": 206,
+      "review_map_file": "docs/l10n/reviews/uk/final-map.json",
+      "review_map_sha256": "f36bfe0c7554aaa3165d788fc6ad4579238bcf234eb7cfd6b2ff1ea9969450f6",
+      "frozen_draft_sha256": "5bef41a5fe2513fb69ccf282a607207bbbbb4bdbbdaac60a5c8b0defe507e34d"
+    }
+  },
+  "accepted_pairs": 24332,
+  "rejected_pairs": 0,
+  "full_pair_review": true,
+  "human_native_review": false,
+  "device_review": false
+}

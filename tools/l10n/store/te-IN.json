@@ -28,17 +28,8 @@
     "semantic": "ai_cross_reviewed_critical_facts",
     "legal_back_translation": "not_performed_optional_under_ai_policy",
     "song_title_alignment": {
-      "state": "pending_app_alignment",
-      "pending_app_alignment": [
-        "timbre.song.twinkle",
-        "timbre.song.odetojoy",
-        "timbre.song.jinglebells",
-        "timbre.song.saints",
-        "timbre.song.kiteweather",
-        "timbre.song.dashboard",
-        "timbre.song.lochlomond",
-        "timbre.song.mountain"
-      ],
+      "state": "app_text_reused",
+      "pending_app_alignment": [],
       "native_review": "not_verified"
     },
     "ai_cross_review": {
@@ -54,14 +45,14 @@
     "timbre.sniper.weekly": "ఈ వారం బుల్స్‌ఐ",
     "timbre.ear.level": "శ్రవణ శిక్షణ స్థాయి",
     "timbre.streak": "ప్రాక్టీస్ స్ట్రీక్",
-    "timbre.song.twinkle": "మిణుకు మిణుకు చిన్న తార",
-    "timbre.song.odetojoy": "ఆనంద గీతం",
-    "timbre.song.jinglebells": "జింగిల్ బెల్స్",
-    "timbre.song.saints": "సాధువులు కవాతుగా వచ్చినప్పుడు",
-    "timbre.song.kiteweather": "గాలిపటాల వాతావరణం",
-    "timbre.song.dashboard": "డ్యాష్‌బోర్డుపై దుమ్ము",
-    "timbre.song.lochlomond": "లాక్ లోమండ్",
-    "timbre.song.mountain": "ఆమె కొండ చుట్టూ వస్తుంది"
+    "timbre.song.twinkle": "Twinkle, Twinkle, Little Star",
+    "timbre.song.odetojoy": "Ode to Joy",
+    "timbre.song.jinglebells": "Jingle Bells",
+    "timbre.song.saints": "When the Saints Go Marching In",
+    "timbre.song.kiteweather": "Kite Weather",
+    "timbre.song.dashboard": "Dust on the Dashboard",
+    "timbre.song.lochlomond": "Loch Lomond",
+    "timbre.song.mountain": "She'll Be Coming 'Round the Mountain"
   },
   "game_center_achievement_names": {
     "timbre.badge.first_tune": "మొదటి తీగ ట్యూన్‌లో",
@@ -195,7 +186,15 @@
         "timbre.badge.units_10:game_center_achievement_descriptions",
         "timbre.badge.course_done:game_center_achievement_descriptions",
         "timbre.badge.songs_1:game_center_achievement_descriptions",
-        "timbre.badge.songs_25:game_center_achievement_descriptions"
+        "timbre.badge.songs_25:game_center_achievement_descriptions",
+        "timbre.song.twinkle",
+        "timbre.song.odetojoy",
+        "timbre.song.jinglebells",
+        "timbre.song.saints",
+        "timbre.song.kiteweather",
+        "timbre.song.dashboard",
+        "timbre.song.lochlomond",
+        "timbre.song.mountain"
       ],
       "note": "Available app values reused exactly; missing app values retain authored store drafts. Does not certify native or device review."
     }

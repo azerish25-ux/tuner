@@ -131,7 +131,7 @@ for inst in sample_manifest['instruments']:
     # Optional play-time voicing: a velocity-tracked darkening (single-layer plucked sets), paired courses (mandolin).
     assert inst.get('softFilter', False) in (True, False) and (not inst.get('softFilter') or inst['kind'] == 'plucked'), inst['id']
     assert 0 <= inst.get('pairCents', 0) <= 5, inst['id']
-on_disk = {str(p.relative_to(samples)) for p in samples.rglob('*') if p.is_file() and p.name != 'manifest.json'}
+on_disk = {p.relative_to(samples).as_posix() for p in samples.rglob('*') if p.is_file() and p.name != 'manifest.json'}
 assert on_disk == listed, ('unlisted or missing samples', sorted(on_disk - listed), sorted(listed - on_disk))
 sample_sets = {inst['id']: inst for inst in sample_manifest['instruments']}
 folders = {p.name for p in samples.iterdir() if p.is_dir()}

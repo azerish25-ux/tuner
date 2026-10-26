@@ -1,0 +1,4850 @@
+{
+  "scope": "Targeted shared contexts only; not an exhaustive display of all helper contexts. All 6083 standalone English/target pairs separately read.",
+  "reviewed_keys": 27,
+  "reviewed_context_rows": 192,
+  "all_helper_shared_context_rows": 4127,
+  "contexts": [
+    {
+      "key": "L916a78d701",
+      "source_index": 81,
+      "context_index": 0,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which finger plays fret 3?",
+          "options": [
+            "First",
+            "Second finger",
+            "Third finger",
+            "Fourth finger"
+          ],
+          "why": "One finger per fret: fret 1 gets finger 1, fret 2 gets finger 2, fret 3 gets finger 3."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/1/lessons/0/steps/4/options/0"
+        ]
+      },
+      "source_context_sha256": "1d00baab5a5d768a50080601f01d51e372c084fd42f7e54b6f1ff17e5c2cd61d",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L916a78d701",
+      "source_index": 81,
+      "context_index": 1,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which finger plays fret 2?",
+          "options": [
+            "First",
+            "Second finger",
+            "Third finger"
+          ],
+          "why": "One finger per fret: fret 1 gets finger 1, fret 2 gets finger 2, fret 3 gets finger 3."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/5/lessons/0/steps/3/options/0"
+        ]
+      },
+      "source_context_sha256": "c227410cf5f5340d5da4bdaa3cd7884fdef90d10c332b5737334a74652103dc2",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L916a78d701",
+      "source_index": 81,
+      "context_index": 2,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which finger plays F sharp on the E string?",
+          "options": [
+            "First",
+            "Second finger",
+            "Third finger"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/3/units/2/lessons/4/steps/4/options/0"
+        ]
+      },
+      "source_context_sha256": "25dea20d5e068c8103a20d1579a3c977fc309fb5857cd09a1b0d94474294a8dc",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L916a78d701",
+      "source_index": 81,
+      "context_index": 3,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which finger plays B on the A string?",
+          "options": [
+            "First",
+            "Second finger",
+            "Third finger"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/4/units/2/lessons/4/steps/4/options/0"
+        ]
+      },
+      "source_context_sha256": "a2f6c22e8915e17d1bf32627b8dccb1be352d3f5780243b782e5ac671859c9af",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L916a78d701",
+      "source_index": 81,
+      "context_index": 4,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "In fourth position on the A string, which finger plays E?",
+          "options": [
+            "Third finger",
+            "First",
+            "Fourth finger"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/4/units/4/lessons/1/steps/4/options/1"
+        ]
+      },
+      "source_context_sha256": "cea057e2322f85a6655c39515f5ff1c2b8e8114ab46e7e518761063e7aca726e",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L8d3e7efd0a",
+      "source_index": 82,
+      "context_index": 0,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which finger plays fret 3?",
+          "options": [
+            "First",
+            "Second finger",
+            "Third finger",
+            "Fourth finger"
+          ],
+          "why": "One finger per fret: fret 1 gets finger 1, fret 2 gets finger 2, fret 3 gets finger 3."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/1/lessons/0/steps/4/options/1"
+        ]
+      },
+      "source_context_sha256": "fd6fa9678618200897e0f274d8b132e3f4e2c456a17848e0cfdbc4758c533306",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L8d3e7efd0a",
+      "source_index": 82,
+      "context_index": 1,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which finger plays fret 2?",
+          "options": [
+            "First",
+            "Second finger",
+            "Third finger"
+          ],
+          "why": "One finger per fret: fret 1 gets finger 1, fret 2 gets finger 2, fret 3 gets finger 3."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/5/lessons/0/steps/3/options/1"
+        ]
+      },
+      "source_context_sha256": "71a2173149b0e84435f80767505e000009c008c708422d0ede95bd891611919f",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L8d3e7efd0a",
+      "source_index": 82,
+      "context_index": 2,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which finger plays F sharp on the E string?",
+          "options": [
+            "First",
+            "Second finger",
+            "Third finger"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/3/units/2/lessons/4/steps/4/options/1"
+        ]
+      },
+      "source_context_sha256": "08a1420dfd0ba63e23ecc809023cba0c13ac1ec19d3fe5c5fa9d8f7c8c2e2839",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L8d3e7efd0a",
+      "source_index": 82,
+      "context_index": 3,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which finger plays B on the A string?",
+          "options": [
+            "First",
+            "Second finger",
+            "Third finger"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/4/units/2/lessons/4/steps/4/options/1"
+        ]
+      },
+      "source_context_sha256": "312249465364124d8cb167c614c159dbf31534b9b72943bc2984b98a0eb4dc4a",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L8d3e7efd0a",
+      "source_index": 82,
+      "context_index": 4,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which finger plays C sharp on the A string?",
+          "options": [
+            "Third finger",
+            "Second finger",
+            "Fourth finger"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/4/units/2/lessons/6/steps/3/options/1"
+        ]
+      },
+      "source_context_sha256": "c7a1e37827806206edc9dd3ff5db027b18b520bbb33865aaa1b743a2c41a300e",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L8d3e7efd0a",
+      "source_index": 82,
+      "context_index": 5,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which finger plays C on the G string?",
+          "options": [
+            "Fourth finger",
+            "Third finger",
+            "Second finger"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/4/units/3/lessons/0/steps/4/options/2"
+        ]
+      },
+      "source_context_sha256": "dd4a8d5040df30c2adf19b3c68251bdc92d0bfb0eb9b4df609e26615307487dd",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L8d3e7efd0a",
+      "source_index": 82,
+      "context_index": 6,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which finger plays fret 4?",
+          "options": [
+            "Fourth finger",
+            "Second finger",
+            "First finger"
+          ],
+          "why": "Each finger covers two frets on mandolin, so the second finger handles frets 3 and 4."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/5/units/1/lessons/1/steps/2/options/1"
+        ]
+      },
+      "source_context_sha256": "6f81b72e58decab731c23c37a523178c6aac5125e0adaff70c2d8888dfd21a34",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L8d3e7efd0a",
+      "source_index": 82,
+      "context_index": 7,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which finger plays fret 3?",
+          "options": [
+            "First finger",
+            "Third finger",
+            "Second finger"
+          ],
+          "why": "Fret 3 sits in the second finger's zone, frets 3 and 4."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/5/units/1/lessons/4/steps/2/options/2"
+        ]
+      },
+      "source_context_sha256": "d3f77679bf0bcdd46bf200d45565180f2602c65b215b35f07b075cf1ac96b1eb",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lafec931374",
+      "source_index": 83,
+      "context_index": 0,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which finger plays fret 3?",
+          "options": [
+            "First",
+            "Second finger",
+            "Third finger",
+            "Fourth finger"
+          ],
+          "why": "One finger per fret: fret 1 gets finger 1, fret 2 gets finger 2, fret 3 gets finger 3."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/1/lessons/0/steps/4/options/2"
+        ]
+      },
+      "source_context_sha256": "f59cd3c54f321b61521756f11d879c95f19a1f340bc8b3c5e437ad73f793051f",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lafec931374",
+      "source_index": 83,
+      "context_index": 1,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which finger plays fret 2?",
+          "options": [
+            "First",
+            "Second finger",
+            "Third finger"
+          ],
+          "why": "One finger per fret: fret 1 gets finger 1, fret 2 gets finger 2, fret 3 gets finger 3."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/5/lessons/0/steps/3/options/2"
+        ]
+      },
+      "source_context_sha256": "13888ae2616db998a975b36e2b70b4dda6ef67aa2a0714c9f1859c511dfb2a05",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lafec931374",
+      "source_index": 83,
+      "context_index": 2,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which finger plays the C chord?",
+          "options": [
+            "First finger",
+            "Third finger",
+            "Little finger"
+          ],
+          "why": "Your third finger reaches fret 3 without a stretch."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/1/units/0/lessons/6/steps/5/options/1"
+        ]
+      },
+      "source_context_sha256": "b6342d6978558ec018af7f3cdf0bf5ee718b89f838c01c34e79d996badfc785a",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lafec931374",
+      "source_index": 83,
+      "context_index": 3,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which finger plays F sharp on the E string?",
+          "options": [
+            "First",
+            "Second finger",
+            "Third finger"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/3/units/2/lessons/4/steps/4/options/2"
+        ]
+      },
+      "source_context_sha256": "450c6b0d9185c42b98aec06658c4f1e19b0f96bf7b0cbaaba5df1a67042fa25d",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lafec931374",
+      "source_index": 83,
+      "context_index": 4,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which finger plays G on the E string?",
+          "options": [
+            "Low 2",
+            "High 2",
+            "Third finger"
+          ],
+          "why": "Soldier's Joy is in D major, so G is natural: high 2 for F sharp on D, low 2 for G on E."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/3/units/4/lessons/5/steps/4/options/2"
+        ]
+      },
+      "source_context_sha256": "19b8aeca9b8c2e399f9c0d84d072a3af40f528a46a32fd4e5cfdc271c879105b",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lafec931374",
+      "source_index": 83,
+      "context_index": 5,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which finger plays B on the A string?",
+          "options": [
+            "First",
+            "Second finger",
+            "Third finger"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/4/units/2/lessons/4/steps/4/options/2"
+        ]
+      },
+      "source_context_sha256": "884f63889d1ed2bb76de449321e5f9232c5e8cf931a177de5eb3e308555a4bf2",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lafec931374",
+      "source_index": 83,
+      "context_index": 6,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which finger plays C sharp on the A string?",
+          "options": [
+            "Third finger",
+            "Second finger",
+            "Fourth finger"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/4/units/2/lessons/6/steps/3/options/0"
+        ]
+      },
+      "source_context_sha256": "175a2b5d0bdc8a6cf6ee28ba2a089574368f2c33234c4a6c2159d7180be7e887",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lafec931374",
+      "source_index": 83,
+      "context_index": 7,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which finger plays C on the G string?",
+          "options": [
+            "Fourth finger",
+            "Third finger",
+            "Second finger"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/4/units/3/lessons/0/steps/4/options/1"
+        ]
+      },
+      "source_context_sha256": "c13771b1599ed6c7380c7800babc4f4ec9d6a35596ce00a38340fbe7425074f3",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lafec931374",
+      "source_index": 83,
+      "context_index": 8,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "In fourth position on the A string, which finger plays E?",
+          "options": [
+            "Third finger",
+            "First",
+            "Fourth finger"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/4/units/4/lessons/1/steps/4/options/0"
+        ]
+      },
+      "source_context_sha256": "6d83b883cb53d79889d4ac7aa07777b20d1131548de82d08f94a1d5553a7aa4d",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lafec931374",
+      "source_index": 83,
+      "context_index": 9,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which finger plays fret 3?",
+          "options": [
+            "First finger",
+            "Third finger",
+            "Second finger"
+          ],
+          "why": "Fret 3 sits in the second finger's zone, frets 3 and 4."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/5/units/1/lessons/4/steps/2/options/1"
+        ]
+      },
+      "source_context_sha256": "60cd0f8ecb541626adbbf6eb0e1c67c54b8923031efd453a478390103bfed777",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "La7ac4ed745",
+      "source_index": 84,
+      "context_index": 0,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which finger plays fret 3?",
+          "options": [
+            "First",
+            "Second finger",
+            "Third finger",
+            "Fourth finger"
+          ],
+          "why": "One finger per fret: fret 1 gets finger 1, fret 2 gets finger 2, fret 3 gets finger 3."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/1/lessons/0/steps/4/options/3"
+        ]
+      },
+      "source_context_sha256": "9f8f2c184c774ff264803efa0873cb4a2f89b6c726c59e5cecc4551bb0ec27f4",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "La7ac4ed745",
+      "source_index": 84,
+      "context_index": 1,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which finger plays C sharp on the A string?",
+          "options": [
+            "Third finger",
+            "Second finger",
+            "Fourth finger"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/4/units/2/lessons/6/steps/3/options/2"
+        ]
+      },
+      "source_context_sha256": "104447f9c54b96ef9c14dca3a8f5829c5d85465db09c371e3524865c02ab32b0",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "La7ac4ed745",
+      "source_index": 84,
+      "context_index": 2,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which finger plays C on the G string?",
+          "options": [
+            "Fourth finger",
+            "Third finger",
+            "Second finger"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/4/units/3/lessons/0/steps/4/options/0"
+        ]
+      },
+      "source_context_sha256": "e9c58f68e9cbf43890b08df31163e12a442f81e44909380f1eb153f7dd2067f2",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "La7ac4ed745",
+      "source_index": 84,
+      "context_index": 3,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "In fourth position on the A string, which finger plays E?",
+          "options": [
+            "Third finger",
+            "First",
+            "Fourth finger"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/4/units/4/lessons/1/steps/4/options/2"
+        ]
+      },
+      "source_context_sha256": "89251f70e196c23405f91cc9a40cdda2f659b3434d5f1afde0d53737076d37c8",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "La7ac4ed745",
+      "source_index": 84,
+      "context_index": 4,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which finger plays fret 4?",
+          "options": [
+            "Fourth finger",
+            "Second finger",
+            "First finger"
+          ],
+          "why": "Each finger covers two frets on mandolin, so the second finger handles frets 3 and 4."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/5/units/1/lessons/1/steps/2/options/0"
+        ]
+      },
+      "source_context_sha256": "a0dd7cde5497441770367a4746f6de9480cded480c7b35b8966797beb02f4c42",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lb76aee974c",
+      "source_index": 853,
+      "context_index": 0,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Target, then a short bend. Same note or different?",
+          "options": [
+            "Same",
+            "Different"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/12/lessons/3/steps/4/options/0"
+        ]
+      },
+      "source_context_sha256": "992252768b6df27e1c9e8dbc2135a526de71c8e9b44de4fcd2092ee63df63d05",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lb76aee974c",
+      "source_index": 853,
+      "context_index": 1,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Target, then a bend. Same note or different?",
+          "options": [
+            "Same",
+            "Different"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/12/lessons/6/steps/3/options/0"
+        ]
+      },
+      "source_context_sha256": "41c787ae902d099cd649ffe25b413a1a100dd883ba45f2005dfe47278588ccb9",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lb76aee974c",
+      "source_index": 853,
+      "context_index": 2,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Same chord or different?",
+          "options": [
+            "Same",
+            "Different"
+          ]
+        },
+        "occurrences": 3,
+        "example_locations": [
+          "/courses/0/units/16/lessons/0/steps/5/options/0",
+          "/courses/0/units/16/lessons/6/steps/3/options/0"
+        ]
+      },
+      "source_context_sha256": "dc7c96ef2f99b751373ae052a7369f5ab28e0a1e7da5c1eaf2bad8d346033d38",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lb76aee974c",
+      "source_index": 853,
+      "context_index": 3,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Same note or different?",
+          "options": [
+            "Same",
+            "Different"
+          ]
+        },
+        "occurrences": 19,
+        "example_locations": [
+          "/courses/1/units/0/lessons/4/steps/3/options/0",
+          "/courses/2/units/2/lessons/0/steps/2/options/0"
+        ]
+      },
+      "source_context_sha256": "800948afbbbe0c542a6fe2c9cadd75c4b4e5b988c44040049abc1803ded96046",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L6824a5dc37",
+      "source_index": 854,
+      "context_index": 0,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Target, then a short bend. Same note or different?",
+          "options": [
+            "Same",
+            "Different"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/12/lessons/3/steps/4/options/1"
+        ]
+      },
+      "source_context_sha256": "0abb1526a37ade9348a70584d2cc4b698e4162e23b80256183844b6b302b5d8e",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L6824a5dc37",
+      "source_index": 854,
+      "context_index": 1,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Target, then a bend. Same note or different?",
+          "options": [
+            "Same",
+            "Different"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/12/lessons/6/steps/3/options/1"
+        ]
+      },
+      "source_context_sha256": "d93bbf530a50636ac65e92d3d9873aa09e48b234e968a63a571ee0fe099c9d34",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L6824a5dc37",
+      "source_index": 854,
+      "context_index": 2,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Same chord or different?",
+          "options": [
+            "Same",
+            "Different"
+          ]
+        },
+        "occurrences": 3,
+        "example_locations": [
+          "/courses/0/units/16/lessons/0/steps/5/options/1",
+          "/courses/0/units/16/lessons/6/steps/3/options/1"
+        ]
+      },
+      "source_context_sha256": "7079221a09f049bf799c6813f6372a2ac2f5589830ded068164b513a338c585e",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L6824a5dc37",
+      "source_index": 854,
+      "context_index": 3,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Same note or different?",
+          "options": [
+            "Same",
+            "Different"
+          ]
+        },
+        "occurrences": 19,
+        "example_locations": [
+          "/courses/1/units/0/lessons/4/steps/3/options/1",
+          "/courses/2/units/2/lessons/0/steps/2/options/1"
+        ]
+      },
+      "source_context_sha256": "3a8ebf45eb74c0b239bebd3540f904856e2989cc4590472d4b6d3c65b3aa91ec",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Ld706b55945",
+      "source_index": 1673,
+      "context_index": 0,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "A sharp sign raises a note by how much?",
+          "options": [
+            "One fret",
+            "Two frets",
+            "One string"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/1/units/3/lessons/4/steps/4/options/0"
+        ]
+      },
+      "source_context_sha256": "987dab0c3e834d591a34d3d6a0196fc99c0c1ce82964d535fed49657243a1630",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Ld706b55945",
+      "source_index": 1673,
+      "context_index": 1,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "One fret apart, or more?",
+          "options": [
+            "One fret",
+            "More than one"
+          ]
+        },
+        "occurrences": 2,
+        "example_locations": [
+          "/courses/2/units/4/lessons/2/steps/4/options/0",
+          "/courses/2/units/5/lessons/3/steps/2/options/0"
+        ]
+      },
+      "source_context_sha256": "eb89e29d9f4a19d13f945b201c6dd5f95bda60ac4cef0b6a6b778fdf00159c8d",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Ld706b55945",
+      "source_index": 1673,
+      "context_index": 2,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "D at fret 3 on string 2 and open string 4 are both D. How far apart are they?",
+          "options": [
+            "One octave",
+            "One fret",
+            "Nothing: same pitch"
+          ],
+          "why": "An octave is the same letter, eight steps higher or lower. The two Ds blend, but one sounds brighter."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/11/units/4/lessons/2/steps/2/options/1"
+        ]
+      },
+      "source_context_sha256": "0a85d267aec074b9271b0b7fe6c4986c6588a51b50c5406583a6e259f4c1d89c",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Ld706b55945",
+      "source_index": 1673,
+      "context_index": 3,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "A key change up a whole step moves every note up…",
+          "options": [
+            "One fret",
+            "Two frets",
+            "Twelve frets"
+          ],
+          "why": "A whole step is two half steps, and each fret is a half step. C becomes D, and G becomes A."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/12/units/8/lessons/4/steps/1/options/0"
+        ]
+      },
+      "source_context_sha256": "6b3e2a296e200592a73449edd62ee56c11922828a7349ad3b0d361bbf0ea08c4",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lf1c6f16910",
+      "source_index": 1674,
+      "context_index": 0,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "A sharp sign raises a note by how much?",
+          "options": [
+            "One fret",
+            "Two frets",
+            "One string"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/1/units/3/lessons/4/steps/4/options/1"
+        ]
+      },
+      "source_context_sha256": "c953bb0acf3bed6e368eabec4871217d6e3b8eb07c7e59fe63c4cd09f6553a19",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lf1c6f16910",
+      "source_index": 1674,
+      "context_index": 1,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "A key change up a whole step moves every note up…",
+          "options": [
+            "One fret",
+            "Two frets",
+            "Twelve frets"
+          ],
+          "why": "A whole step is two half steps, and each fret is a half step. C becomes D, and G becomes A."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/12/units/8/lessons/4/steps/1/options/1"
+        ]
+      },
+      "source_context_sha256": "546aa069a2b1e6a2b3a5941c1d64879d14aaa9f750a56d4f174249ff1b0dace1",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L8be1dd6d7f",
+      "source_index": 1366,
+      "context_index": 0,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "When you slide into a note, which one lands on the beat?",
+          "options": [
+            "The target",
+            "The fret below",
+            "Both at once"
+          ],
+          "why": "The slide starts just before the beat, so the note you're aiming for arrives right on it."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/20/lessons/2/steps/5/options/2"
+        ]
+      },
+      "source_context_sha256": "667bc0ba4e120fdffbc8eab4768b51c95b69b8ce23e4ae446484f5423c454935",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L8be1dd6d7f",
+      "source_index": 1366,
+      "context_index": 1,
+      "semantic_source": {
+        "role": "steps:explain",
+        "field": "title",
+        "text": {
+          "title": "Both at once",
+          "body": "When two notes sound together, listen to the blend. An octave melts into one sound. A fifth sounds hollow and strong. A fourth sounds open but restless."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/7/units/3/lessons/3/steps/4/title"
+        ]
+      },
+      "source_context_sha256": "5a3eff43ee62e32739307f1d37219d84e861a0cbffaa22e4875a952874914d31",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lc833bd9baf",
+      "source_index": 302,
+      "context_index": 0,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "In G, which strings ring open?",
+          "options": [
+            "Strings 2, 3 and 4",
+            "Strings 1 and 6",
+            "None of them"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/4/lessons/1/steps/2/options/2"
+        ]
+      },
+      "source_context_sha256": "a5a1956046ece0fa89cd9b04beca7843e2770247e78cb01bcd46921f154a4a16",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lc833bd9baf",
+      "source_index": 302,
+      "context_index": 1,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "From G at frets 4, 3, 3 to E minor at 4, 5, 3, which notes stay?",
+          "options": [
+            "Only D",
+            "None of them",
+            "B and G"
+          ],
+          "why": "B on string 3 and G on string 1 stay put. Only string 2 moves, from D up to E."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/17/lessons/3/steps/2/options/1"
+        ]
+      },
+      "source_context_sha256": "4be5687008c025ca59d659afbae118a69cdfb82865aa82a594334a98019c123c",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lc833bd9baf",
+      "source_index": 302,
+      "context_index": 2,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "On the D string, which fingers touch?",
+          "options": [
+            "2 and 3",
+            "1 and 2",
+            "None of them"
+          ],
+          "why": "It's the A-string pattern again: whole step, whole step, half step. The half step is between 2 and 3."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/3/units/3/lessons/0/steps/4/options/2"
+        ]
+      },
+      "source_context_sha256": "bd0af848bb691218bf4d876401d662cb1b70b49de9fb06a447bc805592e1e392",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L3fe3239a4a",
+      "source_index": 10,
+      "context_index": 0,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which string is string 6?",
+          "options": [
+            "The thickest",
+            "The thinnest",
+            "The middle one"
+          ],
+          "why": "Strings count from the thinnest (1) to the thickest (6)."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/0/lessons/0/steps/2/options/0"
+        ]
+      },
+      "source_context_sha256": "d070013a25609d69851cf27a345f37010cb194385e8d991c1f61f32df9e2e7f7",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L3fe3239a4a",
+      "source_index": 10,
+      "context_index": 1,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which string is string 4?",
+          "options": [
+            "The thickest",
+            "The thinnest",
+            "The middle one"
+          ],
+          "why": "Strings count from the thinnest (1) to the thickest (4)."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/2/units/0/lessons/0/steps/2/options/0"
+        ]
+      },
+      "source_context_sha256": "c084c63a445ca6aab9e0116a6cc14c28ce5cc3764c7eeb4a176c17f0bea0062d",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L9ef451a1cc",
+      "source_index": 11,
+      "context_index": 0,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which string is string 6?",
+          "options": [
+            "The thickest",
+            "The thinnest",
+            "The middle one"
+          ],
+          "why": "Strings count from the thinnest (1) to the thickest (6)."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/0/lessons/0/steps/2/options/1"
+        ]
+      },
+      "source_context_sha256": "fad79c082c66dbbc26ecb19045d8cca4d17ecae56aae5ee632025184cae81eee",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L9ef451a1cc",
+      "source_index": 11,
+      "context_index": 1,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which string is string 4?",
+          "options": [
+            "The thickest",
+            "The thinnest",
+            "The middle one"
+          ],
+          "why": "Strings count from the thinnest (1) to the thickest (4)."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/2/units/0/lessons/0/steps/2/options/1"
+        ]
+      },
+      "source_context_sha256": "0342e4db44ac70de37e9fccf7d6ce5909fee7278679d117fcaac571a37f1826b",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lb25076c5d4",
+      "source_index": 12,
+      "context_index": 0,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which string is string 6?",
+          "options": [
+            "The thickest",
+            "The thinnest",
+            "The middle one"
+          ],
+          "why": "Strings count from the thinnest (1) to the thickest (6)."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/0/lessons/0/steps/2/options/2"
+        ]
+      },
+      "source_context_sha256": "8267e352319974959e5ea2ad8ec5ab20203dfa1752015db2b1aaa302de746df5",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lb25076c5d4",
+      "source_index": 12,
+      "context_index": 1,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which string is string 4?",
+          "options": [
+            "The thickest",
+            "The thinnest",
+            "The middle one"
+          ],
+          "why": "Strings count from the thinnest (1) to the thickest (4)."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/2/units/0/lessons/0/steps/2/options/2"
+        ]
+      },
+      "source_context_sha256": "8f6c71efe3eca4cffc3b1c6b8870fdb309cad50f2d88a675477a52c68d46f2b3",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L957dc77c43",
+      "source_index": 27,
+      "context_index": 0,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which is higher?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 27,
+        "example_locations": [
+          "/courses/0/units/0/lessons/1/steps/4/options/0",
+          "/courses/1/units/0/lessons/1/steps/4/options/0"
+        ]
+      },
+      "source_context_sha256": "4cc411b7c407f9b2834fe80e57792532a8258138fc5486c2c7e0cc5a32aed077",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L957dc77c43",
+      "source_index": 27,
+      "context_index": 1,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which is lower?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 5,
+        "example_locations": [
+          "/courses/0/units/0/lessons/4/steps/3/options/0",
+          "/courses/3/units/0/lessons/1/steps/4/options/0"
+        ]
+      },
+      "source_context_sha256": "b8f63f93f85d42b4675524fb98c589d1ae5fc96f2970a8a8bd361616b83275a8",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L957dc77c43",
+      "source_index": 27,
+      "context_index": 2,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which chord is minor?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 5,
+        "example_locations": [
+          "/courses/0/units/2/lessons/2/steps/4/options/0",
+          "/courses/0/units/2/lessons/3/steps/4/options/0"
+        ]
+      },
+      "source_context_sha256": "003ccdc44f33e3880d948fe58c600387087b1c9bd8d3b6961e33bc97e7136232",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L957dc77c43",
+      "source_index": 27,
+      "context_index": 3,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which D is higher?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/5/lessons/1/steps/4/options/0"
+        ]
+      },
+      "source_context_sha256": "33eb58d8408cb79cc2b2e54060e1a4f95032a3acb35894913fd2323daab4ea77",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L957dc77c43",
+      "source_index": 27,
+      "context_index": 4,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which chord has the seventh?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 8,
+        "example_locations": [
+          "/courses/0/units/7/lessons/0/steps/2/options/0",
+          "/courses/0/units/7/lessons/6/steps/1/options/0"
+        ]
+      },
+      "source_context_sha256": "bf67a329ad67194542dc6a4f7ad9476629ad208d2008334e6fb02bccad1c1bb6",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L957dc77c43",
+      "source_index": 27,
+      "context_index": 5,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which chord sounds settled?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 2,
+        "example_locations": [
+          "/courses/0/units/7/lessons/4/steps/2/options/0",
+          "/courses/12/units/5/lessons/4/steps/1/options/0"
+        ]
+      },
+      "source_context_sha256": "8494af9f65c6568ccc6d844f6097b1525007cf2a4a396482b186bd0b9e0cca96",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L957dc77c43",
+      "source_index": 27,
+      "context_index": 6,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which one is a power chord?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/8/lessons/6/steps/2/options/0"
+        ]
+      },
+      "source_context_sha256": "8f484192e7283b99f665430cbbca151e83257cefaf982e156207e51a6031bcd8",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L957dc77c43",
+      "source_index": 27,
+      "context_index": 7,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which G is higher?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/16/lessons/3/steps/4/options/0"
+        ]
+      },
+      "source_context_sha256": "f7ee78e95d967c8b1e6833ba0104931692455582849f881d134adc3517536558",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L957dc77c43",
+      "source_index": 27,
+      "context_index": 8,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which sounds higher?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/1/units/0/lessons/2/steps/1/options/0"
+        ]
+      },
+      "source_context_sha256": "bb7eb4e09eba0fc6ffa677197163c8a16e734c31673d3a075b95782871d8eab7",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L957dc77c43",
+      "source_index": 27,
+      "context_index": 9,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which one is the open G string?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/1/units/0/lessons/5/steps/2/options/0"
+        ]
+      },
+      "source_context_sha256": "ccc138b7623ca038e6dfb8091b7f939e2555bfcd06cb9439437cf7857fb4b751",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L957dc77c43",
+      "source_index": 27,
+      "context_index": 10,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which chord sounds darker?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 2,
+        "example_locations": [
+          "/courses/1/units/1/lessons/0/steps/2/options/0",
+          "/courses/1/units/2/lessons/5/steps/6/options/0"
+        ]
+      },
+      "source_context_sha256": "5aa200e2457353d28a7e2af1f72900198435cd246105b73fb7db192b56bb9e0e",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L957dc77c43",
+      "source_index": 27,
+      "context_index": 11,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which one is G7, the one with more tension?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/1/units/1/lessons/3/steps/4/options/0"
+        ]
+      },
+      "source_context_sha256": "8fe3371c3c45ee90f7ba837b31ac5fe0e2cd8cb5a997eca309002efa91267560",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L957dc77c43",
+      "source_index": 27,
+      "context_index": 12,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which one is the open E string?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/2/units/0/lessons/4/steps/2/options/0"
+        ]
+      },
+      "source_context_sha256": "51e5055074e92c8cebc2c11b26e36722d0adcc04fd8a338fef16470dc781f271",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L957dc77c43",
+      "source_index": 27,
+      "context_index": 13,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which sounds lower?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/2/units/3/lessons/1/steps/4/options/0"
+        ]
+      },
+      "source_context_sha256": "bf14b362a999427d28d3e99134f2ff02da87ea2950e4c29c2296030cfef2d41d",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L957dc77c43",
+      "source_index": 27,
+      "context_index": 14,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which pair sounds lower?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/5/units/0/lessons/3/steps/3/options/0"
+        ]
+      },
+      "source_context_sha256": "1e8fcd9b1e58df601d774fb1ac116e9298208e47f4b675446c8bd45a9649bce8",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L957dc77c43",
+      "source_index": 27,
+      "context_index": 15,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which chord wants to move on?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/6/units/2/lessons/1/steps/5/options/0"
+        ]
+      },
+      "source_context_sha256": "d0a99352aec408d78afa0586b97bad78b47c354e83851d8ec66a46911f64d4c3",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L957dc77c43",
+      "source_index": 27,
+      "context_index": 16,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which sounds darker?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/6/units/3/lessons/3/steps/3/options/0"
+        ]
+      },
+      "source_context_sha256": "93de3d1781ef2443cdbad807c08a3e0e112c2cbdf4a9887d643f3d93d084afae",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L957dc77c43",
+      "source_index": 27,
+      "context_index": 17,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which note is higher?",
+          "options": [
+            "The first",
+            "The second"
+          ],
+          "why": "It sits higher on the staff, so it sounds higher."
+        },
+        "occurrences": 2,
+        "example_locations": [
+          "/courses/8/units/2/lessons/0/steps/2/options/0",
+          "/courses/8/units/2/lessons/0/steps/4/options/0"
+        ]
+      },
+      "source_context_sha256": "0636675b878fffae19576cce76b023a50465089c8046755ebc1ffba65cb6d344",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L957dc77c43",
+      "source_index": 27,
+      "context_index": 18,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which chord is E minor?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 2,
+        "example_locations": [
+          "/courses/12/units/2/lessons/1/steps/1/options/0",
+          "/courses/12/units/7/lessons/0/steps/1/options/0"
+        ]
+      },
+      "source_context_sha256": "69e390e8edaebc892e4b7830aa7c1be7f827b81a7aff0c1059255c466fe82b9c",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L957dc77c43",
+      "source_index": 27,
+      "context_index": 19,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which chord is Cmaj7?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 2,
+        "example_locations": [
+          "/courses/12/units/3/lessons/3/steps/3/options/0",
+          "/courses/12/units/4/lessons/0/steps/3/options/0"
+        ]
+      },
+      "source_context_sha256": "ca3121c8d95549c536a882b1f59de9687b49ce01ac7d71da7a5344b03030502f",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L957dc77c43",
+      "source_index": 27,
+      "context_index": 20,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which phrase of the verse climbs highest?",
+          "options": [
+            "The third",
+            "The first",
+            "The last"
+          ],
+          "why": "The third phrase, soft the drowsy hours, rises to C, D and E. The other three phrases share one tune."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/13/units/1/lessons/0/steps/2/options/1"
+        ]
+      },
+      "source_context_sha256": "1832cc4585923d67a4d0869cc1e288e0b54c8027555c907b105dd40bead7a47c",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lbece65d16e",
+      "source_index": 28,
+      "context_index": 0,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which is higher?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 27,
+        "example_locations": [
+          "/courses/0/units/0/lessons/1/steps/4/options/1",
+          "/courses/1/units/0/lessons/1/steps/4/options/1"
+        ]
+      },
+      "source_context_sha256": "6a8b334f72af0c0c98f727963c4360524f1826ea1cbb5f13c687cb5d78d419d1",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lbece65d16e",
+      "source_index": 28,
+      "context_index": 1,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which is lower?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 5,
+        "example_locations": [
+          "/courses/0/units/0/lessons/4/steps/3/options/1",
+          "/courses/3/units/0/lessons/1/steps/4/options/1"
+        ]
+      },
+      "source_context_sha256": "942a5a99246c54218c31f21a915a468dd8b1138343f19e6601ee072f77257c15",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lbece65d16e",
+      "source_index": 28,
+      "context_index": 2,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which chord is minor?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 5,
+        "example_locations": [
+          "/courses/0/units/2/lessons/2/steps/4/options/1",
+          "/courses/0/units/2/lessons/3/steps/4/options/1"
+        ]
+      },
+      "source_context_sha256": "4c6d83fe84a7efee5650411c936d369bdd0a71c664adae52d8f1511cada9dc74",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lbece65d16e",
+      "source_index": 28,
+      "context_index": 3,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which D is higher?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/5/lessons/1/steps/4/options/1"
+        ]
+      },
+      "source_context_sha256": "e371dbf84a48960d6535a8960f45f7f2dd7fbbc75194be0728f042f3884c7f4e",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lbece65d16e",
+      "source_index": 28,
+      "context_index": 4,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which chord has the seventh?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 8,
+        "example_locations": [
+          "/courses/0/units/7/lessons/0/steps/2/options/1",
+          "/courses/0/units/7/lessons/6/steps/1/options/1"
+        ]
+      },
+      "source_context_sha256": "05f75c2acff72e449a87376f064ab59e820de5a1f2d3e28f58870b52a8c281ca",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lbece65d16e",
+      "source_index": 28,
+      "context_index": 5,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which chord sounds settled?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 2,
+        "example_locations": [
+          "/courses/0/units/7/lessons/4/steps/2/options/1",
+          "/courses/12/units/5/lessons/4/steps/1/options/1"
+        ]
+      },
+      "source_context_sha256": "9abf672f4d9e074ec0aaff89c33f8d2e885406b2c7256764bccbb284b4d3b54a",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lbece65d16e",
+      "source_index": 28,
+      "context_index": 6,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which one is a power chord?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/8/lessons/6/steps/2/options/1"
+        ]
+      },
+      "source_context_sha256": "37f4c1c30b4cbdddc84c7762c4e8474e6ad9c75923d6afa8ef81a2af9e3b2bcf",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lbece65d16e",
+      "source_index": 28,
+      "context_index": 7,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which G is higher?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/16/lessons/3/steps/4/options/1"
+        ]
+      },
+      "source_context_sha256": "aac75b1b4f8e9caa59f35f11e2303ac17928f796cf3049492ca9dd558668078b",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lbece65d16e",
+      "source_index": 28,
+      "context_index": 8,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which sounds higher?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/1/units/0/lessons/2/steps/1/options/1"
+        ]
+      },
+      "source_context_sha256": "e9076461a527d0a9d3a901fb80054859e5ff77273153067db2e0100316fe4557",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lbece65d16e",
+      "source_index": 28,
+      "context_index": 9,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which one is the open G string?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/1/units/0/lessons/5/steps/2/options/1"
+        ]
+      },
+      "source_context_sha256": "35ec2f4280e08302e121262ec72e8ce0b76f84c181dc61ec9c903895369794b3",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lbece65d16e",
+      "source_index": 28,
+      "context_index": 10,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which chord sounds darker?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 2,
+        "example_locations": [
+          "/courses/1/units/1/lessons/0/steps/2/options/1",
+          "/courses/1/units/2/lessons/5/steps/6/options/1"
+        ]
+      },
+      "source_context_sha256": "632dc5ad9fedf19e6da8f3eaf1a5ac4e4af76fc8aed84901ba2ac4816872f7aa",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lbece65d16e",
+      "source_index": 28,
+      "context_index": 11,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which one is G7, the one with more tension?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/1/units/1/lessons/3/steps/4/options/1"
+        ]
+      },
+      "source_context_sha256": "83caf1dfefb45ebd171ccaf996da39ac03b07ff38dbe7975c634b504324aced1",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lbece65d16e",
+      "source_index": 28,
+      "context_index": 12,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which one is the open E string?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/2/units/0/lessons/4/steps/2/options/1"
+        ]
+      },
+      "source_context_sha256": "c93bccaa25bf5d799977a79d54cf7db7e3369d3ead8369e45cadff01fa2b3a41",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lbece65d16e",
+      "source_index": 28,
+      "context_index": 13,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which sounds lower?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/2/units/3/lessons/1/steps/4/options/1"
+        ]
+      },
+      "source_context_sha256": "be24b88fa8dad61d493c7849623d1622b316a211854a706fc93ebbb5d1c542cb",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lbece65d16e",
+      "source_index": 28,
+      "context_index": 14,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which pair sounds lower?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/5/units/0/lessons/3/steps/3/options/1"
+        ]
+      },
+      "source_context_sha256": "7cd4c8e2a74c3e5af92fd52b488b1a89e10e579ef83003367b79eb6527604b77",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lbece65d16e",
+      "source_index": 28,
+      "context_index": 15,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which chord wants to move on?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/6/units/2/lessons/1/steps/5/options/1"
+        ]
+      },
+      "source_context_sha256": "0785cb9a2b732c7da1f293d5a5307821258e0c6b86dea72d2caf5a44f948b543",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lbece65d16e",
+      "source_index": 28,
+      "context_index": 16,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which sounds darker?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/6/units/3/lessons/3/steps/3/options/1"
+        ]
+      },
+      "source_context_sha256": "40fa1af88f3be53ed8fa13096291f128017aa8720779b006a40013cf6674a85b",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lbece65d16e",
+      "source_index": 28,
+      "context_index": 17,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which note is higher?",
+          "options": [
+            "The first",
+            "The second"
+          ],
+          "why": "It sits higher on the staff, so it sounds higher."
+        },
+        "occurrences": 2,
+        "example_locations": [
+          "/courses/8/units/2/lessons/0/steps/2/options/1",
+          "/courses/8/units/2/lessons/0/steps/4/options/1"
+        ]
+      },
+      "source_context_sha256": "880cb41ac2b7ae6bac60d4d98235fbad223ae0ea4565a706f66ef79ec922004c",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lbece65d16e",
+      "source_index": 28,
+      "context_index": 18,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which chord is E minor?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 2,
+        "example_locations": [
+          "/courses/12/units/2/lessons/1/steps/1/options/1",
+          "/courses/12/units/7/lessons/0/steps/1/options/1"
+        ]
+      },
+      "source_context_sha256": "5b322828e24f3c1c218509e9f19337e0305ef21479823b383f148eac5e397171",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lbece65d16e",
+      "source_index": 28,
+      "context_index": 19,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which chord is Cmaj7?",
+          "options": [
+            "The first",
+            "The second"
+          ]
+        },
+        "occurrences": 2,
+        "example_locations": [
+          "/courses/12/units/3/lessons/3/steps/3/options/1",
+          "/courses/12/units/4/lessons/0/steps/3/options/1"
+        ]
+      },
+      "source_context_sha256": "a5b2b7cd798a72f11da35e50966a61a1ae05ea782cd0e7b803e1f37b98e40676",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L7329d82bd9",
+      "source_index": 1550,
+      "context_index": 0,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which finger plays the C chord?",
+          "options": [
+            "First finger",
+            "Third finger",
+            "Little finger"
+          ],
+          "why": "Your third finger reaches fret 3 without a stretch."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/1/units/0/lessons/6/steps/5/options/0"
+        ]
+      },
+      "source_context_sha256": "1896f1deffee4dd69ee86388a325cbf3b976d830909656cb7b076dde71f870f9",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L7329d82bd9",
+      "source_index": 1550,
+      "context_index": 1,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which finger plays fret 4?",
+          "options": [
+            "Fourth finger",
+            "Second finger",
+            "First finger"
+          ],
+          "why": "Each finger covers two frets on mandolin, so the second finger handles frets 3 and 4."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/5/units/1/lessons/1/steps/2/options/2"
+        ]
+      },
+      "source_context_sha256": "e41416989dd2a4eb14ea8724cf8550973148e42d46979d99c4bbaa624dc3f5c0",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L7329d82bd9",
+      "source_index": 1550,
+      "context_index": 2,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which finger plays fret 3?",
+          "options": [
+            "First finger",
+            "Third finger",
+            "Second finger"
+          ],
+          "why": "Fret 3 sits in the second finger's zone, frets 3 and 4."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/5/units/1/lessons/4/steps/2/options/0"
+        ]
+      },
+      "source_context_sha256": "6940603332fbbb93b523a6b6ebc1c244cbceeb379c65d99601598f8ef962580d",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L8a52ed17c5",
+      "source_index": 174,
+      "context_index": 0,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Major or minor?",
+          "options": [
+            "Major",
+            "Minor"
+          ]
+        },
+        "occurrences": 28,
+        "example_locations": [
+          "/courses/0/units/2/lessons/1/steps/3/options/0",
+          "/courses/0/units/2/lessons/1/steps/4/options/0"
+        ]
+      },
+      "source_context_sha256": "f8f1bdbb6c59e9003b24f1bee9c35ac8a9643cfe69b07dc4231494b8c067b599",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L8a52ed17c5",
+      "source_index": 174,
+      "context_index": 1,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Listen to the verse's last chord. Major or minor?",
+          "options": [
+            "Major",
+            "Minor"
+          ]
+        },
+        "occurrences": 2,
+        "example_locations": [
+          "/courses/0/units/6/lessons/5/steps/2/options/0",
+          "/courses/12/units/7/lessons/4/steps/1/options/0"
+        ]
+      },
+      "source_context_sha256": "6c1e38669a902487a9c25cd7e46cef64b4a3bfda933234d7776db045e140724d",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L8a52ed17c5",
+      "source_index": 174,
+      "context_index": 2,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Listen to the first chord. Major or minor?",
+          "options": [
+            "Major",
+            "Minor"
+          ]
+        },
+        "occurrences": 5,
+        "example_locations": [
+          "/courses/0/units/20/lessons/5/steps/1/options/0",
+          "/courses/12/units/0/lessons/2/steps/1/options/0"
+        ]
+      },
+      "source_context_sha256": "c0c09752d905a684859e175955b5299a6573b879d3b9fd1b4516d6129dadf798",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L8a52ed17c5",
+      "source_index": 174,
+      "context_index": 3,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "And this one?",
+          "options": [
+            "Major",
+            "Minor"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/3/units/4/lessons/2/steps/3/options/0"
+        ]
+      },
+      "source_context_sha256": "42c70d486b1838b9c2fea1c566a21e6ed02b6dfe701597d9dc729eae59583619",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L8a52ed17c5",
+      "source_index": 174,
+      "context_index": 4,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which kind of chord is this?",
+          "options": [
+            "Major",
+            "Diminished"
+          ]
+        },
+        "occurrences": 2,
+        "example_locations": [
+          "/courses/7/units/5/lessons/2/steps/1/options/0",
+          "/courses/7/units/5/lessons/2/steps/3/options/0"
+        ]
+      },
+      "source_context_sha256": "d30fd9aa32216e818fd7f5d70c994da6e4b156d0c269b83eb7295e255a6bc8f8",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L8a52ed17c5",
+      "source_index": 174,
+      "context_index": 5,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which kind of chord is this?",
+          "options": [
+            "Augmented",
+            "Major"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/7/units/5/lessons/2/steps/2/options/1"
+        ]
+      },
+      "source_context_sha256": "f7263fb7722cff404fd89fad191fb8a1d17ba396f00fd505f2ca7231a1c55758",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L8a52ed17c5",
+      "source_index": 174,
+      "context_index": 6,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which kind of chord is this?",
+          "options": [
+            "Major",
+            "Minor",
+            "Diminished"
+          ]
+        },
+        "occurrences": 5,
+        "example_locations": [
+          "/courses/7/units/5/lessons/2/steps/5/options/0",
+          "/courses/7/units/5/lessons/4/steps/1/options/0"
+        ]
+      },
+      "source_context_sha256": "02738b221740869af5a98d7d03da748154adc26414eb0128cd3c9dd050d46270",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L8a52ed17c5",
+      "source_index": 174,
+      "context_index": 7,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which kind of chord is this?",
+          "options": [
+            "Major",
+            "Dominant seventh"
+          ]
+        },
+        "occurrences": 2,
+        "example_locations": [
+          "/courses/7/units/5/lessons/3/steps/1/options/0",
+          "/courses/7/units/5/lessons/3/steps/2/options/0"
+        ]
+      },
+      "source_context_sha256": "81c216a9d2a830693af247ede188e3d316c5a04ad8b8bbe9d9d9458657f5fa01",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L8a52ed17c5",
+      "source_index": 174,
+      "context_index": 8,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which kind of chord is this?",
+          "options": [
+            "Major",
+            "Minor",
+            "Dominant seventh"
+          ]
+        },
+        "occurrences": 3,
+        "example_locations": [
+          "/courses/7/units/5/lessons/3/steps/5/options/0",
+          "/courses/7/units/5/lessons/3/steps/6/options/0"
+        ]
+      },
+      "source_context_sha256": "1f819324aff36fa531915598a10f45983bd7a20d135fd63da2c90ceaa339a6dd",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L8a52ed17c5",
+      "source_index": 174,
+      "context_index": 9,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which kind of chord is this?",
+          "options": [
+            "Major",
+            "Minor",
+            "Diminished",
+            "Dominant seventh"
+          ]
+        },
+        "occurrences": 2,
+        "example_locations": [
+          "/courses/7/units/5/lessons/3/steps/7/options/0",
+          "/courses/7/units/5/lessons/4/steps/7/options/0"
+        ]
+      },
+      "source_context_sha256": "7c1ec872df12db04eb92aee7e8ae66f71cdd8bdbe4a93d50f508399fb192ee3b",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L8a52ed17c5",
+      "source_index": 174,
+      "context_index": 10,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which kind of chord is this?",
+          "options": [
+            "Major",
+            "Dominant seventh",
+            "Augmented"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/7/units/5/lessons/4/steps/2/options/0"
+        ]
+      },
+      "source_context_sha256": "c8568bd8d1579ffc4fa36f494c6361f101d2bed7b28fd120c7e21ee5bf5b662a",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L8a52ed17c5",
+      "source_index": 174,
+      "context_index": 11,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which kind of chord is this?",
+          "options": [
+            "Major",
+            "Minor",
+            "Augmented"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/7/units/5/lessons/4/steps/3/options/0"
+        ]
+      },
+      "source_context_sha256": "6086d8c7e6a10f481d19578777ae5b796d50838ba1bf134851a8cecd988056c8",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L8a52ed17c5",
+      "source_index": 174,
+      "context_index": 12,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which kind of chord is this?",
+          "options": [
+            "Major",
+            "Diminished",
+            "Augmented",
+            "Minor"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/7/units/5/lessons/4/steps/6/options/0"
+        ]
+      },
+      "source_context_sha256": "1e4221014f8592f03647c6186d1a98de1054dcb10c43908e4d4098d997387a05",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L8a52ed17c5",
+      "source_index": 174,
+      "context_index": 13,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Is A C E major or minor?",
+          "options": [
+            "Major",
+            "Minor"
+          ],
+          "why": "A to C is a minor third, three half steps."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/6/lessons/1/steps/6/options/0"
+        ]
+      },
+      "source_context_sha256": "384c224907025eafd1525d908d7a881a2fc9869f3b3d39197c52b318f1848a24",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L8a52ed17c5",
+      "source_index": 174,
+      "context_index": 14,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "The opening climbs through a chord. Major or minor?",
+          "options": [
+            "Major",
+            "Minor"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/11/units/5/lessons/0/steps/5/options/0"
+        ]
+      },
+      "source_context_sha256": "18ea61d28abe3f08a7c804522fff6c49b614ccdb34f30ab6757344073226197a",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L8a52ed17c5",
+      "source_index": 174,
+      "context_index": 15,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Greensleeves is built on this chord. Major or minor?",
+          "options": [
+            "Major",
+            "Minor"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/11/units/5/lessons/1/steps/5/options/0"
+        ]
+      },
+      "source_context_sha256": "d6188d38d91e018327dc96fef8e81bf8863afaf863e19f3837350165f7788c48",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L100b455471",
+      "source_index": 175,
+      "context_index": 0,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Major or minor?",
+          "options": [
+            "Major",
+            "Minor"
+          ]
+        },
+        "occurrences": 28,
+        "example_locations": [
+          "/courses/0/units/2/lessons/1/steps/3/options/1",
+          "/courses/0/units/2/lessons/1/steps/4/options/1"
+        ]
+      },
+      "source_context_sha256": "9f1292c867fec94843e23193d45e5aa942605167c3da79515dffc05eec9f5f48",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L100b455471",
+      "source_index": 175,
+      "context_index": 1,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Listen to the verse's last chord. Major or minor?",
+          "options": [
+            "Major",
+            "Minor"
+          ]
+        },
+        "occurrences": 2,
+        "example_locations": [
+          "/courses/0/units/6/lessons/5/steps/2/options/1",
+          "/courses/12/units/7/lessons/4/steps/1/options/1"
+        ]
+      },
+      "source_context_sha256": "4d403257dea0e65737bf6c54d269d0e34941163fd9032dfbfb14582bc0c5abf5",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L100b455471",
+      "source_index": 175,
+      "context_index": 2,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Listen to the first chord. Major or minor?",
+          "options": [
+            "Major",
+            "Minor"
+          ]
+        },
+        "occurrences": 5,
+        "example_locations": [
+          "/courses/0/units/20/lessons/5/steps/1/options/1",
+          "/courses/12/units/0/lessons/2/steps/1/options/1"
+        ]
+      },
+      "source_context_sha256": "f5343c7bb9da54595b15ef223c0cd3e1a6d5080b6b2a12203767145cca2e1f00",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L100b455471",
+      "source_index": 175,
+      "context_index": 3,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "And this one?",
+          "options": [
+            "Major",
+            "Minor"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/3/units/4/lessons/2/steps/3/options/1"
+        ]
+      },
+      "source_context_sha256": "64bc6bc62b8a21d81a67cf9f53dce78db3f3998943142b9f47667c19559a01ea",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L100b455471",
+      "source_index": 175,
+      "context_index": 4,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which chord stacks two major thirds?",
+          "options": [
+            "Diminished",
+            "Minor",
+            "Augmented"
+          ],
+          "why": "A major third plus a major third, like C E G♯, makes an augmented chord."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/7/units/5/lessons/2/steps/4/options/1"
+        ]
+      },
+      "source_context_sha256": "dc07a0379ef4db44ed6593e74b11590cd356a4e6f4bcbcf6e82f53106f2f1713",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L100b455471",
+      "source_index": 175,
+      "context_index": 5,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which kind of chord is this?",
+          "options": [
+            "Major",
+            "Minor",
+            "Diminished"
+          ]
+        },
+        "occurrences": 5,
+        "example_locations": [
+          "/courses/7/units/5/lessons/2/steps/5/options/1",
+          "/courses/7/units/5/lessons/4/steps/1/options/1"
+        ]
+      },
+      "source_context_sha256": "428ed147158f1a25d382d49388fe91b81e9fce879e02b3a863a375af87afcfad",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L100b455471",
+      "source_index": 175,
+      "context_index": 6,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which kind of chord is this?",
+          "options": [
+            "Minor",
+            "Diminished",
+            "Augmented"
+          ]
+        },
+        "occurrences": 2,
+        "example_locations": [
+          "/courses/7/units/5/lessons/2/steps/6/options/0",
+          "/courses/7/units/5/lessons/2/steps/7/options/0"
+        ]
+      },
+      "source_context_sha256": "b467402283d142226d9d9245c2d64b5c13c01bd7592957ed8faecaf69a0bbe5a",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L100b455471",
+      "source_index": 175,
+      "context_index": 7,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which kind of chord is this?",
+          "options": [
+            "Minor",
+            "Dominant seventh"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/7/units/5/lessons/3/steps/3/options/0"
+        ]
+      },
+      "source_context_sha256": "8666ffca413467f134d4ae1c09355bfdcbd5e4ba12f72d6245cd7e24c91fba7a",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L100b455471",
+      "source_index": 175,
+      "context_index": 8,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which kind of chord is this?",
+          "options": [
+            "Major",
+            "Minor",
+            "Dominant seventh"
+          ]
+        },
+        "occurrences": 3,
+        "example_locations": [
+          "/courses/7/units/5/lessons/3/steps/5/options/1",
+          "/courses/7/units/5/lessons/3/steps/6/options/1"
+        ]
+      },
+      "source_context_sha256": "241674747ba4895c51fd0909bd7bc63e32db333e468ff094d6e738d465f551f3",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L100b455471",
+      "source_index": 175,
+      "context_index": 9,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which kind of chord is this?",
+          "options": [
+            "Major",
+            "Minor",
+            "Diminished",
+            "Dominant seventh"
+          ]
+        },
+        "occurrences": 2,
+        "example_locations": [
+          "/courses/7/units/5/lessons/3/steps/7/options/1",
+          "/courses/7/units/5/lessons/4/steps/7/options/1"
+        ]
+      },
+      "source_context_sha256": "13c292e9d6a2d0579e22015c7b7e03c358a1add9a0ace334da37f11066f6aff5",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L100b455471",
+      "source_index": 175,
+      "context_index": 10,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which kind of chord is this?",
+          "options": [
+            "Major",
+            "Minor",
+            "Augmented"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/7/units/5/lessons/4/steps/3/options/1"
+        ]
+      },
+      "source_context_sha256": "238f9fd62c87bbd867d40c1f471ecf2acf552b2162e39b1f2791c3a232c353a7",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L100b455471",
+      "source_index": 175,
+      "context_index": 11,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which kind of chord is this?",
+          "options": [
+            "Minor",
+            "Diminished",
+            "Augmented",
+            "Dominant seventh"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/7/units/5/lessons/4/steps/5/options/0"
+        ]
+      },
+      "source_context_sha256": "247a6c6e4599acfcd7829a75ba6776fda57a77832fa864c3d5f8322a695c1ce9",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L100b455471",
+      "source_index": 175,
+      "context_index": 12,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which kind of chord is this?",
+          "options": [
+            "Major",
+            "Diminished",
+            "Augmented",
+            "Minor"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/7/units/5/lessons/4/steps/6/options/3"
+        ]
+      },
+      "source_context_sha256": "fb840bdaf481f75c0b86def8d09cd70eb5fd6f844da209e17b42030864469bed",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L100b455471",
+      "source_index": 175,
+      "context_index": 13,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Is A C E major or minor?",
+          "options": [
+            "Major",
+            "Minor"
+          ],
+          "why": "A to C is a minor third, three half steps."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/6/lessons/1/steps/6/options/1"
+        ]
+      },
+      "source_context_sha256": "e025d40d58afeaf405ee5b4167d24d66a2273fbffc3972c88d4fcf03becaaee8",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L100b455471",
+      "source_index": 175,
+      "context_index": 14,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "The opening climbs through a chord. Major or minor?",
+          "options": [
+            "Major",
+            "Minor"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/11/units/5/lessons/0/steps/5/options/1"
+        ]
+      },
+      "source_context_sha256": "42e0f64fcc6a2f6eb8e271813661a0ade17f9a5a7f5d7e579fc6649619bf32a6",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L100b455471",
+      "source_index": 175,
+      "context_index": 15,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Greensleeves is built on this chord. Major or minor?",
+          "options": [
+            "Major",
+            "Minor"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/11/units/5/lessons/1/steps/5/options/1"
+        ]
+      },
+      "source_context_sha256": "474b3f26bd910391275e8972e77481b6ac1e672df00e89a0dadcc3e3e01c8200",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lb58b5a8ced",
+      "source_index": 269,
+      "context_index": 0,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "In this pattern, which beat has no strum on the number?",
+          "options": [
+            "One",
+            "Two",
+            "Three",
+            "Four"
+          ],
+          "why": "On three the hand swings down past the strings, then strums up on the and."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/3/lessons/4/steps/3/options/0"
+        ]
+      },
+      "source_context_sha256": "38554e6a99d7c244a6ebdd4865781b51469a8d177afb45edae24d5ee4abb819f",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lb58b5a8ced",
+      "source_index": 269,
+      "context_index": 1,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "How many eighth notes fit in one beat?",
+          "options": [
+            "Two",
+            "One",
+            "Four"
+          ]
+        },
+        "occurrences": 2,
+        "example_locations": [
+          "/courses/3/units/1/lessons/3/steps/3/options/1",
+          "/courses/4/units/1/lessons/3/steps/3/options/1"
+        ]
+      },
+      "source_context_sha256": "f70b079dfaf9e18a6907762508e55a8e508bbc0392e4333f7ec4e8c15a071dd8",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lb58b5a8ced",
+      "source_index": 269,
+      "context_index": 2,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "How many half steps make a whole step?",
+          "options": [
+            "One",
+            "Two",
+            "Three"
+          ],
+          "why": "A whole step skips one key, so it's two half steps."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/7/units/2/lessons/0/steps/3/options/0"
+        ]
+      },
+      "source_context_sha256": "de41714b9fd0150fb530f6096586db86d02aec4fccd2ac627746e83fa94171e9",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lb58b5a8ced",
+      "source_index": 269,
+      "context_index": 3,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "A major chord turns minor. How many of its notes change?",
+          "options": [
+            "One",
+            "Two",
+            "All three"
+          ],
+          "why": "Only the middle note, the third, drops a half step: C E G becomes C E♭ G."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/7/units/5/lessons/0/steps/3/options/0"
+        ]
+      },
+      "source_context_sha256": "1c467b019950f76e6385475cd7b2ebd2012634391de3f8c937ee7e04b7a862ef",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lb58b5a8ced",
+      "source_index": 269,
+      "context_index": 4,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "How many beats does a half note last?",
+          "options": [
+            "Half a beat",
+            "One",
+            "Two"
+          ],
+          "why": "Two half notes fill a four-beat bar."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/3/lessons/1/steps/1/options/1"
+        ]
+      },
+      "source_context_sha256": "28e71a3e7fd618559b9884ac8dc9c4b1ddd2eb1c167560dd7e8d2c690c42487c",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lb58b5a8ced",
+      "source_index": 269,
+      "context_index": 5,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "How many quarter notes fill a bar of four beats?",
+          "options": [
+            "One",
+            "Two",
+            "Four"
+          ],
+          "why": "A quarter note lasts one beat, so four fill the bar."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/3/lessons/1/steps/3/options/0"
+        ]
+      },
+      "source_context_sha256": "cce7fc59d90aca8cf9ad53d2a6f1618b600bd64eee0cf24af2a35513ef9d1dd0",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lb58b5a8ced",
+      "source_index": 269,
+      "context_index": 6,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "How many eighth notes fit in one beat?",
+          "options": [
+            "One",
+            "Two",
+            "Four"
+          ],
+          "why": "An eighth note lasts half a beat."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/3/lessons/2/steps/2/options/0"
+        ]
+      },
+      "source_context_sha256": "0b5e363d10c48689e03b9a3196d652719ef1c7d62e838ceceb191ffcc0ebf262",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lb58b5a8ced",
+      "source_index": 269,
+      "context_index": 7,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "How many sixteenth notes equal one quarter note?",
+          "options": [
+            "One",
+            "Two",
+            "Four"
+          ],
+          "why": "A quarter note is one beat, and four sixteenths fit in a beat."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/3/lessons/2/steps/4/options/0"
+        ]
+      },
+      "source_context_sha256": "ef67568b24787da430f19a30ed59ea8a0a10b243e064f136a245db77acd4d6de",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lb58b5a8ced",
+      "source_index": 269,
+      "context_index": 8,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "How many sixteenth notes fit in one beat?",
+          "options": [
+            "One",
+            "Two",
+            "Four"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/3/lessons/5/steps/3/options/0"
+        ]
+      },
+      "source_context_sha256": "11bb7540054132d44f78821153412353c2e413d2fc65653481d3f289b7cc7742",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lb58b5a8ced",
+      "source_index": 269,
+      "context_index": 9,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "How many sharps are in G major?",
+          "options": [
+            "None",
+            "One",
+            "Two"
+          ],
+          "why": "Just one: F♯."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/4/lessons/2/steps/5/options/1"
+        ]
+      },
+      "source_context_sha256": "126c6150d9dc6e07a21a89f7c6c9d6f3ab7ee54f6866cf02f04a97f86db38b9b",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lb58b5a8ced",
+      "source_index": 269,
+      "context_index": 10,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "How many half steps from D up to F?",
+          "options": [
+            "One",
+            "Two",
+            "Three"
+          ],
+          "why": "D, D♯, E, F: three moves."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/5/lessons/1/steps/1/options/0"
+        ]
+      },
+      "source_context_sha256": "bbb3c155a573c45fda3eb01030e123c144cb16f921f8fc1e04e100bdd7cba3db",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lb58b5a8ced",
+      "source_index": 269,
+      "context_index": 11,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "How many bars of I open the 12-bar blues?",
+          "options": [
+            "One",
+            "Two",
+            "Four"
+          ],
+          "why": "Four bars of I, then IV arrives in bar 5."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/7/lessons/3/steps/3/options/0"
+        ]
+      },
+      "source_context_sha256": "ffed46e899b2b2fa4889b416e152ffd6b2f2c10402d16936b8a875b55b2f315d",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lb58b5a8ced",
+      "source_index": 269,
+      "context_index": 12,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "How many eighth notes fit in one beat?",
+          "options": [
+            "One",
+            "Two",
+            "Four"
+          ],
+          "why": "An eighth note is half a beat, so two fill each beat."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/9/units/1/lessons/0/steps/3/options/0"
+        ]
+      },
+      "source_context_sha256": "2b95c8da0ea7abc7010596d60b4a15ec820f8978c4e95863479adda889851086",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lb58b5a8ced",
+      "source_index": 269,
+      "context_index": 13,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "How many times does the refrain sing O come, let us adore him?",
+          "options": [
+            "Three",
+            "One",
+            "Two"
+          ],
+          "why": "Three times, each a little higher, before Christ the Lord brings the tune home."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/13/units/1/lessons/3/steps/3/options/1"
+        ]
+      },
+      "source_context_sha256": "964f39c3d4a4cef180ff4084657a26bf99cb3f6bdff6d8383cd853d3e5997399",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L5b3ab40010",
+      "source_index": 111,
+      "context_index": 0,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "How long does a half note last?",
+          "options": [
+            "One beat",
+            "Two beats",
+            "Four beats"
+          ],
+          "why": "Half of a four-beat bar is two beats. A quarter note lasts one beat."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/1/lessons/2/steps/2/options/0"
+        ]
+      },
+      "source_context_sha256": "fb94260640cb2d8ae00d25ed22eecc75dc07d43f9db749394a5aca84e7f182c5",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L5b3ab40010",
+      "source_index": 111,
+      "context_index": 1,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "How long does a dotted quarter note last?",
+          "options": [
+            "Two beats",
+            "One beat",
+            "One and a half beats"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/2/units/5/lessons/1/steps/3/options/1"
+        ]
+      },
+      "source_context_sha256": "c821ac1793fd62614898a72bd5038ad5e2c1f5303bf7512cbd8e7ec517f6f485",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L5b3ab40010",
+      "source_index": 111,
+      "context_index": 2,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "How long does a half note last?",
+          "options": [
+            "Two beats",
+            "One beat",
+            "Half a beat"
+          ]
+        },
+        "occurrences": 2,
+        "example_locations": [
+          "/courses/3/units/1/lessons/4/steps/4/options/1",
+          "/courses/4/units/1/lessons/4/steps/4/options/1"
+        ]
+      },
+      "source_context_sha256": "1db3b478fb7966f18c9620c4c8806636b779b1407e82cadf9400aa7f7fcb8686",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L5b3ab40010",
+      "source_index": 111,
+      "context_index": 3,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "How long does a dotted quarter note last?",
+          "options": [
+            "Half a beat",
+            "One beat",
+            "One and a half beats"
+          ],
+          "why": "A quarter is one beat; the dot adds half of that."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/3/lessons/3/steps/5/options/1"
+        ]
+      },
+      "source_context_sha256": "1df4831b8497f9c0679911dcb68d3b60f4d1ea2c6d14eaab4fcb085ce8920899",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L5b3ab40010",
+      "source_index": 111,
+      "context_index": 4,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "What does a dot add to a note?",
+          "options": [
+            "One beat",
+            "Twice its value",
+            "Half its value"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/3/lessons/5/steps/5/options/0"
+        ]
+      },
+      "source_context_sha256": "c9348ed5be13335106d6cf86544f54e0eae9c0485feea2dcaf5ac941eed27083",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L5b3ab40010",
+      "source_index": 111,
+      "context_index": 5,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "A bar of 3/4 has a quarter note and a quarter rest. What's missing?",
+          "options": [
+            "One beat",
+            "Two beats",
+            "Nothing"
+          ],
+          "why": "3/4 holds three beats; 1 + 1 = 2, so one beat remains."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/3/lessons/5/steps/6/options/0"
+        ]
+      },
+      "source_context_sha256": "463d6aa74a47d83b7cc24badce37fc737304dd5dab06363e76b6e78422887308",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L5b3ab40010",
+      "source_index": 111,
+      "context_index": 6,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "The chorus begins on one long note. How long is it?",
+          "options": [
+            "Two beats",
+            "Four beats",
+            "One beat"
+          ],
+          "why": "Home! is a whole note: hold D at fret 3 on string 2 for the whole bar."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/13/units/7/lessons/0/steps/5/options/2"
+        ]
+      },
+      "source_context_sha256": "e938c86e190084aaadd4c177466b6641026bef9107d40b54c77168e0b39c83e1",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L3db204f097",
+      "source_index": 112,
+      "context_index": 0,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "How long does a half note last?",
+          "options": [
+            "One beat",
+            "Two beats",
+            "Four beats"
+          ],
+          "why": "Half of a four-beat bar is two beats. A quarter note lasts one beat."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/1/lessons/2/steps/2/options/1"
+        ]
+      },
+      "source_context_sha256": "88bedb208b55e14dd25880b454544ec872cc66279d48772f1615aa184cc85a4b",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L3db204f097",
+      "source_index": 112,
+      "context_index": 1,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "How long does a dotted quarter note last?",
+          "options": [
+            "Two beats",
+            "One beat",
+            "One and a half beats"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/2/units/5/lessons/1/steps/3/options/0"
+        ]
+      },
+      "source_context_sha256": "243d9b7e5becbdde925a5ecfad52d6a6845f0ee7d6c96a966dec9f65accb599d",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L3db204f097",
+      "source_index": 112,
+      "context_index": 2,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "How long does a half note last?",
+          "options": [
+            "Two beats",
+            "One beat",
+            "Half a beat"
+          ]
+        },
+        "occurrences": 2,
+        "example_locations": [
+          "/courses/3/units/1/lessons/4/steps/4/options/0",
+          "/courses/4/units/1/lessons/4/steps/4/options/0"
+        ]
+      },
+      "source_context_sha256": "9b476f1b872d20f8d53ab2183ee91f6f5a2d48ae7b6fca8486bc56272d917b24",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L3db204f097",
+      "source_index": 112,
+      "context_index": 3,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "A bar of 3/4 has a quarter note and a quarter rest. What's missing?",
+          "options": [
+            "One beat",
+            "Two beats",
+            "Nothing"
+          ],
+          "why": "3/4 holds three beats; 1 + 1 = 2, so one beat remains."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/3/lessons/5/steps/6/options/1"
+        ]
+      },
+      "source_context_sha256": "b2e134d12bca72c123eb4c116e511ed355a948a482212c12604abd2b4a1fa687",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L3db204f097",
+      "source_index": 112,
+      "context_index": 4,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "A quarter note lasts one beat. How long is a dotted quarter?",
+          "options": [
+            "Two beats",
+            "Half a beat",
+            "One and a half beats"
+          ],
+          "why": "Half of one beat is a half beat. Add it and you get one and a half."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/9/units/3/lessons/1/steps/2/options/0"
+        ]
+      },
+      "source_context_sha256": "66a843c52bcfd9307f01720ec3a24a8477fbcc360055d9b948cdf0a49e02da28",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L3db204f097",
+      "source_index": 112,
+      "context_index": 5,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "A dotted quarter and an eighth together last how long?",
+          "options": [
+            "One and a half beats",
+            "Three beats",
+            "Two beats"
+          ],
+          "why": "One and a half plus a half is two."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/9/units/3/lessons/2/steps/2/options/2"
+        ]
+      },
+      "source_context_sha256": "78f5eeca836c02839d987d17ffaf38cda75e827b237ad262a97d78f8c413a291",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L3db204f097",
+      "source_index": 112,
+      "context_index": 6,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "How long is a dotted half note?",
+          "options": [
+            "Two beats",
+            "Three beats",
+            "Four beats"
+          ],
+          "why": "A half note is two beats; the dot adds one more."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/9/units/3/lessons/3/steps/2/options/0"
+        ]
+      },
+      "source_context_sha256": "d9f936f61d2c6d778d2acd73acc28b398bee53840b0076ad3887b978b210b2f5",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L3db204f097",
+      "source_index": 112,
+      "context_index": 7,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "The chorus begins on one long note. How long is it?",
+          "options": [
+            "Two beats",
+            "Four beats",
+            "One beat"
+          ],
+          "why": "Home! is a whole note: hold D at fret 3 on string 2 for the whole bar."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/13/units/7/lessons/0/steps/5/options/0"
+        ]
+      },
+      "source_context_sha256": "885f056477dcf509eb1cb67cb3096d4e76f47daeffd1abbc3c94964a763837c2",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L937448906f",
+      "source_index": 113,
+      "context_index": 0,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "How long does a half note last?",
+          "options": [
+            "One beat",
+            "Two beats",
+            "Four beats"
+          ],
+          "why": "Half of a four-beat bar is two beats. A quarter note lasts one beat."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/1/lessons/2/steps/2/options/2"
+        ]
+      },
+      "source_context_sha256": "db75bd5b07742dc1f9a44cc35319a04839fd5414773e78d8cc714659b24f51bf",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L937448906f",
+      "source_index": 113,
+      "context_index": 1,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "How long is a dotted half note?",
+          "options": [
+            "Two beats",
+            "Three beats",
+            "Four beats"
+          ],
+          "why": "A half note is two beats; the dot adds one more."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/9/units/3/lessons/3/steps/2/options/2"
+        ]
+      },
+      "source_context_sha256": "9d6c421a064cc4e539e2c59f0c1c41ae75983152568e933a79e3033be589b35c",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L937448906f",
+      "source_index": 113,
+      "context_index": 2,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "The chorus begins on one long note. How long is it?",
+          "options": [
+            "Two beats",
+            "Four beats",
+            "One beat"
+          ],
+          "why": "Home! is a whole note: hold D at fret 3 on string 2 for the whole bar."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/13/units/7/lessons/0/steps/5/options/1"
+        ]
+      },
+      "source_context_sha256": "4fc96be06036bab9036b656d64ce3973b7b1d12a510092821eeb1324a0db8113",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lced02810fc",
+      "source_index": 3137,
+      "context_index": 0,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which finger plays string 2?",
+          "options": [
+            "Middle",
+            "Thumb",
+            "Index"
+          ],
+          "why": "Thumb takes strings 3, 4 and 5, index takes string 2 and middle takes string 1."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/6/units/0/lessons/2/steps/2/options/0"
+        ]
+      },
+      "source_context_sha256": "5b39dc1b63ea334f67ed4a12247c00912de83da3fa2dfd96636d5d1db4a76303",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lced02810fc",
+      "source_index": 3137,
+      "context_index": 1,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which finger plays string 1?",
+          "options": [
+            "Index",
+            "Middle",
+            "Thumb"
+          ],
+          "why": "Thumb takes strings 3, 4 and 5, index takes string 2 and middle takes string 1."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/6/units/0/lessons/4/steps/2/options/1"
+        ]
+      },
+      "source_context_sha256": "1710829ce3cf0ca6a07c776d15c63d214392e88691be8d022eb4a6c1564b0788",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lced02810fc",
+      "source_index": 3137,
+      "context_index": 2,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which finger plays every other note?",
+          "options": [
+            "Index",
+            "Middle",
+            "Thumb"
+          ],
+          "why": "Thumb, index, thumb, middle: the thumb plays every other note, which gives the roll its name."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/6/units/1/lessons/1/steps/3/options/1"
+        ]
+      },
+      "source_context_sha256": "f160df4bbfa4f9b6f46716900fa566bcc1a870efbfc98af06099cb14becf077f",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L55751877e1",
+      "source_index": 3138,
+      "context_index": 0,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which finger plays string 2?",
+          "options": [
+            "Middle",
+            "Thumb",
+            "Index"
+          ],
+          "why": "Thumb takes strings 3, 4 and 5, index takes string 2 and middle takes string 1."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/6/units/0/lessons/2/steps/2/options/1"
+        ]
+      },
+      "source_context_sha256": "ce94687b718cf2c513b92dc179eff54b98b3bee0188238c82c0f578a37aed915",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L55751877e1",
+      "source_index": 3138,
+      "context_index": 1,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which finger plays string 1?",
+          "options": [
+            "Index",
+            "Middle",
+            "Thumb"
+          ],
+          "why": "Thumb takes strings 3, 4 and 5, index takes string 2 and middle takes string 1."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/6/units/0/lessons/4/steps/2/options/2"
+        ]
+      },
+      "source_context_sha256": "ffe7a44e009f12e91c63254c23c2e9f8b0f4939037e883494c06188d7e21c837",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L55751877e1",
+      "source_index": 3138,
+      "context_index": 2,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which finger plays every other note?",
+          "options": [
+            "Index",
+            "Middle",
+            "Thumb"
+          ],
+          "why": "Thumb, index, thumb, middle: the thumb plays every other note, which gives the roll its name."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/6/units/1/lessons/1/steps/3/options/2"
+        ]
+      },
+      "source_context_sha256": "d478efd6dacb6fe0454c4d8716ab42b167d91caa3c777d04aacecdc7f39e19b8",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lc2df9b9326",
+      "source_index": 3139,
+      "context_index": 0,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which finger plays string 2?",
+          "options": [
+            "Middle",
+            "Thumb",
+            "Index"
+          ],
+          "why": "Thumb takes strings 3, 4 and 5, index takes string 2 and middle takes string 1."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/6/units/0/lessons/2/steps/2/options/2"
+        ]
+      },
+      "source_context_sha256": "cf196ccbc3af2fcd21fcab611e396a5af90f743fa90a48340363a0c9f6aaf154",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lc2df9b9326",
+      "source_index": 3139,
+      "context_index": 1,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which finger plays string 1?",
+          "options": [
+            "Index",
+            "Middle",
+            "Thumb"
+          ],
+          "why": "Thumb takes strings 3, 4 and 5, index takes string 2 and middle takes string 1."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/6/units/0/lessons/4/steps/2/options/0"
+        ]
+      },
+      "source_context_sha256": "f41a437604fcfdd1db9f180222a7fea79e4fd223871ff13b5299a582dde32319",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lc2df9b9326",
+      "source_index": 3139,
+      "context_index": 2,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which finger plays every other note?",
+          "options": [
+            "Index",
+            "Middle",
+            "Thumb"
+          ],
+          "why": "Thumb, index, thumb, middle: the thumb plays every other note, which gives the roll its name."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/6/units/1/lessons/1/steps/3/options/0"
+        ]
+      },
+      "source_context_sha256": "a09a805aeadbb29d2460d4ff0655d278d04769dea4799f744b95560e862cbe28",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L2038bdec92",
+      "source_index": 149,
+      "context_index": 0,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Did the tune go up or down?",
+          "options": [
+            "Up",
+            "Down"
+          ]
+        },
+        "occurrences": 5,
+        "example_locations": [
+          "/courses/0/units/1/lessons/6/steps/2/options/0",
+          "/courses/0/units/5/lessons/6/steps/2/options/0"
+        ]
+      },
+      "source_context_sha256": "24eeba60b960671bcd4d94ccc908208caeac16341d6e9a2e3af05ceb0114d487",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L2038bdec92",
+      "source_index": 149,
+      "context_index": 1,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Did the top note go up or down?",
+          "options": [
+            "Up",
+            "Down"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/17/lessons/4/steps/5/options/0"
+        ]
+      },
+      "source_context_sha256": "2ff6a4319afa1e29a8f1b916e4af8abfb1c1b6da23c9ca40c34774cedd4e98b2",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L2038bdec92",
+      "source_index": 149,
+      "context_index": 2,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Does this phrase go up or down?",
+          "options": [
+            "Up",
+            "Down"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/1/units/3/lessons/2/steps/3/options/0"
+        ]
+      },
+      "source_context_sha256": "7807c7863e66ed8c4371c8888991f3e501a1c53edc9178a4b76762bb60d18556",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L2038bdec92",
+      "source_index": 149,
+      "context_index": 3,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Does the tune go up or down?",
+          "options": [
+            "Up",
+            "Down"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/5/units/1/lessons/5/steps/3/options/0"
+        ]
+      },
+      "source_context_sha256": "53b2daa17607824d8cc9b4f226691db15aac33dab4625556f0a0f7b191b396b0",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L2038bdec92",
+      "source_index": 149,
+      "context_index": 4,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which stroke lands on the beat?",
+          "options": [
+            "Down",
+            "Up",
+            "Either one"
+          ],
+          "why": "Down on the beat and up in between keeps your hand in time, like a drummer's sticks."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/5/units/2/lessons/0/steps/2/options/1"
+        ]
+      },
+      "source_context_sha256": "6402273d9c30ad4de55768ffac4f76e6f6490d667a2db0cefc2790425d3050ae",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L2038bdec92",
+      "source_index": 149,
+      "context_index": 5,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "You cross to a new pair on an and. Which stroke?",
+          "options": [
+            "Down",
+            "Up",
+            "Whichever is closer"
+          ],
+          "why": "Every and gets an up stroke. Let the pendulum decide, not the string."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/5/units/2/lessons/1/steps/3/options/1"
+        ]
+      },
+      "source_context_sha256": "0e1cd57ab3a328bfb12c377c8e6dfc353ec316265a3c4267026f3be63d0b8129",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L2038bdec92",
+      "source_index": 149,
+      "context_index": 6,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which stroke plays the and of beat 2?",
+          "options": [
+            "Up",
+            "Down"
+          ],
+          "why": "Every and gets an up stroke, wherever the note is."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/5/units/2/lessons/4/steps/3/options/0"
+        ]
+      },
+      "source_context_sha256": "a163c965f1a26f510deed18f0eef1949214a721a2003f124468fe2af4cd7d8e8",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L2038bdec92",
+      "source_index": 149,
+      "context_index": 7,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Does the second note go up or down?",
+          "options": [
+            "Up",
+            "Down"
+          ]
+        },
+        "occurrences": 24,
+        "example_locations": [
+          "/courses/7/units/0/lessons/0/steps/5/options/0",
+          "/courses/7/units/0/lessons/0/steps/6/options/0"
+        ]
+      },
+      "source_context_sha256": "b94703becd134dccc4333604cdb0b1cae6f9a278599c9a635de191c04949acec",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L2038bdec92",
+      "source_index": 149,
+      "context_index": 8,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Is this scale going up or down?",
+          "options": [
+            "Up",
+            "Down"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/4/lessons/0/steps/2/options/0"
+        ]
+      },
+      "source_context_sha256": "a08d810600f2ac5cc2df0774f3304554de612557f056a2f17429338a284f2afd",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L2038bdec92",
+      "source_index": 149,
+      "context_index": 9,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Did it go up or down?",
+          "options": [
+            "Up",
+            "Down"
+          ]
+        },
+        "occurrences": 4,
+        "example_locations": [
+          "/courses/10/units/1/lessons/2/steps/2/options/0",
+          "/courses/10/units/1/lessons/3/steps/2/options/0"
+        ]
+      },
+      "source_context_sha256": "466b61c820a4be29ccef78af5ee312ed51cffacc0dc83268874b8633d0662712",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "L2038bdec92",
+      "source_index": 149,
+      "context_index": 10,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "The middle phrase: does it go up or down?",
+          "options": [
+            "Up",
+            "Down"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/10/units/4/lessons/0/steps/3/options/0"
+        ]
+      },
+      "source_context_sha256": "f1205896cc661450422c1c62f03309bea7080f587145fbd16c417e26b9b1b91c",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lbf93e5ce8b",
+      "source_index": 150,
+      "context_index": 0,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Did the tune go up or down?",
+          "options": [
+            "Up",
+            "Down"
+          ]
+        },
+        "occurrences": 5,
+        "example_locations": [
+          "/courses/0/units/1/lessons/6/steps/2/options/1",
+          "/courses/0/units/5/lessons/6/steps/2/options/1"
+        ]
+      },
+      "source_context_sha256": "3b2a29e03fb59ca9e4af7cd98b40647e1f726d6bd5726f83da515cee80bcf92c",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lbf93e5ce8b",
+      "source_index": 150,
+      "context_index": 1,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Did the top note go up or down?",
+          "options": [
+            "Up",
+            "Down"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/17/lessons/4/steps/5/options/1"
+        ]
+      },
+      "source_context_sha256": "8ac9ad96da739c89dda21c109fe1f449c92394ef0e37d07e226cdcc6ba456874",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lbf93e5ce8b",
+      "source_index": 150,
+      "context_index": 2,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Does this phrase go up or down?",
+          "options": [
+            "Up",
+            "Down"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/1/units/3/lessons/2/steps/3/options/1"
+        ]
+      },
+      "source_context_sha256": "a9c0a0bcbddd160be7f13d18ae330920d7790447a09a66b40a8b7026d4ea6e72",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lbf93e5ce8b",
+      "source_index": 150,
+      "context_index": 3,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Does the tune go up or down?",
+          "options": [
+            "Up",
+            "Down"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/5/units/1/lessons/5/steps/3/options/1"
+        ]
+      },
+      "source_context_sha256": "e45e9ce1add03e2f53bff10988249e423874f9c89e435d2276f771c3b3a1a9f1",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lbf93e5ce8b",
+      "source_index": 150,
+      "context_index": 4,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which stroke lands on the beat?",
+          "options": [
+            "Down",
+            "Up",
+            "Either one"
+          ],
+          "why": "Down on the beat and up in between keeps your hand in time, like a drummer's sticks."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/5/units/2/lessons/0/steps/2/options/0"
+        ]
+      },
+      "source_context_sha256": "0f7902a7591e7897b2f818fff4ef7b18453311ad71809e472bde0f72ae24e6ed",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lbf93e5ce8b",
+      "source_index": 150,
+      "context_index": 5,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "You cross to a new pair on an and. Which stroke?",
+          "options": [
+            "Down",
+            "Up",
+            "Whichever is closer"
+          ],
+          "why": "Every and gets an up stroke. Let the pendulum decide, not the string."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/5/units/2/lessons/1/steps/3/options/0"
+        ]
+      },
+      "source_context_sha256": "66dc689ddd721311d553922b900f482f5fd4df8605511fbbfb9977139be41e01",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lbf93e5ce8b",
+      "source_index": 150,
+      "context_index": 6,
+      "semantic_source": {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "text": {
+          "prompt": "Which stroke plays the and of beat 2?",
+          "options": [
+            "Up",
+            "Down"
+          ],
+          "why": "Every and gets an up stroke, wherever the note is."
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/5/units/2/lessons/4/steps/3/options/1"
+        ]
+      },
+      "source_context_sha256": "2a21a1830461a85b3fa919b719b011cf9b77d471059923bd5bb20da7e30e7abe",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lbf93e5ce8b",
+      "source_index": 150,
+      "context_index": 7,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Does the second note go up or down?",
+          "options": [
+            "Up",
+            "Down"
+          ]
+        },
+        "occurrences": 24,
+        "example_locations": [
+          "/courses/7/units/0/lessons/0/steps/5/options/1",
+          "/courses/7/units/0/lessons/0/steps/6/options/1"
+        ]
+      },
+      "source_context_sha256": "cdb0582e0a5b22dc43e10058548f5c56d1b2d2f02ddb9725c75c3d8c514b311f",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lbf93e5ce8b",
+      "source_index": 150,
+      "context_index": 8,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Is this scale going up or down?",
+          "options": [
+            "Up",
+            "Down"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/4/lessons/0/steps/2/options/1"
+        ]
+      },
+      "source_context_sha256": "8953042710584fe3faa440a43b30020a083020745da6b9fe4d18c5a2b6f1f381",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lbf93e5ce8b",
+      "source_index": 150,
+      "context_index": 9,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "Did it go up or down?",
+          "options": [
+            "Up",
+            "Down"
+          ]
+        },
+        "occurrences": 4,
+        "example_locations": [
+          "/courses/10/units/1/lessons/2/steps/2/options/1",
+          "/courses/10/units/1/lessons/3/steps/2/options/1"
+        ]
+      },
+      "source_context_sha256": "e5fdf0e53c17e5c76880b1b37be529526d4c3fe6871d5668bb259d909a30ff09",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    },
+    {
+      "key": "Lbf93e5ce8b",
+      "source_index": 150,
+      "context_index": 10,
+      "semantic_source": {
+        "role": "steps:listen",
+        "field": "options/*",
+        "text": {
+          "prompt": "The middle phrase: does it go up or down?",
+          "options": [
+            "Up",
+            "Down"
+          ]
+        },
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/10/units/4/lessons/0/steps/3/options/1"
+        ]
+      },
+      "source_context_sha256": "fe4a156f062e355e1fc65e59cc90769f27221a22b05c8401eb52dda326ece22a",
+      "reviewer": "Codex review_uk",
+      "source_semantic_context_directly_read": true,
+      "target_pairs_directly_read_in_primary_review": true
+    }
+  ]
+}

@@ -1,0 +1,325 @@
+{
+  "reviewer": "Codex review_sk (separate Slovenian correction-review context)",
+  "scope": "Secondary review only of root-authored corrections against frozen Slovenian pairs and glossary; not independent full-corpus Slovenian review.",
+  "proposal_file_sha256": "9fd2bce4347da24108cbdb8e668c7c49bfa917b10451155b063560598f220d3b",
+  "findings": [
+    {
+      "index": 1139,
+      "key": "La006e84500",
+      "source": "Three-note chords on the top strings: major and minor, every inversion, and progressions that barely move.",
+      "proposal": "Akordi s tremi toni na zgornjih strunah: dur in mol, vsi obrati ter zaporedja s komaj opaznimi premiki.",
+      "decision": "accept",
+      "reason": "Correction preserves English music facts and source tokens and improves the stated terminology/grammar issue."
+    },
+    {
+      "index": 1717,
+      "key": "Lc548023fc1",
+      "source": "Counting in two",
+      "proposal": "Štetje na dve dobi",
+      "decision": "accept",
+      "reason": "Correction preserves English music facts and source tokens and improves the stated terminology/grammar issue."
+    },
+    {
+      "index": 1718,
+      "key": "L100c238b00",
+      "source": "Stephen Foster wrote this song in 1848. It counts in two: 1 and 2 and. Most notes are quick eighth notes.",
+      "proposal": "Stephen Foster je to pesem napisal leta 1848. Štejemo na dve dobi: 1 in 2 in. Večinoma gre za hitre osminke.",
+      "decision": "refine",
+      "reason": "Accept the two-beat grouping repair and additionally avoid the source draft plural agreement Večina not so with a natural impersonal last sentence.",
+      "suggested_translation": "Stephen Foster je to pesem napisal leta 1848. Štejemo na dve dobi: 1 in 2 in. Večinoma gre za hitre osminke."
+    },
+    {
+      "index": 1920,
+      "key": "L4ef7deb211",
+      "source": "Dublin's song, in three",
+      "proposal": "Dublinska pesem v tridobnem taktu",
+      "decision": "refine",
+      "reason": "v treh dobah can suggest a three-beat duration; v tridobnem taktu explicitly denotes the song meter.",
+      "suggested_translation": "Dublinska pesem v tridobnem taktu"
+    },
+    {
+      "index": 2019,
+      "key": "L11a5ce4988",
+      "source": "On string 4, each fret is one note higher: E, F, F sharp, G, G sharp, then A at fret 5. Fret 5 sounds the same as open string 3.",
+      "proposal": "Na struni 4 se toni z vsako naslednjo prečko višajo: E, F, F z višajem, G, G z višajem in nato A pri prečki 5. Prečka 5 zveni enako kot prazna struna 3.",
+      "decision": "accept",
+      "reason": "Correction preserves English music facts and source tokens and improves the stated terminology/grammar issue."
+    },
+    {
+      "index": 2175,
+      "key": "L1f53cfa218",
+      "source": "A dotted quarter lasts one and a half beats. Play on 1, hold through 2, then play on the and of 2, then on 3 and 4.",
+      "proposal": "Četrtinka s piko traja dobo in pol. Igraj na 1, zadrži še na 2, nato igraj na »in« po 2, potem na 3 in 4.",
+      "decision": "accept",
+      "reason": "Correction preserves English music facts and source tokens and improves the stated terminology/grammar issue."
+    },
+    {
+      "index": 2801,
+      "key": "L3a0d0c7bd7",
+      "source": "Shift on the open string",
+      "proposal": "Menjaj lego, ko zveni prazna struna",
+      "decision": "accept",
+      "reason": "Correction preserves English music facts and source tokens and improves the stated terminology/grammar issue."
+    },
+    {
+      "index": 3104,
+      "key": "L6e5c726d4d",
+      "source": "A three-note pattern repeated across a bar of eight makes the accent shift each time. That is the rolling feel.",
+      "proposal": "Ponavljanje vzorca s tremi toni čez takt osmih tonov vsakič premakne poudarek. To ustvari občutek tekočega valovanja.",
+      "decision": "accept",
+      "reason": "Correction preserves English music facts and source tokens and improves the stated terminology/grammar issue."
+    },
+    {
+      "index": 3598,
+      "key": "Ld074583ef5",
+      "source": "Three-note melodies",
+      "proposal": "Melodije s tremi toni",
+      "decision": "accept",
+      "reason": "Correction preserves English music facts and source tokens and improves the stated terminology/grammar issue."
+    },
+    {
+      "index": 5011,
+      "key": "Lcadb420c99",
+      "source": "Count in twos",
+      "proposal": "Štej ena, dve",
+      "decision": "accept",
+      "reason": "Correction preserves English music facts and source tokens and improves the stated terminology/grammar issue."
+    },
+    {
+      "index": 5354,
+      "key": "Lc7ededc2df",
+      "source": "This B minor uses the top four strings only: fret 4 on strings 4 and 3, fret 3 on string 2, fret 2 on string 1. The full barre comes later.",
+      "proposal": "Ta B-mol uporablja le štiri najtanjše strune: prečko 4 na strunah 4 in 3, prečko 3 na struni 2, prečko 2 na struni 1. Polni barré pride pozneje.",
+      "decision": "accept",
+      "reason": "Correction preserves English music facts and source tokens and improves the stated terminology/grammar issue."
+    },
+    {
+      "index": 5521,
+      "key": "L928ff94fbb",
+      "source": "Barres and big finishes",
+      "proposal": "Barréji in veliki zaključki",
+      "decision": "accept",
+      "reason": "Correction preserves English music facts and source tokens and improves the stated terminology/grammar issue."
+    },
+    {
+      "index": 5522,
+      "key": "L6be64bc72f",
+      "source": "Indie pop, a power ballad, highlife, neo-soul and an anthem with a key change, with F and B minor barres.",
+      "proposal": "Indie pop, mogočna balada, highlife, neo-soul in himna z menjavo tonalitete, z barréjema F in B-mol.",
+      "decision": "accept",
+      "reason": "Correction preserves English music facts and source tokens and improves the stated terminology/grammar issue."
+    },
+    {
+      "index": 5526,
+      "key": "L68d4c57c61",
+      "source": "Play the full B minor barre at fret 2 if you can. If not, use the top four strings: fret 4 on strings 4 and 3, fret 3 on string 2, fret 2 on string 1.",
+      "proposal": "Če zmoreš, zaigraj polni barré B-mola na prečki 2. Sicer uporabi štiri najtanjše strune: prečko 4 na strunah 4 in 3, prečko 3 na struni 2, prečko 2 na struni 1.",
+      "decision": "accept",
+      "reason": "Correction preserves English music facts and source tokens and improves the stated terminology/grammar issue."
+    },
+    {
+      "index": 5531,
+      "key": "L2e28166032",
+      "source": "F, the full barre",
+      "proposal": "F, polni barré",
+      "decision": "accept",
+      "reason": "Correction preserves English music facts and source tokens and improves the stated terminology/grammar issue."
+    },
+    {
+      "index": 5563,
+      "key": "L5b6055b519",
+      "source": "Barre chords and syncopation",
+      "proposal": "Barré akordi in sinkopiranje",
+      "decision": "accept",
+      "reason": "Correction preserves English music facts and source tokens and improves the stated terminology/grammar issue."
+    },
+    {
+      "index": 5564,
+      "key": "Lf92b8adc12",
+      "source": "Synth-pop, gospel-pop, dark pop, indie pop and a 6/8 finale, with five new barre chords.",
+      "proposal": "Sintetični pop, gospel pop, temni pop, indie pop in finale v 6/8 s petimi novimi barré akordi.",
+      "decision": "accept",
+      "reason": "Correction preserves English music facts and source tokens and improves the stated terminology/grammar issue."
+    },
+    {
+      "index": 5568,
+      "key": "L202e58c39c",
+      "source": "F sharp minor, the barre",
+      "proposal": "Mol na F z višajem, barré",
+      "decision": "accept",
+      "reason": "Correction preserves English music facts and source tokens and improves the stated terminology/grammar issue."
+    },
+    {
+      "index": 5569,
+      "key": "L13b23aa3f1",
+      "source": "Barre finger 1 across all six strings at fret 2, then put fingers 3 and 4 on strings 5 and 4 at fret 4: the E minor shape, moved up two frets.",
+      "proposal": "Prst 1 položi v barré čez vseh šest strun na prečki 2, nato prsta 3 in 4 na struni 5 in 4 na prečki 4: oblika E-mola, premaknjena dve prečki više.",
+      "decision": "accept",
+      "reason": "Correction preserves English music facts and source tokens and improves the stated terminology/grammar issue."
+    },
+    {
+      "index": 5573,
+      "key": "L5072e1fd6d",
+      "source": "B minor, the full barre",
+      "proposal": "B-mol, polni barré",
+      "decision": "accept",
+      "reason": "Correction preserves English music facts and source tokens and improves the stated terminology/grammar issue."
+    },
+    {
+      "index": 5574,
+      "key": "L34c8d35d0f",
+      "source": "Barre finger 1 across strings 5 to 1 at fret 2, then build an A minor shape two frets up with fingers 2, 3 and 4. Leave string 6 silent.",
+      "proposal": "Prst 1 položi v barré čez strune od 5 do 1 na prečki 2, nato s prsti 2, 3 in 4 sestavi obliko A-mola dve prečki više. Struna 6 naj bo tiha.",
+      "decision": "accept",
+      "reason": "Correction preserves English music facts and source tokens and improves the stated terminology/grammar issue."
+    },
+    {
+      "index": 5582,
+      "key": "L794a2fe83f",
+      "source": "Spray Paint Sunrise is indie pop at 124 beats per minute: E, B, C sharp minor and A, the four-chord loop with two barres. Drive steady eighths and let it run.",
+      "proposal": "Zora iz spreja je indie pop pri 124 dobah na minuto: E, B, mol na C z višajem in A, krog štirih akordov z dvema barréjema. Vzdržuj enakomerne osminke in pusti pesmi teči.",
+      "decision": "accept",
+      "reason": "Correction preserves English music facts and source tokens and improves the stated terminology/grammar issue."
+    },
+    {
+      "index": 5584,
+      "key": "L14eaeddb64",
+      "source": "B is an A shape barred at fret 2: finger 1 across strings 5 to 1, three fingers at fret 4. C sharp minor is an A minor shape barred at fret 4.",
+      "proposal": "B je oblika A z barréjem na prečki 2: prst 1 čez strune od 5 do 1, trije prsti na prečki 4. Mol na C z višajem je oblika A-mola z barréjem na prečki 4.",
+      "decision": "accept",
+      "reason": "Correction preserves English music facts and source tokens and improves the stated terminology/grammar issue."
+    },
+    {
+      "index": 5588,
+      "key": "L214f001ba7",
+      "source": "Constellation Prize closes the course: an anthem in 6/8 at 126 counts a minute, in F. F and B flat are both barres, with C and D minor between them.",
+      "proposal": "Ozvezdje za nagrado konča tečaj: himna v 6/8 pri 126 enotah na minuto, v F-duru. F in B z nižajem sta oba barréja, med njima pa sta C in D-mol.",
+      "decision": "accept",
+      "reason": "Correction preserves English music facts and source tokens and improves the stated terminology/grammar issue."
+    },
+    {
+      "index": 5589,
+      "key": "L109746af37",
+      "source": "B flat, the A-shape barre",
+      "proposal": "B z nižajem, barré v obliki A",
+      "decision": "accept",
+      "reason": "Correction preserves English music facts and source tokens and improves the stated terminology/grammar issue."
+    },
+    {
+      "index": 5590,
+      "key": "L881283291b",
+      "source": "Barre finger 1 across strings 5 to 1 at fret 1, then put fingers 2, 3 and 4 on strings 4, 3 and 2 at fret 3. Leave string 6 silent.",
+      "proposal": "Prst 1 položi v barré čez strune od 5 do 1 na prečki 1, nato prste 2, 3 in 4 na strune 4, 3 in 2 na prečki 3. Struna 6 naj bo tiha.",
+      "decision": "accept",
+      "reason": "Correction preserves English music facts and source tokens and improves the stated terminology/grammar issue."
+    },
+    {
+      "index": 5592,
+      "key": "Lc67ccfa70c",
+      "source": "Barre-chord set",
+      "proposal": "Sklop z barré akordi",
+      "decision": "accept",
+      "reason": "Correction preserves English music facts and source tokens and improves the stated terminology/grammar issue."
+    },
+    {
+      "index": 5593,
+      "key": "L2a8419bbfc",
+      "source": "F sharp minor is which shape, barred at fret 2?",
+      "proposal": "Katero obliko z barréjem na prečki 2 ima mol na F z višajem?",
+      "decision": "accept",
+      "reason": "Correction preserves English music facts and source tokens and improves the stated terminology/grammar issue."
+    },
+    {
+      "index": 5594,
+      "key": "L371ab07a8b",
+      "source": "Barre at fret 2 and the E minor shape sits in front of your first finger: F sharp minor.",
+      "proposal": "Barré na prečki 2, pred prvim prstom pa oblika E-mola: mol na F z višajem.",
+      "decision": "accept",
+      "reason": "Correction preserves English music facts and source tokens and improves the stated terminology/grammar issue."
+    },
+    {
+      "index": 5653,
+      "key": "Le05c9e34aa",
+      "source": "This song rocks in six-eight: two big beats a bar, each split in three. Count one-two-three, four-five-six, like oars pulling and coming back.",
+      "proposal": "Ta pesem se ziblje v šestosminskem taktu: dve veliki dobi v taktu, vsaka razdeljena na tri. Štej ena-dve-tri, štiri-pet-šest, kot vesla, ki zaveslajo in se vrnejo.",
+      "decision": "accept",
+      "reason": "Correction preserves English music facts and source tokens and improves the stated terminology/grammar issue."
+    },
+    {
+      "index": 5680,
+      "key": "L5b73319e44",
+      "source": "The Skye Boat Song rocks in six-eight. O Christmas Tree is in three, and All Through the Night in four.",
+      "proposal": "The Skye Boat Song se ziblje v šestosminskem taktu. O smrečica ima tri dobe, All Through the Night pa štiri.",
+      "decision": "accept",
+      "reason": "Correction preserves English music facts and source tokens and improves the stated terminology/grammar issue."
+    },
+    {
+      "index": 5726,
+      "key": "Lc4e661674d",
+      "source": "Joplin, Sousa, Bizet and Grieg: syncopation, six-eight and key changes.",
+      "proposal": "Joplin, Sousa, Bizet in Grieg: sinkopiranje, šestosminski takt in menjave tonalitete.",
+      "decision": "accept",
+      "reason": "Correction preserves English music facts and source tokens and improves the stated terminology/grammar issue."
+    },
+    {
+      "index": 5735,
+      "key": "L2125d1e9cc",
+      "source": "John Philip Sousa published The Liberty Bell in 1893, and a British TV comedy later made it its theme. It's in six-eight: two big beats a bar, like left, right.",
+      "proposal": "John Philip Sousa je The Liberty Bell objavil leta 1893, britanska televizijska komedija pa jo je pozneje uporabila za svojo temo. Je v šestosminskem taktu: dve veliki dobi v taktu, kot leva, desna.",
+      "decision": "accept",
+      "reason": "Correction preserves English music facts and source tokens and improves the stated terminology/grammar issue."
+    },
+    {
+      "index": 5810,
+      "key": "L493d6a3068",
+      "source": "A carol in six-eight",
+      "proposal": "Božična pesem v šestosminskem taktu",
+      "decision": "accept",
+      "reason": "Correction preserves English music facts and source tokens and improves the stated terminology/grammar issue."
+    },
+    {
+      "index": 5812,
+      "key": "L63b5f26523",
+      "source": "In six-eight a quarter and an eighth make one big beat: long, short. Count one-two-three, four-five-six, and play on one, three, four and six.",
+      "proposal": "V šestosminskem taktu četrtinka in osminka tvorita eno veliko dobo: dolgo, kratko. Štej ena-dve-tri, štiri-pet-šest in igraj na ena, tri, štiri in šest.",
+      "decision": "accept",
+      "reason": "Correction preserves English music facts and source tokens and improves the stated terminology/grammar issue."
+    }
+  ],
+  "ui_glossary_followups": [
+    {
+      "key": "Play along",
+      "proposed": "Igraj zraven",
+      "decision": "accept",
+      "reason": "Natural play-along invitation, consistent with glossary informal singular ti; removes formal/plural Igrajte and preserves playing together with music rather than only rhythm."
+    },
+    {
+      "glossary_key": "Again",
+      "proposed": "Znova",
+      "decision": "accept",
+      "reason": "Aligns the stale glossary English value with the already translated actual UI label; no runtime text change implied."
+    }
+  ],
+  "native_human_review": "not performed",
+  "device_review": "not performed",
+  "initial_proposals_directly_read": 37,
+  "current_proposal_file_rows": 35,
+  "numeric_proposals_seen_in_initial_read_and_since_removed": [
+    {
+      "index": 234,
+      "source": "Two",
+      "old": "Dve",
+      "initial_proposed": "Število dve",
+      "decision": "prefer original Dve",
+      "reason": "Standalone count-word citation is natural without a noun; Število adds awkward metalinguistic phrasing."
+    },
+    {
+      "index": 269,
+      "source": "One",
+      "old": "Ena",
+      "initial_proposed": "Število ena",
+      "decision": "prefer original Ena",
+      "reason": "Standalone count-word citation is natural without a noun; Število adds awkward metalinguistic phrasing."
+    }
+  ]
+}

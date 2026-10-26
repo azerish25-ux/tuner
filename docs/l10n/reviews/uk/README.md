@@ -1,0 +1,9 @@
+# Ukrainian lesson review
+
+Codex review_uk independently read all 6,083 exact-current English/author-target pairs in source order, then reviewed 192 complete semantic shared-context rows across 27 high-risk keys. The author snapshot remains frozen. Truncated primary batch gaps were separately reread. The review proposes 63 exact-source/old-value guarded corrections and 206 individually source-bound retentions. final-map.json is the proposed import map.
+
+The corrections cover formal/plural grammar, coordinated nominative finger answers/questions across instruments, scale-degree numbers versus chronological chord order, explicit eighteenth/nineteenth-century date ranges, natural breath cues, case endings for spelled-out accidentals and consistent named-song references. Für Elise uses the established Ukrainian title **До Елізи** in both its title and interval mnemonic; the retained title list follows the glossary's original-title policy.
+
+All 6,083 proposed entries pass the importer/helper's hard checks with the proposed Ukrainian invariant registry supplied in memory. There are no nonidentity or length warnings. Ordinary English teaching prose is not approved as an invariant. The 79 remaining helper warnings are individually approved identity strings; notation-only identities may not produce a helper warning but still receive individual registry records.
+
+This is exhaustive primary pair review with a targeted complete shared-context pass. It does not claim that every one of the helper's 4,127 shared boundary rows was displayed/read, nor that every curriculum audio or notation array was inspected. The context coverage file and per-key coverage preserve these limits. No human native-speaker, device, VoiceOver, audio-performance, historical-source or release certification is claimed. No live import, global registry change, store mutation, commit or push was performed by this reviewer.

@@ -1,0 +1,86 @@
+{
+  "reviewer": "Codex independent integration reviewer /root/review_uk",
+  "review_date": "2026-10-26",
+  "skill": "code-review-and-quality",
+  "verdict": "no-blocking-findings",
+  "findings": [],
+  "scope": "Final integration/code/evidence review. Verified four imported lesson maps and bundled tables against their independent reviewed proposals and exact current English key/text set; registry preservation, TODO/handoff completion, glossary supplements, bounded test/verifier fixes, and the157-field store song-title alignment delta. This is not a fresh full semantic rereview of all50 listing payloads or all prior translated languages.",
+  "lesson_integration": {
+    "new_locale_pairs": 24332,
+    "keys_per_locale": 6083,
+    "locales": [
+      "is",
+      "sk",
+      "sl",
+      "uk"
+    ],
+    "guarded_corrections": 222,
+    "individual_exact_source_invariants": 1156,
+    "review_map_resource_source_equality": true,
+    "prior_locale_invariants_preserved": true,
+    "frozen_author_drafts_preserved": true,
+    "historical_input_glossary_hashes_match_HEAD": true,
+    "Slovenian_UI_semantic_delta": "Play along: Igrajte v ritmu -> Igraj zraven; no other UI semantic changes or deletions"
+  },
+  "store_delta": {
+    "changed_listing_locales": 38,
+    "changed_consumer_fields": 157,
+    "changed_consumer_field_kind": "game_center_leaderboard_names only",
+    "proposal_exactly_matches_applied_old_new_fields": true,
+    "independent_review_records_exactly_match_all157_source_old_new_fields": true,
+    "independent_review_partitions": {
+      "review_is": 70,
+      "review_sk": 87
+    },
+    "parent_payload_hash_lineages_verified": 38,
+    "previous_full_evidence_file_hash_matches_HEAD": true,
+    "unchanged_full_review_records_and_prior_update_chains_preserved": true,
+    "original_correction_ledger_prefix_preserved": 96,
+    "final_correction_ledger_count": 253,
+    "source_old_new_hashes_verified": true,
+    "app_store_title_comparisons": 344,
+    "app_store_title_mismatches": 0,
+    "all50_store_text_review_validators": "pass",
+    "release_ready_values_remain_false": true
+  },
+  "code_review": {
+    "test_store_content": "Replacing obsolete94 with actual hashed correction-artifact length and registry applied_corrections preserves meaningful consistency checks; artifact/source/current-payload validations remain active. No production behavior change.",
+    "verify_ios_resources": "relative_to(samples).as_posix() correctly compares Windows paths with the forward-slash manifest while preserving exact set equality; no resource check is relaxed.",
+    "architecture_security_performance": "No new runtime dependency, data flow, privilege or hot-path implementation. New files are localization resources and review evidence."
+  },
+  "verification": {
+    "independently_executed": [
+      "strict handoff freshness",
+      "strict all48-target lesson coverage",
+      "42 store-content unit tests",
+      "all49-locale/300-sample resource verification",
+      "all50 store text/review validators after alignment",
+      "all5 review artifact manifests",
+      "all344 live app/store featured song-title comparisons",
+      "all157 applied proposal/reviewer/ledger source-old-new guards",
+      "all38 parent-evidence lineages"
+    ],
+    "parent_validation_receipt": "validation.json records152 localization tests plus strict handoff/lessons/critical, resource, store, screenshot planning, catalog roundtrip, draft integrity and comment hygiene checks, each exit0. New broad tests were not repeated after the bounded evidence verification.",
+    "native_build_simulator_device": "not run locally; Xcode unavailable; published-SHA CI remains separate"
+  },
+  "limitations": [
+    "Source-aware AI review does not certify native-human fluency, universal full-context rereading, spoken VoiceOver, actual device/glyph/RTL/layout or historical/music-source facts.",
+    "Store delta review inherits unchanged earlier full-payload reviews through verified parent hashes; it does not reattribute earlier reviewers or claim a fresh all-field review.",
+    "Production privacy URL, localized screenshot/preview renders and App Store account-side evidence remain release gates; no upload/submission authorized."
+  ],
+  "reviewed_input_sha256": {
+    "tools/l10n/store-review-independent.json": "86145f0fe5f18bbdd4fe6205cbad7a858eff6324349000dac25e2ac0e226c143",
+    "tools/l10n/store-review.json": "ed54f0a2dfd6ffadaa35a5b4d6c8939e7b212285446dd43c7cfde348b4feb37c",
+    "tools/l10n/store-corrections.json": "62515e51ca782cec045a007ca710e46a430ac884a54e2681e412655def5b41d5",
+    "docs/l10n/reviews/store-title-alignment/proposal.json": "e830bf43508a8d1d9bf37ee76b8869e51703fa3c86b8047895b890fc3242e385",
+    "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+    "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5",
+    "docs/l10n/reviews/store-title-alignment/application-receipt.json": "c57b04fc51b0c66ee0d45648c8440bdd831730b7b6dd6cfd4fa958cc8af8107a",
+    "docs/l10n/reviews/final-integration/import-receipt.json": "242b5076509fa15d66079072ebbfad8915e6d3bf7dc2f304e83e5ce2f379bc5b",
+    "docs/l10n/reviews/final-integration/validation.json": "a2489826a237543317557654faef4584cfe8e5469f7be1c40f864f72e600e80e",
+    "docs/l10n/reviews/final-integration/applied-integrity.json": "d14453ec43252a54ecd5e501a8896e308e44e2cf78f7dd07b9b76c5b616b9882",
+    "tools/l10n/lesson-invariants.json": "ac736612c1e27d7941c9e0f1e82e251359c24c24c77ec2a8956b00931bfd43dc",
+    "tools/l10n/tests/test_store_content.py": "9d35db27a3c4e2b926c461e7f25704e105601cf52bc3009cf65a9d7a3dbeba12",
+    "tools/verify-ios-resources.py": "627eab37ebc33d559be008838de6ca048c766cdfb517485ebf2d4cdaac091d77"
+  }
+}

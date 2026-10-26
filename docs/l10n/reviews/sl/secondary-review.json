@@ -1,0 +1,63 @@
+{
+  "reviewer": "Codex independent secondary reviewer /root/review_uk",
+  "scope": "Read all 37 initial proposed corrections, then the updated 35-correction proposal; inspect all 321 invariant sources and their complete reason categories/individual bindings; mechanically audit source/old/final coverage and current deduplicated context inventory. This secondary review did not reread the entire Slovenian 6083-pair corpus or all 656 localized boundaries.",
+  "current_guarded_corrections": 35,
+  "current_individual_invariants": 321,
+  "unresolved_findings": [],
+  "resolved_findings": [
+    {
+      "key": "L8a5e6d018b",
+      "issue": "Cmaj7 was initially misclassified by the invariant reason as a named musical work.",
+      "resolution": "The updated reason explicitly identifies the complete C major-seventh chord symbol and preserves its quality/numeral notation. Target retention is correct."
+    }
+  ],
+  "numeric_answer_review": {
+    "initial_proposal": [
+      "Število ena",
+      "Število dve"
+    ],
+    "current_proposal": [
+      "Ena",
+      "Dve"
+    ],
+    "judgment": "Bare numeral names are the more concise, natural quiz labels. The added Število construction was defensible numeral naming rather than a semantic error, but unnecessary in this UI. The current labels can be read as independent number names instead of noun-agreeing sentence completions.",
+    "reference": {
+      "title": "SSKJ², dva (Fran / ZRC SAZU)",
+      "url": "https://fran.si/iskanje?Query=dva&View=2",
+      "use": "Primary dictionary confirms dve as the name of the number in its definition and independent arithmetic usage; no long quotation retained."
+    }
+  },
+  "other_correction_review": "The tritone/three-note distinction, two-beat grouping, triple-meter wording, chromatic fret progression, sustained dotted note, sounding open-string shift, barré terminology and šestosminski spelling corrections preserve the source sense. The final Štetje na dve dobi / Štejemo na dve dobi and Dublinska pesem v tridobnem taktu are clear. The updated Večinoma gre za hitre osminke removes awkward noun agreement.",
+  "mechanical_checks": {
+    "exact_source_and_final_keys": 6083,
+    "coverage_rows_with_matching_source_old_final_hashes": 6083,
+    "guarded_corrections_matching_frozen_source_old_and_final": 35,
+    "exact_source_identity_records": 321,
+    "deduplicated_current_quiz_listen_boundaries": 656,
+    "recorded_context_boundaries": 656,
+    "missing_or_foreign_boundaries": 0,
+    "text_only_context_hashes_match": true,
+    "hard_importer_errors_with_isolated_proposed_invariants": 0
+  },
+  "coverage_limits": "Primary evidence explicitly reports all6083 source-ordered pairs and all656 shared quiz/listen prompt/option boundaries read, while nonoption context inventory is not separately universally reread. The record preserves that distinction. Structural/hash checks support corpus correspondence but do not independently certify the primary reviewer reading process or device/native quality.",
+  "ukrainian_hash_reverification": {
+    "artifact_manifest_entries": 11,
+    "artifact_mismatches": [],
+    "frozen_current_source_input_mismatches": []
+  },
+  "reviewed_inputs_sha256": {
+    "context-review.json": "b98507587681902131fb9b42d792b4e2cf3b76083e46b503c10504513f0a2822",
+    "corrections.json": "78bd0916433e26e0928f5e829623e62829b6269072890a3920a9c924efee8015",
+    "coverage.json": "162e8ad7d584c0aa631231f2eb0cd170f02e358be0ded56b3bb68f6a5a12bcd4",
+    "final.json": "876b46a131b59a6d7c4b7d66051cc6970a38e1157d0d17ffbeddc4188e9888cc",
+    "invariants.json": "2b368c1a5a19e50f9e75fa47c0e4e6680417a0dac5ff420cd96cb5b739239be3",
+    "qa.json": "fe8457c40191e45043e650968ce84b06ecd236d4c8ece19d72a0d5b6de436cd3",
+    "verification.json": "795b3b0685e2a0515b0105e91ebe8616e8cd902ba57db1c014f89d9a5800449c"
+  },
+  "certification_limits": {
+    "native_human": false,
+    "device_rendering": false,
+    "voiceover_audio": false,
+    "release_approval": false
+  }
+}

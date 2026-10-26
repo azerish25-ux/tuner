@@ -28,17 +28,8 @@
     "semantic": "ai_cross_reviewed_critical_facts",
     "legal_back_translation": "not_performed_optional_under_ai_policy",
     "song_title_alignment": {
-      "state": "pending_app_alignment",
-      "pending_app_alignment": [
-        "timbre.song.twinkle",
-        "timbre.song.odetojoy",
-        "timbre.song.jinglebells",
-        "timbre.song.saints",
-        "timbre.song.kiteweather",
-        "timbre.song.dashboard",
-        "timbre.song.lochlomond",
-        "timbre.song.mountain"
-      ],
+      "state": "app_text_reused",
+      "pending_app_alignment": [],
       "native_review": "not_verified"
     },
     "ai_cross_review": {
@@ -54,14 +45,14 @@
     "timbre.sniper.weekly": "এই সপ্তাহে নিখুঁত নিশানা",
     "timbre.ear.level": "শ্রুতি প্রশিক্ষকের স্তর",
     "timbre.streak": "অনুশীলনের ধারা",
-    "timbre.song.twinkle": "মিটিমিটি ছোট্ট তারা",
-    "timbre.song.odetojoy": "আনন্দের গান",
-    "timbre.song.jinglebells": "জিঙ্গল বেলস",
-    "timbre.song.saints": "যখন সাধুরা এগিয়ে চলেন",
-    "timbre.song.kiteweather": "ঘুড়ির আবহাওয়া",
+    "timbre.song.twinkle": "ঝিকিমিকি ছোট্ট তারা",
+    "timbre.song.odetojoy": "আনন্দগান",
+    "timbre.song.jinglebells": "ঝনঝন ঘণ্টা",
+    "timbre.song.saints": "সাধুদের শোভাযাত্রা",
+    "timbre.song.kiteweather": "ঘুড়ি ওড়ার দিন",
     "timbre.song.dashboard": "ড্যাশবোর্ডে ধুলো",
     "timbre.song.lochlomond": "লখ লোমন্ড",
-    "timbre.song.mountain": "সে পাহাড় ঘুরে আসবে"
+    "timbre.song.mountain": "পাহাড় ঘুরে সে আসবে"
   },
   "game_center_achievement_names": {
     "timbre.badge.first_tune": "প্রথম সুর মিলেছে",
@@ -302,7 +293,15 @@
         "timbre.badge.units_10:game_center_achievement_descriptions",
         "timbre.badge.course_done:game_center_achievement_descriptions",
         "timbre.badge.songs_1:game_center_achievement_descriptions",
-        "timbre.badge.songs_25:game_center_achievement_descriptions"
+        "timbre.badge.songs_25:game_center_achievement_descriptions",
+        "timbre.song.twinkle",
+        "timbre.song.odetojoy",
+        "timbre.song.jinglebells",
+        "timbre.song.saints",
+        "timbre.song.kiteweather",
+        "timbre.song.dashboard",
+        "timbre.song.lochlomond",
+        "timbre.song.mountain"
       ],
       "note": "Available app values reused exactly; missing app values retain authored store drafts. Does not certify native or device review."
     }

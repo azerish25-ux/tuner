@@ -110,13 +110,30 @@
       "12 GC board names and 31 achievement name/description pairs"
     ],
     "notes": "",
-    "proposed_content_sha256": "1c6dc6f1d4d29b45038334d4fd50b715cbc76ad2fd313c6a1b6283467c153558",
+    "proposed_content_sha256": "3a20f7424cbe4ee8c926eb4e9b05bc6cb412c2bd1a2a2b4fb1d574d4667b8c3d",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "1c6dc6f1d4d29b45038334d4fd50b715cbc76ad2fd313c6a1b6283467c153558",
+        "reviewed_content_sha256": "3a20f7424cbe4ee8c926eb4e9b05bc6cb412c2bd1a2a2b4fb1d574d4667b8c3d",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.twinkle"
+        ]
+      }
     ]
   },
   "fr-FR": {
@@ -134,13 +151,30 @@
       "12 GC board names and 31 achievement name/description pairs"
     ],
     "notes": "",
-    "proposed_content_sha256": "87c861ab01a699847abaaaca796db9eec451406746b0dd6ebaf83e24bc3187b8",
+    "proposed_content_sha256": "f1d7875ec92843594ef5a943c3e550d753d1baa66bcb8a50553b258548773cb0",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "87c861ab01a699847abaaaca796db9eec451406746b0dd6ebaf83e24bc3187b8",
+        "reviewed_content_sha256": "f1d7875ec92843594ef5a943c3e550d753d1baa66bcb8a50553b258548773cb0",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.jinglebells"
+        ]
+      }
     ]
   },
   "es-MX": {
@@ -158,13 +192,30 @@
       "12 GC board names and 31 achievement name/description pairs"
     ],
     "notes": "",
-    "proposed_content_sha256": "b52dca05a39c195726b5ec285ffb30bbca7a2d42fc39e127e6e49cdeda77708c",
+    "proposed_content_sha256": "3f5405980450a57992bd956a6ae7f7fe08626d48c450dfeec9ff71d2012f8bd8",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "b52dca05a39c195726b5ec285ffb30bbca7a2d42fc39e127e6e49cdeda77708c",
+        "reviewed_content_sha256": "3f5405980450a57992bd956a6ae7f7fe08626d48c450dfeec9ff71d2012f8bd8",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.jinglebells"
+        ]
+      }
     ]
   },
   "it": {
@@ -206,13 +257,30 @@
       "12 GC board names and 31 achievement name/description pairs"
     ],
     "notes": "",
-    "proposed_content_sha256": "c2f19924967717171e4509f5ab875d4ee925aeab207220c2eb40682c9e12347a",
+    "proposed_content_sha256": "aae4c0c130bbcfea11e34b6e50030df4c005f4b567e6269f67ee24c4c975f78b",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "c2f19924967717171e4509f5ab875d4ee925aeab207220c2eb40682c9e12347a",
+        "reviewed_content_sha256": "aae4c0c130bbcfea11e34b6e50030df4c005f4b567e6269f67ee24c4c975f78b",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.jinglebells"
+        ]
+      }
     ]
   },
   "ru": {
@@ -230,13 +298,31 @@
       "12 GC board names and 31 achievement name/description pairs"
     ],
     "notes": "",
-    "proposed_content_sha256": "11c55f08449db76f9b590f287b1b4f4242061c7949388dd49fa76fd87029ade3",
+    "proposed_content_sha256": "9b51738c9042d2029202a95e1c8dffdf94447c76ae5652bdc6190056c27daba1",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "11c55f08449db76f9b590f287b1b4f4242061c7949388dd49fa76fd87029ade3",
+        "reviewed_content_sha256": "9b51738c9042d2029202a95e1c8dffdf94447c76ae5652bdc6190056c27daba1",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.twinkle",
+          "game_center_leaderboard_names.timbre.song.jinglebells"
+        ]
+      }
     ]
   },
   "ja": {
@@ -325,13 +411,30 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "be6ed6e7baf0802f1bc829715ce90ffa71d471eae6aeacea84fda70d3b840ea2",
+    "proposed_content_sha256": "2e3751be638e502932eb24bf504a01cd879b2e25f8acaa4dcfb59d89b136f90b",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "be6ed6e7baf0802f1bc829715ce90ffa71d471eae6aeacea84fda70d3b840ea2",
+        "reviewed_content_sha256": "2e3751be638e502932eb24bf504a01cd879b2e25f8acaa4dcfb59d89b136f90b",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.jinglebells"
+        ]
+      }
     ]
   },
   "fr-CA": {
@@ -348,13 +451,30 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "a33a96eea9a35f24bdd7d01f2db6cc6a47666d29136eff66005d029c7ca680f3",
+    "proposed_content_sha256": "dee796727fee4f7ce89a1d43b8789b00671735fde9f54edc72c558d94a7e5943",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "a33a96eea9a35f24bdd7d01f2db6cc6a47666d29136eff66005d029c7ca680f3",
+        "reviewed_content_sha256": "dee796727fee4f7ce89a1d43b8789b00671735fde9f54edc72c558d94a7e5943",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.jinglebells"
+        ]
+      }
     ]
   },
   "pt-PT": {
@@ -371,13 +491,30 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "32d62dd7823c3341d9200e65aed59337f88b4792128f8d7cdc0988f656693001",
+    "proposed_content_sha256": "fd5d141af0a50ccf1ad80b0fd593abee11df31f323fa87040c3d72123b1d51d7",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "32d62dd7823c3341d9200e65aed59337f88b4792128f8d7cdc0988f656693001",
+        "reviewed_content_sha256": "fd5d141af0a50ccf1ad80b0fd593abee11df31f323fa87040c3d72123b1d51d7",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.jinglebells"
+        ]
+      }
     ]
   },
   "ar-SA": {
@@ -394,13 +531,34 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "9e8863d534a414c144a470404b3591ee21a6b030aca64ea37dac5eccbc3dc6a8",
+    "proposed_content_sha256": "6595dad933834ea10ead3c4b0ea1ecc2be8aadc2b1cb280b7700f60860658ae5",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "9e8863d534a414c144a470404b3591ee21a6b030aca64ea37dac5eccbc3dc6a8",
+        "reviewed_content_sha256": "6595dad933834ea10ead3c4b0ea1ecc2be8aadc2b1cb280b7700f60860658ae5",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.mountain",
+          "game_center_leaderboard_names.timbre.song.twinkle",
+          "game_center_leaderboard_names.timbre.song.lochlomond",
+          "game_center_leaderboard_names.timbre.song.saints",
+          "game_center_leaderboard_names.timbre.song.jinglebells"
+        ]
+      }
     ]
   },
   "he": {
@@ -417,13 +575,34 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "bed742f28287a3cba3f17dfc80d2383faf81857a247d69ecd39d289cf844492d",
+    "proposed_content_sha256": "960ce608a363663e360d3c8a0aace5e5b16ce61cd9c78b0b1b399b5096fe634a",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "bed742f28287a3cba3f17dfc80d2383faf81857a247d69ecd39d289cf844492d",
+        "reviewed_content_sha256": "960ce608a363663e360d3c8a0aace5e5b16ce61cd9c78b0b1b399b5096fe634a",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.mountain",
+          "game_center_leaderboard_names.timbre.song.twinkle",
+          "game_center_leaderboard_names.timbre.song.lochlomond",
+          "game_center_leaderboard_names.timbre.song.saints",
+          "game_center_leaderboard_names.timbre.song.jinglebells"
+        ]
+      }
     ]
   },
   "ca": {
@@ -440,13 +619,32 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "24b2750ba6aa81da9f3214a52fa80a316d5235f0dd10beee2365e9673d8e94be",
+    "proposed_content_sha256": "8c8724352da29e888a6fb156775ba10350d127f92021311ee605e6fc750e59cb",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "24b2750ba6aa81da9f3214a52fa80a316d5235f0dd10beee2365e9673d8e94be",
+        "reviewed_content_sha256": "8c8724352da29e888a6fb156775ba10350d127f92021311ee605e6fc750e59cb",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.dashboard",
+          "game_center_leaderboard_names.timbre.song.twinkle",
+          "game_center_leaderboard_names.timbre.song.kiteweather"
+        ]
+      }
     ]
   },
   "cs": {
@@ -463,13 +661,32 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "5da587674213b35e201c0be126d8c585fb198f51c211080063b448c6633b6151",
+    "proposed_content_sha256": "74b76f2d4978dcc69c6d5a97a152b2c21a8f0de50acd08a2e10e0560a74e312b",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "5da587674213b35e201c0be126d8c585fb198f51c211080063b448c6633b6151",
+        "reviewed_content_sha256": "74b76f2d4978dcc69c6d5a97a152b2c21a8f0de50acd08a2e10e0560a74e312b",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.dashboard",
+          "game_center_leaderboard_names.timbre.song.saints",
+          "game_center_leaderboard_names.timbre.song.kiteweather"
+        ]
+      }
     ]
   },
   "da": {
@@ -486,13 +703,30 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "6ea75ed985945ded6611a8bd75ff7e3ff4f6ccb067a7880aa08f04689afa1a4a",
+    "proposed_content_sha256": "ab1cf3a3ca90c44e870a05da7c7b3dc441a87ca658f0a54a6ed6c1b696576e83",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "6ea75ed985945ded6611a8bd75ff7e3ff4f6ccb067a7880aa08f04689afa1a4a",
+        "reviewed_content_sha256": "ab1cf3a3ca90c44e870a05da7c7b3dc441a87ca658f0a54a6ed6c1b696576e83",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.twinkle"
+        ]
+      }
     ]
   },
   "nl-NL": {
@@ -509,13 +743,31 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "c3ec3eec6afebf1f176d8a7fb190f6d68b3c22b3163f2a033e6c7ef413e2e3b7",
+    "proposed_content_sha256": "ed5a655839962d604071198fe3a75a29b388e110c6be9b49034607c7bf5e8191",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "c3ec3eec6afebf1f176d8a7fb190f6d68b3c22b3163f2a033e6c7ef413e2e3b7",
+        "reviewed_content_sha256": "ed5a655839962d604071198fe3a75a29b388e110c6be9b49034607c7bf5e8191",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.dashboard",
+          "game_center_leaderboard_names.timbre.song.kiteweather"
+        ]
+      }
     ]
   },
   "no": {
@@ -532,13 +784,32 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "b58cf211ec67681e405531548e2cff417a301a77e3a36d607f31712e942803f5",
+    "proposed_content_sha256": "764924b549d5b08abec8d4ea30cb67e2ebf462e7683f81c22fdc1692cfd57f79",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "b58cf211ec67681e405531548e2cff417a301a77e3a36d607f31712e942803f5",
+        "reviewed_content_sha256": "764924b549d5b08abec8d4ea30cb67e2ebf462e7683f81c22fdc1692cfd57f79",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.twinkle",
+          "game_center_leaderboard_names.timbre.song.jinglebells",
+          "game_center_leaderboard_names.timbre.song.odetojoy"
+        ]
+      }
     ]
   },
   "sv": {
@@ -578,13 +849,32 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "fff9c0d34d76d1621bda2f70bdfb0b07c82c5bfdc2f6155eb6b96f12a80cede4",
+    "proposed_content_sha256": "1ebbc525f739b7bf7d14e495c5dda8e1b4ca5bc538e38bcec3cbade9509d1e85",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "fff9c0d34d76d1621bda2f70bdfb0b07c82c5bfdc2f6155eb6b96f12a80cede4",
+        "reviewed_content_sha256": "1ebbc525f739b7bf7d14e495c5dda8e1b4ca5bc538e38bcec3cbade9509d1e85",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.twinkle",
+          "game_center_leaderboard_names.timbre.song.jinglebells",
+          "game_center_leaderboard_names.timbre.song.odetojoy"
+        ]
+      }
     ]
   },
   "el": {
@@ -601,13 +891,36 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "a6475215c562538f102b01eef96e546617d655b522211e5f959919ee8d85962a",
+    "proposed_content_sha256": "c4ccafbea98826cee59f8e52171a47d6734542234fbccd9e8f6e2e85a300bd2b",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "a6475215c562538f102b01eef96e546617d655b522211e5f959919ee8d85962a",
+        "reviewed_content_sha256": "c4ccafbea98826cee59f8e52171a47d6734542234fbccd9e8f6e2e85a300bd2b",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.dashboard",
+          "game_center_leaderboard_names.timbre.song.mountain",
+          "game_center_leaderboard_names.timbre.song.twinkle",
+          "game_center_leaderboard_names.timbre.song.lochlomond",
+          "game_center_leaderboard_names.timbre.song.saints",
+          "game_center_leaderboard_names.timbre.song.kiteweather",
+          "game_center_leaderboard_names.timbre.song.jinglebells"
+        ]
+      }
     ]
   },
   "tr": {
@@ -624,13 +937,30 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "704fa9f842fd786efd5f10da43cd36816fe67a02b0e5f8c6b930903ef62e91f4",
+    "proposed_content_sha256": "a3383c074e793cca30b09d3cc3ef9e0364a629b3ed3190e8c6d9fac19beb47fb",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "704fa9f842fd786efd5f10da43cd36816fe67a02b0e5f8c6b930903ef62e91f4",
+        "reviewed_content_sha256": "a3383c074e793cca30b09d3cc3ef9e0364a629b3ed3190e8c6d9fac19beb47fb",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.twinkle"
+        ]
+      }
     ]
   },
   "hr": {
@@ -647,13 +977,31 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "21bf64c9feea295d63fad7eed313fb9f4de185994be9f86d3204ef902e9d4815",
+    "proposed_content_sha256": "66141b585ea67d70102e7c854fe628788e380fed4bafbb74b1ee186e13a4b915",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "21bf64c9feea295d63fad7eed313fb9f4de185994be9f86d3204ef902e9d4815",
+        "reviewed_content_sha256": "66141b585ea67d70102e7c854fe628788e380fed4bafbb74b1ee186e13a4b915",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.dashboard",
+          "game_center_leaderboard_names.timbre.song.kiteweather"
+        ]
+      }
     ]
   },
   "hu": {
@@ -670,13 +1018,32 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "de4be93cf0455948714412b20addfd011e9c2021b05a649a2367cccebf1d9f0a",
+    "proposed_content_sha256": "712a05ef8f1bff250c0ebdae4b04f70c1927488eee803e74298d1e4f3deef83a",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "de4be93cf0455948714412b20addfd011e9c2021b05a649a2367cccebf1d9f0a",
+        "reviewed_content_sha256": "712a05ef8f1bff250c0ebdae4b04f70c1927488eee803e74298d1e4f3deef83a",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.dashboard",
+          "game_center_leaderboard_names.timbre.song.kiteweather",
+          "game_center_leaderboard_names.timbre.song.jinglebells"
+        ]
+      }
     ]
   },
   "pl": {
@@ -693,13 +1060,34 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "ee71db1725695e21b98326f7c0ac43184f1545731a5d915273b67338e722e665",
+    "proposed_content_sha256": "185d3573f5a26e4af1e0198e1e61cb87be3e0e3a7e52cc44ad4d805118d76c3e",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "ee71db1725695e21b98326f7c0ac43184f1545731a5d915273b67338e722e665",
+        "reviewed_content_sha256": "185d3573f5a26e4af1e0198e1e61cb87be3e0e3a7e52cc44ad4d805118d76c3e",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.dashboard",
+          "game_center_leaderboard_names.timbre.song.twinkle",
+          "game_center_leaderboard_names.timbre.song.saints",
+          "game_center_leaderboard_names.timbre.song.kiteweather",
+          "game_center_leaderboard_names.timbre.song.jinglebells"
+        ]
+      }
     ]
   },
   "ro": {
@@ -716,13 +1104,32 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "7b9a56ae8555bf68e47021c66763ff58cf36efe505b9f0da1a26c5f425cffa77",
+    "proposed_content_sha256": "0327883a3c3bb551376c3bbb45a53dbdef5c849fc21155fad0da7fed6386c2fb",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "7b9a56ae8555bf68e47021c66763ff58cf36efe505b9f0da1a26c5f425cffa77",
+        "reviewed_content_sha256": "0327883a3c3bb551376c3bbb45a53dbdef5c849fc21155fad0da7fed6386c2fb",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.dashboard",
+          "game_center_leaderboard_names.timbre.song.twinkle",
+          "game_center_leaderboard_names.timbre.song.kiteweather"
+        ]
+      }
     ]
   },
   "sk": {
@@ -739,13 +1146,32 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "c571659330281c2037233bf8e1551a7abe2f695aa9f354912430b1528ca70c47",
+    "proposed_content_sha256": "ae08847bb89ffbcd9877fb906bf4643231f7c15ecc93b924dd1f1e1bdacd53d3",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "c571659330281c2037233bf8e1551a7abe2f695aa9f354912430b1528ca70c47",
+        "reviewed_content_sha256": "ae08847bb89ffbcd9877fb906bf4643231f7c15ecc93b924dd1f1e1bdacd53d3",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.dashboard",
+          "game_center_leaderboard_names.timbre.song.twinkle",
+          "game_center_leaderboard_names.timbre.song.kiteweather"
+        ]
+      }
     ]
   },
   "sl-SI": {
@@ -762,7 +1188,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "ddbbf6e92174543ceea9a71d7fc246306343fc10bc6473403779a0a314005479",
+    "proposed_content_sha256": "8e4d8b71a2e337411345730136124c18252b905f53604019b92d409394b37e68",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -791,6 +1217,25 @@
         "native_review": false,
         "device_review": false
       }
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "ddbbf6e92174543ceea9a71d7fc246306343fc10bc6473403779a0a314005479",
+        "reviewed_content_sha256": "8e4d8b71a2e337411345730136124c18252b905f53604019b92d409394b37e68",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.dashboard",
+          "game_center_leaderboard_names.timbre.song.kiteweather",
+          "game_center_leaderboard_names.timbre.song.jinglebells"
+        ]
+      }
     ]
   },
   "uk": {
@@ -807,13 +1252,33 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "77626c8bcc5bb539b058d8ac21f516a43d9d0b484ccf0bb67cbcbd09df7d1a30",
+    "proposed_content_sha256": "8ef6ecb31fb75ed1207a66a1478735e67537ffff63160d0820921c722e7d5be4",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "77626c8bcc5bb539b058d8ac21f516a43d9d0b484ccf0bb67cbcbd09df7d1a30",
+        "reviewed_content_sha256": "8ef6ecb31fb75ed1207a66a1478735e67537ffff63160d0820921c722e7d5be4",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.dashboard",
+          "game_center_leaderboard_names.timbre.song.twinkle",
+          "game_center_leaderboard_names.timbre.song.saints",
+          "game_center_leaderboard_names.timbre.song.kiteweather"
+        ]
+      }
     ]
   },
   "id": {
@@ -830,13 +1295,32 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "6a63b5dfd8481cc198d1b664abfb50ab9da9149dc61ed67ee6266293e5d016b7",
+    "proposed_content_sha256": "68d5b135f3200f4b515739ea6c0a08a7418036baa0e56a394d060affcff14fe6",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "6a63b5dfd8481cc198d1b664abfb50ab9da9149dc61ed67ee6266293e5d016b7",
+        "reviewed_content_sha256": "68d5b135f3200f4b515739ea6c0a08a7418036baa0e56a394d060affcff14fe6",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.mountain",
+          "game_center_leaderboard_names.timbre.song.twinkle",
+          "game_center_leaderboard_names.timbre.song.odetojoy"
+        ]
+      }
     ]
   },
   "ms": {
@@ -876,13 +1360,33 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "2c417187a871495c2e392a6f3cd5754fd325f547374cc955c58091a694e391f9",
+    "proposed_content_sha256": "33909e27d13472df08a2dd7a07f9996eafeb1d71f4875013f6d9e38b96ffd255",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "2c417187a871495c2e392a6f3cd5754fd325f547374cc955c58091a694e391f9",
+        "reviewed_content_sha256": "33909e27d13472df08a2dd7a07f9996eafeb1d71f4875013f6d9e38b96ffd255",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.mountain",
+          "game_center_leaderboard_names.timbre.song.twinkle",
+          "game_center_leaderboard_names.timbre.song.kiteweather",
+          "game_center_leaderboard_names.timbre.song.jinglebells"
+        ]
+      }
     ]
   },
   "th": {
@@ -899,13 +1403,36 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "1ae1bd63f395102f96931ef7c12295d9dbb00f336809373b3b879d2d74cdf9de",
+    "proposed_content_sha256": "fa3867e6f552b7512d48b25003279376e09e59b94febe60b62045196ff0a4a6b",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "1ae1bd63f395102f96931ef7c12295d9dbb00f336809373b3b879d2d74cdf9de",
+        "reviewed_content_sha256": "fa3867e6f552b7512d48b25003279376e09e59b94febe60b62045196ff0a4a6b",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.mountain",
+          "game_center_leaderboard_names.timbre.song.twinkle",
+          "game_center_leaderboard_names.timbre.song.lochlomond",
+          "game_center_leaderboard_names.timbre.song.saints",
+          "game_center_leaderboard_names.timbre.song.kiteweather",
+          "game_center_leaderboard_names.timbre.song.jinglebells",
+          "game_center_leaderboard_names.timbre.song.odetojoy"
+        ]
+      }
     ]
   },
   "zh-Hant": {
@@ -945,13 +1472,37 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "6436816a34425b989107a1b42bf3cb5bdea8c42080782d38cf46a3bd4379e551",
+    "proposed_content_sha256": "ad7f97ccdcbe2aa7cde27fe45562b5cd3905743dabc54de16fc3fbc8ca16a333",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "6436816a34425b989107a1b42bf3cb5bdea8c42080782d38cf46a3bd4379e551",
+        "reviewed_content_sha256": "ad7f97ccdcbe2aa7cde27fe45562b5cd3905743dabc54de16fc3fbc8ca16a333",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.dashboard",
+          "game_center_leaderboard_names.timbre.song.mountain",
+          "game_center_leaderboard_names.timbre.song.twinkle",
+          "game_center_leaderboard_names.timbre.song.lochlomond",
+          "game_center_leaderboard_names.timbre.song.saints",
+          "game_center_leaderboard_names.timbre.song.kiteweather",
+          "game_center_leaderboard_names.timbre.song.jinglebells",
+          "game_center_leaderboard_names.timbre.song.odetojoy"
+        ]
+      }
     ]
   },
   "ur-PK": {
@@ -968,13 +1519,37 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "ac600c3a3796748ecc351fedb1ef42d3fa5fb520277025067304683c95826bf7",
+    "proposed_content_sha256": "5b80c1760a5d161be8bcae8ee62bc4a0980ef7c96d10b1a6f82a3e092bac0385",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "ac600c3a3796748ecc351fedb1ef42d3fa5fb520277025067304683c95826bf7",
+        "reviewed_content_sha256": "5b80c1760a5d161be8bcae8ee62bc4a0980ef7c96d10b1a6f82a3e092bac0385",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.dashboard",
+          "game_center_leaderboard_names.timbre.song.mountain",
+          "game_center_leaderboard_names.timbre.song.twinkle",
+          "game_center_leaderboard_names.timbre.song.lochlomond",
+          "game_center_leaderboard_names.timbre.song.saints",
+          "game_center_leaderboard_names.timbre.song.kiteweather",
+          "game_center_leaderboard_names.timbre.song.jinglebells",
+          "game_center_leaderboard_names.timbre.song.odetojoy"
+        ]
+      }
     ]
   },
   "bn-BD": {
@@ -991,13 +1566,35 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "e25418463840934a7d66aa7639b3e3773d1d381fd00d279cbc7a2ef72415e78b",
+    "proposed_content_sha256": "a46f5469d11059f9aea3c0a33744859a21bcf2fb6c7279f8de1fa2a1c08571ce",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "e25418463840934a7d66aa7639b3e3773d1d381fd00d279cbc7a2ef72415e78b",
+        "reviewed_content_sha256": "a46f5469d11059f9aea3c0a33744859a21bcf2fb6c7279f8de1fa2a1c08571ce",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.mountain",
+          "game_center_leaderboard_names.timbre.song.twinkle",
+          "game_center_leaderboard_names.timbre.song.saints",
+          "game_center_leaderboard_names.timbre.song.kiteweather",
+          "game_center_leaderboard_names.timbre.song.jinglebells",
+          "game_center_leaderboard_names.timbre.song.odetojoy"
+        ]
+      }
     ]
   },
   "gu-IN": {
@@ -1014,13 +1611,37 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "92e0a5904b112f6dd765d3ea97cfb9ded360eb48037ec08999faf7c3a2bff0db",
+    "proposed_content_sha256": "63c4031d546d6d5fdc8422d7c98300e372616f5d5fa44d8ea9373903003e2c5e",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "92e0a5904b112f6dd765d3ea97cfb9ded360eb48037ec08999faf7c3a2bff0db",
+        "reviewed_content_sha256": "63c4031d546d6d5fdc8422d7c98300e372616f5d5fa44d8ea9373903003e2c5e",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.dashboard",
+          "game_center_leaderboard_names.timbre.song.mountain",
+          "game_center_leaderboard_names.timbre.song.twinkle",
+          "game_center_leaderboard_names.timbre.song.lochlomond",
+          "game_center_leaderboard_names.timbre.song.saints",
+          "game_center_leaderboard_names.timbre.song.kiteweather",
+          "game_center_leaderboard_names.timbre.song.jinglebells",
+          "game_center_leaderboard_names.timbre.song.odetojoy"
+        ]
+      }
     ]
   },
   "mr-IN": {
@@ -1037,13 +1658,37 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "f19632592cea3f719a6fa951e60bada5b042ba59f1c29494c2f3feb682112177",
+    "proposed_content_sha256": "0c14c819e373a2c48577a3915c61da3ea4f72cae17a002466eda214032854705",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "f19632592cea3f719a6fa951e60bada5b042ba59f1c29494c2f3feb682112177",
+        "reviewed_content_sha256": "0c14c819e373a2c48577a3915c61da3ea4f72cae17a002466eda214032854705",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.dashboard",
+          "game_center_leaderboard_names.timbre.song.mountain",
+          "game_center_leaderboard_names.timbre.song.twinkle",
+          "game_center_leaderboard_names.timbre.song.lochlomond",
+          "game_center_leaderboard_names.timbre.song.saints",
+          "game_center_leaderboard_names.timbre.song.kiteweather",
+          "game_center_leaderboard_names.timbre.song.jinglebells",
+          "game_center_leaderboard_names.timbre.song.odetojoy"
+        ]
+      }
     ]
   },
   "pa-IN": {
@@ -1060,13 +1705,37 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "82e0366c8f1540c0e90a8a27770e41b6867e188e86dc0ed1f50be33afcea2253",
+    "proposed_content_sha256": "e717df5871a743d7f1d136a3a7fcfa034b4373dc90519e722343913ec4a2ebef",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "82e0366c8f1540c0e90a8a27770e41b6867e188e86dc0ed1f50be33afcea2253",
+        "reviewed_content_sha256": "e717df5871a743d7f1d136a3a7fcfa034b4373dc90519e722343913ec4a2ebef",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.dashboard",
+          "game_center_leaderboard_names.timbre.song.mountain",
+          "game_center_leaderboard_names.timbre.song.twinkle",
+          "game_center_leaderboard_names.timbre.song.lochlomond",
+          "game_center_leaderboard_names.timbre.song.saints",
+          "game_center_leaderboard_names.timbre.song.kiteweather",
+          "game_center_leaderboard_names.timbre.song.jinglebells",
+          "game_center_leaderboard_names.timbre.song.odetojoy"
+        ]
+      }
     ]
   },
   "kn-IN": {
@@ -1083,13 +1752,37 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "5ccc0e4bdc49ab97accbbe211fe39ec50a51addf01c8cb21d5ff4d6b3a6bbb2f",
+    "proposed_content_sha256": "c55e7c34e42b03a8e1a239fd49f9d043e3dc804b49cb4a5770737f6b26ac922a",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "5ccc0e4bdc49ab97accbbe211fe39ec50a51addf01c8cb21d5ff4d6b3a6bbb2f",
+        "reviewed_content_sha256": "c55e7c34e42b03a8e1a239fd49f9d043e3dc804b49cb4a5770737f6b26ac922a",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.dashboard",
+          "game_center_leaderboard_names.timbre.song.mountain",
+          "game_center_leaderboard_names.timbre.song.twinkle",
+          "game_center_leaderboard_names.timbre.song.lochlomond",
+          "game_center_leaderboard_names.timbre.song.saints",
+          "game_center_leaderboard_names.timbre.song.kiteweather",
+          "game_center_leaderboard_names.timbre.song.jinglebells",
+          "game_center_leaderboard_names.timbre.song.odetojoy"
+        ]
+      }
     ]
   },
   "ml-IN": {
@@ -1106,13 +1799,37 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "cee12a1bcea95686e0afd4ecafbb067e4f61ea6525e8716b6d504c8c17a721e5",
+    "proposed_content_sha256": "946e1e2b8baf7fb0196759badb8ce11858d3c95723da9324b01d1853dba8270f",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "cee12a1bcea95686e0afd4ecafbb067e4f61ea6525e8716b6d504c8c17a721e5",
+        "reviewed_content_sha256": "946e1e2b8baf7fb0196759badb8ce11858d3c95723da9324b01d1853dba8270f",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.dashboard",
+          "game_center_leaderboard_names.timbre.song.mountain",
+          "game_center_leaderboard_names.timbre.song.twinkle",
+          "game_center_leaderboard_names.timbre.song.lochlomond",
+          "game_center_leaderboard_names.timbre.song.saints",
+          "game_center_leaderboard_names.timbre.song.kiteweather",
+          "game_center_leaderboard_names.timbre.song.jinglebells",
+          "game_center_leaderboard_names.timbre.song.odetojoy"
+        ]
+      }
     ]
   },
   "ta-IN": {
@@ -1129,13 +1846,37 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "03f58955ed26337a4d75023775c4f62b29f1f2cb026b76b3428bf6422e4fe30b",
+    "proposed_content_sha256": "1ec3502a7e49b3a94103b39e9923a1ce9b71dd45fbc39ef019f2f55e4c3690bd",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "03f58955ed26337a4d75023775c4f62b29f1f2cb026b76b3428bf6422e4fe30b",
+        "reviewed_content_sha256": "1ec3502a7e49b3a94103b39e9923a1ce9b71dd45fbc39ef019f2f55e4c3690bd",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.dashboard",
+          "game_center_leaderboard_names.timbre.song.mountain",
+          "game_center_leaderboard_names.timbre.song.twinkle",
+          "game_center_leaderboard_names.timbre.song.lochlomond",
+          "game_center_leaderboard_names.timbre.song.saints",
+          "game_center_leaderboard_names.timbre.song.kiteweather",
+          "game_center_leaderboard_names.timbre.song.jinglebells",
+          "game_center_leaderboard_names.timbre.song.odetojoy"
+        ]
+      }
     ]
   },
   "te-IN": {
@@ -1152,13 +1893,37 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "46b67e3bbf21619e0510985e71d3349b078b4b9031ebbc48f2372e0743512814",
+    "proposed_content_sha256": "b508b0eb8d16547c1e2ab69ccfc712391d9ae12f3ec76cff5384d7d12ff19daf",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
       "No localized screenshot/video/device/RTL rendering verified",
       "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
       "Review detects identified issues, not a guarantee of idiomatic perfection"
+    ],
+    "post_review_updates": [
+      {
+        "previous_content_sha256": "46b67e3bbf21619e0510985e71d3349b078b4b9031ebbc48f2372e0743512814",
+        "reviewed_content_sha256": "b508b0eb8d16547c1e2ab69ccfc712391d9ae12f3ec76cff5384d7d12ff19daf",
+        "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+        "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+        "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+        "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+        "review_artifacts": {
+          "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+          "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+        },
+        "changed_fields": [
+          "game_center_leaderboard_names.timbre.song.dashboard",
+          "game_center_leaderboard_names.timbre.song.mountain",
+          "game_center_leaderboard_names.timbre.song.twinkle",
+          "game_center_leaderboard_names.timbre.song.lochlomond",
+          "game_center_leaderboard_names.timbre.song.saints",
+          "game_center_leaderboard_names.timbre.song.kiteweather",
+          "game_center_leaderboard_names.timbre.song.jinglebells",
+          "game_center_leaderboard_names.timbre.song.odetojoy"
+        ]
+      }
     ]
   },
   "or-IN": {

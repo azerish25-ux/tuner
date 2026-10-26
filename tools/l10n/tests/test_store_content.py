@@ -43,7 +43,11 @@ class StoreContentTests(unittest.TestCase):
         self.assertEqual(store.review_artifact_errors(self.registry), [])
         for row in self.inventory:
             self.assertEqual(store.ai_review_errors(store.load(row['locale']), self.source, self.registry), [])
-        self.assertEqual(sum(r['resolved_corrections'] for r in self.registry['locales'].values()), 94)
+        corrections_path = ROOT / self.registry['independent_review']['artifacts']['corrections']['file']
+        corrections = json.loads(corrections_path.read_text(encoding='utf-8'))
+        resolved = sum(r['resolved_corrections'] for r in self.registry['locales'].values())
+        self.assertEqual(resolved, len(corrections))
+        self.assertEqual(resolved, self.registry['independent_review']['applied_corrections'])
 
     def test_ai_review_does_not_relabel_human_evidence(self):
         for row in self.inventory:

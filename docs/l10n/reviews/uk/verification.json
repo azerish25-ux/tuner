@@ -1,0 +1,21 @@
+{
+  "locale": "uk",
+  "reviewer": "Codex review_uk",
+  "draft_sha256": "5bef41a5fe2513fb69ccf282a607207bbbbb4bdbbdaac60a5c8b0defe507e34d",
+  "source_keys": 6083,
+  "primary_pairs_directly_read": 6083,
+  "corrections": 63,
+  "individually_approved_identities": 206,
+  "current_source_exact_match": true,
+  "source_context_method": "All source-ordered English/target pairs displayed in sequential batches, with truncated gaps separately reread. Targeted complete shared contexts displayed and reviewed, not a universal full-boundary review.",
+  "source_inputs": {
+    "tools/l10n/drafts/final/uk.json": "5bef41a5fe2513fb69ccf282a607207bbbbb4bdbbdaac60a5c8b0defe507e34d",
+    "tools/l10n/gpt_l10n.py": "b74452e7165145c82449bf7fc70a0a114282a69ed875a18a7ba46e7ff0c70731",
+    "ios/Sources/TimbreCore/Resources/curriculum.json": "f5399d3d13edd2f94b660648e7dd23aceef66a21e095567988bbb6bd38995bf1",
+    "ios/Timbre/Resources/en.lproj/Learn.strings": "718a9431e97997dcad904b99eb00f0072385142d63ebb7ffc1c27ff374ca6de3",
+    "docs/l10n/glossary/uk.md": "cb711f5cb2395e31fc7a1ecbab9a6383c1543420f50b1df64dc36e6125c04f71"
+  },
+  "device_review": "not-run",
+  "human_native_review": "not-performed",
+  "app_store_submission": "not-authorized"
+}

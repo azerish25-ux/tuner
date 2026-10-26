@@ -1,0 +1,1845 @@
+[
+  {
+    "id": "SKCTX-0040",
+    "role": "steps:quiz",
+    "text": {
+      "prompt": "Which note is this?",
+      "options": [
+        "E",
+        "G",
+        "A"
+      ],
+      "why": "The second space up is A: F, A."
+    },
+    "row_refs": {
+      "prompt": 103,
+      "options": [
+        147,
+        25,
+        22
+      ],
+      "why": 3873
+    },
+    "keys": [
+      "L6dcd4ce23d",
+      "La36a6718f5",
+      "L6f1906dfa5",
+      "Le0184adedf"
+    ],
+    "final_target_text": {
+      "prompt": "Ktorý tón to je?",
+      "options": [
+        "E",
+        "G",
+        "A"
+      ],
+      "why": "Druhá medzera zdola je A: F, A."
+    }
+  },
+  {
+    "id": "SKCTX-0041",
+    "role": "steps:quiz",
+    "text": {
+      "prompt": "Which note is this?",
+      "options": [
+        "G",
+        "F",
+        "A"
+      ],
+      "why": "The second line up is G, where the treble clef curls."
+    },
+    "row_refs": {
+      "prompt": 103,
+      "options": [
+        25,
+        104,
+        22
+      ],
+      "why": 3877
+    },
+    "keys": [
+      "L6dcd4ce23d",
+      "La36a6718f5",
+      "L6f1906dfa5",
+      "Le69f20e9f6",
+      "L5c08c48eb7"
+    ],
+    "final_target_text": {
+      "prompt": "Ktorý tón to je?",
+      "options": [
+        "G",
+        "F",
+        "A"
+      ],
+      "why": "Druhá čiara zdola je G, okolo ktorého sa stáča husľový kľúč."
+    }
+  },
+  {
+    "id": "SKCTX-0045",
+    "role": "steps:quiz",
+    "text": {
+      "prompt": "Which note is this?",
+      "options": [
+        "A",
+        "E",
+        "C"
+      ],
+      "why": "The second space up is C: All Cows."
+    },
+    "row_refs": {
+      "prompt": 103,
+      "options": [
+        22,
+        147,
+        105
+      ],
+      "why": 3897
+    },
+    "keys": [
+      "L6dcd4ce23d",
+      "L6f1906dfa5",
+      "L32096c2e0e",
+      "Le0184adedf"
+    ],
+    "final_target_text": {
+      "prompt": "Ktorý tón to je?",
+      "options": [
+        "A",
+        "E",
+        "C"
+      ],
+      "why": "Druhá medzera zdola je C, ako cíti v pomôcke „Adam cíti egrešový guláš“."
+    }
+  },
+  {
+    "id": "SKCTX-0070",
+    "role": "steps:quiz",
+    "text": {
+      "prompt": "Roller Rink's loop is the one, six, four and five of G. Which chord is the six?",
+      "options": [
+        "E minor",
+        "C",
+        "D"
+      ],
+      "why": "Count up G major: G 1, A 2, B 3, C 4, D 5, E 6. The chord on 6 is minor: E minor."
+    },
+    "row_refs": {
+      "prompt": 1193,
+      "options": [
+        334,
+        105,
+        23
+      ],
+      "why": 1194
+    },
+    "keys": [
+      "L50c9e8d5fc",
+      "L32096c2e0e",
+      "Lc3e1440b37"
+    ],
+    "final_target_text": {
+      "prompt": "Sled v piesni Korčuliarsky parket tvoria akordy na prvom, šiestom, štvrtom a piatom stupni G dur. Ktorý je na šiestom stupni?",
+      "options": [
+        "E mol",
+        "C",
+        "D"
+      ],
+      "why": "Počítajte po G dur: G 1, A 2, B 3, C 4, D 5, E 6. Akord na 6 je molový: E mol."
+    }
+  },
+  {
+    "id": "SKCTX-0091",
+    "role": "steps:quiz",
+    "text": {
+      "prompt": "Which note is this?",
+      "options": [
+        "B",
+        "D",
+        "G"
+      ],
+      "why": "The second line up is G, where the treble clef curls."
+    },
+    "row_refs": {
+      "prompt": 103,
+      "options": [
+        24,
+        23,
+        25
+      ],
+      "why": 3877
+    },
+    "keys": [
+      "L50c9e8d5fc",
+      "Lae4f281df5",
+      "La36a6718f5",
+      "L6f1906dfa5",
+      "L5c08c48eb7"
+    ],
+    "final_target_text": {
+      "prompt": "Ktorý tón to je?",
+      "options": [
+        "B",
+        "D",
+        "G"
+      ],
+      "why": "Druhá čiara zdola je G, okolo ktorého sa stáča husľový kľúč."
+    }
+  },
+  {
+    "id": "SKCTX-0123",
+    "role": "steps:listen",
+    "text": {
+      "prompt": "Which is higher?",
+      "options": [
+        "The first",
+        "The second"
+      ]
+    },
+    "row_refs": {
+      "prompt": 26,
+      "options": [
+        27,
+        28
+      ]
+    },
+    "keys": [
+      "L957dc77c43",
+      "Lbece65d16e"
+    ],
+    "final_target_text": {
+      "prompt": "Ktorý tón je vyšší?",
+      "options": [
+        "Prvá ukážka",
+        "Druhá ukážka"
+      ]
+    }
+  },
+  {
+    "id": "SKCTX-0124",
+    "role": "steps:listen",
+    "text": {
+      "prompt": "Which is lower?",
+      "options": [
+        "The first",
+        "The second"
+      ]
+    },
+    "row_refs": {
+      "prompt": 54,
+      "options": [
+        27,
+        28
+      ]
+    },
+    "keys": [
+      "L957dc77c43",
+      "Lbece65d16e"
+    ],
+    "final_target_text": {
+      "prompt": "Ktorý tón je nižší?",
+      "options": [
+        "Prvá ukážka",
+        "Druhá ukážka"
+      ]
+    }
+  },
+  {
+    "id": "SKCTX-0125",
+    "role": "steps:listen",
+    "text": {
+      "prompt": "Which chord is minor?",
+      "options": [
+        "The first",
+        "The second"
+      ]
+    },
+    "row_refs": {
+      "prompt": 187,
+      "options": [
+        27,
+        28
+      ]
+    },
+    "keys": [
+      "L957dc77c43",
+      "Lbece65d16e"
+    ],
+    "final_target_text": {
+      "prompt": "Ktorý akord je molový?",
+      "options": [
+        "Prvá ukážka",
+        "Druhá ukážka"
+      ]
+    }
+  },
+  {
+    "id": "SKCTX-0126",
+    "role": "steps:listen",
+    "text": {
+      "prompt": "Which D is higher?",
+      "options": [
+        "The first",
+        "The second"
+      ]
+    },
+    "row_refs": {
+      "prompt": 358,
+      "options": [
+        27,
+        28
+      ]
+    },
+    "keys": [
+      "L957dc77c43",
+      "Lbece65d16e"
+    ],
+    "final_target_text": {
+      "prompt": "Ktoré D je vyššie?",
+      "options": [
+        "Prvá ukážka",
+        "Druhá ukážka"
+      ]
+    }
+  },
+  {
+    "id": "SKCTX-0127",
+    "role": "steps:listen",
+    "text": {
+      "prompt": "Which chord has the seventh?",
+      "options": [
+        "The first",
+        "The second"
+      ]
+    },
+    "row_refs": {
+      "prompt": 470,
+      "options": [
+        27,
+        28
+      ]
+    },
+    "keys": [
+      "L957dc77c43",
+      "Lbece65d16e"
+    ],
+    "final_target_text": {
+      "prompt": "Ktorý akord obsahuje septimu?",
+      "options": [
+        "Prvá ukážka",
+        "Druhá ukážka"
+      ]
+    }
+  },
+  {
+    "id": "SKCTX-0128",
+    "role": "steps:listen",
+    "text": {
+      "prompt": "Which chord sounds settled?",
+      "options": [
+        "The first",
+        "The second"
+      ]
+    },
+    "row_refs": {
+      "prompt": 501,
+      "options": [
+        27,
+        28
+      ]
+    },
+    "keys": [
+      "L957dc77c43",
+      "Lbece65d16e"
+    ],
+    "final_target_text": {
+      "prompt": "Ktorý akord znie ustálene?",
+      "options": [
+        "Prvá ukážka",
+        "Druhá ukážka"
+      ]
+    }
+  },
+  {
+    "id": "SKCTX-0129",
+    "role": "steps:listen",
+    "text": {
+      "prompt": "Which one is a power chord?",
+      "options": [
+        "The first",
+        "The second"
+      ]
+    },
+    "row_refs": {
+      "prompt": 583,
+      "options": [
+        27,
+        28
+      ]
+    },
+    "keys": [
+      "L957dc77c43",
+      "Lbece65d16e"
+    ],
+    "final_target_text": {
+      "prompt": "Ktorý z nich je kvintový akord?",
+      "options": [
+        "Prvá ukážka",
+        "Druhá ukážka"
+      ]
+    }
+  },
+  {
+    "id": "SKCTX-0130",
+    "role": "steps:listen",
+    "text": {
+      "prompt": "Which G is higher?",
+      "options": [
+        "The first",
+        "The second"
+      ]
+    },
+    "row_refs": {
+      "prompt": 1120,
+      "options": [
+        27,
+        28
+      ]
+    },
+    "keys": [
+      "L957dc77c43",
+      "Lbece65d16e"
+    ],
+    "final_target_text": {
+      "prompt": "Ktoré G je vyššie?",
+      "options": [
+        "Prvá ukážka",
+        "Druhá ukážka"
+      ]
+    }
+  },
+  {
+    "id": "SKCTX-0131",
+    "role": "steps:listen",
+    "text": {
+      "prompt": "Which sounds higher?",
+      "options": [
+        "The first",
+        "The second"
+      ]
+    },
+    "row_refs": {
+      "prompt": 1512,
+      "options": [
+        27,
+        28
+      ]
+    },
+    "keys": [
+      "L957dc77c43",
+      "Lbece65d16e"
+    ],
+    "final_target_text": {
+      "prompt": "Čo znie vyššie?",
+      "options": [
+        "Prvá ukážka",
+        "Druhá ukážka"
+      ]
+    }
+  },
+  {
+    "id": "SKCTX-0132",
+    "role": "steps:listen",
+    "text": {
+      "prompt": "Which one is the open G string?",
+      "options": [
+        "The first",
+        "The second"
+      ]
+    },
+    "row_refs": {
+      "prompt": 1540,
+      "options": [
+        27,
+        28
+      ]
+    },
+    "keys": [
+      "L957dc77c43",
+      "Lbece65d16e"
+    ],
+    "final_target_text": {
+      "prompt": "Ktorá z nich je prázdna struna G?",
+      "options": [
+        "Prvá ukážka",
+        "Druhá ukážka"
+      ]
+    }
+  },
+  {
+    "id": "SKCTX-0133",
+    "role": "steps:listen",
+    "text": {
+      "prompt": "Which chord sounds darker?",
+      "options": [
+        "The first",
+        "The second"
+      ]
+    },
+    "row_refs": {
+      "prompt": 1563,
+      "options": [
+        27,
+        28
+      ]
+    },
+    "keys": [
+      "L957dc77c43",
+      "Lbece65d16e"
+    ],
+    "final_target_text": {
+      "prompt": "Ktorý akord znie temnejšie?",
+      "options": [
+        "Prvá ukážka",
+        "Druhá ukážka"
+      ]
+    }
+  },
+  {
+    "id": "SKCTX-0134",
+    "role": "steps:listen",
+    "text": {
+      "prompt": "Which one is G7, the one with more tension?",
+      "options": [
+        "The first",
+        "The second"
+      ]
+    },
+    "row_refs": {
+      "prompt": 1587,
+      "options": [
+        27,
+        28
+      ]
+    },
+    "keys": [
+      "L957dc77c43",
+      "Lbece65d16e"
+    ],
+    "final_target_text": {
+      "prompt": "Ktorý z nich je G7 s väčším napätím?",
+      "options": [
+        "Prvá ukážka",
+        "Druhá ukážka"
+      ]
+    }
+  },
+  {
+    "id": "SKCTX-0135",
+    "role": "steps:listen",
+    "text": {
+      "prompt": "Which one is the open E string?",
+      "options": [
+        "The first",
+        "The second"
+      ]
+    },
+    "row_refs": {
+      "prompt": 1966,
+      "options": [
+        27,
+        28
+      ]
+    },
+    "keys": [
+      "L957dc77c43",
+      "Lbece65d16e"
+    ],
+    "final_target_text": {
+      "prompt": "Ktorá z nich je prázdna struna E?",
+      "options": [
+        "Prvá ukážka",
+        "Druhá ukážka"
+      ]
+    }
+  },
+  {
+    "id": "SKCTX-0136",
+    "role": "steps:listen",
+    "text": {
+      "prompt": "Which sounds lower?",
+      "options": [
+        "The first",
+        "The second"
+      ]
+    },
+    "row_refs": {
+      "prompt": 2083,
+      "options": [
+        27,
+        28
+      ]
+    },
+    "keys": [
+      "L957dc77c43",
+      "Lbece65d16e"
+    ],
+    "final_target_text": {
+      "prompt": "Čo znie nižšie?",
+      "options": [
+        "Prvá ukážka",
+        "Druhá ukážka"
+      ]
+    }
+  },
+  {
+    "id": "SKCTX-0137",
+    "role": "steps:listen",
+    "text": {
+      "prompt": "Which pair sounds lower?",
+      "options": [
+        "The first",
+        "The second"
+      ]
+    },
+    "row_refs": {
+      "prompt": 2859,
+      "options": [
+        27,
+        28
+      ]
+    },
+    "keys": [
+      "L957dc77c43",
+      "Lbece65d16e"
+    ],
+    "final_target_text": {
+      "prompt": "Ktorá dvojica znie nižšie?",
+      "options": [
+        "Prvá ukážka",
+        "Druhá ukážka"
+      ]
+    }
+  },
+  {
+    "id": "SKCTX-0138",
+    "role": "steps:listen",
+    "text": {
+      "prompt": "Which chord wants to move on?",
+      "options": [
+        "The first",
+        "The second"
+      ]
+    },
+    "row_refs": {
+      "prompt": 3217,
+      "options": [
+        27,
+        28
+      ]
+    },
+    "keys": [
+      "L957dc77c43",
+      "Lbece65d16e"
+    ],
+    "final_target_text": {
+      "prompt": "Ktorý akord si žiada pokračovanie?",
+      "options": [
+        "Prvá ukážka",
+        "Druhá ukážka"
+      ]
+    }
+  },
+  {
+    "id": "SKCTX-0139",
+    "role": "steps:listen",
+    "text": {
+      "prompt": "Which sounds darker?",
+      "options": [
+        "The first",
+        "The second"
+      ]
+    },
+    "row_refs": {
+      "prompt": 3267,
+      "options": [
+        27,
+        28
+      ]
+    },
+    "keys": [
+      "L957dc77c43",
+      "Lbece65d16e",
+      "L9e40df4748"
+    ],
+    "final_target_text": {
+      "prompt": "Čo znie temnejšie?",
+      "options": [
+        "Prvá ukážka",
+        "Druhá ukážka"
+      ]
+    }
+  },
+  {
+    "id": "SKCTX-0140",
+    "role": "steps:quiz",
+    "text": {
+      "prompt": "Which note is higher?",
+      "options": [
+        "The first",
+        "The second"
+      ],
+      "why": "It sits higher on the staff, so it sounds higher."
+    },
+    "row_refs": {
+      "prompt": 3847,
+      "options": [
+        27,
+        28
+      ],
+      "why": 3848
+    },
+    "keys": [
+      "L957dc77c43",
+      "Lbece65d16e"
+    ],
+    "final_target_text": {
+      "prompt": "Ktorý tón je vyšší?",
+      "options": [
+        "Prvá ukážka",
+        "Druhá ukážka"
+      ],
+      "why": "V notovej osnove je vyššie, preto aj znie vyššie."
+    }
+  },
+  {
+    "id": "SKCTX-0141",
+    "role": "steps:listen",
+    "text": {
+      "prompt": "Which chord is E minor?",
+      "options": [
+        "The first",
+        "The second"
+      ]
+    },
+    "row_refs": {
+      "prompt": 5335,
+      "options": [
+        27,
+        28
+      ]
+    },
+    "keys": [
+      "L957dc77c43",
+      "Lbece65d16e"
+    ],
+    "final_target_text": {
+      "prompt": "Ktorý akord je E mol?",
+      "options": [
+        "Prvá ukážka",
+        "Druhá ukážka"
+      ]
+    }
+  },
+  {
+    "id": "SKCTX-0142",
+    "role": "steps:listen",
+    "text": {
+      "prompt": "Which chord is Cmaj7?",
+      "options": [
+        "The first",
+        "The second"
+      ]
+    },
+    "row_refs": {
+      "prompt": 5383,
+      "options": [
+        27,
+        28
+      ]
+    },
+    "keys": [
+      "L957dc77c43",
+      "Lbece65d16e"
+    ],
+    "final_target_text": {
+      "prompt": "Ktorý akord je Cmaj7?",
+      "options": [
+        "Prvá ukážka",
+        "Druhá ukážka"
+      ]
+    }
+  },
+  {
+    "id": "SKCTX-0143",
+    "role": "steps:quiz",
+    "text": {
+      "prompt": "Which phrase of the verse climbs highest?",
+      "options": [
+        "The third",
+        "The first",
+        "The last"
+      ],
+      "why": "The third phrase, soft the drowsy hours, rises to C, D and E. The other three phrases share one tune."
+    },
+    "row_refs": {
+      "prompt": 5646,
+      "options": [
+        5647,
+        27,
+        5648
+      ],
+      "why": 5649
+    },
+    "keys": [
+      "L957dc77c43"
+    ],
+    "final_target_text": {
+      "prompt": "Ktorá fráza slohy stúpa najvyššie?",
+      "options": [
+        "Tretia",
+        "Prvá ukážka",
+        "Posledná"
+      ],
+      "why": "Tretia fráza, soft the drowsy hours, stúpa na C, D a E. Ostatné tri frázy majú rovnakú melódiu."
+    }
+  },
+  {
+    "id": "SKCTX-0145",
+    "role": "steps:explain",
+    "text": {
+      "title": "Press just behind the fret",
+      "body": "Press both strings of a pair with one fingertip, just behind the metal fret. Mandolin strings are tight, so use the very tip and press only as hard as a clean note needs."
+    },
+    "row_refs": {
+      "title": 31,
+      "body": 2877
+    },
+    "keys": [
+      "L9114298cd0"
+    ],
+    "final_target_text": {
+      "title": "Stlačte tesne pri pražci",
+      "body": "Jedným končekom prsta stlačte obe struny dvojice tesne pri kovovom pražci zo strany hlavy. Struny mandolíny sú napnuté: použite konček a tlačte len toľko, koľko treba na čistý tón."
+    }
+  },
+  {
+    "id": "SKCTX-0147",
+    "role": "steps:quiz",
+    "text": {
+      "prompt": "Where does your fingertip go?",
+      "options": [
+        "Just behind the fret",
+        "On top of the fret",
+        "Halfway between two frets"
+      ],
+      "why": "Right behind the fret takes the least pressure and gives the cleanest note."
+    },
+    "row_refs": {
+      "prompt": 2880,
+      "options": [
+        37,
+        38,
+        2881
+      ],
+      "why": 2882
+    },
+    "keys": [
+      "La1f91698f6",
+      "L4d11838152"
+    ],
+    "final_target_text": {
+      "prompt": "Kam položíte špičku prsta?",
+      "options": [
+        "Tesne pri pražci zo strany hlavy",
+        "Priamo na pražci",
+        "Doprostred medzi dva pražce"
+      ],
+      "why": "Tesne pri pražci zo strany hlavy stačí najmenší tlak a tón je najčistejší."
+    }
+  },
+  {
+    "id": "SKCTX-0590",
+    "role": "steps:quiz",
+    "text": {
+      "prompt": "How many quick counts fill a bar of 6/8?",
+      "options": [
+        "Three",
+        "Four",
+        "Six"
+      ],
+      "why": "6/8 has six eighth-note counts, felt as two groups of three."
+    },
+    "row_refs": {
+      "prompt": 5391,
+      "options": [
+        270,
+        235,
+        370
+      ],
+      "why": 5392
+    },
+    "keys": [
+      "Lc5d87b23f2",
+      "Lf3cd4632fc",
+      "Lb10d663463"
+    ],
+    "final_target_text": {
+      "prompt": "Koľko rýchlych osmín vyplní takt 6/8?",
+      "options": [
+        "Tri",
+        "Štyri",
+        "Šesť"
+      ],
+      "why": "6/8 má šesť osmín, ktoré cítime ako dve skupiny po troch."
+    }
+  },
+  {
+    "id": "SKCTX-0626",
+    "role": "steps:quiz",
+    "text": {
+      "prompt": "In G, which strings ring open?",
+      "options": [
+        "Strings 2, 3 and 4",
+        "Strings 1 and 6",
+        "None of them"
+      ]
+    },
+    "row_refs": {
+      "prompt": 299,
+      "options": [
+        300,
+        301,
+        302
+      ]
+    },
+    "keys": [
+      "Lc833bd9baf"
+    ],
+    "final_target_text": {
+      "prompt": "Ktoré struny v G znejú prázdne?",
+      "options": [
+        "Struny 2, 3 a 4",
+        "Struny 1 a 6",
+        "Nič z uvedeného"
+      ]
+    }
+  },
+  {
+    "id": "SKCTX-0627",
+    "role": "steps:quiz",
+    "text": {
+      "prompt": "From G at frets 4, 3, 3 to E minor at 4, 5, 3, which notes stay?",
+      "options": [
+        "Only D",
+        "None of them",
+        "B and G"
+      ],
+      "why": "B on string 3 and G on string 1 stay put. Only string 2 moves, from D up to E."
+    },
+    "row_refs": {
+      "prompt": 1171,
+      "options": [
+        1172,
+        302,
+        1173
+      ],
+      "why": 1174
+    },
+    "keys": [
+      "Lc833bd9baf"
+    ],
+    "final_target_text": {
+      "prompt": "Ktoré tóny zostávajú pri zmene z G na pražcoch 4, 3, 3 na E mol na 4, 5, 3?",
+      "options": [
+        "Iba D",
+        "Nič z uvedeného",
+        "B a G"
+      ],
+      "why": "B na strune 3 a G na strune 1 zostávajú na mieste. Mení sa iba struna 2, z D nahor na E."
+    }
+  },
+  {
+    "id": "SKCTX-0628",
+    "role": "steps:quiz",
+    "text": {
+      "prompt": "On the D string, which fingers touch?",
+      "options": [
+        "2 and 3",
+        "1 and 2",
+        "None of them"
+      ],
+      "why": "It's the A-string pattern again: whole step, whole step, half step. The half step is between 2 and 3."
+    },
+    "row_refs": {
+      "prompt": 2416,
+      "options": [
+        2373,
+        2374,
+        302
+      ],
+      "why": 2417
+    },
+    "keys": [
+      "Lc833bd9baf",
+      "L07d8522005",
+      "L81491460e0"
+    ],
+    "final_target_text": {
+      "prompt": "Ktoré prsty sa na strune D dotýkajú?",
+      "options": [
+        "2 a 3",
+        "1 a 2",
+        "Nič z uvedeného"
+      ],
+      "why": "Opäť vzor struny A: celý tón, celý tón, poltón. Poltón je medzi 2 a 3."
+    }
+  },
+  {
+    "id": "SKCTX-0650",
+    "role": "steps:quiz",
+    "text": {
+      "prompt": "In the key of A, which chord does the job B7 did in E?",
+      "options": [
+        "D7",
+        "E7",
+        "G7"
+      ],
+      "why": "B7 is five letters up from E. Five letters up from A is E, so E7 takes its place."
+    },
+    "row_refs": {
+      "prompt": 743,
+      "options": [
+        449,
+        517,
+        744
+      ],
+      "why": 745
+    },
+    "keys": [
+      "L92d40794f5",
+      "Lebc3b18e39",
+      "Lcde5d983fc"
+    ],
+    "final_target_text": {
+      "prompt": "Ktorý akord má v tónine A rovnakú úlohu ako B7 v E?",
+      "options": [
+        "D7",
+        "E7",
+        "G7"
+      ],
+      "why": "Od E po B počítame päť písmen vrátane krajných. Od A je piatym písmenom E, preto E7 zaujme miesto B7."
+    }
+  },
+  {
+    "id": "SKCTX-0655",
+    "role": "steps:quiz",
+    "text": {
+      "prompt": "In a shuffle, each beat splits into…",
+      "options": [
+        "Long, then short",
+        "Two equal halves",
+        "Short, then long"
+      ]
+    },
+    "row_refs": {
+      "prompt": 487,
+      "options": [
+        488,
+        489,
+        490
+      ]
+    },
+    "keys": [
+      "Ld77b3c7b61",
+      "Lf91de05d29",
+      "Lf5424db4cf"
+    ],
+    "final_target_text": {
+      "prompt": "V rytme shuffle sa každá doba delí na…",
+      "options": [
+        "Dlho, potom krátko",
+        "Dve rovnaké polovice",
+        "Krátko, potom dlho"
+      ]
+    }
+  },
+  {
+    "id": "SKCTX-0656",
+    "role": "steps:quiz",
+    "text": {
+      "prompt": "How do the two notes of each pair feel?",
+      "options": [
+        "Short, then long",
+        "Long, then short",
+        "Exactly even"
+      ],
+      "why": "It's the shuffle again: a long note on the beat, a short one just before the next."
+    },
+    "row_refs": {
+      "prompt": 760,
+      "options": [
+        490,
+        488,
+        761
+      ],
+      "why": 762
+    },
+    "keys": [
+      "Ld77b3c7b61",
+      "Lf5424db4cf"
+    ],
+    "final_target_text": {
+      "prompt": "Ako znejú dva tóny každej dvojice?",
+      "options": [
+        "Krátko, potom dlho",
+        "Dlho, potom krátko",
+        "Úplne rovnomerne"
+      ],
+      "why": "Je to opäť shuffle: dlhý tón na dobu, krátky tesne pred nasledujúcou."
+    }
+  },
+  {
+    "id": "SKCTX-0657",
+    "role": "steps:quiz",
+    "text": {
+      "prompt": "In a swing strum, each beat splits into…",
+      "options": [
+        "Two equal halves",
+        "Short, then long",
+        "Long, then short"
+      ]
+    },
+    "row_refs": {
+      "prompt": 1832,
+      "options": [
+        489,
+        490,
+        488
+      ]
+    },
+    "keys": [
+      "Ld77b3c7b61",
+      "Lf91de05d29",
+      "Lf5424db4cf"
+    ],
+    "final_target_text": {
+      "prompt": "Pri swingovom brnkaní sa každá doba delí na…",
+      "options": [
+        "Dve rovnaké polovice",
+        "Krátko, potom dlho",
+        "Dlho, potom krátko"
+      ]
+    }
+  },
+  {
+    "id": "SKCTX-0658",
+    "role": "steps:explain",
+    "text": {
+      "title": "Long, then short",
+      "body": "A dotted quarter lasts one and a half beats. Play on 1, hold through 2, then play on the and of 2, then on 3 and 4."
+    },
+    "row_refs": {
+      "title": 488,
+      "body": 2175
+    },
+    "keys": [
+      "Ld77b3c7b61"
+    ],
+    "final_target_text": {
+      "title": "Dlho, potom krátko",
+      "body": "Štvrťová nota s bodkou trvá jeden a pol doby. Zahrajte na 1, držte cez začiatok 2, potom zahrajte na „a“ doby 2, potom na 3 a 4."
+    }
+  },
+  {
+    "id": "SKCTX-0659",
+    "role": "steps:quiz",
+    "text": {
+      "prompt": "Swing turns each pair of eighths into what?",
+      "options": [
+        "Two equal halves",
+        "Long, then short",
+        "Short, then long"
+      ],
+      "why": "The first eighth stretches and the \"and\" arrives late."
+    },
+    "row_refs": {
+      "prompt": 4596,
+      "options": [
+        489,
+        488,
+        490
+      ],
+      "why": 4597
+    },
+    "keys": [
+      "Ld77b3c7b61",
+      "Lf91de05d29",
+      "Lf5424db4cf"
+    ],
+    "final_target_text": {
+      "prompt": "Na čo mení swing každý pár osmín?",
+      "options": [
+        "Dve rovnaké polovice",
+        "Dlho, potom krátko",
+        "Krátko, potom dlho"
+      ],
+      "why": "Prvá osmina sa predĺži a „a“ príde neskôr."
+    }
+  },
+  {
+    "id": "SKCTX-0660",
+    "role": "steps:quiz",
+    "text": {
+      "prompt": "The first phrase ends with a dotted note. How does it feel?",
+      "options": [
+        "Long, then short",
+        "Short, then long",
+        "Two equal notes"
+      ],
+      "why": "The dotted note is held longer, then a short note leads into the last one."
+    },
+    "row_refs": {
+      "prompt": 4852,
+      "options": [
+        488,
+        490,
+        4853
+      ],
+      "why": 4854
+    },
+    "keys": [
+      "Ld77b3c7b61",
+      "Lf5424db4cf"
+    ],
+    "final_target_text": {
+      "prompt": "Prvá fráza končí bodkovanou notou. Aký má rytmus?",
+      "options": [
+        "Dlho, potom krátko",
+        "Krátko, potom dlho",
+        "Dve rovnako dlhé noty"
+      ],
+      "why": "Bodkovaná nota sa drží dlhšie a potom krátka nota vedie k poslednej."
+    }
+  },
+  {
+    "id": "SKCTX-0661",
+    "role": "steps:explain",
+    "text": {
+      "title": "Short, then long",
+      "body": "Twice in the first line, a quick B leads into an A that rings for three beats. Pick the A once and let it ring."
+    },
+    "row_refs": {
+      "title": 490,
+      "body": 5005
+    },
+    "keys": [
+      "Lf5424db4cf"
+    ],
+    "final_target_text": {
+      "title": "Krátko, potom dlho",
+      "body": "V prvom riadku dvakrát vedie rýchle B do A, ktoré znie tri doby. Brnknite na A raz a nechajte ho znieť."
+    }
+  },
+  {
+    "id": "SKCTX-0756",
+    "role": "steps:quiz",
+    "text": {
+      "prompt": "In Jukebox Moon, which section is the B?",
+      "options": [
+        "The bridge",
+        "The first verse",
+        "The last verse"
+      ],
+      "why": "The verses share one tune: A, A. The bridge brings new chords and a new tune, B, then the verse returns."
+    },
+    "row_refs": {
+      "prompt": 1478,
+      "options": [
+        1479,
+        1480,
+        1481
+      ],
+      "why": 1482
+    },
+    "keys": [
+      "L690a93e955"
+    ],
+    "final_target_text": {
+      "prompt": "Ktorá časť Jukeboxového mesiaca je B?",
+      "options": [
+        "Mostík",
+        "Prvá sloha",
+        "Posledná sloha"
+      ],
+      "why": "Slohy majú rovnakú melódiu: A, A. Mostík prináša nové akordy a melódiu, B, potom sa sloha vráti."
+    }
+  },
+  {
+    "id": "SKCTX-0759",
+    "role": "steps:explain",
+    "text": {
+      "title": "G C E A",
+      "body": "From string 4 down to string 1, the open strings are G, C, E, A. Try: Good Cooks Eat Apples."
+    },
+    "row_refs": {
+      "title": 1504,
+      "body": 1505
+    },
+    "keys": [
+      "L80744757e1"
+    ],
+    "final_target_text": {
+      "title": "G C E A",
+      "body": "Od struny 4 po strunu 1 znejú prázdne struny G, C, E, A. Pomôcka: Gorila cíti egrešovú arómu."
+    }
+  },
+  {
+    "id": "SKCTX-0780",
+    "role": "steps:explain",
+    "text": {
+      "title": "E A D G",
+      "body": "From thick to thin: E, A, D, G. They match the four lowest guitar strings, an octave down. Try: Every Amp Drives Grooves."
+    },
+    "row_refs": {
+      "title": 1538,
+      "body": 1949
+    },
+    "keys": [
+      "Lf9bc0a7668"
+    ],
+    "final_target_text": {
+      "title": "E A D G",
+      "body": "Od hrubej po tenkú: E, A, D, G. Zodpovedajú štyrom najnižším gitarovým strunám o oktávu nižšie. Pomôcka: Eva a Dávid grilujú."
+    }
+  },
+  {
+    "id": "SKCTX-0781",
+    "role": "steps:explain",
+    "text": {
+      "title": "G D A E",
+      "body": "From low to high: G, D, A, E. Each string is five letter names above the last, an interval called a fifth. Try: Good Dogs Always Eat."
+    },
+    "row_refs": {
+      "title": 1539,
+      "body": 2250
+    },
+    "keys": [
+      "L60db049169"
+    ],
+    "final_target_text": {
+      "title": "G D A E",
+      "body": "Od nízkej po vysokú: G, D, A, E. Každá struna je o kvintu vyššie, teda päť názvov tónov pri počítaní od prvého vrátane. Pomôcka: Gorila dnes asi experimentuje."
+    }
+  },
+  {
+    "id": "SKCTX-0793",
+    "role": "steps:quiz",
+    "text": {
+      "prompt": "The first line ends on D. Where does the second line end?",
+      "options": [
+        "On G",
+        "On C, home",
+        "On D again"
+      ],
+      "why": "Same start, different finish. The second line comes home to C."
+    },
+    "row_refs": {
+      "prompt": 1646,
+      "options": [
+        1647,
+        1648,
+        1649
+      ],
+      "why": 1650
+    },
+    "keys": [
+      "L47cef636b2"
+    ],
+    "final_target_text": {
+      "prompt": "Prvý riadok končí na D. Kde končí druhý?",
+      "options": [
+        "Na G",
+        "Na C, doma",
+        "Znova na D"
+      ],
+      "why": "Rovnaký začiatok, iný koniec. Druhý riadok sa vracia domov na C."
+    }
+  },
+  {
+    "id": "SKCTX-0799",
+    "role": "steps:quiz",
+    "text": {
+      "prompt": "D at fret 3 on string 2 and open string 4 are both D. How far apart are they?",
+      "options": [
+        "One octave",
+        "One fret",
+        "Nothing: same pitch"
+      ],
+      "why": "An octave is the same letter, eight steps higher or lower. The two Ds blend, but one sounds brighter."
+    },
+    "row_refs": {
+      "prompt": 5165,
+      "options": [
+        5166,
+        1673,
+        5167
+      ],
+      "why": 5168
+    },
+    "keys": [
+      "Ld706b55945"
+    ],
+    "final_target_text": {
+      "prompt": "D na pražci 3 struny 2 aj prázdna struna 4 sú D. Aká je medzi nimi vzdialenosť?",
+      "options": [
+        "Jedna oktáva",
+        "O jeden pražec",
+        "Žiadna: rovnaká výška"
+      ],
+      "why": "Oktáva spája rovnaké písmeno vyššie či nižšie: osem tónov vrátane oboch krajných. Obe D splývajú, ale jedno znie jasnejšie."
+    }
+  },
+  {
+    "id": "SKCTX-0818",
+    "role": "steps:quiz",
+    "text": {
+      "prompt": "The first line ends on A. Where does the second line end?",
+      "options": [
+        "On G, home",
+        "On A again",
+        "On D"
+      ],
+      "why": "Same start, different finish. The second line comes home to G."
+    },
+    "row_refs": {
+      "prompt": 2054,
+      "options": [
+        2055,
+        2056,
+        2057
+      ],
+      "why": 2058
+    },
+    "keys": [
+      "Le944e07b04"
+    ],
+    "final_target_text": {
+      "prompt": "Prvý riadok končí na A. Kde končí druhý?",
+      "options": [
+        "Na G, doma",
+        "Znova na A",
+        "Na D"
+      ],
+      "why": "Rovnaký začiatok, iný koniec. Druhý riadok sa vracia domov na G."
+    }
+  },
+  {
+    "id": "SKCTX-0833",
+    "role": "steps:explain",
+    "text": {
+      "title": "Check your setup",
+      "body": "Violin on your collarbone, soft bow hold, bow halfway between bridge and fingerboard. Now play everything from this unit."
+    },
+    "row_refs": {
+      "title": 2272,
+      "body": 2273
+    },
+    "keys": [
+      "Lb61b421ab4"
+    ],
+    "final_target_text": {
+      "title": "Skontrolujte pripravenosť",
+      "body": "Husle na kľúčnej kosti, mäkké držanie sláčika a sláčik v polovici medzi kobylkou a hmatníkom. Teraz zahrajte všetko z tejto časti."
+    }
+  },
+  {
+    "id": "SKCTX-0834",
+    "role": "steps:explain",
+    "text": {
+      "title": "Check your setup",
+      "body": "Sit tall with the endpin set, soft bow hold, bow halfway between bridge and fingerboard. Now play everything from this unit."
+    },
+    "row_refs": {
+      "title": 2272,
+      "body": 2654
+    },
+    "keys": [
+      "Lb61b421ab4"
+    ],
+    "final_target_text": {
+      "title": "Skontrolujte pripravenosť",
+      "body": "Seďte vzpriamene s nastaveným bodcom, sláčik držte mäkko v polovici medzi kobylkou a hmatníkom. Teraz zahrajte všetko z tejto časti."
+    }
+  },
+  {
+    "id": "SKCTX-0901",
+    "role": "steps:quiz",
+    "text": {
+      "prompt": "Where does the second phrase land?",
+      "options": [
+        "On E",
+        "On A",
+        "On D, the home note"
+      ],
+      "why": "The first phrase stops on E and sounds unfinished. The second lands on D and sounds like home."
+    },
+    "row_refs": {
+      "prompt": 2908,
+      "options": [
+        2909,
+        2910,
+        2911
+      ],
+      "why": 2912
+    },
+    "keys": [
+      "Lf04e8a09c2"
+    ],
+    "final_target_text": {
+      "prompt": "Na ktorom tóne končí druhá fráza?",
+      "options": [
+        "Na E",
+        "Na A",
+        "Na D, základnom tóne"
+      ],
+      "why": "Prvá fráza sa zastaví na E a znie nedokončene. Druhá končí na D a znie ako návrat domov."
+    }
+  },
+  {
+    "id": "SKCTX-0911",
+    "role": "steps:explain",
+    "text": {
+      "title": "Hammer-on",
+      "body": "Pick an open pair, then snap a fingertip down just behind fret 2. The new note sounds from the tap alone, with no second pick stroke."
+    },
+    "row_refs": {
+      "title": 3073,
+      "body": 3074
+    },
+    "keys": [
+      "Lf592a06d42"
+    ],
+    "final_target_text": {
+      "title": "Príklep",
+      "body": "Brnknite na prázdnu dvojicu a prudko položte konček prsta tesne pri pražci 2 zo strany hlavy. Nový tón zaznie iba z príklepu, bez druhého úderu brnkadlom."
+    }
+  },
+  {
+    "id": "SKCTX-0912",
+    "role": "steps:explain",
+    "text": {
+      "title": "Hammer-on",
+      "body": "Pick an open string, then snap a fingertip down just behind fret 2. The new note sounds from the tap alone, with no second pick."
+    },
+    "row_refs": {
+      "title": 3073,
+      "body": 3276
+    },
+    "keys": [
+      "Lf592a06d42"
+    ],
+    "final_target_text": {
+      "title": "Príklep",
+      "body": "Brnknite na prázdnu strunu a prudko položte konček prsta tesne pri pražci 2 zo strany hlavy. Nový tón zaznie iba z príklepu, bez druhého brnknutia."
+    }
+  },
+  {
+    "id": "SKCTX-0956",
+    "role": "steps:quiz",
+    "text": {
+      "prompt": "The first line walks down from high D to low D. How far is that?",
+      "options": [
+        "A fifth",
+        "An octave",
+        "A third"
+      ],
+      "why": "D down to D is an octave: eight steps of the scale, the same note name, one register lower."
+    },
+    "row_refs": {
+      "prompt": 5793,
+      "options": [
+        4839,
+        3396,
+        4840
+      ],
+      "why": 5794
+    },
+    "keys": [
+      "L914bfe3e36",
+      "Lf5e69b5b0c",
+      "L006392a6a7"
+    ],
+    "final_target_text": {
+      "prompt": "Prvý riadok klesá od vysokého D po nízke D. Aká je to vzdialenosť?",
+      "options": [
+        "Kvinta",
+        "Oktáva",
+        "Tercia"
+      ],
+      "why": "D nadol po D je oktáva: osem tónov stupnice vrátane krajných, rovnaký názov tónu o register nižšie."
+    }
+  },
+  {
+    "id": "SKCTX-1071",
+    "role": "steps:quiz",
+    "text": {
+      "prompt": "The first half ends on B. How does that feel?",
+      "options": [
+        "Finished",
+        "Unfinished, like a question"
+      ],
+      "why": "B sits just below C and leans toward it. The second half answers by landing on C."
+    },
+    "row_refs": {
+      "prompt": 5017,
+      "options": [
+        3640,
+        5018
+      ],
+      "why": 5019
+    },
+    "keys": [
+      "L355bcc577d"
+    ],
+    "final_target_text": {
+      "prompt": "Prvá polovica končí na B. Aký to vyvoláva dojem?",
+      "options": [
+        "Dokončene",
+        "Nedokončený, ako otázka"
+      ],
+      "why": "B leží tesne pod C a smeruje k nemu. Druhá polovica odpovie tým, že pristane na C."
+    }
+  },
+  {
+    "id": "SKCTX-1384",
+    "role": "steps:quiz",
+    "text": {
+      "prompt": "In AABA form, which section is the bridge?",
+      "options": [
+        "The first A",
+        "The B",
+        "The last A"
+      ]
+    },
+    "row_refs": {
+      "prompt": 1424,
+      "options": [
+        1425,
+        1426,
+        1427
+      ]
+    },
+    "keys": [
+      "Lbee270b187",
+      "L34c2737622",
+      "L77510a1916"
+    ],
+    "final_target_text": {
+      "prompt": "Ktorá časť formy AABA je mostík?",
+      "options": [
+        "Prvé A",
+        "Časť B",
+        "Posledné A"
+      ]
+    }
+  },
+  {
+    "id": "SKCTX-1398",
+    "role": "steps:quiz",
+    "text": {
+      "prompt": "In six-eight, where do the big beats fall?",
+      "options": [
+        "On every count",
+        "On 1, 3 and 5",
+        "On 1 and 4"
+      ],
+      "why": "Six eighths group in two threes: 1 2 3, 4 5 6. The first of each three carries the sway."
+    },
+    "row_refs": {
+      "prompt": 1930,
+      "options": [
+        1931,
+        1932,
+        1933
+      ],
+      "why": 1934
+    },
+    "keys": [
+      "L8158b53929",
+      "L0129c1441b",
+      "L64e238b935"
+    ],
+    "final_target_text": {
+      "prompt": "Kde sú hlavné doby v šesťosminovom metre?",
+      "options": [
+        "Na každú osminu",
+        "Na 1, 3 a 5",
+        "Na 1 a 4"
+      ],
+      "why": "Šesť osmín sa zoskupí do dvoch trojíc: 1 2 3, 4 5 6. Prvá z každej trojice nesie kolísanie."
+    }
+  },
+  {
+    "id": "SKCTX-1437",
+    "role": "steps:listen",
+    "text": {
+      "prompt": "Which pair matches?",
+      "options": [
+        "The first pair",
+        "The second pair"
+      ]
+    },
+    "row_refs": {
+      "prompt": 2782,
+      "options": [
+        2783,
+        2784
+      ]
+    },
+    "keys": [
+      "L360e615ed3",
+      "La1042ecdf6"
+    ],
+    "final_target_text": {
+      "prompt": "V ktorej dvojici sú tóny zhodné?",
+      "options": [
+        "V prvej dvojici",
+        "V druhej dvojici"
+      ]
+    }
+  },
+  {
+    "id": "SKCTX-1455",
+    "role": "steps:quiz",
+    "text": {
+      "prompt": "How many times do you pick for a hammer-on?",
+      "options": [
+        "Twice, once per note",
+        "Once, for the first note",
+        "Not at all"
+      ],
+      "why": "The pick sounds the first note. The second comes from your finger striking the string."
+    },
+    "row_refs": {
+      "prompt": 3278,
+      "options": [
+        3279,
+        3280,
+        3281
+      ],
+      "why": 3282
+    },
+    "keys": [
+      "L202bd75fac",
+      "L837d2ceaeb",
+      "L35b42ab803"
+    ],
+    "final_target_text": {
+      "prompt": "Koľkokrát brnknete pri príklepe?",
+      "options": [
+        "Dvakrát, raz na každý tón",
+        "Raz, pri prvom tóne",
+        "Ani raz"
+      ],
+      "why": "Brnkadlo rozozvučí prvý tón. Druhý vznikne úderom prsta o strunu."
+    }
+  },
+  {
+    "id": "SKCTX-1503",
+    "role": "steps:listen",
+    "text": {
+      "prompt": "The first click is beat 1. Are the strong clicks on the numbers or the ands?",
+      "options": [
+        "On the numbers",
+        "On the ands"
+      ]
+    },
+    "row_refs": {
+      "prompt": 4506,
+      "options": [
+        4507,
+        4508
+      ]
+    },
+    "keys": [
+      "Lb2132239e3",
+      "L7d6b0a3fdf"
+    ],
+    "final_target_text": {
+      "prompt": "Prvé kliknutie je doba 1. Sú silné kliknutia na číslach alebo na „a“?",
+      "options": [
+        "Na číslach",
+        "Na „a“"
+      ]
+    }
+  },
+  {
+    "id": "SKCTX-1506",
+    "role": "steps:quiz",
+    "text": {
+      "prompt": "You tapped this pattern with a rest in Unit 3. What changes with a dot?",
+      "options": [
+        "The first note rings longer",
+        "The taps move",
+        "The tempo slows"
+      ],
+      "why": "The taps land in the same places. Only the length of the first note changes."
+    },
+    "row_refs": {
+      "prompt": 4540,
+      "options": [
+        4541,
+        4542,
+        4543
+      ],
+      "why": 4544
+    },
+    "keys": [
+      "Lb7c40080f8",
+      "Lf486c38d33",
+      "L3bb2c0fff0"
+    ],
+    "final_target_text": {
+      "prompt": "Tento rytmus ste v časti 3 ťukali s pomlčkou. Čo sa zmení s bodkou?",
+      "options": [
+        "Prvý tón znie dlhšie",
+        "Ťuknutia sa posunú",
+        "Tempo sa spomalí"
+      ],
+      "why": "Ťuknutia zostanú na rovnakých miestach. Mení sa iba dĺžka prvého tónu."
+    }
+  },
+  {
+    "id": "SKCTX-1510",
+    "role": "steps:listen",
+    "text": {
+      "prompt": "The first click is beat 1. Where are the strong clicks?",
+      "options": [
+        "On 1 and 3",
+        "On 2 and 4",
+        "On every click"
+      ]
+    },
+    "row_refs": {
+      "prompt": 4635,
+      "options": [
+        4636,
+        4637,
+        4638
+      ]
+    },
+    "keys": [
+      "Lb0577bdcc9",
+      "L9c5a850a0b",
+      "L15368ce007"
+    ],
+    "final_target_text": {
+      "prompt": "Prvé kliknutie je doba 1. Kde sú silné kliknutia?",
+      "options": [
+        "Na 1 a 3",
+        "Na 2 a 4",
+        "Na každom kliknutí"
+      ]
+    }
+  }
+]

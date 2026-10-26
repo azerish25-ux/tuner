@@ -5,20 +5,17 @@ manual's human-review step. No human native-speaker, legal, accessibility-listen
 or market review is claimed. Automated checks cannot establish perfect fluency
 or release readiness. This work does not authorize App Store submission.
 
-## Current checkpoint — 26 October 2026, 12:18 UTC
+## Current checkpoint — all-language text completion, 26 October 2026
 
-- Interface resources: all 49 app languages have literal-key coverage; this is not a universal device/semantic certification.
-- Lessons: 30 translated targets plus English now cover all 6,083 current source keys. Finnish, Danish, Swedish, Dutch and Norwegian were imported after full independent AI review, 842 guarded corrections and 1,940 exact-source retention approvals. Bridge and interval source splits and the sustained-tremolo repair reconcile their frozen drafts with current content.
-- Romanian is now imported after full independent AI review: 164 guarded corrections, 370 exact source-bound retention approvals, and all 6,083 current targets independently hash-verified.
-- Hebrew and Thai are now independently reviewed and imported: 14 and 13 guarded corrections, 231 and 261 exact retention approvals respectively; all 6,083 current targets verified in each.
-- Swahili and Greek are now imported after full independent AI review: 122 and 92 guarded corrections, with 412 and 168 individual retention approvals. Layout advisories remain explicit.
-- Telugu and Zulu are undergoing independent review. Polish and Czech complete drafts await review. Indonesian, Turkish, Hungarian and Vietnamese drafting continue; 10 further targets have not yet entered lesson drafting.
-- 18 additional first/second musical-item label corrections across nine earlier locales passed independent review of all 369 locale/context rows. Some changes fix demonstrated referent/gender defects; others improve precision.
-- Context tooling now exposes nested arrangement section names in semantic bundles. Source curriculum is unchanged; frozen review inputs remain preserved.
-- Store text: all 50 Apple-supported locale payloads have independent AI text review. Localized screenshot/preview renders, production privacy URL and account-side checks are not complete; release_ready remains false.
-- GitHub run 40288874201 on 31305f6 passed 58 app tests and 3 smoke tests, including all configured regional language cases and the corrected tuner string identifier. Its accessibility audit still failed contrast checks.
-- Matrix run 40286089721 now passed seven groups after the Indic retry; its RTL group remains failed with simulator lifecycle timeout. Current integration requests a fresh full matrix with the bounded recovery fix; queued/running is not passing.
-- Historical sections below describe their own earlier checkpoints, not current coverage.
+- **App interface:** all 49 app languages (English source + 48 targets) have complete literal-key coverage, including launch-critical strings.
+- **Lessons:** all 48 targets now ship all **6,083 current English keys**. The final Icelandic, Slovak, Slovenian and Ukrainian import adds **24,332 pairs**, with **222 guarded review corrections** and **1,156 individual exact-source retention approvals**. Frozen author drafts remain preserved.
+- Each final locale received a separate, complete source/target pair read. Shared-answer/context follow-up methods and their precise limits are recorded per locale; this does not claim every full helper context was separately displayed, native-human certification or device QA.
+- Slovenian Play along now uses informal **Igraj zraven**; its Again glossary now matches the existing **Znova** UI value. Glossary supplements record the selected terminology and coordinated song titles.
+- All 50 Apple-supported store listings retain their full source-aware AI text review. A separately reviewed Game Center title-alignment addendum reconciles listing names with the actual app lesson names. Text completion remains separate from release readiness.
+- Production privacy URL, localized device/glyph/layout/VoiceOver checks, screenshot/preview assets and account-side release evidence remain incomplete. No App Store submission or account change is performed.
+- Final validation and published commit evidence are recorded in `reviews/final-integration/`. Windows has no Xcode; new native build/simulator results must be checked in GitHub Actions against the published SHA.
+
+Historical sections below describe their own checkpoints, not current coverage.
 
 ## Imported checkpoint: German launch strings
 

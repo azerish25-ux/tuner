@@ -202,3 +202,62 @@ E–A–D–G–B–E mnemonic adaptation: Eva a Dávid grilujú bez elektriny. 
 - Cello → violončelo; endpin → bodec; shift → výmena polohy; fourth position → štvrtá poloha. Distinguish a hand position from a low/high placement of finger 2.
 - Slur → legatový oblúčik / legato jedným ťahom; do not confuse with a duration tie. The Swan → Labuť; Brahms’ Lullaby → Brahmsova uspávanka.
 - Cello C G D A mnemonic: Cirkusová gorila dáva autogramy. Exact initials retained, review pending.
+
+## Reviewed Original titles — 26 October 2026
+
+These coordinated title choices supersede earlier general title-retention instructions. All 6,083 lesson pairs received independent source-aware AI review; historical draft/review-pending statements above describe the author checkpoint. Reuse the selected titles in lesson references and Game Center. This does not establish native-human or device approval.
+
+| English title | Selected title |
+|---|---|
+| Kite Weather | Počasie na šarkany |
+| Porchlight | Svetlo na verande |
+| Moth and Ember | Moľa a uhlík |
+| Low Tide Radio | Rádio pri odlive |
+| Dust on the Dashboard | Prach na palubnej doske |
+| Lantern Hill | Lampášový vrch |
+| Gravel Road Two-Step | Two-step na štrkovej ceste |
+| First Frost | Prvý mráz |
+| Hammock Season | Sezóna hojdacích sietí |
+| Glow-in-the-Dark Stars | Hviezdy svietiace v tme |
+| Sparkler Season | Sezóna prskaviek |
+| Roller Rink | Korčuliarsky parket |
+| Echo Canyon | Kaňon ozvien |
+| Open Windows | Otvorené okná |
+| Scoreboard Lights | Svetlá výsledkovej tabule |
+| Rust Belt Shuffle | Shuffle hrdzavého pásu |
+| Carousel at Closing Time | Kolotoč pred záverečnou |
+| Cedar Smoke | Cédrový dym |
+| Rain on the Skylight | Dážď na strešnom okne |
+| Neon Laundromat | Neónová práčovňa |
+| Late Checkout | Neskorý odchod z hotela |
+| Saltwater Sunday | Slaná nedeľa |
+| Pocket Change | Drobné vo vrecku |
+| Kitchen Slow Dance | Pomalý tanec v kuchyni |
+| Houseplants | Izbové rastliny |
+| Static on Channel Nine | Šum na deviatom kanáli |
+| Basement Weather | Počasie v pivnici |
+| Jukebox Moon | Jukeboxový mesiac |
+| Boardwalk Comet | Kométa na promenáde |
+| Mile Marker Zero | Nultý míľnik |
+| Last Bell | Posledné zvonenie |
+| Copper Wire | Medený drôt |
+| Cold Lake | Studené jazero |
+| Parking Lot Cathedral | Katedrála na parkovisku |
+| Halogen | Halogén |
+| Letters in a Shoebox | Listy v krabici od topánok |
+| Keeper's Daughter | Dcéra strážcu majáka |
+| Snow Globe Town | Mestečko v snežnej guli |
+| Thistle and Thread | Bodliak a niť |
+| Ghost Light | Svetlo duchov |
+| Late Bus Home | Neskorý autobus domov |
+| Glass Satellites | Sklenené satelity |
+| Market Day | Trhový deň |
+| Velvet Hour | Zamatová hodina |
+| Rooftop Choir | Zbor na streche |
+| Slow Motion Strobe | Spomalený stroboskop |
+| Bright Side of the Block | Svetlá strana ulice |
+| Over You Soon | Čoskoro na teba zabudnem |
+| Spray Paint Sunrise | Úsvit nasprejovaný farbou |
+| Constellation Prize | Cena súhvezdia |
+
+Reviewed shared choices: First/The second use Prvá ukážka/Druhá ukážka for examples; None of them uses Nič z uvedeného; long/short pairs use neutral adverbs. The G C E A, E A D G, G D A E and C G D A mnemonic proposals above have now passed independent AI review.
