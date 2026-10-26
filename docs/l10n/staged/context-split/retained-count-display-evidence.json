@@ -1,0 +1,172 @@
+{
+  "status": "unapplied proposals",
+  "method": "ICU76 ubidi_setPara paragraph level1 for Arabic/Urdu, level0 for Bengali; ubidi_writeReordered; controls stripped only from diagnostic visual output",
+  "cases": [
+    {
+      "locale": "ar",
+      "key": "Lf6586312d9",
+      "source": "1, 2, 3 and 4",
+      "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+      "old": "الأوتار 1 و2 و3 و4",
+      "old_sha256": "9cb3f7b0b5a47dec3a1bbeb6bc855c6329615bc302c34a71dfa13a9492060f02",
+      "new": "العدّ: 1، 2، 3 و4",
+      "new_sha256": "26145d8d0f3ceb62f118274923e141d8e67475e51c0649f1fd6f1882e3570194",
+      "context_pointers": [
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "paragraph_level": 1,
+      "old_visual_left_to_right": "4و 3و 2و 1 راتوألا",
+      "new_visual_left_to_right": "4و 3 ،2 ،1 :ّدعلا",
+      "new_visual_digits_left_to_right": [
+        "4",
+        "3",
+        "2",
+        "1"
+      ],
+      "adjacent_same_quiz_options": [
+        {
+          "key": "L703760e9d4",
+          "source": "1, 2 and, 3, 4",
+          "value": "العدّ: 1، 2 و، 3، 4",
+          "source_sha256": "88cef163ad1b2e74ad9706cdaef51d4e9e8ddd711ca11ca947b8632d73222e33",
+          "value_sha256": "db9604e15878f27cc127743c734f05250ee084c6023dec5ffaaa192b2d11074b",
+          "visual_left_to_right": "4 ،3 ،و 2 ،1 :ّدعلا",
+          "controls": []
+        },
+        {
+          "key": "L1081fbeb3c",
+          "source": "1 and 2, 3, 4",
+          "value": "العدّ: 1 و2، 3، 4",
+          "source_sha256": "48e5db860acf3b7f755b3bc4a4ba280f7b293d28da74af808091b733e758922a",
+          "value_sha256": "15fb216d5801e18e7a6837e5a877f52a53179a5b34aafcae442fb3300a15b64f",
+          "visual_left_to_right": "4 ،3 ،2و 1 :ّدعلا",
+          "controls": []
+        }
+      ],
+      "whole_run_isolate_comparison": {
+        "unapplied_alternative": "العدّ: ⁦1، 2، 3 و4⁩",
+        "visual_left_to_right": "1، 2، 3 4و :ّدعلا",
+        "visual_digits_left_to_right": [
+          "1",
+          "2",
+          "3",
+          "4"
+        ],
+        "controls_added": [
+          "U+2066 LRI",
+          "U+2069 PDI"
+        ],
+        "why_not_chosen": "LRI changes the whole spoken-count display to LTR numbering, while both existing options use localized conjunctions and RTL reading order. This is not a pure LTR numeric/musical notation run. No demonstrated defect in that shared convention justifies uniquely reorienting this distractor. For any future decision to force a notation-style LTR count, review all three options together; do not blanket-format prose."
+      },
+      "decision": "Propose no new directional marks. Both adjacent same-quiz count options already begin with the same local count label and use the same conjunction, without marks. Under RTL paragraph level1 their digits appear physically right-to-left, which follows local-language reading order; reverse left-to-right diagnostic digit order alone is not a defect. Adding LRI to this option alone would introduce a different presentation convention.",
+      "required_device_check": "Verify in the actual RTL quiz that reading from the right gives counts1,2,3,and4 and that the conjunction is grouped after3, comparing both sibling options. Check accessibility spoken order and forced/automatic paragraph direction. If the UI presents counts as LTR notation, independently review a coordinated whole-quiz change; this proposal does not certify it.",
+      "certification": "ICU76 Unicode-order diagnostic only, not native-human approval or actual iOS layout/font/VoiceOver evidence."
+    },
+    {
+      "locale": "bn",
+      "key": "Lf6586312d9",
+      "source": "1, 2, 3 and 4",
+      "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+      "old": "1, 2, 3 ও 4",
+      "old_sha256": "821aa8872e3bfc42e9188a0eca7405dc95f7ca531392305f5370780657864cd2",
+      "new": "1, 2, 3 আর 4",
+      "new_sha256": "0a2ad2d7ecf1a0d7a8a7af5d0788bf45c527c392cc392b8e2374734772089db5",
+      "context_pointers": [
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "paragraph_level": 0,
+      "old_visual_left_to_right": "1, 2, 3 ও 4",
+      "new_visual_left_to_right": "1, 2, 3 আর 4",
+      "new_visual_digits_left_to_right": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "adjacent_same_quiz_options": [
+        {
+          "key": "L703760e9d4",
+          "source": "1, 2 and, 3, 4",
+          "value": "1, 2 আর, 3, 4",
+          "source_sha256": "88cef163ad1b2e74ad9706cdaef51d4e9e8ddd711ca11ca947b8632d73222e33",
+          "value_sha256": "11198d416c16172dd731c8209104e805854aaba0fec2e3b820bd61214f512da3",
+          "visual_left_to_right": "1, 2 আর, 3, 4",
+          "controls": []
+        },
+        {
+          "key": "L1081fbeb3c",
+          "source": "1 and 2, 3, 4",
+          "value": "1 আর 2, 3, 4",
+          "source_sha256": "48e5db860acf3b7f755b3bc4a4ba280f7b293d28da74af808091b733e758922a",
+          "value_sha256": "d6f1f66b24c3ab28d5091fd264984358c3e629353d83264f11436127404da197",
+          "visual_left_to_right": "1 আর 2, 3, 4",
+          "controls": []
+        }
+      ],
+      "whole_run_isolate_comparison": null,
+      "decision": "Bengali uses LTR writing. Old and new digit visual order remains1,2,3,4 at paragraph level0; replacing ও with আর matches both adjacent spoken-count choices. No bidi controls needed.",
+      "required_device_check": "Confirm Bengali glyph shaping, comma spacing and offbeat আর pronunciation/placement in the quiz; independent semantic/device review still pending.",
+      "certification": "ICU76 Unicode-order diagnostic only, not native-human approval or actual iOS layout/font/VoiceOver evidence."
+    },
+    {
+      "locale": "ur",
+      "key": "Lf6586312d9",
+      "source": "1, 2, 3 and 4",
+      "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+      "old": "تار 1، 2، 3 اور 4",
+      "old_sha256": "71202b0f71180de6866f0ca6604d8ae3b76db693ce54ce8b4d564b166ee22205",
+      "new": "گنتی 1، 2، 3 اور 4",
+      "new_sha256": "2d7590e20230c1e64316be5b6fef956b111cc4e6fa6e1404b2d5ed4ba0b9266c",
+      "context_pointers": [
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "paragraph_level": 1,
+      "old_visual_left_to_right": "4 روا 3 ،2 ،1 رات",
+      "new_visual_left_to_right": "4 روا 3 ،2 ،1 یتنگ",
+      "new_visual_digits_left_to_right": [
+        "4",
+        "3",
+        "2",
+        "1"
+      ],
+      "adjacent_same_quiz_options": [
+        {
+          "key": "L703760e9d4",
+          "source": "1, 2 and, 3, 4",
+          "value": "گنتی 1، 2 اور، 3، 4",
+          "source_sha256": "88cef163ad1b2e74ad9706cdaef51d4e9e8ddd711ca11ca947b8632d73222e33",
+          "value_sha256": "add765951f4ef87a257a28bd40ea23fb7187c4b95836947f41e861752cc703df",
+          "visual_left_to_right": "4 ،3 ،روا 2 ،1 یتنگ",
+          "controls": []
+        },
+        {
+          "key": "L1081fbeb3c",
+          "source": "1 and 2, 3, 4",
+          "value": "گنتی 1 اور 2، 3، 4",
+          "source_sha256": "48e5db860acf3b7f755b3bc4a4ba280f7b293d28da74af808091b733e758922a",
+          "value_sha256": "3234d6c3f6c94437ec195bbb20e5c83ceb1e0061f6f9651023a74c8de4ddb398",
+          "visual_left_to_right": "4 ،3 ،2 روا 1 یتنگ",
+          "controls": []
+        }
+      ],
+      "whole_run_isolate_comparison": {
+        "unapplied_alternative": "گنتی ⁦1، 2، 3 اور 4⁩",
+        "visual_left_to_right": "1، 2، 3 4 روا یتنگ",
+        "visual_digits_left_to_right": [
+          "1",
+          "2",
+          "3",
+          "4"
+        ],
+        "controls_added": [
+          "U+2066 LRI",
+          "U+2069 PDI"
+        ],
+        "why_not_chosen": "LRI changes the whole spoken-count display to LTR numbering, while both existing options use localized conjunctions and RTL reading order. This is not a pure LTR numeric/musical notation run. No demonstrated defect in that shared convention justifies uniquely reorienting this distractor. For any future decision to force a notation-style LTR count, review all three options together; do not blanket-format prose."
+      },
+      "decision": "Propose no new directional marks. Both adjacent same-quiz count options already begin with the same local count label and use the same conjunction, without marks. Under RTL paragraph level1 their digits appear physically right-to-left, which follows local-language reading order; reverse left-to-right diagnostic digit order alone is not a defect. Adding LRI to this option alone would introduce a different presentation convention.",
+      "required_device_check": "Verify in the actual RTL quiz that reading from the right gives counts1,2,3,and4 and that the conjunction is grouped after3, comparing both sibling options. Check accessibility spoken order and forced/automatic paragraph direction. If the UI presents counts as LTR notation, independently review a coordinated whole-quiz change; this proposal does not certify it.",
+      "certification": "ICU76 Unicode-order diagnostic only, not native-human approval or actual iOS layout/font/VoiceOver evidence."
+    }
+  ]
+}

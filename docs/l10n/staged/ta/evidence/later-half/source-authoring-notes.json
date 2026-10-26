@@ -1,0 +1,68 @@
+[
+  {
+    "locale": "ta",
+    "batch": 45,
+    "id": "s086",
+    "table": "Learn.strings",
+    "key": "L3aa3fb08ad",
+    "source": "E, D, C: three steps down to home.",
+    "old": "E, D, C: ஆதாரத்தை நோக்கி மூன்று இறங்கும் படிகள்.",
+    "context": "Singing · Unit 1 · song voc-1-6 “Mary Had a Little Lamb” · step 2 (notes) · hint under an exercise",
+    "max_length": 120,
+    "source_sha256": "37148fb2cc07b5710a28492f6234366e3d9b57ef287603def31af8419ee2e887",
+    "old_sha256": "003e291311af4f69f0bf779d77b1a440cced19a1e77a94d77b1c5aa12f9ee2c8",
+    "curriculum_refs": [
+      {
+        "path": "/courses/10/units/0/lessons/5/steps/1/hint",
+        "parents": [
+          "voice",
+          "voc-1",
+          "voc-1-6"
+        ],
+        "labels": [
+          "Singing",
+          "Finding your voice",
+          "Mary Had a Little Lamb"
+        ],
+        "source": "E, D, C: three steps down to home."
+      }
+    ],
+    "kind": "source_authoring_clarity",
+    "reason": "The English calls E-D-C three steps down although this is three notes and two descending adjacent moves. Tamil follows the source; not silently changed to a different count.",
+    "recommended_action": "Parent may clarify source to three descending notes, then propagate consistently.",
+    "status": "advisory_source_query_not_translation_patch"
+  },
+  {
+    "locale": "ta",
+    "batch": 52,
+    "id": "s022",
+    "table": "Learn.strings",
+    "key": "Lcb89454ade",
+    "source": "Open B, D at fret 3, open E and back. Then G and G sharp on string 3, sliding into open B.",
+    "old": "திறந்த B, ஃப்ரெட் 3-இல் D, திறந்த E, திரும்புங்கள். தந்தி 3-இல் G, G ஷார்ப், திறந்த B-க்குச் சறுக்குங்கள்.",
+    "context": "Originals · Unit 4 · song orig-rust-belt-shuffle “Rust Belt Shuffle” · step 4 (notes) · hint under an exercise",
+    "max_length": 120,
+    "source_sha256": "0fb2c0ca1b74296e5969c419f25ab41bf564377fe85cf91c48bba81b00aa5056",
+    "old_sha256": "13e7e166a7a05a1b31e5c5892e9e121976ffe0edb606a0399d2231b9810b1140",
+    "curriculum_refs": [
+      {
+        "path": "/courses/12/units/3/lessons/0/steps/3/hint",
+        "parents": [
+          "originals",
+          "orig-2",
+          "orig-rust-belt-shuffle"
+        ],
+        "labels": [
+          "Originals",
+          "Sevenths, sus and swing",
+          "Rust Belt Shuffle"
+        ],
+        "source": "Open B, D at fret 3, open E and back. Then G and G sharp on string 3, sliding into open B."
+      }
+    ],
+    "kind": "source_authoring_clarity",
+    "reason": "The source says G and G sharp on string 3, sliding into open B (string 2). A literal same-string guitar slide cannot end at that open B. This may be figurative melodic motion; Tamil follows the source rather than inventing different fingering.",
+    "recommended_action": "Parent may clarify sliding into as moving to, or provide intended technique. No source edit made.",
+    "status": "advisory_source_query_not_translation_patch"
+  }
+]

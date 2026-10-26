@@ -1,0 +1,24 @@
+{
+  "scope": "Read-only cross-partition consistency; does not replace either partition’s independent semantic review or integrate any changes.",
+  "full_coverage": 6080,
+  "unique_keys": 6080,
+  "partition_counts": [
+    3117,
+    2963
+  ],
+  "corrections": 312,
+  "invariants": 310,
+  "correction_invariant_overlap": 0,
+  "all_source_old_guards_match_frozen_author_outputs": true,
+  "glossary_fragments_identical": 3,
+  "glossary_instruction": "Apply one coordinated set once, not both packages.",
+  "remaining_context_split": "Lf6586312d9, recorded in first-half/shared-context-split.json. No source split applied.",
+  "input_sha256": {
+    "independent-review-inputs/gu/first-half/coverage.json": "419e11ff5dd501d8aff2feed0a728c873d469675c26e9366dfb1072c0526efea",
+    "independent-review-inputs/gu/later-half/coverage.json": "c3f85d0d74c09d3daf6a4ac24e6b5a61b7c4e2164f74779dbb184112c8f02003",
+    "independent-review-inputs/gu/first-half/corrections.json": "38cdc5439e1512947c8145caf5dbfa36aa0147aa3196454aa222a04abc7b1a53",
+    "independent-review-inputs/gu/later-half/corrections.json": "0a206c479f42ed373690cd5ee71f13769c1387e873aceffd6b378956d26ac460",
+    "independent-review-inputs/gu/first-half/invariant-decisions.json": "f7d83f545ae3d00ba52ef38eabb550098b28c6a6c92d2b23d8b2edf231969a83",
+    "independent-review-inputs/gu/later-half/invariant-decisions.json": "880bdbe85040ffa110597e963fd84e41605511b87a9c7363f288ceb911c2ce50"
+  }
+}

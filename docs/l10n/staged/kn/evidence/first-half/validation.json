@@ -1,0 +1,199 @@
+{
+  "locale": "kn",
+  "batches_reviewed": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30
+  ],
+  "full_pairs_read_sequentially": 3117,
+  "unique_keys": 3117,
+  "corrections": 111,
+  "source_bound_genuine_invariants": 94,
+  "coverage_status_counts": {
+    "reviewed_no_correction_proposed": 2908,
+    "retained_genuine_invariant": 94,
+    "correction_staged": 111,
+    "shared_context_risk_recorded": 3,
+    "source_context_split_pending": 1
+  },
+  "snapshot_manifest_sha256": "674d6867dc03ee610ec8b6d126a63d951ad4cfb1f9ee28700be38dc0745f081b",
+  "glossary_sha256": "7e228fc843225fb52cc3f2c0e403f0e360d69a98639722c0647e9738bee17a78",
+  "source_target_map_guard_checks": "passed for all 3,117 pairs",
+  "all_source_pairs_match_current_curriculum_contexts": true,
+  "all90_batch_file_hashes_match_frozen_manifest": true,
+  "all_correction_old_source_guards_match_frozen_snapshot": true,
+  "correction_duplicates": 0,
+  "unexpected_indic_script_in_corrections": [],
+  "soft_length_warnings": [
+    {
+      "key": "L8a28d3c1df",
+      "batch": "kn-019.out.json",
+      "id": "s074",
+      "source": "Index, middle, index, middle",
+      "max_length": 42,
+      "old_codepoints": 34,
+      "new_codepoints": 46,
+      "new": "ತೋರುಬೆರಳು, ಮಧ್ಯದ ಬೆರಳು, ತೋರುಬೆರಳು, ಮಧ್ಯದ ಬೆರಳು",
+      "disposition": "soft_length_warning_requires_layout_review_not_silently_truncated"
+    }
+  ],
+  "changed_latin_numeric_tokens_reviewed": [
+    {
+      "batch": "kn-008.out.json",
+      "id": "s018",
+      "key": "L9cf127a892",
+      "old_latin_numeric_tokens": [],
+      "new_latin_numeric_tokens": [
+        "IV"
+      ],
+      "reason": "Four chord denotes the harmony on scale degree 4, not the fourth chord in a sequence."
+    },
+    {
+      "batch": "kn-008.out.json",
+      "id": "s019",
+      "key": "L99fad30698",
+      "old_latin_numeric_tokens": [
+        "2",
+        "A",
+        "A7",
+        "D7",
+        "A7",
+        "A7"
+      ],
+      "new_latin_numeric_tokens": [
+        "2",
+        "IV",
+        "A",
+        "A7",
+        "D7",
+        "A7",
+        "A7"
+      ],
+      "reason": "Explicit IV preserves harmonic function; ordinal fourth chord can mean sequence position."
+    },
+    {
+      "batch": "kn-008.out.json",
+      "id": "s021",
+      "key": "Lcc7e435ee7",
+      "old_latin_numeric_tokens": [
+        "A",
+        "D7",
+        "2",
+        "A7"
+      ],
+      "new_latin_numeric_tokens": [
+        "A",
+        "IV",
+        "D7",
+        "2",
+        "A7"
+      ],
+      "reason": "Identify degree-IV harmony, not chronological fourth chord."
+    },
+    {
+      "batch": "kn-012.out.json",
+      "id": "s043",
+      "key": "Leacb886dc3",
+      "old_latin_numeric_tokens": [
+        "Roller",
+        "Rink",
+        "G"
+      ],
+      "new_latin_numeric_tokens": [
+        "Roller",
+        "Rink",
+        "G",
+        "I",
+        "vi",
+        "IV",
+        "V",
+        "vi"
+      ],
+      "reason": "one/six/four/five name harmonic scale degrees, not sequence positions or note durations; identify functions explicitly."
+    },
+    {
+      "batch": "kn-012.out.json",
+      "id": "s098",
+      "key": "Ld035dda7cc",
+      "old_latin_numeric_tokens": [
+        "Late",
+        "Checkout",
+        "C",
+        "Dm7",
+        "G7",
+        "Cmaj7",
+        "Am7",
+        "Timbre",
+        "ii",
+        "V",
+        "I"
+      ],
+      "new_latin_numeric_tokens": [
+        "Late",
+        "Checkout",
+        "C",
+        "Dm7",
+        "G7",
+        "Cmaj7",
+        "Am7",
+        "Timbre",
+        "ii",
+        "V",
+        "I",
+        "vi"
+      ],
+      "reason": "Six chord is vi harmony, not sixth item in the progression."
+    },
+    {
+      "batch": "kn-025.out.json",
+      "id": "s036",
+      "key": "Lbd46d3fe34",
+      "old_latin_numeric_tokens": [
+        "1",
+        "4"
+      ],
+      "new_latin_numeric_tokens": [
+        "Minuet",
+        "1",
+        "4"
+      ],
+      "reason": "This is a play-along locator naming the specific retained title Minuet in G, not generic prose about the minuet dance. Retain its source-authorized short title and translate only the bar locator."
+    }
+  ],
+  "latin_numeric_delta_disposition": "All 6 inspected: explicit harmonic-function Roman numerals or retained Minuet song locator. No accidental note/chord/order changes.",
+  "stage_only": true,
+  "repository_import_or_merge_performed": false,
+  "human_native_review": false,
+  "device_layout_validation": false,
+  "remaining_work": "Parent integration, guarded apply if authorized, shared source split validation, and rendering/device/native review not performed by this agent.",
+  "post_artifact_reverification": "passed: all frozen input/source hashes, 3,117 key coverage, 111 full-string guards, 94 exact invariant decisions, placeholder/bracket/markup preservation",
+  "known_list_count_collision_not_blanket_replaced": true,
+  "source_numeric_token_multisets_preserved_in_all_corrections": true
+}

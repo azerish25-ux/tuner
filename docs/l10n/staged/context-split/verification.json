@@ -1,0 +1,162 @@
+{
+  "read_only_repository_policy": "No checkout file writes, reports/imports, git mutations or publication performed. Full build executed only under isolated build mirror. Read-only report.check function used with bytecode disabled; report.main/import workflow never called.",
+  "isolated_build": {
+    "exit_code": 0,
+    "courses": 19,
+    "lessons": 1100,
+    "source_key_count_before": 6080,
+    "source_key_count_after": 6082,
+    "added_keys": {
+      "L4f162aedb4": "Middle section",
+      "Lf94a998e29": "Strings: 1, 2, 3 and 4"
+    },
+    "removed_keys": [],
+    "existing_english_value_changes": [],
+    "curriculum_changed_localized_objects": 7,
+    "all_nonchanged_fields_identical": true,
+    "proof": "generated-context-diff.json; recursive type/key/array-length/scalar comparison rejects any other curriculum change"
+  },
+  "context_counts": {
+    "before": {
+      "Lced02810fc": 9,
+      "Lf94a998e29": 0,
+      "L4f162aedb4": 0,
+      "Lf6586312d9": 2
+    },
+    "after": {
+      "Lced02810fc": 3,
+      "Lf94a998e29": 1,
+      "L4f162aedb4": 6,
+      "Lf6586312d9": 1
+    }
+  },
+  "locale_proposal_checks": {
+    "locales": 14,
+    "additions": 28,
+    "retained_key_replacements": 3,
+    "all_proposed_values_mechanically_valid": true,
+    "new_option_lengths_at_most_48": true,
+    "numeric_order_exact": true,
+    "human_review": false,
+    "independent_migration_review": false,
+    "device_qa": false
+  },
+  "required_lesson_locales": [
+    "ar",
+    "bg",
+    "bn",
+    "ca",
+    "cs",
+    "da",
+    "de",
+    "el",
+    "es",
+    "et",
+    "fa",
+    "fi",
+    "fr",
+    "gu",
+    "he",
+    "hi",
+    "hr",
+    "hu",
+    "id",
+    "is",
+    "it",
+    "ja",
+    "kn",
+    "ko",
+    "lt",
+    "lv",
+    "ml",
+    "mr",
+    "nl",
+    "no",
+    "pa",
+    "pl",
+    "pt",
+    "ro",
+    "ru",
+    "sk",
+    "sl",
+    "sv",
+    "sw",
+    "ta",
+    "te",
+    "th",
+    "tr",
+    "uk",
+    "ur",
+    "vi",
+    "zh-CN",
+    "zu"
+  ],
+  "required_new_pairs_all_locales": 96,
+  "proposed_new_pairs_main_bundle": 28,
+  "remaining_new_pairs_outside_main_proposal": 68,
+  "limitations": [
+    "No iOS runtime/UI/device/font verification performed.",
+    "Full repository Swift/l10n CI not run on either checkout; isolated builder validation is not a release pass.",
+    "All draft/new-source operations remain unapplied; source migration and new per-context approval are pending."
+  ],
+  "marketing_helper_validation": {
+    "helper": "tools/marketing/screenshots.py:202 build_counts",
+    "helper_sha256": "ddc7366d879b8baa375dd91001e63c83e49c5d3f0c6c523564bc0ab577268ba9",
+    "before": {
+      "lessons": 526,
+      "courses": 11,
+      "instruments": 60,
+      "tunings": 132,
+      "songs": 146,
+      "originals": 50,
+      "songs_floor": 140
+    },
+    "after": {
+      "lessons": 526,
+      "courses": 11,
+      "instruments": 60,
+      "tunings": 132,
+      "songs": 146,
+      "originals": 50,
+      "songs_floor": 140
+    },
+    "identical": true,
+    "scope": "All-course structural totals 19/1100 differ by definition from filtered teaching totals 11/526. This change affects neither; no marketing content was altered."
+  },
+  "source_patch_applicability": {
+    "command": "git apply --check source-authoring.patch",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "",
+    "does_not_apply_patch": true
+  },
+  "read_only_verification": {
+    "all_input_manifest_file_hashes_unchanged": true,
+    "git_status_porcelain_before": "",
+    "git_status_porcelain_after": "",
+    "head_unchanged": true
+  },
+  "retained_rhythm_display_review": {
+    "path": "retained-count-display-evidence.json",
+    "locales": [
+      "ar",
+      "bn",
+      "ur"
+    ],
+    "source_old_new_hashed": true,
+    "compared_both_adjacent_options": true,
+    "ar_ur_lri_alternatives_diagnosed_not_applied": true,
+    "device_qa": "pending, not established",
+    "proposed_controls_added": 0
+  },
+  "final_staged_operation_validation": {
+    "guarded_operations": 31,
+    "hashes_valid": true,
+    "mechanical_issues": 0,
+    "ordered_number_differences": 0,
+    "length_exceeds_48": 0,
+    "supplemental_tamil_operations": 4,
+    "supplemental_tamil_mechanical_issues": 0
+  },
+  "evidence_scope": "Historical isolated-build and proposal-validation evidence; not a current release pass. Source migration remains unapplied."
+}

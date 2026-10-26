@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "status": "SOURCE_COMPARISON_PENDING",
+  "hash_algorithm": "SHA-256",
+  "manifest_excludes_itself": true,
+  "files": {
+    "README.md": {
+      "sha256": "4a5b8d285820135a071d5fde13a83c4612daf1f3fbd92761c71d0592fae36993",
+      "bytes": 2793,
+      "preservation": "Checkpoint documentation or validation summary"
+    },
+    "checkpoint-summary.json": {
+      "sha256": "40975c8d75a7da71a588ccfded7d3267f782e423ffcbb931ffb1d3ec918c7f62",
+      "bytes": 1409,
+      "preservation": "Checkpoint documentation or validation summary"
+    },
+    "group1-evidence.json": {
+      "sha256": "48b57722444b2fe05af3161dd41891dbec785c50a7ce5eb7f7987976d122c3ef",
+      "bytes": 9869,
+      "original_artifact_sha256": "d0f79094c41a5c16246117252dd1efd388b1b82bcd746161f7042cced273a0b0",
+      "preservation": "Public provenance normalization; exact translation values and guards retained"
+    },
+    "group1-output.json": {
+      "sha256": "acd8474fed3c7d9dc8d6ee5f06c8a8092f6a5ec6e23ed946f21276ecd091687c",
+      "bytes": 96075,
+      "original_artifact_sha256": "acd8474fed3c7d9dc8d6ee5f06c8a8092f6a5ec6e23ed946f21276ecd091687c",
+      "preservation": "byte-exact"
+    },
+    "group2-evidence.json": {
+      "sha256": "a359ce328f58a90644e95d90ce0156a5bc24919cd61472cd8726c8145b800af4",
+      "bytes": 10512,
+      "original_artifact_sha256": "75422ce2c42fae8656f94a2925361d16d238dcd5c265d188ce67ffe68692354f",
+      "preservation": "Public provenance normalization; exact translation values and guards retained"
+    },
+    "group2-output.json": {
+      "sha256": "f0b802347c2f64ff74aab3312e0ebb4f2921aaa1e2fb258504f31d226f1d4fbf",
+      "bytes": 106209,
+      "original_artifact_sha256": "f0b802347c2f64ff74aab3312e0ebb4f2921aaa1e2fb258504f31d226f1d4fbf",
+      "preservation": "byte-exact"
+    },
+    "parent-source-map.json": {
+      "sha256": "405e7401e1eb38b80c05628db1ea3e2561044af10e08528db4b47675636decc6",
+      "bytes": 526757,
+      "original_artifact_sha256": "405e7401e1eb38b80c05628db1ea3e2561044af10e08528db4b47675636decc6",
+      "preservation": "byte-exact"
+    }
+  }
+}

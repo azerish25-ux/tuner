@@ -1,0 +1,36 @@
+{
+  "locale": "kn",
+  "operation": "add_after_guarded_source_split_only",
+  "table": "Learn.strings",
+  "key": "L4f162aedb4",
+  "source": "Middle section",
+  "old": null,
+  "new": "ಮಧ್ಯಭಾಗ",
+  "source_sha256": "3bb8d1b80c1fb7c14b7404bf6e3c408d1f07d8022175ee18f2667497b875255f",
+  "old_sha256": null,
+  "new_sha256": "8fd3d75faa8372484f40b71eecf1830c3ce06d97ccb06742babbe9542079002b",
+  "reason": "All six Rondo alla Turca arrangement names denote the middle musical section (kind bridge), not a finger. The Kannada term matches already reviewed The middle section (L4812a17df4).",
+  "preconditions": [
+    "Apply only after an explicitly authorized owner applies the source-key split and regenerates the curriculum.",
+    "New key must be absent, or identical existing target must be treated as no-op; do not overwrite another value.",
+    "Require new key/source/hash to match and six migrated name pointers to be the verified ones.",
+    "Retain old Lced02810fc target ಮಧ್ಯದ ಬೆರಳು only for its remaining three banjo quiz options.",
+    "No repository/import/publication authority is granted by this proposal."
+  ],
+  "migrated_pointers": [
+    "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+    "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+    "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+    "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+    "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+    "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+  ],
+  "retained_old_key": {
+    "key": "Lced02810fc",
+    "source": "Middle",
+    "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+    "old_target": "ಮಧ್ಯದ ಬೆರಳು",
+    "old_target_sha256": "832c9cdd114d3d0017fef1faf9787e9cf4c9d0d62a8d24fdac63c5441ccd03c5",
+    "retained_target": "ಮಧ್ಯದ ಬೆರಳು"
+  }
+}

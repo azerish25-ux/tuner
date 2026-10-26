@@ -1,0 +1,112 @@
+{
+  "source_before_sha256": "893b9f23f6d14b70a00423387a584a14bfc9d0ed9f28ade78144f073cdb7bd87",
+  "source_after_staged_sha256": "5385cc11952cce0d76d4f46eb1f61238c9af72f7f46ae94c6b8a25200fc6be1d",
+  "changed_localized_objects": [
+    {
+      "pointer": "/courses/1/units/8/lessons/5/steps/1/options/0",
+      "old": {
+        "k": "Lf6586312d9",
+        "t": "1, 2, 3 and 4"
+      },
+      "new": {
+        "k": "Lf94a998e29",
+        "t": "Strings: 1, 2, 3 and 4"
+      }
+    },
+    {
+      "pointer": "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+      "old": {
+        "k": "Lced02810fc",
+        "t": "Middle"
+      },
+      "new": {
+        "k": "L4f162aedb4",
+        "t": "Middle section"
+      }
+    },
+    {
+      "pointer": "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+      "old": {
+        "k": "Lced02810fc",
+        "t": "Middle"
+      },
+      "new": {
+        "k": "L4f162aedb4",
+        "t": "Middle section"
+      }
+    },
+    {
+      "pointer": "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+      "old": {
+        "k": "Lced02810fc",
+        "t": "Middle"
+      },
+      "new": {
+        "k": "L4f162aedb4",
+        "t": "Middle section"
+      }
+    },
+    {
+      "pointer": "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+      "old": {
+        "k": "Lced02810fc",
+        "t": "Middle"
+      },
+      "new": {
+        "k": "L4f162aedb4",
+        "t": "Middle section"
+      }
+    },
+    {
+      "pointer": "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+      "old": {
+        "k": "Lced02810fc",
+        "t": "Middle"
+      },
+      "new": {
+        "k": "L4f162aedb4",
+        "t": "Middle section"
+      }
+    },
+    {
+      "pointer": "/courses/18/units/22/lessons/1/arrangement/sections/3/name",
+      "old": {
+        "k": "Lced02810fc",
+        "t": "Middle"
+      },
+      "new": {
+        "k": "L4f162aedb4",
+        "t": "Middle section"
+      }
+    }
+  ],
+  "all_other_fields_identical": true,
+  "two_source_split_objects_verified": true,
+  "applied": false,
+  "native_review": false,
+  "device_qa": false,
+  "related_first_half_key": "Lf6586312d9",
+  "first_half_owns_new_strings_key": "Lf94a998e29",
+  "proposal_evidence_files": [
+    {
+      "path": "context-split-evidence/source-guards.json",
+      "sha256": "f268d339fe9217a16392d479fa7a8b512930112a6dbc0351079b4e8ffb2f6d16"
+    },
+    {
+      "path": "context-split-evidence/retained-source-guards.json",
+      "sha256": "00bc2cc1d86e03c80b40b2cebdec4a5184295033feea1b75b41db24d0d8430b0"
+    },
+    {
+      "path": "context-split-evidence/migration-plan.json",
+      "sha256": "54e2a8746661cf4eba82880e17d1638eeb790ee4f642ade5d74662026184f575"
+    },
+    {
+      "path": "context-split-evidence/summary.json",
+      "sha256": "ddd1296f7e9345b5f4f30dde53252ab568053905e1d68e4479a88af96dd78343"
+    },
+    {
+      "path": "context-split-evidence/affected-contexts.json",
+      "sha256": "23786a309c980adf16b0e1b714bc21350d12edf8ae9811b95ffad10c3fa4cedc"
+    }
+  ]
+}

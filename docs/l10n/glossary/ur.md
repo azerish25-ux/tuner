@@ -20,7 +20,7 @@ Every row is mandatory. The "Current table" hints come from reading the shipped 
 | Units | سینٹس؛ منٹ؛ سیکنڈ؛ ملی سیکنڈ. Hz, BPM, ¢, XP unchanged |  |
 | Capitalization | No case; preserve brand spelling |  |
 | Note names in the interface | Runtime supplies notes; never invent names |  |
-| Note names in lessons (lesson languages only) | Not a lesson locale; preserve C, F♯, B♭, Em, G7 if referenced |  |
+| Note names in lessons (lesson languages only) | Lessons are required; preserve C, F♯, B♭, Em, G7 if referenced |  |
 | Sharp / flat / double sharp / double flat as words | شارپ / فلیٹ / ڈبل شارپ / ڈبل فلیٹ |  |
 | Tuning direction | نیچے / اوپر for tuner direction; not accidentals |  |
 | iOS Settings path (legal text) | سیٹنگز › Apple اکاؤنٹ › سبسکرپشنز. AI-reviewed; device verification pending |  |
@@ -60,7 +60,7 @@ Every row is mandatory. The "Current table" hints come from reading the shipped 
 | Chord view / Neck view | What VoiceOver calls the Show me switch | VoiceOver | `Chord view`, `Neck view` | کورڈ کا منظر / نیک کا منظر |  |
 | Show me | The 3D demonstration of a chord or notes on the neck | lessons | `Show me` | دکھائیں | Sits on a small capsule: short. |
 | Strum to tune | One strum reads every string at once | tuner, listing | `Strum to tune` | ٹیون کرنے کے لیے اسٹرم کریں |  |
-| Tune by feel / Feel | The phone pulses with the beat between the string and its note, slower as they meet, still at the lock | tuner, settings | `Tune by feel`, `Feel` | ارتعاش سے ٹیون کریں / ارتعاش محسوس کریں | "Feel it", "Feel the beat" use the same sense. |
+| Tune by feel / Feel | The phone pulses with the beat between the string and its note, slower as they meet, still at the lock | tuner, settings | `Tune by feel`, `Feel` | ارتعاش سے ٹیون کریں / ارتعاش | "Feel it", "Feel the beat" use the same sense. |
 | Bullseye | The pitch game (hit the centre ring); also leaderboard names | Practice, Game Center | `Bullseye` | عین نشانہ | Every current table translates it (de Volltreffer, fr Tir parfait, ja ど真ん中, ru В яблочко …) although HANDOFF.md says to keep game names. Decide once; every string naming the game ("Win a round of Bullseye", "Score 2,000 in Bullseye") uses this. |
 | Ear trainer / Ear training | The ear games and the ear course | Practice, Learn | `Ear training` | کان کی تربیت |  |
 | Drone | A sustained reference tone to play or sing against | Practice, lessons | `Drone` | مسلسل سُر | de Bordun, fr Bourdon, es Nota pedal, ja ドローン (current tables). |
@@ -187,3 +187,26 @@ Write the translation that applies in Timbre, and the one GPT must avoid.
 | Next, Again, Slower | on-screen labels and also Siri command words (`ios/Timbre/Intents/PracticeIntents.swift`): one translation serves both | — | اگلا / دوبارہ / آہستہ | Use the sense above |
 | Practice | the tab and the activity | a medical or legal practice | پریکٹس | a medical or legal practice |
 | Feel | the haptic tuning feature, feeling the beat | emotions | ارتعاش محسوس کریں (haptics; not emotion) | emotions |
+
+## 5. Lesson-draft decisions (direct GPT pass, 2026-10-26)
+
+These decisions are AI-reviewed only; no native-speaker certification or device QA is claimed.
+
+- Keep exact note/chord notation, fingering letters (`p`, `i`, `m`, `a`), roman-numeral progressions, strumming-letter notation and original song/author names when the whole source is such an invariant. They remain unmerged until an independent per-key semantic review approves them; do not add bidi marks or filler merely to evade identity checks.
+- In prose, lead with natural Urdu words (`نوٹ`, `کورڈ`, `کی`, `اسکیل`, `گانا`, `دھن`) when that fits, to establish RTL direction. No extra meaning is implied by those classifiers. Exact standalone invariants retain source spelling.
+- English acrostics used to remember literal Latin note letters are quoted **teaching examples**, not untranslated instruction or placeholders: `Every Amateur Does Get Better Eventually`, `Good Cooks Eat Apples`, `Every Amp Drives Grooves`, `Good Dogs Always Eat`, `Cats Go Dancing Around`. Keep the acrostic in quotes within Urdu instruction, with Urdu meaning where room allows; a literal Urdu replacement alone would lose the mnemonic's initial letters. Original lyric fragments identifying a passage are likewise retained within Urdu instruction.
+- Solfège instructional syllables: do = دو, re = رے, mi = می, fa = فا, sol = سول, la = لا, ti = ٹی. Actual Latin note names (`C`, `D`, etc.) remain Latin, never converted to solfège.
+- Interval terms: minor/major second = مائنر/میجر دوسرا وقفہ; third = تیسرا وقفہ; sixth = چھٹا وقفہ; perfect fourth/fifth = پرفیکٹ چوتھا/پانچواں; unison = ہم آواز. Root = بنیادی نوٹ; home note = بنیادی/مرکزی نوٹ; tonic = ٹونک.
+- Triad = ترائیڈ; inversion = الٹ ترتیب; arpeggio = آرپیجیو; common tone = مشترک سُر; diminished = ڈِمنشڈ; augmented = آگمنٹڈ; dominant seventh = ڈومیننٹ سیونتھ; mode = موڈ; Dorian = ڈورین; Mixolydian = مکسولیڈین; pentatonic box = پینٹاٹونک پیٹرن.
+- Hook = مرکزی دھن; riff = رِف; lick = فقرہ; fill = فِل; arrangement = ترتیب; texture = صوتی بناوٹ; comping = کورڈ سنگت; walking bass = واکنگ باس / چلتی باس دھن; shuffle = شفل; swing = سوئنگ / جھول by context; syncopation = سنکوپیشن; tremolo = ٹریملو; trill = ٹرل.
+- Bow = گز; frog = دستہ; tip = سرا; fingerboard = فنگر بورڈ; scroll = بل دار سرا; rosin = روزن; pizzicato = پزیکاٹو; slur = سلر; endpin = اینڈ پن; position/shift = پوزیشن / پوزیشن بدلنا; high/low second finger = اونچی/نیچی 2 when the source uses the digit. Cello first-position spacing is one finger per half step, not violin fingering.
+- Mandolin string pair/course = جوڑا (technical introductory term کورس); pick = پک; chop = چاپ; chunk = چنک. Banjo roll = رول; forward roll = فارورڈ رول; pinch = پنچ; clawhammer = کلا ہیمر; bum-ditty = بم ڈِٹی (بم، ڈِٹ، ٹی). These are instrument-technique terms, not untranslated prose.
+- Rhythm-duration terms follow the earlier lesson drafts: whole note = پورا نوٹ, half note = نصف نوٹ, quarter note = چوتھائی نوٹ, eighth note = آٹھواں نوٹ (plural/oblique آٹھویں نوٹ), sixteenth note = سولہواں نوٹ (plural/oblique سولہویں نوٹ). Rest = وقفہ / وقفۂ خاموشی; tie = ٹائی; dot/dotted = نقطہ / نقطے والا; triplet = ٹرپلٹ. A half cadence is the separate harmony term ہاف کیڈنس, not a half-note duration.
+- Staff = اسٹاف; treble/bass clef = ٹریبل/باس کلیف; ledger lines = اضافی لکیریں; key signature = کی سگنیچر; time signature = ٹائم سگنیچر; meter = میٹر. Keyboard keys are چابیاں/کنجیاں, never the tonality term کی.
+- Additional letter-name mnemonics remain quoted inside Urdu instruction: `Every Good Boy Does Fine`, `Good Boys Do Fine Always`, `All Cows Eat Grass`, and `FACE`. Their initials are the teaching content; an Urdu-only replacement would break the note mapping.
+- Cadence types: authentic = آتھنٹک, plagal = پلیگل, half = ہاف, deceptive = ڈیسیپٹو. Dynamics = ڈائنامکس / آواز کی بلندی; sustain = سُر قائم رکھنا; pitch matching = سُر ملانا; lip trill = ہونٹوں کا ٹرل. Breath-energy instructions do not mean squeezing or forcing the throat.
+- Descriptive numbered classical work titles may translate their descriptor while preserving the identifying number: `Mozart's Symphony No. 40` = موزارٹ کی سمفنی نمبر 40; `Symphony No. 40` = سمفنی نمبر 40. Keep the same localized descriptor in explanatory prose. This is distinct from lexical original song titles, which retain their original spelling under the rule above.
+
+## Independent review checkpoint (2026-10-26)
+
+The 6,080-key baseline received independent AI source/context review, including 186 guarded corrections and 305 source-bound identity decisions. Targeted Unicode isolates are limited to sequences whose display ordering was reviewed; ordinary prose is not blanket-wrapped. Shared count/list and finger/section source context repairs remain tracked separately. This is not native-reader or device-rendering certification.

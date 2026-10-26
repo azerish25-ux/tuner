@@ -1,0 +1,20 @@
+[
+  {
+    "path": "tools/curriculum/courses/ukulele_part2.py",
+    "line": 346,
+    "old": "        quiz(\"Thumb, index, middle, ring play which strings?\", [\"1, 2, 3 and 4\", \"3, 4, 1 and 2\", \"4, 3, 2 and 1\"], 2),",
+    "new": "        quiz(\"Thumb, index, middle, ring play which strings?\", [\"Strings: 1, 2, 3 and 4\", \"3, 4, 1 and 2\", \"4, 3, 2 and 1\"], 2),",
+    "old_line_occurrences": 1,
+    "file_sha256": "a7c1c98bb3acfdc56523d37606392a1244db6e06a03f41e258fd55a510438bbb",
+    "proposed_file_sha256": "1c32d00a6467f58f72e707dfe36850b89d9a6e4d0a0f6e807927d7d95eca5a58"
+  },
+  {
+    "path": "tools/curriculum/courses/standards_part2.py",
+    "line": 866,
+    "old": "    Part(\"Middle\", \"bridge\", TURCA_B, pickup=1, chords=\"C,G7 C,G Am,E Am,E\"),",
+    "new": "    Part(\"Middle section\", \"bridge\", TURCA_B, pickup=1, chords=\"C,G7 C,G Am,E Am,E\"),",
+    "old_line_occurrences": 1,
+    "file_sha256": "ff965a160164a7bcddf8b4a7e4a5eb769f02a096d952fa462d8de8afeec555b1",
+    "proposed_file_sha256": "ce1c5bb52526c81bab192ca58666f99d872aea5b69b2c4adc6975820f3db8dfe"
+  }
+]

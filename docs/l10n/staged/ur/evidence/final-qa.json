@@ -1,0 +1,49 @@
+{
+  "locale": "ur",
+  "source_all_drafts_sha256": "ed5d837d8a98593ea7975418f7cba2b264eb6d2aad2837b1383eb37bcfbfffa4",
+  "pairs_independently_reviewed": 6080,
+  "batches": 59,
+  "first_half_pairs": 3117,
+  "later_half_pairs": 2963,
+  "corrections": 186,
+  "genuine_source_bound_identities": 305,
+  "identity_categories": {
+    "music_notation": 115,
+    "original_work_title": 141,
+    "proper_author_credit": 31,
+    "fingering_symbol": 4,
+    "form_notation": 1,
+    "strum_notation": 3,
+    "roman_chord_notation": 1,
+    "rhythm_grouping_notation": 3,
+    "brand_credit": 1,
+    "source_lyric_token": 5
+  },
+  "context_specific_bidi_rows": 70,
+  "hard_errors": [],
+  "unresolved_warnings": [],
+  "reviewed_warning_rows": 367,
+  "guards_valid": true,
+  "coverage_complete": true,
+  "source_drift": false,
+  "native_review": false,
+  "device_qa": false,
+  "repository_edits": false,
+  "import_actions": false,
+  "global_report_actions": false,
+  "git_actions": false,
+  "reviewers": [
+    "OpenAI GPT independent review agent Independent AI review (AI review; not native-human certification)",
+    "OpenAI assistant Independent AI review (AI-only semantic review, 2026-10-26)"
+  ],
+  "evidence_by_half": {
+    "first-half": {
+      "manifest_sha256": "87043329c52b2b0078500364392dad17919d514578f12ba48df33cb2f2bef2f5",
+      "rtl_evidence_sha256": "3446246701e5ad522df65bbe286a00d47cfcc8c0dbcfba0a30f5877c790fe138"
+    },
+    "later-half": {
+      "manifest_sha256": "7627d3816fbcb0cc65f737d98eb9336fea30c168ff199bc0dea50f7e4cf00417",
+      "rtl_evidence_sha256": "12b00bf1420bce65889c965130c06fcf468f5dc354a12264124ef464904d924f"
+    }
+  }
+}

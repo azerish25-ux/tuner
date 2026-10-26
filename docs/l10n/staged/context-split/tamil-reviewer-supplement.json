@@ -1,0 +1,52 @@
+{
+  "locale": "ta",
+  "status": "reviewer-supplied proposals; additional migration delta, not new approval of entire frozen baseline",
+  "operations": [
+    {
+      "key": "Lf94a998e29",
+      "source": "Strings: 1, 2, 3 and 4",
+      "operation": "add_if_absent",
+      "new": "தந்திகள்: 1, 2, 3 மற்றும் 4",
+      "source_sha256": "a9c0f5eaf3a697599b3602ce970b13b1f3fbfa5800b0f02cee313043a39f4d1a",
+      "new_sha256": "3109a9c29b2f9d3e19be210ca5bf715374357184f105f254765b62d0df240e99",
+      "mechanical_issues": [],
+      "codepoint_length": 27
+    },
+    {
+      "key": "Lf6586312d9",
+      "source": "1, 2, 3 and 4",
+      "operation": "replace_if_exact",
+      "old": "1, 2, 3 மற்றும் 4",
+      "old_sha256": "08dbdb5e33ec69cee57e0ec6689dc89df68ea017726969a7304045e02d83f804",
+      "new": "1, 2, 3 அண்ட் 4",
+      "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+      "new_sha256": "a14410ee9a014069a28b245d9aea672b3c6a7d3c7316754ed84ca027a7b7dda3",
+      "mechanical_issues": [],
+      "codepoint_length": 15
+    },
+    {
+      "key": "L4f162aedb4",
+      "source": "Middle section",
+      "operation": "add_if_absent",
+      "new": "நடுப்பகுதி",
+      "source_sha256": "3bb8d1b80c1fb7c14b7404bf6e3c408d1f07d8022175ee18f2667497b875255f",
+      "new_sha256": "53ca25e6e56e988efd79dbd927e4f3dcb3f1ad3a5bbdc011fc2555fe6e99f8cd",
+      "mechanical_issues": [],
+      "codepoint_length": 10
+    },
+    {
+      "key": "Lced02810fc",
+      "source": "Middle",
+      "operation": "retain",
+      "new": "நடுவிரல்",
+      "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+      "new_sha256": "1c8031a8ef2f71d4916513e82689d9d0d899c1956ef8603bd9ece4a2f8adc489",
+      "mechanical_issues": [],
+      "codepoint_length": 8
+    }
+  ],
+  "evidence_paths": [
+    "frozen Tamil review artifact first-half/blockers.json",
+    "frozen Tamil review artifact later-half/blockers.json"
+  ]
+}

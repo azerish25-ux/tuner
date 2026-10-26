@@ -1,0 +1,2213 @@
+{
+  "locale": "gu",
+  "scope": "final frozen batches031–059",
+  "pairs": 2963,
+  "batches": 29,
+  "sequential_full_pair_read": true,
+  "corrections": 191,
+  "correction_categories": {
+    "shared-label": 2,
+    "rhythm-duration": 119,
+    "interval-terminology": 7,
+    "grammar": 2,
+    "counting-syllable": 54,
+    "idiom-grammar": 1,
+    "technique": 1,
+    "music-semantics": 4,
+    "idiom": 1
+  },
+  "genuine_invariants": 216,
+  "invariant_categories": {
+    "song_title": 110,
+    "musical_notation": 72,
+    "author_credit": 22,
+    "proper_title_or_named_tune": 6,
+    "brand_credit": 1,
+    "original_sung_word_locator": 5
+  },
+  "manifest_sha256": "bd8a997a5fe9d044cc918d0df302430714a2c8ee701bb55cf2ec23ddce03dd98",
+  "manifest_files_verified": 183,
+  "guarded_input_files": 101,
+  "source_target_staged_agreement": true,
+  "unique_keys": 2963,
+  "official_identity_gate_pending_count": 216,
+  "official_identity_gate_pending": [
+    {
+      "batch": 32,
+      "id": "s023",
+      "table": "Learn.strings",
+      "key": "Lf88ebdd5e8",
+      "context": "Banjo · Unit 4 · song bjo-4-2 “Cripple Creek” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 32,
+      "id": "s031",
+      "table": "Learn.strings",
+      "key": "Lce7001df87",
+      "context": "Banjo · Unit 4 · song bjo-4-3 “Cumberland Gap” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 32,
+      "id": "s040",
+      "table": "Learn.strings",
+      "key": "L5a5d8340b2",
+      "context": "Banjo · Unit 4 · song bjo-4-4 “Shady Grove” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 33,
+      "id": "s020",
+      "table": "Learn.strings",
+      "key": "L4437fdb426",
+      "context": "Banjo · Unit 6 · song bjo-6-4 “Skip to My Lou” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 34,
+      "id": "s092",
+      "table": "Learn.strings",
+      "key": "L439cc8cefc",
+      "context": "Ear Training · Unit 6 · lesson ear-6-2 “Major and minor everywhere” · step 6 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 34,
+      "id": "s093",
+      "table": "Learn.strings",
+      "key": "Lb4edf8f910",
+      "context": "Ear Training · Unit 6 · lesson ear-6-2 “Major and minor everywhere” · step 6 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 34,
+      "id": "s094",
+      "table": "Learn.strings",
+      "key": "L37fc0760bc",
+      "context": "Ear Training · Unit 6 · lesson ear-6-2 “Major and minor everywhere” · step 6 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 35,
+      "id": "s006",
+      "table": "Learn.strings",
+      "key": "Ld19e3e1e5a",
+      "context": "Ear Training · Unit 6 · lesson ear-6-4 “The dominant seventh” · step 5 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 35,
+      "id": "s007",
+      "table": "Learn.strings",
+      "key": "Ld54e6e9baa",
+      "context": "Ear Training · Unit 6 · lesson ear-6-4 “The dominant seventh” · step 5 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 35,
+      "id": "s008",
+      "table": "Learn.strings",
+      "key": "L8b3fd24a46",
+      "context": "Ear Training · Unit 6 · lesson ear-6-4 “The dominant seventh” · step 5 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 36,
+      "id": "s039",
+      "table": "Learn.strings",
+      "key": "L7cf184f4c6",
+      "context": "Music Theory · Unit 1 · lesson thy-1-1 “The musical alphabet” · step 2 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 36,
+      "id": "s046",
+      "table": "Learn.strings",
+      "key": "L65dc0bc434",
+      "context": "Music Theory · Unit 1 · lesson thy-1-1 “The musical alphabet” · step 5 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 36,
+      "id": "s047",
+      "table": "Learn.strings",
+      "key": "L16d7cda25c",
+      "context": "Music Theory · Unit 1 · lesson thy-1-1 “The musical alphabet” · step 5 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 36,
+      "id": "s048",
+      "table": "Learn.strings",
+      "key": "L013fea348d",
+      "context": "Music Theory · Unit 1 · lesson thy-1-1 “The musical alphabet” · step 5 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 36,
+      "id": "s051",
+      "table": "Learn.strings",
+      "key": "L144eabccb1",
+      "context": "Music Theory · Unit 1 · lesson thy-1-1 “The musical alphabet” · step 6 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 36,
+      "id": "s052",
+      "table": "Learn.strings",
+      "key": "L91d585db22",
+      "context": "Music Theory · Unit 1 · lesson thy-1-1 “The musical alphabet” · step 6 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 36,
+      "id": "s053",
+      "table": "Learn.strings",
+      "key": "L51e4d1a6c5",
+      "context": "Music Theory · Unit 1 · lesson thy-1-1 “The musical alphabet” · step 6 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 36,
+      "id": "s068",
+      "table": "Learn.strings",
+      "key": "Lc6400eaec1",
+      "context": "Music Theory · Unit 1 · lesson thy-1-2 “Octaves” · step 6 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 36,
+      "id": "s069",
+      "table": "Learn.strings",
+      "key": "L0371438f82",
+      "context": "Music Theory · Unit 1 · lesson thy-1-2 “Octaves” · step 6 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 36,
+      "id": "s070",
+      "table": "Learn.strings",
+      "key": "Laaa025b382",
+      "context": "Music Theory · Unit 1 · lesson thy-1-2 “Octaves” · step 6 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 36,
+      "id": "s097",
+      "table": "Learn.strings",
+      "key": "La04af666be",
+      "context": "Music Theory · Unit 1 · challenge thy-1-5 “Notes and letters challenge” · step 2 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 36,
+      "id": "s098",
+      "table": "Learn.strings",
+      "key": "L944e60cb74",
+      "context": "Music Theory · Unit 1 · challenge thy-1-5 “Notes and letters challenge” · step 2 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 36,
+      "id": "s099",
+      "table": "Learn.strings",
+      "key": "Le6e5bd1766",
+      "context": "Music Theory · Unit 1 · challenge thy-1-5 “Notes and letters challenge” · step 2 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 36,
+      "id": "s102",
+      "table": "Learn.strings",
+      "key": "Lcb7d29f43f",
+      "context": "Music Theory · Unit 1 · challenge thy-1-5 “Notes and letters challenge” · step 5 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 37,
+      "id": "s006",
+      "table": "Learn.strings",
+      "key": "Le80fdb9645",
+      "context": "Music Theory · Unit 2 · lesson thy-2-1 “Half steps” · step 2 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 37,
+      "id": "s026",
+      "table": "Learn.strings",
+      "key": "Lf87ce692a8",
+      "context": "Music Theory · Unit 2 · lesson thy-2-2 “Sharps and flats” · step 3 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 37,
+      "id": "s027",
+      "table": "Learn.strings",
+      "key": "L468f49fb52",
+      "context": "Music Theory · Unit 2 · lesson thy-2-2 “Sharps and flats” · step 3 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 37,
+      "id": "s030",
+      "table": "Learn.strings",
+      "key": "Leac2bf8895",
+      "context": "Music Theory · Unit 2 · lesson thy-2-2 “Sharps and flats” · step 4 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 37,
+      "id": "s031",
+      "table": "Learn.strings",
+      "key": "L9e779ee713",
+      "context": "Music Theory · Unit 2 · lesson thy-2-2 “Sharps and flats” · step 4 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 37,
+      "id": "s032",
+      "table": "Learn.strings",
+      "key": "L68b2b09c89",
+      "context": "Music Theory · Unit 2 · lesson thy-2-2 “Sharps and flats” · step 4 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 37,
+      "id": "s037",
+      "table": "Learn.strings",
+      "key": "L273a01f9bb",
+      "context": "Music Theory · Unit 2 · lesson thy-2-2 “Sharps and flats” · step 6 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 37,
+      "id": "s038",
+      "table": "Learn.strings",
+      "key": "L147c7ee532",
+      "context": "Music Theory · Unit 2 · lesson thy-2-2 “Sharps and flats” · step 6 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 37,
+      "id": "s040",
+      "table": "Learn.strings",
+      "key": "L7f95f4b200",
+      "context": "Music Theory · Unit 2 · lesson thy-2-2 “Sharps and flats” · step 7 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 37,
+      "id": "s041",
+      "table": "Learn.strings",
+      "key": "L81860bf635",
+      "context": "Music Theory · Unit 2 · lesson thy-2-2 “Sharps and flats” · step 7 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 37,
+      "id": "s042",
+      "table": "Learn.strings",
+      "key": "L58b29e6cc0",
+      "context": "Music Theory · Unit 2 · lesson thy-2-2 “Sharps and flats” · step 7 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 37,
+      "id": "s055",
+      "table": "Learn.strings",
+      "key": "L08b90ad7cf",
+      "context": "Music Theory · Unit 2 · lesson thy-2-3 “Whole steps” · step 7 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 37,
+      "id": "s073",
+      "table": "Learn.strings",
+      "key": "L4f240cf65f",
+      "context": "Music Theory · Unit 2 · lesson thy-2-4 “One key, two names” · step 6 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 37,
+      "id": "s074",
+      "table": "Learn.strings",
+      "key": "L18ca3dda33",
+      "context": "Music Theory · Unit 2 · lesson thy-2-4 “One key, two names” · step 6 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 39,
+      "id": "s009",
+      "table": "Learn.strings",
+      "key": "La13338039b",
+      "context": "Music Theory · Unit 4 · lesson thy-4-5 “Time signatures” · step 4 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 39,
+      "id": "s010",
+      "table": "Learn.strings",
+      "key": "L8ba2a07385",
+      "context": "Music Theory · Unit 4 · lesson thy-4-5 “Time signatures” · step 4 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 39,
+      "id": "s011",
+      "table": "Learn.strings",
+      "key": "Lcc80df1f23",
+      "context": "Music Theory · Unit 4 · lesson thy-4-5 “Time signatures” · step 4 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 39,
+      "id": "s056",
+      "table": "Learn.strings",
+      "key": "L30a6c8a770",
+      "context": "Music Theory · Unit 5 · lesson thy-5-2 “The major scale recipe” · step 2 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 39,
+      "id": "s057",
+      "table": "Learn.strings",
+      "key": "L5bd73fc956",
+      "context": "Music Theory · Unit 5 · lesson thy-5-2 “The major scale recipe” · step 2 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 39,
+      "id": "s058",
+      "table": "Learn.strings",
+      "key": "Le4adabb7df",
+      "context": "Music Theory · Unit 5 · lesson thy-5-2 “The major scale recipe” · step 2 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 40,
+      "id": "s103",
+      "table": "Learn.strings",
+      "key": "Leccee32026",
+      "context": "Music Theory · Unit 7 · lesson thy-7-1 “Building a triad” · step 2 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 40,
+      "id": "s104",
+      "table": "Learn.strings",
+      "key": "Lbd97686897",
+      "context": "Music Theory · Unit 7 · lesson thy-7-1 “Building a triad” · step 2 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 40,
+      "id": "s113",
+      "table": "Learn.strings",
+      "key": "La46d19dee2",
+      "context": "Music Theory · Unit 7 · lesson thy-7-1 “Building a triad” · step 6 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 40,
+      "id": "s114",
+      "table": "Learn.strings",
+      "key": "L4ddbbc6269",
+      "context": "Music Theory · Unit 7 · lesson thy-7-1 “Building a triad” · step 6 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 40,
+      "id": "s115",
+      "table": "Learn.strings",
+      "key": "L8672546ef1",
+      "context": "Music Theory · Unit 7 · lesson thy-7-1 “Building a triad” · step 6 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 41,
+      "id": "s006",
+      "table": "Learn.strings",
+      "key": "L4bc4f5018a",
+      "context": "Music Theory · Unit 7 · lesson thy-7-2 “Major and minor triads” · step 4 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 41,
+      "id": "s007",
+      "table": "Learn.strings",
+      "key": "L52b515dd1c",
+      "context": "Music Theory · Unit 7 · lesson thy-7-2 “Major and minor triads” · step 4 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 41,
+      "id": "s008",
+      "table": "Learn.strings",
+      "key": "La26afab0b8",
+      "context": "Music Theory · Unit 7 · lesson thy-7-2 “Major and minor triads” · step 4 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 41,
+      "id": "s011",
+      "table": "Learn.strings",
+      "key": "L55c00c847d",
+      "context": "Music Theory · Unit 7 · lesson thy-7-2 “Major and minor triads” · step 5 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 41,
+      "id": "s012",
+      "table": "Learn.strings",
+      "key": "Lf92e2db958",
+      "context": "Music Theory · Unit 7 · lesson thy-7-2 “Major and minor triads” · step 5 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 41,
+      "id": "s058",
+      "table": "Learn.strings",
+      "key": "L9ad5c4032f",
+      "context": "Music Theory · Unit 7 · challenge thy-7-5 “Chords challenge” · step 2 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 41,
+      "id": "s060",
+      "table": "Learn.strings",
+      "key": "Lc88b590de9",
+      "context": "Music Theory · Unit 7 · challenge thy-7-5 “Chords challenge” · step 3 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 41,
+      "id": "s061",
+      "table": "Learn.strings",
+      "key": "L2dd4c36e57",
+      "context": "Music Theory · Unit 7 · challenge thy-7-5 “Chords challenge” · step 3 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 41,
+      "id": "s062",
+      "table": "Learn.strings",
+      "key": "Lfb9434a874",
+      "context": "Music Theory · Unit 7 · challenge thy-7-5 “Chords challenge” · step 3 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 41,
+      "id": "s067",
+      "table": "Learn.strings",
+      "key": "L1440066ca8",
+      "context": "Music Theory · Unit 7 · challenge thy-7-5 “Chords challenge” · step 8 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 41,
+      "id": "s083",
+      "table": "Learn.strings",
+      "key": "L932eaaf5a3",
+      "context": "Music Theory · Unit 8 · lesson thy-8-1 “I, IV and V” · step 6 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 41,
+      "id": "s084",
+      "table": "Learn.strings",
+      "key": "L833da18887",
+      "context": "Music Theory · Unit 8 · lesson thy-8-1 “I, IV and V” · step 6 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 41,
+      "id": "s085",
+      "table": "Learn.strings",
+      "key": "Lc9ee5681d3",
+      "context": "Music Theory · Unit 8 · lesson thy-8-1 “I, IV and V” · step 6 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 41,
+      "id": "s091",
+      "table": "Learn.strings",
+      "key": "L3a8aba7a85",
+      "context": "Music Theory · Unit 8 · lesson thy-8-2 “The pop progression” · step 1 (explain) · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 41,
+      "id": "s094",
+      "table": "Learn.strings",
+      "key": "L4f93b2c841",
+      "context": "Music Theory · Unit 8 · lesson thy-8-2 “The pop progression” · step 2 (listen) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 41,
+      "id": "s101",
+      "table": "Learn.strings",
+      "key": "Lfca4fdcfa2",
+      "context": "Music Theory · Unit 8 · lesson thy-8-2 “The pop progression” · step 6 (listen) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 42,
+      "id": "s001",
+      "table": "Learn.strings",
+      "key": "L5385ffddaa",
+      "context": "Music Theory · Unit 8 · lesson thy-8-3 “ii–V–I” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 42,
+      "id": "s009",
+      "table": "Learn.strings",
+      "key": "L1267b63df5",
+      "context": "Music Theory · Unit 8 · lesson thy-8-3 “ii–V–I” · step 3 (listen) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 42,
+      "id": "s014",
+      "table": "Learn.strings",
+      "key": "L7f9b7bad94",
+      "context": "Music Theory · Unit 8 · lesson thy-8-3 “ii–V–I” · step 6 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 42,
+      "id": "s015",
+      "table": "Learn.strings",
+      "key": "Lce9f455869",
+      "context": "Music Theory · Unit 8 · lesson thy-8-3 “ii–V–I” · step 6 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 42,
+      "id": "s031",
+      "table": "Learn.strings",
+      "key": "Lca73ab6556",
+      "context": "Music Theory · Unit 8 · lesson thy-8-4 “The 12-bar blues” · step 5 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 42,
+      "id": "s061",
+      "table": "Learn.strings",
+      "key": "L903c46b456",
+      "context": "Music Theory · Unit 8 · challenge thy-8-6 “Progressions challenge” · step 3 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 44,
+      "id": "s004",
+      "table": "Learn.strings",
+      "key": "Lc4b37cf719",
+      "context": "Rhythm · Unit 3 · challenge rhy-3-5 “Space and push” · step 4 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 44,
+      "id": "s098",
+      "table": "Learn.strings",
+      "key": "Le624d302b7",
+      "context": "Rhythm · Unit 6 · lesson rhy-6-2 “March time: 2/4” · step 5 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 47,
+      "id": "s010",
+      "table": "Learn.strings",
+      "key": "L893275da51",
+      "context": "Singing · Unit 5 · song voc-5-1 “Twinkle Twinkle Little Star” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 47,
+      "id": "s022",
+      "table": "Learn.strings",
+      "key": "Lb944af0880",
+      "context": "Singing · Unit 5 · song voc-5-3 “Auld Lang Syne” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 47,
+      "id": "s031",
+      "table": "Learn.strings",
+      "key": "L51fd07643b",
+      "context": "Singing · Unit 5 · song voc-5-3 “Auld Lang Syne” · arrangement · lyric credit (a name and year: usually keep as is)",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 47,
+      "id": "s036",
+      "table": "Learn.strings",
+      "key": "L5ded105f41",
+      "context": "Singing · Unit 5 · song voc-5-5 “Shenandoah” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 48,
+      "id": "s013",
+      "table": "Learn.strings",
+      "key": "L09054f67ac",
+      "context": "Songs · Unit 1 · song song-twinkle “Twinkle, Twinkle, Little Star” · step 4 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 48,
+      "id": "s015",
+      "table": "Learn.strings",
+      "key": "L3b0a573dce",
+      "context": "Songs · Unit 1 · song song-twinkle “Twinkle, Twinkle, Little Star” · step 4 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 48,
+      "id": "s025",
+      "table": "Learn.strings",
+      "key": "Lf57eae0697",
+      "context": "Songs · Unit 1 · song song-frere-jacques “Frère Jacques” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 48,
+      "id": "s044",
+      "table": "Learn.strings",
+      "key": "L2777cf39fb",
+      "context": "Songs · Unit 1 · song song-jingle-bells “Jingle Bells” · arrangement · lyric credit (a name and year: usually keep as is)",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 48,
+      "id": "s062",
+      "table": "Learn.strings",
+      "key": "L2358e4572b",
+      "context": "Songs · Unit 2 · song song-old-macdonald “Old MacDonald Had a Farm” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 48,
+      "id": "s086",
+      "table": "Learn.strings",
+      "key": "Lebb146d631",
+      "context": "Songs · Unit 2 · song song-bobby-shafto “Bobby Shafto” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 49,
+      "id": "s003",
+      "table": "Learn.strings",
+      "key": "L6a92c479e4",
+      "context": "Songs · Unit 3 · song song-canon-in-d “Canon in D” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 49,
+      "id": "s018",
+      "table": "Learn.strings",
+      "key": "Lfde6285917",
+      "context": "Songs · Unit 3 · song song-largo “Largo, New World Symphony” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 49,
+      "id": "s037",
+      "table": "Learn.strings",
+      "key": "L5533d4675e",
+      "context": "Songs · Unit 3 · song song-mountain-king “In the Hall of the Mountain King” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 49,
+      "id": "s051",
+      "table": "Learn.strings",
+      "key": "L146c1bf23b",
+      "context": "Songs · Unit 3 · song song-fur-elise “Für Elise” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 49,
+      "id": "s078",
+      "table": "Learn.strings",
+      "key": "Lcacba260e6",
+      "context": "Songs · Unit 4 · song song-my-country “My Country, 'Tis of Thee” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 49,
+      "id": "s083",
+      "table": "Learn.strings",
+      "key": "L9c2b93a151",
+      "context": "Songs · Unit 4 · song song-my-country “My Country, 'Tis of Thee” · arrangement · lyric credit (a name and year: usually keep as is)",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 49,
+      "id": "s084",
+      "table": "Learn.strings",
+      "key": "Lae0e4af3a3",
+      "context": "Songs · Unit 4 · song song-simple-gifts “Simple Gifts” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 49,
+      "id": "s093",
+      "table": "Learn.strings",
+      "key": "La3f0345a76",
+      "context": "Songs · Unit 4 · song song-simple-gifts “Simple Gifts” · arrangement · lyric credit (a name and year: usually keep as is)",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 50,
+      "id": "s003",
+      "table": "Learn.strings",
+      "key": "L406b881188",
+      "context": "Songs · Unit 5 · song song-good-king-wenceslas “Good King Wenceslas” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 50,
+      "id": "s008",
+      "table": "Learn.strings",
+      "key": "L84690acdde",
+      "context": "Songs · Unit 5 · song song-good-king-wenceslas “Good King Wenceslas” · arrangement · lyric credit (a name and year: usually keep as is)",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 50,
+      "id": "s009",
+      "table": "Learn.strings",
+      "key": "Lf38952de44",
+      "context": "Songs · Unit 5 · song song-deck-the-halls “Deck the Halls” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 50,
+      "id": "s016",
+      "table": "Learn.strings",
+      "key": "L500ab3c359",
+      "context": "Songs · Unit 5 · song song-deck-the-halls “Deck the Halls” · arrangement · lyric credit (a name and year: usually keep as is)",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 50,
+      "id": "s017",
+      "table": "Learn.strings",
+      "key": "L869c163632",
+      "context": "Songs · Unit 5 · song song-we-wish-you “We Wish You a Merry Christmas” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 50,
+      "id": "s029",
+      "table": "Learn.strings",
+      "key": "Ld9afe70020",
+      "context": "Songs · Unit 5 · song song-joy-to-the-world “Joy to the World” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 50,
+      "id": "s034",
+      "table": "Learn.strings",
+      "key": "Ld89817766e",
+      "context": "Songs · Unit 5 · song song-joy-to-the-world “Joy to the World” · arrangement · lyric credit (a name and year: usually keep as is)",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 50,
+      "id": "s035",
+      "table": "Learn.strings",
+      "key": "Lf319af35dc",
+      "context": "Songs · Unit 5 · song song-silent-night “Silent Night” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 50,
+      "id": "s055",
+      "table": "Learn.strings",
+      "key": "Ld052b9a30c",
+      "context": "Songs · Unit 6 · song song-eine-kleine “Eine kleine Nachtmusik” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 50,
+      "id": "s070",
+      "table": "Learn.strings",
+      "key": "L21a9f4f643",
+      "context": "Songs · Unit 6 · song song-danny-boy “Danny Boy (Londonderry Air)” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 50,
+      "id": "s080",
+      "table": "Learn.strings",
+      "key": "La06e04321c",
+      "context": "Songs · Unit 6 · song song-danny-boy “Danny Boy (Londonderry Air)” · step 5 (along) · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 50,
+      "id": "s081",
+      "table": "Learn.strings",
+      "key": "L70aebab32e",
+      "context": "Songs · Unit 6 · song song-danny-boy “Danny Boy (Londonderry Air)” · arrangement · lyric credit (a name and year: usually keep as is)",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 50,
+      "id": "s082",
+      "table": "Learn.strings",
+      "key": "L562fb6ab78",
+      "context": "Songs · Unit 6 · song song-mozart-40 “Mozart's Symphony No. 40” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 50,
+      "id": "s091",
+      "table": "Learn.strings",
+      "key": "L45ffe10705",
+      "context": "Songs · Unit 6 · song song-mozart-40 “Mozart's Symphony No. 40” · step 6 (along) · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 51,
+      "id": "s002",
+      "table": "Learn.strings",
+      "key": "Lf4ae93d3b6",
+      "context": "Originals · Unit 1 · song orig-kite-weather “Kite Weather” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 51,
+      "id": "s009",
+      "table": "Learn.strings",
+      "key": "L8deaa20015",
+      "context": "Originals · Unit 1 · song orig-kite-weather “Kite Weather” · arrangement · lyric credit (a name and year: usually keep as is)",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 51,
+      "id": "s010",
+      "table": "Learn.strings",
+      "key": "L135e3a84c9",
+      "context": "Originals · Unit 1 · song orig-porchlight “Porchlight” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 51,
+      "id": "s015",
+      "table": "Learn.strings",
+      "key": "Lb4f4a898b0",
+      "context": "Originals · Unit 1 · song orig-moth-and-ember “Moth and Ember” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 51,
+      "id": "s022",
+      "table": "Learn.strings",
+      "key": "L140525c1cd",
+      "context": "Originals · Unit 1 · song orig-low-tide-radio “Low Tide Radio” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 51,
+      "id": "s028",
+      "table": "Learn.strings",
+      "key": "La629e1f318",
+      "context": "Originals · Unit 1 · song orig-dust-on-the-dashboard “Dust on the Dashboard” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 51,
+      "id": "s047",
+      "table": "Learn.strings",
+      "key": "L4cc78df1b7",
+      "context": "Originals · Unit 2 · song orig-lantern-hill “Lantern Hill” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 51,
+      "id": "s051",
+      "table": "Learn.strings",
+      "key": "L76775d6156",
+      "context": "Originals · Unit 2 · song orig-gravel-road-two-step “Gravel Road Two-Step” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 51,
+      "id": "s059",
+      "table": "Learn.strings",
+      "key": "Lf237c6e813",
+      "context": "Originals · Unit 2 · song orig-first-frost “First Frost” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 51,
+      "id": "s063",
+      "table": "Learn.strings",
+      "key": "L0d3104ffd5",
+      "context": "Originals · Unit 2 · song orig-hammock-season “Hammock Season” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 51,
+      "id": "s068",
+      "table": "Learn.strings",
+      "key": "L9d25dea184",
+      "context": "Originals · Unit 2 · song orig-glow-in-the-dark-stars “Glow-in-the-Dark Stars” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 51,
+      "id": "s081",
+      "table": "Learn.strings",
+      "key": "L42657f23ba",
+      "context": "Originals · Unit 3 · song orig-sparkler-season “Sparkler Season” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 51,
+      "id": "s087",
+      "table": "Learn.strings",
+      "key": "L948eb34feb",
+      "context": "Originals · Unit 3 · song orig-roller-rink “Roller Rink” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 51,
+      "id": "s092",
+      "table": "Learn.strings",
+      "key": "L7d5a055e37",
+      "context": "Originals · Unit 3 · song orig-echo-canyon “Echo Canyon” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 52,
+      "id": "s001",
+      "table": "Learn.strings",
+      "key": "L4cf432a342",
+      "context": "Originals · Unit 3 · song orig-open-windows “Open Windows” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 52,
+      "id": "s005",
+      "table": "Learn.strings",
+      "key": "L5155fc0931",
+      "context": "Originals · Unit 3 · song orig-scoreboard-lights “Scoreboard Lights” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 52,
+      "id": "s014",
+      "table": "Learn.strings",
+      "key": "L0f8363a8e4",
+      "context": "Originals · Unit 3 · challenge orig-pop-anthem-set “Pop anthem set” · step 6 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 52,
+      "id": "s015",
+      "table": "Learn.strings",
+      "key": "Le431eabaf3",
+      "context": "Originals · Unit 3 · challenge orig-pop-anthem-set “Pop anthem set” · step 6 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 52,
+      "id": "s019",
+      "table": "Learn.strings",
+      "key": "L3f63ae8b8d",
+      "context": "Originals · Unit 4 · song orig-rust-belt-shuffle “Rust Belt Shuffle” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 52,
+      "id": "s023",
+      "table": "Learn.strings",
+      "key": "Lf2ecba4f27",
+      "context": "Originals · Unit 4 · song orig-carousel-at-closing-time “Carousel at Closing Time” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 52,
+      "id": "s027",
+      "table": "Learn.strings",
+      "key": "Lb1c589af79",
+      "context": "Originals · Unit 4 · song orig-cedar-smoke “Cedar Smoke” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 52,
+      "id": "s033",
+      "table": "Learn.strings",
+      "key": "L79edc518ec",
+      "context": "Originals · Unit 4 · song orig-rain-on-the-skylight “Rain on the Skylight” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 52,
+      "id": "s039",
+      "table": "Learn.strings",
+      "key": "L22a125fda7",
+      "context": "Originals · Unit 4 · song orig-neon-laundromat “Neon Laundromat” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 52,
+      "id": "s050",
+      "table": "Learn.strings",
+      "key": "L8e081d8487",
+      "context": "Originals · Unit 5 · song orig-late-checkout “Late Checkout” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 52,
+      "id": "s054",
+      "table": "Learn.strings",
+      "key": "L4cad552525",
+      "context": "Originals · Unit 5 · song orig-saltwater-sunday “Saltwater Sunday” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 52,
+      "id": "s059",
+      "table": "Learn.strings",
+      "key": "Lab9322ed00",
+      "context": "Originals · Unit 5 · song orig-pocket-change “Pocket Change” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 52,
+      "id": "s065",
+      "table": "Learn.strings",
+      "key": "L6ab1a75a8e",
+      "context": "Originals · Unit 5 · song orig-kitchen-slow-dance “Kitchen Slow Dance” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 52,
+      "id": "s071",
+      "table": "Learn.strings",
+      "key": "L2385db8e9f",
+      "context": "Originals · Unit 5 · song orig-houseplants “Houseplants” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 52,
+      "id": "s079",
+      "table": "Learn.strings",
+      "key": "L8a5e6d018b",
+      "context": "Originals · Unit 5 · challenge orig-groove-set “Groove set” · step 6 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 52,
+      "id": "s083",
+      "table": "Learn.strings",
+      "key": "L0995a331f6",
+      "context": "Originals · Unit 6 · song orig-static-on-channel-nine “Static on Channel Nine” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 52,
+      "id": "s087",
+      "table": "Learn.strings",
+      "key": "Lc91deeae6c",
+      "context": "Originals · Unit 6 · song orig-basement-weather “Basement Weather” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 52,
+      "id": "s095",
+      "table": "Learn.strings",
+      "key": "Lefc1ea7915",
+      "context": "Originals · Unit 6 · song orig-jukebox-moon “Jukebox Moon” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 52,
+      "id": "s099",
+      "table": "Learn.strings",
+      "key": "Lad5fe25684",
+      "context": "Originals · Unit 6 · song orig-boardwalk-comet “Boardwalk Comet” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 53,
+      "id": "s001",
+      "table": "Learn.strings",
+      "key": "L16d416a1dc",
+      "context": "Originals · Unit 6 · song orig-mile-marker-zero “Mile Marker Zero” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 53,
+      "id": "s015",
+      "table": "Learn.strings",
+      "key": "L30e03d8db8",
+      "context": "Originals · Unit 7 · song orig-last-bell “Last Bell” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 53,
+      "id": "s020",
+      "table": "Learn.strings",
+      "key": "L9a1fc5bd94",
+      "context": "Originals · Unit 7 · song orig-copper-wire “Copper Wire” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 53,
+      "id": "s025",
+      "table": "Learn.strings",
+      "key": "Lc28f954374",
+      "context": "Originals · Unit 7 · song orig-cold-lake “Cold Lake” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 53,
+      "id": "s029",
+      "table": "Learn.strings",
+      "key": "Lef7f677c71",
+      "context": "Originals · Unit 7 · song orig-parking-lot-cathedral “Parking Lot Cathedral” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 53,
+      "id": "s034",
+      "table": "Learn.strings",
+      "key": "L5067110091",
+      "context": "Originals · Unit 7 · song orig-halogen “Halogen” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 53,
+      "id": "s049",
+      "table": "Learn.strings",
+      "key": "L365db7dc82",
+      "context": "Originals · Unit 8 · song orig-keepers-daughter “Keeper's Daughter” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 53,
+      "id": "s053",
+      "table": "Learn.strings",
+      "key": "L4a732fabe7",
+      "context": "Originals · Unit 8 · song orig-snow-globe-town “Snow Globe Town” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 53,
+      "id": "s057",
+      "table": "Learn.strings",
+      "key": "L3c3628688b",
+      "context": "Originals · Unit 8 · song orig-thistle-and-thread “Thistle and Thread” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 53,
+      "id": "s063",
+      "table": "Learn.strings",
+      "key": "L1f9582c5c2",
+      "context": "Originals · Unit 8 · song orig-ghost-light “Ghost Light” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 53,
+      "id": "s074",
+      "table": "Learn.strings",
+      "key": "L78ad8f08fc",
+      "context": "Originals · Unit 9 · song orig-late-bus-home “Late Bus Home” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 53,
+      "id": "s079",
+      "table": "Learn.strings",
+      "key": "Lc0d7bcfb41",
+      "context": "Originals · Unit 9 · song orig-glass-satellites “Glass Satellites” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 53,
+      "id": "s085",
+      "table": "Learn.strings",
+      "key": "L5d43afb2a2",
+      "context": "Originals · Unit 9 · song orig-market-day “Market Day” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 53,
+      "id": "s094",
+      "table": "Learn.strings",
+      "key": "Ldfade6dea5",
+      "context": "Originals · Unit 9 · song orig-velvet-hour “Velvet Hour” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 54,
+      "id": "s001",
+      "table": "Learn.strings",
+      "key": "L3351283c9f",
+      "context": "Originals · Unit 9 · song orig-rooftop-choir “Rooftop Choir” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 54,
+      "id": "s014",
+      "table": "Learn.strings",
+      "key": "L6ede73e021",
+      "context": "Originals · Unit 10 · song orig-slow-motion-strobe “Slow Motion Strobe” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 54,
+      "id": "s019",
+      "table": "Learn.strings",
+      "key": "L47d5277660",
+      "context": "Originals · Unit 10 · song orig-bright-side-of-the-block “Bright Side of the Block” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 54,
+      "id": "s025",
+      "table": "Learn.strings",
+      "key": "L1c651c4a0f",
+      "context": "Originals · Unit 10 · song orig-over-you-soon “Over You Soon” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 54,
+      "id": "s029",
+      "table": "Learn.strings",
+      "key": "L44cdb5a27f",
+      "context": "Originals · Unit 10 · song orig-spray-paint-sunrise “Spray Paint Sunrise” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 54,
+      "id": "s035",
+      "table": "Learn.strings",
+      "key": "L85848424e2",
+      "context": "Originals · Unit 10 · song orig-constellation-prize “Constellation Prize” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 54,
+      "id": "s048",
+      "table": "Learn.strings",
+      "key": "L7dce4b7666",
+      "context": "Standards & Classics · Unit 1 · song std-shell-be-coming “She'll Be Coming 'Round the Mountain” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 54,
+      "id": "s064",
+      "table": "Learn.strings",
+      "key": "Le2a484a070",
+      "context": "Standards & Classics · Unit 1 · song std-loch-lomond “Loch Lomond” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 54,
+      "id": "s082",
+      "table": "Learn.strings",
+      "key": "L873c7db571",
+      "context": "Standards & Classics · Unit 1 · song std-the-water-is-wide “The Water Is Wide” · step 5 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 54,
+      "id": "s083",
+      "table": "Learn.strings",
+      "key": "L9ec4d86f6b",
+      "context": "Standards & Classics · Unit 1 · song std-the-water-is-wide “The Water Is Wide” · step 5 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 54,
+      "id": "s084",
+      "table": "Learn.strings",
+      "key": "Lef58de4ff0",
+      "context": "Standards & Classics · Unit 1 · song std-the-water-is-wide “The Water Is Wide” · step 5 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 54,
+      "id": "s091",
+      "table": "Learn.strings",
+      "key": "Lfb3b1e8607",
+      "context": "Standards & Classics · Unit 2 · song std-all-through-the-night “All Through the Night” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 54,
+      "id": "s099",
+      "table": "Learn.strings",
+      "key": "L6f9084b461",
+      "context": "Standards & Classics · Unit 2 · song std-all-through-the-night “All Through the Night” · arrangement · lyric credit (a name and year: usually keep as is)",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 55,
+      "id": "s001",
+      "table": "Learn.strings",
+      "key": "La44a4911f1",
+      "context": "Standards & Classics · Unit 2 · song std-o-christmas-tree “O Christmas Tree” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 55,
+      "id": "s006",
+      "table": "Learn.strings",
+      "key": "Le658e66d4e",
+      "context": "Standards & Classics · Unit 2 · song std-o-christmas-tree “O Christmas Tree” · arrangement · lyric credit (a name and year: usually keep as is)",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 55,
+      "id": "s007",
+      "table": "Learn.strings",
+      "key": "L038dcfc2fa",
+      "context": "Standards & Classics · Unit 2 · song std-o-come-all-ye-faithful “O Come, All Ye Faithful” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 55,
+      "id": "s014",
+      "table": "Learn.strings",
+      "key": "Lb5ba032118",
+      "context": "Standards & Classics · Unit 2 · song std-the-first-noel “The First Noel” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 55,
+      "id": "s029",
+      "table": "Learn.strings",
+      "key": "L5b11880954",
+      "context": "Standards & Classics · Unit 3 · song std-scotland-the-brave “Scotland the Brave” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 55,
+      "id": "s037",
+      "table": "Learn.strings",
+      "key": "L26cf298a3d",
+      "context": "Standards & Classics · Unit 3 · song std-korobeiniki “Korobeiniki” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 55,
+      "id": "s047",
+      "table": "Learn.strings",
+      "key": "L515a6d791f",
+      "context": "Standards & Classics · Unit 3 · song std-blue-danube “The Blue Danube” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 55,
+      "id": "s056",
+      "table": "Learn.strings",
+      "key": "Lc09802b908",
+      "context": "Standards & Classics · Unit 3 · song std-can-can “Can-can” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 55,
+      "id": "s073",
+      "table": "Learn.strings",
+      "key": "L7140cafdab",
+      "context": "Standards & Classics · Unit 4 · song std-the-entertainer “The Entertainer” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 55,
+      "id": "s079",
+      "table": "Learn.strings",
+      "key": "L4c0b79f89f",
+      "context": "Standards & Classics · Unit 4 · song std-the-liberty-bell “The Liberty Bell” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 55,
+      "id": "s092",
+      "table": "Learn.strings",
+      "key": "Ld92e05b62f",
+      "context": "Standards & Classics · Unit 4 · song std-carmen-prelude “Carmen: Prelude” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 55,
+      "id": "s098",
+      "table": "Learn.strings",
+      "key": "Le448093dba",
+      "context": "Standards & Classics · Unit 4 · song std-carmen-prelude “Carmen: Prelude” · step 5 (along) · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 55,
+      "id": "s104",
+      "table": "Learn.strings",
+      "key": "L8aa2514408",
+      "context": "Standards & Classics · Unit 4 · song std-carmen-prelude “Carmen: Prelude” · arrangement · song section label (Intro, Verse 1 …) on a small chip",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 56,
+      "id": "s001",
+      "table": "Learn.strings",
+      "key": "L5456c995d6",
+      "context": "Standards & Classics · Unit 4 · song std-morning-mood “Morning Mood” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 56,
+      "id": "s022",
+      "table": "Learn.strings",
+      "key": "Lc79f013aef",
+      "context": "Standards & Classics · Unit 5 · song std-hark-the-herald “Hark! The Herald Angels Sing” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 56,
+      "id": "s031",
+      "table": "Learn.strings",
+      "key": "Lb47027890d",
+      "context": "Standards & Classics · Unit 5 · song std-away-in-a-manger “Away in a Manger” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 56,
+      "id": "s039",
+      "table": "Learn.strings",
+      "key": "Lf49c331357",
+      "context": "Standards & Classics · Unit 5 · song std-o-little-town “O Little Town of Bethlehem” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 56,
+      "id": "s046",
+      "table": "Learn.strings",
+      "key": "L5d9c113b57",
+      "context": "Standards & Classics · Unit 5 · song std-o-little-town “O Little Town of Bethlehem” · step 5 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 56,
+      "id": "s047",
+      "table": "Learn.strings",
+      "key": "L4c40cf3873",
+      "context": "Standards & Classics · Unit 5 · song std-o-little-town “O Little Town of Bethlehem” · step 5 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 56,
+      "id": "s050",
+      "table": "Learn.strings",
+      "key": "Le177db0c02",
+      "context": "Standards & Classics · Unit 5 · song std-o-little-town “O Little Town of Bethlehem” · arrangement · lyric credit (a name and year: usually keep as is)",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 56,
+      "id": "s051",
+      "table": "Learn.strings",
+      "key": "L1114ff3a6f",
+      "context": "Standards & Classics · Unit 5 · song std-it-came-upon “It Came Upon the Midnight Clear” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 56,
+      "id": "s058",
+      "table": "Learn.strings",
+      "key": "L1b69c1b683",
+      "context": "Standards & Classics · Unit 5 · song std-it-came-upon “It Came Upon the Midnight Clear” · arrangement · lyric credit (a name and year: usually keep as is)",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 56,
+      "id": "s066",
+      "table": "Learn.strings",
+      "key": "L55ea61dde9",
+      "context": "Standards & Classics · Unit 6 · song std-royal-davids-city “Once in Royal David's City” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 56,
+      "id": "s077",
+      "table": "Learn.strings",
+      "key": "L6c65dbe5e7",
+      "context": "Standards & Classics · Unit 6 · song std-royal-davids-city “Once in Royal David's City” · arrangement · lyric credit (a name and year: usually keep as is)",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 56,
+      "id": "s078",
+      "table": "Learn.strings",
+      "key": "Lfa0db53fe8",
+      "context": "Standards & Classics · Unit 6 · song std-bleak-midwinter “In the Bleak Midwinter” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 56,
+      "id": "s088",
+      "table": "Learn.strings",
+      "key": "L0fd26bc07a",
+      "context": "Standards & Classics · Unit 6 · song std-bleak-midwinter “In the Bleak Midwinter” · arrangement · lyric credit (a name and year: usually keep as is)",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 56,
+      "id": "s089",
+      "table": "Learn.strings",
+      "key": "Lee21f7bcbe",
+      "context": "Standards & Classics · Unit 6 · song std-holly-and-ivy “The Holly and the Ivy” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 56,
+      "id": "s096",
+      "table": "Learn.strings",
+      "key": "L58d40ef087",
+      "context": "Standards & Classics · Unit 6 · song std-angels-from-the-realms “Angels from the Realms of Glory” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 56,
+      "id": "s106",
+      "table": "Learn.strings",
+      "key": "L366309b7d1",
+      "context": "Standards & Classics · Unit 6 · song std-angels-from-the-realms “Angels from the Realms of Glory” · arrangement · lyric credit (a name and year: usually keep as is)",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 57,
+      "id": "s008",
+      "table": "Learn.strings",
+      "key": "L362a6b5f4f",
+      "context": "Standards & Classics · Unit 7 · song std-o-god-our-help “O God, Our Help in Ages Past” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 57,
+      "id": "s017",
+      "table": "Learn.strings",
+      "key": "L8d6cc94f22",
+      "context": "Standards & Classics · Unit 7 · song std-holy-holy-holy “Holy, Holy, Holy” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 57,
+      "id": "s027",
+      "table": "Learn.strings",
+      "key": "Lf76e88c357",
+      "context": "Standards & Classics · Unit 7 · song std-holy-holy-holy “Holy, Holy, Holy” · arrangement · lyric credit (a name and year: usually keep as is)",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 57,
+      "id": "s028",
+      "table": "Learn.strings",
+      "key": "Lb5bbe0ebe3",
+      "context": "Standards & Classics · Unit 7 · song std-abide-with-me “Abide with Me” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 57,
+      "id": "s036",
+      "table": "Learn.strings",
+      "key": "L07cd0ccf75",
+      "context": "Standards & Classics · Unit 7 · song std-abide-with-me “Abide with Me” · arrangement · lyric credit (a name and year: usually keep as is)",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 57,
+      "id": "s037",
+      "table": "Learn.strings",
+      "key": "L9ca1f7efa7",
+      "context": "Standards & Classics · Unit 7 · song std-nearer-my-god “Nearer, My God, to Thee” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 57,
+      "id": "s043",
+      "table": "Learn.strings",
+      "key": "L25c9e2591c",
+      "context": "Standards & Classics · Unit 7 · song std-nearer-my-god “Nearer, My God, to Thee” · arrangement · lyric credit (a name and year: usually keep as is)",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 57,
+      "id": "s044",
+      "table": "Learn.strings",
+      "key": "L76f05876f1",
+      "context": "Standards & Classics · Unit 7 · song std-for-the-beauty “For the Beauty of the Earth” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 57,
+      "id": "s050",
+      "table": "Learn.strings",
+      "key": "Laf82ad96c4",
+      "context": "Standards & Classics · Unit 7 · song std-for-the-beauty “For the Beauty of the Earth” · arrangement · lyric credit (a name and year: usually keep as is)",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 57,
+      "id": "s056",
+      "table": "Learn.strings",
+      "key": "L97762a0998",
+      "context": "Standards & Classics · Unit 7 · challenge std-medley-hymns “Hymn medley” · step 5 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 57,
+      "id": "s057",
+      "table": "Learn.strings",
+      "key": "Ldb4a6bf41c",
+      "context": "Standards & Classics · Unit 7 · challenge std-medley-hymns “Hymn medley” · step 5 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 57,
+      "id": "s058",
+      "table": "Learn.strings",
+      "key": "L964cd16960",
+      "context": "Standards & Classics · Unit 7 · challenge std-medley-hymns “Hymn medley” · step 5 (quiz) · quiz answer",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 57,
+      "id": "s062",
+      "table": "Learn.strings",
+      "key": "L41ad61ca24",
+      "context": "Standards & Classics · Unit 8 · song std-home-sweet-home “Home! Sweet Home!” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 57,
+      "id": "s070",
+      "table": "Learn.strings",
+      "key": "Lf25c3da65a",
+      "context": "Standards & Classics · Unit 8 · song std-home-sweet-home “Home! Sweet Home!” · arrangement · lyric credit (a name and year: usually keep as is)",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 57,
+      "id": "s071",
+      "table": "Learn.strings",
+      "key": "Labf6980bc4",
+      "context": "Standards & Classics · Unit 8 · song std-hard-times “Hard Times Come Again No More” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 57,
+      "id": "s079",
+      "table": "Learn.strings",
+      "key": "L38751b4dc8",
+      "context": "Standards & Classics · Unit 8 · song std-hard-times “Hard Times Come Again No More” · arrangement · lyric credit (a name and year: usually keep as is)",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 57,
+      "id": "s080",
+      "table": "Learn.strings",
+      "key": "Lf914feac4e",
+      "context": "Standards & Classics · Unit 8 · song std-last-rose “The Last Rose of Summer” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 57,
+      "id": "s088",
+      "table": "Learn.strings",
+      "key": "L169aa3a3af",
+      "context": "Standards & Classics · Unit 8 · song std-last-rose “The Last Rose of Summer” · arrangement · lyric credit (a name and year: usually keep as is)",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 57,
+      "id": "s089",
+      "table": "Learn.strings",
+      "key": "L88d1577dcc",
+      "context": "Standards & Classics · Unit 8 · song std-jupiter “Jupiter” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 58,
+      "id": "s003",
+      "table": "Learn.strings",
+      "key": "L89677615c2",
+      "context": "Standards & Classics · Unit 9 · song std-spring “Spring” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 58,
+      "id": "s015",
+      "table": "Learn.strings",
+      "key": "L6980bcdcd2",
+      "context": "Standards & Classics · Unit 9 · song std-rondo-alla-turca “Rondo alla Turca” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    },
+    {
+      "batch": 58,
+      "id": "s027",
+      "table": "Learn.strings",
+      "key": "L47fea81827",
+      "context": "Standards & Classics · Unit 9 · song std-stars-and-stripes “The Stars and Stripes Forever” · title",
+      "errors": [
+        "identical to English; translation or explicit independent semantic review required"
+      ]
+    }
+  ],
+  "official_nonidentity_errors": [],
+  "official_nonidentity_warnings": [],
+  "apply_learn_mechanical_errors": [],
+  "source_symbol_or_placeholder_mismatches": [],
+  "correction_digit_sequence_mismatches": [],
+  "correction_note_token_mismatches": [],
+  "correction_roman_token_mismatches": [],
+  "unexpected_scripts_or_Gujarati_digits": [],
+  "inflected_brand_candidates": [],
+  "nonidentity_without_Gujarati": [],
+  "native_review": false,
+  "human_review": false,
+  "device_qa": false,
+  "repository_writes": false,
+  "merge_import_or_GitHub_write": false,
+  "counting_and_contexts_revised": 69,
+  "counting_and_policy": "Rhythmic એન્ડ only; ordinary conjunction અને and original sung lyric and retained."
+}

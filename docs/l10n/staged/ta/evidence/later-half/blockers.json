@@ -1,0 +1,344 @@
+[
+  {
+    "locale": "ta",
+    "batch": 31,
+    "id": "s024",
+    "table": "Learn.strings",
+    "key": "Lced02810fc",
+    "source": "Middle",
+    "old": "நடுவிரல்",
+    "context": "Banjo · Unit 1 · lesson bjo-1-3 “Thumb, index, middle” · step 3 (quiz) · quiz answer",
+    "max_length": 48,
+    "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+    "old_sha256": "1c8031a8ef2f71d4916513e82689d9d0d899c1956ef8603bd9ece4a2f8adc489",
+    "curriculum_refs": [
+      {
+        "path": "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "parents": [
+          "banjo",
+          "bjo-1",
+          "bjo-1-3"
+        ],
+        "labels": [
+          "Banjo",
+          "Hello, banjo",
+          "Thumb, index, middle"
+        ],
+        "source": "Middle"
+      },
+      {
+        "path": "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "parents": [
+          "banjo",
+          "bjo-1",
+          "bjo-1-5"
+        ],
+        "labels": [
+          "Banjo",
+          "Hello, banjo",
+          "Open G challenge"
+        ],
+        "source": "Middle"
+      },
+      {
+        "path": "/courses/6/units/1/lessons/1/steps/3/options/1",
+        "parents": [
+          "banjo",
+          "bjo-2",
+          "bjo-2-2"
+        ],
+        "labels": [
+          "Banjo",
+          "Rolls",
+          "Alternating thumb roll"
+        ],
+        "source": "Middle"
+      },
+      {
+        "path": "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "parents": [
+          "standards",
+          "std-9",
+          "std-rondo-alla-turca"
+        ],
+        "labels": [
+          "Standards & Classics",
+          "Concert favorites",
+          "Rondo alla Turca"
+        ],
+        "source": "Middle"
+      },
+      {
+        "path": "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "parents": [
+          "ukulele-songbook",
+          "uke-sb-std-9",
+          "uke-sb-std-rondo-alla-turca"
+        ],
+        "labels": [
+          "Ukulele Songbook",
+          "Concert favorites",
+          "Rondo alla Turca"
+        ],
+        "source": "Middle"
+      },
+      {
+        "path": "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "parents": [
+          "mandolin-songbook",
+          "man-sb-std-9",
+          "man-sb-std-rondo-alla-turca"
+        ],
+        "labels": [
+          "Mandolin Songbook",
+          "Concert favorites",
+          "Rondo alla Turca"
+        ],
+        "source": "Middle"
+      },
+      {
+        "path": "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "parents": [
+          "violin-songbook",
+          "vln-sb-std-9",
+          "vln-sb-std-rondo-alla-turca"
+        ],
+        "labels": [
+          "Violin Songbook",
+          "Concert favorites",
+          "Rondo alla Turca"
+        ],
+        "source": "Middle"
+      },
+      {
+        "path": "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "parents": [
+          "cello-songbook",
+          "vc-sb-std-9",
+          "vc-sb-std-rondo-alla-turca"
+        ],
+        "labels": [
+          "Cello Songbook",
+          "Concert favorites",
+          "Rondo alla Turca"
+        ],
+        "source": "Middle"
+      },
+      {
+        "path": "/courses/18/units/22/lessons/1/arrangement/sections/3/name",
+        "parents": [
+          "bass-songbook",
+          "bass-sb-std-9",
+          "bass-sb-std-rondo-alla-turca"
+        ],
+        "labels": [
+          "Bass Songbook",
+          "Concert favorites",
+          "Rondo alla Turca"
+        ],
+        "source": "Middle"
+      }
+    ],
+    "status": "source_context_split_pending_parent_authorization",
+    "reason": "The same source/key means middle finger in three banjo quiz options and middle section in six Rondo alla Turca arrangement chips. Current நடுவிரல் is correct only for fingers.",
+    "contexts": {
+      "finger_choice": [
+        {
+          "path": "/courses/6/units/0/lessons/2/steps/2/options/0",
+          "parents": [
+            "banjo",
+            "bjo-1",
+            "bjo-1-3"
+          ],
+          "labels": [
+            "Banjo",
+            "Hello, banjo",
+            "Thumb, index, middle"
+          ],
+          "source": "Middle"
+        },
+        {
+          "path": "/courses/6/units/0/lessons/4/steps/2/options/1",
+          "parents": [
+            "banjo",
+            "bjo-1",
+            "bjo-1-5"
+          ],
+          "labels": [
+            "Banjo",
+            "Hello, banjo",
+            "Open G challenge"
+          ],
+          "source": "Middle"
+        },
+        {
+          "path": "/courses/6/units/1/lessons/1/steps/3/options/1",
+          "parents": [
+            "banjo",
+            "bjo-2",
+            "bjo-2-2"
+          ],
+          "labels": [
+            "Banjo",
+            "Rolls",
+            "Alternating thumb roll"
+          ],
+          "source": "Middle"
+        }
+      ],
+      "song_section": [
+        {
+          "path": "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+          "parents": [
+            "standards",
+            "std-9",
+            "std-rondo-alla-turca"
+          ],
+          "labels": [
+            "Standards & Classics",
+            "Concert favorites",
+            "Rondo alla Turca"
+          ],
+          "source": "Middle"
+        },
+        {
+          "path": "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+          "parents": [
+            "ukulele-songbook",
+            "uke-sb-std-9",
+            "uke-sb-std-rondo-alla-turca"
+          ],
+          "labels": [
+            "Ukulele Songbook",
+            "Concert favorites",
+            "Rondo alla Turca"
+          ],
+          "source": "Middle"
+        },
+        {
+          "path": "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+          "parents": [
+            "mandolin-songbook",
+            "man-sb-std-9",
+            "man-sb-std-rondo-alla-turca"
+          ],
+          "labels": [
+            "Mandolin Songbook",
+            "Concert favorites",
+            "Rondo alla Turca"
+          ],
+          "source": "Middle"
+        },
+        {
+          "path": "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+          "parents": [
+            "violin-songbook",
+            "vln-sb-std-9",
+            "vln-sb-std-rondo-alla-turca"
+          ],
+          "labels": [
+            "Violin Songbook",
+            "Concert favorites",
+            "Rondo alla Turca"
+          ],
+          "source": "Middle"
+        },
+        {
+          "path": "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+          "parents": [
+            "cello-songbook",
+            "vc-sb-std-9",
+            "vc-sb-std-rondo-alla-turca"
+          ],
+          "labels": [
+            "Cello Songbook",
+            "Concert favorites",
+            "Rondo alla Turca"
+          ],
+          "source": "Middle"
+        },
+        {
+          "path": "/courses/18/units/22/lessons/1/arrangement/sections/3/name",
+          "parents": [
+            "bass-songbook",
+            "bass-sb-std-9",
+            "bass-sb-std-rondo-alla-turca"
+          ],
+          "labels": [
+            "Bass Songbook",
+            "Concert favorites",
+            "Rondo alla Turca"
+          ],
+          "source": "Middle"
+        }
+      ]
+    },
+    "minimal_source_proposal": {
+      "retain": {
+        "source": "Middle",
+        "key": "Lced02810fc",
+        "translation": "நடுவிரல்",
+        "paths": [
+          "/courses/6/units/0/lessons/2/steps/2/options/0",
+          "/courses/6/units/0/lessons/4/steps/2/options/1",
+          "/courses/6/units/1/lessons/1/steps/3/options/1"
+        ]
+      },
+      "change_only_song_section_name_sources": {
+        "old_source": "Middle",
+        "new_source": "Middle section",
+        "proposed_tamil": "நடுப்பகுதி",
+        "paths": [
+          "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+          "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+          "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+          "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+          "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+          "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+        ]
+      },
+      "preserve": [
+        "all lesson/course/unit IDs",
+        "all non-name arrangement data",
+        "section positions and boundaries",
+        "existing Middle key for finger choices"
+      ],
+      "new_key": "parent-generated by repository key policy, not guessed or written",
+      "migration": "after write scope resumes, parent adds the new source/key across all locales and revalidates context mappings"
+    },
+    "neutral_tamil_assessment": {
+      "result": "No natural, unambiguous shared label identified; prefer source disambiguation.",
+      "candidates": [
+        {
+          "value": "நடு",
+          "assessment": "Terse neutral middle can fit a section chip but is underspecified and not the usual standalone name of the middle finger in a finger-identification quiz."
+        },
+        {
+          "value": "நடுத்தது",
+          "assessment": "Generic the middle one requires an implied noun and is awkward as a named finger answer; it weakens instructional precision."
+        },
+        {
+          "value": "நடுப்பகுதி",
+          "assessment": "Natural for a middle section, but not the middle finger."
+        },
+        {
+          "value": "நடுவிரல்",
+          "assessment": "Natural for the middle finger, but explicitly wrong as a musical section name."
+        },
+        {
+          "value": "நடுவில்",
+          "assessment": "Locative in the middle; neither a finger name nor a natural section-name equivalent."
+        }
+      ]
+    },
+    "action": {
+      "requested": "minimal guarded source/key split and new-locale-key migration",
+      "target": "six exact arrangement section-name paths above",
+      "reason": "one source key conflates different nouns; no reliable single Tamil value",
+      "completed": "all nine exact keyed contexts read and verified; standalone proposal recorded",
+      "denied": null,
+      "pending": "parent-owned source edit and locale migration when write scope resumes",
+      "uncertain": "final new key and cross-locale translations not generated in this read-only review"
+    }
+  }
+]

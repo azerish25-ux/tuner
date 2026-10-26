@@ -1,0 +1,45 @@
+[
+  {
+    "severity": "blocker",
+    "key": "Lced02810fc",
+    "action": "Keep frozen pair pending globally; apply the source split and new Kannada section label only after repository write scope is explicitly resumed.",
+    "target": "Six Rondo alla Turca section names plus three retained banjo finger quiz options",
+    "reason": "One English key has incompatible senses. ಮಧ್ಯದ ಬೆರಳು is correct for the finger and wrong for a section. No universal target or identity waiver is proposed.",
+    "status": "pending_authorized_migration_not_permission_denial",
+    "evidence": "focused-context-evidence.json and context-split-kannada-middle-proposal.json"
+  },
+  {
+    "severity": "related_blocker",
+    "key": "Lf6586312d9",
+    "action": "Coordinate first-half reviewed count/list split; do not import one target across both senses.",
+    "target": "Ukulele string-order distractor and rhythm count distractor",
+    "reason": "The syllabic rhythmic and needs ಅಂಡ್, while list conjunction needs ಮತ್ತು and explicit Strings source separates the meaning.",
+    "status": "owned_by_first_half_reviewer_pending_authorized_migration",
+    "evidence": "context-split-evidence/affected-contexts.json"
+  },
+  {
+    "severity": "soft_layout_warning",
+    "key": "Lb1a60a5698",
+    "action": "Retain full thumb-index-thumb-middle sequence pending actual UI layout QA.",
+    "target": "kn-031.out.json s061",
+    "reason": "44 code points exceeds max_length42 by2; shortening a finger or deleting sequence element would lose pedagogical meaning.",
+    "status": "documented_not_device_waived",
+    "evidence": "qa-warnings.json"
+  },
+  {
+    "severity": "corrections_proposed",
+    "action": "Apply guarded corrections only after owner authorization and exact locale/key/source/old hashes match.",
+    "target": "87 Kannada pairs",
+    "reason": "Offbeat spoken syllables, directional strokes, duration/pitch distinctions and idiom improvements. Existing numeric protections pass without waivers.",
+    "status": "staged_not_applied",
+    "evidence": "corrections.json"
+  },
+  {
+    "severity": "identity_review",
+    "action": "Consider exact210 source-bound invariant proposals through authorized registry workflow; do not blanket waive English.",
+    "target": "210 exact proper titles/credits/music notation",
+    "reason": "Every entry has exact source/target/key, hashes, per-entry rationale and all usage pointers. Generic descriptors are translated; intentional quiz distractors remain unchanged.",
+    "status": "staged_not_registry_written",
+    "evidence": "invariants.json"
+  }
+]

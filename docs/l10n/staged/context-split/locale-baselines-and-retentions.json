@@ -1,0 +1,789 @@
+[
+  {
+    "locale": "ar",
+    "baseline_state": "6080_applied_map_and_bundle_match",
+    "baseline_map": "tools/l10n/learn/ar.json",
+    "baseline_map_sha256": "19a280e5e0ae87720a45fe6bb010633d33dc9f0509b788a7b9ff2755f4c84b8a",
+    "baseline_entries": 6080,
+    "baseline_current_source_entries": 6080,
+    "baseline_historical_stale_entries": 0,
+    "expected_new_source_keys": 6082,
+    "not_a_complete_or_publishable_translation_claim": true,
+    "retained_context_decisions": [
+      {
+        "locale": "ar",
+        "table": "Learn.strings",
+        "key": "Lced02810fc",
+        "source": "Middle",
+        "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+        "old": "الوسطى",
+        "old_sha256": "6f3d94f614bf9a7aa33cb7ad5954c65c14ce2a29cd7f9ae58af147f3ba2c68a8",
+        "new": "الوسطى",
+        "new_sha256": "6f3d94f614bf9a7aa33cb7ad5954c65c14ce2a29cd7f9ae58af147f3ba2c68a8",
+        "operation": "retain",
+        "context_pointers": [
+          "/courses/6/units/0/lessons/2/steps/2/options/0",
+          "/courses/6/units/0/lessons/4/steps/2/options/1",
+          "/courses/6/units/1/lessons/1/steps/3/options/1"
+        ],
+        "reason": "Existing standalone finger answer remains valid for all three banjo quizzes; do not replace with section wording.",
+        "mechanical_issues": []
+      }
+    ],
+    "guarded_operation_refs": [
+      {
+        "locale": "ar",
+        "key": "Lf94a998e29"
+      },
+      {
+        "locale": "ar",
+        "key": "L4f162aedb4"
+      },
+      {
+        "locale": "ar",
+        "key": "Lf6586312d9"
+      }
+    ]
+  },
+  {
+    "locale": "bn",
+    "baseline_state": "6080_applied_map_and_bundle_match",
+    "baseline_map": "tools/l10n/learn/bn.json",
+    "baseline_map_sha256": "91e83bb65d63488945380b746008843a33a435fbde04bba256f318f99cb1bac8",
+    "baseline_entries": 6080,
+    "baseline_current_source_entries": 6080,
+    "baseline_historical_stale_entries": 0,
+    "expected_new_source_keys": 6082,
+    "not_a_complete_or_publishable_translation_claim": true,
+    "retained_context_decisions": [
+      {
+        "locale": "bn",
+        "table": "Learn.strings",
+        "key": "Lced02810fc",
+        "source": "Middle",
+        "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+        "old": "মধ্যমা",
+        "old_sha256": "c6f3cf3c8bffe996dc34b62ce74c9f601a4b5f15ebe71950b166c0c077f7d299",
+        "new": "মধ্যমা",
+        "new_sha256": "c6f3cf3c8bffe996dc34b62ce74c9f601a4b5f15ebe71950b166c0c077f7d299",
+        "operation": "retain",
+        "context_pointers": [
+          "/courses/6/units/0/lessons/2/steps/2/options/0",
+          "/courses/6/units/0/lessons/4/steps/2/options/1",
+          "/courses/6/units/1/lessons/1/steps/3/options/1"
+        ],
+        "reason": "Existing standalone finger answer remains valid for all three banjo quizzes; do not replace with section wording.",
+        "mechanical_issues": []
+      }
+    ],
+    "guarded_operation_refs": [
+      {
+        "locale": "bn",
+        "key": "Lf94a998e29"
+      },
+      {
+        "locale": "bn",
+        "key": "L4f162aedb4"
+      },
+      {
+        "locale": "bn",
+        "key": "Lf6586312d9"
+      }
+    ]
+  },
+  {
+    "locale": "de",
+    "baseline_state": "6080_applied_map_and_bundle_match",
+    "baseline_map": "tools/l10n/learn/de.json",
+    "baseline_map_sha256": "a7f0211c251ccebc207aea591e88846f13aa1f1d7c2cc483c44032bf8b7477cf",
+    "baseline_entries": 6126,
+    "baseline_current_source_entries": 6080,
+    "baseline_historical_stale_entries": 46,
+    "expected_new_source_keys": 6082,
+    "not_a_complete_or_publishable_translation_claim": true,
+    "retained_context_decisions": [
+      {
+        "locale": "de",
+        "table": "Learn.strings",
+        "key": "Lf6586312d9",
+        "source": "1, 2, 3 and 4",
+        "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+        "old": "1, 2, 3 und 4",
+        "old_sha256": "6bea7404a8ffce6b8ef85492b23014b2b3dc0ec0bb8c0dbadbdfa9095f7d655f",
+        "new": "1, 2, 3 und 4",
+        "new_sha256": "6bea7404a8ffce6b8ef85492b23014b2b3dc0ec0bb8c0dbadbdfa9095f7d655f",
+        "operation": "retain",
+        "context_pointers": [
+          "/courses/9/units/1/lessons/1/steps/2/options/1"
+        ],
+        "reason": "Valid spoken-count form under narrowed rhythm-only context; no forced translation change.",
+        "mechanical_issues": []
+      },
+      {
+        "locale": "de",
+        "table": "Learn.strings",
+        "key": "Lced02810fc",
+        "source": "Middle",
+        "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+        "old": "Mittelfinger",
+        "old_sha256": "1729400ba47e752f125818a87dc0d1c2affbf6d18cccdf4c5b01c850a3020cb9",
+        "new": "Mittelfinger",
+        "new_sha256": "1729400ba47e752f125818a87dc0d1c2affbf6d18cccdf4c5b01c850a3020cb9",
+        "operation": "retain",
+        "context_pointers": [
+          "/courses/6/units/0/lessons/2/steps/2/options/0",
+          "/courses/6/units/0/lessons/4/steps/2/options/1",
+          "/courses/6/units/1/lessons/1/steps/3/options/1"
+        ],
+        "reason": "Existing standalone finger answer remains valid for all three banjo quizzes; do not replace with section wording.",
+        "mechanical_issues": []
+      }
+    ],
+    "guarded_operation_refs": [
+      {
+        "locale": "de",
+        "key": "Lf94a998e29"
+      },
+      {
+        "locale": "de",
+        "key": "L4f162aedb4"
+      }
+    ]
+  },
+  {
+    "locale": "es",
+    "baseline_state": "6080_applied_map_and_bundle_match",
+    "baseline_map": "tools/l10n/learn/es.json",
+    "baseline_map_sha256": "9cca586a4f2114deb1a5f77830eea231f4a46ad2f12d4c2486ee21c43f3e3a43",
+    "baseline_entries": 6126,
+    "baseline_current_source_entries": 6080,
+    "baseline_historical_stale_entries": 46,
+    "expected_new_source_keys": 6082,
+    "not_a_complete_or_publishable_translation_claim": true,
+    "retained_context_decisions": [
+      {
+        "locale": "es",
+        "table": "Learn.strings",
+        "key": "Lf6586312d9",
+        "source": "1, 2, 3 and 4",
+        "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+        "old": "1, 2, 3 y 4",
+        "old_sha256": "b27686936a5dcb66abc785881c7cc8b4dd15795916a907ffb9e37c754bda82b3",
+        "new": "1, 2, 3 y 4",
+        "new_sha256": "b27686936a5dcb66abc785881c7cc8b4dd15795916a907ffb9e37c754bda82b3",
+        "operation": "retain",
+        "context_pointers": [
+          "/courses/9/units/1/lessons/1/steps/2/options/1"
+        ],
+        "reason": "Valid spoken-count form under narrowed rhythm-only context; no forced translation change.",
+        "mechanical_issues": []
+      },
+      {
+        "locale": "es",
+        "table": "Learn.strings",
+        "key": "Lced02810fc",
+        "source": "Middle",
+        "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+        "old": "Corazón",
+        "old_sha256": "15446a7351fbdd0a063916dcc7a07648e98c2392d108952a115622ac066d2718",
+        "new": "Corazón",
+        "new_sha256": "15446a7351fbdd0a063916dcc7a07648e98c2392d108952a115622ac066d2718",
+        "operation": "retain",
+        "context_pointers": [
+          "/courses/6/units/0/lessons/2/steps/2/options/0",
+          "/courses/6/units/0/lessons/4/steps/2/options/1",
+          "/courses/6/units/1/lessons/1/steps/3/options/1"
+        ],
+        "reason": "Existing standalone finger answer remains valid for all three banjo quizzes; do not replace with section wording.",
+        "mechanical_issues": []
+      }
+    ],
+    "guarded_operation_refs": [
+      {
+        "locale": "es",
+        "key": "Lf94a998e29"
+      },
+      {
+        "locale": "es",
+        "key": "L4f162aedb4"
+      }
+    ]
+  },
+  {
+    "locale": "fa",
+    "baseline_state": "6080_applied_map_and_bundle_match",
+    "baseline_map": "tools/l10n/learn/fa.json",
+    "baseline_map_sha256": "b3929e2fe9245ecd54cd753729ebd2c740ca7719f275ee2a06db6feaab7c0e8d",
+    "baseline_entries": 6080,
+    "baseline_current_source_entries": 6080,
+    "baseline_historical_stale_entries": 0,
+    "expected_new_source_keys": 6082,
+    "not_a_complete_or_publishable_translation_claim": true,
+    "retained_context_decisions": [
+      {
+        "locale": "fa",
+        "table": "Learn.strings",
+        "key": "Lf6586312d9",
+        "source": "1, 2, 3 and 4",
+        "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+        "old": "1، 2، 3 و 4",
+        "old_sha256": "2e59d09b7143ca408e3085dcc2fb0d1bf3bcc67183422170978e169194be5404",
+        "new": "1، 2، 3 و 4",
+        "new_sha256": "2e59d09b7143ca408e3085dcc2fb0d1bf3bcc67183422170978e169194be5404",
+        "operation": "retain",
+        "context_pointers": [
+          "/courses/9/units/1/lessons/1/steps/2/options/1"
+        ],
+        "reason": "Valid spoken-count form under narrowed rhythm-only context; no forced translation change.",
+        "mechanical_issues": []
+      },
+      {
+        "locale": "fa",
+        "table": "Learn.strings",
+        "key": "Lced02810fc",
+        "source": "Middle",
+        "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+        "old": "میانی",
+        "old_sha256": "b51a47137d9f4da492ff9e8af3ec203db21b2f121c68b694c2313c164b0a0902",
+        "new": "میانی",
+        "new_sha256": "b51a47137d9f4da492ff9e8af3ec203db21b2f121c68b694c2313c164b0a0902",
+        "operation": "retain",
+        "context_pointers": [
+          "/courses/6/units/0/lessons/2/steps/2/options/0",
+          "/courses/6/units/0/lessons/4/steps/2/options/1",
+          "/courses/6/units/1/lessons/1/steps/3/options/1"
+        ],
+        "reason": "Existing standalone finger answer remains valid for all three banjo quizzes; do not replace with section wording.",
+        "mechanical_issues": []
+      }
+    ],
+    "guarded_operation_refs": [
+      {
+        "locale": "fa",
+        "key": "Lf94a998e29"
+      },
+      {
+        "locale": "fa",
+        "key": "L4f162aedb4"
+      }
+    ]
+  },
+  {
+    "locale": "fr",
+    "baseline_state": "6080_applied_map_and_bundle_match",
+    "baseline_map": "tools/l10n/learn/fr.json",
+    "baseline_map_sha256": "6125a7b3c3f7d8cd78ac3d3c68fc540357138d249ffef562b40c2e722615a92f",
+    "baseline_entries": 6126,
+    "baseline_current_source_entries": 6080,
+    "baseline_historical_stale_entries": 46,
+    "expected_new_source_keys": 6082,
+    "not_a_complete_or_publishable_translation_claim": true,
+    "retained_context_decisions": [
+      {
+        "locale": "fr",
+        "table": "Learn.strings",
+        "key": "Lf6586312d9",
+        "source": "1, 2, 3 and 4",
+        "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+        "old": "1, 2, 3 et 4",
+        "old_sha256": "3d781af631d1bff461b8cfb9fcdadf554fad57b8a05b4faf1b1fc37f902851cd",
+        "new": "1, 2, 3 et 4",
+        "new_sha256": "3d781af631d1bff461b8cfb9fcdadf554fad57b8a05b4faf1b1fc37f902851cd",
+        "operation": "retain",
+        "context_pointers": [
+          "/courses/9/units/1/lessons/1/steps/2/options/1"
+        ],
+        "reason": "Valid spoken-count form under narrowed rhythm-only context; no forced translation change.",
+        "mechanical_issues": []
+      },
+      {
+        "locale": "fr",
+        "table": "Learn.strings",
+        "key": "Lced02810fc",
+        "source": "Middle",
+        "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+        "old": "Majeur",
+        "old_sha256": "27f13ba29af43853a85fb5bf841c1b72e17a1cf270ce78292fc676d6dbd9f361",
+        "new": "Majeur",
+        "new_sha256": "27f13ba29af43853a85fb5bf841c1b72e17a1cf270ce78292fc676d6dbd9f361",
+        "operation": "retain",
+        "context_pointers": [
+          "/courses/6/units/0/lessons/2/steps/2/options/0",
+          "/courses/6/units/0/lessons/4/steps/2/options/1",
+          "/courses/6/units/1/lessons/1/steps/3/options/1"
+        ],
+        "reason": "Existing standalone finger answer remains valid for all three banjo quizzes; do not replace with section wording.",
+        "mechanical_issues": []
+      }
+    ],
+    "guarded_operation_refs": [
+      {
+        "locale": "fr",
+        "key": "Lf94a998e29"
+      },
+      {
+        "locale": "fr",
+        "key": "L4f162aedb4"
+      }
+    ]
+  },
+  {
+    "locale": "hi",
+    "baseline_state": "6080_applied_map_and_bundle_match",
+    "baseline_map": "tools/l10n/learn/hi.json",
+    "baseline_map_sha256": "063782576129b393f46cbf1217c2586c1e962ffd2a6c0fe4d44112a975dbc88a",
+    "baseline_entries": 6080,
+    "baseline_current_source_entries": 6080,
+    "baseline_historical_stale_entries": 0,
+    "expected_new_source_keys": 6082,
+    "not_a_complete_or_publishable_translation_claim": true,
+    "retained_context_decisions": [
+      {
+        "locale": "hi",
+        "table": "Learn.strings",
+        "key": "Lf6586312d9",
+        "source": "1, 2, 3 and 4",
+        "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+        "old": "1, 2, 3 और 4",
+        "old_sha256": "c040c84a80aeda6e1e1da72e8fc3f20a8b7795d6f9c550c8211e8a70901a021b",
+        "new": "1, 2, 3 और 4",
+        "new_sha256": "c040c84a80aeda6e1e1da72e8fc3f20a8b7795d6f9c550c8211e8a70901a021b",
+        "operation": "retain",
+        "context_pointers": [
+          "/courses/9/units/1/lessons/1/steps/2/options/1"
+        ],
+        "reason": "Valid spoken-count form under narrowed rhythm-only context; no forced translation change.",
+        "mechanical_issues": []
+      },
+      {
+        "locale": "hi",
+        "table": "Learn.strings",
+        "key": "Lced02810fc",
+        "source": "Middle",
+        "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+        "old": "मध्यमा",
+        "old_sha256": "a7a7230f9cbd3233b3afa678b1ff901948c529808a10349c2229d719507a76b7",
+        "new": "मध्यमा",
+        "new_sha256": "a7a7230f9cbd3233b3afa678b1ff901948c529808a10349c2229d719507a76b7",
+        "operation": "retain",
+        "context_pointers": [
+          "/courses/6/units/0/lessons/2/steps/2/options/0",
+          "/courses/6/units/0/lessons/4/steps/2/options/1",
+          "/courses/6/units/1/lessons/1/steps/3/options/1"
+        ],
+        "reason": "Existing standalone finger answer remains valid for all three banjo quizzes; do not replace with section wording.",
+        "mechanical_issues": []
+      }
+    ],
+    "guarded_operation_refs": [
+      {
+        "locale": "hi",
+        "key": "Lf94a998e29"
+      },
+      {
+        "locale": "hi",
+        "key": "L4f162aedb4"
+      }
+    ]
+  },
+  {
+    "locale": "it",
+    "baseline_state": "6080_applied_map_and_bundle_match",
+    "baseline_map": "tools/l10n/learn/it.json",
+    "baseline_map_sha256": "19af0dc759142692f294db701c8134b4102afc3a9f13dc0d7a0c231016df3333",
+    "baseline_entries": 6126,
+    "baseline_current_source_entries": 6080,
+    "baseline_historical_stale_entries": 46,
+    "expected_new_source_keys": 6082,
+    "not_a_complete_or_publishable_translation_claim": true,
+    "retained_context_decisions": [
+      {
+        "locale": "it",
+        "table": "Learn.strings",
+        "key": "Lf6586312d9",
+        "source": "1, 2, 3 and 4",
+        "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+        "old": "1, 2, 3 e 4",
+        "old_sha256": "213df635f4b6b3d0b9ab4a65d44654689b15374f0b43d3d3d281a144fce0a20a",
+        "new": "1, 2, 3 e 4",
+        "new_sha256": "213df635f4b6b3d0b9ab4a65d44654689b15374f0b43d3d3d281a144fce0a20a",
+        "operation": "retain",
+        "context_pointers": [
+          "/courses/9/units/1/lessons/1/steps/2/options/1"
+        ],
+        "reason": "Valid spoken-count form under narrowed rhythm-only context; no forced translation change.",
+        "mechanical_issues": []
+      },
+      {
+        "locale": "it",
+        "table": "Learn.strings",
+        "key": "Lced02810fc",
+        "source": "Middle",
+        "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+        "old": "Medio",
+        "old_sha256": "da26d4f11244518e356cd45724d7e4bd2095275d2a26fd7786890400238a997c",
+        "new": "Medio",
+        "new_sha256": "da26d4f11244518e356cd45724d7e4bd2095275d2a26fd7786890400238a997c",
+        "operation": "retain",
+        "context_pointers": [
+          "/courses/6/units/0/lessons/2/steps/2/options/0",
+          "/courses/6/units/0/lessons/4/steps/2/options/1",
+          "/courses/6/units/1/lessons/1/steps/3/options/1"
+        ],
+        "reason": "Existing standalone finger answer remains valid for all three banjo quizzes; do not replace with section wording.",
+        "mechanical_issues": []
+      }
+    ],
+    "guarded_operation_refs": [
+      {
+        "locale": "it",
+        "key": "Lf94a998e29"
+      },
+      {
+        "locale": "it",
+        "key": "L4f162aedb4"
+      }
+    ]
+  },
+  {
+    "locale": "ja",
+    "baseline_state": "6080_applied_map_and_bundle_match",
+    "baseline_map": "tools/l10n/learn/ja.json",
+    "baseline_map_sha256": "a95dccfa4924a899d0c509c65b9d07dd9c62de99ad509dde4c61f2829bd0cf0f",
+    "baseline_entries": 6126,
+    "baseline_current_source_entries": 6080,
+    "baseline_historical_stale_entries": 46,
+    "expected_new_source_keys": 6082,
+    "not_a_complete_or_publishable_translation_claim": true,
+    "retained_context_decisions": [
+      {
+        "locale": "ja",
+        "table": "Learn.strings",
+        "key": "Lf6586312d9",
+        "source": "1, 2, 3 and 4",
+        "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+        "old": "1、2、3 and 4",
+        "old_sha256": "14b2a7c8e8b663de6972d12c563c110bb5a7b29d9ec321b7ea9d1528d2777e02",
+        "new": "1、2、3 and 4",
+        "new_sha256": "14b2a7c8e8b663de6972d12c563c110bb5a7b29d9ec321b7ea9d1528d2777e02",
+        "operation": "retain",
+        "context_pointers": [
+          "/courses/9/units/1/lessons/1/steps/2/options/1"
+        ],
+        "reason": "Valid spoken-count form under narrowed rhythm-only context; no forced translation change.",
+        "mechanical_issues": []
+      },
+      {
+        "locale": "ja",
+        "table": "Learn.strings",
+        "key": "Lced02810fc",
+        "source": "Middle",
+        "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+        "old": "中指",
+        "old_sha256": "917c990a11206d2cc2d7f776a079f43d7ae2dae2c2235a65379adc436328cc44",
+        "new": "中指",
+        "new_sha256": "917c990a11206d2cc2d7f776a079f43d7ae2dae2c2235a65379adc436328cc44",
+        "operation": "retain",
+        "context_pointers": [
+          "/courses/6/units/0/lessons/2/steps/2/options/0",
+          "/courses/6/units/0/lessons/4/steps/2/options/1",
+          "/courses/6/units/1/lessons/1/steps/3/options/1"
+        ],
+        "reason": "Existing standalone finger answer remains valid for all three banjo quizzes; do not replace with section wording.",
+        "mechanical_issues": []
+      }
+    ],
+    "guarded_operation_refs": [
+      {
+        "locale": "ja",
+        "key": "Lf94a998e29"
+      },
+      {
+        "locale": "ja",
+        "key": "L4f162aedb4"
+      }
+    ]
+  },
+  {
+    "locale": "ko",
+    "baseline_state": "6080_applied_map_and_bundle_match",
+    "baseline_map": "tools/l10n/learn/ko.json",
+    "baseline_map_sha256": "243f5b3efb30c29dfff4bb80e5f5d6b807370e83734bde80d447c553703b7971",
+    "baseline_entries": 6126,
+    "baseline_current_source_entries": 6080,
+    "baseline_historical_stale_entries": 46,
+    "expected_new_source_keys": 6082,
+    "not_a_complete_or_publishable_translation_claim": true,
+    "retained_context_decisions": [
+      {
+        "locale": "ko",
+        "table": "Learn.strings",
+        "key": "Lf6586312d9",
+        "source": "1, 2, 3 and 4",
+        "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+        "old": "1, 2, 3 앤 4",
+        "old_sha256": "82187f5747ed3ddf7274894725df9dadc207a78d545c7942b9ba1b625f291660",
+        "new": "1, 2, 3 앤 4",
+        "new_sha256": "82187f5747ed3ddf7274894725df9dadc207a78d545c7942b9ba1b625f291660",
+        "operation": "retain",
+        "context_pointers": [
+          "/courses/9/units/1/lessons/1/steps/2/options/1"
+        ],
+        "reason": "Valid spoken-count form under narrowed rhythm-only context; no forced translation change.",
+        "mechanical_issues": []
+      },
+      {
+        "locale": "ko",
+        "table": "Learn.strings",
+        "key": "Lced02810fc",
+        "source": "Middle",
+        "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+        "old": "중지",
+        "old_sha256": "92cdef3c5bc09f842a88991dc306d5fdcc015dcbadb3b675c19f7a3f7f6ccee5",
+        "new": "중지",
+        "new_sha256": "92cdef3c5bc09f842a88991dc306d5fdcc015dcbadb3b675c19f7a3f7f6ccee5",
+        "operation": "retain",
+        "context_pointers": [
+          "/courses/6/units/0/lessons/2/steps/2/options/0",
+          "/courses/6/units/0/lessons/4/steps/2/options/1",
+          "/courses/6/units/1/lessons/1/steps/3/options/1"
+        ],
+        "reason": "Existing standalone finger answer remains valid for all three banjo quizzes; do not replace with section wording.",
+        "mechanical_issues": []
+      }
+    ],
+    "guarded_operation_refs": [
+      {
+        "locale": "ko",
+        "key": "Lf94a998e29"
+      },
+      {
+        "locale": "ko",
+        "key": "L4f162aedb4"
+      }
+    ]
+  },
+  {
+    "locale": "pt",
+    "baseline_state": "6080_applied_map_and_bundle_match",
+    "baseline_map": "tools/l10n/learn/pt.json",
+    "baseline_map_sha256": "597ba2cc5ce8bbfa8b1c97d3be85d8095d56f41980b4b6ca7ce5bdd8fa7958bc",
+    "baseline_entries": 6126,
+    "baseline_current_source_entries": 6080,
+    "baseline_historical_stale_entries": 46,
+    "expected_new_source_keys": 6082,
+    "not_a_complete_or_publishable_translation_claim": true,
+    "retained_context_decisions": [
+      {
+        "locale": "pt",
+        "table": "Learn.strings",
+        "key": "Lf6586312d9",
+        "source": "1, 2, 3 and 4",
+        "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+        "old": "1, 2, 3 e 4",
+        "old_sha256": "213df635f4b6b3d0b9ab4a65d44654689b15374f0b43d3d3d281a144fce0a20a",
+        "new": "1, 2, 3 e 4",
+        "new_sha256": "213df635f4b6b3d0b9ab4a65d44654689b15374f0b43d3d3d281a144fce0a20a",
+        "operation": "retain",
+        "context_pointers": [
+          "/courses/9/units/1/lessons/1/steps/2/options/1"
+        ],
+        "reason": "Valid spoken-count form under narrowed rhythm-only context; no forced translation change.",
+        "mechanical_issues": []
+      },
+      {
+        "locale": "pt",
+        "table": "Learn.strings",
+        "key": "Lced02810fc",
+        "source": "Middle",
+        "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+        "old": "Médio",
+        "old_sha256": "151c296c50988948818d1977de857aea0b4a447815ebf293cac8ee0f66b685e6",
+        "new": "Médio",
+        "new_sha256": "151c296c50988948818d1977de857aea0b4a447815ebf293cac8ee0f66b685e6",
+        "operation": "retain",
+        "context_pointers": [
+          "/courses/6/units/0/lessons/2/steps/2/options/0",
+          "/courses/6/units/0/lessons/4/steps/2/options/1",
+          "/courses/6/units/1/lessons/1/steps/3/options/1"
+        ],
+        "reason": "Existing standalone finger answer remains valid for all three banjo quizzes; do not replace with section wording.",
+        "mechanical_issues": []
+      }
+    ],
+    "guarded_operation_refs": [
+      {
+        "locale": "pt",
+        "key": "Lf94a998e29"
+      },
+      {
+        "locale": "pt",
+        "key": "L4f162aedb4"
+      }
+    ]
+  },
+  {
+    "locale": "ru",
+    "baseline_state": "6080_applied_map_and_bundle_match",
+    "baseline_map": "tools/l10n/learn/ru.json",
+    "baseline_map_sha256": "9e7b7c6e5e0217a0429e6b0403aa9c33b0c05e2cfd84bebb28c34225b8ff6d91",
+    "baseline_entries": 6126,
+    "baseline_current_source_entries": 6080,
+    "baseline_historical_stale_entries": 46,
+    "expected_new_source_keys": 6082,
+    "not_a_complete_or_publishable_translation_claim": true,
+    "retained_context_decisions": [
+      {
+        "locale": "ru",
+        "table": "Learn.strings",
+        "key": "Lf6586312d9",
+        "source": "1, 2, 3 and 4",
+        "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+        "old": "1, 2, 3 и 4",
+        "old_sha256": "d5d46e5778acdc05f98eb69468910991caff85bed989d2f49afec36e9e41b7e9",
+        "new": "1, 2, 3 и 4",
+        "new_sha256": "d5d46e5778acdc05f98eb69468910991caff85bed989d2f49afec36e9e41b7e9",
+        "operation": "retain",
+        "context_pointers": [
+          "/courses/9/units/1/lessons/1/steps/2/options/1"
+        ],
+        "reason": "Valid spoken-count form under narrowed rhythm-only context; no forced translation change.",
+        "mechanical_issues": []
+      },
+      {
+        "locale": "ru",
+        "table": "Learn.strings",
+        "key": "Lced02810fc",
+        "source": "Middle",
+        "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+        "old": "Средний",
+        "old_sha256": "84ab7f7de9c01285d33f81b79fe03acfa205cd64660b5b30c6c9bc887a359e62",
+        "new": "Средний",
+        "new_sha256": "84ab7f7de9c01285d33f81b79fe03acfa205cd64660b5b30c6c9bc887a359e62",
+        "operation": "retain",
+        "context_pointers": [
+          "/courses/6/units/0/lessons/2/steps/2/options/0",
+          "/courses/6/units/0/lessons/4/steps/2/options/1",
+          "/courses/6/units/1/lessons/1/steps/3/options/1"
+        ],
+        "reason": "Existing standalone finger answer remains valid for all three banjo quizzes; do not replace with section wording.",
+        "mechanical_issues": []
+      }
+    ],
+    "guarded_operation_refs": [
+      {
+        "locale": "ru",
+        "key": "Lf94a998e29"
+      },
+      {
+        "locale": "ru",
+        "key": "L4f162aedb4"
+      }
+    ]
+  },
+  {
+    "locale": "zh-CN",
+    "baseline_state": "6080_applied_map_and_bundle_match",
+    "baseline_map": "tools/l10n/learn/zh-CN.json",
+    "baseline_map_sha256": "45572da5e793d267829ed857701745bb0ec7e308db11f3c7878bb924392f1614",
+    "baseline_entries": 6126,
+    "baseline_current_source_entries": 6080,
+    "baseline_historical_stale_entries": 46,
+    "expected_new_source_keys": 6082,
+    "not_a_complete_or_publishable_translation_claim": true,
+    "retained_context_decisions": [
+      {
+        "locale": "zh-CN",
+        "table": "Learn.strings",
+        "key": "Lf6586312d9",
+        "source": "1, 2, 3 and 4",
+        "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+        "old": "1、2、3 and 4",
+        "old_sha256": "14b2a7c8e8b663de6972d12c563c110bb5a7b29d9ec321b7ea9d1528d2777e02",
+        "new": "1、2、3 and 4",
+        "new_sha256": "14b2a7c8e8b663de6972d12c563c110bb5a7b29d9ec321b7ea9d1528d2777e02",
+        "operation": "retain",
+        "context_pointers": [
+          "/courses/9/units/1/lessons/1/steps/2/options/1"
+        ],
+        "reason": "Valid spoken-count form under narrowed rhythm-only context; no forced translation change.",
+        "mechanical_issues": []
+      },
+      {
+        "locale": "zh-CN",
+        "table": "Learn.strings",
+        "key": "Lced02810fc",
+        "source": "Middle",
+        "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+        "old": "中指",
+        "old_sha256": "917c990a11206d2cc2d7f776a079f43d7ae2dae2c2235a65379adc436328cc44",
+        "new": "中指",
+        "new_sha256": "917c990a11206d2cc2d7f776a079f43d7ae2dae2c2235a65379adc436328cc44",
+        "operation": "retain",
+        "context_pointers": [
+          "/courses/6/units/0/lessons/2/steps/2/options/0",
+          "/courses/6/units/0/lessons/4/steps/2/options/1",
+          "/courses/6/units/1/lessons/1/steps/3/options/1"
+        ],
+        "reason": "Existing standalone finger answer remains valid for all three banjo quizzes; do not replace with section wording.",
+        "mechanical_issues": []
+      }
+    ],
+    "guarded_operation_refs": [
+      {
+        "locale": "zh-CN",
+        "key": "Lf94a998e29"
+      },
+      {
+        "locale": "zh-CN",
+        "key": "L4f162aedb4"
+      }
+    ]
+  },
+  {
+    "locale": "ur",
+    "baseline_state": "reviewed_6080_staged_not_applied",
+    "baseline_map": "frozen Urdu independently reviewed map",
+    "baseline_map_sha256": "b5b55ff059e117cb44b71b08648d44ae5681a2bee2fcbb233434716ea0292510",
+    "baseline_entries": 6080,
+    "baseline_current_source_entries": 6080,
+    "baseline_historical_stale_entries": 0,
+    "expected_new_source_keys": 6082,
+    "not_a_complete_or_publishable_translation_claim": true,
+    "retained_context_decisions": [
+      {
+        "locale": "ur",
+        "table": "Learn.strings",
+        "key": "Lced02810fc",
+        "source": "Middle",
+        "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+        "old": "درمیانی",
+        "old_sha256": "fbab161be701b373c9b26443e8bc4ff52661fbe086696a72a18a69e5805e47d0",
+        "new": "درمیانی",
+        "new_sha256": "fbab161be701b373c9b26443e8bc4ff52661fbe086696a72a18a69e5805e47d0",
+        "operation": "retain",
+        "context_pointers": [
+          "/courses/6/units/0/lessons/2/steps/2/options/0",
+          "/courses/6/units/0/lessons/4/steps/2/options/1",
+          "/courses/6/units/1/lessons/1/steps/3/options/1"
+        ],
+        "reason": "Existing standalone finger answer remains valid for all three banjo quizzes; do not replace with section wording.",
+        "mechanical_issues": []
+      }
+    ],
+    "guarded_operation_refs": [
+      {
+        "locale": "ur",
+        "key": "Lf94a998e29"
+      },
+      {
+        "locale": "ur",
+        "key": "L4f162aedb4"
+      },
+      {
+        "locale": "ur",
+        "key": "Lf6586312d9"
+      }
+    ]
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "locale": "gu",
+    "target": "docs/l10n/staged/gu/author-glossary.md",
+    "input_file_sha256": "0705505321d81438004fe0f6fb13313748f2a92c36da7c414ef3eaa93e98c593",
+    "old": "eighth note = આઠમો સ્વર; quarter note = ચોથો સ્વર; half note = અડધો સ્વર; whole note = આખો સ્વર.",
+    "new": "eighth note = એઇથ નોટ; quarter note = ક્વાર્ટર નોટ; half note = હાફ નોટ; whole note = હોલ નોટ. These are rhythmic durations, not ordinal pitch degrees; નોટ is feminine (plural નોટો). Duration rests use the same qualifier plus વિરામ, e.g. ક્વાર્ટર વિરામ. Keep અર્ધ/પૂર્ણ સ્વર for half/whole steps and preserve genuine scale-degree ordinals. Whole meaning the entire sustained sound, rather than the duration value, remains આખો સ્વર.",
+    "old_sha256": "a433198dc331ba8403385dced55e0e8ec2bc757c5d8d245ecef1201a867cc8f0",
+    "new_sha256": "359ca30812fa7efaedb5b74dd374a127c1ebb209d9fa41639969c366b17fde1c",
+    "reason": "Unambiguous rhythmic terminology coordinated with first-half review; never apply to genuine pitch ordinals or whole meaning entire.",
+    "application": "Staged proposal only. Identical coordinated fragment is also in later-half package; apply once after exact base/source guards, not twice."
+  },
+  {
+    "locale": "gu",
+    "target": "docs/l10n/staged/gu/author-glossary.md",
+    "input_file_sha256": "0705505321d81438004fe0f6fb13313748f2a92c36da7c414ef3eaa93e98c593",
+    "old": "dotted = બિંદુવાળો; sixteenth note = સોળમો સ્વર;",
+    "new": "dotted = બિંદુવાળો (બિંદુવાળી with feminine નોટ); sixteenth note = સિક્સટીન્થ નોટ;",
+    "old_sha256": "929ebce42f8846ddf20344816c7ea06eae1fd0f7ac0ac2798dc87bd2a15ab851",
+    "new_sha256": "945d7208e6dcc49405340223ed2754664507bef15b842c920d9b140726785283",
+    "reason": "Sixteenth duration must not be rendered as an ordinal pitch; adjective agrees with feminine નોટ.",
+    "application": "Staged proposal only. Identical coordinated fragment is also in later-half package; apply once after exact base/source guards, not twice."
+  },
+  {
+    "locale": "gu",
+    "target": "docs/l10n/staged/gu/author-glossary.md",
+    "input_file_sha256": "0705505321d81438004fe0f6fb13313748f2a92c36da7c414ef3eaa93e98c593",
+    "old": "Counting syllables e/and/a = ઈ/અને/અ and trip-let = ટ્રિપ-લેટ, distinct from preserved original sung-word locators.",
+    "new": "Counting syllables e/and/a = ઈ/એન્ડ/અ and trip-let = ટ્રિપ-લેટ, distinct from preserved original sung-word locators. Rhythmic એન્ડ is one timed syllable; the ordinary prose/list conjunction remains અને. A sung syllable is ઉચ્ચારખંડ, not a written alphabetic letter.",
+    "old_sha256": "24e11ee55b2a3459c90faed3eef5ece8f32b344e070b379db5810b8fcc627f7b",
+    "new_sha256": "fd783c9ac69239d6ba16d837f57dea8138373547b3dc5a7fc76787bc8742625f",
+    "reason": "Gujarati conjunction અને has two syllables; the offbeat/subdivision requires one timed syllable. Never change normal conjunctions or original lyric and.",
+    "application": "Staged proposal only. Identical coordinated fragment is also in later-half package; apply once after exact base/source guards, not twice."
+  }
+]

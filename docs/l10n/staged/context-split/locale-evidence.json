@@ -1,0 +1,954 @@
+{
+  "ar": {
+    "map": "tools/l10n/learn/ar.json",
+    "map_sha256": "19a280e5e0ae87720a45fe6bb010633d33dc9f0509b788a7b9ff2755f4c84b8a",
+    "glossary": "docs/l10n/glossary/ar.md",
+    "glossary_sha256": "c6345b338befd6581411868f844f2916f4009fbad6d8176369e489ec1153b9ca",
+    "glossary_rows": [
+      {
+        "line": 46,
+        "text": "| string / peg / headstock | وتر / مفتاح ضبط / رأس العنق |"
+      },
+      {
+        "line": 62,
+        "text": "| Intro / Verse 1 / Chorus / Bridge / Solo / Outro / Tag / section | مقدمة / مقطع 1 / لازمة / جسر / عزف منفرد / خاتمة / ذيل / قسم |"
+      }
+    ],
+    "neighbor_terms": [
+      {
+        "key": "Ldea06d68d7",
+        "source": "Thumb, index, middle, ring play which strings?",
+        "value": "أي أوتار يعزف الإبهام والسبابة والوسطى والبنصر؟"
+      },
+      {
+        "key": "L2959e49ccf",
+        "source": "3, 4, 1 and 2",
+        "value": "الأوتار 3 و4 و1 و2"
+      },
+      {
+        "key": "L1e68a89c2e",
+        "source": "4, 3, 2 and 1",
+        "value": "الأوتار 4 و3 و2 و1"
+      },
+      {
+        "key": "L703760e9d4",
+        "source": "1, 2 and, 3, 4",
+        "value": "العدّ: 1، 2 و، 3، 4"
+      },
+      {
+        "key": "L1081fbeb3c",
+        "source": "1 and 2, 3, 4",
+        "value": "العدّ: 1 و2، 3، 4"
+      },
+      {
+        "key": "Lba789e471f",
+        "source": "Beat 1 has two taps, 1 and. Beats 2, 3 and 4 get one tap each.",
+        "value": "للنبضة 1 نقرتان، 1 و. وتأخذ النبضات 2 و3 و4 نقرة لكل منها."
+      },
+      {
+        "key": "L7ec06a6447",
+        "source": "Part A",
+        "value": "القسم ⁨A⁩"
+      },
+      {
+        "key": "Lb575488938",
+        "source": "Part B",
+        "value": "القسم ⁨B⁩"
+      },
+      {
+        "key": "L55751877e1",
+        "source": "Thumb",
+        "value": "الإبهام"
+      },
+      {
+        "key": "Lc2df9b9326",
+        "source": "Index",
+        "value": "السبابة"
+      }
+    ]
+  },
+  "bn": {
+    "map": "tools/l10n/learn/bn.json",
+    "map_sha256": "91e83bb65d63488945380b746008843a33a435fbde04bba256f318f99cb1bac8",
+    "glossary": "docs/l10n/glossary/bn.md",
+    "glossary_sha256": "5e8c533bb3c3f8edd35815ded09d2f201aed39fce96632e8e0de07bcf8506b3b",
+    "glossary_rows": [
+      {
+        "line": 90,
+        "text": "| string | A string of the instrument; numbered 1 (thinnest, highest) to N | UI 69, lessons 807 |  | তার |  |"
+      },
+      {
+        "line": 125,
+        "text": "| section | A part of a song | lessons 9 |  | অংশ |  |"
+      }
+    ],
+    "neighbor_terms": [
+      {
+        "key": "Ldea06d68d7",
+        "source": "Thumb, index, middle, ring play which strings?",
+        "value": "বুড়ো আঙুল, তর্জনী, মধ্যমা, অনামিকা কোন তারগুলো বাজায়?"
+      },
+      {
+        "key": "L2959e49ccf",
+        "source": "3, 4, 1 and 2",
+        "value": "3, 4, 1 ও 2"
+      },
+      {
+        "key": "L1e68a89c2e",
+        "source": "4, 3, 2 and 1",
+        "value": "4, 3, 2 ও 1"
+      },
+      {
+        "key": "L703760e9d4",
+        "source": "1, 2 and, 3, 4",
+        "value": "1, 2 আর, 3, 4"
+      },
+      {
+        "key": "L1081fbeb3c",
+        "source": "1 and 2, 3, 4",
+        "value": "1 আর 2, 3, 4"
+      },
+      {
+        "key": "Lba789e471f",
+        "source": "Beat 1 has two taps, 1 and. Beats 2, 3 and 4 get one tap each.",
+        "value": "বিট 1-এ দুই টোকা, 1 আর। বিট 2, 3 ও 4-এ একটি করে।"
+      },
+      {
+        "key": "L7ec06a6447",
+        "source": "Part A",
+        "value": "অংশ A"
+      },
+      {
+        "key": "Lb575488938",
+        "source": "Part B",
+        "value": "অংশ B"
+      },
+      {
+        "key": "L55751877e1",
+        "source": "Thumb",
+        "value": "বুড়ো আঙুল"
+      },
+      {
+        "key": "Lc2df9b9326",
+        "source": "Index",
+        "value": "তর্জনী"
+      }
+    ]
+  },
+  "de": {
+    "map": "tools/l10n/learn/de.json",
+    "map_sha256": "a7f0211c251ccebc207aea591e88846f13aa1f1d7c2cc483c44032bf8b7477cf",
+    "glossary": "docs/l10n/glossary/de.md",
+    "glossary_sha256": "a88373e44d5f39c45cc40759345366d89dfa739d2d1e6e6e87700a4d648ae057",
+    "glossary_rows": [
+      {
+        "line": 45,
+        "text": "| String | Context-specific musical/UI sense | UI and lessons | `String` | Saite |  |"
+      },
+      {
+        "line": 100,
+        "text": "| section | Context-specific musical/UI sense | UI and lessons | `section` | Abschnitt |  |"
+      }
+    ],
+    "neighbor_terms": [
+      {
+        "key": "Ldea06d68d7",
+        "source": "Thumb, index, middle, ring play which strings?",
+        "value": "Welche Saiten spielen Daumen, Zeige-, Mittel- und Ringfinger?"
+      },
+      {
+        "key": "L2959e49ccf",
+        "source": "3, 4, 1 and 2",
+        "value": "3, 4, 1 und 2"
+      },
+      {
+        "key": "L1e68a89c2e",
+        "source": "4, 3, 2 and 1",
+        "value": "4, 3, 2 und 1"
+      },
+      {
+        "key": "L703760e9d4",
+        "source": "1, 2 and, 3, 4",
+        "value": "1, 2 und, 3, 4"
+      },
+      {
+        "key": "L1081fbeb3c",
+        "source": "1 and 2, 3, 4",
+        "value": "1 und 2, 3, 4"
+      },
+      {
+        "key": "Lba789e471f",
+        "source": "Beat 1 has two taps, 1 and. Beats 2, 3 and 4 get one tap each.",
+        "value": "Schlag 1 wird zweimal getippt, 1 und. Die Schläge 2, 3 und 4 je einmal."
+      },
+      {
+        "key": "L7ec06a6447",
+        "source": "Part A",
+        "value": "Teil A"
+      },
+      {
+        "key": "Lb575488938",
+        "source": "Part B",
+        "value": "Teil B"
+      },
+      {
+        "key": "L55751877e1",
+        "source": "Thumb",
+        "value": "Daumen"
+      },
+      {
+        "key": "Lc2df9b9326",
+        "source": "Index",
+        "value": "Zeigefinger"
+      }
+    ]
+  },
+  "es": {
+    "map": "tools/l10n/learn/es.json",
+    "map_sha256": "9cca586a4f2114deb1a5f77830eea231f4a46ad2f12d4c2486ee21c43f3e3a43",
+    "glossary": "docs/l10n/glossary/es.md",
+    "glossary_sha256": "1db38bb7fd05aff467ffc494d1e3bff56597e9b68d5f009044c077cb1b7ebcae",
+    "glossary_rows": [
+      {
+        "line": 45,
+        "text": "| String | Context-specific musical/UI sense | UI and lessons | `String` | Cuerda |  |"
+      },
+      {
+        "line": 100,
+        "text": "| section | Context-specific musical/UI sense | UI and lessons | `section` | sección |  |"
+      }
+    ],
+    "neighbor_terms": [
+      {
+        "key": "Ldea06d68d7",
+        "source": "Thumb, index, middle, ring play which strings?",
+        "value": "¿Qué cuerdas tocan pulgar, índice, medio y anular?"
+      },
+      {
+        "key": "L2959e49ccf",
+        "source": "3, 4, 1 and 2",
+        "value": "3, 4, 1 y 2"
+      },
+      {
+        "key": "L1e68a89c2e",
+        "source": "4, 3, 2 and 1",
+        "value": "4, 3, 2 y 1"
+      },
+      {
+        "key": "L703760e9d4",
+        "source": "1, 2 and, 3, 4",
+        "value": "1, 2 y, 3, 4"
+      },
+      {
+        "key": "L1081fbeb3c",
+        "source": "1 and 2, 3, 4",
+        "value": "1 y 2, 3, 4"
+      },
+      {
+        "key": "Lba789e471f",
+        "source": "Beat 1 has two taps, 1 and. Beats 2, 3 and 4 get one tap each.",
+        "value": "El tiempo 1 tiene dos toques, 1 y. Los tiempos 2, 3 y 4 llevan un toque cada uno."
+      },
+      {
+        "key": "L7ec06a6447",
+        "source": "Part A",
+        "value": "Parte A"
+      },
+      {
+        "key": "Lb575488938",
+        "source": "Part B",
+        "value": "Parte B"
+      },
+      {
+        "key": "L55751877e1",
+        "source": "Thumb",
+        "value": "Pulgar"
+      },
+      {
+        "key": "Lc2df9b9326",
+        "source": "Index",
+        "value": "Índice"
+      }
+    ]
+  },
+  "fa": {
+    "map": "tools/l10n/learn/fa.json",
+    "map_sha256": "b3929e2fe9245ecd54cd753729ebd2c740ca7719f275ee2a06db6feaab7c0e8d",
+    "glossary": "docs/l10n/glossary/fa.md",
+    "glossary_sha256": "056cc8e1c7d1bc24c74c6c216235e5cfb99fa87563111e1806cbf5af18400b74",
+    "glossary_rows": [
+      {
+        "line": 90,
+        "text": "| string | A string of the instrument; numbered 1 (thinnest, highest) to N | UI 69, lessons 807 |  | سیم |  |"
+      },
+      {
+        "line": 125,
+        "text": "| section | A part of a song | lessons 9 |  | بخش |  |"
+      }
+    ],
+    "neighbor_terms": [
+      {
+        "key": "Ldea06d68d7",
+        "source": "Thumb, index, middle, ring play which strings?",
+        "value": "شست، اشاره، میانی، حلقه کدام سیم‌ها را می‌نوازند؟"
+      },
+      {
+        "key": "L2959e49ccf",
+        "source": "3, 4, 1 and 2",
+        "value": "سیم‌های 3، 4، 1 و 2"
+      },
+      {
+        "key": "L1e68a89c2e",
+        "source": "4, 3, 2 and 1",
+        "value": "سیم‌های 4، 3، 2 و 1"
+      },
+      {
+        "key": "L703760e9d4",
+        "source": "1, 2 and, 3, 4",
+        "value": "شمارش 1، 2 و، 3، 4"
+      },
+      {
+        "key": "L1081fbeb3c",
+        "source": "1 and 2, 3, 4",
+        "value": "شمارش 1 و 2، 3، 4"
+      },
+      {
+        "key": "Lba789e471f",
+        "source": "Beat 1 has two taps, 1 and. Beats 2, 3 and 4 get one tap each.",
+        "value": "ضرب 1 دو ضربه دارد: 1 و. ضرب‌های 2، 3 و 4 هرکدام یک ضربه دارند."
+      },
+      {
+        "key": "L7ec06a6447",
+        "source": "Part A",
+        "value": "بخش A"
+      },
+      {
+        "key": "Lb575488938",
+        "source": "Part B",
+        "value": "بخش B"
+      },
+      {
+        "key": "L55751877e1",
+        "source": "Thumb",
+        "value": "شست"
+      },
+      {
+        "key": "Lc2df9b9326",
+        "source": "Index",
+        "value": "اشاره"
+      }
+    ]
+  },
+  "fr": {
+    "map": "tools/l10n/learn/fr.json",
+    "map_sha256": "6125a7b3c3f7d8cd78ac3d3c68fc540357138d249ffef562b40c2e722615a92f",
+    "glossary": "docs/l10n/glossary/fr.md",
+    "glossary_sha256": "ad4eed9bd93168acb1ee1aa88a4e97ab8e0792042b377582bcdc31e5bbf3dc95",
+    "glossary_rows": [
+      {
+        "line": 45,
+        "text": "| String | Context-specific musical/UI sense | UI and lessons | `String` | Corde |  |"
+      },
+      {
+        "line": 100,
+        "text": "| section | Context-specific musical/UI sense | UI and lessons | `section` | section |  |"
+      }
+    ],
+    "neighbor_terms": [
+      {
+        "key": "Ldea06d68d7",
+        "source": "Thumb, index, middle, ring play which strings?",
+        "value": "Quelles cordes jouent pouce, index, majeur et annulaire ?"
+      },
+      {
+        "key": "L2959e49ccf",
+        "source": "3, 4, 1 and 2",
+        "value": "3, 4, 1 et 2"
+      },
+      {
+        "key": "L1e68a89c2e",
+        "source": "4, 3, 2 and 1",
+        "value": "4, 3, 2 et 1"
+      },
+      {
+        "key": "L703760e9d4",
+        "source": "1, 2 and, 3, 4",
+        "value": "1, 2 et, 3, 4"
+      },
+      {
+        "key": "L1081fbeb3c",
+        "source": "1 and 2, 3, 4",
+        "value": "1 et 2, 3, 4"
+      },
+      {
+        "key": "Lba789e471f",
+        "source": "Beat 1 has two taps, 1 and. Beats 2, 3 and 4 get one tap each.",
+        "value": "Le temps 1 a deux frappes, 1 et. Les temps 2, 3 et 4 en reçoivent une chacun."
+      },
+      {
+        "key": "L7ec06a6447",
+        "source": "Part A",
+        "value": "Partie A"
+      },
+      {
+        "key": "Lb575488938",
+        "source": "Part B",
+        "value": "Partie B"
+      },
+      {
+        "key": "L55751877e1",
+        "source": "Thumb",
+        "value": "Pouce"
+      },
+      {
+        "key": "Lc2df9b9326",
+        "source": "Index",
+        "value": "Index"
+      }
+    ]
+  },
+  "hi": {
+    "map": "tools/l10n/learn/hi.json",
+    "map_sha256": "063782576129b393f46cbf1217c2586c1e962ffd2a6c0fe4d44112a975dbc88a",
+    "glossary": "docs/l10n/glossary/hi.md",
+    "glossary_sha256": "1a9e9be519eeb1aa430d09a6eb3149d100e5f3e3ce1d1991dbc0d1d4de0c7776",
+    "glossary_rows": [
+      {
+        "line": 90,
+        "text": "| string | A string of the instrument; numbered 1 (thinnest, highest) to N | UI 69, lessons 807 |  | तार |  |"
+      },
+      {
+        "line": 125,
+        "text": "| section | A part of a song | lessons 9 |  | खंड |  |"
+      }
+    ],
+    "neighbor_terms": [
+      {
+        "key": "Ldea06d68d7",
+        "source": "Thumb, index, middle, ring play which strings?",
+        "value": "अंगूठा, तर्जनी, मध्यमा, अनामिका कौन-से तार बजाते हैं?"
+      },
+      {
+        "key": "L2959e49ccf",
+        "source": "3, 4, 1 and 2",
+        "value": "3, 4, 1 और 2"
+      },
+      {
+        "key": "L1e68a89c2e",
+        "source": "4, 3, 2 and 1",
+        "value": "4, 3, 2 और 1"
+      },
+      {
+        "key": "L703760e9d4",
+        "source": "1, 2 and, 3, 4",
+        "value": "1, 2 और, 3, 4"
+      },
+      {
+        "key": "L1081fbeb3c",
+        "source": "1 and 2, 3, 4",
+        "value": "1 और 2, 3, 4"
+      },
+      {
+        "key": "Lba789e471f",
+        "source": "Beat 1 has two taps, 1 and. Beats 2, 3 and 4 get one tap each.",
+        "value": "ताल 1 पर दो थपकियाँ हैं, 1 और। ताल 2, 3 और 4 पर एक-एक।"
+      },
+      {
+        "key": "L7ec06a6447",
+        "source": "Part A",
+        "value": "भाग A"
+      },
+      {
+        "key": "Lb575488938",
+        "source": "Part B",
+        "value": "भाग B"
+      },
+      {
+        "key": "L55751877e1",
+        "source": "Thumb",
+        "value": "अंगूठा"
+      },
+      {
+        "key": "Lc2df9b9326",
+        "source": "Index",
+        "value": "तर्जनी"
+      }
+    ]
+  },
+  "it": {
+    "map": "tools/l10n/learn/it.json",
+    "map_sha256": "19af0dc759142692f294db701c8134b4102afc3a9f13dc0d7a0c231016df3333",
+    "glossary": "docs/l10n/glossary/it.md",
+    "glossary_sha256": "0925850181cd2dbc73792f86ff0b8663c6e3df61f88a79b9332ba890bfb17e4c",
+    "glossary_rows": [
+      {
+        "line": 45,
+        "text": "| String | Context-specific musical/UI sense | UI and lessons | `String` | Corda |  |"
+      },
+      {
+        "line": 100,
+        "text": "| section | Context-specific musical/UI sense | UI and lessons | `section` | sezione |  |"
+      }
+    ],
+    "neighbor_terms": [
+      {
+        "key": "Ldea06d68d7",
+        "source": "Thumb, index, middle, ring play which strings?",
+        "value": "Quali corde suonano pollice, indice, medio e anulare?"
+      },
+      {
+        "key": "L2959e49ccf",
+        "source": "3, 4, 1 and 2",
+        "value": "3, 4, 1 e 2"
+      },
+      {
+        "key": "L1e68a89c2e",
+        "source": "4, 3, 2 and 1",
+        "value": "4, 3, 2 e 1"
+      },
+      {
+        "key": "L703760e9d4",
+        "source": "1, 2 and, 3, 4",
+        "value": "1, 2 e, 3, 4"
+      },
+      {
+        "key": "L1081fbeb3c",
+        "source": "1 and 2, 3, 4",
+        "value": "1 e 2, 3, 4"
+      },
+      {
+        "key": "Lba789e471f",
+        "source": "Beat 1 has two taps, 1 and. Beats 2, 3 and 4 get one tap each.",
+        "value": "Il battito 1 ha due colpi, 1 e. I battiti 2, 3 e 4 hanno un colpo ciascuno."
+      },
+      {
+        "key": "L7ec06a6447",
+        "source": "Part A",
+        "value": "Parte A"
+      },
+      {
+        "key": "Lb575488938",
+        "source": "Part B",
+        "value": "Parte B"
+      },
+      {
+        "key": "L55751877e1",
+        "source": "Thumb",
+        "value": "Pollice"
+      },
+      {
+        "key": "Lc2df9b9326",
+        "source": "Index",
+        "value": "Indice"
+      }
+    ]
+  },
+  "ja": {
+    "map": "tools/l10n/learn/ja.json",
+    "map_sha256": "a95dccfa4924a899d0c509c65b9d07dd9c62de99ad509dde4c61f2829bd0cf0f",
+    "glossary": "docs/l10n/glossary/ja.md",
+    "glossary_sha256": "6fb9e067b9f9c0db86ece19a6b19cfa484745d6b1c51e0e30b1004ecce7f7989",
+    "glossary_rows": [
+      {
+        "line": 48,
+        "text": "| string / peg / headstock | 弦 / ペグ / ヘッド |"
+      },
+      {
+        "line": 64,
+        "text": "| Intro / Verse 1 / Chorus / Bridge / Solo / Outro / Tag / section | イントロ / Aメロ1 / サビ / ブリッジ / ソロ / アウトロ / 結尾 / セクション |"
+      }
+    ],
+    "neighbor_terms": [
+      {
+        "key": "Ldea06d68d7",
+        "source": "Thumb, index, middle, ring play which strings?",
+        "value": "親指、人差し指、中指、薬指が弾く弦はどれですか？"
+      },
+      {
+        "key": "L2959e49ccf",
+        "source": "3, 4, 1 and 2",
+        "value": "3、4、1、2"
+      },
+      {
+        "key": "L1e68a89c2e",
+        "source": "4, 3, 2 and 1",
+        "value": "4、3、2、1"
+      },
+      {
+        "key": "L703760e9d4",
+        "source": "1, 2 and, 3, 4",
+        "value": "1、2 and、3、4"
+      },
+      {
+        "key": "L1081fbeb3c",
+        "source": "1 and 2, 3, 4",
+        "value": "1 and 2、3、4"
+      },
+      {
+        "key": "Lba789e471f",
+        "source": "Beat 1 has two taps, 1 and. Beats 2, 3 and 4 get one tap each.",
+        "value": "1拍目は、1 andの二回叩きます。2拍目、3拍目、4拍目は、それぞれ一回です。"
+      },
+      {
+        "key": "L7ec06a6447",
+        "source": "Part A",
+        "value": "A部"
+      },
+      {
+        "key": "Lb575488938",
+        "source": "Part B",
+        "value": "B部"
+      },
+      {
+        "key": "L55751877e1",
+        "source": "Thumb",
+        "value": "親指"
+      },
+      {
+        "key": "Lc2df9b9326",
+        "source": "Index",
+        "value": "人差し指"
+      }
+    ]
+  },
+  "ko": {
+    "map": "tools/l10n/learn/ko.json",
+    "map_sha256": "243f5b3efb30c29dfff4bb80e5f5d6b807370e83734bde80d447c553703b7971",
+    "glossary": "docs/l10n/glossary/ko.md",
+    "glossary_sha256": "95618ae5cd668afa67fb47624e4ffb4ae5eb09053f304a2b909c7ee1d95d920b",
+    "glossary_rows": [
+      {
+        "line": 48,
+        "text": "| string / peg / headstock | 현 / 튜닝 페그 / 헤드스톡 |"
+      },
+      {
+        "line": 64,
+        "text": "| Intro / Verse 1 / Chorus / Bridge / Solo / Outro / Tag / section | 인트로 / 1절 / 후렴 / 브리지 / 솔로 / 아웃트로 / 끝맺음 / 구간 |"
+      }
+    ],
+    "neighbor_terms": [
+      {
+        "key": "Ldea06d68d7",
+        "source": "Thumb, index, middle, ring play which strings?",
+        "value": "엄지, 검지, 중지, 약지는 어떤 현을 치나요?"
+      },
+      {
+        "key": "L2959e49ccf",
+        "source": "3, 4, 1 and 2",
+        "value": "3, 4, 1, 2"
+      },
+      {
+        "key": "L1e68a89c2e",
+        "source": "4, 3, 2 and 1",
+        "value": "4, 3, 2, 1"
+      },
+      {
+        "key": "L703760e9d4",
+        "source": "1, 2 and, 3, 4",
+        "value": "1, 2 앤, 3, 4"
+      },
+      {
+        "key": "L1081fbeb3c",
+        "source": "1 and 2, 3, 4",
+        "value": "1 앤 2, 3, 4"
+      },
+      {
+        "key": "Lba789e471f",
+        "source": "Beat 1 has two taps, 1 and. Beats 2, 3 and 4 get one tap each.",
+        "value": "1박에는 두드림이 두 번, '1 앤'이에요. 2박, 3박, 4박은 한 번씩 두드려요."
+      },
+      {
+        "key": "L7ec06a6447",
+        "source": "Part A",
+        "value": "A부"
+      },
+      {
+        "key": "Lb575488938",
+        "source": "Part B",
+        "value": "B부"
+      },
+      {
+        "key": "L55751877e1",
+        "source": "Thumb",
+        "value": "엄지"
+      },
+      {
+        "key": "Lc2df9b9326",
+        "source": "Index",
+        "value": "검지"
+      }
+    ]
+  },
+  "pt": {
+    "map": "tools/l10n/learn/pt.json",
+    "map_sha256": "597ba2cc5ce8bbfa8b1c97d3be85d8095d56f41980b4b6ca7ce5bdd8fa7958bc",
+    "glossary": "docs/l10n/glossary/pt.md",
+    "glossary_sha256": "d5d8d5d64cbd0d842cca35b25a6535f2caff8e9ca0dc524fb63e71c8d1855b00",
+    "glossary_rows": [
+      {
+        "line": 45,
+        "text": "| String | Context-specific musical/UI sense | UI and lessons | `String` | Corda |  |"
+      },
+      {
+        "line": 100,
+        "text": "| section | Context-specific musical/UI sense | UI and lessons | `section` | seção |  |"
+      }
+    ],
+    "neighbor_terms": [
+      {
+        "key": "Ldea06d68d7",
+        "source": "Thumb, index, middle, ring play which strings?",
+        "value": "Polegar, indicador, médio e anelar tocam quais cordas?"
+      },
+      {
+        "key": "L2959e49ccf",
+        "source": "3, 4, 1 and 2",
+        "value": "3, 4, 1 e 2"
+      },
+      {
+        "key": "L1e68a89c2e",
+        "source": "4, 3, 2 and 1",
+        "value": "4, 3, 2 e 1"
+      },
+      {
+        "key": "L703760e9d4",
+        "source": "1, 2 and, 3, 4",
+        "value": "1, 2 e, 3, 4"
+      },
+      {
+        "key": "L1081fbeb3c",
+        "source": "1 and 2, 3, 4",
+        "value": "1 e 2, 3, 4"
+      },
+      {
+        "key": "Lba789e471f",
+        "source": "Beat 1 has two taps, 1 and. Beats 2, 3 and 4 get one tap each.",
+        "value": "O tempo 1 tem dois toques, 1 e. Os tempos 2, 3 e 4 recebem um toque cada."
+      },
+      {
+        "key": "L7ec06a6447",
+        "source": "Part A",
+        "value": "Parte A"
+      },
+      {
+        "key": "Lb575488938",
+        "source": "Part B",
+        "value": "Parte B"
+      },
+      {
+        "key": "L55751877e1",
+        "source": "Thumb",
+        "value": "Polegar"
+      },
+      {
+        "key": "Lc2df9b9326",
+        "source": "Index",
+        "value": "Indicador"
+      }
+    ]
+  },
+  "ru": {
+    "map": "tools/l10n/learn/ru.json",
+    "map_sha256": "9e7b7c6e5e0217a0429e6b0403aa9c33b0c05e2cfd84bebb28c34225b8ff6d91",
+    "glossary": "docs/l10n/glossary/ru.md",
+    "glossary_sha256": "763a8f3d3af490ad2277d986284ac680fa8aeab55f2aef666e2443bbae43a3e3",
+    "glossary_rows": [
+      {
+        "line": 90,
+        "text": "| string | A string of the instrument; numbered 1 (thinnest, highest) to N | UI 69, lessons 807 |  | струна |  |"
+      },
+      {
+        "line": 125,
+        "text": "| section | A part of a song | lessons 9 |  | раздел |  |"
+      }
+    ],
+    "neighbor_terms": [
+      {
+        "key": "Ldea06d68d7",
+        "source": "Thumb, index, middle, ring play which strings?",
+        "value": "Какие струны играют большой, указательный, средний, безымянный?"
+      },
+      {
+        "key": "L2959e49ccf",
+        "source": "3, 4, 1 and 2",
+        "value": "3, 4, 1 и 2"
+      },
+      {
+        "key": "L1e68a89c2e",
+        "source": "4, 3, 2 and 1",
+        "value": "4, 3, 2 и 1"
+      },
+      {
+        "key": "L703760e9d4",
+        "source": "1, 2 and, 3, 4",
+        "value": "1, 2 и, 3, 4"
+      },
+      {
+        "key": "L1081fbeb3c",
+        "source": "1 and 2, 3, 4",
+        "value": "1 и 2, 3, 4"
+      },
+      {
+        "key": "Lba789e471f",
+        "source": "Beat 1 has two taps, 1 and. Beats 2, 3 and 4 get one tap each.",
+        "value": "На доле 1 два касания: 1 и. На долях 2, 3 и 4 по одному касанию."
+      },
+      {
+        "key": "L7ec06a6447",
+        "source": "Part A",
+        "value": "Часть A"
+      },
+      {
+        "key": "Lb575488938",
+        "source": "Part B",
+        "value": "Часть B"
+      },
+      {
+        "key": "L55751877e1",
+        "source": "Thumb",
+        "value": "Большой"
+      },
+      {
+        "key": "Lc2df9b9326",
+        "source": "Index",
+        "value": "Указательный"
+      }
+    ]
+  },
+  "zh-CN": {
+    "map": "tools/l10n/learn/zh-CN.json",
+    "map_sha256": "45572da5e793d267829ed857701745bb0ec7e308db11f3c7878bb924392f1614",
+    "glossary": "docs/l10n/glossary/zh-CN.md",
+    "glossary_sha256": "b01f6176ebe700171c6e0b5f08d9cfdc59eeaee57c84b357a4ca15c791cec06a",
+    "glossary_rows": [
+      {
+        "line": 48,
+        "text": "| string / peg / headstock | 弦 / 弦钮 / 琴头 |"
+      },
+      {
+        "line": 64,
+        "text": "| Intro / Verse 1 / Chorus / Bridge / Solo / Outro / Tag / section | 前奏 / 主歌 1 / 副歌 / 桥段 / 独奏 / 尾奏 / 尾句 / 段落 |"
+      }
+    ],
+    "neighbor_terms": [
+      {
+        "key": "Ldea06d68d7",
+        "source": "Thumb, index, middle, ring play which strings?",
+        "value": "拇指、食指、中指、无名指分别弹哪些弦？"
+      },
+      {
+        "key": "L2959e49ccf",
+        "source": "3, 4, 1 and 2",
+        "value": "3、4、1、2"
+      },
+      {
+        "key": "L1e68a89c2e",
+        "source": "4, 3, 2 and 1",
+        "value": "4、3、2、1"
+      },
+      {
+        "key": "L703760e9d4",
+        "source": "1, 2 and, 3, 4",
+        "value": "1、2 and、3、4"
+      },
+      {
+        "key": "L1081fbeb3c",
+        "source": "1 and 2, 3, 4",
+        "value": "1 and 2、3、4"
+      },
+      {
+        "key": "Lba789e471f",
+        "source": "Beat 1 has two taps, 1 and. Beats 2, 3 and 4 get one tap each.",
+        "value": "第 1 拍有两次点击，1 and。第 2、3、4 拍各点击一次。"
+      },
+      {
+        "key": "L7ec06a6447",
+        "source": "Part A",
+        "value": "A 段"
+      },
+      {
+        "key": "Lb575488938",
+        "source": "Part B",
+        "value": "B 段"
+      },
+      {
+        "key": "L55751877e1",
+        "source": "Thumb",
+        "value": "拇指"
+      },
+      {
+        "key": "Lc2df9b9326",
+        "source": "Index",
+        "value": "食指"
+      }
+    ]
+  },
+  "ur": {
+    "map": "frozen Urdu independently reviewed map",
+    "map_sha256": "b5b55ff059e117cb44b71b08648d44ae5681a2bee2fcbb233434716ea0292510",
+    "glossary": "docs/l10n/glossary/ur.md",
+    "glossary_sha256": "20d9a2f45446fca130e76bde1639f161e97a58d82bb9c645b413fd9c4e182663",
+    "glossary_rows": [
+      {
+        "line": 90,
+        "text": "| string | A string of the instrument; numbered 1 (thinnest, highest) to N | UI 69, lessons 807 |  | تار |  |"
+      },
+      {
+        "line": 125,
+        "text": "| section | A part of a song | lessons 9 |  | حصہ |  |"
+      }
+    ],
+    "neighbor_terms": [
+      {
+        "key": "Ldea06d68d7",
+        "source": "Thumb, index, middle, ring play which strings?",
+        "value": "انگوٹھا، شہادت، درمیانی، انگوٹھی کی انگلی کون سے تار بجاتے ہیں؟"
+      },
+      {
+        "key": "L2959e49ccf",
+        "source": "3, 4, 1 and 2",
+        "value": "تار 3، 4، 1 اور 2"
+      },
+      {
+        "key": "L1e68a89c2e",
+        "source": "4, 3, 2 and 1",
+        "value": "تار 4، 3، 2 اور 1"
+      },
+      {
+        "key": "L703760e9d4",
+        "source": "1, 2 and, 3, 4",
+        "value": "گنتی 1، 2 اور، 3، 4"
+      },
+      {
+        "key": "L1081fbeb3c",
+        "source": "1 and 2, 3, 4",
+        "value": "گنتی 1 اور 2، 3، 4"
+      },
+      {
+        "key": "Lba789e471f",
+        "source": "Beat 1 has two taps, 1 and. Beats 2, 3 and 4 get one tap each.",
+        "value": "تال 1 پر دو تھپتھپاہٹیں ہیں، 1 اور۔ تال 2، 3 اور 4 پر ایک ایک۔"
+      },
+      {
+        "key": "L7ec06a6447",
+        "source": "Part A",
+        "value": "حصہ A"
+      },
+      {
+        "key": "Lb575488938",
+        "source": "Part B",
+        "value": "حصہ B"
+      },
+      {
+        "key": "L55751877e1",
+        "source": "Thumb",
+        "value": "انگوٹھا"
+      },
+      {
+        "key": "Lc2df9b9326",
+        "source": "Index",
+        "value": "شہادت"
+      }
+    ]
+  }
+}

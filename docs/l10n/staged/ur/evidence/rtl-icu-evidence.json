@@ -1,0 +1,1148 @@
+{
+  "method": "Two independent reviewers; ICU76 Unicode-order evidence, not native device/font certification. Only individually reviewed ordered notation spans isolated; no blanket bidi marks.",
+  "first_half": {
+    "method": "ICU76 ubidi_setPara paragraph level1(RTL), ubidi_writeReordered; controls stripped only from diagnostic visual output. No native font/device rendering certification.",
+    "corrections": [
+      {
+        "batch": "ur-017.json",
+        "id": "s062",
+        "key": "L007b8bf14c",
+        "source": "Count 1 2 3, 1 2 3, with the weight on 1. This is waltz time. \"Clementine\", first printed in 1884, sways in three.",
+        "old": "گنیں 1 2 3، 1 2 3، زور 1 پر۔ یہ والٹز کی لے ہے۔ “Clementine”، جو پہلے 1884 میں چھپا، تین میں جھولتا ہے۔",
+        "new": "گنیں ⁦1 2 3، 1 2 3⁩، زور 1 پر۔ یہ والٹز کی لے ہے۔ “Clementine”، جو پہلے 1884 میں چھپا، تین میں جھولتا ہے۔",
+        "notation_fragment": "1 2 3، 1 2 3",
+        "old_visual_left_to_right": "۔ےہ اتلوھج ںیم نیت ،اپھچ ںیم 1884 ےلہپ وج ،”Clementine“ ۔ےہ ےل یک زٹلاو ہی ۔رپ 1 روز ،3 2 1 ،3 2 1 ںینگ",
+        "new_visual_left_to_right": "۔ےہ اتلوھج ںیم نیت ،اپھچ ںیم 1884 ےلہپ وج ،”Clementine“ ۔ےہ ےل یک زٹلاو ہی ۔رپ 1 روز ،1 2 3، 1 2 3 ںینگ"
+      },
+      {
+        "batch": "ur-018.json",
+        "id": "s020",
+        "key": "L0bc3dc7e3b",
+        "source": "The chunk, the island strum with a backbeat, swing and the ragtime chords, accents in 3-3-2, and the waltz.",
+        "old": "چنک، بیک بیٹ والا آئی لینڈ اسٹرم، سوئنگ، ریگ ٹائم کورڈ، 3-3-2 کے زور اور والٹز۔",
+        "new": "چنک، بیک بیٹ والا آئی لینڈ اسٹرم، سوئنگ، ریگ ٹائم کورڈ، ⁦3-3-2⁩ کے زور اور والٹز۔",
+        "notation_fragment": "3-3-2",
+        "old_visual_left_to_right": "۔زٹلاو روا روز ےک 2-3-3 ،ڈروک مئاٹ گیر ،گنئوس ،مرٹسا ڈنیل یئآ الاو ٹیب کیب ،کنچ",
+        "new_visual_left_to_right": "۔زٹلاو روا روز ےک 3-3-2 ،ڈروک مئاٹ گیر ،گنئوس ،مرٹسا ڈنیل یئآ الاو ٹیب کیب ،کنچ"
+      },
+      {
+        "batch": "ur-018.json",
+        "id": "s044",
+        "key": "L1c887cc6f4",
+        "source": "Accents in 3-3-2",
+        "old": "ترتیب 3-3-2 میں زور",
+        "new": "ترتیب ⁦3-3-2⁩ میں زور",
+        "notation_fragment": "3-3-2",
+        "old_visual_left_to_right": "روز ںیم 2-3-3 بیترت",
+        "new_visual_left_to_right": "روز ںیم 3-3-2 بیترت"
+      },
+      {
+        "batch": "ur-018.json",
+        "id": "s050",
+        "key": "Lc2dfec487b",
+        "source": "Count 1 2 3, 1 2 3, 1 2 across the bar's eight eighths. Each 1 is an accent.",
+        "old": "بار کے آٹھ آٹھویں نوٹوں میں گنیں: 1 2 3، 1 2 3، 1 2۔ ہر 1 پر زور ہے۔",
+        "new": "بار کے آٹھ آٹھویں نوٹوں میں گنیں: ⁦1 2 3، 1 2 3، 1 2⁩۔ ہر 1 پر زور ہے۔",
+        "notation_fragment": "1 2 3، 1 2 3، 1 2",
+        "old_visual_left_to_right": "۔ےہ روز رپ 1 رہ ۔2 1 ،3 2 1 ،3 2 1 :ںینگ ںیم ںوٹون ںیوھٹآ ھٹآ ےک راب",
+        "new_visual_left_to_right": "۔ےہ روز رپ 1 رہ ۔1 2 3، 1 2 3، 1 2 :ںینگ ںیم ںوٹون ںیوھٹآ ھٹآ ےک راب"
+      },
+      {
+        "batch": "ur-018.json",
+        "id": "s060",
+        "key": "Lf02209b661",
+        "source": "No new ideas: chunks, the island strum with a chunk, swing, the 3-3-2 accents and the waltz. Keep the hand moving and let the accents speak.",
+        "old": "کوئی نئی بات نہیں: چنک، چنک والا آئی لینڈ اسٹرم، سوئنگ، 3-3-2 کے زور اور والٹز۔ ہاتھ چلتا رکھیں، زور کو بولنے دیں۔",
+        "new": "کوئی نئی بات نہیں: چنک، چنک والا آئی لینڈ اسٹرم، سوئنگ، ⁦3-3-2⁩ کے زور اور والٹز۔ ہاتھ چلتا رکھیں، زور کو بولنے دیں۔",
+        "notation_fragment": "3-3-2",
+        "old_visual_left_to_right": "۔ںید ےنلوب وک روز ،ںیھکر اتلچ ھتاہ ۔زٹلاو روا روز ےک 2-3-3 ،گنئوس ،مرٹسا ڈنیل یئآ الاو کنچ ،کنچ :ںیہن تاب یئن یئوک",
+        "new_visual_left_to_right": "۔ںید ےنلوب وک روز ،ںیھکر اتلچ ھتاہ ۔زٹلاو روا روز ےک 3-3-2 ،گنئوس ،مرٹسا ڈنیل یئآ الاو کنچ ،کنچ :ںیہن تاب یئن یئوک"
+      },
+      {
+        "batch": "ur-019.json",
+        "id": "s052",
+        "key": "L95847c5f13",
+        "source": "This rowing song is in six-eight: six quick counts to a bar, felt as two big sways. Count 1 2 3, 4 5 6, and lean on 1 and 4.",
+        "old": "کشتی کھینچنے کا یہ گانا چھ آٹھ میں ہے: ہر بار چھ تیز گنتیاں، دو بڑے جھولوں کا احساس۔ گنیں 1 2 3، 4 5 6، زور 1 اور 4 پر۔",
+        "new": "کشتی کھینچنے کا یہ گانا چھ آٹھ میں ہے: ہر بار چھ تیز گنتیاں، دو بڑے جھولوں کا احساس۔ گنیں ⁦1 2 3، 4 5 6⁩، زور 1 اور 4 پر۔",
+        "notation_fragment": "1 2 3، 4 5 6",
+        "old_visual_left_to_right": "۔رپ 4 روا 1 روز ،6 5 4 ،3 2 1 ںینگ ۔ساسحا اک ںولوھج ےڑب ود ،ںایتنگ زیت ھچ راب رہ :ےہ ںیم ھٹآ ھچ اناگ ہی اک ےنچنیھک یتشک",
+        "new_visual_left_to_right": "۔رپ 4 روا 1 روز ،1 2 3، 4 5 6 ںینگ ۔ساسحا اک ںولوھج ےڑب ود ،ںایتنگ زیت ھچ راب رہ :ےہ ںیم ھٹآ ھچ اناگ ہی اک ےنچنیھک یتشک"
+      },
+      {
+        "batch": "ur-019.json",
+        "id": "s057",
+        "key": "L9ae990d08d",
+        "source": "Six eighths group in two threes: 1 2 3, 4 5 6. The first of each three carries the sway.",
+        "old": "چھ آٹھویں نوٹ تین تین کے دو گروہ ہیں: 1 2 3، 4 5 6۔ ہر تین کا پہلا نوٹ جھول اٹھاتا ہے۔",
+        "new": "چھ آٹھویں نوٹ تین تین کے دو گروہ ہیں: ⁦1 2 3، 4 5 6⁩۔ ہر تین کا پہلا نوٹ جھول اٹھاتا ہے۔",
+        "notation_fragment": "1 2 3، 4 5 6",
+        "old_visual_left_to_right": "۔ےہ اتاھٹا لوھج ٹون الہپ اک نیت رہ ۔6 5 4 ،3 2 1 :ںیہ ہورگ ود ےک نیت نیت ٹون ںیوھٹآ ھچ",
+        "new_visual_left_to_right": "۔ےہ اتاھٹا لوھج ٹون الہپ اک نیت رہ ۔1 2 3، 4 5 6 :ںیہ ہورگ ود ےک نیت نیت ٹون ںیوھٹآ ھچ"
+      },
+      {
+        "batch": "ur-020.json",
+        "id": "s063",
+        "key": "L2783b98449",
+        "source": "Start on G, fret 3 of string 4, with your middle finger. Climb across three strings: G A B C D E F sharp G. The same shape works from any root.",
+        "old": "تار 4 کے فریٹ 3 والے G سے درمیانی انگلی کے ساتھ شروع کریں۔ تین تاروں پر چڑھیں: G A B C D E F شارپ G۔ یہی شکل کسی بھی بنیادی نوٹ سے چلتی ہے۔",
+        "new": "تار 4 کے فریٹ 3 والے G سے درمیانی انگلی کے ساتھ شروع کریں۔ تین تاروں پر چڑھیں: ⁦G A B C D E F شارپ G⁩۔ یہی شکل کسی بھی بنیادی نوٹ سے چلتی ہے۔",
+        "notation_fragment": "G A B C D E F شارپ G",
+        "old_visual_left_to_right": "۔ےہ یتلچ ےس ٹون یداینب یھب یسک لکش یہی ۔G پراش G A B C D E F :ںیھڑچ رپ ںورات نیت ۔ںیرک عورش ھتاس ےک یلگنا ینایمرد ےس G ےلاو 3 ٹیرف ےک 4 رات",
+        "new_visual_left_to_right": "۔ےہ یتلچ ےس ٹون یداینب یھب یسک لکش یہی ۔G A B C D E F پراش G :ںیھڑچ رپ ںورات نیت ۔ںیرک عورش ھتاس ےک یلگنا ینایمرد ےس G ےلاو 3 ٹیرف ےک 4 رات"
+      },
+      {
+        "batch": "ur-030.json",
+        "id": "s090",
+        "key": "L184b5b4ca8",
+        "source": "3 + 3 + 2",
+        "old": "3 + 3 + 2",
+        "new": "⁦3 + 3 + 2⁩",
+        "notation_fragment": "3 + 3 + 2",
+        "old_visual_left_to_right": "2 + 3 + 3",
+        "new_visual_left_to_right": "3 + 3 + 2"
+      },
+      {
+        "batch": "ur-005.json",
+        "id": "s012",
+        "key": "Ld46172ac7a",
+        "source": "G sharp, A, B: string 3 at frets 1 and 2, then open string 2.",
+        "old": "نوٹ G شارپ، A، B: تار 3 کے فریٹ 1 اور 2، پھر کھلا تار 2۔",
+        "new": "نوٹ ⁦G شارپ، A، B⁩: تار 3 کے فریٹ 1 اور 2، پھر کھلا تار 2۔",
+        "notation_fragments": [
+          "G شارپ، A، B"
+        ],
+        "old_visual_left_to_right": "۔2 رات الھک رھپ ،2 روا 1 ٹیرف ےک 3 رات :A، B ،پراش G ٹون",
+        "new_visual_left_to_right": "۔2 رات الھک رھپ ،2 روا 1 ٹیرف ےک 3 رات :G پراش، A، B ٹون",
+        "criterion": "This exact fragment is an ordered playable note/scale sequence or explicit sequence quiz answer, not a prose note reference. Urdu sharp/flat words split the Latin run in RTL; ICU evidence supports one LRI/PDI around the complete ordered fragment, leaving surrounding prose untouched."
+      },
+      {
+        "batch": "ur-008.json",
+        "id": "s026",
+        "key": "Ldd672a79e0",
+        "source": "A boogie line walks up the chord and back, each note twice, long-short like the shuffle. Over A7 it climbs A, C sharp, E, F sharp, G, then walks back down.",
+        "old": "بوگی دھن کورڈ پر اوپر اور واپس چلتی ہے، ہر نوٹ دو بار، شفل کی طرح لمبا مختصر۔ A7 پر A، C شارپ، E، F شارپ، G تک چڑھتی ہے، پھر نیچے۔",
+        "new": "بوگی دھن کورڈ پر اوپر اور واپس چلتی ہے، ہر نوٹ دو بار، شفل کی طرح لمبا مختصر۔ A7 پر ⁦A، C شارپ، E، F شارپ، G⁩ تک چڑھتی ہے، پھر نیچے۔",
+        "notation_fragments": [
+          "A، C شارپ، E، F شارپ، G"
+        ],
+        "old_visual_left_to_right": "۔ےچین رھپ ،ےہ یتھڑچ کت G ،پراش E، F ،پراش A، C رپ A7 ۔رصتخم ابمل حرط یک لفش ،راب ود ٹون رہ ،ےہ یتلچ سپاو روا رپوا رپ ڈروک نھد یگوب",
+        "new_visual_left_to_right": "۔ےچین رھپ ،ےہ یتھڑچ کت A، C پراش، E، F پراش، G رپ A7 ۔رصتخم ابمل حرط یک لفش ،راب ود ٹون رہ ،ےہ یتلچ سپاو روا رپوا رپ ڈروک نھد یگوب",
+        "criterion": "This exact fragment is an ordered playable note/scale sequence or explicit sequence quiz answer, not a prose note reference. Urdu sharp/flat words split the Latin run in RTL; ICU evidence supports one LRI/PDI around the complete ordered fragment, leaving surrounding prose untouched."
+      },
+      {
+        "batch": "ur-008.json",
+        "id": "s033",
+        "key": "L35570cbd1c",
+        "source": "The same walk starts from D on string 4 and from E on string 6. Over D7: D, F sharp, A, B, C. Over E7: E, G sharp, B, C sharp, D.",
+        "old": "یہی چال تار 4 کے D اور تار 6 کے E سے شروع ہوتی ہے۔ D7 پر: D، F شارپ، A، B، C۔ E7 پر: E، G شارپ، B، C شارپ، D۔",
+        "new": "یہی چال تار 4 کے D اور تار 6 کے E سے شروع ہوتی ہے۔ D7 پر: ⁦D، F شارپ، A، B، C⁩۔ E7 پر: ⁦E، G شارپ، B، C شارپ، D⁩۔",
+        "notation_fragments": [
+          "D، F شارپ، A، B، C",
+          "E، G شارپ، B، C شارپ، D"
+        ],
+        "old_visual_left_to_right": "۔D ،پراش B، C ،پراش E، G :رپ E7 ۔A، B، C ،پراش D، F :رپ D7 ۔ےہ یتوہ عورش ےس E ےک 6 رات روا D ےک 4 رات لاچ یہی",
+        "new_visual_left_to_right": "۔E، G پراش، B، C پراش، D :رپ E7 ۔D، F پراش، A، B، C :رپ D7 ۔ےہ یتوہ عورش ےس E ےک 6 رات روا D ےک 4 رات لاچ یہی",
+        "criterion": "This exact fragment is an ordered playable note/scale sequence or explicit sequence quiz answer, not a prose note reference. Urdu sharp/flat words split the Latin run in RTL; ICU evidence supports one LRI/PDI around the complete ordered fragment, leaving surrounding prose untouched."
+      },
+      {
+        "batch": "ur-008.json",
+        "id": "s067",
+        "key": "L4d39331c9c",
+        "source": "Neon Laundromat doesn't shuffle. Play your boogie walk in even eighths and it becomes a bass line under the A7: A, C sharp, E, F sharp, G, and back down.",
+        "old": "گانا Neon Laundromat شفل نہیں کرتا۔ بوگی کو برابر آٹھویں نوٹوں میں بجائیں تو A7 کے نیچے باس دھن بنتی ہے: A، C شارپ، E، F شارپ، G، پھر نیچے۔",
+        "new": "گانا Neon Laundromat شفل نہیں کرتا۔ بوگی کو برابر آٹھویں نوٹوں میں بجائیں تو A7 کے نیچے باس دھن بنتی ہے: ⁦A، C شارپ، E، F شارپ، G⁩، پھر نیچے۔",
+        "notation_fragments": [
+          "A، C شارپ، E، F شارپ، G"
+        ],
+        "old_visual_left_to_right": "۔ےچین رھپ ،G ،پراش E، F ،پراش A، C :ےہ یتنب نھد ساب ےچین ےک A7 وت ںیئاجب ںیم ںوٹون ںیوھٹآ ربارب وک یگوب ۔اترک ںیہن لفش Neon Laundromat اناگ",
+        "new_visual_left_to_right": "۔ےچین رھپ ،A، C پراش، E، F پراش، G :ےہ یتنب نھد ساب ےچین ےک A7 وت ںیئاجب ںیم ںوٹون ںیوھٹآ ربارب وک یگوب ۔اترک ںیہن لفش Neon Laundromat اناگ",
+        "criterion": "This exact fragment is an ordered playable note/scale sequence or explicit sequence quiz answer, not a prose note reference. Urdu sharp/flat words split the Latin run in RTL; ICU evidence supports one LRI/PDI around the complete ordered fragment, leaving surrounding prose untouched."
+      },
+      {
+        "batch": "ur-012.json",
+        "id": "s037",
+        "key": "L921bfa2279",
+        "source": "The top notes here run G, G, G, F sharp: almost still while the chords change under them. A note that two chords share is a common tone, and it's why triads sound so smooth.",
+        "old": "یہاں اوپر کے نوٹ G، G، G، F شارپ ہیں: تقریباً ساکن، جبکہ نیچے کورڈ بدلتے ہیں۔ دو کورڈ کا مشترک نوٹ مشترک سُر ہے؛ اسی لیے ترائیڈ ہموار لگتے ہیں۔",
+        "new": "یہاں اوپر کے نوٹ ⁦G، G، G، F شارپ⁩ ہیں: تقریباً ساکن، جبکہ نیچے کورڈ بدلتے ہیں۔ دو کورڈ کا مشترک نوٹ مشترک سُر ہے؛ اسی لیے ترائیڈ ہموار لگتے ہیں۔",
+        "notation_fragments": [
+          "G، G، G، F شارپ"
+        ],
+        "old_visual_left_to_right": "۔ںیہ ےتگل راومہ ڈیئارت ےیل یسا ؛ےہ رُس کرتشم ٹون کرتشم اک ڈروک ود ۔ںیہ ےتلدب ڈروک ےچین ہکبج ،نکاس ًابیرقت :ںیہ پراش G، G، G، F ٹون ےک رپوا ںاہی",
+        "new_visual_left_to_right": "۔ںیہ ےتگل راومہ ڈیئارت ےیل یسا ؛ےہ رُس کرتشم ٹون کرتشم اک ڈروک ود ۔ںیہ ےتلدب ڈروک ےچین ہکبج ،نکاس ًابیرقت :ںیہ G، G، G، F پراش ٹون ےک رپوا ںاہی",
+        "criterion": "This exact fragment is an ordered playable note/scale sequence or explicit sequence quiz answer, not a prose note reference. Urdu sharp/flat words split the Latin run in RTL; ICU evidence supports one LRI/PDI around the complete ordered fragment, leaving surrounding prose untouched."
+      },
+      {
+        "batch": "ur-013.json",
+        "id": "s088",
+        "key": "Lf86ce92363",
+        "source": "A, B, C sharp, E, F sharp",
+        "old": "نوٹ A، B، C شارپ، E، F شارپ",
+        "new": "نوٹ ⁦A، B، C شارپ، E، F شارپ⁩",
+        "notation_fragments": [
+          "A، B، C شارپ، E، F شارپ"
+        ],
+        "old_visual_left_to_right": "پراش E، F ،پراش A، B، C ٹون",
+        "new_visual_left_to_right": "A، B، C پراش، E، F پراش ٹون",
+        "criterion": "This exact fragment is an ordered playable note/scale sequence or explicit sequence quiz answer, not a prose note reference. Urdu sharp/flat words split the Latin run in RTL; ICU evidence supports one LRI/PDI around the complete ordered fragment, leaving surrounding prose untouched."
+      },
+      {
+        "batch": "ur-017.json",
+        "id": "s070",
+        "key": "L4841404fd2",
+        "source": "The last line starts D, C sharp, C. How do those notes move?",
+        "old": "آخری سطر D، C شارپ، C سے شروع ہے۔ یہ نوٹ کیسے چلتے ہیں؟",
+        "new": "آخری سطر ⁦D، C شارپ، C⁩ سے شروع ہے۔ یہ نوٹ کیسے چلتے ہیں؟",
+        "notation_fragments": [
+          "D، C شارپ، C"
+        ],
+        "old_visual_left_to_right": "؟ںیہ ےتلچ ےسیک ٹون ہی ۔ےہ عورش ےس C ،پراش D، C رطس یرخآ",
+        "new_visual_left_to_right": "؟ںیہ ےتلچ ےسیک ٹون ہی ۔ےہ عورش ےس D، C پراش، C رطس یرخآ",
+        "criterion": "This exact fragment is an ordered playable note/scale sequence or explicit sequence quiz answer, not a prose note reference. Urdu sharp/flat words split the Latin run in RTL; ICU evidence supports one LRI/PDI around the complete ordered fragment, leaving surrounding prose untouched."
+      },
+      {
+        "batch": "ur-018.json",
+        "id": "s005",
+        "key": "Lf86491058d",
+        "source": "Count up from F: F, G, A, B flat. The fourth note is B flat.",
+        "old": "نوٹ F سے گنیں: F، G، A، B فلیٹ۔ چوتھا نوٹ B فلیٹ ہے۔",
+        "new": "نوٹ F سے گنیں: ⁦F، G، A، B فلیٹ⁩۔ چوتھا نوٹ B فلیٹ ہے۔",
+        "notation_fragments": [
+          "F، G، A، B فلیٹ"
+        ],
+        "old_visual_left_to_right": "۔ےہ ٹیلف B ٹون اھتوچ ۔ٹیلف F، G، A، B :ںینگ ےس F ٹون",
+        "new_visual_left_to_right": "۔ےہ ٹیلف B ٹون اھتوچ ۔F، G، A، B ٹیلف :ںینگ ےس F ٹون",
+        "criterion": "This exact fragment is an ordered playable note/scale sequence or explicit sequence quiz answer, not a prose note reference. Urdu sharp/flat words split the Latin run in RTL; ICU evidence supports one LRI/PDI around the complete ordered fragment, leaving surrounding prose untouched."
+      },
+      {
+        "batch": "ur-018.json",
+        "id": "s009",
+        "key": "L58d68468c9",
+        "source": "Count up from D: D, E, F sharp, G, A. A is the fifth note, so A7 is the V chord.",
+        "old": "نوٹ D سے گنیں: D، E، F شارپ، G، A۔ A پانچواں نوٹ ہے، اس لیے A7 ہی V کورڈ ہے۔",
+        "new": "نوٹ D سے گنیں: ⁦D، E، F شارپ، G، A⁩۔ A پانچواں نوٹ ہے، اس لیے A7 ہی V کورڈ ہے۔",
+        "notation_fragments": [
+          "D، E، F شارپ، G، A"
+        ],
+        "old_visual_left_to_right": "۔ےہ ڈروک V یہ A7 ےیل سا ،ےہ ٹون ںاوچناپ A ۔G، A ،پراش D، E، F :ںینگ ےس D ٹون",
+        "new_visual_left_to_right": "۔ےہ ڈروک V یہ A7 ےیل سا ،ےہ ٹون ںاوچناپ A ۔D، E، F پراش، G، A :ںینگ ےس D ٹون",
+        "criterion": "This exact fragment is an ordered playable note/scale sequence or explicit sequence quiz answer, not a prose note reference. Urdu sharp/flat words split the Latin run in RTL; ICU evidence supports one LRI/PDI around the complete ordered fragment, leaving surrounding prose untouched."
+      },
+      {
+        "batch": "ur-019.json",
+        "id": "s022",
+        "key": "L4be63de2a8",
+        "source": "Down by the riverside: B, B, A sharp, B, then A and G.",
+        "old": "گیت Down by the riverside: B، B، A شارپ، B، پھر A اور G۔",
+        "new": "سطر “Down by the riverside”: ⁦B، B، A شارپ، B⁩، پھر A اور G۔",
+        "notation_fragments": [
+          "B، B، A شارپ، B"
+        ],
+        "old_visual_left_to_right": "۔G روا A رھپ ،B ،پراش Down by the riverside: B، B، A تیگ",
+        "new_visual_left_to_right": "۔G روا A رھپ ،B، B، A پراش، B :”Down by the riverside“ رطس",
+        "criterion": "This exact fragment is an ordered playable note/scale sequence or explicit sequence quiz answer, not a prose note reference. Urdu sharp/flat words split the Latin run in RTL; ICU evidence supports one LRI/PDI around the complete ordered fragment, leaving surrounding prose untouched."
+      },
+      {
+        "batch": "ur-020.json",
+        "id": "s038",
+        "key": "L11a5ce4988",
+        "source": "On string 4, each fret is one note higher: E, F, F sharp, G, G sharp, then A at fret 5. Fret 5 sounds the same as open string 3.",
+        "old": "تار 4 پر ہر فریٹ ایک نوٹ اونچا ہے: E، F، F شارپ، G، G شارپ، پھر فریٹ 5 پر A۔ فریٹ 5 کھلے تار 3 جیسا بجتا ہے۔",
+        "new": "تار 4 پر ہر فریٹ ایک نوٹ اونچا ہے: ⁦E، F، F شارپ، G، G شارپ⁩، پھر فریٹ 5 پر A۔ فریٹ 5 کھلے تار 3 جیسا بجتا ہے۔",
+        "notation_fragments": [
+          "E، F، F شارپ، G، G شارپ"
+        ],
+        "old_visual_left_to_right": "۔ےہ اتجب اسیج 3 رات ےلھک 5 ٹیرف ۔A رپ 5 ٹیرف رھپ ،پراش G، G ،پراش E، F، F :ےہ اچنوا ٹون کیا ٹیرف رہ رپ 4 رات",
+        "new_visual_left_to_right": "۔ےہ اتجب اسیج 3 رات ےلھک 5 ٹیرف ۔A رپ 5 ٹیرف رھپ ،E، F، F پراش، G، G پراش :ےہ اچنوا ٹون کیا ٹیرف رہ رپ 4 رات",
+        "criterion": "This exact fragment is an ordered playable note/scale sequence or explicit sequence quiz answer, not a prose note reference. Urdu sharp/flat words split the Latin run in RTL; ICU evidence supports one LRI/PDI around the complete ordered fragment, leaving surrounding prose untouched."
+      },
+      {
+        "batch": "ur-020.json",
+        "id": "s046",
+        "key": "Ledf82803a1",
+        "source": "String 3 works the same way: A, B flat, B, C, C sharp, then D at fret 5. Fret 5 matches open string 2.",
+        "old": "تار 3 بھی ایسا ہے: A، B فلیٹ، B، C، C شارپ، پھر فریٹ 5 پر D۔ فریٹ 5 کھلے تار 2 سے ملتا ہے۔",
+        "new": "تار 3 بھی ایسا ہے: ⁦A، B فلیٹ، B، C، C شارپ⁩، پھر فریٹ 5 پر D۔ فریٹ 5 کھلے تار 2 سے ملتا ہے۔",
+        "notation_fragments": [
+          "A، B فلیٹ، B، C، C شارپ"
+        ],
+        "old_visual_left_to_right": "۔ےہ اتلم ےس 2 رات ےلھک 5 ٹیرف ۔D رپ 5 ٹیرف رھپ ،پراش B، C، C ،ٹیلف A، B :ےہ اسیا یھب 3 رات",
+        "new_visual_left_to_right": "۔ےہ اتلم ےس 2 رات ےلھک 5 ٹیرف ۔D رپ 5 ٹیرف رھپ ،A، B ٹیلف، B، C، C پراش :ےہ اسیا یھب 3 رات",
+        "criterion": "This exact fragment is an ordered playable note/scale sequence or explicit sequence quiz answer, not a prose note reference. Urdu sharp/flat words split the Latin run in RTL; ICU evidence supports one LRI/PDI around the complete ordered fragment, leaving surrounding prose untouched."
+      },
+      {
+        "batch": "ur-020.json",
+        "id": "s091",
+        "key": "L223294919d",
+        "source": "Count up the D major scale: D, E, F sharp, G, A. A is the fifth note.",
+        "old": "اسکیل D میجر گنیں: D، E، F شارپ، G، A۔ A پانچواں نوٹ ہے۔",
+        "new": "اسکیل D میجر گنیں: ⁦D، E، F شارپ، G، A⁩۔ A پانچواں نوٹ ہے۔",
+        "notation_fragments": [
+          "D، E، F شارپ، G، A"
+        ],
+        "old_visual_left_to_right": "۔ےہ ٹون ںاوچناپ A ۔G، A ،پراش D، E، F :ںینگ رجیم D لیکسا",
+        "new_visual_left_to_right": "۔ےہ ٹون ںاوچناپ A ۔D، E، F پراش، G، A :ںینگ رجیم D لیکسا",
+        "criterion": "This exact fragment is an ordered playable note/scale sequence or explicit sequence quiz answer, not a prose note reference. Urdu sharp/flat words split the Latin run in RTL; ICU evidence supports one LRI/PDI around the complete ordered fragment, leaving surrounding prose untouched."
+      },
+      {
+        "batch": "ur-021.json",
+        "id": "s041",
+        "key": "Leeafc98b67",
+        "source": "A walking bass line plays a new note on every beat. Start with root, third, fifth, sixth: over A that's A, C sharp, E, F sharp.",
+        "old": "واکنگ باس ہر تال پر نیا نوٹ بجاتی ہے۔ بنیادی، تیسرے، پانچویں، چھٹے سے شروع: A پر A، C شارپ، E، F شارپ۔",
+        "new": "واکنگ باس ہر تال پر نیا نوٹ بجاتی ہے۔ بنیادی، تیسرے، پانچویں، چھٹے سے شروع: A پر ⁦A، C شارپ، E، F شارپ⁩۔",
+        "notation_fragments": [
+          "A، C شارپ، E، F شارپ"
+        ],
+        "old_visual_left_to_right": "۔پراش E، F ،پراش A، C رپ A :عورش ےس ےٹھچ ،ںیوچناپ ،ےرسیت ،یداینب ۔ےہ یتاجب ٹون این رپ لات رہ ساب گنکاو",
+        "new_visual_left_to_right": "۔A، C پراش، E، F پراش رپ A :عورش ےس ےٹھچ ،ںیوچناپ ،ےرسیت ،یداینب ۔ےہ یتاجب ٹون این رپ لات رہ ساب گنکاو",
+        "criterion": "This exact fragment is an ordered playable note/scale sequence or explicit sequence quiz answer, not a prose note reference. Urdu sharp/flat words split the Latin run in RTL; ICU evidence supports one LRI/PDI around the complete ordered fragment, leaving surrounding prose untouched."
+      },
+      {
+        "batch": "ur-022.json",
+        "id": "s093",
+        "key": "Lf3162ad5ad",
+        "source": "C sharp, B, A, B, then C sharp three times.",
+        "old": "نوٹ C شارپ، B، A، B، پھر C شارپ تین بار۔",
+        "new": "نوٹ ⁦C شارپ، B، A، B⁩، پھر C شارپ تین بار۔",
+        "notation_fragments": [
+          "C شارپ، B، A، B"
+        ],
+        "old_visual_left_to_right": "۔راب نیت پراش C رھپ ،B، A، B ،پراش C ٹون",
+        "new_visual_left_to_right": "۔راب نیت پراش C رھپ ،C پراش، B، A، B ٹون",
+        "criterion": "This exact fragment is an ordered playable note/scale sequence or explicit sequence quiz answer, not a prose note reference. Urdu sharp/flat words split the Latin run in RTL; ICU evidence supports one LRI/PDI around the complete ordered fragment, leaving surrounding prose untouched."
+      },
+      {
+        "batch": "ur-023.json",
+        "id": "s060",
+        "key": "L6d4859c613",
+        "source": "A, B, C sharp. Keep first finger down while second plays.",
+        "old": "نوٹ A، B، C شارپ۔ دوسری انگلی بجائے تو پہلی رکھی رہنے دیں۔",
+        "new": "نوٹ ⁦A، B، C شارپ⁩۔ دوسری انگلی بجائے تو پہلی رکھی رہنے دیں۔",
+        "notation_fragments": [
+          "A، B، C شارپ"
+        ],
+        "old_visual_left_to_right": "۔ںید ےنہر یھکر یلہپ وت ےئاجب یلگنا یرسود ۔پراش A، B، C ٹون",
+        "new_visual_left_to_right": "۔ںید ےنہر یھکر یلہپ وت ےئاجب یلگنا یرسود ۔A، B، C پراش ٹون",
+        "criterion": "This exact fragment is an ordered playable note/scale sequence or explicit sequence quiz answer, not a prose note reference. Urdu sharp/flat words split the Latin run in RTL; ICU evidence supports one LRI/PDI around the complete ordered fragment, leaving surrounding prose untouched."
+      },
+      {
+        "batch": "ur-023.json",
+        "id": "s065",
+        "key": "L85a12320fb",
+        "source": "B, C sharp, B, A. Land each note in tune before you move on.",
+        "old": "نوٹ B، C شارپ، B، A۔ آگے جانے سے پہلے ہر نوٹ سُر میں بٹھائیں۔",
+        "new": "نوٹ ⁦B، C شارپ، B، A⁩۔ آگے جانے سے پہلے ہر نوٹ سُر میں بٹھائیں۔",
+        "notation_fragments": [
+          "B، C شارپ، B، A"
+        ],
+        "old_visual_left_to_right": "۔ںیئاھٹب ںیم رُس ٹون رہ ےلہپ ےس ےناج ےگآ ۔B، A ،پراش B، C ٹون",
+        "new_visual_left_to_right": "۔ںیئاھٹب ںیم رُس ٹون رہ ےلہپ ےس ےناج ےگآ ۔B، C پراش، B، A ٹون",
+        "criterion": "This exact fragment is an ordered playable note/scale sequence or explicit sequence quiz answer, not a prose note reference. Urdu sharp/flat words split the Latin run in RTL; ICU evidence supports one LRI/PDI around the complete ordered fragment, leaving surrounding prose untouched."
+      },
+      {
+        "batch": "ur-023.json",
+        "id": "s069",
+        "key": "L24bdd963b7",
+        "source": "A, B, C sharp, D. Leave each finger down as you add the next.",
+        "old": "نوٹ A، B، C شارپ، D۔ اگلی انگلی لگاتے وقت پچھلی رکھی رہنے دیں۔",
+        "new": "نوٹ ⁦A، B، C شارپ، D⁩۔ اگلی انگلی لگاتے وقت پچھلی رکھی رہنے دیں۔",
+        "notation_fragments": [
+          "A، B، C شارپ، D"
+        ],
+        "old_visual_left_to_right": "۔ںید ےنہر یھکر یلھچپ تقو ےتاگل یلگنا یلگا ۔D ،پراش A، B، C ٹون",
+        "new_visual_left_to_right": "۔ںید ےنہر یھکر یلھچپ تقو ےتاگل یلگنا یلگا ۔A، B، C پراش، D ٹون",
+        "criterion": "This exact fragment is an ordered playable note/scale sequence or explicit sequence quiz answer, not a prose note reference. Urdu sharp/flat words split the Latin run in RTL; ICU evidence supports one LRI/PDI around the complete ordered fragment, leaving surrounding prose untouched."
+      },
+      {
+        "batch": "ur-023.json",
+        "id": "s084",
+        "key": "L31fa9a51ba",
+        "source": "E, F sharp, G sharp, A. Same shape as on the A string.",
+        "old": "نوٹ E، F شارپ، G شارپ، A۔ تار A والی شکل۔",
+        "new": "نوٹ ⁦E، F شارپ، G شارپ، A⁩۔ تار A والی شکل۔",
+        "notation_fragments": [
+          "E، F شارپ، G شارپ، A"
+        ],
+        "old_visual_left_to_right": "۔لکش یلاو A رات ۔A ،پراش G ،پراش E، F ٹون",
+        "new_visual_left_to_right": "۔لکش یلاو A رات ۔E، F پراش، G پراش، A ٹون",
+        "criterion": "This exact fragment is an ordered playable note/scale sequence or explicit sequence quiz answer, not a prose note reference. Urdu sharp/flat words split the Latin run in RTL; ICU evidence supports one LRI/PDI around the complete ordered fragment, leaving surrounding prose untouched."
+      },
+      {
+        "batch": "ur-023.json",
+        "id": "s091",
+        "key": "Ldb4feecf84",
+        "source": "Join the halves: A, B, C sharp, D on the A string, then E, F sharp, G sharp, A on the E string. Eight notes, A to A, one shape played twice.",
+        "old": "نصف جوڑیں: A تار پر A، B، C شارپ، D؛ پھر E تار پر E، F شارپ، G شارپ، A۔ آٹھ نوٹ، A سے A، ایک شکل دو بار۔",
+        "new": "نصف جوڑیں: A تار پر ⁦A، B، C شارپ، D⁩؛ پھر E تار پر ⁦E، F شارپ، G شارپ، A⁩۔ آٹھ نوٹ، A سے A، ایک شکل دو بار۔",
+        "notation_fragments": [
+          "A، B، C شارپ، D",
+          "E، F شارپ، G شارپ، A"
+        ],
+        "old_visual_left_to_right": "۔راب ود لکش کیا ،A ےس A ،ٹون ھٹآ ۔A ،پراش G ،پراش E، F رپ رات E رھپ ؛D ،پراش A، B، C رپ رات A :ںیڑوج فصن",
+        "new_visual_left_to_right": "۔راب ود لکش کیا ،A ےس A ،ٹون ھٹآ ۔E، F پراش، G پراش، A رپ رات E رھپ ؛A، B، C پراش، D رپ رات A :ںیڑوج فصن",
+        "criterion": "This exact fragment is an ordered playable note/scale sequence or explicit sequence quiz answer, not a prose note reference. Urdu sharp/flat words split the Latin run in RTL; ICU evidence supports one LRI/PDI around the complete ordered fragment, leaving surrounding prose untouched."
+      },
+      {
+        "batch": "ur-024.json",
+        "id": "s005",
+        "key": "Lc738b166ea",
+        "source": "B, C sharp, D, then open D. Listen for the ring.",
+        "old": "نوٹ B، C شارپ، D، پھر کھلا D۔ گونج سنیں۔",
+        "new": "نوٹ ⁦B، C شارپ، D⁩، پھر کھلا D۔ گونج سنیں۔",
+        "notation_fragments": [
+          "B، C شارپ، D"
+        ],
+        "old_visual_left_to_right": "۔ںینس جنوگ ۔D الھک رھپ ،D ،پراش B، C ٹون",
+        "new_visual_left_to_right": "۔ںینس جنوگ ۔D الھک رھپ ،B، C پراش، D ٹون",
+        "criterion": "This exact fragment is an ordered playable note/scale sequence or explicit sequence quiz answer, not a prose note reference. Urdu sharp/flat words split the Latin run in RTL; ICU evidence supports one LRI/PDI around the complete ordered fragment, leaving surrounding prose untouched."
+      },
+      {
+        "batch": "ur-024.json",
+        "id": "s007",
+        "key": "Lf38484922d",
+        "source": "F sharp, G sharp, A on the E string, then open A an octave lower.",
+        "old": "تار E پر F شارپ، G شارپ، A، پھر ایک آکٹیو نیچے کھلا A۔",
+        "new": "تار E پر ⁦F شارپ، G شارپ، A⁩، پھر ایک آکٹیو نیچے کھلا A۔",
+        "notation_fragments": [
+          "F شارپ، G شارپ، A"
+        ],
+        "old_visual_left_to_right": "۔A الھک ےچین ویٹکآ کیا رھپ ،A ،پراش G ،پراش F رپ E رات",
+        "new_visual_left_to_right": "۔A الھک ےچین ویٹکآ کیا رھپ ،F پراش، G پراش، A رپ E رات",
+        "criterion": "This exact fragment is an ordered playable note/scale sequence or explicit sequence quiz answer, not a prose note reference. Urdu sharp/flat words split the Latin run in RTL; ICU evidence supports one LRI/PDI around the complete ordered fragment, leaving surrounding prose untouched."
+      },
+      {
+        "batch": "ur-024.json",
+        "id": "s015",
+        "key": "L38ae92b41e",
+        "source": "D, E, F sharp, G. Second and third fingers touch.",
+        "old": "نوٹ D، E، F شارپ، G۔ دوسری اور تیسری انگلیاں ملتی ہیں۔",
+        "new": "نوٹ ⁦D، E، F شارپ، G⁩۔ دوسری اور تیسری انگلیاں ملتی ہیں۔",
+        "notation_fragments": [
+          "D، E، F شارپ، G"
+        ],
+        "old_visual_left_to_right": "۔ںیہ یتلم ںایلگنا یرسیت روا یرسود ۔G ،پراش D، E، F ٹون",
+        "new_visual_left_to_right": "۔ںیہ یتلم ںایلگنا یرسیت روا یرسود ۔D، E، F پراش، G ٹون",
+        "criterion": "This exact fragment is an ordered playable note/scale sequence or explicit sequence quiz answer, not a prose note reference. Urdu sharp/flat words split the Latin run in RTL; ICU evidence supports one LRI/PDI around the complete ordered fragment, leaving surrounding prose untouched."
+      },
+      {
+        "batch": "ur-024.json",
+        "id": "s024",
+        "key": "L286e84af6a",
+        "source": "Play D, E, F sharp, G on the D string, then A, B, C sharp, D on the A string. The D major scale is one finger shape played twice.",
+        "old": "تار D پر D، E، F شارپ، G، پھر A تار پر A، B، C شارپ، D بجائیں۔ D میجر اسکیل ایک انگلیوں کی شکل دو بار ہے۔",
+        "new": "تار D پر ⁦D، E، F شارپ، G⁩، پھر A تار پر ⁦A، B، C شارپ، D⁩ بجائیں۔ D میجر اسکیل ایک انگلیوں کی شکل دو بار ہے۔",
+        "notation_fragments": [
+          "D، E، F شارپ، G",
+          "A، B، C شارپ، D"
+        ],
+        "old_visual_left_to_right": "۔ےہ راب ود لکش یک ںویلگنا کیا لیکسا رجیم D ۔ںیئاجب D ،پراش A، B، C رپ رات A رھپ ،G ،پراش D، E، F رپ D رات",
+        "new_visual_left_to_right": "۔ےہ راب ود لکش یک ںویلگنا کیا لیکسا رجیم D ۔ںیئاجب A، B، C پراش، D رپ رات A رھپ ،D، E، F پراش، G رپ D رات",
+        "criterion": "This exact fragment is an ordered playable note/scale sequence or explicit sequence quiz answer, not a prose note reference. Urdu sharp/flat words split the Latin run in RTL; ICU evidence supports one LRI/PDI around the complete ordered fragment, leaving surrounding prose untouched."
+      },
+      {
+        "batch": "ur-024.json",
+        "id": "s052",
+        "key": "Lfb8475e0a0",
+        "source": "G, A, B, C on the G string plus D, E, F sharp, G on the D string make G major. It's the first octave of a two-octave scale you'll finish in the next unit.",
+        "old": "تار G پر G، A، B، C اور تار D پر D، E، F شارپ، G مل کر G میجر بناتے ہیں۔ یہ دو آکٹیو اسکیل کا پہلا آکٹیو ہے، جسے اگلے یونٹ میں مکمل کریں گے۔",
+        "new": "تار G پر G، A، B، C اور تار D پر ⁦D، E، F شارپ، G⁩ مل کر G میجر بناتے ہیں۔ یہ دو آکٹیو اسکیل کا پہلا آکٹیو ہے، جسے اگلے یونٹ میں مکمل کریں گے۔",
+        "notation_fragments": [
+          "D، E، F شارپ، G"
+        ],
+        "old_visual_left_to_right": "۔ےگ ںیرک لمکم ںیم ٹنوی ےلگا ےسج ،ےہ ویٹکآ الہپ اک لیکسا ویٹکآ ود ہی ۔ںیہ ےتانب رجیم G رک لم G ،پراش D، E، F رپ D رات روا G، A، B، C رپ G رات",
+        "new_visual_left_to_right": "۔ےگ ںیرک لمکم ںیم ٹنوی ےلگا ےسج ،ےہ ویٹکآ الہپ اک لیکسا ویٹکآ ود ہی ۔ںیہ ےتانب رجیم G رک لم D، E، F پراش، G رپ D رات روا G، A، B، C رپ G رات",
+        "criterion": "This exact fragment is an ordered playable note/scale sequence or explicit sequence quiz answer, not a prose note reference. Urdu sharp/flat words split the Latin run in RTL; ICU evidence supports one LRI/PDI around the complete ordered fragment, leaving surrounding prose untouched."
+      },
+      {
+        "batch": "ur-024.json",
+        "id": "s090",
+        "key": "L48ca6e198f",
+        "source": "Now E, F sharp, G on the E string. Low 2 again.",
+        "old": "اب E تار پر E، F شارپ، G۔ پھر نیچی 2۔",
+        "new": "اب E تار پر ⁦E، F شارپ، G⁩۔ پھر نیچی 2۔",
+        "notation_fragments": [
+          "E، F شارپ، G"
+        ],
+        "old_visual_left_to_right": "۔2 یچین رھپ ۔G ،پراش E، F رپ رات E با",
+        "new_visual_left_to_right": "۔2 یچین رھپ ۔E، F پراش، G رپ رات E با",
+        "criterion": "This exact fragment is an ordered playable note/scale sequence or explicit sequence quiz answer, not a prose note reference. Urdu sharp/flat words split the Latin run in RTL; ICU evidence supports one LRI/PDI around the complete ordered fragment, leaving surrounding prose untouched."
+      },
+      {
+        "batch": "ur-025.json",
+        "id": "s014",
+        "key": "L53844e53b0",
+        "source": "E, F sharp, G, F sharp. Keep second finger low, touching first.",
+        "old": "نوٹ E، F شارپ، G، F شارپ۔ دوسری انگلی نیچی، پہلی سے ملی رکھیں۔",
+        "new": "نوٹ ⁦E، F شارپ، G، F شارپ⁩۔ دوسری انگلی نیچی، پہلی سے ملی رکھیں۔",
+        "notation_fragments": [
+          "E، F شارپ، G، F شارپ"
+        ],
+        "old_visual_left_to_right": "۔ںیھکر یلم ےس یلہپ ،یچین یلگنا یرسود ۔پراش G، F ،پراش E، F ٹون",
+        "new_visual_left_to_right": "۔ںیھکر یلم ےس یلہپ ،یچین یلگنا یرسود ۔E، F پراش، G، F پراش ٹون",
+        "criterion": "This exact fragment is an ordered playable note/scale sequence or explicit sequence quiz answer, not a prose note reference. Urdu sharp/flat words split the Latin run in RTL; ICU evidence supports one LRI/PDI around the complete ordered fragment, leaving surrounding prose untouched."
+      },
+      {
+        "batch": "ur-025.json",
+        "id": "s106",
+        "key": "Lec97e45489",
+        "source": "A, G, F sharp, A on the E string: third finger, low 2, first, third.",
+        "old": "تار E پر A، G، F شارپ، A: تیسری انگلی، نیچی 2، پہلی، تیسری۔",
+        "new": "تار E پر ⁦A، G، F شارپ، A⁩: تیسری انگلی، نیچی 2، پہلی، تیسری۔",
+        "notation_fragments": [
+          "A، G، F شارپ، A"
+        ],
+        "old_visual_left_to_right": "۔یرسیت ،یلہپ ،2 یچین ،یلگنا یرسیت :A ،پراش A، G، F رپ E رات",
+        "new_visual_left_to_right": "۔یرسیت ،یلہپ ،2 یچین ،یلگنا یرسیت :A، G، F پراش، A رپ E رات",
+        "criterion": "This exact fragment is an ordered playable note/scale sequence or explicit sequence quiz answer, not a prose note reference. Urdu sharp/flat words split the Latin run in RTL; ICU evidence supports one LRI/PDI around the complete ordered fragment, leaving surrounding prose untouched."
+      },
+      {
+        "batch": "ur-026.json",
+        "id": "s049",
+        "key": "L8cabfc1895",
+        "source": "F sharp, E, D, E, then F sharp three times.",
+        "old": "نوٹ F شارپ، E، D، E، پھر F شارپ تین بار۔",
+        "new": "نوٹ ⁦F شارپ، E، D، E⁩، پھر F شارپ تین بار۔",
+        "notation_fragments": [
+          "F شارپ، E، D، E"
+        ],
+        "old_visual_left_to_right": "۔راب نیت پراش F رھپ ،E، D، E ،پراش F ٹون",
+        "new_visual_left_to_right": "۔راب نیت پراش F رھپ ،F پراش، E، D، E ٹون",
+        "criterion": "This exact fragment is an ordered playable note/scale sequence or explicit sequence quiz answer, not a prose note reference. Urdu sharp/flat words split the Latin run in RTL; ICU evidence supports one LRI/PDI around the complete ordered fragment, leaving surrounding prose untouched."
+      },
+      {
+        "batch": "ur-026.json",
+        "id": "s069",
+        "key": "Le2c31c9243",
+        "source": "D, E, F sharp. Keep first finger down while third plays.",
+        "old": "نوٹ D، E، F شارپ۔ تیسری انگلی بجائے تو پہلی رکھی رہنے دیں۔",
+        "new": "نوٹ ⁦D، E، F شارپ⁩۔ تیسری انگلی بجائے تو پہلی رکھی رہنے دیں۔",
+        "notation_fragments": [
+          "D، E، F شارپ"
+        ],
+        "old_visual_left_to_right": "۔ںید ےنہر یھکر یلہپ وت ےئاجب یلگنا یرسیت ۔پراش D، E، F ٹون",
+        "new_visual_left_to_right": "۔ںید ےنہر یھکر یلہپ وت ےئاجب یلگنا یرسیت ۔D، E، F پراش ٹون",
+        "criterion": "This exact fragment is an ordered playable note/scale sequence or explicit sequence quiz answer, not a prose note reference. Urdu sharp/flat words split the Latin run in RTL; ICU evidence supports one LRI/PDI around the complete ordered fragment, leaving surrounding prose untouched."
+      },
+      {
+        "batch": "ur-026.json",
+        "id": "s076",
+        "key": "L982dce3a6f",
+        "source": "Same fingers on the A string: open A, B, C sharp.",
+        "old": "تار A پر وہی انگلیاں: کھلا A، B، C شارپ۔",
+        "new": "تار A پر وہی انگلیاں: کھلا ⁦A، B، C شارپ⁩۔",
+        "notation_fragments": [
+          "A، B، C شارپ"
+        ],
+        "old_visual_left_to_right": "۔پراش A، B، C الھک :ںایلگنا یہو رپ A رات",
+        "new_visual_left_to_right": "۔A، B، C پراش الھک :ںایلگنا یہو رپ A رات",
+        "criterion": "This exact fragment is an ordered playable note/scale sequence or explicit sequence quiz answer, not a prose note reference. Urdu sharp/flat words split the Latin run in RTL; ICU evidence supports one LRI/PDI around the complete ordered fragment, leaving surrounding prose untouched."
+      },
+      {
+        "batch": "ur-026.json",
+        "id": "s079",
+        "key": "L6f1de5b0a4",
+        "source": "Fourth finger plays G, a half step above F sharp. D, E, F sharp, G is the first half of the D major scale: open, 1, 3, 4.",
+        "old": "چوتھی انگلی G بجاتی ہے، F شارپ سے آدھا سُر اوپر۔ D، E، F شارپ، G اسکیل D میجر کا پہلا نصف ہے: کھلا، 1، 3، 4۔",
+        "new": "چوتھی انگلی G بجاتی ہے، F شارپ سے آدھا سُر اوپر۔ ⁦D، E، F شارپ، G⁩ اسکیل D میجر کا پہلا نصف ہے: کھلا، 1، 3، 4۔",
+        "notation_fragments": [
+          "D، E، F شارپ، G"
+        ],
+        "old_visual_left_to_right": "۔4 ،3 ،1 ،الھک :ےہ فصن الہپ اک رجیم D لیکسا G ،پراش D، E، F ۔رپوا رُس اھدآ ےس پراش F ،ےہ یتاجب G یلگنا یھتوچ",
+        "new_visual_left_to_right": "۔4 ،3 ،1 ،الھک :ےہ فصن الہپ اک رجیم D لیکسا D، E، F پراش، G ۔رپوا رُس اھدآ ےس پراش F ،ےہ یتاجب G یلگنا یھتوچ",
+        "criterion": "This exact fragment is an ordered playable note/scale sequence or explicit sequence quiz answer, not a prose note reference. Urdu sharp/flat words split the Latin run in RTL; ICU evidence supports one LRI/PDI around the complete ordered fragment, leaving surrounding prose untouched."
+      },
+      {
+        "batch": "ur-026.json",
+        "id": "s080",
+        "key": "L91d307deab",
+        "source": "D, E, F sharp, G: open, 1, 3, 4.",
+        "old": "نوٹ D، E، F شارپ، G: کھلا، 1، 3، 4۔",
+        "new": "نوٹ ⁦D، E، F شارپ، G⁩: کھلا، 1، 3، 4۔",
+        "notation_fragments": [
+          "D، E، F شارپ، G"
+        ],
+        "old_visual_left_to_right": "۔4 ،3 ،1 ،الھک :G ،پراش D، E، F ٹون",
+        "new_visual_left_to_right": "۔4 ،3 ،1 ،الھک :D، E، F پراش، G ٹون",
+        "criterion": "This exact fragment is an ordered playable note/scale sequence or explicit sequence quiz answer, not a prose note reference. Urdu sharp/flat words split the Latin run in RTL; ICU evidence supports one LRI/PDI around the complete ordered fragment, leaving surrounding prose untouched."
+      },
+      {
+        "batch": "ur-026.json",
+        "id": "s083",
+        "key": "L5bece8cfd8",
+        "source": "Play D, E, F sharp, G on the D string, then A, B, C sharp, D on the A string. The same fingers twice: open, 1, 3, 4.",
+        "old": "تار D پر D، E، F شارپ، G، پھر A تار پر A، B، C شارپ، D بجائیں۔ وہی انگلیاں دو بار: کھلا، 1، 3، 4۔",
+        "new": "تار D پر ⁦D، E، F شارپ، G⁩، پھر A تار پر ⁦A، B، C شارپ، D⁩ بجائیں۔ وہی انگلیاں دو بار: کھلا، 1، 3، 4۔",
+        "notation_fragments": [
+          "D، E، F شارپ، G",
+          "A، B، C شارپ، D"
+        ],
+        "old_visual_left_to_right": "۔4 ،3 ،1 ،الھک :راب ود ںایلگنا یہو ۔ںیئاجب D ،پراش A، B، C رپ رات A رھپ ،G ،پراش D، E، F رپ D رات",
+        "new_visual_left_to_right": "۔4 ،3 ،1 ،الھک :راب ود ںایلگنا یہو ۔ںیئاجب A، B، C پراش، D رپ رات A رھپ ،D، E، F پراش، G رپ D رات",
+        "criterion": "This exact fragment is an ordered playable note/scale sequence or explicit sequence quiz answer, not a prose note reference. Urdu sharp/flat words split the Latin run in RTL; ICU evidence supports one LRI/PDI around the complete ordered fragment, leaving surrounding prose untouched."
+      },
+      {
+        "batch": "ur-027.json",
+        "id": "s004",
+        "key": "L0e09dfdc9c",
+        "source": "G, A, B, C on the G string plus D, E, F sharp, G on the D string make the G major scale. Same fingers on both strings.",
+        "old": "تار G پر G، A، B، C، اور تار D پر D، E، F شارپ، G مل کر G میجر اسکیل ہیں۔ دونوں پر وہی انگلیاں۔",
+        "new": "تار G پر G، A، B، C، اور تار D پر ⁦D، E، F شارپ، G⁩ مل کر G میجر اسکیل ہیں۔ دونوں پر وہی انگلیاں۔",
+        "notation_fragments": [
+          "D، E، F شارپ، G"
+        ],
+        "old_visual_left_to_right": "۔ںایلگنا یہو رپ ںونود ۔ںیہ لیکسا رجیم G رک لم G ،پراش D، E، F رپ D رات روا ،G، A، B، C رپ G رات",
+        "new_visual_left_to_right": "۔ںایلگنا یہو رپ ںونود ۔ںیہ لیکسا رجیم G رک لم D، E، F پراش، G رپ D رات روا ،G، A، B، C رپ G رات",
+        "criterion": "This exact fragment is an ordered playable note/scale sequence or explicit sequence quiz answer, not a prose note reference. Urdu sharp/flat words split the Latin run in RTL; ICU evidence supports one LRI/PDI around the complete ordered fragment, leaving surrounding prose untouched."
+      },
+      {
+        "batch": "ur-027.json",
+        "id": "s030",
+        "key": "L53a05073fd",
+        "source": "G, F sharp, E: fingers 4, 3, 1. This is the lullaby's high point.",
+        "old": "نوٹ G، F شارپ، E: انگلیاں 4، 3، 1۔ یہ لوری کا اونچا مقام ہے۔",
+        "new": "نوٹ ⁦G، F شارپ، E⁩: انگلیاں 4، 3، 1۔ یہ لوری کا اونچا مقام ہے۔",
+        "notation_fragments": [
+          "G، F شارپ، E"
+        ],
+        "old_visual_left_to_right": "۔ےہ ماقم اچنوا اک یرول ہی ۔1 ،3 ،4 ںایلگنا :E ،پراش G، F ٹون",
+        "new_visual_left_to_right": "۔ےہ ماقم اچنوا اک یرول ہی ۔1 ،3 ،4 ںایلگنا :G، F پراش، E ٹون",
+        "criterion": "This exact fragment is an ordered playable note/scale sequence or explicit sequence quiz answer, not a prose note reference. Urdu sharp/flat words split the Latin run in RTL; ICU evidence supports one LRI/PDI around the complete ordered fragment, leaving surrounding prose untouched."
+      },
+      {
+        "batch": "ur-027.json",
+        "id": "s085",
+        "key": "Lea4218233c",
+        "source": "G, F sharp, B: fourth and third finger on D, then third finger on G.",
+        "old": "نوٹ G، F شارپ، B: D پر چوتھی، تیسری انگلی، پھر G پر تیسری۔",
+        "new": "نوٹ ⁦G، F شارپ، B⁩: D پر چوتھی، تیسری انگلی، پھر G پر تیسری۔",
+        "notation_fragments": [
+          "G، F شارپ، B"
+        ],
+        "old_visual_left_to_right": "۔یرسیت رپ G رھپ ،یلگنا یرسیت ،یھتوچ رپ B: D ،پراش G، F ٹون",
+        "new_visual_left_to_right": "۔یرسیت رپ G رھپ ،یلگنا یرسیت ،یھتوچ رپ D :G، F پراش، B ٹون",
+        "criterion": "This exact fragment is an ordered playable note/scale sequence or explicit sequence quiz answer, not a prose note reference. Urdu sharp/flat words split the Latin run in RTL; ICU evidence supports one LRI/PDI around the complete ordered fragment, leaving surrounding prose untouched."
+      }
+    ],
+    "negative_controls": [
+      {
+        "batch": "ur-016.json",
+        "id": "s053",
+        "key": "L67c3806843",
+        "text": "D, DU, UDU",
+        "visual_left_to_right": "D, DU, UDU",
+        "decision": "No correction: complete Latin notation/name runs already retain order without added marks."
+      },
+      {
+        "batch": "ur-017.json",
+        "id": "s011",
+        "key": "Ld975a3a9d1",
+        "text": "W. W. Fosdick (1861)",
+        "visual_left_to_right": "W. W. Fosdick (1861)",
+        "decision": "No correction: complete Latin notation/name runs already retain order without added marks."
+      },
+      {
+        "batch": "ur-017.json",
+        "id": "s040",
+        "key": "L7e6a077cdf",
+        "text": "I, V, vi, IV",
+        "visual_left_to_right": "I, V, vi, IV",
+        "decision": "No correction: complete Latin notation/name runs already retain order without added marks."
+      },
+      {
+        "batch": "ur-018.json",
+        "id": "s033",
+        "key": "Lc0ded9cc39",
+        "text": "آئی لینڈ اسٹرم D، DU، UDU لیں، اور 2 کے نیچے اسٹرم کو چنک بنا دیں۔ لے وہی رہتی ہے، مگر بیک بیٹ آ جاتا ہے۔",
+        "visual_left_to_right": "۔ےہ اتاج آ ٹیب کیب رگم ،ےہ یتہر یہو ےل ۔ںید انب کنچ وک مرٹسا ےچین ےک 2 روا ،ںیل D، DU، UDU مرٹسا ڈنیل یئآ",
+        "decision": "No correction: complete Latin notation/name runs already retain order without added marks."
+      },
+      {
+        "batch": "ur-018.json",
+        "id": "s055",
+        "key": "L91116aad75",
+        "text": "تین میں 1 پر نیچے، پھر 2 اور 3 پر نیچے اوپر: D، DU، DU۔ 1 پر زور دیں تاکہ جھول واضح ہو۔",
+        "visual_left_to_right": "۔وہ حضاو لوھج ہکات ںید روز رپ 1 ۔D، DU، DU :رپوا ےچین رپ 3 روا 2 رھپ ،ےچین رپ 1 ںیم نیت",
+        "decision": "No correction: complete Latin notation/name runs already retain order without added marks."
+      },
+      {
+        "batch": "ur-001.json",
+        "id": "s019",
+        "key": "Leba98ce894",
+        "text": "موٹے سے باریک: E، A، D، G، B، E۔ حروف یاد رکھیں: “Every Amateur Does Get Better Eventually” (ہر شوقین آخرکار بہتر ہوتا ہے)۔",
+        "visual_left_to_right": "۔)ےہ اتوہ رتہب راکرخآ نیقوش رہ( ”Every Amateur Does Get Better Eventually“ :ںیھکر دای فورح ۔E، A، D، G، B، E :کیراب ےس ےٹوم",
+        "decision": "No correction: complete Latin notation/name runs already retain order without added marks."
+      },
+      {
+        "batch": "ur-001.json",
+        "id": "s036",
+        "key": "L44368c8e63",
+        "text": "کھلا، فریٹ 1، فریٹ 3: E، F، G۔",
+        "visual_left_to_right": "۔E، F، G :3 ٹیرف ،1 ٹیرف ،الھک",
+        "decision": "No correction: complete Latin notation/name runs already retain order without added marks."
+      }
+    ],
+    "selection_policy": "Only true ordered playable/scale/count notation sequences with demonstrated reordered or split Unicode runs are isolated. General prose enumerations, individual sharp/flat names, pure Latin notation runs already retaining order, and all other source identities are not blanket-marked."
+  },
+  "later_half": {
+    "method": "ICU76 ubidi_setPara paragraph level1(RTL), ubidi_writeReordered. Controls stripped only from diagnostic visual output. Checks Unicode order, not native font/device rendering.",
+    "scope": "Case-specific ordered numeric formulas, counts, ranges, and play-this note sequences containing Latin runs split by Urdu sharp; no blanket isolation of ordinary Urdu lists or prose.",
+    "corrections": [
+      {
+        "batch": 38,
+        "id": "s083",
+        "key": "Lc9549834f0",
+        "source": "A bar can mix values, as long as they add up. A half note plus two quarter notes fills four beats: 2 + 1 + 1.",
+        "old": "ایک بار میں مختلف مدتیں ہو سکتی ہیں، بس مجموعہ پورا ہو۔ ایک نصف اور دو چوتھائی نوٹ چار تال بھرتے ہیں: 2 + 1 + 1۔",
+        "new": "ایک بار میں مختلف مدتیں ہو سکتی ہیں، بس مجموعہ پورا ہو۔ ایک نصف اور دو چوتھائی نوٹ چار تال بھرتے ہیں: ⁦2 + 1 + 1⁩۔",
+        "notation_fragments": [
+          "2 + 1 + 1"
+        ],
+        "old_visual_left_to_right": "۔1 + 1 + 2 :ںیہ ےترھب لات راچ ٹون یئاھتوچ ود روا فصن کیا ۔وہ اروپ ہعومجم سب ،ںیہ یتکس وہ ںیتدم فلتخم ںیم راب کیا",
+        "new_visual_left_to_right": "۔2 + 1 + 1 :ںیہ ےترھب لات راچ ٹون یئاھتوچ ود روا فصن کیا ۔وہ اروپ ہعومجم سب ،ںیہ یتکس وہ ںیتدم فلتخم ںیم راب کیا",
+        "identity_still_requires_perkey_approval": false
+      },
+      {
+        "batch": 38,
+        "id": "s095",
+        "key": "L2612061cab",
+        "source": "Half of two is one, so the dot adds one beat: 2 + 1 = 3.",
+        "old": "دو کا آدھا ایک ہے، لہٰذا نقطہ ایک تال بڑھاتا ہے: 2 + 1 = 3۔",
+        "new": "دو کا آدھا ایک ہے، لہٰذا نقطہ ایک تال بڑھاتا ہے: ⁦2 + 1 = 3⁩۔",
+        "notation_fragments": [
+          "2 + 1 = 3"
+        ],
+        "old_visual_left_to_right": "۔3 = 1 + 2 :ےہ اتاھڑب لات کیا ہطقن اذٰہل ،ےہ کیا اھدآ اک ود",
+        "new_visual_left_to_right": "۔2 + 1 = 3 :ےہ اتاھڑب لات کیا ہطقن اذٰہل ،ےہ کیا اھدآ اک ود",
+        "identity_still_requires_perkey_approval": false
+      },
+      {
+        "batch": 38,
+        "id": "s103",
+        "key": "L1f9d9298a3",
+        "source": "2 + 1 = 3, so one beat is left: a quarter rest.",
+        "old": "حساب 2 + 1 = 3، اس لیے ایک تال باقی ہے: چوتھائی وقفہ۔",
+        "new": "حساب ⁦2 + 1 = 3⁩، اس لیے ایک تال باقی ہے: چوتھائی وقفہ۔",
+        "notation_fragments": [
+          "2 + 1 = 3"
+        ],
+        "old_visual_left_to_right": "۔ہفقو یئاھتوچ :ےہ یقاب لات کیا ےیل سا ،3 = 1 + 2 باسح",
+        "new_visual_left_to_right": "۔ہفقو یئاھتوچ :ےہ یقاب لات کیا ےیل سا ،2 + 1 = 3 باسح",
+        "identity_still_requires_perkey_approval": false
+      },
+      {
+        "batch": 39,
+        "id": "s014",
+        "key": "L790e7c10be",
+        "source": "In 6/8, each bar holds six eighth notes in two groups of three. It feels like two big beats, each split in three: 1 2 3, 4 5 6.",
+        "old": "میٹر 6/8 کے ہر بار میں چھ آٹھویں نوٹ، تین تین کے دو گروہوں میں ہیں۔ دو بڑے تال محسوس ہوتے ہیں، ہر ایک کے تین حصے: 1 2 3، 4 5 6۔",
+        "new": "میٹر 6/8 کے ہر بار میں چھ آٹھویں نوٹ، تین تین کے دو گروہوں میں ہیں۔ دو بڑے تال محسوس ہوتے ہیں، ہر ایک کے تین حصے: ⁦1 2 3، 4 5 6⁩۔",
+        "notation_fragments": [
+          "1 2 3، 4 5 6"
+        ],
+        "old_visual_left_to_right": "۔6 5 4 ،3 2 1 :ےصح نیت ےک کیا رہ ،ںیہ ےتوہ سوسحم لات ےڑب ود ۔ںیہ ںیم ںوہورگ ود ےک نیت نیت ،ٹون ںیوھٹآ ھچ ںیم راب رہ ےک 6/8 رٹیم",
+        "new_visual_left_to_right": "۔1 2 3، 4 5 6 :ےصح نیت ےک کیا رہ ،ںیہ ےتوہ سوسحم لات ےڑب ود ۔ںیہ ںیم ںوہورگ ود ےک نیت نیت ،ٹون ںیوھٹآ ھچ ںیم راب رہ ےک 6/8 رٹیم",
+        "identity_still_requires_perkey_approval": false
+      },
+      {
+        "batch": 39,
+        "id": "s019",
+        "key": "L3685132a0b",
+        "source": "The eighths group 1 2 3, 4 5 6, so you feel two strong pulses per bar.",
+        "old": "آٹھویں نوٹ 1 2 3، 4 5 6 کے گروہوں میں ہیں، اس لیے ہر بار میں دو مضبوط دھڑکنیں محسوس ہوتی ہیں۔",
+        "new": "آٹھویں نوٹ ⁦1 2 3، 4 5 6⁩ کے گروہوں میں ہیں، اس لیے ہر بار میں دو مضبوط دھڑکنیں محسوس ہوتی ہیں۔",
+        "notation_fragments": [
+          "1 2 3، 4 5 6"
+        ],
+        "old_visual_left_to_right": "۔ںیہ یتوہ سوسحم ںینکڑھد طوبضم ود ںیم راب رہ ےیل سا ،ںیہ ںیم ںوہورگ ےک 6 5 4 ،3 2 1 ٹون ںیوھٹآ",
+        "new_visual_left_to_right": "۔ںیہ یتوہ سوسحم ںینکڑھد طوبضم ود ںیم راب رہ ےیل سا ،ںیہ ںیم ںوہورگ ےک 1 2 3، 4 5 6 ٹون ںیوھٹآ",
+        "identity_still_requires_perkey_approval": false
+      },
+      {
+        "batch": 39,
+        "id": "s033",
+        "key": "L75ba5c8a40",
+        "source": "3/4 holds three beats; 1 + 1 = 2, so one beat remains.",
+        "old": "میٹر 3/4 میں تین تال ہیں؛ 1 + 1 = 2، تو ایک تال باقی ہے۔",
+        "new": "میٹر 3/4 میں تین تال ہیں؛ ⁦1 + 1 = 2⁩، تو ایک تال باقی ہے۔",
+        "notation_fragments": [
+          "1 + 1 = 2"
+        ],
+        "old_visual_left_to_right": "۔ےہ یقاب لات کیا وت ،2 = 1 + 1 ؛ںیہ لات نیت ںیم 3/4 رٹیم",
+        "new_visual_left_to_right": "۔ےہ یقاب لات کیا وت ،1 + 1 = 2 ؛ںیہ لات نیت ںیم 3/4 رٹیم",
+        "identity_still_requires_perkey_approval": false
+      },
+      {
+        "batch": 39,
+        "id": "s061",
+        "key": "L579f548b6d",
+        "source": "2–3 and 6–7",
+        "old": "وقفے 2–3 اور 6–7",
+        "new": "وقفے ⁦2–3⁩ اور ⁦6–7⁩",
+        "notation_fragments": [
+          "2–3",
+          "6–7"
+        ],
+        "old_visual_left_to_right": "7–6 روا 3–2 ےفقو",
+        "new_visual_left_to_right": "6–7 روا 2–3 ےفقو",
+        "identity_still_requires_perkey_approval": false
+      },
+      {
+        "batch": 39,
+        "id": "s062",
+        "key": "Ld04dc84ef6",
+        "source": "3–4 and 7–8",
+        "old": "وقفے 3–4 اور 7–8",
+        "new": "وقفے ⁦3–4⁩ اور ⁦7–8⁩",
+        "notation_fragments": [
+          "3–4",
+          "7–8"
+        ],
+        "old_visual_left_to_right": "8–7 روا 4–3 ےفقو",
+        "new_visual_left_to_right": "7–8 روا 3–4 ےفقو",
+        "identity_still_requires_perkey_approval": false
+      },
+      {
+        "batch": 39,
+        "id": "s063",
+        "key": "L16aca80516",
+        "source": "4–5 and 7–8",
+        "old": "وقفے 4–5 اور 7–8",
+        "new": "وقفے ⁦4–5⁩ اور ⁦7–8⁩",
+        "notation_fragments": [
+          "4–5",
+          "7–8"
+        ],
+        "old_visual_left_to_right": "8–7 روا 5–4 ےفقو",
+        "new_visual_left_to_right": "7–8 روا 4–5 ےفقو",
+        "identity_still_requires_perkey_approval": false
+      },
+      {
+        "batch": 44,
+        "id": "s004",
+        "key": "Lc4b37cf719",
+        "source": "1, 2, 3, 4",
+        "old": "1, 2, 3, 4",
+        "new": "⁦1, 2, 3, 4⁩",
+        "notation_fragments": [
+          "1, 2, 3, 4"
+        ],
+        "old_visual_left_to_right": "4 ,3 ,2 ,1",
+        "new_visual_left_to_right": "1, 2, 3, 4",
+        "identity_still_requires_perkey_approval": true
+      },
+      {
+        "batch": 45,
+        "id": "s005",
+        "key": "L1a902fcb5b",
+        "source": "Count all eight eighths and tap just the accents: 1, the \"and\" of 2, and 4. This 3-3-2 pattern drives a lot of pop and Latin music.",
+        "old": "آٹھوں آٹھویں نوٹ گنیں اور صرف زور والی جگہ تھپتھپائیں: 1، پھر 2 کا “اور”، پھر 4۔ یہ 3-3-2 پیٹرن بہت سی پاپ اور لاطینی موسیقی چلاتا ہے۔",
+        "new": "آٹھوں آٹھویں نوٹ گنیں اور صرف زور والی جگہ تھپتھپائیں: 1، پھر 2 کا “اور”، پھر 4۔ یہ ⁦3-3-2⁩ پیٹرن بہت سی پاپ اور لاطینی موسیقی چلاتا ہے۔",
+        "notation_fragments": [
+          "3-3-2"
+        ],
+        "old_visual_left_to_right": "۔ےہ اتالچ یقیسوم ینیطال روا پاپ یس تہب نرٹیپ 2-3-3 ہی ۔4 رھپ ،”روا“ اک 2 رھپ ،1 :ںیئاپھتپھت ہگج یلاو روز فرص روا ںینگ ٹون ںیوھٹآ ںوھٹآ",
+        "new_visual_left_to_right": "۔ےہ اتالچ یقیسوم ینیطال روا پاپ یس تہب نرٹیپ 3-3-2 ہی ۔4 رھپ ،”روا“ اک 2 رھپ ،1 :ںیئاپھتپھت ہگج یلاو روز فرص روا ںینگ ٹون ںیوھٹآ ںوھٹآ",
+        "identity_still_requires_perkey_approval": false
+      },
+      {
+        "batch": 49,
+        "id": "s006",
+        "key": "Le57c1b941f",
+        "source": "The bass, moved up an octave: D, A, B, F sharp, G, D, G, A.",
+        "old": "باس، ایک آکٹیو اوپر: D، A، B، F شارپ، G، D، G، A۔",
+        "new": "باس، ایک آکٹیو اوپر: ⁦D، A، B، F شارپ، G، D، G، A⁩۔",
+        "notation_fragments": [
+          "D، A، B، F شارپ، G، D، G، A"
+        ],
+        "old_visual_left_to_right": "۔G، D، G، A ،پراش D، A، B، F :رپوا ویٹکآ کیا ،ساب",
+        "new_visual_left_to_right": "۔D، A، B، F پراش، G، D، G، A :رپوا ویٹکآ کیا ،ساب",
+        "identity_still_requires_perkey_approval": false
+      },
+      {
+        "batch": 50,
+        "id": "s024",
+        "key": "Lea081be6db",
+        "source": "B A G, then leap from D at fret 3 on string 2 down to open D. Then E, A, F sharp, G.",
+        "old": "نوٹ B A G، پھر تار 2 کے فریٹ 3 کے D سے نیچے کھلے D پر چھلانگ۔ پھر E، A، F شارپ، G۔",
+        "new": "نوٹ B A G، پھر تار 2 کے فریٹ 3 کے D سے نیچے کھلے D پر چھلانگ۔ پھر ⁦E، A، F شارپ، G⁩۔",
+        "notation_fragments": [
+          "E، A، F شارپ، G"
+        ],
+        "old_visual_left_to_right": "۔G ،پراش E، A، F رھپ ۔گنالھچ رپ D ےلھک ےچین ےس D ےک 3 ٹیرف ےک 2 رات رھپ ،B A G ٹون",
+        "new_visual_left_to_right": "۔E، A، F پراش، G رھپ ۔گنالھچ رپ D ےلھک ےچین ےس D ےک 3 ٹیرف ےک 2 رات رھپ ،B A G ٹون",
+        "identity_still_requires_perkey_approval": false
+      },
+      {
+        "batch": 50,
+        "id": "s067",
+        "key": "Lbd7f360aed",
+        "source": "Each half ends: G, F sharp, E, then D sharp, C sharp, D sharp, and home to E.",
+        "old": "ہر نصف یوں ختم ہوتا ہے: G، F شارپ، E، پھر D شارپ، C شارپ، D شارپ، اور واپس E۔",
+        "new": "ہر نصف یوں ختم ہوتا ہے: ⁦G، F شارپ، E⁩، پھر D شارپ، C شارپ، D شارپ، اور واپس E۔",
+        "notation_fragments": [
+          "G، F شارپ، E"
+        ],
+        "old_visual_left_to_right": "۔E سپاو روا ،پراش D ،پراش C ،پراش D رھپ ،E ،پراش G، F :ےہ اتوہ متخ ںوی فصن رہ",
+        "new_visual_left_to_right": "۔E سپاو روا ،پراش D ،پراش C ،پراش D رھپ ،G، F پراش، E :ےہ اتوہ متخ ںوی فصن رہ",
+        "identity_still_requires_perkey_approval": false
+      },
+      {
+        "batch": 50,
+        "id": "s073",
+        "key": "L5fbe60e018",
+        "source": "The high point: three As, up to F sharp at fret 2 on string 1, then E E D B D, A F sharp D.",
+        "old": "بلند ترین مقام: تین A، اوپر تار 1 کے فریٹ 2 پر F شارپ، پھر E E D B D، A F شارپ D۔",
+        "new": "بلند ترین مقام: تین A، اوپر تار 1 کے فریٹ 2 پر F شارپ، پھر ⁦E E D B D، A F شارپ D⁩۔",
+        "notation_fragments": [
+          "E E D B D، A F شارپ D"
+        ],
+        "old_visual_left_to_right": "۔D پراش E E D B D، A F رھپ ،پراش F رپ 2 ٹیرف ےک 1 رات رپوا ،A نیت :ماقم نیرت دنلب",
+        "new_visual_left_to_right": "۔E E D B D، A F پراش D رھپ ،پراش F رپ 2 ٹیرف ےک 1 رات رپوا ،A نیت :ماقم نیرت دنلب",
+        "identity_still_requires_perkey_approval": false
+      },
+      {
+        "batch": 55,
+        "id": "s034",
+        "key": "Lf5a5c874a5",
+        "source": "Up the D chord: open D twice, E, F sharp at fret 4, D, F sharp, A, then D on string 2.",
+        "old": "کورڈ D پر اوپر: کھلا D دو بار، E، فریٹ 4 پر F شارپ، D، F شارپ، A، پھر تار 2 پر D۔",
+        "new": "کورڈ D پر اوپر: کھلا D دو بار، E، فریٹ 4 پر F شارپ، ⁦D، F شارپ، A⁩، پھر تار 2 پر D۔",
+        "notation_fragments": [
+          "D، F شارپ، A"
+        ],
+        "old_visual_left_to_right": "۔D رپ 2 رات رھپ ،A ،پراش D، F ،پراش F رپ 4 ٹیرف ،E ،راب ود D الھک :رپوا رپ D ڈروک",
+        "new_visual_left_to_right": "۔D رپ 2 رات رھپ ،D، F پراش، A ،پراش F رپ 4 ٹیرف ،E ،راب ود D الھک :رپوا رپ D ڈروک",
+        "identity_still_requires_perkey_approval": false
+      },
+      {
+        "batch": 55,
+        "id": "s040",
+        "key": "L80d31491c6",
+        "source": "The opening: open B, down to F sharp at fret 4 on string 4, up G and A, then G, F sharp, E.",
+        "old": "آغاز: کھلا B، نیچے تار 4 کے فریٹ 4 پر F شارپ، اوپر G اور A، پھر G، F شارپ، E۔",
+        "new": "آغاز: کھلا B، نیچے تار 4 کے فریٹ 4 پر F شارپ، اوپر G اور A، پھر ⁦G، F شارپ، E⁩۔",
+        "notation_fragments": [
+          "G، F شارپ، E"
+        ],
+        "old_visual_left_to_right": "۔E ،پراش G، F رھپ ،A روا G رپوا ،پراش F رپ 4 ٹیرف ےک 4 رات ےچین ،B الھک :زاغآ",
+        "new_visual_left_to_right": "۔G، F پراش، E رھپ ،A روا G رپوا ،پراش F رپ 4 ٹیرف ےک 4 رات ےچین ،B الھک :زاغآ",
+        "identity_still_requires_perkey_approval": false
+      },
+      {
+        "batch": 56,
+        "id": "s069",
+        "key": "L27d7480a2a",
+        "source": "Open D, F sharp at fret 4 on string 4, open G, then a turn: G, F sharp, G, A, A, G.",
+        "old": "کھلا D، تار 4 کے فریٹ 4 پر F شارپ، کھلا G، پھر موڑ: G، F شارپ، G، A، A، G۔",
+        "new": "کھلا D، تار 4 کے فریٹ 4 پر F شارپ، کھلا G، پھر موڑ: ⁦G، F شارپ، G، A، A، G⁩۔",
+        "notation_fragments": [
+          "G، F شارپ، G، A، A، G"
+        ],
+        "old_visual_left_to_right": "۔G، A، A، G ،پراش G، F :ڑوم رھپ ،G الھک ،پراش F رپ 4 ٹیرف ےک 4 رات ،D الھک",
+        "new_visual_left_to_right": "۔G، F پراش، G، A، A، G :ڑوم رھپ ،G الھک ،پراش F رپ 4 ٹیرف ےک 4 رات ،D الھک",
+        "identity_still_requires_perkey_approval": false
+      },
+      {
+        "batch": 58,
+        "id": "s020",
+        "key": "L89163da1ab",
+        "source": "The theme circles A: B, A, G sharp, A. Each circle is four sixteenths. Then it climbs a step and circles again.",
+        "old": "مرکزی دھن A کے گرد گھومتی ہے: B، A، G شارپ، A۔ ہر چکر چار سولہویں نوٹ ہے۔ پھر ایک قدم چڑھ کر دوبارہ گھومتی ہے۔",
+        "new": "مرکزی دھن A کے گرد گھومتی ہے: ⁦B، A، G شارپ، A⁩۔ ہر چکر چار سولہویں نوٹ ہے۔ پھر ایک قدم چڑھ کر دوبارہ گھومتی ہے۔",
+        "notation_fragments": [
+          "B، A، G شارپ، A"
+        ],
+        "old_visual_left_to_right": "۔ےہ یتموھگ ہرابود رک ھڑچ مدق کیا رھپ ۔ےہ ٹون ںیوہلوس راچ رکچ رہ ۔A ،پراش B، A، G :ےہ یتموھگ درگ ےک A نھد یزکرم",
+        "new_visual_left_to_right": "۔ےہ یتموھگ ہرابود رک ھڑچ مدق کیا رھپ ۔ےہ ٹون ںیوہلوس راچ رکچ رہ ۔B، A، G پراش، A :ےہ یتموھگ درگ ےک A نھد یزکرم",
+        "identity_still_requires_perkey_approval": false
+      },
+      {
+        "batch": 49,
+        "id": "s034",
+        "key": "L5b72f1cd00",
+        "source": "Open E, back to C and D on string 2, then E, F sharp and G on string 1.",
+        "old": "کھلا E، واپس تار 2 پر C اور D، پھر تار 1 پر E، F شارپ اور G۔",
+        "new": "کھلا E، واپس تار 2 پر C اور D، پھر تار 1 پر ⁦E، F شارپ اور G⁩۔",
+        "notation_fragments": [
+          "E، F شارپ اور G"
+        ],
+        "old_visual_left_to_right": "۔G روا پراش E، F رپ 1 رات رھپ ،D روا C رپ 2 رات سپاو ،E الھک",
+        "new_visual_left_to_right": "۔E، F روا پراش G رپ 1 رات رھپ ،D روا C رپ 2 رات سپاو ،E الھک",
+        "criterion": "This is an explicitly ordered playable ascent/descent within an exercise hint, not a prose set of notes. Its Urdu sharp word and final connective split the Latin note run in RTL. ICU confirms full-fragment LRI/PDI restores the source note order while preserving Urdu modifier text.",
+        "fragment_note_order_after_icu_matches_logical": true
+      },
+      {
+        "batch": 50,
+        "id": "s012",
+        "key": "Lfa98928fe5",
+        "source": "The third line climbs: C sharp at fret 2 on string 2, D, then E, F sharp and G on string 1.",
+        "old": "تیسری سطر چڑھتی ہے: تار 2 کے فریٹ 2 پر C شارپ، D، پھر تار 1 پر E، F شارپ اور G۔",
+        "new": "تیسری سطر چڑھتی ہے: تار 2 کے فریٹ 2 پر C شارپ، D، پھر تار 1 پر ⁦E، F شارپ اور G⁩۔",
+        "notation_fragments": [
+          "E، F شارپ اور G"
+        ],
+        "old_visual_left_to_right": "۔G روا پراش E، F رپ 1 رات رھپ ،D ،پراش C رپ 2 ٹیرف ےک 2 رات :ےہ یتھڑچ رطس یرسیت",
+        "new_visual_left_to_right": "۔E، F روا پراش G رپ 1 رات رھپ ،D ،پراش C رپ 2 ٹیرف ےک 2 رات :ےہ یتھڑچ رطس یرسیت",
+        "criterion": "This is an explicitly ordered playable ascent/descent within an exercise hint, not a prose set of notes. Its Urdu sharp word and final connective split the Latin note run in RTL. ICU confirms full-fragment LRI/PDI restores the source note order while preserving Urdu modifier text.",
+        "fragment_note_order_after_icu_matches_logical": true
+      },
+      {
+        "batch": 54,
+        "id": "s094",
+        "key": "L0b53e8367f",
+        "source": "Sleep, my child, and peace attend thee: open G, down to F sharp and E, then G, A, G, F sharp and D.",
+        "old": "بول Sleep, my child, and peace attend thee: کھلا G، نیچے F شارپ اور E، پھر G، A، G، F شارپ اور D۔",
+        "new": "بول Sleep, my child, and peace attend thee: کھلا G، نیچے F شارپ اور E، پھر ⁦G، A، G، F شارپ اور D⁩۔",
+        "notation_fragments": [
+          "G، A، G، F شارپ اور D"
+        ],
+        "old_visual_left_to_right": "۔D روا پراش G، A، G، F رھپ ،E روا پراش F ےچین ،G الھک :Sleep, my child, and peace attend thee لوب",
+        "new_visual_left_to_right": "۔G، A، G، F روا پراش D رھپ ،E روا پراش F ےچین ،G الھک :Sleep, my child, and peace attend thee لوب",
+        "criterion": "This is an explicitly ordered playable ascent/descent within an exercise hint, not a prose set of notes. Its Urdu sharp word and final connective split the Latin note run in RTL. ICU confirms full-fragment LRI/PDI restores the source note order while preserving Urdu modifier text.",
+        "fragment_note_order_after_icu_matches_logical": true
+      },
+      {
+        "batch": 56,
+        "id": "s034",
+        "key": "L355f5433e7",
+        "source": "It starts high: D at fret 3 on string 2, then steps down C, B, A, G and F sharp all the way to open D.",
+        "old": "یہ اونچا شروع ہوتا ہے: تار 2 کے فریٹ 3 پر D، پھر C، B، A، G اور F شارپ سے قدم بہ قدم کھلے D تک۔",
+        "new": "یہ اونچا شروع ہوتا ہے: تار 2 کے فریٹ 3 پر D، پھر ⁦C، B، A، G اور F شارپ⁩ سے قدم بہ قدم کھلے D تک۔",
+        "notation_fragments": [
+          "C، B، A، G اور F شارپ"
+        ],
+        "old_visual_left_to_right": "۔کت D ےلھک مدق ہب مدق ےس پراش F روا C، B، A، G رھپ ،D رپ 3 ٹیرف ےک 2 رات :ےہ اتوہ عورش اچنوا ہی",
+        "new_visual_left_to_right": "۔کت D ےلھک مدق ہب مدق ےس C، B، A، G روا F پراش رھپ ،D رپ 3 ٹیرف ےک 2 رات :ےہ اتوہ عورش اچنوا ہی",
+        "criterion": "This is an explicitly ordered playable ascent/descent within an exercise hint, not a prose set of notes. Its Urdu sharp word and final connective split the Latin note run in RTL. ICU confirms full-fragment LRI/PDI restores the source note order while preserving Urdu modifier text.",
+        "fragment_note_order_after_icu_matches_logical": true
+      },
+      {
+        "batch": 57,
+        "id": "s083",
+        "key": "L6651a17acc",
+        "source": "Open D, E and F sharp on string 4, then a leap to D at fret 3 on string 2, and down C sharp, B and A.",
+        "old": "تار 4 پر کھلا D، E اور F شارپ، پھر تار 2 کے فریٹ 3 پر D تک چھلانگ، اور نیچے C شارپ، B اور A۔",
+        "new": "تار 4 پر کھلا D، E اور F شارپ، پھر تار 2 کے فریٹ 3 پر D تک چھلانگ، اور نیچے ⁦C شارپ، B اور A⁩۔",
+        "notation_fragments": [
+          "C شارپ، B اور A"
+        ],
+        "old_visual_left_to_right": "۔A روا B ،پراش C ےچین روا ،گنالھچ کت D رپ 3 ٹیرف ےک 2 رات رھپ ،پراش F روا D، E الھک رپ 4 رات",
+        "new_visual_left_to_right": "۔C پراش، B روا A ےچین روا ،گنالھچ کت D رپ 3 ٹیرف ےک 2 رات رھپ ،پراش F روا D، E الھک رپ 4 رات",
+        "criterion": "This is an explicitly ordered playable ascent/descent within an exercise hint, not a prose set of notes. Its Urdu sharp word and final connective split the Latin note run in RTL. ICU confirms full-fragment LRI/PDI restores the source note order while preserving Urdu modifier text.",
+        "fragment_note_order_after_icu_matches_logical": true
+      }
+    ],
+    "negative_controls": [
+      {
+        "batch": 34,
+        "id": "s093",
+        "key": "Lb4edf8f910",
+        "source": "C E♭ G",
+        "text": "C E♭ G",
+        "visual_left_to_right": "C E♭ G",
+        "decision": "No added marks: source notation is already one stable Latin run, or this is natural Urdu prose/counting with translated connective/syllables rather than a compact LTR notation string."
+      },
+      {
+        "batch": 36,
+        "id": "s046",
+        "key": "L65dc0bc434",
+        "source": "G, H",
+        "text": "G, H",
+        "visual_left_to_right": "G, H",
+        "decision": "No added marks: source notation is already one stable Latin run, or this is natural Urdu prose/counting with translated connective/syllables rather than a compact LTR notation string."
+      },
+      {
+        "batch": 37,
+        "id": "s006",
+        "key": "Le80fdb9645",
+        "source": "F♯",
+        "text": "F♯",
+        "visual_left_to_right": "♯F",
+        "decision": "No added marks: source notation is already one stable Latin run, or this is natural Urdu prose/counting with translated connective/syllables rather than a compact LTR notation string."
+      },
+      {
+        "batch": 38,
+        "id": "s007",
+        "key": "L1028012093",
+        "source": "From bottom to top, the treble staff's lines are E, G, B, D, F. Remember them as Every Good Boy Does Fine.",
+        "text": "ٹریبل اسٹاف کی لکیریں نیچے سے اوپر E، G، B، D، F ہیں۔ یاد رکھنے کا جملہ: “Every Good Boy Does Fine”۔",
+        "visual_left_to_right": "۔”Every Good Boy Does Fine“ :ہلمج اک ےنھکر دای ۔ںیہ E، G، B، D، F رپوا ےس ےچین ںیریکل یک فاٹسا لبیرٹ",
+        "decision": "No added marks: source notation is already one stable Latin run, or this is natural Urdu prose/counting with translated connective/syllables rather than a compact LTR notation string."
+      },
+      {
+        "batch": 38,
+        "id": "s087",
+        "key": "Lc4eb4d4416",
+        "source": "A sixteenth note lasts a quarter of a beat, so four fit in each beat. Count them 1 e and a, 2 e and a.",
+        "text": "سولہواں نوٹ چوتھائی تال رہتا ہے، اس لیے ہر تال میں چار آتے ہیں۔ گنیں: 1 ای اور اَ، 2 ای اور اَ۔",
+        "visual_left_to_right": "۔َا روا یا 2 ،َا روا یا 1 :ںینگ ۔ںیہ ےتآ راچ ںیم لات رہ ےیل سا ،ےہ اتہر لات یئاھتوچ ٹون ںاوہلوس",
+        "decision": "No added marks: source notation is already one stable Latin run, or this is natural Urdu prose/counting with translated connective/syllables rather than a compact LTR notation string."
+      },
+      {
+        "batch": 39,
+        "id": "s010",
+        "key": "L8ba2a07385",
+        "source": "6/8",
+        "text": "6/8",
+        "visual_left_to_right": "6/8",
+        "decision": "No added marks: source notation is already one stable Latin run, or this is natural Urdu prose/counting with translated connective/syllables rather than a compact LTR notation string."
+      },
+      {
+        "batch": 41,
+        "id": "s091",
+        "key": "L3a8aba7a85",
+        "source": "I–V–vi–IV",
+        "text": "I–V–vi–IV",
+        "visual_left_to_right": "I–V–vi–IV",
+        "decision": "No added marks: source notation is already one stable Latin run, or this is natural Urdu prose/counting with translated connective/syllables rather than a compact LTR notation string."
+      },
+      {
+        "batch": 43,
+        "id": "s037",
+        "key": "L703760e9d4",
+        "source": "1, 2 and, 3, 4",
+        "text": "گنتی 1، 2 اور، 3، 4",
+        "visual_left_to_right": "4 ،3 ،روا 2 ،1 یتنگ",
+        "decision": "No added marks: source notation is already one stable Latin run, or this is natural Urdu prose/counting with translated connective/syllables rather than a compact LTR notation string."
+      },
+      {
+        "batch": 44,
+        "id": "s053",
+        "key": "L7364a9324b",
+        "source": "A triplet fits three even notes into one beat. Count 1-trip-let, 2-trip-let, with each syllable the same length.",
+        "text": "ٹرپلٹ میں ایک تال کے اندر تین برابر نوٹ آتے ہیں۔ گنیں 1-ٹرپ-لٹ، 2-ٹرپ-لٹ، ہر ہجے کی مدت برابر۔",
+        "visual_left_to_right": "۔ربارب تدم یک ےجہ رہ ،ٹل-پرٹ-2 ،ٹل-پرٹ-1 ںینگ ۔ںیہ ےتآ ٹون ربارب نیت ردنا ےک لات کیا ںیم ٹلپرٹ",
+        "decision": "No added marks: source notation is already one stable Latin run, or this is natural Urdu prose/counting with translated connective/syllables rather than a compact LTR notation string."
+      },
+      {
+        "batch": 50,
+        "id": "s003",
+        "key": "L406b881188",
+        "source": "Good King Wenceslas",
+        "text": "Good King Wenceslas",
+        "visual_left_to_right": "Good King Wenceslas",
+        "decision": "No added marks: source notation is already one stable Latin run, or this is natural Urdu prose/counting with translated connective/syllables rather than a compact LTR notation string."
+      },
+      {
+        "batch": 54,
+        "id": "s082",
+        "key": "L873c7db571",
+        "source": "Fly",
+        "text": "Fly",
+        "visual_left_to_right": "Fly",
+        "decision": "No added marks: source notation is already one stable Latin run, or this is natural Urdu prose/counting with translated connective/syllables rather than a compact LTR notation string."
+      },
+      {
+        "batch": 56,
+        "id": "s047",
+        "key": "L4c40cf3873",
+        "source": "Bethlehem",
+        "text": "Bethlehem",
+        "visual_left_to_right": "Bethlehem",
+        "decision": "No added marks: source notation is already one stable Latin run, or this is natural Urdu prose/counting with translated connective/syllables rather than a compact LTR notation string."
+      }
+    ]
+  }
+}

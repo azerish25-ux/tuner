@@ -1,0 +1,126 @@
+{
+  "schema": 1,
+  "status": "NOT_APPLIED",
+  "hash_algorithm": "SHA-256",
+  "manifest_excludes_itself": true,
+  "files": {
+    "README.md": {
+      "sha256": "70dfa9d4983e083c166d192d61c505976c2e0d9ffa917924e1633e1f0251dfd5",
+      "bytes": 3758,
+      "preservation": "Checkpoint documentation or validation summary"
+    },
+    "affected-contexts.json": {
+      "sha256": "23786a309c980adf16b0e1b714bc21350d12edf8ae9811b95ffad10c3fa4cedc",
+      "bytes": 21599,
+      "original_artifact_sha256": "23786a309c980adf16b0e1b714bc21350d12edf8ae9811b95ffad10c3fa4cedc",
+      "preservation": "byte-exact"
+    },
+    "checkpoint-summary.json": {
+      "sha256": "333fd3547ebbd7d470063c84f41421c396c06936251c534b8befeda44beb6f1f",
+      "bytes": 2033,
+      "preservation": "Checkpoint documentation or validation summary"
+    },
+    "context-signatures.json": {
+      "sha256": "1c00c1c60e695a5fcf97b3fbadaaba9a77a7e0e0d127cb1d0852850a2175e24d",
+      "bytes": 1070,
+      "original_artifact_sha256": "1c00c1c60e695a5fcf97b3fbadaaba9a77a7e0e0d127cb1d0852850a2175e24d",
+      "preservation": "byte-exact"
+    },
+    "generated-context-diff.json": {
+      "sha256": "1b9967dcbb1f83cbb4c34286fdb8d5682def7dd700d19e3be209698fbf6909d4",
+      "bytes": 1580,
+      "original_artifact_sha256": "1b9967dcbb1f83cbb4c34286fdb8d5682def7dd700d19e3be209698fbf6909d4",
+      "preservation": "byte-exact"
+    },
+    "generated-english.patch": {
+      "sha256": "fee47aaf1fba639a07de279b7c58b45b45b6d4b94bbdb37ad23fb1b2e57fea8e",
+      "bytes": 808,
+      "original_artifact_sha256": "fee47aaf1fba639a07de279b7c58b45b45b6d4b94bbdb37ad23fb1b2e57fea8e",
+      "preservation": "byte-exact"
+    },
+    "input-manifest.json": {
+      "sha256": "9e85a65aa8a167fca64c99033e00cd632fb6ecd11dbc86a7dc03727ef4a67238",
+      "bytes": 5576,
+      "original_artifact_sha256": "50f2e1fc46cc24c9dabd91fdfe67a2eb09285138a282002325bc81f2db0e1661",
+      "preservation": "Public provenance normalization; exact translation values and guards retained"
+    },
+    "kannada-first-reviewer-supplement.json": {
+      "sha256": "1668f90dbdd699ab7cc435366f3ba13786f21aab0d735c4f6cfa8d4ccb2bdf81",
+      "bytes": 39405,
+      "original_artifact_sha256": "28876258f6376dd5c26a1cb4a9dacb7a5e2d1e9f42681a18a47497f1af4cbc5f",
+      "preservation": "Public provenance normalization; exact translation values and guards retained"
+    },
+    "kannada-later-reviewer-supplement.json": {
+      "sha256": "12330dc7fa71a1b5237283571c2fc9d614fa8c781a482c43ed51f0ff55eed0ea",
+      "bytes": 1947,
+      "original_artifact_sha256": "12330dc7fa71a1b5237283571c2fc9d614fa8c781a482c43ed51f0ff55eed0ea",
+      "preservation": "byte-exact"
+    },
+    "locale-baselines-and-retentions.json": {
+      "sha256": "4f16e2ed5129d58710ea1a84b05cf7b928062935f9d836eee499985f10499344",
+      "bytes": 30216,
+      "original_artifact_sha256": "3aa282b5cbd65c930e91d1efc1893e96a6c28788cf8c16dbc631504f6fe7457b",
+      "preservation": "Deduplicated baseline and retain evidence; mutation payloads canonicalized in locale-guarded-operations.json"
+    },
+    "locale-evidence.json": {
+      "sha256": "0be03076ec9e29593eb77a49c5ac2bd5ab7d429c64aa3dbc55a589fcb9c87c43",
+      "bytes": 27775,
+      "original_artifact_sha256": "25a5d313c5710e96e35b7e1ff1079a954173acf03c95b03374e4faef1a013857",
+      "preservation": "Public provenance normalization; exact translation values and guards retained"
+    },
+    "locale-guarded-operations.json": {
+      "sha256": "d62c84999076162197578897fde92795b5116406b8a7548701ef0fc473eb3247",
+      "bytes": 37893,
+      "original_artifact_sha256": "9c788c050a2715ec32a2d2492e2041939ee185e2c981f282a0be35f7cf95609a",
+      "preservation": "Public provenance normalization; exact translation values and guards retained"
+    },
+    "migration-plan.json": {
+      "sha256": "b400e64492d46790de6dea7df9b4c9cc8359a16494a7d6445fd5f65dc78240a0",
+      "bytes": 10893,
+      "original_artifact_sha256": "54e2a8746661cf4eba82880e17d1638eeb790ee4f642ade5d74662026184f575",
+      "preservation": "Public provenance normalization; exact translation values and guards retained"
+    },
+    "retained-count-display-evidence.json": {
+      "sha256": "893ce173f55680b531b6febacf8cde8031adcb78f40a1ac94badbd6fc6715e94",
+      "bytes": 9378,
+      "original_artifact_sha256": "893ce173f55680b531b6febacf8cde8031adcb78f40a1ac94badbd6fc6715e94",
+      "preservation": "byte-exact"
+    },
+    "retained-source-guards.json": {
+      "sha256": "00bc2cc1d86e03c80b40b2cebdec4a5184295033feea1b75b41db24d0d8430b0",
+      "bytes": 1730,
+      "original_artifact_sha256": "00bc2cc1d86e03c80b40b2cebdec4a5184295033feea1b75b41db24d0d8430b0",
+      "preservation": "byte-exact"
+    },
+    "rtl-evidence.json": {
+      "sha256": "5f747cae5a9ecc21393f014031de2c45b5e8a21a24020876cb2b2ae5a0ff23b5",
+      "bytes": 5660,
+      "original_artifact_sha256": "5f747cae5a9ecc21393f014031de2c45b5e8a21a24020876cb2b2ae5a0ff23b5",
+      "preservation": "byte-exact"
+    },
+    "source-authoring.patch": {
+      "sha256": "9f0d6afc745f69cefa4ab70f60251ec3ebadf60c20a1fe5a61089090ae996ff3",
+      "bytes": 1639,
+      "original_artifact_sha256": "9f0d6afc745f69cefa4ab70f60251ec3ebadf60c20a1fe5a61089090ae996ff3",
+      "preservation": "byte-exact"
+    },
+    "source-guards.json": {
+      "sha256": "f268d339fe9217a16392d479fa7a8b512930112a6dbc0351079b4e8ffb2f6d16",
+      "bytes": 1094,
+      "original_artifact_sha256": "f268d339fe9217a16392d479fa7a8b512930112a6dbc0351079b4e8ffb2f6d16",
+      "preservation": "byte-exact"
+    },
+    "tamil-reviewer-supplement.json": {
+      "sha256": "92ffabbd4da5fb84e3bee6ecb83812f82b6abb559fb551cde95bfd903a60dc61",
+      "bytes": 2040,
+      "original_artifact_sha256": "41d4a09f6e73dd950cb62ec2af435c98d61fb19d2ee116512c3a9351ae63bdcb",
+      "preservation": "Public provenance normalization; exact translation values and guards retained"
+    },
+    "verification.json": {
+      "sha256": "0af028c61482dc8c9578f138b2e2e2be9718026db2ec601437e2cc161517addb",
+      "bytes": 4325,
+      "original_artifact_sha256": "0e144dabb7e80e51a137403d2f1706582e268b498b3aaafed2068c096fca11ee",
+      "preservation": "Public provenance normalization; exact translation values and guards retained"
+    }
+  }
+}

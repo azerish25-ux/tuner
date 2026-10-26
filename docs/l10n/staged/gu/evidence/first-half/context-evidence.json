@@ -1,0 +1,1055 @@
+{
+  "scope": "Every 3,117 first-half pair read. Full-curriculum static exact-literal reference index used to inspect shared short labels; all 324 nonidentity sources shorter than 36 characters occurring in multiple files read. Index includes non-display pitch literals; it is not a proof of runtime reachability.",
+  "mnemonics": [
+    {
+      "batch": 1,
+      "id": "s019",
+      "key": "Leba98ce894",
+      "source": "From thick to thin: E, A, D, G, B, E. Try: Every Amateur Does Get Better Eventually.",
+      "translation": "જાડાથી પાતળા તરફ: E, A, D, G, B, E. યાદ રાખવા આ અંગ્રેજી શબ્દોના પ્રથમ અક્ષર લો: “Every Amateur Does Get Better Eventually.”",
+      "context": "Guitar · Unit 1 · lesson gtr-1-2 “The open strings” · step 1 (explain) · lesson card text",
+      "source_sha256": "9f2944594c612a8c3d32cf7153fbf13c3086cd18c099df1dc0964da61aa9a890",
+      "target_sha256": "e04c6129efddfb909ac5a5d80b3d37c96f116b19e1ef90ee9d24e42b1928e6ec",
+      "reason": "Original mnemonic words supply initial letters EADGBE; target retains those words with Gujarati explanation. Translating the mnemonic words themselves would lose the taught note order.",
+      "exact_literal_occurrences": [
+        {
+          "path": "tools/curriculum/courses/guitar.py",
+          "line": 265,
+          "excerpt": "    lesson(\"gtr-1-2\", \"The open strings\", [\n        explain(\"E A D G B E\", \"From thick to thin: E, A, D, G, B, E. Try: Every Amateur Does Get Better Eventually.\",\n                fretboard(G, [(6, 0), (5, 0), (4, 0), (3, 0), (2, 0), (1, 0)])),"
+        }
+      ]
+    },
+    {
+      "batch": 1,
+      "id": "s053",
+      "key": "L3534785c8b",
+      "source": "Every Amateur Does Get Better Eventually: E A D G B E, string 6 to string 1.",
+      "translation": "“Every Amateur Does Get Better Eventually”ના પ્રથમ અક્ષર યાદ રાખો: E A D G B E, તાર 6થી તાર 1 સુધી.",
+      "context": "Guitar · Unit 1 · challenge gtr-1-5 “First-steps challenge” · step 2 (quiz) · explanation after a quiz answer",
+      "source_sha256": "61d877a18961bc865984e38b39b093d8c9960e1c0a5ae74586d972b7f5a75cf8",
+      "target_sha256": "def5260e5768c75550b0643591f67cfdfdb583bee7d554769c16585a0f4625c5",
+      "reason": "Original mnemonic words supply initial letters EADGBE; target retains those words with Gujarati explanation. Translating the mnemonic words themselves would lose the taught note order.",
+      "exact_literal_occurrences": [
+        {
+          "path": "tools/curriculum/courses/guitar.py",
+          "line": 294,
+          "excerpt": "        quiz(\"From thick to thin, the open strings are…\", [\"E B G D A E\", \"E A D G B E\", \"A D G B E A\"], 1,\n             \"Every Amateur Does Get Better Eventually: E A D G B E, string 6 to string 1.\"),\n        along(G, \"E4@1:2 B3@2:2 G3@3:2 D3@4:2 A2@5:2 E2@6:2\", bpm=60, title=\"Roll call, thin to thick\"),"
+        }
+      ]
+    },
+    {
+      "batch": 15,
+      "id": "s043",
+      "key": "L15b292f47e",
+      "source": "From string 4 down to string 1, the open strings are G, C, E, A. Try: Good Cooks Eat Apples.",
+      "translation": "તાર 4થી નીચે તાર 1 સુધી ખુલ્લા તાર G, C, E, A છે. યાદ રાખવા અંગ્રેજી શબ્દોના પ્રથમ અક્ષર લો: “Good Cooks Eat Apples.”",
+      "context": "Ukulele · Unit 1 · lesson uke-1-2 “G C E A, the open strings” · step 1 (explain) · lesson card text",
+      "source_sha256": "58c43925d95509deb06f43c3bc035f0ab3f2b25e0a3ac6b56d78e187a6b3eeb0",
+      "target_sha256": "cebe58bde010a1f193edb2e7e5c8d949924dbb99c024bb0428fdc88cf857856a",
+      "reason": "Original mnemonic words supply initial letters GCEA; target retains those words with Gujarati explanation. Translating the mnemonic words themselves would lose the taught note order.",
+      "exact_literal_occurrences": [
+        {
+          "path": "tools/curriculum/courses/ukulele.py",
+          "line": 229,
+          "excerpt": "    lesson(\"uke-1-2\", \"G C E A, the open strings\", [\n        explain(\"G C E A\", \"From string 4 down to string 1, the open strings are G, C, E, A. Try: Good Cooks Eat Apples.\",\n                fretboard(U, [(4, 0), (3, 0), (2, 0), (1, 0)])),"
+        }
+      ]
+    },
+    {
+      "batch": 19,
+      "id": "s072",
+      "key": "L98e6fb6780",
+      "source": "From thick to thin: E, A, D, G. They match the four lowest guitar strings, an octave down. Try: Every Amp Drives Grooves.",
+      "translation": "જાડાથી પાતળા તરફ: E, A, D, G. તે ગિટારના ચાર સૌથી નીચા તારથી એક સપ્તક નીચે છે. યાદ રાખવા અંગ્રેજી શબ્દોના પ્રથમ અક્ષર લો: “Every Amp Drives Grooves.”",
+      "context": "Bass · Unit 1 · lesson bass-1-2 “The open strings” · step 1 (explain) · lesson card text",
+      "source_sha256": "5a5769cbbdaaf4c0ef58aa8f864aa535a8c79046b9c054caad112b4258199e7f",
+      "target_sha256": "ecf9d720bcfc63e00c2c1c4676759c951ffe158dce2a20bbc33b1db59d23a51a",
+      "reason": "Original mnemonic words supply initial letters EADG; target retains those words with Gujarati explanation. Translating the mnemonic words themselves would lose the taught note order.",
+      "exact_literal_occurrences": [
+        {
+          "path": "tools/curriculum/courses/bass.py",
+          "line": 107,
+          "excerpt": "    lesson(\"bass-1-2\", \"The open strings\", [\n        explain(\"E A D G\", \"From thick to thin: E, A, D, G. They match the four lowest guitar strings, an octave down. Try: Every Amp Drives Grooves.\",\n                fretboard(B, [(4, 0), (3, 0), (2, 0), (1, 0)])),"
+        }
+      ]
+    },
+    {
+      "batch": 22,
+      "id": "s061",
+      "key": "L74c9c1f9c1",
+      "source": "From low to high: G, D, A, E. Each string is five letter names above the last, an interval called a fifth. Try: Good Dogs Always Eat.",
+      "translation": "નીચાથી ઊંચા: G, D, A, E. દરેક તાર અગાઉનાથી પાંચ અક્ષરનામ ઉપર છે, આ સ્વરાંતર પંચમ કહેવાય છે. યાદ રાખવા અંગ્રેજી શબ્દોના પ્રથમ અક્ષર લો: “Good Dogs Always Eat.”",
+      "context": "Violin · Unit 1 · lesson vln-1-4 “The open strings” · step 1 (explain) · lesson card text",
+      "source_sha256": "ef9f0e2a02ac120f605053c145c2cdbcafd015856a542fd30feea8b09e16cde0",
+      "target_sha256": "3c8c375445fdfb2f0e287b16cba40e128e924e81c73463953b2f0efacd4fcd1f",
+      "reason": "Original mnemonic words supply initial letters GDAE; target retains those words with Gujarati explanation. Translating the mnemonic words themselves would lose the taught note order.",
+      "exact_literal_occurrences": [
+        {
+          "path": "tools/curriculum/courses/violin.py",
+          "line": 284,
+          "excerpt": "        explain(\"G D A E\",\n                \"From low to high: G, D, A, E. Each string is five letter names above the last, an interval called \"\n                \"a fifth. Try: Good Dogs Always Eat.\",\n                board([(4, 0), (3, 0), (2, 0), (1, 0)])),"
+        }
+      ]
+    },
+    {
+      "batch": 26,
+      "id": "s038",
+      "key": "La6f5916eae",
+      "source": "From low to high: C, G, D, A. Each string is five letter names above the last, an interval called a fifth. Try: Cats Go Dancing Around.",
+      "translation": "નીચાથી ઊંચા: C, G, D, A. દરેક તાર અગાઉનાથી પાંચ અક્ષરનામ ઉપર છે, આ સ્વરાંતર પંચમ કહેવાય છે. યાદ રાખવા અંગ્રેજી શબ્દોના પ્રથમ અક્ષર લો: “Cats Go Dancing Around.”",
+      "context": "Cello · Unit 1 · lesson vc-1-4 “The open strings” · step 1 (explain) · lesson card text",
+      "source_sha256": "c9f340672a77dceecf4b4522111d0fbb2d2ecb7e6dac7c4685295fba3eca0fb7",
+      "target_sha256": "5b2b73fd5309240c7e8767392fd947674505f578072d147cf70fe90f1ffbe2f6",
+      "reason": "Original mnemonic words supply initial letters CGDA; target retains those words with Gujarati explanation. Translating the mnemonic words themselves would lose the taught note order.",
+      "exact_literal_occurrences": [
+        {
+          "path": "tools/curriculum/courses/cello.py",
+          "line": 277,
+          "excerpt": "        explain(\"C G D A\",\n                \"From low to high: C, G, D, A. Each string is five letter names above the last, an interval called \"\n                \"a fifth. Try: Cats Go Dancing Around.\",\n                board([(4, 0), (3, 0), (2, 0), (1, 0)])),"
+        }
+      ]
+    },
+    {
+      "batch": 28,
+      "id": "s042",
+      "key": "L0d1d2365f7",
+      "source": "From low to high, the pairs are G, D, A and E. Try: Good Dogs Always Eat. A violin is tuned the same way, so fiddle tunes sit naturally on a mandolin.",
+      "translation": "નીચાથી ઊંચા જોડ G, D, A અને E છે. યાદ રાખવા અંગ્રેજી શબ્દોના પ્રથમ અક્ષર લો: “Good Dogs Always Eat.” વાયોલિન પણ આ રીતે ટ્યુન થાય છે, તેથી ફિડલ ધૂનો મેન્ડોલિન પર સહજ બેસે છે.",
+      "context": "Mandolin · Unit 1 · lesson man-1-4 “The open strings” · step 1 (explain) · lesson card text",
+      "source_sha256": "1f59c4fc68d1b11e4d1cde85e4a46e1d3d6c2959742f0aa7d69390bfac928162",
+      "target_sha256": "817ec16e235b059040ff3aee605f4d3b74fefd21bc7c3ff8497116b6f9f18513",
+      "reason": "Original mnemonic words supply initial letters GDAE; target retains those words with Gujarati explanation. Translating the mnemonic words themselves would lose the taught note order.",
+      "exact_literal_occurrences": [
+        {
+          "path": "tools/curriculum/courses/mandolin.py",
+          "line": 255,
+          "excerpt": "    lesson(\"man-1-4\", \"The open strings\", [\n        explain(\"G D A E\", \"From low to high, the pairs are G, D, A and E. Try: Good Dogs Always Eat. \"\n                \"A violin is tuned the same way, so fiddle tunes sit naturally on a mandolin.\",\n                fretboard(M, [(4, 0), (3, 0), (2, 0), (1, 0)])),"
+        }
+      ]
+    }
+  ],
+  "actual_sung_locators": [
+    {
+      "batch": 19,
+      "id": "s022",
+      "key": "L4be63de2a8",
+      "source": "Down by the riverside: B, B, A sharp, B, then A and G.",
+      "translation": "“Down by the riverside” પર: B, B, A શાર્પ, B, પછી A અને G.",
+      "context": "Ukulele · Unit 10 · song uke-10-1 “Down by the Riverside” · step 2 (notes) · hint under an exercise",
+      "source_sha256": "cabd7c8ed08f2532c27d247579ed18c2813824e1f6c6b8b61f510bd48d7d20fc",
+      "target_sha256": "76bd9f1784ada5f2de1deddafa61a6ad4bf4903a54976526ba730e03259c6d31",
+      "reason": "Quoted Down by the riverside is the actual sung locator, not untranslated instruction. Ukulele arrangement at ukulele_part2.py:422; original lyric dbr_words in songs_part3.py:98–113 contains down by the riv-er-side.",
+      "exact_literal_occurrences": [
+        {
+          "path": "tools/curriculum/courses/ukulele_part2.py",
+          "line": 422,
+          "excerpt": "                \"ukulele it sits in G, with G, C and D7, and a gospel A sharp on string 1, fret 1.\"),\n        notes(U, [\"B4\", \"B4\", \"A#4\", \"B4\", \"A4\", (\"G4\", 2)], hint=\"Down by the riverside: B, B, A sharp, B, then A and G.\"),\n        DBR_U.along(\"Verse 1\", bpm=72, title=THE_VERSE),"
+        }
+      ]
+    },
+    {
+      "batch": 19,
+      "id": "s026",
+      "key": "L4a8833e5c8",
+      "source": "The water is wide: open string 3, F at fret 1 twice, G at fret 3, then open A.",
+      "translation": "“The water is wide” પર: ખુલ્લો તાર 3, ફ્રેટ 1 પર F બે વાર, ફ્રેટ 3 પર G, પછી ખુલ્લો A.",
+      "context": "Ukulele · Unit 10 · song uke-10-2 “The Water Is Wide” · step 2 (notes) · hint under an exercise",
+      "source_sha256": "9d090be6ef2d5468755f07a8b05924acce52f42e7dc534b11c36854b1411ee3d",
+      "target_sha256": "5203729f008566eb9a8fdaf9850d9f9d4e6690866e3280db84baddc900a1aa03",
+      "reason": "Quoted The water is wide is the actual sung locator; ukulele_part2.py:432–433. WATER_V1 lyrics at songs_part3.py:222–233 start The wa-ter is wide. Surrounding play instructions are Gujarati.",
+      "exact_literal_occurrences": [
+        {
+          "path": "tools/curriculum/courses/ukulele_part2.py",
+          "line": 432,
+          "excerpt": "                \"G minor and D minor, often two to a bar. Pick the chords between verses and let them ring.\"),\n        notes(U, [\"C4\", \"F4\", \"F4\", (\"G4\", 2), \"A4\"], hint=\"The water is wide: open string 3, F at fret 1 twice, G at fret 3, \"\n              \"then open A.\"),\n        WATER_U.along(\"Verse 1\", bpm=56, title=THE_VERSE),"
+        }
+      ]
+    },
+    {
+      "batch": 19,
+      "id": "s045",
+      "key": "L4ccdff8050",
+      "source": "In Dublin's fair city: open string 3, F at fret 1 four times, open A, back to F.",
+      "translation": "“In Dublin’s fair city” પર: ખુલ્લો તાર 3, ફ્રેટ 1 પર F ચાર વાર, ખુલ્લો A, પાછા F પર.",
+      "context": "Ukulele · Unit 10 · song uke-10-4 “Molly Malone” · step 2 (notes) · hint under an exercise",
+      "source_sha256": "0aaa8bab8f6c4caf8d5be41a0782f7ef535830d3d3cde77be7887da1b7d73930",
+      "target_sha256": "c2959db22719a82fbe355d17d6815b58338c361aeb280d5b719d7bbc7a7380f9",
+      "reason": "Quoted In Dublin’s fair city is the actual sung locator, with typographic apostrophe only; ukulele_part2.py:458–459. MOLLY lyrics at songs_part3.py:190–193 begin In Dub-lin's fair cit-y. Surrounding instructions are Gujarati.",
+      "exact_literal_occurrences": [
+        {
+          "path": "tools/curriculum/courses/ukulele_part2.py",
+          "line": 458,
+          "excerpt": "                \"sway. In F it uses F, G minor, C7, D minor and G7.\"),\n        notes(U, [\"C4\", \"F4\", \"F4\", \"F4\", \"F4\", \"A4\", \"F4\"], hint=\"In Dublin's fair city: open string 3, F at fret 1 four times, \"\n              \"open A, back to F.\"),\n        MOLLY_U.along(\"Chorus\", bpm=96, title=THE_CHORUS),"
+        }
+      ]
+    }
+  ],
+  "shared_labels": [
+    {
+      "batch": 1,
+      "id": "s082",
+      "key": "L916a78d701",
+      "source": "First",
+      "translation": "પહેલી",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 5 (quiz) · quiz answer",
+      "source_sha256": "a151ceb1711aad529a7704248f03333990022ebbfa07a7f04c004d70c167919f",
+      "target_sha256": "25d790950748e589a59192055fa50c5f67e5e1f3e464956a959cfa64789be792",
+      "reason": "Uninflected ordinal coordinated with shared answer set; no feminine-only finger assumption.",
+      "exact_literal_occurrences": [
+        {
+          "path": "tools/curriculum/courses/guitar.py",
+          "line": 321,
+          "excerpt": "        notes(G, [(\"D4\", 2)], hint=\"String 2, fret 3, third finger. That's D.\"),\n        quiz(\"Which finger plays fret 3?\", [\"First\", \"Second\", \"Third\", \"Fourth\"], 2, ONE_FINGER),\n        explain(\"Thumb behind the neck\", \"Rest your thumb on the back of the neck, behind your second finger. \""
+        },
+        {
+          "path": "tools/curriculum/courses/guitar.py",
+          "line": 679,
+          "excerpt": "        notes(G, [(\"A3\", 3)], hint=\"String 3, fret 2, second finger. That's A.\"),\n        quiz(\"Which finger plays fret 2?\", [\"First\", \"Second\", \"Third\"], 1, ONE_FINGER),\n        notes(G, [\"G3\", \"A3\", \"B3\", \"C4\", \"D4\"], hint=\"G and A on string 3, then B, C and D on string 2.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/cello.py",
+          "line": 452,
+          "excerpt": "               [\"The middle line\", \"The opening line\"], 0),\n        quiz(\"Which finger plays B on the A string?\", [\"First\", \"Second\", \"Third\"], 0),\n        tune(\" \".join([TWINKLE_1, TWINKLE_2, TWINKLE_1]), bpm=72, title=\"Twinkle, Twinkle, Little Star\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/cello.py",
+          "line": 592,
+          "excerpt": "        play([(\"A3\", 1), (\"B3\", 1), (\"D4\", 1), (\"E4\", 1)], hint=\"Open A, B, shift on first finger to D, then E with third.\", pos=FOURTH),\n        quiz(\"In fourth position on the A string, which finger plays E?\", [\"Third\", \"First\", \"Fourth\"], 0),\n        tune(UP_AND_BACK_4, bpm=60, title=\"Up to fourth position and back\", pos=FOURTH),"
+        },
+        {
+          "path": "tools/curriculum/courses/violin.py",
+          "line": 465,
+          "excerpt": "               [\"The middle line\", \"The opening line\"], 0),\n        quiz(\"Which finger plays F sharp on the E string?\", [\"First\", \"Second\", \"Third\"], 0),\n        tune(\" \".join([TWINKLE_1, TWINKLE_2, TWINKLE_1]), bpm=72, title=\"Twinkle, Twinkle, Little Star\"),"
+        }
+      ],
+      "proposed_target": "પ્રથમ"
+    },
+    {
+      "batch": 1,
+      "id": "s083",
+      "key": "L2a4bcae654",
+      "source": "Second",
+      "translation": "બીજી",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 5 (quiz) · quiz answer",
+      "source_sha256": "8b88a85089561b7978c4e52c3150112912125f3d34ec59b6ff1450fc1079979c",
+      "target_sha256": "11a80def748eeba5b5793e5cbf12301182f93c08017a64305b4acecea7d26f85",
+      "reason": "Shared finger position and musical interval; uninflected દ્વિતીય fits both.",
+      "exact_literal_occurrences": [
+        {
+          "path": "tools/curriculum/courses/guitar.py",
+          "line": 321,
+          "excerpt": "        notes(G, [(\"D4\", 2)], hint=\"String 2, fret 3, third finger. That's D.\"),\n        quiz(\"Which finger plays fret 3?\", [\"First\", \"Second\", \"Third\", \"Fourth\"], 2, ONE_FINGER),\n        explain(\"Thumb behind the neck\", \"Rest your thumb on the back of the neck, behind your second finger. \""
+        },
+        {
+          "path": "tools/curriculum/courses/guitar.py",
+          "line": 679,
+          "excerpt": "        notes(G, [(\"A3\", 3)], hint=\"String 3, fret 2, second finger. That's A.\"),\n        quiz(\"Which finger plays fret 2?\", [\"First\", \"Second\", \"Third\"], 1, ONE_FINGER),\n        notes(G, [\"G3\", \"A3\", \"B3\", \"C4\", \"D4\"], hint=\"G and A on string 3, then B, C and D on string 2.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/theory.py",
+          "line": 465,
+          "excerpt": "        quiz(\"C up to G is a...\", [\"Third\", \"Fourth\", \"Fifth\"], 2, \"C, D, E, F, G: five letters.\"),\n        quiz(\"D up to F is a...\", [\"Second\", \"Third\", \"Fourth\"], 1, \"D, E, F: three letters.\"),\n        quiz(\"What interval is this?\", [\"Fourth\", \"Third\", \"Second\"], 0, \"E, F, G, A: four letters.\", staff([\"E4\", \"A4\"])),"
+        },
+        {
+          "path": "tools/curriculum/courses/theory.py",
+          "line": 466,
+          "excerpt": "        quiz(\"D up to F is a...\", [\"Second\", \"Third\", \"Fourth\"], 1, \"D, E, F: three letters.\"),\n        quiz(\"What interval is this?\", [\"Fourth\", \"Third\", \"Second\"], 0, \"E, F, G, A: four letters.\", staff([\"E4\", \"A4\"])),\n        explain(\"Sharps don't change the count\", \"Sharps and flats don't change an interval's number. C to E♭ and C to E are \""
+        },
+        {
+          "path": "tools/curriculum/courses/cello.py",
+          "line": 452,
+          "excerpt": "               [\"The middle line\", \"The opening line\"], 0),\n        quiz(\"Which finger plays B on the A string?\", [\"First\", \"Second\", \"Third\"], 0),\n        tune(\" \".join([TWINKLE_1, TWINKLE_2, TWINKLE_1]), bpm=72, title=\"Twinkle, Twinkle, Little Star\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/cello.py",
+          "line": 470,
+          "excerpt": "        play([(\"G3\", 2), (\"G2\", 3), (\"D4\", 1), (\"D3\", 2)], hint=\"Two octave checks: G with open G, then fourth-finger D with open D.\"),\n        quiz(\"Which finger plays C sharp on the A string?\", [\"Third\", \"Second\", \"Fourth\"], 0),\n        tune(\"D4 C#4 B3 A3 | G3 F#3 E3 D3 | D3 E3 F#3 G3 | A3:4\", bpm=72, title=\"Scale down and up\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/cello.py",
+          "line": 489,
+          "excerpt": "        play(G_MAJOR, hint=\"Up the G major scale. Same shape on both strings.\"),\n        quiz(\"Which finger plays C on the G string?\", [\"Fourth\", \"Third\", \"Second\"], 0),\n        tune(\"G2 A2 B2 C3 | D3 E3 F#3 G3 | G3 F#3 E3 D3 | C3 B2 A2 G2\", bpm=66, title=\"G major scale\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/violin.py",
+          "line": 465,
+          "excerpt": "               [\"The middle line\", \"The opening line\"], 0),\n        quiz(\"Which finger plays F sharp on the E string?\", [\"First\", \"Second\", \"Third\"], 0),\n        tune(\" \".join([TWINKLE_1, TWINKLE_2, TWINKLE_1]), bpm=72, title=\"Twinkle, Twinkle, Little Star\"),"
+        }
+      ],
+      "proposed_target": "દ્વિતીય"
+    },
+    {
+      "batch": 1,
+      "id": "s084",
+      "key": "Lefb3a32162",
+      "source": "Third",
+      "translation": "ત્રીજી",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 5 (quiz) · quiz answer",
+      "source_sha256": "5e7425d72f32c5c80a5f7a131585657b80723ae22e01fd69776828feb19e3bd5",
+      "target_sha256": "ee95a2130ec28f9452364fecfb558618a3e60d76517702d6bf3ccb7d509101a0",
+      "reason": "Shared finger, scale/interval context; uninflected તૃતીય avoids feminine-only wording.",
+      "exact_literal_occurrences": [
+        {
+          "path": "tools/curriculum/courses/ear.py",
+          "line": 262,
+          "excerpt": "        interval(\"B3\", 1, [1, 2]),\n        quiz(\"E up to F is a...\", [\"Major second\", \"Minor second\", \"Third\"], 1,\n             \"E and F have no key between them: a half step, so a minor second.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/ear.py",
+          "line": 265,
+          "excerpt": "        interval(\"D5\", 2, [1, 2], \"down\"),\n        quiz(\"C up to D is a...\", [\"Major second\", \"Minor second\", \"Third\"], 0,\n             \"C to D skips the black key between them: a whole step, so a major second.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/guitar.py",
+          "line": 321,
+          "excerpt": "        notes(G, [(\"D4\", 2)], hint=\"String 2, fret 3, third finger. That's D.\"),\n        quiz(\"Which finger plays fret 3?\", [\"First\", \"Second\", \"Third\", \"Fourth\"], 2, ONE_FINGER),\n        explain(\"Thumb behind the neck\", \"Rest your thumb on the back of the neck, behind your second finger. \""
+        },
+        {
+          "path": "tools/curriculum/courses/guitar.py",
+          "line": 679,
+          "excerpt": "        notes(G, [(\"A3\", 3)], hint=\"String 3, fret 2, second finger. That's A.\"),\n        quiz(\"Which finger plays fret 2?\", [\"First\", \"Second\", \"Third\"], 1, ONE_FINGER),\n        notes(G, [\"G3\", \"A3\", \"B3\", \"C4\", \"D4\"], hint=\"G and A on string 3, then B, C and D on string 2.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/voice.py",
+          "line": 315,
+          "excerpt": "        notes(V, [\"C4\", \"G4\", \"C4\"], hint=\"Do to sol and back: C, G, C.\"),\n        listen(\"Third or fifth?\", [[\"C4\"], [\"G4\"]], [\"Third\", \"Fifth\"], 1),\n        notes(V, [\"C4\", \"E4\", \"G4\"], hint=\"Do, mi, sol: two thirds stack up to a fifth.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/voice.py",
+          "line": 319,
+          "excerpt": "             \"Do, re, mi, fa, sol: five notes, so it's a fifth.\"),\n        listen(\"Third or fifth?\", [[\"D4\"], [\"F4\"]], [\"Third\", \"Fifth\"], 0),\n        along(V, \"C4 E4 G4:2 G4 E4 C4:2 C4 G4 E4 G4 C4:4\", bpm=60, title=\"Do, mi, sol\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/voice.py",
+          "line": 336,
+          "excerpt": "        notes(V, [\"C4\", \"E4\", \"G4\", \"C5\"], hint=\"Do, mi, sol, high do.\"),\n        listen(\"Third or fifth?\", [[\"E4\"], [\"G4\"]], [\"Third\", \"Fifth\"], 0),\n        notes(V, [\"C5\", \"G4\", \"E4\", \"C4\"], hint=\"High do, sol, mi, do: back down.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/theory.py",
+          "line": 464,
+          "excerpt": "                \"counts C, D, E: three letters, so it's a third.\", staff([\"C4\", \"E4\"])),\n        quiz(\"C up to G is a...\", [\"Third\", \"Fourth\", \"Fifth\"], 2, \"C, D, E, F, G: five letters.\"),\n        quiz(\"D up to F is a...\", [\"Second\", \"Third\", \"Fourth\"], 1, \"D, E, F: three letters.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/theory.py",
+          "line": 465,
+          "excerpt": "        quiz(\"C up to G is a...\", [\"Third\", \"Fourth\", \"Fifth\"], 2, \"C, D, E, F, G: five letters.\"),\n        quiz(\"D up to F is a...\", [\"Second\", \"Third\", \"Fourth\"], 1, \"D, E, F: three letters.\"),\n        quiz(\"What interval is this?\", [\"Fourth\", \"Third\", \"Second\"], 0, \"E, F, G, A: four letters.\", staff([\"E4\", \"A4\"])),"
+        },
+        {
+          "path": "tools/curriculum/courses/theory.py",
+          "line": 466,
+          "excerpt": "        quiz(\"D up to F is a...\", [\"Second\", \"Third\", \"Fourth\"], 1, \"D, E, F: three letters.\"),\n        quiz(\"What interval is this?\", [\"Fourth\", \"Third\", \"Second\"], 0, \"E, F, G, A: four letters.\", staff([\"E4\", \"A4\"])),\n        explain(\"Sharps don't change the count\", \"Sharps and flats don't change an interval's number. C to E♭ and C to E are \""
+        },
+        {
+          "path": "tools/curriculum/courses/cello.py",
+          "line": 452,
+          "excerpt": "               [\"The middle line\", \"The opening line\"], 0),\n        quiz(\"Which finger plays B on the A string?\", [\"First\", \"Second\", \"Third\"], 0),\n        tune(\" \".join([TWINKLE_1, TWINKLE_2, TWINKLE_1]), bpm=72, title=\"Twinkle, Twinkle, Little Star\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/cello.py",
+          "line": 470,
+          "excerpt": "        play([(\"G3\", 2), (\"G2\", 3), (\"D4\", 1), (\"D3\", 2)], hint=\"Two octave checks: G with open G, then fourth-finger D with open D.\"),\n        quiz(\"Which finger plays C sharp on the A string?\", [\"Third\", \"Second\", \"Fourth\"], 0),\n        tune(\"D4 C#4 B3 A3 | G3 F#3 E3 D3 | D3 E3 F#3 G3 | A3:4\", bpm=72, title=\"Scale down and up\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/cello.py",
+          "line": 489,
+          "excerpt": "        play(G_MAJOR, hint=\"Up the G major scale. Same shape on both strings.\"),\n        quiz(\"Which finger plays C on the G string?\", [\"Fourth\", \"Third\", \"Second\"], 0),\n        tune(\"G2 A2 B2 C3 | D3 E3 F#3 G3 | G3 F#3 E3 D3 | C3 B2 A2 G2\", bpm=66, title=\"G major scale\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/cello.py",
+          "line": 592,
+          "excerpt": "        play([(\"A3\", 1), (\"B3\", 1), (\"D4\", 1), (\"E4\", 1)], hint=\"Open A, B, shift on first finger to D, then E with third.\", pos=FOURTH),\n        quiz(\"In fourth position on the A string, which finger plays E?\", [\"Third\", \"First\", \"Fourth\"], 0),\n        tune(UP_AND_BACK_4, bpm=60, title=\"Up to fourth position and back\", pos=FOURTH),"
+        },
+        {
+          "path": "tools/curriculum/courses/violin.py",
+          "line": 465,
+          "excerpt": "               [\"The middle line\", \"The opening line\"], 0),\n        quiz(\"Which finger plays F sharp on the E string?\", [\"First\", \"Second\", \"Third\"], 0),\n        tune(\" \".join([TWINKLE_1, TWINKLE_2, TWINKLE_1]), bpm=72, title=\"Twinkle, Twinkle, Little Star\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/violin.py",
+          "line": 642,
+          "excerpt": "        tune(SOLDIER_2, bpm=60, title=\"Second half\"),\n        quiz(\"Which finger plays G on the E string?\", [\"Low 2\", \"High 2\", \"Third\"], 0,\n             \"Soldier's Joy is in D major, so G is natural: high 2 for F sharp on D, low 2 for G on E.\"),"
+        }
+      ],
+      "proposed_target": "તૃતીય"
+    },
+    {
+      "batch": 1,
+      "id": "s085",
+      "key": "L7a3a4a4221",
+      "source": "Fourth",
+      "translation": "ચોથી",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 5 (quiz) · quiz answer",
+      "source_sha256": "c737c0b33eb30959da477494b9d8f26222b30a473236ed884324654f5a29fc84",
+      "target_sha256": "b460ca11287c337a9aa3fa15070fc25f364ffec404c323560e9ab14066a8e0b0",
+      "reason": "Shared finger and musical interval; uninflected ચતુર્થ fits both.",
+      "exact_literal_occurrences": [
+        {
+          "path": "tools/curriculum/courses/guitar.py",
+          "line": 321,
+          "excerpt": "        notes(G, [(\"D4\", 2)], hint=\"String 2, fret 3, third finger. That's D.\"),\n        quiz(\"Which finger plays fret 3?\", [\"First\", \"Second\", \"Third\", \"Fourth\"], 2, ONE_FINGER),\n        explain(\"Thumb behind the neck\", \"Rest your thumb on the back of the neck, behind your second finger. \""
+        },
+        {
+          "path": "tools/curriculum/courses/theory.py",
+          "line": 464,
+          "excerpt": "                \"counts C, D, E: three letters, so it's a third.\", staff([\"C4\", \"E4\"])),\n        quiz(\"C up to G is a...\", [\"Third\", \"Fourth\", \"Fifth\"], 2, \"C, D, E, F, G: five letters.\"),\n        quiz(\"D up to F is a...\", [\"Second\", \"Third\", \"Fourth\"], 1, \"D, E, F: three letters.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/theory.py",
+          "line": 465,
+          "excerpt": "        quiz(\"C up to G is a...\", [\"Third\", \"Fourth\", \"Fifth\"], 2, \"C, D, E, F, G: five letters.\"),\n        quiz(\"D up to F is a...\", [\"Second\", \"Third\", \"Fourth\"], 1, \"D, E, F: three letters.\"),\n        quiz(\"What interval is this?\", [\"Fourth\", \"Third\", \"Second\"], 0, \"E, F, G, A: four letters.\", staff([\"E4\", \"A4\"])),"
+        },
+        {
+          "path": "tools/curriculum/courses/theory.py",
+          "line": 466,
+          "excerpt": "        quiz(\"D up to F is a...\", [\"Second\", \"Third\", \"Fourth\"], 1, \"D, E, F: three letters.\"),\n        quiz(\"What interval is this?\", [\"Fourth\", \"Third\", \"Second\"], 0, \"E, F, G, A: four letters.\", staff([\"E4\", \"A4\"])),\n        explain(\"Sharps don't change the count\", \"Sharps and flats don't change an interval's number. C to E♭ and C to E are \""
+        },
+        {
+          "path": "tools/curriculum/courses/theory.py",
+          "line": 469,
+          "excerpt": "                \"both thirds: C, D, E either way. They differ in size, which comes next.\", staff([\"C4\", \"Eb4\"])),\n        quiz(\"F up to D is a...\", [\"Fourth\", \"Fifth\", \"Sixth\"], 2, \"F, G, A, B, C, D: six letters.\"),\n        quiz(\"A up to E♭ is a...\", [\"Fourth\", \"Fifth\", \"Sixth\"], 1,"
+        },
+        {
+          "path": "tools/curriculum/courses/theory.py",
+          "line": 470,
+          "excerpt": "        quiz(\"F up to D is a...\", [\"Fourth\", \"Fifth\", \"Sixth\"], 2, \"F, G, A, B, C, D: six letters.\"),\n        quiz(\"A up to E♭ is a...\", [\"Fourth\", \"Fifth\", \"Sixth\"], 1,\n             \"A, B, C, D, E: five letters. The flat doesn't change the count.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/cello.py",
+          "line": 470,
+          "excerpt": "        play([(\"G3\", 2), (\"G2\", 3), (\"D4\", 1), (\"D3\", 2)], hint=\"Two octave checks: G with open G, then fourth-finger D with open D.\"),\n        quiz(\"Which finger plays C sharp on the A string?\", [\"Third\", \"Second\", \"Fourth\"], 0),\n        tune(\"D4 C#4 B3 A3 | G3 F#3 E3 D3 | D3 E3 F#3 G3 | A3:4\", bpm=72, title=\"Scale down and up\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/cello.py",
+          "line": 489,
+          "excerpt": "        play(G_MAJOR, hint=\"Up the G major scale. Same shape on both strings.\"),\n        quiz(\"Which finger plays C on the G string?\", [\"Fourth\", \"Third\", \"Second\"], 0),\n        tune(\"G2 A2 B2 C3 | D3 E3 F#3 G3 | G3 F#3 E3 D3 | C3 B2 A2 G2\", bpm=66, title=\"G major scale\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/cello.py",
+          "line": 592,
+          "excerpt": "        play([(\"A3\", 1), (\"B3\", 1), (\"D4\", 1), (\"E4\", 1)], hint=\"Open A, B, shift on first finger to D, then E with third.\", pos=FOURTH),\n        quiz(\"In fourth position on the A string, which finger plays E?\", [\"Third\", \"First\", \"Fourth\"], 0),\n        tune(UP_AND_BACK_4, bpm=60, title=\"Up to fourth position and back\", pos=FOURTH),"
+        }
+      ],
+      "proposed_target": "ચતુર્થ"
+    },
+    {
+      "batch": 1,
+      "id": "s028",
+      "key": "L957dc77c43",
+      "source": "The first",
+      "translation": "પહેલો",
+      "context": "Guitar · Unit 1 · lesson gtr-1-2 “The open strings” · step 5 (listen) · quiz answer",
+      "source_sha256": "6c5be2173287547e70a21a1fa8288ec3061cc030a5f4e879cc4afd97e4464a29",
+      "target_sha256": "274b37c9de1b170554edba81505345fa560cbf0c41978bb36bc38c1be9ad2492",
+      "reason": "Shared note/chord, string-pair and musical-phrase choices have different grammatical genders; neutral પ્રથમ preserves referent rather than wrongly saying first option.",
+      "exact_literal_occurrences": [
+        {
+          "path": "tools/curriculum/courses/bass.py",
+          "line": 112,
+          "excerpt": "        quiz(\"What is string 3 called?\", [\"D\", \"E\", \"G\", \"A\"], 3, visual=fretboard(B, [(3, 0)])),\n        listen(\"Which is higher?\", [[\"A1\"], [\"D2\"]], [\"The first\", \"The second\"], 1),\n        along(B, \"E1@4:2 A1@3:2 D2@2:2 G2@1:2 D2@2:2 A1@3:2 E1@4:4\", bpm=60, title=\"Open-string roll call\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/bass.py",
+          "line": 136,
+          "excerpt": "        quiz(\"Name the open strings from 4 to 1.\", [\"E A D G\", \"G D A E\", \"G C E A\"], 0),\n        listen(\"Which one is the open E string?\", [[\"A1\"], [\"E1\"]], [\"The first\", \"The second\"], 1),\n        notes(B, [(\"E1\", 4), (\"A1\", 3), (\"D2\", 2), (\"G2\", 1)], hint=\"All four open strings, 4 to 1.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/bass.py",
+          "line": 216,
+          "excerpt": "        along(B, \"A1 B1 C2 D2@3 C2 B1 A1:2\", bpm=66, max_fret=5, title=\"Up the A string\"),\n        listen(\"Which is higher?\", [[\"C2\"], [\"B1\"]], [\"The first\", \"The second\"], 0),\n        along(B, \"A1 C2 D2@3:2 A1 C2 D2@3 C2 A1:2 C2:2 A1:4\", bpm=66, max_fret=5, title=\"A-string riff\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/bass.py",
+          "line": 255,
+          "excerpt": "        notes(B, [(\"F1\", 4), (\"A1\", 4), (\"B1\", 3), (\"D2\", 3)], hint=\"F, A, B, D on strings 4 and 3.\", max_fret=5),\n        listen(\"Which is higher?\", [[\"G1\"], [\"D2\"]], [\"The first\", \"The second\"], 1),\n        along(B, G_SCALE, bpm=66, max_fret=5, first_fret=2, title=\"G major, up and down\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/bass.py",
+          "line": 279,
+          "excerpt": "             \"The root on beat 1 tells everyone which chord they're in.\"),\n        listen(\"Which sounds lower?\", [[\"E1\"], [\"B1\"]], [\"The first\", \"The second\"], 0),\n        along(B, \"A1 A1 E2 E2 D2 D2 A2 A2 E1 E1 B1 B1 A1 E2 A1:2\", bpm=70, title=\"Root, root, fifth, fifth\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/ear.py",
+          "line": 12,
+          "excerpt": "\nFIRST, SECOND = \"The first\", \"The second\"\nECHO = \"Sing or play back the note you just heard.\""
+        },
+        {
+          "path": "tools/curriculum/courses/songs_part3.py",
+          "line": 301,
+          "excerpt": "          hint=\"Sleep, my child, and peace attend thee: open G, down to F sharp and E, then G, A, G, F sharp and D.\"),\n    quiz(\"Which phrase of the verse climbs highest?\", [\"The third\", \"The first\", \"The last\"], 0,\n         \"The third phrase, soft the drowsy hours, rises to C, D and E. The other three phrases share one tune.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/mandolin.py",
+          "line": 260,
+          "excerpt": "        quiz(\"What is pair 2 called?\", [\"D\", \"A\", \"E\", \"G\"], 1, visual=fretboard(M, [(2, 0)])),\n        listen(\"Which pair sounds lower?\", [[\"E5\"], [\"G3\"]], [\"The first\", \"The second\"], 1),\n        play([(\"E5\", 1), (\"A4\", 2), (\"D4\", 3), (\"G3\", 4)], hint=\"Now high to low: E, A, D, G.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/mandolin.py",
+          "line": 343,
+          "excerpt": "        tune(\"A4:1 B4:1 C#5:1 D5:1 E5:1 F#5:1 G5:1 A5:1\", bpm=62, title=\"A to A over two pairs\"),\n        listen(\"Which is higher?\", [[\"A5\"], [\"A4\"]], [\"The first\", \"The second\"], 0),\n        tune(\"A5:1 G5:1 F#5:1 E5:1 D5:1 C#5:1 B4:1 A4:1\", bpm=62, title=\"And back down\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/originals_part2.py",
+          "line": 92,
+          "excerpt": "CLIMB_FALL = [\"It climbs\", \"It falls\"]\nFIRST_SECOND = [\"The first\", \"The second\"]\nSET_LIST = \"No new chords or notes: the five songs from this unit, each a touch faster. Name each hook by ear, then play.\""
+        },
+        {
+          "path": "tools/curriculum/courses/guitar.py",
+          "line": 104,
+          "excerpt": "MAJOR_MINOR = [\"Major\", \"Minor\"]\nFIRST_SECOND = [\"The first\", \"The second\"]\nUP_DOWN = [\"Up\", \"Down\"]"
+        },
+        {
+          "path": "tools/curriculum/courses/voice.py",
+          "line": 168,
+          "excerpt": "        explain(\"Hear it, then sing it\", \"Matching pitch means singing the same note you hear. Listen, imagine the note for a moment, then sing softly and adjust until it settles.\"),\n        listen(\"Which is higher?\", [[\"C4\"], [\"E4\"]], [\"The first\", \"The second\"], 1),\n        notes(V, [\"E4\"], hint=\"Sing E softly, then adjust until it settles.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/voice.py",
+          "line": 188,
+          "excerpt": "        notes(V, [\"C4\"], hint=HOLD_C),\n        listen(\"Which is higher?\", [[\"G4\"], [\"E4\"]], [\"The first\", \"The second\"], 0),\n        notes(V, [\"E4\", \"G4\"], hint=\"E, then G. Hear each one before you sing it.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/ukulele.py",
+          "line": 234,
+          "excerpt": "        quiz(\"What is string 3 called?\", [\"G\", \"C\", \"E\", \"A\"], 1, visual=fretboard(U, [(3, 0)])),\n        listen(\"Which is higher?\", [[\"C4\"], [\"A4\"]], [\"The first\", \"The second\"], 1),\n        tap(DOWNS, bpm=60, bars=2),"
+        },
+        {
+          "path": "tools/curriculum/courses/ukulele.py",
+          "line": 241,
+          "excerpt": "                fretboard(U, [(4, 0), (3, 0)])),\n        listen(\"Which sounds higher?\", [[\"G4\"], [\"C4\"]], [\"The first\", \"The second\"], 0),\n        explain(\"Why it's tuned that way\", \"The high G keeps every chord close together and bright. It is the sweet, ringing sound people know as ukulele.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/ukulele.py",
+          "line": 270,
+          "excerpt": "        quiz(\"Name the open strings from 4 to 1.\", [\"A E C G\", \"E A D G\", \"G C E A\", \"G D A E\"], 2),\n        listen(\"Which one is the open G string?\", [[\"C4\"], [\"G4\"]], [\"The first\", \"The second\"], 1),\n        notes(U, [(\"G4\", 4), (\"C4\", 3), (\"E4\", 2), (\"A4\", 1)], hint=\"All four open strings, 4 to 1.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/ukulele.py",
+          "line": 303,
+          "excerpt": "        play_chord(Am),\n        listen(\"Which chord sounds darker?\", [SOUND_C, SOUND_AM], [\"The first\", \"The second\"], 1),\n        explain(\"Change early, not late\", \"Lift the finger you don't need and place the new one while the last strum still rings. Look ahead to the next chord.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/ukulele.py",
+          "line": 335,
+          "excerpt": "        strum(G, DOWNS, bpm=60, bars=2),\n        listen(\"Which one is G7, the one with more tension?\", [SOUND_G, SOUND_G7], [\"The first\", \"The second\"], 1),\n        progression([(C, 2), (G, 2), (C, 2), (G, 2)], DOWNS, bpm=60),"
+        },
+        {
+          "path": "tools/curriculum/courses/ukulele.py",
+          "line": 407,
+          "excerpt": "        quiz(\"Which pattern is the island strum?\", [\"D, DU, UDU\", \"D, D, D, D\", \"DU, DU, DU, DU\"], 0),\n        listen(\"Which chord sounds darker?\", [SOUND_F, SOUND_AM], [\"The first\", \"The second\"], 1),\n        strum(G7, ISLAND, bpm=70, bars=2),"
+        },
+        {
+          "path": "tools/curriculum/courses/ukulele.py",
+          "line": 471,
+          "excerpt": "        quiz(\"Where is F sharp on string 2?\", [\"Fret 1\", \"Fret 2\", \"Fret 3\"], 1, visual=fretboard(U, [(2, 2)])),\n        listen(\"Which is higher?\", [[\"B4\"], [\"G4\"]], [\"The first\", \"The second\"], 0),\n        along(U, f\"{ODE_1} {ODE_2}\", bpm=76, title=\"Ode to Joy\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/theory.py",
+          "line": 8,
+          "excerpt": "\nFIRST, SECOND = \"The first\", \"The second\"\nMAJOR = [2, 2, 1, 2, 2, 2, 1]          # whole, whole, half, whole, whole, whole, half"
+        },
+        {
+          "path": "tools/curriculum/courses/originals.py",
+          "line": 76,
+          "excerpt": "CLIMB_FALL = [\"It climbs\", \"It falls\"]\nFIRST_SECOND = [\"The first\", \"The second\"]\nSET_LIST = \"No new chords or notes: the five songs from this unit, each a touch faster. Name each hook by ear, then play.\""
+        },
+        {
+          "path": "tools/curriculum/courses/banjo.py",
+          "line": 344,
+          "excerpt": "        play_chord(D7_FULL),\n        listen(\"Which chord wants to move on?\", [[\"D3\", \"A3\", \"C4\", \"D4\"], [\"G3\", \"B3\", \"D4\", \"G4\"]], [\"The first\", \"The second\"], 0),\n        quiz(\"What does your thumb do on D7?\", [\"Plays string 5 as usual\", \"Frets string 5\", \"Stays on strings 3 and 4\"], 2,"
+        },
+        {
+          "path": "tools/curriculum/courses/banjo.py",
+          "line": 422,
+          "excerpt": "        along(B, SHADY_1, bpm=72, title=\"First part\"),\n        listen(\"Which sounds darker?\", [[\"A3\", \"C4\", \"E4\"], [\"G3\", \"B3\", \"D4\"]], [\"The first\", \"The second\"], 0),\n        along(B, SHADY_2, bpm=72, title=\"Second part\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/cello.py",
+          "line": 83,
+          "excerpt": "SAME_LETTER = [\"Yes, an octave apart\", \"No, different notes\"]\nWHICH = [\"The first\", \"The second\"]\nSTEPS = [\"A whole step\", \"A half step\"]"
+        },
+        {
+          "path": "tools/curriculum/courses/violin.py",
+          "line": 70,
+          "excerpt": "SAME_LETTER = [\"Yes, an octave apart\", \"No, different notes\"]\nWHICH = [\"The first\", \"The second\"]\nSTEPS = [\"A whole step\", \"A half step\"]"
+        }
+      ],
+      "proposed_target": "પ્રથમ"
+    },
+    {
+      "batch": 1,
+      "id": "s029",
+      "key": "Lbece65d16e",
+      "source": "The second",
+      "translation": "બીજો",
+      "context": "Guitar · Unit 1 · lesson gtr-1-2 “The open strings” · step 5 (listen) · quiz answer",
+      "source_sha256": "6d8412e5afe844b18067c974a31b3bc3b832ff2a62f7c9803f154a036c240ee3",
+      "target_sha256": "b1afc6397720fe56a5deb77d477316d8fb7916141a551b58c8f08f18324be596",
+      "reason": "Shared note/chord and string-pair choices have different grammatical genders; neutral દ્વિતીય preserves referent rather than wrongly saying second option.",
+      "exact_literal_occurrences": [
+        {
+          "path": "tools/curriculum/courses/bass.py",
+          "line": 112,
+          "excerpt": "        quiz(\"What is string 3 called?\", [\"D\", \"E\", \"G\", \"A\"], 3, visual=fretboard(B, [(3, 0)])),\n        listen(\"Which is higher?\", [[\"A1\"], [\"D2\"]], [\"The first\", \"The second\"], 1),\n        along(B, \"E1@4:2 A1@3:2 D2@2:2 G2@1:2 D2@2:2 A1@3:2 E1@4:4\", bpm=60, title=\"Open-string roll call\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/bass.py",
+          "line": 136,
+          "excerpt": "        quiz(\"Name the open strings from 4 to 1.\", [\"E A D G\", \"G D A E\", \"G C E A\"], 0),\n        listen(\"Which one is the open E string?\", [[\"A1\"], [\"E1\"]], [\"The first\", \"The second\"], 1),\n        notes(B, [(\"E1\", 4), (\"A1\", 3), (\"D2\", 2), (\"G2\", 1)], hint=\"All four open strings, 4 to 1.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/bass.py",
+          "line": 216,
+          "excerpt": "        along(B, \"A1 B1 C2 D2@3 C2 B1 A1:2\", bpm=66, max_fret=5, title=\"Up the A string\"),\n        listen(\"Which is higher?\", [[\"C2\"], [\"B1\"]], [\"The first\", \"The second\"], 0),\n        along(B, \"A1 C2 D2@3:2 A1 C2 D2@3 C2 A1:2 C2:2 A1:4\", bpm=66, max_fret=5, title=\"A-string riff\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/bass.py",
+          "line": 255,
+          "excerpt": "        notes(B, [(\"F1\", 4), (\"A1\", 4), (\"B1\", 3), (\"D2\", 3)], hint=\"F, A, B, D on strings 4 and 3.\", max_fret=5),\n        listen(\"Which is higher?\", [[\"G1\"], [\"D2\"]], [\"The first\", \"The second\"], 1),\n        along(B, G_SCALE, bpm=66, max_fret=5, first_fret=2, title=\"G major, up and down\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/bass.py",
+          "line": 279,
+          "excerpt": "             \"The root on beat 1 tells everyone which chord they're in.\"),\n        listen(\"Which sounds lower?\", [[\"E1\"], [\"B1\"]], [\"The first\", \"The second\"], 0),\n        along(B, \"A1 A1 E2 E2 D2 D2 A2 A2 E1 E1 B1 B1 A1 E2 A1:2\", bpm=70, title=\"Root, root, fifth, fifth\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/ear.py",
+          "line": 12,
+          "excerpt": "\nFIRST, SECOND = \"The first\", \"The second\"\nECHO = \"Sing or play back the note you just heard.\""
+        },
+        {
+          "path": "tools/curriculum/courses/mandolin.py",
+          "line": 260,
+          "excerpt": "        quiz(\"What is pair 2 called?\", [\"D\", \"A\", \"E\", \"G\"], 1, visual=fretboard(M, [(2, 0)])),\n        listen(\"Which pair sounds lower?\", [[\"E5\"], [\"G3\"]], [\"The first\", \"The second\"], 1),\n        play([(\"E5\", 1), (\"A4\", 2), (\"D4\", 3), (\"G3\", 4)], hint=\"Now high to low: E, A, D, G.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/mandolin.py",
+          "line": 343,
+          "excerpt": "        tune(\"A4:1 B4:1 C#5:1 D5:1 E5:1 F#5:1 G5:1 A5:1\", bpm=62, title=\"A to A over two pairs\"),\n        listen(\"Which is higher?\", [[\"A5\"], [\"A4\"]], [\"The first\", \"The second\"], 0),\n        tune(\"A5:1 G5:1 F#5:1 E5:1 D5:1 C#5:1 B4:1 A4:1\", bpm=62, title=\"And back down\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/originals_part2.py",
+          "line": 92,
+          "excerpt": "CLIMB_FALL = [\"It climbs\", \"It falls\"]\nFIRST_SECOND = [\"The first\", \"The second\"]\nSET_LIST = \"No new chords or notes: the five songs from this unit, each a touch faster. Name each hook by ear, then play.\""
+        },
+        {
+          "path": "tools/curriculum/courses/guitar.py",
+          "line": 104,
+          "excerpt": "MAJOR_MINOR = [\"Major\", \"Minor\"]\nFIRST_SECOND = [\"The first\", \"The second\"]\nUP_DOWN = [\"Up\", \"Down\"]"
+        },
+        {
+          "path": "tools/curriculum/courses/voice.py",
+          "line": 168,
+          "excerpt": "        explain(\"Hear it, then sing it\", \"Matching pitch means singing the same note you hear. Listen, imagine the note for a moment, then sing softly and adjust until it settles.\"),\n        listen(\"Which is higher?\", [[\"C4\"], [\"E4\"]], [\"The first\", \"The second\"], 1),\n        notes(V, [\"E4\"], hint=\"Sing E softly, then adjust until it settles.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/voice.py",
+          "line": 188,
+          "excerpt": "        notes(V, [\"C4\"], hint=HOLD_C),\n        listen(\"Which is higher?\", [[\"G4\"], [\"E4\"]], [\"The first\", \"The second\"], 0),\n        notes(V, [\"E4\", \"G4\"], hint=\"E, then G. Hear each one before you sing it.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/ukulele.py",
+          "line": 234,
+          "excerpt": "        quiz(\"What is string 3 called?\", [\"G\", \"C\", \"E\", \"A\"], 1, visual=fretboard(U, [(3, 0)])),\n        listen(\"Which is higher?\", [[\"C4\"], [\"A4\"]], [\"The first\", \"The second\"], 1),\n        tap(DOWNS, bpm=60, bars=2),"
+        },
+        {
+          "path": "tools/curriculum/courses/ukulele.py",
+          "line": 241,
+          "excerpt": "                fretboard(U, [(4, 0), (3, 0)])),\n        listen(\"Which sounds higher?\", [[\"G4\"], [\"C4\"]], [\"The first\", \"The second\"], 0),\n        explain(\"Why it's tuned that way\", \"The high G keeps every chord close together and bright. It is the sweet, ringing sound people know as ukulele.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/ukulele.py",
+          "line": 270,
+          "excerpt": "        quiz(\"Name the open strings from 4 to 1.\", [\"A E C G\", \"E A D G\", \"G C E A\", \"G D A E\"], 2),\n        listen(\"Which one is the open G string?\", [[\"C4\"], [\"G4\"]], [\"The first\", \"The second\"], 1),\n        notes(U, [(\"G4\", 4), (\"C4\", 3), (\"E4\", 2), (\"A4\", 1)], hint=\"All four open strings, 4 to 1.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/ukulele.py",
+          "line": 303,
+          "excerpt": "        play_chord(Am),\n        listen(\"Which chord sounds darker?\", [SOUND_C, SOUND_AM], [\"The first\", \"The second\"], 1),\n        explain(\"Change early, not late\", \"Lift the finger you don't need and place the new one while the last strum still rings. Look ahead to the next chord.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/ukulele.py",
+          "line": 335,
+          "excerpt": "        strum(G, DOWNS, bpm=60, bars=2),\n        listen(\"Which one is G7, the one with more tension?\", [SOUND_G, SOUND_G7], [\"The first\", \"The second\"], 1),\n        progression([(C, 2), (G, 2), (C, 2), (G, 2)], DOWNS, bpm=60),"
+        },
+        {
+          "path": "tools/curriculum/courses/ukulele.py",
+          "line": 407,
+          "excerpt": "        quiz(\"Which pattern is the island strum?\", [\"D, DU, UDU\", \"D, D, D, D\", \"DU, DU, DU, DU\"], 0),\n        listen(\"Which chord sounds darker?\", [SOUND_F, SOUND_AM], [\"The first\", \"The second\"], 1),\n        strum(G7, ISLAND, bpm=70, bars=2),"
+        },
+        {
+          "path": "tools/curriculum/courses/ukulele.py",
+          "line": 471,
+          "excerpt": "        quiz(\"Where is F sharp on string 2?\", [\"Fret 1\", \"Fret 2\", \"Fret 3\"], 1, visual=fretboard(U, [(2, 2)])),\n        listen(\"Which is higher?\", [[\"B4\"], [\"G4\"]], [\"The first\", \"The second\"], 0),\n        along(U, f\"{ODE_1} {ODE_2}\", bpm=76, title=\"Ode to Joy\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/theory.py",
+          "line": 8,
+          "excerpt": "\nFIRST, SECOND = \"The first\", \"The second\"\nMAJOR = [2, 2, 1, 2, 2, 2, 1]          # whole, whole, half, whole, whole, whole, half"
+        },
+        {
+          "path": "tools/curriculum/courses/originals.py",
+          "line": 76,
+          "excerpt": "CLIMB_FALL = [\"It climbs\", \"It falls\"]\nFIRST_SECOND = [\"The first\", \"The second\"]\nSET_LIST = \"No new chords or notes: the five songs from this unit, each a touch faster. Name each hook by ear, then play.\""
+        },
+        {
+          "path": "tools/curriculum/courses/banjo.py",
+          "line": 344,
+          "excerpt": "        play_chord(D7_FULL),\n        listen(\"Which chord wants to move on?\", [[\"D3\", \"A3\", \"C4\", \"D4\"], [\"G3\", \"B3\", \"D4\", \"G4\"]], [\"The first\", \"The second\"], 0),\n        quiz(\"What does your thumb do on D7?\", [\"Plays string 5 as usual\", \"Frets string 5\", \"Stays on strings 3 and 4\"], 2,"
+        },
+        {
+          "path": "tools/curriculum/courses/banjo.py",
+          "line": 422,
+          "excerpt": "        along(B, SHADY_1, bpm=72, title=\"First part\"),\n        listen(\"Which sounds darker?\", [[\"A3\", \"C4\", \"E4\"], [\"G3\", \"B3\", \"D4\"]], [\"The first\", \"The second\"], 0),\n        along(B, SHADY_2, bpm=72, title=\"Second part\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/cello.py",
+          "line": 83,
+          "excerpt": "SAME_LETTER = [\"Yes, an octave apart\", \"No, different notes\"]\nWHICH = [\"The first\", \"The second\"]\nSTEPS = [\"A whole step\", \"A half step\"]"
+        },
+        {
+          "path": "tools/curriculum/courses/violin.py",
+          "line": 70,
+          "excerpt": "SAME_LETTER = [\"Yes, an octave apart\", \"No, different notes\"]\nWHICH = [\"The first\", \"The second\"]\nSTEPS = [\"A whole step\", \"A half step\"]"
+        }
+      ],
+      "proposed_target": "દ્વિતીય"
+    },
+    {
+      "batch": 23,
+      "id": "s008",
+      "key": "L7515b995d9",
+      "source": "A half note",
+      "translation": "અડધા સ્વરને",
+      "context": "Violin · Unit 2 · lesson vln-2-2 “Quarter notes, half notes” · step 6 (quiz) · quiz answer",
+      "source_sha256": "e7abaa2b73c6ff07206ee97396472b9506e412363da9487813bafac76d74629f",
+      "target_sha256": "4401a638033dcf250be9caf5c50a15553dad18047d7653456131bb58d099d310",
+      "reason": "Bare nominative હાફ નોટ works both bow-comparison answer and rhythm/theory duration answer; do not retain context-specific oblique suffix.",
+      "exact_literal_occurrences": [
+        {
+          "path": "tools/curriculum/courses/rhythm.py",
+          "line": 82,
+          "excerpt": "        tap([0, 2], bpm=75, bars=2),\n        quiz(\"Which note lasts a whole bar of 4/4?\", [\"A half note\", \"A whole note\", \"A quarter note\"], 1,\n             \"A whole note lasts four beats, the full bar of 4/4.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/rhythm.py",
+          "line": 239,
+          "excerpt": "        tap([0, 1.5, 2, 3.5], bpm=70, bars=2),\n        quiz(\"Which lasts as long as a dotted quarter?\", [\"A quarter tied to an eighth\", \"Two eighth notes\", \"A half note\"], 0,\n             \"The tie adds half a beat to the quarter, just like the dot does.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/theory.py",
+          "line": 304,
+          "excerpt": "             \"A quarter note lasts one beat, so four fill the bar.\", rhythm([0, 1, 2, 3])),\n        quiz(\"Which lasts longest?\", [\"A quarter note\", \"A whole note\", \"A half note\"], 1,\n             \"A whole note lasts four beats, a half note two, a quarter note one.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/theory.py",
+          "line": 352,
+          "excerpt": "             1, \"The eighths group 1 2 3, 4 5 6, so you feel two strong pulses per bar.\"),\n        quiz(\"In 3/4, which single note fills a whole bar?\", [\"A whole note\", \"A dotted half note\", \"A half note\"], 1,\n             \"Three beats: a half note (2) plus its dot (1).\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/cello.py",
+          "line": 346,
+          "excerpt": "        tap([0, 1, 2], bpm=70, bars=2),\n        quiz(\"Which note needs more bow?\", [\"A half note\", \"A quarter note\", \"They need the same\"], 0,\n             \"A half note lasts twice as long, so it gets a longer, slower stroke.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/violin.py",
+          "line": 354,
+          "excerpt": "        tap([0, 1, 2], bpm=70, bars=2),\n        quiz(\"Which note needs more bow?\", [\"A half note\", \"A quarter note\", \"They need the same\"], 0,\n             \"A half note lasts twice as long, so it gets a longer, slower stroke.\"),"
+        }
+      ],
+      "proposed_target": "હાફ નોટ"
+    },
+    {
+      "batch": 23,
+      "id": "s009",
+      "key": "L5887ff3d74",
+      "source": "A quarter note",
+      "translation": "ચોથા સ્વરને",
+      "context": "Violin · Unit 2 · lesson vln-2-2 “Quarter notes, half notes” · step 6 (quiz) · quiz answer",
+      "source_sha256": "a10a2773fabee54b99da1608fb71559c01afffd6160f6595f712e1140a7fd797",
+      "target_sha256": "051f4edbce609a8e5e94d2e13d1a264c4e6d0be5d01b2c840a806f461cc3103b",
+      "reason": "Bare nominative ક્વાર્ટર નોટ works both bow-comparison answer and rhythm/theory duration answer.",
+      "exact_literal_occurrences": [
+        {
+          "path": "tools/curriculum/courses/rhythm.py",
+          "line": 82,
+          "excerpt": "        tap([0, 2], bpm=75, bars=2),\n        quiz(\"Which note lasts a whole bar of 4/4?\", [\"A half note\", \"A whole note\", \"A quarter note\"], 1,\n             \"A whole note lasts four beats, the full bar of 4/4.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/theory.py",
+          "line": 304,
+          "excerpt": "             \"A quarter note lasts one beat, so four fill the bar.\", rhythm([0, 1, 2, 3])),\n        quiz(\"Which lasts longest?\", [\"A quarter note\", \"A whole note\", \"A half note\"], 1,\n             \"A whole note lasts four beats, a half note two, a quarter note one.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/cello.py",
+          "line": 346,
+          "excerpt": "        tap([0, 1, 2], bpm=70, bars=2),\n        quiz(\"Which note needs more bow?\", [\"A half note\", \"A quarter note\", \"They need the same\"], 0,\n             \"A half note lasts twice as long, so it gets a longer, slower stroke.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/violin.py",
+          "line": 354,
+          "excerpt": "        tap([0, 1, 2], bpm=70, bars=2),\n        quiz(\"Which note needs more bow?\", [\"A half note\", \"A quarter note\", \"They need the same\"], 0,\n             \"A half note lasts twice as long, so it gets a longer, slower stroke.\"),"
+        }
+      ],
+      "proposed_target": "ક્વાર્ટર નોટ"
+    },
+    {
+      "batch": 18,
+      "id": "s080",
+      "key": "L30b87fb5c8",
+      "source": "The middle",
+      "translation": "મધ્યમા",
+      "context": "Ukulele · Unit 9 · lesson uke-9-2 “Rolling patterns” · step 3 (quiz) · quiz answer",
+      "source_sha256": "a49226c4f352167899759d93e22b2818ac43b7d2842a8e72ba1348f60a0fdb9b",
+      "target_sha256": "72d8fa8cb919b3d6906a5171ea092f8377e0228befc1978985907ae6e1c84c19",
+      "reason": "Distinct from bare Middle: exact source The middle occurs in ukulele finger question only; existing મધ્યમા is appropriate.",
+      "exact_literal_occurrences": [
+        {
+          "path": "tools/curriculum/courses/ukulele_part2.py",
+          "line": 300,
+          "excerpt": "        held([(C, pattern(C, ROLL, 0.5))] * 2, bpm=60, beats_per_bar=3, title=\"C, out and back\"),\n        quiz(\"After the ring finger plucks string 1, which finger comes next?\", [\"The thumb\", \"The middle\", \"The index\"], 1,\n             \"The roll turns around at the top: ring on string 1, then middle on 2 and index on 3.\"),"
+        }
+      ],
+      "proposed_target": "મધ્યમા"
+    },
+    {
+      "batch": 13,
+      "id": "s005",
+      "key": "L495be9b820",
+      "source": "The minor seventh",
+      "translation": "માઇનર સેવન્થ",
+      "context": "Guitar · Unit 19 · challenge gtr-19-6 “Jazz chord challenge” · step 2 (quiz) · quiz answer",
+      "source_sha256": "74f44a83bb938afef7ebad625be64fe17d3fae015a5fda40e5eae212b266aba3",
+      "target_sha256": "729f4d74d00477b312c5a43df5b8e2dc1de69d3043694cfcc56a6aa815d963b6",
+      "reason": "This exact label answers the interval question, not chord-quality question; માઇનર સપ્તમ.",
+      "exact_literal_occurrences": [
+        {
+          "path": "tools/curriculum/courses/guitar_part3.py",
+          "line": 397,
+          "excerpt": "                \"and G. Keep the chords short and the swing steady.\"),\n        quiz(\"Which seventh sits one fret below the root's octave?\", [\"The minor seventh\", \"The major seventh\"], 1),\n        listen(\"Which chord has the seventh?\", [tones(Fmaj7), tones(F_MINI)], FIRST_SECOND, 0),"
+        }
+      ],
+      "proposed_target": "માઇનર સપ્તમ"
+    },
+    {
+      "batch": 13,
+      "id": "s006",
+      "key": "L051d8c7d10",
+      "source": "The major seventh",
+      "translation": "મેજર સેવન્થ",
+      "context": "Guitar · Unit 19 · challenge gtr-19-6 “Jazz chord challenge” · step 2 (quiz) · quiz answer",
+      "source_sha256": "93394e0c1c3101db17495927f0e5d7a7a7bc12e73b42964f783e6ed8b5ea5e47",
+      "target_sha256": "898f0b67b5d64fa78a57a0b17c1da92c8f361c0e098694551af695630881286b",
+      "reason": "This exact label answers the interval question, not chord-quality question; મેજર સપ્તમ.",
+      "exact_literal_occurrences": [
+        {
+          "path": "tools/curriculum/courses/guitar_part3.py",
+          "line": 397,
+          "excerpt": "                \"and G. Keep the chords short and the swing steady.\"),\n        quiz(\"Which seventh sits one fret below the root's octave?\", [\"The minor seventh\", \"The major seventh\"], 1),\n        listen(\"Which chord has the seventh?\", [tones(Fmaj7), tones(F_MINI)], FIRST_SECOND, 0),"
+        }
+      ],
+      "proposed_target": "મેજર સપ્તમ"
+    },
+    {
+      "batch": 9,
+      "id": "s013",
+      "key": "Lb76aee974c",
+      "source": "Same",
+      "translation": "સમાન",
+      "context": "Guitar · Unit 13 · lesson gtr-13-4 “Bends and vibrato” · step 5 (listen) · quiz answer",
+      "source_sha256": "2a98b1deb68c7223d1367ad0671045f6835d960785aa24ebf18a69d64900cd42",
+      "target_sha256": "ad1dd66132aaedd681a68c7539ee09ef05683d43370ba79fa66605aa5a1be361",
+      "reason": "સમાન is gender-neutral and works across note/chord comparisons.",
+      "exact_literal_occurrences": [
+        {
+          "path": "tools/curriculum/courses/bass.py",
+          "line": 203,
+          "excerpt": "        notes(B, [(\"F1\", 4), (\"G1\", 4), (\"A1\", 4)], hint=\"String 4: fret 1, fret 3, fret 5.\", max_fret=5),\n        listen(\"Same note or different?\", [[\"A1\"], [\"A1\"]], [\"Same\", \"Different\"], 0),\n        quiz(\"Which fret on string 4 matches open string 3?\", [\"Fret 3\", \"Fret 5\", \"Fret 7\"], 1,"
+        },
+        {
+          "path": "tools/curriculum/courses/guitar_part2.py",
+          "line": 353,
+          "excerpt": "LINK_FINGERS = {3: 3, 4: 2, 5: 4}\nSAME_DIFFERENT = [\"Same\", \"Different\"]\n# Saltwater Sunday (song spotlight): a break of our own over its verse, Am7 | D7 | Am7 | D7. Bars 1 and 2 in box 1"
+        },
+        {
+          "path": "tools/curriculum/courses/ear.py",
+          "line": 36,
+          "excerpt": "def same(a, b):\n    return listen(\"Same note or different?\", [[a], [b]], [\"Same\", \"Different\"], 0 if midi(a) == midi(b) else 1)\n"
+        },
+        {
+          "path": "tools/curriculum/courses/mandolin.py",
+          "line": 270,
+          "excerpt": "        play([(\"A4\", 2), (\"G3\", 4), (\"E5\", 1), (\"D4\", 3)], hint=\"A, G, E, D. Find each pair by its name.\"),\n        listen(\"Same note or different?\", [[\"D4\"], [\"D4\"]], [\"Same\", \"Different\"], 0),\n        tap(QUARTERS, bpm=72, bars=2),"
+        },
+        {
+          "path": "tools/curriculum/courses/voice.py",
+          "line": 173,
+          "excerpt": "             \"Flat means under the note, so lift the pitch slightly.\"),\n        listen(\"Same note or different?\", [[\"D4\"], [\"D4\"]], [\"Same\", \"Different\"], 0),\n        notes(V, [\"D4\", \"G4\"], hint=\"Two notes this time: D, then G. Take a breath between them.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/voice.py",
+          "line": 210,
+          "excerpt": "        notes(V, [\"D4\"], hint=\"Hear D in your head, then sing it.\"),\n        listen(\"Same note or different?\", [[\"F4\"], [\"E4\"]], [\"Same\", \"Different\"], 1),\n        notes(V, [\"F4\"], hint=\"Hear F in your head, then sing it.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/voice.py",
+          "line": 219,
+          "excerpt": "        explain(\"Unison: the same note\", \"Unison means two sounds on exactly the same pitch. When they match, they blend into one; when they're slightly off, you hear a wobble.\"),\n        listen(\"Same note or different?\", [[\"E4\"], [\"F4\"]], [\"Same\", \"Different\"], 1),\n        notes(V, [\"E4\"], hint=\"Sing E and hold it in tune.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/voice.py",
+          "line": 243,
+          "excerpt": "             \"E to F has no note between them. C to D and G to A are whole steps.\"),\n        listen(\"Same note or different?\", [[\"A4\"], [\"A4\"]], [\"Same\", \"Different\"], 0),\n        along(V, \"G4 G4 A4:2 G4 F4 E4:2 F4 F4 E4 D4 C4:4\", bpm=66, title=\"Steps and repeats\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/ukulele.py",
+          "line": 262,
+          "excerpt": "        notes(U, [\"E4\", \"F4\", (\"G4\", 2)], hint=\"String 2: open, fret 1, fret 3.\"),\n        listen(\"Same note or different?\", [[\"G4\"], [\"G4\"]], [\"Same\", \"Different\"], 0),\n        quiz(\"Fret 3 on string 2 matches which open string?\", [\"String 4, G\", \"String 1, A\", \"String 3, C\"], 0,"
+        }
+      ],
+      "proposed_target": "સમાન"
+    },
+    {
+      "batch": 9,
+      "id": "s014",
+      "key": "L6824a5dc37",
+      "source": "Different",
+      "translation": "જુદો",
+      "context": "Guitar · Unit 13 · lesson gtr-13-4 “Bends and vibrato” · step 5 (listen) · quiz answer",
+      "source_sha256": "e9cdbd4dd56c72ee4be54e807000aed933a32ee8f6732ffa276def48d08d097d",
+      "target_sha256": "6dcfc2714118c75b1b4bde3748554425ea8ac7d25595e0b1e8e911ce14628053",
+      "reason": "જુદો agrees with the implied masculine સ્વર/કોર્ડ in inspected comparison contexts.",
+      "exact_literal_occurrences": [
+        {
+          "path": "tools/curriculum/courses/bass.py",
+          "line": 203,
+          "excerpt": "        notes(B, [(\"F1\", 4), (\"G1\", 4), (\"A1\", 4)], hint=\"String 4: fret 1, fret 3, fret 5.\", max_fret=5),\n        listen(\"Same note or different?\", [[\"A1\"], [\"A1\"]], [\"Same\", \"Different\"], 0),\n        quiz(\"Which fret on string 4 matches open string 3?\", [\"Fret 3\", \"Fret 5\", \"Fret 7\"], 1,"
+        },
+        {
+          "path": "tools/curriculum/courses/guitar_part2.py",
+          "line": 353,
+          "excerpt": "LINK_FINGERS = {3: 3, 4: 2, 5: 4}\nSAME_DIFFERENT = [\"Same\", \"Different\"]\n# Saltwater Sunday (song spotlight): a break of our own over its verse, Am7 | D7 | Am7 | D7. Bars 1 and 2 in box 1"
+        },
+        {
+          "path": "tools/curriculum/courses/ear.py",
+          "line": 36,
+          "excerpt": "def same(a, b):\n    return listen(\"Same note or different?\", [[a], [b]], [\"Same\", \"Different\"], 0 if midi(a) == midi(b) else 1)\n"
+        },
+        {
+          "path": "tools/curriculum/courses/mandolin.py",
+          "line": 270,
+          "excerpt": "        play([(\"A4\", 2), (\"G3\", 4), (\"E5\", 1), (\"D4\", 3)], hint=\"A, G, E, D. Find each pair by its name.\"),\n        listen(\"Same note or different?\", [[\"D4\"], [\"D4\"]], [\"Same\", \"Different\"], 0),\n        tap(QUARTERS, bpm=72, bars=2),"
+        },
+        {
+          "path": "tools/curriculum/courses/voice.py",
+          "line": 173,
+          "excerpt": "             \"Flat means under the note, so lift the pitch slightly.\"),\n        listen(\"Same note or different?\", [[\"D4\"], [\"D4\"]], [\"Same\", \"Different\"], 0),\n        notes(V, [\"D4\", \"G4\"], hint=\"Two notes this time: D, then G. Take a breath between them.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/voice.py",
+          "line": 210,
+          "excerpt": "        notes(V, [\"D4\"], hint=\"Hear D in your head, then sing it.\"),\n        listen(\"Same note or different?\", [[\"F4\"], [\"E4\"]], [\"Same\", \"Different\"], 1),\n        notes(V, [\"F4\"], hint=\"Hear F in your head, then sing it.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/voice.py",
+          "line": 219,
+          "excerpt": "        explain(\"Unison: the same note\", \"Unison means two sounds on exactly the same pitch. When they match, they blend into one; when they're slightly off, you hear a wobble.\"),\n        listen(\"Same note or different?\", [[\"E4\"], [\"F4\"]], [\"Same\", \"Different\"], 1),\n        notes(V, [\"E4\"], hint=\"Sing E and hold it in tune.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/voice.py",
+          "line": 243,
+          "excerpt": "             \"E to F has no note between them. C to D and G to A are whole steps.\"),\n        listen(\"Same note or different?\", [[\"A4\"], [\"A4\"]], [\"Same\", \"Different\"], 0),\n        along(V, \"G4 G4 A4:2 G4 F4 E4:2 F4 F4 E4 D4 C4:4\", bpm=66, title=\"Steps and repeats\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/ukulele.py",
+          "line": 262,
+          "excerpt": "        notes(U, [\"E4\", \"F4\", (\"G4\", 2)], hint=\"String 2: open, fret 1, fret 3.\"),\n        listen(\"Same note or different?\", [[\"G4\"], [\"G4\"]], [\"Same\", \"Different\"], 0),\n        quiz(\"Fret 3 on string 2 matches which open string?\", [\"String 4, G\", \"String 1, A\", \"String 3, C\"], 0,"
+        }
+      ],
+      "proposed_target": "જુદો"
+    },
+    {
+      "batch": 15,
+      "id": "s017",
+      "key": "L690a93e955",
+      "source": "The bridge",
+      "translation": "બ્રિજ",
+      "context": "Guitar · Unit 22 · lesson gtr-22-spotlight “Song spotlight: Jukebox Moon” · step 2 (quiz) · quiz answer",
+      "source_sha256": "3a4b73ad209fc5ea8e4c8e6f14935c98c1ea1a3a4f11395b909289a0f78871c7",
+      "target_sha256": "398e99b18fc68322446dc5e1297c97ac9cfd4236c90a533c68600cc875b256ba",
+      "reason": "બ્રિજ works as loan for both physical instrument bridge and song bridge.",
+      "exact_literal_occurrences": [
+        {
+          "path": "tools/curriculum/courses/guitar_part3.py",
+          "line": 751,
+          "excerpt": "                  \"each new bar.\", rhythm(DOOWOP)),\n        quiz(\"In Jukebox Moon, which section is the B?\", [\"The bridge\", \"The first verse\", \"The last verse\"], 0,\n             \"The verses share one tune: A, A. The bridge brings new chords and a new tune, B, then the verse returns.\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/guitar_part3.py",
+          "line": 757,
+          "excerpt": "        along(G, JUKEBOX_LAST, bpm=66, title=\"An intro from the last line\"),\n        JUKEBOX_SONG.along(\"Bridge\", bpm=66, title=\"The bridge\"),\n        progression(JUKEBOX_LOOP, DOOWOP, bpm=72),"
+        },
+        {
+          "path": "tools/curriculum/courses/originals.py",
+          "line": 718,
+          "excerpt": "        progression(JUKEBOX_CHORDS, DOOWOP, bpm=72),\n        JUKEBOX_SONG.along(\"Bridge\", bpm=66, title=\"The bridge\"),\n        JUKEBOX_SONG.take(\"Jukebox Moon\"),"
+        },
+        {
+          "path": "tools/curriculum/courses/cello.py",
+          "line": 240,
+          "excerpt": "                part(\"strings\")),\n        explain(\"The bridge\", BRIDGE, part(\"bridge\")),\n        quiz(\"Which string is the lowest?\", [\"C\", \"A\", \"D\", \"G\"], 0,"
+        },
+        {
+          "path": "tools/curriculum/courses/violin.py",
+          "line": 246,
+          "excerpt": "                part(\"strings\")),\n        explain(\"The bridge\", BRIDGE, part(\"bridge\")),\n        quiz(\"Which string is the highest?\", [\"E\", \"G\", \"D\", \"A\"], 0,"
+        }
+      ],
+      "proposed_target": "બ્રિજ"
+    }
+  ],
+  "later_owned_shared_label": {
+    "key": "Lced02810fc",
+    "source": "Middle",
+    "old": "મધ્યમા",
+    "new": "મધ્ય",
+    "owner": "Independent AI review",
+    "reason": "Neutral મધ્ય works with implied finger or song-section. Later reviewer guards this correction; not duplicated here."
+  },
+  "counting_syllable_policy": {
+    "and": "એન્ડ",
+    "e": "ઈ",
+    "a": "અ",
+    "rationale": "Gujarati અને has two vowel nuclei અ-ને. It can be squeezed into a single timing slot, but can induce an extra articulated subdivision in beginner counting; the monosyllabic loan એન્ડ explicitly represents the source count syllable. This is a pedagogical translation choice, not audio/device certification. Ordinary conjunctions remain અને.",
+    "changed_contexts": 37,
+    "conditional_collision": "shared-context-split.json"
+  },
+  "pitch_and_fingering_checks": {
+    "bend_undershoot": {
+      "batch": 9,
+      "id": "s012",
+      "key": "L38ebe33d09",
+      "source": "Target, then a short bend. Same note or different?",
+      "translation": "લક્ષ્ય સ્વર, પછી ટૂંકો બેન્ડ. સ્વર સમાન છે કે જુદો?",
+      "context": "Guitar · Unit 13 · lesson gtr-13-4 “Bends and vibrato” · step 5 (listen) · question or instruction",
+      "source_sha256": "f789f3a67d9d6720a1650d3fbb9811493e5d6cb97384d3cdeb95207073dc8e12",
+      "target_sha256": "642ffe2432857b4ed6ec2122bdd0829d040cc075684ec02120a573be43b5c7f3",
+      "reason": "Actual guitar_part2.py:411 listening pattern is E4 then Eb4: short means undershooting target pitch, not a short duration. Equal-pitch pattern at line449 is E4/E4. Correct to લક્ષ્યથી નીચો બેન્ડ.",
+      "exact_literal_occurrences": [
+        {
+          "path": "tools/curriculum/courses/guitar_part2.py",
+          "line": 411,
+          "excerpt": "             \"A bend that falls short sounds sour. Push until it matches the target you heard.\"),\n        listen(\"Target, then a short bend. Same note or different?\", [[\"E4\"], [\"Eb4\"]], SAME_DIFFERENT, 1),\n        explain(\"Vibrato makes notes sing\", \"Vibrato is a small bend and release, repeated quickly on a held note. \""
+        }
+      ]
+    },
+    "duration_exclusions": "Genuine ordinal scale degrees, finger/string/fret numbers, half/whole-step અર્ધ/પૂર્ણ સ્વર, half/whole bow and quarter turns remain unchanged. Replacements are exact source-read duration contexts, not global ordinal substitutions.",
+    "intervals": "Added seventh tone/interval uses સપ્તમ/સપ્તમ સ્વર; seventh chord quality remains સેવન્થ.",
+    "octaves": "Three two-octave-check sentences mean two separate octave comparisons; clarify સપ્તકના અંતરની બે ચકાસણી, not a two-octave interval."
+  },
+  "certification": {
+    "model_semantic_review": true,
+    "human_native_review": false,
+    "device_audio_qa": false,
+    "repository_changes": false
+  }
+}

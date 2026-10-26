@@ -1,0 +1,65 @@
+{
+  "captured_at_utc": "2026-10-26T04:50:18.607588+00:00",
+  "status": "unreviewed_partial_drafts_not_imported",
+  "current_source_keys": 6080,
+  "nonempty_todo_values_captured": 298,
+  "unique_draft_keys_preserved": 313,
+  "remaining_keys_without_captured_draft": 5767,
+  "finished_output_batches_captured": [
+    "ml-001.out.json",
+    "ml-002.out.json",
+    "ml-003.out.json"
+  ],
+  "identity_candidates_unapproved": 15,
+  "conflicting_variant_keys": [],
+  "independent_review": false,
+  "native_human_review": false,
+  "device_layout_qa": false,
+  "omissions": [],
+  "input_file_hashes": {
+    "author-checkout/ml.todo.json": {
+      "sha256": "c0eafbe0c96e944a26cbe68b04a17c2a93e8c5c3156232a838a4011973751be3",
+      "bytes": 1739815
+    },
+    "author-staging/batches/ml-001.out.json": {
+      "sha256": "a1ef9658bf091c3596892c81d3f5972a655418d239c9e2afd0679899e70b3c9a",
+      "bytes": 19339
+    },
+    "author-staging/batches/ml-001.json": {
+      "sha256": "bdf39ca1922f8d95da4e7ded86823b40530a667e38754bd04b1fdb2dd63a20dc",
+      "bytes": 27539
+    },
+    "author-staging/batches/ml-001.map.json": {
+      "sha256": "3b968e9ecf511309685209b5f1cb2aa0803d159fc2c1a7b323bb03683b6d36c4",
+      "bytes": 5353
+    },
+    "author-staging/batches/ml-002.out.json": {
+      "sha256": "a9aa85fe2265feb84c96ac22912f49925ba4977d9214a371a71f610bc31b42c0",
+      "bytes": 20303
+    },
+    "author-staging/batches/ml-002.json": {
+      "sha256": "2baf806ca3d2457118ef51aee18ff3f1aae32330d8169775b82e0ebc759fa64b",
+      "bytes": 26950
+    },
+    "author-staging/batches/ml-002.map.json": {
+      "sha256": "3a2a55ac733698edea685b5ffd0228eb1be76bfb819f860b426a3756cf5ddfe3",
+      "bytes": 5103
+    },
+    "author-staging/batches/ml-003.out.json": {
+      "sha256": "374e15cf2805eca11b491a3fce02d2a10a5a29458fe93913144bcbcb4612255b",
+      "bytes": 22399
+    },
+    "author-staging/batches/ml-003.json": {
+      "sha256": "1c31af3d57dc520e0d495d50953654d361b5ab992ee58346ee48663feac06b25",
+      "bytes": 28081
+    },
+    "author-staging/batches/ml-003.map.json": {
+      "sha256": "37f2bf67f184280fa9d74992f4043a8cf0646aa1b08094f599dfefb7b69ddd3f",
+      "bytes": 5203
+    },
+    "author-staging/holds.json": {
+      "sha256": "bc766360a3ff33f54cd0083de67a202858acf6ea710ab9a1cd2ca9d11c22e40d",
+      "bytes": 4052
+    }
+  }
+}

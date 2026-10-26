@@ -1,0 +1,125 @@
+{
+  "claims": "AI semantic review only; no English teaching-prose waiver, no native or device approval. Original work titles/proper credits are handled source-by-source in identities.json.",
+  "rows": [
+    {
+      "batch": "ur-001.json",
+      "id": "s019",
+      "key": "Leba98ce894",
+      "source": "From thick to thin: E, A, D, G, B, E. Try: Every Amateur Does Get Better Eventually.",
+      "translation": "موٹے سے باریک: E، A، D، G، B، E۔ حروف یاد رکھیں: “Every Amateur Does Get Better Eventually” (ہر شوقین آخرکار بہتر ہوتا ہے)۔",
+      "note": "QA: preserved source English acrostic as a quoted pedagogical example with Urdu instruction and meaning; Urdu replacement alone loses its note-letter initials.",
+      "category": "English_initials_mnemonic",
+      "retained_token": "Every Amateur Does Get Better Eventually",
+      "decision": "retain_inside_translated_instruction",
+      "reason": "English initials encode the literal Latin open-string names taught by this row; an Urdu-only replacement destroys the initial-letter correspondence. The surrounding teaching instruction is translated."
+    },
+    {
+      "batch": "ur-001.json",
+      "id": "s053",
+      "key": "L3534785c8b",
+      "source": "Every Amateur Does Get Better Eventually: E A D G B E, string 6 to string 1.",
+      "translation": "تار 6 سے تار 1: E A D G B E۔ حروف یاد رکھیں: “Every Amateur Does Get Better Eventually”۔",
+      "note": "QA: preserved source English acrostic as a quoted pedagogical example with Urdu instruction and meaning; Urdu replacement alone loses its note-letter initials.",
+      "category": "English_initials_mnemonic",
+      "retained_token": "Every Amateur Does Get Better Eventually",
+      "decision": "retain_inside_translated_instruction",
+      "reason": "English initials encode the literal Latin open-string names taught by this row; an Urdu-only replacement destroys the initial-letter correspondence. The surrounding teaching instruction is translated."
+    },
+    {
+      "batch": "ur-015.json",
+      "id": "s043",
+      "key": "L15b292f47e",
+      "source": "From string 4 down to string 1, the open strings are G, C, E, A. Try: Good Cooks Eat Apples.",
+      "translation": "تار 4 سے تار 1 تک کھلے تار G، C، E، A ہیں۔ حروف یاد رکھیں: “Good Cooks Eat Apples” (اچھے باورچی سیب کھاتے ہیں)۔",
+      "note": "QA: preserved source English acrostic as a quoted pedagogical example with Urdu instruction and meaning; Urdu replacement alone loses its note-letter initials.",
+      "category": "English_initials_mnemonic",
+      "retained_token": "Good Cooks Eat Apples",
+      "decision": "retain_inside_translated_instruction",
+      "reason": "English initials encode the literal Latin open-string names taught by this row; an Urdu-only replacement destroys the initial-letter correspondence. The surrounding teaching instruction is translated."
+    },
+    {
+      "batch": "ur-019.json",
+      "id": "s072",
+      "key": "L98e6fb6780",
+      "source": "From thick to thin: E, A, D, G. They match the four lowest guitar strings, an octave down. Try: Every Amp Drives Grooves.",
+      "translation": "موٹے سے باریک: E، A، D، G۔ گٹار کے چار موٹے ترین تاروں جیسے، ایک آکٹیو نیچے۔ حروف یاد رکھیں: “Every Amp Drives Grooves” (ہر ایمپ لے کو طاقت دیتا ہے)۔",
+      "note": "QA: preserved source English acrostic as a quoted pedagogical example with Urdu instruction and meaning; Urdu replacement alone loses its note-letter initials.",
+      "category": "English_initials_mnemonic",
+      "retained_token": "Every Amp Drives Grooves",
+      "decision": "retain_inside_translated_instruction",
+      "reason": "English initials encode the literal Latin open-string names taught by this row; an Urdu-only replacement destroys the initial-letter correspondence. The surrounding teaching instruction is translated."
+    },
+    {
+      "batch": "ur-022.json",
+      "id": "s061",
+      "key": "L74c9c1f9c1",
+      "source": "From low to high: G, D, A, E. Each string is five letter names above the last, an interval called a fifth. Try: Good Dogs Always Eat.",
+      "translation": "نیچے سے اوپر: G، D، A، E۔ ہر تار پچھلے سے پانچ حرفی نام اوپر، یعنی پانچواں وقفہ ہے۔ حروف یاد رکھیں: “Good Dogs Always Eat” (اچھے کتے ہمیشہ کھاتے ہیں)۔",
+      "note": "QA: preserved source English acrostic as a quoted pedagogical example with Urdu instruction and meaning; Urdu replacement alone loses its note-letter initials.",
+      "category": "English_initials_mnemonic",
+      "retained_token": "Good Dogs Always Eat",
+      "decision": "retain_inside_translated_instruction",
+      "reason": "English initials encode the literal Latin open-string names taught by this row; an Urdu-only replacement destroys the initial-letter correspondence. The surrounding teaching instruction is translated."
+    },
+    {
+      "batch": "ur-026.json",
+      "id": "s038",
+      "key": "La6f5916eae",
+      "source": "From low to high: C, G, D, A. Each string is five letter names above the last, an interval called a fifth. Try: Cats Go Dancing Around.",
+      "translation": "نیچے سے اوپر: C، G، D، A۔ ہر تار پچھلے سے پانچ حرفی نام اوپر، یعنی پانچواں وقفہ ہے۔ حروف یاد رکھیں: “Cats Go Dancing Around” (بلیاں ناچتی پھرتی ہیں)۔",
+      "note": "QA: preserved source English acrostic as a quoted pedagogical example with Urdu instruction and meaning; Urdu replacement alone loses its note-letter initials.",
+      "category": "English_initials_mnemonic",
+      "retained_token": "Cats Go Dancing Around",
+      "decision": "retain_inside_translated_instruction",
+      "reason": "English initials encode the literal Latin open-string names taught by this row; an Urdu-only replacement destroys the initial-letter correspondence. The surrounding teaching instruction is translated."
+    },
+    {
+      "batch": "ur-028.json",
+      "id": "s042",
+      "key": "L0d1d2365f7",
+      "source": "From low to high, the pairs are G, D, A and E. Try: Good Dogs Always Eat. A violin is tuned the same way, so fiddle tunes sit naturally on a mandolin.",
+      "translation": "نیچے سے اوپر جوڑے G، D، A، E ہیں۔ حروف یاد رکھیں: “Good Dogs Always Eat” (اچھے کتے ہمیشہ کھاتے ہیں)۔ وائلن بھی ایسے ٹیون ہے، سو فِڈل دھنیں مینڈولن پر فطری بیٹھتی ہیں۔",
+      "note": "QA: preserved source English acrostic as a quoted pedagogical example with Urdu instruction and meaning; Urdu replacement alone loses its note-letter initials.",
+      "category": "English_initials_mnemonic",
+      "retained_token": "Good Dogs Always Eat",
+      "decision": "retain_inside_translated_instruction",
+      "reason": "English initials encode the literal Latin open-string names taught by this row; an Urdu-only replacement destroys the initial-letter correspondence. The surrounding teaching instruction is translated."
+    },
+    {
+      "batch": "ur-019.json",
+      "id": "s022",
+      "key": "L4be63de2a8",
+      "source": "Down by the riverside: B, B, A sharp, B, then A and G.",
+      "translation": "سطر “Down by the riverside”: ⁦B، B، A شارپ، B⁩، پھر A اور G۔",
+      "note": "",
+      "category": "actual_sung_source_locator",
+      "retained_token": "Down by the riverside",
+      "decision": "retain_quoted_inside_translated_instruction",
+      "reason": "This exact fragment identifies the words actually sung at the exercise passage, not untranslated instruction. The Urdu target labels it as a line and translates the remaining fingering/note direction."
+    },
+    {
+      "batch": "ur-019.json",
+      "id": "s026",
+      "key": "L4a8833e5c8",
+      "source": "The water is wide: open string 3, F at fret 1 twice, G at fret 3, then open A.",
+      "translation": "سطر “The water is wide”: کھلا تار 3، فریٹ 1 پر دو بار F، فریٹ 3 پر G، پھر کھلا A۔",
+      "note": "",
+      "category": "actual_sung_source_locator",
+      "retained_token": "The water is wide",
+      "decision": "retain_quoted_inside_translated_instruction",
+      "reason": "This exact fragment identifies the words actually sung at the exercise passage, not untranslated instruction. The Urdu target labels it as a line and translates the remaining fingering/note direction."
+    },
+    {
+      "batch": "ur-019.json",
+      "id": "s045",
+      "key": "L4ccdff8050",
+      "source": "In Dublin's fair city: open string 3, F at fret 1 four times, open A, back to F.",
+      "translation": "سطر “In Dublin's fair city”: کھلا تار 3، فریٹ 1 پر چار بار F، کھلا A، واپس F۔",
+      "note": "QA: retained original lyric-fragment identifier within Urdu instruction.",
+      "category": "actual_sung_source_locator",
+      "retained_token": "In Dublin's fair city",
+      "decision": "retain_quoted_inside_translated_instruction",
+      "reason": "This exact fragment identifies the words actually sung at the exercise passage, not untranslated instruction. The Urdu target labels it as a line and translates the remaining fingering/note direction."
+    }
+  ]
+}

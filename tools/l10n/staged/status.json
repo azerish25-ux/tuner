@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "checkpoint_date": "2026-10-26",
+  "status": "frozen_review_checkpoint_integration_in_progress",
+  "review_provenance": "Independent AI semantic review (2026-10-26); not native-human or device certification",
+  "source_keys": 6080,
+  "candidate_pairs": 24320,
+  "locales": {
+    "ur": {
+      "pairs": 6080,
+      "batches": 59,
+      "corrections": 186,
+      "source_bound_invariants": 305,
+      "independent_review": "all pairs, not a sample",
+      "native_human_review": false,
+      "device_layout_review": false,
+      "applied": true,
+      "source_context_keys_held": [
+        "Lf6586312d9",
+        "Lced02810fc"
+      ],
+      "layout_keys_held": [],
+      "dispositions": {
+        "accepted_unchanged": 2933,
+        "approved_identity": 90,
+        "corrected": 94,
+        "reviewed_no_correction": 2658,
+        "correction_proposed": 91,
+        "approved_genuine_invariant": 213,
+        "correction_proposed_and_invariant_approved": 1
+      },
+      "integration_status": "6080-key reviewed baseline imported locally; not yet pushed; context delta pending",
+      "registration_status": "source-bound baseline invariants imported locally"
+    },
+    "gu": {
+      "pairs": 6080,
+      "batches": 59,
+      "corrections": 312,
+      "source_bound_invariants": 310,
+      "independent_review": "all pairs, not a sample",
+      "native_human_review": false,
+      "device_layout_review": false,
+      "applied": false,
+      "source_context_keys_held": [
+        "Lf6586312d9",
+        "Lced02810fc"
+      ],
+      "layout_keys_held": [],
+      "dispositions": {
+        "retained_after_full_pair_review": 5457,
+        "genuine_invariant": 310,
+        "correction_proposed": 312,
+        "context_split_required": 1
+      }
+    },
+    "ta": {
+      "pairs": 6080,
+      "batches": 59,
+      "corrections": 109,
+      "source_bound_invariants": 309,
+      "independent_review": "all pairs, not a sample",
+      "native_human_review": false,
+      "device_layout_review": false,
+      "applied": false,
+      "source_context_keys_held": [
+        "Lf6586312d9",
+        "Lced02810fc"
+      ],
+      "layout_keys_held": [],
+      "dispositions": {
+        "retained_after_independent_review": 5660,
+        "recommended_source_bound_invariant": 94,
+        "proposed_correction": 68,
+        "unresolved_source_context_collision": 1,
+        "correction_proposed": 41,
+        "blocked_context_collision": 1,
+        "recommend_keep_exact": 215
+      }
+    },
+    "kn": {
+      "pairs": 6080,
+      "batches": 59,
+      "corrections": 198,
+      "source_bound_invariants": 304,
+      "independent_review": "all pairs, not a sample",
+      "native_human_review": false,
+      "device_layout_review": false,
+      "applied": false,
+      "source_context_keys_held": [
+        "Lf6586312d9",
+        "Lced02810fc"
+      ],
+      "layout_keys_held": [
+        "L8a28d3c1df",
+        "Lb1a60a5698"
+      ],
+      "dispositions": {
+        "reviewed_no_correction_proposed": 2908,
+        "retained_genuine_invariant": 94,
+        "correction_staged": 111,
+        "shared_context_risk_recorded": 3,
+        "source_context_split_pending": 1,
+        "reviewed_no_change": 2665,
+        "source_split_required": 1,
+        "genuine_invariant": 210,
+        "correction_proposed": 87
+      }
+    }
+  },
+  "known_blockers": [
+    {
+      "keys": [
+        "Lf6586312d9",
+        "Lced02810fc"
+      ],
+      "status": "source_split_proposed_not_applied",
+      "details": "One key is string-number list versus spoken count; the other is middle finger versus song section. No source migration delta is applied to these candidates, including locales where a neutral target was proposed."
+    },
+    {
+      "locale": "kn",
+      "key": "L8a28d3c1df",
+      "length": 46,
+      "max_length": 42,
+      "status": "layout_review_pending"
+    },
+    {
+      "locale": "kn",
+      "key": "Lb1a60a5698",
+      "length": 44,
+      "max_length": 42,
+      "status": "layout_review_pending"
+    }
+  ],
+  "live_resources_written": false,
+  "registry_written": false,
+  "write_scope_note": "Checkpoint packaging changed no live resources or registry. Integration status records separately performed integration work, not a mutation performed by this archive."
+}

@@ -1,0 +1,302 @@
+[
+  {
+    "locale": "ta",
+    "batch": 1,
+    "id": "s019",
+    "table": "Learn.strings",
+    "key": "Leba98ce894",
+    "source": "From thick to thin: E, A, D, G, B, E. Try: Every Amateur Does Get Better Eventually.",
+    "old": "தடிமனிலிருந்து மெலிதாக: E, A, D, G, B, E. நினைவுக்கு: “Every Amateur Does Get Better Eventually” — ஒவ்வொரு தொடக்கநிலையாளரும் நாளடைவில் மேம்படுவார்.",
+    "context": "Guitar · Unit 1 · lesson gtr-1-2 “The open strings” · step 1 (explain) · lesson card text",
+    "max_length": 300,
+    "source_sha256": "9f2944594c612a8c3d32cf7153fbf13c3086cd18c099df1dc0964da61aa9a890",
+    "old_sha256": "7ea93f41f108787b9f4d282182f3f99183121d63d41c1e27d513ce83f3054d4b",
+    "curriculum_refs": [
+      {
+        "path": "/courses/0/units/0/lessons/1/steps/0/body",
+        "parents": [
+          "guitar",
+          "gtr-1",
+          "gtr-1-2"
+        ],
+        "source": "From thick to thin: E, A, D, G, B, E. Try: Every Amateur Does Get Better Eventually."
+      }
+    ],
+    "source_span": "Every Amateur Does Get Better Eventually",
+    "target_span": "Every Amateur Does Get Better Eventually",
+    "kind": "Latin_initial_mnemonic",
+    "decision": "retain_original_span_and_translate_surrounding_instruction",
+    "reason": "Latin initials must continue to name the taught string tuning; Tamil explanation is supplementary, not a replacement mnemonic.",
+    "scope": "exact span in this source-bound row; not a whole-prose exemption"
+  },
+  {
+    "locale": "ta",
+    "batch": 1,
+    "id": "s053",
+    "table": "Learn.strings",
+    "key": "L3534785c8b",
+    "source": "Every Amateur Does Get Better Eventually: E A D G B E, string 6 to string 1.",
+    "old": "“Every Amateur Does Get Better Eventually” என்பதன் முதலெழுத்துகள்: E A D G B E, தந்தி 6 முதல் தந்தி 1 வரை.",
+    "context": "Guitar · Unit 1 · challenge gtr-1-5 “First-steps challenge” · step 2 (quiz) · explanation after a quiz answer",
+    "max_length": 220,
+    "source_sha256": "61d877a18961bc865984e38b39b093d8c9960e1c0a5ae74586d972b7f5a75cf8",
+    "old_sha256": "7b78d1fe8047f07f9d1b1e080215e25217926a407cdbf84fedf09651b722457f",
+    "curriculum_refs": [
+      {
+        "path": "/courses/0/units/0/lessons/4/steps/1/why",
+        "parents": [
+          "guitar",
+          "gtr-1",
+          "gtr-1-5"
+        ],
+        "source": "Every Amateur Does Get Better Eventually: E A D G B E, string 6 to string 1."
+      }
+    ],
+    "source_span": "Every Amateur Does Get Better Eventually",
+    "target_span": "Every Amateur Does Get Better Eventually",
+    "kind": "Latin_initial_mnemonic",
+    "decision": "retain_original_span_and_translate_surrounding_instruction",
+    "reason": "Latin initials must continue to name the taught string tuning; Tamil explanation is supplementary, not a replacement mnemonic.",
+    "scope": "exact span in this source-bound row; not a whole-prose exemption"
+  },
+  {
+    "locale": "ta",
+    "batch": 15,
+    "id": "s043",
+    "table": "Learn.strings",
+    "key": "L15b292f47e",
+    "source": "From string 4 down to string 1, the open strings are G, C, E, A. Try: Good Cooks Eat Apples.",
+    "old": "தந்தி 4 முதல் தந்தி 1 வரை திறந்த சுரங்கள் G, C, E, A. நினைவுக்கு: “Good Cooks Eat Apples” — நல்ல சமையல்காரர்கள் ஆப்பிள் சாப்பிடுவார்கள்.",
+    "context": "Ukulele · Unit 1 · lesson uke-1-2 “G C E A, the open strings” · step 1 (explain) · lesson card text",
+    "max_length": 300,
+    "source_sha256": "58c43925d95509deb06f43c3bc035f0ab3f2b25e0a3ac6b56d78e187a6b3eeb0",
+    "old_sha256": "c6fb16dc98ba53347c9f2b752e77f3d4a104e892dc3f28d57ace5a59ee2da0cc",
+    "curriculum_refs": [
+      {
+        "path": "/courses/1/units/0/lessons/1/steps/0/body",
+        "parents": [
+          "ukulele",
+          "uke-1",
+          "uke-1-2"
+        ],
+        "source": "From string 4 down to string 1, the open strings are G, C, E, A. Try: Good Cooks Eat Apples."
+      }
+    ],
+    "source_span": "Good Cooks Eat Apples",
+    "target_span": "Good Cooks Eat Apples",
+    "kind": "Latin_initial_mnemonic",
+    "decision": "retain_original_span_and_translate_surrounding_instruction",
+    "reason": "Latin initials must continue to name the taught string tuning; Tamil explanation is supplementary, not a replacement mnemonic.",
+    "scope": "exact span in this source-bound row; not a whole-prose exemption"
+  },
+  {
+    "locale": "ta",
+    "batch": 19,
+    "id": "s072",
+    "table": "Learn.strings",
+    "key": "L98e6fb6780",
+    "source": "From thick to thin: E, A, D, G. They match the four lowest guitar strings, an octave down. Try: Every Amp Drives Grooves.",
+    "old": "தடிமனிலிருந்து மெலிதாக: E, A, D, G. கிட்டாரின் தாழ்ந்த நான்கு தந்திகளுக்கு ஒரு ஸ்தாயி கீழே. நினைவுக்கு: “Every Amp Drives Grooves” — ஒவ்வொரு ஆம்ப்ளிஃபையரும் தாள ஓட்டத்தை இயக்கும்.",
+    "context": "Bass · Unit 1 · lesson bass-1-2 “The open strings” · step 1 (explain) · lesson card text",
+    "max_length": 300,
+    "source_sha256": "5a5769cbbdaaf4c0ef58aa8f864aa535a8c79046b9c054caad112b4258199e7f",
+    "old_sha256": "5b521d726fdd74e0e4297023400a0ecc5b85dcde086ca665348030f9aef98e49",
+    "curriculum_refs": [
+      {
+        "path": "/courses/2/units/0/lessons/1/steps/0/body",
+        "parents": [
+          "bass",
+          "bass-1",
+          "bass-1-2"
+        ],
+        "source": "From thick to thin: E, A, D, G. They match the four lowest guitar strings, an octave down. Try: Every Amp Drives Grooves."
+      }
+    ],
+    "source_span": "Every Amp Drives Grooves",
+    "target_span": "Every Amp Drives Grooves",
+    "kind": "Latin_initial_mnemonic",
+    "decision": "retain_original_span_and_translate_surrounding_instruction",
+    "reason": "Latin initials must continue to name the taught string tuning; Tamil explanation is supplementary, not a replacement mnemonic.",
+    "scope": "exact span in this source-bound row; not a whole-prose exemption"
+  },
+  {
+    "locale": "ta",
+    "batch": 22,
+    "id": "s061",
+    "table": "Learn.strings",
+    "key": "L74c9c1f9c1",
+    "source": "From low to high: G, D, A, E. Each string is five letter names above the last, an interval called a fifth. Try: Good Dogs Always Eat.",
+    "old": "தாழ்விலிருந்து உயர்வு: G, D, A, E. ஒவ்வொரு தந்தியும் முந்தையதிலிருந்து ஐந்து எழுத்துச் சுரங்கள் மேலே; இதுவே ஐந்தாம் சுர இடைவெளி. நினைவுக்கு: “Good Dogs Always Eat” — நல்ல நாய்கள் எப்போதும் சாப்பிடும்.",
+    "context": "Violin · Unit 1 · lesson vln-1-4 “The open strings” · step 1 (explain) · lesson card text",
+    "max_length": 300,
+    "source_sha256": "ef9f0e2a02ac120f605053c145c2cdbcafd015856a542fd30feea8b09e16cde0",
+    "old_sha256": "c51309d36612dfb3fac7133152cdcf07bd55d5085584c0cf43eefd0deb100b28",
+    "curriculum_refs": [
+      {
+        "path": "/courses/3/units/0/lessons/3/steps/0/body",
+        "parents": [
+          "violin",
+          "vln-1",
+          "vln-1-4"
+        ],
+        "source": "From low to high: G, D, A, E. Each string is five letter names above the last, an interval called a fifth. Try: Good Dogs Always Eat."
+      }
+    ],
+    "source_span": "Good Dogs Always Eat",
+    "target_span": "Good Dogs Always Eat",
+    "kind": "Latin_initial_mnemonic",
+    "decision": "retain_original_span_and_translate_surrounding_instruction",
+    "reason": "Latin initials must continue to name the taught string tuning; Tamil explanation is supplementary, not a replacement mnemonic.",
+    "scope": "exact span in this source-bound row; not a whole-prose exemption"
+  },
+  {
+    "locale": "ta",
+    "batch": 26,
+    "id": "s038",
+    "table": "Learn.strings",
+    "key": "La6f5916eae",
+    "source": "From low to high: C, G, D, A. Each string is five letter names above the last, an interval called a fifth. Try: Cats Go Dancing Around.",
+    "old": "தாழ்விலிருந்து உயர்வு: C, G, D, A. ஒவ்வொரு தந்தியும் முந்தையதிலிருந்து ஐந்து எழுத்துச் சுரங்கள் மேலே; இதுவே ஐந்தாம் சுர இடைவெளி. நினைவுக்கு: “Cats Go Dancing Around” — பூனைகள் சுற்றி நடனமாடச் செல்கின்றன.",
+    "context": "Cello · Unit 1 · lesson vc-1-4 “The open strings” · step 1 (explain) · lesson card text",
+    "max_length": 300,
+    "source_sha256": "c9f340672a77dceecf4b4522111d0fbb2d2ecb7e6dac7c4685295fba3eca0fb7",
+    "old_sha256": "4995fd2543ac4b2d404ce88c8920531578ed0d1e2105429ac836a349d2228052",
+    "curriculum_refs": [
+      {
+        "path": "/courses/4/units/0/lessons/3/steps/0/body",
+        "parents": [
+          "cello",
+          "vc-1",
+          "vc-1-4"
+        ],
+        "source": "From low to high: C, G, D, A. Each string is five letter names above the last, an interval called a fifth. Try: Cats Go Dancing Around."
+      }
+    ],
+    "source_span": "Cats Go Dancing Around",
+    "target_span": "Cats Go Dancing Around",
+    "kind": "Latin_initial_mnemonic",
+    "decision": "retain_original_span_and_translate_surrounding_instruction",
+    "reason": "Latin initials must continue to name the taught string tuning; Tamil explanation is supplementary, not a replacement mnemonic.",
+    "scope": "exact span in this source-bound row; not a whole-prose exemption"
+  },
+  {
+    "locale": "ta",
+    "batch": 28,
+    "id": "s042",
+    "table": "Learn.strings",
+    "key": "L0d1d2365f7",
+    "source": "From low to high, the pairs are G, D, A and E. Try: Good Dogs Always Eat. A violin is tuned the same way, so fiddle tunes sit naturally on a mandolin.",
+    "old": "தாழ்விலிருந்து உயர்வு G, D, A, E. நினைவுக்கு: “Good Dogs Always Eat” — நல்ல நாய்கள் எப்போதும் சாப்பிடும். வயலினும் அதே டியூனிங்; அதனால் ஃபிடில் மெட்டுகள் மாண்டலினில் இயல்பாக அமையும்.",
+    "context": "Mandolin · Unit 1 · lesson man-1-4 “The open strings” · step 1 (explain) · lesson card text",
+    "max_length": 300,
+    "source_sha256": "1f59c4fc68d1b11e4d1cde85e4a46e1d3d6c2959742f0aa7d69390bfac928162",
+    "old_sha256": "41ae81b8b91559e39f7d518d67c82683a5f1161ce583f52d61881a603b32000c",
+    "curriculum_refs": [
+      {
+        "path": "/courses/5/units/0/lessons/3/steps/0/body",
+        "parents": [
+          "mandolin",
+          "man-1",
+          "man-1-4"
+        ],
+        "source": "From low to high, the pairs are G, D, A and E. Try: Good Dogs Always Eat. A violin is tuned the same way, so fiddle tunes sit naturally on a mandolin."
+      }
+    ],
+    "source_span": "Good Dogs Always Eat",
+    "target_span": "Good Dogs Always Eat",
+    "kind": "Latin_initial_mnemonic",
+    "decision": "retain_original_span_and_translate_surrounding_instruction",
+    "reason": "Latin initials must continue to name the taught string tuning; Tamil explanation is supplementary, not a replacement mnemonic.",
+    "scope": "exact span in this source-bound row; not a whole-prose exemption"
+  },
+  {
+    "locale": "ta",
+    "batch": 19,
+    "id": "s022",
+    "table": "Learn.strings",
+    "key": "L4be63de2a8",
+    "source": "Down by the riverside: B, B, A sharp, B, then A and G.",
+    "old": "“Down by the riverside” வரியில்: B, B, A ஷார்ப், B, பிறகு A, G.",
+    "context": "Ukulele · Unit 10 · song uke-10-1 “Down by the Riverside” · step 2 (notes) · hint under an exercise",
+    "max_length": 120,
+    "source_sha256": "cabd7c8ed08f2532c27d247579ed18c2813824e1f6c6b8b61f510bd48d7d20fc",
+    "old_sha256": "40c9bc127034e44ca1c24c808c5e63c42fbeba42f46357a2cb389a8ab8f457f6",
+    "curriculum_refs": [
+      {
+        "path": "/courses/1/units/9/lessons/0/steps/1/hint",
+        "parents": [
+          "ukulele",
+          "uke-10",
+          "uke-10-1"
+        ],
+        "source": "Down by the riverside: B, B, A sharp, B, then A and G."
+      }
+    ],
+    "source_span": "Down by the riverside",
+    "target_span": "Down by the riverside",
+    "kind": "original_sung_locator",
+    "decision": "retain_original_span_and_translate_surrounding_instruction",
+    "reason": "The quoted original sung words identify the phrase in the original-language song; translating them would detach the note exercise from its lyric locator. Surrounding note/fingering instructions are translated.",
+    "scope": "exact span in this source-bound row; not a whole-prose exemption"
+  },
+  {
+    "locale": "ta",
+    "batch": 19,
+    "id": "s026",
+    "table": "Learn.strings",
+    "key": "L4a8833e5c8",
+    "source": "The water is wide: open string 3, F at fret 1 twice, G at fret 3, then open A.",
+    "old": "“The water is wide” வரியில்: திறந்த தந்தி 3, ஃப்ரெட் 1-இல் F இருமுறை, ஃப்ரெட் 3-இல் G, பிறகு திறந்த A.",
+    "context": "Ukulele · Unit 10 · song uke-10-2 “The Water Is Wide” · step 2 (notes) · hint under an exercise",
+    "max_length": 120,
+    "source_sha256": "9d090be6ef2d5468755f07a8b05924acce52f42e7dc534b11c36854b1411ee3d",
+    "old_sha256": "c659dd87b624314056ec5d704f738e02e0c7e651b61a98bd6f6cf081428c1b4e",
+    "curriculum_refs": [
+      {
+        "path": "/courses/1/units/9/lessons/1/steps/1/hint",
+        "parents": [
+          "ukulele",
+          "uke-10",
+          "uke-10-2"
+        ],
+        "source": "The water is wide: open string 3, F at fret 1 twice, G at fret 3, then open A."
+      }
+    ],
+    "source_span": "The water is wide",
+    "target_span": "The water is wide",
+    "kind": "original_sung_locator",
+    "decision": "retain_original_span_and_translate_surrounding_instruction",
+    "reason": "The quoted original sung words identify the phrase in the original-language song; translating them would detach the note exercise from its lyric locator. Surrounding note/fingering instructions are translated.",
+    "scope": "exact span in this source-bound row; not a whole-prose exemption"
+  },
+  {
+    "locale": "ta",
+    "batch": 19,
+    "id": "s045",
+    "table": "Learn.strings",
+    "key": "L4ccdff8050",
+    "source": "In Dublin's fair city: open string 3, F at fret 1 four times, open A, back to F.",
+    "old": "“In Dublin’s fair city” வரியில்: திறந்த தந்தி 3, ஃப்ரெட் 1-இல் F நான்குமுறை, திறந்த A, மீண்டும் F.",
+    "context": "Ukulele · Unit 10 · song uke-10-4 “Molly Malone” · step 2 (notes) · hint under an exercise",
+    "max_length": 120,
+    "source_sha256": "0aaa8bab8f6c4caf8d5be41a0782f7ef535830d3d3cde77be7887da1b7d73930",
+    "old_sha256": "b2d6b5225f568718424f18f7888ef5dabc5058a8eecf37bae22be9ea46ab22bc",
+    "curriculum_refs": [
+      {
+        "path": "/courses/1/units/9/lessons/3/steps/1/hint",
+        "parents": [
+          "ukulele",
+          "uke-10",
+          "uke-10-4"
+        ],
+        "source": "In Dublin's fair city: open string 3, F at fret 1 four times, open A, back to F."
+      }
+    ],
+    "source_span": "In Dublin's fair city",
+    "target_span": "In Dublin’s fair city",
+    "kind": "original_sung_locator",
+    "decision": "retain_original_span_and_translate_surrounding_instruction",
+    "reason": "The quoted original sung words identify the phrase in the original-language song; translating them would detach the note exercise from its lyric locator. Surrounding note/fingering instructions are translated.",
+    "scope": "exact span in this source-bound row; not a whole-prose exemption"
+  }
+]

@@ -1,0 +1,131 @@
+{
+  "scope": "Source baseline for the frozen 6080-key review; later source migrations require revalidation",
+  "keys": 6080,
+  "exact_keyed_curriculum_pointers_verified": 16366,
+  "files": {
+    "ios/Sources/TimbreCore/Resources/curriculum.json": {
+      "sha256": "893b9f23f6d14b70a00423387a584a14bfc9d0ed9f28ade78144f073cdb7bd87",
+      "bytes": 11286862
+    },
+    "ios/Timbre/Resources/en.lproj/Learn.strings": {
+      "sha256": "3e2135199aa1f417ef7eda9ac26c5957eba3bd3d1f278aa08fe8d38a40018521",
+      "bytes": 417849
+    },
+    "tools/curriculum/build.py": {
+      "sha256": "f82e915bb5db53b69d4a33fc2bfcbf22140bd8e19d6c0d8ae03c2effdbae9dfa",
+      "bytes": 18183
+    },
+    "tools/curriculum/courses/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "tools/curriculum/courses/banjo.py": {
+      "sha256": "b57f0cba8218cd7e226fc6204f8ff391e9f38a661181530a8bb36bee34cbd2d6",
+      "bytes": 38016
+    },
+    "tools/curriculum/courses/bass.py": {
+      "sha256": "6868a87847ce0222bd9b5b6d0f60bb0febaa75ddcd8f56c64b6471f993307695",
+      "bytes": 32001
+    },
+    "tools/curriculum/courses/bass_songbook.py": {
+      "sha256": "f8d1f53d2315cb41491519aba0aec90a12064882f09008307838c30fcb4d14f2",
+      "bytes": 632
+    },
+    "tools/curriculum/courses/cello.py": {
+      "sha256": "1416150e1384ce1f74d6dbf118c3acce3a71f0882823c1f5b0f90698b9cf1159",
+      "bytes": 44702
+    },
+    "tools/curriculum/courses/cello_songbook.py": {
+      "sha256": "598521feb1b79e669c23c2f2ad5874e7842f1cb5a51ed0efe218df063f8f4003",
+      "bytes": 682
+    },
+    "tools/curriculum/courses/ear.py": {
+      "sha256": "4ee974d98ceb6c9e14bec6ca5c3cb7855562de6b2d8803fabd02bd21388aabe3",
+      "bytes": 35386
+    },
+    "tools/curriculum/courses/guitar.py": {
+      "sha256": "762a0e21d341ff26262e8f8fb9983fc560c1ee1fa11cc10e02d7c60f94ec50ef",
+      "bytes": 79091
+    },
+    "tools/curriculum/courses/guitar_part2.py": {
+      "sha256": "e8c871536b26acb483de403f20327fc6539b2ae28207cb4369da9ca1cd30fa85",
+      "bytes": 61746
+    },
+    "tools/curriculum/courses/guitar_part3.py": {
+      "sha256": "ca690e2b682ce2a9a0358535705dd054673936c97a19909aabc39c1dc56d6c0c",
+      "bytes": 57787
+    },
+    "tools/curriculum/courses/mandolin.py": {
+      "sha256": "873a03f12c50fcffc1e931abea80c6ed862e3814c8f061fad34b45b861b8f9a8",
+      "bytes": 43401
+    },
+    "tools/curriculum/courses/mandolin_songbook.py": {
+      "sha256": "637d00e37fe030f87619d8f549f5fa9691b2a945949d98b67ac6911678e6a932",
+      "bytes": 707
+    },
+    "tools/curriculum/courses/originals.py": {
+      "sha256": "794c4bd3830c3ebeef08fd85b2d8bb55c8b7565d4b3e6cb15e5bbf71f42d97c4",
+      "bytes": 70349
+    },
+    "tools/curriculum/courses/originals_part2.py": {
+      "sha256": "9eb0a2fb2d95815cfc06a110f31ec798e1c5d759b7a316ee9d46a62348c1dbea",
+      "bytes": 106769
+    },
+    "tools/curriculum/courses/rhythm.py": {
+      "sha256": "03df86dc0b4ff17fe273f96e3515fd2f3ee0f705f8bf66aefa96f3b0ade1717d",
+      "bytes": 26982
+    },
+    "tools/curriculum/courses/songbook_sources.py": {
+      "sha256": "e733f080392a41d72dadbf7d5b2621ddbe5260b0abf97b5d84f53aed911656f1",
+      "bytes": 1398
+    },
+    "tools/curriculum/courses/songs.py": {
+      "sha256": "10c284f5b19dc91be880bd78b37283d132bdf8c47c2298bf9e643443c4624305",
+      "bytes": 455
+    },
+    "tools/curriculum/courses/songs_part1.py": {
+      "sha256": "d5e0812d6815a9eb0fd0820a7ce40f38cdb9c9eb514c19ef134a2159e307646a",
+      "bytes": 54574
+    },
+    "tools/curriculum/courses/songs_part2.py": {
+      "sha256": "29aef3f2b75be65ce8280209c2dcf3a234e84f112fb90152f3a0891b7cb48f8e",
+      "bytes": 48192
+    },
+    "tools/curriculum/courses/songs_part3.py": {
+      "sha256": "e28f3cd6af59252847c2b15878811e09b43ad809ae48471efb8cc52294da4a1f",
+      "bytes": 55539
+    },
+    "tools/curriculum/courses/standards_part2.py": {
+      "sha256": "ff965a160164a7bcddf8b4a7e4a5eb769f02a096d952fa462d8de8afeec555b1",
+      "bytes": 67625
+    },
+    "tools/curriculum/courses/theory.py": {
+      "sha256": "3b7d831029a11e6373eebb45143db0f492241a28644094ee34b20524a0e23ad1",
+      "bytes": 56191
+    },
+    "tools/curriculum/courses/ukulele.py": {
+      "sha256": "0b67a58de9b462eccdb4ba3fab4f89258540eea4301f062edfd3660c15f5fdac",
+      "bytes": 42566
+    },
+    "tools/curriculum/courses/ukulele_part2.py": {
+      "sha256": "a7c1c98bb3acfdc56523d37606392a1244db6e06a03f41e258fd55a510438bbb",
+      "bytes": 33189
+    },
+    "tools/curriculum/courses/ukulele_songbook.py": {
+      "sha256": "b3482b4188a8395e6b7d37992b6701c28269c1e168c13dd27a9b79113b5e9777",
+      "bytes": 687
+    },
+    "tools/curriculum/courses/violin.py": {
+      "sha256": "df6f047b3e38045f6b34867e360d3275e6da36ea37787cf9efcc883dd959699a",
+      "bytes": 53929
+    },
+    "tools/curriculum/courses/violin_songbook.py": {
+      "sha256": "891505f2bfa023e5fba13a4bd43a76c292b8d4a38231e27225cf121c95ea7315",
+      "bytes": 659
+    },
+    "tools/curriculum/courses/voice.py": {
+      "sha256": "48b9220ec904b072baf23c0aeb2a08b3e5af8ce3166fcb775ceab2931d9ef39f",
+      "bytes": 35536
+    }
+  }
+}

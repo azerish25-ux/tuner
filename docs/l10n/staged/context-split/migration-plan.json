@@ -1,0 +1,261 @@
+{
+  "state": "PROPOSAL_ONLY_NOT_APPLIED",
+  "frozen_baseline": {
+    "source_keys": 6080,
+    "preserve": "Do not edit or overwrite existing frozen author/reviewer manifests, coverage, corrections or approvals. They remain true only for their original source/context baseline.",
+    "source_manifest": "input-manifest.json",
+    "retained_source_keys": [
+      "Lf6586312d9",
+      "Lced02810fc"
+    ],
+    "changed_contexts_require_delta_review_even_with_unchanged_source_hash": true
+  },
+  "migration_source_revision": {
+    "source_keys": 6082,
+    "new_keys": {
+      "Lf94a998e29": "Strings: 1, 2, 3 and 4",
+      "L4f162aedb4": "Middle section"
+    },
+    "expected_source_authoring_lines_changed": 2,
+    "expected_generated_localized_objects_changed": 7,
+    "all_other_curriculum_fields_unchanged": true,
+    "expected_context_counts": {
+      "Lced02810fc": 3,
+      "Lf94a998e29": 1,
+      "L4f162aedb4": 6,
+      "Lf6586312d9": 1
+    },
+    "expected_marketing": {
+      "lessons": 526,
+      "courses": 11,
+      "instruments": 60,
+      "tunings": 132,
+      "songs": 146,
+      "originals": 50,
+      "songs_floor": 140
+    }
+  },
+  "required_translation_delta": {
+    "target_locales": [
+      "ar",
+      "bg",
+      "bn",
+      "ca",
+      "cs",
+      "da",
+      "de",
+      "el",
+      "es",
+      "et",
+      "fa",
+      "fi",
+      "fr",
+      "gu",
+      "he",
+      "hi",
+      "hr",
+      "hu",
+      "id",
+      "is",
+      "it",
+      "ja",
+      "kn",
+      "ko",
+      "lt",
+      "lv",
+      "ml",
+      "mr",
+      "nl",
+      "no",
+      "pa",
+      "pl",
+      "pt",
+      "ro",
+      "ru",
+      "sk",
+      "sl",
+      "sv",
+      "sw",
+      "ta",
+      "te",
+      "th",
+      "tr",
+      "uk",
+      "ur",
+      "vi",
+      "zh-CN",
+      "zu"
+    ],
+    "target_locale_count": 48,
+    "english_plus_targets": 49,
+    "new_target_pairs": 96,
+    "main_proposal_locales": [
+      "ar",
+      "bn",
+      "de",
+      "es",
+      "fa",
+      "fr",
+      "hi",
+      "it",
+      "ja",
+      "ko",
+      "pt",
+      "ru",
+      "zh-CN",
+      "ur"
+    ],
+    "main_proposal_additions": 28,
+    "main_retained_key_corrections": {
+      "ar": "explicit strings -> rhythm count",
+      "bn": "list conjunction -> existing spoken-count convention",
+      "ur": "explicit strings -> rhythm count"
+    },
+    "additional_reviewed_tamil_proposal": "tamil-reviewer-supplement.json: two additions, one count correction, finger retention; verify against final composed Tamil snapshot before applying",
+    "remaining_locales_without_new_values_in_this_proposal": [
+      "bg",
+      "ca",
+      "cs",
+      "da",
+      "el",
+      "et",
+      "fi",
+      "gu",
+      "he",
+      "hr",
+      "hu",
+      "id",
+      "is",
+      "kn",
+      "lt",
+      "lv",
+      "ml",
+      "mr",
+      "nl",
+      "no",
+      "pa",
+      "pl",
+      "ro",
+      "sk",
+      "sl",
+      "sv",
+      "sw",
+      "te",
+      "th",
+      "tr",
+      "uk",
+      "vi",
+      "zu"
+    ],
+    "remaining_new_pairs_without_values_excluding_tamil_supplement": 66,
+    "instruction": "Do not fabricate missing locales, copy English, promote drafts to approved, or treat fallback as complete. Stage new keys as pending for every untranslated locale, including concurrently drafted Gujarati/Kannada."
+  },
+  "ordered_gates": [
+    {
+      "id": "G1",
+      "name": "Authorization and fresh exact guards",
+      "require": [
+        "Read-only restriction expressly lifted for specified checkout/operations.",
+        "Verify HEAD/source file hashes and exact unique old lines; verify generated baseline source count6080 and every referenced pointer before applying.",
+        "For locales verify current exact source/value guards; Urdu corrections are relative to reviewed-map.json, not TODO/import fields. Abort rather than fuzzy-match if any guard differs."
+      ]
+    },
+    {
+      "id": "G2",
+      "name": "Minimal source/build proof",
+      "require": [
+        "Apply only two-line authoring patch; do not globally replace Middle or the numeric phrase.",
+        "Run full curriculum generator through owner workflow. English adds exactly two entries, removes none, retains all6080 existing values.",
+        "Compare generated curriculum: only seven keyed text objects change; array lengths, IDs, notes, rhythms, correct-answer indices, section roles/boundaries, chords and counts unchanged.",
+        "Use marketing build_counts helper; filtered11/526 and all other marketing counts remain exact. Structural19/1100 is not a marketing discrepancy."
+      ]
+    },
+    {
+      "id": "G3",
+      "name": "New context-aware semantic review",
+      "require": [
+        "Independently review every new locale/key in both new source meanings; no human/native approval may be claimed without evidence.",
+        "Re-review retained count and finger keys against narrowed complete context sets; unchanged source hashes alone do not certify narrowed-context semantics.",
+        "Accept or revise each proposal using existing glossary conventions and exact neighboring examples. Both numbered options remain distractors, not corrected answers.",
+        "Keep frozen6080 evidence untouched; create a separately versioned6082 migration ledger with source SHA256, target SHA256, context-signature SHA256, actual reviewer, disposition and actual approval type for each delta."
+      ]
+    },
+    {
+      "id": "G4",
+      "name": "Guarded translation migration",
+      "require": [
+        "Add approved Lf94a998e29 and L4f162aedb4 only if absent; never overwrite existing new-key work silently.",
+        "For ar/bn/ur apply retained count correction only when old text/hash matches. Keep old keys present.",
+        "Retain existing finger labels; never populate section key from finger value.",
+        "Merge reviewed Urdu baseline only through the parent-owned integration path after its own original-source/target guards; it is not currently applied.",
+        "Treat Tamil supplement as reviewer proposals and compare to final composed Tamil snapshot; Gujarati/Kannada and other pending locale baselines need their own delta."
+      ]
+    },
+    {
+      "id": "G5",
+      "name": "Refresh derived source/coverage only under write scope",
+      "require": [
+        "Use supported owner pipeline to regenerate Learn.strings and then TODO/index, source/history metadata and handoff reports for6082. Do not import stale6080 TODOs as complete after regeneration.",
+        "Read actual shipped Learn.strings, not only delivery JSON. Historical stale JSON keys do not count toward current coverage.",
+        "Every formerly6080-complete locale is6080/6082 immediately after source migration until both accepted keys ship. All48 non-English locales remain required;96 total new pairs is the denominator delta.",
+        "Never use a blanket invariant allowlist or automatic inherited approval; these two new English strings are ordinary translated text."
+      ]
+    },
+    {
+      "id": "G6",
+      "name": "Validation and device gates",
+      "require": [
+        "Run curriculum --check and applicable curriculum/l10n unit tests in authorized checkout; rerun structural diff after any changes.",
+        "Run lesson/coverage strict gate against6082 source. Expected global gaps are still release blockers; do not relabel a failing full-scope gate as a pass.",
+        "Require zero missing/rejected delta keys for every locale claimed migrated, exact ordered digit runs1,2,3,4, valid escaping/control characters, option length<=48 and native chip fit.",
+        "On iOS verify ukulele and rhythm option order/distractor behavior, three banjo finger quizzes, all six Rondo section chips, RTL reading order and screen-reader labels. ICU diagnostics here are not native device/font certification.",
+        "Re-run launch/store/marketing gates as applicable, preserving filtered figures; no marketing edits required by this change."
+      ]
+    },
+    {
+      "id": "G7",
+      "name": "Publication remains separate",
+      "require": [
+        "No commit, push, merge or release until separately authorized and all required gates relevant to that action pass.",
+        "Report full baseline review and migration review separately; never claim every6082 pair was reviewed based solely on a frozen6080 manifest plus mechanical additions."
+      ]
+    }
+  ],
+  "blockers": [
+    {
+      "action": "Apply source split and regenerate repository outputs",
+      "target": "tools/curriculum/courses/ukulele_part2.py:346; tools/curriculum/courses/standards_part2.py:866; generated curriculum/English Learn tables",
+      "reason": "Current read-only update restriction",
+      "completed": "Exact guards, minimal patch, full isolated generation, structural and marketing equality proofs",
+      "denied": null,
+      "pending": "Repository write authorization",
+      "uncertain": null
+    },
+    {
+      "action": "Approve and apply migration translations",
+      "target": "28 additions +3 retained-key corrections for13 applied locales and staged Urdu; Tamil reviewer supplement; remaining66 new pairs across33 other locales",
+      "reason": "Proposals are AI-authored; missing locales not fabricated; independent migration review and device QA absent",
+      "completed": "Glossary/context-grounded proposed values, exact guards, numeric/length/mechanical checks, RTL diagnostics",
+      "denied": null,
+      "pending": "Independent delta review; other-locale translation; authorized import; device QA",
+      "uncertain": "Human/native certification and device rendering are not established"
+    }
+  ],
+  "historical_authorization_gate": {
+    "action": "Apply guarded source-authoring.patch, regenerate derived files, migrate approved locale entries and refresh source metadata in owner checkout",
+    "target": "repository root",
+    "reason": "Current parent instruction permits read-only investigation/staging only",
+    "state": "pending explicit resumption of write scope; not a filesystem denial",
+    "not_authorized_by": "Standing permission for free official-tool installation does not resume repository write or publication scope"
+  },
+  "historical_scope": "Two context-key splits; no editorial rewrite of sibling options, lesson IDs, answers, song data or marketing figures. Repository publication paused.",
+  "scope": "Preserved proposal only. Publication of this checkpoint does not apply the source patch or import translations.",
+  "checkpoint_policy": {
+    "state": "CHECKPOINT_ONLY_NOT_APPLIED",
+    "repository_checkpoint_publication": "authorized separately from applying this proposal",
+    "source_migration": "not performed",
+    "import": "not performed",
+    "release_approval": "not established",
+    "historical_notes": "The historical authorization gate and gate wording describe the proposal preparation phase, not current checkpoint publication authority."
+  }
+}

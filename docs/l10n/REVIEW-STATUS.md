@@ -159,3 +159,23 @@ reconciled for shared labels. Latin-initial memory aids, rhythmic subdivision sy
 string pitch versus physical position, bow directions and song titles are coordinated
 with the glossary. Mechanical lesson coverage is complete; iOS rendering and human
 native-speaker certification are not claimed.
+
+## Preserved review and draft checkpoint (2026-10-26)
+
+Urdu's full 6,080-key frozen baseline is imported locally with 186 guarded review
+corrections and 305 source-bound invariants. This baseline still needs the separately
+staged shared-context repairs; mechanical completeness is not release certification.
+
+`tools/l10n/staged/` and `docs/l10n/staged/` preserve the complete Urdu, Gujarati,
+Tamil and Kannada review candidates, original-value correction guards, invariants,
+coverage and unresolved source/layout issues. They also preserve 1,104 source-blinded
+purchase/permission back-translations and a bounded snapshot of ongoing Malayalam,
+Marathi and Punjabi drafts. These artifacts do not auto-import or approve release.
+The artifact manifest and verifier bind every preserved file; partial drafts are
+explicitly unreviewed. Temporary tool logs, prompts and duplicate downloads are not
+repository deliverables and were excluded.
+
+Two English keys conflate different contexts (string list/rhythm count and finger/
+song section). A minimal two-key source migration is staged and undergoing independent
+review. The associated wording corrections must not be called resolved until applied
+and checked against the regenerated source. Blinded wording comparison is also ongoing.

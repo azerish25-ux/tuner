@@ -1,0 +1,101 @@
+{
+  "method": "ICU76 ubidi_setPara paragraph level1 and ubidi_writeReordered; only diagnostic rendering, controls stripped from visual output",
+  "cases": [
+    {
+      "locale": "ar",
+      "key": "Lf94a998e29",
+      "logical": "الأوتار: 1 و2 و3 و4",
+      "visual_left_to_right": "4و 3و 2و 1 :راتوألا",
+      "controls": [],
+      "analysis": "Instrument strings and localized spoken counting use local-language conjunctions and RTL reading order, not a pure LTR notation formula. No extra isolates introduced. Section/finger labels are RTL-only words. Diagnostic visual output is not device/font QA."
+    },
+    {
+      "locale": "ar",
+      "key": "L4f162aedb4",
+      "logical": "القسم الأوسط",
+      "visual_left_to_right": "طسوألا مسقلا",
+      "controls": [],
+      "analysis": "Instrument strings and localized spoken counting use local-language conjunctions and RTL reading order, not a pure LTR notation formula. No extra isolates introduced. Section/finger labels are RTL-only words. Diagnostic visual output is not device/font QA."
+    },
+    {
+      "locale": "ar",
+      "key": "Lf6586312d9",
+      "logical": "العدّ: 1، 2، 3 و4",
+      "visual_left_to_right": "4و 3 ،2 ،1 :ّدعلا",
+      "controls": [],
+      "analysis": "Instrument strings and localized spoken counting use local-language conjunctions and RTL reading order, not a pure LTR notation formula. No extra isolates introduced. Section/finger labels are RTL-only words. Diagnostic visual output is not device/font QA."
+    },
+    {
+      "locale": "ar",
+      "key": "Lced02810fc",
+      "logical": "الوسطى",
+      "visual_left_to_right": "ىطسولا",
+      "controls": [],
+      "analysis": "Instrument strings and localized spoken counting use local-language conjunctions and RTL reading order, not a pure LTR notation formula. No extra isolates introduced. Section/finger labels are RTL-only words. Diagnostic visual output is not device/font QA."
+    },
+    {
+      "locale": "fa",
+      "key": "Lf94a998e29",
+      "logical": "سیم‌ها: 1، 2، 3 و 4",
+      "visual_left_to_right": "4 و 3 ،2 ،1 :اه‌میس",
+      "controls": [],
+      "analysis": "Instrument strings and localized spoken counting use local-language conjunctions and RTL reading order, not a pure LTR notation formula. No extra isolates introduced. Section/finger labels are RTL-only words. Diagnostic visual output is not device/font QA."
+    },
+    {
+      "locale": "fa",
+      "key": "L4f162aedb4",
+      "logical": "بخش میانی",
+      "visual_left_to_right": "ینایم شخب",
+      "controls": [],
+      "analysis": "Instrument strings and localized spoken counting use local-language conjunctions and RTL reading order, not a pure LTR notation formula. No extra isolates introduced. Section/finger labels are RTL-only words. Diagnostic visual output is not device/font QA."
+    },
+    {
+      "locale": "fa",
+      "key": "Lf6586312d9",
+      "logical": "1، 2، 3 و 4",
+      "visual_left_to_right": "4 و 3 ،2 ،1",
+      "controls": [],
+      "analysis": "Instrument strings and localized spoken counting use local-language conjunctions and RTL reading order, not a pure LTR notation formula. No extra isolates introduced. Section/finger labels are RTL-only words. Diagnostic visual output is not device/font QA."
+    },
+    {
+      "locale": "fa",
+      "key": "Lced02810fc",
+      "logical": "میانی",
+      "visual_left_to_right": "ینایم",
+      "controls": [],
+      "analysis": "Instrument strings and localized spoken counting use local-language conjunctions and RTL reading order, not a pure LTR notation formula. No extra isolates introduced. Section/finger labels are RTL-only words. Diagnostic visual output is not device/font QA."
+    },
+    {
+      "locale": "ur",
+      "key": "Lf94a998e29",
+      "logical": "تار: 1، 2، 3 اور 4",
+      "visual_left_to_right": "4 روا 3 ،2 ،1 :رات",
+      "controls": [],
+      "analysis": "Instrument strings and localized spoken counting use local-language conjunctions and RTL reading order, not a pure LTR notation formula. No extra isolates introduced. Section/finger labels are RTL-only words. Diagnostic visual output is not device/font QA."
+    },
+    {
+      "locale": "ur",
+      "key": "L4f162aedb4",
+      "logical": "درمیانی حصہ",
+      "visual_left_to_right": "ہصح ینایمرد",
+      "controls": [],
+      "analysis": "Instrument strings and localized spoken counting use local-language conjunctions and RTL reading order, not a pure LTR notation formula. No extra isolates introduced. Section/finger labels are RTL-only words. Diagnostic visual output is not device/font QA."
+    },
+    {
+      "locale": "ur",
+      "key": "Lf6586312d9",
+      "logical": "گنتی 1، 2، 3 اور 4",
+      "visual_left_to_right": "4 روا 3 ،2 ،1 یتنگ",
+      "controls": [],
+      "analysis": "Instrument strings and localized spoken counting use local-language conjunctions and RTL reading order, not a pure LTR notation formula. No extra isolates introduced. Section/finger labels are RTL-only words. Diagnostic visual output is not device/font QA."
+    },
+    {
+      "locale": "ur",
+      "key": "Lced02810fc",
+      "logical": "درمیانی",
+      "visual_left_to_right": "ینایمرد",
+      "controls": [],
+      "analysis": "Instrument strings and localized spoken counting use local-language conjunctions and RTL reading order, not a pure LTR notation formula. No extra isolates introduced. Section/finger labels are RTL-only words. Diagnostic visual output is not device/font QA."
+    }
+  ]
+}

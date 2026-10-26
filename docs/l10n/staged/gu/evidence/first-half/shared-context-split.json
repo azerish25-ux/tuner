@@ -1,0 +1,37 @@
+{
+  "batch": 19,
+  "id": "s015",
+  "key": "Lf6586312d9",
+  "source": "1, 2, 3 and 4",
+  "translation": "1, 2, 3 અને 4",
+  "context": "Ukulele · Unit 9 · challenge uke-9-6 “Challenge: fingerpicking” · step 2 (quiz) · quiz answer",
+  "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+  "target_sha256": "3e1190708394ede0420bc069f35d58058bee1a6ca46445ab4530a228622b273a",
+  "reason": "Dictionary-equivalent અને is an ordinary conjunction, but the rhythm distractor is a spoken-count token. The two contexts require distinct targets under the reviewed single-syllable count policy.",
+  "exact_literal_occurrences": [
+    {
+      "path": "tools/curriculum/courses/ukulele_part2.py",
+      "line": 346,
+      "excerpt": "                \"and the melody inside the chord.\"),\n        quiz(\"Thumb, index, middle, ring play which strings?\", [\"1, 2, 3 and 4\", \"3, 4, 1 and 2\", \"4, 3, 2 and 1\"], 2),\n        held([(spec, pattern(spec, ROLL, 0.5)) for spec in ROLLS], bpm=69, beats_per_bar=3, title=\"A minor, F, C, G7\"),"
+    },
+    {
+      "path": "tools/curriculum/courses/rhythm.py",
+      "line": 107,
+      "excerpt": "        tap([0, 1, 1.5, 2, 3], bpm=60, bars=2),\n        quiz(\"How do you count this pattern?\", [\"1, 2 and, 3, 4\", \"1, 2, 3 and 4\", \"1 and 2, 3, 4\"], 2,\n             \"Beat 1 has two taps, 1 and. Beats 2, 3 and 4 get one tap each.\", visual=rhythm([0, 0.5, 1, 2, 3])),"
+    }
+  ],
+  "decision": "source_context_split_required",
+  "current_key_target_retained": "1, 2, 3 અને 4",
+  "string_number_list": {
+    "path": "tools/curriculum/courses/ukulele_part2.py",
+    "line": 346,
+    "desired_target": "1, 2, 3 અને 4"
+  },
+  "spoken_count_distractor": {
+    "path": "tools/curriculum/courses/rhythm.py",
+    "line": 107,
+    "desired_target": "1, 2, 3 એન્ડ 4"
+  },
+  "action_required": "Parent/source author must assign distinct source key/context and revalidate the affected English and locale sources before integrating. No guessed new key and no global mutation proposed.",
+  "status": "pending_parent_source_split; repository remains read-only"
+}

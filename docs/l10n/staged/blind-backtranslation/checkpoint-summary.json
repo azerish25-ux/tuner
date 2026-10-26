@@ -1,0 +1,33 @@
+{
+  "status": "SOURCE_COMPARISON_PENDING",
+  "provenance": "Independent AI source-blinded English backtranslation; not native-human, legal, device, or release certification.",
+  "rows": 1104,
+  "locales": 48,
+  "rows_per_locale": 23,
+  "source_comparison_completed": false,
+  "translation_corrections_applied": false,
+  "all_ids_unique_and_match_parent_source_map": true,
+  "group_validation": [
+    {
+      "group": 1,
+      "rows": 552,
+      "target_only_input_sha256": "41af9a262ff72866f7203dcce18f706aecd22f7d62ebd533547e5baf4fd3fdc9",
+      "target_only_input_reconstructs_byte_exactly": true,
+      "output_sha256_verified": true
+    },
+    {
+      "group": 2,
+      "rows": 552,
+      "target_only_input_sha256": "d8f0082e111697368befc5ab6517bb6b5f404bf96fea18d13dd491b10f4da5e6",
+      "target_only_input_reconstructs_byte_exactly": true,
+      "output_sha256_verified": true
+    }
+  ],
+  "input_deduplication": "Target-only inputs are losslessly reconstructible from output ID order and parent-source-map.json using the README recipe; original input hashes are retained in group evidence.",
+  "pending": [
+    "Compare all backtranslations and uncertainty notes to original source, context, placeholders and application behavior",
+    "Record exact source/old/new corrections for any confirmed discrepancy",
+    "Independently review and test changes before import"
+  ],
+  "denied_operations": []
+}

@@ -1,0 +1,1427 @@
+[
+  {
+    "locale": "ta",
+    "batch": 1,
+    "id": "s032",
+    "table": "Learn.strings",
+    "key": "L9114298cd0",
+    "source": "Press just behind the fret",
+    "old": "ஃப்ரெட்டுக்குப் பின்னால் அழுத்துங்கள்",
+    "context": "Guitar · Unit 1 · lesson gtr-1-3 “Your first fretted notes” · step 1 (explain) · title",
+    "max_length": 42,
+    "source_sha256": "623b7228885553cfc1a996d2bf990dcd22b0cf555fc1cc5c9a735243ec6c7e87",
+    "old_sha256": "1b7c79ae34dc922a814dd5400a053456d7d2d8a39e24fe8285cf4f726863b678",
+    "curriculum_refs": [
+      {
+        "path": "/courses/0/units/0/lessons/2/steps/0/title",
+        "parents": [
+          "guitar",
+          "gtr-1",
+          "gtr-1-3"
+        ],
+        "source": "Press just behind the fret"
+      },
+      {
+        "path": "/courses/1/units/0/lessons/3/steps/0/title",
+        "parents": [
+          "ukulele",
+          "uke-1",
+          "uke-1-4"
+        ],
+        "source": "Press just behind the fret"
+      },
+      {
+        "path": "/courses/2/units/0/lessons/3/steps/0/title",
+        "parents": [
+          "bass",
+          "bass-1",
+          "bass-1-4"
+        ],
+        "source": "Press just behind the fret"
+      },
+      {
+        "path": "/courses/5/units/1/lessons/0/steps/0/title",
+        "parents": [
+          "mandolin",
+          "man-2",
+          "man-2-1"
+        ],
+        "source": "Press just behind the fret"
+      }
+    ],
+    "qa_script": "frozen-author-inputs/ta/qa_fixes.py",
+    "qa_script_sha256": "efc94e4386dbd29d6e563073d6d2c8775aa7d5bb3d6c35c2a78bb4c12a6f1299",
+    "semantic_alignment": "aligned_with_source",
+    "finding": "Reviewed the shortened target against its own source and adjacent exercise; no additional semantic copy/shift error found."
+  },
+  {
+    "locale": "ta",
+    "batch": 3,
+    "id": "s006",
+    "table": "Learn.strings",
+    "key": "L40cf5e5cf3",
+    "source": "Dust on the Dashboard is a Timbre Original: country in A. Every verse ends on two bars of E and two of A, the change you just learned. See the shape, move early and land on beat one. The whole song is in Songs, under Originals.",
+    "old": "Dust on the Dashboard என்பது A சுருதியிலுள்ள Timbre சொந்த கன்ட்ரி பாடல். ஒவ்வொரு சரணமும் E-இல் இரண்டு பார்கள், A-இல் இரண்டு பார்களுடன் முடியும் — கற்ற மாற்றம். வடிவத்தை மனதில் கண்டு, முன்னரே நகர்ந்து முதல் துடிப்பில் பதியுங்கள். முழுப் பாடலும் பாடல்கள் பகுதியில் சொந்தப் பாடல்களின்கீழ் உள்ளது.",
+    "context": "Guitar · Unit 3 · lesson gtr-3-spotlight “Song spotlight: Dust on the Dashboard” · step 1 (explain) · lesson card text",
+    "max_length": 300,
+    "source_sha256": "5d2e2a9cfe3a260debb1bddc4ae5b5febb40f7585fd9da9250dcc94423f46f83",
+    "old_sha256": "f16416b20d498c90c7a26f2692ba74683b142ed55f54771629b0f7caeef4efa0",
+    "curriculum_refs": [
+      {
+        "path": "/courses/0/units/2/lessons/6/steps/0/body",
+        "parents": [
+          "guitar",
+          "gtr-3",
+          "gtr-3-spotlight"
+        ],
+        "source": "Dust on the Dashboard is a Timbre Original: country in A. Every verse ends on two bars of E and two of A, the change you just learned. See the shape, move early and land on beat one. The whole song is in Songs, under Originals."
+      }
+    ],
+    "qa_script": "frozen-author-inputs/ta/qa_fixes.py",
+    "qa_script_sha256": "efc94e4386dbd29d6e563073d6d2c8775aa7d5bb3d6c35c2a78bb4c12a6f1299",
+    "semantic_alignment": "aligned_with_source",
+    "finding": "Reviewed the shortened target against its own source and adjacent exercise; no additional semantic copy/shift error found."
+  },
+  {
+    "locale": "ta",
+    "batch": 3,
+    "id": "s008",
+    "table": "Learn.strings",
+    "key": "L38282d193b",
+    "source": "Over E: open B, open E, D at fret 3 on string 2, C sharp at fret 2, then G sharp at fret 1 on string 3.",
+    "old": "E-இல்: திறந்த B, திறந்த E, தந்தி 2 ஃப்ரெட் 3-இல் D, ஃப்ரெட் 2-இல் C ஷார்ப், பிறகு தந்தி 3 ஃப்ரெட் 1-இல் G ஷார்ப்.",
+    "context": "Guitar · Unit 3 · lesson gtr-3-spotlight “Song spotlight: Dust on the Dashboard” · step 5 (notes) · hint under an exercise",
+    "max_length": 120,
+    "source_sha256": "d3c946e0a753541aaa56152f061f33603889a74ca54ca91779bf27467450f544",
+    "old_sha256": "5eedecc817efab52ca403739ccc6f1472eb17c33ed42793a753e4b255e17d672",
+    "curriculum_refs": [
+      {
+        "path": "/courses/0/units/2/lessons/6/steps/4/hint",
+        "parents": [
+          "guitar",
+          "gtr-3",
+          "gtr-3-spotlight"
+        ],
+        "source": "Over E: open B, open E, D at fret 3 on string 2, C sharp at fret 2, then G sharp at fret 1 on string 3."
+      }
+    ],
+    "qa_script": "frozen-author-inputs/ta/qa_fixes.py",
+    "qa_script_sha256": "efc94e4386dbd29d6e563073d6d2c8775aa7d5bb3d6c35c2a78bb4c12a6f1299",
+    "semantic_alignment": "aligned_with_source",
+    "finding": "Reviewed the shortened target against its own source and adjacent exercise; no additional semantic copy/shift error found."
+  },
+  {
+    "locale": "ta",
+    "batch": 4,
+    "id": "s095",
+    "table": "Learn.strings",
+    "key": "L0a50afc718",
+    "source": "The Saints, up to speed",
+    "old": "பேஸ் சுரத்தை முதலில் பதியுங்கள்",
+    "context": "Guitar · Unit 6 · challenge gtr-6-6 “Lower-strings challenge” · step 6 (along) · title",
+    "max_length": 42,
+    "source_sha256": "f754ff0003c0fe0802875117d13dc18b1fee978e38e8121ccbbc6b5f621fd41b",
+    "old_sha256": "ffa0b76e7032295321e746d7d01fb98058503f8f89fc15c03b66401f6ee0f5b5",
+    "curriculum_refs": [
+      {
+        "path": "/courses/0/units/5/lessons/6/steps/5/title",
+        "parents": [
+          "guitar",
+          "gtr-6",
+          "gtr-6-6"
+        ],
+        "source": "The Saints, up to speed"
+      }
+    ],
+    "qa_script": "frozen-author-inputs/ta/qa_fixes.py",
+    "qa_script_sha256": "efc94e4386dbd29d6e563073d6d2c8775aa7d5bb3d6c35c2a78bb4c12a6f1299",
+    "semantic_alignment": "wrong_source_assignment",
+    "finding": "QA script assigns Lead with the bass wording to The Saints, up to speed at batch004 s095. The matching source is batch003 s095; frozen batch004 neighbors s089–s105 are aligned. This is an isolated wrong-batch coordinate, not a cascading ID/order shift."
+  },
+  {
+    "locale": "ta",
+    "batch": 5,
+    "id": "s095",
+    "table": "Learn.strings",
+    "key": "L340c93526e",
+    "source": "Bar nine, over B7: F sharp at fret 2 on string 1, open E, D sharp at fret 4 on string 2 with your little finger, then B.",
+    "old": "ஒன்பதாம் பார், B7-இல்: தந்தி 1 ஃப்ரெட் 2-இல் F ஷார்ப், திறந்த E, தந்தி 2 ஃப்ரெட் 4-இல் சுண்டுவிரலால் D ஷார்ப், பிறகு B.",
+    "context": "Guitar · Unit 8 · lesson gtr-8-spotlight “Song spotlight: Rust Belt Shuffle” · step 6 (notes) · hint under an exercise",
+    "max_length": 120,
+    "source_sha256": "aa8f1285e5c524be930a5350ad0c4f4648f059bcc680fc7d817eb8fb6552a5e7",
+    "old_sha256": "ca217a46380c441a67701d897ba35c1b9ccdea82f1990647f244a650f8bdb9b1",
+    "curriculum_refs": [
+      {
+        "path": "/courses/0/units/7/lessons/5/steps/5/hint",
+        "parents": [
+          "guitar",
+          "gtr-8",
+          "gtr-8-spotlight"
+        ],
+        "source": "Bar nine, over B7: F sharp at fret 2 on string 1, open E, D sharp at fret 4 on string 2 with your little finger, then B."
+      }
+    ],
+    "qa_script": "frozen-author-inputs/ta/qa_fixes.py",
+    "qa_script_sha256": "efc94e4386dbd29d6e563073d6d2c8775aa7d5bb3d6c35c2a78bb4c12a6f1299",
+    "semantic_alignment": "aligned_with_source",
+    "finding": "Reviewed the shortened target against its own source and adjacent exercise; no additional semantic copy/shift error found."
+  },
+  {
+    "locale": "ta",
+    "batch": 9,
+    "id": "s032",
+    "table": "Learn.strings",
+    "key": "L5d538c9b62",
+    "source": "Saltwater Sunday is a Timbre Original: laid-back reggae in A minor, where Am7 and D7 trade bars. Both pentatonic boxes fit over them. Hammer, pull and slide, and land on a chord note as each bar begins. The whole song is in Songs, under Originals.",
+    "old": "Saltwater Sunday என்பது A மைனரில் நிதானமான Timbre சொந்த ரெகே பாடல்; Am7, D7 பார்களைப் பகிரும். இரு பென்டாடோனிக் வடிவங்களும் பொருந்தும். ஹேமர்-ஆன், புல்-ஆஃப், ஸ்லைட் செய்து ஒவ்வொரு பாரின் தொடக்கத்திலும் கார்டு சுரத்தில் பதியுங்கள். முழுப் பாடலும் பாடல்கள் பகுதியில் சொந்தப் பாடல்களின்கீழ் உள்ளது.",
+    "context": "Guitar · Unit 13 · lesson gtr-13-spotlight “Song spotlight: Saltwater Sunday” · step 1 (explain) · lesson card text",
+    "max_length": 300,
+    "source_sha256": "56190cf9e7a1e4abea3f79932a298ce85d713ae45e7d39651037c72b543b762a",
+    "old_sha256": "61047a98bafa2d544e63340ca6f9a04bbc6a08eb73de3bf6a1827b567dccb50d",
+    "curriculum_refs": [
+      {
+        "path": "/courses/0/units/12/lessons/5/steps/0/body",
+        "parents": [
+          "guitar",
+          "gtr-13",
+          "gtr-13-spotlight"
+        ],
+        "source": "Saltwater Sunday is a Timbre Original: laid-back reggae in A minor, where Am7 and D7 trade bars. Both pentatonic boxes fit over them. Hammer, pull and slide, and land on a chord note as each bar begins. The whole song is in Songs, under Originals."
+      }
+    ],
+    "qa_script": "frozen-author-inputs/ta/qa_fixes.py",
+    "qa_script_sha256": "efc94e4386dbd29d6e563073d6d2c8775aa7d5bb3d6c35c2a78bb4c12a6f1299",
+    "semantic_alignment": "aligned_with_source",
+    "finding": "Reviewed the shortened target against its own source and adjacent exercise; no additional semantic copy/shift error found."
+  },
+  {
+    "locale": "ta",
+    "batch": 12,
+    "id": "s042",
+    "table": "Learn.strings",
+    "key": "Lca6596b6b1",
+    "source": "Roller Rink is a Timbre Original: retro dance pop on G, E minor, C and D, your four triads between frets 2 and 5. Small shapes on the top strings sound bright and tight, like a second guitar. The whole song is in Songs, under Originals.",
+    "old": "Roller Rink என்பது G, E மைனர், C, D கொண்ட Timbre சொந்த ரெட்ரோ டான்ஸ் பாப் பாடல்; ஃப்ரெட்டுகள் 2 முதல் 5 வரை நான்கு மூன்று சுரக் கார்டுகள். மேல் தந்திகளின் சிறிய வடிவங்கள் இரண்டாம் கிட்டார்போல் பிரகாசமாகவும் துல்லியமாகவும் ஒலிக்கும். முழுப் பாடலும் பாடல்கள் பகுதியில் சொந்தப் பாடல்களின்கீழ் உள்ளது.",
+    "context": "Guitar · Unit 18 · lesson gtr-18-spotlight “Song spotlight: Roller Rink” · step 1 (explain) · lesson card text",
+    "max_length": 300,
+    "source_sha256": "f29031169f52c7e7fc85783a4242041085b6082990a5c84d57cb94624b0477b2",
+    "old_sha256": "6d1a90257eb5c242250259581e44913606977103b12c94d14736c1384b4c5090",
+    "curriculum_refs": [
+      {
+        "path": "/courses/0/units/17/lessons/5/steps/0/body",
+        "parents": [
+          "guitar",
+          "gtr-18",
+          "gtr-18-spotlight"
+        ],
+        "source": "Roller Rink is a Timbre Original: retro dance pop on G, E minor, C and D, your four triads between frets 2 and 5. Small shapes on the top strings sound bright and tight, like a second guitar. The whole song is in Songs, under Originals."
+      }
+    ],
+    "qa_script": "frozen-author-inputs/ta/qa_fixes.py",
+    "qa_script_sha256": "efc94e4386dbd29d6e563073d6d2c8775aa7d5bb3d6c35c2a78bb4c12a6f1299",
+    "semantic_alignment": "aligned_with_source",
+    "finding": "Reviewed the shortened target against its own source and adjacent exercise; no additional semantic copy/shift error found."
+  },
+  {
+    "locale": "ta",
+    "batch": 12,
+    "id": "s045",
+    "table": "Learn.strings",
+    "key": "L4cf503f371",
+    "source": "Triads, top string down",
+    "old": "மூன்று சுரக் கார்டுகள்: மேலிருந்து கீழே",
+    "context": "Guitar · Unit 18 · lesson gtr-18-spotlight “Song spotlight: Roller Rink” · step 4 (along) · title",
+    "max_length": 42,
+    "source_sha256": "c81e08a792d1b2b05326453fea5359cdd6a5ffc84ad3b455b6357b1a420bf05f",
+    "old_sha256": "3d956dd127c9c54417b48eede38e5f44e95ed3a380f17d8087874fd0d1e0fe48",
+    "curriculum_refs": [
+      {
+        "path": "/courses/0/units/17/lessons/5/steps/3/title",
+        "parents": [
+          "guitar",
+          "gtr-18",
+          "gtr-18-spotlight"
+        ],
+        "source": "Triads, top string down"
+      },
+      {
+        "path": "/courses/0/units/17/lessons/5/steps/6/title",
+        "parents": [
+          "guitar",
+          "gtr-18",
+          "gtr-18-spotlight"
+        ],
+        "source": "Triads, top string down"
+      }
+    ],
+    "qa_script": "frozen-author-inputs/ta/qa_fixes.py",
+    "qa_script_sha256": "efc94e4386dbd29d6e563073d6d2c8775aa7d5bb3d6c35c2a78bb4c12a6f1299",
+    "semantic_alignment": "aligned_with_source",
+    "finding": "Reviewed the shortened target against its own source and adjacent exercise; no additional semantic copy/shift error found."
+  },
+  {
+    "locale": "ta",
+    "batch": 15,
+    "id": "s023",
+    "table": "Learn.strings",
+    "key": "L27cc6fca88",
+    "source": "Your arrangement, start to finish",
+    "old": "உங்கள் இசையமைப்பு, தொடக்கம் முதல் முடிவு",
+    "context": "Guitar · Unit 22 · challenge gtr-22-6 “Arranger's showcase” · step 1 (explain) · title",
+    "max_length": 42,
+    "source_sha256": "4752e0170acf9eff37dbd326106a4b346e6982ce7b3e686161eb5ea276befcac",
+    "old_sha256": "ad8c88bb07156b11c815c89248ea89795e9289a0a9e27a6a72f13eca57530105",
+    "curriculum_refs": [
+      {
+        "path": "/courses/0/units/21/lessons/6/steps/0/title",
+        "parents": [
+          "guitar",
+          "gtr-22",
+          "gtr-22-6"
+        ],
+        "source": "Your arrangement, start to finish"
+      }
+    ],
+    "qa_script": "frozen-author-inputs/ta/qa_fixes.py",
+    "qa_script_sha256": "efc94e4386dbd29d6e563073d6d2c8775aa7d5bb3d6c35c2a78bb4c12a6f1299",
+    "semantic_alignment": "aligned_with_source",
+    "finding": "Reviewed the shortened target against its own source and adjacent exercise; no additional semantic copy/shift error found."
+  },
+  {
+    "locale": "ta",
+    "batch": 22,
+    "id": "s052",
+    "table": "Learn.strings",
+    "key": "Ld7b4af16e9",
+    "source": "Bent, where the frog meets the stick",
+    "old": "வளைந்து, பிடிப்பகுதி-குச்சி சந்திப்பில்",
+    "context": "Violin · Unit 1 · lesson vln-1-3 “Hold the bow” · step 3 (quiz) · quiz answer",
+    "max_length": 48,
+    "source_sha256": "505d6fab6a3f04561a59c367fd735fc259c2850568b5ab7c438110bf99126375",
+    "old_sha256": "456c0f0956e5d51c7c0d3a1c7096eda2cdfcd3f3c40663f2c685572afd1e14e6",
+    "curriculum_refs": [
+      {
+        "path": "/courses/3/units/0/lessons/2/steps/2/options/0",
+        "parents": [
+          "violin",
+          "vln-1",
+          "vln-1-3"
+        ],
+        "source": "Bent, where the frog meets the stick"
+      },
+      {
+        "path": "/courses/4/units/0/lessons/2/steps/2/options/0",
+        "parents": [
+          "cello",
+          "vc-1",
+          "vc-1-3"
+        ],
+        "source": "Bent, where the frog meets the stick"
+      }
+    ],
+    "qa_script": "frozen-author-inputs/ta/qa_fixes.py",
+    "qa_script_sha256": "efc94e4386dbd29d6e563073d6d2c8775aa7d5bb3d6c35c2a78bb4c12a6f1299",
+    "semantic_alignment": "aligned_with_source",
+    "finding": "Reviewed the shortened target against its own source and adjacent exercise; no additional semantic copy/shift error found."
+  },
+  {
+    "locale": "ta",
+    "batch": 24,
+    "id": "s009",
+    "table": "Learn.strings",
+    "key": "L9250446614",
+    "source": "Twinkle, a little faster",
+    "old": "Twinkle, சற்று வேகமாக",
+    "context": "Violin · Unit 3 · challenge vln-3-6 “A and E checkup” · step 7 (along) · title",
+    "max_length": 42,
+    "source_sha256": "cdfbbc0b4522c3f8a35168babc23dc391c12fb8c7e4d6eea206699e6569f4d14",
+    "old_sha256": "7a3b409ee63a2982d2cb784bda49ec046e36cd897e1f632431fd9bbd2baacb7f",
+    "curriculum_refs": [
+      {
+        "path": "/courses/3/units/2/lessons/5/steps/6/title",
+        "parents": [
+          "violin",
+          "vln-3",
+          "vln-3-6"
+        ],
+        "source": "Twinkle, a little faster"
+      },
+      {
+        "path": "/courses/4/units/2/lessons/6/steps/6/title",
+        "parents": [
+          "cello",
+          "vc-3",
+          "vc-3-7"
+        ],
+        "source": "Twinkle, a little faster"
+      }
+    ],
+    "qa_script": "frozen-author-inputs/ta/qa_fixes.py",
+    "qa_script_sha256": "efc94e4386dbd29d6e563073d6d2c8775aa7d5bb3d6c35c2a78bb4c12a6f1299",
+    "semantic_alignment": "aligned_with_source",
+    "finding": "Reviewed the shortened target against its own source and adjacent exercise; no additional semantic copy/shift error found."
+  },
+  {
+    "locale": "ta",
+    "batch": 25,
+    "id": "s096",
+    "table": "Learn.strings",
+    "key": "L3af6a3a699",
+    "source": "Now bow these without vibrato and center each one. That center is where vibrato starts.",
+    "old": "இப்போது வைப்ராட்டோ இல்லாமல் வில்லால் வாசித்து சுரங்களை மையப்படுத்துங்கள். அந்த மையத்தில்தான் வைப்ராட்டோ தொடங்கும்.",
+    "context": "Violin · Unit 6 · lesson vln-6-5 “Getting ready for vibrato” · step 5 (notes) · hint under an exercise",
+    "max_length": 120,
+    "source_sha256": "18a9154654c28769e9b4b6e1de10096d23788e708752c102c950f5e75f503574",
+    "old_sha256": "2a890feb0bf1b04b33e26197701520996f8a033a21d94e2a998ea4b83ca0dc5b",
+    "curriculum_refs": [
+      {
+        "path": "/courses/3/units/5/lessons/4/steps/4/hint",
+        "parents": [
+          "violin",
+          "vln-6",
+          "vln-6-5"
+        ],
+        "source": "Now bow these without vibrato and center each one. That center is where vibrato starts."
+      }
+    ],
+    "qa_script": "frozen-author-inputs/ta/qa_fixes.py",
+    "qa_script_sha256": "efc94e4386dbd29d6e563073d6d2c8775aa7d5bb3d6c35c2a78bb4c12a6f1299",
+    "semantic_alignment": "aligned_with_source",
+    "finding": "Reviewed the shortened target against its own source and adjacent exercise; no additional semantic copy/shift error found."
+  },
+  {
+    "locale": "ta",
+    "batch": 26,
+    "id": "s012",
+    "table": "Learn.strings",
+    "key": "Le649e3afe7",
+    "source": "Sit, bow and play in tune, from open strings to The Swan",
+    "old": "திறந்த தந்தி முதல் The Swan வரை அமர்ந்து, வில்லால் சுருதி சேர்த்து வாசியுங்கள்",
+    "context": "Cello course · course subtitle",
+    "max_length": 80,
+    "source_sha256": "1c46114b74364cd7708532ebe47436d236d06214e202e3f6357e5f63d28c5d91",
+    "old_sha256": "40b42f46cd502ae1bea0d09e224799efbe04bd410f0a20c3794353a580fcb854",
+    "curriculum_refs": [
+      {
+        "path": "/courses/4/subtitle",
+        "parents": [
+          "cello"
+        ],
+        "source": "Sit, bow and play in tune, from open strings to The Swan"
+      }
+    ],
+    "qa_script": "frozen-author-inputs/ta/qa_fixes.py",
+    "qa_script_sha256": "efc94e4386dbd29d6e563073d6d2c8775aa7d5bb3d6c35c2a78bb4c12a6f1299",
+    "semantic_alignment": "aligned_with_source",
+    "finding": "Reviewed the shortened target against its own source and adjacent exercise; no additional semantic copy/shift error found."
+  },
+  {
+    "locale": "ta",
+    "batch": 27,
+    "id": "s090",
+    "table": "Learn.strings",
+    "key": "La797e30923",
+    "source": "Theme",
+    "old": "மெட்டு",
+    "context": "Cello · Unit 5 · song vc-5-4 “The Swan” · arrangement · song section label (Intro, Verse 1 …) on a small chip",
+    "max_length": 12,
+    "source_sha256": "efb52e7172b77731d996ff4f51cd7b3dcfd55fc6f07392994619418d58d170dd",
+    "old_sha256": "4b7b636a9292baafeb56f8a2dde72c2e72ee3473c11b8fc2ad6afdf057a9f35e",
+    "curriculum_refs": [
+      {
+        "path": "/courses/4/units/4/lessons/3/arrangement/sections/1/name",
+        "parents": [
+          "cello",
+          "vc-5",
+          "vc-5-4"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/4/units/4/lessons/3/arrangement/sections/4/name",
+        "parents": [
+          "cello",
+          "vc-5",
+          "vc-5-4"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/11/units/2/lessons/0/arrangement/sections/1/name",
+        "parents": [
+          "songs",
+          "songs-3",
+          "song-canon-in-d"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/11/units/2/lessons/0/arrangement/sections/3/name",
+        "parents": [
+          "songs",
+          "songs-3",
+          "song-canon-in-d"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/11/units/2/lessons/0/arrangement/sections/5/name",
+        "parents": [
+          "songs",
+          "songs-3",
+          "song-canon-in-d"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/11/units/2/lessons/1/arrangement/sections/1/name",
+        "parents": [
+          "songs",
+          "songs-3",
+          "song-largo"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/11/units/2/lessons/1/arrangement/sections/3/name",
+        "parents": [
+          "songs",
+          "songs-3",
+          "song-largo"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/11/units/2/lessons/4/arrangement/sections/1/name",
+        "parents": [
+          "songs",
+          "songs-3",
+          "song-mountain-king"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/11/units/2/lessons/4/arrangement/sections/4/name",
+        "parents": [
+          "songs",
+          "songs-3",
+          "song-mountain-king"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/11/units/5/lessons/0/arrangement/sections/1/name",
+        "parents": [
+          "songs",
+          "song-u6",
+          "song-eine-kleine"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/11/units/5/lessons/0/arrangement/sections/3/name",
+        "parents": [
+          "songs",
+          "song-u6",
+          "song-eine-kleine"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/11/units/5/lessons/3/arrangement/sections/1/name",
+        "parents": [
+          "songs",
+          "song-u6",
+          "song-mozart-40"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/11/units/5/lessons/3/arrangement/sections/2/name",
+        "parents": [
+          "songs",
+          "song-u6",
+          "song-mozart-40"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/11/units/5/lessons/3/arrangement/sections/4/name",
+        "parents": [
+          "songs",
+          "song-u6",
+          "song-mozart-40"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/13/units/2/lessons/1/arrangement/sections/1/name",
+        "parents": [
+          "standards",
+          "std-3",
+          "std-korobeiniki"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/13/units/2/lessons/3/arrangement/sections/1/name",
+        "parents": [
+          "standards",
+          "std-3",
+          "std-can-can"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/13/units/3/lessons/0/arrangement/sections/1/name",
+        "parents": [
+          "standards",
+          "std-4",
+          "std-the-entertainer"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/13/units/7/lessons/3/arrangement/sections/1/name",
+        "parents": [
+          "standards",
+          "std-8",
+          "std-jupiter"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/13/units/8/lessons/0/arrangement/sections/1/name",
+        "parents": [
+          "standards",
+          "std-9",
+          "std-spring"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/13/units/8/lessons/1/arrangement/sections/1/name",
+        "parents": [
+          "standards",
+          "std-9",
+          "std-rondo-alla-turca"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/14/units/9/lessons/0/arrangement/sections/1/name",
+        "parents": [
+          "ukulele-songbook",
+          "uke-sb-songs-3",
+          "uke-sb-song-canon-in-d"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/14/units/9/lessons/0/arrangement/sections/3/name",
+        "parents": [
+          "ukulele-songbook",
+          "uke-sb-songs-3",
+          "uke-sb-song-canon-in-d"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/14/units/9/lessons/0/arrangement/sections/5/name",
+        "parents": [
+          "ukulele-songbook",
+          "uke-sb-songs-3",
+          "uke-sb-song-canon-in-d"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/14/units/9/lessons/1/arrangement/sections/1/name",
+        "parents": [
+          "ukulele-songbook",
+          "uke-sb-songs-3",
+          "uke-sb-song-largo"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/14/units/9/lessons/1/arrangement/sections/3/name",
+        "parents": [
+          "ukulele-songbook",
+          "uke-sb-songs-3",
+          "uke-sb-song-largo"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/14/units/9/lessons/4/arrangement/sections/1/name",
+        "parents": [
+          "ukulele-songbook",
+          "uke-sb-songs-3",
+          "uke-sb-song-mountain-king"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/14/units/9/lessons/4/arrangement/sections/4/name",
+        "parents": [
+          "ukulele-songbook",
+          "uke-sb-songs-3",
+          "uke-sb-song-mountain-king"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/14/units/12/lessons/1/arrangement/sections/1/name",
+        "parents": [
+          "ukulele-songbook",
+          "uke-sb-std-3",
+          "uke-sb-std-korobeiniki"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/14/units/12/lessons/3/arrangement/sections/1/name",
+        "parents": [
+          "ukulele-songbook",
+          "uke-sb-std-3",
+          "uke-sb-std-can-can"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/14/units/17/lessons/0/arrangement/sections/1/name",
+        "parents": [
+          "ukulele-songbook",
+          "uke-sb-std-4",
+          "uke-sb-std-the-entertainer"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/14/units/19/lessons/0/arrangement/sections/1/name",
+        "parents": [
+          "ukulele-songbook",
+          "uke-sb-song-u6",
+          "uke-sb-song-eine-kleine"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/14/units/19/lessons/0/arrangement/sections/3/name",
+        "parents": [
+          "ukulele-songbook",
+          "uke-sb-song-u6",
+          "uke-sb-song-eine-kleine"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/14/units/19/lessons/3/arrangement/sections/1/name",
+        "parents": [
+          "ukulele-songbook",
+          "uke-sb-song-u6",
+          "uke-sb-song-mozart-40"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/14/units/19/lessons/3/arrangement/sections/2/name",
+        "parents": [
+          "ukulele-songbook",
+          "uke-sb-song-u6",
+          "uke-sb-song-mozart-40"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/14/units/19/lessons/3/arrangement/sections/4/name",
+        "parents": [
+          "ukulele-songbook",
+          "uke-sb-song-u6",
+          "uke-sb-song-mozart-40"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/14/units/20/lessons/3/arrangement/sections/1/name",
+        "parents": [
+          "ukulele-songbook",
+          "uke-sb-std-8",
+          "uke-sb-std-jupiter"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/14/units/22/lessons/0/arrangement/sections/1/name",
+        "parents": [
+          "ukulele-songbook",
+          "uke-sb-std-9",
+          "uke-sb-std-spring"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/14/units/22/lessons/1/arrangement/sections/1/name",
+        "parents": [
+          "ukulele-songbook",
+          "uke-sb-std-9",
+          "uke-sb-std-rondo-alla-turca"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/15/units/6/lessons/0/arrangement/sections/1/name",
+        "parents": [
+          "mandolin-songbook",
+          "man-sb-songs-3",
+          "man-sb-song-canon-in-d"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/15/units/6/lessons/0/arrangement/sections/3/name",
+        "parents": [
+          "mandolin-songbook",
+          "man-sb-songs-3",
+          "man-sb-song-canon-in-d"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/15/units/6/lessons/0/arrangement/sections/5/name",
+        "parents": [
+          "mandolin-songbook",
+          "man-sb-songs-3",
+          "man-sb-song-canon-in-d"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/15/units/6/lessons/1/arrangement/sections/1/name",
+        "parents": [
+          "mandolin-songbook",
+          "man-sb-songs-3",
+          "man-sb-song-largo"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/15/units/6/lessons/1/arrangement/sections/3/name",
+        "parents": [
+          "mandolin-songbook",
+          "man-sb-songs-3",
+          "man-sb-song-largo"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/15/units/6/lessons/4/arrangement/sections/1/name",
+        "parents": [
+          "mandolin-songbook",
+          "man-sb-songs-3",
+          "man-sb-song-mountain-king"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/15/units/6/lessons/4/arrangement/sections/4/name",
+        "parents": [
+          "mandolin-songbook",
+          "man-sb-songs-3",
+          "man-sb-song-mountain-king"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/15/units/8/lessons/1/arrangement/sections/1/name",
+        "parents": [
+          "mandolin-songbook",
+          "man-sb-std-3",
+          "man-sb-std-korobeiniki"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/15/units/8/lessons/3/arrangement/sections/1/name",
+        "parents": [
+          "mandolin-songbook",
+          "man-sb-std-3",
+          "man-sb-std-can-can"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/15/units/11/lessons/0/arrangement/sections/1/name",
+        "parents": [
+          "mandolin-songbook",
+          "man-sb-std-4",
+          "man-sb-std-the-entertainer"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/15/units/12/lessons/0/arrangement/sections/1/name",
+        "parents": [
+          "mandolin-songbook",
+          "man-sb-song-u6",
+          "man-sb-song-eine-kleine"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/15/units/12/lessons/0/arrangement/sections/3/name",
+        "parents": [
+          "mandolin-songbook",
+          "man-sb-song-u6",
+          "man-sb-song-eine-kleine"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/15/units/12/lessons/3/arrangement/sections/1/name",
+        "parents": [
+          "mandolin-songbook",
+          "man-sb-song-u6",
+          "man-sb-song-mozart-40"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/15/units/12/lessons/3/arrangement/sections/2/name",
+        "parents": [
+          "mandolin-songbook",
+          "man-sb-song-u6",
+          "man-sb-song-mozart-40"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/15/units/12/lessons/3/arrangement/sections/4/name",
+        "parents": [
+          "mandolin-songbook",
+          "man-sb-song-u6",
+          "man-sb-song-mozart-40"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/15/units/13/lessons/3/arrangement/sections/1/name",
+        "parents": [
+          "mandolin-songbook",
+          "man-sb-std-8",
+          "man-sb-std-jupiter"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/15/units/14/lessons/0/arrangement/sections/1/name",
+        "parents": [
+          "mandolin-songbook",
+          "man-sb-std-9",
+          "man-sb-std-spring"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/15/units/14/lessons/1/arrangement/sections/1/name",
+        "parents": [
+          "mandolin-songbook",
+          "man-sb-std-9",
+          "man-sb-std-rondo-alla-turca"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/16/units/6/lessons/0/arrangement/sections/1/name",
+        "parents": [
+          "violin-songbook",
+          "vln-sb-songs-3",
+          "vln-sb-song-canon-in-d"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/16/units/6/lessons/0/arrangement/sections/3/name",
+        "parents": [
+          "violin-songbook",
+          "vln-sb-songs-3",
+          "vln-sb-song-canon-in-d"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/16/units/6/lessons/0/arrangement/sections/5/name",
+        "parents": [
+          "violin-songbook",
+          "vln-sb-songs-3",
+          "vln-sb-song-canon-in-d"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/16/units/6/lessons/1/arrangement/sections/1/name",
+        "parents": [
+          "violin-songbook",
+          "vln-sb-songs-3",
+          "vln-sb-song-largo"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/16/units/6/lessons/1/arrangement/sections/3/name",
+        "parents": [
+          "violin-songbook",
+          "vln-sb-songs-3",
+          "vln-sb-song-largo"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/16/units/6/lessons/3/arrangement/sections/1/name",
+        "parents": [
+          "violin-songbook",
+          "vln-sb-songs-3",
+          "vln-sb-song-mountain-king"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/16/units/6/lessons/3/arrangement/sections/4/name",
+        "parents": [
+          "violin-songbook",
+          "vln-sb-songs-3",
+          "vln-sb-song-mountain-king"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/16/units/8/lessons/1/arrangement/sections/1/name",
+        "parents": [
+          "violin-songbook",
+          "vln-sb-std-3",
+          "vln-sb-std-korobeiniki"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/16/units/8/lessons/3/arrangement/sections/1/name",
+        "parents": [
+          "violin-songbook",
+          "vln-sb-std-3",
+          "vln-sb-std-can-can"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/16/units/11/lessons/0/arrangement/sections/1/name",
+        "parents": [
+          "violin-songbook",
+          "vln-sb-std-4",
+          "vln-sb-std-the-entertainer"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/16/units/12/lessons/0/arrangement/sections/1/name",
+        "parents": [
+          "violin-songbook",
+          "vln-sb-song-u6",
+          "vln-sb-song-eine-kleine"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/16/units/12/lessons/0/arrangement/sections/3/name",
+        "parents": [
+          "violin-songbook",
+          "vln-sb-song-u6",
+          "vln-sb-song-eine-kleine"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/16/units/12/lessons/3/arrangement/sections/1/name",
+        "parents": [
+          "violin-songbook",
+          "vln-sb-song-u6",
+          "vln-sb-song-mozart-40"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/16/units/12/lessons/3/arrangement/sections/2/name",
+        "parents": [
+          "violin-songbook",
+          "vln-sb-song-u6",
+          "vln-sb-song-mozart-40"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/16/units/12/lessons/3/arrangement/sections/4/name",
+        "parents": [
+          "violin-songbook",
+          "vln-sb-song-u6",
+          "vln-sb-song-mozart-40"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/16/units/13/lessons/3/arrangement/sections/1/name",
+        "parents": [
+          "violin-songbook",
+          "vln-sb-std-8",
+          "vln-sb-std-jupiter"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/16/units/14/lessons/0/arrangement/sections/1/name",
+        "parents": [
+          "violin-songbook",
+          "vln-sb-std-9",
+          "vln-sb-std-spring"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/16/units/14/lessons/1/arrangement/sections/1/name",
+        "parents": [
+          "violin-songbook",
+          "vln-sb-std-9",
+          "vln-sb-std-rondo-alla-turca"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/17/units/6/lessons/0/arrangement/sections/1/name",
+        "parents": [
+          "cello-songbook",
+          "vc-sb-songs-3",
+          "vc-sb-song-canon-in-d"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/17/units/6/lessons/0/arrangement/sections/3/name",
+        "parents": [
+          "cello-songbook",
+          "vc-sb-songs-3",
+          "vc-sb-song-canon-in-d"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/17/units/6/lessons/0/arrangement/sections/5/name",
+        "parents": [
+          "cello-songbook",
+          "vc-sb-songs-3",
+          "vc-sb-song-canon-in-d"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/17/units/6/lessons/1/arrangement/sections/1/name",
+        "parents": [
+          "cello-songbook",
+          "vc-sb-songs-3",
+          "vc-sb-song-largo"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/17/units/6/lessons/1/arrangement/sections/3/name",
+        "parents": [
+          "cello-songbook",
+          "vc-sb-songs-3",
+          "vc-sb-song-largo"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/17/units/6/lessons/3/arrangement/sections/1/name",
+        "parents": [
+          "cello-songbook",
+          "vc-sb-songs-3",
+          "vc-sb-song-mountain-king"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/17/units/6/lessons/3/arrangement/sections/4/name",
+        "parents": [
+          "cello-songbook",
+          "vc-sb-songs-3",
+          "vc-sb-song-mountain-king"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/17/units/8/lessons/1/arrangement/sections/1/name",
+        "parents": [
+          "cello-songbook",
+          "vc-sb-std-3",
+          "vc-sb-std-korobeiniki"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/17/units/8/lessons/3/arrangement/sections/1/name",
+        "parents": [
+          "cello-songbook",
+          "vc-sb-std-3",
+          "vc-sb-std-can-can"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/17/units/11/lessons/0/arrangement/sections/1/name",
+        "parents": [
+          "cello-songbook",
+          "vc-sb-std-4",
+          "vc-sb-std-the-entertainer"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/17/units/12/lessons/0/arrangement/sections/1/name",
+        "parents": [
+          "cello-songbook",
+          "vc-sb-song-u6",
+          "vc-sb-song-eine-kleine"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/17/units/12/lessons/0/arrangement/sections/3/name",
+        "parents": [
+          "cello-songbook",
+          "vc-sb-song-u6",
+          "vc-sb-song-eine-kleine"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/17/units/12/lessons/3/arrangement/sections/1/name",
+        "parents": [
+          "cello-songbook",
+          "vc-sb-song-u6",
+          "vc-sb-song-mozart-40"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/17/units/12/lessons/3/arrangement/sections/2/name",
+        "parents": [
+          "cello-songbook",
+          "vc-sb-song-u6",
+          "vc-sb-song-mozart-40"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/17/units/12/lessons/3/arrangement/sections/4/name",
+        "parents": [
+          "cello-songbook",
+          "vc-sb-song-u6",
+          "vc-sb-song-mozart-40"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/17/units/13/lessons/3/arrangement/sections/1/name",
+        "parents": [
+          "cello-songbook",
+          "vc-sb-std-8",
+          "vc-sb-std-jupiter"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/17/units/14/lessons/0/arrangement/sections/1/name",
+        "parents": [
+          "cello-songbook",
+          "vc-sb-std-9",
+          "vc-sb-std-spring"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/17/units/14/lessons/1/arrangement/sections/1/name",
+        "parents": [
+          "cello-songbook",
+          "vc-sb-std-9",
+          "vc-sb-std-rondo-alla-turca"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/18/units/9/lessons/0/arrangement/sections/1/name",
+        "parents": [
+          "bass-songbook",
+          "bass-sb-songs-3",
+          "bass-sb-song-canon-in-d"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/18/units/9/lessons/0/arrangement/sections/3/name",
+        "parents": [
+          "bass-songbook",
+          "bass-sb-songs-3",
+          "bass-sb-song-canon-in-d"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/18/units/9/lessons/0/arrangement/sections/5/name",
+        "parents": [
+          "bass-songbook",
+          "bass-sb-songs-3",
+          "bass-sb-song-canon-in-d"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/18/units/9/lessons/1/arrangement/sections/1/name",
+        "parents": [
+          "bass-songbook",
+          "bass-sb-songs-3",
+          "bass-sb-song-largo"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/18/units/9/lessons/1/arrangement/sections/3/name",
+        "parents": [
+          "bass-songbook",
+          "bass-sb-songs-3",
+          "bass-sb-song-largo"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/18/units/9/lessons/4/arrangement/sections/1/name",
+        "parents": [
+          "bass-songbook",
+          "bass-sb-songs-3",
+          "bass-sb-song-mountain-king"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/18/units/9/lessons/4/arrangement/sections/4/name",
+        "parents": [
+          "bass-songbook",
+          "bass-sb-songs-3",
+          "bass-sb-song-mountain-king"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/18/units/12/lessons/1/arrangement/sections/1/name",
+        "parents": [
+          "bass-songbook",
+          "bass-sb-std-3",
+          "bass-sb-std-korobeiniki"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/18/units/12/lessons/3/arrangement/sections/1/name",
+        "parents": [
+          "bass-songbook",
+          "bass-sb-std-3",
+          "bass-sb-std-can-can"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/18/units/17/lessons/0/arrangement/sections/1/name",
+        "parents": [
+          "bass-songbook",
+          "bass-sb-std-4",
+          "bass-sb-std-the-entertainer"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/18/units/19/lessons/0/arrangement/sections/1/name",
+        "parents": [
+          "bass-songbook",
+          "bass-sb-song-u6",
+          "bass-sb-song-eine-kleine"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/18/units/19/lessons/0/arrangement/sections/3/name",
+        "parents": [
+          "bass-songbook",
+          "bass-sb-song-u6",
+          "bass-sb-song-eine-kleine"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/18/units/19/lessons/3/arrangement/sections/1/name",
+        "parents": [
+          "bass-songbook",
+          "bass-sb-song-u6",
+          "bass-sb-song-mozart-40"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/18/units/19/lessons/3/arrangement/sections/2/name",
+        "parents": [
+          "bass-songbook",
+          "bass-sb-song-u6",
+          "bass-sb-song-mozart-40"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/18/units/19/lessons/3/arrangement/sections/4/name",
+        "parents": [
+          "bass-songbook",
+          "bass-sb-song-u6",
+          "bass-sb-song-mozart-40"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/18/units/20/lessons/3/arrangement/sections/1/name",
+        "parents": [
+          "bass-songbook",
+          "bass-sb-std-8",
+          "bass-sb-std-jupiter"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/18/units/22/lessons/0/arrangement/sections/1/name",
+        "parents": [
+          "bass-songbook",
+          "bass-sb-std-9",
+          "bass-sb-std-spring"
+        ],
+        "source": "Theme"
+      },
+      {
+        "path": "/courses/18/units/22/lessons/1/arrangement/sections/1/name",
+        "parents": [
+          "bass-songbook",
+          "bass-sb-std-9",
+          "bass-sb-std-rondo-alla-turca"
+        ],
+        "source": "Theme"
+      }
+    ],
+    "qa_script": "frozen-author-inputs/ta/qa_fixes.py",
+    "qa_script_sha256": "efc94e4386dbd29d6e563073d6d2c8775aa7d5bb3d6c35c2a78bb4c12a6f1299",
+    "semantic_alignment": "aligned_with_source",
+    "finding": "Reviewed the shortened target against its own source and adjacent exercise; no additional semantic copy/shift error found."
+  }
+]

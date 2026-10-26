@@ -1,0 +1,112 @@
+[
+  {
+    "topic": "G/G7 common-position anchor wording",
+    "status": "Inherited source wording question, not a translation-side repair or certified source defect.",
+    "observation": "The supplied G7 fingering uses finger 2 at string 3 fret 2, while G uses finger 1 there. The later anchor sentence may mean the shared fretboard location, but a beginner might read it as keeping the same finger down. Gujarati follows the source; source author can clarify intent.",
+    "evidence": [
+      {
+        "batch": 16,
+        "id": "s009",
+        "key": "L588f8784f5",
+        "source": "First finger on fret 1 of string 2, second on fret 2 of string 3, third on fret 2 of string 1. Strum all four.",
+        "translation": "પહેલી આંગળી તાર 2ના ફ્રેટ 1 પર, બીજી તાર 3ના ફ્રેટ 2 પર, ત્રીજી તાર 1ના ફ્રેટ 2 પર. ચારેય સ્ટ્રમ કરો.",
+        "context": "Ukulele · Unit 2 · lesson uke-2-4 “G7, the chord that leads home” · step 1 (explain) · lesson card text",
+        "source_sha256": "24d2b3dac6d57c0851808091a3bcb79e05d28b9642c3df135b0b9889050bd009",
+        "occurrences": [
+          {
+            "path": "tools/curriculum/courses/ukulele.py",
+            "line": 320,
+            "excerpt": "    lesson(\"uke-2-4\", \"G7, the chord that leads home\", [\n        explain(\"G7: a triangle of fingers\", \"First finger on fret 1 of string 2, second on fret 2 of string 3, third on fret 2 of string 1. Strum all four.\",\n                {\"type\": \"chord\", \"chord\": G7}),"
+          }
+        ]
+      },
+      {
+        "batch": 16,
+        "id": "s016",
+        "key": "La928974510",
+        "source": "First finger on fret 2 of string 3, second on fret 2 of string 1, third on fret 3 of string 2. Arch your fingers so string 4 rings.",
+        "translation": "પહેલી આંગળી તાર 3ના ફ્રેટ 2 પર, બીજી તાર 1ના ફ્રેટ 2 પર, ત્રીજી તાર 2ના ફ્રેટ 3 પર. આંગળીઓ વાળો જેથી તાર 4 ગુંજે.",
+        "context": "Ukulele · Unit 2 · lesson uke-2-5 “G: three fingers” · step 1 (explain) · lesson card text",
+        "source_sha256": "c9a1569689403c927f675439e52c5060597fcf39468a4ba44146a9bc8f1ddc33",
+        "occurrences": [
+          {
+            "path": "tools/curriculum/courses/ukulele.py",
+            "line": 329,
+            "excerpt": "    lesson(\"uke-2-5\", \"G: three fingers\", [\n        explain(\"G major\", \"First finger on fret 2 of string 3, second on fret 2 of string 1, third on fret 3 of string 2. Arch your fingers so string 4 rings.\",\n                {\"type\": \"chord\", \"chord\": G}),"
+          }
+        ]
+      },
+      {
+        "batch": 16,
+        "id": "s021",
+        "key": "La1e36be585",
+        "source": "Both chords put a finger on fret 2 of string 3. Use it as your anchor.",
+        "translation": "બંને કોર્ડમાં તાર 3ના ફ્રેટ 2 પર આંગળી હોય છે. તેને સ્થિર આધાર તરીકે રાખો.",
+        "context": "Ukulele · Unit 2 · lesson uke-2-5 “G: three fingers” · step 3 (quiz) · explanation after a quiz answer",
+        "source_sha256": "97f856078beff79f59f28bc21a541e5191f6586c3043a530e9d2200288bd69fa",
+        "occurrences": [
+          {
+            "path": "tools/curriculum/courses/ukulele.py",
+            "line": 333,
+            "excerpt": "        quiz(\"G and G7 both press which spot?\", [\"Fret 1 of string 2\", \"Fret 3 of string 1\", \"Fret 2 of string 3\"], 2,\n             \"Both chords put a finger on fret 2 of string 3. Use it as your anchor.\"),\n        strum(G, DOWNS, bpm=60, bars=2),"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "topic": "Tremolo until next beat versus full long note",
+    "status": "Inherited source wording question, not a translation-side repair or certified source defect.",
+    "observation": "The quiz answer says until the next beat, while the explanation says through a three-beat note to the bar end. The source may intend the next new-note beat; translation preserves source instead of silently changing the answer.",
+    "evidence": [
+      {
+        "batch": 29,
+        "id": "s048",
+        "key": "L30af854113",
+        "source": "How do you hold the long A at the end?",
+        "translation": "અંતનો લાંબો A કેવી રીતે ટકાવશો?",
+        "context": "Mandolin · Unit 3 · song man-3-4 “Amazing Grace” · step 5 (quiz) · question or instruction",
+        "source_sha256": "6880a2b103b620aa47ff4595bfb3828518e3003097e083a69c3112272b550398",
+        "occurrences": [
+          {
+            "path": "tools/curriculum/courses/mandolin.py",
+            "line": 399,
+            "excerpt": "        tune(AMAZING_1_ALONE, bpm=66, beats_per_bar=3, title=\"First line\"),\n        quiz(\"How do you hold the long A at the end?\", [\"Pick once and wait\", \"Tremolo until the next beat\", \"Mute it right away\"], 1,\n             \"A single pick fades long before three beats are up. Tremolo keeps it ringing to the end of the bar.\"),"
+          }
+        ]
+      },
+      {
+        "batch": 29,
+        "id": "s050",
+        "key": "L4d1c8b1ea7",
+        "source": "Tremolo until the next beat",
+        "translation": "આગલા તાલ સુધી ટ્રેમોલો",
+        "context": "Mandolin · Unit 3 · song man-3-4 “Amazing Grace” · step 5 (quiz) · quiz answer",
+        "source_sha256": "563b9bc79f25bca6cfc53f5889154ee73404e01a542b5229820938cc7a5b6ecd",
+        "occurrences": [
+          {
+            "path": "tools/curriculum/courses/mandolin.py",
+            "line": 399,
+            "excerpt": "        tune(AMAZING_1_ALONE, bpm=66, beats_per_bar=3, title=\"First line\"),\n        quiz(\"How do you hold the long A at the end?\", [\"Pick once and wait\", \"Tremolo until the next beat\", \"Mute it right away\"], 1,\n             \"A single pick fades long before three beats are up. Tremolo keeps it ringing to the end of the bar.\"),"
+          }
+        ]
+      },
+      {
+        "batch": 29,
+        "id": "s052",
+        "key": "L48172fabe6",
+        "source": "A single pick fades long before three beats are up. Tremolo keeps it ringing to the end of the bar.",
+        "translation": "એક વાર છેડેલો સ્વર ત્રણ તાલ પૂરા થાય તે પહેલાં ઓલવાય છે. ટ્રેમોલો તેને બારના અંત સુધી ગુંજતો રાખે છે.",
+        "context": "Mandolin · Unit 3 · song man-3-4 “Amazing Grace” · step 5 (quiz) · explanation after a quiz answer",
+        "source_sha256": "55cb438b9124273eda123413681633207f2c99d6865207d5f58a3e7755726e9a",
+        "occurrences": [
+          {
+            "path": "tools/curriculum/courses/mandolin.py",
+            "line": 400,
+            "excerpt": "        quiz(\"How do you hold the long A at the end?\", [\"Pick once and wait\", \"Tremolo until the next beat\", \"Mute it right away\"], 1,\n             \"A single pick fades long before three beats are up. Tremolo keeps it ringing to the end of the bar.\"),\n        tune(f\"r:2 {AMAZING_2}\", bpm=66, beats_per_bar=3, title=\"Second line\"),"
+          }
+        ]
+      }
+    ]
+  }
+]

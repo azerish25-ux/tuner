@@ -1,0 +1,75 @@
+{
+  "check": "read-only candidate validation with staged source-bound invariant decisions in memory; no registry mutation",
+  "source_catalog_matches_live_6080_keys": true,
+  "locales": {
+    "ur": {
+      "pairs": 6080,
+      "hard_errors": [],
+      "protected_token_errors": [],
+      "warning_rows": 367,
+      "warning_counts": {
+        "starts with %@ or Latin text": 297,
+        "identical to the English": 180,
+        "invisible direction marks": 70
+      },
+      "length_warnings": [],
+      "source_context_split_still_required": true,
+      "native_human_review": false,
+      "device_layout_qa": false
+    },
+    "gu": {
+      "pairs": 6080,
+      "hard_errors": [],
+      "protected_token_errors": [],
+      "warning_rows": 183,
+      "warning_counts": {
+        "identical to the English": 183
+      },
+      "length_warnings": [],
+      "source_context_split_still_required": true,
+      "native_human_review": false,
+      "device_layout_qa": false
+    },
+    "ta": {
+      "pairs": 6080,
+      "hard_errors": [],
+      "protected_token_errors": [],
+      "warning_rows": 182,
+      "warning_counts": {
+        "identical to the English": 182
+      },
+      "length_warnings": [],
+      "source_context_split_still_required": true,
+      "native_human_review": false,
+      "device_layout_qa": false
+    },
+    "kn": {
+      "pairs": 6080,
+      "hard_errors": [],
+      "protected_token_errors": [],
+      "warning_rows": 179,
+      "warning_counts": {
+        "identical to the English": 177,
+        "longer than max_length 42 (46)": 1,
+        "longer than max_length 42 (44)": 1
+      },
+      "length_warnings": [
+        {
+          "key": "L8a28d3c1df",
+          "warnings": [
+            "longer than max_length 42 (46)"
+          ]
+        },
+        {
+          "key": "Lb1a60a5698",
+          "warnings": [
+            "longer than max_length 42 (44)"
+          ]
+        }
+      ],
+      "source_context_split_still_required": true,
+      "native_human_review": false,
+      "device_layout_qa": false
+    }
+  }
+}

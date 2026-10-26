@@ -1,0 +1,206 @@
+[
+  {
+    "locale": "ta",
+    "batch": 19,
+    "id": "s015",
+    "table": "Learn.strings",
+    "key": "Lf6586312d9",
+    "source": "1, 2, 3 and 4",
+    "old": "1, 2, 3 மற்றும் 4",
+    "context": "Ukulele · Unit 9 · challenge uke-9-6 “Challenge: fingerpicking” · step 2 (quiz) · quiz answer",
+    "max_length": 48,
+    "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+    "old_sha256": "08dbdb5e33ec69cee57e0ec6689dc89df68ea017726969a7304045e02d83f804",
+    "curriculum_refs": [
+      {
+        "path": "/courses/1/units/8/lessons/5/steps/1/options/0",
+        "parents": [
+          "ukulele",
+          "uke-9",
+          "uke-9-6"
+        ],
+        "source": "1, 2, 3 and 4"
+      },
+      {
+        "path": "/courses/9/units/1/lessons/1/steps/2/options/1",
+        "parents": [
+          "rhythm",
+          "rhy-2",
+          "rhy-2-2"
+        ],
+        "source": "1, 2, 3 and 4"
+      }
+    ],
+    "status": "unresolved_source_context_collision",
+    "reason": "The same source-hashed key represents a conjunction joining four string numbers in ukulele and a spoken offbeat count in rhythm. மற்றும் is correct for the list but incorrect for the subdivision; அண்ட் would be correct for rhythm but not the ordinary list. No single forced target is approved.",
+    "source_file": "ios/Sources/TimbreCore/Resources/curriculum.json",
+    "authoring_changes_proposed_not_applied": [
+      {
+        "file": "tools/curriculum/courses/ukulele_part2.py",
+        "line": 346,
+        "lesson": "uke-9-6",
+        "field": "steps[1].options[0]",
+        "old_source": "1, 2, 3 and 4",
+        "new_source": "Strings: 1, 2, 3 and 4",
+        "new_key_if_current_builder_retained": "Lf94a998e29",
+        "proposed_tamil": "தந்திகள்: 1, 2, 3 மற்றும் 4",
+        "generated_json_pointer": "/courses/1/units/8/lessons/5/steps/1/options/0"
+      },
+      {
+        "file": "tools/curriculum/courses/rhythm.py",
+        "line": 107,
+        "lesson": "rhy-2-2",
+        "field": "steps[2].options[1]",
+        "old_source": "1, 2, 3 and 4",
+        "new_source": "1, 2, 3 and 4",
+        "key_retained": "Lf6586312d9",
+        "proposed_tamil": "1, 2, 3 அண்ட் 4",
+        "generated_json_pointer": "/courses/9/units/1/lessons/1/steps/2/options/1"
+      }
+    ],
+    "minimal_change_rationale": "Change only the instrument-list option source to an explicit string label, retain the rhythm source. Existing build.py key_for uses L + SHA1(source)[:10], separating the meanings without localization-engine redesign. Prefer labeling all three list options consistently if editorial scope allows, but that is optional and increases changed keys.",
+    "contexts": [
+      {
+        "ref": {
+          "path": "/courses/1/units/8/lessons/5/steps/1/options/0",
+          "parents": [
+            "ukulele",
+            "uke-9",
+            "uke-9-6"
+          ],
+          "source": "1, 2, 3 and 4"
+        },
+        "step": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Ldea06d68d7",
+            "t": "Thumb, index, middle, ring play which strings?"
+          },
+          "options": [
+            {
+              "k": "Lf6586312d9",
+              "t": "1, 2, 3 and 4"
+            },
+            {
+              "k": "L2959e49ccf",
+              "t": "3, 4, 1 and 2"
+            },
+            {
+              "k": "L1e68a89c2e",
+              "t": "4, 3, 2 and 1"
+            }
+          ],
+          "answer": 2,
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "ref": {
+          "path": "/courses/9/units/1/lessons/1/steps/2/options/1",
+          "parents": [
+            "rhythm",
+            "rhy-2",
+            "rhy-2-2"
+          ],
+          "source": "1, 2, 3 and 4"
+        },
+        "step": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Le92e7a2c26",
+            "t": "How do you count this pattern?"
+          },
+          "options": [
+            {
+              "k": "L703760e9d4",
+              "t": "1, 2 and, 3, 4"
+            },
+            {
+              "k": "Lf6586312d9",
+              "t": "1, 2, 3 and 4"
+            },
+            {
+              "k": "L1081fbeb3c",
+              "t": "1 and 2, 3, 4"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "Lba789e471f",
+            "t": "Beat 1 has two taps, 1 and. Beats 2, 3 and 4 get one tap each."
+          },
+          "visual": {
+            "type": "rhythm",
+            "pattern": [
+              0,
+              0.5,
+              1,
+              2,
+              3
+            ],
+            "beatsPerBar": 4
+          }
+        }
+      }
+    ],
+    "existing_locales": [
+      {
+        "locale": "de",
+        "file": "ios/Timbre/Resources/de.lproj/Learn.strings",
+        "entry": "\"Lf6586312d9\" = \"1, 2, 3 und 4\";"
+      },
+      {
+        "locale": "en",
+        "file": "ios/Timbre/Resources/en.lproj/Learn.strings",
+        "entry": "\"Lf6586312d9\" = \"1, 2, 3 and 4\";"
+      },
+      {
+        "locale": "es",
+        "file": "ios/Timbre/Resources/es.lproj/Learn.strings",
+        "entry": "\"Lf6586312d9\" = \"1, 2, 3 y 4\";"
+      },
+      {
+        "locale": "fr",
+        "file": "ios/Timbre/Resources/fr.lproj/Learn.strings",
+        "entry": "\"Lf6586312d9\" = \"1, 2, 3 et 4\";"
+      },
+      {
+        "locale": "it",
+        "file": "ios/Timbre/Resources/it.lproj/Learn.strings",
+        "entry": "\"Lf6586312d9\" = \"1, 2, 3 e 4\";"
+      },
+      {
+        "locale": "ja",
+        "file": "ios/Timbre/Resources/ja.lproj/Learn.strings",
+        "entry": "\"Lf6586312d9\" = \"1、2、3 and 4\";"
+      },
+      {
+        "locale": "ko",
+        "file": "ios/Timbre/Resources/ko.lproj/Learn.strings",
+        "entry": "\"Lf6586312d9\" = \"1, 2, 3 앤 4\";"
+      },
+      {
+        "locale": "pt",
+        "file": "ios/Timbre/Resources/pt.lproj/Learn.strings",
+        "entry": "\"Lf6586312d9\" = \"1, 2, 3 e 4\";"
+      },
+      {
+        "locale": "ru",
+        "file": "ios/Timbre/Resources/ru.lproj/Learn.strings",
+        "entry": "\"Lf6586312d9\" = \"1, 2, 3 и 4\";"
+      },
+      {
+        "locale": "zh-CN",
+        "file": "ios/Timbre/Resources/zh-CN.lproj/Learn.strings",
+        "entry": "\"Lf6586312d9\" = \"1、2、3 and 4\";"
+      }
+    ],
+    "locale_impact": "Current source key exists in en plus de/es/fr/it/ja/ko/pt/ru/zh-CN Learn tables. Old key remains for rhythm; each old target must be reviewed specifically as spoken counting, rather than assumed valid from the string list. New instrument-list key needs translations in all required lesson locales, including staged Tamil and any other pending locales. Regenerate curriculum/en extraction and metadata, re-review new/retained translations, refresh source/hash coverage and rerun tests only after write scope resumes. Do not blindly carry a source-hash approval across the split.",
+    "action_needed": "Parent/source owner decision and authorized source regeneration, locale migration and re-review.",
+    "target": "tools/curriculum/courses/ukulele_part2.py and affected generated curriculum/Learn localization artifacts",
+    "completed": "Read-only full-context diagnosis, exact source/old guards, minimal source-change proposal, new-key computation, current locale-impact enumeration.",
+    "authorization_state": "pending_write_scope; no filesystem permission denial; repository intentionally read-only"
+  }
+]
