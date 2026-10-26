@@ -3,9 +3,10 @@
   "run": 40345275012,
   "completed_jobs": {
     "en": 121650423067,
-    "de": 121650422872
+    "de": 121650422872,
+    "ar": 121650422472
   },
-  "observed_result": "Both completed jobs passed seven of eight selected tests: five of six store frames plus two semantic/bounds fixture tests. Only the live song frame failed; every HUD/lyric image pair changed. Arabic still running when recorded.",
+  "observed_result": "All three English, German and Arabic jobs passed seven of eight selected tests: five of six store frames plus two semantic/bounds fixture tests. Each failed only the live song frame because every HUD/lyric image pair changed. No wrong song image was approved.",
   "repair": "Explicit DEBUG still-only scene barrier holds the actual judged take timestamp after one additional bar. No note, grade, combo or score is rewritten. Input and audio stop; runway, lyrics and progress all use the same held timestamp. Video audio recording excludes the barrier. Production behavior is unchanged.",
   "validation_retained": [
     "all four image regions must match",

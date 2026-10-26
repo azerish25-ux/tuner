@@ -1,0 +1,61 @@
+{
+ "source_keys": 6083,
+ "source_key_text_exact": true,
+ "source_sha256": "718a9431e97997dcad904b99eb00f0072385142d63ebb7ffc1c27ff374ca6de3",
+ "helper_sha256": "b74452e7165145c82449bf7fc70a0a114282a69ed875a18a7ba46e7ff0c70731",
+ "curriculum_sha256": "f5399d3d13edd2f94b660648e7dd23aceef66a21e095567988bbb6bd38995bf1",
+ "review_manifest_sha256": "cc93670526e1a33f3d19fb750bb0931941f35bbe49820843f8c27d33b2fb6e03",
+ "author_manifest_sha256": "7c8c35ca9315e66b7fb8671e5411898864d43f443a07228a655ccacfc894332b",
+ "predecessor_manifest_sha256": "0fad5e1c8e281212d7ee92936527beb7d85bc8ced8e03b58e62f93e43584381b",
+ "verified_review_artifacts": 172,
+ "verified_author_artifacts": 557,
+ "verified_predecessor_artifacts": 70,
+ "guarded_corrections": 35,
+ "approved_identities": 343,
+ "primary_reviewer_counts": {
+  "Catalan independent AI reviewer 1": 2200,
+  "Catalan independent AI reviewer 2": 3883
+ },
+ "context_reviewer_counts": {
+  "Catalan independent AI reviewer 2": 697,
+  "Catalan independent AI reviewer 3": 849
+ },
+ "required_complete_contexts": 1546,
+ "final_layout_rereads": 2,
+ "shared_records_rematched": 4127,
+ "option_records_rematched": 2284,
+ "all_guarded_correction_occurrences_rematched": true,
+ "in_memory_hard_errors": 0,
+ "protected_contract_errors": 0,
+ "nonidentity_soft_warnings": 0,
+ "native_human_or_device_certification": false,
+ "helper_bound_complete_contexts": 1537,
+ "correction_only_complete_contexts": 9,
+ "canonical_applied_resource_exact": true,
+ "localization_unit_tests": {
+  "tests": 149,
+  "result": "passed"
+ },
+ "canonical_gates": {
+  "strict_handoff_freshness": "passed",
+  "ios_resources": "passed",
+  "critical_baseline": "passed; zero gaps",
+  "critical_strict": "passed; zero gaps",
+  "preserved_draft_integrity": "passed; no semantic approval implied",
+  "git_diff_check": "passed",
+  "all_language_lesson_release": "incomplete; eight unimported locales are not waived"
+ },
+ "applied_target_languages": 40,
+ "required_target_languages": 48,
+ "remaining_lesson_locales": [
+  "et",
+  "hr",
+  "is",
+  "lt",
+  "lv",
+  "sk",
+  "sl",
+  "uk"
+ ],
+ "remaining_lesson_pairs": 48664
+}

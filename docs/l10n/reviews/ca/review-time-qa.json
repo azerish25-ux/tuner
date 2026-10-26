@@ -1,0 +1,62 @@
+{
+ "locale": "ca",
+ "status": "complete-independent-AI-semantic-review-approved-for-parent-integration",
+ "source_rows": 6083,
+ "approved_rows": 6083,
+ "primary_reviewers": {
+  "Catalan independent AI reviewer 1": 2200,
+  "Catalan independent AI reviewer 2": 3883
+ },
+ "original_author_counts": {
+  "Catalan AI translation author 1": 4490,
+  "Catalan AI translation author 2": 1593
+ },
+ "identity_candidates_individually_reasoned": 344,
+ "identity_approvals": 343,
+ "rejected_identity_candidates": 1,
+ "identity_reviewers": {
+  "Catalan independent AI reviewer 1": 83,
+  "Catalan independent AI reviewer 2": 260
+ },
+ "required_complete_contexts": 1546,
+ "required_complete_contexts_approved": 1546,
+ "actual_complete_context_reviewers": {
+  "Catalan independent AI reviewer 2": 697,
+  "Catalan independent AI reviewer 3": 849
+ },
+ "new_contexts_read_this_continuation": 849,
+ "inherited_contexts_preserved": 697,
+ "final_layout_context_rereads": 2,
+ "keys_bound_to_required_full_contexts": 2923,
+ "keys_with_primary_lesson_role_context_only": 3160,
+ "guarded_corrections": 35,
+ "original_correction_proposal_reviewers": {
+  "Catalan independent AI reviewer 1": 2,
+  "Catalan independent AI reviewer 2": 33
+ },
+ "effective_final_correction_reviewers": {
+  "Catalan independent AI reviewer 1": 2,
+  "Catalan independent AI reviewer 3": 2,
+  "Catalan independent AI reviewer 2": 31
+ },
+ "final_layout_tightenings_with_preserved_prior_proposals": 2,
+ "all_35_correction_occurrences_reviewed": true,
+ "shared_helper_records_covered": 4127,
+ "option_helper_records_covered": 2284,
+ "exact_current_source_key_text_and_context_rematch": true,
+ "all_evidence_hashes_verified": true,
+ "all_primary_and_correction_source_old_target_hashes_verified": true,
+ "all_effective_context_hashes_match_evidence": true,
+ "mechanical_guard_rows_passed": 6083,
+ "soft_warnings_excluding_expected_identity": 0,
+ "expected_registry_pending_identity_rejections": 343,
+ "source_digit_or_notation_guard_waivers": 0,
+ "remaining_contexts": 0,
+ "unresolved_semantic_issues": 0,
+ "author_frozen_manifest_artifacts_reverified": 557,
+ "prior_frozen_artifacts_modified": false,
+ "publisher_source_todo_resources_registry_or_git_writes": false,
+ "native_human_review": "not performed",
+ "device_layout_VoiceOver_certification": "not performed",
+ "completion_assembled_by": "Catalan independent AI reviewer 3"
+}

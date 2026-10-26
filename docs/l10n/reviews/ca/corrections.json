@@ -1,0 +1,1304 @@
+[
+ {
+  "locale": "ca",
+  "key": "L51221b9b02",
+  "source": "String 3, fret 9: this is your bend target. Let it ring and remember it.",
+  "old": "Corda 3, trast 9: aquesta és la nota del bend. Deixa-la sonar i recorda-la.",
+  "new": "Corda 3, trast 9: aquesta és la nota que ha d’assolir el bend. Deixa-la sonar i recorda-la.",
+  "reason": "Explicitly retain bend target as the pitch to reach, rather than vague nota del bend; this is the reference-pitch exercise and agrees with nota de referència in neighboring listening prompts.",
+  "source_sha256": "3e6d45bfac3d5384b3399e37ca23e6bb2fb772f8395d04ce73a5682795d2719d",
+  "old_sha256": "3c763bf22ffda9f53e7c1f01e7c1a68c88bf474fa68cb228145dfa0c22e6187c",
+  "new_sha256": "39c7c89a7a5a88b940792adf1aa074bd8ca83cb805f01c78517dc671488b3adc",
+  "reviewer": "Catalan independent AI reviewer 1",
+  "status": "approved-guarded-correction",
+  "evidence_file": "primary-evidence-0801-1050.json",
+  "evidence_sha256": "089fc041554be7def39f06b0e155117892106526a08fae4cda8b8db2c83b1ce6",
+  "context_completion_recorded_by": "Catalan independent AI reviewer 3",
+  "all_current_occurrences_complete_context_reviewed": true,
+  "complete_context_approvals": [
+   {
+    "id": "CTX-1538",
+    "reviewer": "Catalan independent AI reviewer 3",
+    "target_sha256": "521d8c0ff35827fed6ec955ca1c721969f30c6a0769e223499c418a17dd971ef",
+    "evidence_sha256": "30f6deaf18e1d6849d9cbbee92c0b7f5905d5acd44919ed1c0bfd281b63d62ec"
+   }
+  ],
+  "primary_reviewer": "Catalan independent AI reviewer 1",
+  "author_provenance": {
+   "author": "Catalan AI translation author 1",
+   "batch": "ca-009.json",
+   "batch_output": "batches/ca-009.out.json",
+   "item_id": "s004"
+  }
+ },
+ {
+  "locale": "ca",
+  "key": "La49f08c03f",
+  "source": "No new ideas: hammer-ons, pull-offs, slides, bend targets, vibrato and both boxes. Play each phrase cleanly, then make it sing.",
+  "old": "Res de nou: lligats ascendents i descendents, lliscaments, notes de bend, vibrato i totes dues posicions. Toca cada frase amb netedat i fes-la cantar.",
+  "new": "Res de nou: lligats ascendents i descendents, lliscaments, notes de referència dels bends, vibrato i totes dues posicions. Toca cada frase amb netedat i fes-la cantar.",
+  "reason": "Bend targets are reference pitches to attain, not merely notes de bend. Preserve this taught listening/intonation concept with the established nota de referència wording.",
+  "source_sha256": "f2fc16553eac4a3d948628af2de75bac270a3c1c3993c1e413b084df15423e7c",
+  "old_sha256": "ba8eb92130f2091b9087a3e05374eefdafcd812051f983dce47683727a47b783",
+  "new_sha256": "a8c8ffad8f255c3d4553ecdda6b76fcec0cf4d82f84c09854f9c0dd2218bffe4",
+  "reviewer": "Catalan independent AI reviewer 1",
+  "status": "approved-guarded-correction",
+  "evidence_file": "primary-evidence-0801-1050.json",
+  "evidence_sha256": "089fc041554be7def39f06b0e155117892106526a08fae4cda8b8db2c83b1ce6",
+  "context_completion_recorded_by": "Catalan independent AI reviewer 3",
+  "all_current_occurrences_complete_context_reviewed": true,
+  "complete_context_approvals": [
+   {
+    "id": "CTX-1539",
+    "reviewer": "Catalan independent AI reviewer 3",
+    "target_sha256": "5e7b4551df9846b29378fc476315dfa3f10f9960ddfcc7ff1593732cf72fdf58",
+    "evidence_sha256": "30f6deaf18e1d6849d9cbbee92c0b7f5905d5acd44919ed1c0bfd281b63d62ec"
+   }
+  ],
+  "primary_reviewer": "Catalan independent AI reviewer 1",
+  "author_provenance": {
+   "author": "Catalan AI translation author 1",
+   "batch": "ca-009.json",
+   "batch_output": "batches/ca-009.out.json",
+   "item_id": "s040"
+  }
+ },
+ {
+  "locale": "ca",
+  "key": "Lbcc8b8db19",
+  "source": "From paired strings to fiddle tunes and the bluegrass chop",
+  "old": "De les cordes dobles al violí tradicional i el cop apagat de bluegrass",
+  "new": "De cordes dobles a melodies de violí tradicional i al cop apagat de bluegrass",
+  "reason": "Restore fiddle tunes as repertoire rather than the violin instrument itself: the old mandolin subtitle says it progresses to traditional violin. The new wording explicitly names the melodies and keeps the bluegrass chop terminology. Final tightening: Remove optional articles in the course subtitle, preserving paired strings, traditional fiddle-tune repertoire and bluegrass chop while fitting the 80-character advisory limit.",
+  "source_sha256": "cf1b832b0223a61cf5aae4d8f73bca3c6173798ec81b24d73adc2d0eade6bd8a",
+  "old_sha256": "61bdbad71cb4d51cd4ac9db326f4680b0423636f854e57ccabdf565e94d1f5f4",
+  "new_sha256": "bf36c7e1f2cc9119f326d421e6df8033312efc6cbb0cfca686d30ee1198cfbd4",
+  "reviewer": "Catalan independent AI reviewer 3",
+  "status": "approved-guarded-correction",
+  "evidence_file": "context-amendment-evidence-final-layout.json",
+  "evidence_sha256": "4921bdcffba975b75fa39baf8f27088439d623e23567a0892519ee021c4478ca",
+  "originating_proposal_reviewer": "Catalan independent AI reviewer 2",
+  "preserved_prior_proposal": {
+   "locale": "ca",
+   "key": "Lbcc8b8db19",
+   "source": "From paired strings to fiddle tunes and the bluegrass chop",
+   "old": "De les cordes dobles al violí tradicional i el cop apagat de bluegrass",
+   "new": "De les cordes dobles a les melodies de violí tradicional i al cop apagat de bluegrass",
+   "reason": "Restore fiddle tunes as repertoire rather than the violin instrument itself: the old mandolin subtitle says it progresses to traditional violin. The new wording explicitly names the melodies and keeps the bluegrass chop terminology.",
+   "source_sha256": "cf1b832b0223a61cf5aae4d8f73bca3c6173798ec81b24d73adc2d0eade6bd8a",
+   "old_sha256": "61bdbad71cb4d51cd4ac9db326f4680b0423636f854e57ccabdf565e94d1f5f4",
+   "new_sha256": "80197f59ad68e40111064ee46c00a9b31817a83a1c6e99dccc85331d0290bd72",
+   "reviewer": "Catalan independent AI reviewer 2",
+   "status": "proposed-pending-complete-contexts",
+   "evidence_file": "primary-evidence-2701-2950.json",
+   "evidence_sha256": "75d48ebfe20725959fade78e3ce7e83941d72fd58dd4663d6e23b2a81b37ac26"
+  },
+  "context_completion_recorded_by": "Catalan independent AI reviewer 3",
+  "all_current_occurrences_complete_context_reviewed": true,
+  "complete_context_approvals": [
+   {
+    "id": "CTX-1542",
+    "reviewer": "Catalan independent AI reviewer 3",
+    "target_sha256": "209c07c98e8681f19c801886378c0dcc277ad3f498e3c78ffcab7cce5f56f9b7",
+    "evidence_sha256": "4921bdcffba975b75fa39baf8f27088439d623e23567a0892519ee021c4478ca"
+   }
+  ],
+  "primary_reviewer": "Catalan independent AI reviewer 2",
+  "author_provenance": {
+   "author": "Catalan AI translation author 1",
+   "batch": "ca-028.json",
+   "batch_output": "batches/ca-028.out.json",
+   "item_id": "s002"
+  }
+ },
+ {
+  "locale": "ca",
+  "key": "Lc7a201f1b1",
+  "source": "In A, B, A, how many times do you pick?",
+  "old": "A A, B, A, quants cops toques amb la pua?",
+  "new": "En la seqüència A, B, A, quants cops toques amb la pua?",
+  "reason": "Disambiguate the pitch sequence from the Catalan preposition: old A A, B, A is visually awkward and easy to misread as four pitches. Explicitly naming the sequence preserves the same three-note question and picking-count contrast.",
+  "source_sha256": "3c2e421115302f4aa063e72558440f4c9600658d29e6c93a5c7d5f81b2d28b86",
+  "old_sha256": "91f9a0a2c77d9421fb5816033855aed530b43719276d624772189f6fcc29d4e3",
+  "new_sha256": "f59903572ce49f293c7b6fccdf060f14c69296513ab72ec75fc142c54da869c1",
+  "reviewer": "Catalan independent AI reviewer 2",
+  "status": "approved-guarded-correction",
+  "evidence_file": "primary-evidence-2951-3200.json",
+  "evidence_sha256": "842c58854682a73ab1d16b35f6ca2ef1913ff42d4e8f5dabcda92dd32ff8f480",
+  "context_completion_recorded_by": "Catalan independent AI reviewer 3",
+  "all_current_occurrences_complete_context_reviewed": true,
+  "complete_context_approvals": [
+   {
+    "id": "CTX-0913",
+    "reviewer": "Catalan independent AI reviewer 3",
+    "target_sha256": "2aa6b956891ddc6baed8200fca17cf9a811c61d5b1ca24023e47e92781abb730",
+    "evidence_sha256": "4c5da4dd52198b82bece25d4160414e79d35c021d052249107d740819698426c"
+   }
+  ],
+  "primary_reviewer": "Catalan independent AI reviewer 2",
+  "author_provenance": {
+   "author": "Catalan AI translation author 1",
+   "batch": "ca-030.json",
+   "batch_output": "batches/ca-030.out.json",
+   "item_id": "s068"
+  }
+ },
+ {
+  "locale": "ca",
+  "key": "L44f4e7e1ff",
+  "source": "The backbeat",
+  "old": "El contracop",
+  "new": "El backbeat",
+  "reason": "Use the attested specialist loan backbeat for the accent pattern on beats 2 and 4, rather than the unsupported calque contracop. Primary Catalan educational materials retain backbeat; surrounding Catalan explains the action and keeps it distinct from offbeats/contratemps. See terminology-evidence.json.",
+  "source_sha256": "2d81c2acaed2a0b75f2ba0efcb6668f61ca64cd3f8a25c47b7f085f30c61b9b4",
+  "old_sha256": "42f7d81709a6de71da679209bc39e5b1b25de1d2316912b87da8b17102102a26",
+  "new_sha256": "d63cf9884079c7ca9454d3d681526cc0e1c83ae496e1073eefc38c1d71ee59bd",
+  "reviewer": "Catalan independent AI reviewer 2",
+  "status": "approved-guarded-correction",
+  "evidence_file": "primary-evidence-4501-4800.json",
+  "evidence_sha256": "6e316f5f225e8a0ce9635c659311d90b62811ff5e4acfa9dd5c644aa7f4ca134",
+  "context_completion_recorded_by": "Catalan independent AI reviewer 3",
+  "all_current_occurrences_complete_context_reviewed": true,
+  "complete_context_approvals": [
+   {
+    "id": "CTX-1543",
+    "reviewer": "Catalan independent AI reviewer 3",
+    "target_sha256": "18c6c3718beb75ebc7c68b9094ddc7b458826ef1c823c76c37bd15322812d831",
+    "evidence_sha256": "30f6deaf18e1d6849d9cbbee92c0b7f5905d5acd44919ed1c0bfd281b63d62ec"
+   }
+  ],
+  "primary_reviewer": "Catalan independent AI reviewer 2",
+  "author_provenance": {
+   "author": "Catalan AI translation author 2",
+   "batch": "ca-045.json",
+   "batch_output": "batches/ca-045.out.json",
+   "item_id": "s040"
+  }
+ },
+ {
+  "locale": "ca",
+  "key": "Lcbd395cf69",
+  "source": "Rock, pop and soul put the accent on beats 2 and 4. This is the backbeat. Count all four and tap only 2 and 4, like a snare drum.",
+  "old": "El rock, el pop i el soul accentuen els temps 2 i 4. És el contracop. Compta els quatre i pica només al 2 i al 4, com una caixa de bateria.",
+  "new": "El rock, el pop i el soul accentuen els temps 2 i 4. És el backbeat. Compta els quatre i pica només al 2 i al 4, com una caixa de bateria.",
+  "reason": "Use the attested specialist loan backbeat for the accent pattern on beats 2 and 4, rather than the unsupported calque contracop. Primary Catalan educational materials retain backbeat; surrounding Catalan explains the action and keeps it distinct from offbeats/contratemps. See terminology-evidence.json.",
+  "source_sha256": "edc97dc7e2f85420b21e1f5fd840f796997cc8a750fd38aadd1448e2d682bc6d",
+  "old_sha256": "bcf7ec736c5e18f78cdd60cf049cf7e633403e406051329cb46f1fc416602d2e",
+  "new_sha256": "f784e541bdf13435e7ce0211729c652ecf7efd5ed95d4fb31712591f46707d26",
+  "reviewer": "Catalan independent AI reviewer 2",
+  "status": "approved-guarded-correction",
+  "evidence_file": "primary-evidence-4501-4800.json",
+  "evidence_sha256": "6e316f5f225e8a0ce9635c659311d90b62811ff5e4acfa9dd5c644aa7f4ca134",
+  "context_completion_recorded_by": "Catalan independent AI reviewer 3",
+  "all_current_occurrences_complete_context_reviewed": true,
+  "complete_context_approvals": [
+   {
+    "id": "CTX-1543",
+    "reviewer": "Catalan independent AI reviewer 3",
+    "target_sha256": "18c6c3718beb75ebc7c68b9094ddc7b458826ef1c823c76c37bd15322812d831",
+    "evidence_sha256": "30f6deaf18e1d6849d9cbbee92c0b7f5905d5acd44919ed1c0bfd281b63d62ec"
+   }
+  ],
+  "primary_reviewer": "Catalan independent AI reviewer 2",
+  "author_provenance": {
+   "author": "Catalan AI translation author 2",
+   "batch": "ca-045.json",
+   "batch_output": "batches/ca-045.out.json",
+   "item_id": "s041"
+  }
+ },
+ {
+  "locale": "ca",
+  "key": "L0bc3dc7e3b",
+  "source": "The chunk, the island strum with a backbeat, swing and the ragtime chords, accents in 3-3-2, and the waltz.",
+  "old": "Rascat apagat, rascat illenc amb contracop, swing i acords de ragtime, accents en 3-3-2 i vals.",
+  "new": "Rascat apagat, rascat illenc amb backbeat, swing i acords de ragtime, accents en 3-3-2 i vals.",
+  "reason": "Use the attested specialist loan backbeat for the accent pattern on beats 2 and 4, rather than the unsupported calque contracop. Primary Catalan educational materials retain backbeat; surrounding Catalan explains the action and keeps it distinct from offbeats/contratemps. See terminology-evidence.json.",
+  "source_sha256": "0c2ee5ad09b67d6cf11ab3148da9cf7df3529f0c6ad20efbad4c15b0b2f5db84",
+  "old_sha256": "05376481f6e80a075172de844aa3f44047f811a9d88a7b207113b991c12e9f18",
+  "new_sha256": "734a2280dd43d43b2243593a5779a25d7cec48d3939e8e3738d4914e18302c25",
+  "reviewer": "Catalan independent AI reviewer 2",
+  "status": "approved-guarded-correction",
+  "evidence_file": "supplementary-backbeat-evidence.json",
+  "evidence_sha256": "c187e506fe8b1d4a1ad973e28268ec6ad8f45cff71edddc19f56afa38fd49ef5",
+  "supplementary_reassessment": true,
+  "context_completion_recorded_by": "Catalan independent AI reviewer 3",
+  "all_current_occurrences_complete_context_reviewed": true,
+  "complete_context_approvals": [
+   {
+    "id": "CTX-1540",
+    "reviewer": "Catalan independent AI reviewer 3",
+    "target_sha256": "fb0066e9902647c427e0ac42ea06caefdae83f43efedc3a2d77722e60947c6b9",
+    "evidence_sha256": "30f6deaf18e1d6849d9cbbee92c0b7f5905d5acd44919ed1c0bfd281b63d62ec"
+   }
+  ],
+  "primary_reviewer": "Catalan independent AI reviewer 1",
+  "author_provenance": {
+   "author": "Catalan AI translation author 1",
+   "batch": "ca-018.json",
+   "batch_output": "batches/ca-018.out.json",
+   "item_id": "s020"
+  }
+ },
+ {
+  "locale": "ca",
+  "key": "L80a64c52c1",
+  "source": "Two and four are the backbeat, where the snare drum plays. A chunk there gives the strum a drummer's punch.",
+  "old": "El dos i el quatre són el contracop, on toca la caixa de la bateria. Un rascat apagat allà dona al ritme una empenta de bateria.",
+  "new": "El dos i el quatre són el backbeat, on toca la caixa de la bateria. Un rascat apagat allà dona al ritme una empenta de bateria.",
+  "reason": "Use the attested specialist loan backbeat for the accent pattern on beats 2 and 4, rather than the unsupported calque contracop. Primary Catalan educational materials retain backbeat; surrounding Catalan explains the action and keeps it distinct from offbeats/contratemps. See terminology-evidence.json.",
+  "source_sha256": "4a647679dc2479218726ab1c6bd72be81ffb54ccedbbccdd56a095c1e9e4951c",
+  "old_sha256": "b4c44efdcfd24aed5f40e637481e6f32b95d7a79b2169d43608063cc2a22a2bc",
+  "new_sha256": "ce84f47e2173baaa3ca23ed1873e34de1179c36081211d6e9eaa10cb3befea58",
+  "reviewer": "Catalan independent AI reviewer 2",
+  "status": "approved-guarded-correction",
+  "evidence_file": "supplementary-backbeat-evidence.json",
+  "evidence_sha256": "c187e506fe8b1d4a1ad973e28268ec6ad8f45cff71edddc19f56afa38fd49ef5",
+  "supplementary_reassessment": true,
+  "context_completion_recorded_by": "Catalan independent AI reviewer 3",
+  "all_current_occurrences_complete_context_reviewed": true,
+  "complete_context_approvals": [
+   {
+    "id": "CTX-1387",
+    "reviewer": "Catalan independent AI reviewer 3",
+    "target_sha256": "b5acd3e2024047c2f14c38071d2f1fa8b86f4eba262c2f752b7642d79b36099b",
+    "evidence_sha256": "2342445e1848d1a3bd4075422dedeac3fcd2d0d62217b3912805e258030fc674"
+   }
+  ],
+  "primary_reviewer": "Catalan independent AI reviewer 1",
+  "author_provenance": {
+   "author": "Catalan AI translation author 1",
+   "batch": "ca-018.json",
+   "batch_output": "batches/ca-018.out.json",
+   "item_id": "s030"
+  }
+ },
+ {
+  "locale": "ca",
+  "key": "Lc0ded9cc39",
+  "source": "Take the island strum, D, DU, UDU, and turn the down on 2 into a chunk. The rhythm stays the same; the groove gets a backbeat.",
+  "old": "Agafa el rascat illenc, D, DU, UDU, i converteix el cop avall del 2 en un rascat apagat. El ritme és el mateix, però guanya un contracop.",
+  "new": "Agafa el rascat illenc, D, DU, UDU, i converteix el cop avall del 2 en un rascat apagat. El ritme és el mateix, però guanya un backbeat.",
+  "reason": "Use the attested specialist loan backbeat for the accent pattern on beats 2 and 4, rather than the unsupported calque contracop. Primary Catalan educational materials retain backbeat; surrounding Catalan explains the action and keeps it distinct from offbeats/contratemps. See terminology-evidence.json.",
+  "source_sha256": "6736239d649c439cdd64d3af9e1271d76522af6639fe17fa422218e666d864a0",
+  "old_sha256": "832a540d5ffea799110a22e187594e3c38bda355e42823ba5c916ac0e5344fdf",
+  "new_sha256": "5747e2efae74aef83698c1df4f8b7e2361118298fe54f3c95a338eb90e0f75d8",
+  "reviewer": "Catalan independent AI reviewer 2",
+  "status": "approved-guarded-correction",
+  "evidence_file": "supplementary-backbeat-evidence.json",
+  "evidence_sha256": "c187e506fe8b1d4a1ad973e28268ec6ad8f45cff71edddc19f56afa38fd49ef5",
+  "supplementary_reassessment": true,
+  "context_completion_recorded_by": "Catalan independent AI reviewer 3",
+  "all_current_occurrences_complete_context_reviewed": true,
+  "complete_context_approvals": [
+   {
+    "id": "CTX-1541",
+    "reviewer": "Catalan independent AI reviewer 3",
+    "target_sha256": "4f269fc1a6738a13e3b5f09f30bf4b6feec88668fa98649992aa685e22b37060",
+    "evidence_sha256": "30f6deaf18e1d6849d9cbbee92c0b7f5905d5acd44919ed1c0bfd281b63d62ec"
+   }
+  ],
+  "primary_reviewer": "Catalan independent AI reviewer 1",
+  "author_provenance": {
+   "author": "Catalan AI translation author 1",
+   "batch": "ca-018.json",
+   "batch_output": "batches/ca-018.out.json",
+   "item_id": "s033"
+  }
+ },
+ {
+  "locale": "ca",
+  "key": "Lde3e9cebaf",
+  "source": "Leap by thirds, fifths and octaves, and land in tune.",
+  "old": "Salta per terceres, quintes i octaves i arriba afinant.",
+  "new": "Salta per terceres, quintes i octaves i arriba-hi afinat.",
+  "reason": "Express landing on the target interval in tune, rather than arriving while tuning (arriba afinant). The corrected Catalan names the achieved pitch result and retains the same interval list.",
+  "source_sha256": "fc232d4d81f8458dc0a79c38336f8e82352f2452543040fbd5617625417b7f73",
+  "old_sha256": "afe9ee6bc548caf7cf41e1597ee254646a3ed9a2bd96ff9d181fdc060f1b8b86",
+  "new_sha256": "c0ff7ba97078a5b3970b0073f799e2c4b762c0e2c076d6cc628822b06592c8d3",
+  "reviewer": "Catalan independent AI reviewer 2",
+  "status": "approved-guarded-correction",
+  "evidence_file": "primary-evidence-4801-5100.json",
+  "evidence_sha256": "aa74b45dbde557697a34005efade0a73a5898773dc166831aa0c64fed05467f9",
+  "context_completion_recorded_by": "Catalan independent AI reviewer 3",
+  "all_current_occurrences_complete_context_reviewed": true,
+  "complete_context_approvals": [
+   {
+    "id": "CTX-1544",
+    "reviewer": "Catalan independent AI reviewer 3",
+    "target_sha256": "caf847aada26b56409ebfcb8852ae6ebbbb8149eca55ff92325c3b9702d6dc9e",
+    "evidence_sha256": "30f6deaf18e1d6849d9cbbee92c0b7f5905d5acd44919ed1c0bfd281b63d62ec"
+   }
+  ],
+  "primary_reviewer": "Catalan independent AI reviewer 2",
+  "author_provenance": {
+   "author": "Catalan AI translation author 2",
+   "batch": "ca-047.json",
+   "batch_output": "batches/ca-047.out.json",
+   "item_id": "s002"
+  }
+ },
+ {
+  "locale": "ca",
+  "key": "L1c3d60852e",
+  "source": "The second section starts low: open B, A, open D, then C sharp at fret 4 and B at fret 2 on string 5, and open A.",
+  "old": "La segona secció és greu: B a l’aire, A, D a l’aire, C sostingut al trast 4 i B al trast 2 de la corda 5, A a l’aire.",
+  "new": "La segona part comença greu: B a l’aire, A, D a l’aire, C sostingut al trast 4 i B al trast 2 de la corda 5, A a l’aire.",
+  "reason": "Restore starts: the source describes the low opening of the second section, not the register of the entire section. Preserve all following exact pitch, fret and string instructions. Final tightening: Use synonymous part for secció while retaining comença greu, all pitches, open strings, frets and string number; fits the 120-character advisory limit without changing the starting-register clarification.",
+  "source_sha256": "c34d9e37b180c4834f0f06b93fddd961178dc30aa67ad44a6d59cc771329d606",
+  "old_sha256": "6e9904a6c259fe17b01b15a5b606dd93b620ab1ff5f0666896a9b7598feacf20",
+  "new_sha256": "1774dab46cf52af9d985121ac100dcf396b1f75157edcf72347bd857b5b78298",
+  "reviewer": "Catalan independent AI reviewer 3",
+  "status": "approved-guarded-correction",
+  "evidence_file": "context-amendment-evidence-final-layout.json",
+  "evidence_sha256": "4921bdcffba975b75fa39baf8f27088439d623e23567a0892519ee021c4478ca",
+  "originating_proposal_reviewer": "Catalan independent AI reviewer 2",
+  "preserved_prior_proposal": {
+   "locale": "ca",
+   "key": "L1c3d60852e",
+   "source": "The second section starts low: open B, A, open D, then C sharp at fret 4 and B at fret 2 on string 5, and open A.",
+   "old": "La segona secció és greu: B a l’aire, A, D a l’aire, C sostingut al trast 4 i B al trast 2 de la corda 5, A a l’aire.",
+   "new": "La segona secció comença greu: B a l’aire, A, D a l’aire, C sostingut al trast 4 i B al trast 2 de la corda 5, A a l’aire.",
+   "reason": "Restore starts: the source describes the low opening of the second section, not the register of the entire section. Preserve all following exact pitch, fret and string instructions.",
+   "source_sha256": "c34d9e37b180c4834f0f06b93fddd961178dc30aa67ad44a6d59cc771329d606",
+   "old_sha256": "6e9904a6c259fe17b01b15a5b606dd93b620ab1ff5f0666896a9b7598feacf20",
+   "new_sha256": "896c4990d36e39d29d833e77e9475189eb4e4ff6d884cff17530fa060644725f",
+   "reviewer": "Catalan independent AI reviewer 2",
+   "status": "proposed-pending-complete-contexts",
+   "evidence_file": "primary-evidence-4801-5100.json",
+   "evidence_sha256": "aa74b45dbde557697a34005efade0a73a5898773dc166831aa0c64fed05467f9"
+  },
+  "context_completion_recorded_by": "Catalan independent AI reviewer 3",
+  "all_current_occurrences_complete_context_reviewed": true,
+  "complete_context_approvals": [
+   {
+    "id": "CTX-1545",
+    "reviewer": "Catalan independent AI reviewer 3",
+    "target_sha256": "f1ed0dc1d3c295a74c678748eb75171133356d5e0d79b78041c1fa74ce134a40",
+    "evidence_sha256": "4921bdcffba975b75fa39baf8f27088439d623e23567a0892519ee021c4478ca"
+   }
+  ],
+  "primary_reviewer": "Catalan independent AI reviewer 2",
+  "author_provenance": {
+   "author": "Catalan AI translation author 2",
+   "batch": "ca-049.json",
+   "batch_output": "batches/ca-049.out.json",
+   "item_id": "s067",
+   "original_author": "Catalan AI translation author 2",
+   "correction_lineage": [
+    "guarded-author-corrections/ca-049-s067.json"
+   ]
+  }
+ },
+ {
+  "locale": "ca",
+  "key": "Lf92b8adc12",
+  "source": "Synth-pop, gospel-pop, dark pop, indie pop and a 6/8 finale, with five new barre chords.",
+  "old": "Synth-pop, gospel-pop, pop fosc, pop indie i un final en 6/8, amb cinc acords nous amb celleta.",
+  "new": "Synth-pop, gòspel-pop, pop fosc, pop indie i un final en 6/8, amb cinc acords nous amb celleta.",
+  "reason": "Use the normalized Catalan spelling gòspel in this compound style label, consistently with the same draft’s standalone gòspel. TERMCAT explicitly normalizes gòspel with an open accent; application to the gòspel-pop compound is the reviewer’s composition inference, not a claim that TERMCAT separately lists the compound. See terminology-evidence.json.",
+  "source_sha256": "6677d346c0cc7d26cfe9a7fa4ca5ae887a2654c6cece01d203efd58b6fc03e89",
+  "old_sha256": "8aab136904bd66100a8ee24a7e6b70de055a12af4db98fb0b1bdd5abc1b18759",
+  "new_sha256": "ce6c2fbe3b10c15157473ced71c14903d062162ab88f4a1285497d590274b887",
+  "reviewer": "Catalan independent AI reviewer 2",
+  "status": "approved-guarded-correction",
+  "evidence_file": "primary-evidence-5551-5750.json",
+  "evidence_sha256": "633b7969e0ca233b6c428fcaa92dc5ec3474195348814e8beb0a8dc5491b4454",
+  "context_completion_recorded_by": "Catalan independent AI reviewer 3",
+  "all_current_occurrences_complete_context_reviewed": true,
+  "complete_context_approvals": [
+   {
+    "id": "CTX-1245",
+    "reviewer": "Catalan independent AI reviewer 3",
+    "target_sha256": "8ff0e5a938357d0523a6a6728430827941d789cc876fe48eac3b5b5bd2c06690",
+    "evidence_sha256": "738391c518dc10904e3350c358ad4aaa1e69205175e2645805be95119b8b9503"
+   }
+  ],
+  "primary_reviewer": "Catalan independent AI reviewer 2",
+  "author_provenance": {
+   "author": "Catalan AI translation author 2",
+   "batch": "ca-054.json",
+   "batch_output": "batches/ca-054.out.json",
+   "item_id": "s031"
+  }
+ },
+ {
+  "locale": "ca",
+  "key": "Lfc41746da3",
+  "source": "Gospel-pop",
+  "old": "Gospel-pop",
+  "new": "Gòspel-pop",
+  "reason": "Use the normalized Catalan spelling gòspel in this compound style label, consistently with the same draft’s standalone gòspel. TERMCAT explicitly normalizes gòspel with an open accent; application to the gòspel-pop compound is the reviewer’s composition inference, not a claim that TERMCAT separately lists the compound. See terminology-evidence.json.",
+  "source_sha256": "f9f7c575d36365b9367466d34d5df6562cc584a6bccda73f4342b6c8b21ff45a",
+  "old_sha256": "f9f7c575d36365b9367466d34d5df6562cc584a6bccda73f4342b6c8b21ff45a",
+  "new_sha256": "df3a3fcd36cb1796aac6b37a9036e4f2d1e8d9eb4074e181c9abdf50bc8a2f48",
+  "reviewer": "Catalan independent AI reviewer 2",
+  "status": "approved-guarded-correction",
+  "evidence_file": "primary-evidence-5551-5750.json",
+  "evidence_sha256": "633b7969e0ca233b6c428fcaa92dc5ec3474195348814e8beb0a8dc5491b4454",
+  "context_completion_recorded_by": "Catalan independent AI reviewer 3",
+  "all_current_occurrences_complete_context_reviewed": true,
+  "complete_context_approvals": [
+   {
+    "id": "CTX-1546",
+    "reviewer": "Catalan independent AI reviewer 3",
+    "target_sha256": "8452befe3deee5a89db76d340d348b9a267cd9a87d51288ffd75f8792369d4d6",
+    "evidence_sha256": "30f6deaf18e1d6849d9cbbee92c0b7f5905d5acd44919ed1c0bfd281b63d62ec"
+   }
+  ],
+  "primary_reviewer": "Catalan independent AI reviewer 2",
+  "author_provenance": {
+   "author": "Catalan AI translation author 2",
+   "batch": "ca-054.json",
+   "batch_output": "batches/ca-054.out.json",
+   "item_id": "s038"
+  }
+ },
+ {
+  "locale": "ca",
+  "key": "L1b6de5aa9d",
+  "source": "Bright Side of the Block is a gospel-pop sing-along in D at 100 beats per minute: D, F sharp minor, G and A. Clap on two and four and sing the chorus like the whole street joins in.",
+  "old": "«La cara lluminosa de l’illa de cases» és gospel-pop per cantar junts en D a 100 pulsacions per minut: D, F sostingut menor, G i A. Pica de mans al dos i quatre i canta la tornada com si s’hi afegís tot el carrer.",
+  "new": "«La cara lluminosa de l’illa de cases» és gòspel-pop per cantar junts en D a 100 pulsacions per minut: D, F sostingut menor, G i A. Pica de mans al dos i quatre i canta la tornada com si s’hi afegís tot el carrer.",
+  "reason": "Use the normalized Catalan spelling gòspel in this compound style label, consistently with the same draft’s standalone gòspel. TERMCAT explicitly normalizes gòspel with an open accent; application to the gòspel-pop compound is the reviewer’s composition inference, not a claim that TERMCAT separately lists the compound. See terminology-evidence.json.",
+  "source_sha256": "3705d91af23ec383c7ec54b28bb7d61397b69481f9744796f78aa79daad2202b",
+  "old_sha256": "ddf185f1d23db37ba2bac23f9c8db3ffe69c392c13d00b94c57c7aa206b3be2d",
+  "new_sha256": "6f5ccd77a1033a5f2afe9f1f13ab18c73d96de01770742e6378a242a8a563274",
+  "reviewer": "Catalan independent AI reviewer 2",
+  "status": "approved-guarded-correction",
+  "evidence_file": "primary-evidence-5551-5750.json",
+  "evidence_sha256": "633b7969e0ca233b6c428fcaa92dc5ec3474195348814e8beb0a8dc5491b4454",
+  "context_completion_recorded_by": "Catalan independent AI reviewer 3",
+  "all_current_occurrences_complete_context_reviewed": true,
+  "complete_context_approvals": [
+   {
+    "id": "CTX-1546",
+    "reviewer": "Catalan independent AI reviewer 3",
+    "target_sha256": "8452befe3deee5a89db76d340d348b9a267cd9a87d51288ffd75f8792369d4d6",
+    "evidence_sha256": "30f6deaf18e1d6849d9cbbee92c0b7f5905d5acd44919ed1c0bfd281b63d62ec"
+   }
+  ],
+  "primary_reviewer": "Catalan independent AI reviewer 2",
+  "author_provenance": {
+   "author": "Catalan AI translation author 2",
+   "batch": "ca-054.json",
+   "batch_output": "batches/ca-054.out.json",
+   "item_id": "s039"
+  }
+ },
+ {
+  "locale": "ca",
+  "key": "L6eac4b11f3",
+  "source": "Synth-pop, gospel-pop, dark pop, indie pop and a 6/8 finale, full of syncopation.",
+  "old": "Synth-pop, gospel-pop, pop fosc, pop indie i un final en 6/8, plens de síncopes.",
+  "new": "Synth-pop, gòspel-pop, pop fosc, pop indie i un final en 6/8, plens de síncopes.",
+  "reason": "Apply normalized Catalan gòspel in the compound gòspel-pop, matching the corrected Originals unit summary and genre label as well as standalone gòspel elsewhere; see TERMCAT evidence in terminology-evidence.json.",
+  "source_sha256": "bced12d5b883aeb2161756c0f3c90eb3fcce5c76144c284ef01204a7da2a2c79",
+  "old_sha256": "1700c856427b99c9249fb956a289f8ba5303025dcb796907215d50371f25e5b2",
+  "new_sha256": "621808e3fe95d1a716427dbf956a6bcbab004a197d864895a4a902bd43b9d579",
+  "reviewer": "Catalan independent AI reviewer 2",
+  "status": "approved-guarded-correction",
+  "evidence_file": "primary-evidence-5951-6083.json",
+  "evidence_sha256": "0a989c2dc142a3a3dfb8e52aca327b20ee86bef2b805557890c19df4087d8173",
+  "context_completion_recorded_by": "Catalan independent AI reviewer 3",
+  "all_current_occurrences_complete_context_reviewed": true,
+  "complete_context_approvals": [
+   {
+    "id": "CTX-1246",
+    "reviewer": "Catalan independent AI reviewer 3",
+    "target_sha256": "f882980533b77c3025468374a3a1ce932f3c1615164b688af57519f2784c69ba",
+    "evidence_sha256": "738391c518dc10904e3350c358ad4aaa1e69205175e2645805be95119b8b9503"
+   }
+  ],
+  "primary_reviewer": "Catalan independent AI reviewer 2",
+  "author_provenance": {
+   "author": "Catalan AI translation author 2",
+   "batch": "ca-058.json",
+   "batch_output": "batches/ca-058.out.json",
+   "item_id": "s090"
+  }
+ },
+ {
+  "locale": "ca",
+  "key": "L028703cd0b",
+  "source": "And this one?",
+  "old": "I aquesta?",
+  "new": "I en aquest cas?",
+  "reason": "Replace feminine this-one demonstrative with a natural gender-neutral follow-on question, since the same key covers a chord-quality choice and note/fingering choices. Parent explicitly directed localized abstract-number prompt adaptations rather than any digit-guard waiver or source split.",
+  "source_sha256": "243f3afee91c1316d76900546a1e87125ffd4ee183c7b2886b7b8f3d9e64709b",
+  "old_sha256": "817b931c5a2f4af9f94ce412fa9caeaeb9bd8bfd65f4f3b4e4042d9fb488f459",
+  "new_sha256": "77008f121f971168f31bf494af5aafb1ee8ec0fd2cbb86a824636a1d2337b449",
+  "reviewer": "Catalan independent AI reviewer 2",
+  "status": "approved-guarded-correction",
+  "prior_primary_reviewer": "Catalan independent AI reviewer 2",
+  "context_ids": [
+   "CTX-0495",
+   "CTX-0873",
+   "CTX-0874"
+  ],
+  "evidence_file": "context-amendment-evidence-001.json",
+  "evidence_sha256": "8b3c24c7572c378acde575733e0743840e764293bcb303d78655c5de65b2eb47",
+  "context_completion_recorded_by": "Catalan independent AI reviewer 3",
+  "all_current_occurrences_complete_context_reviewed": true,
+  "complete_context_approvals": [
+   {
+    "id": "CTX-0495",
+    "reviewer": "Catalan independent AI reviewer 2",
+    "target_sha256": "d4f8671a662ae818c2085724cd2e01d3da6a4c9b9ace3be1acce2eca64232d43",
+    "evidence_sha256": "8b3c24c7572c378acde575733e0743840e764293bcb303d78655c5de65b2eb47"
+   },
+   {
+    "id": "CTX-0873",
+    "reviewer": "Catalan independent AI reviewer 2",
+    "target_sha256": "083ed5d99a240a92e0516b10b1f4123b8da3bb19f45718f681acb34feccff017",
+    "evidence_sha256": "8b3c24c7572c378acde575733e0743840e764293bcb303d78655c5de65b2eb47"
+   },
+   {
+    "id": "CTX-0874",
+    "reviewer": "Catalan independent AI reviewer 2",
+    "target_sha256": "5149fb5b29dd9f376f866ef200e285f875aad4f677e1db09dcd76692b714abd5",
+    "evidence_sha256": "8b3c24c7572c378acde575733e0743840e764293bcb303d78655c5de65b2eb47"
+   }
+  ],
+  "primary_reviewer": "Catalan independent AI reviewer 2",
+  "author_provenance": {
+   "author": "Catalan AI translation author 1",
+   "batch": "ca-024.json",
+   "batch_output": "batches/ca-024.out.json",
+   "item_id": "s083"
+  }
+ },
+ {
+  "locale": "ca",
+  "key": "Lfc41cb39bf",
+  "source": "How many sixteenth notes fill one beat?",
+  "old": "Quantes semicorxeres omplen una pulsació?",
+  "new": "Quin és el nombre de semicorxeres que omplen una pulsació?",
+  "reason": "Ask explicitly for the abstract number of sixteenth notes; shared Un/Dos are number labels rather than ungrammatical ellipses of feminine semicorxeres. Parent explicitly directed localized abstract-number prompt adaptations rather than any digit-guard waiver or source split.",
+  "source_sha256": "a868afda411a25f7d0bb23cb195ecf1719b737e0f6198419f4e94478eabd7bda",
+  "old_sha256": "b6bd95a370b6a8596718749f6c7c135bf6ffad20e96cd76a0e1f399726a107b6",
+  "new_sha256": "fe9ff654ad061748cdfc3a4b1d6a70835560fa3e8bf50c0d70de0d62e2c62f8b",
+  "reviewer": "Catalan independent AI reviewer 2",
+  "status": "approved-guarded-correction",
+  "prior_primary_reviewer": "Catalan independent AI reviewer 1",
+  "context_ids": [
+   "CTX-0555"
+  ],
+  "evidence_file": "context-amendment-evidence-001.json",
+  "evidence_sha256": "8b3c24c7572c378acde575733e0743840e764293bcb303d78655c5de65b2eb47",
+  "context_completion_recorded_by": "Catalan independent AI reviewer 3",
+  "all_current_occurrences_complete_context_reviewed": true,
+  "complete_context_approvals": [
+   {
+    "id": "CTX-0555",
+    "reviewer": "Catalan independent AI reviewer 2",
+    "target_sha256": "a4b2801cc728268713b78e81f661913686a353236929e7b84af728cb5b142399",
+    "evidence_sha256": "8b3c24c7572c378acde575733e0743840e764293bcb303d78655c5de65b2eb47"
+   }
+  ],
+  "primary_reviewer": "Catalan independent AI reviewer 1",
+  "author_provenance": {
+   "author": "Catalan AI translation author 1",
+   "batch": "ca-010.json",
+   "batch_output": "batches/ca-010.out.json",
+   "item_id": "s013"
+  }
+ },
+ {
+  "locale": "ca",
+  "key": "L2e2ccc4532",
+  "source": "In AABA, how many times does the A tune come?",
+  "old": "En AABA, quantes vegades apareix la melodia A?",
+  "new": "En AABA, quin és el nombre d’aparicions de la melodia A?",
+  "reason": "Ask for the number of A-theme appearances, preserving the AABA count while allowing shared abstract-number answer labels. Parent explicitly directed localized abstract-number prompt adaptations rather than any digit-guard waiver or source split.",
+  "source_sha256": "b8b68448d8a8f16a7a669cd28144c4da8ac364118cbe8fadf6af83ac3ce531d2",
+  "old_sha256": "e1909d5862f7aa78015b465a93ea638f749baef05b6563d64b73e75ad7ad3a1f",
+  "new_sha256": "b7de4a8eb7eee33af8753127e0dca4427a125c449e23ed82124e3c42495bcb8b",
+  "reviewer": "Catalan independent AI reviewer 2",
+  "status": "approved-guarded-correction",
+  "prior_primary_reviewer": "Catalan independent AI reviewer 1",
+  "context_ids": [
+   "CTX-0556"
+  ],
+  "evidence_file": "context-amendment-evidence-001.json",
+  "evidence_sha256": "8b3c24c7572c378acde575733e0743840e764293bcb303d78655c5de65b2eb47",
+  "context_completion_recorded_by": "Catalan independent AI reviewer 3",
+  "all_current_occurrences_complete_context_reviewed": true,
+  "complete_context_approvals": [
+   {
+    "id": "CTX-0556",
+    "reviewer": "Catalan independent AI reviewer 2",
+    "target_sha256": "0a5e9a9da69b18f6660df865dde62deb706d6fceca9ce3cdcdbb0583dd9a9bca",
+    "evidence_sha256": "8b3c24c7572c378acde575733e0743840e764293bcb303d78655c5de65b2eb47"
+   }
+  ],
+  "primary_reviewer": "Catalan independent AI reviewer 1",
+  "author_provenance": {
+   "author": "Catalan AI translation author 1",
+   "batch": "ca-015.json",
+   "batch_output": "batches/ca-015.out.json",
+   "item_id": "s025"
+  }
+ },
+ {
+  "locale": "ca",
+  "key": "L5a0e299b6e",
+  "source": "How many beats does a dotted half note last?",
+  "old": "Quantes pulsacions dura una blanca amb puntet?",
+  "new": "Quin és el nombre de pulsacions d’una blanca amb puntet?",
+  "reason": "Ask for the abstract pulse count of the dotted half note; avoids gender conflict between feminine pulsacions and shared numeral labels. Parent explicitly directed localized abstract-number prompt adaptations rather than any digit-guard waiver or source split.",
+  "source_sha256": "f78544bca4a749965cbfdfca5505f746e4f86602f7a5f94844e6e13646bd08ab",
+  "old_sha256": "c175e483f0b8c8e0fadd1fd2e1be1db936eb7939fd94a3eff05371f7b184e6ea",
+  "new_sha256": "5a412fb0bca79b1bda4c380aa286eb6a088be16989ee7f2a41baa8b6047d5b39",
+  "reviewer": "Catalan independent AI reviewer 2",
+  "status": "approved-guarded-correction",
+  "prior_primary_reviewer": "Catalan independent AI reviewer 1",
+  "context_ids": [
+   "CTX-0557",
+   "CTX-0568"
+  ],
+  "evidence_file": "context-amendment-evidence-001.json",
+  "evidence_sha256": "8b3c24c7572c378acde575733e0743840e764293bcb303d78655c5de65b2eb47",
+  "context_completion_recorded_by": "Catalan independent AI reviewer 3",
+  "all_current_occurrences_complete_context_reviewed": true,
+  "complete_context_approvals": [
+   {
+    "id": "CTX-0557",
+    "reviewer": "Catalan independent AI reviewer 2",
+    "target_sha256": "4797ca700b5267edbb405ff78a0450629464495b07ffcae6fe6dfce5f65bd5bf",
+    "evidence_sha256": "8b3c24c7572c378acde575733e0743840e764293bcb303d78655c5de65b2eb47"
+   },
+   {
+    "id": "CTX-0568",
+    "reviewer": "Catalan independent AI reviewer 2",
+    "target_sha256": "b514983c4791520c660af66593074ff7f189e20d77f333bd0dfc6b93fb97ec76",
+    "evidence_sha256": "8b3c24c7572c378acde575733e0743840e764293bcb303d78655c5de65b2eb47"
+   }
+  ],
+  "primary_reviewer": "Catalan independent AI reviewer 1",
+  "author_provenance": {
+   "author": "Catalan AI translation author 1",
+   "batch": "ca-016.json",
+   "batch_output": "batches/ca-016.out.json",
+   "item_id": "s100"
+  }
+ },
+ {
+  "locale": "ca",
+  "key": "L8a15878ca1",
+  "source": "How many eighth notes fit in one beat?",
+  "old": "Quantes corxeres caben en una pulsació?",
+  "new": "Quin és el nombre de corxeres que caben en una pulsació?",
+  "reason": "Ask for the abstract count of eighth notes that fit in one pulse; answer remains the same while shared bare numerals need no feminine noun agreement. Parent explicitly directed localized abstract-number prompt adaptations rather than any digit-guard waiver or source split.",
+  "source_sha256": "e098f5a4c792e59d32676d7566c3a323acc3e544228cbed6eb856f9d0aa3818d",
+  "old_sha256": "1c686cab62531f9fcca2332c774811377dc491973afa8e56d7b24c5aa27e4ca9",
+  "new_sha256": "eeaad68f9c849575308448c5d21c70d23657cd0a05cfaaac1929351082e169c0",
+  "reviewer": "Catalan independent AI reviewer 2",
+  "status": "approved-guarded-correction",
+  "prior_primary_reviewer": "Catalan independent AI reviewer 2",
+  "context_ids": [
+   "CTX-0559",
+   "CTX-0566",
+   "CTX-0576"
+  ],
+  "evidence_file": "context-amendment-evidence-001.json",
+  "evidence_sha256": "8b3c24c7572c378acde575733e0743840e764293bcb303d78655c5de65b2eb47",
+  "context_completion_recorded_by": "Catalan independent AI reviewer 3",
+  "all_current_occurrences_complete_context_reviewed": true,
+  "complete_context_approvals": [
+   {
+    "id": "CTX-0559",
+    "reviewer": "Catalan independent AI reviewer 2",
+    "target_sha256": "04105460fbe284e75790848fa587cd29d5e8bdfb1d45f5eedef60900f9540b47",
+    "evidence_sha256": "8b3c24c7572c378acde575733e0743840e764293bcb303d78655c5de65b2eb47"
+   },
+   {
+    "id": "CTX-0566",
+    "reviewer": "Catalan independent AI reviewer 2",
+    "target_sha256": "1b328e61a46ad5605e8ee78d254f3651dad6feb6da9341755dac5d36faa99547",
+    "evidence_sha256": "8b3c24c7572c378acde575733e0743840e764293bcb303d78655c5de65b2eb47"
+   },
+   {
+    "id": "CTX-0576",
+    "reviewer": "Catalan independent AI reviewer 2",
+    "target_sha256": "f48356d164291197bef7b1ce474d56e7a08d441ff33302b5e48e70455e6b3136",
+    "evidence_sha256": "8b3c24c7572c378acde575733e0743840e764293bcb303d78655c5de65b2eb47"
+   }
+  ],
+  "primary_reviewer": "Catalan independent AI reviewer 2",
+  "author_provenance": {
+   "author": "Catalan AI translation author 1",
+   "batch": "ca-023.json",
+   "batch_output": "batches/ca-023.out.json",
+   "item_id": "s029"
+  }
+ },
+ {
+  "locale": "ca",
+  "key": "Lb9c69f6a3b",
+  "source": "A major chord turns minor. How many of its notes change?",
+  "old": "Un acord major es torna menor. Quantes notes canvien?",
+  "new": "Un acord major es torna menor. Quin és el nombre de notes que canvien?",
+  "reason": "Keep the chord transformation and ask explicitly for the number of changed notes; shared Un/Dos then name numerical values, while Totes tres remains a meaningful all-notes distractor. Parent explicitly directed localized abstract-number prompt adaptations rather than any digit-guard waiver or source split.",
+  "source_sha256": "aca0d97d9737584e3a18ba3e9b3bb9ee17eacec8c70a8a95fac6399a187f948a",
+  "old_sha256": "7067d082bdf17a5b8cf5530940e1f283e54271a3d2c10627732f7ade5a2ff76a",
+  "new_sha256": "6d69ee9d9f15ac20d1b5029bc28ff13b7daff95ad7444dab656ee173f81a8141",
+  "reviewer": "Catalan independent AI reviewer 2",
+  "status": "approved-guarded-correction",
+  "prior_primary_reviewer": "Catalan independent AI reviewer 2",
+  "context_ids": [
+   "CTX-0562"
+  ],
+  "evidence_file": "context-amendment-evidence-001.json",
+  "evidence_sha256": "8b3c24c7572c378acde575733e0743840e764293bcb303d78655c5de65b2eb47",
+  "context_completion_recorded_by": "Catalan independent AI reviewer 3",
+  "all_current_occurrences_complete_context_reviewed": true,
+  "complete_context_approvals": [
+   {
+    "id": "CTX-0562",
+    "reviewer": "Catalan independent AI reviewer 2",
+    "target_sha256": "55c10349c89e240cef6c18197b5153e478ae639f47ad7d4edd418bfb82678523",
+    "evidence_sha256": "8b3c24c7572c378acde575733e0743840e764293bcb303d78655c5de65b2eb47"
+   }
+  ],
+  "primary_reviewer": "Catalan independent AI reviewer 2",
+  "author_provenance": {
+   "author": "Catalan AI translation author 1",
+   "batch": "ca-034.json",
+   "batch_output": "batches/ca-034.out.json",
+   "item_id": "s084"
+  }
+ },
+ {
+  "locale": "ca",
+  "key": "L3569741f6a",
+  "source": "How many beats does a half note last?",
+  "old": "Quantes pulsacions dura una blanca?",
+  "new": "Quin és el nombre de pulsacions d’una blanca?",
+  "reason": "Ask for the abstract pulse count of a half note; number labels remain suitable alongside the explicit Mitja pulsació distractor. Parent explicitly directed localized abstract-number prompt adaptations rather than any digit-guard waiver or source split.",
+  "source_sha256": "99dbdbc7aa27374b52d066e0898748125d1e2544b074c1e8dcb02467eabcbb40",
+  "old_sha256": "2e65f818b8727ef7fb4511456cebd271eaad10908f3844ac09496c2cebbc5441",
+  "new_sha256": "bffd2e4a1167bd13815d38f0358513e8ab7f20bccc1e4dee5e8fb5c48e163702",
+  "reviewer": "Catalan independent AI reviewer 2",
+  "status": "approved-guarded-correction",
+  "prior_primary_reviewer": "Catalan independent AI reviewer 2",
+  "context_ids": [
+   "CTX-0564"
+  ],
+  "evidence_file": "context-amendment-evidence-001.json",
+  "evidence_sha256": "8b3c24c7572c378acde575733e0743840e764293bcb303d78655c5de65b2eb47",
+  "context_completion_recorded_by": "Catalan independent AI reviewer 3",
+  "all_current_occurrences_complete_context_reviewed": true,
+  "complete_context_approvals": [
+   {
+    "id": "CTX-0564",
+    "reviewer": "Catalan independent AI reviewer 2",
+    "target_sha256": "24c55d77deb542375f1da7e99481ff8131ad467e72f4a6c96ba74eebc1627941",
+    "evidence_sha256": "8b3c24c7572c378acde575733e0743840e764293bcb303d78655c5de65b2eb47"
+   }
+  ],
+  "primary_reviewer": "Catalan independent AI reviewer 2",
+  "author_provenance": {
+   "author": "Catalan AI translation author 1",
+   "batch": "ca-038.json",
+   "batch_output": "batches/ca-038.out.json",
+   "item_id": "s075"
+  }
+ },
+ {
+  "locale": "ca",
+  "key": "L9b8afa8d58",
+  "source": "How many quarter notes fill a bar of four beats?",
+  "old": "Quantes negres omplen un compàs de quatre pulsacions?",
+  "new": "Quin és el nombre de negres que omplen un compàs de quatre pulsacions?",
+  "reason": "Ask for the abstract count of quarter notes filling the same four-beat bar; preserves the exact counting task without feminine numeral ellipsis. Parent explicitly directed localized abstract-number prompt adaptations rather than any digit-guard waiver or source split.",
+  "source_sha256": "bcce779c8b9b4b797aca8147572791ffae5777a0ed67b3146603a426dfb48752",
+  "old_sha256": "6301770624f348671e59559c2241a1bc0624c5007e79d51ba720d2c1b5851225",
+  "new_sha256": "00a63b1fda7121eecc70dd5be09a5092a41227f322ff47c6915251b475c71311",
+  "reviewer": "Catalan independent AI reviewer 2",
+  "status": "approved-guarded-correction",
+  "prior_primary_reviewer": "Catalan independent AI reviewer 2",
+  "context_ids": [
+   "CTX-0565"
+  ],
+  "evidence_file": "context-amendment-evidence-001.json",
+  "evidence_sha256": "8b3c24c7572c378acde575733e0743840e764293bcb303d78655c5de65b2eb47",
+  "context_completion_recorded_by": "Catalan independent AI reviewer 3",
+  "all_current_occurrences_complete_context_reviewed": true,
+  "complete_context_approvals": [
+   {
+    "id": "CTX-0565",
+    "reviewer": "Catalan independent AI reviewer 2",
+    "target_sha256": "8067eea9db9b0549c733ad820f88f17773610dacf1bd19ed26194c940c2f3f55",
+    "evidence_sha256": "8b3c24c7572c378acde575733e0743840e764293bcb303d78655c5de65b2eb47"
+   }
+  ],
+  "primary_reviewer": "Catalan independent AI reviewer 2",
+  "author_provenance": {
+   "author": "Catalan AI translation author 1",
+   "batch": "ca-038.json",
+   "batch_output": "batches/ca-038.out.json",
+   "item_id": "s077"
+  }
+ },
+ {
+  "locale": "ca",
+  "key": "Lff52112f8f",
+  "source": "How many sixteenth notes equal one quarter note?",
+  "old": "Quantes semicorxeres equivalen a una negra?",
+  "new": "Quin és el nombre de semicorxeres que equivalen a una negra?",
+  "reason": "Ask for the abstract number of sixteenth notes equivalent to one quarter note, preserving the duration relationship and shared numerical answer labels. Parent explicitly directed localized abstract-number prompt adaptations rather than any digit-guard waiver or source split.",
+  "source_sha256": "43a90bb8d4343ce99f6b239da00fbe52cea380f1244c313e5931193d9cf60403",
+  "old_sha256": "d018d95aa53f8c705479573c6df46e71db1f5813a9bad3370cfdee416886b649",
+  "new_sha256": "dfa31acc967eab3d2b7113e18f442a2dc206bdf285c34f98e9fd1da894cbe4ca",
+  "reviewer": "Catalan independent AI reviewer 2",
+  "status": "approved-guarded-correction",
+  "prior_primary_reviewer": "Catalan independent AI reviewer 2",
+  "context_ids": [
+   "CTX-0567"
+  ],
+  "evidence_file": "context-amendment-evidence-001.json",
+  "evidence_sha256": "8b3c24c7572c378acde575733e0743840e764293bcb303d78655c5de65b2eb47",
+  "context_completion_recorded_by": "Catalan independent AI reviewer 3",
+  "all_current_occurrences_complete_context_reviewed": true,
+  "complete_context_approvals": [
+   {
+    "id": "CTX-0567",
+    "reviewer": "Catalan independent AI reviewer 2",
+    "target_sha256": "b6cf397b0d31cc56edcf5b6372b87c7eabec113db8af02f26a1c927061323031",
+    "evidence_sha256": "8b3c24c7572c378acde575733e0743840e764293bcb303d78655c5de65b2eb47"
+   }
+  ],
+  "primary_reviewer": "Catalan independent AI reviewer 2",
+  "author_provenance": {
+   "author": "Catalan AI translation author 1",
+   "batch": "ca-038.json",
+   "batch_output": "batches/ca-038.out.json",
+   "item_id": "s088"
+  }
+ },
+ {
+  "locale": "ca",
+  "key": "L76b8e0aefa",
+  "source": "In 4/4, how many quarter-note beats are in a bar?",
+  "old": "En 4/4, quantes pulsacions de negra té un compàs?",
+  "new": "En 4/4, quin és el nombre de pulsacions de negra en un compàs?",
+  "reason": "Ask explicitly for the abstract count in the same 4/4 meter; preserves source digits and quarter-note unit while avoiding feminine agreement conflict. Parent explicitly directed localized abstract-number prompt adaptations rather than any digit-guard waiver or source split.",
+  "source_sha256": "a2111aa43ef37be1378355f3b4c22861e3198bfe74327c5dfc86436fa2e38ee3",
+  "old_sha256": "0388c0b8b200fc80436fbf693d1883076e527ad6dbeae0b0165808d5b70bcdc4",
+  "new_sha256": "b1c622d77b80db26297e734fa25731bf581f8b3985f72ec4041cafcc3760e1fa",
+  "reviewer": "Catalan independent AI reviewer 2",
+  "status": "approved-guarded-correction",
+  "prior_primary_reviewer": "Catalan independent AI reviewer 2",
+  "context_ids": [
+   "CTX-0569"
+  ],
+  "evidence_file": "context-amendment-evidence-001.json",
+  "evidence_sha256": "8b3c24c7572c378acde575733e0743840e764293bcb303d78655c5de65b2eb47",
+  "context_completion_recorded_by": "Catalan independent AI reviewer 3",
+  "all_current_occurrences_complete_context_reviewed": true,
+  "complete_context_approvals": [
+   {
+    "id": "CTX-0569",
+    "reviewer": "Catalan independent AI reviewer 2",
+    "target_sha256": "c73474147f01f4b5e55f37ec3cf1a09a2708872551de19fc8af66a07ee51c4aa",
+    "evidence_sha256": "8b3c24c7572c378acde575733e0743840e764293bcb303d78655c5de65b2eb47"
+   }
+  ],
+  "primary_reviewer": "Catalan independent AI reviewer 2",
+  "author_provenance": {
+   "author": "Catalan AI translation author 1",
+   "batch": "ca-039.json",
+   "batch_output": "batches/ca-039.out.json",
+   "item_id": "s004"
+  }
+ },
+ {
+  "locale": "ca",
+  "key": "La969eae660",
+  "source": "How many beats does a whole note last in 4/4?",
+  "old": "Quantes pulsacions dura una rodona en 4/4?",
+  "new": "En 4/4, quin és el nombre de pulsacions d’una rodona?",
+  "reason": "Ask for the abstract whole-note pulse count in the specified 4/4 meter; preserves the original numeric premise and answer. Parent explicitly directed localized abstract-number prompt adaptations rather than any digit-guard waiver or source split.",
+  "source_sha256": "5bfc945a9406b7faf6e9a8434f382d6eff2a96596f7230b705e692ad1aaba9de",
+  "old_sha256": "cd5bcca583e148b92dbdf9caa2922fe11b853cdd31194398941ea0e4209244ff",
+  "new_sha256": "b3d8b02cf382baa3efcc9920394dcf66d9b9ebc8f7945e5eaf1f6ce6132c1853",
+  "reviewer": "Catalan independent AI reviewer 2",
+  "status": "approved-guarded-correction",
+  "prior_primary_reviewer": "Catalan independent AI reviewer 2",
+  "context_ids": [
+   "CTX-0570"
+  ],
+  "evidence_file": "context-amendment-evidence-001.json",
+  "evidence_sha256": "8b3c24c7572c378acde575733e0743840e764293bcb303d78655c5de65b2eb47",
+  "context_completion_recorded_by": "Catalan independent AI reviewer 3",
+  "all_current_occurrences_complete_context_reviewed": true,
+  "complete_context_approvals": [
+   {
+    "id": "CTX-0570",
+    "reviewer": "Catalan independent AI reviewer 2",
+    "target_sha256": "538fa4f1e7914ef1c4f137d1b385a588088cf0a66e73e78e0f1120a9bcaeb2bd",
+    "evidence_sha256": "8b3c24c7572c378acde575733e0743840e764293bcb303d78655c5de65b2eb47"
+   }
+  ],
+  "primary_reviewer": "Catalan independent AI reviewer 2",
+  "author_provenance": {
+   "author": "Catalan AI translation author 1",
+   "batch": "ca-039.json",
+   "batch_output": "batches/ca-039.out.json",
+   "item_id": "s026"
+  }
+ },
+ {
+  "locale": "ca",
+  "key": "L688a376adc",
+  "source": "How many sixteenth notes fit in one beat?",
+  "old": "Quantes semicorxeres caben en una pulsació?",
+  "new": "Quin és el nombre de semicorxeres que caben en una pulsació?",
+  "reason": "Individually rephrase this feminine noun-count question as an explicit abstract-number question. The original counted object, temporal/meter premise, ordered distractors and correct answer are unchanged; shared Un/Dos then name numerical values without a feminine noun-ellipsis mismatch. Parent forbids source change or digit-guard waiver.",
+  "source_sha256": "5a972a2267cc32e32f475663815610b5963a519e49fbe7a5eafaaeea5d649650",
+  "old_sha256": "380f760b59b6098ee0850639bb04e1c8b70b65ad7064c5eddd6dec5addf600de",
+  "new_sha256": "5644f1803bad1b91709776ea1676b99f138f0a085041f66b23aa2815b4797777",
+  "reviewer": "Catalan independent AI reviewer 2",
+  "status": "approved-guarded-correction",
+  "prior_primary_reviewer": "Catalan independent AI reviewer 2",
+  "context_ids": [
+   "CTX-0571"
+  ],
+  "evidence_file": "context-amendment-evidence-002.json",
+  "evidence_sha256": "10bd267949c140b34bf2af5245c31423ce96430d5b720461d7c121deb10ab2ea",
+  "context_completion_recorded_by": "Catalan independent AI reviewer 3",
+  "all_current_occurrences_complete_context_reviewed": true,
+  "complete_context_approvals": [
+   {
+    "id": "CTX-0571",
+    "reviewer": "Catalan independent AI reviewer 2",
+    "target_sha256": "54fc5f815a6e6e210d2288b973a97bdab69606266a0e70a78adf16bbfc529331",
+    "evidence_sha256": "10bd267949c140b34bf2af5245c31423ce96430d5b720461d7c121deb10ab2ea"
+   }
+  ],
+  "primary_reviewer": "Catalan independent AI reviewer 2",
+  "author_provenance": {
+   "author": "Catalan AI translation author 1",
+   "batch": "ca-039.json",
+   "batch_output": "batches/ca-039.out.json",
+   "item_id": "s027"
+  }
+ },
+ {
+  "locale": "ca",
+  "key": "Ld3a1cbb5a3",
+  "source": "The strong click is beat 1. How many beats are in each bar?",
+  "old": "El clic fort és el temps 1. Quantes pulsacions té cada compàs?",
+  "new": "El clic fort és el temps 1. Quin és el nombre de pulsacions de cada compàs?",
+  "reason": "Individually rephrase this feminine noun-count question as an explicit abstract-number question. The original counted object, temporal/meter premise, ordered distractors and correct answer are unchanged; shared Un/Dos then name numerical values without a feminine noun-ellipsis mismatch. Parent forbids source change or digit-guard waiver.",
+  "source_sha256": "1dc39a2ef8c9cf201ce36da95a9a3758c2bb226bee0c06bae828cd3ac0b0b9d7",
+  "old_sha256": "acd85811889ca951e49dcd5b74db188c0c025c6f5e0059ccb5ec4fb8693201c6",
+  "new_sha256": "457f3e83a622ee55986a17eecb9690655be695c227f4e8902f219dba458eec29",
+  "reviewer": "Catalan independent AI reviewer 2",
+  "status": "approved-guarded-correction",
+  "prior_primary_reviewer": "Catalan independent AI reviewer 2",
+  "context_ids": [
+   "CTX-0575",
+   "CTX-0582",
+   "CTX-0590"
+  ],
+  "evidence_file": "context-amendment-evidence-002.json",
+  "evidence_sha256": "10bd267949c140b34bf2af5245c31423ce96430d5b720461d7c121deb10ab2ea",
+  "context_completion_recorded_by": "Catalan independent AI reviewer 3",
+  "all_current_occurrences_complete_context_reviewed": true,
+  "complete_context_approvals": [
+   {
+    "id": "CTX-0575",
+    "reviewer": "Catalan independent AI reviewer 2",
+    "target_sha256": "eb3169d86ec933d1d3d09177c20b74cad0e72cfcf3a41e352b52f7ab0443ace1",
+    "evidence_sha256": "10bd267949c140b34bf2af5245c31423ce96430d5b720461d7c121deb10ab2ea"
+   },
+   {
+    "id": "CTX-0582",
+    "reviewer": "Catalan independent AI reviewer 2",
+    "target_sha256": "22043d6fd9d4653b5c41ef86ef2048b4edbccd8ba01941ac6818533fc6a055ca",
+    "evidence_sha256": "10bd267949c140b34bf2af5245c31423ce96430d5b720461d7c121deb10ab2ea"
+   },
+   {
+    "id": "CTX-0590",
+    "reviewer": "Catalan independent AI reviewer 2",
+    "target_sha256": "36f8e124d73707915f18c00c8e4e1e25a9e88022773558bfd86fcb3b2dab2da3",
+    "evidence_sha256": "10bd267949c140b34bf2af5245c31423ce96430d5b720461d7c121deb10ab2ea"
+   }
+  ],
+  "primary_reviewer": "Catalan independent AI reviewer 2",
+  "author_provenance": {
+   "author": "Catalan AI translation author 1",
+   "batch": "ca-043.json",
+   "batch_output": "batches/ca-043.out.json",
+   "item_id": "s006"
+  }
+ },
+ {
+  "locale": "ca",
+  "key": "Lde01691b6d",
+  "source": "The strong clicks are the beats. How many beats did you hear?",
+  "old": "Els clics forts són les pulsacions. Quantes n’has sentit?",
+  "new": "Els clics forts són les pulsacions. Quin és el nombre de pulsacions que has sentit?",
+  "reason": "Individually rephrase this feminine noun-count question as an explicit abstract-number question. The original counted object, temporal/meter premise, ordered distractors and correct answer are unchanged; shared Un/Dos then name numerical values without a feminine noun-ellipsis mismatch. Parent forbids source change or digit-guard waiver.",
+  "source_sha256": "6324a9dfd7cfc293ac61dc8cbe92238adc1ff4852a8cf8e9e4cbf2be28783b7d",
+  "old_sha256": "6bd18b01573871463ae430008235f0688da0097ca254eade5382861799b1a55f",
+  "new_sha256": "72d5788f1389bfe9eda786f210da3e3361c7515acffa45a6773a9f97f9272487",
+  "reviewer": "Catalan independent AI reviewer 2",
+  "status": "approved-guarded-correction",
+  "prior_primary_reviewer": "Catalan independent AI reviewer 2",
+  "context_ids": [
+   "CTX-0577",
+   "CTX-0578",
+   "CTX-0579"
+  ],
+  "evidence_file": "context-amendment-evidence-002.json",
+  "evidence_sha256": "10bd267949c140b34bf2af5245c31423ce96430d5b720461d7c121deb10ab2ea",
+  "context_completion_recorded_by": "Catalan independent AI reviewer 3",
+  "all_current_occurrences_complete_context_reviewed": true,
+  "complete_context_approvals": [
+   {
+    "id": "CTX-0577",
+    "reviewer": "Catalan independent AI reviewer 2",
+    "target_sha256": "9f8d12d686ff692b43f56dfe32deb0345f031f3b2d6beffb747d5ff55f4beaaf",
+    "evidence_sha256": "10bd267949c140b34bf2af5245c31423ce96430d5b720461d7c121deb10ab2ea"
+   },
+   {
+    "id": "CTX-0578",
+    "reviewer": "Catalan independent AI reviewer 2",
+    "target_sha256": "54e85edd65eada9530ddd05be7a59e950a8ba0f141d280065c9f6229614028d2",
+    "evidence_sha256": "10bd267949c140b34bf2af5245c31423ce96430d5b720461d7c121deb10ab2ea"
+   },
+   {
+    "id": "CTX-0579",
+    "reviewer": "Catalan independent AI reviewer 2",
+    "target_sha256": "63f66678be2bd4cd50daca7c59a68654a8e59aad114d45e2671c0f66ac87b72f",
+    "evidence_sha256": "10bd267949c140b34bf2af5245c31423ce96430d5b720461d7c121deb10ab2ea"
+   }
+  ],
+  "primary_reviewer": "Catalan independent AI reviewer 2",
+  "author_provenance": {
+   "author": "Catalan AI translation author 1",
+   "batch": "ca-043.json",
+   "batch_output": "batches/ca-043.out.json",
+   "item_id": "s052"
+  }
+ },
+ {
+  "locale": "ca",
+  "key": "L6c65f3cae3",
+  "source": "How many triplet notes fit in one beat?",
+  "old": "Quantes notes d’un treset caben en una pulsació?",
+  "new": "Quin és el nombre de notes d’un treset que caben en una pulsació?",
+  "reason": "Individually rephrase this feminine noun-count question as an explicit abstract-number question. The original counted object, temporal/meter premise, ordered distractors and correct answer are unchanged; shared Un/Dos then name numerical values without a feminine noun-ellipsis mismatch. Parent forbids source change or digit-guard waiver.",
+  "source_sha256": "5aa6ec1fe853f22e701a953c83849cacf66b5825cbda6192491e432dcbfeda69",
+  "old_sha256": "7c180acae199a65b01bb310cdcac2784eff60b13165e49b371604b63169c378a",
+  "new_sha256": "45cd868680b4306e7f6830d34ee96be34f644f060305170cdb7f6286ae4240bd",
+  "reviewer": "Catalan independent AI reviewer 2",
+  "status": "approved-guarded-correction",
+  "prior_primary_reviewer": "Catalan independent AI reviewer 2",
+  "context_ids": [
+   "CTX-0580"
+  ],
+  "evidence_file": "context-amendment-evidence-002.json",
+  "evidence_sha256": "10bd267949c140b34bf2af5245c31423ce96430d5b720461d7c121deb10ab2ea",
+  "context_completion_recorded_by": "Catalan independent AI reviewer 3",
+  "all_current_occurrences_complete_context_reviewed": true,
+  "complete_context_approvals": [
+   {
+    "id": "CTX-0580",
+    "reviewer": "Catalan independent AI reviewer 2",
+    "target_sha256": "915fd2f6d23a362b10924fad5b5fcf96fc9986808cf90a75344d552c3f88d6a6",
+    "evidence_sha256": "10bd267949c140b34bf2af5245c31423ce96430d5b720461d7c121deb10ab2ea"
+   }
+  ],
+  "primary_reviewer": "Catalan independent AI reviewer 2",
+  "author_provenance": {
+   "author": "Catalan AI translation author 2",
+   "batch": "ca-044.json",
+   "batch_output": "batches/ca-044.out.json",
+   "item_id": "s077"
+  }
+ },
+ {
+  "locale": "ca",
+  "key": "L3f1369f326",
+  "source": "How many beats are in a bar of 3/4?",
+  "old": "Quantes pulsacions té un compàs de 3/4?",
+  "new": "Quin és el nombre de pulsacions en un compàs de 3/4?",
+  "reason": "Individually rephrase this feminine noun-count question as an explicit abstract-number question. The original counted object, temporal/meter premise, ordered distractors and correct answer are unchanged; shared Un/Dos then name numerical values without a feminine noun-ellipsis mismatch. Parent forbids source change or digit-guard waiver.",
+  "source_sha256": "e83bd2db5ae512d2439d41f8220d67299d0a10343fcf8578397e66f484fb795e",
+  "old_sha256": "e61027a7b62b9a5ac5f443bba8404e0908dc15cb0dd476358fdc9d49fb7d7e67",
+  "new_sha256": "0e9f9e16a9e0e068abfbb49697dd4bc446d040a86ce0c3655636a8393b8b18d1",
+  "reviewer": "Catalan independent AI reviewer 2",
+  "status": "approved-guarded-correction",
+  "prior_primary_reviewer": "Catalan independent AI reviewer 2",
+  "context_ids": [
+   "CTX-0581"
+  ],
+  "evidence_file": "context-amendment-evidence-002.json",
+  "evidence_sha256": "10bd267949c140b34bf2af5245c31423ce96430d5b720461d7c121deb10ab2ea",
+  "context_completion_recorded_by": "Catalan independent AI reviewer 3",
+  "all_current_occurrences_complete_context_reviewed": true,
+  "complete_context_approvals": [
+   {
+    "id": "CTX-0581",
+    "reviewer": "Catalan independent AI reviewer 2",
+    "target_sha256": "34b925740d71c678e9a4aa405fc146de458bc418c0237e76901740ddf95311ad",
+    "evidence_sha256": "10bd267949c140b34bf2af5245c31423ce96430d5b720461d7c121deb10ab2ea"
+   }
+  ],
+  "primary_reviewer": "Catalan independent AI reviewer 2",
+  "author_provenance": {
+   "author": "Catalan AI translation author 2",
+   "batch": "ca-045.json",
+   "batch_output": "batches/ca-045.out.json",
+   "item_id": "s011"
+  }
+ },
+ {
+  "locale": "ca",
+  "key": "Lf6e930deee",
+  "source": "How many beats are in each bar of this hymn?",
+  "old": "Quantes pulsacions té cada compàs d’aquest himne?",
+  "new": "Quin és el nombre de pulsacions de cada compàs d’aquest himne?",
+  "reason": "Individually rephrase this feminine noun-count question as an explicit abstract-number question. The original counted object, temporal/meter premise, ordered distractors and correct answer are unchanged; shared Un/Dos then name numerical values without a feminine noun-ellipsis mismatch. Parent forbids source change or digit-guard waiver.",
+  "source_sha256": "ff6309ac6451ed8f4efda1ddbd8c40b414e46206a75fd2b393a5e0e15838318c",
+  "old_sha256": "fd6c4f283d19144602fd2345698b8ed93e2872d571a6df3af855367d092243b2",
+  "new_sha256": "e98711648e7e77b5893ded182ac31dd5f77ddd2045580a4b69fbb9caf410488a",
+  "reviewer": "Catalan independent AI reviewer 2",
+  "status": "approved-guarded-correction",
+  "prior_primary_reviewer": "Catalan independent AI reviewer 2",
+  "context_ids": [
+   "CTX-0583"
+  ],
+  "evidence_file": "context-amendment-evidence-002.json",
+  "evidence_sha256": "10bd267949c140b34bf2af5245c31423ce96430d5b720461d7c121deb10ab2ea",
+  "context_completion_recorded_by": "Catalan independent AI reviewer 3",
+  "all_current_occurrences_complete_context_reviewed": true,
+  "complete_context_approvals": [
+   {
+    "id": "CTX-0583",
+    "reviewer": "Catalan independent AI reviewer 2",
+    "target_sha256": "8e81286ef95fcde4b7d6852c56e93b2b2bd1b9a3a5f291395b192d890115ee05",
+    "evidence_sha256": "10bd267949c140b34bf2af5245c31423ce96430d5b720461d7c121deb10ab2ea"
+   }
+  ],
+  "primary_reviewer": "Catalan independent AI reviewer 2",
+  "author_provenance": {
+   "author": "Catalan AI translation author 2",
+   "batch": "ca-047.json",
+   "batch_output": "batches/ca-047.out.json",
+   "item_id": "s069"
+  }
+ },
+ {
+  "locale": "ca",
+  "key": "L42a58326f5",
+  "source": "How many beats fill a bar of 3/4?",
+  "old": "Quantes pulsacions omplen un compàs de 3/4?",
+  "new": "Quin és el nombre de pulsacions que omplen un compàs de 3/4?",
+  "reason": "Individually rephrase this feminine noun-count question as an explicit abstract-number question. The original counted object, temporal/meter premise, ordered distractors and correct answer are unchanged; shared Un/Dos then name numerical values without a feminine noun-ellipsis mismatch. Parent forbids source change or digit-guard waiver.",
+  "source_sha256": "5468b1f3bf48f7601cbbcc5566bc3b3c0fdf5dada51d5d6f932e65fffd3dd913",
+  "old_sha256": "3debd16e09008a877c757c2e8d012bee22c8d9b9501c3648ac7da39f6efc56eb",
+  "new_sha256": "38080c6a641271005a88a81148c718bebc5ce2f3e1559021d1439663bcf5dd6c",
+  "reviewer": "Catalan independent AI reviewer 2",
+  "status": "approved-guarded-correction",
+  "prior_primary_reviewer": "Catalan independent AI reviewer 2",
+  "context_ids": [
+   "CTX-0584"
+  ],
+  "evidence_file": "context-amendment-evidence-002.json",
+  "evidence_sha256": "10bd267949c140b34bf2af5245c31423ce96430d5b720461d7c121deb10ab2ea",
+  "context_completion_recorded_by": "Catalan independent AI reviewer 3",
+  "all_current_occurrences_complete_context_reviewed": true,
+  "complete_context_approvals": [
+   {
+    "id": "CTX-0584",
+    "reviewer": "Catalan independent AI reviewer 2",
+    "target_sha256": "883f6bb6c8d54c01aa4b58b08ae44fea41d1a3e14fc01607acbc9f11a3cdda24",
+    "evidence_sha256": "10bd267949c140b34bf2af5245c31423ce96430d5b720461d7c121deb10ab2ea"
+   }
+  ],
+  "primary_reviewer": "Catalan independent AI reviewer 2",
+  "author_provenance": {
+   "author": "Catalan AI translation author 2",
+   "batch": "ca-053.json",
+   "batch_output": "batches/ca-053.out.json",
+   "item_id": "s088"
+  }
+ },
+ {
+  "locale": "ca",
+  "key": "Lca62447596",
+  "source": "How do the two notes of each pair feel?",
+  "old": "Com són les dues notes de cada parella?",
+  "new": "Quin patró rítmic fa cada parella de notes?",
+  "reason": "Ask for the rhythmic pattern rather than asking Com són les dues notes, which invites feminine curta/llarga adjectives while the shared answers name adverbial long-then-short/short-then-long patterns. The shuffle timing and same correct long-short answer remain unchanged.",
+  "source_sha256": "df22074b2c53c9624488b59eeaab032a2ef833523a019afa4616d616681b8815",
+  "old_sha256": "5a86b37ad6050bd13365724109642c06f2a4cdb25fe825e325705151ef53f840",
+  "new_sha256": "df6b6aa7a9ce4d614564681a470e7d318f84c66dbb1c6b20525984127b9d8faa",
+  "reviewer": "Catalan independent AI reviewer 2",
+  "status": "approved-guarded-correction",
+  "prior_primary_reviewer": "Catalan independent AI reviewer 1",
+  "context_ids": [
+   "CTX-0657"
+  ],
+  "evidence_file": "context-amendment-evidence-003.json",
+  "evidence_sha256": "4f3e18d03558a5d6f86003b7c26f4809f94d2ef6efde34a048857d8604364038",
+  "context_completion_recorded_by": "Catalan independent AI reviewer 3",
+  "all_current_occurrences_complete_context_reviewed": true,
+  "complete_context_approvals": [
+   {
+    "id": "CTX-0657",
+    "reviewer": "Catalan independent AI reviewer 2",
+    "target_sha256": "b6d5ed244890deb020af568b3f8bd4c49d8715fcc5f17a6e4ded2ce1c335a93e",
+    "evidence_sha256": "4f3e18d03558a5d6f86003b7c26f4809f94d2ef6efde34a048857d8604364038"
+   }
+  ],
+  "primary_reviewer": "Catalan independent AI reviewer 1",
+  "author_provenance": {
+   "author": "Catalan AI translation author 1",
+   "batch": "ca-008.json",
+   "batch_output": "batches/ca-008.out.json",
+   "item_id": "s029"
+  }
+ },
+ {
+  "locale": "ca",
+  "key": "Ld3e7992b92",
+  "source": "Exactly even",
+  "old": "Exactament iguals",
+  "new": "Dues durades exactament iguals",
+  "reason": "Make the equal-length distractor an explicit two-duration pattern, matching the guarded abstract-rhythm prompt and contrasting evenly timed notes with the shared long-short and short-long pattern labels. Exactly even occurs only in this complete shuffle-pair context. Apply together with Lca62447596.",
+  "source_sha256": "2c62acf99b181e77951f187cdb8d9742a752c42aaa92abd1c542083a667439a8",
+  "old_sha256": "cc61e5c41d6f52a89ac13c73c81614dbf0c83097613a518e47f5455ea50ebecc",
+  "new_sha256": "77b2fff74321a42e77b94fbc30c11607d88a2fd446cf7c7306c53607c7bedf14",
+  "reviewer": "Catalan independent AI reviewer 2",
+  "status": "approved-guarded-correction",
+  "prior_primary_reviewer": "Catalan independent AI reviewer 1",
+  "context_ids": [
+   "CTX-0657"
+  ],
+  "evidence_file": "context-amendment-evidence-003.json",
+  "evidence_sha256": "4f3e18d03558a5d6f86003b7c26f4809f94d2ef6efde34a048857d8604364038",
+  "context_completion_recorded_by": "Catalan independent AI reviewer 3",
+  "all_current_occurrences_complete_context_reviewed": true,
+  "complete_context_approvals": [
+   {
+    "id": "CTX-0657",
+    "reviewer": "Catalan independent AI reviewer 2",
+    "target_sha256": "b6d5ed244890deb020af568b3f8bd4c49d8715fcc5f17a6e4ded2ce1c335a93e",
+    "evidence_sha256": "4f3e18d03558a5d6f86003b7c26f4809f94d2ef6efde34a048857d8604364038"
+   }
+  ],
+  "primary_reviewer": "Catalan independent AI reviewer 1",
+  "author_provenance": {
+   "author": "Catalan AI translation author 1",
+   "batch": "ca-008.json",
+   "batch_output": "batches/ca-008.out.json",
+   "item_id": "s030"
+  }
+ }
+]

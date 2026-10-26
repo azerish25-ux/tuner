@@ -1,0 +1,27 @@
+[
+ {
+  "key": "Lfc41746da3",
+  "source": "Gospel-pop",
+  "old": "Gospel-pop",
+  "target": "Gòspel-pop",
+  "source_sha256": "f9f7c575d36365b9367466d34d5df6562cc584a6bccda73f4342b6c8b21ff45a",
+  "old_sha256": "f9f7c575d36365b9367466d34d5df6562cc584a6bccda73f4342b6c8b21ff45a",
+  "target_sha256": "df3a3fcd36cb1796aac6b37a9036e4f2d1e8d9eb4074e181c9abdf50bc8a2f48",
+  "reason": "Generic genre label has conventional Catalan gòspel spelling and must be translated consistently, not exempted as an English identity.",
+  "original_identity_candidate_judgment": "Identity rejected: Gospel-pop is a generic style label, and Catalan has the normalized gòspel spelling already used elsewhere in this draft. Preserve pop but adapt gospel to gòspel, rather than granting a whole-string English identity exemption.",
+  "correction_reviewer": "Catalan independent AI reviewer 2",
+  "complete_context_approvals": [
+   {
+    "index": 1546,
+    "id": "CTX-1546",
+    "reviewer": "Catalan independent AI reviewer 3",
+    "judgment": "suitable-in-complete-context",
+    "source_sha256": "f3c0494376cf9a5edbc04b22d7cbfd57643e77191a16dad3c31d9f321a394c49",
+    "old_sha256": "dce471fbca5d521fafd9e8386f54b44dc464b0d70b3303eed50e96d8ab02482d",
+    "proposed_sha256": "8452befe3deee5a89db76d340d348b9a267cd9a87d51288ffd75f8792369d4d6",
+    "evidence_file": "context-evidence-1491-1546.json",
+    "evidence_sha256": "30f6deaf18e1d6849d9cbbee92c0b7f5905d5acd44919ed1c0bfd281b63d62ec"
+   }
+  ]
+ }
+]
