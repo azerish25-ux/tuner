@@ -85,3 +85,10 @@ new blanket certification of the 6,082-key source.
   Persian ZWNJ is preserved.
 - Baseline and delta reviews are independent **AI** reviews, not native-human
   certification or App Store delivery authorization.
+
+## Source-observation clarification
+
+The earlier question about `rhy-2-2` comparing its quiz answer to the preceding tap
+is resolved by the quiz's own visual: `[0, 0.5, 1, 2, 3]` matches answer 2 and its
+explanation. The preceding `[0, 1, 1.5, 2, 3]` exercise is intentionally different.
+No answer index, visual rhythm or tap pattern was changed by this migration.

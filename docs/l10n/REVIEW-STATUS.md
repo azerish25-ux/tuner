@@ -202,3 +202,14 @@ Source-blinded purchase/permission QA now covers all 1,104 rows. Source-aware co
 retained 1,102 and applied two exact-guarded cancellation-deadline corrections (German and
 Lithuanian). Evidence and limitations are in `purchase-permission-review/`. No native
 human certification, legal compliance opinion or complete release-readiness is claimed.
+
+## Bounded simulator launch recovery
+
+The older matrix's Japanese/Korean/Chinese/Thai/Vietnamese/Indonesian group failed
+before launch with no app process ID. The matrix now waits for simulator boot and
+uses the existing launch-only classifier for one retry. Build errors and actual
+translation/layout assertions are never classified as recoverable launch failures.
+Initial logs/result bundles remain preserved; completion markers must come entirely
+from the successful attempt. Local validation: 102 localization tests plus workflow
+YAML/shell syntax pass. This does not turn the earlier failed run into a pass; fresh
+simulator execution remains required.

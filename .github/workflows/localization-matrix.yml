@@ -47,6 +47,7 @@ jobs:
           DEVICE_ID=$(xcrun simctl list devices available -j | python3 -c 'import json,re,sys; d=json.load(sys.stdin); runtimes=sorted(d["devices"].items(),key=lambda p:tuple(map(int,re.findall(r"\d+",p[0]))),reverse=True); print(next(x["udid"] for k,v in runtimes if "iOS" in k for x in v if "iPhone" in x["name"]))')
           echo "DEVICE_ID=$DEVICE_ID" >> "$GITHUB_ENV"
           xcrun simctl boot "$DEVICE_ID" || true
+          xcrun simctl bootstatus "$DEVICE_ID" -b
       - name: Ensure Metal toolchain
         run: bash tools/ci/ensure-metal.sh
       - name: Build once and test each selected language
@@ -55,15 +56,31 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p ci-out
-          xcodebuild test -project ios/Timbre.xcodeproj -scheme Timbre -destination "platform=iOS Simulator,id=$DEVICE_ID" \
-            -derivedDataPath ios/build/l10n -parallel-testing-enabled NO \
-            -only-testing:TimbreUITests/LocalizationMatrixUITests \
-            -resultBundlePath ci-out/Localization.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/test.log
+          run_matrix() {
+            local mode="$1" bundle="$2" log="$3"
+            xcodebuild "$mode" -project ios/Timbre.xcodeproj -scheme Timbre -destination "platform=iOS Simulator,id=$DEVICE_ID" \
+              -derivedDataPath ios/build/l10n -parallel-testing-enabled NO \
+              -only-testing:TimbreUITests/LocalizationMatrixUITests \
+              -resultBundlePath "$bundle" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$log"
+          }
+          EVIDENCE_LOG=ci-out/test.log
+          if run_matrix test ci-out/Localization.xcresult "$EVIDENCE_LOG"; then
+            :
+          else
+            # Retry once only if every failure is classified as app-launch infrastructure.
+            # Build failures, missing translations, clipping and all other assertions still fail here.
+            python3 tools/ci/launch_retry.py ci-out/test.log ci-out/relaunch.txt
+            xcrun simctl terminate "$DEVICE_ID" com.shahradazerisharghi.timbre || true
+            xcrun simctl bootstatus "$DEVICE_ID" -b
+            sleep 5
+            run_matrix test-without-building ci-out/LocalizationRetry.xcresult ci-out/retry.log
+            EVIDENCE_LOG=ci-out/retry.log
+          fi
           python3 tools/l10n/matrix_fixture.py --locales "$TIMBRE_L10N_MATRIX" \
-            --out ios/TimbreUITests/LocalizationWelcomeExpected.json --verify-log ci-out/test.log
+            --out ios/TimbreUITests/LocalizationWelcomeExpected.json --verify-log "$EVIDENCE_LOG"
           IFS=',' read -ra LOCALES <<< "$TIMBRE_L10N_MATRIX"
           for locale in "${LOCALES[@]}"; do
-            grep -Fx "TIMBRE_L10N_MATRIX_TESTED $locale" ci-out/test.log >/dev/null || {
+            grep -Fx "TIMBRE_L10N_MATRIX_TESTED $locale" "$EVIDENCE_LOG" >/dev/null || {
               echo "::error::No executed localization check for $locale"; exit 1;
             }
           done
@@ -72,6 +89,9 @@ jobs:
         run: |
           if [ -d ci-out/Localization.xcresult ]; then
             xcrun xcresulttool export attachments --path ci-out/Localization.xcresult --output-path ci-out/screenshots
+          fi
+          if [ -d ci-out/LocalizationRetry.xcresult ]; then
+            xcrun xcresulttool export attachments --path ci-out/LocalizationRetry.xcresult --output-path ci-out/retry-screenshots
           fi
       - uses: actions/upload-artifact@v4
         if: always()
