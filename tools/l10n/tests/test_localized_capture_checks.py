@@ -134,6 +134,25 @@ class LocalizedCaptureChecksTests(unittest.TestCase):
             self.assertNotIn('status == "In tune"', code)
         self.assertIn('return (false, "the probe has no lock field")', phone)
 
+    def test_guitar_results_capture_wait_covers_the_actual_take(self):
+        curriculum = json.loads((ROOT / 'ios/Sources/TimbreCore/Resources/curriculum.json').read_text())
+        def dictionaries(value):
+            if isinstance(value, dict):
+                yield value
+                for child in value.values():
+                    yield from dictionaries(child)
+            elif isinstance(value, list):
+                for child in value:
+                    yield from dictionaries(child)
+        lesson = next(x for x in dictionaries(curriculum) if x.get('id') == 'gtr-1-2')
+        take = next(x for x in reversed(lesson['steps']) if x['type'] == 'along')
+        session = (ROOT / 'ios/Sources/TimbreCore/Learn/PlayAlongSession.swift').read_text()
+        tail = float(re.search(r'public static let tail = ([0-9.]+)', session).group(1))
+        beats = max(n['b'] + n['d'] for n in take['notes'])
+        self.assertLess((beats + take['beatsPerBar']) * 60 / take['bpm'] + tail, 21)
+        source = (ROOT / 'ios/TimbreUITests/TimbreUITests.swift').read_text()
+        self.assertIn('settle(7); shot("60-along-playing")\n        settle(14)', source)
+
     def test_focused_ci_checks_ltr_rtl_and_requires_real_valid_attachments(self):
         source = (ROOT / '.github/workflows/localized-capture-check.yml').read_text()
         for language in ['en', 'de', 'ar']:
