@@ -112,6 +112,30 @@ def option_contexts(repo):
     return {key: list(contexts.values()) for key, contexts in grouped.items()}
 
 
+def source_clarifications(repo):
+    """Verified source distinctions, bound to exact English and full curriculum contexts."""
+    path = repo / "tools/l10n/source-clarifications.json"
+    if not path.exists():
+        return {}
+    data = json.loads(path.read_text(encoding="utf-8"))
+    catalog = json.loads((repo / "ios/Sources/TimbreCore/Resources/curriculum.json").read_text(encoding="utf-8"))
+    result = {}
+    for row in data["notes"]:
+        if row["key"] in result or not row["evidence"] or not row["clarification"].strip():
+            raise ValueError("invalid or duplicate source clarification: " + row["key"])
+        if hashlib.sha256(row["source"].encode()).hexdigest() != row["source_sha256"]:
+            raise ValueError("source clarification hash drift: " + row["key"])
+        for guard in row["evidence"]:
+            value = catalog
+            for key in guard["pointer"].strip("/").split("/"):
+                value = value[int(key)] if isinstance(value, list) else value[key]
+            encoded = json.dumps(value, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
+            if hashlib.sha256(encoded).hexdigest() != guard["sha256"]:
+                raise ValueError("source clarification context drift: " + row["key"])
+        result[row["key"]] = row
+    return result
+
+
 def split(repo, loc, size, out, review=False):
     sys.path.insert(0, str(repo / "tools/l10n"))
     import report
@@ -122,6 +146,7 @@ def split(repo, loc, size, out, review=False):
     learned = json.loads(learn_path.read_text(encoding="utf-8")) if learn_path.exists() else {}
     forms = plural_forms(repo, loc)
     answer_contexts = option_contexts(repo)
+    clarifications = source_clarifications(repo)
     def group(item):
         """A batch holds one kind: one launch-critical kind, the rest of the interface, or whole lessons."""
         if item["table"] == "Learn.strings":
@@ -152,6 +177,11 @@ def split(repo, loc, size, out, review=False):
             for field in ("context", "layout", "max_length", "launch", "status", "previous", "problem"):
                 if item.get(field):
                     row[field] = item[field]
+            if item["table"] == "Learn.strings" and item["key"] in clarifications:
+                note = clarifications[item["key"]]
+                if item["source"] != note["source"]:
+                    raise ValueError("TODO source differs from clarification: " + item["key"])
+                row["source_clarification"] = note["clarification"]
             if item["table"] == "Learn.strings" and item["key"] in answer_contexts:
                 row["answer_contexts"] = answer_contexts[item["key"]]
             if item.get("status") == "rejected" and item.get("translation"):
@@ -200,6 +230,7 @@ Locale decisions and glossary for {language} (binding):
 How Timbre already reads in {language} (current translations; match their register, terms and punctuation):
 {anchors}
 
+source_clarification records verified curriculum meaning; preserve that distinction without changing notes or answers.
 When answer_contexts is present, the SAME target must work under every listed prompt and explanation.
 Do not use pitch-only or past-tense wording for a key also used for physical picking directions.
 Flag incompatible shared contexts instead of guessing; do not change source keys or metadata.
@@ -221,6 +252,7 @@ Locale decisions and glossary for {language} (binding):
 How Timbre already reads in {language}:
 {anchors}
 
+source_clarification records verified curriculum meaning; preserve that distinction without changing notes or answers.
 When answer_contexts is present, the SAME target must work under every listed prompt and explanation.
 Do not use pitch-only or past-tense wording for a key also used for physical picking directions.
 Flag incompatible shared contexts instead of guessing; do not change source keys or metadata.

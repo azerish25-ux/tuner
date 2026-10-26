@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "scope": "Verified English curriculum distinctions, not translated text or review approval",
+  "notes": [
+    {
+      "key": "L38ebe33d09",
+      "source": "Target, then a short bend. Same note or different?",
+      "source_sha256": "f789f3a67d9d6720a1650d3fbb9811493e5d6cb97384d3cdeb95207073dc8e12",
+      "clarification": "Here short means a bend that falls short of the target pitch, not short duration. The actual gtr-13-4 comparison sounds MIDI64 then63 and Different is correct.",
+      "evidence": [
+        {
+          "pointer": "/courses/0/units/12/lessons/3/steps/4",
+          "sha256": "32e600759e969234c1d99a43e379aeb19e73b04be2b424875feb011251b5604b"
+        }
+      ]
+    },
+    {
+      "key": "L342ffe164f",
+      "source": "Point the scroll forward and to your left, about level with the floor. Your left hand cradles the neck, thumb across from your first finger. Keep the wrist straight and soft.",
+      "source_sha256": "e712f60048e61e4af1e6f47ab6c18615549565200a7dd49785dd26e60d3bbea6",
+      "clarification": "About level with the floor means approximately horizontal/parallel to the floor, not held down at floor height. This is violin playing posture.",
+      "evidence": [
+        {
+          "pointer": "/courses/3/units/0/lessons/1/steps/1",
+          "sha256": "fd64ed00af416c10018e156418ab30b9c723d2d692010596639d1f8cd39f8cc5"
+        }
+      ]
+    },
+    {
+      "key": "L8f17a64c02",
+      "source": "String 3: pick fret 5 with finger 1, then hammer finger 3 onto fret 7.",
+      "source_sha256": "cfe0b53abcc48a178552620afe64570924f305a0d1da9f3d48e72c559f5b38cc",
+      "clarification": "Finger1 holds the fretted position; the other hand picks the string before finger3 hammers onto the next fret. Do not direct the player to pluck with fretting finger1.",
+      "evidence": [
+        {
+          "pointer": "/courses/0/units/12/lessons/0/steps/2",
+          "sha256": "ff6fd7cf551f922695b8e143e235773b274677821559d3def3bb777ffd101de3"
+        }
+      ]
+    },
+    {
+      "key": "L72a3d2b16e",
+      "source": "This French melody from the 1700s uses only notes you've learned: A, B, C sharp, D on the A string, and E and F sharp on the E string.",
+      "source_sha256": "3e280fc79e68d9e82565bc82a285006bb1f2edae5417bab12bb62238dd44e37a",
+      "clarification": "1700s denotes the whole century-long period starting1700, not merely the decade1700–1709. Preserve the source numeric tokens; choose unambiguous century wording rather than a decade idiom.",
+      "evidence": [
+        {
+          "pointer": "/courses/3/units/2/lessons/4/steps/0",
+          "sha256": "5bc1026fef00ec7a3e8a5f50ce7c653da4950a44ec6e230da220899feab1ce7c"
+        }
+      ]
+    },
+    {
+      "key": "L7b56ed522a",
+      "source": "Au clair de la lune is a French folk song from the 1700s. It lives on the G and D strings, with C under your fourth finger.",
+      "source_sha256": "a9ee0928d6d495ef54c27106ee996b0bf4f5b1bfcc7654493bb925855c816d4a",
+      "clarification": "1700s denotes the whole century-long period starting1700, not merely the decade1700–1709. Preserve the source numeric tokens; choose unambiguous century wording rather than a decade idiom.",
+      "evidence": [
+        {
+          "pointer": "/courses/4/units/3/lessons/5/steps/0",
+          "sha256": "da9c2fb2ff18078f33e6b8d9ddcb4ec963330f56c8d3144dd6e7bb11af33f029"
+        }
+      ]
+    },
+    {
+      "key": "La0b0aee62a",
+      "source": "This French melody from the 1700s uses only notes you've learned: D, E, F sharp, G on the D string, and A and B on the A string.",
+      "source_sha256": "087a17c69bed2a5fd019e443178d9fb01c24fd0808ff1b37dedc820fa6ab7166",
+      "clarification": "1700s denotes the whole century-long period starting1700, not merely the decade1700–1709. Preserve the source numeric tokens; choose unambiguous century wording rather than a decade idiom.",
+      "evidence": [
+        {
+          "pointer": "/courses/4/units/2/lessons/4/steps/0",
+          "sha256": "4e013540de8292e9f0356d6e3656a1f428f55358d414dc5bb5530fcfc90e4cae"
+        }
+      ]
+    },
+    {
+      "key": "La15c2bceff",
+      "source": "Soldier's Joy was printed in Scotland in the 1700s and is still played at dances across America. Its first part rocks on A, F sharp and D, the notes of a D major chord.",
+      "source_sha256": "bc9fead42c8759581a8cce3e2fa2f2d29e0cbae357c9b3957d00ca92d41ab654",
+      "clarification": "1700s denotes the whole century-long period starting1700, not merely the decade1700–1709. Preserve the source numeric tokens; choose unambiguous century wording rather than a decade idiom.",
+      "evidence": [
+        {
+          "pointer": "/courses/3/units/4/lessons/5/steps/0",
+          "sha256": "4f597978c7f7e14495b246e280cf67533ca519925e91d0aeb2dbe7b55e0feb01"
+        }
+      ]
+    },
+    {
+      "key": "La75bd4a533",
+      "source": "Deck the Halls comes from Nos Galan, a Welsh New Year's Eve song from the 1700s. The English words came in 1862.",
+      "source_sha256": "5fbfe6f0e659927a965fb757d151f9958227f0aa36877756c801d9871102d8fc",
+      "clarification": "1700s denotes the whole century-long period starting1700, not merely the decade1700–1709. Preserve the source numeric tokens; choose unambiguous century wording rather than a decade idiom.",
+      "evidence": [
+        {
+          "pointer": "/courses/11/units/4/lessons/1/steps/0",
+          "sha256": "b8207d1a035e5dbd381344085c5c189c02be144ea547f966c4b1c7fabf58e6fd"
+        }
+      ]
+    },
+    {
+      "key": "Le78a26c847",
+      "source": "Cecil Sharp collected and published this ballad in 1906, from verses that go back to the 1700s. Play it slowly and let every long note ring.",
+      "source_sha256": "56deca0abf5e594da07a9541182e1c806d3adec97a23a4e5e784cce7f4a89eb4",
+      "clarification": "1700s denotes the whole century-long period starting1700, not merely the decade1700–1709. Preserve the source numeric tokens; choose unambiguous century wording rather than a decade idiom.",
+      "evidence": [
+        {
+          "pointer": "/courses/13/units/0/lessons/4/steps/0",
+          "sha256": "1d0acde23b4dcd25b9ae0b7fa299a515d8e68ee61d0b7a7868072b573bbd46a1"
+        }
+      ]
+    },
+    {
+      "key": "Lf9d1ec4c42",
+      "source": "A tune from the 1700s",
+      "source_sha256": "755a05a497fad26082e2a26ae972e884e807a2c6389ff9b1b120e0043c9e7f3e",
+      "clarification": "1700s denotes the whole century-long period starting1700, not merely the decade1700–1709. Preserve the source numeric tokens; choose unambiguous century wording rather than a decade idiom.",
+      "evidence": [
+        {
+          "pointer": "/courses/3/units/4/lessons/5/steps/0",
+          "sha256": "4f597978c7f7e14495b246e280cf67533ca519925e91d0aeb2dbe7b55e0feb01"
+        }
+      ]
+    }
+  ]
+}

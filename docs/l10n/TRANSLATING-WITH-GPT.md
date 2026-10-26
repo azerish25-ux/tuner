@@ -879,3 +879,15 @@ What can still go wrong after every check above passes, and what to do about it:
 New `gpt_l10n.py split` batches include `answer_contexts` for lesson answer keys: every distinct current prompt/explanation, total occurrences and example lesson IDs. Translate a shared answer for **all** listed uses, not only the first TODO context. Bare Up/Down have 41 uses each, including mandolin picking strokes as well as pitch movement; neutral direction wording avoids a past-tense pitch-only error. One beat has eight uses across duration/count/missing-beat questions. When no target can serve every context, hold the key and request a bounded source-reference repair instead of silently changing quiz semantics.
 
 Frozen batches created earlier remain valid historical artifacts; do not overwrite them mid-review. Reviewers can call `gpt_l10n.option_contexts(repo)` against the current integration source to inspect all current answer contexts. This context enrichment does not approve translations, rewrite TODO metadata, or waive independent review.
+
+### Verified source clarifications
+
+New batches also include `source_clarification` for a small set of ambiguous English
+instructions. These distinguish under-bent pitch from short duration, horizontal
+violin posture from floor height, fretting from plucking, and a whole1700s century
+from its first decade. `tools/l10n/source-clarifications.json` binds each note to its
+exact English hash and complete current curriculum context hashes. A changed sound,
+answer, instruction or context fails closed until the note is rechecked. The note is
+reference metadata, not text to copy into the translation and not review approval.
+Preserve source numeric tokens; do not copy explanatory MIDI/example numbers from
+metadata into a target that did not contain them.

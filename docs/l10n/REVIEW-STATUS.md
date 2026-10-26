@@ -347,3 +347,11 @@ contrast finding and the wider47-finding audit are not waived; see
 `visual-review/paywall-5e938a9.json`. An explicit iOS refresh requests verification
 of the newer string-identifier fix rather than repeatedly testing the obsolete
 known-failing revision.
+
+## Guarded source clarification support
+
+The batch helper now attaches10 verified source clarifications with exact English
+and full-context hashes. Six new tests reject stale source/audio/context evidence
+and unbound/duplicate notes. All117 Python localization tests pass. Existing frozen
+translation/review packets are not rewritten; future batches gain these distinctions
+without changing English keys, answers, music data or translator TODO metadata.
