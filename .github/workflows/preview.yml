@@ -57,8 +57,10 @@ jobs:
           ffmpeg -version | head -1
           # Pillow draws the captions and the end card; fontTools checks a caption's glyphs.
           python3 -m venv build/preview-venv
-          build/preview-venv/bin/pip install --quiet pillow fonttools
+          build/preview-venv/bin/pip install --quiet -r tools/marketing/requirements.txt
           echo "PREVIEW_PY=$PWD/build/preview-venv/bin/python3" >> "$GITHUB_ENV"
+      - name: Prepare pinned licensed fonts and verify localized caption typography
+        run: "$PREVIEW_PY tools/marketing/font_assets.py --audit --out $OUT/caption-typography.json"
       - name: Generate Xcode project
         working-directory: ios
         run: xcodegen generate

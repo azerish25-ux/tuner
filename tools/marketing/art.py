@@ -7,7 +7,7 @@ accent of the feature it shows, so a set reads as a colour progression at thumbn
 repeated. Captions are set in Sora when it has every glyph, else in the first system font that does (CJK and
 Cyrillic captions), or the one `--font` names.
 
-Needs Pillow (python3 -m pip install pillow).
+Needs Pillow with libraqm, fontTools and regex (python3 -m pip install pillow fonttools regex).
 """
 from __future__ import annotations
 
@@ -51,6 +51,10 @@ FALLBACK_FONTS = [
     "/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc",
     "/usr/share/fonts/opentype/noto/NotoSerifCJK-Bold.ttc",
     "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+    *[f"/usr/share/fonts/truetype/noto/NotoSans{script}-Bold.ttf" for script in
+      ["Bengali", "Devanagari", "Gujarati", "Gurmukhi", "Kannada", "Malayalam", "Oriya", "Tamil", "Telugu", "Thai"]],
+    "/usr/share/fonts/truetype/noto/NotoNaskhArabic-Bold.ttf",
+    "/usr/share/fonts/truetype/noto/NotoNastaliqUrdu-Bold.ttf",
 ]
 EXTRA_FONT = os.environ.get("TIMBRE_CAPTION_FONT")  # screenshots.py --font sets it
 
@@ -70,75 +74,162 @@ def sora(weight: str, size: int):
     return ImageFont.truetype(str(FONTS / f"Sora-{weight}.ttf"), size)
 
 
-@lru_cache(maxsize=32)
-def _cmap(path: str) -> frozenset | None:
-    """The characters a font file maps (None when fontTools can't read it: the caller then trusts the font)."""
+@lru_cache(maxsize=512)
+def _cmap(path: str, index: int = 0) -> frozenset | None:
+    """Glyphs in exactly the selected rendered face; never a union of collection faces."""
     try:
-        from fontTools.ttLib import TTCollection, TTFont
-    except ImportError:
-        return None
-    try:
-        if path.lower().endswith(".ttc"):
-            fonts = TTCollection(path).fonts
-        else:
-            fonts = [TTFont(path, lazy=True)]
-        chars: set = set()
-        for face in fonts:
-            table = face.getBestCmap() or {}
-            chars.update(table.keys())
-        return frozenset(chars)
+        from fontTools.ttLib import TTFont
+        with TTFont(path, fontNumber=index, lazy=True) as face:
+            return frozenset((face.getBestCmap() or {}).keys())
     except Exception:
         return None
 
 
+@lru_cache(maxsize=128)
+def collection_face(path: str, locale: str) -> int:
+    if not path.lower().endswith(".ttc"):
+        return 0
+    wanted = "TC" if locale.startswith("zh-Hant") else "SC" if locale.startswith("zh") else "KR" if locale.startswith("ko") else "JP" if locale.startswith("ja") else None
+    if wanted is None:
+        return 0
+    try:
+        from fontTools.ttLib import TTCollection
+        with TTCollection(path, lazy=True) as collection:
+            for index, face in enumerate(collection.fonts):
+                family = face["name"].getDebugName(1) or ""
+                if family.endswith(" " + wanted) and ("Noto Sans CJK" in family or "Noto Serif CJK" in family or "PingFang" in family):
+                    return index
+    except Exception:
+        pass
+    return 0
+
+
+def caption_locale() -> str:
+    return os.environ.get("TIMBRE_CAPTION_LOCALE", "en-US")
+
+
+def preferred_fallbacks() -> list[str]:
+    locale = caption_locale()
+    marker = "ヒラギノ" if locale.startswith("ja") else "AppleSDGothic" if locale.startswith("ko") else "PingFang" if locale.startswith("zh") else None
+    return sorted(FALLBACK_FONTS, key=lambda path: 0 if marker and marker in path else 1)
+
+
 def covers(path: str, text: str) -> bool:
-    chars = _cmap(path)
+    chars = _cmap(path, collection_face(path, caption_locale()))
     if chars is None:
-        return True
+        return False
     return all(ch.isspace() or ord(ch) in chars for ch in text)
+
+
+@lru_cache(maxsize=1)
+def system_fallbacks() -> tuple[str, ...]:
+    """Discover installed macOS script fonts after the preferred families, without downloading fonts."""
+    root = Path("/System/Library/Fonts")
+    return tuple(str(p) for p in sorted(root.rglob("*")) if p.suffix.lower() in {".ttf", ".ttc", ".otf"}) if root.exists() else ()
+
+
+def managed_fonts() -> list[str]:
+    directory = Path(os.environ.get("TIMBRE_CAPTION_FONT_DIR", str(ROOT / "build/marketing-fonts")))
+    return [str(p) for p in sorted(directory.glob("*.ttf"))] if directory.is_dir() else []
+
+
+def fallback_font(path: str, weight: str, size: int):
+    from PIL import ImageFont
+    font = ImageFont.truetype(path, size, index=collection_face(path, caption_locale()))
+    try:
+        axes = font.get_variation_axes()
+    except OSError:
+        return font
+    wanted = {"Bold": 700, "SemiBold": 600, "Medium": 500, "Regular": 400}.get(weight, 400)
+    font.set_variation_by_axes([
+        max(axis["minimum"], min(axis["maximum"], wanted)) if axis["name"] == b"Weight" else axis["default"]
+        for axis in axes
+    ])
+    return font
 
 
 def caption_font(text: str, weight: str, size: int):
     """Sora when it has every glyph of `text`, else the first fallback that does (raises when none does)."""
-    from PIL import ImageFont
+    from PIL import ImageFont, features
+    try:
+        import fontTools  # noqa: F401
+    except ImportError:
+        raise SystemExit("Caption glyph verification requires fontTools: python3 -m pip install fonttools")
+    if any(ord(ch) > 0x02FF and not ch.isspace() for ch in text) and not features.check("raqm"):
+        raise SystemExit("Unicode captions require Pillow with libraqm shaping; do not render unshaped text.")
     sora_path = str(FONTS / f"Sora-{weight}.ttf")
     if covers(sora_path, text):
         return sora(weight, size)
-    for path in ([EXTRA_FONT] if EXTRA_FONT else []) + FALLBACK_FONTS:
+    for path in ([EXTRA_FONT] if EXTRA_FONT else []) + managed_fonts() + preferred_fallbacks() + list(system_fallbacks()):
         if path and Path(path).exists() and covers(path, text):
-            return ImageFont.truetype(path, size)
+            return fallback_font(path, weight, size)
     raise SystemExit(f"No font has every character of “{text}”: pass --font <a .ttf/.ttc that does>")
+
+
+def text_layout() -> dict:
+    language = caption_locale().split("-")[0]
+    return {"direction": "rtl" if language in {"ar", "fa", "he", "ur"} else "ltr", "language": language}
+
+
+def line_step(font, lines: list[str], leading: float = 1.06) -> int:
+    """Keep combining marks and descenders on adjacent shaped lines from overlapping."""
+    import math
+    bounds = [font.getbbox(line, anchor="la", **text_layout()) for line in lines if line]
+    ink = max(box[3] for box in bounds) - min(box[1] for box in bounds) if bounds else 0
+    return math.ceil(max(font.size * leading, ink + font.size * 0.08))
 
 
 def wrap(text: str, font, width: float, lines: int = 2) -> list[str]:
     """One line when it fits; otherwise the break into `lines` lines whose longest line is shortest. Text without
     spaces (Japanese, Chinese) breaks between characters."""
-    if font.getlength(text) <= width:
+    if font.getlength(text, **text_layout()) <= width:
         return [text]
     words = text.split()
-    units = words if len(words) > 1 else list(text)
+    if len(words) > 1:
+        units = words
+    else:
+        try:
+            import regex
+        except ImportError:
+            raise SystemExit("Caption wrapping requires Unicode grapheme support: python3 -m pip install regex")
+        units = regex.findall(r"\X", text)
     joiner = " " if len(words) > 1 else ""
     best = [text]
     best_width = float("inf")
+    natural = None
+    natural_width = float("inf")
     if lines >= 2:
         for i in range(1, len(units)):
             candidate = [joiner.join(units[:i]), joiner.join(units[i:])]
-            widest = max(font.getlength(line) for line in candidate)
+            if not joiner:
+                # Japanese small kana/prolongation marks and closing punctuation stay
+                # with the preceding grapheme, never stranded at a line's start.
+                nonstarters = "、。，．？！：；ー々ゝゞヽヾぁぃぅぇぉっゃゅょゎァィゥェォッャュョヮヵヶ）］｝〉》」』】〕〗〙〛"
+                openers = "（［｛〈《「『【〔〖〘〚"
+                if candidate[1][0] in nonstarters or candidate[0][-1] in openers:
+                    continue
+            widest = max(font.getlength(line, **text_layout()) for line in candidate)
+            if not joiner and candidate[0][-1] in "。！？、，" and widest <= width and widest < natural_width:
+                natural, natural_width = candidate, widest
             if widest < best_width:
                 best, best_width = candidate, widest
-    return best
+    return natural or best
 
 
 def fit_lines(text: str, weight: str, size: int, smallest: int, width: float, lines: int = 2):
     """The largest size from `size` down to `smallest` at which `text` fits `width` in at most `lines` lines;
     returns (font, lines)."""
-    for current in range(size, smallest - 1, -2):
+    if not (size >= smallest > 0 and width > 0 and lines > 0):
+        raise ValueError("Invalid caption font size, width or line count")
+    sizes = list(range(size, smallest - 1, -2))
+    if sizes[-1] != smallest:
+        sizes.append(smallest)
+    for current in sizes:
         font = caption_font(text, weight, current)
         wrapped = wrap(text, font, width, lines)
-        if len(wrapped) <= lines and all(font.getlength(line) <= width for line in wrapped):
+        if len(wrapped) <= lines and all(font.getlength(line, **text_layout()) <= width for line in wrapped):
             return font, wrapped
-    font = caption_font(text, weight, smallest)
-    return font, wrap(text, font, width, lines)
+    raise ValueError(f"Caption cannot fit {lines} lines at the minimum {smallest}px within {width}px: {text}")
 
 
 def backdrop(size: tuple, accent: str, light: bool = False, glow: tuple = (0.5, 0.16), wash: float = 1.0):
@@ -192,11 +283,14 @@ def text_block(canvas, lines: list[str], font, centre_x: float, top: float, colo
     """Centred lines from `top`; returns the y below the last line."""
     from PIL import ImageDraw
     draw = ImageDraw.Draw(canvas)
-    step = int(font.size * leading)
+    step = line_step(font, lines, leading)
     y = top
     for line in lines:
-        draw.text((centre_x, y), line, font=font, fill=colour, anchor="ma")
+        draw.text((centre_x, y), line, font=font, fill=colour, anchor="ma", **text_layout())
         y += step
+    if lines:
+        last_bottom = y - step + font.getbbox(lines[-1], anchor="ma", **text_layout())[3]
+        y = max(y, last_bottom)
     return y
 
 

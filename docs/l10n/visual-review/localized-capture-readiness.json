@@ -1,5 +1,5 @@
 {
-  "status": "pilot-partially-verified-further-localized-selectors-await-ci",
+  "status": "two-frame-ltr-rtl-pilot-passed-six-frame-expansion-awaits-ci",
   "scope": [
     "52b-lesson-chord",
     "62b-lesson-results-violin"
@@ -17,22 +17,40 @@
   ],
   "ci_workflow": ".github/workflows/localized-capture-check.yml",
   "limits": [
-    "New semantic selectors and phone/tablet navigation are locally contract-tested, not yet simulator-verified.",
-    "Some non-store tour assertions still use English text; full tour needs further checks.",
+    "Latest semantic state selectors and phone/tablet navigation need their own simulator run.",
+    "Full tour and iPad localized captures are not yet certified.",
     "No all50 listing screenshot/preview completion claimed.",
-    "German and Arabic two-frame pilot success does not certify every screen, locale or device."
+    "Broader accessibility audit still has enforced failures outside this pilot."
   ],
   "verified_pilot": {
-    "source_commit": "c5f19f4b1fcb9b9a8032e3a9528755308a8c3191",
-    "run": 40321755946,
-    "de": "passed all three tests",
-    "ar": "passed all three tests",
-    "en": "failed chord snapshot and genuinely clipped imperfect-take result; timing repair pushed d8757b7"
+    "source_commit": "d8757b799a887e7402ff819da2f3e556e9788cbc",
+    "run": 40326595300,
+    "scope": [
+      "52b-lesson-chord",
+      "62b-lesson-results-violin"
+    ],
+    "jobs": {
+      "en": 121584776037,
+      "de": 121584776320,
+      "ar": 121584776461
+    },
+    "conclusion": "all three locale jobs passed, each with three tests"
   },
   "additional_implementation": [
     "Instrument family chips use stable catalog IDs; rail drag follows actual off-screen target side for LTR/RTL.",
     "Performance combo count, score and lyrics use semantic identifiers while preserving localized accessibility labels. Missing HUD/score regions fail rather than vacuously passing empty-region comparison.",
     "Strum capture checks actual tune verdict, not English Tune prefix.",
     "Phone and tablet tab navigation resolve exact current exported labels, including translated Songs course titles. Both accept requested language/locale; non-English missing fixture fails instead of silently using English."
-  ]
+  ],
+  "next_pilot": {
+    "scope": [
+      "10b-tune-locked",
+      "11b-tune-strum",
+      "31b-instruments-folk",
+      "52b-lesson-chord",
+      "62b-lesson-results-violin",
+      "65-song-perform"
+    ],
+    "status": "implementation expanded; runtime verification pending"
+  }
 }

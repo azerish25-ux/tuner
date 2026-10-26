@@ -1,0 +1,42 @@
+name: Store caption typography
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/marketing/**'
+      - 'tools/l10n/store/**'
+      - 'tools/l10n/store-locales.json'
+      - 'docs/ios/APP-STORE-LISTING*.md'
+      - '.github/workflows/caption-typography.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: caption-typography-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  captions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install rendering dependencies and CJK fonts
+        run: |
+          python -m pip install -r tools/marketing/requirements.txt
+          sudo apt-get update -qq
+          sudo apt-get install -y fonts-noto-cjk fonts-dejavu-core
+      - name: Verify font selection and fail-closed rendering contracts
+        run: python -m unittest discover -s tools/marketing/tests
+      - name: Verify every listing caption with pinned licensed fonts
+        run: python tools/marketing/font_assets.py --audit --out ci-out/caption-typography.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: caption-typography
+          path: ci-out
+          retention-days: 14

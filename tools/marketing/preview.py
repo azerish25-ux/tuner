@@ -637,9 +637,14 @@ def chrome(caption: str, accent: str, screen_h: int, dest: Path) -> None:
     from PIL import Image, ImageDraw
     canvas = art.backdrop((WIDTH, HEIGHT), accent, glow=(0.5, 0.05)).convert("RGBA")
     if caption:
-        font, lines = art.fit_lines(caption, "SemiBold", 80, 58, WIDTH - 2 * SCREEN_X)
-        step = int(font.size * 1.08)
-        top = (BAND - step * len(lines)) // 2 + 6
+        font, lines = art.fit_lines(caption, "SemiBold", 80, 48, WIDTH - 2 * SCREEN_X)
+        step = art.line_step(font, lines, 1.08)
+        bounds = [font.getbbox(line, anchor="ma", **art.text_layout()) for line in lines]
+        ink_top = min(box[1] for box in bounds)
+        ink_bottom = max(index * step + box[3] for index, box in enumerate(bounds))
+        if ink_bottom - ink_top > BAND - 24:
+            raise ValueError("Localized preview caption exceeds its band; shorten or reflow it before rendering")
+        top = (BAND - (ink_bottom - ink_top)) // 2 - ink_top
         art.text_block(canvas, lines, font, WIDTH / 2, top, art.INK, leading=1.08)
     # A thin rim of the accent around the picture, then the window cut out of the frame.
     window = Image.new("L", (WIDTH, HEIGHT), 0)
@@ -664,7 +669,7 @@ def end_card(title: str, line: str, note: str, accent: str, dest: Path) -> None:
     font, lines = art.fit_lines(line, "Medium", 54, 40, WIDTH - 120)
     y = art.text_block(canvas, lines, font, WIDTH / 2, y + 30, art.INK, leading=1.15)
     if note:
-        small, rows = art.fit_lines(note, "Medium", 38, 30, WIDTH - 140, lines=1)
+        small, rows = art.fit_lines(note, "Medium", 38, 30, WIDTH - 140, lines=2)
         art.text_block(canvas, rows, small, WIDTH / 2, y + 36, art.mix(art.INK, art.tint(accent), 0.35))
     canvas.convert("RGB").save(dest)
 
@@ -909,6 +914,7 @@ def verify_poster(clips: list[Clip], poster_at: float, poster_clip: str, lock: L
 
 
 def render_command(args) -> None:
+    os.environ["TIMBRE_CAPTION_LOCALE"] = getattr(args, "locale", None) or "en-US"
     for tool in ("ffmpeg", "ffprobe"):
         if not shutil.which(tool):
             sys.exit(f"{tool} is missing: brew install ffmpeg")

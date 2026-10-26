@@ -541,25 +541,32 @@ class Frame:
         return int(round(value * self.unit))
 
     def caption(self, title: str, line: str, top: float, left: float, right: float, align: str = "centre") -> int:
-        """The caption (Sora SemiBold, 136 px down to 120 at 1320 wide) and the supporting line under it (Sora Medium,
+        """The caption (Sora SemiBold, 136 px down to 96 at 1320 wide) and the supporting line under it (Sora Medium,
         56 px, the ink at 60 %); returns the foot of the block."""
         from PIL import ImageDraw
         width = right - left
-        font, lines = art.fit_lines(title, "SemiBold", self.px(136), self.px(120), width)
+        font, lines = art.fit_lines(title, "SemiBold", self.px(136), self.px(96), width)
         small, rows = art.fit_lines(line, "Medium", self.px(56), self.px(52), width) if line else (None, [])
         draw = ImageDraw.Draw(self.canvas)
         x, anchor = {"centre": ((left + right) / 2, "ma"), "left": (left, "la"), "right": (right, "ra")}[align]
         y = top
+        step = art.line_step(font, lines, 1.04)
         for text in lines:
-            draw.text((x, y), text, font=font, fill=self.ink, anchor=anchor)
-            y += int(font.size * 1.04)
+            draw.text((x, y), text, font=font, fill=self.ink, anchor=anchor, **art.text_layout())
+            bottom = y + font.getbbox(text, anchor=anchor, **art.text_layout())[3]
+            y += step
+        if lines:
+            y = max(y, bottom)
         if rows:
             y += self.px(26)
             sample = self.canvas.getpixel((int(min(max(x, 0), self.w - 1)), int(min(y + small.size // 2, self.h - 1))))
             soft = art.mix(self.ink, sample[:3], 0.40)
+            step = art.line_step(small, rows, 1.18)
             for text in rows:
-                draw.text((x, y), text, font=small, fill=soft, anchor=anchor)
-                y += int(small.size * 1.18)
+                draw.text((x, y), text, font=small, fill=soft, anchor=anchor, **art.text_layout())
+                bottom = y + small.getbbox(text, anchor=anchor, **art.text_layout())[3]
+                y += step
+            y = max(y, bottom)
         return int(y)
 
     def card(self, picture, x: int, y: int, radius: int, corners=(True, True, True, True), rim: bool = True, shadow: int = 150):
@@ -891,6 +898,7 @@ def sheet(paths: list[Path], dest: Path) -> list[str]:
 
 
 def render(folder: Path, out: Path, device: str, page: str | None, locale: str | None, allow_english: bool) -> int:
+    os.environ["TIMBRE_CAPTION_LOCALE"] = locale or "en-US"
     counts = build_counts()
     english = plan(device, page)
     rows = plan(device, page, locale)
