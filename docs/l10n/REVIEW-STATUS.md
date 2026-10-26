@@ -329,3 +329,21 @@ Evidence: `visual-review/smoke-5e938a9.json`.
 Complete unreviewed Finnish, Danish, Swedish, Dutch and Norwegian author drafts are preserved
 under `tools/l10n/drafts/final/`, with exact source/target hashes. They remain excluded
 from the 20 applied target-language count until separate full review and import.
+
+## Pitch comparison and complete Romanian draft
+
+Seven additional independently reviewed corrections make the gtr-13-4 bend prompt
+explicitly mean a pitch below its target, not a short duration. Actual MIDI64-to63
+comparison and Different answer are unchanged. Evidence and exact guards are in
+`reviews/bend-context-corrections/`.
+
+All six new author drafts, including Romanian, are now preserved in `drafts/final/`.
+They are complete drafts but remain unapproved/unimported while full independent
+semantic review proceeds. Applied lesson coverage is still20 target languages.
+
+The actual5e938a9 paywall capture confirms that the trial badge no longer obscures
+the annual price. All four hosted-layout tests passed. A remaining savings-badge
+contrast finding and the wider47-finding audit are not waived; see
+`visual-review/paywall-5e938a9.json`. An explicit iOS refresh requests verification
+of the newer string-identifier fix rather than repeatedly testing the obsolete
+known-failing revision.

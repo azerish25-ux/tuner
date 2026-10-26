@@ -1,0 +1,490 @@
+{
+  "current_occurrences": 1,
+  "current_lesson": {
+    "id": "gtr-13-4",
+    "title": {
+      "k": "L6c33fc06dc",
+      "t": "Bends and vibrato"
+    },
+    "kind": "lesson",
+    "minutes": 5,
+    "xp": 25,
+    "free": false,
+    "steps": [
+      {
+        "type": "explain",
+        "title": {
+          "k": "La5f49e18ed",
+          "t": "Bend to a target"
+        },
+        "body": {
+          "k": "L6d9391f723",
+          "t": "A bend pushes the string across the fret to raise its pitch. A whole-step bend, the size of two frets, from fret 7 must sound exactly like fret 9."
+        },
+        "visual": {
+          "type": "fretboard",
+          "strings": 6,
+          "dots": [
+            {
+              "s": 3,
+              "f": 7,
+              "g": 3
+            },
+            {
+              "s": 3,
+              "f": 9
+            }
+          ],
+          "frets": 4,
+          "start": 6
+        }
+      },
+      {
+        "type": "notes",
+        "notes": [
+          {
+            "m": 64,
+            "b": 0.0,
+            "d": 1.0,
+            "at": {
+              "s": 3,
+              "f": 9,
+              "g": 3
+            }
+          }
+        ],
+        "hint": {
+          "k": "L51221b9b02",
+          "t": "String 3, fret 9: this is your bend target. Let it ring and remember it."
+        }
+      },
+      {
+        "type": "explain",
+        "title": {
+          "k": "L6776fd531f",
+          "t": "Three fingers push"
+        },
+        "body": {
+          "k": "Led56f6988b",
+          "t": "Put finger 3 on fret 7 with fingers 1 and 2 behind it on the same string. Push all three toward the ceiling, turning your wrist as if turning a doorknob."
+        },
+        "visual": {
+          "type": "none"
+        }
+      },
+      {
+        "type": "quiz",
+        "prompt": {
+          "k": "L223923b2af",
+          "t": "Your bend from fret 7 sounds lower than fret 9. What now?"
+        },
+        "options": [
+          {
+            "k": "Le71cc88d74",
+            "t": "Push a little further"
+          },
+          {
+            "k": "L51be815771",
+            "t": "Pick harder"
+          },
+          {
+            "k": "L81cf145d40",
+            "t": "Release the bend"
+          }
+        ],
+        "answer": 0,
+        "why": {
+          "k": "L8d02931319",
+          "t": "A bend that falls short sounds sour. Push until it matches the target you heard."
+        },
+        "visual": {
+          "type": "none"
+        }
+      },
+      {
+        "type": "listen",
+        "prompt": {
+          "k": "L38ebe33d09",
+          "t": "Target, then a short bend. Same note or different?"
+        },
+        "sound": [
+          [
+            64
+          ],
+          [
+            63
+          ]
+        ],
+        "options": [
+          {
+            "k": "Lb76aee974c",
+            "t": "Same"
+          },
+          {
+            "k": "L6824a5dc37",
+            "t": "Different"
+          }
+        ],
+        "answer": 1
+      },
+      {
+        "type": "explain",
+        "title": {
+          "k": "L91967d6e76",
+          "t": "Vibrato makes notes sing"
+        },
+        "body": {
+          "k": "L0f8323da7a",
+          "t": "Vibrato is a small bend and release, repeated quickly on a held note. Keep it narrow and even so the note stays in tune."
+        },
+        "visual": {
+          "type": "none"
+        }
+      },
+      {
+        "type": "along",
+        "notes": [
+          {
+            "m": 72,
+            "b": 0.0,
+            "d": 1.0,
+            "at": {
+              "s": 1,
+              "f": 8,
+              "g": 4
+            }
+          },
+          {
+            "m": 69,
+            "b": 1.0,
+            "d": 3.0,
+            "at": {
+              "s": 1,
+              "f": 5,
+              "g": 1
+            }
+          },
+          {
+            "m": 67,
+            "b": 4.0,
+            "d": 1.0,
+            "at": {
+              "s": 2,
+              "f": 8,
+              "g": 4
+            }
+          },
+          {
+            "m": 64,
+            "b": 5.0,
+            "d": 3.0,
+            "at": {
+              "s": 2,
+              "f": 5,
+              "g": 1
+            }
+          },
+          {
+            "m": 60,
+            "b": 8.0,
+            "d": 1.0,
+            "at": {
+              "s": 3,
+              "f": 5,
+              "g": 1
+            }
+          },
+          {
+            "m": 57,
+            "b": 9.0,
+            "d": 3.0,
+            "at": {
+              "s": 4,
+              "f": 7,
+              "g": 3
+            }
+          }
+        ],
+        "bpm": 60,
+        "beatsPerBar": 4,
+        "title": {
+          "k": "Lf16f6a6b45",
+          "t": "Make the long notes sing"
+        }
+      },
+      {
+        "type": "along",
+        "notes": [
+          {
+            "m": 69,
+            "b": 0.0,
+            "d": 1.0,
+            "at": {
+              "s": 1,
+              "f": 5,
+              "g": 1
+            }
+          },
+          {
+            "m": 72,
+            "b": 1.0,
+            "d": 1.0,
+            "at": {
+              "s": 1,
+              "f": 8,
+              "g": 4
+            }
+          },
+          {
+            "m": 69,
+            "b": 2.0,
+            "d": 1.0,
+            "at": {
+              "s": 1,
+              "f": 5,
+              "g": 1
+            }
+          },
+          {
+            "m": 67,
+            "b": 3.0,
+            "d": 1.0,
+            "at": {
+              "s": 2,
+              "f": 8,
+              "g": 4
+            }
+          },
+          {
+            "m": 64,
+            "b": 4.0,
+            "d": 3.0,
+            "at": {
+              "s": 2,
+              "f": 5,
+              "g": 1
+            }
+          },
+          {
+            "m": 67,
+            "b": 8.0,
+            "d": 0.5,
+            "at": {
+              "s": 2,
+              "f": 8,
+              "g": 4
+            }
+          },
+          {
+            "m": 69,
+            "b": 8.5,
+            "d": 0.5,
+            "at": {
+              "s": 1,
+              "f": 5,
+              "g": 1
+            }
+          },
+          {
+            "m": 67,
+            "b": 9.0,
+            "d": 0.5,
+            "at": {
+              "s": 2,
+              "f": 8,
+              "g": 4
+            }
+          },
+          {
+            "m": 64,
+            "b": 9.5,
+            "d": 0.5,
+            "at": {
+              "s": 2,
+              "f": 5,
+              "g": 1
+            }
+          },
+          {
+            "m": 62,
+            "b": 10.0,
+            "d": 1.0,
+            "at": {
+              "s": 3,
+              "f": 7,
+              "g": 3
+            }
+          },
+          {
+            "m": 60,
+            "b": 11.0,
+            "d": 1.0,
+            "at": {
+              "s": 3,
+              "f": 5,
+              "g": 1
+            }
+          },
+          {
+            "m": 57,
+            "b": 12.0,
+            "d": 4.0,
+            "at": {
+              "s": 4,
+              "f": 7,
+              "g": 3
+            }
+          }
+        ],
+        "bpm": 66,
+        "beatsPerBar": 4,
+        "title": {
+          "k": "Le26482ab01",
+          "t": "Your solo, with feeling"
+        }
+      }
+    ]
+  },
+  "localized_contexts": {
+    "de": [
+      {
+        "field": "prompt",
+        "key": "L223923b2af",
+        "source": "Your bend from fret 7 sounds lower than fret 9. What now?",
+        "target": "Dein Bend von Bund 7 klingt tiefer als Bund 9. Was nun?"
+      },
+      {
+        "field": "why",
+        "key": "L8d02931319",
+        "source": "A bend that falls short sounds sour. Push until it matches the target you heard.",
+        "target": "Ein zu kurzer Bend klingt schief. Drücke weiter, bis er zum gehörten Zielton passt."
+      },
+      {
+        "field": "prompt",
+        "key": "L38ebe33d09",
+        "source": "Target, then a short bend. Same note or different?",
+        "target": "Zielton, dann ein zu kurzer Bend. Derselbe Ton oder ein anderer?"
+      }
+    ],
+    "es": [
+      {
+        "field": "prompt",
+        "key": "L223923b2af",
+        "source": "Your bend from fret 7 sounds lower than fret 9. What now?",
+        "target": "Tu bend desde el traste 7 suena más grave que el traste 9. ¿Qué haces?"
+      },
+      {
+        "field": "why",
+        "key": "L8d02931319",
+        "source": "A bend that falls short sounds sour. Push until it matches the target you heard.",
+        "target": "Un bend que se queda corto suena desafinado. Empuja hasta igualar la nota objetivo que oíste."
+      },
+      {
+        "field": "prompt",
+        "key": "L38ebe33d09",
+        "source": "Target, then a short bend. Same note or different?",
+        "target": "Nota objetivo y luego un bend corto. ¿Misma nota o distinta?"
+      }
+    ],
+    "fr": [
+      {
+        "field": "prompt",
+        "key": "L223923b2af",
+        "source": "Your bend from fret 7 sounds lower than fret 9. What now?",
+        "target": "Votre bend depuis la case 7 sonne plus bas que la case 9. Que faire ?"
+      },
+      {
+        "field": "why",
+        "key": "L8d02931319",
+        "source": "A bend that falls short sounds sour. Push until it matches the target you heard.",
+        "target": "Un bend trop court sonne faux. Poussez jusqu'à retrouver la note cible que vous avez entendue."
+      },
+      {
+        "field": "prompt",
+        "key": "L38ebe33d09",
+        "source": "Target, then a short bend. Same note or different?",
+        "target": "Note cible, puis un bend trop court. Même note ou note différente ?"
+      }
+    ],
+    "it": [
+      {
+        "field": "prompt",
+        "key": "L223923b2af",
+        "source": "Your bend from fret 7 sounds lower than fret 9. What now?",
+        "target": "Il tuo bend dal tasto 7 suona più basso del tasto 9. Che fare?"
+      },
+      {
+        "field": "why",
+        "key": "L8d02931319",
+        "source": "A bend that falls short sounds sour. Push until it matches the target you heard.",
+        "target": "Un bend troppo corto suona stonato. Spingi finché non corrisponde alla nota obiettivo che hai sentito."
+      },
+      {
+        "field": "prompt",
+        "key": "L38ebe33d09",
+        "source": "Target, then a short bend. Same note or different?",
+        "target": "Nota obiettivo, poi un bend breve. Stessa nota o diversa?"
+      }
+    ],
+    "pt": [
+      {
+        "field": "prompt",
+        "key": "L223923b2af",
+        "source": "Your bend from fret 7 sounds lower than fret 9. What now?",
+        "target": "O seu bend a partir da casa 7 soa mais grave que a casa 9. E agora?"
+      },
+      {
+        "field": "why",
+        "key": "L8d02931319",
+        "source": "A bend that falls short sounds sour. Push until it matches the target you heard.",
+        "target": "Um bend que fica curto soa desafinado. Empurre até igualar a nota-alvo que você ouviu."
+      },
+      {
+        "field": "prompt",
+        "key": "L38ebe33d09",
+        "source": "Target, then a short bend. Same note or different?",
+        "target": "Nota-alvo e depois um bend curto. Mesma nota ou diferente?"
+      }
+    ],
+    "ru": [
+      {
+        "field": "prompt",
+        "key": "L223923b2af",
+        "source": "Your bend from fret 7 sounds lower than fret 9. What now?",
+        "target": "Ваш бенд от лада 7 звучит ниже лада 9. Что делать?"
+      },
+      {
+        "field": "why",
+        "key": "L8d02931319",
+        "source": "A bend that falls short sounds sour. Push until it matches the target you heard.",
+        "target": "Недотянутый бенд звучит фальшиво. Давите, пока он не совпадёт с целевой нотой, которую вы слышали."
+      },
+      {
+        "field": "prompt",
+        "key": "L38ebe33d09",
+        "source": "Target, then a short bend. Same note or different?",
+        "target": "Целевая нота, затем короткий бенд. Та же нота или другая?"
+      }
+    ],
+    "ur": [
+      {
+        "field": "prompt",
+        "key": "L223923b2af",
+        "source": "Your bend from fret 7 sounds lower than fret 9. What now?",
+        "target": "فریٹ 7 کا بینڈ فریٹ 9 سے نیچا بجتا ہے۔ اب کیا کریں؟"
+      },
+      {
+        "field": "why",
+        "key": "L8d02931319",
+        "source": "A bend that falls short sounds sour. Push until it matches the target you heard.",
+        "target": "ہدف سے نیچا بینڈ بے سُرا لگتا ہے۔ سنے ہوئے ہدف تک دھکیلیں۔"
+      },
+      {
+        "field": "prompt",
+        "key": "L38ebe33d09",
+        "source": "Target, then a short bend. Same note or different?",
+        "target": "ہدف، پھر ذرا سا بینڈ۔ ایک ہی نوٹ یا مختلف؟"
+      }
+    ]
+  }
+}

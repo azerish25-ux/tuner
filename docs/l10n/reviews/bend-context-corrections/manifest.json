@@ -1,0 +1,20 @@
+{
+  "reviewer": "Independent AI context reviewer",
+  "counts": {
+    "reviewed": 7,
+    "approved": 7,
+    "corrected": 0,
+    "rejected": 0
+  },
+  "inputs": {
+    "review-artifact/corrections.json": "f6aeb5d8ec5a309c25384c9b51fd45fe2373bb98aaa1b61e59b6323eaf38a54e",
+    "review-artifact/lesson.json": "ab182a8577857477f7fb41b2b93a6e88209a729a77387aa4ab16c0124970f5a2"
+  },
+  "outputs": {
+    "README.md": "90fea0337d839868710747a88e16320260c8751bd9499d8cb425d723884b1132",
+    "approved-corrections.json": "1047cd650c231c452ab561a15353f2839f5ea8d1412f87c4adf7041225455951",
+    "review.json": "1047cd650c231c452ab561a15353f2839f5ea8d1412f87c4adf7041225455951",
+    "write_review.py": "0fa96034576015feb1e2250deb8af186f1f7c31a1e7c50ddc9751ffb074572ce",
+    "context-evidence.json": "7e0fc8de8b70900c137a730cd4a8611b14175028c7774a0c258dc69a8b083215"
+  }
+}

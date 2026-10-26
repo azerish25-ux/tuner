@@ -1,0 +1,13 @@
+{
+  "commit": "5e938a974410223a5bcc06705536cae11727d3b2",
+  "run_id": 40280386056,
+  "job_id": 121433354244,
+  "artifact_id": 12633143452,
+  "artifact_sha256": "9184250312a9776c8a52fd8fab1e10275a7bc80dc10b5f198abe0e18d18d6c40",
+  "artifact_verified": true,
+  "screenshot": "8CBB7C19-5F80-4536-848C-9A3C18BA5855.png",
+  "visual_observation": "Actual default-size screenshot shows trial badge above the annual name/price row, with the complete $34.99 price visible and no overlap.",
+  "unit_evidence": "All4 PaywallLayoutTests passed in same revision, including multilingual, RTL, narrow and accessibility-size measurement cases.",
+  "remaining": "Paywall audit reports SAVE58% contrast; broader app audit has47 findings, including Songs timeout and other contrast findings. No exemptions or global accessibility pass claimed.",
+  "scope": "Confirms the demonstrated default-size overlap repair, not all screen sizes or every locale screenshot."
+}
