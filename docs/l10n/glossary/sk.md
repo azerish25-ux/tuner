@@ -166,3 +166,17 @@ E–A–D–G–B–E mnemonic adaptation: Eva a Dávid grilujú bez elektriny. 
 - Ghost Light → Svetlo duchov
 - Sharp in prose → krížik, sharpened note names G sharp/F sharp → Gis/Fis. This does not replace literal displayed G♯/F♯ notation symbols.
 - Traditional song names When the Saints Go Marching In, Amazing Grace, Greensleeves and Clementine are proposed retained work identifiers. Every exact-source row is held for individual independent review; retention is not a blanket exemption for instructions, generic titles or credits such as Traditional spiritual.
+- Rust Belt Shuffle → Shuffle hrdzavého pásu
+- Basement Weather → Počasie v pivnici
+- Power chord → kvintový akord; palm muting → tlmenie dlaňou; seventh chord → septakord; sus chord → akord sus (explained as akord so zadržaným tónom).
+- Shuffle rhythm mnemonic hum-pty, dum-pty → dáá-da, dáá-da, explicitly illustrating long-short duration without leaving English verse.
+- Glass Satellites → Sklenené satelity
+- Barre → barré; pentatonic box → pentatonický box; Travis picking → Travisovo vybrnkávanie; p/i/m/a preserve the standard Spanish-derived guitar notation. Finger names: palec, ukazovák, prostredník, prstenník, malíček.
+- Porchlight → Svetlo na verande
+- Neon Laundromat → Neónová práčovňa
+- Hammer-on → príklep; pull-off → odtrh; slide → sklz; turnaround → návratový motív or descriptive Návrat na začiatok; quick change → skorá zmena akordu, explained by the actual fourth-degree chord in bar 2.
+- Saltwater Sunday → Slaná nedeľa
+- Same/Different listening alternatives → Rovnaké/Odlišné, neutral plural for compared sounds; shared context requires independent review.
+- Spray Paint Sunrise → Úsvit nasprejovaný farbou
+- Sparkler Season → Sezóna prskaviek
+- Sixteenth count one-e-and-a → raz-e-a-da; preserve four syllables/subdivisions, matching dva-e-a-da. Country boom-chick → bum-čik. Reggae offbeat here explicitly means weak beats two and four, rendered ľahké doby, not medzi dobami.
