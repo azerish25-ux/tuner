@@ -63,7 +63,7 @@ final class AccessibilityAuditUITests: XCTestCase {
         (type: .elementDetection, name: "element detection"),
     ]
 
-    /// Tries before an audit that can't complete counts as a failure, with a pause between them for the screen to rest.
+    /// Tries for each isolated kind after a combined audit times out, with a pause for the screen to rest.
     private static let attempts = 3
 
     /// What one audit found, filled in by the issue handler.
@@ -108,6 +108,14 @@ final class AccessibilityAuditUITests: XCTestCase {
         let count = buttons.count
         XCTAssertGreaterThan(count, 0)
         for index in 0..<count {
+            // Each tab gets a fresh process: an earlier screen's rendering and audit state must not keep the next
+            // screen busy. Keep discovering the actual tab bar rather than maintaining a second list of tabs.
+            if index > 0 {
+                app.terminate()
+                launchOnboarded()
+                XCTAssertTrue(buttons.firstMatch.waitForExistence(timeout: 25))
+                XCTAssertEqual(buttons.count, count)
+            }
             let button = buttons.element(boundBy: index)
             let name = button.label
             button.tap()
@@ -222,23 +230,26 @@ final class AccessibilityAuditUITests: XCTestCase {
         known.first { $0.screen == screen && $0.kind == kind && ($0.element == id || $0.element == label) }?.reason
     }
 
-    /// Runs the audit on the screen in front (again, after a pause, when it can't complete), then attaches its report
-    /// and a screenshot as `ax-audit-<screen>`. Fails on an issue of an enforced kind that `known` doesn't list, and
-    /// when no attempt completes.
+    /// Runs the complete audit, or every kind separately if the combined request times out. Splitting the request
+    /// gives each kind its own time budget; it never omits an audit or treats an unfinished one as a pass.
+    /// All attempts and their findings stay in the report, including failures found before a timeout.
     private func audit(_ screen: String) {
-        let screenshot = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        let screenshot = XCTAttachment(screenshot: stillScreenshot())
         screenshot.name = "ax-audit-\(screen)"
         screenshot.lifetime = .keepAlways
         add(screenshot)
 
-        var findings = Findings()
-        var problem: String?
-        for attempt in 1...Self.attempts {
-            findings = Findings()
-            problem = run(screen, into: findings)
-            guard let reason = problem else { break }
-            findings.lines.append("Attempt \(attempt) did not complete: \(reason)")
-            if attempt < Self.attempts { settle(3) }
+        let findings = Findings()
+        var unfinished: [String] = []
+        if let reason = run(screen, types: .all, into: findings) {
+            findings.lines.append("Combined audit did not complete: \(reason). Retrying every kind separately.")
+            for kind in Self.kinds {
+                if let problem = auditKind(kind.type, name: kind.name, screen: screen, into: findings) {
+                    unfinished.append("\(kind.name): \(problem)")
+                }
+            }
+        } else {
+            findings.lines.append("Completed all audit kinds.")
         }
 
         let header = "Accessibility audit, \(screen): \(findings.lines.count) lines, \(findings.failing.count) failing"
@@ -247,20 +258,35 @@ final class AccessibilityAuditUITests: XCTestCase {
         report.name = "ax-audit-\(screen).txt"
         report.lifetime = .keepAlways
         add(report)
-        if let problem {
-            XCTFail("\(screen): the accessibility audit could not run (\(Self.attempts) tries): \(problem)")
+        for problem in unfinished {
+            XCTFail("\(screen): the accessibility audit could not run (\(Self.attempts) isolated tries): \(problem)")
         }
         for line in findings.failing {
             XCTFail("\(screen): \(line)")
         }
     }
 
-    /// One audit of the screen in front; the reason it didn't complete, or nil.
-    private func run(_ screen: String, into findings: Findings) -> String? {
+    /// An isolated kind must complete, even when its findings are informational rather than enforced.
+    private func auditKind(_ type: XCUIAccessibilityAuditType, name: String, screen: String, into findings: Findings) -> String? {
+        var problem: String?
+        for attempt in 1...Self.attempts {
+            settle(3)
+            problem = run(screen, types: type, into: findings)
+            guard let reason = problem else {
+                findings.lines.append("Completed \(name) audit on isolated attempt \(attempt).")
+                return nil
+            }
+            findings.lines.append("\(name) attempt \(attempt) did not complete: \(reason)")
+        }
+        return problem
+    }
+
+    /// One request for the screen in front; the reason it didn't complete, or nil.
+    private func run(_ screen: String, types: XCUIAccessibilityAuditType, into findings: Findings) -> String? {
         let enforced = Self.enforced
         let kinds = Self.kinds
         do {
-            try app.performAccessibilityAudit(for: .all) { issue in
+            try app.performAccessibilityAudit(for: types) { issue in
                 let kind = kinds.first { issue.auditType.contains($0.type) }?.name ?? "other"
                 let snapshot = try? issue.element?.snapshot()
                 let id = snapshot?.identifier ?? ""
@@ -268,10 +294,12 @@ final class AccessibilityAuditUITests: XCTestCase {
                 let reason = Self.knownReason(screen: screen, kind: kind, id: id, label: label)
                 let fails = enforced.contains(issue.auditType) && reason == nil
                 let tag = fails ? ", enforced" : (reason.map { ", known: \($0)" } ?? "")
+                let geometry = snapshot.map { " | frame \($0.frame) | type \($0.elementType.rawValue)" } ?? " | snapshot unavailable"
                 let line = "[\(kind)\(tag)] \(issue.compactDescription) | id \(id.isEmpty ? "-" : id) | label "
                     + (label.isEmpty ? "-" : "\"\(label)\"")
+                    + geometry
                 findings.lines.append(line)
-                if fails { findings.failing.append(line) }
+                if fails, !findings.failing.contains(line) { findings.failing.append(line) }
                 // true: recorded here (and failed below when it must); false would make XCTest fail it without context.
                 return true
             }

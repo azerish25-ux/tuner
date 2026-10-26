@@ -20,7 +20,7 @@ Every row is mandatory. The "Current table" hints come from reading the shipped 
 | Units | সেন্ট; মিনিট; সেকেন্ড; মিলিসেকেন্ড. Hz, BPM, ¢, XP unchanged |  |
 | Capitalization | No letter case; brands retain spelling |  |
 | Note names in the interface | Notes supplied by runtime; never invent note names |  |
-| Note names in lessons (lesson languages only) | Not a lesson locale; retain C, F♯, B♭, Em, G7 when referenced |  |
+| Note names in lessons (lesson languages only) | Lessons are required; retain C, F♯, B♭, Em, G7 when referenced |  |
 | Sharp / flat / double sharp / double flat as words | শার্প / ফ্ল্যাট / ডাবল শার্প / ডাবল ফ্ল্যাট |  |
 | Tuning direction | নিচু / উঁচু; not accidentals |  |
 | iOS Settings path (legal text) | সেটিংস › Apple অ্যাকাউন্ট › সাবস্ক্রিপশন. AI-reviewed; device verification pending |  |
@@ -60,7 +60,7 @@ Every row is mandatory. The "Current table" hints come from reading the shipped 
 | Chord view / Neck view | What VoiceOver calls the Show me switch | VoiceOver | `Chord view`, `Neck view` | কর্ড দৃশ্য / নেক দৃশ্য |  |
 | Show me | The 3D demonstration of a chord or notes on the neck | lessons | `Show me` | দেখান | Sits on a small capsule: short. |
 | Strum to tune | One strum reads every string at once | tuner, listing | `Strum to tune` | টিউন করতে স্ট্রাম করুন |  |
-| Tune by feel / Feel | The phone pulses with the beat between the string and its note, slower as they meet, still at the lock | tuner, settings | `Tune by feel`, `Feel` | কম্পন অনুভব করে টিউন করুন / কম্পন অনুভব করুন | "Feel it", "Feel the beat" use the same sense. |
+| Tune by feel / Feel | The phone pulses with the beat between the string and its note, slower as they meet, still at the lock | tuner, settings | `Tune by feel`, `Feel` | কম্পন অনুভব করে টিউন করুন / কম্পন | "Feel it", "Feel the beat" use the same sense. |
 | Bullseye | The pitch game (hit the centre ring); also leaderboard names | Practice, Game Center | `Bullseye` | নিখুঁত নিশানা | Every current table translates it (de Volltreffer, fr Tir parfait, ja ど真ん中, ru В яблочко …) although HANDOFF.md says to keep game names. Decide once; every string naming the game ("Win a round of Bullseye", "Score 2,000 in Bullseye") uses this. |
 | Ear trainer / Ear training | The ear games and the ear course | Practice, Learn | `Ear training` | কানের তালিম |  |
 | Drone | A sustained reference tone to play or sing against | Practice, lessons | `Drone` | টানা সুর | de Bordun, fr Bourdon, es Nota pedal, ja ドローン (current tables). |
@@ -115,7 +115,7 @@ Every row is mandatory. The "Current table" hints come from reading the shipped 
 | bowing, open-string bowing | Violin and cello | lessons |  | ছড় দিয়ে বাজানো / খোলা তারে ছড় চালানো |  |
 | tune (noun) | A melody ("an old fiddle tune") | lessons |  | সুর | Not the verb, not the tab. |
 | cadence, V chord, I–IV–V | Harmony | lessons |  | ক্যাডেন্স / V কর্ড / I–IV–V | Roman numerals stay. |
-| pickup | Notes before the first full bar (anacrusis) | lessons |  | প্রথম পূর্ণ বারের আগের স্বর |  |
+| pickup | Notes before the first full bar (anacrusis) | lessons |  | পিকআপ; প্রথম পূর্ণ বারের আগের স্বর | Teach পিকআপ with its Bengali definition at first use. Keep the term, not its answer-giving definition, in a definition quiz. |
 
 ### E. Song structure (section chips: `max_length` 12, or 1.5 × a longer English label)
 
@@ -154,7 +154,7 @@ Every row is mandatory. The "Current table" hints come from reading the shipped 
 | English | Where | Translation | Notes |
 |---|---|---|---|
 | Guitar, Ukulele, Bass, Violin, Cello, Mandolin, Banjo | Course titles (`Learn.strings`) | গিটার / ইউকুলেলে / বেস / বেহালা / চেলো / ম্যান্ডোলিন / ব্যাঞ্জো | Same words as the instrument names. |
-| Ear Training, Music Theory, Rhythm, Singing | Course titles | কানের তালিম / সঙ্গীততত্ত্ব / তাল / গান গাওয়া |  |
+| Ear Training, Music Theory, Rhythm, Singing | Course titles | কানের তালিম / সংগীততত্ত্ব / ছন্দ / গান গাওয়া |  |
 | Songs | Course title, also the Songs tab | গান |  |
 | Originals | Course of songs written for Timbre ("Timbre Originals") | মৌলিক গান | Keep or translate: decide once. |
 | Standards & Classics | Course title | প্রচলিত ও ক্লাসিক গান |  |
@@ -162,11 +162,184 @@ Every row is mandatory. The "Current table" hints come from reading the shipped 
 
 Song titles, the rule for this locale (fill one line each):
 
-- Public-domain songs with an established title in the language (Ode to Joy, Silent Night, Twinkle Twinkle Little Star …): use the established local title; otherwise keep English. (Current tables use local titles where they exist: ru «Зелёные рукава», zh-CN 《绿袖子》.)
-- Other traditional songs (Clementine, Shenandoah, Molly Malone …): keep the English title (ja グリーンスリーブス, ko 그린슬리브스).
-- Timbre Originals (Kite Weather, Ghost Light, Neon Laundromat …): keep the original English title. (Current lesson tables translate them: de Drachenwetter, ja 「凧日和」.)
-- A title in prose must equal the title of its song lesson in this locale (the helper adds it to lesson batches as `lesson_title`), and Game Center's leaderboard for a featured song uses the same title.
-- Lyric credits ("Traditional (printed 1876; James Yorkston, 1884)", "Words from 1779, tune from 1829"): names and years as they are; the connecting words translated.
+- All lesson prose and descriptive title text is Bengali; no English fallback counts as translated. Polite আপনি, warm direct teacher voice. Keep ASCII digits, literal notation, note/chord letters, brands and original sung lyrics exactly. Translate credit connectors, retaining names and years.
+- Established Bengali song names may be used when known; otherwise use a clear stable Bengali translation or Bengali transliteration, without claiming an established local title. Proper names may remain original. Originals receive Bengali titles, reused verbatim in prose. Qualifiers (three notes, melody, chords, arrangement) are translated.
+- Initial binding title map (extend before translating each new title):
+
+| English | Bengali |
+|---|---|
+| Boil Them Cabbage Down | বাঁধাকপি সেদ্ধ করুন |
+| Minuet in G | G-তে মিনুয়েট |
+| Old Joe Clark | বুড়ো জো ক্লার্ক |
+| Soldier's Joy | সৈনিকের আনন্দ |
+| Arkansas Traveler | আরকানসাসের পথিক |
+| The Swan | রাজহাঁস |
+| Brahms' Lullaby | ব্রাহমসের ঘুমপাড়ানি গান |
+| Au clair de la lune | চাঁদের আলোয় |
+| The Carnival of the Animals | প্রাণীদের উৎসব |
+| Angeline the Baker | রুটির কারিগর অ্যাঞ্জেলিন |
+| Cripple Creek | ক্রিপল ক্রিক |
+| Cumberland Gap | কাম্বারল্যান্ড গিরিপথ |
+| Shady Grove | ছায়াঘেরা বন |
+| Skip to My Lou | লাফিয়ে লুর কাছে |
+| Jingle Bells | ঝনঝন ঘণ্টা |
+| Take Me Out to the Ball Game | আমাকে বলখেলায় নিয়ে চলো |
+| My Bonnie Lies Over the Ocean | আমার বনি সাগরের ওপারে |
+| The Entertainer | বিনোদনদাতা |
+| Frère Jacques | ভাই জাক |
+| Für Elise | এলিজের জন্য |
+| Auld Lang Syne | অল্ড ল্যাং সাইন |
+| Shenandoah | শেনানডোয়া |
+| Yankee Doodle | ইয়াঙ্কি ডুডল |
+| The alphabet song | বর্ণমালার গান |
+| Baa, Baa, Black Sheep | বা, বা, কালো ভেড়া |
+| One Horse Open Sleigh | এক ঘোড়ার খোলা স্লেজ |
+| Old MacDonald Had a Farm | বুড়ো ম্যাকডোনাল্ডের খামার |
+| Love Me Tender | লাভ মি টেন্ডার |
+| Bobby Shafto | ববি শ্যাফটো |
+| Canon in D | D-তে ক্যানন |
+| Largo, New World Symphony | লার্গো, নতুন জগতের সিম্ফনি |
+| From the New World | নতুন জগৎ থেকে |
+| In the Hall of the Mountain King | পাহাড়ের রাজার সভায় |
+| Peer Gynt | পিয়ার গিন্ট |
+| My Country, 'Tis of Thee | আমার দেশ, তোমারই গান |
+| God Save the King | ঈশ্বর রাজাকে রক্ষা করুন |
+| Simple Gifts | সহজ উপহার |
+| Appalachian Spring | অ্যাপালাচিয়ার বসন্ত |
+| Good King Wenceslas | সৎ রাজা ওয়েনসেসলাস |
+| Deck the Halls | হলঘর সাজাও |
+| Nos Galan | নস গালান |
+| We Wish You a Merry Christmas | আনন্দময় বড়দিনের শুভেচ্ছা |
+| Silent Night | নীরব রাত |
+| Messiah | মেসায়া |
+| Eine kleine Nachtmusik | রাতের ছোট্ট সংগীত |
+| The Merry Wives of Windsor | উইন্ডসরের হাসিখুশি গৃহিণীরা |
+| Danny Boy (Londonderry Air) | ড্যানি বয় (লন্ডনডেরির সুর) |
+| Danny Boy | ড্যানি বয় |
+| Mozart's Symphony No. 40 | মোৎসার্টের 40 নম্বর সিম্ফনি |
+| Moth and Ember | মথ ও অঙ্গার |
+| First Frost | প্রথম তুষারপাত |
+| Hammock Season | দোলনায় শোওয়ার মরসুম |
+| Glow-in-the-Dark Stars | অন্ধকারে জ্বলা তারা |
+| Echo Canyon | প্রতিধ্বনির গিরিখাত |
+| Open Windows | খোলা জানালা |
+| Scoreboard Lights | স্কোরবোর্ডের আলো |
+| Carousel at Closing Time | বন্ধের সময় নাগরদোলা |
+| Cedar Smoke | সিডার কাঠের ধোঁয়া |
+| Rain on the Skylight | ছাদ-জানালায় বৃষ্টি |
+| Pocket Change | পকেটের খুচরো |
+| Kitchen Slow Dance | রান্নাঘরে ধীর নাচ |
+| Houseplants | ঘরের গাছ |
+| Static on Channel Nine | নয় নম্বর চ্যানেলে ঝিরঝির |
+| Boardwalk Comet | কাঠের পথের ধূমকেতু |
+| Mile Marker Zero | শূন্য মাইলফলক |
+| Last Bell | শেষ ঘণ্টা |
+| Copper Wire | তামার তার |
+| Cold Lake | ঠান্ডা হ্রদ |
+| Parking Lot Cathedral | পার্কিং মাঠের গির্জা |
+| Keeper's Daughter | রক্ষকের মেয়ে |
+| Snow Globe Town | স্নো গ্লোবের শহর |
+| Thistle and Thread | কাঁটাফুল ও সুতো |
+| Late Bus Home | বাড়ি ফেরার রাতের বাস |
+| Velvet Hour | মখমলি প্রহর |
+| Rooftop Choir | ছাদের গানের দল |
+| Bright Side of the Block | পাড়ার উজ্জ্বল দিক |
+| Over You Soon | শিগগিরই তোমায় ভুলব |
+| Constellation Prize | নক্ষত্রমণ্ডলের পুরস্কার |
+| She'll Be Coming 'Round the Mountain | পাহাড় ঘুরে সে আসবে |
+| Loch Lomond | লখ লোমন্ড |
+| All Through the Night / Ar Hyd y Nos | সারারাত |
+| O Christmas Tree | ও বড়দিনের গাছ |
+| O Come, All Ye Faithful / Adeste Fideles | এসো, সব বিশ্বাসী |
+| The First Noel | প্রথম বড়দিন |
+| Scotland the Brave | বীর স্কটল্যান্ড |
+| Korobeiniki | কোরোবেইনিকি |
+| The Blue Danube | নীল দানিয়ুব |
+| Can-can | ক্যান-ক্যান |
+| Orpheus in the Underworld | পাতালে অর্ফিয়ুস |
+| The Liberty Bell | স্বাধীনতার ঘণ্টা |
+| Carmen: Prelude | কারমেন: প্রিলিউড |
+| Carmen | কারমেন |
+| Toreador Song | ষাঁড়যোদ্ধার গান |
+| Morning Mood | সকালের আবেশ |
+| Hark! The Herald Angels Sing | শোনো! দূতেরা গাইছে |
+| Away in a Manger | দূরে এক জাবনার পাত্রে |
+| O Little Town of Bethlehem | ও বেথলেহেমের ছোট্ট শহর |
+| It Came Upon the Midnight Clear | নির্মল মধ্যরাতে তা এসেছিল |
+| Once in Royal David's City | একদা রাজা দাউদের নগরে |
+| In the Bleak Midwinter | বিষণ্ণ শীতের মাঝে |
+| The Holly and the Ivy | হলি ও আইভি |
+| Angels from the Realms of Glory | মহিমার রাজ্যের স্বর্গদূত |
+| O God, Our Help in Ages Past | হে ঈশ্বর, অতীত যুগের সহায় |
+| St Anne | সেন্ট অ্যান |
+| Holy, Holy, Holy | পবিত্র, পবিত্র, পবিত্র |
+| Abide with Me | আমার সঙ্গে থাকো |
+| Eventide | সাঁঝবেলা |
+| Nearer, My God, to Thee | হে ঈশ্বর, তোমার আরও কাছে |
+| For the Beauty of the Earth | পৃথিবীর সৌন্দর্যের জন্য |
+| Dix | ডিক্স |
+| Bethany | বেথানি |
+| Nicaea | নাইসিয়া |
+| Home! Sweet Home! | ঘর! মধুর ঘর! |
+| Hard Times Come Again No More | দুঃসময় আর এসো না |
+| The Last Rose of Summer | গ্রীষ্মের শেষ গোলাপ |
+| Martha | মার্থা |
+| Jupiter | বৃহস্পতি |
+| The Planets | গ্রহমালা |
+| Thaxted | থ্যাক্সটেড |
+| Spring | বসন্ত |
+| The Four Seasons | চার ঋতু |
+| Rondo alla Turca | রোন্দো আল্লা তুর্কা |
+| The Stars and Stripes Forever | তারা ও ডোরা চিরকাল |
+| Ukulele / Mandolin / Violin / Cello / Bass Songbook | ইউকুলেলে / ম্যান্ডোলিন / বেহালা / চেলো / বেস গানের খাতা |
+| Molly Malone | মলি ম্যালোন |
+| The Skye Boat Song | স্কাইয়ের নৌকার গান |
+| The Water Is Wide | বিস্তৃত জলরাশি |
+| New Britain | নিউ ব্রিটেন |
+| Red River Valley | রেড রিভার উপত্যকা |
+| Aura Lee | অরা লি |
+| Camptown Races | ক্যাম্পটাউনের দৌড় |
+| Jukebox Moon | জুকবক্সের চাঁদ |
+| Slow Motion Strobe | ধীরগতির স্ট্রোব |
+| Market Day | হাটবার |
+| Late Checkout | দেরিতে বিদায় |
+| Joy to the World | বিশ্বজুড়ে আনন্দ |
+| Lantern Hill | লণ্ঠন পাহাড় |
+| Roller Rink | রোলার স্কেটিংয়ের মাঠ |
+| Gravel Road Two-Step | নুড়িপথের টু-স্টেপ |
+| Sparkler Season | ফুলঝুরির মরসুম |
+| Saltwater Sunday | নোনাজলের রবিবার |
+| Spray Paint Sunrise | স্প্রে রঙে সূর্যোদয় |
+| Neon Laundromat | নিয়ন লন্ড্রি |
+| Porchlight | বারান্দার আলো |
+| Glass Satellites | কাচের উপগ্রহ |
+| Rust Belt Shuffle | রাস্ট বেল্ট শাফল |
+| Basement Weather | বেসমেন্টের আবহাওয়া |
+| Clementine | ক্লেমেন্টাইন |
+| Ghost Light | ভূতুড়ে আলো |
+| Kite Weather | ঘুড়ি ওড়ার দিন |
+| Halogen | হ্যালোজেন |
+| Low Tide Radio | ভাটার রেডিও |
+| Letters in a Shoebox | জুতোর বাক্সে চিঠি |
+| Dust on the Dashboard | ড্যাশবোর্ডে ধুলো |
+| Mary Had a Little Lamb | মেরির ছোট্ট ভেড়া |
+| Ode to Joy | আনন্দগান |
+| When the Saints Go Marching In | সাধুদের শোভাযাত্রা |
+| Amazing Grace | অপার করুণা |
+| Greensleeves | গ্রিনস্লিভস |
+| Oh! Susanna | ওহ! সুজানা |
+| Down by the Riverside | নদীর তীরে |
+| Row, Row, Row Your Boat | বেয়ে চলুন নৌকা |
+| Twinkle, Twinkle, Little Star / Twinkle Twinkle Little Star | ঝিকিমিকি ছোট্ট তারা |
+| Lightly Row | আলতো করে বেয়ে চলুন |
+| Songs | গান |
+| Guitar / Ukulele / Bass / Violin / Cello / Mandolin / Banjo | গিটার / ইউকুলেলে / বেস / বেহালা / চেলো / ম্যান্ডোলিন / ব্যাঞ্জো |
+| Voice / Ear Training / Music Theory / Rhythm | কণ্ঠ / কানের তালিম / সংগীততত্ত্ব / ছন্দ |
+| Originals | মৌলিক গান |
+| Standards & Classics | প্রচলিত ও ক্লাসিক গান |
+| Songbook | গানের খাতা |
+
+AI translation decisions only; independent AI review and native/device review remain distinct and pending.
 
 ## 4. Words that mislead
 
@@ -187,3 +360,18 @@ Write the translation that applies in Timbre, and the one GPT must avoid.
 | Next, Again, Slower | on-screen labels and also Siri command words (`ios/Timbre/Intents/PracticeIntents.swift`): one translation serves both | — | পরের / আবার / ধীরে | Use the sense above |
 | Practice | the tab and the activity | a medical or legal practice | অনুশীলন | a medical or legal practice |
 | Feel | the haptic tuning feature, feeling the beat | emotions | কম্পন অনুভব করুন (haptics; not emotion) | emotions |
+
+## Independent contextual review decisions (2026-10-26)
+
+AI review only, not human/native or device certification.
+
+- **Latin-initial mnemonics**: Retain the precise English mnemonic inside Bengali teaching prose and explicitly tell the learner to take the first letter of each English word. Literal Bengali meaning alone loses the taught Latin note sequence. Standalone mnemonic headings can identify the sequence in Bengali. This is a contextual teaching exception, not permission to leave ordinary prose untranslated.
+- **Sung lyric cues versus translated song titles**: Retain original sung words when the text maps lyric syllables to notes, even if those words also resemble a translated song title. Translate the accompanying musical instruction. This preserves original lyrics under the existing policy and is not a prose waiver.
+- **Spoken subdivisions**: Use monosyllabic আর for the spoken offbeat counting syllable and, matching earlier Bengali lessons. Sixteenth counts use এক-ই-আর-আ. Do not use two-syllable এবং for a single rhythmic subdivision. Ordinary conjunctions remain contextually ও/এবং/আর.
+- **String pitch versus physical orientation**: In guitar top strings/top four strings, use সরু তার/সরু চারটি তার or উঁচু স্বরের তার, since the physically upper strings nearest the player are bass strings. For violin, mandolin and cello, higher/lower string references denote pitch and are disambiguated as উঁচু/নিচু সুরের তার. Preserve actual tablature orientation and physical bow-arm directions.
+- **Steady movement**: For a moving picking hand or thumb, steady means rhythmically even: সমান তালে / সমান তাল রাখা, not motionless স্থির হাত. স্থির remains appropriate for stable pitch, pressure or tempo when context is clear.
+- **Bowing directions**: Use taught labels ডাউন-বো and আপ-বো for frog-to-tip and return strokes. Do not literalize them as vertically downward/upward bow movement.
+- **Pickup as a taught term**: Use পিকআপ, defining it in Bengali at first teaching use. Do not replace the term by the answer in a definition question.
+- **Swing subdivision**: When the source refers to the last or middle triplet within a beat, say ট্রিপলেটের শেষ অংশ or ট্রিপলেটের মাঝের অংশ: it denotes a subdivision within one triplet, not a whole triplet group.
+- **Airflow**: Steady air is সমান বায়ুপ্রবাহ; do not describe breathing flow as motionless স্থির বাতাস.
+- **Original lyric quiz options**: When a quiz identifies an original sung word or syllable, retain that precise word as a source-bound answer option, while translating prompt and explanation. This includes incorrect lyric-word options as well as the correct option. Do not extend to ordinary UI or lesson prose.

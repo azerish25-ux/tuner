@@ -55,8 +55,6 @@ struct PaywallView: View {
     @State private var exitOfferShown = false
     /// The App Store's offer-code sheet ("Redeem code").
     @State private var redeeming = false
-    /// The chosen plan's glass (iOS 26) flows from card to card as the choice moves.
-    @Namespace private var planGlass
     /// Room at the top of the yearly card for the lower half of its tag (the tag stops growing at xxxLarge).
     @ScaledMetric(relativeTo: .caption2) private var tagRoom: CGFloat = 11
 
@@ -888,24 +886,22 @@ struct PaywallView: View {
         }
     }
 
-    /// One glass group: the chosen plan's glass flows to the next card as the choice moves. The cards keep stable
-    /// identifiers by role (`paywall.plan.yearly`, `.monthly`, `.lifetime`) whichever product a test arm sells.
+    /// The cards keep stable identifiers by role (`paywall.plan.yearly`, `.monthly`, `.lifetime`), whichever product
+    /// a test arm sells.
     private func planGroup(_ arrangement: PlanFace.Arrangement) -> some View {
-        TimbreGlassGroup(spacing: 8) {
-            VStack(spacing: 8) {
-                if let annual = commerce.annual {
-                    planRow(annual, role: "yearly", title: "Yearly", detail: perWeek(annual), saving: annualSaving, anchor: annualAnchor,
-                            tag: annualTag(annual), arrangement: arrangement)
-                }
-                if let monthly = commerce.monthly {
-                    planRow(monthly, role: "monthly", title: "Monthly", detail: monthlyDetail(monthly), saving: nil, arrangement: arrangement)
-                }
-                // A third option, quieter than the two subscriptions, so it doesn't compete with the year. Onboarding's
-                // paywall leaves it out: a first-time buyer chooses between the trial year and the month.
-                if let lifetime = commerce.lifetime, offered.contains(where: { $0.id == lifetime.id }) {
-                    planRow(lifetime, role: "lifetime", title: "Lifetime", detail: String(localized: "Pay once"), saving: nil, quiet: true,
-                            arrangement: arrangement)
-                }
+        VStack(spacing: 8) {
+            if let annual = commerce.annual {
+                planRow(annual, role: "yearly", title: "Yearly", detail: perWeek(annual), saving: annualSaving, anchor: annualAnchor,
+                        tag: annualTag(annual), arrangement: arrangement)
+            }
+            if let monthly = commerce.monthly {
+                planRow(monthly, role: "monthly", title: "Monthly", detail: monthlyDetail(monthly), saving: nil, arrangement: arrangement)
+            }
+            // A third option, quieter than the two subscriptions, so it doesn't compete with the year. Onboarding's
+            // paywall leaves it out: a first-time buyer chooses between the trial year and the month.
+            if let lifetime = commerce.lifetime, offered.contains(where: { $0.id == lifetime.id }) {
+                planRow(lifetime, role: "lifetime", title: "Lifetime", detail: String(localized: "Pay once"), saving: nil, quiet: true,
+                        arrangement: arrangement)
             }
         }
     }
@@ -979,7 +975,7 @@ struct PaywallView: View {
 
     /// A plan card: the check, then its face (`PlanFace`) in the group's arrangement. The name is never broken across
     /// lines. A tagged card (the yearly one) keeps room at its top for the tag over its edge, and carries the tag itself,
-    /// over its plate and its glass.
+    /// over its plate.
     private func planRow(_ product: Product, role: String, title: LocalizedStringKey, detail: String, saving: Int?, anchor: String? = nil,
                          tag: String? = nil, quiet: Bool = false, arrangement: PlanFace.Arrangement) -> some View {
         let isSelected = selected?.id == product.id
@@ -1001,7 +997,7 @@ struct PaywallView: View {
             .padding(.horizontal, 14)
             .padding(.top, tag == nil ? inset : max(inset, min(tagRoom, 18)))
             .padding(.bottom, inset)
-            .modifier(PlanPlate(selected: isSelected, quiet: quiet, glass: planGlass))
+            .modifier(PlanPlate(selected: isSelected, quiet: quiet))
             .contentShape(shape)
             .overlay(alignment: .topTrailing) {
                 if let tag { planTag(tag) }
@@ -1515,37 +1511,27 @@ struct PaywallView: View {
     }
 }
 
-/// A plan card's face. Unchosen: graphite with a control's edge. Chosen: a mint border over mint-washed Liquid Glass (iOS 26),
-/// one glass shape named in the plans' group, so choosing another plan moves it there as liquid rather than switching
-/// two cards; before iOS 26 a mint wash with a soft mint glow, as it always was.
-/// Quiet (Lifetime), unchosen, it is a shade darker than the subscriptions; chosen, it takes the same glass.
-/// The glass is a layer behind the card, never the card itself: the words, the price and the edge are drawn as
-/// ordinary views, so they show the moment the plans arrive, whether or not the glass has finished appearing.
+/// A plan card's face. Chosen: an opaque graphite base with a mint wash, border and soft glow. Prices and trial
+/// terms stay outside refracting material, including while `ViewThatFits` measures alternate layouts.
+/// Quiet (Lifetime), unchosen, is a shade darker than the subscriptions; chosen, it takes the same mint plate.
 private struct PlanPlate: ViewModifier {
     let selected: Bool
     var quiet = false
-    let glass: Namespace.ID
 
     func body(content: Content) -> some View {
         let shape = RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous)
-        let id: String? = selected ? "paywall.plan.selected" : nil
         return content
             .background {
                 ZStack {
-                    if !selected { shape.fill(Palette.stageRaised.opacity(quiet ? 0.45 : 1)) }
-                    Color.clear
-                        .timbreGlass(Palette.mint.opacity(0.22), isOn: selected, in: shape) {
-                            ZStack {
-                                shape.fill(Palette.mint.opacity(0.08))
-                                shape.strokeBorder(Palette.mint, lineWidth: 2)
-                                    .shadow(color: Palette.mint.opacity(0.16), radius: 14, y: 4)
-                            }
-                        }
-                        .timbreGlassID(id, in: glass)
+                    shape.fill(Palette.stageRaised.opacity(!selected && quiet ? 0.45 : 1))
+                    if selected { shape.fill(Palette.mint.opacity(0.08)) }
                 }
             }
             // An unchosen plan is a control: its edge is `controlLine`, which holds 3:1 with Increase Contrast.
-            .overlay(shape.strokeBorder(selected ? Palette.mint : Palette.controlLine, lineWidth: selected ? 2 : 1))
+            .overlay {
+                shape.strokeBorder(selected ? Palette.mint : Palette.controlLine, lineWidth: selected ? 2 : 1)
+                    .shadow(color: Palette.mint.opacity(selected ? 0.16 : 0), radius: 14, y: 4)
+            }
     }
 }
 

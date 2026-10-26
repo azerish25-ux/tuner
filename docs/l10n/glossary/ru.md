@@ -168,6 +168,35 @@ Song titles, the rule for this locale (fill one line each):
 - A title in prose must equal the title of its song lesson in this locale (the helper adds it to lesson batches as `lesson_title`), and Game Center's leaderboard for a featured song uses the same title.
 - Lyric credits ("Traditional (printed 1876; James Yorkston, 1884)", "Words from 1779, tune from 1829"): names and years as they are; the connecting words translated.
 
+### Reviewed repertoire-title decisions (2026-10-26)
+
+These are exact-work decisions from independent AI contextual review, not human/native certification. Use each selected title in lesson titles, prose, search labels and leaderboards. Keep original sung lyrics and creator credits.
+
+| Source title | Selected display title |
+|---|---|
+| Amazing Grace | О благодать |
+| Au clair de la lune | При свете луны |
+| Auld Lang Syne | Старая дружба |
+| Danny Boy | Дэнни Бой |
+| Danny Boy (Londonderry Air) | Дэнни Бой (Londonderry Air) |
+| Deck the Halls | Украсьте зал |
+| Frère Jacques | Братец Яков |
+| Good King Wenceslas | Добрый король Вацлав |
+| Jingle Bells | Бубенцы |
+| Joy to the World | Радуйся, мир |
+| Mary Had a Little Lamb | У Мэри был ягнёнок |
+| Old MacDonald Had a Farm | У старого Макдональда была ферма |
+| Red River Valley | Долина Красной реки |
+| Shenandoah | Шенандо |
+| Twinkle Twinkle Little Star | Мерцай, мерцай, маленькая звёздочка |
+| Twinkle, Twinkle, Little Star | Мерцай, мерцай, маленькая звёздочка |
+| We Wish You a Merry Christmas | Желаем вам счастливого Рождества |
+| Yankee Doodle | Янки Дудл |
+
+In the Auld Lang Syne etymology, retain the Scots phrase `Auld lang syne` and explicitly call it the original title of the localized song. This is a metalinguistic quotation, not an inconsistent display title.
+
+Retained exact repertoire titles in this review (each has its own source-bound rationale in `lesson-invariants.json`; this list is not a blanket exemption): Old Joe Clark; Soldier's Joy; Skip to My Lou; Aura Lee; Shady Grove; Angeline the Baker; Lightly Row; Simple Gifts; Boil Them Cabbage Down; My Country, 'Tis of Thee; Camptown Races; Cumberland Gap; Arkansas Traveler; Cripple Creek.
+
 ## 4. Words that mislead
 
 Write the translation that applies in Timbre, and the one GPT must avoid.

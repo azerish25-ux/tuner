@@ -20,7 +20,7 @@ Every row is mandatory. The "Current table" hints come from reading the shipped 
 | Units | सेंट्स; मिनट; सेकंड; मिलीसेकंड. Hz, BPM, ¢, XP unchanged |  |
 | Capitalization | No case in Devanagari; preserve brand capitalization |  |
 | Note names in the interface | Runtime arguments supply notes; do not invent names |  |
-| Note names in lessons (lesson languages only) | Not a lesson locale; if referenced, preserve C, F♯, B♭, Em, G7 |  |
+| Note names in lessons (lesson languages only) | Lessons are required; if referenced, preserve C, F♯, B♭, Em, G7 |  |
 | Sharp / flat / double sharp / double flat as words | शार्प / फ़्लैट / डबल शार्प / डबल फ़्लैट |  |
 | Tuning direction | नीचा / ऊँचा for tuner direction, not accidentals |  |
 | iOS Settings path (legal text) | सेटिंग्स › Apple खाता › सदस्यताएँ. AI-reviewed wording; device verification pending |  |
@@ -60,7 +60,7 @@ Every row is mandatory. The "Current table" hints come from reading the shipped 
 | Chord view / Neck view | What VoiceOver calls the Show me switch | VoiceOver | `Chord view`, `Neck view` | कॉर्ड दृश्य / नेक दृश्य |  |
 | Show me | The 3D demonstration of a chord or notes on the neck | lessons | `Show me` | दिखाएँ | Sits on a small capsule: short. |
 | Strum to tune | One strum reads every string at once | tuner, listing | `Strum to tune` | ट्यून करने के लिए स्ट्रम करें |  |
-| Tune by feel / Feel | The phone pulses with the beat between the string and its note, slower as they meet, still at the lock | tuner, settings | `Tune by feel`, `Feel` | कंपन से ट्यून करें / कंपन महसूस करें | "Feel it", "Feel the beat" use the same sense. |
+| Tune by feel / Feel | The phone pulses with the beat between the string and its note, slower as they meet, still at the lock | tuner, settings | `Tune by feel`, `Feel` | कंपन से ट्यून करें / कंपन | "Feel it", "Feel the beat" use the same sense. |
 | Bullseye | The pitch game (hit the centre ring); also leaderboard names | Practice, Game Center | `Bullseye` | सटीक निशाना | Every current table translates it (de Volltreffer, fr Tir parfait, ja ど真ん中, ru В яблочко …) although HANDOFF.md says to keep game names. Decide once; every string naming the game ("Win a round of Bullseye", "Score 2,000 in Bullseye") uses this. |
 | Ear trainer / Ear training | The ear games and the ear course | Practice, Learn | `Ear training` | कान की ट्रेनिंग |  |
 | Drone | A sustained reference tone to play or sing against | Practice, lessons | `Drone` | आधार स्वर | de Bordun, fr Bourdon, es Nota pedal, ja ドローン (current tables). |
@@ -151,6 +151,9 @@ Every row is mandatory. The "Current table" hints come from reading the shipped 
 
 ## 3. Course and song names
 
+Lesson policy (2026-10-26): Hindi requires all 6,080 lesson strings, with automatic phone-language selection. English fallback is incomplete, not English-by-design. These are AI translation decisions, not native certification. Preserve sung originals, notation and proper-name titles only; translate all teaching prose and connecting words in credits.
+
+
 | English | Where | Translation | Notes |
 |---|---|---|---|
 | Guitar, Ukulele, Bass, Violin, Cello, Mandolin, Banjo | Course titles (`Learn.strings`) | गिटार / युकुलेले / बास / वायलिन / चेलो / मैंडोलिन / बैंजो | Same words as the instrument names. |
@@ -187,3 +190,160 @@ Write the translation that applies in Timbre, and the one GPT must avoid.
 | Next, Again, Slower | on-screen labels and also Siri command words (`ios/Timbre/Intents/PracticeIntents.swift`): one translation serves both | — | अगला / फिर से / धीरे | Use the sense above |
 | Practice | the tab and the activity | a medical or legal practice | अभ्यास | a medical or legal practice |
 | Feel | the haptic tuning feature, feeling the beat | emotions | कंपन महसूस करें (haptics; not emotion) | emotions |
+
+## 5. Exact song-title reference map
+
+No reliable single established Hindi form is asserted for these source titles; retain their identifying title, translating descriptive suffixes where present. This explicit map controls all prose references; original sung words stay unchanged.
+
+| English title | Hindi reference |
+|---|---|
+| Abide with Me | Abide with Me |
+| All Through the Night | All Through the Night |
+| Amazing Grace | Amazing Grace |
+| Amazing Grace, fingerpicked | Amazing Grace, fingerpicked |
+| Angeline the Baker | Angeline the Baker |
+| Angels from the Realms of Glory | Angels from the Realms of Glory |
+| Arkansas Traveler | Arkansas Traveler |
+| Au clair de la lune | Au clair de la lune |
+| Auld Lang Syne | Auld Lang Syne |
+| Aura Lee | Aura Lee |
+| Away in a Manger | Away in a Manger |
+| Basement Weather | Basement Weather |
+| Boardwalk Comet | Boardwalk Comet |
+| Bobby Shafto | Bobby Shafto |
+| Boil Them Cabbage Down | Boil Them Cabbage Down |
+| Brahms' Lullaby | Brahms' Lullaby |
+| Bright Side of the Block | Bright Side of the Block |
+| Camptown Races | Camptown Races |
+| Can-can | Can-can |
+| Canon in D | Canon in D |
+| Carmen: Prelude | Carmen: प्रस्तावना |
+| Carousel at Closing Time | Carousel at Closing Time |
+| Cedar Smoke | Cedar Smoke |
+| Clementine | Clementine |
+| Cold Lake | Cold Lake |
+| Constellation Prize | Constellation Prize |
+| Copper Wire | Copper Wire |
+| Cripple Creek | Cripple Creek |
+| Cumberland Gap | Cumberland Gap |
+| Danny Boy (Londonderry Air) | Danny Boy (Londonderry Air) |
+| Deck the Halls | Deck the Halls |
+| Down by the Riverside | Down by the Riverside |
+| Down by the Riverside: your arrangement | Down by the Riverside: आपकी अरेंजमेंट |
+| Dust on the Dashboard | Dust on the Dashboard |
+| Echo Canyon | Echo Canyon |
+| Eine kleine Nachtmusik | Eine kleine Nachtmusik |
+| First Frost | First Frost |
+| For the Beauty of the Earth | For the Beauty of the Earth |
+| Frère Jacques | Frère Jacques |
+| Für Elise | Für Elise |
+| Ghost Light | Ghost Light |
+| Glass Satellites | Glass Satellites |
+| Glow-in-the-Dark Stars | Glow-in-the-Dark Stars |
+| Good King Wenceslas | Good King Wenceslas |
+| Gravel Road Two-Step | Gravel Road Two-Step |
+| Greensleeves | Greensleeves |
+| Greensleeves: the chords | Greensleeves: कॉर्ड |
+| Greensleeves: the melody | Greensleeves: धुन |
+| Halogen | Halogen |
+| Hammock Season | Hammock Season |
+| Hard Times Come Again No More | Hard Times Come Again No More |
+| Hark! The Herald Angels Sing | Hark! The Herald Angels Sing |
+| Holy, Holy, Holy | Holy, Holy, Holy |
+| Home! Sweet Home! | Home! Sweet Home! |
+| Houseplants | Houseplants |
+| In the Bleak Midwinter | In the Bleak Midwinter |
+| In the Hall of the Mountain King | In the Hall of the Mountain King |
+| It Came Upon the Midnight Clear | It Came Upon the Midnight Clear |
+| Jingle Bells | Jingle Bells |
+| Joy to the World | Joy to the World |
+| Jukebox Moon | Jukebox Moon |
+| Jupiter | Jupiter |
+| Keeper's Daughter | Keeper's Daughter |
+| Kitchen Slow Dance | Kitchen Slow Dance |
+| Kite Weather | Kite Weather |
+| Korobeiniki | Korobeiniki |
+| Lantern Hill | Lantern Hill |
+| Largo, New World Symphony | Largo, New World Symphony |
+| Last Bell | Last Bell |
+| Late Bus Home | Late Bus Home |
+| Late Checkout | Late Checkout |
+| Letters in a Shoebox | Letters in a Shoebox |
+| Lightly Row | Lightly Row |
+| Loch Lomond | Loch Lomond |
+| Low Tide Radio | Low Tide Radio |
+| Market Day | Market Day |
+| Mary Had a Little Lamb | Mary Had a Little Lamb |
+| Mary Had a Little Lamb: three notes | Mary Had a Little Lamb: तीन स्वर |
+| Mile Marker Zero | Mile Marker Zero |
+| Minuet in G | Minuet in G |
+| Molly Malone | Molly Malone |
+| Morning Mood | Morning Mood |
+| Moth and Ember | Moth and Ember |
+| Mozart's Symphony No. 40 | Mozart's Symphony No. 40 |
+| My Country, 'Tis of Thee | My Country, 'Tis of Thee |
+| Nearer, My God, to Thee | Nearer, My God, to Thee |
+| Neon Laundromat | Neon Laundromat |
+| O Christmas Tree | O Christmas Tree |
+| O Come, All Ye Faithful | O Come, All Ye Faithful |
+| O God, Our Help in Ages Past | O God, Our Help in Ages Past |
+| O Little Town of Bethlehem | O Little Town of Bethlehem |
+| Ode to Joy | Ode to Joy |
+| Ode to Joy on bass | Ode to Joy on bass |
+| Oh! Susanna | Oh! Susanna |
+| Oh! Susanna: the chorus | Oh! Susanna: मुखड़ा |
+| Oh! Susanna: the verse | Oh! Susanna: अंतरा |
+| Old Joe Clark | Old Joe Clark |
+| Old MacDonald Had a Farm | Old MacDonald Had a Farm |
+| Once in Royal David's City | Once in Royal David's City |
+| Open Windows | Open Windows |
+| Over You Soon | Over You Soon |
+| Parking Lot Cathedral | Parking Lot Cathedral |
+| Pocket Change | Pocket Change |
+| Porchlight | Porchlight |
+| Rain on the Skylight | Rain on the Skylight |
+| Red River Valley | Red River Valley |
+| Roller Rink | Roller Rink |
+| Rondo alla Turca | Rondo alla Turca |
+| Rooftop Choir | Rooftop Choir |
+| Row, Row, Row Your Boat | Row, Row, Row Your Boat |
+| Rust Belt Shuffle | Rust Belt Shuffle |
+| Saltwater Sunday | Saltwater Sunday |
+| Scoreboard Lights | Scoreboard Lights |
+| Scotland the Brave | Scotland the Brave |
+| Shady Grove | Shady Grove |
+| She'll Be Coming 'Round the Mountain | She'll Be Coming 'Round the Mountain |
+| Shenandoah | Shenandoah |
+| Silent Night | Silent Night |
+| Simple Gifts | Simple Gifts |
+| Skip to My Lou | Skip to My Lou |
+| Slow Motion Strobe | Slow Motion Strobe |
+| Snow Globe Town | Snow Globe Town |
+| Soldier's Joy | Soldier's Joy |
+| Sparkler Season | Sparkler Season |
+| Spray Paint Sunrise | Spray Paint Sunrise |
+| Spring | Spring |
+| Static on Channel Nine | Static on Channel Nine |
+| The Blue Danube | The Blue Danube |
+| The Entertainer | The Entertainer |
+| The First Noel | The First Noel |
+| The Holly and the Ivy | The Holly and the Ivy |
+| The Last Rose of Summer | The Last Rose of Summer |
+| The Liberty Bell | The Liberty Bell |
+| The Skye Boat Song | The Skye Boat Song |
+| The Stars and Stripes Forever | The Stars and Stripes Forever |
+| The Swan | The Swan |
+| The Water Is Wide | The Water Is Wide |
+| Thistle and Thread | Thistle and Thread |
+| Twinkle Twinkle Little Star | Twinkle Twinkle Little Star |
+| Twinkle, Twinkle, Little Star | Twinkle, Twinkle, Little Star |
+| Velvet Hour | Velvet Hour |
+| Walking the blues in A | Walking the blues in A |
+| We Wish You a Merry Christmas | We Wish You a Merry Christmas |
+| When the Saints Go Marching In | When the Saints Go Marching In |
+| Yankee Doodle | Yankee Doodle |
+| Your arrangement | Your arrangement |
+
+## Independent review additions (2026-10-26)
+
+Preserve the exact current reviewed title from Learn.strings when mentioning a song. Explain English note-initial mnemonics in Hindi; retained mnemonic headings depend on their paired Hindi explanation. Distinguish evenly timed notes from identical pitches, continuous picking from an immobile hand, and musical meter from chronological time. Original sung words remain only when identifying exact lyric targets. Review is AI semantic, not human/native or device certification.

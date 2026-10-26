@@ -290,5 +290,21 @@ Brands unchanged: Timbre, Timbre Pro, Pro, Apple, iPhone, iPad, Apple Watch, App
 Instrument course names use the catalogue translations above (Guitar, Ukulele, Bass, Violin, Cello, Mandolin, Banjo). Ear Training, Music Theory, Rhythm, Singing, Songs, Originals, Standards & Classics and Songbook use the explicit rows above; combine instrument + Songbook naturally.
 Public-domain songs: established local title when one exists. Other traditional titles: keep the existing lesson title; Japanese/Korean use established transliteration, otherwise retain English when no established local title exists. Timbre Originals: translate titles consistently with existing lesson titles. Prose and leaderboards must use the identical lesson title. Credits: preserve people's names, years and sung lyrics; translate connecting words only.
 
+### Reviewed repertoire-title decisions (2026-10-26)
+
+These are exact-work decisions from independent AI contextual review, not human/native certification. Use each selected title in lesson titles, prose, search labels and leaderboards. Keep original sung lyrics and creator credits.
+
+| Source title | Selected display title |
+|---|---|
+| Arkansas Traveler | アーカンソー・トラヴェラー |
+| Cripple Creek | クリプル・クリーク |
+| Cumberland Gap | カンバーランド・ギャップ |
+| Good King Wenceslas | ウェンセスラスはよい王様 |
+| Old Joe Clark | オールド・ジョー・クラーク |
+| Shady Grove | シェイディ・グローヴ |
+| Skip to My Lou | スキップ・トゥ・マイ・ルー |
+
+Retained exact repertoire titles in this review (each has its own source-bound rationale in `lesson-invariants.json`; this list is not a blanket exemption): Soldier's Joy; Angeline the Baker; Boil Them Cabbage Down; My Country, 'Tis of Thee.
+
 ## 4. Sense distinctions
 Tune verb/tab ≠ tune melody; direction flat/sharp ≠ accidentals. Bar means measure, never pub or UI bar. Key means tonality, not keyboard/password. Pick means plectrum/pluck/choose by context. Lock means stable correct pitch, not padlock. Take means recorded performance attempt, not taking a lesson. Run means streak or continuous performance, not running. Chart means chord notation unless explicitly a progress graph. Intonation means playing/singing accurately over a drone, never saddle or octave adjustment (legacy ja/zh-CN entries are overridden above). Practice means musical practice, not a professional office. Feel means haptic feedback, not emotion. Challenge-friend and unit challenge use the separate senses above.

@@ -171,5 +171,21 @@ Brand names Timbre, Timbre Pro, Pro, Apple, iPhone, iPad, Apple Watch, App Store
 ## 3. Course and song names
 Instrument course titles match catalogue instrument names. Ear Training, Music Theory, Rhythm and Singing match their existing localized Learn titles; Songs must match the Songs tab. Originals and Standards & Classics use existing localized course titles. Instrument Songbook titles use the localized instrument plus the existing localized Songbook term. Established public-domain song titles use their established local titles; other traditional titles stay English. Timbre Originals retain existing localized lesson titles. Every prose mention and leaderboard uses the exact lesson title. Lyric credits preserve names and years and translate connecting prose. Sung lyrics remain unchanged.
 
+### Reviewed repertoire-title decisions (2026-10-26)
+
+These are exact-work decisions from independent AI contextual review, not human/native certification. Use each selected title in lesson titles, prose, search labels and leaderboards. Keep original sung lyrics and creator credits.
+
+| Source title | Selected display title |
+|---|---|
+| Amazing Grace | Stupenda grazia |
+| Au clair de la lune | Al chiaro di luna |
+| Eine kleine Nachtmusik | Piccola serenata notturna |
+| Joy to the World | Gioia al mondo |
+| Red River Valley | La valle del fiume rosso |
+| Rust Belt Shuffle | Shuffle della cintura della ruggine |
+| We Wish You a Merry Christmas | Auguri di buon Natale |
+
+Retained exact repertoire titles in this review (each has its own source-bound rationale in `lesson-invariants.json`; this list is not a blanket exemption): Jingle Bells; Old Joe Clark; Danny Boy (Londonderry Air); Clementine; When the Saints Go Marching In; Yankee Doodle; Good King Wenceslas; Soldier's Joy; Skip to My Lou; Aura Lee; Shady Grove; Shenandoah; Angeline the Baker; Lightly Row; Greensleeves; Danny Boy; Simple Gifts; Auld Lang Syne; Boil Them Cabbage Down; My Country, 'Tis of Thee; Camptown Races; Cumberland Gap; Oh! Susanna; Deck the Halls; Arkansas Traveler; Cripple Creek.
+
 ## 4. Words that mislead
 Tune as a verb means tuning, as a noun a melody. Sharp/flat on the tuner mean too high/low, not accidentals. Bar means measure; key means tonality. Pick means plectrum or plucking in music, choose in UI. Lock means a stable in-tune confirmation, not a padlock. Take is one recorded performance, not taking a lesson. Run means a practice streak or an uninterrupted passage, not running. Chart means an instrumental chord diagram/sheet unless progress statistics explicitly demand a graph. Intonation is playing in tune over a drone, never octave/saddle adjustment. Practice is musical practice. Feel is haptic vibration, not emotion. A challenge to a friend differs from the unit's final challenge lesson; preserve context.

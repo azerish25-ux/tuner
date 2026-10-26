@@ -285,7 +285,187 @@ Instrument names and tunings use the catalogue rows. Precision Expert is خبي�
 | timbre_catalog_tuning_violin_standard_4_standard | قياسي |
 
 ## 3. Course and song names
-Instrument course titles use the corresponding catalogue names; remaining courses use the rows above. Songs tab and course both use الأغاني. Combine instrument name with كتاب الأغاني naturally. Use an established Arabic title for a public-domain song when one exists; otherwise retain the English title unless the existing lesson has an established transliteration. Translate Timbre Originals consistently with existing lesson titles. Prose and leaderboards must match the lesson title exactly. Preserve lyrics, personal names and years in credits; translate connecting words.
+Instrument course titles use the corresponding catalogue names; remaining courses use the rows above. Songs tab and course both use الأغاني. Combine instrument name with كتاب الأغاني naturally. Use the binding Arabic title map below across all shared lessons; these are localization choices, not claims of established published titles. Translate title modifiers and all teaching prose; do not retain English titles as a blanket policy. Translate Timbre Originals consistently. Only genuine sung originals, proper names and notation may remain unchanged, with exact-string invariants requiring independent review. Prose and leaderboards must match the lesson title exactly. Preserve lyrics, personal names and years in credits; translate connecting words.
 
 ## 4. Sense distinctions
 Tune verb/tab means ضبط, melody means لحن. Flat/sharp direction is not an accidental. Bar means مازورة, not a pub or UI bar. Key is مقام, not a keyboard key. Pick means ريشة, نقر or اختيار by context. Lock means stable correct pitch, not a padlock. Take is محاولة مسجلة, not taking a lesson. Run means a streak or complete performance, never running. Chart is chord notation unless the context specifies a statistics graph. Intonation is pitch accuracy over a drone, not saddle setup. Practice is musical التمرين, not a professional practice. Feel is haptic sensation, not emotion. Challenge-friend and lesson challenge use their distinct senses above.
+
+
+## 5. Full lesson localization policy (2026-10-26)
+All 6,080 current lesson keys require Arabic drafts; English fallback never counts as completion. Apply the neutral masculine singular teacher register. For lessons the first terminology rows override older duplicate UI anchors: chord تآلف, key مقام, concert pitch الطبقة الفعلية, temperament نظام التقسيم النغمي. Keep every ASCII digit group, note/chord symbol, newline and protected brand. Translate credit connectors (words by كلمات، music by ألحان، traditional تراثية); retain named creators. Start prose in Arabic. Any necessary U+200F or U+2068/U+2069 is individually explained in the batch note. Drafts are AI-authored, not native/device-approved.
+
+### Binding course/title map
+| English base title | Arabic base title |
+|---|---|
+| Guitar | جيتار |
+| Ukulele | يوكوليلي |
+| Bass | غيتار باس |
+| Violin | كمان |
+| Cello | تشيلو |
+| Mandolin | مندولين |
+| Banjo | بانجو |
+| Singing | الغناء |
+| Ear Training | تدريب الأذن |
+| Music Theory | نظرية الموسيقى |
+| Rhythm | الإيقاع |
+| Mary Had a Little Lamb | كان لدى ماري حمل صغير |
+| Ode to Joy | نشيد الفرح |
+| When the Saints Go Marching In | حين يسير القديسون |
+| Amazing Grace | نعمة مذهلة |
+| Greensleeves | الأكمام الخضراء |
+| Oh! Susanna | آه! سوزانا |
+| Down by the Riverside | عند ضفة النهر |
+| Row, Row, Row Your Boat | جدّف، جدّف، جدّف بقاربك |
+| Twinkle, Twinkle, Little Star / Twinkle Twinkle Little Star | تلألئي، تلألئي، أيتها النجمة الصغيرة |
+| Aura Lee | أورا لي |
+| Camptown Races | سباقات كامبتاون |
+| Red River Valley | وادي النهر الأحمر |
+| The Water Is Wide | الماء واسع |
+| Molly Malone | مولي مالون |
+| The Skye Boat Song | أغنية قارب سكاي |
+| Lightly Row | جدّف برفق |
+| Boil Them Cabbage Down | اسلق ذلك الملفوف |
+| Minuet in G | مينويت في G |
+| Old Joe Clark | جو كلارك العجوز |
+| Soldier's Joy | فرحة الجندي |
+| Arkansas Traveler | مسافر أركنساس |
+| Brahms' Lullaby | تهويدة برامز |
+| Au clair de la lune | في ضوء القمر |
+| The Swan | البجعة |
+| Angeline the Baker | أنجلين الخبازة |
+| Cripple Creek | كريبل كريك |
+| Cumberland Gap | ممر كمبرلاند |
+| Shady Grove | البستان الظليل |
+| Skip to My Lou | ارقص إلى لو |
+| Auld Lang Syne | الأيام الخوالي |
+| Shenandoah | شيناندواه |
+| Frère Jacques | الأخ جاك |
+| Jingle Bells | رنين الأجراس |
+| Clementine | كليمنتين |
+| Old MacDonald Had a Farm | كان لماكدونالد العجوز مزرعة |
+| Bobby Shafto | بوبي شافتو |
+| Canon in D | كانون في D |
+| Largo, New World Symphony | لارغو، سيمفونية العالم الجديد |
+| In the Hall of the Mountain King | في قاعة ملك الجبل |
+| Für Elise | إلى إليزه |
+| My Country, 'Tis of Thee | بلادي، لك أغنّي |
+| Simple Gifts | هبات بسيطة |
+| Good King Wenceslas | الملك الطيب فنتسلاس |
+| Deck the Halls | زيّنوا القاعات |
+| We Wish You a Merry Christmas | نتمنى لكم ميلادًا سعيدًا |
+| Joy to the World | فرح للعالم |
+| Silent Night | ليلة صامتة |
+| Eine kleine Nachtmusik | موسيقى ليلية صغيرة |
+| Danny Boy (Londonderry Air) | داني بوي (لحن لندنديري) |
+| Danny Boy | داني بوي |
+| Mozart's Symphony No. 40 | سيمفونية موزارت رقم 40 |
+| Kite Weather | طقس الطائرات الورقية |
+| Porchlight | ضوء الشرفة |
+| Moth and Ember | عثة وجمرة |
+| Low Tide Radio | راديو الجزر |
+| Dust on the Dashboard | غبار على لوحة القيادة |
+| Lantern Hill | تل الفوانيس |
+| Gravel Road Two-Step | رقصة ثنائية على طريق حصوي |
+| First Frost | أول صقيع |
+| Hammock Season | موسم الأرجوحة الشبكية |
+| Glow-in-the-Dark Stars | نجوم تتوهج في الظلام |
+| Sparkler Season | موسم الشرارات الاحتفالية |
+| Roller Rink | حلبة التزلج |
+| Echo Canyon | وادي الصدى |
+| Open Windows | نوافذ مفتوحة |
+| Scoreboard Lights | أضواء لوحة النتائج |
+| Rust Belt Shuffle | شافل حزام الصدأ |
+| Carousel at Closing Time | دوامة الخيل وقت الإغلاق |
+| Cedar Smoke | دخان الأرز |
+| Rain on the Skylight | مطر على النافذة السقفية |
+| Neon Laundromat | مغسلة النيون |
+| Late Checkout | مغادرة متأخرة |
+| Saltwater Sunday | أحد المياه المالحة |
+| Pocket Change | فكة الجيب |
+| Kitchen Slow Dance | رقصة بطيئة في المطبخ |
+| Houseplants | نباتات منزلية |
+| Static on Channel Nine | تشويش على القناة التاسعة |
+| Basement Weather | طقس القبو |
+| Jukebox Moon | قمر صندوق الأغاني |
+| Boardwalk Comet | مذنب الممشى الخشبي |
+| Mile Marker Zero | علامة الميل صفر |
+| Last Bell | الجرس الأخير |
+| Copper Wire | سلك نحاسي |
+| Cold Lake | بحيرة باردة |
+| Parking Lot Cathedral | كاتدرائية موقف السيارات |
+| Halogen | هالوجين |
+| Keeper's Daughter | ابنة الحارس |
+| Snow Globe Town | بلدة الكرة الثلجية |
+| Thistle and Thread | شوك وخيط |
+| Ghost Light | ضوء الشبح |
+| Late Bus Home | حافلة متأخرة إلى المنزل |
+| Glass Satellites | أقمار صناعية زجاجية |
+| Market Day | يوم السوق |
+| Velvet Hour | ساعة مخملية |
+| Rooftop Choir | جوقة فوق السطح |
+| Slow Motion Strobe | وميض بالحركة البطيئة |
+| Bright Side of the Block | الجانب المشرق من الحي |
+| Over You Soon | سأنساك قريبًا |
+| Spray Paint Sunrise | شروق بطلاء الرش |
+| Constellation Prize | جائزة الكوكبة |
+| She'll Be Coming 'Round the Mountain | ستأتي من حول الجبل |
+| Loch Lomond | بحيرة لوموند |
+| All Through the Night | طوال الليل |
+| O Christmas Tree | يا شجرة الميلاد |
+| O Come, All Ye Faithful | هلمّوا يا جميع المؤمنين |
+| The First Noel | الميلاد الأول |
+| Scotland the Brave | اسكتلندا الشجاعة |
+| Korobeiniki | الباعة الجائلون |
+| The Blue Danube | الدانوب الأزرق |
+| Can-can | كانكان |
+| The Entertainer | المسلّي |
+| The Liberty Bell | جرس الحرية |
+| Carmen: Prelude | كارمن: المقدمة |
+| The Toreador Song | أغنية مصارع الثيران |
+| Morning Mood | مزاج الصباح |
+| Hark! The Herald Angels Sing | أصغوا! الملائكة المبشّرون يغنّون |
+| Away in a Manger | هناك في مذود |
+| O Little Town of Bethlehem | يا بلدة بيت لحم الصغيرة |
+| It Came Upon the Midnight Clear | أتى في منتصف الليل الصافي |
+| Once in Royal David's City | ذات مرة في مدينة الملك داود |
+| In the Bleak Midwinter | في منتصف الشتاء القارس |
+| The Holly and the Ivy | البهشية واللبلاب |
+| Angels from the Realms of Glory | ملائكة من عوالم المجد |
+| O God, Our Help in Ages Past | يا إلهنا، عوننا في العصور الماضية |
+| Holy, Holy, Holy | قدوس، قدوس، قدوس |
+| Abide with Me | ابق معي |
+| Nearer, My God, to Thee | أقرب إليك يا إلهي |
+| For the Beauty of the Earth | من أجل جمال الأرض |
+| Home! Sweet Home! | الوطن! ما أحلاه! |
+| Hard Times Come Again No More | أيتها الأيام الصعبة، لا تعودي |
+| The Last Rose of Summer | وردة الصيف الأخيرة |
+| Jupiter | المشتري |
+| Spring | الربيع |
+| Rondo alla Turca | روندو على الطريقة التركية |
+| The Stars and Stripes Forever | النجوم والخطوط إلى الأبد |
+
+| Letters in a Shoebox | رسائل في علبة أحذية |
+
+| Twinkle (short title) | تلألئي |
+| New Britain | بريطانيا الجديدة |
+
+| Take Me Out to the Ball Game | خذني إلى مباراة البيسبول |
+| My Bonnie Lies Over the Ocean | بوني وراء المحيط |
+
+| The alphabet song | أغنية الحروف الأبجدية |
+| Baa, Baa, Black Sheep | ماء، ماء، أيتها النعجة السوداء |
+| Yankee Doodle | يانكي دودل |
+| One Horse Open Sleigh | مزلجة مفتوحة يجرها حصان واحد |
+| Love Me Tender | أحببني برقة |
+| God Save the King | حفظ الله الملك |
+| Appalachian Spring | ربيع أبالاتشيا |
+| Hard Times (short title) | الأيام الصعبة |
+
+### Lesson-only retention and layout notes
+Quoted English note-letter mnemonics keep their Latin initials with Arabic explanation (including FACE); they are functional teaching aids, not untranslated fallback prose. Exact original sung words and syllables stay quoted where a question or instruction refers to the score. U+2068/U+2069 isolate a whole Latin quote, including its punctuation, and notation beside mixed-direction punctuation/digits. U+200F supplies RTL paragraph direction for genuinely invariant standalone notation, names, brands or sung-word answers. Such identities require a separate source-bound independent review; marks never grant acceptance. In century/decade prose, a parenthetical ASCII source year can accompany the Arabic century/decade to preserve the required exact digit group without changing its historical meaning. These are AI draft conventions, not human or device approval.
+
+For the bar/measure synonym lesson, use مازورة and حقل موسيقي; avoid مقياس (a literal nonmusical measurement) and keep ميزان for meter/time signature.
+
+## Independent review additions (2026-10-26)
+
+Keep complete LTR notation, progressions, names/year credits and original sung locators inside a single directional isolate when used in an RTL paragraph. Isolating separate tokens can reverse their order. Retain exact sung original words only as quoted teaching locators with Arabic instruction; never treat ordinary English prose as an invariant. This is AI semantic review, not device rendering or native-reader certification.

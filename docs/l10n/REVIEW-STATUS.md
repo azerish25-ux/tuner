@@ -131,3 +131,31 @@ This section supersedes the earlier checkpoint counts above.
   with source regression checks; fresh simulator captures remain required.
 - No human native-speaker certification, full-app device signoff, completed store
   submission, or finished all-language lessons is claimed.
+
+## Reviewed curriculum expansion (2026-10-26)
+
+- Arabic, Persian and Hindi each add all 6,080 current lesson strings after
+  exhaustive independent AI source/context review, not just a mechanical sample.
+- Applied 190 Arabic, 86 Persian and 98 Hindi guarded review corrections. Exact
+  source-bound invariant decisions cover 124 Arabic, 154 Persian and 370 Hindi
+  notation/name/original-sung-token entries. Mnemonic text is contextualized in the
+  target language; ordinary English teaching prose is not waived.
+- Arabic complete LTR notation/name spans use Unicode isolates where review and
+  ICU testing demonstrated split-token reordering. Actual iOS glyph, wrapping and
+  spoken VoiceOver verification remain pending for these new lesson resources.
+- The original nine target lesson languages now have zero mechanically unresolved
+  entries after 357 coordinated title/reference/UI edits and 161 source-bound
+  title/technical-term decisions. Established translated titles are documented in
+  locale glossaries; source sung lyrics and creator credits remain intentionally intact.
+- Mechanical completeness is not native-speaker certification or evidence that all
+  48 target lesson languages are done. Remaining languages stay in the generated queue.
+
+## Bengali curriculum (2026-10-26)
+
+All 6,080 current lesson pairs received exhaustive independent AI contextual review.
+Applied 172 exact-source/old-guarded corrections and 168 individually justified
+notation/name/original-sung-token invariants. Every current source occurrence was
+reconciled for shared labels. Latin-initial memory aids, rhythmic subdivision syllables,
+string pitch versus physical position, bow directions and song titles are coordinated
+with the glossary. Mechanical lesson coverage is complete; iOS rendering and human
+native-speaker certification are not claimed.

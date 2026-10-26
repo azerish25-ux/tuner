@@ -171,5 +171,29 @@ Brand names Timbre, Timbre Pro, Pro, Apple, iPhone, iPad, Apple Watch, App Store
 ## 3. Course and song names
 Instrument course titles match catalogue instrument names. Ear Training, Music Theory, Rhythm and Singing match their existing localized Learn titles; Songs must match the Songs tab. Originals and Standards & Classics use existing localized course titles. Instrument Songbook titles use the localized instrument plus the existing localized Songbook term. Established public-domain song titles use their established local titles; other traditional titles stay English. Timbre Originals retain existing localized lesson titles. Every prose mention and leaderboard uses the exact lesson title. Lyric credits preserve names and years and translate connecting prose. Sung lyrics remain unchanged.
 
+### Reviewed repertoire-title decisions (2026-10-26)
+
+These are exact-work decisions from independent AI contextual review, not human/native certification. Use each selected title in lesson titles, prose, search labels and leaderboards. Keep original sung lyrics and creator credits.
+
+| Source title | Selected display title |
+|---|---|
+| Amazing Grace | Grâce infinie |
+| Auld Lang Syne | Ce n’est qu’un au revoir |
+| Deck the Halls | Falalalala |
+| Good King Wenceslas | Le bon roi Wenceslas |
+| Jingle Bells | Vive le vent |
+| Joy to the World | Joie au monde |
+| Lightly Row | Vieille chanson (Lightly Row) |
+| Mary Had a Little Lamb | Marie avait un petit agneau |
+| Originals | Créations originales |
+| Rust Belt Shuffle | Shuffle de la ceinture de rouille |
+| We Wish You a Merry Christmas | Nous vous souhaitons un joyeux Noël |
+
+In the Auld Lang Syne etymology, retain the Scots phrase `Auld lang syne` and explicitly call it the original title of the localized song. This is a metalinguistic quotation, not an inconsistent display title.
+
+Retained exact repertoire titles in this review (each has its own source-bound rationale in `lesson-invariants.json`; this list is not a blanket exemption): Old Joe Clark; Danny Boy (Londonderry Air); Clementine; When the Saints Go Marching In; Yankee Doodle; Soldier's Joy; Skip to My Lou; Aura Lee; Shady Grove; Shenandoah; Angeline the Baker; Greensleeves; Danny Boy; Simple Gifts; Boil Them Cabbage Down; Red River Valley; My Country, 'Tis of Thee; Camptown Races; Cumberland Gap; Arkansas Traveler; Cripple Creek.
+
+`Originals` is a generic collection label here, not an invariant brand. Use the selected collection term in navigation and the Words & music credit. Timbre itself is unchanged. Singular description “a Timbre original” may remain a natural local noun phrase rather than forcing the plural navigation label into a sentence.
+
 ## 4. Words that mislead
 Tune as a verb means tuning, as a noun a melody. Sharp/flat on the tuner mean too high/low, not accidentals. Bar means measure; key means tonality. Pick means plectrum or plucking in music, choose in UI. Lock means a stable in-tune confirmation, not a padlock. Take is one recorded performance, not taking a lesson. Run means a practice streak or an uninterrupted passage, not running. Chart means an instrumental chord diagram/sheet unless progress statistics explicitly demand a graph. Intonation is playing in tune over a drone, never octave/saddle adjustment. Practice is musical practice. Feel is haptic vibration, not emotion. A challenge to a friend differs from the unit's final challenge lesson; preserve context.
