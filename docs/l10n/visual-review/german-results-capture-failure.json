@@ -10,7 +10,7 @@
     "level_bar_bottom": 771,
     "safe_area_before_button_fade": 742
   },
-  "status": "Original runtime capture failed; later image inspection supports an unconditional-fade test false positive, not demonstrated visible overlap. Actual-state probe rerun pending.",
+  "status": "Original failed capture preserved. Actual-state probe rerun passed on c5f19f4; no active fade, with one-point accessibility rectangle rounding. This verifies the two pilot frames and bounds unit test, not full store assets or all-device visual QA.",
   "artifact": 12647381730,
   "artifact_sha256": "32e3795199d124cae1408d623a61465e157cd2f539751ff89da5c23d2e469eb0",
   "image_inspected": "4A47E527-98B2-4EF8-A8A3-CDADFC88E637.png",
@@ -44,5 +44,22 @@
       766
     ]
   },
-  "bounded_repair": "Read actual global viewport bottom and active fade height from DEBUG-only probe; missing/invalid probe fails; active fade still enforced; at most1point accessibility rectangle rounding."
+  "bounded_repair": "Read actual global viewport bottom and active fade height from DEBUG-only probe; missing/invalid probe fails; active fade still enforced; at most1point accessibility rectangle rounding.",
+  "verified_rerun": {
+    "source_commit": "c5f19f4b1fcb9b9a8032e3a9528755308a8c3191",
+    "run": 40321755946,
+    "job": 121568167045,
+    "conclusion": "success",
+    "test_count": 3,
+    "failures": 0,
+    "share_bottom": 691.0,
+    "level_bottom": 771.0,
+    "viewport_bottom": 770.0,
+    "active_fade_height": 0.0,
+    "buttons_top": 778.0,
+    "safe_bottom": 770.0,
+    "allowed_ax_rounding_points": 1,
+    "fits": true,
+    "log_timestamp": "2026-10-26T12:35:30.3277040Z"
+  }
 }

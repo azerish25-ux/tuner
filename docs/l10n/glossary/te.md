@@ -1,6 +1,6 @@
 # Telugu (te) glossary
 
-Status: AI-reviewed translation decisions, not human-reviewed or native-speaker approved. Device QA pending.
+Status: AI-authored and self-checked translation decisions, not independently reviewed or native-speaker approved. Device QA pending.
 
 ## 1. Locale decisions
 
@@ -20,7 +20,7 @@ Every row is mandatory. The "Current table" hints come from reading the shipped 
 | Units | సెంట్లు; నిమిషాలు; సెకన్లు; మిల్లీసెకన్లు. Hz, BPM, ¢, XP unchanged |  |
 | Capitalization | No case; preserve brand spelling |  |
 | Note names in the interface | Runtime supplies notes; do not invent names |  |
-| Note names in lessons (lesson languages only) | Not a lesson locale; preserve C, F♯, B♭, Em, G7 if referenced |  |
+| Note names in lessons (lesson languages only) | Lesson locale; preserve every source note letter and chord symbol, including C, F♯, B♭, Em and G7 |  |
 | Sharp / flat / double sharp / double flat as words | షార్ప్ / ఫ్లాట్ / డబుల్ షార్ప్ / డబుల్ ఫ్లాట్ |  |
 | Tuning direction | తక్కువ / ఎక్కువ for tuner direction; existing loan labels remain exact refs |  |
 | iOS Settings path (legal text) | సెట్టింగ్‌లు › Apple ఖాతా › సబ్‌స్క్రిప్షన్‌లు. AI-reviewed; device verification pending |  |
@@ -154,7 +154,7 @@ Every row is mandatory. The "Current table" hints come from reading the shipped 
 | English | Where | Translation | Notes |
 |---|---|---|---|
 | Guitar, Ukulele, Bass, Violin, Cello, Mandolin, Banjo | Course titles (`Learn.strings`) | గిటార్ / యుకులేలే / బాస్ / వయొలిన్ / చెల్లో / మాండొలిన్ / బాంజో | Same words as the instrument names. |
-| Ear Training, Music Theory, Rhythm, Singing | Course titles | చెవి శిక్షణ / సంగీత సిద్ధాంతం / లయ / గానం |  |
+| Ear Training, Music Theory, Rhythm, Singing | Course titles | వినికిడి శిక్షణ / సంగీత సిద్ధాంతం / లయ / గానం | Lesson course-facing wording; older UI term is a historical reference. |
 | Songs | Course title, also the Songs tab | పాటలు |  |
 | Originals | Course of songs written for Timbre ("Timbre Originals") | సొంత పాటలు | Keep or translate: decide once. |
 | Standards & Classics | Course title | ప్రసిద్ధ మరియు క్లాసిక్ పాటలు |  |
@@ -187,3 +187,65 @@ Write the translation that applies in Timbre, and the one GPT must avoid.
 | Next, Again, Slower | on-screen labels and also Siri command words (`ios/Timbre/Intents/PracticeIntents.swift`): one translation serves both | — | తర్వాత / మళ్లీ / నెమ్మదిగా | Use the sense above |
 | Practice | the tab and the activity | a medical or legal practice | ప్రాక్టీస్ | a medical or legal practice |
 | Feel | the haptic tuning feature, feeling the beat | emotions | కంపనాన్ని అనుభవించండి (haptics; not emotion) | emotions |
+
+## 5. Lesson author decisions — 2026-10-26
+
+Author: OpenAI GPT assistant, task /root/translate_telugu_lessons. Direct language drafting; independent/native/device review remains pending.
+
+- Physical instrument bridge: వాద్యపు బ్రిడ్జ్ for the explicit part heading (బ్రిడ్జ్ in clearly physical prose); song-form bridge: బ్రిడ్జ్ భాగం, or బ్రిడ్జ్ on a short section chip. Distinct source keys are preserved.
+- Interval-only Second, Third, Fourth: ద్వితీయ స్వరాంతరం, తృతీయ స్వరాంతరం, చతుర్థ స్వరాంతరం. Explicit finger options identify the finger, not an interval.
+- Direction-only Up/Down: పైకి/కిందికి, suitable for both pitch and physical picking where shared.
+- Note in instructional prose: స్వరం. Note symbols remain exact Latin symbols.
+- Open string: ఓపెన్ తీగ (a string played without pressing a fret); fretting: ఫ్రెట్‌పై నొక్కడం; picking: మీటడం. These are not interchangeable.
+- Rest: విరామం; sustain/let ring: మోగనివ్వండి; pulse/beat: బీట్; rhythm: లయ.
+- Exact-source song titles and pure notation remain candidates requiring independent approval, not self-approved invariants.
+
+### Additional lesson terms fixed during batches 001–015
+
+- quarter note: క్వార్టర్ నోట్; half note: హాఫ్ నోట్; eighth note: ఎయిత్ నోట్; sixteenth note: సిక్స్‌టీంత్ నోట్. Generic pitched note: స్వరం.
+- hook: ప్రధాన బాణీ; phrase: స్వర వాక్యం; riff: రిఫ్; lick: లిక్; arpeggio: ఆర్పెజియో; triad: ట్రయాడ్; inversion: ఇన్వర్షన్.
+- counting “and”: అండ్; “one-e-and-a”: ఒకటి-ఈ-అండ్-అ. Preserve source digits where present.
+- arrangement: స్వర అమరిక; texture: ధ్వని రూపం; fill: పూరకం; tag: ట్యాగ్; turnaround: టర్న్‌అరౌండ్, explained as returning to the start.
+- A minor pentatonic box: A మైనర్ పెంటాటోనిక్ నమూనా; do not render box as a literal container.
+- Major/minor auditory character: ప్రకాశంగా / గంభీరంగా; blues sweet/sour contrast: మధురత / రాపిడి, not literal taste claims.
+- Guitar/ukulele English initial-letter mnemonics stay in English because their initials encode preserved Latin note names; all surrounding prose is Telugu.
+- Verified source clarification: “pick fret 5 with finger 1” means fret with finger 1 and pick with the other hand; explicitly separated in Telugu. “short bend” means undershot pitch, not duration.
+
+### Additional lesson terms and contexts fixed during batches 016–045
+
+- Ear Training lesson course: వినికిడి శిక్షణ. This is the natural course-facing wording; the older UI entry చెవి శిక్షణ remains a historical UI reference, not a requirement to copy that wording into the lesson title.
+- Instrument bridge exact source: వాద్యపు బ్రిడ్జ్; song-form bridge: బ్రిడ్జ్ భాగం. Bow: బో; down-bow/up-bow: డౌన్-బో/అప్-బో, not literal vertical direction; frog: ఫ్రాగ్ (bow part). Fingerboard: ఫింగర్‌బోర్డ్; rosin: రోసిన్; tailpiece: టెయిల్‌పీస్; endpin: ఎండ్‌పిన్.
+- Violin high/low finger positions: ఎత్తు స్థానం/దిగువ స్థానం, with the source finger digits preserved. These are placement instructions, not automatic pitch labels.
+- Thumb/index/middle/ring/little finger: బొటనవేలు/చూపుడువేలు/మధ్యవేలు/ఉంగరపు వేలు/చిటికెన వేలు. Fretting and plucking fingers are explicitly distinguished.
+- Rest stroke (bass): రెస్ట్ స్ట్రోక్, explained as coming to rest on the next thicker string; a silence rest is విరామం, never that physical stroke.
+- Slur: స్లర్, explained as multiple notes under one bow; tie: టాయి, connecting durations without a new attack. Vibrato: వైబ్రాటో; shifting: స్థానమార్పు; fourth position: నాలుగవ స్థానం.
+- Mandolin string pairs: జతలు; courses in that physical context: కోర్స్‌లు, not curriculum courses. Tremolo: ట్రెమొలో; chop/chunk/crosspicking/clawhammer: చాప్/చంక్/క్రాస్‌పికింగ్/క్లాహ్యామర్.
+- Banjo roll names: రోల్, ఫార్వర్డ్ రోల్, ఆల్టర్నేటింగ్ థంబ్ రోల్; pinch: పించ్, explained as simultaneous thumb and middle plucks. Drone string: నేపథ్య స్వరం ఇచ్చే తీగ/నేపథ్య తీగ; not a changing melody string unless the source explicitly uses it that way.
+- Bum-ditty counting: బమ్-డిటీ; bum, dit, ty: బమ్, డిట్, టీ. The physical single strike, brush across strings, and thumb stroke are separately explained.
+- Solfège syllables are phonetic Telugu: do/re/mi/fa/sol/la/ti = డో/రే/మీ/ఫా/సోల్/లా/టీ. They are not converted to sargam or fixed letter names. Every source Latin note/chord symbol stays unchanged.
+- Unison: ఏకస్వరం; interval: స్వరాంతరం. Fifth/sixth/seventh/ninth intervals: పంచమ/షష్ఠ/సప్తమ/నవమ స్వరాంతరం. Perfect interval: పర్ఫెక్ట్ స్వరాంతరం, avoiding confusion with a different tuning-system term.
+- Major/minor interval qualities: మేజర్/మైనర్, not chord qualities in interval lessons. Current L775c034932 is chord-only; new L418aadaeed interval title is separately drafted as మేజర్, మైనర్ స్వరాంతరాలు.
+- Chord qualities: డిమినిష్డ్/ఆగ్మెంటెడ్/డామినెంట్ సెవెంత్. Chord progression: కార్డ్ క్రమం. Cadence: కేడెన్స్; authentic/half/plagal/deceptive: ఆథెంటిక్/హాఫ్/ప్లేగల్/డిసెప్టివ్, with source functional explanations translated.
+- Major/minor audible character may use ఉల్లాసంగా/గంభీరంగా; bright descriptive tone also ప్రకాశంగా. Do not confuse these character descriptions with loudness, physical color or pitch height.
+- Staff: స్టాఫ్; line/space: గీత/ఖాళీ; treble/bass clef: ట్రెబుల్/బాస్ క్లెఫ్; ledger line: లెడ్జర్ గీత. Initial-letter English mnemonics remain exact, with Telugu explanation, because they encode preserved note letters.
+- Whole note: హోల్ నోట్; dotted: డాటెడ్; note value: నోట్ వ్యవధి; measure: మెజర్, synonymous with బార్. Time signature: టైమ్ సిగ్నేచర్; key signature: కీ సిగ్నేచర్. Tonic/home note: టానిక్/నిలయ స్వరం.
+- Accent: ఉద్ఘాటన; offbeat: ఆఫ్‌బీట్; syncopation: సింకొపేషన్; swing: స్వింగ్; backbeat: బ్యాక్‌బీట్; triplet: ట్రిప్లెట్. Triplet counts: 1-ట్రిప్-లెట్, preserving source digits. Counting "and" is అండ్; ordinary conjunction "and" is మరియు or natural Telugu list punctuation, never interchangeable in rhythmic labels.
+- Singing vowels and light syllables are phonetic: ah = ఆ; da = దా when encountered. Sustaining is holding a steady pitch, not increasing volume. Lip trill: పెదవుల ట్రిల్.
+- Source historical-century clarifications honored: 1700s means the entire century beginning 1700, not the 1700–1709 decade; 1840s remains a decade. No added numerical endpoint absent from the source.
+- Retired L4d1c8b1ea7 is explicitly left blank historically and excluded from the current draft map. Reused Le56240b1d1 is దీర్ఘ స్వరాలంతా ట్రెమొలో, sustaining the entire long-note duration rather than stopping at the next beat.
+
+These remain author choices, not independent or native-speaker approvals. Full on-device layout and pronunciation review is pending.
+
+
+### Additional lesson terms and contexts fixed during batches 046–059
+
+- Singing syllable “loo”: లూ; original sung English lyric cues remain unchanged, while instructions and rhythmic explanations are Telugu.
+- Verse/chorus/intro/outro: చరణం/పల్లవి/ప్రారంభం/ముగింపు. Song-form bridge on a section chip: బ్రిడ్జ్; explanatory heading: బ్రిడ్జ్ భాగం. These are not the physical instrument part.
+- In two/three/four, when describing meter: రెండు/మూడు/నాలుగు బీట్‌ల లయలో; when counting: … బీట్‌ల చొప్పున. Avoid opaque literal రెండులో/మూడులో/నాలుగులో for beginners. Six-eight written out in the source: ఆరు-ఎనిమిది లయ; numeric 6/8 remains 6/8. Mathematical “half of two” is not meter and is unchanged.
+- Songbook: పాటల పుస్తకం. Play-along chord charts: కార్డ్ చార్ట్; accompaniment: సహవాద్యం. “Roots and fifths” refers to మూలస్వరాలు, పంచమాలు, not finger numbers.
+- Proper song titles, original song names and name/year-only credits remain exact-source candidates for independent review. Generic work labels may be translated naturally (Mozart సింఫనీ నం. 40; Carmen: ప్రెల్యూడ్; Toreador గీతం), and references use the same localized label.
+- Original-lyric quiz words Fly/Wide/Boat/Town/Bethlehem are identification tokens, not generic prose instructions. “Wide … two …” in The Water Is Wide identifies those two sung words; “O, our, our, and” in the hymn identifies lyric pickups, so that final “and” is not counting అండ్.
+- Source 1700s/1800s denote centuries; 1580s/1840s/1890s denote decades in their given contexts. Exact source digits remain unchanged. New Year's Eve is the preceding night, not merely a generic New Year celebration.
+- “Full sun” section chip: నిండు ఎండ, a concise natural daylight label following sunrise. Character-count checks pass; physical Telugu glyph layout still needs device review.
+
+Final author coverage: all 6,083 current source keys. The 308 exact-source candidates are proposals, not approvals. Native-speaker, independent semantic and device/VoiceOver review are still pending.

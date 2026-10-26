@@ -1,0 +1,3194 @@
+{
+ "status": "complete-independent-ai-semantic-review",
+ "counts": {
+  "source_rows": 6083,
+  "pair_reviewed": 6083,
+  "pair_unread": 0,
+  "reviewed_current_map_ready_rows": 6083,
+  "remaining_shared_key_contexts": 0,
+  "remaining_shared_keys": 0,
+  "current_context_records_individually_audited": 5567,
+  "guarded_corrections": 73,
+  "identity_pairs_individually_reasoned": 308,
+  "identity_pairs_context_complete": 308,
+  "nonidentity_mechanical_issues": 0,
+  "statuses": {
+   "accept": 5702,
+   "genuine-identity-approval": 308,
+   "guarded-correction": 73
+  },
+  "distinct_shared_semantic_contexts_reviewed": 1344,
+  "exact_shared_key_contexts_reviewed": 4127,
+  "exact_option_key_contexts_reviewed": 2284,
+  "single_distinct_role_option_contexts_bound_to_pair_evidence": 844,
+  "nested_arrangement_section_keys_reviewed": 51,
+  "nested_arrangement_section_occurrences_exact_context_bound": 4113,
+  "frozen_author_manifest_files_reverified": 420,
+  "translation_unresolved_issues": 0
+ },
+ "mechanical_findings": [
+  {
+   "key": "Lebaa7ee42e",
+   "ordinal": 18,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L6dcd4ce23d",
+   "ordinal": 23,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L50c9e8d5fc",
+   "ordinal": 24,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Lae4f281df5",
+   "ordinal": 25,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "La36a6718f5",
+   "ordinal": 26,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L4b8ddb7777",
+   "ordinal": 51,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "La42bbdd946",
+   "ordinal": 52,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Ldb4211a03a",
+   "ordinal": 64,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L5d7cef323e",
+   "ordinal": 72,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Le69f20e9f6",
+   "ordinal": 105,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L32096c2e0e",
+   "ordinal": 106,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Lde97f92a64",
+   "ordinal": 121,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L7d6c1cd2a4",
+   "ordinal": 129,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L1ac3ce2b0d",
+   "ordinal": 143,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Le0184adedf",
+   "ordinal": 148,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "La47109ee9d",
+   "ordinal": 342,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L3602bcec2f",
+   "ordinal": 375,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Leab1d949c4",
+   "ordinal": 385,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L423f20489c",
+   "ordinal": 393,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L9f9413d895",
+   "ordinal": 420,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L2bf2d48e26",
+   "ordinal": 444,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L92d40794f5",
+   "ordinal": 450,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L53d54b3da0",
+   "ordinal": 453,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lebc3b18e39",
+   "ordinal": 518,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Lb33edd8ff2",
+   "ordinal": 519,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L20cf11aa74",
+   "ordinal": 520,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L75cc572d55",
+   "ordinal": 547,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Lc40e0e2351",
+   "ordinal": 548,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Lfbeff7287b",
+   "ordinal": 549,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Lb5cbd3434b",
+   "ordinal": 569,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L6952d23be8",
+   "ordinal": 570,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Ld5183bf933",
+   "ordinal": 582,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L4cd7920fdd",
+   "ordinal": 611,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L41d9a6a844",
+   "ordinal": 620,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L6de1c1020b",
+   "ordinal": 621,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L40a376c23b",
+   "ordinal": 622,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L6f49985ada",
+   "ordinal": 623,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L67f2b8db53",
+   "ordinal": 680,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L042dc4512f",
+   "ordinal": 695,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L6b0d31c0d5",
+   "ordinal": 696,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L86f7e437fa",
+   "ordinal": 697,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L516b9783fc",
+   "ordinal": 719,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Lcde5d983fc",
+   "ordinal": 745,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Ld5cd3af1c1",
+   "ordinal": 1044,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L0f3d32305b",
+   "ordinal": 1045,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L32a2abd6aa",
+   "ordinal": 1237,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L2c5b0a2b92",
+   "ordinal": 1238,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Lc71863b940",
+   "ordinal": 1251,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Lc51cc62eec",
+   "ordinal": 1338,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L2322e7fd2f",
+   "ordinal": 1339,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L1b32faec74",
+   "ordinal": 1423,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lcbd53803e4",
+   "ordinal": 1474,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L80744757e1",
+   "ordinal": 1505,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Lf1f91d70ac",
+   "ordinal": 1538,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Lf9bc0a7668",
+   "ordinal": 1539,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L60db049169",
+   "ordinal": 1540,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Leb5d689f09",
+   "ordinal": 1554,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L67c3806843",
+   "ordinal": 1619,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Ld8cef08bd1",
+   "ordinal": 1633,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L8198fbd5b7",
+   "ordinal": 1634,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "La35051bafe",
+   "ordinal": 1653,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L47207f2354",
+   "ordinal": 1659,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L565f5c8676",
+   "ordinal": 1667,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Ld975a3a9d1",
+   "ordinal": 1677,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L7e6a077cdf",
+   "ordinal": 1706,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Lcdef3f1f1e",
+   "ordinal": 1722,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L8763a0c59a",
+   "ordinal": 1724,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "La8645a16b1",
+   "ordinal": 1727,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lc329cf4ac6",
+   "ordinal": 1732,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "La838e58546",
+   "ordinal": 1746,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L8e48bd58a1",
+   "ordinal": 1868,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L7ac2aa3ed2",
+   "ordinal": 1901,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L88b9f64029",
+   "ordinal": 1920,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lbdefafacbc",
+   "ordinal": 1928,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L1b7f99964a",
+   "ordinal": 1936,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L5ca845ae96",
+   "ordinal": 2007,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Lcc0eb99888",
+   "ordinal": 2014,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L84fcf011f2",
+   "ordinal": 2434,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lbd4d7f2e87",
+   "ordinal": 2456,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Ld55060be18",
+   "ordinal": 2505,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L1430f1810f",
+   "ordinal": 2515,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L435eef57b3",
+   "ordinal": 2523,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lf7d33a22a5",
+   "ordinal": 2602,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L52d774ad9f",
+   "ordinal": 2647,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L6a1333dc6b",
+   "ordinal": 2737,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L98357cd0f3",
+   "ordinal": 2741,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L3be94b09c5",
+   "ordinal": 2772,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L0b5acb7191",
+   "ordinal": 2790,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L9279caa296",
+   "ordinal": 2791,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L61da910eb5",
+   "ordinal": 3023,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lededd1cb64",
+   "ordinal": 3089,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L7cbe9df99e",
+   "ordinal": 3102,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L7b4579eb6a",
+   "ordinal": 3103,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L184b5b4ca8",
+   "ordinal": 3104,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Lf88ebdd5e8",
+   "ordinal": 3247,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lce7001df87",
+   "ordinal": 3255,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L5a5d8340b2",
+   "ordinal": 3264,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L4437fdb426",
+   "ordinal": 3348,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L439cc8cefc",
+   "ordinal": 3530,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Lb4edf8f910",
+   "ordinal": 3531,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L37fc0760bc",
+   "ordinal": 3532,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Ld19e3e1e5a",
+   "ordinal": 3547,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Ld54e6e9baa",
+   "ordinal": 3548,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L8b3fd24a46",
+   "ordinal": 3549,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L7cf184f4c6",
+   "ordinal": 3686,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L65dc0bc434",
+   "ordinal": 3693,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L16d7cda25c",
+   "ordinal": 3694,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L013fea348d",
+   "ordinal": 3695,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L144eabccb1",
+   "ordinal": 3698,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L91d585db22",
+   "ordinal": 3699,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L51e4d1a6c5",
+   "ordinal": 3700,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Lc6400eaec1",
+   "ordinal": 3715,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L0371438f82",
+   "ordinal": 3716,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Laaa025b382",
+   "ordinal": 3717,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "La04af666be",
+   "ordinal": 3744,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L944e60cb74",
+   "ordinal": 3745,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Le6e5bd1766",
+   "ordinal": 3746,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Lcb7d29f43f",
+   "ordinal": 3749,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Le80fdb9645",
+   "ordinal": 3757,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Lf87ce692a8",
+   "ordinal": 3777,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L468f49fb52",
+   "ordinal": 3778,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Leac2bf8895",
+   "ordinal": 3781,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L9e779ee713",
+   "ordinal": 3782,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L68b2b09c89",
+   "ordinal": 3783,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L273a01f9bb",
+   "ordinal": 3788,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L147c7ee532",
+   "ordinal": 3789,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L7f95f4b200",
+   "ordinal": 3791,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L81860bf635",
+   "ordinal": 3792,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L58b29e6cc0",
+   "ordinal": 3793,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L08b90ad7cf",
+   "ordinal": 3806,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L4f240cf65f",
+   "ordinal": 3824,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L18ca3dda33",
+   "ordinal": 3825,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L239059aba7",
+   "ordinal": 3862,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L0f18f4693e",
+   "ordinal": 3895,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "La13338039b",
+   "ordinal": 3968,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L8ba2a07385",
+   "ordinal": 3969,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Lcc80df1f23",
+   "ordinal": 3970,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L30a6c8a770",
+   "ordinal": 4015,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L5bd73fc956",
+   "ordinal": 4016,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Le4adabb7df",
+   "ordinal": 4017,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Leccee32026",
+   "ordinal": 4181,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Lbd97686897",
+   "ordinal": 4182,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "La46d19dee2",
+   "ordinal": 4191,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L4ddbbc6269",
+   "ordinal": 4192,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L8672546ef1",
+   "ordinal": 4193,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L4bc4f5018a",
+   "ordinal": 4201,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L52b515dd1c",
+   "ordinal": 4202,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "La26afab0b8",
+   "ordinal": 4203,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L55c00c847d",
+   "ordinal": 4206,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Lf92e2db958",
+   "ordinal": 4207,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L9ad5c4032f",
+   "ordinal": 4253,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Lc88b590de9",
+   "ordinal": 4255,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L2dd4c36e57",
+   "ordinal": 4256,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Lfb9434a874",
+   "ordinal": 4257,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L1440066ca8",
+   "ordinal": 4262,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L932eaaf5a3",
+   "ordinal": 4278,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L833da18887",
+   "ordinal": 4279,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Lc9ee5681d3",
+   "ordinal": 4280,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L3a8aba7a85",
+   "ordinal": 4286,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L4f93b2c841",
+   "ordinal": 4289,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Lfca4fdcfa2",
+   "ordinal": 4296,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L5385ffddaa",
+   "ordinal": 4300,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L1267b63df5",
+   "ordinal": 4308,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L7f9b7bad94",
+   "ordinal": 4313,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Lce9f455869",
+   "ordinal": 4314,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Lca73ab6556",
+   "ordinal": 4330,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L903c46b456",
+   "ordinal": 4360,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Lc4b37cf719",
+   "ordinal": 4516,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Le624d302b7",
+   "ordinal": 4610,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L3903101dc3",
+   "ordinal": 4709,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L893275da51",
+   "ordinal": 4843,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lb944af0880",
+   "ordinal": 4855,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L51fd07643b",
+   "ordinal": 4864,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L5ded105f41",
+   "ordinal": 4869,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L09054f67ac",
+   "ordinal": 4957,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L3b0a573dce",
+   "ordinal": 4959,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lf57eae0697",
+   "ordinal": 4969,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L2777cf39fb",
+   "ordinal": 4988,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L2358e4572b",
+   "ordinal": 5006,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lebb146d631",
+   "ordinal": 5030,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L6a92c479e4",
+   "ordinal": 5047,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lfde6285917",
+   "ordinal": 5062,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L5533d4675e",
+   "ordinal": 5081,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L146c1bf23b",
+   "ordinal": 5095,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lcacba260e6",
+   "ordinal": 5122,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L9c2b93a151",
+   "ordinal": 5127,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lae0e4af3a3",
+   "ordinal": 5128,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "La3f0345a76",
+   "ordinal": 5137,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L406b881188",
+   "ordinal": 5148,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L84690acdde",
+   "ordinal": 5153,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lf38952de44",
+   "ordinal": 5154,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L500ab3c359",
+   "ordinal": 5161,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L869c163632",
+   "ordinal": 5162,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Ld9afe70020",
+   "ordinal": 5174,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Ld89817766e",
+   "ordinal": 5179,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lf319af35dc",
+   "ordinal": 5180,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Ld052b9a30c",
+   "ordinal": 5200,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L21a9f4f643",
+   "ordinal": 5215,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "La06e04321c",
+   "ordinal": 5225,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L70aebab32e",
+   "ordinal": 5226,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lf4ae93d3b6",
+   "ordinal": 5247,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L8deaa20015",
+   "ordinal": 5254,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L135e3a84c9",
+   "ordinal": 5255,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lb4f4a898b0",
+   "ordinal": 5260,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L140525c1cd",
+   "ordinal": 5267,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "La629e1f318",
+   "ordinal": 5273,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L4cc78df1b7",
+   "ordinal": 5292,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L76775d6156",
+   "ordinal": 5296,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lf237c6e813",
+   "ordinal": 5304,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L0d3104ffd5",
+   "ordinal": 5308,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L9d25dea184",
+   "ordinal": 5313,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L42657f23ba",
+   "ordinal": 5326,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L948eb34feb",
+   "ordinal": 5332,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L7d5a055e37",
+   "ordinal": 5337,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L4cf432a342",
+   "ordinal": 5346,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L5155fc0931",
+   "ordinal": 5350,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L0f8363a8e4",
+   "ordinal": 5359,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "Le431eabaf3",
+   "ordinal": 5360,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": []
+  },
+  {
+   "key": "L3f63ae8b8d",
+   "ordinal": 5364,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lf2ecba4f27",
+   "ordinal": 5368,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lb1c589af79",
+   "ordinal": 5372,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L79edc518ec",
+   "ordinal": 5378,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L22a125fda7",
+   "ordinal": 5384,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L8e081d8487",
+   "ordinal": 5395,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L4cad552525",
+   "ordinal": 5399,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lab9322ed00",
+   "ordinal": 5404,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L6ab1a75a8e",
+   "ordinal": 5410,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L2385db8e9f",
+   "ordinal": 5416,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L8a5e6d018b",
+   "ordinal": 5424,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L0995a331f6",
+   "ordinal": 5428,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lc91deeae6c",
+   "ordinal": 5432,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lefc1ea7915",
+   "ordinal": 5440,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lad5fe25684",
+   "ordinal": 5444,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L16d416a1dc",
+   "ordinal": 5450,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L30e03d8db8",
+   "ordinal": 5464,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L9a1fc5bd94",
+   "ordinal": 5469,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lc28f954374",
+   "ordinal": 5474,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lef7f677c71",
+   "ordinal": 5478,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L5067110091",
+   "ordinal": 5483,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L365db7dc82",
+   "ordinal": 5498,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L4a732fabe7",
+   "ordinal": 5502,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L3c3628688b",
+   "ordinal": 5506,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L1f9582c5c2",
+   "ordinal": 5512,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L78ad8f08fc",
+   "ordinal": 5523,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lc0d7bcfb41",
+   "ordinal": 5528,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L5d43afb2a2",
+   "ordinal": 5534,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Ldfade6dea5",
+   "ordinal": 5543,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L3351283c9f",
+   "ordinal": 5552,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L6ede73e021",
+   "ordinal": 5565,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L47d5277660",
+   "ordinal": 5570,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L1c651c4a0f",
+   "ordinal": 5576,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L44cdb5a27f",
+   "ordinal": 5580,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L85848424e2",
+   "ordinal": 5586,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L7dce4b7666",
+   "ordinal": 5599,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Le2a484a070",
+   "ordinal": 5615,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L873c7db571",
+   "ordinal": 5633,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L9ec4d86f6b",
+   "ordinal": 5634,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lef58de4ff0",
+   "ordinal": 5635,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lfb3b1e8607",
+   "ordinal": 5642,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L6f9084b461",
+   "ordinal": 5650,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "La44a4911f1",
+   "ordinal": 5655,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Le658e66d4e",
+   "ordinal": 5660,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L038dcfc2fa",
+   "ordinal": 5661,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lb5ba032118",
+   "ordinal": 5668,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L5b11880954",
+   "ordinal": 5683,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L26cf298a3d",
+   "ordinal": 5691,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L515a6d791f",
+   "ordinal": 5701,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lc09802b908",
+   "ordinal": 5710,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L7140cafdab",
+   "ordinal": 5727,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L4c0b79f89f",
+   "ordinal": 5733,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L5456c995d6",
+   "ordinal": 5759,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lc79f013aef",
+   "ordinal": 5780,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lb47027890d",
+   "ordinal": 5789,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lf49c331357",
+   "ordinal": 5797,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L5d9c113b57",
+   "ordinal": 5804,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L4c40cf3873",
+   "ordinal": 5805,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Le177db0c02",
+   "ordinal": 5808,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L1114ff3a6f",
+   "ordinal": 5809,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L1b69c1b683",
+   "ordinal": 5816,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L55ea61dde9",
+   "ordinal": 5824,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L6c65dbe5e7",
+   "ordinal": 5835,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lfa0db53fe8",
+   "ordinal": 5836,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L0fd26bc07a",
+   "ordinal": 5846,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lee21f7bcbe",
+   "ordinal": 5847,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L58d40ef087",
+   "ordinal": 5854,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L366309b7d1",
+   "ordinal": 5864,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L362a6b5f4f",
+   "ordinal": 5872,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L8d6cc94f22",
+   "ordinal": 5881,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lf76e88c357",
+   "ordinal": 5891,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lb5bbe0ebe3",
+   "ordinal": 5892,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L07cd0ccf75",
+   "ordinal": 5900,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L9ca1f7efa7",
+   "ordinal": 5901,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L25c9e2591c",
+   "ordinal": 5907,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L76f05876f1",
+   "ordinal": 5908,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Laf82ad96c4",
+   "ordinal": 5914,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L97762a0998",
+   "ordinal": 5920,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Ldb4a6bf41c",
+   "ordinal": 5921,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L964cd16960",
+   "ordinal": 5922,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L41ad61ca24",
+   "ordinal": 5926,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lf25c3da65a",
+   "ordinal": 5934,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Labf6980bc4",
+   "ordinal": 5935,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L38751b4dc8",
+   "ordinal": 5943,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lf914feac4e",
+   "ordinal": 5944,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L169aa3a3af",
+   "ordinal": 5952,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L88d1577dcc",
+   "ordinal": 5953,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L89677615c2",
+   "ordinal": 5974,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L6980bcdcd2",
+   "ordinal": 5986,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L47fea81827",
+   "ordinal": 5999,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ]
+  }
+ ],
+ "identity_errors_are_expected_until_parent_registers_approved_invariants": true,
+ "native_human_review": false,
+ "device_qa": false,
+ "input_verification": {
+  "author_combined_sha256": "468154610890056504d737b9a54e90fb083b1128ba70b30e79caa0ccc6f3bb4b",
+  "author_manifest_sha256": "341ec0e29b6f392991fd7fa2adb4148eacf9eccfda5eeaa174acc2e21f6e32cc",
+  "manifest_files_verified": 420,
+  "current_source_count": 6083,
+  "option_keys": 1224,
+  "shared_keys": 610,
+  "distinct_shared_contexts": 1344,
+  "helper_sha256": "b74452e7165145c82449bf7fc70a0a114282a69ed875a18a7ba46e7ff0c70731",
+  "current_english_sha256": "718a9431e97997dcad904b99eb00f0072385142d63ebb7ffc1c27ff374ca6de3",
+  "current_curriculum_sha256": "f5399d3d13edd2f94b660648e7dd23aceef66a21e095567988bbb6bd38995bf1"
+ },
+ "translation_semantic_review_complete": true,
+ "release_certification": false,
+ "all_current_source_and_helper_hashes_unchanged": true,
+ "all_420_frozen_author_manifest_files_unchanged": true,
+ "current_context_outputs_recomputed_and_identical": true,
+ "exact_context_coverage_file": "context-coverage.json",
+ "nested_section_coverage_file": "nested-section-coverage.json",
+ "reviewed_current_map_sha256": "6d10e7b862f100a2d5032f5253a81490f66c0270e6f0941b5d436928f7e7547a",
+ "review_scope": "Independent AI review of every source/target pair and every distinct meaningful current shared context, with individual identity reasons. Mechanical checks supplement, not replace, recorded semantic judgments.",
+ "remaining_external_verification": [
+  "Native-human Telugu review, if required for release.",
+  "Actual device glyph fit, musical playback correctness and VoiceOver pronunciation.",
+  "Historical/musicology factual claims were translated faithfully, not independently externally fact-checked."
+ ]
+}

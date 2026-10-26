@@ -1,0 +1,49 @@
+{
+ "status": "complete-independent-ai-semantic-review",
+ "translation_semantic_review_complete": true,
+ "translation_unresolved_issues": [],
+ "unread_pairs": 0,
+ "pending_distinct_shared_contexts": 0,
+ "release_certification": false,
+ "source_questions": [
+  {
+   "key": "L14b529a7ef",
+   "topic": "Spray Paint Sunrise spotlight",
+   "question": "Source calls B major and C-sharp minor A-shape barres one hand shape. They share the A-shape family but major/minor fingerings differ. Translation follows source; optional pedagogy clarification, not a translation blocker."
+  },
+  {
+   "key": "L3aa3fb08ad",
+   "source": "E, D, C: three steps down to home.",
+   "question": "Three note-stages but two interval moves. Telugu faithfully retains three steps; optional source precision, not target-only error."
+  },
+  {
+   "keys": [
+    "Lcb89454ade",
+    "L4b49795891"
+   ],
+   "topic": "Slide into open B from string 3",
+   "question": "The source describes G/G sharp or A sharp sliding into open B on another string. Retained as melodic description; consider clarifying whether this means a melodic approach rather than a continuous same-string finger slide. Not a Telugu-only error."
+  }
+ ],
+ "glossary_notes": [
+  "Modern polite Telugu and neutral learner/singer references retained; targeted gender-neutral corrections are individually guarded.",
+  "Scale-degree four/six chord wording explicitly distinguishes musical function from sequential chord position.",
+  "Half/whole step uses అర్ధస్వరం/పూర్తిస్వరం, separate from duration terms హాఫ్/హోల్.",
+  "Course-facing Ear Training వినికిడి శిక్షణ is explicitly approved in the frozen glossary; older UI చెవి శిక్షణ is a historical reference, not an unresolved lesson inconsistency.",
+  "Songs uses పాటలు consistently with course/tab naming. Original work names, notation and sung identification words are retained only under their individual whole-string reasons."
+ ],
+ "layout_warnings": [
+  "All supplied mechanical length checks pass, but Telugu glyph fit and mixed Latin/Telugu note pronunciation need actual device/VoiceOver QA."
+ ],
+ "source_contract_checks": [
+  "Bare Second/Third/Fourth are interval-only; explicit finger options remain separate.",
+  "Up/Down fit physical strokes and melodic direction without pitch-only tense.",
+  "One beat reviewed across duration/count/missing-beat roles.",
+  "Bar/Measure localized quiz is internally consistent with Beat and Rest distractors.",
+  "Phrase ordinals identify musical sequence, not displayed option indices; [The third,The first,The last] retained correctly.",
+  "Song-form bridge and instrument bridge remain separate. Chord-only and interval-only major/minor titles remain distinct. Retired tremolo key absent; full-long-note tremolo retained.",
+  "C5 identity rationale explicitly covers both guitar power-chord and scientific-pitch roles.",
+  "All 51 distinct nested arrangement-section labels reviewed and 4,113 occurrences bound to exact read full-lesson contexts."
+ ],
+ "integration_owner": "Parent /root; no live publisher/author maps, registry, reports or Git were changed by this reviewer."
+}
