@@ -1,0 +1,25 @@
+{
+  "status": "implementation-ready-for-ci-not-device-verified",
+  "scope": [
+    "52b-lesson-chord",
+    "62b-lesson-results-violin"
+  ],
+  "changes": [
+    "Locale-independent semantic state identifiers preserve localized VoiceOver labels.",
+    "Chord frame requires all six unique string numbers heard; an empty check set cannot pass.",
+    "Results require three stars and measured clear space above controls.",
+    "Primary play-along control readiness no longer compares English Start text."
+  ],
+  "pilot_locales": [
+    "en",
+    "de",
+    "ar"
+  ],
+  "ci_workflow": ".github/workflows/localized-capture-check.yml",
+  "limits": [
+    "Full tour still has other English selectors.",
+    "iPad capture setup still defaults to English.",
+    "No all50 listing screenshot/preview completion claimed.",
+    "Swift compilation and real simulator captures remain pending."
+  ]
+}

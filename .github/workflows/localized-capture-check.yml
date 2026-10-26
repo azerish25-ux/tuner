@@ -1,0 +1,81 @@
+name: Localized store capture checks
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: localized-capture-check-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[capture-check]') }}
+jobs:
+  lesson-frames:
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[capture-check]')
+    runs-on: macos-15
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        include:
+          - language: en
+            locale: en_US
+          - language: de
+            locale: de_DE
+          - language: ar
+            locale: ar_SA
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+      HOMEBREW_NO_AUTO_UPDATE: '1'
+      HOMEBREW_NO_INSTALL_CLEANUP: '1'
+      TEST_RUNNER_TIMBRE_UI_LANGUAGE: ${{ matrix.language }}
+      TEST_RUNNER_TIMBRE_UI_LOCALE: ${{ matrix.locale }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Generate project and boot simulator
+        run: |
+          command -v xcodegen >/dev/null 2>&1 || brew install xcodegen
+          (cd ios && xcodegen generate)
+          DEVICE_ID=$(xcrun simctl list devices available -j | python3 -c 'import json,re,sys; d=json.load(sys.stdin); runtimes=sorted(d["devices"].items(),key=lambda p:tuple(map(int,re.findall(r"\d+",p[0]))),reverse=True); print(next(x["udid"] for k,v in runtimes if "iOS" in k for x in v if "iPhone" in x["name"]))')
+          echo "DEVICE_ID=$DEVICE_ID" >> "$GITHUB_ENV"
+          xcrun simctl boot "$DEVICE_ID" || true
+          xcrun simctl bootstatus "$DEVICE_ID" -b
+      - name: Ensure Metal toolchain
+        run: bash tools/ci/ensure-metal.sh
+      - name: Verify chord and violin-results frames in selected language
+        run: |
+          set -euo pipefail
+          mkdir -p ci-out
+          xcodebuild test -project ios/Timbre.xcodeproj -scheme Timbre \
+            -destination "platform=iOS Simulator,id=$DEVICE_ID" \
+            -derivedDataPath ios/build/capture-check -parallel-testing-enabled NO \
+            -only-testing:TimbreUITests/TimbreUITests/test12StoreChord \
+            -only-testing:TimbreUITests/TimbreUITests/test19StoreViolinResults \
+            -resultBundlePath ci-out/CaptureCheck.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/test.log
+      - name: Export actual screenshots
+        if: always()
+        run: |
+          test -d ci-out/CaptureCheck.xcresult
+          xcrun xcresulttool export attachments --path ci-out/CaptureCheck.xcresult --output-path ci-out/screenshots
+      - name: Require both valid capture attachments
+        run: |
+          python3 - <<'PY'
+          import sys
+          from pathlib import Path
+          sys.path.insert(0, 'tools/marketing')
+          from screenshots import attachments
+          captures = attachments(Path('ci-out/screenshots'))
+          for name in ['52b-lesson-chord', '62b-lesson-results-violin']:
+              assert name + '-wrong' not in captures, name + ': invalid frame retained'
+              assert len(captures.get(name, [])) == 1, name + ': missing or duplicate capture'
+              assert captures[name][0].is_file(), name + ': missing image file'
+          print('Two actual locale-specific frames verified; this is not all listing assets.')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: localized-lesson-captures-${{ matrix.language }}
+          path: ci-out
+          retention-days: 7

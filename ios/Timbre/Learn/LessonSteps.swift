@@ -521,7 +521,7 @@ struct ChordStep: View {
             VStack(spacing: 6) {
                 Text(finished ? LocalizedStringKey("Every string rings") : LocalizedStringKey("Strum it, or pluck each string"))
                     .font(Typeface.label(.body)).foregroundStyle(finished ? Palette.ink : Palette.inkSoft)
-                    .accessibilityIdentifier("lesson.chord")
+                    .accessibilityIdentifier(finished ? "lesson.chord.complete" : "lesson.chord.pending")
                     .lessonStepArrival()
                 guidance
             }
@@ -959,7 +959,7 @@ struct ChordStep: View {
 /// it's the one to pluck next, filled with a tick once heard, ringed in amber when the last strum left it silent; a
 /// string the chord mutes is a faint cross.
 struct LessonStringCheck: View {
-    enum Mark { case muted, waiting, next, heard, silent }
+    enum Mark: String { case muted, waiting, next, heard, silent }
     let note: String
     /// String number (1 is the thinnest), for VoiceOver.
     let number: Int
@@ -979,6 +979,8 @@ struct LessonStringCheck: View {
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(Text("String \(number), \(note)"))
             .accessibilityValue(spokenMark)
+            // Locale-independent state for capture verification; spoken labels/values stay localized.
+            .accessibilityIdentifier("lesson.chord.string.\(number).\(mark.rawValue)")
             .accessibilityHidden(mark == .muted)
     }
 

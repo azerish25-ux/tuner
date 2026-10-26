@@ -22,9 +22,8 @@ final class TimbreUITests: XCTestCase {
 
     /// The tour's language: English, unless the run asks for another to capture a localized store set
     /// (`TEST_RUNNER_TIMBRE_UI_LANGUAGE=de TEST_RUNNER_TIMBRE_UI_LOCALE=de_DE xcodebuild test …`, then
-    /// `tools/marketing/screenshots.py … --locale de-DE`). A few store-frame checks read English text (the chord step's
-    /// "Every string rings", the results' headline), so a localized run keeps those frames as "-wrong" until they read
-    /// identifiers instead.
+    /// `tools/marketing/screenshots.py … --locale de-DE`). Chord completion and results frames use semantic identifiers,
+    /// not English captions. Other tour selectors still need localization coverage; this does not certify every frame.
     private static let language = ProcessInfo.processInfo.environment["TIMBRE_UI_LANGUAGE"].flatMap { $0.isEmpty ? nil : $0 } ?? "en"
     private static let locale = ProcessInfo.processInfo.environment["TIMBRE_UI_LOCALE"].flatMap { $0.isEmpty ? nil : $0 } ?? "en_US"
 
@@ -736,9 +735,9 @@ final class TimbreUITests: XCTestCase {
         // (labelled "Level N") fills under them. Its arrival means the XP has finished counting; the badges that pop in
         // after it and the bar's fill settle before the picture. Kept only with three stars (the row reads "3 of 3 stars").
         element("lesson.continue").tap()
-        _ = labeled("Level [0-9]+").waitForExistence(timeout: 15)
+        XCTAssertTrue(element("lesson.results.level").waitForExistence(timeout: 15))
         let results = stillScreenshot(timeout: 3)
-        let headline = labeled("3 of 3 stars").exists
+        let headline = element("lesson.results.stars.3").exists
         let room = resultsFit()
         storeFrame("62-lesson-results", picture: results, ok: headline && room.fits,
                    headline ? room.summary
@@ -755,16 +754,19 @@ final class TimbreUITests: XCTestCase {
         XCTAssertTrue(element("lesson.close").waitForExistence(timeout: 30), "The violin checkup never opened")
         settle(1.2)
         let start = element("lesson.continue")
-        for _ in 0..<40 where !(start.exists && start.isEnabled && start.label == "Start") { settle(0.5) }
+        // This scene opens directly on the play-along. Its enabled primary control is the start action;
+        // matching an English caption would unnecessarily wait in every other language.
+        for _ in 0..<40 where !(start.exists && start.isEnabled) { settle(0.5) }
+        XCTAssertTrue(start.exists && start.isEnabled, "The play-along start control was not ready")
         start.tap()
         // A one-bar count-in and four open strings: the take is over well inside 15 s.
         settle(15)
         XCTAssertTrue(element("along.again").waitForExistence(timeout: 30), "The violin play-along never finished")
         settle(1)
         element("lesson.continue").tap()
-        _ = labeled("Level [0-9]+").waitForExistence(timeout: 15)
+        XCTAssertTrue(element("lesson.results.level").waitForExistence(timeout: 15))
         let results = stillScreenshot(timeout: 3)
-        let headline = labeled("3 of 3 stars").exists
+        let headline = element("lesson.results.stars.3").exists
         let room = resultsFit()
         storeFrame("62b-lesson-results-violin", picture: results, ok: headline && room.fits,
                    headline ? room.summary
@@ -778,7 +780,7 @@ final class TimbreUITests: XCTestCase {
         let nodes = appNodes()
         func frame(_ id: String) -> CGRect? { nodes.first { $0.identifier == id }?.frame }
         let buttons = [frame("lesson.next"), frame("lesson.done")].compactMap { $0?.minY }.min()
-        let level = nodes.first { $0.label.range(of: "^Level [0-9]+$", options: .regularExpression) != nil }?.frame
+        let level = frame("lesson.results.level")
         let share = frame("lesson.share")
         guard let buttons, let level else {
             return (false, "the results show no level bar or no buttons (level \(level != nil), buttons \(buttons != nil))")
@@ -908,16 +910,19 @@ final class TimbreUITests: XCTestCase {
     /// every string lit instead of handing over to the next step.
     func test12StoreChord() throws {
         launch(pitch: true, scene: "lesson-chord")
-        let finished = NSPredicate(format: "identifier == %@ AND label == %@", "lesson.chord", "Every string rings")
-        let ringing = app.descendants(matching: .any).matching(finished).firstMatch.waitForExistence(timeout: 45)
+        let ringing = element("lesson.chord.complete").waitForExistence(timeout: 45)
         // The last string's tick and the burst land.
         settle(1.2)
         let picture = XCUIScreen.main.screenshot()
-        // Each string's check over the box reads "Got it" once heard; a muted string has none.
-        let checks = appNodes().filter { $0.label.hasPrefix("String ") && $0.identifier.isEmpty }
-        let unheard = checks.filter { ($0.value as? String) != "Got it" }.count
-        storeFrame("52b-lesson-chord", picture: picture, ok: ringing && unheard == 0,
-                   ringing ? "\(unheard) of \(checks.count) strings not lit" : "the chord step never heard every string")
+        // The E-minor scene must expose all six individually heard strings. No English labels or
+        // localized-number parsing, and an empty/missing check set cannot pass vacuously.
+        let checks = appNodes().filter { $0.identifier.hasPrefix("lesson.chord.string.") }
+        let heard = Set((1...6).filter { number in
+            checks.contains { $0.identifier == "lesson.chord.string.\(number).heard" }
+        })
+        storeFrame("52b-lesson-chord", picture: picture,
+                   ok: ringing && checks.count == 6 && heard == Set(1...6),
+                   ringing ? "\(heard.count) of 6 strings heard; \(checks.count) checks visible" : "the chord step never heard every string")
     }
 
     /// App Store frame #8: Strum to tune, every string of the guitar read from one strum (polyphonic, the tuner no

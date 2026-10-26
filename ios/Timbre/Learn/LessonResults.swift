@@ -134,6 +134,7 @@ struct LessonResults: View {
             // The stars are read as one fact: "2 of 3 stars".
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(Text("\(result.stars) of 3 stars"))
+            .accessibilityIdentifier("lesson.results.stars.\(result.stars)")
             // Where the burst behind them is drawn (outside the scroll view, so its ring is never cut).
             .onGeometryChange(for: CGPoint.self) { proxy in
                 let frame = proxy.frame(in: resultsSpace)
@@ -279,6 +280,7 @@ struct LessonResults: View {
         .overlay(RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous).strokeBorder(leveled ? Palette.starGold.opacity(0.6) : .clear, lineWidth: 1.5))
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("Level \(level.number)"))
+        .accessibilityIdentifier("lesson.results.level")
     }
 
     /// One thing the lesson earned: a badge, a quest, Today's set.
