@@ -1,0 +1,25 @@
+{
+  "locale": "nl",
+  "change": "Normalize oekelele to standard ukelele in instrument labels, related achievements and unchanged purchase-term sentences. No price, cancellation, timing or entitlement semantics changed.",
+  "author_review": "Dutch lesson author flagged spelling inconsistency; parent independently confirmed and applied bounded spelling replacement.",
+  "references": [
+    "https://rijmwoordenboek.vandale.nl/begint-met-Ukel",
+    "https://www.woorden.org/foute-spelling/13"
+  ],
+  "files": [
+    {
+      "file": "tools/l10n/translations/nl.json",
+      "before_sha256": "2d55b4c8f3be103cd3dc4993e23cdb7cd80136b42dd9f0110829f19f24f481f9",
+      "after_sha256": "66d208d91c1e57ebb766e21833a29564990bdb827afd3f394f04af8d4c64d9e8",
+      "replacements": 5
+    },
+    {
+      "file": "ios/Timbre/Resources/nl.lproj/Localizable.strings",
+      "before_sha256": "8d3a23eb2f77c1ea5b06a046834e17eac4d64534d6676dcc4c35d99eca008720",
+      "after_sha256": "16dccec3dbf824bdedaaa57878793e5b53a0320caa48b28dae159f6773641f73",
+      "replacements": 7
+    }
+  ],
+  "status": "applied locally; no native/device certification",
+  "historical_review": "Earlier back-translation evidence preserves its original target hashes; this subsequent spelling-only change is recorded separately."
+}

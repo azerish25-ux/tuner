@@ -55,8 +55,6 @@ struct PaywallView: View {
     @State private var exitOfferShown = false
     /// The App Store's offer-code sheet ("Redeem code").
     @State private var redeeming = false
-    /// Room at the top of the yearly card for the lower half of its tag (the tag stops growing at xxxLarge).
-    @ScaledMetric(relativeTo: .caption2) private var tagRoom: CGFloat = 11
 
     /// The plans on offer: the year and the month, and the lifetime unlock everywhere but onboarding (unless its test
     /// arm brings it back, or the storefront has nothing else).
@@ -877,10 +875,8 @@ struct PaywallView: View {
             // The cards' first arrangement in which every card fits (`PlanFace`), the same for all three: the saving
             // beside the name, else under the price, else everything stacked (the largest text sizes, long
             // translations). Each card carries its own tag (`planRow`), so a tag only ever shows on its card.
-            ViewThatFits(in: .horizontal) {
-                planGroup(.inline)
-                if commerce.annual != nil && annualSaving != nil { planGroup(.savingUnderPrice) }
-                planGroup(.stacked)
+            PaywallPlanArrangements(hasSaving: commerce.annual != nil && annualSaving != nil) { arrangement in
+                planGroup(arrangement)
             }
             .transition(.opacity)
         }
@@ -913,18 +909,6 @@ struct PaywallView: View {
         return String(localized: "\(days) days free")
     }
 
-    /// "14 days free" centred on a card's top edge, in mint. It is part of the card (an overlay of its plate), so it
-    /// appears, fades and gives under the finger with the card and never shows without it.
-    private func planTag(_ text: String) -> some View {
-        Badge(Text(verbatim: text), style: .solid(Palette.mint))
-            .shadow(color: Palette.stage.opacity(0.5), radius: 4, y: 1)
-            .padding(.trailing, 14)
-            .alignmentGuide(.top) { dimensions in dimensions[VerticalAlignment.center] }
-            .allowsHitTesting(false)
-            // The card says it (its accessibility value).
-            .accessibilityHidden(true)
-    }
-
     /// The stage's spinner, holding the plans' place while StoreKit answers, so nothing jumps when they arrive.
     private var planSkeleton: some View {
         StageSpinner("Plans are loading.")
@@ -932,10 +916,10 @@ struct PaywallView: View {
             .frame(height: showsLifetime ? Self.plansHeight : Self.subscriptionPlansHeight)
     }
 
-    /// The three plan cards at the default text size (the yearly one with its tag's room, the quieter lifetime one)
-    /// and the gaps between them; without the lifetime card, the two subscriptions.
-    private static let plansHeight: CGFloat = 60 + 56 + 48 + 2 * 8
-    private static let subscriptionPlansHeight: CGFloat = 60 + 56 + 8
+    /// Loading estimates at the default text size, including the yearly offer's own row. Once products arrive,
+    /// the measured cards replace these estimates and may grow to fit their localized text.
+    private static let plansHeight: CGFloat = 82 + 56 + 48 + 2 * 8
+    private static let subscriptionPlansHeight: CGFloat = 82 + 56 + 8
 
     /// The yearly price as a week of it ("$0.67 a week"): the product's own price over 52, in the storefront's currency.
     private func perWeek(_ product: Product) -> String {
@@ -973,9 +957,8 @@ struct PaywallView: View {
         Haptics.shared.selection()
     }
 
-    /// A plan card: the check, then its face (`PlanFace`) in the group's arrangement. The name is never broken across
-    /// lines. A tagged card (the yearly one) keeps room at its top for the tag over its edge, and carries the tag itself,
-    /// over its plate.
+    /// A plan card: its offer gets a measured row above the check and price, never an overlay. The compact
+    /// arrangements keep names on one line; the stacked fallback lets longer localized names and prices wrap.
     private func planRow(_ product: Product, role: String, title: LocalizedStringKey, detail: String, saving: Int?, anchor: String? = nil,
                          tag: String? = nil, quiet: Bool = false, arrangement: PlanFace.Arrangement) -> some View {
         let isSelected = selected?.id == product.id
@@ -983,25 +966,12 @@ struct PaywallView: View {
         let face = PlanFace(title: title, detail: detail, price: product.displayPrice, saving: saving, anchor: anchor,
                             selected: isSelected, quiet: quiet)
         let inset: CGFloat = quiet ? 7 : 9
-        // Stacked, the check stands on the name's line; otherwise centred on the card.
-        let rowAlignment: VerticalAlignment = arrangement == .stacked ? .firstTextBaseline : .center
         return Button { select(product) } label: {
-            HStack(alignment: rowAlignment, spacing: 12) {
-                Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
-                    .font(.system(size: 22, weight: .semibold))
-                    .foregroundStyle(isSelected ? Palette.mint : Palette.inkFaint)
-                    .contentTransition(.symbolEffect(.replace))
-                    .accessibilityHidden(true)
-                face.arranged(arrangement)
-            }
-            .padding(.horizontal, 14)
-            .padding(.top, tag == nil ? inset : max(inset, min(tagRoom, 18)))
-            .padding(.bottom, inset)
-            .modifier(PlanPlate(selected: isSelected, quiet: quiet))
-            .contentShape(shape)
-            .overlay(alignment: .topTrailing) {
-                if let tag { planTag(tag) }
-            }
+            PaywallPlanCardContent(face: face, tag: tag, arrangement: arrangement)
+                .padding(.horizontal, 14)
+                .padding(.vertical, inset)
+                .modifier(PlanPlate(selected: isSelected, quiet: quiet))
+                .contentShape(shape)
         }
         .buttonStyle(PlanPressStyle())
         .accessibilityElement(children: .combine)
@@ -1556,13 +1526,82 @@ private struct TrustLine: ViewModifier {
     }
 }
 
+/// All plan cards use the first arrangement that fits their full text. Accessibility sizes go straight to
+/// the wrapping stack; other sizes try both compact arrangements before falling back to it.
+struct PaywallPlanArrangements<Cards: View>: View {
+    @Environment(\.dynamicTypeSize) private var typeSize
+    let hasSaving: Bool
+    @ViewBuilder let cards: (PlanFace.Arrangement) -> Cards
+
+    var body: some View {
+        if typeSize.isAccessibilitySize {
+            cards(.stacked)
+        } else {
+            ViewThatFits(in: .horizontal) {
+                cards(.inline)
+                if hasSaving { cards(.savingUnderPrice) }
+                cards(.stacked)
+            }
+        }
+    }
+}
+
+/// A card's offer and its selectable plan are separate measured rows. The offer can grow to any number of lines
+/// without covering the name, comparison or StoreKit price. The whole card remains one accessible button.
+@MainActor
+struct PaywallPlanCardContent: View {
+    let face: PlanFace
+    let tag: String?
+    let arrangement: PlanFace.Arrangement
+
+    var body: some View {
+        VStack(alignment: .trailing, spacing: 6) {
+            if let tag {
+                PaywallOfferBadge(text: tag, trial: true)
+                    // The card says this once, as its accessibility value.
+                    .accessibilityHidden(true)
+            }
+            HStack(alignment: arrangement == .stacked ? .firstTextBaseline : .center, spacing: 12) {
+                Image(systemName: face.selected ? "checkmark.circle.fill" : "circle")
+                    .font(.system(size: 22, weight: .semibold))
+                    .foregroundStyle(face.selected ? Palette.mint : Palette.inkFaint)
+                    .contentTransition(.symbolEffect(.replace))
+                    .accessibilityHidden(true)
+                face.arranged(arrangement)
+            }
+        }
+    }
+}
+
+/// Trial terms and savings stay legible at accessibility sizes and in longer translations. Unlike the compact
+/// shared badge, this offer can wrap and grow; a rounded rectangle keeps padding around every line.
+struct PaywallOfferBadge: View {
+    let text: String
+    var trial = false
+
+    var body: some View {
+        Text(verbatim: text)
+            .font(Typeface.badge).tracking(1)
+            .textCase(.uppercase)
+            .multilineTextAlignment(.center)
+            .lineLimit(nil)
+            .fixedSize(horizontal: false, vertical: true)
+            .foregroundStyle(trial ? Palette.onAccent : Palette.onGold)
+            .padding(.horizontal, 7).padding(.vertical, 3)
+            .background {
+                let shape = RoundedRectangle(cornerRadius: Metrics.cornerChip, style: .continuous)
+                if trial { shape.fill(Palette.mint) } else { shape.fill(Palette.proGold) }
+            }
+    }
+}
+
 /// A plan card's text beside its check: the name, what it comes to (a week of the year's price), the price and, for the
 /// year, the saving and twelve monthly payments ("12 × $6.99") beside the price. `PaywallView.plans` shows the cards in
-/// the first arrangement that fits them all: the saving beside the name, else under the price, else all stacked. The name is
-/// never broken across lines (it once hyphenated "Year-ly" beside the saving). Quiet (Lifetime): smaller type in
-/// softer ink until chosen, a third option that doesn't compete with the two subscriptions.
+/// the first arrangement that fits them all: the saving beside the name, else under the price, else all stacked.
+/// The fallback wraps instead of shrinking text, and separates the price from its comparison. Quiet (Lifetime):
+/// smaller type in softer ink until chosen, a third option that doesn't compete with the two subscriptions.
 @MainActor
-private struct PlanFace {
+struct PlanFace {
     enum Arrangement { case inline, savingUnderPrice, stacked }
 
     let title: LocalizedStringKey
@@ -1609,20 +1648,23 @@ private struct PlanFace {
                 name(fixed: false)
                 if let saving { savingChip(saving) }
                 detailText(wraps: true)
-                pricePair.padding(.top, 2)
+                VStack(alignment: .leading, spacing: 3) {
+                    priceText
+                    if let anchor { anchorPrice(anchor) }
+                }
+                .padding(.top, 2)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 
-    /// One line, always: at its full size beside the rest, shrinking a little when stacked.
+    /// Compact layouts measure the whole name. The stacked fallback wraps at its full Dynamic Type size.
     private func name(fixed: Bool) -> some View {
         Text(title)
             .font(quiet ? Font.subheadline.weight(.semibold) : Font.headline)
             .foregroundStyle(quiet && !selected ? Palette.inkSoft : Palette.ink)
-            .lineLimit(1)
-            .minimumScaleFactor(fixed ? 1 : 0.6)
-            .fixedSize(horizontal: fixed, vertical: false)
+            .lineLimit(fixed ? 1 : nil)
+            .fixedSize(horizontal: fixed, vertical: !fixed)
     }
 
     private func detailText(wraps: Bool) -> some View {
@@ -1630,7 +1672,6 @@ private struct PlanFace {
             .font(quiet ? Font.caption : Font.footnote)
             .foregroundStyle(selected ? Palette.mint : Palette.inkSoft)
             .lineLimit(wraps ? nil : 1)
-            .minimumScaleFactor(wraps ? 1 : 0.8)
             .fixedSize(horizontal: false, vertical: wraps)
     }
 
@@ -1639,7 +1680,8 @@ private struct PlanFace {
         return Text(verbatim: price)
             .font(Typeface.number(step))
             .foregroundStyle(quiet && !selected ? Palette.inkSoft : Palette.ink)
-            .lineLimit(1).minimumScaleFactor(0.7)
+            .lineLimit(nil)
+            .fixedSize(horizontal: false, vertical: true)
     }
 
     private func prices(withSaving: Bool) -> some View {
@@ -1662,13 +1704,14 @@ private struct PlanFace {
     private func anchorPrice(_ anchor: String) -> some View {
         Text(verbatim: anchor)
             .font(Typeface.number(.caption)).foregroundStyle(Palette.inkFaint)
-            .lineLimit(1).minimumScaleFactor(0.7)
+            .lineLimit(nil)
+            .fixedSize(horizontal: false, vertical: true)
             .accessibilityLabel(Text("\(anchor) if paid monthly"))
     }
 
     /// "Save 58%", in Pro gold.
     private func savingChip(_ percent: Int) -> some View {
-        Badge(Text(verbatim: String(localized: "Save \(percent)%")), style: .pro)
+        PaywallOfferBadge(text: String(localized: "Save \(percent)%"))
     }
 }
 

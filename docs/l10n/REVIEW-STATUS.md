@@ -255,3 +255,21 @@ layout repair requires fresh simulator verification. No global accessibility or 
 linguistic certification is claimed. Store text remains independently AI reviewed;
 locale-specific assets, live store/account requirements and final device QA remain
 separate gates rather than presumed complete.
+
+## Measured paywall offers and preserved ongoing drafts
+
+The annual trial badge now occupies a measured row instead of an overlay over the
+StoreKit price. Localized badges and stacked plan text wrap at full readable size;
+accessibility sizes select the stacked arrangement. Four hosted-view regression tests
+cover long offers, RTL, narrow widths and the actual phone-width arrangement selector.
+These Swift tests still require Xcode execution; source/resource checks alone are not
+rendered proof. No purchase wording or entitlement behavior changes were introduced.
+
+Dutch instrument terminology is normalized to standard `ukelele`, with a separate
+before/after receipt under `reviews/nl-ui-terminology.json`. Historical purchase review
+hashes remain historical, not rewritten to pretend they cover later spelling changes.
+
+`tools/l10n/drafts/ongoing/` preserves timestamped, partial, unreviewed Finnish, Dutch,
+Swedish, Danish, Norwegian and Romanian authoring work. These drafts are not imported
+or included in the completed-language count. Its verifier checks hashes and source
+bindings, not translation quality. Work created after each snapshot remains ongoing.
