@@ -349,6 +349,7 @@ struct SongPerformStep: View {
                 Eyebrow("Score", color: accent, style: .display)
             }
             .accessibilityElement(children: .combine)
+            .accessibilityIdentifier("performance.score")
         }
         .padding(.horizontal, Metrics.gutter).padding(.top, 8)
     }

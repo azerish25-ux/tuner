@@ -70,6 +70,20 @@ class LocalizedCaptureChecksTests(unittest.TestCase):
         self.assertIn('settle(45)', chord)
         self.assertNotIn('waitForExistence', chord)
 
+    def test_additional_store_frames_use_semantic_controls_and_state(self):
+        checks = (ROOT / 'ios/TimbreUITests/TimbreUITests.swift').read_text()
+        for obsolete in ['node.label == "Combo"', 'node.label == "Lyrics"', 'node.label.hasSuffix("Score")', 'summary.hasPrefix("Tune ")', 'app.buttons["Folk & world strings"]']:
+            self.assertNotIn(obsolete, checks)
+        for identifier in ['performance.combo.', 'performance.lyrics', 'performance.score', 'instruments.family.folk_world_strings', 'strum.summary.tune']:
+            self.assertIn(identifier, checks)
+        self.assertIn('hud == nil || score == nil || regions.count != 3', checks)
+        self.assertIn('target.frame.midX > app.frame.midX', checks)
+        hud = (ROOT / 'ios/Timbre/Learn/HighwayHUD.swift').read_text()
+        lyrics = (ROOT / 'ios/Timbre/Learn/HighwayLyrics.swift').read_text()
+        self.assertIn('.accessibilityLabel(Text("Combo"))', hud)
+        self.assertIn('.accessibilityLabel(Text("Lyrics"))', lyrics)
+        self.assertIn('.accessibilityIdentifier("performance.lyrics")', lyrics)
+
     def test_focused_ci_checks_ltr_rtl_and_requires_real_valid_attachments(self):
         source = (ROOT / '.github/workflows/localized-capture-check.yml').read_text()
         for language in ['en', 'de', 'ar']:

@@ -48,6 +48,7 @@ struct HighwayLyrics: View {
         .dynamicTypeSize(...DynamicTypeSize.xxLarge)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("Lyrics"))
+        .accessibilityIdentifier("performance.lyrics")
         .accessibilityValue(Text(verbatim: spoken(cue)))
     }
 

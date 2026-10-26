@@ -1,5 +1,5 @@
 {
-  "status": "implementation-ready-for-ci-not-device-verified",
+  "status": "pilot-partially-verified-further-localized-selectors-await-ci",
   "scope": [
     "52b-lesson-chord",
     "62b-lesson-results-violin"
@@ -17,9 +17,21 @@
   ],
   "ci_workflow": ".github/workflows/localized-capture-check.yml",
   "limits": [
-    "Full tour still has other English selectors.",
-    "iPad capture setup still defaults to English.",
+    "New additional selectors are locally contract-tested, not simulator-verified.",
+    "General tour/tab selectors and iPad localization still need work.",
     "No all50 listing screenshot/preview completion claimed.",
-    "Swift compilation and real simulator captures remain pending."
+    "German and Arabic two-frame pilot success does not certify every screen, locale or device."
+  ],
+  "verified_pilot": {
+    "source_commit": "c5f19f4b1fcb9b9a8032e3a9528755308a8c3191",
+    "run": 40321755946,
+    "de": "passed all three tests",
+    "ar": "passed all three tests",
+    "en": "failed chord snapshot and genuinely clipped imperfect-take result; timing repair pushed d8757b7"
+  },
+  "additional_implementation": [
+    "Instrument family chips use stable catalog IDs; rail drag follows actual off-screen target side for LTR/RTL.",
+    "Performance combo count, score and lyrics use semantic identifiers while preserving localized accessibility labels. Missing HUD/score regions fail rather than vacuously passing empty-region comparison.",
+    "Strum capture checks actual tune verdict, not English Tune prefix."
   ]
 }

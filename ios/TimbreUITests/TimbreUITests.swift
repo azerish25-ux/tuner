@@ -974,9 +974,10 @@ final class TimbreUITests: XCTestCase {
         // The reading lands about a second after the screen opens; its ring dies away 1.8 s after the strum's attack.
         settle(1.2)
         let picture = stillScreenshot(timeout: 4)
-        let summary = (try? element("strum.summary").snapshot())?.label ?? ""
-        let covered = element("paywall.purchase").exists || app.navigationBars["Choose instrument"].exists
-        storeFrame("11b-tune-strum", picture: picture, ok: read && summary.hasPrefix("Tune ") && !covered,
+        let summaryNode = try? element("strum.summary.tune").snapshot()
+        let summary = summaryNode?.label ?? ""
+        let covered = element("paywall.purchase").exists || element("instruments.done").exists
+        storeFrame("11b-tune-strum", picture: picture, ok: read && summaryNode != nil && !covered,
                    "the strum screen reads '\(summary)' (Fine-tune button: \(read), a sheet over it: \(covered)), not the demo strum")
     }
 
@@ -1029,12 +1030,12 @@ final class TimbreUITests: XCTestCase {
         var hud: CGRect?
         var score: CGRect?
         for node in appNodes() {
-            if node.label == "Combo" {
-                if let value = node.value as? String { combo = Int(value.prefix { $0.isNumber }) ?? 0 }
+            if node.identifier.hasPrefix("performance.combo.") {
+                combo = Int(node.identifier.dropFirst("performance.combo.".count)) ?? 0
                 hud = node.frame
             }
-            if node.label == "Lyrics", let value = node.value as? String { words = value.lowercased() }
-            if node.label.hasSuffix("Score") { score = node.frame }
+            if node.identifier == "performance.lyrics", let value = node.value as? String { words = value.lowercased() }
+            if node.identifier == "performance.score" { score = node.frame }
         }
         let regions = hudRegions(hud: hud, score: score)
         let steady = pairs.firstIndex { StillScreen.regionsMatch($0.0, $0.1, regions) }
@@ -1045,6 +1046,8 @@ final class TimbreUITests: XCTestCase {
             problem = "\(song)'s take never stayed on screen for \(Self.takeHold) s (the stage's Perform button stayed lit; opened: \(opened))"
         } else if !(opened && combo >= 8 && inChorus) {
             problem = "\(song)'s take shows a combo of \(combo) and the words '\(words)' (opened: \(opened)), not a run of 8+ in the chorus"
+        } else if hud == nil || score == nil || regions.count != 3 {
+            problem = "the semantic combo or score region is missing"
         } else if steady == nil {
             problem = "the HUD changed between every pair of pictures 120 ms apart (\(regions.count) regions): a counter mid-change"
         } else {
@@ -1074,15 +1077,24 @@ final class TimbreUITests: XCTestCase {
         launch(scene: "instrument-wall")
         XCTAssertTrue(element("instruments.search").waitForExistence(timeout: 25), "The instrument browser never opened")
         settle(1)
-        let folk = app.buttons["Folk & world strings"].firstMatch
-        let guitarChip = app.buttons["Guitar"].firstMatch
+        let folk = element("instruments.family.folk_world_strings")
+        let guitarChip = element("instruments.family.guitar")
         // From one snapshot (`isHittable` throws while the chip is off the rail's edge): its centre is on screen.
         func onScreen(_ target: XCUIElement) -> Bool {
             guard let box = (try? target.snapshot())?.frame, !box.isEmpty, box.midX.isFinite else { return false }
             return app.frame.insetBy(dx: 8, dy: 8).contains(CGPoint(x: box.midX, y: box.midY))
         }
+        let railY = (try? guitarChip.snapshot())?.frame.midY
         for _ in 0..<5 where !onScreen(folk) {
-            if guitarChip.exists { guitarChip.swipeLeft() } else { break }
+            guard let railY, railY.isFinite,
+                  let target = try? folk.snapshot(), !target.frame.isEmpty else { break }
+            // Follow the off-screen target's actual side, not an English/LTR-only swipe.
+            let towardLeft = target.frame.midX > app.frame.midX
+            let startX = app.frame.width * (towardLeft ? 0.85 : 0.15)
+            let endX = app.frame.width * (towardLeft ? 0.15 : 0.85)
+            let origin = app.coordinate(withNormalizedOffset: .zero)
+            origin.withOffset(CGVector(dx: startX, dy: railY))
+                .press(forDuration: 0.1, thenDragTo: origin.withOffset(CGVector(dx: endX, dy: railY)))
             settle(0.6)
         }
         if onScreen(folk) { tapIfPresent(folk) }

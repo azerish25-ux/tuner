@@ -44,6 +44,7 @@ struct HighwayHUD: View {
         .cappedControl(Text("Combo \(combo), ×\(level)"), symbol: "flame.fill", cap: .xxLarge)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("Combo"))
+        .accessibilityIdentifier("performance.combo.\(combo)")
         .accessibilityValue(Text(verbatim: "\(combo), ×\(level)"))
     }
 

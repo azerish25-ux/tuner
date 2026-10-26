@@ -61,7 +61,7 @@ struct InstrumentsView: View {
             .scrollDismissesKeyboard(.interactively)
         }
         .background(StageBackground(motes: false))
-        .toolbar { if picker { ToolbarItem(placement: .topBarTrailing) { Button("Done") { dismiss() } } } }
+        .toolbar { if picker { ToolbarItem(placement: .topBarTrailing) { Button("Done") { dismiss() }.accessibilityIdentifier("instruments.done") } } }
         .sheet(isPresented: $creating) {
             if let base = store.catalog.tuning(id: store.instrument.defaultTuningId) {
                 CustomTuningEditor(base: base).presentationBackground(Palette.stage)
@@ -328,9 +328,11 @@ struct InstrumentsView: View {
         EdgeRail(selection: family ?? Self.allFamilies) {
             Button("All") { family = nil }.buttonStyle(ChipButtonStyle(selected: family == nil))
                 .id(Self.allFamilies)
+                .accessibilityIdentifier("instruments.family.all")
             ForEach(store.catalog.families) { group in
                 Button(group.name.localized) { withAnimation(Motion.quick) { family = group.id } }.buttonStyle(ChipButtonStyle(selected: family == group.id))
                     .id(group.id)
+                    .accessibilityIdentifier("instruments.family.\(group.id)")
             }
         }
     }

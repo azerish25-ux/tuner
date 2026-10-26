@@ -121,6 +121,18 @@ struct StrumTuneView: View {
         let title = self.headline(board, zoomed: zoomed, done: done)
         let line = self.detail(board, zoomed: zoomed, done: done)
         let allInTune = board.verdict == .allInTune || done
+        let state: String
+        if !listening { state = "inactive" }
+        else if done { state = "done" }
+        else if zoomed != nil { state = "fine-tune" }
+        else {
+            switch board.verdict {
+            case .waiting: state = "waiting"
+            case .allInTune: state = "all-in-tune"
+            case .tune: state = "tune"
+            case .missing: state = "missing"
+            }
+        }
         return VStack(spacing: 6) {
             HStack(spacing: 10) {
                 if allInTune {
@@ -147,7 +159,7 @@ struct StrumTuneView: View {
         .fixedSize(horizontal: false, vertical: true)
         .animation(Motion.adaptive(Motion.pluck, reduceMotion: reduceMotion), value: title)
         .accessibilityElement(children: .combine)
-        .accessibilityIdentifier("strum.summary")
+        .accessibilityIdentifier("strum.summary.\(state)")
     }
 
     /// Listening, or about to (the microphone takes a moment to start when the screen opens).
