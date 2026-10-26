@@ -1,0 +1,58 @@
+{
+  "source_commit": "608796707ab5155fe16fe71f30e2ead0580f0a9c",
+  "run": 40355877297,
+  "job": 121688071942,
+  "locale": "de_DE",
+  "device": "iPhone 17 Pro",
+  "conclusion": "success",
+  "tests_passed": 8,
+  "required_frames": 6,
+  "artifact": 12666114978,
+  "artifact_sha256": "03c9eb5952a4cc484fc2ec7a286eb2db06a35fe1c02734604fb220e39972509b",
+  "actual_visual_review": "All six exported images directly inspected. Song shows readable single chorus lines, German score/title/buttons and combo61 without overlapping digits; chord shows sixheardstrings; violin results show three stars,100% and complete level/share controls. Tuner and instrument family texts are readable. Strum frame has a truncated approximate-reading badge (≈ geschä…); test pass does not certify this badge layout.",
+  "layout_followup": "StrumEstimateBadge now proposes locale-independent ViewThatFits: full localized text at natural width or its existing compact≈symbol. Parent lane VoiceOver retains full localized estimate description. Fresh simulator image required.",
+  "not_claimed": [
+    "all50listingassetsets",
+    "native-human-language-certification",
+    "full-app-accessibility-pass",
+    "AppStoreConnect-release-readiness"
+  ],
+  "attachments": [
+    {
+      "attachment": "10b-tune-locked_0_267B092B-238B-4DBB-B1C0-8C512ECF4A32.png",
+      "sha256": "982d00759ab40d6c11625b410c67b280a692d6a5ab20d25654db90ffecb1b452",
+      "test": "TimbreUITests/test11StoreTunerLock()",
+      "failure_attachment": false
+    },
+    {
+      "attachment": "52b-lesson-chord_0_C0274DE9-C5AC-4180-912F-DE5AFB81E4A5.png",
+      "sha256": "691be4a21ada6cbcbd7f43efa40f39903e5147c4a56e7b71b73b9538bc95981a",
+      "test": "TimbreUITests/test12StoreChord()",
+      "failure_attachment": false
+    },
+    {
+      "attachment": "11b-tune-strum_0_9CFD8D62-8FD5-4908-8A10-E87D926D936D.png",
+      "sha256": "a9e0bffe38a8734dd3d45387eed912fc3756baafe93580ed8e2ce35feabde410",
+      "test": "TimbreUITests/test13StoreStrum()",
+      "failure_attachment": false
+    },
+    {
+      "attachment": "65-song-perform_0_0D51600D-CD60-4BAA-976E-F060997431A5.png",
+      "sha256": "5d9d2531a42aab9bed31f24a8b85d3006e57067862391fae1fc12d14ee113b55",
+      "test": "TimbreUITests/test14StoreSongPerform()",
+      "failure_attachment": false
+    },
+    {
+      "attachment": "31b-instruments-folk_0_21AFD37C-52F7-40EE-B61B-6CB5E598E2FE.png",
+      "sha256": "4a5b7a2381914acbaf3a9f2ca22205da35069746386ea5b00124d4b11b455b70",
+      "test": "TimbreUITests/test17StoreInstrumentWall()",
+      "failure_attachment": false
+    },
+    {
+      "attachment": "62b-lesson-results-violin_0_659238EC-8F5E-4096-ACD3-0734539F10C2.png",
+      "sha256": "b731b00bc67f26de5f791ec688cac26ab32a37576ec2d0f9736e13b1320f91c4",
+      "test": "TimbreUITests/test19StoreViolinResults()",
+      "failure_attachment": false
+    }
+  ]
+}

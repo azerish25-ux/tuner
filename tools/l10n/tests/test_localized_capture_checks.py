@@ -218,6 +218,15 @@ class LocalizedCaptureChecksTests(unittest.TestCase):
         self.assertIn('the actual performance capture barrier was not reached', method)
         self.assertIn('heldBeat == nil || heldBeat != endingHeldBeat || combo != endingCombo', method)
 
+    def test_estimate_badge_uses_complete_label_or_existing_symbol(self):
+        source = (ROOT / 'ios/Timbre/Tune/StrumMeters.swift').read_text()
+        badge = source.split('struct StrumEstimateBadge:', 1)[1].split('struct StrumTurnBadge:', 1)[0]
+        self.assertIn('ViewThatFits(in: .horizontal)', badge)
+        self.assertIn('Text("≈ estimate").fixedSize(horizontal: true, vertical: false)', badge)
+        self.assertGreaterEqual(badge.count('Text(verbatim: "≈")'), 2)
+        self.assertIn('.accessibilityHidden(true)', badge)
+        self.assertNotIn('Locale.current', badge)
+
     def test_chord_capture_waits_sparsely_and_captures_confirmed_completion(self):
         source = (ROOT / 'ios/TimbreUITests/TimbreUITests.swift').read_text()
         chord = source.split('func test12StoreChord()', 1)[1].split('func ', 1)[0]

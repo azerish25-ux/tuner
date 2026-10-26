@@ -295,7 +295,17 @@ struct StrumEstimateBadge: View {
     var body: some View {
         let strong = contrast == .increased
         Group {
-            if compact { Text(verbatim: "≈") } else { Text("≈ estimate") }
+            if compact {
+                Text(verbatim: "≈")
+            } else {
+                // A long localized label must not become an unreadable ellipsis in a six-string lane.
+                // Use the existing compact symbol when the complete label cannot fit; VoiceOver
+                // still reads the lane's full localized estimate description.
+                ViewThatFits(in: .horizontal) {
+                    Text("≈ estimate").fixedSize(horizontal: true, vertical: false)
+                    Text(verbatim: "≈")
+                }
+            }
         }
         .font(Typeface.badge)
         .foregroundStyle(strong ? Palette.ink : Palette.inkSoft)
