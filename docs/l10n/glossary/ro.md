@@ -1,6 +1,6 @@
 # Timbre glossary — ro
 
-Status: AI-drafted and AI-reviewed terminology decisions; not human-reviewed or native-speaker signed off. Device terminology verification remains pending.
+Status: Existing app terminology with AI-authored lesson additions. The lesson draft is not independently reviewed, human-reviewed or native-speaker signed off. Device terminology verification remains pending.
 
 ## 1. Locale decisions
 - Locale/variant: ro; standard modern written language, regional-neutral.
@@ -56,7 +56,7 @@ Status: AI-drafted and AI-reviewed terminology decisions; not human-reviewed or 
 | Restore purchases | `Restore purchases` | Restaurează achizițiile |
 | Terms | `Terms` | Termeni |
 | Next | `Next` | Urmează |
-| Again | `Again` | Again |
+| Again | `Again` | Din nou |
 | Slower | `Slower` | Mai încet |
 | Songs | | Cântece |
 | Quest | | Misiune |
@@ -92,8 +92,8 @@ Status: AI-drafted and AI-reviewed terminology decisions; not human-reviewed or 
 | major scale / pentatonic box | | gamă majoră / poziție pentatonică |
 | half step / whole step / interval / third / fifth / octave | | semiton / ton / interval / terță / cvintă / octavă |
 | bar | | măsură |
-| beat / downbeat / count | | bătaie / timp accentuat / numărătoare |
-| strum / downstroke / upstroke / mute | | ciupirea corzilor / lovitură în jos / lovitură în sus / amortizare |
+| beat / downbeat / count | | timp / primul timp accentuat / numărătoare |
+| strum / downstroke / upstroke / mute | | lovirea corzilor (treci peste corzi) / lovitură în jos / lovitură în sus / amortizare |
 | pick (plectrum / choose) | | pană / alege |
 | fingerpicking / hammer-on / pull-off / slide / bend / vibrato | | ciupire cu degetele / hammer-on / pull-off / glisare / bend / vibrato |
 | bowing / open-string bowing | | cântat cu arcușul / cântat pe corzi libere cu arcușul |
@@ -125,3 +125,111 @@ Instrument courses use the catalogue instrument names. Songs uses the term above
 
 ## 4. Words that mislead
 Tune means bringing pitch to the target; a tune is a melody. Sharp/flat direction uses the existing flat/sharp labels (too low/high), not accidental names. Bar means musical measure, key means tonality, pick means plectrum/plucking or choose according to context. Lock means pitch confirmation, not a padlock. Take means recorded attempt, run a streak or passage attempt, not running. Chart means chord diagram/sheet unless statistical context. Intonation means pitch accuracy over a sustained tone, not saddle adjustment or speech stress. Practice means musical practice; Feel means vibration feedback, not emotion. Chop/chunk are muted rhythmic strokes, never a missed note.
+
+## 5. Lesson draft decisions (2026-10-26; independent review pending)
+- Bare Second, Third and Fourth are musical intervals: secundă, terță, cvartă. Explicit finger labels are al doilea deget, al treilea deget, al patrulea deget.
+- Note values: whole note = notă întreagă; half note = doime; quarter note = pătrime; eighth note = optime; sixteenth note = șaisprezecime.
+- Root = fundamentală; tonic = tonică; pulse = pulsație; beat = timp; strum uses lovirea corzilor or a natural instruction to trece peste corzi.
+- Ode to Joy = Odă bucuriei. Mary Had a Little Lamb is retained as a song name. Letters in a Shoebox = Scrisori într-o cutie de pantofi.
+- E A D G B E mnemonic: Elevii Atenți Deprind Game Bine Exersând. Initials and note names are preserved.
+
+### Shared-key and instrument decisions
+- Up / Down = În sus / În jos (both melodic direction and pick strokes; parent independently flagged contexts and guarded correction receipt saved).
+- Same / Different = La fel / Diferit (neutral for both note and chord comparisons).
+- Walking bass = bas umblător; chord chart = foaie de acorduri where it is a chord sequence, not a fingering diagram.
+- Triad = trison; inversion = răsturnare. Intervals use major/minor = mare/mică (terță mare/mică, septimă mare/mică); chord-quality descriptions may use major/minor (acord de septimă majoră/minoră). Dorian / Mixolydian = dorian / mixolidian.
+- Violin/cello: frog = talon; stick = baghetă; hair = păr; rosin = sacâz; chin rest = suport pentru bărbie; scroll = volută; tailpiece = cordar; fine tuner = acordor fin; endpin = picior de sprijin; shift = schimbare de poziție; slur = legato; high 2 / low 2 = 2 sus / 2 jos.
+- Mandolin: course = pereche (cor de corzi); chop = atac scurt; ukulele chunk = lovitură mută; crosspicking remains a named technique. Banjo roll = tipar de ciupire, not the literal household noun rulou.
+- Mnemonics adapted with source initials: G C E A = Gospodarii Cuminți Evită Arsurile; E A D G = Elevii Atenți Deprind Game; G D A E = Gândurile Dulci Aduc Energie; C G D A = Câinii Grăbiți Dansează Afară.
+- Note letters, chord symbols, p-i-m-a fingering, D/U stroke notation, form letters and Roman numerals remain unchanged. Genuine source-identical terms, notation, song names and credits are held for independent approval, never padded to evade coverage checks.
+
+### Fixed song-title decisions for the draft
+- Dust on the Dashboard = Praf pe bord
+- Low Tide Radio = Radio la reflux
+- Kite Weather = Vreme de zmeie
+- Halogen = Halogen
+- Ghost Light = Lumina fantomă
+- Rust Belt Shuffle = Shuffle din centura ruginită
+- Basement Weather = Vreme în subsol
+- Glass Satellites = Sateliți de sticlă
+- Porchlight = Lumina de pe verandă
+- Neon Laundromat = Spălătoria cu neon
+- Saltwater Sunday = Duminică la mare
+- Spray Paint Sunrise = Răsărit din spray
+- Sparkler Season = Sezonul steluțelor
+- Gravel Road Two-Step = Two-step pe drumul pietruit
+- Lantern Hill = Dealul felinarelor
+- Roller Rink = Patinoarul cu role
+- Late Checkout = Plecare târzie
+- Market Day = Zi de târg
+- Slow Motion Strobe = Stroboscop cu încetinitorul
+- Jukebox Moon = Luna din tonomat
+- Minuet in G = Menuet în G; Brahms' Lullaby = Cântec de leagăn de Brahms; The Swan = Lebăda; The Carnival of the Animals = Carnavalul animalelor.
+- Other traditional song titles retained unless an established Romanian title has been selected above. Lyric snippets quoted as musical cues stay in their original sung language; surrounding instruction is translated.
+
+
+## 6. Completed lesson-draft conventions (independent review pending)
+- All 6,082 sources have an authored draft in 59 whole-lesson batches. Exact or normalized-identical candidates are held outside the canonical TODO until independently approved; the complete review artifact includes them without disguising their identity.
+- Movable-do curriculum: retain source **do, re, mi, fa, sol, la, ti, do**, including **ti**, and retain the syllable-only exercise answers. Do is the movable tonic here, not fixed C. Do not substitute Romanian fixed-do si for ti, or rewrite pitch data. The first tonic explanation explicitly says „solfegiul relativ”. This policy explains candidates; it is not blanket approval of any invariant.
+- Staff mnemonics preserve the note-letter initials: E G B D F = Elevii Grijulii Bat Darabana Frumos; G B D F A = Gospodarii Buni Dansează Foarte Agil; A C E G = Artiștii Cântă Exerciții Grele. Every follow-up referring to one mnemonic word uses the corresponding adapted word. FACE stays FACE because the note sequence forms that word in Romanian as well.
+- W/H scale recipes retain the source letters. Their question defines W = ton and H = semiton, so the answer sequences remain aligned with the curriculum.
+- English half step/semitone and bar/measure teach synonyms. Where both source words translate to one Romanian term, explain the English label explicitly rather than ask a circular synonym question. The bar quiz asks what the English „bar” means; the explanation says bar and measure both mean măsură. Shared Beat = Timp and Rest = Pauză remain ordinary Romanian.
+- Tie = legătură de prelungire (not slur/legato); dotted quarter = pătrime cu punct; dotted half = doime cu punct; triplet = triolet; syncopation = sincopă; offbeats = contratimpi. In the triplet-count lesson, 1-trip-let / 2-trip-let become 1-ta-ta / 2-ta-ta, three equal syllables each; the swing instruction explicitly selects the final ta. The beat digits and rhythm stay unchanged.
+- Singing = canto; breathe low = respiră abdominal; sustain = menține/susține; lip trill = vibrații ale buzelor. Sung vowel cues remain source syllables where they are the exercise sound (ah, da, loo). Short quoted lyric words used as quiz answers remain the original sung words, including Fly, Wide, Boat, Town and Bethlehem.
+- Banjo mountain minor = minor de munte; roll = tipar de ciupire; forward roll = tipar înainte; alternating-thumb roll = tipar cu degetul mare alternat; pinch = ciupire simultană. Bum-ditty and bum/dit/ty remain the named rhythmic syllables, explained in Romanian.
+- Proper traditional song names without a selected Romanian title are retained consistently; all surrounding instruction is translated. Credits made solely of an author's proper name and year remain exact-source candidates. The complete chosen-title map is song-title-decisions.json in the review handoff.
+
+### Additional fixed song titles
+- Canon in D = Canon în D
+- Largo, New World Symphony = Largo, Simfonia din Lumea Nouă
+- In the Hall of the Mountain King = În peștera regelui munților
+- Silent Night = Noapte de vis
+- Mozart's Symphony No. 40 = Simfonia nr. 40 de Mozart
+- O Christmas Tree = O, brad frumos
+- The Blue Danube = Dunărea albastră
+- Can-can = Cancan
+- Carmen: Prelude = Carmen: Preludiu
+- The Toreador Song / Toreador Song = Aria toreadorului
+- Morning Mood = Dimineața
+- Spring = Primăvara; The Four Seasons = Anotimpurile; The Planets = Planetele
+- Moth and Ember = Molie și jar
+- First Frost = Prima brumă
+- Hammock Season = Sezonul hamacului
+- Glow-in-the-Dark Stars = Stele fosforescente
+- Echo Canyon = Canionul ecourilor
+- Open Windows = Ferestre deschise
+- Scoreboard Lights = Luminile tabelei
+- Carousel at Closing Time = Caruselul la închidere
+- Cedar Smoke = Fum de cedru
+- Rain on the Skylight = Ploaie pe luminator
+- Pocket Change = Mărunțiș
+- Kitchen Slow Dance = Dans lent în bucătărie
+- Houseplants = Plante de apartament
+- Static on Channel Nine = Paraziți pe canalul nouă
+- Boardwalk Comet = Cometa de pe promenadă
+- Mile Marker Zero = Mila zero
+- Last Bell = Ultimul clopoțel
+- Copper Wire = Sârmă de cupru
+- Cold Lake = Lacul rece
+- Parking Lot Cathedral = Catedrala din parcare
+- Keeper's Daughter = Fiica paznicului
+- Snow Globe Town = Orașul din globul cu zăpadă
+- Thistle and Thread = Ciulin și fir
+- Late Bus Home = Autobuz târziu spre casă
+- Velvet Hour = Ora de catifea
+- Rooftop Choir = Corul de pe acoperiș
+- Bright Side of the Block = Partea luminoasă a cartierului
+- Over You Soon = Curând te voi uita
+- Constellation Prize = Premiul constelației
+
+## Independent AI review resolutions, 26 October 2026
+
+These exact-context decisions supersede conflicting draft wording above; they are AI-reviewed, not native-human certification.
+
+- Shared numeral labels: Numărul unu / Numărul doi; melodic and physical direction options: În sus / În jos.
+- Song bridge: Puntea; violin/cello hardware bridge: Călușul. The two source keys are separate.
+- Interval qualities: mare/mică, with Intervale mari și mici for the interval title; Major și minor peste tot remains chord-only.
+- Sustained straight vocal tone: fără vibrato; upper-pitched guitar strings: corzi acute.
+- Reviewed loanword inflections include rifful, soloul, solouri, legatoul, benduri, hammer-onuri, pull-offuri. Apply in the individually reviewed contexts, not as unguarded global replacements.
+- Phrase-quiz wording uses fragment muzical with Primul / Al treilea / Ultimul, preserving gender agreement without changing shared chord answers.
+- Full guarded corrections, identity reasons and source-role proofs: ../reviews/ro/.

@@ -1,0 +1,188 @@
+{
+ "status": "complete-independent-ai-review-of-current-source-deltas",
+ "reviewer": "Romanian independent AI reviewer B",
+ "baseline_pairs": 6082,
+ "current_pairs": 6083,
+ "current_english_sha256": "718a9431e97997dcad904b99eb00f0072385142d63ebb7ffc1c27ff374ca6de3",
+ "current_curriculum_sha256": "f5399d3d13edd2f94b660648e7dd23aceef66a21e095567988bbb6bd38995bf1",
+ "exact_source_set_delta": {
+  "unchanged_baseline_key_source_pairs": 6081,
+  "added_keys": [
+   "Lc9e2d70b52",
+   "L418aadaeed"
+  ],
+  "retired_keys": [
+   "L4d1c8b1ea7"
+  ],
+  "changed_source_strings": []
+ },
+ "additions": [
+  {
+   "locale": "ro",
+   "key": "Lc9e2d70b52",
+   "table": "Learn.strings",
+   "source": "The instrument bridge",
+   "translation": "Călușul",
+   "key_sha256": "f495ef40ff8c79db29e43f40871a6b1b348d455b2bd4802918b5ee6f93ff5630",
+   "source_sha256": "7734fd025e5fb53951f6296b093cdc77c114bba9cceed55915a8205c877c56cd",
+   "translation_sha256": "2e51990f88ef0c3062e96b3d6743d6408b28993c9ef963bb835a581f6ebf073e",
+   "max_length": 42,
+   "reviewer": "Romanian independent AI reviewer B",
+   "status": "reviewed_new_source_translation",
+   "reason": "Physical violin/cello wooden string-support component is căluș, distinct from song-form punte. Both live explain contexts share the reviewed body already using Călușul.",
+   "current_occurrences": [
+    {
+     "pointer": "/courses/3/units/0/lessons/0/steps/1/title",
+     "parents": [
+      "violin",
+      "vln-1",
+      "vln-1-1"
+     ],
+     "source": "The instrument bridge"
+    },
+    {
+     "pointer": "/courses/4/units/0/lessons/0/steps/1/title",
+     "parents": [
+      "cello",
+      "vc-1",
+      "vc-1-1"
+     ],
+     "source": "The instrument bridge"
+    }
+   ]
+  },
+  {
+   "locale": "ro",
+   "key": "L418aadaeed",
+   "table": "Learn.strings",
+   "source": "Major and minor intervals",
+   "translation": "Intervale mari și mici",
+   "key_sha256": "bdf511d26b559b047d8b2acf7770a4f3172f4edda8782a5a38a8076bcf3d7e22",
+   "source_sha256": "3823c80a23a69b9749d58597fa9a9dfda5f71586d283113d679031fac8492c90",
+   "translation_sha256": "d2ddb098b06953b07711d63233615e7ba928627fd368b6569f5472e06f85026d",
+   "max_length": 42,
+   "reviewer": "Romanian independent AI reviewer B",
+   "status": "reviewed_new_source_translation",
+   "reason": "Romanian interval qualities are mari/mici, not chord/key qualities majore/minore. The current heading exclusively introduces seconds, thirds, sixths and sevenths and matches its reviewed Romanian body.",
+   "current_occurrences": [
+    {
+     "pointer": "/courses/8/units/5/lessons/3/steps/0/title",
+     "parents": [
+      "theory",
+      "thy-6",
+      "thy-6-4"
+     ],
+     "source": "Major and minor intervals"
+    }
+   ]
+  }
+ ],
+ "retained_role_reviews": [
+  {
+   "locale": "ro",
+   "key": "L690a93e955",
+   "source": "The bridge",
+   "translation": "Puntea",
+   "source_sha256": "3a4b73ad209fc5ea8e4c8e6f14935c98c1ea1a3a4f11395b909289a0f78871c7",
+   "translation_sha256": "870d619a83db2ce602670897232adceab7af1f3cd0e603631c041b649a893849",
+   "reviewer": "Romanian independent AI reviewer B",
+   "status": "accepted_current_roles",
+   "reason": "Puntea is accepted ONLY for the three current song-form uses. Frozen physical violin/cello title occurrences were not correct under this target and are resolved by remapping to Lc9e2d70b52, not by global replacement.",
+   "current_occurrences": [
+    {
+     "pointer": "/courses/0/units/21/lessons/5/steps/1/options/0",
+     "parents": [
+      "guitar",
+      "gtr-22",
+      "gtr-22-spotlight"
+     ],
+     "source": "The bridge"
+    },
+    {
+     "pointer": "/courses/0/units/21/lessons/5/steps/6/title",
+     "parents": [
+      "guitar",
+      "gtr-22",
+      "gtr-22-spotlight"
+     ],
+     "source": "The bridge"
+    },
+    {
+     "pointer": "/courses/12/units/5/lessons/2/steps/6/title",
+     "parents": [
+      "originals",
+      "orig-3",
+      "orig-jukebox-moon"
+     ],
+     "source": "The bridge"
+    }
+   ]
+  },
+  {
+   "locale": "ro",
+   "key": "L775c034932",
+   "source": "Major and minor everywhere",
+   "translation": "Major și minor peste tot",
+   "source_sha256": "6c2814419cef4533c06f8ceb4793fc4ec17a2a8cfe0e6334c38bf7fb6707dbe5",
+   "translation_sha256": "2f5544971221ea68243f84f2b2c44f9ecdbb1f16ba3631113e4d78675e1265ed",
+   "reviewer": "Romanian independent AI reviewer B",
+   "status": "accepted_current_roles",
+   "reason": "Major și minor peste tot is accepted ONLY for the current chord lesson title. The frozen interval-heading occurrence needs the new source key L418aadaeed and Intervale mari și mici; no incompatible global target change is proposed.",
+   "current_occurrences": [
+    {
+     "pointer": "/courses/7/units/5/lessons/1/title",
+     "parents": [
+      "ear",
+      "ear-6",
+      "ear-6-2"
+     ],
+     "source": "Major and minor everywhere"
+    }
+   ]
+  },
+  {
+   "locale": "ro",
+   "key": "Le56240b1d1",
+   "source": "Tremolo through long notes",
+   "translation": "Tremolo pe notele lungi",
+   "source_sha256": "fef51002764149f0fe4baa67d8866fd2186dcf1b6126e0c152e40f37d14dc33b",
+   "translation_sha256": "87e4e289d6430baa7e269de7b9b42eb4ef4272195ff7dce6f50f0bdca9f6d9bb",
+   "reviewer": "Romanian independent AI reviewer B",
+   "status": "accepted_current_roles",
+   "reason": "Tremolo pe notele lungi fits both its existing heading and the newly reused correct quiz answer: sustain the long A through its full duration, not merely to the next beat. Read the live prompt, all three options, answer index 1 and explanation; music unchanged.",
+   "current_occurrences": [
+    {
+     "pointer": "/courses/5/units/2/lessons/2/steps/5/title",
+     "parents": [
+      "mandolin",
+      "man-3",
+      "man-3-3"
+     ],
+     "source": "Tremolo through long notes"
+    },
+    {
+     "pointer": "/courses/5/units/2/lessons/3/steps/4/options/1",
+     "parents": [
+      "mandolin",
+      "man-3",
+      "man-3-4"
+     ],
+     "source": "Tremolo through long notes"
+    }
+   ]
+  }
+ ],
+ "retirement": {
+  "key": "L4d1c8b1ea7",
+  "source": "Tremolo until the next beat",
+  "old_target": "Tremolo până la timpul următor",
+  "source_sha256": "563b9bc79f25bca6cfc53f5889154ee73404e01a542b5229820938cc7a5b6ecd",
+  "old_target_sha256": "bd8f56b747843bac752d498ce2dd0da835c2ed1881113668fdea66ac2ba6f90a",
+  "status": "retired_source_exclude_from_current_delivery",
+  "replacement_key": "Le56240b1d1",
+  "reviewer": "Romanian independent AI reviewer B",
+  "reason": "Frozen Romanian faithfully translates the obsolete English but the source answer cuts a three-beat note short. Preserve the original historical draft and exclude this retired key; current curriculum reuses the reviewed long-note answer."
+ },
+ "context_evidence": "current-source-context-review.json",
+ "option_evidence": "current-option-delta-review.json"
+}

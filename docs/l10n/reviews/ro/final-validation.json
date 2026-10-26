@@ -1,0 +1,905 @@
+{
+ "status": "passed",
+ "reviewer": "Romanian independent AI reviewer B",
+ "scope": "Mechanical verification after complete independent semantic reading; does not substitute for semantic review or device QA.",
+ "current_pairs_tested": 6083,
+ "structural_errors": [],
+ "remaining_nonidentity_lint_warnings": [],
+ "source_exact_identities_independently_approved": 369,
+ "normalized_identity_candidates_independently_approved": 370,
+ "case_only_identity": {
+  "key": "L45df8aaa94",
+  "source": "A Dorian",
+  "target": "A dorian",
+  "reason": "Romanian mode noun is lower-case; exact key/source/target and full-string rationale are independently approved."
+ },
+ "numeric_tokens_and_associations_preserved": true,
+ "reviewed_numeric_order_exception": {
+  "key": "L5d2b5b9774",
+  "reason": "Romanian imperative naturally says touch string 6 with fingertip 1 rather than let fingertip 1 touch string 6. Exact string/finger relationships and all numeric token counts are preserved."
+ },
+ "notation_newlines_percent_and_placeholders_preserved": true,
+ "all_8235_baseline_semantic_contexts_reviewed": true,
+ "baseline_occurrences_covered": 16366,
+ "direct_text_occurrences_read": 10116,
+ "equivalent_occurrences_covered": 6250,
+ "focused_evidence": [
+  {
+   "packet": "bass-sb-orig-1",
+   "sha256": "98794a5e6cc7c61f3f2a810dbe2bff68a00572798589a22a33a57a7622c8d1ee",
+   "visible_occurrences": 11,
+   "equivalent_omitted_occurrences": 56
+  },
+  {
+   "packet": "bass-sb-orig-10",
+   "sha256": "51635d6e62824384c7acf8f68b6d1361b474acbeee9df959532289e6326f7980",
+   "visible_occurrences": 9,
+   "equivalent_omitted_occurrences": 62
+  },
+  {
+   "packet": "bass-sb-orig-2",
+   "sha256": "08c5514712e5fe567d80fe59dd5f4dbc9597a81d70d53bcc2b8f531486738bac",
+   "visible_occurrences": 9,
+   "equivalent_omitted_occurrences": 56
+  },
+  {
+   "packet": "bass-sb-orig-3",
+   "sha256": "1df117bd106e418568572e8d30ff446b7a6e39d08c6b057dd10b0528103cddc6",
+   "visible_occurrences": 5,
+   "equivalent_omitted_occurrences": 61
+  },
+  {
+   "packet": "bass-sb-orig-4",
+   "sha256": "979b5bcde7aba7d5d69abfd457f78d0add17a36bc216991453ba5e5e7ff6e847",
+   "visible_occurrences": 5,
+   "equivalent_omitted_occurrences": 62
+  },
+  {
+   "packet": "bass-sb-orig-5",
+   "sha256": "b0f4dd465acfda78c864b467cf8403902902ca122c46853f29ef9aaaf8fae061",
+   "visible_occurrences": 5,
+   "equivalent_omitted_occurrences": 63
+  },
+  {
+   "packet": "bass-sb-orig-6",
+   "sha256": "f8f1b95f124a6de8b81f8ef73f2449cb8cfead4ce85cb6870b7f6e772f97b1f0",
+   "visible_occurrences": 7,
+   "equivalent_omitted_occurrences": 66
+  },
+  {
+   "packet": "bass-sb-orig-7",
+   "sha256": "d1efc3ae81397a62509887be1b7008f6966a74ee368307445eadf2c89b965285",
+   "visible_occurrences": 5,
+   "equivalent_omitted_occurrences": 62
+  },
+  {
+   "packet": "bass-sb-orig-8",
+   "sha256": "7a002ffb0858b6c3efbc6c32dfbbba5963e9aa01f3de628cdd3757659a4a0729",
+   "visible_occurrences": 5,
+   "equivalent_omitted_occurrences": 68
+  },
+  {
+   "packet": "bass-sb-orig-9",
+   "sha256": "7b4b7ac0f924e7a6b6f9beb7c57f586f6566d60bf9ebb81d74b81ded1028251a",
+   "visible_occurrences": 5,
+   "equivalent_omitted_occurrences": 63
+  },
+  {
+   "packet": "bass-sb-song-u4",
+   "sha256": "864be15ba40188ebecbfe4c26385a2a3688627182da6c86a295e74923872f3c8",
+   "visible_occurrences": 4,
+   "equivalent_omitted_occurrences": 43
+  },
+  {
+   "packet": "bass-sb-song-u5",
+   "sha256": "2194df5a85d65687c5d0ed24b8dc5e4ce6ac004295038681f741be7b6a58c0e4",
+   "visible_occurrences": 6,
+   "equivalent_omitted_occurrences": 61
+  },
+  {
+   "packet": "bass-sb-song-u6",
+   "sha256": "9f829a602c48daf16b20bcd3eb4281ae7ae00977bff9c5cdb2beca59ded7a53b",
+   "visible_occurrences": 6,
+   "equivalent_omitted_occurrences": 39
+  },
+  {
+   "packet": "bass-sb-songs-1",
+   "sha256": "486acf68f85b756b3a1a5cd58df072cc65a0ada23eec4984c4d41da08b0d21cd",
+   "visible_occurrences": 14,
+   "equivalent_omitted_occurrences": 55
+  },
+  {
+   "packet": "bass-sb-songs-2",
+   "sha256": "8f446d3b84885cfe1002bac02b5f2f29f6dd74063e9f845aa77045e3b4317d37",
+   "visible_occurrences": 6,
+   "equivalent_omitted_occurrences": 64
+  },
+  {
+   "packet": "bass-sb-songs-3",
+   "sha256": "7e7b9c8d03da7bcaa5680b49dd08dfb36bbad3f2799f966f6cc151826342c74d",
+   "visible_occurrences": 6,
+   "equivalent_omitted_occurrences": 61
+  },
+  {
+   "packet": "bass-sb-std-1",
+   "sha256": "946ca40ccc2a3e81e82b0ef6df2e6c092a605891bc3f8c2ac30809ac833519fe",
+   "visible_occurrences": 5,
+   "equivalent_omitted_occurrences": 55
+  },
+  {
+   "packet": "bass-sb-std-2",
+   "sha256": "ffcf5375d862fba791b703695fbab3bd40d7ef542ed18df532f2606c8f0c035d",
+   "visible_occurrences": 5,
+   "equivalent_omitted_occurrences": 50
+  },
+  {
+   "packet": "bass-sb-std-3",
+   "sha256": "a95b21eb043b609014876e0d90da570e8987215acc3cdd49e2051ff47eafbb8b",
+   "visible_occurrences": 4,
+   "equivalent_omitted_occurrences": 40
+  },
+  {
+   "packet": "bass-sb-std-4",
+   "sha256": "3d655d048f5ef6f4468e47a60948b2e4d570ded348c3a420532ef37374eb201a",
+   "visible_occurrences": 4,
+   "equivalent_omitted_occurrences": 43
+  },
+  {
+   "packet": "bass-sb-std-5",
+   "sha256": "a143414cab780c5b6c2ea60aeec70bda2c0c4175e30555b0dd252fee273af202",
+   "visible_occurrences": 4,
+   "equivalent_omitted_occurrences": 40
+  },
+  {
+   "packet": "bass-sb-std-6",
+   "sha256": "874d300aa6585e94b2d53ddb1dd5aa3d8b47c6e9d8babd102a7f220527969e0c",
+   "visible_occurrences": 4,
+   "equivalent_omitted_occurrences": 46
+  },
+  {
+   "packet": "bass-sb-std-7",
+   "sha256": "573498f9605c43d700e8a49e9a53432c49723b68ba8d2fa73e35ebac362deeb7",
+   "visible_occurrences": 5,
+   "equivalent_omitted_occurrences": 53
+  },
+  {
+   "packet": "bass-sb-std-8",
+   "sha256": "6ec2abfa4cd71c487a429215b48877ebf8c60e6d9010d3512b8e1d358b174b58",
+   "visible_occurrences": 4,
+   "equivalent_omitted_occurrences": 39
+  },
+  {
+   "packet": "bass-sb-std-9",
+   "sha256": "2a1b70fb16173e877aad87a1dc2d29355db5b6f9c51fb6a765d79f5bc0ae6d65",
+   "visible_occurrences": 3,
+   "equivalent_omitted_occurrences": 36
+  },
+  {
+   "packet": "ear-3",
+   "sha256": "37e855d62d48fc13c1d44487ca6c53ea7a01738cf8972e3994ef98fc95970865",
+   "visible_occurrences": 53,
+   "equivalent_omitted_occurrences": 71
+  },
+  {
+   "packet": "ear-4",
+   "sha256": "cc75f3d1677fc2fbbe609f817303b33edb76cd7efbdfaa35eb5f044309a5dcbe",
+   "visible_occurrences": 60,
+   "equivalent_omitted_occurrences": 73
+  },
+  {
+   "packet": "ear-5",
+   "sha256": "f3ae8b7e835c819c7ea8b23f7e77863e7507dc369ac37fa6dbd27b8448c8f365",
+   "visible_occurrences": 80,
+   "equivalent_omitted_occurrences": 63
+  },
+  {
+   "packet": "ear-6",
+   "sha256": "6ce66acbb39d9b975b4fafe492c9b3095d3b58f2d8aace7bf432e38a9411edce",
+   "visible_occurrences": 85,
+   "equivalent_omitted_occurrences": 64
+  },
+  {
+   "packet": "ear-7",
+   "sha256": "8333ba27e72ef879572b8e431378861e5f69b1d247aa1409a8dc0ec5ff196a16",
+   "visible_occurrences": 106,
+   "equivalent_omitted_occurrences": 51
+  },
+  {
+   "packet": "ear-8",
+   "sha256": "fb53ad892b6921aad35a1d98310f4eab5676d0043764ecce57654de5be5ad142",
+   "visible_occurrences": 122,
+   "equivalent_omitted_occurrences": 11
+  },
+  {
+   "packet": "man-sb-song-u4",
+   "sha256": "327e5c6c14d9e5e4b5dbdcd69eddb8a4f58438e5e4cf023f54feae59a3894033",
+   "visible_occurrences": 3,
+   "equivalent_omitted_occurrences": 37
+  },
+  {
+   "packet": "man-sb-song-u5",
+   "sha256": "ce6150e2fa1c5e35df0b5e3f919ab9cd54b32dca6d3c23fd6d3ff64592272d75",
+   "visible_occurrences": 6,
+   "equivalent_omitted_occurrences": 67
+  },
+  {
+   "packet": "man-sb-song-u6",
+   "sha256": "716bf5440753e83239d0a5334ca8b4da35f3c30496d259e94fe19520628a2840",
+   "visible_occurrences": 4,
+   "equivalent_omitted_occurrences": 43
+  },
+  {
+   "packet": "man-sb-songs-1",
+   "sha256": "8e5949dce2cd51e30bcd6bbf950448333ae019d1a45deb6c6da4c8ca3a0bfb6f",
+   "visible_occurrences": 15,
+   "equivalent_omitted_occurrences": 50
+  },
+  {
+   "packet": "man-sb-songs-2",
+   "sha256": "29b28e9d1f2dd8fc2f1654cdf7f373bf07b2b0fc2651a22852f33767dcac9432",
+   "visible_occurrences": 6,
+   "equivalent_omitted_occurrences": 70
+  },
+  {
+   "packet": "man-sb-songs-3",
+   "sha256": "35c47a1f61c09081801b1f07320663f6719a9f12c9f217c806e2bb57c644c893",
+   "visible_occurrences": 10,
+   "equivalent_omitted_occurrences": 57
+  },
+  {
+   "packet": "man-sb-std-1",
+   "sha256": "6036f4a980f9db4ac3ea96ed7407e279083539eea70662342b5d061eb4c12f59",
+   "visible_occurrences": 5,
+   "equivalent_omitted_occurrences": 60
+  },
+  {
+   "packet": "man-sb-std-2",
+   "sha256": "fd54441676ccf1bae8cc1ce003205d02e8a3d86655fe5e8ad67557e9af14cb09",
+   "visible_occurrences": 5,
+   "equivalent_omitted_occurrences": 54
+  },
+  {
+   "packet": "man-sb-std-3",
+   "sha256": "7aecd7294df15d1681a30f64baf30e1bfec00f5a0d6873f1fe210079e59aa855",
+   "visible_occurrences": 4,
+   "equivalent_omitted_occurrences": 40
+  },
+  {
+   "packet": "man-sb-std-4",
+   "sha256": "5c0056ae3db536b469f746b83627c96b5b5acffc21e82f79e039d8eb422ed31d",
+   "visible_occurrences": 6,
+   "equivalent_omitted_occurrences": 41
+  },
+  {
+   "packet": "man-sb-std-5",
+   "sha256": "52f3ce89aba0639f685ab6215abd23529f954832697a71fb28b1a709818ff71f",
+   "visible_occurrences": 4,
+   "equivalent_omitted_occurrences": 44
+  },
+  {
+   "packet": "man-sb-std-6",
+   "sha256": "ff61cb483e2ecd46abb06d98275bd5ca6b428247d92aa4d4ce3ede72b9ac1d3c",
+   "visible_occurrences": 4,
+   "equivalent_omitted_occurrences": 50
+  },
+  {
+   "packet": "man-sb-std-7",
+   "sha256": "edccb0ef74a69952f9ed03db9693cba76a3f10d772187969ce5d32b26682135c",
+   "visible_occurrences": 5,
+   "equivalent_omitted_occurrences": 58
+  },
+  {
+   "packet": "man-sb-std-8",
+   "sha256": "95f42c377d9d2b0d8f528409c363792c9493ca8710ae8cec294ac917263828b8",
+   "visible_occurrences": 4,
+   "equivalent_omitted_occurrences": 42
+  },
+  {
+   "packet": "man-sb-std-9",
+   "sha256": "1f34c5f43061434ddb86150a1678fa5b50ddf819f2c403a9ab14686601f28678",
+   "visible_occurrences": 3,
+   "equivalent_omitted_occurrences": 36
+  },
+  {
+   "packet": "orig-1",
+   "sha256": "f5dde6d65d0bea062b7059d51bef0d960ad97f07b2b176562a0535370c5568f9",
+   "visible_occurrences": 106,
+   "equivalent_omitted_occurrences": 13
+  },
+  {
+   "packet": "orig-10",
+   "sha256": "af7d045cc0a9867610b05513f3f9e51aa014274c0b0ad52db61607092a418e26",
+   "visible_occurrences": 44,
+   "equivalent_omitted_occurrences": 64
+  },
+  {
+   "packet": "orig-2",
+   "sha256": "9175264087c8f368111bb996166d690df5f778b0fa90903659455a8f5ab9d573",
+   "visible_occurrences": 88,
+   "equivalent_omitted_occurrences": 23
+  },
+  {
+   "packet": "orig-3",
+   "sha256": "af0ff00df1d7a70e5ed5f6adb246fa9b95dfc3d2d0751fc047af90275dce47b3",
+   "visible_occurrences": 48,
+   "equivalent_omitted_occurrences": 66
+  },
+  {
+   "packet": "orig-4",
+   "sha256": "3502e3ef314d152af368a4585748117083b6a46244713d2c8d35a70d28969cdd",
+   "visible_occurrences": 58,
+   "equivalent_omitted_occurrences": 55
+  },
+  {
+   "packet": "orig-5",
+   "sha256": "37e39a2c2c3c1bca50c49fca93e75cbaea837053bef44e12c89318267380476d",
+   "visible_occurrences": 94,
+   "equivalent_omitted_occurrences": 22
+  },
+  {
+   "packet": "orig-6",
+   "sha256": "102a335cf79c46fc74f509065571d662db89794c9a68c3ec5fbc1fc14b092d4b",
+   "visible_occurrences": 99,
+   "equivalent_omitted_occurrences": 14
+  },
+  {
+   "packet": "orig-7",
+   "sha256": "4feaa0a9f2b41560476fabfcee750148cf35e48c54f5b77fcfdda709e05d5982",
+   "visible_occurrences": 45,
+   "equivalent_omitted_occurrences": 59
+  },
+  {
+   "packet": "orig-8",
+   "sha256": "a5820fda7d416aa917b61d84c287f0955e458f1329646a327aff7db21e6a3559",
+   "visible_occurrences": 43,
+   "equivalent_omitted_occurrences": 70
+  },
+  {
+   "packet": "orig-9",
+   "sha256": "f52ae00fb83c15f807abe83f454a4285aa62a233bd4f42062732d85726b68179",
+   "visible_occurrences": 43,
+   "equivalent_omitted_occurrences": 70
+  },
+  {
+   "packet": "rhy-1",
+   "sha256": "79e5edf2e651da94fa77be8bc5d984ef2858ea5596ac9de9b8f4ee74b2b7ede8",
+   "visible_occurrences": 76,
+   "equivalent_omitted_occurrences": 0
+  },
+  {
+   "packet": "rhy-2",
+   "sha256": "00a42b9c96f20036d99b34465b68d49e37becbf838f26c56131028714baa1ff4",
+   "visible_occurrences": 63,
+   "equivalent_omitted_occurrences": 0
+  },
+  {
+   "packet": "rhy-3",
+   "sha256": "b5709b9e5f8d2d499604266380bcd5916925de67eadea964a2a700408aa19598",
+   "visible_occurrences": 57,
+   "equivalent_omitted_occurrences": 0
+  },
+  {
+   "packet": "rhy-4",
+   "sha256": "dfa5c1c565e8be3fc106143bf1bcd070a0a3bf861e285b9286df48d0075342f9",
+   "visible_occurrences": 53,
+   "equivalent_omitted_occurrences": 0
+  },
+  {
+   "packet": "rhy-5",
+   "sha256": "7782f437917a1a59a8e24d7aee526e98e3f96a6bb8e1d625d3e2eaf8a31806ff",
+   "visible_occurrences": 49,
+   "equivalent_omitted_occurrences": 6
+  },
+  {
+   "packet": "rhy-6",
+   "sha256": "8d9e4d0e4524c7dbf78e7d01670f64511946be5555aaba570b7090553999273c",
+   "visible_occurrences": 65,
+   "equivalent_omitted_occurrences": 11
+  },
+  {
+   "packet": "song-u4",
+   "sha256": "de611d1a584100f4b9d7469de8cb7bf5fa4f3ecb500176c1b5c7e3bee42457be",
+   "visible_occurrences": 73,
+   "equivalent_omitted_occurrences": 11
+  },
+  {
+   "packet": "song-u5",
+   "sha256": "c4c1704eaf8bdb43d1233e02da4810b1902e11d77ded9c8199aa877e45f011aa",
+   "visible_occurrences": 99,
+   "equivalent_omitted_occurrences": 13
+  },
+  {
+   "packet": "song-u6",
+   "sha256": "b430b2ef8424598f12ae6711db86010a00157bea9cd67dea36a14f57b8255beb",
+   "visible_occurrences": 85,
+   "equivalent_omitted_occurrences": 10
+  },
+  {
+   "packet": "songs-1",
+   "sha256": "75b11b6ef38fccfb1f2b3b677449407940bc5ffd775992079af2d90ec203222e",
+   "visible_occurrences": 104,
+   "equivalent_omitted_occurrences": 26
+  },
+  {
+   "packet": "songs-2",
+   "sha256": "39b9057d1ee526a15a7c9d1c54427418c6b22e48a0c84bed2f7c5de7df8b0552",
+   "visible_occurrences": 106,
+   "equivalent_omitted_occurrences": 20
+  },
+  {
+   "packet": "songs-3",
+   "sha256": "2a9f59421685c5ea82bc8cd3f1239f917f9f93dcfad131c104e1a59f8db0d544",
+   "visible_occurrences": 111,
+   "equivalent_omitted_occurrences": 15
+  },
+  {
+   "packet": "std-1",
+   "sha256": "50a5b1daaeec7cde6b8e2b4f96347129496be76e00954bdb0d21c63e27a6ce37",
+   "visible_occurrences": 60,
+   "equivalent_omitted_occurrences": 52
+  },
+  {
+   "packet": "std-2",
+   "sha256": "b635a76970e5c2de0d163e59e5a3e08183259232f97b448a9d222908eaa952ec",
+   "visible_occurrences": 59,
+   "equivalent_omitted_occurrences": 40
+  },
+  {
+   "packet": "std-3",
+   "sha256": "616e9294222b5176f0bba37dff0030cb055093e53150983f09f7ad7dbc51e3b7",
+   "visible_occurrences": 57,
+   "equivalent_omitted_occurrences": 21
+  },
+  {
+   "packet": "std-4",
+   "sha256": "f460e9344291ba5e3eaac7832564397837ddb7fcbef1d764025d9fb7e2f4debd",
+   "visible_occurrences": 68,
+   "equivalent_omitted_occurrences": 21
+  },
+  {
+   "packet": "std-5",
+   "sha256": "03b260e00fca4548dc79dcf8d6214d130a1c56524510e498aa871192cad1065f",
+   "visible_occurrences": 60,
+   "equivalent_omitted_occurrences": 31
+  },
+  {
+   "packet": "std-6",
+   "sha256": "7cd632a82061e0d64d38555370cae906596b077c65e18744a38489bd6c87ecad",
+   "visible_occurrences": 63,
+   "equivalent_omitted_occurrences": 38
+  },
+  {
+   "packet": "std-7",
+   "sha256": "6d86fffdff972e79b8571ce50fcf286f2618e6ad3fefa3b9a3f144c1397a4d6e",
+   "visible_occurrences": 66,
+   "equivalent_omitted_occurrences": 42
+  },
+  {
+   "packet": "std-8",
+   "sha256": "fed6692b9c59a149a6a7f1715a51269a0d496ec62f917cc8bfca7b5ffe351e24",
+   "visible_occurrences": 59,
+   "equivalent_omitted_occurrences": 31
+  },
+  {
+   "packet": "std-9",
+   "sha256": "b7d80109b60258e61a8d956a311ba86e0a365857b875563ee84c1e39e125a3c6",
+   "visible_occurrences": 54,
+   "equivalent_omitted_occurrences": 20
+  },
+  {
+   "packet": "thy-1",
+   "sha256": "94bb137a815fa2620249490d2a8990be50b9cc6b0092fc9a4a9c8c7b2f416c79",
+   "visible_occurrences": 123,
+   "equivalent_omitted_occurrences": 12
+  },
+  {
+   "packet": "thy-2",
+   "sha256": "87e66cd247f152d2a9dbe188b104d623f19561bad111dc45b7525e6876122d3a",
+   "visible_occurrences": 137,
+   "equivalent_omitted_occurrences": 15
+  },
+  {
+   "packet": "thy-3",
+   "sha256": "daa4608bcd55f392b0e0cb2e389f97646201534f3bedb6a25deb59f281207f33",
+   "visible_occurrences": 179,
+   "equivalent_omitted_occurrences": 7
+  },
+  {
+   "packet": "thy-4",
+   "sha256": "1751d6b714cd91799c32ed1fc38908445d64321db30f97cfc63871cc5e18096f",
+   "visible_occurrences": 128,
+   "equivalent_omitted_occurrences": 0
+  },
+  {
+   "packet": "thy-5",
+   "sha256": "a0584e9b01426a54ff9b59b4c297da8018bee42adf549881a94c5f3f9c17ece9",
+   "visible_occurrences": 146,
+   "equivalent_omitted_occurrences": 21
+  },
+  {
+   "packet": "thy-6",
+   "sha256": "c8b0580ecd6093c80d4aadf3a199d60e87d715e4340b19599ee2810c74139d2a",
+   "visible_occurrences": 149,
+   "equivalent_omitted_occurrences": 26
+  },
+  {
+   "packet": "thy-7",
+   "sha256": "7af233f668376f9d4f0b186ebdc6b1946607ca2fcf92f43a033ee350e3794d23",
+   "visible_occurrences": 129,
+   "equivalent_omitted_occurrences": 21
+  },
+  {
+   "packet": "thy-8",
+   "sha256": "aedc1b40da8fd4592e06d7a2fa8a8052d9c7f45d5a3f64cc46c6bdc7d959d58f",
+   "visible_occurrences": 157,
+   "equivalent_omitted_occurrences": 24
+  },
+  {
+   "packet": "uke-sb-orig-1",
+   "sha256": "6687db36beaf052b1058c1460e8e90180d3857dcf4bf4e1acb8fc603da20e3f8",
+   "visible_occurrences": 9,
+   "equivalent_omitted_occurrences": 63
+  },
+  {
+   "packet": "uke-sb-orig-10",
+   "sha256": "2daecc3f2541e6b4a5702ee27d384bc53006a79b70cd639c27681b16b3c9a853",
+   "visible_occurrences": 7,
+   "equivalent_omitted_occurrences": 69
+  },
+  {
+   "packet": "uke-sb-orig-2",
+   "sha256": "e3666a3d2c8443f98ea979563f7662293ff72b2ca29000fd1fcecf92f3fbd50f",
+   "visible_occurrences": 5,
+   "equivalent_omitted_occurrences": 65
+  },
+  {
+   "packet": "uke-sb-orig-3",
+   "sha256": "d8c775f6d7fd4e812ac8668bd81cc54fa180344cb675034eacad778a61cadf7c",
+   "visible_occurrences": 5,
+   "equivalent_omitted_occurrences": 66
+  },
+  {
+   "packet": "uke-sb-orig-4",
+   "sha256": "c174fe63a08bf45d2d238a6ce0acabc9818661902ab9d58140a3a561348328d4",
+   "visible_occurrences": 7,
+   "equivalent_omitted_occurrences": 65
+  },
+  {
+   "packet": "uke-sb-orig-5",
+   "sha256": "c5c051c0889ca9da4d3d2a98d8e874dc17bea260b5e91ad79c1bffd65a954c66",
+   "visible_occurrences": 7,
+   "equivalent_omitted_occurrences": 66
+  },
+  {
+   "packet": "uke-sb-orig-6",
+   "sha256": "bd8baf5b4115520d3e3e33b03692ccf52e5f363dc7122970ece7dad046970d17",
+   "visible_occurrences": 7,
+   "equivalent_omitted_occurrences": 71
+  },
+  {
+   "packet": "uke-sb-orig-7",
+   "sha256": "8df1a71b41bacc58fe12caef631020e8ccec95606e4c9a236468de17a1f0a232",
+   "visible_occurrences": 5,
+   "equivalent_omitted_occurrences": 67
+  },
+  {
+   "packet": "uke-sb-orig-8",
+   "sha256": "1e03464588f46c3e9da8b2cbc8769da4e4da8c52210bedbcf4eef97bb36f7d71",
+   "visible_occurrences": 7,
+   "equivalent_omitted_occurrences": 71
+  },
+  {
+   "packet": "uke-sb-orig-9",
+   "sha256": "e12074bdaf9d9e0a05294373bd6d575efbd0e7aa7c1057779a46ab36ad0c85ec",
+   "visible_occurrences": 7,
+   "equivalent_omitted_occurrences": 66
+  },
+  {
+   "packet": "uke-sb-song-u4",
+   "sha256": "306aab919e6a92d83aba825a732162895d03d70dddd34720d1472aa908e353c6",
+   "visible_occurrences": 5,
+   "equivalent_omitted_occurrences": 32
+  },
+  {
+   "packet": "uke-sb-song-u5",
+   "sha256": "d463aeb990c8496d30789c1ee4982b356bf9e7e68394d374a8e2701491bfb27d",
+   "visible_occurrences": 6,
+   "equivalent_omitted_occurrences": 67
+  },
+  {
+   "packet": "uke-sb-song-u6",
+   "sha256": "e55d327c46ffe9365aac9a749556be7c618672b31ff0fae717aacd6f6284892c",
+   "visible_occurrences": 8,
+   "equivalent_omitted_occurrences": 39
+  },
+  {
+   "packet": "uke-sb-songs-1",
+   "sha256": "8f9910a6808e3515454274f618905a7118077641da1e24da795183309b5e0bc9",
+   "visible_occurrences": 12,
+   "equivalent_omitted_occurrences": 39
+  },
+  {
+   "packet": "uke-sb-songs-2",
+   "sha256": "78ef0594298990982c01377dff4cb859f287d788cd7a74e36dbf554dfc74ce69",
+   "visible_occurrences": 7,
+   "equivalent_omitted_occurrences": 33
+  },
+  {
+   "packet": "uke-sb-songs-3",
+   "sha256": "82573a92079287868f62aa83eb1c88d64e086b187d38b2a1bee4d4754f98b5bf",
+   "visible_occurrences": 8,
+   "equivalent_omitted_occurrences": 59
+  },
+  {
+   "packet": "uke-sb-std-1",
+   "sha256": "72e0ec72b8aaf7caf4166b3df976f0b00afc55fb8892a6a3acf8e69578de2f93",
+   "visible_occurrences": 6,
+   "equivalent_omitted_occurrences": 20
+  },
+  {
+   "packet": "uke-sb-std-2",
+   "sha256": "9b9e6eba1185984bab4654c4a0bb945369380605ec2449183a52c7e0cefe0dbc",
+   "visible_occurrences": 6,
+   "equivalent_omitted_occurrences": 40
+  },
+  {
+   "packet": "uke-sb-std-3",
+   "sha256": "6a1d274c55570f01cfcd768e5baa2f23100e834b97095c90befea0d4b5d2accc",
+   "visible_occurrences": 4,
+   "equivalent_omitted_occurrences": 40
+  },
+  {
+   "packet": "uke-sb-std-4",
+   "sha256": "4158d7513c8e521c7e7d4ce907491c3191187a749599d2c7e56b4ac2373cf45b",
+   "visible_occurrences": 4,
+   "equivalent_omitted_occurrences": 43
+  },
+  {
+   "packet": "uke-sb-std-5",
+   "sha256": "2183d047b2b3d14b292316be1f2da3d07582fe5a1a56c6e7726c1bd4870dac20",
+   "visible_occurrences": 4,
+   "equivalent_omitted_occurrences": 44
+  },
+  {
+   "packet": "uke-sb-std-6",
+   "sha256": "6370b5fc5d8bf11e61df1ede2ab20ca6b2c145c18a1bab642d6e89f4371a63dc",
+   "visible_occurrences": 4,
+   "equivalent_omitted_occurrences": 50
+  },
+  {
+   "packet": "uke-sb-std-7",
+   "sha256": "43274a478f2fe2772fa0bb123a23763ec61e1d7d03f608a937ffb9d201d607a9",
+   "visible_occurrences": 5,
+   "equivalent_omitted_occurrences": 58
+  },
+  {
+   "packet": "uke-sb-std-8",
+   "sha256": "24256546a14da06d82a97592c9968fd5c705b3d90bd7127c1113957cc86a6eb5",
+   "visible_occurrences": 4,
+   "equivalent_omitted_occurrences": 42
+  },
+  {
+   "packet": "uke-sb-std-9",
+   "sha256": "84698b18f8a6b3eb22a1b9e1b4802dcca8636e3da2990aeac094cbc4088ee676",
+   "visible_occurrences": 3,
+   "equivalent_omitted_occurrences": 36
+  },
+  {
+   "packet": "vc-sb-song-u4",
+   "sha256": "6096b89aa681694d452db2d57923a3b8c3fdd152ece74193483d6002c6478a04",
+   "visible_occurrences": 3,
+   "equivalent_omitted_occurrences": 37
+  },
+  {
+   "packet": "vc-sb-song-u5",
+   "sha256": "4f484d35f6fdbca9584595a03c91fa6ef4e1e7eb61cce241c1967551b977bae9",
+   "visible_occurrences": 6,
+   "equivalent_omitted_occurrences": 67
+  },
+  {
+   "packet": "vc-sb-song-u6",
+   "sha256": "39e77b90d5f5e030a2029e6dff543635d1d5e6f72ebd386aa248c35a40cc2d09",
+   "visible_occurrences": 6,
+   "equivalent_omitted_occurrences": 41
+  },
+  {
+   "packet": "vc-sb-songs-1",
+   "sha256": "79fc0c9bc90a75b99fa1f1fb414770cb5414c767ccb6ffe31574ebdf62563f86",
+   "visible_occurrences": 14,
+   "equivalent_omitted_occurrences": 37
+  },
+  {
+   "packet": "vc-sb-songs-2",
+   "sha256": "b1df335b20ca9698428ba32ca842cd0953b664dca5dbe75b2f099d18d288de90",
+   "visible_occurrences": 6,
+   "equivalent_omitted_occurrences": 70
+  },
+  {
+   "packet": "vc-sb-songs-3",
+   "sha256": "22a51bfb7f5c781fbd110ade90e027a336055fcc3f7e48cafbbc7d5c56452c2f",
+   "visible_occurrences": 9,
+   "equivalent_omitted_occurrences": 47
+  },
+  {
+   "packet": "vc-sb-std-1",
+   "sha256": "94add22bc6749104588f6cac0a4201d66410f649ddcdad50bad202230e177c17",
+   "visible_occurrences": 7,
+   "equivalent_omitted_occurrences": 58
+  },
+  {
+   "packet": "vc-sb-std-2",
+   "sha256": "00e82dd66a9f1b3621c520716d5e0ecd4bf26693da80a7e8f1e6b574e3885853",
+   "visible_occurrences": 5,
+   "equivalent_omitted_occurrences": 54
+  },
+  {
+   "packet": "vc-sb-std-3",
+   "sha256": "0c5d0432be097c1799bf101de867ed08fe2b7375c2b34c4964a31a8c4a0b3a94",
+   "visible_occurrences": 4,
+   "equivalent_omitted_occurrences": 40
+  },
+  {
+   "packet": "vc-sb-std-4",
+   "sha256": "e62dd9ab433f0a66ab7ca45ff0a244dd9acb53c44098c2b148c66f4aee78689a",
+   "visible_occurrences": 3,
+   "equivalent_omitted_occurrences": 35
+  },
+  {
+   "packet": "vc-sb-std-5",
+   "sha256": "46d37b38a55a679897aac37587009a86f343dc0c01c3a14577c24de1546cc635",
+   "visible_occurrences": 4,
+   "equivalent_omitted_occurrences": 44
+  },
+  {
+   "packet": "vc-sb-std-6",
+   "sha256": "109472d55262dfb5a96c7379e0303953f373ec209ac6b4eea3c9d255d01b1336",
+   "visible_occurrences": 4,
+   "equivalent_omitted_occurrences": 50
+  },
+  {
+   "packet": "vc-sb-std-7",
+   "sha256": "ee1b6c8693bb8375e199691f0a303f4feebcfa072c953e913c1ef05c48e736f0",
+   "visible_occurrences": 5,
+   "equivalent_omitted_occurrences": 58
+  },
+  {
+   "packet": "vc-sb-std-8",
+   "sha256": "511a627732765b990e8825d8eaa38164df36a8de3f2bc7bf930d06aa19ac60d0",
+   "visible_occurrences": 4,
+   "equivalent_omitted_occurrences": 42
+  },
+  {
+   "packet": "vc-sb-std-9",
+   "sha256": "b5158e2eaf33c401fb69d5d0a2a424021e2b277c4b37ecca05acde6af6c37390",
+   "visible_occurrences": 3,
+   "equivalent_omitted_occurrences": 36
+  },
+  {
+   "packet": "vln-sb-song-u4",
+   "sha256": "035710554dc50326b06a9bcdbcfb1453b930eb18c0fd6e327e11203128ab1354",
+   "visible_occurrences": 3,
+   "equivalent_omitted_occurrences": 37
+  },
+  {
+   "packet": "vln-sb-song-u5",
+   "sha256": "641ed9375c51f005d74502729119192a7cd52ee95917ffe25c1d940ba2bf31b1",
+   "visible_occurrences": 6,
+   "equivalent_omitted_occurrences": 67
+  },
+  {
+   "packet": "vln-sb-song-u6",
+   "sha256": "f17eef5a2549da74997170bb1028b5f133bee47f575d64eec730433244d800e0",
+   "visible_occurrences": 4,
+   "equivalent_omitted_occurrences": 43
+  },
+  {
+   "packet": "vln-sb-songs-1",
+   "sha256": "4369086441483599d3d01b31a943211b76c657f9d717ea2ffc8b972c2c995767",
+   "visible_occurrences": 14,
+   "equivalent_omitted_occurrences": 37
+  },
+  {
+   "packet": "vln-sb-songs-2",
+   "sha256": "9d2f2ac4f8931e5310678eb5dbdda3b66bcec1e8204716c20a87609b2a8290a9",
+   "visible_occurrences": 6,
+   "equivalent_omitted_occurrences": 70
+  },
+  {
+   "packet": "vln-sb-songs-3",
+   "sha256": "fd6f9197059b07b5f12aa5427b502008b70254a6d7402488812c5aff4ca8bb56",
+   "visible_occurrences": 9,
+   "equivalent_omitted_occurrences": 49
+  },
+  {
+   "packet": "vln-sb-std-1",
+   "sha256": "57995b98f68ab2826e1347562fbc9878d996af154c7aefec0b300520d26cfc76",
+   "visible_occurrences": 5,
+   "equivalent_omitted_occurrences": 60
+  },
+  {
+   "packet": "vln-sb-std-2",
+   "sha256": "12fd15a70947d54721535bd6c2743895e758e660ad9962c42d39228fe32719fc",
+   "visible_occurrences": 5,
+   "equivalent_omitted_occurrences": 54
+  },
+  {
+   "packet": "vln-sb-std-3",
+   "sha256": "c62c2bc67428648db6ae2ec28d14f7c716b4e6740bed80cf8f9aab1d25ccac5a",
+   "visible_occurrences": 4,
+   "equivalent_omitted_occurrences": 40
+  },
+  {
+   "packet": "vln-sb-std-4",
+   "sha256": "cf23299d18bcdf7ac985c2bcebaa10626064b13501de67150ce1b2a0f1e925fb",
+   "visible_occurrences": 6,
+   "equivalent_omitted_occurrences": 41
+  },
+  {
+   "packet": "vln-sb-std-5",
+   "sha256": "1e1ee12d8518dafe124958a76853978b1839910c19b695974faf6b48859cf93d",
+   "visible_occurrences": 4,
+   "equivalent_omitted_occurrences": 44
+  },
+  {
+   "packet": "vln-sb-std-6",
+   "sha256": "6a31241f877e69bfbc05fac6b9e9b90021d63eee0a1e8c9088b23b0408ef8db2",
+   "visible_occurrences": 4,
+   "equivalent_omitted_occurrences": 50
+  },
+  {
+   "packet": "vln-sb-std-7",
+   "sha256": "ed25d616075d865ccd807407e1fc457b25d58b9b8232d3e3c6ecaf754770e74d",
+   "visible_occurrences": 5,
+   "equivalent_omitted_occurrences": 58
+  },
+  {
+   "packet": "vln-sb-std-8",
+   "sha256": "4456f716ae461c98237a2b8ed3ae5e2bb006d767db42e37914567dd8cb805050",
+   "visible_occurrences": 4,
+   "equivalent_omitted_occurrences": 42
+  },
+  {
+   "packet": "vln-sb-std-9",
+   "sha256": "4bff7fde24fda622910aeef18b3b3840686be42b01133e1063f8ab44960f21b8",
+   "visible_occurrences": 3,
+   "equivalent_omitted_occurrences": 36
+  },
+  {
+   "packet": "voc-1",
+   "sha256": "63052b6198f2ff7f09768f08ff18fe920017c494a87a9e423cd33eaf8f57be63",
+   "visible_occurrences": 81,
+   "equivalent_omitted_occurrences": 13
+  },
+  {
+   "packet": "voc-2",
+   "sha256": "d4bd6f8a830972139c85c0d386c4a7fdd1654ca5f7ab4d68b760141735c1e2dc",
+   "visible_occurrences": 44,
+   "equivalent_omitted_occurrences": 15
+  },
+  {
+   "packet": "voc-3",
+   "sha256": "c4edb0cc4453e5ea47848ac17c5465da1a6b03d423ebd196cb8d61a899c275f1",
+   "visible_occurrences": 65,
+   "equivalent_omitted_occurrences": 9
+  },
+  {
+   "packet": "voc-4",
+   "sha256": "6b28bb3d45e2e5234e95530c8308d8763675bd38c3bb5f4667f16a1c12cde287",
+   "visible_occurrences": 56,
+   "equivalent_omitted_occurrences": 12
+  },
+  {
+   "packet": "voc-5",
+   "sha256": "bdf21784371d5d50ad3d87a85c8379a3e690578dad479b44fc23b954e79b1c72",
+   "visible_occurrences": 92,
+   "equivalent_omitted_occurrences": 22
+  },
+  {
+   "packet": "voc-6",
+   "sha256": "d924fe2ac28e4fd99ca6fc3b7f525ff93714d944f94b473f46b46a5fc0e9e82e",
+   "visible_occurrences": 66,
+   "equivalent_omitted_occurrences": 8
+  }
+ ],
+ "publisher_not_modified_by_reviewer": true
+}
