@@ -94,7 +94,7 @@ class LocalizedCaptureChecksTests(unittest.TestCase):
         for code in [phone, tablet]:
             self.assertIn('CaptureLocalization.tabLabel(name)', code)
             self.assertIn('CaptureLocalization.language', code)
-            self.assertIn('CaptureLocalization.locale', code)
+            self.assertIn('CaptureLocalization.launchArguments', code)
             self.assertNotIn('app.buttons[name]', code)
             self.assertNotIn('app.buttons["Done"]', code)
         self.assertNotIn('app.tabBars.buttons[name]', phone)

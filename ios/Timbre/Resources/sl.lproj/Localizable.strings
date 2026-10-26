@@ -117,7 +117,7 @@
 "timbre_catalog_family_keys" = "Ključi";
 "timbre_catalog_family_mallet_percussion_hand" = "Tolkala, tolkala in ročna glasbila";
 "timbre_catalog_family_mandolin" = "Mandolina";
-"timbre_catalog_family_ukulele" = "Ukulele";
+"timbre_catalog_family_ukulele" = "Ukulela";
 "timbre_catalog_family_winds" = "Pihala";
 "timbre_catalog_instrument_autoharp_chromatic_36" = "Avtoharfa";
 "timbre_catalog_instrument_balalaika_prima_3" = "Balalajka (prima)";
@@ -174,9 +174,9 @@
 "timbre_catalog_instrument_tin_whistle_d_0" = "Piščal";
 "timbre_catalog_instrument_trombone_bb_0" = "Pozavna (Bb)";
 "timbre_catalog_instrument_trumpet_bb_0" = "Trobenta (Bb)";
-"timbre_catalog_instrument_ukulele_baritone_4" = "Baritonska ukulele";
-"timbre_catalog_instrument_ukulele_bass_4" = "Bas ukulele (UBass)";
-"timbre_catalog_instrument_ukulele_soprano_4" = "Ukulele (sopran / koncert / tenor)";
+"timbre_catalog_instrument_ukulele_baritone_4" = "Baritonska ukulela";
+"timbre_catalog_instrument_ukulele_bass_4" = "Basovska ukulela (UBass)";
+"timbre_catalog_instrument_ukulele_soprano_4" = "Ukulela (sopranska / koncertna / tenorska)";
 "timbre_catalog_instrument_viola_standard_4" = "Viola";
 "timbre_catalog_instrument_violin_standard_4" = "Violina";
 "timbre_catalog_reference_mode_reference_chromatic" = "Kromatično / referenčna višina tona";
@@ -333,7 +333,7 @@
 "timbre_payment_pending" = "Plačilo v teku";
 "timbre_paywall_body" = "Vaši inštrumenti. Vaš glas. Popoln prostor za vadbo z enim trajnim odklepanjem.";
 "timbre_paywall_buy_full_access" = "Odkleni vse funkcije · %1$@";
-"timbre_paywall_free_edition" = "Kitara, štiristrunski bas in ukulele ostajajo brezplačni. Oglasi se prikažejo po končanih sejah uglaševanja.";
+"timbre_paywall_free_edition" = "Kitara, štiristrunski bas in ukulela ostajajo brezplačni. Oglasi se prikažejo po končanih sejah uglaševanja.";
 "timbre_paywall_full_access_heading" = "Odklenite celotno aplikacijo.";
 "timbre_paywall_price_loading" = "Preverjanje cene…";
 "timbre_paywall_price_loading_detail" = "Povezovanje s trgovino Google Play za vašo lokalno ceno.";
@@ -350,9 +350,9 @@
 "timbre_photo_07_bass_5_string_j_bass" = "5-strunski bas";
 "timbre_photo_08_guitar_guitalele" = "Guitalele";
 "timbre_photo_09_guitar_guitarron_mexican" = "Guitarrón";
-"timbre_photo_10_ukulele_soprano_ukulele" = "Sopranska ukulele";
-"timbre_photo_11_ukulele_concert_ukulele" = "Koncertna ukulele";
-"timbre_photo_12_ukulele_tenor_ukulele" = "Tenorska ukulele";
+"timbre_photo_10_ukulele_soprano_ukulele" = "Sopranska ukulela";
+"timbre_photo_11_ukulele_concert_ukulele" = "Koncertna ukulela";
+"timbre_photo_12_ukulele_tenor_ukulele" = "Tenorska ukulela";
 "timbre_photo_13_mandolin_mandolin" = "Mandolina";
 "timbre_photo_14_mandolin_octave_mandolin" = "Oktavna mandolina";
 "timbre_photo_15_mandolin_mandola" = "Mandola";
@@ -410,8 +410,8 @@
 "timbre_photo_67_mallet_percussion_timpani" = "Timpani";
 "timbre_photo_68_mallet_percussion_kalimba" = "Kalimba";
 "timbre_photo_69_mallet_percussion_handpan" = "Handpan";
-"timbre_photo_baritone_ukulele" = "Baritonski ukulele";
-"timbre_photo_bass_ukulele" = "Bas ukulele";
+"timbre_photo_baritone_ukulele" = "Baritonska ukulela";
+"timbre_photo_bass_ukulele" = "Basovska ukulela";
 "timbre_progress_best_many" = "Najboljše %1$d/100 · %2$d poskusov";
 "timbre_progress_best_one" = "Najboljše %1$d/100 · 1 poskus";
 "timbre_progress_change_closer" = "Povprečno %1$@ centov bližje cilju.";
@@ -990,7 +990,7 @@
 "Tuning" = "Uglasitev";
 "Tuning accuracy" = "Natančnost uglasitve";
 "Tuning name" = "Ime uglasitve";
-"Ukulele" = "Ukulele";
+"Ukulele" = "Ukulela";
 "Unlock for %@" = "Odkleni za %@";
 "Violin" = "Violina";
 "Voice" = "Glas";
@@ -1349,7 +1349,7 @@
 "Guitarist" = "Kitarist";
 "Finish 10 guitar lessons" = "Zaključite 10 lekcij kitare";
 "Uke player" = "Ukulelist";
-"Finish 10 ukulele lessons" = "Zaključite 10 lekcij ukuleleja";
+"Finish 10 ukulele lessons" = "Zaključite 10 lekcij ukulele";
 "Bassist" = "Basist";
 "Finish 10 bass lessons" = "Zaključite 10 lekcij basa";
 "Violinist" = "Violinist";
@@ -1450,7 +1450,7 @@
 "The App Store couldn't renew your subscription. Update your payment method to pick up where you left off." = "App Store ni mogel obnoviti tvoje naročnine. Posodobi način plačila za nadaljevanje tam, kjer se je igranje ustavilo.";
 "Cancel anytime in Settings" = "Prekliči kadar koli v Nastavitvah";
 "Subscriptions renew automatically until cancelled in Settings › Apple Account › Subscriptions. Cancel at least a day before renewal to avoid the next charge. Every instrument’s standard tuning stays free." = "Naročnine se samodejno obnavljajo, dokler jih ne prekličeš v razdelku Nastavitve › Račun Apple › Naročnine. Prekliči vsaj en dan pred obnovitvijo, da se izogneš naslednjemu plačilu. Standardna uglasitev vsakega instrumenta ostane brezplačna.";
-"Subscriptions renew automatically until cancelled in Settings › Apple Account › Subscriptions. Cancel at least a day before renewal to avoid the next charge. The tuner for guitar, bass, ukulele, violin and cello stays free." = "Naročnine se samodejno obnavljajo, dokler jih ne prekličeš v razdelku Nastavitve › Račun Apple › Naročnine. Prekliči vsaj en dan pred obnovitvijo, da se izogneš naslednjemu plačilu. Uglaševalnik za kitaro, bas, ukulele, violino in violončelo ostane brezplačen.";
+"Subscriptions renew automatically until cancelled in Settings › Apple Account › Subscriptions. Cancel at least a day before renewal to avoid the next charge. The tuner for guitar, bass, ukulele, violin and cello stays free." = "Naročnine se samodejno obnavljajo, dokler jih ne prekličeš v razdelku Nastavitve › Račun Apple › Naročnine. Prekliči vsaj en dan pred obnovitvijo, da se izogneš naslednjemu plačilu. Uglaševalnik za kitaro, bas, ukulelo, violino in violončelo ostane brezplačen.";
 "Start free trial" = "Začni brezplačni preizkus";
 "Then %@. It renews automatically until you cancel in Settings." = "Nato %@. Naročnina se samodejno obnavlja, dokler je ne prekličeš v Nastavitvah.";
 "Plays three seconds of the feel on your iPhone" = "Predvaja tri sekunde tresljajev na tvojem telefonu iPhone";

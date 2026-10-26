@@ -1,0 +1,32 @@
+{
+  "source_commit": "a49c5fde11a1f0df8327ea43ec88085d2a4d102f",
+  "run": 40366151774,
+  "locale": "de_DE",
+  "job": 121724282682,
+  "job_conclusion": "failure",
+  "tests_passed": 7,
+  "tests_failed": 1,
+  "failed_test": "test11StoreTunerLock",
+  "artifact": 12671932556,
+  "artifact_sha256": "0c1b65ffc0a443741d1b0ac0dbe97d7baa10ecb3cea2e534df8e3be3c7ca7d6f",
+  "directly_inspected_frames": [
+    {
+      "file": "893C830D-DFC0-4006-B402-5199E07273B9.png",
+      "sha256": "a369d58c3b1bbc5550aa70d27cacc60fa6db56a219ed769bd7de4db5b2b78f85"
+    },
+    {
+      "file": "30DAFFBD-73AE-49E4-BD5E-DAB2CA60EEEA.png",
+      "sha256": "1399b8518a78f7939479b2fcc85d6c839fbefa23a911ccbe03e8f7d53c0448d8"
+    }
+  ],
+  "findings": [
+    "The rejected tuner image visibly shows Gestimmt,0c,D3locked and3of6strings tuned; the later semantic snapshot reported Halten. Log shows image selected2.03s after pluck and semantic failure about25s later. This supports a capture-time race with periodic demo re-plucks, not a mistranslated fixture. The wrong image remains rejected and must not be promoted.",
+    "The valid strum screenshot now displays the complete compact approximate symbol without the former clipped German estimate label. This specifically verifies the ViewThatFits fallback in this screenshot, not every locale/device."
+  ],
+  "next_action": "Default still tuner capture disables periodic comet re-plucks while retaining genuine lock, selected-string,three-string and1.5-second hold checks. Preview motion/audio unchanged. Fresh native capture required.",
+  "not_claimed": [
+    "successful German job",
+    "all screenshot sets complete",
+    "all locales/device layouts approved"
+  ]
+}

@@ -18,7 +18,7 @@ final class TimbreUITests: XCTestCase {
         app = XCUIApplication()
         app.launchEnvironment["TIMBRE_TEST_STORAGE_ID"] = UUID().uuidString
         app.launchEnvironment["TIMBRE_DEBUG_STATE"] = "1"
-        app.launchArguments = ["-AppleLanguages", "(\(Self.language))", "-AppleLocale", Self.locale]
+        app.launchArguments = CaptureLocalization.launchArguments
     }
 
     /// The tour's language: English, unless the run asks for another to capture a localized store set
@@ -26,7 +26,6 @@ final class TimbreUITests: XCTestCase {
     /// `tools/marketing/screenshots.py … --locale de-DE`). Chord completion and results frames use semantic identifiers,
     /// not English captions. Other tour selectors still need localization coverage; this does not certify every frame.
     private static let language = CaptureLocalization.language
-    private static let locale = CaptureLocalization.locale
 
     override func tearDownWithError() throws {
         if (testRun?.totalFailureCount ?? 0) > 0 { shot("zz-failure-\(name)") }
@@ -46,6 +45,7 @@ final class TimbreUITests: XCTestCase {
         if demo { app.launchEnvironment["TIMBRE_DEMO_DATA"] = "1" }
         if studio { app.launchEnvironment["TIMBRE_STAGE_MODE"] = "studio" }
         app.launch()
+        CaptureLocalization.recordLaunch(context: "iphone")
     }
 
     private func shot(_ name: String) {
@@ -863,7 +863,8 @@ final class TimbreUITests: XCTestCase {
     /// again).
     func test11StoreTunerLock() throws {
         app.launchEnvironment["TIMBRE_DEBUG_STATE"] = "1"
-        launch(pitch: true, scene: "tune-locked", comet: true)
+        // A still frame must keep the actual lock, not reselect the string during the later accessibility snapshot.
+        launch(pitch: true, scene: "tune-locked")
         storeFrame("10b-tune-locked", tuner: lockedTunerFrame(strings: 3))
     }
 

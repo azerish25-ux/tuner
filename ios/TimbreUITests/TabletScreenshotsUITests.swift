@@ -17,7 +17,7 @@ final class TabletScreenshotsUITests: XCTestCase {
         app.launchEnvironment["TIMBRE_SCENE"] = "tune-locked"
         // The tuner's probe (stage.state) says when the 3D model has replaced its studio render.
         app.launchEnvironment["TIMBRE_DEBUG_STATE"] = "1"
-        app.launchArguments = ["-AppleLanguages", "(\(CaptureLocalization.language))", "-AppleLocale", CaptureLocalization.locale]
+        app.launchArguments = CaptureLocalization.launchArguments
     }
 
     override func tearDownWithError() throws {
@@ -27,6 +27,7 @@ final class TabletScreenshotsUITests: XCTestCase {
     func testTabletLayouts() throws {
         XCUIDevice.shared.orientation = .portrait
         app.launch()
+        CaptureLocalization.recordLaunch(context: "ipad")
         XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 30))
 
         // App Store frame (iPad #1 in landscape): the 3D headstock with the scene's lock, never the studio stand-in.

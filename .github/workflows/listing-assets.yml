@@ -1,0 +1,231 @@
+# Explicit opt-in, artifact-only capture/render evidence. Never Apple delivery or branch publication.
+name: Localized listing assets
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      locales:
+        description: 'all, or exact comma-separated listing codes (pilot: en-US,de-DE,ar-SA)'
+        type: string
+        default: all
+        required: true
+      scope:
+        description: Assets to capture from the actual localized app
+        type: choice
+        options: [all, screenshots, previews]
+        default: all
+        required: true
+      violin:
+        description: Include supplemental violin CPP preview (not a complete localized CPP set)
+        type: boolean
+        default: false
+permissions:
+  contents: read
+concurrency:
+  group: listing-assets-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  plan:
+    if: >-
+      github.ref == 'refs/heads/main' &&
+      (github.event_name == 'workflow_dispatch' ||
+       contains(github.event.head_commit.message, '[listing-assets-pilot]') ||
+       contains(github.event.head_commit.message, '[listing-assets-all]'))
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Validate requested scope and exact locale coverage
+        id: plan
+        env:
+          LOCALES: ${{ inputs.locales || 'all' }}
+          SCOPE: ${{ inputs.scope || 'all' }}
+          VIOLIN: ${{ inputs.violin || false }}
+          EVENT_NAME: ${{ github.event_name }}
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+        run: |
+          set -euo pipefail
+          extra=()
+          if [ "$VIOLIN" = true ]; then extra+=(--violin); fi
+          python3 tools/marketing/listing_assets.py plan --locales "$LOCALES" --scope "$SCOPE" "${extra[@]}" --event "$EVENT_NAME" --message="$COMMIT_MESSAGE" --out ci-out/plan.json > ci-out-matrix.json
+          echo "matrix=$(cat ci-out-matrix.json)" >> "$GITHUB_OUTPUT"
+          python3 -m venv ci-out/test-venv
+          ci-out/test-venv/bin/pip install --quiet pillow
+          ci-out/test-venv/bin/python3 -m unittest discover -s tools/marketing/tests -p 'test_listing_assets.py'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: listing-plan
+          path: ci-out/plan.json
+          if-no-files-found: error
+          retention-days: 7
+
+  build:
+    needs: plan
+    runs-on: macos-15
+    timeout-minutes: 45
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+      HOMEBREW_NO_AUTO_UPDATE: '1'
+      HOMEBREW_NO_INSTALL_CLEANUP: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Generate complete capture fixtures and project once
+        run: |
+          set -euo pipefail
+          command -v xcodegen >/dev/null 2>&1 || brew install xcodegen
+          python3 tools/marketing/listing_assets.py fixtures
+          (cd ios && xcodegen generate)
+          grep -F 'CaptureLocalizationExpected.json in Resources' ios/Timbre.xcodeproj/project.pbxproj
+      - name: Prepare and audit pinned caption fonts once
+        run: |
+          set -euo pipefail
+          python3 -m venv ios/build/listing-venv
+          ios/build/listing-venv/bin/pip install --quiet -r tools/marketing/requirements.txt
+          ios/build/listing-venv/bin/python3 tools/marketing/font_assets.py --audit --out ci-out/build/caption-typography.json
+          tar -C build -czf ci-out/build/caption-fonts.tgz marketing-fonts
+      - name: Ensure Metal toolchain
+        run: bash tools/ci/ensure-metal.sh
+      - name: Build unsigned simulator app and tests once
+        run: |
+          set -euo pipefail
+          mkdir -p ci-out/build
+          xcodebuild build-for-testing -project ios/Timbre.xcodeproj -scheme Timbre \
+            -destination 'generic/platform=iOS Simulator' -derivedDataPath ios/build/listing \
+            CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/build/build.log
+          tar -C ios/build/listing/Build -czf ci-out/build/products.tgz Products
+          python3 - <<'PY'
+          import os, platform, subprocess
+          from pathlib import Path
+          import sys
+          sys.path.insert(0, 'tools/marketing')
+          import listing_assets
+          archive = Path('ci-out/build/products.tgz')
+          info = {
+              'source_sha': os.environ['GITHUB_SHA'],
+              'archive_sha256': listing_assets.digest(archive),
+              'xcode_version': subprocess.check_output(['xcodebuild', '-version'], text=True).strip(),
+              'machine': platform.machine(),
+              'font_archive_sha256': listing_assets.digest(Path('ci-out/build/caption-fonts.tgz')),
+              'typography_sha256': listing_assets.digest(Path('ci-out/build/caption-typography.json')),
+              'fixture_sha256': listing_assets.digest(Path('ios/TimbreUITests/CaptureLocalizationExpected.json')),
+          }
+          listing_assets.write_json(Path('ci-out/build/build-info.json'), info)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: listing-simulator-build
+          path: ci-out/build
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
+
+  capture:
+    needs: [plan, build]
+    runs-on: macos-15
+    timeout-minutes: 150
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+      HOMEBREW_NO_AUTO_UPDATE: '1'
+      HOMEBREW_NO_INSTALL_CLEANUP: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: listing-simulator-build
+          path: ci-build
+      - name: Restore one shared build and prepare renderer
+        run: |
+          set -euo pipefail
+          mkdir -p ios/build/listing/Build
+          tar -xzf ci-build/products.tgz -C ios/build/listing/Build
+          mkdir -p build ci-out
+          tar -xzf ci-build/caption-fonts.tgz -C build
+          cp ci-build/caption-typography.json ci-out/caption-typography.json
+          python3 -m venv ios/build/listing/venv
+          ios/build/listing/venv/bin/pip install --quiet -r tools/marketing/requirements.txt
+          echo "LISTING_PY=$PWD/ios/build/listing/venv/bin/python3" >> "$GITHUB_ENV"
+          command -v ffmpeg >/dev/null 2>&1 || brew install ffmpeg
+      - name: Verify restored font hashes without downloading or repeating the audit
+        run: |
+          "$LISTING_PY" - <<'PY'
+          import sys
+          from pathlib import Path
+          sys.path.insert(0, 'tools/marketing')
+          import font_assets, listing_assets
+          info = listing_assets.read_json(Path('ci-build/build-info.json'))
+          for filename, key in [('caption-fonts.tgz', 'font_archive_sha256'), ('caption-typography.json', 'typography_sha256')]:
+              if listing_assets.digest(Path('ci-build') / filename) != info[key]:
+                  raise SystemExit('Shared font/audit artifact hash mismatch')
+          audit = listing_assets.read_json(Path('ci-out/caption-typography.json'))
+          if audit.get('listing_locales') != 50 or audit.get('failures') or audit.get('layout_failures'):
+              raise SystemExit('Shared all-50 caption audit did not pass')
+          font_assets.install(Path('build/marketing-fonts'))
+          PY
+      - name: Capture and render selected locales without rebuilding
+        env:
+          LOCALES: ${{ matrix.locales }}
+          KIND: ${{ matrix.kind }}
+        run: |
+          "$LISTING_PY" tools/marketing/run_listing_assets.py --locales "$LOCALES" --kind "$KIND" \
+            --products ios/build/listing/Build/Products --build-archive ci-build/products.tgz \
+            --build-info ci-build/build-info.json --source-sha "$GITHUB_SHA" \
+            --out ci-out/assets --manifests ci-out/manifests
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: listing-assets-${{ matrix.id }}
+          path: |
+            ci-out/assets
+            ci-out/caption-typography.json
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: listing-manifests-${{ matrix.id }}
+          path: ci-out/manifests
+          if-no-files-found: error
+          retention-days: 7
+
+  inventory:
+    if: always() && needs.plan.result == 'success'
+    needs: [plan, build, capture]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: listing-plan
+          path: ci-plan
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: listing-manifests-*
+          path: ci-manifests
+      - name: Require every requested locale and asset set, with matching provenance
+        run: |
+          python3 tools/marketing/listing_assets.py aggregate --plan ci-plan/plan.json \
+            --manifests ci-manifests --source-sha "$GITHUB_SHA" --out ci-out/inventory.json
+          echo 'Capture/render mechanical checks passed. Native-language, glyph/RTL/layout and visual/audio review remain pending; release_ready is false.' >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: listing-inventory
+          path: ci-out/inventory.json
+          if-no-files-found: error
+          retention-days: 7

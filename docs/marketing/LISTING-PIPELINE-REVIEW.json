@@ -1,0 +1,45 @@
+{
+  "status": "implemented-and-independently-code-reviewed-native-pilot-pending",
+  "scope": "50 supported listing locales;9iPhone+4iPad screenshots and one main preview perlocale;650screenshots+50videos are target outputs, not completed assets",
+  "checks": {
+    "marketing_tests": 44,
+    "localized_capture_contracts": 21,
+    "full_localization_tests": 152,
+    "actionlint": "passed",
+    "python_compile": "passed",
+    "diff_check": "passed"
+  },
+  "independent_review": "No blocking defect found for pilot. Malformed manifests fail closed with inventory diagnostics; missing lesson resources blocked; actual localized tab labels required; main-only artifact publication, no Apple upload or credentials.",
+  "pilot": {
+    "locales": [
+      "en-US",
+      "de-DE",
+      "ar-SA"
+    ],
+    "workers": 6,
+    "max_parallel": 2
+  },
+  "all": {
+    "locales": 50,
+    "workers": 75,
+    "max_parallel": 2
+  },
+  "pending": [
+    "native Swift build and relocated Xcode build reuse",
+    "actual localized captures and audio/video renders",
+    "visual/native review of all sets",
+    "missing sk/sl/uk lesson imports before those sets"
+  ],
+  "file_sha256": {
+    ".github/workflows/listing-assets.yml": "dce78b9893957954bc00e90116e9601612b17e5bd37be3a6474ab8e3cdf07f55",
+    "tools/marketing/listing_assets.py": "108cd5d6487493f022e26bf57bef05606b7194ddc2573b8c835d4bd849bd0fc8",
+    "tools/marketing/run_listing_assets.py": "0bd831682186068960f179454b654bd07f624c4db5513c6e23c7b51f5a1e8871",
+    "tools/marketing/tests/test_listing_assets.py": "5644bd717cc91ede40eab43d8cbf8226ebc9a9b7348765ee0e83b44e3cb5deef",
+    "ios/TimbreUITests/AppPreviewUITests.swift": "c5129671da0c25d1ca7f7f08476af04e5440f91c5c9279bfaa11ab37835978e9",
+    "ios/TimbreUITests/CaptureLocalization.swift": "4c7aa0d46b24ef2372f96644a35e8be6aa39b2d925fde64bddc603dfee670a7a",
+    "ios/TimbreUITests/ListingCaptureEvidenceUITests.swift": "bf3302d53be5f8d9056b199f077b4167a505e5c8dbef6627163019693c8226cf",
+    "ios/TimbreUITests/TabletScreenshotsUITests.swift": "7b07db1ba61e3871078d45a42e7c312b53b4a4efdeef342e2d1c34936786a36f",
+    "ios/TimbreUITests/TimbreUITests.swift": "442a520039ee626c630f766df919fa389c874cbbec80efb8af18bd8b0115de9c",
+    "tools/l10n/tests/test_localized_capture_checks.py": "df330b29eecee134e599cb764d86356f46d6d28a611c7906c003a5cc534e8650"
+  }
+}

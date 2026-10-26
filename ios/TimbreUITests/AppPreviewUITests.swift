@@ -155,8 +155,9 @@ final class AppPreviewUITests: XCTestCase {
         if let scene { environment["TIMBRE_SCENE"] = scene }
         environment.merge(extra) { _, new in new }
         app.launchEnvironment = environment
-        app.launchArguments = ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
+        app.launchArguments = CaptureLocalization.launchArguments
         app.launch()
+        CaptureLocalization.recordLaunch(context: "preview-" + (scene ?? "songs"))
     }
 
     // MARK: Scenes
@@ -389,7 +390,8 @@ final class AppPreviewUITests: XCTestCase {
         if let root = try? app.snapshot() {
             var pending: [XCUIElementSnapshot] = [root]
             while let node = pending.popLast() {
-                if node.label == "Combo", let value = node.value as? String { combo = Int(value.prefix { $0.isNumber }) ?? 0 }
+                if node.identifier.hasPrefix("performance.combo."),
+                   let value = Int(node.identifier.dropFirst("performance.combo.".count)) { combo = max(combo, value) }
                 pending.append(contentsOf: node.children)
             }
         }
@@ -554,8 +556,12 @@ final class AppPreviewUITests: XCTestCase {
 
     /// The celebration card: its "Ready to play" button, or its headline.
     private func celebration() -> XCUIElement {
-        app.descendants(matching: .any)
-            .matching(NSPredicate(format: "identifier == %@ OR label == %@", "celebration.lesson", "All strings in tune"))
+        guard let headline = CaptureLocalization.allTuned else {
+            XCTFail("Missing localized preview celebration fixture")
+            return element("__missing_preview_celebration_fixture__")
+        }
+        return app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier == %@ OR label == %@", "celebration.lesson", headline))
             .firstMatch
     }
 
@@ -591,8 +597,12 @@ final class AppPreviewUITests: XCTestCase {
     // MARK: Lessons
 
     private func lessonButtonReads(_ title: String) -> Bool {
+        guard let label = CaptureLocalization.lessonButtonLabel(title) else {
+            XCTFail("Missing localized preview lesson-button fixture for \(title)")
+            return false
+        }
         let button = element("lesson.continue")
-        return button.exists && button.isEnabled && button.label == title
+        return button.exists && button.isEnabled && button.label == label
     }
 
     /// Taps the lesson's big bottom button once it reads `title` and is enabled, again if the tap is lost (it still
@@ -644,7 +654,11 @@ final class AppPreviewUITests: XCTestCase {
 
     /// Taps a tab until it is selected (a tap while a sheet is still closing can be swallowed).
     private func tab(_ name: String) {
-        let button = app.tabBars.buttons[name].firstMatch
+        guard let label = CaptureLocalization.tabLabel(name) else {
+            XCTFail("Missing localized preview tab fixture for \(name)")
+            return
+        }
+        let button = app.tabBars.buttons[label].firstMatch
         for attempt in 0..<4 {
             button.tap()
             if button.isSelected { return }
