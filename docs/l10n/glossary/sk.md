@@ -180,3 +180,16 @@ E–A–D–G–B–E mnemonic adaptation: Eva a Dávid grilujú bez elektriny. 
 - Spray Paint Sunrise → Úsvit nasprejovaný farbou
 - Sparkler Season → Sezóna prskaviek
 - Sixteenth count one-e-and-a → raz-e-a-da; preserve four syllables/subdivisions, matching dva-e-a-da. Country boom-chick → bum-čik. Reggae offbeat here explicitly means weak beats two and four, rendered ľahké doby, not medzi dobami.
+- Gravel Road Two-Step → Two-step na štrkovej ceste
+- Lantern Hill → Lampášový vrch
+- Triad → trojzvuk; inversion → obrat; root-position → základný tvar/poloha; CAGED stays the acronym formed by exact source chord letters C A G E D.
+- Roller Rink → Korčuliarsky parket
+- Late Checkout → Neskorý odchod z hotela
+- Major seventh chord → veľký durový septakord; minor seventh chord → malý molový septakord; major/minor seventh interval → veľká/malá septima. B flat in this app’s A–G notation → znížené B, avoiding local B/H ambiguity and preserving accidental-glyph guard.
+- Joy to the World → Radosť svetu
+- Market Day → Trhový deň
+- A Dorian → dórsky modus od A; D Mixolydian → mixolýdický modus od D. Descriptive phrasing distinguishes the mode name from a key quality while preserving the same tonic.
+- Slow Motion Strobe → Spomalený stroboskop
+- Jukebox Moon → Jukeboxový mesiac
+- Song-form bridge → mostík (not instrument kobylka); tag → opakovaný záver; fill → výplň; texture in arranging → spôsob sprievodu.
+- Ukulele G C E A mnemonic proposal: Gorila cíti egrešovú arómu. Exact initials G C E A preserved; independent review pending.
