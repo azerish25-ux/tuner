@@ -1,0 +1,18 @@
+{
+  "observed_run": 40286089721,
+  "rtl_retry_job": 121503151714,
+  "failure": "Failed to get background assertion for target app with pid 31363: Timed out while acquiring background assertion.",
+  "source_location": "LocalizationMatrixUITests.swift:32 (application.launch())",
+  "original_indic_job": 121450253499,
+  "same_infrastructure_failure_observed": true,
+  "repair": "Recognize only exact framework timeout message; restart simulator before existing single full-test retry; retain both logs/result bundles.",
+  "not_waived": [
+    "Translation assertions",
+    "Clipping assertions",
+    "Unknown background failure reasons",
+    "Build failures",
+    "Missing language completion markers"
+  ],
+  "local_regression_tests": 9,
+  "new_ci_verification": "pending; current Indic retry uses older source, not this repair"
+}

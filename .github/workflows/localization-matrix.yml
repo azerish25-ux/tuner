@@ -13,7 +13,7 @@ jobs:
   localized-launch:
     if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[l10n-matrix]')
     runs-on: macos-15
-    timeout-minutes: 45
+    timeout-minutes: 60
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -70,7 +70,9 @@ jobs:
             # Retry once only if every failure is classified as app-launch infrastructure.
             # Build failures, missing translations, clipping and all other assertions still fail here.
             python3 tools/ci/launch_retry.py ci-out/test.log ci-out/relaunch.txt
-            xcrun simctl terminate "$DEVICE_ID" com.shahradazerisharghi.timbre || true
+            # Restart the simulator process, preserving installed build artifacts and both result bundles.
+            xcrun simctl shutdown "$DEVICE_ID" || true
+            xcrun simctl boot "$DEVICE_ID"
             xcrun simctl bootstatus "$DEVICE_ID" -b
             sleep 5
             run_matrix test-without-building ci-out/LocalizationRetry.xcresult ci-out/retry.log

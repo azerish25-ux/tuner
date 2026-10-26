@@ -40,6 +40,29 @@ class MatrixLaunchRetryTests(unittest.TestCase):
         self.assertEqual(status, 1)
         self.assertEqual(args, '')
 
+    def test_exact_framework_background_assertion_timeout_can_retry(self):
+        message = 'Failed to get background assertion for target app with pid 31363: Timed out while acquiring background assertion.'
+        status, args = self.run_classifier([message])
+        self.assertEqual(status, 0)
+        self.assertEqual(args, '-only-testing:' + self.name + '\n')
+
+    def test_background_timeout_does_not_hide_translation_failure(self):
+        message = 'Failed to get background assertion for target app with pid 31363: Timed out while acquiring background assertion.'
+        status, args = self.run_classifier([message, 'XCTAssertEqual failed - wrong translated tab'])
+        self.assertEqual(status, 1)
+        self.assertEqual(args, '')
+
+    def test_assertion_quoting_background_message_is_not_infrastructure(self):
+        message = 'XCTAssertTrue failed - Failed to get background assertion for target app with pid 31363: Timed out while acquiring background assertion.'
+        status, args = self.run_classifier([message])
+        self.assertEqual(status, 1)
+        self.assertEqual(args, '')
+
+    def test_other_background_failure_is_not_classified_as_transient(self):
+        status, args = self.run_classifier(['Failed to get background assertion for target app with pid 31363: Permission denied.'])
+        self.assertEqual(status, 1)
+        self.assertEqual(args, '')
+
     def test_build_failure_has_no_retry_tests(self):
         eligible, other = launch_retry.classify('error: cannot find symbol\n** TEST BUILD FAILED **')
         self.assertEqual((eligible, other), ([], []))
@@ -57,6 +80,8 @@ class MatrixLaunchRetryTests(unittest.TestCase):
         self.assertIn('python3 tools/ci/launch_retry.py ci-out/test.log ci-out/relaunch.txt', workflow)
         self.assertIn('run_matrix test-without-building ci-out/LocalizationRetry.xcresult ci-out/retry.log', workflow)
         self.assertIn('EVIDENCE_LOG=ci-out/retry.log', workflow)
+        self.assertIn('xcrun simctl shutdown "$DEVICE_ID"', workflow)
+        self.assertIn('xcrun simctl boot "$DEVICE_ID"', workflow)
         self.assertIn('--verify-log "$EVIDENCE_LOG"', workflow)
         self.assertIn('--output-path ci-out/retry-screenshots', workflow)
 

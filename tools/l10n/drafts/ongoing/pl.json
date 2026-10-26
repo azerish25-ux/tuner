@@ -1,0 +1,780 @@
+{
+  "locale": "pl",
+  "captured_at": "2026-10-26T10:22:36.412120+00:00",
+  "status": "partial-unreviewed-author-draft-not-imported",
+  "review_status": "independent semantic review pending",
+  "source_todo_sha256": "ff7956e37a895084c72d16586ca5271e0e750df11a84cb95ed8a71ea7b3e4d56",
+  "drafted_nonempty_entries": 96,
+  "required_current_source_keys": 6083,
+  "scope": "Snapshot of accepted nonempty authoring TODO entries only; held exact-source draft candidates and work written later are not included. This is preservation, not import or completion. Context metadata may predate the separately reviewed ordinal reference remap; authoritative current curriculum governs integration.",
+  "rows": [
+    {
+      "table": "Learn.strings",
+      "key": "L94af6c4088",
+      "source": "Guitar",
+      "translation": "Gitara",
+      "context": "Guitar course · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2525f0dd1a",
+      "source": "From your first note to fingerstyle, blues and lead",
+      "translation": "Od pierwszej nuty do fingerstyle, bluesa i solówek",
+      "context": "Guitar course · course subtitle",
+      "max_length": 80
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld1e7626b0f",
+      "source": "Hello, guitar",
+      "translation": "Cześć, gitaro",
+      "context": "Guitar · Unit 1 “Hello, guitar” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld0ad414962",
+      "source": "Hold it, tune it, play your first notes.",
+      "translation": "Chwyć ją, nastrój i zagraj pierwsze nuty.",
+      "context": "Guitar · Unit 1 “Hello, guitar” · unit summary",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L377bdd369e",
+      "source": "Meet your guitar",
+      "translation": "Poznaj swoją gitarę",
+      "context": "Guitar · Unit 1 · lesson gtr-1-1 “Meet your guitar” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L35fd49f78b",
+      "source": "Six strings, one job",
+      "translation": "Sześć strun, jedno zadanie",
+      "context": "Guitar · Unit 1 · lesson gtr-1-1 “Meet your guitar” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld7f60a63df",
+      "source": "The thickest string is the lowest. It sits nearest your face when you play. We call it string 6.",
+      "translation": "Najgrubsza struna brzmi najniżej. Podczas gry jest najbliżej twojej twarzy. Nazywamy ją struną 6.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-1 “Meet your guitar” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2f8101b73b",
+      "source": "Turn to tune",
+      "translation": "Obróć klucz, by nastroić",
+      "context": "Guitar · Unit 1 · lesson gtr-1-1 “Meet your guitar” · step 2 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L96b66429e0",
+      "source": "Each string has a tuning peg on the head. Turning it changes the pitch. Timbre listens and tells you which way.",
+      "translation": "Każda struna ma na główce klucz do strojenia. Obracanie go zmienia wysokość dźwięku. Timbre słucha i wskazuje kierunek.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-1 “Meet your guitar” · step 2 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L1c9c8a30d5",
+      "source": "Which string is string 6?",
+      "translation": "Która struna ma numer 6?",
+      "context": "Guitar · Unit 1 · lesson gtr-1-1 “Meet your guitar” · step 3 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L3fe3239a4a",
+      "source": "The thickest",
+      "translation": "Najgrubsza",
+      "context": "Guitar · Unit 1 · lesson gtr-1-1 “Meet your guitar” · step 3 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L9ef451a1cc",
+      "source": "The thinnest",
+      "translation": "Najcieńsza",
+      "context": "Guitar · Unit 1 · lesson gtr-1-1 “Meet your guitar” · step 3 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lb25076c5d4",
+      "source": "The middle one",
+      "translation": "Środkowa",
+      "context": "Guitar · Unit 1 · lesson gtr-1-1 “Meet your guitar” · step 3 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lab41f6b897",
+      "source": "Strings count from the thinnest (1) to the thickest (6).",
+      "translation": "Struny liczymy od najcieńszej (1) do najgrubszej (6).",
+      "context": "Guitar · Unit 1 · lesson gtr-1-1 “Meet your guitar” · step 3 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L73ff0ae4b6",
+      "source": "Pluck the thickest string and let it ring.",
+      "translation": "Szarpnij najgrubszą strunę i pozwól jej wybrzmieć.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-1 “Meet your guitar” · step 4 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L8d8d13f6af",
+      "source": "Now the thinnest one, string 1.",
+      "translation": "Teraz najcieńsza, struna 1.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-1 “Meet your guitar” · step 5 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf608c3d2a6",
+      "source": "The open strings",
+      "translation": "Puste struny",
+      "context": "Guitar · Unit 1 · lesson gtr-1-2 “The open strings” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Leba98ce894",
+      "source": "From thick to thin: E, A, D, G, B, E. Try: Every Amateur Does Get Better Eventually.",
+      "translation": "Od grubej do cienkiej: E, A, D, G, B, E. Zapamiętaj inicjały angielskiego zdania: Every Amateur Does Get Better Eventually.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-2 “The open strings” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L62773cc1b4",
+      "source": "Play strings 6, 5 and 4, one at a time.",
+      "translation": "Zagraj struny 6, 5 i 4, po jednej.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-2 “The open strings” · step 2 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Led8834e508",
+      "source": "Now strings 3, 2 and 1.",
+      "translation": "Teraz struny 3, 2 i 1.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-2 “The open strings” · step 3 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L10bf85ce64",
+      "source": "What is string 5 called?",
+      "translation": "Jaki dźwięk daje struna 5?",
+      "context": "Guitar · Unit 1 · lesson gtr-1-2 “The open strings” · step 4 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lef015c7687",
+      "source": "Which is higher?",
+      "translation": "Który dźwięk jest wyższy?",
+      "context": "Guitar · Unit 1 · lesson gtr-1-2 “The open strings” · step 5 (listen) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L957dc77c43",
+      "source": "The first",
+      "translation": "Pierwsza opcja",
+      "context": "Guitar · Unit 1 · lesson gtr-1-2 “The open strings” · step 5 (listen) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lbece65d16e",
+      "source": "The second",
+      "translation": "Druga opcja",
+      "context": "Guitar · Unit 1 · lesson gtr-1-2 “The open strings” · step 5 (listen) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L3507df125b",
+      "source": "Open-string roll call",
+      "translation": "Puste struny po kolei",
+      "context": "Guitar · Unit 1 · lesson gtr-1-2 “The open strings” · step 6 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lacbf27617c",
+      "source": "Your first fretted notes",
+      "translation": "Pierwsze dźwięki na progach",
+      "context": "Guitar · Unit 1 · lesson gtr-1-3 “Your first fretted notes” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L9114298cd0",
+      "source": "Press just behind the fret",
+      "translation": "Dociśnij tuż za progiem",
+      "context": "Guitar · Unit 1 · lesson gtr-1-3 “Your first fretted notes” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2b54566755",
+      "source": "Put your fingertip just behind the metal fret, not on top of it. Press firmly enough for a clean ring.",
+      "translation": "Połóż czubek palca tuż za metalowym progiem, nie na nim. Dociśnij na tyle mocno, by dźwięk był czysty.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-3 “Your first fretted notes” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lfb39835aeb",
+      "source": "String 1, fret 1, first finger.",
+      "translation": "Struna 1, próg 1, pierwszy palec.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-3 “Your first fretted notes” · step 2 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2ceccefc66",
+      "source": "String 1, fret 3, third finger.",
+      "translation": "Struna 1, próg 3, trzeci palec.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-3 “Your first fretted notes” · step 3 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L44368c8e63",
+      "source": "Open, fret 1, fret 3: E, F, G.",
+      "translation": "Pusta, próg 1, próg 3: E, F, G.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-3 “Your first fretted notes” · step 4 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lbb91147d34",
+      "source": "Where do you press?",
+      "translation": "Gdzie dociskasz strunę?",
+      "context": "Guitar · Unit 1 · lesson gtr-1-3 “Your first fretted notes” · step 5 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La1f91698f6",
+      "source": "Just behind the fret",
+      "translation": "Tuż za progiem",
+      "context": "Guitar · Unit 1 · lesson gtr-1-3 “Your first fretted notes” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L4d11838152",
+      "source": "On top of the fret",
+      "translation": "Na progu",
+      "context": "Guitar · Unit 1 · lesson gtr-1-3 “Your first fretted notes” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L1471e7977b",
+      "source": "Between two frets, in the middle",
+      "translation": "W połowie między dwoma progami",
+      "context": "Guitar · Unit 1 · lesson gtr-1-3 “Your first fretted notes” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lc15b166920",
+      "source": "Up and back",
+      "translation": "W górę i z powrotem",
+      "context": "Guitar · Unit 1 · lesson gtr-1-3 “Your first fretted notes” · step 6 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lbb69c85edd",
+      "source": "Your first chord: E minor",
+      "translation": "Twój pierwszy akord: E-moll",
+      "context": "Guitar · Unit 1 · lesson gtr-1-4 “Your first chord: E minor” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld662d5e26b",
+      "source": "Two fingers, six strings",
+      "translation": "Dwa palce, sześć strun",
+      "context": "Guitar · Unit 1 · lesson gtr-1-4 “Your first chord: E minor” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L09a5833cec",
+      "source": "E minor uses two fingers on fret 2, strings 5 and 4. Every string rings.",
+      "translation": "E-moll wymaga dwóch palców na progu 2, na strunach 5 i 4. Brzmią wszystkie struny.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-4 “Your first chord: E minor” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L16fedb6c29",
+      "source": "Strum down",
+      "translation": "Uderz w dół",
+      "context": "Guitar · Unit 1 · lesson gtr-1-4 “Your first chord: E minor” · step 3 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L218ffdfd51",
+      "source": "Brush across all six strings from thick to thin, one smooth motion. Keep your wrist loose.",
+      "translation": "Przeciągnij przez wszystkie sześć strun od grubej do cienkiej jednym płynnym ruchem. Rozluźnij nadgarstek.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-4 “Your first chord: E minor” · step 3 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L5a4c7da42b",
+      "source": "First-steps challenge",
+      "translation": "Wyzwanie pierwszych kroków",
+      "context": "Guitar · Unit 1 · challenge gtr-1-5 “First-steps challenge” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L502e8524eb",
+      "source": "No new ideas, just you",
+      "translation": "Bez nowości, teraz twoja kolej",
+      "context": "Guitar · Unit 1 · challenge gtr-1-5 “First-steps challenge” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lb047858f7f",
+      "source": "This challenge mixes the whole unit: the open strings, E, F and G on string 1, and E minor. Take a breath between steps.",
+      "translation": "To wyzwanie łączy całą jednostkę: puste struny, E, F i G na strunie 1 oraz E-moll. Weź oddech między krokami.",
+      "context": "Guitar · Unit 1 · challenge gtr-1-5 “First-steps challenge” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lcbdcef465a",
+      "source": "From thick to thin, the open strings are…",
+      "translation": "Od grubej do cienkiej puste struny to…",
+      "context": "Guitar · Unit 1 · challenge gtr-1-5 “First-steps challenge” · step 2 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L3534785c8b",
+      "source": "Every Amateur Does Get Better Eventually: E A D G B E, string 6 to string 1.",
+      "translation": "Inicjały angielskiego Every Amateur Does Get Better Eventually: E A D G B E, od struny 6 do struny 1.",
+      "context": "Guitar · Unit 1 · challenge gtr-1-5 “First-steps challenge” · step 2 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L3ed18e44f0",
+      "source": "Roll call, thin to thick",
+      "translation": "Po kolei, od cienkiej do grubej",
+      "context": "Guitar · Unit 1 · challenge gtr-1-5 “First-steps challenge” · step 3 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lfb15c73b73",
+      "source": "Which is lower?",
+      "translation": "Który dźwięk jest niższy?",
+      "context": "Guitar · Unit 1 · challenge gtr-1-5 “First-steps challenge” · step 4 (listen) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L7aeab8183d",
+      "source": "E, F and G",
+      "translation": "E, F i G",
+      "context": "Guitar · Unit 1 · challenge gtr-1-5 “First-steps challenge” · step 5 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L13a24a6c0d",
+      "source": "Mary Had a Little Lamb: three notes",
+      "translation": "Mary miała małe jagnię: trzy nuty",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld0ea5ebdfa",
+      "source": "Your first song",
+      "translation": "Twoja pierwsza piosenka",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L67684dd3f9",
+      "source": "Mary Had a Little Lamb needs three notes: open string 2 is B, fret 2 on string 3 is A, and open string 3 is G. Your second finger plays the A.",
+      "translation": "„Mary miała małe jagnię” wymaga trzech nut: pusta struna 2 to B, próg 2 na strunie 3 to A, a pusta struna 3 to G. Dźwięk A grasz drugim palcem.",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L0f0ba5e96c",
+      "source": "String 3, fret 2, second finger. That's A.",
+      "translation": "Struna 3, próg 2, drugi palec. To A.",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · step 2 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La0e88a1c69",
+      "source": "B A G A B B B: open string 2, then string 3.",
+      "translation": "B A G A B B B: pusta struna 2, potem struna 3.",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · step 3 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lb35d67698f",
+      "source": "First half",
+      "translation": "Pierwsza połowa",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · step 4 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L401ad01ac9",
+      "source": "The verse",
+      "translation": "Zwrotka",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · step 5 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ldb4211a03a",
+      "source": "Mary Had a Little Lamb",
+      "translation": "Mary miała małe jagnię",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · step 6 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lb4e6a31089",
+      "source": "Intro",
+      "translation": "Wstęp",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · arrangement · song section label (Intro, Verse 1 …) on a small chip",
+      "max_length": 12
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L0c33a64f82",
+      "source": "Verse 1",
+      "translation": "Zwrotka 1",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · arrangement · song section label (Intro, Verse 1 …) on a small chip",
+      "max_length": 12
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L0d09e295cd",
+      "source": "Verse 2",
+      "translation": "Zwrotka 2",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · arrangement · song section label (Intro, Verse 1 …) on a small chip",
+      "max_length": 12
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lce9f8d903a",
+      "source": "Verse 3",
+      "translation": "Zwrotka 3",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · arrangement · song section label (Intro, Verse 1 …) on a small chip",
+      "max_length": 12
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L5acc606203",
+      "source": "Verse 4",
+      "translation": "Zwrotka 4",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · arrangement · song section label (Intro, Verse 1 …) on a small chip",
+      "max_length": 12
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L7c10b1802d",
+      "source": "Outro",
+      "translation": "Zakończenie",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · arrangement · song section label (Intro, Verse 1 …) on a small chip",
+      "max_length": 12
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L9e459895b8",
+      "source": "First melodies",
+      "translation": "Pierwsze melodie",
+      "context": "Guitar · Unit 2 “First melodies” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lfcd6ee8a23",
+      "source": "Notes on strings 1 and 2, reading tab, and your first two tunes.",
+      "translation": "Nuty na strunach 1 i 2, czytanie tabulatury i twoje pierwsze dwie melodie.",
+      "context": "Guitar · Unit 2 “First melodies” · unit summary",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L1185bdc7c0",
+      "source": "Three notes on string 2",
+      "translation": "Trzy nuty na strunie 2",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L46caccda3a",
+      "source": "String 2: B, C and D",
+      "translation": "Struna 2: B, C i D",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La536f7740f",
+      "source": "String 2 works like string 1. Open, it's B. Fret 1 with your first finger is C. Fret 3 with your third finger is D.",
+      "translation": "Struna 2 działa jak struna 1. Pusta to B. Próg 1 z pierwszym palcem to C. Próg 3 z trzecim palcem to D.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lc55cf4408c",
+      "source": "Pluck string 2 open. That's B.",
+      "translation": "Szarpnij pustą strunę 2. To B.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 2 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2200cf274d",
+      "source": "String 2, fret 1, first finger. That's C.",
+      "translation": "Struna 2, próg 1, pierwszy palec. To C.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 3 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L0819310447",
+      "source": "String 2, fret 3, third finger. That's D.",
+      "translation": "Struna 2, próg 3, trzeci palec. To D.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 4 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L23bce6a2de",
+      "source": "Which finger plays fret 3?",
+      "translation": "Którym palcem grasz na progu 3?",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 5 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L916a78d701",
+      "source": "First",
+      "translation": "Pierwszy",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L8d3e7efd0a",
+      "source": "Second finger",
+      "translation": "Drugi palec",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lafec931374",
+      "source": "Third finger",
+      "translation": "Trzeci palec",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La7ac4ed745",
+      "source": "Fourth finger",
+      "translation": "Czwarty palec",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La5ee2d48fb",
+      "source": "One finger per fret: fret 1 gets finger 1, fret 2 gets finger 2, fret 3 gets finger 3.",
+      "translation": "Jeden palec na próg: próg 1 to palec 1, próg 2 to palec 2, próg 3 to palec 3.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 5 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L4e95f3a260",
+      "source": "Thumb behind the neck",
+      "translation": "Kciuk z tyłu gryfu",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 6 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld211b97b75",
+      "source": "Rest your thumb on the back of the neck, behind your second finger. Your fingers can then arch and land on their tips.",
+      "translation": "Oprzyj kciuk z tyłu gryfu, naprzeciw drugiego palca. Wtedy palce mogą się wygiąć i dotykać strun czubkami.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 6 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L3c50e8b84e",
+      "source": "Up and back on string 2",
+      "translation": "W górę i z powrotem na strunie 2",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 7 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L45d13a2383",
+      "source": "Reading tab",
+      "translation": "Czytanie tabulatury",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L78a58336aa",
+      "source": "Tab is a map",
+      "translation": "Tabulatura jest mapą",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L8ab2f23db2",
+      "source": "Tab draws six lines, one per string, with string 1 on top. A number on a line is the fret to press. A 0 means play that string open.",
+      "translation": "Tabulatura ma sześć linii, po jednej na strunę, ze struną 1 u góry. Liczba na linii wskazuje próg do dociśnięcia. 0 oznacza pustą strunę.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lccf8acd553",
+      "source": "In tab, a 3 on the top line means…",
+      "translation": "W tabulaturze 3 na górnej linii oznacza…",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 2 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lc403ba83f1",
+      "source": "String 6, fret 3",
+      "translation": "Struna 6, próg 3",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 2 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L600e2dce19",
+      "source": "String 1, fret 3",
+      "translation": "Struna 1, próg 3",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 2 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld82df6e098",
+      "source": "Play three strings",
+      "translation": "Zagraj trzy struny",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 2 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L7277fd97d8",
+      "source": "The top line is string 1, the thinnest. The number is the fret.",
+      "translation": "Górna linia to struna 1, najcieńsza. Liczba wskazuje próg.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 2 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2a3bf68f34",
+      "source": "Top line: 0, 1, 3.",
+      "translation": "Górna linia: 0, 1, 3.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 3 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L7c796e01f6",
+      "source": "A 0 on the second line means…",
+      "translation": "0 na drugiej linii oznacza…",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 4 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2dd456e860",
+      "source": "Play string 2 open",
+      "translation": "Zagraj pustą strunę 2",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf9774646bd",
+      "source": "Don't play string 2",
+      "translation": "Nie graj struny 2",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lcff74c469b",
+      "source": "Press string 2 at fret 10",
+      "translation": "Dociśnij strunę 2 na progu 10",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ldcd6285c8b",
+      "source": "Second line: 3, 1, 0.",
+      "translation": "Druga linia: 3, 1, 0.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 5 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L6f1906dfa5",
+      "source": "Which note is this?",
+      "translation": "Jaka to nuta?",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 6 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L517a9d49ae",
+      "source": "Down the stairs",
+      "translation": "Schodami w dół",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 7 (along) · title",
+      "max_length": 42
+    }
+  ]
+}

@@ -5,7 +5,7 @@
 
 A simulator still settling after its boot can lose app launches for minutes: XCUITest reports "Failed to launch …
 Timed out while launching application via Xcode" or "Application … does not have a process ID", and the test ends
-there, before it has checked anything. Those tests are written to the second file as `-only-testing:` arguments, one a
+there, before it has checked anything. The exact XCUITest background-assertion timeout also qualifies as simulator lifecycle infrastructure; ordinary assertion text does not. Those tests are written to the second file as `-only-testing:` arguments, one a
 line (an empty file when there are none), so the job can run them once more.
 
 Exits 0 when every failed test failed only that way, so the outcome rests on that one more try; 1 when any test failed
@@ -23,6 +23,12 @@ ERROR = re.compile(r"\berror: -\[(?P<module>\w+)\.(?P<cls>\w+) (?P<test>\w+)\] :
 LAUNCH = re.compile(r"Failed to launch .* via Xcode|Timed out while launching application|does not have a process ID")
 
 
+BACKGROUND_ASSERTION = re.compile(
+    r"^Failed to get background assertion for target app with pid [1-9]\d*: "
+    r"Timed out while acquiring background assertion\.$"
+)
+
+
 def classify(text: str) -> tuple[list[str], list[str]]:
     """The failed tests (as `module/class/test`) that failed only at launch, and those that failed otherwise."""
     failed: list[str] = []
@@ -35,7 +41,7 @@ def classify(text: str) -> tuple[list[str], list[str]]:
             name = f"{match['module']}/{match['cls']}/{match['test']}"
             if name not in failed:
                 failed.append(name)
-    launch_only = [name for name in failed if errors.get(name) and all(LAUNCH.search(m) for m in errors[name])]
+    launch_only = [name for name in failed if errors.get(name) and all(LAUNCH.search(m) or BACKGROUND_ASSERTION.fullmatch(m) for m in errors[name])]
     others = [name for name in failed if name not in launch_only]
     return launch_only, others
 
