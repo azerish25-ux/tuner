@@ -1,0 +1,36 @@
+{
+ "status": "COMPLETE-independent-AI-semantic-review",
+ "unread_pairs": "remaining-pairs.json",
+ "unread_distinct_contexts": "remaining-semantic-contexts.json",
+ "pending_key_roles": "remaining-contexts.json",
+ "release_review_complete": true,
+ "source_questions": [
+  {
+   "key": "L14b529a7ef",
+   "ordinal": 938,
+   "question": "B major and C-sharp minor share the A-shape family but not identical major/minor fingerings. Source says one hand shape; translated faithfully. Optional pedagogy clarification, not a target-only error."
+  }
+ ],
+ "glossary_notes": [
+  "Later author lesson glossary deliberately uses akord rather than older UI akor; no global UI rewrite.",
+  "Explicit tingkat/derajat tangga nada preserves chord-function degrees rather than chord counts.",
+  "Tune verb setel/menyetel; penyetem remains the tuner noun; pickup uses nada ancang-ancang.",
+  "Quoted “dan” marks a named offbeat; ordinary sung count sequences remain unquoted.",
+  "Individually approved notation, proper work names and technical loanwords are exact whole-string approvals, not global exemptions."
+ ],
+ "layout_warnings": [
+  "All current mechanical length, numeric, newline and placeholder contracts passed apart from expected registry identity holds resolved individually in the review packet.",
+  "Actual device rendering, narration and VoiceOver remain untested."
+ ],
+ "limitations": [
+  "Independent AI review only, not native-human/device/audio certification.",
+  "Historical source claims not externally fact-checked.",
+  "Parent must apply guarded corrections, register individual identity receipts, and run canonical integration validation."
+ ],
+ "denial_or_external_block": false,
+ "unread_pair_count": 0,
+ "unread_distinct_context_count": 0,
+ "pending_context_record_count": 0,
+ "unresolved_target_issues": [],
+ "source_questions_block_integration": false
+}

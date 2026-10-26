@@ -1,0 +1,4810 @@
+{
+ "status": "COMPLETE-independent-AI-semantic-review",
+ "counts": {
+  "source_rows": 6083,
+  "pair_reviewed": 6083,
+  "pair_unread": 0,
+  "guarded_corrections": 112,
+  "individually_reasoned_identity_pairs": 337,
+  "distinct_shared_contexts_read": 1344,
+  "distinct_shared_contexts_unread": 0,
+  "supplemental_option_contexts_read": 201,
+  "context_records_reviewed": 6411,
+  "shared_records_reviewed": 4127,
+  "option_records_reviewed": 2284,
+  "shared_records_remaining": 0,
+  "option_records_remaining": 0,
+  "stale_context_snapshots": 0,
+  "nonidentity_qa_findings": 0,
+  "pair_dispositions": {
+   "accept": 5634,
+   "guarded-correction": 112,
+   "genuine-identity-approval": 337
+  },
+  "reviewed_current_map_rows": 6083
+ },
+ "mechanical_findings": [
+  {
+   "key": "Lebaa7ee42e",
+   "ordinal": 18,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L6dcd4ce23d",
+   "ordinal": 23,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L50c9e8d5fc",
+   "ordinal": 24,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lae4f281df5",
+   "ordinal": 25,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "La36a6718f5",
+   "ordinal": 26,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L4b8ddb7777",
+   "ordinal": 51,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "La42bbdd946",
+   "ordinal": 52,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L9fc93acaa4",
+   "ordinal": 68,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L5d7cef323e",
+   "ordinal": 72,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Le69f20e9f6",
+   "ordinal": 105,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L32096c2e0e",
+   "ordinal": 106,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lde97f92a64",
+   "ordinal": 121,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L7d6c1cd2a4",
+   "ordinal": 129,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Le0184adedf",
+   "ordinal": 148,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L100b455471",
+   "ordinal": 176,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L728cd633f1",
+   "ordinal": 178,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L9d5d06c602",
+   "ordinal": 196,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L25fd2930a3",
+   "ordinal": 197,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L806d33523e",
+   "ordinal": 198,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L5478c3c226",
+   "ordinal": 322,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lc3e1440b37",
+   "ordinal": 335,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "La47109ee9d",
+   "ordinal": 342,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L3602bcec2f",
+   "ordinal": 375,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Leab1d949c4",
+   "ordinal": 385,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L423f20489c",
+   "ordinal": 393,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lf93eaafc65",
+   "ordinal": 417,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L9f9413d895",
+   "ordinal": 420,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L2bf2d48e26",
+   "ordinal": 444,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L92d40794f5",
+   "ordinal": 450,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L53d54b3da0",
+   "ordinal": 453,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lebc3b18e39",
+   "ordinal": 518,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lb33edd8ff2",
+   "ordinal": 519,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L20cf11aa74",
+   "ordinal": 520,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L75cc572d55",
+   "ordinal": 547,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lc40e0e2351",
+   "ordinal": 548,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lfbeff7287b",
+   "ordinal": 549,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lb5cbd3434b",
+   "ordinal": 569,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L6952d23be8",
+   "ordinal": 570,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Ld5183bf933",
+   "ordinal": 582,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lb6f731452f",
+   "ordinal": 605,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L4cd7920fdd",
+   "ordinal": 611,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L41d9a6a844",
+   "ordinal": 620,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L6de1c1020b",
+   "ordinal": 621,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L40a376c23b",
+   "ordinal": 622,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L6f49985ada",
+   "ordinal": 623,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L76bdd8e96f",
+   "ordinal": 676,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L7f98eb4ee9",
+   "ordinal": 679,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L67f2b8db53",
+   "ordinal": 680,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L042dc4512f",
+   "ordinal": 695,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L6b0d31c0d5",
+   "ordinal": 696,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L86f7e437fa",
+   "ordinal": 697,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L447c3b92f0",
+   "ordinal": 710,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L5c49265a7a",
+   "ordinal": 717,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L516b9783fc",
+   "ordinal": 719,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lfcff5b9fa2",
+   "ordinal": 739,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lcde5d983fc",
+   "ordinal": 745,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L0199b663ee",
+   "ordinal": 783,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L0a0bca8e18",
+   "ordinal": 786,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L253b2a893c",
+   "ordinal": 883,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "La8ca21349f",
+   "ordinal": 884,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lf5379f3358",
+   "ordinal": 885,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lf02f101c07",
+   "ordinal": 915,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lf03a831605",
+   "ordinal": 916,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L78e0fbb58e",
+   "ordinal": 922,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lc6d901cedd",
+   "ordinal": 940,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Ld5cd3af1c1",
+   "ordinal": 1044,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L0f3d32305b",
+   "ordinal": 1045,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L32a2abd6aa",
+   "ordinal": 1237,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L2c5b0a2b92",
+   "ordinal": 1238,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lc71863b940",
+   "ordinal": 1251,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L45df8aaa94",
+   "ordinal": 1295,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L454672c296",
+   "ordinal": 1304,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lc51cc62eec",
+   "ordinal": 1338,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L2322e7fd2f",
+   "ordinal": 1339,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L1b32faec74",
+   "ordinal": 1423,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lcbd53803e4",
+   "ordinal": 1474,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L8608911070",
+   "ordinal": 1490,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L80744757e1",
+   "ordinal": 1505,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lf1f91d70ac",
+   "ordinal": 1538,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lf9bc0a7668",
+   "ordinal": 1539,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L60db049169",
+   "ordinal": 1540,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Leb5d689f09",
+   "ordinal": 1554,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L67c3806843",
+   "ordinal": 1619,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Ld8cef08bd1",
+   "ordinal": 1633,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L8198fbd5b7",
+   "ordinal": 1634,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "La35051bafe",
+   "ordinal": 1653,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L47207f2354",
+   "ordinal": 1659,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L565f5c8676",
+   "ordinal": 1667,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Ld975a3a9d1",
+   "ordinal": 1677,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lf884b03c33",
+   "ordinal": 1685,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L7e6a077cdf",
+   "ordinal": 1706,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lcdef3f1f1e",
+   "ordinal": 1722,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L8763a0c59a",
+   "ordinal": 1724,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "La8645a16b1",
+   "ordinal": 1727,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lc329cf4ac6",
+   "ordinal": 1732,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "La838e58546",
+   "ordinal": 1746,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 1",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L784171a46b",
+   "ordinal": 1845,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L2e225d587c",
+   "ordinal": 1857,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L8e48bd58a1",
+   "ordinal": 1868,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L7ac2aa3ed2",
+   "ordinal": 1901,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L88b9f64029",
+   "ordinal": 1920,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L162bc9fbcc",
+   "ordinal": 1925,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lbdefafacbc",
+   "ordinal": 1928,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L1b7f99964a",
+   "ordinal": 1936,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L5ca845ae96",
+   "ordinal": 2007,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lcc0eb99888",
+   "ordinal": 2014,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L84fcf011f2",
+   "ordinal": 2434,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lbd4d7f2e87",
+   "ordinal": 2456,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L1430f1810f",
+   "ordinal": 2515,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L435eef57b3",
+   "ordinal": 2523,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lf7d33a22a5",
+   "ordinal": 2602,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lb6873a215b",
+   "ordinal": 2616,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L7e327ea06c",
+   "ordinal": 2617,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L71e5b1f872",
+   "ordinal": 2618,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L705c9442a0",
+   "ordinal": 2621,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L52d774ad9f",
+   "ordinal": 2647,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L98357cd0f3",
+   "ordinal": 2741,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L3be94b09c5",
+   "ordinal": 2772,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L9279caa296",
+   "ordinal": 2791,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L7af2d04324",
+   "ordinal": 2816,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lcd439df6f5",
+   "ordinal": 2945,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L61da910eb5",
+   "ordinal": 3023,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lf592a06d42",
+   "ordinal": 3074,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Leb8b5de3ca",
+   "ordinal": 3077,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lededd1cb64",
+   "ordinal": 3089,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L30be5259ed",
+   "ordinal": 3097,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L7cbe9df99e",
+   "ordinal": 3102,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L7b4579eb6a",
+   "ordinal": 3103,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L184b5b4ca8",
+   "ordinal": 3104,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lf7745eab6a",
+   "ordinal": 3112,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Ld26b5595e3",
+   "ordinal": 3201,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lf88ebdd5e8",
+   "ordinal": 3247,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lce7001df87",
+   "ordinal": 3255,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L5a5d8340b2",
+   "ordinal": 3264,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L15297afb76",
+   "ordinal": 3315,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L185628e4e2",
+   "ordinal": 3329,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lb75aac01fa",
+   "ordinal": 3330,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L4437fdb426",
+   "ordinal": 3348,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L439cc8cefc",
+   "ordinal": 3530,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lb4edf8f910",
+   "ordinal": 3531,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L37fc0760bc",
+   "ordinal": 3532,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L2e7d43d0bf",
+   "ordinal": 3538,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Ld8b9875fa7",
+   "ordinal": 3539,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Ld19e3e1e5a",
+   "ordinal": 3547,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Ld54e6e9baa",
+   "ordinal": 3548,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L8b3fd24a46",
+   "ordinal": 3549,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lc9afa7e1ea",
+   "ordinal": 3562,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L22bdf47be3",
+   "ordinal": 3565,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Ldf5d466476",
+   "ordinal": 3566,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L6b7439b401",
+   "ordinal": 3571,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Le39422d2f4",
+   "ordinal": 3577,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lc850edc11e",
+   "ordinal": 3579,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "La87a011753",
+   "ordinal": 3580,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L10df8a2f0e",
+   "ordinal": 3602,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L2daa85f845",
+   "ordinal": 3603,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L2f34e7c4c2",
+   "ordinal": 3604,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "La104946954",
+   "ordinal": 3605,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L27b86d297c",
+   "ordinal": 3606,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lccb1461a57",
+   "ordinal": 3607,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lc15da70e80",
+   "ordinal": 3608,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L6e6a60a89b",
+   "ordinal": 3611,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L55f002b223",
+   "ordinal": 3617,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lec981d2bd2",
+   "ordinal": 3618,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L9a9f9c28f6",
+   "ordinal": 3624,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lca56896c9c",
+   "ordinal": 3625,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L848c7a54ea",
+   "ordinal": 3626,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lee509cabb4",
+   "ordinal": 3630,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L2a151ab2bb",
+   "ordinal": 3631,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L42222e1426",
+   "ordinal": 3632,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lf958c71b37",
+   "ordinal": 3633,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L878228b1a7",
+   "ordinal": 3634,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Le4c868e589",
+   "ordinal": 3636,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Le9371f17bc",
+   "ordinal": 3637,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L82bc2b06b9",
+   "ordinal": 3638,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L377d5c926e",
+   "ordinal": 3644,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L72e4578411",
+   "ordinal": 3645,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lab8ffb6b34",
+   "ordinal": 3646,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lc67ebfc12b",
+   "ordinal": 3647,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L8a8b9cc525",
+   "ordinal": 3650,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L87ea4d596c",
+   "ordinal": 3652,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L4dcaf0bbc5",
+   "ordinal": 3666,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L4a72dceccd",
+   "ordinal": 3667,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L17da966f18",
+   "ordinal": 3668,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "La32484a6d1",
+   "ordinal": 3669,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L6abdd41c99",
+   "ordinal": 3670,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L70a67c5399",
+   "ordinal": 3674,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lb8b54bd04f",
+   "ordinal": 3675,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "La4154244ab",
+   "ordinal": 3676,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L7cf184f4c6",
+   "ordinal": 3686,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L65dc0bc434",
+   "ordinal": 3693,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L16d7cda25c",
+   "ordinal": 3694,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L013fea348d",
+   "ordinal": 3695,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L144eabccb1",
+   "ordinal": 3698,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L91d585db22",
+   "ordinal": 3699,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L51e4d1a6c5",
+   "ordinal": 3700,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lc6400eaec1",
+   "ordinal": 3715,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L0371438f82",
+   "ordinal": 3716,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Laaa025b382",
+   "ordinal": 3717,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "La04af666be",
+   "ordinal": 3744,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L944e60cb74",
+   "ordinal": 3745,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Le6e5bd1766",
+   "ordinal": 3746,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lcb7d29f43f",
+   "ordinal": 3749,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Le80fdb9645",
+   "ordinal": 3757,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lf87ce692a8",
+   "ordinal": 3777,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L468f49fb52",
+   "ordinal": 3778,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Leac2bf8895",
+   "ordinal": 3781,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L9e779ee713",
+   "ordinal": 3782,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L68b2b09c89",
+   "ordinal": 3783,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L273a01f9bb",
+   "ordinal": 3788,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L147c7ee532",
+   "ordinal": 3789,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L7f95f4b200",
+   "ordinal": 3791,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L81860bf635",
+   "ordinal": 3792,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L58b29e6cc0",
+   "ordinal": 3793,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L08b90ad7cf",
+   "ordinal": 3806,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L4f240cf65f",
+   "ordinal": 3824,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L18ca3dda33",
+   "ordinal": 3825,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "La13338039b",
+   "ordinal": 3968,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L8ba2a07385",
+   "ordinal": 3969,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lcc80df1f23",
+   "ordinal": 3970,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L30a6c8a770",
+   "ordinal": 4015,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L5bd73fc956",
+   "ordinal": 4016,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Le4adabb7df",
+   "ordinal": 4017,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Leccee32026",
+   "ordinal": 4182,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lbd97686897",
+   "ordinal": 4183,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "La46d19dee2",
+   "ordinal": 4192,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L4ddbbc6269",
+   "ordinal": 4193,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L8672546ef1",
+   "ordinal": 4194,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L4bc4f5018a",
+   "ordinal": 4202,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L52b515dd1c",
+   "ordinal": 4203,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "La26afab0b8",
+   "ordinal": 4204,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L55c00c847d",
+   "ordinal": 4207,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lf92e2db958",
+   "ordinal": 4208,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L72b3117837",
+   "ordinal": 4217,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Le48c7961de",
+   "ordinal": 4220,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L05a2271256",
+   "ordinal": 4229,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L0301e70c80",
+   "ordinal": 4248,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L9ad5c4032f",
+   "ordinal": 4254,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lc88b590de9",
+   "ordinal": 4256,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L2dd4c36e57",
+   "ordinal": 4257,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lfb9434a874",
+   "ordinal": 4258,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L1440066ca8",
+   "ordinal": 4263,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L932eaaf5a3",
+   "ordinal": 4279,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L833da18887",
+   "ordinal": 4280,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lc9ee5681d3",
+   "ordinal": 4281,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L3a8aba7a85",
+   "ordinal": 4287,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L4f93b2c841",
+   "ordinal": 4290,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L030d0d05a0",
+   "ordinal": 4292,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L2bf238ad38",
+   "ordinal": 4293,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lfca4fdcfa2",
+   "ordinal": 4297,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L5385ffddaa",
+   "ordinal": 4301,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L0c05851077",
+   "ordinal": 4305,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Le306253f9f",
+   "ordinal": 4306,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lfe09e0f049",
+   "ordinal": 4307,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L1267b63df5",
+   "ordinal": 4309,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Laf4a940bce",
+   "ordinal": 4313,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L7f9b7bad94",
+   "ordinal": 4314,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lce9f455869",
+   "ordinal": 4315,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lca73ab6556",
+   "ordinal": 4331,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L7850157ffa",
+   "ordinal": 4347,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "La4d3530fda",
+   "ordinal": 4354,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L5ad2994115",
+   "ordinal": 4360,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L903c46b456",
+   "ordinal": 4361,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L181b7feea8",
+   "ordinal": 4362,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L899658e27a",
+   "ordinal": 4406,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lc4b37cf719",
+   "ordinal": 4517,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Le624d302b7",
+   "ordinal": 4611,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lc2c65c2827",
+   "ordinal": 4785,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L8b3ccea2a5",
+   "ordinal": 4822,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L893275da51",
+   "ordinal": 4844,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lb944af0880",
+   "ordinal": 4856,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L51fd07643b",
+   "ordinal": 4865,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L5ded105f41",
+   "ordinal": 4870,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L09054f67ac",
+   "ordinal": 4958,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L3b0a573dce",
+   "ordinal": 4960,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lf57eae0697",
+   "ordinal": 4970,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L2777cf39fb",
+   "ordinal": 4989,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L2358e4572b",
+   "ordinal": 5007,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lebb146d631",
+   "ordinal": 5031,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lbbf56e1506",
+   "ordinal": 5069,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L146c1bf23b",
+   "ordinal": 5096,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lcacba260e6",
+   "ordinal": 5123,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L9c2b93a151",
+   "ordinal": 5128,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "La3f0345a76",
+   "ordinal": 5138,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L406b881188",
+   "ordinal": 5149,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L84690acdde",
+   "ordinal": 5154,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lf38952de44",
+   "ordinal": 5155,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L500ab3c359",
+   "ordinal": 5162,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L869c163632",
+   "ordinal": 5163,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Ld89817766e",
+   "ordinal": 5180,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Ld052b9a30c",
+   "ordinal": 5201,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L21a9f4f643",
+   "ordinal": 5216,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "La06e04321c",
+   "ordinal": 5226,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L70aebab32e",
+   "ordinal": 5227,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L8deaa20015",
+   "ordinal": 5255,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lc9c0d91879",
+   "ordinal": 5298,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L0cb89c5c9d",
+   "ordinal": 5359,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L0f8363a8e4",
+   "ordinal": 5360,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Le431eabaf3",
+   "ordinal": 5361,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L8a5e6d018b",
+   "ordinal": 5425,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L4957f52b01",
+   "ordinal": 5440,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L3895894ce1",
+   "ordinal": 5459,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Le5e1f8817f",
+   "ordinal": 5460,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L9d06bca5d4",
+   "ordinal": 5461,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L443929a467",
+   "ordinal": 5466,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L5067110091",
+   "ordinal": 5484,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "La6be98d6c0",
+   "ordinal": 5545,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lfc41746da3",
+   "ordinal": 5572,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L7dce4b7666",
+   "ordinal": 5600,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Le2a484a070",
+   "ordinal": 5616,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L873c7db571",
+   "ordinal": 5634,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L9ec4d86f6b",
+   "ordinal": 5635,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lef58de4ff0",
+   "ordinal": 5636,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L6f9084b461",
+   "ordinal": 5651,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Le658e66d4e",
+   "ordinal": 5661,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L5b11880954",
+   "ordinal": 5684,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L26cf298a3d",
+   "ordinal": 5692,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Ld7b53d2c2f",
+   "ordinal": 5709,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lc09802b908",
+   "ordinal": 5711,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L7140cafdab",
+   "ordinal": 5728,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lf6b456d043",
+   "ordinal": 5744,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L5d9c113b57",
+   "ordinal": 5805,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L4c40cf3873",
+   "ordinal": 5806,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Le177db0c02",
+   "ordinal": 5809,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L1b69c1b683",
+   "ordinal": 5817,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L6c65dbe5e7",
+   "ordinal": 5836,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L0fd26bc07a",
+   "ordinal": 5847,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L366309b7d1",
+   "ordinal": 5865,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lf76e88c357",
+   "ordinal": 5892,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L07cd0ccf75",
+   "ordinal": 5901,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L25c9e2591c",
+   "ordinal": 5908,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Laf82ad96c4",
+   "ordinal": 5915,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "Lf25c3da65a",
+   "ordinal": 5935,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L38751b4dc8",
+   "ordinal": 5944,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L169aa3a3af",
+   "ordinal": 5953,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L88d1577dcc",
+   "ordinal": 5954,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L6980bcdcd2",
+   "ordinal": 5987,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  },
+  {
+   "key": "L47fea81827",
+   "ordinal": 6000,
+   "is_identity": true,
+   "errors": [
+    "identical to English; translation or explicit independent semantic review required"
+   ],
+   "warnings": [
+    "identical to the English"
+   ],
+   "review_resolution": "individually-approved-exact-whole-string-identity",
+   "approval_artifact": "individual-invariants.json",
+   "actual_reviewer": "OpenAI GPT assistant Independent Indonesian AI reviewer 2",
+   "canonical_registration": "pending-parent-integration-not-a-review-gap"
+  }
+ ],
+ "identity_hold_errors_expected_until_individual_registration": true,
+ "native_human_review": false,
+ "device_qa": false,
+ "input_verification": {
+  "author_combined_sha256": "10ff6e0f4d65923874c0fc7b8d0d978fc8ef0c9c5e19b95eae770d09839c2777",
+  "author_manifest_sha256": "32c64babc06b1b01bba91b6bb9ce8fa20e8c53044ad2dfcb08cd9b791eb35cd7",
+  "manifest_files_verified": 379,
+  "current_source_count": 6083,
+  "option_keys": 1224,
+  "option_records": 2284,
+  "shared_keys": 610,
+  "shared_records": 4127,
+  "distinct_shared_contexts": 1344,
+  "helper_sha256": "b74452e7165145c82449bf7fc70a0a114282a69ed875a18a7ba46e7ff0c70731",
+  "current_english_sha256": "718a9431e97997dcad904b99eb00f0072385142d63ebb7ffc1c27ff374ca6de3",
+  "current_curriculum_sha256": "f5399d3d13edd2f94b660648e7dd23aceef66a21e095567988bbb6bd38995bf1"
+ },
+ "review_complete": true,
+ "unresolved_target_findings": 0,
+ "canonical_registration_performed": false,
+ "identity_findings_individually_resolved": 337,
+ "final_reconciliation": "final-reconciliation.json",
+ "device_layout_audio_voiceover_qa": false
+}

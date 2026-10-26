@@ -292,3 +292,174 @@ Public-domain songs: established local title when one exists. Other traditional 
 
 ## 4. Sense distinctions
 Tune verb/tab ≠ tune melody; direction flat/sharp ≠ accidentals. Bar means measure, never pub or UI bar. Key means tonality, not keyboard/password. Pick means plectrum/pluck/choose by context. Lock means stable correct pitch, not padlock. Take means recorded performance attempt, not taking a lesson. Run means streak or continuous performance, not running. Chart means chord notation unless explicitly a progress graph. Intonation means playing/singing accurately over a drone, never saddle or octave adjustment (legacy ja/zh-CN entries are overridden above). Practice means musical practice, not a professional office. Feel means haptic feedback, not emotion. Challenge-friend and unit challenge use the separate senses above.
+
+## 5. Current-source lesson author decisions (2026-10-26)
+
+Unreviewed author decisions by `/root/translate_indonesian_lessons`; these are not independent/native approval. This section overrides conflicting older lesson terminology above, following `/root`'s initial lesson batch.
+
+- Lesson chord = **akord**; chord shape = bentuk akord. Root = nada pokok; key = nada dasar; tonal home = nada rumah / pulang (metaphor), never the app's Home screen.
+- Scale = tangga nada; interval third/fifth = terts/kuint; ordinal first/second musical item = Yang pertama/Yang kedua, not answer-button position. Finger ordinals explicitly use jari pertama/kedua/etc.
+- Major/minor/dominant seventh chords = akord mayor/minor/dominan tujuh; generic seventh chord = akord ketujuh. Chord symbols, note letters, Roman numerals, and p-i-m-a notation stay unchanged.
+- Box = pola (pentatonik); inversion = pembalikan; arpeggio = arpeggio; lead guitar = gitar melodi; hook = motif utama; lick/riff/trill are established performance loan terms.
+- Tune (verb) = menyetel; tuning = penyetelan; tuner = penyetem. Root's earlier menyetem choices remain in its original packet pending source-bound correction, not rewritten provenance.
+- Guitar/ukulele bridge hardware = jembatan. Song bridge = bagian penghubung (small label: Penghubung). Intro = Pembuka; Verse = Bait; Chorus = Refrein; Outro = Penutup; Tag = Ulang akhir (small label) / ulangan penutup (prose); Interlude = Selingan. Solo remains an invariant candidate.
+- Rhythm counting: one-and-two = satu-dan-dua; one-e-and-a = satu-e-dan-a. “The and of two” = dan setelah dua. D/U strum notation is preserved when it appears as notation, with prose explaining turun/naik.
+- Palm muting = peredaman telapak; power chord, barre, hammer-on, pull-off, slide, bending, vibrato, shuffle and Travis remain recognizable technique names within fully translated prose.
+- Source clarification id-008 s078: finger 1 **holds** fret 5 and the other hand picks; Indonesian explicitly says tahan ... dan petik, not pluck with fretting finger 1.
+- Source clarification id-009 s012: “short bend” means below target pitch, translated bending yang belum mencapainya, not short duration.
+- Ukulele G C E A mnemonic: **Gita, Coba Es Apel** (initials G C E A). Guitar root mnemonic remains **Eka akan datang guna belajar esok** (E A D G B E).
+
+### Authored title correspondences (use identically in titles, prose and quizzes)
+| Source | Indonesian |
+|---|---|
+| Letters in a Shoebox | Surat dalam Kotak Sepatu |
+| Dust on the Dashboard | Debu di Dasbor |
+| Low Tide Radio | Radio Saat Surut |
+| Kite Weather | Cuaca Layang-Layang |
+| Halogen | Halogen |
+| Ghost Light | Cahaya Hantu |
+| Rust Belt Shuffle | Shuffle Rust Belt |
+| Basement Weather | Cuaca Ruang Bawah Tanah |
+| Glass Satellites | Satelit Kaca |
+| Porchlight | Lampu Teras |
+| Neon Laundromat | Penatu Neon |
+| Saltwater Sunday | Minggu di Laut |
+| Spray Paint Sunrise | Fajar Cat Semprot |
+| Sparkler Season | Musim Kembang Api |
+| Gravel Road Two-Step | Dua Langkah di Jalan Kerikil |
+| Lantern Hill | Bukit Lentera |
+| Roller Rink | Arena Sepatu Roda |
+| Late Checkout | Terlambat Check-out |
+| Market Day | Hari Pasar |
+| Slow Motion Strobe | Strobo Gerak Lambat |
+| Jukebox Moon | Bulan Jukebox |
+| Mary Had a Little Lamb | Mary Punya Anak Domba |
+| Joy to the World | Hai Dunia, Gembiralah |
+
+Traditional proper work names currently retained as **candidates**, with individual whole-string reasons in batch candidate files: Ode to Joy, When the Saints Go Marching In, Amazing Grace, Greensleeves, Clementine, Oh! Susanna, Down by the Riverside, Row, Row, Row Your Boat. Retention is not an invariant approval. Lyrics and personal credits are not rewritten.
+
+### Completed-current-source lesson terminology and adaptations
+
+The lesson authoring pass covers all 6,083 current keys. This is **author checking**, not independent, native-speaker, audio or device approval. The original `/root` batch remains attributed to `/root`; all later direct authoring and the separately recorded corrections are by `/root/translate_indonesian_lessons`.
+
+- Intervals: unisono, sekon, terts, kuart, kuint, sekst, septim, oktaf, interval kesembilan. Perfect = murni; major/minor = mayor/minor. “Major seventh” and “Minor seventh” shared answers are interval-only (septim mayor/minor), whereas “Dominant seventh” is a chord answer (dominan tujuh). Bare Second/Third/Fourth/Fifth/Sixth refer to intervals; explicit finger rows use jari. “The first/second/third/last” identifies the source musical item or phrase, never the position of its answer button.
+- Whole step = satu nada; half step = setengah nada. Multiple half steps use **dua langkah setengah nada**, not the ambiguous “dua setengah nada” (two-and-a-half tones). Chromatic fret movement is explicitly movement to the next chromatic pitch, not one whole tone.
+- Bass = bas; walking bass = bas berjalan / alur bas berjalan; chromatic approach = nada pendekatan kromatik. Groove = ritme / pola ritme / rasa ritme according to context; pocket = pas dengan ritme. Hook = motif utama; sequence = sekuens; chord melody = melodi akord / melodi dalam akord.
+- Note durations: not penuh, not setengah, not seperempat, not seperdelapan, not seperenam belas; dotted = bertitik. Rest = tanda istirahat (or its duration). Beat = ketukan, physical tap = ketukan jari / ketuk. Triplet = triol; `1-trip-let` becomes `1-tri-ol`, and the last syllable is **ol** throughout the exercise. Offbeat = sela ketukan; syncopation = sinkopasi; backbeat = ketukan belakang, with its loan term explained in prose.
+- Staff = paranada; space = spasi; ledger lines = garis bantu; treble clef = kunci G; bass clef = kunci F; key signature = tanda mula; time signature = tanda birama. Slur = tanda legato; tie = tanda ikat. These are not interchangeable.
+- Both English “bar” and “measure” mean **birama**. The vocabulary quiz is adapted to ask “Dalam musik, apa arti bar?” with answer Birama and an explanation that bar and measure both mean birama; this preserves its teaching purpose rather than making the answer repeat an untranslated synonym.
+- Sharp/flat notation = kres/mol; natural = natural. Sharp/flat sung intonation = terlalu tinggi/terlalu rendah. All note letters, chord symbols, enharmonic spellings, Roman numerals and accidental glyphs are protected, including incorrect quiz distractors.
+- Cadence = kadens; authentic = autentik; half = setengah; plagal = plagal; deceptive = tipuan. Pickup as a musical lead-in = nada ancang-ancang, not an instrument pickup.
+- Bow = busur; bowing = menggesek; down/up bow = gesekan turun/naik; frog = pangkal (first explanation also gives frog); chin rest = sandaran dagu; scroll = kepala gulung; fingerboard = papan jari; tailpiece = penambat senar; fine tuner = penyetel halus; rosin = rosin; cello endpin = penyangga bawah. Violin “high 2 / low 2” means **posisi tinggi/rendah jari 2**, not physically lifting or lowering the finger. Fiddle tunes = lagu biola tradisional.
+- Mandolin course = pasangan senar; the first explanation introduces the English term course. Beating between two nearly matched pitches = layangan. Mandolin tremolo sustains the whole long note, not merely until the next beat.
+- Banjo head = membran; drone string = senar dengung; roll = roll; forward roll = roll maju; alternating thumb roll = roll ibu jari berselang-seling. Pinch, clawhammer and crosspicking remain explained technique names; bum-ditty syllables are sound mnemonics, not untranslated prose.
+- Solfège = solmisasi; audiation = audiasi; scale degree = derajat tangga nada; tonic = tonika. English **ti becomes si** consistently in Indonesian solmisasi; other syllables retain their standard spellings.
+- Singing “breathe low” = gunakan napas perut / tarik napas dengan perut mengembang, not a claim that air enters the abdomen. Lip trill = getaran bibir; hum = bersenandung; “loo” is rendered **lu** for pronunciation. Swell means volume grows then fades while pitch remains stable.
+- Orchestra flute = flut; oboe = obo; English horn = kor Inggris; Scottish pipes = bagpipe. March = mars; waltz = waltz; minuet = minuet; rondo = rondo; prelude = preludium. Trio section is the contrast section in a march, not a direction to use three players.
+- Additional section labels: Theme = Tema; Coda = Koda; Part A/B = Bagian A/B; Variation = Variasi; Pre-chorus = Prarefrein; Development = Pengembangan; Theme again = Tema lagi; Last theme = Tema terakhir. These identify musical sections, not app navigation.
+- Source “1700s” is an entire century: **abad yang dimulai pada 1700**, preserving the protected source digits; “1800s” is likewise the century beginning in 1800, not just the first decade. Violin “about level with the floor” means **kira-kira sejajar lantai**, not low height above the floor.
+- Original sung lyrics stay unchanged where a note, syllable or melisma is tied to an actual lyric token. Instructions around them are Indonesian. Exact answers Fly/Wide/Boat and Town/Bethlehem are narrowly held as lyric-reference candidates; the song-title city can still be translated as Betlehem. Creator names/years remain unchanged; descriptors such as Traditional, Anonymous and geographic connecting prose are translated.
+- The shared answer **Nothing at all** is **Tidak ada sama sekali**, valid for both a silent beat and absence of body movement. It must not add “bunyi” (sound), which fails the breathing quiz.
+
+### Mnemonics and recall consistency
+
+| Notes / context | Authored mnemonic |
+|---|---|
+| E A D G B E, guitar | Eka akan datang guna belajar esok |
+| G C E A, ukulele | Gita, Coba Es Apel |
+| E A D G, bass | Ema Ajak Dodi Gowes |
+| G D A E, violin and mandolin | Gita Datang Ambil Es |
+| C G D A, cello | Cici Gemar Durian Asli |
+| E G B D F, treble staff lines | Eka Gemar Belajar Dengan Fani |
+| G B D F A, bass staff lines | Gita Bawa Donat Favorit Ayah |
+| A C E G, bass staff spaces | Ani Coba Es Gula |
+| F A C E, treble staff spaces | FACE, explained as an English word meaning wajah |
+
+The initials and all recall explanations preserve the exact source note order. These are author-created mnemonic adaptations, not literal translations of English mnemonic sentences.
+
+### Further authored title correspondences
+
+These are editorial author choices, not a claim that every translation is an officially published Indonesian work title. Original titles retained in candidate files identify the original work, particularly when lyrics or historical references depend on it.
+
+| Source | Indonesian |
+|---|---|
+| The Swan | Sang Angsa |
+| The Carnival of the Animals | Karnaval Hewan |
+| Brahms' Lullaby | Nina Bobo Brahms |
+| Minuet in G | Minuet dalam G |
+| Canon in D | Kanon dalam D |
+| Largo, New World Symphony | Largo, Simfoni Dunia Baru |
+| In the Hall of the Mountain King | Di Balairung Raja Gunung |
+| Simple Gifts | Anugerah Sederhana |
+| Silent Night | Malam Kudus |
+| Mozart's Symphony No. 40 | Simfoni No. 40 Mozart |
+| Moth and Ember | Ngengat dan Bara |
+| First Frost | Embun Beku Pertama |
+| Hammock Season | Musim Buaian |
+| Glow-in-the-Dark Stars | Bintang Pendar Gelap |
+| Echo Canyon | Ngarai Gema |
+| Open Windows | Jendela Terbuka |
+| Scoreboard Lights | Lampu Papan Skor |
+| Carousel at Closing Time | Komidi Putar Menjelang Tutup |
+| Cedar Smoke | Asap Kayu Cedar |
+| Rain on the Skylight | Hujan di Jendela Atap |
+| Pocket Change | Uang Receh |
+| Kitchen Slow Dance | Dansa Lambat di Dapur |
+| Houseplants | Tanaman Rumah |
+| Static on Channel Nine | Derau di Saluran Sembilan |
+| Boardwalk Comet | Komet di Titian Pantai |
+| Mile Marker Zero | Penanda Mil Nol |
+| Last Bell | Bel Terakhir |
+| Copper Wire | Kawat Tembaga |
+| Cold Lake | Danau Dingin |
+| Parking Lot Cathedral | Katedral di Tempat Parkir |
+| Keeper's Daughter | Putri Sang Penjaga |
+| Snow Globe Town | Kota dalam Bola Salju |
+| Thistle and Thread | Onak dan Benang |
+| Late Bus Home | Bus Pulang Larut |
+| Velvet Hour | Saat Beludru |
+| Rooftop Choir | Paduan Suara Atap |
+| Bright Side of the Block | Sisi Cerah Lingkungan |
+| Over You Soon | Segera Melupakanmu |
+| Constellation Prize | Hadiah Rasi Bintang |
+| All Through the Night | Sepanjang Malam |
+| O Christmas Tree | Oh, Pohon Natal |
+| O Come, All Ye Faithful | Hai Mari, Berhimpun |
+| The First Noel | Noel Pertama |
+| The Blue Danube | Donau Biru |
+| The Liberty Bell | Lonceng Kemerdekaan |
+| Carmen: Prelude | Carmen: Preludium |
+| The Toreador Song / Toreador Song | Lagu Toreador |
+| Morning Mood | Suasana Pagi |
+| Hark! The Herald Angels Sing | Gita Sorga Bergema |
+| Away in a Manger | Di Dalam Palungan |
+| O Little Town of Bethlehem | Hai Kota Mungil Betlehem |
+| It Came Upon the Midnight Clear | Di Tengah Malam yang Cerah |
+| Once in Royal David's City | Dahulu di Kota Raja Daud |
+| In the Bleak Midwinter | Di Tengah Musim Dingin Suram |
+| The Holly and the Ivy | Holly dan Ivy |
+| Angels from the Realms of Glory | Malaikat dari Alam Kemuliaan |
+| O God, Our Help in Ages Past | Ya Allah, Penolong Kami Dahulu |
+| Holy, Holy, Holy | Suci, Suci, Suci |
+| Abide with Me | Tinggal Sertaku |
+| Nearer, My God, to Thee | Makin Dekat, Tuhan, Kepada-Mu |
+| For the Beauty of the Earth | Untuk Keindahan Bumi |
+| Home! Sweet Home! | Rumah! Rumah Tercinta! |
+| Hard Times Come Again No More / Hard Times | Masa Sulit, Jangan Kembali / Masa Sulit |
+| The Last Rose of Summer | Mawar Terakhir Musim Panas |
+| Spring | Musim Semi |
+| The Four Seasons | Empat Musim |
+
+“Constellation Prize” preserves the celestial image, not the English consonance with “consolation prize.” Song-name references were mechanically cross-checked against their directly authored title spellings; this supplements, but does not replace, semantic review.
+
+### Review boundaries
+
+The final handoff under `/tmp/timbre-new-lessons/id` contains a complete source-bound draft, individual exact-source invariant proposals, five source-bound author-correction receipts, the complete current shared-context snapshot, author-only QA and an exact-hash manifest. The original 107-row root packet and 1,978-row early author packet are preserved verbatim. No proposed invariant has been independently approved by this author. Independent language review and actual small-screen/audio/device checks remain required before publication.
+
+## Independently reviewed lesson overrides
+
+- Later author lesson glossary deliberately uses akord rather than older UI akor; no global UI rewrite.
+- Explicit tingkat/derajat tangga nada preserves chord-function degrees rather than chord counts.
+- Tune verb setel/menyetel; penyetem remains the tuner noun; pickup uses nada ancang-ancang.
+- Quoted “dan” marks a named offbeat; ordinary sung count sequences remain unquoted.
+- Individually approved notation, proper work names and technical loanwords are exact whole-string approvals, not global exemptions.
