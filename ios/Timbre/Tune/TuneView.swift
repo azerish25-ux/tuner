@@ -535,6 +535,8 @@ struct TuneView: View {
             // Chromatic has no strings to quest over; the simple tuner has no quest line.
             if !store.referenceMode && !store.settings.simpleTuner { questLine }
             StringRail(motion: motion, latch: latch).opacity(store.referenceMode ? 0 : 1).frame(height: store.referenceMode ? 8 : nil)
+                // Keep each string's own identifier and action beneath the rail's testable container.
+                .accessibilityElement(children: .contain)
                 .accessibilityIdentifier("tune.string.rail")
         }
         .padding(.bottom, 8)

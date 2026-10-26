@@ -1,0 +1,22 @@
+{
+  "reviewer": "Independent AI context reviewer",
+  "counts": {
+    "reviewed": 17,
+    "approved": 17,
+    "corrected": 0,
+    "rejected": 0
+  },
+  "input_sha256": {
+    "review-artifact/corrections.json": "dd84a571d5f52a69b7c174bce9c93ebf6fa1a2ac591e19770c56b44a27fb6b0a",
+    "review-artifact/contexts.json": "faa97dd8a5cb0ca41079d5f9b6515a20166dc9e9cb9b52f0507515f48c07d404",
+    "ios/Sources/TimbreCore/Resources/curriculum.json": "9d17bcb3e3b78e4ca203c6c9bd4caa87f9a6f86346ee8c4ed683b93d86b43639"
+  },
+  "output_sha256": {
+    "README.md": "3a959c9a2bc50b3d397f443c577387748ee28c88edce9611affb9b2313139527",
+    "localized-context-evidence.json": "e94231d997e1b4d5ebb7c5d843ae1d75c5fa66846a98668b921e1121c1cc4b46",
+    "approved-corrections.json": "b2d582e475fd82cea1741ccded9a5c143226e78b6f5fd6db5a2bdcc596e9a4f3",
+    "review.json": "b2d582e475fd82cea1741ccded9a5c143226e78b6f5fd6db5a2bdcc596e9a4f3",
+    "write_review.py": "e3d9e49ec6d5b2d331f60048787ae52936e1200dd0f3ee0100adc4ac3cf4ec78",
+    "current-option-contexts.json": "cdc1cd5382fe4aa2c5eba5591ad031743f28ef8f5bcdd4c9a57a3729a7ffec0f"
+  }
+}

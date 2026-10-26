@@ -24,3 +24,21 @@ for locale, count in manifest['counts'].items():
         assert row['table'] == 'Learn.strings' and source[row['key']] == row['source']
         assert isinstance(row['translation'], str) and row['translation'].strip()
 print('PASS: partial draft hashes and source bindings; semantic review and import remain pending')
+
+# Complete author drafts remain unapproved and unimported until separate review.
+final = BASE.parent / 'final'
+if final.exists():
+    for name, expected in json.loads((final / 'manifest.json').read_text())['files'].items():
+        assert hashlib.sha256((final / name).read_bytes()).hexdigest() == expected, name
+    for path in final.glob('*.json'):
+        if path.name == 'manifest.json':
+            continue
+        data = json.loads(path.read_text())
+        assert data['status'] == 'complete-author-draft-awaiting-independent-review-not-imported'
+        rows = data['rows']
+        assert len(rows) == len({r['key'] for r in rows}) == len(source) == data['source_keys']
+        for row in rows:
+            assert row['source'] == source[row['key']] and row['translation'].strip()
+            for field in ['source', 'translation']:
+                assert hashlib.sha256(row[field].encode()).hexdigest() == row[field + '_sha256']
+    print('PASS: complete draft hashes/coverage only; independent semantic approval remains pending')

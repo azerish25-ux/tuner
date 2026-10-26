@@ -1,0 +1,19 @@
+{
+  "commit": "5e938a974410223a5bcc06705536cae11727d3b2",
+  "run_id": 40280386056,
+  "job_id": 121433354469,
+  "artifact_id": 12632727630,
+  "artifact_sha256": "99b1f89ffc6068b84084fc9ab123080df6396c35c936022ba73863efd5984916",
+  "artifact_verified": true,
+  "app_unit_tests": {
+    "passed": 58,
+    "failed": 0,
+    "includes_paywall_layout_tests": 4
+  },
+  "smoke_failure": "testTheTunerLocksAString could not find identifier string.* with Tuned value",
+  "screenshot": "1DD031EF-9D8B-48F0-BD11-53FE4FC2590B.png",
+  "observed": "Actual screenshot shows a green E2 chip and quest1/6, evidence that the app recorded a tuned string despite the failing accessibility query.",
+  "diagnosis": "Likely parent accessibilityIdentifier propagation hid child string identifiers after adding tune.string.rail.",
+  "candidate_fix": "Explicit children:.contain on rail container and an additional individual-string-identifier assertion, retaining the original lock assertion.",
+  "verification": "Fix requires fresh simulator execution; no retry or waiver turns the failed run into a pass."
+}

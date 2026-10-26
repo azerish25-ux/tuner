@@ -310,3 +310,22 @@ Chinese `zh-Hans-CN`. The cases must exactly cover the bundled locale set. These
 new assertions pending Xcode execution, not a claim that every alias has passed or
 that incomplete lesson locales are already translated. Production still uses the
 system bundle for automatic selection; no silent language override was introduced.
+
+## Shared semantics and string-control regression follow-up
+
+17 additional guarded language corrections across Arabic, Marathi, Portuguese,
+Spanish, German and Russian passed fresh independent semantic review and are now
+applied. See `reviews/shared-context-corrections/`. This supersedes only those
+specific earlier targets, not their historical review artifacts.
+
+On 5e938a9 all 58 app unit tests passed, including the four new measured-paywall tests.
+The string-lock smoke query failed even though its actual screenshot shows a green
+E2 chip and quest1/6. The new rail identifier likely propagated to individual string
+controls. The rail now explicitly contains its accessibility children; a separate
+assertion checks individual string IDs before retaining the original tuned-string
+assertion. A fresh simulator pass is required, not a waiver or assumed success.
+Evidence: `visual-review/smoke-5e938a9.json`.
+
+Complete unreviewed Finnish, Danish, Swedish, Dutch and Norwegian author drafts are preserved
+under `tools/l10n/drafts/final/`, with exact source/target hashes. They remain excluded
+from the 20 applied target-language count until separate full review and import.

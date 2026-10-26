@@ -1,0 +1,1066 @@
+[
+  {
+    "locale": "ar",
+    "table": "Learn.strings",
+    "key": "L2038bdec92",
+    "source": "Up",
+    "old": "صعد",
+    "new": "إلى أعلى",
+    "source_sha256": "55490a4bf3a8e8cb5eed69720293a700ff01ef7da2bfc749f332f626cb584916",
+    "old_sha256": "bbc85051ae9c064d6ea569158944b3e03e7badd081d58fd57ec94f6f78a9cc34",
+    "new_sha256": "ac70eb86422e1bf6fae7cff01e20ebfc5cccdea5a31f20ca815cb16459157bc5",
+    "reason": "Past-tense melodic movement does not fit the3 mandolin pick-stroke questions among41 uses; use neutral direction valid for physical and melodic movement.",
+    "author": "parent AI context audit",
+    "status": "independently-approved-proposal-not-applied",
+    "reviewer": "Independent AI context reviewer (independent AI reviewer; claire)",
+    "review_reason": "إلى أعلى is an atemporal direction phrase; fits rising melody and an upward pick stroke. The old صعد is a completed-action verb and cannot label a stroke naturally.",
+    "current_old_verified": true,
+    "reviewed_contexts": [
+      {
+        "prompt": "Did the tune go up or down?",
+        "explanation": "",
+        "occurrences": 5,
+        "example_lessons": [
+          "gtr-2-6",
+          "gtr-6-6"
+        ]
+      },
+      {
+        "prompt": "Did the top note go up or down?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "gtr-18-5"
+        ]
+      },
+      {
+        "prompt": "Does this phrase go up or down?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "uke-4-3"
+        ]
+      },
+      {
+        "prompt": "Does the tune go up or down?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "man-2-6"
+        ]
+      },
+      {
+        "prompt": "Which stroke lands on the beat?",
+        "explanation": "Down on the beat and up in between keeps your hand in time, like a drummer's sticks.",
+        "occurrences": 1,
+        "example_lessons": [
+          "man-3-1"
+        ]
+      },
+      {
+        "prompt": "You cross to a new pair on an and. Which stroke?",
+        "explanation": "Every and gets an up stroke. Let the pendulum decide, not the string.",
+        "occurrences": 1,
+        "example_lessons": [
+          "man-3-2"
+        ]
+      },
+      {
+        "prompt": "Which stroke plays the and of beat 2?",
+        "explanation": "Every and gets an up stroke, wherever the note is.",
+        "occurrences": 1,
+        "example_lessons": [
+          "man-3-5"
+        ]
+      },
+      {
+        "prompt": "Does the second note go up or down?",
+        "explanation": "",
+        "occurrences": 24,
+        "example_lessons": [
+          "ear-1-1",
+          "ear-1-2"
+        ]
+      },
+      {
+        "prompt": "Is this scale going up or down?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-5-1"
+        ]
+      },
+      {
+        "prompt": "Did it go up or down?",
+        "explanation": "",
+        "occurrences": 4,
+        "example_lessons": [
+          "voc-2-3",
+          "voc-2-4"
+        ]
+      },
+      {
+        "prompt": "The middle phrase: does it go up or down?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "voc-5-1"
+        ]
+      }
+    ]
+  },
+  {
+    "locale": "ar",
+    "table": "Learn.strings",
+    "key": "Lbf93e5ce8b",
+    "source": "Down",
+    "old": "هبط",
+    "new": "إلى أسفل",
+    "source_sha256": "b86d11af79188e58af384b421f2799b08bfb151939b4404679d948aae2720b0b",
+    "old_sha256": "d64e757b9899667943c913fc20b84de585a521fd0d90584f874ad6d021bcc490",
+    "new_sha256": "93c8f5397827f8dab7e85e17c11ed3aca7140247d64ba9f26b6dbf9616b302f0",
+    "reason": "Past-tense melodic movement does not fit the3 mandolin pick-stroke questions among41 uses; use neutral direction valid for physical and melodic movement.",
+    "author": "parent AI context audit",
+    "status": "independently-approved-proposal-not-applied",
+    "reviewer": "Independent AI context reviewer (independent AI reviewer; claire)",
+    "review_reason": "إلى أسفل is an atemporal direction phrase; fits descending melody and a downward pick stroke. The old هبط is a completed-action verb and cannot label a stroke naturally.",
+    "current_old_verified": true,
+    "reviewed_contexts": [
+      {
+        "prompt": "Did the tune go up or down?",
+        "explanation": "",
+        "occurrences": 5,
+        "example_lessons": [
+          "gtr-2-6",
+          "gtr-6-6"
+        ]
+      },
+      {
+        "prompt": "Did the top note go up or down?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "gtr-18-5"
+        ]
+      },
+      {
+        "prompt": "Does this phrase go up or down?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "uke-4-3"
+        ]
+      },
+      {
+        "prompt": "Does the tune go up or down?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "man-2-6"
+        ]
+      },
+      {
+        "prompt": "Which stroke lands on the beat?",
+        "explanation": "Down on the beat and up in between keeps your hand in time, like a drummer's sticks.",
+        "occurrences": 1,
+        "example_lessons": [
+          "man-3-1"
+        ]
+      },
+      {
+        "prompt": "You cross to a new pair on an and. Which stroke?",
+        "explanation": "Every and gets an up stroke. Let the pendulum decide, not the string.",
+        "occurrences": 1,
+        "example_lessons": [
+          "man-3-2"
+        ]
+      },
+      {
+        "prompt": "Which stroke plays the and of beat 2?",
+        "explanation": "Every and gets an up stroke, wherever the note is.",
+        "occurrences": 1,
+        "example_lessons": [
+          "man-3-5"
+        ]
+      },
+      {
+        "prompt": "Does the second note go up or down?",
+        "explanation": "",
+        "occurrences": 24,
+        "example_lessons": [
+          "ear-1-1",
+          "ear-1-2"
+        ]
+      },
+      {
+        "prompt": "Is this scale going up or down?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-5-1"
+        ]
+      },
+      {
+        "prompt": "Did it go up or down?",
+        "explanation": "",
+        "occurrences": 4,
+        "example_lessons": [
+          "voc-2-3",
+          "voc-2-4"
+        ]
+      },
+      {
+        "prompt": "The middle phrase: does it go up or down?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "voc-5-1"
+        ]
+      }
+    ]
+  },
+  {
+    "locale": "mr",
+    "table": "Learn.strings",
+    "key": "L2038bdec92",
+    "source": "Up",
+    "old": "चढले",
+    "new": "वर",
+    "source_sha256": "55490a4bf3a8e8cb5eed69720293a700ff01ef7da2bfc749f332f626cb584916",
+    "old_sha256": "d3d8575d8d4c050c7d2ea3177529d6da74eaf8eaee3e589a39e98d5af106b0fb",
+    "new_sha256": "ac3c957a4fc8ed6f826cf4ca27c9e02d212b7dec600009f843a676dadcaea8c7",
+    "reason": "Past-tense melodic movement does not fit the3 mandolin pick-stroke questions among41 uses; use neutral direction valid for physical and melodic movement.",
+    "author": "parent AI context audit",
+    "status": "independently-approved-proposal-not-applied",
+    "reviewer": "Independent AI context reviewer (independent AI reviewer; claire)",
+    "review_reason": "वर labels upward direction without tense or gender/number agreement and fits pitch and physical picking. चढले is an inflected completed movement, unlike the shared label required.",
+    "current_old_verified": true,
+    "reviewed_contexts": [
+      {
+        "prompt": "Did the tune go up or down?",
+        "explanation": "",
+        "occurrences": 5,
+        "example_lessons": [
+          "gtr-2-6",
+          "gtr-6-6"
+        ]
+      },
+      {
+        "prompt": "Did the top note go up or down?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "gtr-18-5"
+        ]
+      },
+      {
+        "prompt": "Does this phrase go up or down?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "uke-4-3"
+        ]
+      },
+      {
+        "prompt": "Does the tune go up or down?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "man-2-6"
+        ]
+      },
+      {
+        "prompt": "Which stroke lands on the beat?",
+        "explanation": "Down on the beat and up in between keeps your hand in time, like a drummer's sticks.",
+        "occurrences": 1,
+        "example_lessons": [
+          "man-3-1"
+        ]
+      },
+      {
+        "prompt": "You cross to a new pair on an and. Which stroke?",
+        "explanation": "Every and gets an up stroke. Let the pendulum decide, not the string.",
+        "occurrences": 1,
+        "example_lessons": [
+          "man-3-2"
+        ]
+      },
+      {
+        "prompt": "Which stroke plays the and of beat 2?",
+        "explanation": "Every and gets an up stroke, wherever the note is.",
+        "occurrences": 1,
+        "example_lessons": [
+          "man-3-5"
+        ]
+      },
+      {
+        "prompt": "Does the second note go up or down?",
+        "explanation": "",
+        "occurrences": 24,
+        "example_lessons": [
+          "ear-1-1",
+          "ear-1-2"
+        ]
+      },
+      {
+        "prompt": "Is this scale going up or down?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-5-1"
+        ]
+      },
+      {
+        "prompt": "Did it go up or down?",
+        "explanation": "",
+        "occurrences": 4,
+        "example_lessons": [
+          "voc-2-3",
+          "voc-2-4"
+        ]
+      },
+      {
+        "prompt": "The middle phrase: does it go up or down?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "voc-5-1"
+        ]
+      }
+    ]
+  },
+  {
+    "locale": "mr",
+    "table": "Learn.strings",
+    "key": "Lbf93e5ce8b",
+    "source": "Down",
+    "old": "उतरले",
+    "new": "खाली",
+    "source_sha256": "b86d11af79188e58af384b421f2799b08bfb151939b4404679d948aae2720b0b",
+    "old_sha256": "1f32900b0cf01499356aa0c96dfd36cd8e1e7d9336d82459423c6467ebf13416",
+    "new_sha256": "19883da5b58a229cea0895376bb07d7115a60b358dbcfdea7171f644119ac031",
+    "reason": "Past-tense melodic movement does not fit the3 mandolin pick-stroke questions among41 uses; use neutral direction valid for physical and melodic movement.",
+    "author": "parent AI context audit",
+    "status": "independently-approved-proposal-not-applied",
+    "reviewer": "Independent AI context reviewer (independent AI reviewer; claire)",
+    "review_reason": "खाली labels downward direction without tense or gender/number agreement and fits pitch and physical picking. उतरले is an inflected completed movement, unlike the shared label required.",
+    "current_old_verified": true,
+    "reviewed_contexts": [
+      {
+        "prompt": "Did the tune go up or down?",
+        "explanation": "",
+        "occurrences": 5,
+        "example_lessons": [
+          "gtr-2-6",
+          "gtr-6-6"
+        ]
+      },
+      {
+        "prompt": "Did the top note go up or down?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "gtr-18-5"
+        ]
+      },
+      {
+        "prompt": "Does this phrase go up or down?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "uke-4-3"
+        ]
+      },
+      {
+        "prompt": "Does the tune go up or down?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "man-2-6"
+        ]
+      },
+      {
+        "prompt": "Which stroke lands on the beat?",
+        "explanation": "Down on the beat and up in between keeps your hand in time, like a drummer's sticks.",
+        "occurrences": 1,
+        "example_lessons": [
+          "man-3-1"
+        ]
+      },
+      {
+        "prompt": "You cross to a new pair on an and. Which stroke?",
+        "explanation": "Every and gets an up stroke. Let the pendulum decide, not the string.",
+        "occurrences": 1,
+        "example_lessons": [
+          "man-3-2"
+        ]
+      },
+      {
+        "prompt": "Which stroke plays the and of beat 2?",
+        "explanation": "Every and gets an up stroke, wherever the note is.",
+        "occurrences": 1,
+        "example_lessons": [
+          "man-3-5"
+        ]
+      },
+      {
+        "prompt": "Does the second note go up or down?",
+        "explanation": "",
+        "occurrences": 24,
+        "example_lessons": [
+          "ear-1-1",
+          "ear-1-2"
+        ]
+      },
+      {
+        "prompt": "Is this scale going up or down?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-5-1"
+        ]
+      },
+      {
+        "prompt": "Did it go up or down?",
+        "explanation": "",
+        "occurrences": 4,
+        "example_lessons": [
+          "voc-2-3",
+          "voc-2-4"
+        ]
+      },
+      {
+        "prompt": "The middle phrase: does it go up or down?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "voc-5-1"
+        ]
+      }
+    ]
+  },
+  {
+    "locale": "pt",
+    "table": "Learn.strings",
+    "key": "L2038bdec92",
+    "source": "Up",
+    "old": "Subiu",
+    "new": "Para cima",
+    "source_sha256": "55490a4bf3a8e8cb5eed69720293a700ff01ef7da2bfc749f332f626cb584916",
+    "old_sha256": "75a7e9855b907b7fd1afcaf8b960a6f30d55c799395d76af7f925704e29e526b",
+    "new_sha256": "bacc71199916371c608a8376243bc80238303b12a29389d3c787a5ebc5280242",
+    "reason": "Past-tense melodic movement does not fit the3 mandolin pick-stroke questions among41 uses; use neutral direction valid for physical and melodic movement.",
+    "author": "parent AI context audit",
+    "status": "independently-approved-proposal-not-applied",
+    "reviewer": "Independent AI context reviewer (independent AI reviewer; claire)",
+    "review_reason": "Para cima is a neutral direction and naturally supplies (palhetada) para cima in the three stroke questions; it also denotes upward pitch. Subiu is a past-tense event, not a stroke label.",
+    "current_old_verified": true,
+    "reviewed_contexts": [
+      {
+        "prompt": "Did the tune go up or down?",
+        "explanation": "",
+        "occurrences": 5,
+        "example_lessons": [
+          "gtr-2-6",
+          "gtr-6-6"
+        ]
+      },
+      {
+        "prompt": "Did the top note go up or down?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "gtr-18-5"
+        ]
+      },
+      {
+        "prompt": "Does this phrase go up or down?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "uke-4-3"
+        ]
+      },
+      {
+        "prompt": "Does the tune go up or down?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "man-2-6"
+        ]
+      },
+      {
+        "prompt": "Which stroke lands on the beat?",
+        "explanation": "Down on the beat and up in between keeps your hand in time, like a drummer's sticks.",
+        "occurrences": 1,
+        "example_lessons": [
+          "man-3-1"
+        ]
+      },
+      {
+        "prompt": "You cross to a new pair on an and. Which stroke?",
+        "explanation": "Every and gets an up stroke. Let the pendulum decide, not the string.",
+        "occurrences": 1,
+        "example_lessons": [
+          "man-3-2"
+        ]
+      },
+      {
+        "prompt": "Which stroke plays the and of beat 2?",
+        "explanation": "Every and gets an up stroke, wherever the note is.",
+        "occurrences": 1,
+        "example_lessons": [
+          "man-3-5"
+        ]
+      },
+      {
+        "prompt": "Does the second note go up or down?",
+        "explanation": "",
+        "occurrences": 24,
+        "example_lessons": [
+          "ear-1-1",
+          "ear-1-2"
+        ]
+      },
+      {
+        "prompt": "Is this scale going up or down?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-5-1"
+        ]
+      },
+      {
+        "prompt": "Did it go up or down?",
+        "explanation": "",
+        "occurrences": 4,
+        "example_lessons": [
+          "voc-2-3",
+          "voc-2-4"
+        ]
+      },
+      {
+        "prompt": "The middle phrase: does it go up or down?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "voc-5-1"
+        ]
+      }
+    ]
+  },
+  {
+    "locale": "pt",
+    "table": "Learn.strings",
+    "key": "Lbf93e5ce8b",
+    "source": "Down",
+    "old": "Desceu",
+    "new": "Para baixo",
+    "source_sha256": "b86d11af79188e58af384b421f2799b08bfb151939b4404679d948aae2720b0b",
+    "old_sha256": "6dafbc5c28dccbe23aa7fd466803d167fafadad717dbfeff29d825459b7de43e",
+    "new_sha256": "d43041452e4511e70a63d3648c24ea6672e0cef688d51d4f5c74288a5df8a625",
+    "reason": "Past-tense melodic movement does not fit the3 mandolin pick-stroke questions among41 uses; use neutral direction valid for physical and melodic movement.",
+    "author": "parent AI context audit",
+    "status": "independently-approved-proposal-not-applied",
+    "reviewer": "Independent AI context reviewer (independent AI reviewer; claire)",
+    "review_reason": "Para baixo is a neutral direction and naturally supplies (palhetada) para baixo in the three stroke questions; it also denotes downward pitch. Desceu is a past-tense event, not a stroke label.",
+    "current_old_verified": true,
+    "reviewed_contexts": [
+      {
+        "prompt": "Did the tune go up or down?",
+        "explanation": "",
+        "occurrences": 5,
+        "example_lessons": [
+          "gtr-2-6",
+          "gtr-6-6"
+        ]
+      },
+      {
+        "prompt": "Did the top note go up or down?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "gtr-18-5"
+        ]
+      },
+      {
+        "prompt": "Does this phrase go up or down?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "uke-4-3"
+        ]
+      },
+      {
+        "prompt": "Does the tune go up or down?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "man-2-6"
+        ]
+      },
+      {
+        "prompt": "Which stroke lands on the beat?",
+        "explanation": "Down on the beat and up in between keeps your hand in time, like a drummer's sticks.",
+        "occurrences": 1,
+        "example_lessons": [
+          "man-3-1"
+        ]
+      },
+      {
+        "prompt": "You cross to a new pair on an and. Which stroke?",
+        "explanation": "Every and gets an up stroke. Let the pendulum decide, not the string.",
+        "occurrences": 1,
+        "example_lessons": [
+          "man-3-2"
+        ]
+      },
+      {
+        "prompt": "Which stroke plays the and of beat 2?",
+        "explanation": "Every and gets an up stroke, wherever the note is.",
+        "occurrences": 1,
+        "example_lessons": [
+          "man-3-5"
+        ]
+      },
+      {
+        "prompt": "Does the second note go up or down?",
+        "explanation": "",
+        "occurrences": 24,
+        "example_lessons": [
+          "ear-1-1",
+          "ear-1-2"
+        ]
+      },
+      {
+        "prompt": "Is this scale going up or down?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-5-1"
+        ]
+      },
+      {
+        "prompt": "Did it go up or down?",
+        "explanation": "",
+        "occurrences": 4,
+        "example_lessons": [
+          "voc-2-3",
+          "voc-2-4"
+        ]
+      },
+      {
+        "prompt": "The middle phrase: does it go up or down?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "voc-5-1"
+        ]
+      }
+    ]
+  },
+  {
+    "locale": "ar",
+    "table": "Learn.strings",
+    "key": "L9f29e18cb2",
+    "source": "What's another word for a bar?",
+    "old": "ما الاسم الآخر للمازورة؟",
+    "new": "ما معنى المصطلح الموسيقي الإنجليزي «⁨bar⁩»؟",
+    "source_sha256": "b8e5aba08cd34244b85dc754a4738411806442539886cdc39033997eec441c4c",
+    "old_sha256": "702e54d535ff72365a452c6a3e26c0348cbd1968b0c50b5741fc52ba4d496cdd",
+    "new_sha256": "aa9bebd9ad319be544adf6061c1fa9777cc2ac760335c34d6a583726c00a3dc0",
+    "reason": "Keep the bar/measure synonym lesson coherent in the target language: explicitly identify the English musical term and choose its natural localized equivalent, rather than literal field/measurement terminology.",
+    "author": "parent AI context audit",
+    "status": "independently-approved-proposal-not-applied",
+    "reviewer": "Independent AI context reviewer (independent AI reviewer; claire)",
+    "review_reason": "Explicitly asks the meaning of the English musical term bar, so choosing مازورة is noncircular. The FSI/PDI pairs isolate the Latin token correctly. Apply with the paired explanation and Measure correction.",
+    "current_old_verified": true,
+    "reviewed_contexts": [
+      {
+        "prompt": "What's another word for a bar?",
+        "explanation": "Bar and measure mean the same thing.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-4-1"
+        ]
+      }
+    ],
+    "atomic_application_group": "ar-thy-4-1-bar-meaning"
+  },
+  {
+    "locale": "ar",
+    "table": "Learn.strings",
+    "key": "L13b1d22f50",
+    "source": "Bar and measure mean the same thing.",
+    "old": "المازورة والحقل الموسيقي يعنيان الشيء نفسه.",
+    "new": "الكلمتان الإنجليزيتان «⁨bar⁩» و«⁨measure⁩» تعنيان مازورة.",
+    "source_sha256": "9da659bc44599f1c0c7b9b2abba7552291f27e0c482877375f2cffa0b3750baf",
+    "old_sha256": "31a2cb87777feac28fcb35daffc82a2fb7d83829a2ec043deafdb57f5d6a4011",
+    "new_sha256": "5920231b582c6799942fe7a71c9561ad60f87eea32feea42c33a1c1a5863457b",
+    "reason": "Keep the bar/measure synonym lesson coherent in the target language: explicitly identify the English musical term and choose its natural localized equivalent, rather than literal field/measurement terminology.",
+    "author": "parent AI context audit",
+    "status": "independently-approved-proposal-not-applied",
+    "reviewer": "Independent AI context reviewer (independent AI reviewer; claire)",
+    "review_reason": "The dual subject الكلمتان الإنجليزيتان agrees with تعنيان; both English words are explicitly named and separately isolated. مازورة is the correct musical measure; the old field metaphor is wrong. Apply the three quiz rows together.",
+    "current_old_verified": true,
+    "reviewed_contexts": [
+      {
+        "prompt": "What's another word for a bar?",
+        "explanation": "Bar and measure mean the same thing.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-4-1"
+        ]
+      }
+    ],
+    "atomic_application_group": "ar-thy-4-1-bar-meaning"
+  },
+  {
+    "locale": "ar",
+    "table": "Learn.strings",
+    "key": "Ld4fd0a232e",
+    "source": "Measure",
+    "old": "حقل موسيقي",
+    "new": "مازورة",
+    "source_sha256": "ebf940f2b3eaa86c4ca34f4bfe7241f2c2815c1358cbb6b841818ca7a4aaadc7",
+    "old_sha256": "53ac63766c49084fde6ecb196f053927f397743f027ad93d3677ea89d5bdd80d",
+    "new_sha256": "e7a3649ef28c279f493d448b07cb3a1dd78a82e198ed3ba944ad169e7203321e",
+    "reason": "Keep the bar/measure synonym lesson coherent in the target language: explicitly identify the English musical term and choose its natural localized equivalent, rather than literal field/measurement terminology.",
+    "author": "parent AI context audit",
+    "status": "independently-approved-proposal-not-applied",
+    "reviewer": "Independent AI context reviewer (independent AI reviewer; claire)",
+    "review_reason": "مازورة denotes a musical measure, unlike حقل موسيقي. The only context is thy-4-1; نبضة and سكتة remain distinct plausible distractors. Requires the paired English-term question/explanation.",
+    "current_old_verified": true,
+    "reviewed_contexts": [
+      {
+        "prompt": "What's another word for a bar?",
+        "explanation": "Bar and measure mean the same thing.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-4-1"
+        ]
+      }
+    ],
+    "atomic_application_group": "ar-thy-4-1-bar-meaning"
+  },
+  {
+    "locale": "es",
+    "table": "Learn.strings",
+    "key": "L9f29e18cb2",
+    "source": "What's another word for a bar?",
+    "old": "¿Qué otra palabra se usa para compás?",
+    "new": "¿Qué significa el término musical inglés «bar»?",
+    "source_sha256": "b8e5aba08cd34244b85dc754a4738411806442539886cdc39033997eec441c4c",
+    "old_sha256": "47818e438876552f036b003b9d7016dd8ea7a33e507a65a2d12fac46cbe1a0e3",
+    "new_sha256": "6f8496f89730804c3d98255660375b5daf7d718f353aaffa996a91c44469c275",
+    "reason": "Keep the bar/measure synonym lesson coherent in the target language: explicitly identify the English musical term and choose its natural localized equivalent, rather than literal field/measurement terminology.",
+    "author": "parent AI context audit",
+    "status": "independently-approved-proposal-not-applied",
+    "reviewer": "Independent AI context reviewer (independent AI reviewer; claire)",
+    "review_reason": "Natural Spanish asks the meaning of English musical bar, avoiding the circular compás synonym question. Apply with the proposed explanation and Compás option.",
+    "current_old_verified": true,
+    "reviewed_contexts": [
+      {
+        "prompt": "What's another word for a bar?",
+        "explanation": "Bar and measure mean the same thing.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-4-1"
+        ]
+      }
+    ],
+    "atomic_application_group": "es-thy-4-1-bar-meaning"
+  },
+  {
+    "locale": "es",
+    "table": "Learn.strings",
+    "key": "L13b1d22f50",
+    "source": "Bar and measure mean the same thing.",
+    "old": "Compás y medida significan lo mismo.",
+    "new": "En inglés, bar y measure significan compás.",
+    "source_sha256": "9da659bc44599f1c0c7b9b2abba7552291f27e0c482877375f2cffa0b3750baf",
+    "old_sha256": "07dde32fa48d029d28218755849f5e9c2ddd9139c6b26c79b910a0a3f18fe71b",
+    "new_sha256": "c2aa995addd88eac83c19c5bca1afb69757f5948bead8b3bda243beadc90fa23",
+    "reason": "Keep the bar/measure synonym lesson coherent in the target language: explicitly identify the English musical term and choose its natural localized equivalent, rather than literal field/measurement terminology.",
+    "author": "parent AI context audit",
+    "status": "independently-approved-proposal-not-applied",
+    "reviewer": "Independent AI context reviewer (independent AI reviewer; claire)",
+    "review_reason": "Correctly explains that English bar and measure both denote compás; does not assert the nonmusical Spanish medida is a musical synonym. Apply the three quiz rows together.",
+    "current_old_verified": true,
+    "reviewed_contexts": [
+      {
+        "prompt": "What's another word for a bar?",
+        "explanation": "Bar and measure mean the same thing.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-4-1"
+        ]
+      }
+    ],
+    "atomic_application_group": "es-thy-4-1-bar-meaning"
+  },
+  {
+    "locale": "es",
+    "table": "Learn.strings",
+    "key": "Ld4fd0a232e",
+    "source": "Measure",
+    "old": "Medida",
+    "new": "Compás",
+    "source_sha256": "ebf940f2b3eaa86c4ca34f4bfe7241f2c2815c1358cbb6b841818ca7a4aaadc7",
+    "old_sha256": "c597f9ba4777d8334ca45e72ce09e711dfcd0999956cdbee8b2fd0b46ce7c7b6",
+    "new_sha256": "e2a704c08a0a4fb09989acc00a5ec47d0f26ee0aad56c9b0eaa9884e5ca07b81",
+    "reason": "Keep the bar/measure synonym lesson coherent in the target language: explicitly identify the English musical term and choose its natural localized equivalent, rather than literal field/measurement terminology.",
+    "author": "parent AI context audit",
+    "status": "independently-approved-proposal-not-applied",
+    "reviewer": "Independent AI context reviewer (independent AI reviewer; claire)",
+    "review_reason": "Compás is the natural musical measure label. Tiempo and Silencio remain distinct distractors in the sole thy-4-1 use. Requires the paired English-term framing.",
+    "current_old_verified": true,
+    "reviewed_contexts": [
+      {
+        "prompt": "What's another word for a bar?",
+        "explanation": "Bar and measure mean the same thing.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-4-1"
+        ]
+      }
+    ],
+    "atomic_application_group": "es-thy-4-1-bar-meaning"
+  },
+  {
+    "locale": "pt",
+    "table": "Learn.strings",
+    "key": "L9f29e18cb2",
+    "source": "What's another word for a bar?",
+    "old": "Qual é outra palavra para compasso?",
+    "new": "O que significa o termo musical inglês «bar»?",
+    "source_sha256": "b8e5aba08cd34244b85dc754a4738411806442539886cdc39033997eec441c4c",
+    "old_sha256": "834d13055b72d963411749c8cb837eae50647990b85a225d32fc34b61f63baec",
+    "new_sha256": "986b51232072d998772b57670da2655bbafbe08a610480214f4bf86421547407",
+    "reason": "Keep the bar/measure synonym lesson coherent in the target language: explicitly identify the English musical term and choose its natural localized equivalent, rather than literal field/measurement terminology.",
+    "author": "parent AI context audit",
+    "status": "independently-approved-proposal-not-applied",
+    "reviewer": "Independent AI context reviewer (independent AI reviewer; claire)",
+    "review_reason": "Natural Portuguese explicitly asks the meaning of English musical bar; Compasso is then a noncircular answer. Apply with the proposed explanation and option.",
+    "current_old_verified": true,
+    "reviewed_contexts": [
+      {
+        "prompt": "What's another word for a bar?",
+        "explanation": "Bar and measure mean the same thing.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-4-1"
+        ]
+      }
+    ],
+    "atomic_application_group": "pt-thy-4-1-bar-meaning"
+  },
+  {
+    "locale": "pt",
+    "table": "Learn.strings",
+    "key": "L13b1d22f50",
+    "source": "Bar and measure mean the same thing.",
+    "old": "Compasso e medida querem dizer a mesma coisa.",
+    "new": "Em inglês, bar e measure significam compasso.",
+    "source_sha256": "9da659bc44599f1c0c7b9b2abba7552291f27e0c482877375f2cffa0b3750baf",
+    "old_sha256": "a8c26e76fe35f619e716e572ae9b5b963504d61769f4c245c9f06da1e23fa30a",
+    "new_sha256": "a46a4505a63002532ddb65c53ca2da21952139d3dddf48088b1f47d17c4f2963",
+    "reason": "Keep the bar/measure synonym lesson coherent in the target language: explicitly identify the English musical term and choose its natural localized equivalent, rather than literal field/measurement terminology.",
+    "author": "parent AI context audit",
+    "status": "independently-approved-proposal-not-applied",
+    "reviewer": "Independent AI context reviewer (independent AI reviewer; claire)",
+    "review_reason": "Correctly names English bar and measure as equivalents of compasso, instead of teaching generic medida as the Portuguese music term. Apply the three quiz rows together.",
+    "current_old_verified": true,
+    "reviewed_contexts": [
+      {
+        "prompt": "What's another word for a bar?",
+        "explanation": "Bar and measure mean the same thing.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-4-1"
+        ]
+      }
+    ],
+    "atomic_application_group": "pt-thy-4-1-bar-meaning"
+  },
+  {
+    "locale": "pt",
+    "table": "Learn.strings",
+    "key": "Ld4fd0a232e",
+    "source": "Measure",
+    "old": "Medida",
+    "new": "Compasso",
+    "source_sha256": "ebf940f2b3eaa86c4ca34f4bfe7241f2c2815c1358cbb6b841818ca7a4aaadc7",
+    "old_sha256": "c597f9ba4777d8334ca45e72ce09e711dfcd0999956cdbee8b2fd0b46ce7c7b6",
+    "new_sha256": "32762cb372f05967a2e7ff935227da3da5537a088063e27edde9f7fa2125637e",
+    "reason": "Keep the bar/measure synonym lesson coherent in the target language: explicitly identify the English musical term and choose its natural localized equivalent, rather than literal field/measurement terminology.",
+    "author": "parent AI context audit",
+    "status": "independently-approved-proposal-not-applied",
+    "reviewer": "Independent AI context reviewer (independent AI reviewer; claire)",
+    "review_reason": "Compasso is the musical measure term; Tempo and Pausa remain distinct distractors in the sole thy-4-1 use. Requires paired English-term framing.",
+    "current_old_verified": true,
+    "reviewed_contexts": [
+      {
+        "prompt": "What's another word for a bar?",
+        "explanation": "Bar and measure mean the same thing.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-4-1"
+        ]
+      }
+    ],
+    "atomic_application_group": "pt-thy-4-1-bar-meaning"
+  },
+  {
+    "locale": "de",
+    "table": "Learn.strings",
+    "key": "L5b3ab40010",
+    "source": "One beat",
+    "old": "Einen Schlag",
+    "new": "Ein Schlag",
+    "source_sha256": "f919c67401def6b5871110676c32ed6aac0f71e44cfb28755d5bb97b73191380",
+    "old_sha256": "cf46b6188c8560b511148228fac90783f2a5a6cee0845fb862ad36e9ce35c254",
+    "new_sha256": "a1a8094bff94ab109ad5b8a66616e2d168beafa9a9c4b6bcc6d3bc3c0eecd6b4",
+    "reason": "Review whether the neutral isolated answer is preferable across8 duration/count/missing-beat contexts; existing accusative wording is tied to some questions. This is a proposal for judgment, not a proven mistranslation in every context.",
+    "author": "parent AI context audit",
+    "status": "independently-approved-proposal-not-applied",
+    "reviewer": "Independent AI context reviewer (independent AI reviewer; claire)",
+    "review_reason": "Approve as a standalone nominative answer label across all eight uses, not a sentence completion. Einen Schlag fits duration and add-object questions but fails the nominative Was fehlt? question. Ein Schlag is a neutral label, although connected prose after Wie lange? would retain accusative. No claim that nominative grammatically completes every prompt.",
+    "current_old_verified": true,
+    "reviewed_contexts": [
+      {
+        "prompt": "How long does a half note last?",
+        "explanation": "Half of a four-beat bar is two beats. A quarter note lasts one beat.",
+        "occurrences": 1,
+        "example_lessons": [
+          "gtr-2-3"
+        ]
+      },
+      {
+        "prompt": "How long does a dotted quarter note last?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "bass-6-2"
+        ]
+      },
+      {
+        "prompt": "How long does a half note last?",
+        "explanation": "",
+        "occurrences": 2,
+        "example_lessons": [
+          "vln-2-5",
+          "vc-2-5"
+        ]
+      },
+      {
+        "prompt": "How long does a dotted quarter note last?",
+        "explanation": "A quarter is one beat; the dot adds half of that.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-4-4"
+        ]
+      },
+      {
+        "prompt": "What does a dot add to a note?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-4-6"
+        ]
+      },
+      {
+        "prompt": "A bar of 3/4 has a quarter note and a quarter rest. What's missing?",
+        "explanation": "3/4 holds three beats; 1 + 1 = 2, so one beat remains.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-4-6"
+        ]
+      },
+      {
+        "prompt": "The chorus begins on one long note. How long is it?",
+        "explanation": "Home! is a whole note: hold D at fret 3 on string 2 for the whole bar.",
+        "occurrences": 1,
+        "example_lessons": [
+          "std-home-sweet-home"
+        ]
+      }
+    ]
+  },
+  {
+    "locale": "ru",
+    "table": "Learn.strings",
+    "key": "L5b3ab40010",
+    "source": "One beat",
+    "old": "Одну долю",
+    "new": "Одна доля",
+    "source_sha256": "f919c67401def6b5871110676c32ed6aac0f71e44cfb28755d5bb97b73191380",
+    "old_sha256": "a0acfc89e831eb3baf6d32ce9125a8e76725f9c5d48c45c71e13661e57a0b994",
+    "new_sha256": "c5c35a51ac776ff0a7e13dbc2ad7334239e09c6acf45b890b1a6e1b361bcb6e9",
+    "reason": "Review whether the neutral isolated answer is preferable across8 duration/count/missing-beat contexts; existing accusative wording is tied to some questions. This is a proposal for judgment, not a proven mistranslation in every context.",
+    "author": "parent AI context audit",
+    "status": "independently-approved-proposal-not-applied",
+    "reviewer": "Independent AI context reviewer (independent AI reviewer; claire)",
+    "review_reason": "Approve as a standalone nominative answer label across all eight uses, not a sentence completion. Одну долю fits duration/add-object contexts but cannot complete Чего не хватает? (which requires одной доли); Одна доля works as the independent label naming the amount and fits Какова её длительность? directly. No claim that nominative grammatically completes every prompt.",
+    "current_old_verified": true,
+    "reviewed_contexts": [
+      {
+        "prompt": "How long does a half note last?",
+        "explanation": "Half of a four-beat bar is two beats. A quarter note lasts one beat.",
+        "occurrences": 1,
+        "example_lessons": [
+          "gtr-2-3"
+        ]
+      },
+      {
+        "prompt": "How long does a dotted quarter note last?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "bass-6-2"
+        ]
+      },
+      {
+        "prompt": "How long does a half note last?",
+        "explanation": "",
+        "occurrences": 2,
+        "example_lessons": [
+          "vln-2-5",
+          "vc-2-5"
+        ]
+      },
+      {
+        "prompt": "How long does a dotted quarter note last?",
+        "explanation": "A quarter is one beat; the dot adds half of that.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-4-4"
+        ]
+      },
+      {
+        "prompt": "What does a dot add to a note?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-4-6"
+        ]
+      },
+      {
+        "prompt": "A bar of 3/4 has a quarter note and a quarter rest. What's missing?",
+        "explanation": "3/4 holds three beats; 1 + 1 = 2, so one beat remains.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-4-6"
+        ]
+      },
+      {
+        "prompt": "The chorus begins on one long note. How long is it?",
+        "explanation": "Home! is a whole note: hold D at fret 3 on string 2 for the whole bar.",
+        "occurrences": 1,
+        "example_lessons": [
+          "std-home-sweet-home"
+        ]
+      }
+    ]
+  }
+]

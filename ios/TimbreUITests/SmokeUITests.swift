@@ -49,6 +49,8 @@ final class SmokeUITests: XCTestCase {
         app.launchEnvironment["TIMBRE_DEMO_PITCH"] = "1"
         app.launch()
         XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 40), "the tuner didn't open")
+        let strings = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "string."))
+        XCTAssertTrue(strings.firstMatch.waitForExistence(timeout: 10), "string controls lost their individual accessibility identifiers")
         let tuned = app.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier BEGINSWITH %@ AND value == %@", "string.", "Tuned")).firstMatch
         // Listening starts by itself once the microphone is allowed (the workflow grants it); start it by hand if not.
