@@ -1027,11 +1027,13 @@ final class TimbreUITests: XCTestCase {
     }
 
     /// App Store frame #2: Kite Weather opens at its first chorus (zero-based bar 12).
-    /// Earlier notes are played by the existing scene; the actual take continues normally.
-    /// Semantic state is sampled before capture, and the first pair with stable HUD and lyrics is kept.
+    /// Earlier notes are played by the existing scene. A still-only barrier holds the actual take
+    /// after one more bar, so its score, lyric cue and runway cannot race screenshot delivery.
+    /// Semantics bracket the image; all four HUD/lyric regions must still match.
     func test14StoreSongPerform() throws {
         // Start at the first chorus, leaving enough real music for both capture and validation.
         app.launchEnvironment["TIMBRE_SCENE_BAR"] = "12"
+        app.launchEnvironment["TIMBRE_SCENE_STILL"] = "1"
         launch(pitch: true, scene: "song-perform")
         storePerformFrame("65-song-perform", song: "Kite Weather", chorus: ["kite weather", "let it climb", "summer winds"])
     }
@@ -1041,6 +1043,7 @@ final class TimbreUITests: XCTestCase {
     func test18StoreViolinSong() throws {
         app.launchEnvironment["TIMBRE_SCENE_SONG"] = "vln-sb-song-jingle-bells"
         app.launchEnvironment["TIMBRE_SCENE_BAR"] = "42"
+        app.launchEnvironment["TIMBRE_SCENE_STILL"] = "1"
         launch(pitch: true, scene: "song-perform")
         storePerformFrame("65b-song-perform-violin", song: "Jingle Bells", chorus: ["jingle bells", "jingle all the way", "what fun"])
     }
@@ -1056,6 +1059,10 @@ final class TimbreUITests: XCTestCase {
     private func storePerformFrame(_ name: String, song: String, chorus: [String]) {
         let opened = element("lesson.close").waitForExistence(timeout: 30)
         let playing = waitForDark(Self.takeButton, hold: Self.takeHold, timeout: 40)
+        let held = waitSparingly(for: element("performance.capture.frozen"), timeout: 30)
+        // The explicit still barrier stops the actual take, not its displayed numbers alone.
+        // Video scenes do not request it. Wait for any pre-barrier transition to settle.
+        if held { settle(1) }
         // Resolve semantics and bounds before capturing, then stop on the first stable pair.
         // The previous six-pair burst read a later verse while validating an earlier chorus image.
         let screen = app.frame
@@ -1065,6 +1072,7 @@ final class TimbreUITests: XCTestCase {
         var score: CGRect?
         var lyrics: CGRect?
         var sectionIdentifier: String?
+        var heldBeat: String?
         for node in appNodes() {
             if node.identifier.hasPrefix("performance.combo.") {
                 combo = Int(node.identifier.dropFirst("performance.combo.".count)) ?? 0
@@ -1076,6 +1084,7 @@ final class TimbreUITests: XCTestCase {
                 lyrics = node.frame
             }
             if node.identifier == "performance.score" { score = node.frame }
+            if node.identifier == "performance.capture.frozen" { heldBeat = node.value as? String }
         }
         var regions = hudRegions(hud: hud, score: score, screen: screen)
         if let lyrics, !lyrics.isEmpty, lyrics.minX.isFinite, lyrics.minY.isFinite,
@@ -1087,7 +1096,7 @@ final class TimbreUITests: XCTestCase {
         }
         var picture: XCUIScreenshot?
         var last: XCUIScreenshot?
-        if opened && playing && combo >= 8 && chorus.contains(where: { words.contains($0) }) && regions.count == 4 {
+        if opened && playing && held && combo >= 8 && chorus.contains(where: { words.contains($0) }) && regions.count == 4 {
             for _ in 0..<6 {
                 let first = XCUIScreen.main.screenshot()
                 Thread.sleep(forTimeInterval: 0.12)
@@ -1104,8 +1113,10 @@ final class TimbreUITests: XCTestCase {
         var sameSection = false
         var endingWords = ""
         var endingCombo = 0
+        var endingHeldBeat: String?
         if picture != nil {
             for node in appNodes() {
+                if node.identifier == "performance.capture.frozen" { endingHeldBeat = node.value as? String }
                 if let sectionIdentifier, node.identifier == sectionIdentifier {
                     sameSection = true
                     endingWords = (node.value as? String)?.lowercased() ?? ""
@@ -1118,6 +1129,8 @@ final class TimbreUITests: XCTestCase {
         let problem: String
         if !playing {
             problem = "\(song)'s take never stayed on screen for \(Self.takeHold) s (opened: \(opened))"
+        } else if !held {
+            problem = "the actual performance capture barrier was not reached"
         } else if !(opened && combo >= 8 && chorus.contains(where: { words.contains($0) })) {
             problem = "\(song)'s take shows a combo of \(combo) and the words '\(words)' (opened: \(opened)), not a run of 8+ in the chorus"
         } else if hud == nil || score == nil || lyrics == nil || regions.count != 4 {
@@ -1126,6 +1139,8 @@ final class TimbreUITests: XCTestCase {
             problem = "the HUD or lyrics changed between every capture pair; no stable frame was approved"
         } else if !sameSection || endingCombo < 8 || !chorus.contains(where: { endingWords.contains($0) }) {
             problem = "the performance left the verified chorus during capture; no frame was approved"
+        } else if heldBeat == nil || heldBeat != endingHeldBeat || combo != endingCombo {
+            problem = "the held take changed between semantic snapshots; no frame was approved"
         } else {
             problem = ""
         }

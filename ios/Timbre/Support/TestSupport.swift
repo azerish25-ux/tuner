@@ -32,6 +32,8 @@ enum TestSupport {
         case sceneInstrument = "TIMBRE_SCENE_INSTRUMENT"
         case sceneSong = "TIMBRE_SCENE_SONG"
         case sceneBar = "TIMBRE_SCENE_BAR"
+        /// "1": hold an actual song-scene state for a still image; never set by video capture.
+        case sceneStill = "TIMBRE_SCENE_STILL"
         case sceneComet = "TIMBRE_SCENE_COMET"
         case sceneCue = "TIMBRE_SCENE_CUE"
         /// A folder the App Preview's soundtrack is written to (`PreviewRecorder`).

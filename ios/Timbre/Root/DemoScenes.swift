@@ -222,6 +222,16 @@ enum DemoScene: String {
     /// count is mid-change in almost any picture.
     static var stillScore: Bool { current == .songPerform }
 
+    /// A still-only capture barrier, after one real bar beyond the scene's start. This does not
+    /// invent a score or move the session: SongPerformStep holds its actual time and judged state
+    /// once it reaches this beat. App Preview recordings must continue in real time.
+    static func captureHoldBeat(beatsPerBar: Int) -> Double? {
+        guard current == .songPerform, TestSupport.isOn(.sceneStill),
+              TestSupport.value(.previewAudio) == nil else { return nil }
+        return Double((performBar + 1) * max(1, beatsPerBar)) + 0.5
+    }
+
+
     /// Learn opens the song (as a Siri or Spotlight link opens one), then goes back to the player's own course once
     /// the song is on screen, so later runs in the same simulator still open Learn on guitar.
     @MainActor private static func openSong(_ store: AppStore) {

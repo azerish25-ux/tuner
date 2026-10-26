@@ -177,6 +177,47 @@ class LocalizedCaptureChecksTests(unittest.TestCase):
         self.assertIn('#if DEBUG\n        .transaction', lyrics)
         self.assertIn('app.launchEnvironment["TIMBRE_SCENE_BAR"] = "12"', source)
 
+    def test_song_still_barrier_is_opt_in_and_excludes_video(self):
+        demo = (ROOT / 'ios/Timbre/Root/DemoScenes.swift').read_text()
+        support = (ROOT / 'ios/Timbre/Support/TestSupport.swift').read_text()
+        phone = (ROOT / 'ios/TimbreUITests/TimbreUITests.swift').read_text()
+        self.assertTrue(demo.startswith('#if DEBUG'))
+        hold = demo.split('static func captureHoldBeat(', 1)[1].split('\n    }', 1)[0]
+        self.assertIn('current == .songPerform', hold)
+        self.assertIn('TestSupport.isOn(.sceneStill)', hold)
+        self.assertIn('TestSupport.value(.previewAudio) == nil', hold)
+        self.assertIn('case sceneStill = "TIMBRE_SCENE_STILL"', support)
+        self.assertEqual(phone.count('app.launchEnvironment["TIMBRE_SCENE_STILL"] = "1"'), 2)
+        self.assertNotIn('TIMBRE_SCENE_STILL', (ROOT / 'ios/TimbreUITests/AppPreviewUITests.swift').read_text())
+
+    def test_song_still_barrier_holds_actual_time_not_fabricated_results(self):
+        song = (ROOT / 'ios/Timbre/Learn/SongPerform.swift').read_text()
+        tick = song.split('private func tick(now:', 1)[1].split('    /// Names the note', 1)[0]
+        self.assertIn('guard phase == .playing, !captureIsHeld', tick)
+        self.assertLess(tick.index('react(session.tick(at: now))'), tick.index('captureTime = now'))
+        for action in ['store.stopLessonListening(owner: owner)', 'store.audio.stopBand()', 'store.audio.stopMetronome()']:
+            self.assertIn(action, tick)
+        held = tick.split('captureTime = now', 1)[1]
+        for mutation in ['session.skip', 'session.hear', 'session.points =', 'session.combo =']:
+            self.assertNotIn(mutation, held)
+        self.assertIn('progress: songProgress(performanceTime)', song)
+        self.assertIn('let beat = lyricBeat(performanceTime)', song)
+        self.assertIn('let now = performanceTime', song)
+        self.assertEqual(song.count('paused: phase != .playing || captureIsHeld'), 3)
+        self.assertIn('guard phase == .playing, !captureIsHeld else { return }', song)
+        self.assertIn('.accessibilityIdentifier("performance.capture.frozen")', song)
+
+    def test_song_still_barrier_does_not_replace_capture_validation(self):
+        source = (ROOT / 'ios/TimbreUITests/TimbreUITests.swift').read_text()
+        method = source.split('private func storePerformFrame(', 1)[1].split('private func hudRegions(', 1)[0]
+        self.assertIn('waitSparingly(for: element("performance.capture.frozen"), timeout: 30)', method)
+        self.assertIn('opened && playing && held && combo >= 8', method)
+        self.assertIn('StillScreen.regionsMatch(first, second, regions)', method)
+        self.assertIn('regions.count == 4', method)
+        self.assertIn('!sameSection || endingCombo < 8', method)
+        self.assertIn('the actual performance capture barrier was not reached', method)
+        self.assertIn('heldBeat == nil || heldBeat != endingHeldBeat || combo != endingCombo', method)
+
     def test_chord_capture_waits_sparsely_and_captures_confirmed_completion(self):
         source = (ROOT / 'ios/TimbreUITests/TimbreUITests.swift').read_text()
         chord = source.split('func test12StoreChord()', 1)[1].split('func ', 1)[0]

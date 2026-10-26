@@ -38,6 +38,27 @@ struct SongPerformStep: View {
     @State private var ladder: TempoLadder
     /// The take under way, or the last one.
     @State private var session: PlayAlongSession
+    #if DEBUG
+    /// An actual rendered take timestamp, held only for explicitly requested still captures.
+    /// Scores, grades, lyrics and runway all stay at this same state; releases and videos never hold.
+    @State private var captureTime: CFTimeInterval?
+    #endif
+
+    private var captureIsHeld: Bool {
+        #if DEBUG
+        return captureTime != nil
+        #else
+        return false
+        #endif
+    }
+
+    private var performanceTime: CFTimeInterval {
+        #if DEBUG
+        if let captureTime { return captureTime }
+        #endif
+        return CACurrentMediaTime()
+    }
+
     /// The grades of the take that counts (the ladder's outcome).
     @State private var countedGrades: [Int: PlayAlongJudge.Grade] = [:]
     /// The take that counts was strummed ("Chords & words"): it says nothing about the melody's notes.
@@ -319,9 +340,9 @@ struct SongPerformStep: View {
             if !lyrics.isEmpty {
                 lyricRow
             }
-            TimelineView(.animation(minimumInterval: 1.0 / 30, paused: phase != .playing)) { _ in
+            TimelineView(.animation(minimumInterval: 1.0 / 30, paused: phase != .playing || captureIsHeld)) { _ in
                 SongSectionMap(sections: sheet.sections, bars: sheet.bars, accent: accent,
-                               progress: songProgress(CACurrentMediaTime()), height: 34)
+                               progress: songProgress(performanceTime), height: 34)
             }
             .padding(.horizontal, Metrics.gutter)
             TakeRibbon(count: notes.count, grades: session.grades, current: session.nextIndex, accent: accent)
@@ -331,6 +352,20 @@ struct SongPerformStep: View {
                 .padding(.horizontal, Metrics.gutter).padding(.bottom, 12)
                 .accessibilityIdentifier("song.stop")
         }
+        #if DEBUG
+        .overlay(alignment: .topLeading) {
+            if let captureTime {
+                Text(verbatim: String(session.clock(at: captureTime) / spb))
+                    .font(.system(size: 9, design: .monospaced))
+                    .foregroundStyle(Color.clear)
+                    .allowsHitTesting(false)
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel(Text(verbatim: "Capture held"))
+                    .accessibilityValue(Text(verbatim: String(session.clock(at: captureTime) / spb)))
+                    .accessibilityIdentifier("performance.capture.frozen")
+            }
+        }
+        #endif
     }
 
     /// The sleeve, the title and tempo, and the score counting up.
@@ -356,8 +391,8 @@ struct SongPerformStep: View {
 
     /// The play-along's stage: the runway (pitch lanes without a neck), the count-in over it, the combo HUD.
     private var runwayStage: some View {
-        TimelineView(.animation(paused: phase != .playing)) { _ in
-            let now = CACurrentMediaTime()
+        TimelineView(.animation(paused: phase != .playing || captureIsHeld)) { _ in
+            let now = performanceTime
             // Seconds since beat 0 on the heard clock (negative during the count-in).
             let clock = session.clock(at: now)
             ZStack {
@@ -391,8 +426,8 @@ struct SongPerformStep: View {
     /// The words under the runway: the line being sung lit syllable by syllable, the next one dim, and over them the
     /// section playing ("Verse 2"). Before the first word, the first line waits.
     private var lyricRow: some View {
-        TimelineView(.animation(minimumInterval: 1.0 / 30, paused: phase != .playing)) { _ in
-            let beat = lyricBeat(CACurrentMediaTime())
+        TimelineView(.animation(minimumInterval: 1.0 / 30, paused: phase != .playing || captureIsHeld)) { _ in
+            let beat = lyricBeat(performanceTime)
             HighwayLyrics(sheet: lyrics, beat: beat, accent: accent, section: sectionName(atBeat: beat),
                           sectionStartBar: lesson.arrangement?.section(atBeat: max(0, beat ?? 0))?.bar)
         }
@@ -479,6 +514,9 @@ struct SongPerformStep: View {
     }
 
     private func startMelody() {
+        #if DEBUG
+        captureTime = nil
+        #endif
         playingChords = false
         // A fresh count from the first click (a lesson's click restarts even over the Metronome tool's), so the
         // count-in, the runway and the judging start together; this take owns it until it ends. The click comes first:
@@ -502,9 +540,12 @@ struct SongPerformStep: View {
         store.demoNoteDue = { session.nextIndex < notes.count && session.clock(at: CACurrentMediaTime()) >= session.judge.time(of: session.nextIndex) - 0.02 }
         #endif
         // Re-attacks of a repeated note come from the onset detector (a jump in loudness as a fallback).
-        let analyzer = LessonAnalyzer(chords: false, onOnset: { time in session.onset(at: time) })
+        let analyzer = LessonAnalyzer(chords: false, onOnset: { time in
+            guard !captureIsHeld else { return }
+            session.onset(at: time)
+        })
         store.startLessonListening(owner: owner, analyzer: analyzer) { hz, level in
-            guard phase == .playing else { return }
+            guard phase == .playing, !captureIsHeld else { return }
             let now = CACurrentMediaTime()
             let heard = HeardNote(hz: hz, reference: store.settings.referencePitchHz)
             var clock = session.clock(at: now)
@@ -534,7 +575,7 @@ struct SongPerformStep: View {
     }
 
     private func tick(now: CFTimeInterval) {
-        guard phase == .playing else { return }
+        guard phase == .playing, !captureIsHeld else { return }
         // Notes and judging follow the heard clock (the first click as it reached the ears), not the tap.
         if let heard = store.audio.heardStart(near: session.startTime) { session.follow(start: heard) }
         let beat = session.countInBeat(at: now)
@@ -544,6 +585,20 @@ struct SongPerformStep: View {
         }
         if spoken, let cue = cueTiming.due(at: session.clock(at: now)) { speak(cue, now: now) }
         react(session.tick(at: now))
+        #if DEBUG
+        if phase == .playing, let hold = DemoScene.captureHoldBeat(beatsPerBar: beatsPerBar),
+           session.clock(at: now) / spb >= hold {
+            // Stop input first at the actual timestamp, without rewriting a note, grade or score.
+            captureTime = now
+            store.demoNoteDue = nil
+            store.stopLessonListening(owner: owner)
+            store.audio.stopBand()
+            if ownsClick && store.audio.metronomeRunning && !store.audio.metronomeOwnedByTool {
+                store.audio.stopMetronome()
+            }
+            ownsClick = false
+        }
+        #endif
     }
 
     /// Names the note of `cue` as planned (`SpokenCues.Timing`): in full, or just its place when the note before it is

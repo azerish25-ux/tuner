@@ -1,0 +1,19 @@
+{
+  "observed_commit": "de98bfe961d2b2b16e428690f46d984cb769d202",
+  "run": 40345275012,
+  "completed_jobs": {
+    "en": 121650423067,
+    "de": 121650422872
+  },
+  "observed_result": "Both completed jobs passed seven of eight selected tests: five of six store frames plus two semantic/bounds fixture tests. Only the live song frame failed; every HUD/lyric image pair changed. Arabic still running when recorded.",
+  "repair": "Explicit DEBUG still-only scene barrier holds the actual judged take timestamp after one additional bar. No note, grade, combo or score is rewritten. Input and audio stop; runway, lyrics and progress all use the same held timestamp. Video audio recording excludes the barrier. Production behavior is unchanged.",
+  "validation_retained": [
+    "all four image regions must match",
+    "chorus words and same section must bracket actual image",
+    "combo at least eight",
+    "held beat and combo must be identical before and after capture"
+  ],
+  "independent_AI_code_review": "No blocking findings; actual curriculum hold beats52.5 and172.5 verified inside intended choruses. Native Swift compilation and simulator behavior still pending.",
+  "local_contract_tests": 149,
+  "scope": "Diagnostic and proposed repair, not proof that the song capture now passes."
+}
