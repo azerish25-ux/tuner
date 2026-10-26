@@ -1,0 +1,2420 @@
+{
+  "locale": "el",
+  "captured_at": "2026-10-26T10:00:39.990717+00:00",
+  "status": "partial-unreviewed-author-draft-not-imported",
+  "review_status": "independent semantic review pending",
+  "source_todo_sha256": "319ac9025478b95bd2e62cdcefef32a97eff2f1d70c0dc49035618b2607678b1",
+  "drafted_nonempty_entries": 301,
+  "required_current_source_keys": 6083,
+  "scope": "Snapshot of accepted nonempty authoring TODO entries only; held exact-source draft candidates and work written later are not included. This is preservation, not import or completion. Context metadata may predate the separately reviewed ordinal reference remap; authoritative current curriculum governs integration.",
+  "rows": [
+    {
+      "table": "Learn.strings",
+      "key": "L94af6c4088",
+      "source": "Guitar",
+      "translation": "Κιθάρα",
+      "context": "Guitar course · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2525f0dd1a",
+      "source": "From your first note to fingerstyle, blues and lead",
+      "translation": "Από την πρώτη νότα στο παίξιμο με δάχτυλα, τα μπλουζ και τα σόλο",
+      "context": "Guitar course · course subtitle",
+      "max_length": 80
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld1e7626b0f",
+      "source": "Hello, guitar",
+      "translation": "Γεια σου, κιθάρα",
+      "context": "Guitar · Unit 1 “Hello, guitar” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld0ad414962",
+      "source": "Hold it, tune it, play your first notes.",
+      "translation": "Κρατήστε την, κουρδίστε την και παίξτε τις πρώτες σας νότες.",
+      "context": "Guitar · Unit 1 “Hello, guitar” · unit summary",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L377bdd369e",
+      "source": "Meet your guitar",
+      "translation": "Γνωρίστε την κιθάρα σας",
+      "context": "Guitar · Unit 1 · lesson gtr-1-1 “Meet your guitar” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L35fd49f78b",
+      "source": "Six strings, one job",
+      "translation": "Έξι χορδές, ένας σκοπός",
+      "context": "Guitar · Unit 1 · lesson gtr-1-1 “Meet your guitar” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld7f60a63df",
+      "source": "The thickest string is the lowest. It sits nearest your face when you play. We call it string 6.",
+      "translation": "Η πιο χοντρή χορδή έχει τον πιο χαμηλό ήχο. Βρίσκεται πιο κοντά στο πρόσωπό σας όταν παίζετε. Την ονομάζουμε χορδή 6.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-1 “Meet your guitar” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2f8101b73b",
+      "source": "Turn to tune",
+      "translation": "Γυρίστε το κλειδί για κούρδισμα",
+      "context": "Guitar · Unit 1 · lesson gtr-1-1 “Meet your guitar” · step 2 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L96b66429e0",
+      "source": "Each string has a tuning peg on the head. Turning it changes the pitch. Timbre listens and tells you which way.",
+      "translation": "Κάθε χορδή έχει ένα κλειδί κουρδίσματος στην κεφαλή. Γυρίζοντάς το αλλάζετε το τονικό ύψος. Το Timbre ακούει και σας δείχνει προς ποια κατεύθυνση.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-1 “Meet your guitar” · step 2 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L1c9c8a30d5",
+      "source": "Which string is string 6?",
+      "translation": "Ποια είναι η χορδή 6;",
+      "context": "Guitar · Unit 1 · lesson gtr-1-1 “Meet your guitar” · step 3 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L3fe3239a4a",
+      "source": "The thickest",
+      "translation": "Η πιο χοντρή",
+      "context": "Guitar · Unit 1 · lesson gtr-1-1 “Meet your guitar” · step 3 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L9ef451a1cc",
+      "source": "The thinnest",
+      "translation": "Η πιο λεπτή",
+      "context": "Guitar · Unit 1 · lesson gtr-1-1 “Meet your guitar” · step 3 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lb25076c5d4",
+      "source": "The middle one",
+      "translation": "Η μεσαία",
+      "context": "Guitar · Unit 1 · lesson gtr-1-1 “Meet your guitar” · step 3 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lab41f6b897",
+      "source": "Strings count from the thinnest (1) to the thickest (6).",
+      "translation": "Αριθμούμε τις χορδές από την πιο λεπτή (1) έως την πιο χοντρή (6).",
+      "context": "Guitar · Unit 1 · lesson gtr-1-1 “Meet your guitar” · step 3 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L73ff0ae4b6",
+      "source": "Pluck the thickest string and let it ring.",
+      "translation": "Παίξτε την πιο χοντρή χορδή και αφήστε την να ηχήσει.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-1 “Meet your guitar” · step 4 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L8d8d13f6af",
+      "source": "Now the thinnest one, string 1.",
+      "translation": "Τώρα η πιο λεπτή, η χορδή 1.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-1 “Meet your guitar” · step 5 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf608c3d2a6",
+      "source": "The open strings",
+      "translation": "Οι ανοιχτές χορδές",
+      "context": "Guitar · Unit 1 · lesson gtr-1-2 “The open strings” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Leba98ce894",
+      "source": "From thick to thin: E, A, D, G, B, E. Try: Every Amateur Does Get Better Eventually.",
+      "translation": "Από τη χοντρή στη λεπτή: E, A, D, G, B, E. Θυμηθείτε τα αρχικά της αγγλικής φράσης: Every Amateur Does Get Better Eventually.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-2 “The open strings” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L62773cc1b4",
+      "source": "Play strings 6, 5 and 4, one at a time.",
+      "translation": "Παίξτε τις χορδές 6, 5 και 4, μία κάθε φορά.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-2 “The open strings” · step 2 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Led8834e508",
+      "source": "Now strings 3, 2 and 1.",
+      "translation": "Τώρα τις χορδές 3, 2 και 1.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-2 “The open strings” · step 3 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L10bf85ce64",
+      "source": "What is string 5 called?",
+      "translation": "Ποια νότα δίνει η χορδή 5;",
+      "context": "Guitar · Unit 1 · lesson gtr-1-2 “The open strings” · step 4 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lef015c7687",
+      "source": "Which is higher?",
+      "translation": "Ποιος ήχος είναι πιο ψηλός;",
+      "context": "Guitar · Unit 1 · lesson gtr-1-2 “The open strings” · step 5 (listen) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L957dc77c43",
+      "source": "The first",
+      "translation": "Η πρώτη επιλογή",
+      "context": "Guitar · Unit 1 · lesson gtr-1-2 “The open strings” · step 5 (listen) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lbece65d16e",
+      "source": "The second",
+      "translation": "Η δεύτερη επιλογή",
+      "context": "Guitar · Unit 1 · lesson gtr-1-2 “The open strings” · step 5 (listen) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L3507df125b",
+      "source": "Open-string roll call",
+      "translation": "Ανοιχτές χορδές με τη σειρά",
+      "context": "Guitar · Unit 1 · lesson gtr-1-2 “The open strings” · step 6 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lacbf27617c",
+      "source": "Your first fretted notes",
+      "translation": "Οι πρώτες σας νότες με πάτημα",
+      "context": "Guitar · Unit 1 · lesson gtr-1-3 “Your first fretted notes” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L9114298cd0",
+      "source": "Press just behind the fret",
+      "translation": "Πατήστε ακριβώς πίσω από το τάστο",
+      "context": "Guitar · Unit 1 · lesson gtr-1-3 “Your first fretted notes” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2b54566755",
+      "source": "Put your fingertip just behind the metal fret, not on top of it. Press firmly enough for a clean ring.",
+      "translation": "Βάλτε την άκρη του δαχτύλου ακριβώς πίσω από το μεταλλικό τάστο, όχι πάνω του. Πιέστε όσο χρειάζεται για καθαρό ήχο.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-3 “Your first fretted notes” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lfb39835aeb",
+      "source": "String 1, fret 1, first finger.",
+      "translation": "Χορδή 1, τάστο 1, πρώτο δάχτυλο.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-3 “Your first fretted notes” · step 2 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2ceccefc66",
+      "source": "String 1, fret 3, third finger.",
+      "translation": "Χορδή 1, τάστο 3, τρίτο δάχτυλο.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-3 “Your first fretted notes” · step 3 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L44368c8e63",
+      "source": "Open, fret 1, fret 3: E, F, G.",
+      "translation": "Ανοιχτή, τάστο 1, τάστο 3: E, F, G.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-3 “Your first fretted notes” · step 4 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lbb91147d34",
+      "source": "Where do you press?",
+      "translation": "Πού πατάτε;",
+      "context": "Guitar · Unit 1 · lesson gtr-1-3 “Your first fretted notes” · step 5 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La1f91698f6",
+      "source": "Just behind the fret",
+      "translation": "Ακριβώς πίσω από το τάστο",
+      "context": "Guitar · Unit 1 · lesson gtr-1-3 “Your first fretted notes” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L4d11838152",
+      "source": "On top of the fret",
+      "translation": "Πάνω στο τάστο",
+      "context": "Guitar · Unit 1 · lesson gtr-1-3 “Your first fretted notes” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L1471e7977b",
+      "source": "Between two frets, in the middle",
+      "translation": "Στη μέση, ανάμεσα σε δύο τάστα",
+      "context": "Guitar · Unit 1 · lesson gtr-1-3 “Your first fretted notes” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lc15b166920",
+      "source": "Up and back",
+      "translation": "Ανεβαίνουμε και επιστρέφουμε",
+      "context": "Guitar · Unit 1 · lesson gtr-1-3 “Your first fretted notes” · step 6 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lbb69c85edd",
+      "source": "Your first chord: E minor",
+      "translation": "Η πρώτη συγχορδία σας: E ελάσσονα",
+      "context": "Guitar · Unit 1 · lesson gtr-1-4 “Your first chord: E minor” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld662d5e26b",
+      "source": "Two fingers, six strings",
+      "translation": "Δύο δάχτυλα, έξι χορδές",
+      "context": "Guitar · Unit 1 · lesson gtr-1-4 “Your first chord: E minor” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L09a5833cec",
+      "source": "E minor uses two fingers on fret 2, strings 5 and 4. Every string rings.",
+      "translation": "Η E ελάσσονα χρειάζεται δύο δάχτυλα στο τάστο 2, στις χορδές 5 και 4. Ηχούν όλες οι χορδές.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-4 “Your first chord: E minor” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L16fedb6c29",
+      "source": "Strum down",
+      "translation": "Χτύπημα προς τα κάτω",
+      "context": "Guitar · Unit 1 · lesson gtr-1-4 “Your first chord: E minor” · step 3 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L218ffdfd51",
+      "source": "Brush across all six strings from thick to thin, one smooth motion. Keep your wrist loose.",
+      "translation": "Περάστε και από τις έξι χορδές, από τη χοντρή στη λεπτή, με μία ομαλή κίνηση. Κρατήστε τον καρπό χαλαρό.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-4 “Your first chord: E minor” · step 3 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L5a4c7da42b",
+      "source": "First-steps challenge",
+      "translation": "Δοκιμασία πρώτων βημάτων",
+      "context": "Guitar · Unit 1 · challenge gtr-1-5 “First-steps challenge” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L502e8524eb",
+      "source": "No new ideas, just you",
+      "translation": "Χωρίς νέα ύλη, μόνο εσείς",
+      "context": "Guitar · Unit 1 · challenge gtr-1-5 “First-steps challenge” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lb047858f7f",
+      "source": "This challenge mixes the whole unit: the open strings, E, F and G on string 1, and E minor. Take a breath between steps.",
+      "translation": "Αυτή η δοκιμασία συνδυάζει όλη την ενότητα: τις ανοιχτές χορδές, τις E, F και G στη χορδή 1 και την E ελάσσονα. Πάρτε μια ανάσα ανάμεσα στα βήματα.",
+      "context": "Guitar · Unit 1 · challenge gtr-1-5 “First-steps challenge” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lcbdcef465a",
+      "source": "From thick to thin, the open strings are…",
+      "translation": "Από τη χοντρή στη λεπτή, οι ανοιχτές χορδές είναι…",
+      "context": "Guitar · Unit 1 · challenge gtr-1-5 “First-steps challenge” · step 2 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L3534785c8b",
+      "source": "Every Amateur Does Get Better Eventually: E A D G B E, string 6 to string 1.",
+      "translation": "Τα αρχικά της αγγλικής φράσης Every Amateur Does Get Better Eventually δίνουν E A D G B E, από τη χορδή 6 έως τη χορδή 1.",
+      "context": "Guitar · Unit 1 · challenge gtr-1-5 “First-steps challenge” · step 2 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L3ed18e44f0",
+      "source": "Roll call, thin to thick",
+      "translation": "Με τη σειρά, από τη λεπτή στη χοντρή",
+      "context": "Guitar · Unit 1 · challenge gtr-1-5 “First-steps challenge” · step 3 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lfb15c73b73",
+      "source": "Which is lower?",
+      "translation": "Ποιος ήχος είναι πιο χαμηλός;",
+      "context": "Guitar · Unit 1 · challenge gtr-1-5 “First-steps challenge” · step 4 (listen) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L7aeab8183d",
+      "source": "E, F and G",
+      "translation": "E, F και G",
+      "context": "Guitar · Unit 1 · challenge gtr-1-5 “First-steps challenge” · step 5 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L13a24a6c0d",
+      "source": "Mary Had a Little Lamb: three notes",
+      "translation": "Η Μαίρη είχε ένα αρνάκι: τρεις νότες",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld0ea5ebdfa",
+      "source": "Your first song",
+      "translation": "Το πρώτο σας τραγούδι",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L67684dd3f9",
+      "source": "Mary Had a Little Lamb needs three notes: open string 2 is B, fret 2 on string 3 is A, and open string 3 is G. Your second finger plays the A.",
+      "translation": "Το «Η Μαίρη είχε ένα αρνάκι» χρειάζεται τρεις νότες: η ανοιχτή χορδή 2 δίνει B, το τάστο 2 στη χορδή 3 δίνει A και η ανοιχτή χορδή 3 δίνει G. Το δεύτερο δάχτυλο παίζει την A.",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L0f0ba5e96c",
+      "source": "String 3, fret 2, second finger. That's A.",
+      "translation": "Χορδή 3, τάστο 2, δεύτερο δάχτυλο. Είναι η A.",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · step 2 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La0e88a1c69",
+      "source": "B A G A B B B: open string 2, then string 3.",
+      "translation": "B A G A B B B: ανοιχτή χορδή 2 και μετά χορδή 3.",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · step 3 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lb35d67698f",
+      "source": "First half",
+      "translation": "Πρώτο μισό",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · step 4 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L401ad01ac9",
+      "source": "The verse",
+      "translation": "Η στροφή",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · step 5 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ldb4211a03a",
+      "source": "Mary Had a Little Lamb",
+      "translation": "Η Μαίρη είχε ένα αρνάκι",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · step 6 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lb4e6a31089",
+      "source": "Intro",
+      "translation": "Εισαγωγή",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · arrangement · song section label (Intro, Verse 1 …) on a small chip",
+      "max_length": 12
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L0c33a64f82",
+      "source": "Verse 1",
+      "translation": "Στροφή 1",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · arrangement · song section label (Intro, Verse 1 …) on a small chip",
+      "max_length": 12
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L0d09e295cd",
+      "source": "Verse 2",
+      "translation": "Στροφή 2",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · arrangement · song section label (Intro, Verse 1 …) on a small chip",
+      "max_length": 12
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L9fc93acaa4",
+      "source": "Solo",
+      "translation": "Σόλο",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · arrangement · song section label (Intro, Verse 1 …) on a small chip",
+      "max_length": 12
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lce9f8d903a",
+      "source": "Verse 3",
+      "translation": "Στροφή 3",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · arrangement · song section label (Intro, Verse 1 …) on a small chip",
+      "max_length": 12
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L5acc606203",
+      "source": "Verse 4",
+      "translation": "Στροφή 4",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · arrangement · song section label (Intro, Verse 1 …) on a small chip",
+      "max_length": 12
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L7c10b1802d",
+      "source": "Outro",
+      "translation": "Κλείσιμο",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · arrangement · song section label (Intro, Verse 1 …) on a small chip",
+      "max_length": 12
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L9e459895b8",
+      "source": "First melodies",
+      "translation": "Πρώτες μελωδίες",
+      "context": "Guitar · Unit 2 “First melodies” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lfcd6ee8a23",
+      "source": "Notes on strings 1 and 2, reading tab, and your first two tunes.",
+      "translation": "Νότες στις χορδές 1 και 2, ανάγνωση ταμπλατούρας και οι πρώτες δύο μελωδίες σας.",
+      "context": "Guitar · Unit 2 “First melodies” · unit summary",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L1185bdc7c0",
+      "source": "Three notes on string 2",
+      "translation": "Τρεις νότες στη χορδή 2",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L46caccda3a",
+      "source": "String 2: B, C and D",
+      "translation": "Χορδή 2: B, C και D",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La536f7740f",
+      "source": "String 2 works like string 1. Open, it's B. Fret 1 with your first finger is C. Fret 3 with your third finger is D.",
+      "translation": "Η χορδή 2 λειτουργεί όπως η χορδή 1. Ανοιχτή δίνει B. Το τάστο 1 με το πρώτο δάχτυλο δίνει C. Το τάστο 3 με το τρίτο δάχτυλο δίνει D.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lc55cf4408c",
+      "source": "Pluck string 2 open. That's B.",
+      "translation": "Παίξτε ανοιχτή τη χορδή 2. Είναι η B.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 2 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2200cf274d",
+      "source": "String 2, fret 1, first finger. That's C.",
+      "translation": "Χορδή 2, τάστο 1, πρώτο δάχτυλο. Είναι η C.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 3 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L0819310447",
+      "source": "String 2, fret 3, third finger. That's D.",
+      "translation": "Χορδή 2, τάστο 3, τρίτο δάχτυλο. Είναι η D.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 4 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L23bce6a2de",
+      "source": "Which finger plays fret 3?",
+      "translation": "Με ποιο δάχτυλο παίζετε το τάστο 3;",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 5 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L916a78d701",
+      "source": "First",
+      "translation": "Πρώτο",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L8d3e7efd0a",
+      "source": "Second finger",
+      "translation": "Δεύτερο δάχτυλο",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lafec931374",
+      "source": "Third finger",
+      "translation": "Τρίτο δάχτυλο",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La7ac4ed745",
+      "source": "Fourth finger",
+      "translation": "Τέταρτο δάχτυλο",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La5ee2d48fb",
+      "source": "One finger per fret: fret 1 gets finger 1, fret 2 gets finger 2, fret 3 gets finger 3.",
+      "translation": "Ένα δάχτυλο ανά τάστο: στο τάστο 1 το δάχτυλο 1, στο τάστο 2 το δάχτυλο 2, στο τάστο 3 το δάχτυλο 3.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 5 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L4e95f3a260",
+      "source": "Thumb behind the neck",
+      "translation": "Ο αντίχειρας πίσω από το μπράτσο",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 6 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld211b97b75",
+      "source": "Rest your thumb on the back of the neck, behind your second finger. Your fingers can then arch and land on their tips.",
+      "translation": "Ακουμπήστε τον αντίχειρα πίσω στο μπράτσο, απέναντι από το δεύτερο δάχτυλο. Έτσι τα δάχτυλα μπορούν να καμπυλώνουν και να πατούν με τις άκρες τους.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 6 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L3c50e8b84e",
+      "source": "Up and back on string 2",
+      "translation": "Ανέβασμα και επιστροφή στη χορδή 2",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 7 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L45d13a2383",
+      "source": "Reading tab",
+      "translation": "Ανάγνωση ταμπλατούρας",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L78a58336aa",
+      "source": "Tab is a map",
+      "translation": "Η ταμπλατούρα είναι χάρτης",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L8ab2f23db2",
+      "source": "Tab draws six lines, one per string, with string 1 on top. A number on a line is the fret to press. A 0 means play that string open.",
+      "translation": "Η ταμπλατούρα έχει έξι γραμμές, μία για κάθε χορδή, με τη χορδή 1 επάνω. Ο αριθμός στη γραμμή δείχνει ποιο τάστο να πατήσετε. Το 0 σημαίνει ανοιχτή χορδή.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lccf8acd553",
+      "source": "In tab, a 3 on the top line means…",
+      "translation": "Στην ταμπλατούρα, το 3 στην επάνω γραμμή σημαίνει…",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 2 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lc403ba83f1",
+      "source": "String 6, fret 3",
+      "translation": "Χορδή 6, τάστο 3",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 2 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L600e2dce19",
+      "source": "String 1, fret 3",
+      "translation": "Χορδή 1, τάστο 3",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 2 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld82df6e098",
+      "source": "Play three strings",
+      "translation": "Παίξτε τρεις χορδές",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 2 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L7277fd97d8",
+      "source": "The top line is string 1, the thinnest. The number is the fret.",
+      "translation": "Η επάνω γραμμή είναι η χορδή 1, η πιο λεπτή. Ο αριθμός δείχνει το τάστο.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 2 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2a3bf68f34",
+      "source": "Top line: 0, 1, 3.",
+      "translation": "Επάνω γραμμή: 0, 1, 3.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 3 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L7c796e01f6",
+      "source": "A 0 on the second line means…",
+      "translation": "Το 0 στη δεύτερη γραμμή σημαίνει…",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 4 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2dd456e860",
+      "source": "Play string 2 open",
+      "translation": "Παίξτε ανοιχτή τη χορδή 2",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf9774646bd",
+      "source": "Don't play string 2",
+      "translation": "Μην παίξετε τη χορδή 2",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lcff74c469b",
+      "source": "Press string 2 at fret 10",
+      "translation": "Πατήστε τη χορδή 2 στο τάστο 10",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ldcd6285c8b",
+      "source": "Second line: 3, 1, 0.",
+      "translation": "Δεύτερη γραμμή: 3, 1, 0.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 5 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L6f1906dfa5",
+      "source": "Which note is this?",
+      "translation": "Ποια νότα είναι αυτή;",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 6 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L517a9d49ae",
+      "source": "Down the stairs",
+      "translation": "Κατεβαίνοντας τη σκάλα",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 7 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L20fb3d8193",
+      "source": "Long and short notes",
+      "translation": "Νότες μεγάλης και μικρής διάρκειας",
+      "context": "Guitar · Unit 2 · lesson gtr-2-3 “Long and short notes” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L67d0dcf34e",
+      "source": "A note that lasts two beats",
+      "translation": "Μια νότα που κρατά δύο χρόνους",
+      "context": "Guitar · Unit 2 · lesson gtr-2-3 “Long and short notes” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L476514910a",
+      "source": "A half note rings for two beats. Pick once, count one, two, and let it sustain until the next note.",
+      "translation": "Το μισό ηχεί για δύο χρόνους. Χτυπήστε μία φορά, μετρήστε ένα, δύο και αφήστε το να ηχήσει μέχρι την επόμενη νότα.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-3 “Long and short notes” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2990d369e9",
+      "source": "How long does a half note last?",
+      "translation": "Πόσο διαρκεί ένα μισό;",
+      "context": "Guitar · Unit 2 · lesson gtr-2-3 “Long and short notes” · step 3 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L5b3ab40010",
+      "source": "One beat",
+      "translation": "Ένας χρόνος",
+      "context": "Guitar · Unit 2 · lesson gtr-2-3 “Long and short notes” · step 3 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L3db204f097",
+      "source": "Two beats",
+      "translation": "Δύο χρόνοι",
+      "context": "Guitar · Unit 2 · lesson gtr-2-3 “Long and short notes” · step 3 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L937448906f",
+      "source": "Four beats",
+      "translation": "Τέσσερις χρόνοι",
+      "context": "Guitar · Unit 2 · lesson gtr-2-3 “Long and short notes” · step 3 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L38ba47812c",
+      "source": "Half of a four-beat bar is two beats. A quarter note lasts one beat.",
+      "translation": "Το μισό ενός μέτρου τεσσάρων χρόνων είναι δύο χρόνοι. Ένα τέταρτο διαρκεί έναν χρόνο.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-3 “Long and short notes” · step 3 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L1e817871a8",
+      "source": "Cross with a small move",
+      "translation": "Αλλάξτε χορδή με μικρή κίνηση",
+      "context": "Guitar · Unit 2 · lesson gtr-2-3 “Long and short notes” · step 4 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L729b7425d6",
+      "source": "Going from string 2 to string 1 is a tiny move. Keep your picking hand close to the strings so the next note is ready.",
+      "translation": "Η μετάβαση από τη χορδή 2 στη χορδή 1 είναι μια μικρή κίνηση. Κρατήστε το χέρι που παίζει κοντά στις χορδές, έτοιμο για την επόμενη νότα.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-3 “Long and short notes” · step 4 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf2d0250794",
+      "source": "Fret 3 on string 2, then open string 1. Lift your finger as you pick.",
+      "translation": "Τάστο 3 στη χορδή 2 και μετά ανοιχτή χορδή 1. Σηκώστε το δάχτυλο καθώς παίζετε.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-3 “Long and short notes” · step 5 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La50440f7b6",
+      "source": "C and D on string 2, then E, F and G on string 1.",
+      "translation": "C και D στη χορδή 2 και μετά E, F και G στη χορδή 1.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-3 “Long and short notes” · step 6 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L1f56f7cfc7",
+      "source": "Across the strings",
+      "translation": "Από χορδή σε χορδή",
+      "context": "Guitar · Unit 2 · lesson gtr-2-3 “Long and short notes” · step 7 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lde97f92a64",
+      "source": "Ode to Joy",
+      "translation": "Ωδή στη χαρά",
+      "context": "Guitar · Unit 2 · song gtr-2-4 “Ode to Joy” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lb0714174a7",
+      "source": "A tune by Beethoven",
+      "translation": "Μια μελωδία του Μπετόβεν",
+      "context": "Guitar · Unit 2 · song gtr-2-4 “Ode to Joy” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L9225771ef7",
+      "source": "This melody comes from Beethoven's Ninth Symphony. It uses C, D, E, F and G, and it moves mostly one step at a time.",
+      "translation": "Αυτή η μελωδία προέρχεται από την Ένατη Συμφωνία του Μπετόβεν. Χρησιμοποιεί τις C, D, E, F και G και κινείται κυρίως με διαδοχικά βήματα.",
+      "context": "Guitar · Unit 2 · song gtr-2-4 “Ode to Joy” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L831dc92b9e",
+      "source": "The first line, slowly: E E F G G F E D.",
+      "translation": "Η πρώτη φράση, αργά: E E F G G F E D.",
+      "context": "Guitar · Unit 2 · song gtr-2-4 “Ode to Joy” · step 2 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lae7d153d96",
+      "source": "Then: C C D E E D D.",
+      "translation": "Μετά: C C D E E D D.",
+      "context": "Guitar · Unit 2 · song gtr-2-4 “Ode to Joy” · step 3 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Led05e029d4",
+      "source": "Long, short, long",
+      "translation": "Μεγάλη, μικρή, μεγάλη διάρκεια",
+      "context": "Guitar · Unit 2 · song gtr-2-4 “Ode to Joy” · step 4 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lbdd78d8957",
+      "source": "Each line ends with a lilt: a longer note, a quick one, then a held one. Count one-and-two, and slip the quick note in on the and.",
+      "translation": "Κάθε φράση τελειώνει με έναν χαρακτηριστικό ρυθμό: μια μεγαλύτερη νότα, μια σύντομη και μετά μια παρατεταμένη. Μετρήστε ένα-και-δύο και βάλτε τη σύντομη νότα στο «και».",
+      "context": "Guitar · Unit 2 · song gtr-2-4 “Ode to Joy” · step 4 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lce405c63b1",
+      "source": "First line",
+      "translation": "Πρώτη φράση",
+      "context": "Guitar · Unit 2 · song gtr-2-4 “Ode to Joy” · step 6 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L89e4852745",
+      "source": "Three notes and a jump",
+      "translation": "Τρεις νότες και ένα άλμα",
+      "context": "Guitar · Unit 2 · song gtr-2-5 “Mary Had a Little Lamb” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf1cc990354",
+      "source": "This nursery tune walks on C, D and E, then jumps up to G. The jump is open string 1 to fret 3.",
+      "translation": "Αυτή η παιδική μελωδία περνά από τις C, D και E και μετά ανεβαίνει με άλμα στη G. Το άλμα γίνεται από την ανοιχτή χορδή 1 στο τάστο 3.",
+      "context": "Guitar · Unit 2 · song gtr-2-5 “Mary Had a Little Lamb” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Le060c1abc6",
+      "source": "E D C D E E E: open string 1, down to string 2 and back.",
+      "translation": "E D C D E E E: ανοιχτή χορδή 1, μετά στη χορδή 2 και επιστροφή.",
+      "context": "Guitar · Unit 2 · song gtr-2-5 “Mary Had a Little Lamb” · step 2 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ldbecec8bff",
+      "source": "D D D on string 2, then E and G on string 1.",
+      "translation": "D D D στη χορδή 2 και μετά E και G στη χορδή 1.",
+      "context": "Guitar · Unit 2 · song gtr-2-5 “Mary Had a Little Lamb” · step 3 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L52b62b2b14",
+      "source": "Song spotlight: Letters in a Shoebox",
+      "translation": "Τραγούδι: Γράμματα σε κουτί παπουτσιών",
+      "context": "Guitar · Unit 2 · lesson gtr-2-spotlight “Song spotlight: Letters in a Shoebox” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L49b5f5c9cb",
+      "source": "A ballad on two strings",
+      "translation": "Μια μπαλάντα σε δύο χορδές",
+      "context": "Guitar · Unit 2 · lesson gtr-2-spotlight “Song spotlight: Letters in a Shoebox” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L55b84af5bf",
+      "source": "Letters in a Shoebox is a Timbre Original, a slow ballad in C. Its chorus lives on strings 1 and 2, and its hook opens with the long, short lilt you played in Ode to Joy. The whole song is in Songs, under Originals.",
+      "translation": "Το «Γράμματα σε κουτί παπουτσιών» είναι πρωτότυπο του Timbre, αργή μπαλάντα σε C. Το ρεφρέν παίζεται στις χορδές 1 και 2. Το μοτίβο του αρχίζει με τη μεγάλη και τη μικρή διάρκεια της «Ωδής στη χαρά». Βρείτε όλο το τραγούδι στα Τραγούδια, στην ενότητα Πρωτότυπα.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-spotlight “Song spotlight: Letters in a Shoebox” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L20b554da11",
+      "source": "The hook: C and D on string 2, then E, F and G on string 1, and back to D.",
+      "translation": "Το βασικό μοτίβο: C και D στη χορδή 2, μετά E, F και G στη χορδή 1 και επιστροφή στη D.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-spotlight “Song spotlight: Letters in a Shoebox” · step 2 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lfa36e93af8",
+      "source": "The hook",
+      "translation": "Το βασικό μοτίβο",
+      "context": "Guitar · Unit 2 · lesson gtr-2-spotlight “Song spotlight: Letters in a Shoebox” · step 4 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L9ac189a560",
+      "source": "Does the chorus end at home?",
+      "translation": "Το ρεφρέν τελειώνει στην τονική;",
+      "context": "Guitar · Unit 2 · lesson gtr-2-spotlight “Song spotlight: Letters in a Shoebox” · step 5 (listen) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ldf81944547",
+      "source": "Yes, it feels finished",
+      "translation": "Ναι, ακούγεται ολοκληρωμένο",
+      "context": "Guitar · Unit 2 · lesson gtr-2-spotlight “Song spotlight: Letters in a Shoebox” · step 5 (listen) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L7ac6eb4e66",
+      "source": "No, it wants to go on",
+      "translation": "Όχι, ζητά συνέχεια",
+      "context": "Guitar · Unit 2 · lesson gtr-2-spotlight “Song spotlight: Letters in a Shoebox” · step 5 (listen) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L31855cbc4f",
+      "source": "The chorus",
+      "translation": "Το ρεφρέν",
+      "context": "Guitar · Unit 2 · lesson gtr-2-spotlight “Song spotlight: Letters in a Shoebox” · step 6 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L1ac3ce2b0d",
+      "source": "Letters in a Shoebox",
+      "translation": "Γράμματα σε κουτί παπουτσιών",
+      "context": "Guitar · Unit 2 · lesson gtr-2-spotlight “Song spotlight: Letters in a Shoebox” · step 7 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L6d2857de41",
+      "source": "Melody challenge",
+      "translation": "Δοκιμασία μελωδίας",
+      "context": "Guitar · Unit 2 · challenge gtr-2-6 “Melody challenge” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L160b92eee7",
+      "source": "Six notes, two strings",
+      "translation": "Έξι νότες, δύο χορδές",
+      "context": "Guitar · Unit 2 · challenge gtr-2-6 “Melody challenge” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L60f61fb4e2",
+      "source": "No new ideas: E, F and G on string 1, B, C and D on string 2. Start slow, then hold a steady tempo.",
+      "translation": "Χωρίς νέα ύλη: E, F και G στη χορδή 1, B, C και D στη χορδή 2. Ξεκινήστε αργά και μετά κρατήστε σταθερό τέμπο.",
+      "context": "Guitar · Unit 2 · challenge gtr-2-6 “Melody challenge” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L16fdc846f0",
+      "source": "Which note is open string 2?",
+      "translation": "Ποια νότα δίνει η ανοιχτή χορδή 2;",
+      "context": "Guitar · Unit 2 · challenge gtr-2-6 “Melody challenge” · step 2 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lad17f6d151",
+      "source": "Did the tune go up or down?",
+      "translation": "Η μελωδία ανέβηκε ή κατέβηκε;",
+      "context": "Guitar · Unit 2 · challenge gtr-2-6 “Melody challenge” · step 3 (listen) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2038bdec92",
+      "source": "Up",
+      "translation": "Προς τα πάνω",
+      "context": "Guitar · Unit 2 · challenge gtr-2-6 “Melody challenge” · step 3 (listen) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lbf93e5ce8b",
+      "source": "Down",
+      "translation": "Προς τα κάτω",
+      "context": "Guitar · Unit 2 · challenge gtr-2-6 “Melody challenge” · step 3 (listen) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La79bc75189",
+      "source": "All six notes, low to high.",
+      "translation": "Και οι έξι νότες, από χαμηλά προς ψηλά.",
+      "context": "Guitar · Unit 2 · challenge gtr-2-6 “Melody challenge” · step 4 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L160018fbfc",
+      "source": "Six notes down",
+      "translation": "Έξι νότες προς τα κάτω",
+      "context": "Guitar · Unit 2 · challenge gtr-2-6 “Melody challenge” · step 5 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld92e4abf8f",
+      "source": "Ode to Joy, a little faster",
+      "translation": "Ωδή στη χαρά, λίγο πιο γρήγορα",
+      "context": "Guitar · Unit 2 · challenge gtr-2-6 “Melody challenge” · step 6 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L304d3240c4",
+      "source": "Mary Had a Little Lamb, faster",
+      "translation": "Η Μαίρη είχε ένα αρνάκι, πιο γρήγορα",
+      "context": "Guitar · Unit 2 · challenge gtr-2-6 “Melody challenge” · step 7 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L6a06751695",
+      "source": "First chords",
+      "translation": "Πρώτες συγχορδίες",
+      "context": "Guitar · Unit 3 “First chords” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L1267092566",
+      "source": "E minor, E, A minor and A, played cleanly, and your first chord changes.",
+      "translation": "E ελάσσονα, E, A ελάσσονα και A με καθαρό ήχο και οι πρώτες σας αλλαγές συγχορδιών.",
+      "context": "Guitar · Unit 3 “First chords” · unit summary",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lce1a46d611",
+      "source": "Clean chords",
+      "translation": "Καθαρές συγχορδίες",
+      "context": "Guitar · Unit 3 · lesson gtr-3-1 “Clean chords” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L297e9e07be",
+      "source": "Tips, not pads",
+      "translation": "Με τις άκρες, όχι τις μαλακές επιφάνειες",
+      "context": "Guitar · Unit 3 · lesson gtr-3-1 “Clean chords” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2c2ebb5975",
+      "source": "Press with your fingertips, arched like a bridge, so no finger leans on the string below it. Short nails make this much easier.",
+      "translation": "Πατήστε με τις άκρες των δαχτύλων, λυγισμένων σαν γέφυρα, ώστε κανένα να μην ακουμπά στη χορδή από κάτω. Τα κοντά νύχια βοηθούν πολύ.",
+      "context": "Guitar · Unit 3 · lesson gtr-3-1 “Clean chords” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L07c9e258fe",
+      "source": "Check each string",
+      "translation": "Ελέγξτε κάθε χορδή",
+      "context": "Guitar · Unit 3 · lesson gtr-3-1 “Clean chords” · step 3 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L777cf155db",
+      "source": "Pick the strings one at a time, thick to thin. A dull thud means a finger is touching that string. Adjust and pick it again.",
+      "translation": "Παίξτε τις χορδές μία μία, από τη χοντρή στη λεπτή. Ένας πνιχτός ήχος σημαίνει ότι κάποιο δάχτυλο ακουμπά τη χορδή. Διορθώστε τη θέση του και ξαναπαίξτε.",
+      "context": "Guitar · Unit 3 · lesson gtr-3-1 “Clean chords” · step 3 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lda4f2c3958",
+      "source": "E minor, string by string",
+      "translation": "E ελάσσονα, χορδή χορδή",
+      "context": "Guitar · Unit 3 · lesson gtr-3-1 “Clean chords” · step 4 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L0009cb1a16",
+      "source": "One string sounds dull. What's the likely cause?",
+      "translation": "Μια χορδή ακούγεται πνιχτή. Ποια είναι η πιθανή αιτία;",
+      "context": "Guitar · Unit 3 · lesson gtr-3-1 “Clean chords” · step 5 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L741d9469c2",
+      "source": "A finger is touching it",
+      "translation": "Την ακουμπά ένα δάχτυλο",
+      "context": "Guitar · Unit 3 · lesson gtr-3-1 “Clean chords” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lbfe7d24c11",
+      "source": "You strummed too slowly",
+      "translation": "Χτυπήσατε τις χορδές πολύ αργά",
+      "context": "Guitar · Unit 3 · lesson gtr-3-1 “Clean chords” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L12329cbb7b",
+      "source": "The pick is too thin",
+      "translation": "Η πένα είναι πολύ λεπτή",
+      "context": "Guitar · Unit 3 · lesson gtr-3-1 “Clean chords” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L29e791ecc4",
+      "source": "A fingertip leaning on a neighboring string stops it ringing. Arch your fingers more.",
+      "translation": "Ένα δάχτυλο που ακουμπά γειτονική χορδή τη σταματά από το να ηχήσει. Λυγίστε περισσότερο τα δάχτυλα.",
+      "context": "Guitar · Unit 3 · lesson gtr-3-1 “Clean chords” · step 5 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L6c3a5b85c6",
+      "source": "E major: add one finger",
+      "translation": "E μείζονα: προσθέστε ένα δάχτυλο",
+      "context": "Guitar · Unit 3 · lesson gtr-3-2 “E major: add one finger” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lca3d6296b8",
+      "source": "E minor plus one",
+      "translation": "E ελάσσονα συν ένα δάχτυλο",
+      "context": "Guitar · Unit 3 · lesson gtr-3-2 “E major: add one finger” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L6e7c200b38",
+      "source": "Keep your E minor shape and add your first finger on string 3, fret 1. That one note turns minor into major.",
+      "translation": "Κρατήστε το σχήμα της E ελάσσονας και βάλτε το πρώτο δάχτυλο στη χορδή 3, τάστο 1. Αυτή η μία νότα μετατρέπει την ελάσσονα σε μείζονα.",
+      "context": "Guitar · Unit 3 · lesson gtr-3-2 “E major: add one finger” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La34ad451bf",
+      "source": "Bright and dark",
+      "translation": "Φωτεινός και σκοτεινός ήχος",
+      "context": "Guitar · Unit 3 · lesson gtr-3-2 “E major: add one finger” · step 3 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L3223de15b5",
+      "source": "Major chords tend to sound bright and settled. Minor chords sound darker. E and E minor differ by just one note.",
+      "translation": "Οι μείζονες συγχορδίες συνήθως ακούγονται φωτεινές και σταθερές. Οι ελάσσονες ακούγονται πιο σκοτεινές. Η E και η E ελάσσονα διαφέρουν μόνο κατά μία νότα.",
+      "context": "Guitar · Unit 3 · lesson gtr-3-2 “E major: add one finger” · step 3 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L8e449bf03d",
+      "source": "Major or minor?",
+      "translation": "Μείζονα ή ελάσσονα;",
+      "context": "Guitar · Unit 3 · lesson gtr-3-2 “E major: add one finger” · step 4 (listen) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L8a52ed17c5",
+      "source": "Major",
+      "translation": "Μείζονα",
+      "context": "Guitar · Unit 3 · lesson gtr-3-2 “E major: add one finger” · step 4 (listen) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L100b455471",
+      "source": "Minor",
+      "translation": "Ελάσσονα",
+      "context": "Guitar · Unit 3 · lesson gtr-3-2 “E major: add one finger” · step 4 (listen) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L5517163095",
+      "source": "E, string by string",
+      "translation": "E, χορδή χορδή",
+      "context": "Guitar · Unit 3 · lesson gtr-3-2 “E major: add one finger” · step 6 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L728cd633f1",
+      "source": "A minor",
+      "translation": "A ελάσσονα",
+      "context": "Guitar · Unit 3 · lesson gtr-3-3 “A minor” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L15cff38132",
+      "source": "Same shape, one string over",
+      "translation": "Ίδιο σχήμα, μία χορδή παραπέρα",
+      "context": "Guitar · Unit 3 · lesson gtr-3-3 “A minor” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L04cd34e7dd",
+      "source": "A minor is the E shape moved one string thinner: fingers 2 and 3 on fret 2, finger 1 on string 2, fret 1.",
+      "translation": "Η A ελάσσονα είναι το σχήμα της E μεταφερμένο μία χορδή προς τις λεπτές: δάχτυλα 2 και 3 στο τάστο 2, δάχτυλο 1 στη χορδή 2, τάστο 1.",
+      "context": "Guitar · Unit 3 · lesson gtr-3-3 “A minor” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L8a71a33747",
+      "source": "Start on the root",
+      "translation": "Ξεκινήστε από τη θεμέλιο",
+      "context": "Guitar · Unit 3 · lesson gtr-3-3 “A minor” · step 3 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L93b54ad89d",
+      "source": "The root is the note a chord is named after. In A minor it's open string 5, so start your strum there and skip string 6.",
+      "translation": "Η θεμέλιος είναι η νότα που δίνει το όνομα στη συγχορδία. Στην A ελάσσονα είναι η ανοιχτή χορδή 5, οπότε ξεκινήστε εκεί και παραλείψτε τη χορδή 6.",
+      "context": "Guitar · Unit 3 · lesson gtr-3-3 “A minor” · step 3 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lea7dcbc0a1",
+      "source": "Which string do you skip in A minor?",
+      "translation": "Ποια χορδή παραλείπετε στην A ελάσσονα;",
+      "context": "Guitar · Unit 3 · lesson gtr-3-3 “A minor” · step 4 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L8b52fe3ce3",
+      "source": "String 1",
+      "translation": "Χορδή 1",
+      "context": "Guitar · Unit 3 · lesson gtr-3-3 “A minor” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L14f54a0668",
+      "source": "String 6",
+      "translation": "Χορδή 6",
+      "context": "Guitar · Unit 3 · lesson gtr-3-3 “A minor” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L8ff7342a88",
+      "source": "String 5",
+      "translation": "Χορδή 5",
+      "context": "Guitar · Unit 3 · lesson gtr-3-3 “A minor” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L99859ab4b6",
+      "source": "A minor's root is open string 5. Start the strum there.",
+      "translation": "Η θεμέλιος της A ελάσσονας είναι η ανοιχτή χορδή 5. Ξεκινήστε το χτύπημα από εκεί.",
+      "context": "Guitar · Unit 3 · lesson gtr-3-3 “A minor” · step 4 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L297e2d2669",
+      "source": "Which chord is minor?",
+      "translation": "Ποια συγχορδία είναι ελάσσονα;",
+      "context": "Guitar · Unit 3 · lesson gtr-3-3 “A minor” · step 5 (listen) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L0eb850e0f9",
+      "source": "A minor, string by string",
+      "translation": "A ελάσσονα, χορδή χορδή",
+      "context": "Guitar · Unit 3 · lesson gtr-3-3 “A minor” · step 6 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L3c6bc13182",
+      "source": "A major",
+      "translation": "A μείζονα",
+      "context": "Guitar · Unit 3 · lesson gtr-3-4 “A major” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L920df29d22",
+      "source": "Three fingers in a row",
+      "translation": "Τρία δάχτυλα στη σειρά",
+      "context": "Guitar · Unit 3 · lesson gtr-3-4 “A major” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf2e8c49236",
+      "source": "A packs fingers 1, 2 and 3 side by side on fret 2, on strings 4, 3 and 2. Strum from string 5.",
+      "translation": "Η A βάζει τα δάχτυλα 1, 2 και 3 δίπλα δίπλα στο τάστο 2, στις χορδές 4, 3 και 2. Χτυπήστε από τη χορδή 5.",
+      "context": "Guitar · Unit 3 · lesson gtr-3-4 “A major” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld5c0a9986f",
+      "source": "Crowded? Angle them",
+      "translation": "Στριμώχνονται; Βάλτε τα λοξά",
+      "context": "Guitar · Unit 3 · lesson gtr-3-4 “A major” · step 3 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L5d3468e2a0",
+      "source": "If your fingers feel cramped, slant them so each sits just behind the fret at a slight angle. Keep string 1 clear so it rings.",
+      "translation": "Αν τα δάχτυλα στριμώχνονται, γείρετέ τα λίγο ώστε να κάθονται ακριβώς πίσω από το τάστο. Αφήστε ελεύθερη τη χορδή 1 για να ηχεί.",
+      "context": "Guitar · Unit 3 · lesson gtr-3-4 “A major” · step 3 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L912d5a9390",
+      "source": "Which fret holds all three fingers in A?",
+      "translation": "Σε ποιο τάστο βρίσκονται και τα τρία δάχτυλα στην A;",
+      "context": "Guitar · Unit 3 · lesson gtr-3-4 “A major” · step 4 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L9d5d06c602",
+      "source": "Fret 2",
+      "translation": "Τάστο 2",
+      "context": "Guitar · Unit 3 · lesson gtr-3-4 “A major” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L25fd2930a3",
+      "source": "Fret 1",
+      "translation": "Τάστο 1",
+      "context": "Guitar · Unit 3 · lesson gtr-3-4 “A major” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L806d33523e",
+      "source": "Fret 3",
+      "translation": "Τάστο 3",
+      "context": "Guitar · Unit 3 · lesson gtr-3-4 “A major” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L72be45acb1",
+      "source": "A, string by string",
+      "translation": "A, χορδή χορδή",
+      "context": "Guitar · Unit 3 · lesson gtr-3-4 “A major” · step 6 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L45b6d9e63c",
+      "source": "From E minor to A minor",
+      "translation": "Από την E ελάσσονα στην A ελάσσονα",
+      "context": "Guitar · Unit 3 · lesson gtr-3-5 “From E minor to A minor” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L97d4f3dd8e",
+      "source": "Move the shape, not the fingers",
+      "translation": "Μετακινήστε το σχήμα, όχι τα δάχτυλα",
+      "context": "Guitar · Unit 3 · lesson gtr-3-5 “From E minor to A minor” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lc214834014",
+      "source": "From E minor to A minor, fingers 2 and 3 hop together to strings 4 and 3. Then finger 1 lands on string 2. Your hand barely moves.",
+      "translation": "Από την E ελάσσονα στην A ελάσσονα, τα δάχτυλα 2 και 3 πηγαίνουν μαζί στις χορδές 4 και 3. Μετά το δάχτυλο 1 πατά τη χορδή 2. Το χέρι σχεδόν δεν κινείται.",
+      "context": "Guitar · Unit 3 · lesson gtr-3-5 “From E minor to A minor” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La3f4c297e3",
+      "source": "Change early, land on one",
+      "translation": "Αλλάξτε νωρίς, πατήστε στον πρώτο χρόνο",
+      "context": "Guitar · Unit 3 · lesson gtr-3-5 “From E minor to A minor” · step 4 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf02792e9e5",
+      "source": "Strum once, then use the rest of the bar to change. Aim to land the new chord right on beat one. Speed comes later, by itself.",
+      "translation": "Χτυπήστε μία φορά και αλλάξτε θέση στο υπόλοιπο μέτρο. Στόχος είναι η νέα συγχορδία να είναι έτοιμη ακριβώς στον πρώτο χρόνο. Η ταχύτητα θα έρθει αργότερα, μόνη της.",
+      "context": "Guitar · Unit 3 · lesson gtr-3-5 “From E minor to A minor” · step 4 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L951f4e8f4d",
+      "source": "How should your fingers travel between chords?",
+      "translation": "Πώς πρέπει να κινούνται τα δάχτυλα μεταξύ συγχορδιών;",
+      "context": "Guitar · Unit 3 · lesson gtr-3-5 “From E minor to A minor” · step 7 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lbf4cffd3cf",
+      "source": "One at a time",
+      "translation": "Ένα κάθε φορά",
+      "context": "Guitar · Unit 3 · lesson gtr-3-5 “From E minor to A minor” · step 7 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lba3eda912b",
+      "source": "As high as possible",
+      "translation": "Όσο πιο ψηλά γίνεται",
+      "context": "Guitar · Unit 3 · lesson gtr-3-5 “From E minor to A minor” · step 7 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Le6ae13d822",
+      "source": "Together, as one shape",
+      "translation": "Μαζί, σαν ενιαίο σχήμα",
+      "context": "Guitar · Unit 3 · lesson gtr-3-5 “From E minor to A minor” · step 7 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L110633d13f",
+      "source": "Moving the fingers as a unit is faster and lands cleaner. Keep them low, just above the strings.",
+      "translation": "Η κίνηση των δαχτύλων ως σύνολο είναι πιο γρήγορη και προσγειώνει τη συγχορδία καθαρότερα. Κρατήστε τα χαμηλά, λίγο πάνω από τις χορδές.",
+      "context": "Guitar · Unit 3 · lesson gtr-3-5 “From E minor to A minor” · step 7 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L374c3725ba",
+      "source": "From A to E",
+      "translation": "Από την A στην E",
+      "context": "Guitar · Unit 3 · lesson gtr-3-6 “From A to E” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L4a01cc8b59",
+      "source": "See the shape first",
+      "translation": "Δείτε πρώτα το σχήμα",
+      "context": "Guitar · Unit 3 · lesson gtr-3-6 “From A to E” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lfa2be0ab9c",
+      "source": "Every finger moves from A to E. Picture the E shape before you lift, then move all three together. Aim finger 2 at string 5.",
+      "translation": "Από την A στην E κινούνται όλα τα δάχτυλα. Φανταστείτε το σχήμα της E πριν τα σηκώσετε και μετακινήστε και τα τρία μαζί. Στοχεύστε με το δάχτυλο 2 τη χορδή 5.",
+      "context": "Guitar · Unit 3 · lesson gtr-3-6 “From A to E” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La16512a680",
+      "source": "Song spotlight: Dust on the Dashboard",
+      "translation": "Τραγούδι: Σκόνη στο ταμπλό",
+      "context": "Guitar · Unit 3 · lesson gtr-3-spotlight “Song spotlight: Dust on the Dashboard” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Le2da99d722",
+      "source": "Country on E and A",
+      "translation": "Κάντρι με E και A",
+      "context": "Guitar · Unit 3 · lesson gtr-3-spotlight “Song spotlight: Dust on the Dashboard” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L40cf5e5cf3",
+      "source": "Dust on the Dashboard is a Timbre Original: country in A. Every verse ends on two bars of E and two of A, the change you just learned. See the shape, move early and land on beat one. The whole song is in Songs, under Originals.",
+      "translation": "Το «Σκόνη στο ταμπλό» είναι πρωτότυπο του Timbre: κάντρι σε A. Κάθε στροφή τελειώνει με δύο μέτρα E και δύο A, την αλλαγή που μόλις μάθατε. Δείτε το σχήμα, κινηθείτε νωρίς και πατήστε στον πρώτο χρόνο. Βρείτε όλο το τραγούδι στα Τραγούδια, στην ενότητα Πρωτότυπα.",
+      "context": "Guitar · Unit 3 · lesson gtr-3-spotlight “Song spotlight: Dust on the Dashboard” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf98b39c10f",
+      "source": "Does this end at home?",
+      "translation": "Τελειώνει στην τονική;",
+      "context": "Guitar · Unit 3 · lesson gtr-3-spotlight “Song spotlight: Dust on the Dashboard” · step 2 (listen) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L38282d193b",
+      "source": "Over E: open B, open E, D at fret 3 on string 2, C sharp at fret 2, then G sharp at fret 1 on string 3.",
+      "translation": "Πάνω στην E: ανοιχτές B, E, D στο τάστο 3 της χορδής 2, C δίεση στο τάστο 2, G δίεση στο τάστο 1 της χορδής 3.",
+      "context": "Guitar · Unit 3 · lesson gtr-3-spotlight “Song spotlight: Dust on the Dashboard” · step 5 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L6bb5e2c3fa",
+      "source": "The end of the verse",
+      "translation": "Το τέλος της στροφής",
+      "context": "Guitar · Unit 3 · lesson gtr-3-spotlight “Song spotlight: Dust on the Dashboard” · step 6 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L3e308928e8",
+      "source": "Chord-change challenge",
+      "translation": "Δοκιμασία αλλαγών συγχορδιών",
+      "context": "Guitar · Unit 3 · challenge gtr-3-7 “Chord-change challenge” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L221ab5e996",
+      "source": "Four chords, clean changes",
+      "translation": "Τέσσερις συγχορδίες, καθαρές αλλαγές",
+      "context": "Guitar · Unit 3 · challenge gtr-3-7 “Chord-change challenge” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L0832428388",
+      "source": "No new ideas: E minor, E, A minor and A. Land each shape cleanly, then keep the changes steady.",
+      "translation": "Χωρίς νέα ύλη: E ελάσσονα, E, A ελάσσονα και A. Πατήστε καθαρά κάθε σχήμα και μετά κρατήστε σταθερές τις αλλαγές.",
+      "context": "Guitar · Unit 3 · challenge gtr-3-7 “Chord-change challenge” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L28887108d7",
+      "source": "Which finger turns E minor into E?",
+      "translation": "Ποιο δάχτυλο μετατρέπει την E ελάσσονα σε E;",
+      "context": "Guitar · Unit 3 · challenge gtr-3-7 “Chord-change challenge” · step 2 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L625d141f7d",
+      "source": "Finger 4 on string 1",
+      "translation": "Δάχτυλο 4 στη χορδή 1",
+      "context": "Guitar · Unit 3 · challenge gtr-3-7 “Chord-change challenge” · step 2 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf42b604b43",
+      "source": "Finger 2 on string 6",
+      "translation": "Δάχτυλο 2 στη χορδή 6",
+      "context": "Guitar · Unit 3 · challenge gtr-3-7 “Chord-change challenge” · step 2 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L070e348de7",
+      "source": "Finger 1 on string 3",
+      "translation": "Δάχτυλο 1 στη χορδή 3",
+      "context": "Guitar · Unit 3 · challenge gtr-3-7 “Chord-change challenge” · step 2 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L001a8a4e76",
+      "source": "Finger 1 on string 3, fret 1 is the one note that makes E major.",
+      "translation": "Το δάχτυλο 1 στη χορδή 3, τάστο 1, δίνει τη μία νότα που σχηματίζει την E μείζονα.",
+      "context": "Guitar · Unit 3 · challenge gtr-3-7 “Chord-change challenge” · step 2 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lb40e7e9efb",
+      "source": "Strumming",
+      "translation": "Ρυθμικά χτυπήματα χορδών",
+      "context": "Guitar · Unit 4 “Strumming” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L6f2ac8800d",
+      "source": "Downstrokes, down-up eighths, accents and a strumming hand that never stops.",
+      "translation": "Χτυπήματα κάτω, όγδοα κάτω-πάνω, τονισμοί και ένα χέρι που δεν σταματά ποτέ.",
+      "context": "Guitar · Unit 4 “Strumming” · unit summary",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lc5270fb654",
+      "source": "One strum per beat",
+      "translation": "Ένα χτύπημα ανά χρόνο",
+      "context": "Guitar · Unit 4 · lesson gtr-4-1 “One strum per beat” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2cabfc4329",
+      "source": "Quarter notes",
+      "translation": "Τέταρτα",
+      "context": "Guitar · Unit 4 · lesson gtr-4-1 “One strum per beat” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf30e266da0",
+      "source": "A quarter note lasts one beat. Strum down on every beat and count out loud: one, two, three, four.",
+      "translation": "Ένα τέταρτο διαρκεί έναν χρόνο. Χτυπήστε προς τα κάτω σε κάθε χρόνο και μετρήστε δυνατά: ένα, δύο, τρία, τέσσερα.",
+      "context": "Guitar · Unit 4 · lesson gtr-4-1 “One strum per beat” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2384698d7e",
+      "source": "Strum from the wrist",
+      "translation": "Χτυπήστε με κίνηση του καρπού",
+      "context": "Guitar · Unit 4 · lesson gtr-4-1 “One strum per beat” · step 4 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L4d8264bf18",
+      "source": "Let the motion come from a loose wrist and forearm, like shaking water off your hand. A stiff arm sounds harsh.",
+      "translation": "Αφήστε την κίνηση να έρχεται από χαλαρό καρπό και αντιβράχιο, σαν να τινάζετε νερό από το χέρι. Ένα σφιγμένο χέρι δίνει σκληρό ήχο.",
+      "context": "Guitar · Unit 4 · lesson gtr-4-1 “One strum per beat” · step 4 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld5bb3cb3e3",
+      "source": "How many quarter-note strums fill a bar of four?",
+      "translation": "Πόσα χτυπήματα τετάρτων γεμίζουν ένα μέτρο τεσσάρων χρόνων;",
+      "context": "Guitar · Unit 4 · lesson gtr-4-1 “One strum per beat” · step 5 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L16e018ece5",
+      "source": "Two",
+      "translation": "Δύο",
+      "context": "Guitar · Unit 4 · lesson gtr-4-1 “One strum per beat” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lc5d87b23f2",
+      "source": "Four",
+      "translation": "Ο αριθμός τέσσερα",
+      "context": "Guitar · Unit 4 · lesson gtr-4-1 “One strum per beat” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L20c26c702a",
+      "source": "Eight",
+      "translation": "Οκτώ",
+      "context": "Guitar · Unit 4 · lesson gtr-4-1 “One strum per beat” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L3f9e2ba82f",
+      "source": "Down and up",
+      "translation": "Κάτω και πάνω",
+      "context": "Guitar · Unit 4 · lesson gtr-4-2 “Down and up” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L3bb7f9fd15",
+      "source": "Eighth notes: down-up",
+      "translation": "Όγδοα: κάτω-πάνω",
+      "context": "Guitar · Unit 4 · lesson gtr-4-2 “Down and up” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L53cc9a5bfd",
+      "source": "Split each beat in two. Strum down on the number and up on the and: one and two and. That's eight strums per bar.",
+      "translation": "Χωρίστε κάθε χρόνο στα δύο. Χτυπήστε κάτω στον αριθμό και πάνω στο «και»: ένα και δύο και. Είναι οκτώ χτυπήματα ανά μέτρο.",
+      "context": "Guitar · Unit 4 · lesson gtr-4-2 “Down and up” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L648307a100",
+      "source": "Where does the up strum fall?",
+      "translation": "Πότε γίνεται το χτύπημα προς τα πάνω;",
+      "context": "Guitar · Unit 4 · lesson gtr-4-2 “Down and up” · step 4 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lc953224dbf",
+      "source": "On the and",
+      "translation": "Στο «και»",
+      "context": "Guitar · Unit 4 · lesson gtr-4-2 “Down and up” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lcd86993d57",
+      "source": "On the number",
+      "translation": "Στον αριθμό",
+      "context": "Guitar · Unit 4 · lesson gtr-4-2 “Down and up” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lcf848a7efd",
+      "source": "Only on beat four",
+      "translation": "Μόνο στον τέταρτο χρόνο",
+      "context": "Guitar · Unit 4 · lesson gtr-4-2 “Down and up” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L66ae417c89",
+      "source": "Down on the number, up on the and. Your hand goes down and up once per beat.",
+      "translation": "Κάτω στον αριθμό, πάνω στο «και». Το χέρι κινείται κάτω και πάνω μία φορά ανά χρόνο.",
+      "context": "Guitar · Unit 4 · lesson gtr-4-2 “Down and up” · step 4 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L1e9bc6385b",
+      "source": "Lighter going up",
+      "translation": "Πιο απαλά προς τα πάνω",
+      "context": "Guitar · Unit 4 · lesson gtr-4-2 “Down and up” · step 5 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L6ea8d54e79",
+      "source": "Up strums are naturally softer. Brush just the thinner three or four strings on the way up. That gives the groove its lift.",
+      "translation": "Τα χτυπήματα προς τα πάνω είναι φυσικά πιο απαλά. Αγγίξτε μόνο τις τρεις ή τέσσερις λεπτότερες χορδές ανεβαίνοντας. Έτσι ο ρυθμός αποκτά ζωντάνια.",
+      "context": "Guitar · Unit 4 · lesson gtr-4-2 “Down and up” · step 5 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L80ff4ffcee",
+      "source": "Accent beat one",
+      "translation": "Τονίστε τον πρώτο χρόνο",
+      "context": "Guitar · Unit 4 · lesson gtr-4-3 “Accent beat one” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lc385d2091f",
+      "source": "Lean on one",
+      "translation": "Δώστε βάρος στον πρώτο χρόνο",
+      "context": "Guitar · Unit 4 · lesson gtr-4-3 “Accent beat one” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L8c49b6c18f",
+      "source": "An accent is a note played a little louder. Strum beat one harder than the rest. It tells everyone where the bar begins.",
+      "translation": "Τονισμός είναι μια νότα που παίζεται λίγο δυνατότερα. Χτυπήστε τον πρώτο χρόνο πιο δυνατά από τους υπόλοιπους. Έτσι όλοι καταλαβαίνουν πού αρχίζει το μέτρο.",
+      "context": "Guitar · Unit 4 · lesson gtr-4-3 “Accent beat one” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L50fae3bee8",
+      "source": "Which beat gets the accent?",
+      "translation": "Ποιος χρόνος τονίζεται;",
+      "context": "Guitar · Unit 4 · lesson gtr-4-3 “Accent beat one” · step 3 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L88701ee81c",
+      "source": "Beat three",
+      "translation": "Ο τρίτος χρόνος",
+      "context": "Guitar · Unit 4 · lesson gtr-4-3 “Accent beat one” · step 3 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Le8195a4ce0",
+      "source": "Every and",
+      "translation": "Κάθε «και»",
+      "context": "Guitar · Unit 4 · lesson gtr-4-3 “Accent beat one” · step 3 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L61fc25fa4f",
+      "source": "Beat one",
+      "translation": "Ο πρώτος χρόνος",
+      "context": "Guitar · Unit 4 · lesson gtr-4-3 “Accent beat one” · step 3 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lefe5a8489c",
+      "source": "Beat one starts the bar. A slightly louder first strum keeps you, and anyone listening, in time.",
+      "translation": "Ο πρώτος χρόνος αρχίζει το μέτρο. Ένα λίγο δυνατότερο πρώτο χτύπημα κρατά εσάς και όσους ακούν στον ρυθμό.",
+      "context": "Guitar · Unit 4 · lesson gtr-4-3 “Accent beat one” · step 3 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Le24540d5b2",
+      "source": "Count the bars",
+      "translation": "Μετρήστε τα μέτρα",
+      "context": "Guitar · Unit 4 · lesson gtr-4-3 “Accent beat one” · step 4 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L4f43432762",
+      "source": "Say the bar number on beat one: one, two, three, four; two, two, three, four. You always know where you are.",
+      "translation": "Πείτε τον αριθμό του μέτρου στον πρώτο χρόνο: ένα, δύο, τρία, τέσσερα· δύο, δύο, τρία, τέσσερα. Έτσι ξέρετε πάντα πού βρίσκεστε.",
+      "context": "Guitar · Unit 4 · lesson gtr-4-3 “Accent beat one” · step 4 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L7f8ad82b9c",
+      "source": "Keep the hand moving",
+      "translation": "Κρατήστε το χέρι σε κίνηση",
+      "context": "Guitar · Unit 4 · lesson gtr-4-4 “Keep the hand moving” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Le30d7248ff",
+      "source": "A pendulum hand",
+      "translation": "Το χέρι σαν εκκρεμές",
+      "context": "Guitar · Unit 4 · lesson gtr-4-4 “Keep the hand moving” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L42b0890e73",
+      "source": "Your strumming hand swings down and up all the time, like a pendulum. To skip a strum, keep swinging and simply miss the strings.",
+      "translation": "Το χέρι που χτυπά τις χορδές κινείται συνεχώς κάτω και πάνω σαν εκκρεμές. Για να παραλείψετε ένα χτύπημα, συνεχίστε την κίνηση χωρίς να αγγίξετε τις χορδές.",
+      "context": "Guitar · Unit 4 · lesson gtr-4-4 “Keep the hand moving” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lded54f4d23",
+      "source": "To skip a strum, your hand…",
+      "translation": "Για να παραλείψετε χτύπημα, το χέρι…",
+      "context": "Guitar · Unit 4 · lesson gtr-4-4 “Keep the hand moving” · step 4 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L80cc36535b",
+      "source": "Keeps moving and misses the strings",
+      "translation": "Συνεχίζει χωρίς να αγγίξει τις χορδές",
+      "context": "Guitar · Unit 4 · lesson gtr-4-4 “Keep the hand moving” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La6899881d0",
+      "source": "Stops and waits",
+      "translation": "Σταματά και περιμένει",
+      "context": "Guitar · Unit 4 · lesson gtr-4-4 “Keep the hand moving” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L08b3bd0b98",
+      "source": "Strums twice as hard",
+      "translation": "Χτυπά με διπλάσια δύναμη",
+      "context": "Guitar · Unit 4 · lesson gtr-4-4 “Keep the hand moving” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L32f5531fae",
+      "source": "A hand that never stops keeps steady time. The skipped strum is a swing that doesn't touch the strings.",
+      "translation": "Ένα χέρι που δεν σταματά κρατά σταθερό ρυθμό. Το χτύπημα που παραλείπεται είναι μια κίνηση που δεν αγγίζει τις χορδές.",
+      "context": "Guitar · Unit 4 · lesson gtr-4-4 “Keep the hand moving” · step 4 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld9b6e8bec7",
+      "source": "The folk strum",
+      "translation": "Το μοτίβο της φολκ",
+      "context": "Guitar · Unit 4 · lesson gtr-4-5 “The folk strum” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L4ae2f0cb0a",
+      "source": "Down, down-up, up-down-up",
+      "translation": "Κάτω, κάτω-πάνω, πάνω-κάτω-πάνω",
+      "context": "Guitar · Unit 4 · lesson gtr-4-5 “The folk strum” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L76b5c122da",
+      "source": "This pattern drives countless songs. On beat three your hand swings down without touching the strings, then catches the up strum.",
+      "translation": "Αυτό το μοτίβο στηρίζει αμέτρητα τραγούδια. Στον τρίτο χρόνο το χέρι κατεβαίνει χωρίς να αγγίξει τις χορδές και μετά τις χτυπά ανεβαίνοντας.",
+      "context": "Guitar · Unit 4 · lesson gtr-4-5 “The folk strum” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L4ccadbfff8",
+      "source": "In this pattern, which beat has no strum on the number?",
+      "translation": "Σε αυτό το μοτίβο, σε ποιον χρόνο δεν χτυπάτε στον αριθμό;",
+      "context": "Guitar · Unit 4 · lesson gtr-4-5 “The folk strum” · step 4 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lb58b5a8ced",
+      "source": "One",
+      "translation": "Ο αριθμός ένα",
+      "context": "Guitar · Unit 4 · lesson gtr-4-5 “The folk strum” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf3cd4632fc",
+      "source": "Three",
+      "translation": "Ο αριθμός τρία",
+      "context": "Guitar · Unit 4 · lesson gtr-4-5 “The folk strum” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2671f18144",
+      "source": "On three the hand swings down past the strings, then strums up on the and.",
+      "translation": "Στο τρία το χέρι κατεβαίνει χωρίς να αγγίξει τις χορδές και μετά χτυπά προς τα πάνω στο «και».",
+      "context": "Guitar · Unit 4 · lesson gtr-4-5 “The folk strum” · step 4 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf4f6aa9fd6",
+      "source": "Song spotlight: Low Tide Radio",
+      "translation": "Τραγούδι: Ραδιόφωνο στην άμπωτη",
+      "context": "Guitar · Unit 4 · lesson gtr-4-spotlight “Song spotlight: Low Tide Radio” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L40de34d2de",
+      "source": "Reggae on the ands",
+      "translation": "Ρέγκε στα «και»",
+      "context": "Guitar · Unit 4 · lesson gtr-4-spotlight “Song spotlight: Low Tide Radio” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L749ac2f07c",
+      "source": "Low Tide Radio is a Timbre Original: laid-back reggae on E minor and A. The guitar plays only the ands. Keep your hand swinging down and up, miss the strings on each number and catch every and. The whole song is in Songs, under Originals.",
+      "translation": "Το «Ραδιόφωνο στην άμπωτη» είναι πρωτότυπο του Timbre: χαλαρή ρέγκε με E ελάσσονα και A. Η κιθάρα παίζει μόνο στα «και». Κρατήστε το χέρι σε κίνηση κάτω-πάνω, χωρίς επαφή στους αριθμούς και με χτύπημα σε κάθε «και». Όλο το τραγούδι βρίσκεται στα Τραγούδια, στα Πρωτότυπα.",
+      "context": "Guitar · Unit 4 · lesson gtr-4-spotlight “Song spotlight: Low Tide Radio” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L958cd7f8b2",
+      "source": "Where does the guitar play in Low Tide Radio?",
+      "translation": "Πότε παίζει η κιθάρα στο «Ραδιόφωνο στην άμπωτη»;",
+      "context": "Guitar · Unit 4 · lesson gtr-4-spotlight “Song spotlight: Low Tide Radio” · step 5 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lefda538736",
+      "source": "Only on the ands",
+      "translation": "Μόνο στα «και»",
+      "context": "Guitar · Unit 4 · lesson gtr-4-spotlight “Song spotlight: Low Tide Radio” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L82e6d3612d",
+      "source": "On every number",
+      "translation": "Σε κάθε αριθμό",
+      "context": "Guitar · Unit 4 · lesson gtr-4-spotlight “Song spotlight: Low Tide Radio” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L71e96e5d41",
+      "source": "Only on beat one",
+      "translation": "Μόνο στον πρώτο χρόνο",
+      "context": "Guitar · Unit 4 · lesson gtr-4-spotlight “Song spotlight: Low Tide Radio” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lbaaaeb8ba6",
+      "source": "Bass and drums hold the numbers. The guitar answers between them, on the ands.",
+      "translation": "Το μπάσο και τα τύμπανα κρατούν τους αριθμούς. Η κιθάρα απαντά ανάμεσά τους, στα «και».",
+      "context": "Guitar · Unit 4 · lesson gtr-4-spotlight “Song spotlight: Low Tide Radio” · step 5 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf42e6f48eb",
+      "source": "Strumming challenge",
+      "translation": "Δοκιμασία ρυθμικών χτυπημάτων",
+      "context": "Guitar · Unit 4 · challenge gtr-4-6 “Strumming challenge” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld852510182",
+      "source": "Steady hand, four chords",
+      "translation": "Σταθερό χέρι, τέσσερις συγχορδίες",
+      "context": "Guitar · Unit 4 · challenge gtr-4-6 “Strumming challenge” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La5aeda8eb5",
+      "source": "No new ideas: quarters, eighths and the folk strum on the chords you know. Keep the hand swinging and lean on beat one.",
+      "translation": "Χωρίς νέα ύλη: τέταρτα, όγδοα και το μοτίβο φολκ στις συγχορδίες που ξέρετε. Κρατήστε το χέρι σε κίνηση και τονίστε τον πρώτο χρόνο.",
+      "context": "Guitar · Unit 4 · challenge gtr-4-6 “Strumming challenge” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L49001bc117",
+      "source": "Down-up eighths: where are the up strums?",
+      "translation": "Όγδοα κάτω-πάνω: πότε χτυπάτε προς τα πάνω;",
+      "context": "Guitar · Unit 4 · challenge gtr-4-6 “Strumming challenge” · step 5 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L026036a0e5",
+      "source": "On every and",
+      "translation": "Σε κάθε «και»",
+      "context": "Guitar · Unit 4 · challenge gtr-4-6 “Strumming challenge” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lb6a0055821",
+      "source": "Only on two and four",
+      "translation": "Μόνο στο δύο και στο τέσσερα",
+      "context": "Guitar · Unit 4 · challenge gtr-4-6 “Strumming challenge” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lbdfc9d5e3c",
+      "source": "More open chords",
+      "translation": "Περισσότερες ανοιχτές συγχορδίες",
+      "context": "Guitar · Unit 5 “More open chords” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld004ac6df6",
+      "source": "C, G, D and D minor, two classic progressions, and the one-minute change.",
+      "translation": "C, G, D και D ελάσσονα, δύο κλασικές ακολουθίες και η αλλαγή του ενός λεπτού.",
+      "context": "Guitar · Unit 5 “More open chords” · unit summary",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Laa87302d09",
+      "source": "C major",
+      "translation": "C μείζονα",
+      "context": "Guitar · Unit 5 · lesson gtr-5-1 “C major” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Laf19c95d48",
+      "source": "A three-step staircase",
+      "translation": "Μια σκάλα με τρία σκαλοπάτια",
+      "context": "Guitar · Unit 5 · lesson gtr-5-1 “C major” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Laaf57f2a76",
+      "source": "C climbs like a staircase: finger 3 on string 5, fret 3; finger 2 on string 4, fret 2; finger 1 on string 2, fret 1.",
+      "translation": "Η C ανεβαίνει σαν σκάλα: δάχτυλο 3 στη χορδή 5, τάστο 3· δάχτυλο 2 στη χορδή 4, τάστο 2· δάχτυλο 1 στη χορδή 2, τάστο 1.",
+      "context": "Guitar · Unit 5 · lesson gtr-5-1 “C major” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lc5a0fa0134",
+      "source": "Which string do you skip in C?",
+      "translation": "Ποια χορδή παραλείπετε στην C;",
+      "context": "Guitar · Unit 5 · lesson gtr-5-1 “C major” · step 3 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L1ab6b5a5b3",
+      "source": "String 3",
+      "translation": "Χορδή 3",
+      "context": "Guitar · Unit 5 · lesson gtr-5-1 “C major” · step 3 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Le3f278d075",
+      "source": "C's root is on string 5, fret 3. Start the strum there.",
+      "translation": "Η θεμέλιος της C βρίσκεται στη χορδή 5, τάστο 3. Ξεκινήστε το χτύπημα από εκεί.",
+      "context": "Guitar · Unit 5 · lesson gtr-5-1 “C major” · step 3 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ldb61d61d3a",
+      "source": "A minor to C: one finger",
+      "translation": "Από A ελάσσονα σε C: ένα δάχτυλο",
+      "context": "Guitar · Unit 5 · lesson gtr-5-1 “C major” · step 5 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La241eba100",
+      "source": "Fingers 1 and 2 stay exactly where they are. Only finger 3 moves, from string 3 to string 5, fret 3.",
+      "translation": "Τα δάχτυλα 1 και 2 μένουν ακριβώς στη θέση τους. Κινείται μόνο το δάχτυλο 3, από τη χορδή 3 στη χορδή 5, τάστο 3.",
+      "context": "Guitar · Unit 5 · lesson gtr-5-1 “C major” · step 5 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2449e81b73",
+      "source": "G major",
+      "translation": "G μείζονα",
+      "context": "Guitar · Unit 5 · lesson gtr-5-2 “G major” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Le42f6df718",
+      "source": "Wide and bright",
+      "translation": "Ανοιχτός και φωτεινός ήχος",
+      "context": "Guitar · Unit 5 · lesson gtr-5-2 “G major” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L0dd28dc711",
+      "source": "G spreads out: finger 2 on string 6, fret 3; finger 1 on string 5, fret 2; finger 3 on string 1, fret 3. All six strings ring.",
+      "translation": "Η G απλώνεται: δάχτυλο 2 στη χορδή 6, τάστο 3· δάχτυλο 1 στη χορδή 5, τάστο 2· δάχτυλο 3 στη χορδή 1, τάστο 3. Ηχούν και οι έξι χορδές.",
+      "context": "Guitar · Unit 5 · lesson gtr-5-2 “G major” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lb36eb57ac7",
+      "source": "In G, which strings ring open?",
+      "translation": "Στην G, ποιες χορδές ηχούν ανοιχτές;",
+      "context": "Guitar · Unit 5 · lesson gtr-5-2 “G major” · step 3 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L843a47ea46",
+      "source": "Strings 2, 3 and 4",
+      "translation": "Χορδές 2, 3 και 4",
+      "context": "Guitar · Unit 5 · lesson gtr-5-2 “G major” · step 3 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lb185897636",
+      "source": "Strings 1 and 6",
+      "translation": "Χορδές 1 και 6",
+      "context": "Guitar · Unit 5 · lesson gtr-5-2 “G major” · step 3 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lc833bd9baf",
+      "source": "None of them",
+      "translation": "Καμία",
+      "context": "Guitar · Unit 5 · lesson gtr-5-2 “G major” · step 3 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L73b1f13160",
+      "source": "Lead with the bass",
+      "translation": "Ξεκινήστε από το μπάσο",
+      "context": "Guitar · Unit 5 · lesson gtr-5-2 “G major” · step 5 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L3c6a908125",
+      "source": "When you change, land the finger for the lowest string first. It's the first note your strum hits, which buys a moment for the rest.",
+      "translation": "Στην αλλαγή, πατήστε πρώτα το δάχτυλο της χαμηλότερης χορδής. Είναι η πρώτη νότα που χτυπάτε, οπότε κερδίζετε λίγο χρόνο για τις υπόλοιπες.",
+      "context": "Guitar · Unit 5 · lesson gtr-5-2 “G major” · step 5 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L5f8b0a6d18",
+      "source": "D and D minor",
+      "translation": "D και D ελάσσονα",
+      "context": "Guitar · Unit 5 · lesson gtr-5-3 “D and D minor” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lcfad049f54",
+      "source": "A small triangle",
+      "translation": "Ένα μικρό τρίγωνο",
+      "context": "Guitar · Unit 5 · lesson gtr-5-3 “D and D minor” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L263e596db5",
+      "source": "D lives on the thinnest three strings: finger 1 on string 3, fret 2; finger 3 on string 2, fret 3; finger 2 on string 1, fret 2.",
+      "translation": "Η D παίζεται στις τρεις λεπτότερες χορδές: δάχτυλο 1 στη χορδή 3, τάστο 2· δάχτυλο 3 στη χορδή 2, τάστο 3· δάχτυλο 2 στη χορδή 1, τάστο 2.",
+      "context": "Guitar · Unit 5 · lesson gtr-5-3 “D and D minor” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L3d8bca869b",
+      "source": "Where does a D chord's strum start?",
+      "translation": "Από πού αρχίζει το χτύπημα της συγχορδίας D;",
+      "context": "Guitar · Unit 5 · lesson gtr-5-3 “D and D minor” · step 3 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L89e03eb68c",
+      "source": "String 4",
+      "translation": "Χορδή 4",
+      "context": "Guitar · Unit 5 · lesson gtr-5-3 “D and D minor” · step 3 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L0f052bad8c",
+      "source": "D's root is open string 4. Strings 5 and 6 stay quiet.",
+      "translation": "Η θεμέλιος της D είναι η ανοιχτή χορδή 4. Οι χορδές 5 και 6 μένουν σιωπηλές.",
+      "context": "Guitar · Unit 5 · lesson gtr-5-3 “D and D minor” · step 3 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lb36524405c",
+      "source": "D minor: one note lower",
+      "translation": "D ελάσσονα: μία νότα χαμηλότερα",
+      "context": "Guitar · Unit 5 · lesson gtr-5-3 “D and D minor” · step 5 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L19cabd994c",
+      "source": "For D minor, the note on string 1 drops to fret 1. Reshuffle: finger 1 on string 1, finger 2 on string 3, finger 3 stays on string 2.",
+      "translation": "Για την D ελάσσονα, η νότα στη χορδή 1 κατεβαίνει στο τάστο 1. Αλλάξτε θέσεις: δάχτυλο 1 στη χορδή 1, δάχτυλο 2 στη χορδή 3, δάχτυλο 3 μένει στη χορδή 2.",
+      "context": "Guitar · Unit 5 · lesson gtr-5-3 “D and D minor” · step 5 (explain) · lesson card text",
+      "max_length": 300
+    }
+  ]
+}
