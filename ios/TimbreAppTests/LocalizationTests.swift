@@ -40,8 +40,23 @@ final class LocalizationTests: XCTestCase {
     func testPhoneRegionsResolveThroughFoundationToAvailableAppLanguages() {
         // The production system path is Bundle.main, so use Foundation's own regional negotiation.
         let available = Bundle.main.localizations
-        for (phone, expected) in [("de-DE", "de"), ("es-MX", "es"), ("pt-BR", "pt"),
-                                  ("fa-IR", "fa"), ("ar-SA", "ar"), ("fr-CA", "fr")] {
+        // Include actual phone spellings such as Bokmål nb and script-qualified Simplified Chinese/Punjabi.
+        let cases = [("en-CA", "en"), ("ar-SA", "ar"), ("bg-BG", "bg"), ("bn-BD", "bn"),
+                     ("ca-ES", "ca"), ("cs-CZ", "cs"), ("da-DK", "da"), ("de-DE", "de"),
+                     ("el-GR", "el"), ("es-MX", "es"), ("et-EE", "et"), ("fa-IR", "fa"),
+                     ("fi-FI", "fi"), ("fr-CA", "fr"), ("gu-IN", "gu"), ("he-IL", "he"),
+                     ("hi-IN", "hi"), ("hr-HR", "hr"), ("hu-HU", "hu"), ("id-ID", "id"),
+                     ("is-IS", "is"), ("it-IT", "it"), ("ja-JP", "ja"), ("kn-IN", "kn"),
+                     ("ko-KR", "ko"), ("lt-LT", "lt"), ("lv-LV", "lv"), ("ml-IN", "ml"),
+                     ("mr-IN", "mr"), ("nl-NL", "nl"), ("nb-NO", "no"), ("pa-Guru-IN", "pa"),
+                     ("pl-PL", "pl"), ("pt-BR", "pt"), ("ro-RO", "ro"), ("ru-RU", "ru"),
+                     ("sk-SK", "sk"), ("sl-SI", "sl"), ("sv-SE", "sv"), ("sw-KE", "sw"),
+                     ("ta-IN", "ta"), ("te-IN", "te"), ("th-TH", "th"), ("tr-TR", "tr"),
+                     ("uk-UA", "uk"), ("ur-PK", "ur"), ("vi-VN", "vi"), ("zh-Hans-CN", "zh-CN"),
+                     ("zu-ZA", "zu")]
+        XCTAssertEqual(cases.count, 49)
+        XCTAssertEqual(Set(cases.map { $0.1 }), Set(available.filter { $0 != "Base" }))
+        for (phone, expected) in cases {
             XCTAssertEqual(Bundle.preferredLocalizations(from: available, forPreferences: [phone]).first,
                            expected, "phone language \(phone)")
         }

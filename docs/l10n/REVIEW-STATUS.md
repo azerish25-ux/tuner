@@ -301,3 +301,12 @@ request retain cancellation behavior. Every result remains bound to its exact SH
 a prior pass is not evidence for later code. The a291229 eight-group language matrix
 finished successfully, covering48 launches and its17 available lesson locales. A
 fresh explicit matrix request is needed for the20-locale and layout checkpoint.
+
+## Phone-language negotiation coverage
+
+Foundation negotiation tests now cover all49 app locales using regional phone
+preferences, including Norwegian Bokmål `nb-NO`, Punjabi `pa-Guru-IN` and Simplified
+Chinese `zh-Hans-CN`. The cases must exactly cover the bundled locale set. These are
+new assertions pending Xcode execution, not a claim that every alias has passed or
+that incomplete lesson locales are already translated. Production still uses the
+system bundle for automatic selection; no silent language override was introduced.
