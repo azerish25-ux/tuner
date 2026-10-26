@@ -1,0 +1,1293 @@
+{
+ "locale": "pl",
+ "status": "complete-independent-AI-review; no native-human/device certification",
+ "reviewer": "Independent AI lesson reviewer",
+ "source_count": 6083,
+ "reviewed_count": 6083,
+ "unread_count": 0,
+ "missing_keys": [],
+ "extra_keys": [],
+ "source_files": {
+  "ios/Timbre/Resources/en.lproj/Learn.strings": "718a9431e97997dcad904b99eb00f0072385142d63ebb7ffc1c27ff374ca6de3",
+  "ios/Sources/TimbreCore/Resources/curriculum.json": "f5399d3d13edd2f94b660648e7dd23aceef66a21e095567988bbb6bd38995bf1",
+  "tools/l10n/source-clarifications.json": "99e5eb3d0c68419ad1893602fca17f4bf71490049acc3023fcb3693d696fdf6c"
+ },
+ "source_hashes_reverified": true,
+ "frozen_author_files_reverified": 500,
+ "exact_candidate_decisions": 310,
+ "decision_counts": {
+  "accept": 5682,
+  "genuine-identity-approval": 310,
+  "guarded-correction": 91
+ },
+ "guarded_corrections": 91,
+ "shared_keys": 610,
+ "shared_groups_read": 1344,
+ "shared_key_contexts": 4127,
+ "option_keys": 1224,
+ "option_signatures_reviewed": 735,
+ "additional_option_groups_read": 201,
+ "nonidentity_hard_errors": [],
+ "strict_errors": [],
+ "raw_identity_registration_holds": [
+  {
+   "key": "Lebaa7ee42e",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L6dcd4ce23d",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L50c9e8d5fc",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lae4f281df5",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "La36a6718f5",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L4b8ddb7777",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "La42bbdd946",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L9fc93acaa4",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L5d7cef323e",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Le69f20e9f6",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L32096c2e0e",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L7d6c1cd2a4",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Le0184adedf",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "La47109ee9d",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L423f20489c",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L9f9413d895",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L2bf2d48e26",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L92d40794f5",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L53d54b3da0",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lebc3b18e39",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lb33edd8ff2",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L20cf11aa74",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L75cc572d55",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lc40e0e2351",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lfbeff7287b",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lb5cbd3434b",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L6952d23be8",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Ld5183bf933",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L4cd7920fdd",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L41d9a6a844",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L6de1c1020b",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L40a376c23b",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L6f49985ada",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L67f2b8db53",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L042dc4512f",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L6b0d31c0d5",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L86f7e437fa",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L516b9783fc",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lfcff5b9fa2",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lcde5d983fc",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Ld5cd3af1c1",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L0f3d32305b",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L32a2abd6aa",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L2c5b0a2b92",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lc71863b940",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lc51cc62eec",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L2322e7fd2f",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L1b32faec74",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lcbd53803e4",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L8608911070",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L80744757e1",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lf1f91d70ac",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lf9bc0a7668",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L60db049169",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Leb5d689f09",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L67c3806843",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Ld8cef08bd1",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L8198fbd5b7",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L47207f2354",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L565f5c8676",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Ld975a3a9d1",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L7e6a077cdf",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lcdef3f1f1e",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L8763a0c59a",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "La8645a16b1",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lc329cf4ac6",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "La838e58546",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L8e48bd58a1",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L7ac2aa3ed2",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L88b9f64029",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lbdefafacbc",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L1b7f99964a",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L5ca845ae96",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lcc0eb99888",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L84fcf011f2",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lbd4d7f2e87",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L1430f1810f",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L435eef57b3",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lf7d33a22a5",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lb6873a215b",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L7e327ea06c",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L71e5b1f872",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L52d774ad9f",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L98357cd0f3",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L3be94b09c5",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L9279caa296",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lcd439df6f5",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L61da910eb5",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lf592a06d42",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Leb8b5de3ca",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lededd1cb64",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L30be5259ed",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L7cbe9df99e",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L7b4579eb6a",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L184b5b4ca8",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lf7745eab6a",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Ld26b5595e3",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lf88ebdd5e8",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lce7001df87",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L5a5d8340b2",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L15297afb76",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L4437fdb426",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L439cc8cefc",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lb4edf8f910",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L37fc0760bc",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Ld19e3e1e5a",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Ld54e6e9baa",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L8b3fd24a46",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lc9afa7e1ea",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L22bdf47be3",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Ldf5d466476",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L6b7439b401",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Le39422d2f4",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L92dad30792",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lc850edc11e",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "La87a011753",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L10df8a2f0e",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L2daa85f845",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L2f34e7c4c2",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "La104946954",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L27b86d297c",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lccb1461a57",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lc15da70e80",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L6e6a60a89b",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L044767a8b1",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Ld6e13b74e3",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L55f002b223",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lec981d2bd2",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L9a9f9c28f6",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lca56896c9c",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L848c7a54ea",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lee509cabb4",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L2a151ab2bb",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L42222e1426",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lf958c71b37",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L878228b1a7",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "La6f9aacf24",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Le4c868e589",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Le9371f17bc",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L82bc2b06b9",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L377d5c926e",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L72e4578411",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lab8ffb6b34",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lc67ebfc12b",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L8a8b9cc525",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Le543807b2f",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L87ea4d596c",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L1c0240672b",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lb01b896844",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Le3436b50d8",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L2b2f41ff19",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Ld07694d3e3",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L8358224416",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L7fdd1f14cb",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "La94dd92fdf",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L4dcaf0bbc5",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L4a72dceccd",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L17da966f18",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "La32484a6d1",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L6abdd41c99",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Led5d359fba",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L3f861c08cd",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lec6173309d",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L70a67c5399",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lb8b54bd04f",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "La4154244ab",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L1f749cf405",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L7cf184f4c6",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L65dc0bc434",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L16d7cda25c",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L013fea348d",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L144eabccb1",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L91d585db22",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L51e4d1a6c5",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lc6400eaec1",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L0371438f82",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Laaa025b382",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "La04af666be",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L944e60cb74",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Le6e5bd1766",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lcb7d29f43f",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Le80fdb9645",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lf87ce692a8",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L468f49fb52",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Leac2bf8895",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L9e779ee713",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L68b2b09c89",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L273a01f9bb",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L147c7ee532",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L7f95f4b200",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L81860bf635",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L58b29e6cc0",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L08b90ad7cf",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L4f240cf65f",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L18ca3dda33",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "La13338039b",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L8ba2a07385",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lcc80df1f23",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L30a6c8a770",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L5bd73fc956",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Le4adabb7df",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Leccee32026",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lbd97686897",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "La46d19dee2",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L4ddbbc6269",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L8672546ef1",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L4bc4f5018a",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L52b515dd1c",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "La26afab0b8",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L55c00c847d",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lf92e2db958",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L9ad5c4032f",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lc88b590de9",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L2dd4c36e57",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lfb9434a874",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L1440066ca8",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L932eaaf5a3",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L833da18887",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lc9ee5681d3",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L3a8aba7a85",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L4f93b2c841",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lfca4fdcfa2",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L5385ffddaa",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L1267b63df5",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L7f9b7bad94",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lce9f455869",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lca73ab6556",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L903c46b456",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L899658e27a",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lc4b37cf719",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Le624d302b7",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L3903101dc3",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lc2c65c2827",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L8b3ccea2a5",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lb944af0880",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L51fd07643b",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L5ded105f41",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L3b0a573dce",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L2777cf39fb",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lebb146d631",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lbbf56e1506",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lcacba260e6",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L9c2b93a151",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lae0e4af3a3",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "La3f0345a76",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L84690acdde",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lf38952de44",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L500ab3c359",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Ld89817766e",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Ld052b9a30c",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L21a9f4f643",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "La06e04321c",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L70aebab32e",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L8deaa20015",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lc9c0d91879",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lc2f7df0e02",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L0f8363a8e4",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Le431eabaf3",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L8a5e6d018b",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L4957f52b01",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L46a6cedfce",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L6dddb64ee4",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L3895894ce1",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Le5e1f8817f",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L9d06bca5d4",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L443929a467",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L5067110091",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "La6be98d6c0",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lfc41746da3",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L7dce4b7666",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Le2a484a070",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L873c7db571",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L9ec4d86f6b",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lef58de4ff0",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lfb3b1e8607",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L6f9084b461",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Le658e66d4e",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lb5ba032118",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L5b11880954",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L26cf298a3d",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L7140cafdab",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lf6b456d043",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lc79f013aef",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lb47027890d",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lf49c331357",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L5d9c113b57",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L4c40cf3873",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Le177db0c02",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L1114ff3a6f",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L1b69c1b683",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L55ea61dde9",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L6c65dbe5e7",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lfa0db53fe8",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L0fd26bc07a",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lee21f7bcbe",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L58d40ef087",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L366309b7d1",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L362a6b5f4f",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lf76e88c357",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L07cd0ccf75",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L25c9e2591c",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L76f05876f1",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Laf82ad96c4",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L964cd16960",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L41ad61ca24",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Lf25c3da65a",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "Labf6980bc4",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L38751b4dc8",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L169aa3a3af",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  },
+  {
+   "key": "L6980bcdcd2",
+   "error": "identical to English; translation or explicit independent semantic review required"
+  }
+ ],
+ "raw_identity_registration_hold_count": 310,
+ "raw_holds_resolved_by_exact_independent_invariants": true,
+ "nonidentity_soft_warnings": [
+  {
+   "key": "L52abc3a14b",
+   "source": "G sharp at fret 4 on string 1, F sharp, open E, open B, then D sharp at fret 4 on string 2, C sharp, D sharp.",
+   "translation": "G z krzyżykiem na progu 4 struny 1, F z krzyżykiem, puste E i B, potem D z krzyżykiem na progu 4 struny 2, C z krzyżykiem, D z krzyżykiem.",
+   "batch_filename": "pl-054.json",
+   "item_id": "s052",
+   "warnings": [
+    "longer than max_length 120 (138)"
+   ]
+  }
+ ],
+ "no_live_import_or_registry_or_git_actions": true,
+ "proposed_registry_in_memory_validation": {
+  "hard_errors": [],
+  "note": "Only the read-only validation function was supplied the exact independent proposal in memory; live registry unchanged."
+ }
+}

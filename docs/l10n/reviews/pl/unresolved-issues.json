@@ -1,0 +1,22 @@
+{
+ "semantic_blockers": [],
+ "unreviewed_keys": [],
+ "unresolved_source_questions": [],
+ "advisories": [
+  {
+   "kind": "device-layout",
+   "key": "L52abc3a14b",
+   "batch": "pl-054 s052",
+   "length": 138,
+   "suggested_limit": 120,
+   "decision": "Retain complete meaning; inspect device wrapping.",
+   "blocking_semantic_review": false
+  },
+  {
+   "kind": "certification",
+   "decision": "Native-human Polish sign-off and device QA are not claimed.",
+   "blocking_semantic_review": false
+  }
+ ],
+ "reviewer": "Independent AI lesson reviewer"
+}
