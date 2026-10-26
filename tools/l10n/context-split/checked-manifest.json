@@ -1,0 +1,3236 @@
+{
+  "schema": 1,
+  "reviewer": "Independent AI source-context delta review",
+  "status": "AI_INDEPENDENT_DELTA_REVIEW_CHECKED_NOT_APPLIED",
+  "rows": [
+    {
+      "locale": "ar",
+      "table": "Learn.strings",
+      "key": "Lf94a998e29",
+      "source": "Strings: 1, 2, 3 and 4",
+      "source_sha256": "a9c0f5eaf3a697599b3602ce970b13b1f3fbfa5800b0f02cee313043a39f4d1a",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "الأوتار: 1 و2 و3 و4",
+      "new_sha256": "869df4f006a7f4de0b7f3cb477b71c4176ee0661589aee2cd1b12f99dea535a2",
+      "reason": "Explicit instrument-string label; ordinary enumeration, not a spoken offbeat. Preserve numbered string order and distractor status.",
+      "legacy_key_for_context_only": "Lf6586312d9",
+      "legacy_value_do_not_copy_blindly": "الأوتار 1 و2 و3 و4",
+      "context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0"
+      ],
+      "required_authorization": "repository_write_scope_resumed",
+      "proposal_review_status": "AI semantic proposal by AI source-context proposal preparation; independent migration review and device QA pending; no human certification",
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 19,
+      "evidence_ref": "locale-evidence.json#ar",
+      "old_sha256": null,
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "9e4b4aa71f0946fd423335ea3b9cca7e0fd0eecf86eadabbebfddcb2373f1965"
+      },
+      "before_context_pointers": [],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "tools/l10n/learn/ar.json",
+      "baseline_evidence_sha256": "19a280e5e0ae87720a45fe6bb010633d33dc9f0509b788a7b9ff2755f4c84b8a",
+      "absence_guard": true,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "الأوتار explicitly names instrument strings; و is the ordinary list conjunction.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "ar",
+      "table": "Learn.strings",
+      "key": "L4f162aedb4",
+      "source": "Middle section",
+      "source_sha256": "3bb8d1b80c1fb7c14b7404bf6e3c408d1f07d8022175ee18f2667497b875255f",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "القسم الأوسط",
+      "new_sha256": "d02ac5e65765e3b78c6ef7321927504c274ee967ea10d25b6c205ae1275e4e13",
+      "reason": "Middle musical section, not a finger. Uses existing section glossary term and ordinary modifier; no new musical form is asserted.",
+      "legacy_key_for_context_only": "Lced02810fc",
+      "legacy_value_do_not_copy_blindly": "الوسطى",
+      "context_pointers": [
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "required_authorization": "repository_write_scope_resumed",
+      "proposal_review_status": "AI semantic proposal by AI source-context proposal preparation; independent migration review and device QA pending; no human certification",
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 12,
+      "evidence_ref": "locale-evidence.json#ar",
+      "old_sha256": null,
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 6,
+        "sha256": "db09e78b892d85ae906ed36688dc53395da72b1066ee85a473996f26724ab439"
+      },
+      "before_context_pointers": [],
+      "required_after_context_count": 6,
+      "baseline_evidence_path": "tools/l10n/learn/ar.json",
+      "baseline_evidence_sha256": "19a280e5e0ae87720a45fe6bb010633d33dc9f0509b788a7b9ff2755f4c84b8a",
+      "absence_guard": true,
+      "field_length_hint": 21,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "القسم الأوسط means the middle section, matching glossary قسم.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "ar",
+      "table": "Learn.strings",
+      "key": "Lf6586312d9",
+      "source": "1, 2, 3 and 4",
+      "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+      "old": "الأوتار 1 و2 و3 و4",
+      "old_sha256": "9cb3f7b0b5a47dec3a1bbeb6bc855c6329615bc302c34a71dfa13a9492060f02",
+      "new": "العدّ: 1، 2، 3 و4",
+      "new_sha256": "26145d8d0f3ceb62f118274923e141d8e67475e51c0649f1fd6f1882e3570194",
+      "operation": "replace_if_exact",
+      "context_pointers": [
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "reason": "Old value explicitly says strings; retained key is now solely a rhythm-count distractor. Use adjacent count label العدّ and preserve offbeat و after 3.",
+      "mechanical_issues": [],
+      "before_context_signature": {
+        "count": 2,
+        "sha256": "8c8365b70d4e43b3eb48a6735f8787002db35e7063763ea26b9a441bb0e52b8a"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "11769cf0fb2cc1339adfaba63d4ad896072ae6c30380d13bdd2cdba22fdf6851"
+      },
+      "before_context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0",
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "tools/l10n/learn/ar.json",
+      "baseline_evidence_sha256": "19a280e5e0ae87720a45fe6bb010633d33dc9f0509b788a7b9ff2755f4c84b8a",
+      "absence_guard": null,
+      "number_order_matches_source": true,
+      "codepoint_length": 17,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "The original الأوتار incorrectly labels the rhythm count as strings. العدّ plus the existing Arabic spoken-count و follows both adjacent choices and leaves the and-slot after 3.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "ar",
+      "table": "Learn.strings",
+      "key": "Lced02810fc",
+      "source": "Middle",
+      "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+      "old": "الوسطى",
+      "old_sha256": "6f3d94f614bf9a7aa33cb7ad5954c65c14ce2a29cd7f9ae58af147f3ba2c68a8",
+      "new": "الوسطى",
+      "new_sha256": "6f3d94f614bf9a7aa33cb7ad5954c65c14ce2a29cd7f9ae58af147f3ba2c68a8",
+      "operation": "retain",
+      "context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1"
+      ],
+      "reason": "Existing standalone finger answer remains valid for all three banjo quizzes; do not replace with section wording.",
+      "mechanical_issues": [],
+      "before_context_signature": {
+        "count": 9,
+        "sha256": "521e0089fe3ee95645f0469b8051b400acb7e31c4a20d55be78aac0a333c5d8d"
+      },
+      "required_after_context_signature": {
+        "count": 3,
+        "sha256": "1161746d9b9764743afcb91553fd88d64df65ae8cff1eb2c2260ad89a3af3cda"
+      },
+      "before_context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1",
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "required_after_context_count": 3,
+      "baseline_evidence_path": "tools/l10n/learn/ar.json",
+      "baseline_evidence_sha256": "19a280e5e0ae87720a45fe6bb010633d33dc9f0509b788a7b9ff2755f4c84b8a",
+      "absence_guard": null,
+      "number_order_matches_source": true,
+      "codepoint_length": 6,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "الوسطى is the conventional middle-finger adjective/name in these finger-identification prompts.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "bn",
+      "table": "Learn.strings",
+      "key": "Lf94a998e29",
+      "source": "Strings: 1, 2, 3 and 4",
+      "source_sha256": "a9c0f5eaf3a697599b3602ce970b13b1f3fbfa5800b0f02cee313043a39f4d1a",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "তার: 1, 2, 3 ও 4",
+      "new_sha256": "1788f4822253120361c548076c10798cb14732a3698455319a772e568864ee03",
+      "reason": "Explicit instrument-string label; ordinary enumeration, not a spoken offbeat. Preserve numbered string order and distractor status.",
+      "legacy_key_for_context_only": "Lf6586312d9",
+      "legacy_value_do_not_copy_blindly": "1, 2, 3 ও 4",
+      "context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0"
+      ],
+      "required_authorization": "repository_write_scope_resumed",
+      "proposal_review_status": "AI semantic proposal by AI source-context proposal preparation; independent migration review and device QA pending; no human certification",
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 16,
+      "evidence_ref": "locale-evidence.json#bn",
+      "old_sha256": null,
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "9e4b4aa71f0946fd423335ea3b9cca7e0fd0eecf86eadabbebfddcb2373f1965"
+      },
+      "before_context_pointers": [],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "tools/l10n/learn/bn.json",
+      "baseline_evidence_sha256": "91e83bb65d63488945380b746008843a33a435fbde04bba256f318f99cb1bac8",
+      "absence_guard": true,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "তার identifies instrument strings; ও joins the ordinary list.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "bn",
+      "table": "Learn.strings",
+      "key": "L4f162aedb4",
+      "source": "Middle section",
+      "source_sha256": "3bb8d1b80c1fb7c14b7404bf6e3c408d1f07d8022175ee18f2667497b875255f",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "মাঝের অংশ",
+      "new_sha256": "e0be5b355fb240cfb5e46cae19b6c419da02cf5cfa33fedb270702201c7a5c4c",
+      "reason": "Middle musical section, not a finger. Uses existing section glossary term and ordinary modifier; no new musical form is asserted.",
+      "legacy_key_for_context_only": "Lced02810fc",
+      "legacy_value_do_not_copy_blindly": "মধ্যমা",
+      "context_pointers": [
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "required_authorization": "repository_write_scope_resumed",
+      "proposal_review_status": "AI semantic proposal by AI source-context proposal preparation; independent migration review and device QA pending; no human certification",
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 9,
+      "evidence_ref": "locale-evidence.json#bn",
+      "old_sha256": null,
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 6,
+        "sha256": "db09e78b892d85ae906ed36688dc53395da72b1066ee85a473996f26724ab439"
+      },
+      "before_context_pointers": [],
+      "required_after_context_count": 6,
+      "baseline_evidence_path": "tools/l10n/learn/bn.json",
+      "baseline_evidence_sha256": "91e83bb65d63488945380b746008843a33a435fbde04bba256f318f99cb1bac8",
+      "absence_guard": true,
+      "field_length_hint": 21,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "মাঝের অংশ means middle part/section, matching অংশ.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "bn",
+      "table": "Learn.strings",
+      "key": "Lf6586312d9",
+      "source": "1, 2, 3 and 4",
+      "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+      "old": "1, 2, 3 ও 4",
+      "old_sha256": "821aa8872e3bfc42e9188a0eca7405dc95f7ca531392305f5370780657864cd2",
+      "new": "1, 2, 3 আর 4",
+      "new_sha256": "0a2ad2d7ecf1a0d7a8a7af5d0788bf45c527c392cc392b8e2374734772089db5",
+      "operation": "replace_if_exact",
+      "context_pointers": [
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "reason": "Use the same spoken subdivision আর as adjacent rhythm options L703760e9d4/L1081fbeb3c; retain ordinary list conjunction ও in the new string-list key.",
+      "mechanical_issues": [],
+      "before_context_signature": {
+        "count": 2,
+        "sha256": "8c8365b70d4e43b3eb48a6735f8787002db35e7063763ea26b9a441bb0e52b8a"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "11769cf0fb2cc1339adfaba63d4ad896072ae6c30380d13bdd2cdba22fdf6851"
+      },
+      "before_context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0",
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "tools/l10n/learn/bn.json",
+      "baseline_evidence_sha256": "91e83bb65d63488945380b746008843a33a435fbde04bba256f318f99cb1bac8",
+      "absence_guard": null,
+      "number_order_matches_source": true,
+      "codepoint_length": 12,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "আর is the reviewed spoken-count token in both sibling options; replacing list ও narrows the meaning without moving numbers.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "bn",
+      "table": "Learn.strings",
+      "key": "Lced02810fc",
+      "source": "Middle",
+      "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+      "old": "মধ্যমা",
+      "old_sha256": "c6f3cf3c8bffe996dc34b62ce74c9f601a4b5f15ebe71950b166c0c077f7d299",
+      "new": "মধ্যমা",
+      "new_sha256": "c6f3cf3c8bffe996dc34b62ce74c9f601a4b5f15ebe71950b166c0c077f7d299",
+      "operation": "retain",
+      "context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1"
+      ],
+      "reason": "Existing standalone finger answer remains valid for all three banjo quizzes; do not replace with section wording.",
+      "mechanical_issues": [],
+      "before_context_signature": {
+        "count": 9,
+        "sha256": "521e0089fe3ee95645f0469b8051b400acb7e31c4a20d55be78aac0a333c5d8d"
+      },
+      "required_after_context_signature": {
+        "count": 3,
+        "sha256": "1161746d9b9764743afcb91553fd88d64df65ae8cff1eb2c2260ad89a3af3cda"
+      },
+      "before_context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1",
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "required_after_context_count": 3,
+      "baseline_evidence_path": "tools/l10n/learn/bn.json",
+      "baseline_evidence_sha256": "91e83bb65d63488945380b746008843a33a435fbde04bba256f318f99cb1bac8",
+      "absence_guard": null,
+      "number_order_matches_source": true,
+      "codepoint_length": 6,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "মধ্যমা names the middle finger.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "de",
+      "table": "Learn.strings",
+      "key": "Lf94a998e29",
+      "source": "Strings: 1, 2, 3 and 4",
+      "source_sha256": "a9c0f5eaf3a697599b3602ce970b13b1f3fbfa5800b0f02cee313043a39f4d1a",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "Saiten: 1, 2, 3 und 4",
+      "new_sha256": "370be45c2dace00524f76967e96e7ddd351a0e954c093643b770a787f59beb1c",
+      "reason": "Explicit instrument-string label; ordinary enumeration, not a spoken offbeat. Preserve numbered string order and distractor status.",
+      "legacy_key_for_context_only": "Lf6586312d9",
+      "legacy_value_do_not_copy_blindly": "1, 2, 3 und 4",
+      "context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0"
+      ],
+      "required_authorization": "repository_write_scope_resumed",
+      "proposal_review_status": "AI semantic proposal by AI source-context proposal preparation; independent migration review and device QA pending; no human certification",
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 21,
+      "evidence_ref": "locale-evidence.json#de",
+      "old_sha256": null,
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "9e4b4aa71f0946fd423335ea3b9cca7e0fd0eecf86eadabbebfddcb2373f1965"
+      },
+      "before_context_pointers": [],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "tools/l10n/learn/de.json",
+      "baseline_evidence_sha256": "a7f0211c251ccebc207aea591e88846f13aa1f1d7c2cc483c44032bf8b7477cf",
+      "absence_guard": true,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "Saiten is the instrument-string plural; und is ordinary enumeration.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "de",
+      "table": "Learn.strings",
+      "key": "L4f162aedb4",
+      "source": "Middle section",
+      "source_sha256": "3bb8d1b80c1fb7c14b7404bf6e3c408d1f07d8022175ee18f2667497b875255f",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "Mittlerer Abschnitt",
+      "new_sha256": "197be4ca4eb4e598f131c89c6ad92c8427b136b87a117d291890f231ef127c2d",
+      "reason": "Middle musical section, not a finger. Uses existing section glossary term and ordinary modifier; no new musical form is asserted.",
+      "legacy_key_for_context_only": "Lced02810fc",
+      "legacy_value_do_not_copy_blindly": "Mittelfinger",
+      "context_pointers": [
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "required_authorization": "repository_write_scope_resumed",
+      "proposal_review_status": "AI semantic proposal by AI source-context proposal preparation; independent migration review and device QA pending; no human certification",
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 19,
+      "evidence_ref": "locale-evidence.json#de",
+      "old_sha256": null,
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 6,
+        "sha256": "db09e78b892d85ae906ed36688dc53395da72b1066ee85a473996f26724ab439"
+      },
+      "before_context_pointers": [],
+      "required_after_context_count": 6,
+      "baseline_evidence_path": "tools/l10n/learn/de.json",
+      "baseline_evidence_sha256": "a7f0211c251ccebc207aea591e88846f13aa1f1d7c2cc483c44032bf8b7477cf",
+      "absence_guard": true,
+      "field_length_hint": 21,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "Mittlerer Abschnitt is middle section, not Mittelfinger.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "de",
+      "table": "Learn.strings",
+      "key": "Lf6586312d9",
+      "source": "1, 2, 3 and 4",
+      "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+      "old": "1, 2, 3 und 4",
+      "old_sha256": "6bea7404a8ffce6b8ef85492b23014b2b3dc0ec0bb8c0dbadbdfa9095f7d655f",
+      "new": "1, 2, 3 und 4",
+      "new_sha256": "6bea7404a8ffce6b8ef85492b23014b2b3dc0ec0bb8c0dbadbdfa9095f7d655f",
+      "operation": "retain",
+      "context_pointers": [
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "reason": "Valid spoken-count form under narrowed rhythm-only context; no forced translation change.",
+      "mechanical_issues": [],
+      "before_context_signature": {
+        "count": 2,
+        "sha256": "8c8365b70d4e43b3eb48a6735f8787002db35e7063763ea26b9a441bb0e52b8a"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "11769cf0fb2cc1339adfaba63d4ad896072ae6c30380d13bdd2cdba22fdf6851"
+      },
+      "before_context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0",
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "tools/l10n/learn/de.json",
+      "baseline_evidence_sha256": "a7f0211c251ccebc207aea591e88846f13aa1f1d7c2cc483c44032bf8b7477cf",
+      "absence_guard": null,
+      "number_order_matches_source": true,
+      "codepoint_length": 13,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "und can serve the spoken offbeat and matches both adjacent choices.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "de",
+      "table": "Learn.strings",
+      "key": "Lced02810fc",
+      "source": "Middle",
+      "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+      "old": "Mittelfinger",
+      "old_sha256": "1729400ba47e752f125818a87dc0d1c2affbf6d18cccdf4c5b01c850a3020cb9",
+      "new": "Mittelfinger",
+      "new_sha256": "1729400ba47e752f125818a87dc0d1c2affbf6d18cccdf4c5b01c850a3020cb9",
+      "operation": "retain",
+      "context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1"
+      ],
+      "reason": "Existing standalone finger answer remains valid for all three banjo quizzes; do not replace with section wording.",
+      "mechanical_issues": [],
+      "before_context_signature": {
+        "count": 9,
+        "sha256": "521e0089fe3ee95645f0469b8051b400acb7e31c4a20d55be78aac0a333c5d8d"
+      },
+      "required_after_context_signature": {
+        "count": 3,
+        "sha256": "1161746d9b9764743afcb91553fd88d64df65ae8cff1eb2c2260ad89a3af3cda"
+      },
+      "before_context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1",
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "required_after_context_count": 3,
+      "baseline_evidence_path": "tools/l10n/learn/de.json",
+      "baseline_evidence_sha256": "a7f0211c251ccebc207aea591e88846f13aa1f1d7c2cc483c44032bf8b7477cf",
+      "absence_guard": null,
+      "number_order_matches_source": true,
+      "codepoint_length": 12,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "Mittelfinger names the middle finger explicitly.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "es",
+      "table": "Learn.strings",
+      "key": "Lf94a998e29",
+      "source": "Strings: 1, 2, 3 and 4",
+      "source_sha256": "a9c0f5eaf3a697599b3602ce970b13b1f3fbfa5800b0f02cee313043a39f4d1a",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "Cuerdas: 1, 2, 3 y 4",
+      "new_sha256": "30cf011f421692c703fde6fd4576d71653b6d21abf08b9bfe58c98a36bcfdf53",
+      "reason": "Explicit instrument-string label; ordinary enumeration, not a spoken offbeat. Preserve numbered string order and distractor status.",
+      "legacy_key_for_context_only": "Lf6586312d9",
+      "legacy_value_do_not_copy_blindly": "1, 2, 3 y 4",
+      "context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0"
+      ],
+      "required_authorization": "repository_write_scope_resumed",
+      "proposal_review_status": "AI semantic proposal by AI source-context proposal preparation; independent migration review and device QA pending; no human certification",
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 20,
+      "evidence_ref": "locale-evidence.json#es",
+      "old_sha256": null,
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "9e4b4aa71f0946fd423335ea3b9cca7e0fd0eecf86eadabbebfddcb2373f1965"
+      },
+      "before_context_pointers": [],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "tools/l10n/learn/es.json",
+      "baseline_evidence_sha256": "9cca586a4f2114deb1a5f77830eea231f4a46ad2f12d4c2486ee21c43f3e3a43",
+      "absence_guard": true,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "Cuerdas identifies instrument strings; y is enumeration.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "es",
+      "table": "Learn.strings",
+      "key": "L4f162aedb4",
+      "source": "Middle section",
+      "source_sha256": "3bb8d1b80c1fb7c14b7404bf6e3c408d1f07d8022175ee18f2667497b875255f",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "Sección central",
+      "new_sha256": "31ef98100acd802896286ebaecab769003ca4f1a90bc6c1e9a5e2512e4de5975",
+      "reason": "Middle musical section, not a finger. Uses existing section glossary term and ordinary modifier; no new musical form is asserted.",
+      "legacy_key_for_context_only": "Lced02810fc",
+      "legacy_value_do_not_copy_blindly": "Corazón",
+      "context_pointers": [
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "required_authorization": "repository_write_scope_resumed",
+      "proposal_review_status": "AI semantic proposal by AI source-context proposal preparation; independent migration review and device QA pending; no human certification",
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 15,
+      "evidence_ref": "locale-evidence.json#es",
+      "old_sha256": null,
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 6,
+        "sha256": "db09e78b892d85ae906ed36688dc53395da72b1066ee85a473996f26724ab439"
+      },
+      "before_context_pointers": [],
+      "required_after_context_count": 6,
+      "baseline_evidence_path": "tools/l10n/learn/es.json",
+      "baseline_evidence_sha256": "9cca586a4f2114deb1a5f77830eea231f4a46ad2f12d4c2486ee21c43f3e3a43",
+      "absence_guard": true,
+      "field_length_hint": 21,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "Sección central names the central musical section, not a finger.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "es",
+      "table": "Learn.strings",
+      "key": "Lf6586312d9",
+      "source": "1, 2, 3 and 4",
+      "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+      "old": "1, 2, 3 y 4",
+      "old_sha256": "b27686936a5dcb66abc785881c7cc8b4dd15795916a907ffb9e37c754bda82b3",
+      "new": "1, 2, 3 y 4",
+      "new_sha256": "b27686936a5dcb66abc785881c7cc8b4dd15795916a907ffb9e37c754bda82b3",
+      "operation": "retain",
+      "context_pointers": [
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "reason": "Valid spoken-count form under narrowed rhythm-only context; no forced translation change.",
+      "mechanical_issues": [],
+      "before_context_signature": {
+        "count": 2,
+        "sha256": "8c8365b70d4e43b3eb48a6735f8787002db35e7063763ea26b9a441bb0e52b8a"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "11769cf0fb2cc1339adfaba63d4ad896072ae6c30380d13bdd2cdba22fdf6851"
+      },
+      "before_context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0",
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "tools/l10n/learn/es.json",
+      "baseline_evidence_sha256": "9cca586a4f2114deb1a5f77830eea231f4a46ad2f12d4c2486ee21c43f3e3a43",
+      "absence_guard": null,
+      "number_order_matches_source": true,
+      "codepoint_length": 11,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "y is the spoken offbeat and matches both adjacent choices.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "es",
+      "table": "Learn.strings",
+      "key": "Lced02810fc",
+      "source": "Middle",
+      "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+      "old": "Corazón",
+      "old_sha256": "15446a7351fbdd0a063916dcc7a07648e98c2392d108952a115622ac066d2718",
+      "new": "Corazón",
+      "new_sha256": "15446a7351fbdd0a063916dcc7a07648e98c2392d108952a115622ac066d2718",
+      "operation": "retain",
+      "context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1"
+      ],
+      "reason": "Existing standalone finger answer remains valid for all three banjo quizzes; do not replace with section wording.",
+      "mechanical_issues": [],
+      "before_context_signature": {
+        "count": 9,
+        "sha256": "521e0089fe3ee95645f0469b8051b400acb7e31c4a20d55be78aac0a333c5d8d"
+      },
+      "required_after_context_signature": {
+        "count": 3,
+        "sha256": "1161746d9b9764743afcb91553fd88d64df65ae8cff1eb2c2260ad89a3af3cda"
+      },
+      "before_context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1",
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "required_after_context_count": 3,
+      "baseline_evidence_path": "tools/l10n/learn/es.json",
+      "baseline_evidence_sha256": "9cca586a4f2114deb1a5f77830eea231f4a46ad2f12d4c2486ee21c43f3e3a43",
+      "absence_guard": null,
+      "number_order_matches_source": true,
+      "codepoint_length": 7,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "Corazón is a conventional Spanish name for the middle finger in this finger-choice context, not the organ sense.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "fa",
+      "table": "Learn.strings",
+      "key": "Lf94a998e29",
+      "source": "Strings: 1, 2, 3 and 4",
+      "source_sha256": "a9c0f5eaf3a697599b3602ce970b13b1f3fbfa5800b0f02cee313043a39f4d1a",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "سیم‌ها: 1، 2، 3 و 4",
+      "new_sha256": "63856442ab3dc6df5a78cf69343c12ecc669ac7adfc62020c86a66013367618c",
+      "reason": "Explicit instrument-string label; ordinary enumeration, not a spoken offbeat. Preserve numbered string order and distractor status.",
+      "legacy_key_for_context_only": "Lf6586312d9",
+      "legacy_value_do_not_copy_blindly": "1، 2، 3 و 4",
+      "context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0"
+      ],
+      "required_authorization": "repository_write_scope_resumed",
+      "proposal_review_status": "AI semantic proposal by AI source-context proposal preparation; independent migration review and device QA pending; no human certification",
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 19,
+      "evidence_ref": "locale-evidence.json#fa",
+      "old_sha256": null,
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "9e4b4aa71f0946fd423335ea3b9cca7e0fd0eecf86eadabbebfddcb2373f1965"
+      },
+      "before_context_pointers": [],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "tools/l10n/learn/fa.json",
+      "baseline_evidence_sha256": "b3929e2fe9245ecd54cd753729ebd2c740ca7719f275ee2a06db6feaab7c0e8d",
+      "absence_guard": true,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "سیم‌ها names instrument strings; the ZWNJ joins plural suffix correctly. و joins the list.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "fa",
+      "table": "Learn.strings",
+      "key": "L4f162aedb4",
+      "source": "Middle section",
+      "source_sha256": "3bb8d1b80c1fb7c14b7404bf6e3c408d1f07d8022175ee18f2667497b875255f",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "بخش میانی",
+      "new_sha256": "e8f35a58b126a789d7f21dffa755075ef42eab2aac97e5de356b386c0acf495a",
+      "reason": "Middle musical section, not a finger. Uses existing section glossary term and ordinary modifier; no new musical form is asserted.",
+      "legacy_key_for_context_only": "Lced02810fc",
+      "legacy_value_do_not_copy_blindly": "میانی",
+      "context_pointers": [
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "required_authorization": "repository_write_scope_resumed",
+      "proposal_review_status": "AI semantic proposal by AI source-context proposal preparation; independent migration review and device QA pending; no human certification",
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 9,
+      "evidence_ref": "locale-evidence.json#fa",
+      "old_sha256": null,
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 6,
+        "sha256": "db09e78b892d85ae906ed36688dc53395da72b1066ee85a473996f26724ab439"
+      },
+      "before_context_pointers": [],
+      "required_after_context_count": 6,
+      "baseline_evidence_path": "tools/l10n/learn/fa.json",
+      "baseline_evidence_sha256": "b3929e2fe9245ecd54cd753729ebd2c740ca7719f275ee2a06db6feaab7c0e8d",
+      "absence_guard": true,
+      "field_length_hint": 21,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "بخش میانی is the middle section, consistent with بخش.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "fa",
+      "table": "Learn.strings",
+      "key": "Lf6586312d9",
+      "source": "1, 2, 3 and 4",
+      "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+      "old": "1، 2، 3 و 4",
+      "old_sha256": "2e59d09b7143ca408e3085dcc2fb0d1bf3bcc67183422170978e169194be5404",
+      "new": "1، 2، 3 و 4",
+      "new_sha256": "2e59d09b7143ca408e3085dcc2fb0d1bf3bcc67183422170978e169194be5404",
+      "operation": "retain",
+      "context_pointers": [
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "reason": "Valid spoken-count form under narrowed rhythm-only context; no forced translation change.",
+      "mechanical_issues": [],
+      "before_context_signature": {
+        "count": 2,
+        "sha256": "8c8365b70d4e43b3eb48a6735f8787002db35e7063763ea26b9a441bb0e52b8a"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "11769cf0fb2cc1339adfaba63d4ad896072ae6c30380d13bdd2cdba22fdf6851"
+      },
+      "before_context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0",
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "tools/l10n/learn/fa.json",
+      "baseline_evidence_sha256": "b3929e2fe9245ecd54cd753729ebd2c740ca7719f275ee2a06db6feaab7c0e8d",
+      "absence_guard": null,
+      "number_order_matches_source": true,
+      "codepoint_length": 11,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "و can serve the local spoken count; the retained order and position match sibling counts.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "fa",
+      "table": "Learn.strings",
+      "key": "Lced02810fc",
+      "source": "Middle",
+      "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+      "old": "میانی",
+      "old_sha256": "b51a47137d9f4da492ff9e8af3ec203db21b2f121c68b694c2313c164b0a0902",
+      "new": "میانی",
+      "new_sha256": "b51a47137d9f4da492ff9e8af3ec203db21b2f121c68b694c2313c164b0a0902",
+      "operation": "retain",
+      "context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1"
+      ],
+      "reason": "Existing standalone finger answer remains valid for all three banjo quizzes; do not replace with section wording.",
+      "mechanical_issues": [],
+      "before_context_signature": {
+        "count": 9,
+        "sha256": "521e0089fe3ee95645f0469b8051b400acb7e31c4a20d55be78aac0a333c5d8d"
+      },
+      "required_after_context_signature": {
+        "count": 3,
+        "sha256": "1161746d9b9764743afcb91553fd88d64df65ae8cff1eb2c2260ad89a3af3cda"
+      },
+      "before_context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1",
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "required_after_context_count": 3,
+      "baseline_evidence_path": "tools/l10n/learn/fa.json",
+      "baseline_evidence_sha256": "b3929e2fe9245ecd54cd753729ebd2c740ca7719f275ee2a06db6feaab7c0e8d",
+      "absence_guard": null,
+      "number_order_matches_source": true,
+      "codepoint_length": 5,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "میانی is an elliptical middle adjective under explicit finger prompts, consistent with neighboring finger names; no section noun is retained.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "fr",
+      "table": "Learn.strings",
+      "key": "Lf94a998e29",
+      "source": "Strings: 1, 2, 3 and 4",
+      "source_sha256": "a9c0f5eaf3a697599b3602ce970b13b1f3fbfa5800b0f02cee313043a39f4d1a",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "Cordes : 1, 2, 3 et 4",
+      "new_sha256": "552eada08304d9de5c29c28d1a42648d7595c53dd4e6dd3b39c8875d27d0ed65",
+      "reason": "Explicit instrument-string label; ordinary enumeration, not a spoken offbeat. Preserve numbered string order and distractor status.",
+      "legacy_key_for_context_only": "Lf6586312d9",
+      "legacy_value_do_not_copy_blindly": "1, 2, 3 et 4",
+      "context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0"
+      ],
+      "required_authorization": "repository_write_scope_resumed",
+      "proposal_review_status": "AI semantic proposal by AI source-context proposal preparation; independent migration review and device QA pending; no human certification",
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 21,
+      "evidence_ref": "locale-evidence.json#fr",
+      "punctuation_note": "U+00A0 NBSP before colon per docs/l10n/glossary/fr.md:9; not a directional control.",
+      "old_sha256": null,
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "9e4b4aa71f0946fd423335ea3b9cca7e0fd0eecf86eadabbebfddcb2373f1965"
+      },
+      "before_context_pointers": [],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "tools/l10n/learn/fr.json",
+      "baseline_evidence_sha256": "6125a7b3c3f7d8cd78ac3d3c68fc540357138d249ffef562b40c2e722615a92f",
+      "absence_guard": true,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "Cordes names instrument strings; NBSP before colon is intentional French spacing. et is enumeration.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "fr",
+      "table": "Learn.strings",
+      "key": "L4f162aedb4",
+      "source": "Middle section",
+      "source_sha256": "3bb8d1b80c1fb7c14b7404bf6e3c408d1f07d8022175ee18f2667497b875255f",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "Section centrale",
+      "new_sha256": "5e45297c942a56366bf58baa69a02df011ba867155567b02cfa07c709c957118",
+      "reason": "Middle musical section, not a finger. Uses existing section glossary term and ordinary modifier; no new musical form is asserted.",
+      "legacy_key_for_context_only": "Lced02810fc",
+      "legacy_value_do_not_copy_blindly": "Majeur",
+      "context_pointers": [
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "required_authorization": "repository_write_scope_resumed",
+      "proposal_review_status": "AI semantic proposal by AI source-context proposal preparation; independent migration review and device QA pending; no human certification",
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 16,
+      "evidence_ref": "locale-evidence.json#fr",
+      "old_sha256": null,
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 6,
+        "sha256": "db09e78b892d85ae906ed36688dc53395da72b1066ee85a473996f26724ab439"
+      },
+      "before_context_pointers": [],
+      "required_after_context_count": 6,
+      "baseline_evidence_path": "tools/l10n/learn/fr.json",
+      "baseline_evidence_sha256": "6125a7b3c3f7d8cd78ac3d3c68fc540357138d249ffef562b40c2e722615a92f",
+      "absence_guard": true,
+      "field_length_hint": 21,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "Section centrale is the central section, distinct from Majeur.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "fr",
+      "table": "Learn.strings",
+      "key": "Lf6586312d9",
+      "source": "1, 2, 3 and 4",
+      "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+      "old": "1, 2, 3 et 4",
+      "old_sha256": "3d781af631d1bff461b8cfb9fcdadf554fad57b8a05b4faf1b1fc37f902851cd",
+      "new": "1, 2, 3 et 4",
+      "new_sha256": "3d781af631d1bff461b8cfb9fcdadf554fad57b8a05b4faf1b1fc37f902851cd",
+      "operation": "retain",
+      "context_pointers": [
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "reason": "Valid spoken-count form under narrowed rhythm-only context; no forced translation change.",
+      "mechanical_issues": [],
+      "before_context_signature": {
+        "count": 2,
+        "sha256": "8c8365b70d4e43b3eb48a6735f8787002db35e7063763ea26b9a441bb0e52b8a"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "11769cf0fb2cc1339adfaba63d4ad896072ae6c30380d13bdd2cdba22fdf6851"
+      },
+      "before_context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0",
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "tools/l10n/learn/fr.json",
+      "baseline_evidence_sha256": "6125a7b3c3f7d8cd78ac3d3c68fc540357138d249ffef562b40c2e722615a92f",
+      "absence_guard": null,
+      "number_order_matches_source": true,
+      "codepoint_length": 12,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "et serves as the spoken offbeat and matches the neighboring counts.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "fr",
+      "table": "Learn.strings",
+      "key": "Lced02810fc",
+      "source": "Middle",
+      "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+      "old": "Majeur",
+      "old_sha256": "27f13ba29af43853a85fb5bf841c1b72e17a1cf270ce78292fc676d6dbd9f361",
+      "new": "Majeur",
+      "new_sha256": "27f13ba29af43853a85fb5bf841c1b72e17a1cf270ce78292fc676d6dbd9f361",
+      "operation": "retain",
+      "context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1"
+      ],
+      "reason": "Existing standalone finger answer remains valid for all three banjo quizzes; do not replace with section wording.",
+      "mechanical_issues": [],
+      "before_context_signature": {
+        "count": 9,
+        "sha256": "521e0089fe3ee95645f0469b8051b400acb7e31c4a20d55be78aac0a333c5d8d"
+      },
+      "required_after_context_signature": {
+        "count": 3,
+        "sha256": "1161746d9b9764743afcb91553fd88d64df65ae8cff1eb2c2260ad89a3af3cda"
+      },
+      "before_context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1",
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "required_after_context_count": 3,
+      "baseline_evidence_path": "tools/l10n/learn/fr.json",
+      "baseline_evidence_sha256": "6125a7b3c3f7d8cd78ac3d3c68fc540357138d249ffef562b40c2e722615a92f",
+      "absence_guard": null,
+      "number_order_matches_source": true,
+      "codepoint_length": 6,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "Majeur is the French middle-finger name in the finger-choice context.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "hi",
+      "table": "Learn.strings",
+      "key": "Lf94a998e29",
+      "source": "Strings: 1, 2, 3 and 4",
+      "source_sha256": "a9c0f5eaf3a697599b3602ce970b13b1f3fbfa5800b0f02cee313043a39f4d1a",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "तार: 1, 2, 3 और 4",
+      "new_sha256": "80e2d953be063b4c3c6390a2ea60c1a4250af3f64aa58b9479c77f64b30ce7f2",
+      "reason": "Explicit instrument-string label; ordinary enumeration, not a spoken offbeat. Preserve numbered string order and distractor status.",
+      "legacy_key_for_context_only": "Lf6586312d9",
+      "legacy_value_do_not_copy_blindly": "1, 2, 3 और 4",
+      "context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0"
+      ],
+      "required_authorization": "repository_write_scope_resumed",
+      "proposal_review_status": "AI semantic proposal by AI source-context proposal preparation; independent migration review and device QA pending; no human certification",
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 17,
+      "evidence_ref": "locale-evidence.json#hi",
+      "old_sha256": null,
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "9e4b4aa71f0946fd423335ea3b9cca7e0fd0eecf86eadabbebfddcb2373f1965"
+      },
+      "before_context_pointers": [],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "tools/l10n/learn/hi.json",
+      "baseline_evidence_sha256": "063782576129b393f46cbf1217c2586c1e962ffd2a6c0fe4d44112a975dbc88a",
+      "absence_guard": true,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "तार identifies strings; और is ordinary enumeration.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "hi",
+      "table": "Learn.strings",
+      "key": "L4f162aedb4",
+      "source": "Middle section",
+      "source_sha256": "3bb8d1b80c1fb7c14b7404bf6e3c408d1f07d8022175ee18f2667497b875255f",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "मध्य खंड",
+      "new_sha256": "90fbff7bd72fc875a0975e3706486d2e724799a6502deed43c7940f4e63bf808",
+      "reason": "Middle musical section, not a finger. Uses existing section glossary term and ordinary modifier; no new musical form is asserted.",
+      "legacy_key_for_context_only": "Lced02810fc",
+      "legacy_value_do_not_copy_blindly": "मध्यमा",
+      "context_pointers": [
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "required_authorization": "repository_write_scope_resumed",
+      "proposal_review_status": "AI semantic proposal by AI source-context proposal preparation; independent migration review and device QA pending; no human certification",
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 8,
+      "evidence_ref": "locale-evidence.json#hi",
+      "old_sha256": null,
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 6,
+        "sha256": "db09e78b892d85ae906ed36688dc53395da72b1066ee85a473996f26724ab439"
+      },
+      "before_context_pointers": [],
+      "required_after_context_count": 6,
+      "baseline_evidence_path": "tools/l10n/learn/hi.json",
+      "baseline_evidence_sha256": "063782576129b393f46cbf1217c2586c1e962ffd2a6c0fe4d44112a975dbc88a",
+      "absence_guard": true,
+      "field_length_hint": 21,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "मध्य खंड names the middle section, not मध्यमा.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "hi",
+      "table": "Learn.strings",
+      "key": "Lf6586312d9",
+      "source": "1, 2, 3 and 4",
+      "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+      "old": "1, 2, 3 और 4",
+      "old_sha256": "c040c84a80aeda6e1e1da72e8fc3f20a8b7795d6f9c550c8211e8a70901a021b",
+      "new": "1, 2, 3 और 4",
+      "new_sha256": "c040c84a80aeda6e1e1da72e8fc3f20a8b7795d6f9c550c8211e8a70901a021b",
+      "operation": "retain",
+      "context_pointers": [
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "reason": "Valid spoken-count form under narrowed rhythm-only context; no forced translation change.",
+      "mechanical_issues": [],
+      "before_context_signature": {
+        "count": 2,
+        "sha256": "8c8365b70d4e43b3eb48a6735f8787002db35e7063763ea26b9a441bb0e52b8a"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "11769cf0fb2cc1339adfaba63d4ad896072ae6c30380d13bdd2cdba22fdf6851"
+      },
+      "before_context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0",
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "tools/l10n/learn/hi.json",
+      "baseline_evidence_sha256": "063782576129b393f46cbf1217c2586c1e962ffd2a6c0fe4d44112a975dbc88a",
+      "absence_guard": null,
+      "number_order_matches_source": true,
+      "codepoint_length": 12,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "और is the reviewed local spoken count matching both neighbors; no new count convention is introduced.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "hi",
+      "table": "Learn.strings",
+      "key": "Lced02810fc",
+      "source": "Middle",
+      "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+      "old": "मध्यमा",
+      "old_sha256": "a7a7230f9cbd3233b3afa678b1ff901948c529808a10349c2229d719507a76b7",
+      "new": "मध्यमा",
+      "new_sha256": "a7a7230f9cbd3233b3afa678b1ff901948c529808a10349c2229d719507a76b7",
+      "operation": "retain",
+      "context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1"
+      ],
+      "reason": "Existing standalone finger answer remains valid for all three banjo quizzes; do not replace with section wording.",
+      "mechanical_issues": [],
+      "before_context_signature": {
+        "count": 9,
+        "sha256": "521e0089fe3ee95645f0469b8051b400acb7e31c4a20d55be78aac0a333c5d8d"
+      },
+      "required_after_context_signature": {
+        "count": 3,
+        "sha256": "1161746d9b9764743afcb91553fd88d64df65ae8cff1eb2c2260ad89a3af3cda"
+      },
+      "before_context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1",
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "required_after_context_count": 3,
+      "baseline_evidence_path": "tools/l10n/learn/hi.json",
+      "baseline_evidence_sha256": "063782576129b393f46cbf1217c2586c1e962ffd2a6c0fe4d44112a975dbc88a",
+      "absence_guard": null,
+      "number_order_matches_source": true,
+      "codepoint_length": 6,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "मध्यमा names the middle finger.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "it",
+      "table": "Learn.strings",
+      "key": "Lf94a998e29",
+      "source": "Strings: 1, 2, 3 and 4",
+      "source_sha256": "a9c0f5eaf3a697599b3602ce970b13b1f3fbfa5800b0f02cee313043a39f4d1a",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "Corde: 1, 2, 3 e 4",
+      "new_sha256": "82e914faf24f5e5adb12e83ec88f8276604f645a7f4414a8353e221aae3914d0",
+      "reason": "Explicit instrument-string label; ordinary enumeration, not a spoken offbeat. Preserve numbered string order and distractor status.",
+      "legacy_key_for_context_only": "Lf6586312d9",
+      "legacy_value_do_not_copy_blindly": "1, 2, 3 e 4",
+      "context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0"
+      ],
+      "required_authorization": "repository_write_scope_resumed",
+      "proposal_review_status": "AI semantic proposal by AI source-context proposal preparation; independent migration review and device QA pending; no human certification",
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 18,
+      "evidence_ref": "locale-evidence.json#it",
+      "old_sha256": null,
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "9e4b4aa71f0946fd423335ea3b9cca7e0fd0eecf86eadabbebfddcb2373f1965"
+      },
+      "before_context_pointers": [],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "tools/l10n/learn/it.json",
+      "baseline_evidence_sha256": "19af0dc759142692f294db701c8134b4102afc3a9f13dc0d7a0c231016df3333",
+      "absence_guard": true,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "Corde is instrument strings; e joins the list.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "it",
+      "table": "Learn.strings",
+      "key": "L4f162aedb4",
+      "source": "Middle section",
+      "source_sha256": "3bb8d1b80c1fb7c14b7404bf6e3c408d1f07d8022175ee18f2667497b875255f",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "Sezione centrale",
+      "new_sha256": "342ebf1d1dd466263173b5f5a7b6db66e2e4c852fe1b9f543c37d48173ac1ecf",
+      "reason": "Middle musical section, not a finger. Uses existing section glossary term and ordinary modifier; no new musical form is asserted.",
+      "legacy_key_for_context_only": "Lced02810fc",
+      "legacy_value_do_not_copy_blindly": "Medio",
+      "context_pointers": [
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "required_authorization": "repository_write_scope_resumed",
+      "proposal_review_status": "AI semantic proposal by AI source-context proposal preparation; independent migration review and device QA pending; no human certification",
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 16,
+      "evidence_ref": "locale-evidence.json#it",
+      "old_sha256": null,
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 6,
+        "sha256": "db09e78b892d85ae906ed36688dc53395da72b1066ee85a473996f26724ab439"
+      },
+      "before_context_pointers": [],
+      "required_after_context_count": 6,
+      "baseline_evidence_path": "tools/l10n/learn/it.json",
+      "baseline_evidence_sha256": "19af0dc759142692f294db701c8134b4102afc3a9f13dc0d7a0c231016df3333",
+      "absence_guard": true,
+      "field_length_hint": 21,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "Sezione centrale is the central section.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "it",
+      "table": "Learn.strings",
+      "key": "Lf6586312d9",
+      "source": "1, 2, 3 and 4",
+      "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+      "old": "1, 2, 3 e 4",
+      "old_sha256": "213df635f4b6b3d0b9ab4a65d44654689b15374f0b43d3d3d281a144fce0a20a",
+      "new": "1, 2, 3 e 4",
+      "new_sha256": "213df635f4b6b3d0b9ab4a65d44654689b15374f0b43d3d3d281a144fce0a20a",
+      "operation": "retain",
+      "context_pointers": [
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "reason": "Valid spoken-count form under narrowed rhythm-only context; no forced translation change.",
+      "mechanical_issues": [],
+      "before_context_signature": {
+        "count": 2,
+        "sha256": "8c8365b70d4e43b3eb48a6735f8787002db35e7063763ea26b9a441bb0e52b8a"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "11769cf0fb2cc1339adfaba63d4ad896072ae6c30380d13bdd2cdba22fdf6851"
+      },
+      "before_context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0",
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "tools/l10n/learn/it.json",
+      "baseline_evidence_sha256": "19af0dc759142692f294db701c8134b4102afc3a9f13dc0d7a0c231016df3333",
+      "absence_guard": null,
+      "number_order_matches_source": true,
+      "codepoint_length": 11,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "e is the standard conjunction used as the local offbeat and matches both adjacent counts.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "it",
+      "table": "Learn.strings",
+      "key": "Lced02810fc",
+      "source": "Middle",
+      "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+      "old": "Medio",
+      "old_sha256": "da26d4f11244518e356cd45724d7e4bd2095275d2a26fd7786890400238a997c",
+      "new": "Medio",
+      "new_sha256": "da26d4f11244518e356cd45724d7e4bd2095275d2a26fd7786890400238a997c",
+      "operation": "retain",
+      "context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1"
+      ],
+      "reason": "Existing standalone finger answer remains valid for all three banjo quizzes; do not replace with section wording.",
+      "mechanical_issues": [],
+      "before_context_signature": {
+        "count": 9,
+        "sha256": "521e0089fe3ee95645f0469b8051b400acb7e31c4a20d55be78aac0a333c5d8d"
+      },
+      "required_after_context_signature": {
+        "count": 3,
+        "sha256": "1161746d9b9764743afcb91553fd88d64df65ae8cff1eb2c2260ad89a3af3cda"
+      },
+      "before_context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1",
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "required_after_context_count": 3,
+      "baseline_evidence_path": "tools/l10n/learn/it.json",
+      "baseline_evidence_sha256": "19af0dc759142692f294db701c8134b4102afc3a9f13dc0d7a0c231016df3333",
+      "absence_guard": null,
+      "number_order_matches_source": true,
+      "codepoint_length": 5,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "Medio names the middle finger in this finger-choice context.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "ja",
+      "table": "Learn.strings",
+      "key": "Lf94a998e29",
+      "source": "Strings: 1, 2, 3 and 4",
+      "source_sha256": "a9c0f5eaf3a697599b3602ce970b13b1f3fbfa5800b0f02cee313043a39f4d1a",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "弦：1、2、3、4",
+      "new_sha256": "9c41a8bf6958ae6ebc2bdbc2791bca57996b7c08a4d57f71e004bcdd9dc9f140",
+      "reason": "Explicit instrument-string label; ordinary enumeration, not a spoken offbeat. Preserve numbered string order and distractor status.",
+      "legacy_key_for_context_only": "Lf6586312d9",
+      "legacy_value_do_not_copy_blindly": "1、2、3 and 4",
+      "context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0"
+      ],
+      "required_authorization": "repository_write_scope_resumed",
+      "proposal_review_status": "AI semantic proposal by AI source-context proposal preparation; independent migration review and device QA pending; no human certification",
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 9,
+      "evidence_ref": "locale-evidence.json#ja",
+      "old_sha256": null,
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "9e4b4aa71f0946fd423335ea3b9cca7e0fd0eecf86eadabbebfddcb2373f1965"
+      },
+      "before_context_pointers": [],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "tools/l10n/learn/ja.json",
+      "baseline_evidence_sha256": "a95dccfa4924a899d0c509c65b9d07dd9c62de99ad509dde4c61f2829bd0cf0f",
+      "absence_guard": true,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "弦 plus Japanese enumeration commas unambiguously lists four strings; no spoken English and remains.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "ja",
+      "table": "Learn.strings",
+      "key": "L4f162aedb4",
+      "source": "Middle section",
+      "source_sha256": "3bb8d1b80c1fb7c14b7404bf6e3c408d1f07d8022175ee18f2667497b875255f",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "中間セクション",
+      "new_sha256": "cddc1b956b827a3c8b7aa69058d0459d61e7ded8d4594877b1066134d442f558",
+      "reason": "Middle musical section, not a finger. Uses existing section glossary term and ordinary modifier; no new musical form is asserted.",
+      "legacy_key_for_context_only": "Lced02810fc",
+      "legacy_value_do_not_copy_blindly": "中指",
+      "context_pointers": [
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "required_authorization": "repository_write_scope_resumed",
+      "proposal_review_status": "AI semantic proposal by AI source-context proposal preparation; independent migration review and device QA pending; no human certification",
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 7,
+      "evidence_ref": "locale-evidence.json#ja",
+      "old_sha256": null,
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 6,
+        "sha256": "db09e78b892d85ae906ed36688dc53395da72b1066ee85a473996f26724ab439"
+      },
+      "before_context_pointers": [],
+      "required_after_context_count": 6,
+      "baseline_evidence_path": "tools/l10n/learn/ja.json",
+      "baseline_evidence_sha256": "a95dccfa4924a899d0c509c65b9d07dd9c62de99ad509dde4c61f2829bd0cf0f",
+      "absence_guard": true,
+      "field_length_hint": 21,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "中間セクション names the middle section; it does not mean 中指 (finger).",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "ja",
+      "table": "Learn.strings",
+      "key": "Lf6586312d9",
+      "source": "1, 2, 3 and 4",
+      "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+      "old": "1、2、3 and 4",
+      "old_sha256": "14b2a7c8e8b663de6972d12c563c110bb5a7b29d9ec321b7ea9d1528d2777e02",
+      "new": "1、2、3 and 4",
+      "new_sha256": "14b2a7c8e8b663de6972d12c563c110bb5a7b29d9ec321b7ea9d1528d2777e02",
+      "operation": "retain",
+      "context_pointers": [
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "reason": "Valid spoken-count form under narrowed rhythm-only context; no forced translation change.",
+      "mechanical_issues": [],
+      "before_context_signature": {
+        "count": 2,
+        "sha256": "8c8365b70d4e43b3eb48a6735f8787002db35e7063763ea26b9a441bb0e52b8a"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "11769cf0fb2cc1339adfaba63d4ad896072ae6c30380d13bdd2cdba22fdf6851"
+      },
+      "before_context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0",
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "tools/l10n/learn/ja.json",
+      "baseline_evidence_sha256": "a95dccfa4924a899d0c509c65b9d07dd9c62de99ad509dde4c61f2829bd0cf0f",
+      "absence_guard": null,
+      "number_order_matches_source": true,
+      "codepoint_length": 11,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "English and is deliberately retained as a spoken subdivision token, matching both neighboring count answers; it is not an untranslated ordinary conjunction in this narrowed context.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "ja",
+      "table": "Learn.strings",
+      "key": "Lced02810fc",
+      "source": "Middle",
+      "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+      "old": "中指",
+      "old_sha256": "917c990a11206d2cc2d7f776a079f43d7ae2dae2c2235a65379adc436328cc44",
+      "new": "中指",
+      "new_sha256": "917c990a11206d2cc2d7f776a079f43d7ae2dae2c2235a65379adc436328cc44",
+      "operation": "retain",
+      "context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1"
+      ],
+      "reason": "Existing standalone finger answer remains valid for all three banjo quizzes; do not replace with section wording.",
+      "mechanical_issues": [],
+      "before_context_signature": {
+        "count": 9,
+        "sha256": "521e0089fe3ee95645f0469b8051b400acb7e31c4a20d55be78aac0a333c5d8d"
+      },
+      "required_after_context_signature": {
+        "count": 3,
+        "sha256": "1161746d9b9764743afcb91553fd88d64df65ae8cff1eb2c2260ad89a3af3cda"
+      },
+      "before_context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1",
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "required_after_context_count": 3,
+      "baseline_evidence_path": "tools/l10n/learn/ja.json",
+      "baseline_evidence_sha256": "a95dccfa4924a899d0c509c65b9d07dd9c62de99ad509dde4c61f2829bd0cf0f",
+      "absence_guard": null,
+      "number_order_matches_source": true,
+      "codepoint_length": 2,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "中指 explicitly names the middle finger.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "ko",
+      "table": "Learn.strings",
+      "key": "Lf94a998e29",
+      "source": "Strings: 1, 2, 3 and 4",
+      "source_sha256": "a9c0f5eaf3a697599b3602ce970b13b1f3fbfa5800b0f02cee313043a39f4d1a",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "현: 1, 2, 3, 4",
+      "new_sha256": "060a45e730749a98478400b1ac4fc3ad72fd84f6a716fc129e3ba1b55889aa09",
+      "reason": "Explicit instrument-string label; ordinary enumeration, not a spoken offbeat. Preserve numbered string order and distractor status.",
+      "legacy_key_for_context_only": "Lf6586312d9",
+      "legacy_value_do_not_copy_blindly": "1, 2, 3 앤 4",
+      "context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0"
+      ],
+      "required_authorization": "repository_write_scope_resumed",
+      "proposal_review_status": "AI semantic proposal by AI source-context proposal preparation; independent migration review and device QA pending; no human certification",
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 13,
+      "evidence_ref": "locale-evidence.json#ko",
+      "old_sha256": null,
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "9e4b4aa71f0946fd423335ea3b9cca7e0fd0eecf86eadabbebfddcb2373f1965"
+      },
+      "before_context_pointers": [],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "tools/l10n/learn/ko.json",
+      "baseline_evidence_sha256": "243f5b3efb30c29dfff4bb80e5f5d6b807370e83734bde80d447c553703b7971",
+      "absence_guard": true,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "현 is instrument string; comma enumeration is natural and does not introduce the spoken count 앤.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "ko",
+      "table": "Learn.strings",
+      "key": "L4f162aedb4",
+      "source": "Middle section",
+      "source_sha256": "3bb8d1b80c1fb7c14b7404bf6e3c408d1f07d8022175ee18f2667497b875255f",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "중간 구간",
+      "new_sha256": "da7162c35294c4e05a54cf9c933a00a4c3b9046a876223734e7f2ee47ce6a013",
+      "reason": "Middle musical section, not a finger. Uses existing section glossary term and ordinary modifier; no new musical form is asserted.",
+      "legacy_key_for_context_only": "Lced02810fc",
+      "legacy_value_do_not_copy_blindly": "중지",
+      "context_pointers": [
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "required_authorization": "repository_write_scope_resumed",
+      "proposal_review_status": "AI semantic proposal by AI source-context proposal preparation; independent migration review and device QA pending; no human certification",
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 5,
+      "evidence_ref": "locale-evidence.json#ko",
+      "old_sha256": null,
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 6,
+        "sha256": "db09e78b892d85ae906ed36688dc53395da72b1066ee85a473996f26724ab439"
+      },
+      "before_context_pointers": [],
+      "required_after_context_count": 6,
+      "baseline_evidence_path": "tools/l10n/learn/ko.json",
+      "baseline_evidence_sha256": "243f5b3efb30c29dfff4bb80e5f5d6b807370e83734bde80d447c553703b7971",
+      "absence_guard": true,
+      "field_length_hint": 21,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "중간 구간 means middle segment/section, not 중지.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "ko",
+      "table": "Learn.strings",
+      "key": "Lf6586312d9",
+      "source": "1, 2, 3 and 4",
+      "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+      "old": "1, 2, 3 앤 4",
+      "old_sha256": "82187f5747ed3ddf7274894725df9dadc207a78d545c7942b9ba1b625f291660",
+      "new": "1, 2, 3 앤 4",
+      "new_sha256": "82187f5747ed3ddf7274894725df9dadc207a78d545c7942b9ba1b625f291660",
+      "operation": "retain",
+      "context_pointers": [
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "reason": "Valid spoken-count form under narrowed rhythm-only context; no forced translation change.",
+      "mechanical_issues": [],
+      "before_context_signature": {
+        "count": 2,
+        "sha256": "8c8365b70d4e43b3eb48a6735f8787002db35e7063763ea26b9a441bb0e52b8a"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "11769cf0fb2cc1339adfaba63d4ad896072ae6c30380d13bdd2cdba22fdf6851"
+      },
+      "before_context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0",
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "tools/l10n/learn/ko.json",
+      "baseline_evidence_sha256": "243f5b3efb30c29dfff4bb80e5f5d6b807370e83734bde80d447c553703b7971",
+      "absence_guard": null,
+      "number_order_matches_source": true,
+      "codepoint_length": 11,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "앤 is the reviewed phonetic and count syllable; retain it rather than replacing with ordinary conjunction.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "ko",
+      "table": "Learn.strings",
+      "key": "Lced02810fc",
+      "source": "Middle",
+      "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+      "old": "중지",
+      "old_sha256": "92cdef3c5bc09f842a88991dc306d5fdcc015dcbadb3b675c19f7a3f7f6ccee5",
+      "new": "중지",
+      "new_sha256": "92cdef3c5bc09f842a88991dc306d5fdcc015dcbadb3b675c19f7a3f7f6ccee5",
+      "operation": "retain",
+      "context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1"
+      ],
+      "reason": "Existing standalone finger answer remains valid for all three banjo quizzes; do not replace with section wording.",
+      "mechanical_issues": [],
+      "before_context_signature": {
+        "count": 9,
+        "sha256": "521e0089fe3ee95645f0469b8051b400acb7e31c4a20d55be78aac0a333c5d8d"
+      },
+      "required_after_context_signature": {
+        "count": 3,
+        "sha256": "1161746d9b9764743afcb91553fd88d64df65ae8cff1eb2c2260ad89a3af3cda"
+      },
+      "before_context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1",
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "required_after_context_count": 3,
+      "baseline_evidence_path": "tools/l10n/learn/ko.json",
+      "baseline_evidence_sha256": "243f5b3efb30c29dfff4bb80e5f5d6b807370e83734bde80d447c553703b7971",
+      "absence_guard": null,
+      "number_order_matches_source": true,
+      "codepoint_length": 2,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "중지 is the middle finger in this context.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "pt",
+      "table": "Learn.strings",
+      "key": "Lf94a998e29",
+      "source": "Strings: 1, 2, 3 and 4",
+      "source_sha256": "a9c0f5eaf3a697599b3602ce970b13b1f3fbfa5800b0f02cee313043a39f4d1a",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "Cordas: 1, 2, 3 e 4",
+      "new_sha256": "4caeb9e89674ee479f8f35719d02c5b3eb488525314598a753aacae73549005a",
+      "reason": "Explicit instrument-string label; ordinary enumeration, not a spoken offbeat. Preserve numbered string order and distractor status.",
+      "legacy_key_for_context_only": "Lf6586312d9",
+      "legacy_value_do_not_copy_blindly": "1, 2, 3 e 4",
+      "context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0"
+      ],
+      "required_authorization": "repository_write_scope_resumed",
+      "proposal_review_status": "AI semantic proposal by AI source-context proposal preparation; independent migration review and device QA pending; no human certification",
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 19,
+      "evidence_ref": "locale-evidence.json#pt",
+      "old_sha256": null,
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "9e4b4aa71f0946fd423335ea3b9cca7e0fd0eecf86eadabbebfddcb2373f1965"
+      },
+      "before_context_pointers": [],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "tools/l10n/learn/pt.json",
+      "baseline_evidence_sha256": "597ba2cc5ce8bbfa8b1c97d3be85d8095d56f41980b4b6ca7ce5bdd8fa7958bc",
+      "absence_guard": true,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "Cordas identifies instrument strings; e joins the list.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "pt",
+      "table": "Learn.strings",
+      "key": "L4f162aedb4",
+      "source": "Middle section",
+      "source_sha256": "3bb8d1b80c1fb7c14b7404bf6e3c408d1f07d8022175ee18f2667497b875255f",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "Seção central",
+      "new_sha256": "ade1049b294dbdddba71c499c45d6401e4b25f616264fc1b31cbdd2a8994d1a7",
+      "reason": "Middle musical section, not a finger. Uses existing section glossary term and ordinary modifier; no new musical form is asserted.",
+      "legacy_key_for_context_only": "Lced02810fc",
+      "legacy_value_do_not_copy_blindly": "Médio",
+      "context_pointers": [
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "required_authorization": "repository_write_scope_resumed",
+      "proposal_review_status": "AI semantic proposal by AI source-context proposal preparation; independent migration review and device QA pending; no human certification",
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 13,
+      "evidence_ref": "locale-evidence.json#pt",
+      "old_sha256": null,
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 6,
+        "sha256": "db09e78b892d85ae906ed36688dc53395da72b1066ee85a473996f26724ab439"
+      },
+      "before_context_pointers": [],
+      "required_after_context_count": 6,
+      "baseline_evidence_path": "tools/l10n/learn/pt.json",
+      "baseline_evidence_sha256": "597ba2cc5ce8bbfa8b1c97d3be85d8095d56f41980b4b6ca7ce5bdd8fa7958bc",
+      "absence_guard": true,
+      "field_length_hint": 21,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "Seção central is the central section (existing Brazilian spelling convention).",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "pt",
+      "table": "Learn.strings",
+      "key": "Lf6586312d9",
+      "source": "1, 2, 3 and 4",
+      "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+      "old": "1, 2, 3 e 4",
+      "old_sha256": "213df635f4b6b3d0b9ab4a65d44654689b15374f0b43d3d3d281a144fce0a20a",
+      "new": "1, 2, 3 e 4",
+      "new_sha256": "213df635f4b6b3d0b9ab4a65d44654689b15374f0b43d3d3d281a144fce0a20a",
+      "operation": "retain",
+      "context_pointers": [
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "reason": "Valid spoken-count form under narrowed rhythm-only context; no forced translation change.",
+      "mechanical_issues": [],
+      "before_context_signature": {
+        "count": 2,
+        "sha256": "8c8365b70d4e43b3eb48a6735f8787002db35e7063763ea26b9a441bb0e52b8a"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "11769cf0fb2cc1339adfaba63d4ad896072ae6c30380d13bdd2cdba22fdf6851"
+      },
+      "before_context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0",
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "tools/l10n/learn/pt.json",
+      "baseline_evidence_sha256": "597ba2cc5ce8bbfa8b1c97d3be85d8095d56f41980b4b6ca7ce5bdd8fa7958bc",
+      "absence_guard": null,
+      "number_order_matches_source": true,
+      "codepoint_length": 11,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "e is a valid spoken offbeat matching adjacent counts.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "pt",
+      "table": "Learn.strings",
+      "key": "Lced02810fc",
+      "source": "Middle",
+      "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+      "old": "Médio",
+      "old_sha256": "151c296c50988948818d1977de857aea0b4a447815ebf293cac8ee0f66b685e6",
+      "new": "Médio",
+      "new_sha256": "151c296c50988948818d1977de857aea0b4a447815ebf293cac8ee0f66b685e6",
+      "operation": "retain",
+      "context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1"
+      ],
+      "reason": "Existing standalone finger answer remains valid for all three banjo quizzes; do not replace with section wording.",
+      "mechanical_issues": [],
+      "before_context_signature": {
+        "count": 9,
+        "sha256": "521e0089fe3ee95645f0469b8051b400acb7e31c4a20d55be78aac0a333c5d8d"
+      },
+      "required_after_context_signature": {
+        "count": 3,
+        "sha256": "1161746d9b9764743afcb91553fd88d64df65ae8cff1eb2c2260ad89a3af3cda"
+      },
+      "before_context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1",
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "required_after_context_count": 3,
+      "baseline_evidence_path": "tools/l10n/learn/pt.json",
+      "baseline_evidence_sha256": "597ba2cc5ce8bbfa8b1c97d3be85d8095d56f41980b4b6ca7ce5bdd8fa7958bc",
+      "absence_guard": null,
+      "number_order_matches_source": true,
+      "codepoint_length": 5,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "Médio is a conventional middle-finger name under explicit finger prompts.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "ru",
+      "table": "Learn.strings",
+      "key": "Lf94a998e29",
+      "source": "Strings: 1, 2, 3 and 4",
+      "source_sha256": "a9c0f5eaf3a697599b3602ce970b13b1f3fbfa5800b0f02cee313043a39f4d1a",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "Струны: 1, 2, 3 и 4",
+      "new_sha256": "f8ccdc1a68fb2d1fac88610a2a6963506c6a3a68f19fe2c5856f5b2f330cd9de",
+      "reason": "Explicit instrument-string label; ordinary enumeration, not a spoken offbeat. Preserve numbered string order and distractor status.",
+      "legacy_key_for_context_only": "Lf6586312d9",
+      "legacy_value_do_not_copy_blindly": "1, 2, 3 и 4",
+      "context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0"
+      ],
+      "required_authorization": "repository_write_scope_resumed",
+      "proposal_review_status": "AI semantic proposal by AI source-context proposal preparation; independent migration review and device QA pending; no human certification",
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 19,
+      "evidence_ref": "locale-evidence.json#ru",
+      "old_sha256": null,
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "9e4b4aa71f0946fd423335ea3b9cca7e0fd0eecf86eadabbebfddcb2373f1965"
+      },
+      "before_context_pointers": [],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "tools/l10n/learn/ru.json",
+      "baseline_evidence_sha256": "9e7b7c6e5e0217a0429e6b0403aa9c33b0c05e2cfd84bebb28c34225b8ff6d91",
+      "absence_guard": true,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "Струны names instrument strings; и enumerates.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "ru",
+      "table": "Learn.strings",
+      "key": "L4f162aedb4",
+      "source": "Middle section",
+      "source_sha256": "3bb8d1b80c1fb7c14b7404bf6e3c408d1f07d8022175ee18f2667497b875255f",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "Средний раздел",
+      "new_sha256": "5d15e6613800158b82c43f4ec7e786053c55c0a0ffe4e1f8f177b8154ec39561",
+      "reason": "Middle musical section, not a finger. Uses existing section glossary term and ordinary modifier; no new musical form is asserted.",
+      "legacy_key_for_context_only": "Lced02810fc",
+      "legacy_value_do_not_copy_blindly": "Средний",
+      "context_pointers": [
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "required_authorization": "repository_write_scope_resumed",
+      "proposal_review_status": "AI semantic proposal by AI source-context proposal preparation; independent migration review and device QA pending; no human certification",
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 14,
+      "evidence_ref": "locale-evidence.json#ru",
+      "old_sha256": null,
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 6,
+        "sha256": "db09e78b892d85ae906ed36688dc53395da72b1066ee85a473996f26724ab439"
+      },
+      "before_context_pointers": [],
+      "required_after_context_count": 6,
+      "baseline_evidence_path": "tools/l10n/learn/ru.json",
+      "baseline_evidence_sha256": "9e7b7c6e5e0217a0429e6b0403aa9c33b0c05e2cfd84bebb28c34225b8ff6d91",
+      "absence_guard": true,
+      "field_length_hint": 21,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "Средний раздел is the middle section, with explicit раздел.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "ru",
+      "table": "Learn.strings",
+      "key": "Lf6586312d9",
+      "source": "1, 2, 3 and 4",
+      "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+      "old": "1, 2, 3 и 4",
+      "old_sha256": "d5d46e5778acdc05f98eb69468910991caff85bed989d2f49afec36e9e41b7e9",
+      "new": "1, 2, 3 и 4",
+      "new_sha256": "d5d46e5778acdc05f98eb69468910991caff85bed989d2f49afec36e9e41b7e9",
+      "operation": "retain",
+      "context_pointers": [
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "reason": "Valid spoken-count form under narrowed rhythm-only context; no forced translation change.",
+      "mechanical_issues": [],
+      "before_context_signature": {
+        "count": 2,
+        "sha256": "8c8365b70d4e43b3eb48a6735f8787002db35e7063763ea26b9a441bb0e52b8a"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "11769cf0fb2cc1339adfaba63d4ad896072ae6c30380d13bdd2cdba22fdf6851"
+      },
+      "before_context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0",
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "tools/l10n/learn/ru.json",
+      "baseline_evidence_sha256": "9e7b7c6e5e0217a0429e6b0403aa9c33b0c05e2cfd84bebb28c34225b8ff6d91",
+      "absence_guard": null,
+      "number_order_matches_source": true,
+      "codepoint_length": 11,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "и is the spoken offbeat matching adjacent counts.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "ru",
+      "table": "Learn.strings",
+      "key": "Lced02810fc",
+      "source": "Middle",
+      "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+      "old": "Средний",
+      "old_sha256": "84ab7f7de9c01285d33f81b79fe03acfa205cd64660b5b30c6c9bc887a359e62",
+      "new": "Средний",
+      "new_sha256": "84ab7f7de9c01285d33f81b79fe03acfa205cd64660b5b30c6c9bc887a359e62",
+      "operation": "retain",
+      "context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1"
+      ],
+      "reason": "Existing standalone finger answer remains valid for all three banjo quizzes; do not replace with section wording.",
+      "mechanical_issues": [],
+      "before_context_signature": {
+        "count": 9,
+        "sha256": "521e0089fe3ee95645f0469b8051b400acb7e31c4a20d55be78aac0a333c5d8d"
+      },
+      "required_after_context_signature": {
+        "count": 3,
+        "sha256": "1161746d9b9764743afcb91553fd88d64df65ae8cff1eb2c2260ad89a3af3cda"
+      },
+      "before_context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1",
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "required_after_context_count": 3,
+      "baseline_evidence_path": "tools/l10n/learn/ru.json",
+      "baseline_evidence_sha256": "9e7b7c6e5e0217a0429e6b0403aa9c33b0c05e2cfd84bebb28c34225b8ff6d91",
+      "absence_guard": null,
+      "number_order_matches_source": true,
+      "codepoint_length": 7,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "Средний elliptically names the middle finger under explicit finger-identification prompts.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "zh-CN",
+      "table": "Learn.strings",
+      "key": "Lf94a998e29",
+      "source": "Strings: 1, 2, 3 and 4",
+      "source_sha256": "a9c0f5eaf3a697599b3602ce970b13b1f3fbfa5800b0f02cee313043a39f4d1a",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "弦：1、2、3、4",
+      "new_sha256": "9c41a8bf6958ae6ebc2bdbc2791bca57996b7c08a4d57f71e004bcdd9dc9f140",
+      "reason": "Explicit instrument-string label; ordinary enumeration, not a spoken offbeat. Preserve numbered string order and distractor status.",
+      "legacy_key_for_context_only": "Lf6586312d9",
+      "legacy_value_do_not_copy_blindly": "1、2、3 and 4",
+      "context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0"
+      ],
+      "required_authorization": "repository_write_scope_resumed",
+      "proposal_review_status": "AI semantic proposal by AI source-context proposal preparation; independent migration review and device QA pending; no human certification",
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 9,
+      "evidence_ref": "locale-evidence.json#zh-CN",
+      "old_sha256": null,
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "9e4b4aa71f0946fd423335ea3b9cca7e0fd0eecf86eadabbebfddcb2373f1965"
+      },
+      "before_context_pointers": [],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "tools/l10n/learn/zh-CN.json",
+      "baseline_evidence_sha256": "45572da5e793d267829ed857701745bb0ec7e308db11f3c7878bb924392f1614",
+      "absence_guard": true,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "弦 with enumeration punctuation lists strings rather than a spoken subdivision.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "zh-CN",
+      "table": "Learn.strings",
+      "key": "L4f162aedb4",
+      "source": "Middle section",
+      "source_sha256": "3bb8d1b80c1fb7c14b7404bf6e3c408d1f07d8022175ee18f2667497b875255f",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "中间段落",
+      "new_sha256": "bf03014d8779430c83a98d9fdd87ec808f55d07181db3e80d470c7c68b5da6ce",
+      "reason": "Middle musical section, not a finger. Uses existing section glossary term and ordinary modifier; no new musical form is asserted.",
+      "legacy_key_for_context_only": "Lced02810fc",
+      "legacy_value_do_not_copy_blindly": "中指",
+      "context_pointers": [
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "required_authorization": "repository_write_scope_resumed",
+      "proposal_review_status": "AI semantic proposal by AI source-context proposal preparation; independent migration review and device QA pending; no human certification",
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 4,
+      "evidence_ref": "locale-evidence.json#zh-CN",
+      "old_sha256": null,
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 6,
+        "sha256": "db09e78b892d85ae906ed36688dc53395da72b1066ee85a473996f26724ab439"
+      },
+      "before_context_pointers": [],
+      "required_after_context_count": 6,
+      "baseline_evidence_path": "tools/l10n/learn/zh-CN.json",
+      "baseline_evidence_sha256": "45572da5e793d267829ed857701745bb0ec7e308db11f3c7878bb924392f1614",
+      "absence_guard": true,
+      "field_length_hint": 21,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "中间段落 names a middle passage/section; no finger noun remains.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "zh-CN",
+      "table": "Learn.strings",
+      "key": "Lf6586312d9",
+      "source": "1, 2, 3 and 4",
+      "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+      "old": "1、2、3 and 4",
+      "old_sha256": "14b2a7c8e8b663de6972d12c563c110bb5a7b29d9ec321b7ea9d1528d2777e02",
+      "new": "1、2、3 and 4",
+      "new_sha256": "14b2a7c8e8b663de6972d12c563c110bb5a7b29d9ec321b7ea9d1528d2777e02",
+      "operation": "retain",
+      "context_pointers": [
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "reason": "Valid spoken-count form under narrowed rhythm-only context; no forced translation change.",
+      "mechanical_issues": [],
+      "before_context_signature": {
+        "count": 2,
+        "sha256": "8c8365b70d4e43b3eb48a6735f8787002db35e7063763ea26b9a441bb0e52b8a"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "11769cf0fb2cc1339adfaba63d4ad896072ae6c30380d13bdd2cdba22fdf6851"
+      },
+      "before_context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0",
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "tools/l10n/learn/zh-CN.json",
+      "baseline_evidence_sha256": "45572da5e793d267829ed857701745bb0ec7e308db11f3c7878bb924392f1614",
+      "absence_guard": null,
+      "number_order_matches_source": true,
+      "codepoint_length": 11,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "English and is the intentionally retained spoken subdivision token and agrees with neighboring counts, not an ordinary list conjunction needing replacement.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "zh-CN",
+      "table": "Learn.strings",
+      "key": "Lced02810fc",
+      "source": "Middle",
+      "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+      "old": "中指",
+      "old_sha256": "917c990a11206d2cc2d7f776a079f43d7ae2dae2c2235a65379adc436328cc44",
+      "new": "中指",
+      "new_sha256": "917c990a11206d2cc2d7f776a079f43d7ae2dae2c2235a65379adc436328cc44",
+      "operation": "retain",
+      "context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1"
+      ],
+      "reason": "Existing standalone finger answer remains valid for all three banjo quizzes; do not replace with section wording.",
+      "mechanical_issues": [],
+      "before_context_signature": {
+        "count": 9,
+        "sha256": "521e0089fe3ee95645f0469b8051b400acb7e31c4a20d55be78aac0a333c5d8d"
+      },
+      "required_after_context_signature": {
+        "count": 3,
+        "sha256": "1161746d9b9764743afcb91553fd88d64df65ae8cff1eb2c2260ad89a3af3cda"
+      },
+      "before_context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1",
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "required_after_context_count": 3,
+      "baseline_evidence_path": "tools/l10n/learn/zh-CN.json",
+      "baseline_evidence_sha256": "45572da5e793d267829ed857701745bb0ec7e308db11f3c7878bb924392f1614",
+      "absence_guard": null,
+      "number_order_matches_source": true,
+      "codepoint_length": 2,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "中指 explicitly names the middle finger.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "ur",
+      "table": "Learn.strings",
+      "key": "Lf94a998e29",
+      "source": "Strings: 1, 2, 3 and 4",
+      "source_sha256": "a9c0f5eaf3a697599b3602ce970b13b1f3fbfa5800b0f02cee313043a39f4d1a",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "تار: 1، 2، 3 اور 4",
+      "new_sha256": "f6215bef2f4465f0e0fb2fb1d037c81f2886d426738f1dcc64bece50881da413",
+      "reason": "Explicit instrument-string label; ordinary enumeration, not a spoken offbeat. Preserve numbered string order and distractor status.",
+      "legacy_key_for_context_only": "Lf6586312d9",
+      "legacy_value_do_not_copy_blindly": "تار 1، 2، 3 اور 4",
+      "context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0"
+      ],
+      "required_authorization": "repository_write_scope_resumed",
+      "proposal_review_status": "AI semantic proposal by AI source-context proposal preparation; independent migration review and device QA pending; no human certification",
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 18,
+      "evidence_ref": "locale-evidence.json#ur",
+      "old_sha256": null,
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "9e4b4aa71f0946fd423335ea3b9cca7e0fd0eecf86eadabbebfddcb2373f1965"
+      },
+      "before_context_pointers": [],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "docs/l10n/staged/ur/evidence/reviewed-map.json",
+      "baseline_evidence_sha256": "b5b55ff059e117cb44b71b08648d44ae5681a2bee2fcbb233434716ea0292510",
+      "absence_guard": true,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "تار identifies instrument strings; اور is enumeration.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "ur",
+      "table": "Learn.strings",
+      "key": "L4f162aedb4",
+      "source": "Middle section",
+      "source_sha256": "3bb8d1b80c1fb7c14b7404bf6e3c408d1f07d8022175ee18f2667497b875255f",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "درمیانی حصہ",
+      "new_sha256": "60d30cdeab87d7fd269622682b272c34e0d3ba61b9e562b4aa6078b89219e139",
+      "reason": "Middle musical section, not a finger. Uses existing section glossary term and ordinary modifier; no new musical form is asserted.",
+      "legacy_key_for_context_only": "Lced02810fc",
+      "legacy_value_do_not_copy_blindly": "درمیانی",
+      "context_pointers": [
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "required_authorization": "repository_write_scope_resumed",
+      "proposal_review_status": "AI semantic proposal by AI source-context proposal preparation; independent migration review and device QA pending; no human certification",
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 11,
+      "evidence_ref": "locale-evidence.json#ur",
+      "old_sha256": null,
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 6,
+        "sha256": "db09e78b892d85ae906ed36688dc53395da72b1066ee85a473996f26724ab439"
+      },
+      "before_context_pointers": [],
+      "required_after_context_count": 6,
+      "baseline_evidence_path": "docs/l10n/staged/ur/evidence/reviewed-map.json",
+      "baseline_evidence_sha256": "b5b55ff059e117cb44b71b08648d44ae5681a2bee2fcbb233434716ea0292510",
+      "absence_guard": true,
+      "field_length_hint": 21,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "درمیانی حصہ is the middle section/part.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "ur",
+      "table": "Learn.strings",
+      "key": "Lf6586312d9",
+      "source": "1, 2, 3 and 4",
+      "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+      "old": "تار 1، 2، 3 اور 4",
+      "old_sha256": "71202b0f71180de6866f0ca6604d8ae3b76db693ce54ce8b4d564b166ee22205",
+      "new": "گنتی 1، 2، 3 اور 4",
+      "new_sha256": "2d7590e20230c1e64316be5b6fef956b111cc4e6fa6e1404b2d5ed4ba0b9266c",
+      "operation": "replace_if_exact",
+      "context_pointers": [
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "reason": "Reviewed baseline explicitly says strings (تار); retained key now solely means spoken counting. Reuse adjacent گنتی label and count conjunction اور.",
+      "mechanical_issues": [],
+      "before_context_signature": {
+        "count": 2,
+        "sha256": "8c8365b70d4e43b3eb48a6735f8787002db35e7063763ea26b9a441bb0e52b8a"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "11769cf0fb2cc1339adfaba63d4ad896072ae6c30380d13bdd2cdba22fdf6851"
+      },
+      "before_context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0",
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "docs/l10n/staged/ur/evidence/reviewed-map.json",
+      "baseline_evidence_sha256": "b5b55ff059e117cb44b71b08648d44ae5681a2bee2fcbb233434716ea0292510",
+      "absence_guard": null,
+      "number_order_matches_source": true,
+      "codepoint_length": 18,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "The reviewed original says تار (strings), which is wrong after narrowing to rhythm. گنتی (counting) matches both adjacent choices; اور remains in the intended slot after 3.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "ur",
+      "table": "Learn.strings",
+      "key": "Lced02810fc",
+      "source": "Middle",
+      "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+      "old": "درمیانی",
+      "old_sha256": "fbab161be701b373c9b26443e8bc4ff52661fbe086696a72a18a69e5805e47d0",
+      "new": "درمیانی",
+      "new_sha256": "fbab161be701b373c9b26443e8bc4ff52661fbe086696a72a18a69e5805e47d0",
+      "operation": "retain",
+      "context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1"
+      ],
+      "reason": "Existing standalone finger answer remains valid for all three banjo quizzes; do not replace with section wording.",
+      "mechanical_issues": [],
+      "before_context_signature": {
+        "count": 9,
+        "sha256": "521e0089fe3ee95645f0469b8051b400acb7e31c4a20d55be78aac0a333c5d8d"
+      },
+      "required_after_context_signature": {
+        "count": 3,
+        "sha256": "1161746d9b9764743afcb91553fd88d64df65ae8cff1eb2c2260ad89a3af3cda"
+      },
+      "before_context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1",
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "required_after_context_count": 3,
+      "baseline_evidence_path": "docs/l10n/staged/ur/evidence/reviewed-map.json",
+      "baseline_evidence_sha256": "b5b55ff059e117cb44b71b08648d44ae5681a2bee2fcbb233434716ea0292510",
+      "absence_guard": null,
+      "number_order_matches_source": true,
+      "codepoint_length": 7,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "درمیانی is an elliptical middle adjective under the three finger prompts; retain rather than replacing it with حصہ (section).",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly."
+    },
+    {
+      "locale": "ta",
+      "table": "Learn.strings",
+      "key": "Lf94a998e29",
+      "source": "Strings: 1, 2, 3 and 4",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "தந்திகள்: 1, 2, 3 மற்றும் 4",
+      "reviewer_evidence_paths": [
+        "docs/l10n/staged/context-split/tamil-reviewer-supplement.json",
+        "docs/l10n/staged/ta/evidence/first-half/blockers.json",
+        "docs/l10n/staged/ta/evidence/later-half/blockers.json"
+      ],
+      "old_sha256": null,
+      "source_sha256": "a9c0f5eaf3a697599b3602ce970b13b1f3fbfa5800b0f02cee313043a39f4d1a",
+      "new_sha256": "3109a9c29b2f9d3e19be210ca5bf715374357184f105f254765b62d0df240e99",
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "9e4b4aa71f0946fd423335ea3b9cca7e0fd0eecf86eadabbebfddcb2373f1965"
+      },
+      "before_context_pointers": [],
+      "context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0"
+      ],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "frozen-author-inputs/ta/frozen-final/all-6080-rows.json",
+      "baseline_evidence_sha256": "a6659c724240b1b58b92564e4bbd2a7fb204e6c1c70319085a03384283ea8aad",
+      "absence_guard": true,
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 27,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "தந்திகள் is instrument strings; மற்றும் stays an ordinary list conjunction.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly.",
+      "pending_context_blocker": "PENDING_SOURCE_MIGRATION_AND_LOCALE_INTEGRATION; do not mark the original frozen6080 blocker resolved until the owner verifies the migrated source, exact locale values and all contexts.",
+      "original_frozen_baseline_changed": false
+    },
+    {
+      "locale": "ta",
+      "table": "Learn.strings",
+      "key": "L4f162aedb4",
+      "source": "Middle section",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "நடுப்பகுதி",
+      "reviewer_evidence_paths": [
+        "docs/l10n/staged/context-split/tamil-reviewer-supplement.json",
+        "docs/l10n/staged/ta/evidence/first-half/blockers.json",
+        "docs/l10n/staged/ta/evidence/later-half/blockers.json"
+      ],
+      "old_sha256": null,
+      "source_sha256": "3bb8d1b80c1fb7c14b7404bf6e3c408d1f07d8022175ee18f2667497b875255f",
+      "new_sha256": "53ca25e6e56e988efd79dbd927e4f3dcb3f1ad3a5bbdc011fc2555fe6e99f8cd",
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 6,
+        "sha256": "db09e78b892d85ae906ed36688dc53395da72b1066ee85a473996f26724ab439"
+      },
+      "before_context_pointers": [],
+      "context_pointers": [
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "required_after_context_count": 6,
+      "baseline_evidence_path": "frozen-author-inputs/ta/frozen-final/all-6080-rows.json",
+      "baseline_evidence_sha256": "a6659c724240b1b58b92564e4bbd2a7fb204e6c1c70319085a03384283ea8aad",
+      "absence_guard": true,
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 10,
+      "field_length_hint": 21,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "நடுப்பகுதி is middle section, already reviewed for The middle section; never substitute the finger name.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly.",
+      "pending_context_blocker": "PENDING_SOURCE_MIGRATION_AND_LOCALE_INTEGRATION; do not mark the original frozen6080 blocker resolved until the owner verifies the migrated source, exact locale values and all contexts.",
+      "original_frozen_baseline_changed": false
+    },
+    {
+      "locale": "ta",
+      "table": "Learn.strings",
+      "key": "Lf6586312d9",
+      "source": "1, 2, 3 and 4",
+      "operation": "replace_if_exact",
+      "old": "1, 2, 3 மற்றும் 4",
+      "new": "1, 2, 3 அண்ட் 4",
+      "reviewer_evidence_paths": [
+        "docs/l10n/staged/context-split/tamil-reviewer-supplement.json",
+        "docs/l10n/staged/ta/evidence/first-half/blockers.json",
+        "docs/l10n/staged/ta/evidence/later-half/blockers.json"
+      ],
+      "old_sha256": "08dbdb5e33ec69cee57e0ec6689dc89df68ea017726969a7304045e02d83f804",
+      "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+      "new_sha256": "a14410ee9a014069a28b245d9aea672b3c6a7d3c7316754ed84ca027a7b7dda3",
+      "before_context_signature": {
+        "count": 2,
+        "sha256": "8c8365b70d4e43b3eb48a6735f8787002db35e7063763ea26b9a441bb0e52b8a"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "11769cf0fb2cc1339adfaba63d4ad896072ae6c30380d13bdd2cdba22fdf6851"
+      },
+      "before_context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0",
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "context_pointers": [
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "frozen-author-inputs/ta/frozen-final/all-6080-rows.json",
+      "baseline_evidence_sha256": "a6659c724240b1b58b92564e4bbd2a7fb204e6c1c70319085a03384283ea8aad",
+      "absence_guard": null,
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 15,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "அண்ட் is the reviewed spoken offbeat; both frozen sibling quiz counts already use அண்ட். Apply only after ukulele list moves to the new key.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly.",
+      "pending_context_blocker": "PENDING_SOURCE_MIGRATION_AND_LOCALE_INTEGRATION; do not mark the original frozen6080 blocker resolved until the owner verifies the migrated source, exact locale values and all contexts.",
+      "original_frozen_baseline_changed": false
+    },
+    {
+      "locale": "ta",
+      "table": "Learn.strings",
+      "key": "Lced02810fc",
+      "source": "Middle",
+      "operation": "retain",
+      "old": "நடுவிரல்",
+      "new": "நடுவிரல்",
+      "reviewer_evidence_paths": [
+        "docs/l10n/staged/context-split/tamil-reviewer-supplement.json",
+        "docs/l10n/staged/ta/evidence/first-half/blockers.json",
+        "docs/l10n/staged/ta/evidence/later-half/blockers.json"
+      ],
+      "old_sha256": "1c8031a8ef2f71d4916513e82689d9d0d899c1956ef8603bd9ece4a2f8adc489",
+      "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+      "new_sha256": "1c8031a8ef2f71d4916513e82689d9d0d899c1956ef8603bd9ece4a2f8adc489",
+      "before_context_signature": {
+        "count": 9,
+        "sha256": "521e0089fe3ee95645f0469b8051b400acb7e31c4a20d55be78aac0a333c5d8d"
+      },
+      "required_after_context_signature": {
+        "count": 3,
+        "sha256": "1161746d9b9764743afcb91553fd88d64df65ae8cff1eb2c2260ad89a3af3cda"
+      },
+      "before_context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1",
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1"
+      ],
+      "required_after_context_count": 3,
+      "baseline_evidence_path": "frozen-author-inputs/ta/frozen-final/all-6080-rows.json",
+      "baseline_evidence_sha256": "a6659c724240b1b58b92564e4bbd2a7fb204e6c1c70319085a03384283ea8aad",
+      "absence_guard": null,
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 8,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "நடுவிரல் explicitly names the middle finger and remains correct for the three retained quiz choices.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly.",
+      "pending_context_blocker": "PENDING_SOURCE_MIGRATION_AND_LOCALE_INTEGRATION; do not mark the original frozen6080 blocker resolved until the owner verifies the migrated source, exact locale values and all contexts.",
+      "original_frozen_baseline_changed": false
+    },
+    {
+      "locale": "gu",
+      "table": "Learn.strings",
+      "key": "Lf94a998e29",
+      "source": "Strings: 1, 2, 3 and 4",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "તાર: 1, 2, 3 અને 4",
+      "reviewer_evidence_paths": [
+        "docs/l10n/staged/gu/evidence/first-half/shared-context-split.json",
+        "docs/l10n/staged/gu/evidence/later-half/shared-source-references.json",
+        "docs/l10n/staged/gu/evidence/later-half/corrections.json"
+      ],
+      "old_sha256": null,
+      "source_sha256": "a9c0f5eaf3a697599b3602ce970b13b1f3fbfa5800b0f02cee313043a39f4d1a",
+      "new_sha256": "59f59430127154901c3fb982a14d38bc46119cc7b36e1e430f70eac83e1acd99",
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "9e4b4aa71f0946fd423335ea3b9cca7e0fd0eecf86eadabbebfddcb2373f1965"
+      },
+      "before_context_pointers": [],
+      "context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0"
+      ],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "frozen-author-inputs/gu/gu.final-todo.json",
+      "baseline_evidence_sha256": "278d724d2d5099f255e5bd3d7310f26d9820a43806e12231bada31c64cfab78a",
+      "absence_guard": true,
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 18,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "તાર is the instrument-string term and agrees with the reviewed prompt કયા તાર and String 1 = તાર 1; અને remains an ordinary list conjunction.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly.",
+      "pending_context_blocker": "PENDING_SOURCE_MIGRATION_AND_LOCALE_INTEGRATION; do not mark the original frozen6080 blocker resolved until the owner verifies the migrated source, exact locale values and all contexts.",
+      "original_frozen_baseline_changed": false
+    },
+    {
+      "locale": "gu",
+      "table": "Learn.strings",
+      "key": "L4f162aedb4",
+      "source": "Middle section",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "વચ્ચેનો ભાગ",
+      "reviewer_evidence_paths": [
+        "docs/l10n/staged/gu/evidence/first-half/shared-context-split.json",
+        "docs/l10n/staged/gu/evidence/later-half/shared-source-references.json",
+        "docs/l10n/staged/gu/evidence/later-half/corrections.json"
+      ],
+      "old_sha256": null,
+      "source_sha256": "3bb8d1b80c1fb7c14b7404bf6e3c408d1f07d8022175ee18f2667497b875255f",
+      "new_sha256": "5ac477412669c1a412823cd430ee0af3bae8129153a6fddb2e1bb39a59e6b46d",
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 6,
+        "sha256": "db09e78b892d85ae906ed36688dc53395da72b1066ee85a473996f26724ab439"
+      },
+      "before_context_pointers": [],
+      "context_pointers": [
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "required_after_context_count": 6,
+      "baseline_evidence_path": "frozen-author-inputs/gu/gu.final-todo.json",
+      "baseline_evidence_sha256": "278d724d2d5099f255e5bd3d7310f26d9820a43806e12231bada31c64cfab78a",
+      "absence_guard": true,
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 11,
+      "field_length_hint": 21,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "વચ્ચેનો ભાગ means the middle part/section and exactly matches reviewed The middle section.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly.",
+      "pending_context_blocker": "PENDING_SOURCE_MIGRATION_AND_LOCALE_INTEGRATION; do not mark the original frozen6080 blocker resolved until the owner verifies the migrated source, exact locale values and all contexts.",
+      "original_frozen_baseline_changed": false
+    },
+    {
+      "locale": "gu",
+      "table": "Learn.strings",
+      "key": "Lf6586312d9",
+      "source": "1, 2, 3 and 4",
+      "operation": "replace_if_exact",
+      "old": "1, 2, 3 અને 4",
+      "new": "1, 2, 3 એન્ડ 4",
+      "reviewer_evidence_paths": [
+        "docs/l10n/staged/gu/evidence/first-half/shared-context-split.json",
+        "docs/l10n/staged/gu/evidence/later-half/shared-source-references.json",
+        "docs/l10n/staged/gu/evidence/later-half/corrections.json"
+      ],
+      "old_sha256": "3e1190708394ede0420bc069f35d58058bee1a6ca46445ab4530a228622b273a",
+      "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+      "new_sha256": "6bdbc39e9cafb9e43033acbf8c7763fc3da710b3fce227ca879cfd0153e51e46",
+      "before_context_signature": {
+        "count": 2,
+        "sha256": "8c8365b70d4e43b3eb48a6735f8787002db35e7063763ea26b9a441bb0e52b8a"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "11769cf0fb2cc1339adfaba63d4ad896072ae6c30380d13bdd2cdba22fdf6851"
+      },
+      "before_context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0",
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "context_pointers": [
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "frozen-author-inputs/gu/gu.final-todo.json",
+      "baseline_evidence_sha256": "278d724d2d5099f255e5bd3d7310f26d9820a43806e12231bada31c64cfab78a",
+      "absence_guard": null,
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 14,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "એન્ડ is the agreed single-count syllable, unlike ordinary list અને; pair it with the separately reviewed neighboring count corrections.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly.",
+      "pending_context_blocker": "PENDING_SOURCE_MIGRATION_AND_LOCALE_INTEGRATION; do not mark the original frozen6080 blocker resolved until the owner verifies the migrated source, exact locale values and all contexts.",
+      "original_frozen_baseline_changed": false
+    },
+    {
+      "locale": "gu",
+      "table": "Learn.strings",
+      "key": "Lced02810fc",
+      "source": "Middle",
+      "operation": "retain",
+      "old": "મધ્યમા",
+      "new": "મધ્યમા",
+      "reviewer_evidence_paths": [
+        "docs/l10n/staged/gu/evidence/first-half/shared-context-split.json",
+        "docs/l10n/staged/gu/evidence/later-half/shared-source-references.json",
+        "docs/l10n/staged/gu/evidence/later-half/corrections.json"
+      ],
+      "old_sha256": "72d8fa8cb919b3d6906a5171ea092f8377e0228befc1978985907ae6e1c84c19",
+      "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+      "new_sha256": "72d8fa8cb919b3d6906a5171ea092f8377e0228befc1978985907ae6e1c84c19",
+      "before_context_signature": {
+        "count": 9,
+        "sha256": "521e0089fe3ee95645f0469b8051b400acb7e31c4a20d55be78aac0a333c5d8d"
+      },
+      "required_after_context_signature": {
+        "count": 3,
+        "sha256": "1161746d9b9764743afcb91553fd88d64df65ae8cff1eb2c2260ad89a3af3cda"
+      },
+      "before_context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1",
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1"
+      ],
+      "required_after_context_count": 3,
+      "baseline_evidence_path": "frozen-author-inputs/gu/gu.final-todo.json",
+      "baseline_evidence_sha256": "278d724d2d5099f255e5bd3d7310f26d9820a43806e12231bada31c64cfab78a",
+      "absence_guard": null,
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 6,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "મધ્યમા explicitly names the middle finger. Supersede the later-half neutralization મધ્ય, whose sole rationale was the now-separated section collision.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly.",
+      "pending_context_blocker": "PENDING_SOURCE_MIGRATION_AND_LOCALE_INTEGRATION; do not mark the original frozen6080 blocker resolved until the owner verifies the migrated source, exact locale values and all contexts.",
+      "original_frozen_baseline_changed": false
+    },
+    {
+      "locale": "kn",
+      "table": "Learn.strings",
+      "key": "Lf94a998e29",
+      "source": "Strings: 1, 2, 3 and 4",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "ತಂತಿಗಳು: 1, 2, 3 ಮತ್ತು 4",
+      "reviewer_evidence_paths": [
+        "docs/l10n/staged/context-split/kannada-first-reviewer-supplement.json",
+        "docs/l10n/staged/context-split/kannada-later-reviewer-supplement.json",
+        "docs/l10n/staged/kn/evidence/later-half/shared-context-decisions.json"
+      ],
+      "old_sha256": null,
+      "source_sha256": "a9c0f5eaf3a697599b3602ce970b13b1f3fbfa5800b0f02cee313043a39f4d1a",
+      "new_sha256": "15bf68a9b9bc85c46a828e56637eeafcd1bee824673d7639cb9ade33deb8b479",
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "9e4b4aa71f0946fd423335ea3b9cca7e0fd0eecf86eadabbebfddcb2373f1965"
+      },
+      "before_context_pointers": [],
+      "context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0"
+      ],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "frozen-author-inputs/kn/final-snapshot/all-drafts.json",
+      "baseline_evidence_sha256": "9f76340bbc33bfe5d09ad1420e3fd5e84970b79a9c6c3a15541e1d38787f53ac",
+      "absence_guard": true,
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 24,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "ತಂತಿಗಳು is instrument strings; ಮತ್ತು stays the ordinary list conjunction.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly.",
+      "pending_context_blocker": "PENDING_SOURCE_MIGRATION_AND_LOCALE_INTEGRATION; do not mark the original frozen6080 blocker resolved until the owner verifies the migrated source, exact locale values and all contexts.",
+      "original_frozen_baseline_changed": false
+    },
+    {
+      "locale": "kn",
+      "table": "Learn.strings",
+      "key": "L4f162aedb4",
+      "source": "Middle section",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "ಮಧ್ಯಭಾಗ",
+      "reviewer_evidence_paths": [
+        "docs/l10n/staged/context-split/kannada-first-reviewer-supplement.json",
+        "docs/l10n/staged/context-split/kannada-later-reviewer-supplement.json",
+        "docs/l10n/staged/kn/evidence/later-half/shared-context-decisions.json"
+      ],
+      "old_sha256": null,
+      "source_sha256": "3bb8d1b80c1fb7c14b7404bf6e3c408d1f07d8022175ee18f2667497b875255f",
+      "new_sha256": "8fd3d75faa8372484f40b71eecf1830c3ce06d97ccb06742babbe9542079002b",
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 6,
+        "sha256": "db09e78b892d85ae906ed36688dc53395da72b1066ee85a473996f26724ab439"
+      },
+      "before_context_pointers": [],
+      "context_pointers": [
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "required_after_context_count": 6,
+      "baseline_evidence_path": "frozen-author-inputs/kn/final-snapshot/all-drafts.json",
+      "baseline_evidence_sha256": "9f76340bbc33bfe5d09ad1420e3fd5e84970b79a9c6c3a15541e1d38787f53ac",
+      "absence_guard": true,
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 7,
+      "field_length_hint": 21,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "ಮಧ್ಯಭಾಗ is middle section and matches the independently reviewed The middle section.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly.",
+      "pending_context_blocker": "PENDING_SOURCE_MIGRATION_AND_LOCALE_INTEGRATION; do not mark the original frozen6080 blocker resolved until the owner verifies the migrated source, exact locale values and all contexts.",
+      "original_frozen_baseline_changed": false
+    },
+    {
+      "locale": "kn",
+      "table": "Learn.strings",
+      "key": "Lf6586312d9",
+      "source": "1, 2, 3 and 4",
+      "operation": "replace_if_exact",
+      "old": "1, 2, 3 ಮತ್ತು 4",
+      "new": "1, 2, 3 ಅಂಡ್ 4",
+      "reviewer_evidence_paths": [
+        "docs/l10n/staged/context-split/kannada-first-reviewer-supplement.json",
+        "docs/l10n/staged/context-split/kannada-later-reviewer-supplement.json",
+        "docs/l10n/staged/kn/evidence/later-half/shared-context-decisions.json"
+      ],
+      "old_sha256": "7742ccfef3969925aa0282436aff1b828c6f9ece3ec680cb4b3d0f2bba63368a",
+      "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+      "new_sha256": "09453034c6db74a6dbb10d71b02cbb7a5d3bc849667364f94dccd5b5bbcff1b3",
+      "before_context_signature": {
+        "count": 2,
+        "sha256": "8c8365b70d4e43b3eb48a6735f8787002db35e7063763ea26b9a441bb0e52b8a"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "11769cf0fb2cc1339adfaba63d4ad896072ae6c30380d13bdd2cdba22fdf6851"
+      },
+      "before_context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0",
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "context_pointers": [
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "frozen-author-inputs/kn/final-snapshot/all-drafts.json",
+      "baseline_evidence_sha256": "9f76340bbc33bfe5d09ad1420e3fd5e84970b79a9c6c3a15541e1d38787f53ac",
+      "absence_guard": null,
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 14,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "ಅಂಡ್ is the reviewer-agreed spoken count syllable; ordinary list ಮತ್ತು must not remain in this rhythm-only context. Coordinate the neighboring reviewed count corrections.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly.",
+      "pending_context_blocker": "PENDING_SOURCE_MIGRATION_AND_LOCALE_INTEGRATION; do not mark the original frozen6080 blocker resolved until the owner verifies the migrated source, exact locale values and all contexts.",
+      "original_frozen_baseline_changed": false
+    },
+    {
+      "locale": "kn",
+      "table": "Learn.strings",
+      "key": "Lced02810fc",
+      "source": "Middle",
+      "operation": "retain",
+      "old": "ಮಧ್ಯದ ಬೆರಳು",
+      "new": "ಮಧ್ಯದ ಬೆರಳು",
+      "reviewer_evidence_paths": [
+        "docs/l10n/staged/context-split/kannada-first-reviewer-supplement.json",
+        "docs/l10n/staged/context-split/kannada-later-reviewer-supplement.json",
+        "docs/l10n/staged/kn/evidence/later-half/shared-context-decisions.json"
+      ],
+      "old_sha256": "832c9cdd114d3d0017fef1faf9787e9cf4c9d0d62a8d24fdac63c5441ccd03c5",
+      "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+      "new_sha256": "832c9cdd114d3d0017fef1faf9787e9cf4c9d0d62a8d24fdac63c5441ccd03c5",
+      "before_context_signature": {
+        "count": 9,
+        "sha256": "521e0089fe3ee95645f0469b8051b400acb7e31c4a20d55be78aac0a333c5d8d"
+      },
+      "required_after_context_signature": {
+        "count": 3,
+        "sha256": "1161746d9b9764743afcb91553fd88d64df65ae8cff1eb2c2260ad89a3af3cda"
+      },
+      "before_context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1",
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1"
+      ],
+      "required_after_context_count": 3,
+      "baseline_evidence_path": "frozen-author-inputs/kn/final-snapshot/all-drafts.json",
+      "baseline_evidence_sha256": "9f76340bbc33bfe5d09ad1420e3fd5e84970b79a9c6c3a15541e1d38787f53ac",
+      "absence_guard": null,
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 11,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "ಮಧ್ಯದ ಬೆರಳು explicitly names the middle finger and remains correct for the three banjo choices.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly.",
+      "pending_context_blocker": "PENDING_SOURCE_MIGRATION_AND_LOCALE_INTEGRATION; do not mark the original frozen6080 blocker resolved until the owner verifies the migrated source, exact locale values and all contexts.",
+      "original_frozen_baseline_changed": false
+    }
+  ],
+  "row_count": 68,
+  "locales": [
+    "ar",
+    "bn",
+    "de",
+    "es",
+    "fa",
+    "fr",
+    "gu",
+    "hi",
+    "it",
+    "ja",
+    "kn",
+    "ko",
+    "pt",
+    "ru",
+    "ta",
+    "ur",
+    "zh-CN"
+  ],
+  "main_locale_rows": 56,
+  "supplemental_locale_rows": 12,
+  "default_mutations": 40,
+  "default_additions": 34,
+  "default_retained_count_replacements": 6,
+  "default_noop_retains": 28,
+  "source_guards": [
+    {
+      "path": "tools/curriculum/courses/ukulele_part2.py",
+      "line": 346,
+      "old": "        quiz(\"Thumb, index, middle, ring play which strings?\", [\"1, 2, 3 and 4\", \"3, 4, 1 and 2\", \"4, 3, 2 and 1\"], 2),",
+      "new": "        quiz(\"Thumb, index, middle, ring play which strings?\", [\"Strings: 1, 2, 3 and 4\", \"3, 4, 1 and 2\", \"4, 3, 2 and 1\"], 2),",
+      "old_line_occurrences": 1,
+      "file_sha256": "a7c1c98bb3acfdc56523d37606392a1244db6e06a03f41e258fd55a510438bbb",
+      "proposed_file_sha256": "1c32d00a6467f58f72e707dfe36850b89d9a6e4d0a0f6e807927d7d95eca5a58"
+    },
+    {
+      "path": "tools/curriculum/courses/standards_part2.py",
+      "line": 866,
+      "old": "    Part(\"Middle\", \"bridge\", TURCA_B, pickup=1, chords=\"C,G7 C,G Am,E Am,E\"),",
+      "new": "    Part(\"Middle section\", \"bridge\", TURCA_B, pickup=1, chords=\"C,G7 C,G Am,E Am,E\"),",
+      "old_line_occurrences": 1,
+      "file_sha256": "ff965a160164a7bcddf8b4a7e4a5eb769f02a096d952fa462d8de8afeec555b1",
+      "proposed_file_sha256": "ce1c5bb52526c81bab192ca58666f99d872aea5b69b2c4adc6975820f3db8dfe"
+    }
+  ],
+  "retained_source_guards": [
+    {
+      "path": "tools/curriculum/courses/rhythm.py",
+      "line": 107,
+      "lesson": "rhy-2-2",
+      "field": "steps[2].options[1]",
+      "retain_exact_line": "        quiz(\"How do you count this pattern?\", [\"1, 2 and, 3, 4\", \"1, 2, 3 and 4\", \"1 and 2, 3, 4\"], 2,",
+      "line_sha256": "fbc1ce5e6bbfe012fe180d93d54e2af1f5ed04e74e3e62d8a20fdc530b66fe3d",
+      "file_sha256": "03df86dc0b4ff17fe273f96e3515fd2f3ee0f705f8bf66aefa96f3b0ade1717d"
+    },
+    {
+      "path": "tools/curriculum/courses/banjo.py",
+      "line": 234,
+      "lesson": "bjo-1-3",
+      "field": "steps[2].options[0]",
+      "retain_exact_line": "        quiz(\"Which finger plays string 2?\", [\"Middle\", \"Thumb\", \"Index\"], 2,",
+      "line_sha256": "61309fed58604d41ab2d7f9d244dbc3e8700ed3012149b4cb9d2fe1f51a2a493",
+      "file_sha256": "b57f0cba8218cd7e226fc6204f8ff391e9f38a661181530a8bb36bee34cbd2d6"
+    },
+    {
+      "path": "tools/curriculum/courses/banjo.py",
+      "line": 253,
+      "lesson": "bjo-1-5",
+      "field": "steps[2].options[1]",
+      "retain_exact_line": "        quiz(\"Which finger plays string 1?\", [\"Index\", \"Middle\", \"Thumb\"], 1,",
+      "line_sha256": "8c2dc6ac2064c3862122e93443e5152db76552e85da82220a2fc8d4cf591b5ac",
+      "file_sha256": "b57f0cba8218cd7e226fc6204f8ff391e9f38a661181530a8bb36bee34cbd2d6"
+    },
+    {
+      "path": "tools/curriculum/courses/banjo.py",
+      "line": 288,
+      "lesson": "bjo-2-2",
+      "field": "steps[3].options[1]",
+      "retain_exact_line": "        quiz(\"Which finger plays every other note?\", [\"Index\", \"Middle\", \"Thumb\"], 2,",
+      "line_sha256": "b7356c7e3bd242ccaf1247125b238aa0303fb862fa6e7c0286e867e3ce95b95c",
+      "file_sha256": "b57f0cba8218cd7e226fc6204f8ff391e9f38a661181530a8bb36bee34cbd2d6"
+    }
+  ],
+  "context_signature_encoding": "full_rows_compact_sorted_json",
+  "source_curriculum_before_sha256": "893b9f23f6d14b70a00423387a584a14bfc9d0ed9f28ade78144f073cdb7bd87",
+  "source_curriculum_required_after_sha256": "5385cc11952cce0d76d4f46eb1f61238c9af72f7f46ae94c6b8a25200fc6be1d",
+  "required_source_entries": 6082,
+  "main_operations_file": "checked-main-operations.json",
+  "supplemental_operations_file": "unified-ta-gu-kn-addendum.json",
+  "no_full_baseline_approval_implied": true,
+  "no_human_native_or_device_certification": true
+}

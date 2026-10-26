@@ -1,0 +1,25 @@
+{
+  "rows": 1104,
+  "locales": 48,
+  "rows_per_locale": 23,
+  "correction_count": 2,
+  "retained_count": 1102,
+  "per_row_facts_and_rationales_present": true,
+  "correction_and_disposition_ids_equal": true,
+  "blinded_evidence_input_output_hashes_match": true,
+  "final_current_row_guard_mismatches": [],
+  "bidi_isolate_imbalances_or_backtranslation_losses": [],
+  "proposed_corrections_preserve_format_arguments": true,
+  "source_caller_hashes": {
+    "ios/project.yml": "2c5b94fa6e17370f89dff4d4b1b1e21669d8f2a811e7ba22d10c648548a6f92d",
+    "ios/Timbre/Paywall/PaywallView.swift": "ac381cb3c8794f61fb0f1d4d0bfccad8371f691c50ce8200490999986afe6e9a",
+    "ios/Timbre/Paywall/BillingIssueBanner.swift": "fe1695fc7fa15997dc5b000376505e6222c0cf9a8f09f13a046761dc2ed18806"
+  },
+  "output_hashes": {
+    "corrections.json": "21835fbeb7c63db59c61bdec3a45f7cff0530f0c48a7e5b116cbaa5e9dafdbef",
+    "row-dispositions.json": "112ecc64634e14c440edb3f2986888025263adb60b93fd8d3e16cf81416df5ae",
+    "row-dispositions.jsonl": "404ad53fc6e1b1ab08c4ace77ee5618f09c5a6cbd4b3b514eaa31e1740f419b6",
+    "source-evidence.json": "6f79f41b5d4176716cd358cbf499d8fd118a728a2729b47fd187a0117ceefeec",
+    "conclusion.md": "8870e9ab409bfc78cb52e1ee0071e8530539b85a1a146ea61847d25cfe25a667"
+  }
+}

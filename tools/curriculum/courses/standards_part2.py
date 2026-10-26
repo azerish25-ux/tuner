@@ -863,7 +863,7 @@ TURCA_SONG = song(G, 88, [
          chords="Am E"),
     Part("Theme", "verse", TURCA_A, pickup=1, chords="Am E,Am Em B7,Em"),
     Part("Theme answer", "verse", TURCA_A2, pickup=1, chords="Am E,Am Am,Dm E7,Am"),
-    Part("Middle", "bridge", TURCA_B, pickup=1, chords="C,G7 C,G Am,E Am,E"),
+    Part("Middle section", "bridge", TURCA_B, pickup=1, chords="C,G7 C,G Am,E Am,E"),
     Part("Theme answer again", "verse", TURCA_A2, pickup=1, chords="Am E,Am Am,Dm E7,Am"),
     Part("Turkish march", "chorus", TURCA_C, pickup=1, chords="A D,E A E,A"),
     Part("March again", "chorus", TURCA_C, pickup=1, chords="A D,E A E,A"),

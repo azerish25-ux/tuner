@@ -20,7 +20,7 @@ Every row is mandatory. The "Current table" hints come from reading the shipped 
 | Units | સેન્ટ્સ; મિનિટ; સેકન્ડ; મિલિસેકન્ડ. Hz, BPM, ¢, XP unchanged |  |
 | Capitalization | No letter case; preserve brand spelling |  |
 | Note names in the interface | Runtime supplies note names; never invent them |  |
-| Note names in lessons (lesson languages only) | Not a lesson locale; preserve C, F♯, B♭, Em, G7 if referenced |  |
+| Note names in lessons (lesson languages only) | Lessons are required; preserve C, F♯, B♭, Em, G7 if referenced |  |
 | Sharp / flat / double sharp / double flat as words | શાર્પ / ફ્લૅટ / ડબલ શાર્પ / ડબલ ફ્લૅટ |  |
 | Tuning direction | નીચો / ઊંચો; not accidentals |  |
 | iOS Settings path (legal text) | સેટિંગ્સ › Apple એકાઉન્ટ › સબ્સ્ક્રિપ્શન. AI-reviewed; device verification pending |  |
@@ -109,13 +109,13 @@ Every row is mandatory. The "Current table" hints come from reading the shipped 
 | half step, whole step, interval, third, fifth, octave |  | lessons | `Octave` | અર્ધ સ્વર / પૂર્ણ સ્વર / સ્વરાંતર / તૃતીય / પંચમ / સપ્તક |  |
 | bar | A measure (bar 2 of the song); not a UI bar | UI 7, lessons 167 | `Bar %lld` | બાર |  |
 | beat, tempo, downbeat, count |  | UI 29, lessons 251 | `Tempo` | તાલ / ટેમ્પો / પ્રથમ તાલ / ગણતરી |  |
-| strum, downstroke, upstroke, chop, chunk, mute | Strumming and muted strokes | UI 21, lessons 120 | `Strum` | સ્ટ્રમ / નીચેનો સ્ટ્રોક / ઉપરનો સ્ટ્રોક / દબાવેલો સ્ટ્રોક / દબાવેલો સ્ટ્રોક / મ્યૂટ | A muted stroke is judged as muted, not as a miss. |
+| strum, downstroke, upstroke, chop, chunk, mute | Strumming and muted strokes | UI 21, lessons 120 | `Strum` | સ્ટ્રમ / નીચેનો સ્ટ્રોક / ઉપરનો સ્ટ્રોક / ચૉપ / દબાવેલો સ્ટ્રોક / મ્યૂટ | A muted stroke is judged as muted, not as a miss. |
 | pick | A plectrum, or picking strings; in UI often "choose" | UI 8, lessons 77 |  | પિક (plectrum); પસંદ કરો (choose); તાર વગાડો (picking) | Translate by sense; check `context`. |
 | fingerpicking, hammer-on, pull-off, slide, bend, vibrato | Techniques | lessons |  | ફિંગરપિકિંગ / હેમર-ઓન / પુલ-ઓફ / સ્લાઇડ / બેન્ડ / વાઇબ્રેટો | Use the terms guitar teachers in the language use; loanwords are fine where usual. |
 | bowing, open-string bowing | Violin and cello | lessons |  | બો વડે વગાડવું / ખુલ્લા તાર પર બો ચલાવવો |  |
 | tune (noun) | A melody ("an old fiddle tune") | lessons |  | ધૂન | Not the verb, not the tab. |
 | cadence, V chord, I–IV–V | Harmony | lessons |  | કેડન્સ / V કોર્ડ / I–IV–V | Roman numerals stay. |
-| pickup | Notes before the first full bar (anacrusis) | lessons |  | પ્રથમ આખા બાર પહેલાંના સ્વર |  |
+| pickup | Notes before the first full bar (anacrusis) | lessons |  | પિકઅપ — પ્રથમ આખા બાર પહેલાંના સ્વર |  |
 
 ### E. Song structure (section chips: `max_length` 12, or 1.5 × a longer English label)
 
@@ -158,7 +158,7 @@ Every row is mandatory. The "Current table" hints come from reading the shipped 
 | Songs | Course title, also the Songs tab | ગીતો |  |
 | Originals | Course of songs written for Timbre ("Timbre Originals") | મૌલિક ગીતો | Keep or translate: decide once. |
 | Standards & Classics | Course title | પ્રચલિત અને ક્લાસિક ગીતો |  |
-| Ukulele / Mandolin / Violin / Cello / Bass Songbook | Course titles | યુકુલેલે / મેન્ડોલિન / વાયોલિન / ચેલો / બાસ ગીતોની ચોપડી | `Songbook` key: de Liederbuch, fr Carnet de chansons (current). |
+| Ukulele / Mandolin / Violin / Cello / Bass Songbook | Course titles | યુકુલેલેની / મેન્ડોલિનની / વાયોલિનની / ચેલોની / બાસની ગીતોની ચોપડી | `Songbook` key: de Liederbuch, fr Carnet de chansons (current). |
 
 Song titles, the rule for this locale (fill one line each):
 
@@ -187,3 +187,38 @@ Write the translation that applies in Timbre, and the one GPT must avoid.
 | Next, Again, Slower | on-screen labels and also Siri command words (`ios/Timbre/Intents/PracticeIntents.swift`): one translation serves both | — | આગળ / ફરી / ધીમું | Use the sense above |
 | Practice | the tab and the activity | a medical or legal practice | પ્રેક્ટિસ | a medical or legal practice |
 | Feel | the haptic tuning feature, feeling the beat | emotions | કંપન અનુભવો (haptics; not emotion) | emotions |
+
+## 5. Lesson drafting decisions (2026-10-26)
+
+AI translation draft; not native-speaker certification. Preserve Latin note/chord notation and ASCII digit groups exactly. Ordinary instructional prose is Gujarati; quoted original sung-word locators and English mnemonic initials may remain when needed to explain the exercise. Translate the explanation, not the original lyrics. Retain original song names consistently in lesson titles and prose unless a well-established Gujarati title is documented; no invented local title. Exact notation-only strings and retained proper-title/author strings are held for independent invariant review, not altered with punctuation merely to defeat identity checks.
+
+Additional consistent lesson terms: note = સ્વર (a musical sound); pitch = સ્વરની ઊંચાઈ or પિચ where technical; rhythm = લય; beat = તાલ; rest = વિરામ; root = મૂળ સ્વર; major/minor = મેજર/માઇનર; palm mute = હથેળીથી મ્યૂટ કરવું; riff = રિફ; melody = ધૂન; bass line = બાસ લાઇન; groove = ગ્રૂવ; triplet = ત્રિપુટ; shuffle = શફલ; swing = સ્વિંગ; syncopation = સિન્કોપેશન; eighth note = એઇથ નોટ; quarter note = ક્વાર્ટર નોટ; half note = હાફ નોટ; whole note = હોલ નોટ. These are rhythmic durations, not ordinal pitch degrees; નોટ is feminine (plural નોટો). Duration rests use the same qualifier plus વિરામ, e.g. ક્વાર્ટર વિરામ. Keep અર્ધ/પૂર્ણ સ્વર for half/whole steps and preserve genuine scale-degree ordinals. Whole meaning the entire sustained sound, rather than the duration value, remains આખો સ્વર. Spelled-out quantities stay words; never introduce numeric fractions absent from the source.
+
+Further lesson distinctions: chop = ચૉપ (a clipped reggae/bluegrass chord), chunk = દબાવેલો સ્ટ્રોક (percussive ukulele strum); these related but distinct actions must not share an indistinguishable exercise label. triad = ત્રિસ્વરી કોર્ડ; inversion = ઉલટાવ; arpeggio = આર્પેજિયો; slur = સ્લર; tremolo = ટ્રેમોલો; trill = ટ્રિલ; down-bow/up-bow = ડાઉન-બો/અપ-બો; bow frog = ફ્રૉગ; fingerboard = ફિંગરબોર્ડ; natural = નૅચરલ; high/low second finger = ઊંચી/નીચી 2 when the source uses the digit. Interlude chip = મધ્ય વાદ્યભાગ.
+
+Source solfège syllable names (not source Latin pitch letters) are transliterated consistently: do/re/mi/fa/sol/la/ti = ડો/રે/મી/ફા/સોલ/લા/ટી; source si, if present, = સી. This localizes syllable names without converting C, D, E, etc. to solfège. Banjo alternating thumb = વારાફરતી અંગૂઠો; alternating thumb roll = વારાફરતી અંગૂઠાનો રોલ. Tonal “home” = મૂળ સ્વર / મૂળ સૂર / આધાર as context requires, not a literal house.
+
+Spelling: dominant = ડૉમિનન્ટ; perfect interval = પરફેક્ટ; unison = યુનિસન. Source solfège syllables remain Gujarati even before Gujarati postpositions (ડો થી may be written ડોથી; never Latin doથી). Original song titles such as Do Lord, if encountered, remain protected titles.
+
+Final lesson refinements: dotted = બિંદુવાળો (બિંદુવાળી with feminine નોટ); sixteenth note = સિક્સટીન્થ નોટ; seventh interval = સપ્તમ (chord quality remains સેવન્થ); note highway = સ્વરપથ; Pre-chorus chip = પૂર્વમુખડું; Last theme chip = અંતિમ ધૂન. Vocal warm-up syllables ah/da/loo = આ/દા/લૂ. Counting syllables e/and/a = ઈ/એન્ડ/અ and trip-let = ટ્રિપ-લેટ, distinct from preserved original sung-word locators. Rhythmic એન્ડ is one timed syllable; the ordinary prose/list conjunction remains અને. A sung syllable is ઉચ્ચારખંડ, not a written alphabetic letter. Breathe low = પેટ તરફ ઊંડો શ્વાસ લો. These are translation decisions, not native certification.
+
+Genre spelling: ballad = બૅલડ; Latin = લૅટિન. English staff mnemonics explain the relevant word initial in Gujarati without adding extra note tokens absent from the source.
+
+## Independent review integration — 2026-10-26
+
+Three exact, guarded terminology fragments from the independent review are applied once above. Rhythmic એન્ડ is distinct from the ordinary conjunction અને; duration names are distinct from pitch-step ordinals.
+
+## Separated source contexts — 6,082-key source
+
+The two source edits separate string enumeration from spoken rhythm, and a middle finger from a musical section. Use only the exact context below:
+
+| English source | Context | Translation |
+|---|---|---|
+| Strings: 1, 2, 3 and 4 | Ukulele string-number distractor | તાર: 1, 2, 3 અને 4 |
+| Middle section | Musical section, six arrangements | વચ્ચેનો ભાગ |
+| 1, 2, 3 and 4 | Spoken rhythm distractor | 1, 2, 3 એન્ડ 4 |
+| Middle | Middle finger, three banjo options | મધ્યમા |
+
+The 6,080-pair baseline review and the four-key context delta are distinct independent AI reviews, not a new blanket review or human/native certification of 6,082 pairs. The exact source-bound invariant decisions are now registered; author drafting notes above describe their historical hold. Runtime layout, RTL where relevant, audio and VoiceOver QA remain pending. Previously reviewed UI haptic wording is preserved.
+
+The historical `મધ્યમા` → `મધ્ય` neutralization is superseded by the split; retain the precise finger name `મધ્યમા`. Do not replay that old correction.

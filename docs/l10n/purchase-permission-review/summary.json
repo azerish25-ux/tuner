@@ -1,0 +1,41 @@
+{
+  "reviewed_rows": 1104,
+  "locales": 48,
+  "keys_per_locale": 23,
+  "source_map_count": 1104,
+  "rows_with_blinded_uncertainty_notes": 126,
+  "disposition_counts": {
+    "keep_equivalent": 977,
+    "keep_contextual": 125,
+    "correct_timing": 2
+  },
+  "corrections_recommended": 2,
+  "retained_rows": 1102,
+  "current_target_guard_matches": 1104,
+  "current_target_guard_mismatches": 0,
+  "tables_checked": 96,
+  "source_target_backtranslation_format_mismatches": 0,
+  "repository_changes_by_this_review": 0,
+  "head_at_review": "23a1caeb539d33f5c2e24cb000ffaf0867e84263",
+  "method": "All 1,104 source/back-translation pairs compared by the source-aware AI reviewer; source facts, periods, day boundaries, free-tier scopes, price/date placeholders and privacy negatives compared. All current target values mechanically checked against snapshots. Target-language uncertainty rows and source usage contexts reviewed, with selected primary references resolving terminology. This is the source-aware stage, not a new blinded translation.",
+  "limits": [
+    "AI linguistic QA only; no native-speaker or human certification.",
+    "No legal-policy rewrite, legal sufficiency/compliance conclusion, or test that actual platform subscription rules match the source.",
+    "Source strings and actual code context are the equivalence baseline; this review does not certify on-device audio implementation.",
+    "No UI rendering, device menu navigation or runtime StoreKit purchase executed.",
+    "Recommended corrections are guarded proposals, not applied repository edits."
+  ],
+  "blocking_actions": [],
+  "correction_ids": [
+    "de-Q011",
+    "lt-Q011"
+  ],
+  "artifact_files": [
+    "corrections.json",
+    "row-dispositions.json",
+    "row-dispositions.jsonl",
+    "source-evidence.json",
+    "guard-validation.json",
+    "conclusion.md"
+  ]
+}

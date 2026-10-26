@@ -7,7 +7,8 @@ permissions:
   contents: read
 concurrency:
   group: localization-matrix-${{ github.ref }}
-  cancel-in-progress: false
+  # A newer explicit matrix request supersedes stale queued/running tests; ordinary checkpoints do not.
+  cancel-in-progress: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[l10n-matrix]') }}
 jobs:
   localized-launch:
     if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[l10n-matrix]')
@@ -58,6 +59,8 @@ jobs:
             -derivedDataPath ios/build/l10n -parallel-testing-enabled NO \
             -only-testing:TimbreUITests/LocalizationMatrixUITests \
             -resultBundlePath ci-out/Localization.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/test.log
+          python3 tools/l10n/matrix_fixture.py --locales "$TIMBRE_L10N_MATRIX" \
+            --out ios/TimbreUITests/LocalizationWelcomeExpected.json --verify-log ci-out/test.log
           IFS=',' read -ra LOCALES <<< "$TIMBRE_L10N_MATRIX"
           for locale in "${LOCALES[@]}"; do
             grep -Fx "TIMBRE_L10N_MATRIX_TESTED $locale" ci-out/test.log >/dev/null || {

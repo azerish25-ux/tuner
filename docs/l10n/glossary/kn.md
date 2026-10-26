@@ -20,7 +20,7 @@ Every row is mandatory. The "Current table" hints come from reading the shipped 
 | Units | ಸೆಂಟ್ಸ್; ನಿಮಿಷ; ಸೆಕೆಂಡ್; ಮಿಲಿಸೆಕೆಂಡ್. Hz, BPM, ¢, XP unchanged |  |
 | Capitalization | No case; preserve brand spelling |  |
 | Note names in the interface | Notes supplied by runtime; do not invent them |  |
-| Note names in lessons (lesson languages only) | Not a lesson locale; preserve C, F♯, B♭, Em, G7 if referenced |  |
+| Note names in lessons (lesson languages only) | Lessons are required; preserve C, F♯, B♭, Em, G7 if referenced |  |
 | Sharp / flat / double sharp / double flat as words | ಶಾರ್ಪ್ / ಫ್ಲಾಟ್ / ಡಬಲ್ ಶಾರ್ಪ್ / ಡಬಲ್ ಫ್ಲಾಟ್ |  |
 | Tuning direction | ಕಡಿಮೆ / ಹೆಚ್ಚು for tuner direction; existing flat/sharp loan labels may remain as refs |  |
 | iOS Settings path (legal text) | ಸೆಟ್ಟಿಂಗ್‌ಗಳು › Apple ಖಾತೆ › ಚಂದಾದಾರಿಕೆಗಳು. AI-reviewed; device verification pending |  |
@@ -187,3 +187,68 @@ Write the translation that applies in Timbre, and the one GPT must avoid.
 | Next, Again, Slower | on-screen labels and also Siri command words (`ios/Timbre/Intents/PracticeIntents.swift`): one translation serves both | — | ಮುಂದೆ / ಮತ್ತೆ / ನಿಧಾನವಾಗಿ | Use the sense above |
 | Practice | the tab and the activity | a medical or legal practice | ಅಭ್ಯಾಸ | a medical or legal practice |
 | Feel | the haptic tuning feature, feeling the beat | emotions | ಕಂಪನ ಅನುಭವಿಸಿ (haptics; not emotion) | emotions |
+
+## 5. Lesson translation decisions (2026-10-26)
+
+- Lesson prose uses polite Kannada imperatives and the terminology above; Latin technical notation remains exact.
+- Traditional song titles remain in their original English spelling where no established Kannada title is documented. The same retained title is used in titles and prose. Timbre Originals also retain their English titles.
+- An English string consisting entirely of a retained song/person name or music notation is held for independent, key-specific invariant review; typography or filler must not be added to evade identity checks.
+- English mnemonic initial words are quoted when those initials teach note names, with the surrounding instruction in Kannada. Sung-word quiz targets may remain quoted in English because the lyrics themselves are not translated.
+- Half step is ಅರ್ಧ ಸ್ವರ, whole step is ಪೂರ್ಣ ಸ್ವರ, root note is ಮೂಲ ಸ್ವರ, muted is ಮ್ಯೂಟ್ ಮಾಡಿದ. Finger numbering and all literal ASCII digits are preserved exactly.
+- These are AI translation decisions only; native-speaker review and on-device layout/audio QA remain pending.
+
+## Lesson terminology additions
+
+AI translation decisions only; native review and device QA pending. Integrated with the reviewed lesson baseline; the frozen author supplement remains unchanged.
+
+| English | Kannada | Meaning |
+|---|---|---|
+| whole note | ಪೂರ್ಣ ನೋಟು | Rhythmic duration, not whole-step interval |
+| half note | ಅರ್ಧ ನೋಟು | Rhythmic duration, not half-step interval |
+| quarter note | ಕಾಲು ನೋಟು | Rhythmic duration |
+| eighth note | ಎಂಟನೇ ನೋಟು | Rhythmic duration |
+| sixteenth note | ಹದಿನಾರನೇ ನೋಟು | Rhythmic duration |
+| triad | ತ್ರಿಸ್ವರಮೇಳ | Root, third and fifth |
+| inversion | ವ್ಯುತ್ಕ್ರಮ | Same chord tones in a different register order |
+| arpeggio | ಅರ್ಪೆಜಿಯೊ | Chord tones sounded separately |
+| fret hand | ಫ್ರೆಟ್ ಕೈ / ಫ್ರೆಟ್ ಹಿಡಿಯುವ ಕೈ | Hand fretting the strings |
+| down-bow / up-bow | ಡೌನ್-ಬೋ / ಅಪ್-ಬೋ | Bow directions, explained in lessons |
+| rosin | ರೋಸಿನ್ | Resin used on bow hair |
+| re-entrant tuning | ರೀ-ಎಂಟ್ರಂಟ್ ಟ್ಯೂನಿಂಗ್ | Ukulele high G tuning |
+| note highway | ಸ್ವರಗಳ ಪಥ | Play-along note display |
+| walking bass | ವಾಕಿಂಗ್ ಬಾಸ್ | Bass line with a new note each beat |
+| chord melody | ಸ್ವರಮೇಳ ಧಾಟಿ | Melody drawn from held chords |
+| fill | ತುಂಬುಸ್ವರಗಳು | Notes filling the melody's gaps |
+| course (mandolin string pair) | ಜೋಡಿ / ತಂತಿ ಜೋಡಿ | Not ಕೋರ್ಸ್ in curriculum sense |
+| tremolo | ಟ್ರೆಮೊಲೊ | Fast repeated picking, not vibrato |
+
+Traditional and original song names remain English. “Minuet in G” is retained as its song title, while generic references to the minuet dance may use ಮಿನುಯೆಟ್. “The Saints”, “Twinkle”, “Cabbage” and “Au clair” are source-authorized shortened song references; their prose descriptors are translated without expanding or altering note symbols.
+
+## Independent Kannada terminology decisions
+
+Authority: frozen `frozen-author-inputs/kn/final-snapshot/glossary-proposed.md` (SHA256 `7e228fc843225fb52cc3f2c0e403f0e360d69a98639722c0647e9738bee17a78`), confirmed by translator. Integrated alongside the independently reviewed lesson baseline; the frozen author glossary remains unchanged.
+
+- Whole/half/quarter/eighth/sixteenth **durations** remain ಪೂರ್ಣ/ಅರ್ಧ/ಕಾಲು/ಎಂಟನೇ/ಹದಿನಾರನೇ **ನೋಟು**. Half/whole pitch steps remain ಅರ್ಧ/ಪೂರ್ಣ **ಸ್ವರ**. Keep octave/register distinctions.
+- Spoken rhythmic **and** → **ಅಂಡ್**, subdivision **e** → **ಈ**, **a** → **ಅ**. Do not replace ordinary prose/list conjunction **ಮತ್ತು**. Preserve source digit-vs-written-number style: `1 e and a` → `1 ಈ ಅಂಡ್ ಅ`; `One-e-and-a` → `ಒಂದು-ಈ-ಅಂಡ್-ಅ`. This retains protected numeric guards without waivers.
+- Picking direction **upstroke/downstroke** → **ಮೇಲ್ಮುಖ/ಕೆಳಮುಖ ಸ್ಟ್ರೋಕ್** where the old upper/lower-location adjective could mislead. Upper/high strings and lower pitches remain their own concepts.
+- Open string means a string played without fretting; quiz answer **Open** → **ತೆರೆದ ತಂತಿ**, not the adverb ತೆರೆದಂತೆ.
+- A “dry” chord sounds briefly then stops; **ನಾದ ಉಳಿಯದಂತೆ**, not ನಾದವಿಲ್ಲದೆ (silent).
+- Finger **Middle** → **ಮಧ್ಯದ ಬೆರಳು**; musical **Middle section** → **ಮಧ್ಯಭಾಗ** only after the source-key split. Never force a universal translation across the original mixed-sense key.
+- Sung words (German, Latin or English), syllable divisions and mnemonic Latin initials are performance/recognition referents, not prose to be semantically translated. Kannada explanatory framing stays translated. Exact source-bound evidence is in `sung-word-and-mnemonic-evidence.json`.
+- Generic dance/section descriptors remain translated even where named song/composition titles are retained. Source-shortened `Largo`, `Danny Boy`, `Toreador Song` are approved only for their enumerated musical-work contexts.
+
+AI semantic decisions only; no human/native-speaker or device certification.
+
+
+## Separated source contexts — 6,082-key source
+
+The two source edits separate string enumeration from spoken rhythm, and a middle finger from a musical section. Use only the exact context below:
+
+| English source | Context | Translation |
+|---|---|---|
+| Strings: 1, 2, 3 and 4 | Ukulele string-number distractor | ತಂತಿಗಳು: 1, 2, 3 ಮತ್ತು 4 |
+| Middle section | Musical section, six arrangements | ಮಧ್ಯಭಾಗ |
+| 1, 2, 3 and 4 | Spoken rhythm distractor | 1, 2, 3 ಅಂಡ್ 4 |
+| Middle | Middle finger, three banjo options | ಮಧ್ಯದ ಬೆರಳು |
+
+The 6,080-pair baseline review and the four-key context delta are distinct independent AI reviews, not a new blanket review or human/native certification of 6,082 pairs. The exact source-bound invariant decisions are now registered; author drafting notes above describe their historical hold. Runtime layout, RTL where relevant, audio and VoiceOver QA remain pending. Previously reviewed UI haptic wording is preserved.

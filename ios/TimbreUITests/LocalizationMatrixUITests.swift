@@ -1,6 +1,6 @@
 import XCTest
 
-/// Opt-in per-language welcome and tab checks, with screenshots of the actual application.
+/// Opt-in per-language welcome, tab and imported-lesson checks, with screenshots of the actual application.
 final class LocalizationMatrixUITests: XCTestCase {
     private var app: XCUIApplication?
 
@@ -53,6 +53,12 @@ final class LocalizationMatrixUITests: XCTestCase {
             }
             capture(application, name: "l10n-\(language)-tuner")
             if language == "bg" { try assertInstrumentFits(application) }
+            if labels["lesson_status"] == "available" {
+                try assertLocalizedLesson(application, language: language, labels: labels)
+            } else {
+                XCTAssertEqual(labels["lesson_status"], "pending", "Unknown lesson fixture status")
+                print("TIMBRE_L10N_LESSON_PENDING \(language)")
+            }
             application.terminate()
             if language == "bg" {
                 application.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
@@ -65,6 +71,39 @@ final class LocalizationMatrixUITests: XCTestCase {
             }
             print("TIMBRE_L10N_MATRIX_TESTED \(language)")
         }
+    }
+
+    /// Exercise the real Learn route using the phone-language launch arguments, not a manual language override.
+    private func assertLocalizedLesson(_ app: XCUIApplication, language: String, labels: [String: String]) throws {
+        app.tabBars.firstMatch.buttons[try XCTUnwrap(labels["learn"])].tap()
+        let node = app.descendants(matching: .any).matching(identifier: "learn.lesson.gtr-1-1").firstMatch
+        _ = node.waitForExistence(timeout: 5)
+        // A fresh Learn tab starts above the path: reveal the first unit below the course and Continue cards.
+        for _ in 0..<8 where !node.isHittable { app.swipeUp(velocity: .slow) }
+        XCTAssertTrue(node.isHittable, "\(language): first guitar lesson cannot be opened")
+        node.tap()
+        let close = app.descendants(matching: .any).matching(identifier: "lesson.close").firstMatch
+        XCTAssertTrue(close.waitForExistence(timeout: 20))
+        for field in ["lesson_title", "lesson_heading", "lesson_body"] {
+            let value = try XCTUnwrap(labels[field])
+            // LessonHeader hides its children and supplies its own label, so the title need not be a StaticText.
+            let query = field == "lesson_title" ? app.descendants(matching: .any) : app.staticTexts
+            let text = query.matching(NSPredicate(format: "label == %@", value)).firstMatch
+            if field != "lesson_title" {
+                // Long translations can put the explanation below the fold; reveal it before requiring existence.
+                for _ in 0..<4 where !text.isHittable { app.swipeUp(velocity: .slow) }
+            }
+            XCTAssertTrue(text.waitForExistence(timeout: 15), "\(language): missing localized \(field)")
+            XCTAssertTrue(text.isHittable, "\(language): localized \(field) is not visible")
+        }
+        capture(app, name: "l10n-\(language)-lesson")
+        close.tap()
+        XCTAssertTrue(close.waitForNonExistence(timeout: 15), "\(language): lesson did not close")
+        let tune = app.tabBars.firstMatch.buttons[try XCTUnwrap(labels["tune"])]
+        XCTAssertTrue(tune.waitForExistence(timeout: 15))
+        tune.tap() // Keep the subsequent accessibility-size tuner launch on the same tab.
+        XCTAssertTrue(app.buttons["tune.instrument"].waitForExistence(timeout: 15), "\(language): tuner did not reopen")
+        print("TIMBRE_L10N_LESSON_TESTED \(language)")
     }
 
     private func assertInstrumentFits(_ app: XCUIApplication) throws {

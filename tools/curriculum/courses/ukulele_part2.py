@@ -343,7 +343,7 @@ UNIT_9 = unit("uke-9", "Fingerpicking and chord melody", "One finger per string,
     lesson("uke-9-6", "Challenge: fingerpicking", [
         explain("Fingers, thumb and tune", "No new ideas: one finger per string, the out-and-back roll, the alternating thumb "
                 "and the melody inside the chord."),
-        quiz("Thumb, index, middle, ring play which strings?", ["1, 2, 3 and 4", "3, 4, 1 and 2", "4, 3, 2 and 1"], 2),
+        quiz("Thumb, index, middle, ring play which strings?", ["Strings: 1, 2, 3 and 4", "3, 4, 1 and 2", "4, 3, 2 and 1"], 2),
         held([(spec, pattern(spec, ROLL, 0.5)) for spec in ROLLS], bpm=69, beats_per_bar=3, title="A minor, F, C, G7"),
         held([(C, pattern(C, ALTERNATE, 0.5)), (G7, pattern(G7, ALTERNATE, 0.5))] * 2, bpm=72, title="C to G7"),
         along(U, f"r:2 {AG}", bpm=76, beats_per_bar=3, title="Amazing Grace"),

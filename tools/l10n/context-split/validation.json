@@ -1,0 +1,140 @@
+{
+  "date": "2026-10-26",
+  "scope": "Actual live context split and reviewed Gu/Ta/Kn import; independent AI review, not human/native or device certification",
+  "checks": [
+    {
+      "command": "python3 -m unittest discover -s tools/l10n/tests -p 'test_*.py'",
+      "status": "passed",
+      "tests": 94
+    },
+    {
+      "command": "python3 -m unittest discover -s tools/l10n/tests -p 'test_context_split.py'",
+      "status": "passed",
+      "tests": 17
+    },
+    {
+      "command": "python3 tools/l10n/context_split.py",
+      "status": "passed",
+      "result": {
+        "status": "applied migration verified",
+        "source_keys": 6082,
+        "locales": 17,
+        "added_pairs": 34,
+        "count_fixes": 6,
+        "retains": 28,
+        "changed_localized_objects": 7,
+        "nonlocalized_data_unchanged": true,
+        "device_qa": "pending"
+      }
+    },
+    {
+      "command": "python3 tools/curriculum/build.py --check",
+      "status": "passed"
+    },
+    {
+      "command": "python3 tools/verify-ios-resources.py",
+      "status": "passed"
+    },
+    {
+      "command": "python3 tools/l10n/report.py --check --strict",
+      "status": "passed",
+      "note": "Handoff consistency; not full translation coverage"
+    },
+    {
+      "command": "python3 tools/l10n/critical.py --strict",
+      "status": "passed",
+      "legal_permission_voiceover_gaps": 0,
+      "locales": 48
+    },
+    {
+      "command": "python3 tools/l10n/lessons.py",
+      "status": "passed_report_only",
+      "complete_locales": [
+        "ar",
+        "bn",
+        "de",
+        "es",
+        "fa",
+        "fr",
+        "gu",
+        "hi",
+        "it",
+        "ja",
+        "kn",
+        "ko",
+        "pt",
+        "ru",
+        "ta",
+        "ur",
+        "zh-CN"
+      ],
+      "required_targets": 48,
+      "unresolved_pairs": 188542
+    },
+    {
+      "command": "python3 tools/l10n/lessons.py --strict",
+      "status": "failed_expected_incomplete_coverage",
+      "exit_code": 1,
+      "unresolved_pairs": 188542
+    },
+    {
+      "command": "python3 tools/l10n/staged/verify.py",
+      "status": "passed",
+      "frozen_source_keys": 6080,
+      "manifest_files_verified": 114,
+      "archive_changed": false
+    },
+    {
+      "command": "python3 tools/ci/test_hygiene.py",
+      "status": "passed",
+      "tests": 25
+    },
+    {
+      "command": "python3 tools/ci/comment_hygiene.py",
+      "status": "passed",
+      "note": "Existing warning-level design-rule notices remain; no new error-level occurrences"
+    },
+    {
+      "command": "swift test --package-path ios --parallel",
+      "status": "not_run_tool_unavailable",
+      "exit_code": 127,
+      "reason": "swift: command not found"
+    },
+    {
+      "check": "ICU ubidi_setPara/writeReordered option0 diagnostics",
+      "status": "passed",
+      "cases": 26,
+      "live_targets_bound": true,
+      "device_proof": false
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "mode": "read-only"
+    },
+    {
+      "check": "Read-only diff inventory",
+      "status": "passed",
+      "frozen_staged_changed_paths": 0,
+      "curriculum_authoring_files_changed": 2,
+      "authoring_lines_replaced": 2,
+      "parent_owned_de_lt_UI_changes_excluded": true
+    }
+  ],
+  "known_layout_warnings": [
+    {
+      "locale": "kn",
+      "key": "L8a28d3c1df",
+      "codepoints": 46,
+      "max_length_hint": 42
+    },
+    {
+      "locale": "kn",
+      "key": "Lb1a60a5698",
+      "codepoints": 44,
+      "max_length_hint": 42
+    }
+  ],
+  "runtime_qa": "pending",
+  "publication": "parent-owned; not performed by this integration task"
+}

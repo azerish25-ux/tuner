@@ -1,0 +1,38 @@
+[
+  {
+    "id": "de-Q011",
+    "locale": "de",
+    "path": "ios/Timbre/Resources/de.lproj/Localizable.strings",
+    "table": "Localizable.strings",
+    "key": "Cancel anytime in Settings before day %lld.",
+    "source": "Cancel anytime in Settings before day %lld.",
+    "old": "Bis Tag %lld jederzeit in den Einstellungen kündbar.",
+    "new": "Vor Tag %lld jederzeit in den Einstellungen kündbar.",
+    "reason": "Bis Tag expresses an until/up-to boundary and does not preserve the source’s exclusive before-day deadline. Replace only Bis with Vor.",
+    "source_context": "PaywallView.swift:1174–1184 uses selectedTrialDays (fallback 14) and only shows the note with the trial timeline when reminders are blocked; the spoken timeline uses the same string at line 1319.",
+    "severity": "deadline_meaning",
+    "reference_ids": [],
+    "expected_old_guard_passed": true,
+    "application_status": "recommended_not_applied",
+    "proposed_back_translation": "Cancelable at any time in Settings before day %lld."
+  },
+  {
+    "id": "lt-Q011",
+    "locale": "lt",
+    "path": "ios/Timbre/Resources/lt.lproj/Localizable.strings",
+    "table": "Localizable.strings",
+    "key": "Cancel anytime in Settings before day %lld.",
+    "source": "Cancel anytime in Settings before day %lld.",
+    "old": "Atšaukite bet kada nustatymuose prieš %lld d.",
+    "new": "Atšaukite bet kada nustatymuose prieš prasidedant %lld dienai.",
+    "reason": "The abbreviation in prieš %lld d. permits a duration/ago reading rather than a numbered trial day. The replacement says before day %lld begins, preserving the exclusive boundary without a fixed numeral-dependent ordinal suffix.",
+    "source_context": "PaywallView.swift:1174–1184 uses selectedTrialDays (fallback 14) and only shows the note with the trial timeline when reminders are blocked; the spoken timeline uses the same string at line 1319.",
+    "severity": "deadline_meaning",
+    "reference_ids": [
+      "lt-numerals"
+    ],
+    "expected_old_guard_passed": true,
+    "application_status": "recommended_not_applied",
+    "proposed_back_translation": "Cancel at any time in settings before day %lld begins."
+  }
+]

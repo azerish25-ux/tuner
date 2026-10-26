@@ -1,0 +1,72 @@
+{
+  "bg-account": {
+    "title": "Apple Support: Apple регистрация",
+    "url": "https://support.apple.com/bg-bg/guide/iphone/iph76e54c61e/27/ios/27",
+    "evidence": "Apple itself uses Apple регистрация for Apple Account in Bulgarian.",
+    "type": "first-party platform terminology",
+    "retrieval": "web search result"
+  },
+  "sw-chord1": {
+    "title": "Mtayarishaji: Nadharia ya Muziki",
+    "url": "https://mtayarishaji.blogspot.com/2012/08/nadharia-ya-muziki.html",
+    "evidence": "The music lesson uses kodi for minor, major, augmented and diminished chords.",
+    "type": "primary music teaching text",
+    "retrieval": "opened and searched, lines 77–78"
+  },
+  "sw-chord2": {
+    "title": "Malyz Music: Maana ya Muziki",
+    "url": "https://malyzmusic.blogspot.com/2018/02/maana-ya-muziki.html",
+    "evidence": "The music explanation pairs Kodi kuu with Major chord and kodi ndogo with Minor chord.",
+    "type": "primary music teaching text",
+    "retrieval": "opened and searched, line 17"
+  },
+  "sw-renew": {
+    "title": "Google/YouTube Help: Kujiunga na YouTube Premium",
+    "url": "https://support.google.com/youtube/answer/16475192?hl=sw",
+    "evidence": "The provider uses husasishwa for monthly subscription renewal and contrasts prepaid plans that do not renew automatically.",
+    "type": "first-party subscription terminology",
+    "retrieval": "opened and searched, lines 27–36"
+  },
+  "sw-autorenew": {
+    "title": "Google Play Console Help: Kuandaa na kudhibiti usajili",
+    "url": "https://support.google.com/googleplay/android-developer/answer/140504?hl=sw-KE",
+    "evidence": "The provider uses usajili wa kusasishwa kiotomatiki for automatically renewing subscriptions.",
+    "type": "first-party subscription terminology",
+    "retrieval": "indexed search excerpt; direct open cache miss"
+  },
+  "th-pitch": {
+    "title": "DLTV music teaching: ระดับเสียง (pitch)",
+    "url": "https://dltv.ac.th/utils/files/download/38495",
+    "evidence": "The official teaching material defines ระดับเสียง as musical pitch and relates it to frequency and octave.",
+    "type": "primary educational material",
+    "retrieval": "indexed search excerpt; direct open inaccessible"
+  },
+  "ta-chord": {
+    "title": "ஆனந்தி: இளையராஜா-மனதில் புகுந்த மந்திர நொடிகள்",
+    "url": "https://ananthi5.blogspot.com/2010/12/blog-post.html?showComment=1291780328440",
+    "evidence": "The original Tamil music appreciation text explicitly glosses கார்டு as chord. This establishes contextual loanword use, not a universal style rule.",
+    "type": "primary authored music discussion",
+    "retrieval": "indexed search excerpt; base URL open cache miss"
+  },
+  "te-chord": {
+    "title": "కొడవటిగంటి రోహిణీప్రసాద్: శ్రుతిమించిన రాగం",
+    "url": "https://eemaata.com/em/issues/200005/775.html",
+    "evidence": "The musician/author explicitly pairs కార్డ్ with chord while discussing guitar and piano accompaniment.",
+    "type": "primary authored music discussion",
+    "retrieval": "opened and searched, line 54"
+  },
+  "lv-case": {
+    "title": "Latvian literary dictionary: klausīties",
+    "url": "https://llvv.tezaurs.lv/klaus%C4%ABties%3A1",
+    "evidence": "The dictionary gives both transitive accusative and intransitive locative constructions. A locative after klausīties is not automatically a grammar error.",
+    "type": "primary dictionary",
+    "retrieval": "indexed entry including both constructions"
+  },
+  "lt-numerals": {
+    "title": "Lithuanian Fire and Rescue Department: Graphic signs and numeral writing",
+    "url": "https://pagd.lrv.lt/public/canonical/1767165343/7795/Kai%2520kuri%25C5%25B3%2520grafini%25C5%25B3%2520%25C5%25BEenkl%25C5%25B3%2520ir%2520skaitmen%25C5%25B3%2520ra%25C5%25A1ymo%2520ypatyb%25C4%2597s.%25202025%2520m..pdf",
+    "evidence": "The style note allows bare Arabic numeral notation for numbered days (example 17 diena); attached ordinal endings are optional and depend on the numeral. The proposed wording avoids a fixed suffix that could fail for day 3.",
+    "type": "primary official language/style guidance, not legal-policy advice",
+    "retrieval": "opened PDF text, page 5, lines 228–243"
+  }
+}

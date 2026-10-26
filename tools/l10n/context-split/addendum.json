@@ -1,0 +1,755 @@
+{
+  "status": "CHECKED_AI_DELTA_PROPOSAL_NOT_APPLIED",
+  "operations": [
+    {
+      "locale": "ta",
+      "table": "Learn.strings",
+      "key": "Lf94a998e29",
+      "source": "Strings: 1, 2, 3 and 4",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "தந்திகள்: 1, 2, 3 மற்றும் 4",
+      "reviewer_evidence_paths": [
+        "docs/l10n/staged/context-split/tamil-reviewer-supplement.json",
+        "docs/l10n/staged/ta/evidence/first-half/blockers.json",
+        "docs/l10n/staged/ta/evidence/later-half/blockers.json"
+      ],
+      "old_sha256": null,
+      "source_sha256": "a9c0f5eaf3a697599b3602ce970b13b1f3fbfa5800b0f02cee313043a39f4d1a",
+      "new_sha256": "3109a9c29b2f9d3e19be210ca5bf715374357184f105f254765b62d0df240e99",
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "9e4b4aa71f0946fd423335ea3b9cca7e0fd0eecf86eadabbebfddcb2373f1965"
+      },
+      "before_context_pointers": [],
+      "context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0"
+      ],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "frozen-author-inputs/ta/frozen-final/all-6080-rows.json",
+      "baseline_evidence_sha256": "a6659c724240b1b58b92564e4bbd2a7fb204e6c1c70319085a03384283ea8aad",
+      "absence_guard": true,
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 27,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "தந்திகள் is instrument strings; மற்றும் stays an ordinary list conjunction.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly.",
+      "pending_context_blocker": "PENDING_SOURCE_MIGRATION_AND_LOCALE_INTEGRATION; do not mark the original frozen6080 blocker resolved until the owner verifies the migrated source, exact locale values and all contexts.",
+      "original_frozen_baseline_changed": false
+    },
+    {
+      "locale": "ta",
+      "table": "Learn.strings",
+      "key": "L4f162aedb4",
+      "source": "Middle section",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "நடுப்பகுதி",
+      "reviewer_evidence_paths": [
+        "docs/l10n/staged/context-split/tamil-reviewer-supplement.json",
+        "docs/l10n/staged/ta/evidence/first-half/blockers.json",
+        "docs/l10n/staged/ta/evidence/later-half/blockers.json"
+      ],
+      "old_sha256": null,
+      "source_sha256": "3bb8d1b80c1fb7c14b7404bf6e3c408d1f07d8022175ee18f2667497b875255f",
+      "new_sha256": "53ca25e6e56e988efd79dbd927e4f3dcb3f1ad3a5bbdc011fc2555fe6e99f8cd",
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 6,
+        "sha256": "db09e78b892d85ae906ed36688dc53395da72b1066ee85a473996f26724ab439"
+      },
+      "before_context_pointers": [],
+      "context_pointers": [
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "required_after_context_count": 6,
+      "baseline_evidence_path": "frozen-author-inputs/ta/frozen-final/all-6080-rows.json",
+      "baseline_evidence_sha256": "a6659c724240b1b58b92564e4bbd2a7fb204e6c1c70319085a03384283ea8aad",
+      "absence_guard": true,
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 10,
+      "field_length_hint": 21,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "நடுப்பகுதி is middle section, already reviewed for The middle section; never substitute the finger name.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly.",
+      "pending_context_blocker": "PENDING_SOURCE_MIGRATION_AND_LOCALE_INTEGRATION; do not mark the original frozen6080 blocker resolved until the owner verifies the migrated source, exact locale values and all contexts.",
+      "original_frozen_baseline_changed": false
+    },
+    {
+      "locale": "ta",
+      "table": "Learn.strings",
+      "key": "Lf6586312d9",
+      "source": "1, 2, 3 and 4",
+      "operation": "replace_if_exact",
+      "old": "1, 2, 3 மற்றும் 4",
+      "new": "1, 2, 3 அண்ட் 4",
+      "reviewer_evidence_paths": [
+        "docs/l10n/staged/context-split/tamil-reviewer-supplement.json",
+        "docs/l10n/staged/ta/evidence/first-half/blockers.json",
+        "docs/l10n/staged/ta/evidence/later-half/blockers.json"
+      ],
+      "old_sha256": "08dbdb5e33ec69cee57e0ec6689dc89df68ea017726969a7304045e02d83f804",
+      "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+      "new_sha256": "a14410ee9a014069a28b245d9aea672b3c6a7d3c7316754ed84ca027a7b7dda3",
+      "before_context_signature": {
+        "count": 2,
+        "sha256": "8c8365b70d4e43b3eb48a6735f8787002db35e7063763ea26b9a441bb0e52b8a"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "11769cf0fb2cc1339adfaba63d4ad896072ae6c30380d13bdd2cdba22fdf6851"
+      },
+      "before_context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0",
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "context_pointers": [
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "frozen-author-inputs/ta/frozen-final/all-6080-rows.json",
+      "baseline_evidence_sha256": "a6659c724240b1b58b92564e4bbd2a7fb204e6c1c70319085a03384283ea8aad",
+      "absence_guard": null,
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 15,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "அண்ட் is the reviewed spoken offbeat; both frozen sibling quiz counts already use அண்ட். Apply only after ukulele list moves to the new key.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly.",
+      "pending_context_blocker": "PENDING_SOURCE_MIGRATION_AND_LOCALE_INTEGRATION; do not mark the original frozen6080 blocker resolved until the owner verifies the migrated source, exact locale values and all contexts.",
+      "original_frozen_baseline_changed": false
+    },
+    {
+      "locale": "ta",
+      "table": "Learn.strings",
+      "key": "Lced02810fc",
+      "source": "Middle",
+      "operation": "retain",
+      "old": "நடுவிரல்",
+      "new": "நடுவிரல்",
+      "reviewer_evidence_paths": [
+        "docs/l10n/staged/context-split/tamil-reviewer-supplement.json",
+        "docs/l10n/staged/ta/evidence/first-half/blockers.json",
+        "docs/l10n/staged/ta/evidence/later-half/blockers.json"
+      ],
+      "old_sha256": "1c8031a8ef2f71d4916513e82689d9d0d899c1956ef8603bd9ece4a2f8adc489",
+      "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+      "new_sha256": "1c8031a8ef2f71d4916513e82689d9d0d899c1956ef8603bd9ece4a2f8adc489",
+      "before_context_signature": {
+        "count": 9,
+        "sha256": "521e0089fe3ee95645f0469b8051b400acb7e31c4a20d55be78aac0a333c5d8d"
+      },
+      "required_after_context_signature": {
+        "count": 3,
+        "sha256": "1161746d9b9764743afcb91553fd88d64df65ae8cff1eb2c2260ad89a3af3cda"
+      },
+      "before_context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1",
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1"
+      ],
+      "required_after_context_count": 3,
+      "baseline_evidence_path": "frozen-author-inputs/ta/frozen-final/all-6080-rows.json",
+      "baseline_evidence_sha256": "a6659c724240b1b58b92564e4bbd2a7fb204e6c1c70319085a03384283ea8aad",
+      "absence_guard": null,
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 8,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "நடுவிரல் explicitly names the middle finger and remains correct for the three retained quiz choices.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly.",
+      "pending_context_blocker": "PENDING_SOURCE_MIGRATION_AND_LOCALE_INTEGRATION; do not mark the original frozen6080 blocker resolved until the owner verifies the migrated source, exact locale values and all contexts.",
+      "original_frozen_baseline_changed": false
+    },
+    {
+      "locale": "gu",
+      "table": "Learn.strings",
+      "key": "Lf94a998e29",
+      "source": "Strings: 1, 2, 3 and 4",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "તાર: 1, 2, 3 અને 4",
+      "reviewer_evidence_paths": [
+        "docs/l10n/staged/gu/evidence/first-half/shared-context-split.json",
+        "docs/l10n/staged/gu/evidence/later-half/shared-source-references.json",
+        "docs/l10n/staged/gu/evidence/later-half/corrections.json"
+      ],
+      "old_sha256": null,
+      "source_sha256": "a9c0f5eaf3a697599b3602ce970b13b1f3fbfa5800b0f02cee313043a39f4d1a",
+      "new_sha256": "59f59430127154901c3fb982a14d38bc46119cc7b36e1e430f70eac83e1acd99",
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "9e4b4aa71f0946fd423335ea3b9cca7e0fd0eecf86eadabbebfddcb2373f1965"
+      },
+      "before_context_pointers": [],
+      "context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0"
+      ],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "frozen-author-inputs/gu/gu.final-todo.json",
+      "baseline_evidence_sha256": "278d724d2d5099f255e5bd3d7310f26d9820a43806e12231bada31c64cfab78a",
+      "absence_guard": true,
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 18,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "તાર is the instrument-string term and agrees with the reviewed prompt કયા તાર and String 1 = તાર 1; અને remains an ordinary list conjunction.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly.",
+      "pending_context_blocker": "PENDING_SOURCE_MIGRATION_AND_LOCALE_INTEGRATION; do not mark the original frozen6080 blocker resolved until the owner verifies the migrated source, exact locale values and all contexts.",
+      "original_frozen_baseline_changed": false
+    },
+    {
+      "locale": "gu",
+      "table": "Learn.strings",
+      "key": "L4f162aedb4",
+      "source": "Middle section",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "વચ્ચેનો ભાગ",
+      "reviewer_evidence_paths": [
+        "docs/l10n/staged/gu/evidence/first-half/shared-context-split.json",
+        "docs/l10n/staged/gu/evidence/later-half/shared-source-references.json",
+        "docs/l10n/staged/gu/evidence/later-half/corrections.json"
+      ],
+      "old_sha256": null,
+      "source_sha256": "3bb8d1b80c1fb7c14b7404bf6e3c408d1f07d8022175ee18f2667497b875255f",
+      "new_sha256": "5ac477412669c1a412823cd430ee0af3bae8129153a6fddb2e1bb39a59e6b46d",
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 6,
+        "sha256": "db09e78b892d85ae906ed36688dc53395da72b1066ee85a473996f26724ab439"
+      },
+      "before_context_pointers": [],
+      "context_pointers": [
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "required_after_context_count": 6,
+      "baseline_evidence_path": "frozen-author-inputs/gu/gu.final-todo.json",
+      "baseline_evidence_sha256": "278d724d2d5099f255e5bd3d7310f26d9820a43806e12231bada31c64cfab78a",
+      "absence_guard": true,
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 11,
+      "field_length_hint": 21,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "વચ્ચેનો ભાગ means the middle part/section and exactly matches reviewed The middle section.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly.",
+      "pending_context_blocker": "PENDING_SOURCE_MIGRATION_AND_LOCALE_INTEGRATION; do not mark the original frozen6080 blocker resolved until the owner verifies the migrated source, exact locale values and all contexts.",
+      "original_frozen_baseline_changed": false
+    },
+    {
+      "locale": "gu",
+      "table": "Learn.strings",
+      "key": "Lf6586312d9",
+      "source": "1, 2, 3 and 4",
+      "operation": "replace_if_exact",
+      "old": "1, 2, 3 અને 4",
+      "new": "1, 2, 3 એન્ડ 4",
+      "reviewer_evidence_paths": [
+        "docs/l10n/staged/gu/evidence/first-half/shared-context-split.json",
+        "docs/l10n/staged/gu/evidence/later-half/shared-source-references.json",
+        "docs/l10n/staged/gu/evidence/later-half/corrections.json"
+      ],
+      "old_sha256": "3e1190708394ede0420bc069f35d58058bee1a6ca46445ab4530a228622b273a",
+      "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+      "new_sha256": "6bdbc39e9cafb9e43033acbf8c7763fc3da710b3fce227ca879cfd0153e51e46",
+      "before_context_signature": {
+        "count": 2,
+        "sha256": "8c8365b70d4e43b3eb48a6735f8787002db35e7063763ea26b9a441bb0e52b8a"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "11769cf0fb2cc1339adfaba63d4ad896072ae6c30380d13bdd2cdba22fdf6851"
+      },
+      "before_context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0",
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "context_pointers": [
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "frozen-author-inputs/gu/gu.final-todo.json",
+      "baseline_evidence_sha256": "278d724d2d5099f255e5bd3d7310f26d9820a43806e12231bada31c64cfab78a",
+      "absence_guard": null,
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 14,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "એન્ડ is the agreed single-count syllable, unlike ordinary list અને; pair it with the separately reviewed neighboring count corrections.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly.",
+      "pending_context_blocker": "PENDING_SOURCE_MIGRATION_AND_LOCALE_INTEGRATION; do not mark the original frozen6080 blocker resolved until the owner verifies the migrated source, exact locale values and all contexts.",
+      "original_frozen_baseline_changed": false
+    },
+    {
+      "locale": "gu",
+      "table": "Learn.strings",
+      "key": "Lced02810fc",
+      "source": "Middle",
+      "operation": "retain",
+      "old": "મધ્યમા",
+      "new": "મધ્યમા",
+      "reviewer_evidence_paths": [
+        "docs/l10n/staged/gu/evidence/first-half/shared-context-split.json",
+        "docs/l10n/staged/gu/evidence/later-half/shared-source-references.json",
+        "docs/l10n/staged/gu/evidence/later-half/corrections.json"
+      ],
+      "old_sha256": "72d8fa8cb919b3d6906a5171ea092f8377e0228befc1978985907ae6e1c84c19",
+      "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+      "new_sha256": "72d8fa8cb919b3d6906a5171ea092f8377e0228befc1978985907ae6e1c84c19",
+      "before_context_signature": {
+        "count": 9,
+        "sha256": "521e0089fe3ee95645f0469b8051b400acb7e31c4a20d55be78aac0a333c5d8d"
+      },
+      "required_after_context_signature": {
+        "count": 3,
+        "sha256": "1161746d9b9764743afcb91553fd88d64df65ae8cff1eb2c2260ad89a3af3cda"
+      },
+      "before_context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1",
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1"
+      ],
+      "required_after_context_count": 3,
+      "baseline_evidence_path": "frozen-author-inputs/gu/gu.final-todo.json",
+      "baseline_evidence_sha256": "278d724d2d5099f255e5bd3d7310f26d9820a43806e12231bada31c64cfab78a",
+      "absence_guard": null,
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 6,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "મધ્યમા explicitly names the middle finger. Supersede the later-half neutralization મધ્ય, whose sole rationale was the now-separated section collision.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly.",
+      "pending_context_blocker": "PENDING_SOURCE_MIGRATION_AND_LOCALE_INTEGRATION; do not mark the original frozen6080 blocker resolved until the owner verifies the migrated source, exact locale values and all contexts.",
+      "original_frozen_baseline_changed": false
+    },
+    {
+      "locale": "kn",
+      "table": "Learn.strings",
+      "key": "Lf94a998e29",
+      "source": "Strings: 1, 2, 3 and 4",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "ತಂತಿಗಳು: 1, 2, 3 ಮತ್ತು 4",
+      "reviewer_evidence_paths": [
+        "docs/l10n/staged/context-split/kannada-first-reviewer-supplement.json",
+        "docs/l10n/staged/context-split/kannada-later-reviewer-supplement.json",
+        "docs/l10n/staged/kn/evidence/later-half/shared-context-decisions.json"
+      ],
+      "old_sha256": null,
+      "source_sha256": "a9c0f5eaf3a697599b3602ce970b13b1f3fbfa5800b0f02cee313043a39f4d1a",
+      "new_sha256": "15bf68a9b9bc85c46a828e56637eeafcd1bee824673d7639cb9ade33deb8b479",
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "9e4b4aa71f0946fd423335ea3b9cca7e0fd0eecf86eadabbebfddcb2373f1965"
+      },
+      "before_context_pointers": [],
+      "context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0"
+      ],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "frozen-author-inputs/kn/final-snapshot/all-drafts.json",
+      "baseline_evidence_sha256": "9f76340bbc33bfe5d09ad1420e3fd5e84970b79a9c6c3a15541e1d38787f53ac",
+      "absence_guard": true,
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 24,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "ತಂತಿಗಳು is instrument strings; ಮತ್ತು stays the ordinary list conjunction.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly.",
+      "pending_context_blocker": "PENDING_SOURCE_MIGRATION_AND_LOCALE_INTEGRATION; do not mark the original frozen6080 blocker resolved until the owner verifies the migrated source, exact locale values and all contexts.",
+      "original_frozen_baseline_changed": false
+    },
+    {
+      "locale": "kn",
+      "table": "Learn.strings",
+      "key": "L4f162aedb4",
+      "source": "Middle section",
+      "operation": "add_if_absent",
+      "old": null,
+      "new": "ಮಧ್ಯಭಾಗ",
+      "reviewer_evidence_paths": [
+        "docs/l10n/staged/context-split/kannada-first-reviewer-supplement.json",
+        "docs/l10n/staged/context-split/kannada-later-reviewer-supplement.json",
+        "docs/l10n/staged/kn/evidence/later-half/shared-context-decisions.json"
+      ],
+      "old_sha256": null,
+      "source_sha256": "3bb8d1b80c1fb7c14b7404bf6e3c408d1f07d8022175ee18f2667497b875255f",
+      "new_sha256": "8fd3d75faa8372484f40b71eecf1830c3ce06d97ccb06742babbe9542079002b",
+      "before_context_signature": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "required_after_context_signature": {
+        "count": 6,
+        "sha256": "db09e78b892d85ae906ed36688dc53395da72b1066ee85a473996f26724ab439"
+      },
+      "before_context_pointers": [],
+      "context_pointers": [
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "required_after_context_count": 6,
+      "baseline_evidence_path": "frozen-author-inputs/kn/final-snapshot/all-drafts.json",
+      "baseline_evidence_sha256": "9f76340bbc33bfe5d09ad1420e3fd5e84970b79a9c6c3a15541e1d38787f53ac",
+      "absence_guard": true,
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 7,
+      "field_length_hint": 21,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "ಮಧ್ಯಭಾಗ is middle section and matches the independently reviewed The middle section.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly.",
+      "pending_context_blocker": "PENDING_SOURCE_MIGRATION_AND_LOCALE_INTEGRATION; do not mark the original frozen6080 blocker resolved until the owner verifies the migrated source, exact locale values and all contexts.",
+      "original_frozen_baseline_changed": false
+    },
+    {
+      "locale": "kn",
+      "table": "Learn.strings",
+      "key": "Lf6586312d9",
+      "source": "1, 2, 3 and 4",
+      "operation": "replace_if_exact",
+      "old": "1, 2, 3 ಮತ್ತು 4",
+      "new": "1, 2, 3 ಅಂಡ್ 4",
+      "reviewer_evidence_paths": [
+        "docs/l10n/staged/context-split/kannada-first-reviewer-supplement.json",
+        "docs/l10n/staged/context-split/kannada-later-reviewer-supplement.json",
+        "docs/l10n/staged/kn/evidence/later-half/shared-context-decisions.json"
+      ],
+      "old_sha256": "7742ccfef3969925aa0282436aff1b828c6f9ece3ec680cb4b3d0f2bba63368a",
+      "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+      "new_sha256": "09453034c6db74a6dbb10d71b02cbb7a5d3bc849667364f94dccd5b5bbcff1b3",
+      "before_context_signature": {
+        "count": 2,
+        "sha256": "8c8365b70d4e43b3eb48a6735f8787002db35e7063763ea26b9a441bb0e52b8a"
+      },
+      "required_after_context_signature": {
+        "count": 1,
+        "sha256": "11769cf0fb2cc1339adfaba63d4ad896072ae6c30380d13bdd2cdba22fdf6851"
+      },
+      "before_context_pointers": [
+        "/courses/1/units/8/lessons/5/steps/1/options/0",
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "context_pointers": [
+        "/courses/9/units/1/lessons/1/steps/2/options/1"
+      ],
+      "required_after_context_count": 1,
+      "baseline_evidence_path": "frozen-author-inputs/kn/final-snapshot/all-drafts.json",
+      "baseline_evidence_sha256": "9f76340bbc33bfe5d09ad1420e3fd5e84970b79a9c6c3a15541e1d38787f53ac",
+      "absence_guard": null,
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 14,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "ಅಂಡ್ is the reviewer-agreed spoken count syllable; ordinary list ಮತ್ತು must not remain in this rhythm-only context. Coordinate the neighboring reviewed count corrections.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly.",
+      "pending_context_blocker": "PENDING_SOURCE_MIGRATION_AND_LOCALE_INTEGRATION; do not mark the original frozen6080 blocker resolved until the owner verifies the migrated source, exact locale values and all contexts.",
+      "original_frozen_baseline_changed": false
+    },
+    {
+      "locale": "kn",
+      "table": "Learn.strings",
+      "key": "Lced02810fc",
+      "source": "Middle",
+      "operation": "retain",
+      "old": "ಮಧ್ಯದ ಬೆರಳು",
+      "new": "ಮಧ್ಯದ ಬೆರಳು",
+      "reviewer_evidence_paths": [
+        "docs/l10n/staged/context-split/kannada-first-reviewer-supplement.json",
+        "docs/l10n/staged/context-split/kannada-later-reviewer-supplement.json",
+        "docs/l10n/staged/kn/evidence/later-half/shared-context-decisions.json"
+      ],
+      "old_sha256": "832c9cdd114d3d0017fef1faf9787e9cf4c9d0d62a8d24fdac63c5441ccd03c5",
+      "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+      "new_sha256": "832c9cdd114d3d0017fef1faf9787e9cf4c9d0d62a8d24fdac63c5441ccd03c5",
+      "before_context_signature": {
+        "count": 9,
+        "sha256": "521e0089fe3ee95645f0469b8051b400acb7e31c4a20d55be78aac0a333c5d8d"
+      },
+      "required_after_context_signature": {
+        "count": 3,
+        "sha256": "1161746d9b9764743afcb91553fd88d64df65ae8cff1eb2c2260ad89a3af3cda"
+      },
+      "before_context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1",
+        "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+        "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+        "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+        "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+      ],
+      "context_pointers": [
+        "/courses/6/units/0/lessons/2/steps/2/options/0",
+        "/courses/6/units/0/lessons/4/steps/2/options/1",
+        "/courses/6/units/1/lessons/1/steps/3/options/1"
+      ],
+      "required_after_context_count": 3,
+      "baseline_evidence_path": "frozen-author-inputs/kn/final-snapshot/all-drafts.json",
+      "baseline_evidence_sha256": "9f76340bbc33bfe5d09ad1420e3fd5e84970b79a9c6c3a15541e1d38787f53ac",
+      "absence_guard": null,
+      "mechanical_issues": [],
+      "number_order_matches_source": true,
+      "codepoint_length": 11,
+      "field_length_hint": 48,
+      "balanced_new_bidi_isolates": true,
+      "semantic_review": "ಮಧ್ಯದ ಬೆರಳು explicitly names the middle finger and remains correct for the three banjo choices.",
+      "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+      "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+      "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly.",
+      "pending_context_blocker": "PENDING_SOURCE_MIGRATION_AND_LOCALE_INTEGRATION; do not mark the original frozen6080 blocker resolved until the owner verifies the migrated source, exact locale values and all contexts.",
+      "original_frozen_baseline_changed": false
+    }
+  ],
+  "default_mutations": 9,
+  "default_retains": 3,
+  "new_key_pairs": 6,
+  "pending_context_blockers_preserved": true,
+  "conditional_gujarati_restoration": {
+    "locale": "gu",
+    "table": "Learn.strings",
+    "key": "Lced02810fc",
+    "source": "Middle",
+    "operation": "replace_if_exact",
+    "old": "મધ્ય",
+    "new": "મધ્યમા",
+    "reviewer_evidence_paths": [
+      "docs/l10n/staged/gu/evidence/first-half/shared-context-split.json",
+      "docs/l10n/staged/gu/evidence/later-half/shared-source-references.json",
+      "docs/l10n/staged/gu/evidence/later-half/corrections.json"
+    ],
+    "old_sha256": "af739067f33a946fe0ce390c2c97895ad8c3b47efcd0d3a55646e086989401f6",
+    "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+    "new_sha256": "72d8fa8cb919b3d6906a5171ea092f8377e0228befc1978985907ae6e1c84c19",
+    "before_context_signature": {
+      "count": 9,
+      "sha256": "521e0089fe3ee95645f0469b8051b400acb7e31c4a20d55be78aac0a333c5d8d"
+    },
+    "required_after_context_signature": {
+      "count": 3,
+      "sha256": "1161746d9b9764743afcb91553fd88d64df65ae8cff1eb2c2260ad89a3af3cda"
+    },
+    "before_context_pointers": [
+      "/courses/6/units/0/lessons/2/steps/2/options/0",
+      "/courses/6/units/0/lessons/4/steps/2/options/1",
+      "/courses/6/units/1/lessons/1/steps/3/options/1",
+      "/courses/13/units/8/lessons/1/arrangement/sections/3/name",
+      "/courses/14/units/22/lessons/1/arrangement/sections/3/name",
+      "/courses/15/units/14/lessons/1/arrangement/sections/3/name",
+      "/courses/16/units/14/lessons/1/arrangement/sections/3/name",
+      "/courses/17/units/14/lessons/1/arrangement/sections/3/name",
+      "/courses/18/units/22/lessons/1/arrangement/sections/3/name"
+    ],
+    "context_pointers": [
+      "/courses/6/units/0/lessons/2/steps/2/options/0",
+      "/courses/6/units/0/lessons/4/steps/2/options/1",
+      "/courses/6/units/1/lessons/1/steps/3/options/1"
+    ],
+    "required_after_context_count": 3,
+    "baseline_evidence_path": "docs/l10n/staged/gu/evidence/later-half/corrections.json",
+    "baseline_evidence_sha256": "0a206c479f42ed373690cd5ee71f13769c1387e873aceffd6b378956d26ac460",
+    "absence_guard": null,
+    "mechanical_issues": [],
+    "number_order_matches_source": true,
+    "codepoint_length": 6,
+    "field_length_hint": 48,
+    "balanced_new_bidi_isolates": true,
+    "semantic_review": "Restore the precise middle-finger name after the section moves away. Use this branch only if exact old મધ્ય is present; otherwise use default retain મધ્યમા. Reject every other current value.",
+    "independent_review_status": "AI delta review checked; not human/native certification; device QA pending",
+    "apply_phase": "Only after verified 6082 source/context migration; do not apply narrowed-context fixes to the 6080 curriculum",
+    "guard_policy": "Exact locale/table/key/source/old-or-absence/target hash plus before/after full-context signatures; abort mismatch, never fuzzy replace or carry old context approval blindly.",
+    "pending_context_blocker": "PENDING_SOURCE_MIGRATION_AND_LOCALE_INTEGRATION; do not mark the original frozen6080 blocker resolved until the owner verifies the migrated source, exact locale values and all contexts.",
+    "original_frozen_baseline_changed": false,
+    "branch": "CONDITIONAL_ONLY_IF_EXACT_NEUTRALIZATION_ALREADY_APPLIED; mutually exclusive with the default retain row"
+  },
+  "superseded_gujarati_correction": {
+    "locale": "gu",
+    "table": "Learn.strings",
+    "key": "Lced02810fc",
+    "batch": 31,
+    "id": "s024",
+    "source": "Middle",
+    "context": "Banjo · Unit 1 · lesson bjo-1-3 “Thumb, index, middle” · step 3 (quiz) · quiz answer",
+    "old": "મધ્યમા",
+    "new": "મધ્ય",
+    "reason": "Shared key is used for middle finger choices in banjo.py and a Middle bridge-section chip in standards_part2.py. મધ્યમા names the finger only; neutral મધ્ય works with implied આંગળી or ભાગ.",
+    "category": "shared-label",
+    "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+    "old_sha256": "72d8fa8cb919b3d6906a5171ea092f8377e0228befc1978985907ae6e1c84c19",
+    "max_length": 48,
+    "new_sha256": "af739067f33a946fe0ce390c2c97895ad8c3b47efcd0d3a55646e086989401f6",
+    "input_manifest_sha256": "bd8a997a5fe9d044cc918d0df302430714a2c8ee701bb55cf2ec23ddce03dd98",
+    "input_output_file_sha256": "30f819e5809b5912d65957d459c5b64550197fd970bed93a216c1038bc8f2432",
+    "guard_policy": "Apply only if locale/table/key/exact source/exact old and hashes all still match; no fuzzy or source-wide replacement."
+  },
+  "neighbor_count_coordination": [
+    {
+      "locale": "ta",
+      "key": "L703760e9d4",
+      "source": "1, 2 and, 3, 4",
+      "frozen_old": "1, 2 அண்ட், 3, 4",
+      "reviewed_target": "1, 2 அண்ட், 3, 4",
+      "source_sha256": "88cef163ad1b2e74ad9706cdaef51d4e9e8ddd711ca11ca947b8632d73222e33",
+      "old_sha256": "15eebc0399eb9eb92207bcc9c779becad9107d743cff88b6b3b91fe402318197",
+      "new_sha256": "15eebc0399eb9eb92207bcc9c779becad9107d743cff88b6b3b91fe402318197",
+      "already_correct_in_frozen_snapshot": true,
+      "existing_correction_file": null,
+      "instruction": "Existing independent reviewer correction, not an extra source-split mutation. Merge/deduplicate through its own guarded baseline integration and verify alongside the new retained count."
+    },
+    {
+      "locale": "ta",
+      "key": "L1081fbeb3c",
+      "source": "1 and 2, 3, 4",
+      "frozen_old": "1 அண்ட் 2, 3, 4",
+      "reviewed_target": "1 அண்ட் 2, 3, 4",
+      "source_sha256": "48e5db860acf3b7f755b3bc4a4ba280f7b293d28da74af808091b733e758922a",
+      "old_sha256": "658b7b322bb501d7405347813e28869c6e99d7d7c1b24c847b67074cce0d4e41",
+      "new_sha256": "658b7b322bb501d7405347813e28869c6e99d7d7c1b24c847b67074cce0d4e41",
+      "already_correct_in_frozen_snapshot": true,
+      "existing_correction_file": null,
+      "instruction": "Existing independent reviewer correction, not an extra source-split mutation. Merge/deduplicate through its own guarded baseline integration and verify alongside the new retained count."
+    },
+    {
+      "locale": "gu",
+      "key": "L703760e9d4",
+      "source": "1, 2 and, 3, 4",
+      "frozen_old": "1, 2 અને, 3, 4",
+      "reviewed_target": "1, 2 એન્ડ, 3, 4",
+      "source_sha256": "88cef163ad1b2e74ad9706cdaef51d4e9e8ddd711ca11ca947b8632d73222e33",
+      "old_sha256": "ab82523e43483e8fbfb488bbec762abfcda37dcc300d36e61cf6fd9015320f93",
+      "new_sha256": "6ae7095dbe05b489437edf971f5debb1c89dcc642e5bbd621d39959ccd575fbb",
+      "already_correct_in_frozen_snapshot": false,
+      "existing_correction_file": "docs/l10n/staged/gu/evidence/later-half/corrections.json",
+      "instruction": "Existing independent reviewer correction, not an extra source-split mutation. Merge/deduplicate through its own guarded baseline integration and verify alongside the new retained count."
+    },
+    {
+      "locale": "gu",
+      "key": "L1081fbeb3c",
+      "source": "1 and 2, 3, 4",
+      "frozen_old": "1 અને 2, 3, 4",
+      "reviewed_target": "1 એન્ડ 2, 3, 4",
+      "source_sha256": "48e5db860acf3b7f755b3bc4a4ba280f7b293d28da74af808091b733e758922a",
+      "old_sha256": "d5feac0ca02e7bc8721f9ae4af9b558854725e54416ae145773577dd153ed423",
+      "new_sha256": "a579b9da97eb0be4c1f478037f5b2e8a4a57ecf346396b5698971ed4f1334222",
+      "already_correct_in_frozen_snapshot": false,
+      "existing_correction_file": "docs/l10n/staged/gu/evidence/later-half/corrections.json",
+      "instruction": "Existing independent reviewer correction, not an extra source-split mutation. Merge/deduplicate through its own guarded baseline integration and verify alongside the new retained count."
+    },
+    {
+      "locale": "kn",
+      "key": "L703760e9d4",
+      "source": "1, 2 and, 3, 4",
+      "frozen_old": "1, 2 ಮತ್ತು, 3, 4",
+      "reviewed_target": "1, 2 ಅಂಡ್, 3, 4",
+      "source_sha256": "88cef163ad1b2e74ad9706cdaef51d4e9e8ddd711ca11ca947b8632d73222e33",
+      "old_sha256": "b0460cba18a0b8b7938203e281053f3bbf708af6583ed07609cc01350df33e4c",
+      "new_sha256": "718234cdbef7dac2464762f1f84e2376ead6a054a0d4ef49c23d2584ed6eea8b",
+      "already_correct_in_frozen_snapshot": false,
+      "existing_correction_file": "docs/l10n/staged/kn/evidence/later-half/corrections.json",
+      "instruction": "Existing independent reviewer correction, not an extra source-split mutation. Merge/deduplicate through its own guarded baseline integration and verify alongside the new retained count."
+    },
+    {
+      "locale": "kn",
+      "key": "L1081fbeb3c",
+      "source": "1 and 2, 3, 4",
+      "frozen_old": "1 ಮತ್ತು 2, 3, 4",
+      "reviewed_target": "1 ಅಂಡ್ 2, 3, 4",
+      "source_sha256": "48e5db860acf3b7f755b3bc4a4ba280f7b293d28da74af808091b733e758922a",
+      "old_sha256": "236ad6653eb8aa3a2f9447a2cf97c8935299b22418b149f7764dbb2bd3cc20bd",
+      "new_sha256": "6cf7bf1635d445b4cd4a4572f244dccd8f659f77f7c3c540c930b828767194a4",
+      "already_correct_in_frozen_snapshot": false,
+      "existing_correction_file": "docs/l10n/staged/kn/evidence/later-half/corrections.json",
+      "instruction": "Existing independent reviewer correction, not an extra source-split mutation. Merge/deduplicate through its own guarded baseline integration and verify alongside the new retained count."
+    }
+  ],
+  "scope": "This is a 4-key delta review per locale, not a re-review or new approval of the complete6082 translation set. Apply only after source migration; retain frozen6080 evidence unchanged."
+}

@@ -33,7 +33,69 @@ class MatrixFixtureTests(unittest.TestCase):
         result = matrix_fixture.fixture(['fa'])
         self.assertEqual(result['fa']['headline'], values[matrix_fixture.KEYS['headline']])
         self.assertIn('\n', result['fa']['headline'])
-        self.assertEqual(len(result['fa']), 6)
+        self.assertEqual(len(result['fa']), 7)
+        self.assertEqual(result['fa']['lesson_status'], 'pending')
+
+    def write_lessons(self, locale, entries):
+        directory = self.root / f'{locale}.lproj'
+        directory.mkdir(exist_ok=True)
+        (directory / 'Learn.strings').write_text(''.join(
+            f'{json.dumps(key)} = {json.dumps(value)};\n' for key, value in entries.items()), encoding='utf-8')
+
+    def test_imported_lessons_enable_exact_expectations(self):
+        self.write_table('de', {key: 'localized ' + key for key in matrix_fixture.KEYS.values()})
+        source = {key: 'Source text' for key in matrix_fixture.LESSON_KEYS.values()}
+        self.write_lessons('en', source)
+        self.write_lessons('de', {key: 'Übersetzter Text' for key in source})
+        result = matrix_fixture.fixture(['de'])['de']
+        self.assertEqual(result['lesson_status'], 'available')
+        self.assertEqual(result['lesson_body'], 'Übersetzter Text')
+
+    def test_partial_import_cannot_silently_skip_lessons(self):
+        self.write_table('de', {key: 'localized ' + key for key in matrix_fixture.KEYS.values()})
+        self.write_lessons('en', {key: 'Source text' for key in matrix_fixture.LESSON_KEYS.values()})
+        self.write_lessons('de', {})
+        with self.assertRaisesRegex(ValueError, 'lesson_title'):
+            matrix_fixture.fixture(['de'])
+
+    def test_copied_english_lesson_is_not_a_pass(self):
+        self.write_table('de', {key: 'localized ' + key for key in matrix_fixture.KEYS.values()})
+        source = {key: 'Source text' for key in matrix_fixture.LESSON_KEYS.values()}
+        self.write_lessons('en', source)
+        self.write_lessons('de', source)
+        with self.assertRaisesRegex(ValueError, 'untranslated lesson'):
+            matrix_fixture.fixture(['de'])
+
+    def test_blank_lesson_or_source_is_rejected(self):
+        source = {key: 'Source text' for key in matrix_fixture.LESSON_KEYS.values()}
+        translated = {key: 'Übersetzter Text' for key in source}
+        for locale in ('en', 'de'):
+            self.write_table(locale, {key: 'localized ' + key for key in matrix_fixture.KEYS.values()})
+        for locale, blank_source in (('en', True), ('de', True), ('de', False)):
+            with self.subTest(locale=locale, blank_source=blank_source):
+                english, local = dict(source), dict(translated)
+                (english if blank_source else local)[matrix_fixture.LESSON_KEYS['lesson_body']] = ' \t '
+                self.write_lessons('en', english)
+                self.write_lessons('de', local)
+                with self.assertRaisesRegex(ValueError, 'lesson_body'):
+                    matrix_fixture.fixture([locale])
+
+    def test_execution_requires_lesson_marker_when_imported(self):
+        expected = {'de': {'lesson_status': 'available'}}
+        matrix_fixture.validate_log(expected, 'TIMBRE_L10N_MATRIX_TESTED de\nTIMBRE_L10N_LESSON_TESTED de\n')
+        for log in ['', 'TIMBRE_L10N_MATRIX_TESTED de\n',
+                    'TIMBRE_L10N_MATRIX_TESTED de\nTIMBRE_L10N_LESSON_PENDING de\n',
+                    'TIMBRE_L10N_MATRIX_TESTED de\nTIMBRE_L10N_LESSON_TESTED de\nTIMBRE_L10N_LESSON_PENDING de\n']:
+            with self.assertRaises(ValueError):
+                matrix_fixture.validate_log(expected, log)
+
+    def test_missing_lessons_are_explicitly_pending_not_tested(self):
+        expected = {'bg': {'lesson_status': 'pending'}}
+        matrix_fixture.validate_log(expected, 'TIMBRE_L10N_MATRIX_TESTED bg\nTIMBRE_L10N_LESSON_PENDING bg\n')
+        with self.assertRaises(ValueError):
+            matrix_fixture.validate_log(expected, 'TIMBRE_L10N_MATRIX_TESTED bg\nTIMBRE_L10N_LESSON_TESTED bg\n')
+        with self.assertRaises(ValueError):
+            matrix_fixture.validate_log({'bg': {'lesson_status': 'unknown'}}, '')
 
     def test_unknown_locale_rejected(self):
         with self.assertRaisesRegex(ValueError, 'Unknown locale'):
@@ -81,13 +143,38 @@ class MatrixFixtureTests(unittest.TestCase):
 
 
 class MatrixIntegrationTests(unittest.TestCase):
+    def test_fixture_keys_are_the_real_first_guitar_explanation(self):
+        curriculum = json.loads(matrix_fixture.report.CURRICULUM.read_text(encoding='utf-8'))
+        matches = [lesson for course in curriculum['courses'] for unit in course['units']
+                   for lesson in unit['lessons'] if lesson['id'] == 'gtr-1-1']
+        self.assertEqual(len(matches), 1)
+        lesson = matches[0]
+        step = lesson['steps'][0]
+        self.assertEqual(step['type'], 'explain')
+        english = matrix_fixture.report.read_strings(matrix_fixture.report.RES / 'en.lproj/Learn.strings')
+        for field, text in [('lesson_title', lesson['title']), ('lesson_heading', step['title']),
+                            ('lesson_body', step['body'])]:
+            self.assertEqual(matrix_fixture.LESSON_KEYS[field], text['k'])
+            self.assertEqual(english[text['k']], text['t'])
+
+    def test_only_explicit_matrix_requests_cancel_prior_run(self):
+        workflow = (matrix_fixture.report.ROOT / '.github/workflows/localization-matrix.yml').read_text()
+        condition = "github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[l10n-matrix]')"
+        self.assertIn('cancel-in-progress: ${{ ' + condition + ' }}', workflow)
+        self.assertIn('if: ' + condition, workflow)
+
     def test_checked_in_workflow_covers_every_translated_locale(self):
         matrix_fixture.check_workflow(matrix_fixture.report.ROOT / '.github/workflows/localization-matrix.yml')
 
     def test_all_48_real_tables_generate_exact_expectations(self):
         result = matrix_fixture.fixture(list(matrix_fixture.report.LANGUAGE_NAMES))
         self.assertEqual(len(result), 48)
-        self.assertTrue(all(set(labels) == set(matrix_fixture.KEYS) for labels in result.values()))
+        self.assertTrue(all(set(matrix_fixture.KEYS).issubset(labels) for labels in result.values()))
+        for locale, labels in result.items():
+            available = (matrix_fixture.report.RES / f'{locale}.lproj/Learn.strings').is_file()
+            self.assertEqual(labels['lesson_status'], 'available' if available else 'pending')
+            self.assertEqual(set(labels) - set(matrix_fixture.KEYS) - {'lesson_status'},
+                             set(matrix_fixture.LESSON_KEYS) if available else set())
 
 
 if __name__ == '__main__':

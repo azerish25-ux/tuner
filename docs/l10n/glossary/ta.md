@@ -11,7 +11,7 @@ Every row is mandatory. The "Current table" hints come from reading the shipped 
 | Locale code and language | ta — Tamil |  |
 | Variant | Standard modern Tamil |  |
 | Register ("you") | Polite நீங்கள்; warm direct voice |  |
-| Imperatives and buttons | Polite செய்யுங்கள், வாசியுங்கள்; compact nouns where appropriate |  |
+| Imperatives and buttons | Polite செய்யுங்கள், வாசியுங்கள் in instructions; செய்யவும் / வாசிக்கவும் for compact buttons; short nouns where appropriate |  |
 | Readers of unknown gender | Neutral constructions; no gender assumptions |  |
 | Quotation marks | “…”; full stop . |  |
 | Apostrophe and ellipsis | Typographic apostrophe ’; single ellipsis … |  |
@@ -20,7 +20,7 @@ Every row is mandatory. The "Current table" hints come from reading the shipped 
 | Units | சென்ட்கள்; நிமிடம்; வினாடி; மில்லிவினாடி. Hz, BPM, ¢, XP unchanged |  |
 | Capitalization | No case; preserve brand spelling |  |
 | Note names in the interface | Runtime supplies notes; do not invent note names |  |
-| Note names in lessons (lesson languages only) | Not a lesson locale; preserve C, F♯, B♭, Em, G7 if referenced |  |
+| Note names in lessons (lesson languages only) | Lessons are required; preserve C, F♯, B♭, Em, G7 if referenced |  |
 | Sharp / flat / double sharp / double flat as words | ஷார்ப் / ஃபிளாட் / டபுள் ஷார்ப் / டபுள் ஃபிளாட் |  |
 | Tuning direction | கீழே / மேலே for tuner direction; not accidentals |  |
 | iOS Settings path (legal text) | அமைப்புகள் › Apple கணக்கு › சந்தாக்கள். AI-reviewed; device verification pending |  |
@@ -109,7 +109,7 @@ Every row is mandatory. The "Current table" hints come from reading the shipped 
 | half step, whole step, interval, third, fifth, octave |  | lessons | `Octave` | அரை சுரம் / முழு சுரம் / சுர இடைவெளி / மூன்றாம் / ஐந்தாம் / ஸ்தாயி |  |
 | bar | A measure (bar 2 of the song); not a UI bar | UI 7, lessons 167 | `Bar %lld` | பார் |  |
 | beat, tempo, downbeat, count |  | UI 29, lessons 251 | `Tempo` | துடிப்பு / டெம்போ / முதல் துடிப்பு / எண்ணிக்கை |  |
-| strum, downstroke, upstroke, chop, chunk, mute | Strumming and muted strokes | UI 21, lessons 120 | `Strum` | ஸ்ட்ரம் / கீழ்நோக்கிய ஸ்ட்ரோக் / மேல்நோக்கிய ஸ்ட்ரோக் / அடக்கிய ஸ்ட்ரோக் / அடக்கிய ஸ்ட்ரோக் / மியூட் | A muted stroke is judged as muted, not as a miss. |
+| strum, downstroke, upstroke, chop, chunk, mute | Strumming and muted strokes | UI 21, lessons 120 | `Strum` | ஸ்ட்ரம் / கீழ்நோக்கிய ஸ்ட்ரோக் / மேல்நோக்கிய ஸ்ட்ரோக் / சாப் (அடக்கிய ஸ்ட்ரோக்) / அடக்கிய ஸ்ட்ரோக் / மியூட் | A muted stroke is judged as muted, not as a miss. |
 | pick | A plectrum, or picking strings; in UI often "choose" | UI 8, lessons 77 |  | பிக் (plectrum); தேர்ந்தெடுங்கள் (choose); தந்தியை மீட்டுங்கள் (picking) | Translate by sense; check `context`. |
 | fingerpicking, hammer-on, pull-off, slide, bend, vibrato | Techniques | lessons |  | ஃபிங்கர்பிக்கிங் / ஹேமர்-ஆன் / புல்-ஆஃப் / ஸ்லைட் / பெண்ட் / வைப்ராட்டோ | Use the terms guitar teachers in the language use; loanwords are fine where usual. |
 | bowing, open-string bowing | Violin and cello | lessons |  | வில்லால் வாசித்தல் / திறந்த தந்தியில் வில்லால் வாசித்தல் |  |
@@ -187,3 +187,50 @@ Write the translation that applies in Timbre, and the one GPT must avoid.
 | Next, Again, Slower | on-screen labels and also Siri command words (`ios/Timbre/Intents/PracticeIntents.swift`): one translation serves both | — | அடுத்து / மீண்டும் / மெதுவாக | Use the sense above |
 | Practice | the tab and the activity | a medical or legal practice | பயிற்சி | a medical or legal practice |
 | Feel | the haptic tuning feature, feeling the beat | emotions | அதிர்வை உணருங்கள் (haptics; not emotion) | emotions |
+
+## 5. Lesson drafting decisions (2026-10-26)
+
+- Lesson drafts use polite வாசியுங்கள் / மீட்டுங்கள் / கேளுங்கள் and standard modern Tamil. `note` in music is சுரம், not குறிப்பு (the latter is a hint); sustain is நீடிக்கவிடுங்கள், rest is இடைநிறுத்தம், pulse is துடிப்பு.
+- Staff: சுரக் கோடுகள்; clef: கிளெஃப்; treble/bass clef: ட்ரெபிள்/பேஸ் கிளெஃப்; ledger line: கூடுதல் கோடு; key signature: சுருதிக் குறியீடு; time signature: தாளக் குறியீடு; accidentals: சுர மாற்றக் குறிகள். Preserve actual note letters, chord symbols and Roman numerals.
+- Triad: மூன்று சுரக் கார்டு; root: மூலச் சுரம்; inversion: தலைகீழ் அமைப்பு; perfect/augmented/diminished intervals: பெர்ஃபெக்ட்/ஆக்மென்டட்/டிமினிஷ்ட் சுர இடைவெளி. Major/minor remain மேஜர்/மைனர்.
+- Bow: வில்; bow hair: வில் முடி; frog: வில்லின் பிடிப்பகுதி; rosin: ரோசின்; bridge (instrument): பிரிட்ஜ்; neck: நெக்; fingerboard: விரற்பலகை; fretboard: ஃப்ரெட் பலகை. Do not confuse song bridge with instrument bridge.
+- Solfège syllables in explanations: டோ ரே மி ஃபா சோல் லா டி. Actual source C/D/etc. stay Latin. English mnemonic sentences remain quoted with Tamil explanation so their note-letter initials survive. Original sung-word locators also remain quoted inside Tamil instruction; ordinary prose is Tamil.
+- Song titles remain the exact original where no established Tamil title is known; instructional subtitles and prose are translated. Standalone unchanged title, credit or notation rows are held for independent invariant review, never disguised with punctuation or filler. Proper composer/author names remain exact; connecting credit words are Tamil.
+- This is AI drafting and mechanical QA, not native/human certification; phone layout QA remains pending.
+- Rhythmic durations use முழு நோட்டு / அரை நோட்டு / கால் நோட்டு / எட்டாம் நோட்டு / பதினாறாம் நோட்டு, distinct from pitch interval அரை சுரம். Spoken subdivision `and` is அண்ட் (one counting syllable), not the conjunction மற்றும். Beat accent is அழுத்தம்; syncopation is எதிர்த்தாளம்; harmonic rhythm/progression is கார்டு வரிசை.
+- Violin finger positions: உயர்ந்த 2 / தாழ்ந்த 2; natural accidental as word: நேச்சுரல். Cello endpin: தாங்குக் கம்பி. Mandolin courses in explanations: ஜோடிகள், with கோர்ஸ் explained once. Bow slur: ஸ்லர். Fingerboard tapes: நாடாக்கள்.
+- Additional lesson terms: blues ப்ளூஸ்; bluegrass ப்ளூகிராஸ்; tonal home ஆதாரம் / ஆதாரச் சுரம்; pickup முன்எடுப்பு (notes before a full bar); chop சாப் as the named short muted mandolin/reggae technique, explained as அடக்கிய ஸ்ட்ரோக் or குறுகிய அடக்கிய கார்டு. A rest is இடைநிறுத்தம்; slur ஸ்லர்; tie இணைப்பு.
+
+## Independent Tamil terminology decisions
+
+Independent AI recommendations integrated with the reviewed lesson baseline. Not native-speaker or human certification.
+
+| Topic | Recommended clarification | Evidence |
+|---|---|---|
+| Long/short durations | Use நீண்டது / குறுகியது in spoken duration patterns; நீண்ட / குறுகிய adjectivally. Do not use குறுக்கம் for “short.” Preserve the order/grouping of durations. | 002s019; 005s068/s071/s073; 008s026; 011s006; 021s092; 023s012/s030/s031; 024s035/s057/s060 |
+| Duration versus pitch | Keep the existing distinction: முழு/அரை/கால்/எட்டாம் நோட்டு are rhythmic values; அரை சுரம் / முழு சுரம் describe pitch steps. “Long” does not mean a higher pitch, and “short” does not mean lower. | Bowing, dotted-note and bass-groove lessons |
+| Spoken `and` versus conjunction | Keep existing அண்ட் for a spoken offbeat, மற்றும் for an ordinary list. Review all contexts of source-hashed labels. Do not force one target if the same key serves both. | 019s015 Lf6586312d9; resolved by the separately guarded source-context split |
+| Transitive instructions | Use அமைக்கவும்/அமையுங்கள் according to subject/object; fingers are வளைத்துப் பிடியுங்கள், a hand/string is அசைக்கவும், a body/finger is சாய்த்துவையுங்கள். Move the finger with நகர்த்துங்கள், not a player-directed வழுக்குங்கள். Preserve polite instruction register. | 002s061/s087; 005s064; 014s039; 025s095; 027s050/s053/s077 |
+| Shift destinations | “Up to D” means மேலே D வரை, not D-க்கு மேலே (“above D”). Preserve endpoint and direction separately. | 027s053/s077 |
+| Bow length and weight | Bow instrument is வில்; a longer/quick bow action is a வில் இழுப்பு. “Heavy bow” in tone production means using arm weight, not choosing a heavier bow. | 023s006; 027s009/s029/s040/s089 |
+| Sympathetic resonance | In the stopped-note/open-string comparisons, “ring” is ஒத்ததிர்வு, not எதிரொலி (echo). The nearby explanation that the open string vibrates along supplies the meaning. Do not globally replace every English “ring.” | 023s070/s072; 024s005/s018; 026s082 |
+| Outline chords | For a bass/melody line expressing harmony through chord tones, use கார்டுகளை உணர்த்துங்கள் rather than an instruction to draw an outline. | 020s084; 021s025/s026; 030s022 |
+| Same | A shared ear-test answer spanning both individual notes and chords needs a generic form such as ஒன்றே. Avoid numeral ஒன்று or a note-only wording. | 009s013 and its 24 exact curriculum uses |
+| Original spans | Retain the existing Latin-initial mnemonic rule and original sung-word locator rule, but only the relevant spans. Translate surrounding teaching prose. | preserved-fragments.json, 10 exact guarded rows |
+| Titles and credits | Keep exact source-bound decisions, not a whole-English-prose exception. Song titles, author names/dates and literal notation are reviewed individually. Translate instructional subtitles and connective credit wording. | invariants.json: 94 exact rows |
+
+These are contextual decisions, not automatic source-wide replacements. “Bridge” is context-sensitive, but the existing loan பிரிட்ஜ் can serve both the instrument part and song section; the shared first-half key does not require a forced split. “Rest” may be a compact label or prose instruction; avoid mechanical substitutions based only on a glossary headword.
+
+
+## Separated source contexts — 6,082-key source
+
+The two source edits separate string enumeration from spoken rhythm, and a middle finger from a musical section. Use only the exact context below:
+
+| English source | Context | Translation |
+|---|---|---|
+| Strings: 1, 2, 3 and 4 | Ukulele string-number distractor | தந்திகள்: 1, 2, 3 மற்றும் 4 |
+| Middle section | Musical section, six arrangements | நடுப்பகுதி |
+| 1, 2, 3 and 4 | Spoken rhythm distractor | 1, 2, 3 அண்ட் 4 |
+| Middle | Middle finger, three banjo options | நடுவிரல் |
+
+The 6,080-pair baseline review and the four-key context delta are distinct independent AI reviews, not a new blanket review or human/native certification of 6,082 pairs. The exact source-bound invariant decisions are now registered; author drafting notes above describe their historical hold. Runtime layout, RTL where relevant, audio and VoiceOver QA remain pending. Previously reviewed UI haptic wording is preserved.

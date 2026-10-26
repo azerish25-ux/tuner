@@ -19,6 +19,30 @@ KEYS = {
 }
 
 
+LESSON_KEYS = {
+    'lesson_title': 'L377bdd369e',
+    'lesson_heading': 'L35fd49f78b',
+    'lesson_body': 'Ld7f60a63df',
+}
+
+
+def lesson_expectations(locale):
+    """Only actual imported lesson text can enable an in-app lesson check."""
+    path = report.RES / f'{locale}.lproj/Learn.strings'
+    if not path.is_file():
+        return {'lesson_status': 'pending'}
+    table = report.read_strings(path)
+    english = report.read_strings(report.RES / 'en.lproj/Learn.strings')
+    values = {'lesson_status': 'available'}
+    for field, key in LESSON_KEYS.items():
+        source, value = english.get(key), table.get(key)
+        if (not source or not source.strip() or not value or not value.strip() or
+                (locale != 'en' and report.check(report.LEARN, key, source, value, locale))):
+            raise ValueError(f'{locale}: missing or untranslated lesson matrix field {field}')
+        values[field] = value
+    return values
+
+
 def validate_locales(locales):
     if not locales or any(not re.fullmatch(r'[A-Za-z]+(?:-[A-Za-z0-9]+)*', code) for code in locales):
         raise ValueError('Locale codes must be nonempty identifiers without path components')
@@ -50,8 +74,23 @@ def fixture(locales):
             if not value or not value.strip() or (locale != 'en' and field in ('headline', 'subline') and value == key):
                 raise ValueError(f'{locale}: untranslated matrix field {field}')
             values[field] = value
+        values.update(lesson_expectations(locale))
         result[locale] = values
     return result
+
+
+def validate_log(expected, log):
+    """A skipped test or omitted lesson check must not become green matrix evidence."""
+    lines = set(log.splitlines())
+    for locale, labels in expected.items():
+        status = labels.get('lesson_status')
+        if status not in ('available', 'pending'):
+            raise ValueError(f'{locale}: unknown lesson fixture status')
+        required = ['TIMBRE_L10N_MATRIX_TESTED ' + locale,
+                    ('TIMBRE_L10N_LESSON_TESTED ' if status == 'available' else 'TIMBRE_L10N_LESSON_PENDING ') + locale]
+        forbidden = ('TIMBRE_L10N_LESSON_PENDING ' if status == 'available' else 'TIMBRE_L10N_LESSON_TESTED ') + locale
+        if any(marker not in lines for marker in required) or forbidden in lines:
+            raise ValueError(f'{locale}: missing or contradictory executed matrix/lesson evidence')
 
 
 def main():
@@ -59,6 +98,7 @@ def main():
     parser.add_argument('--locales', required=True, help='Comma-separated locale codes')
     parser.add_argument('--out', type=Path, required=True)
     parser.add_argument('--check-workflow', type=Path, help='Require exactly all 48 translated locales in workflow shards')
+    parser.add_argument('--verify-log', type=Path, help='Require executed UI and imported-lesson markers')
     args = parser.parse_args()
     locales = args.locales.split(',')
     if args.check_workflow:
@@ -66,6 +106,9 @@ def main():
     data = fixture(locales)
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    if args.verify_log:
+        validate_log(data, args.verify_log.read_text(encoding='utf-8'))
+        print('Executed UI/lesson markers agree with every fixture locale')
     print(f'Wrote exact launch expectations for {len(data)} locales')
 
 

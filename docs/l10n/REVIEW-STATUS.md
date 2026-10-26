@@ -179,3 +179,26 @@ Two English keys conflate different contexts (string list/rhythm count and finge
 song section). A minimal two-key source migration is staged and undergoing independent
 review. The associated wording corrections must not be called resolved until applied
 and checked against the regenerated source. Blinded wording comparison is also ongoing.
+
+## Applied context migration and expanded runtime checks (2026-10-26)
+
+The reviewed context migration is now applied: the two new source keys distinguish
+string lists from spoken counts and song sections from finger choices. Exactly seven
+localized curriculum objects changed; all other data and the marketing counts remain
+unchanged. All 17 currently imported target locales contain 6,082 current lesson keys.
+Gujarati, Tamil and Kannada review candidates and exact invariant decisions are now
+in the live maps/resources; historical staged evidence remains frozen and verifiable.
+The other 31 target locales still require their lessons, including the new two-key delta.
+
+The language matrix now opens the first actual guitar lesson for every imported lesson
+locale and checks its title, heading and body under the phone-language launch settings.
+Missing lesson locales explicitly emit pending markers, never lesson passes. CI validates
+executed markers against the generated fixture. Actual Swift/simulator execution remains
+pending for this checkpoint; Python fixtures and source-based checks are not device QA.
+Only a new explicit matrix request supersedes an older matrix run, using GitHub's
+[conditional concurrency behavior](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency).
+
+Source-blinded purchase/permission QA now covers all 1,104 rows. Source-aware comparison
+retained 1,102 and applied two exact-guarded cancellation-deadline corrections (German and
+Lithuanian). Evidence and limitations are in `purchase-permission-review/`. No native
+human certification, legal compliance opinion or complete release-readiness is claimed.
