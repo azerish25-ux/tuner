@@ -1,0 +1,544 @@
+[
+ {
+  "key": "L55b84af5bf",
+  "source": "Letters in a Shoebox is a Timbre Original, a slow ballad in C. Its chorus lives on strings 1 and 2, and its hook opens with the long, short lilt you played in Ode to Joy. The whole song is in Songs, under Originals.",
+  "source_sha256": "84409ebe20fa990e9178f176a11fcd46ae23143eda2d9cd3493ecfb0eb7c89b5",
+  "old": "Letters in a Shoebox ir Timbre oriģināldziesma, lēna balāde C tonalitātē. Piedziedājums skan uz 1. un 2. stīgas, un galvenais motīvs sākas ar garo–īso ritmu no „Odas priekam”. Visa dziesma atrodama sadaļā Dziesmas, pie Oriģināldziesmām.",
+  "old_sha256": "4937a49e5ee684c389c13b9f856d2c3f2a2b7dbc60218e37532ef729739ffa59",
+  "new": "Letters in a Shoebox ir Timbre oriģināldziesma, lēna balāde C tonalitātē. Piedziedājums skan uz 1. un 2. stīgas, un galvenais motīvs sākas ar garo–īso ritmu no dziesmas „Oda priekam”. Visa dziesma atrodama sadaļā Dziesmas → Oriģināldziesmas.",
+  "new_sha256": "17097ade81378ae678cc91af53c76ef249698affcd73f3efe87e3f8cc5582b35",
+  "author": "Latvian draft author",
+  "origin": "author-self-correction-not-independent-review",
+  "batch": "lv-001.json",
+  "id": "s136",
+  "receipts": [
+   "correction-receipts-author-corrections-001.json"
+  ],
+  "independent_reviewer": "Latvian independent AI reviewer 2",
+  "independent_disposition": "accept-final-author-receipt-change",
+  "independent_reason": "The revised exact prose title Oda priekam is held uninflected behind dziesmas, and Dziesmas → Oriģināldziesmas matches the binding navigation names; the two-string chorus and long-short hook remain intact.",
+  "read_context_ids": [
+   "U0052"
+  ],
+  "additional_lesson_context_ids": [],
+  "scope": "Independent AI semantic assessment of this historical old→final-author change, not native/device certification; final integrated title-policy changes may separately supersede the accepted author value."
+ },
+ {
+  "key": "L443af6d6cc",
+  "source": "The last four bars move faster: B7, A7, E7, then B7, which turns you around to the top. Change early and keep the shuffle going.",
+  "source_sha256": "1a4860a220941f576bae39c22b9604ba7a3304f33d543a6b67daca1c1e069fd8",
+  "old": "Pēdējie četri akordi mainās ātrāk: B7, A7, E7, tad B7, kas atgriež jūs sākumā. Mainiet laikus un turpiniet šaflu.",
+  "old_sha256": "3b5e6c8cfcd03608a564fa98f3902121f407cdd0723d4b48e46c376f8458c330",
+  "new": "Pēdējās četrās taktīs maiņas ir ātrākas: B7, A7, E7, tad B7, kas atgriež jūs sākumā. Mainiet laikus un turpiniet šaflu.",
+  "new_sha256": "995286846c55f692b9e6a639df1e06157a2782ea76cd39676bf8b0130c42250e",
+  "author": "Latvian draft author",
+  "origin": "author-self-correction-not-independent-review",
+  "batch": "lv-004.json",
+  "id": "s007",
+  "receipts": [
+   "correction-receipts-author-corrections-001.json"
+  ],
+  "independent_reviewer": "Latvian independent AI reviewer 2",
+  "independent_disposition": "accept-final-author-receipt-change",
+  "independent_reason": "The current text correctly says four bars, not four chords, and preserves B7, A7, E7, B7 plus early changing and shuffle.",
+  "read_context_ids": [
+   "S0664"
+  ],
+  "additional_lesson_context_ids": [],
+  "scope": "Independent AI semantic assessment of this historical old→final-author change, not native/device certification; final integrated title-policy changes may separately supersede the accepted author value."
+ },
+ {
+  "key": "L96cb30fc29",
+  "source": "The chorus, picked at fret 5",
+  "source_sha256": "979abbbfb2d82dca76a044e6db1b0629049f841140e245dcaab7e2826401c99f",
+  "old": "Piedziedājums ar pirkstiem 5. ladā",
+  "old_sha256": "0594aa74ff660097b5192653bb89d59fde105e4932aa8e59f2b7a908bb7c04d4",
+  "new": "Piedziedājums pa notīm 5. ladā",
+  "new_sha256": "a2539c07bd41077a1fd4622be5a731f28a39689d643b7e3787e08fb0b667e7d3",
+  "author": "Latvian draft author",
+  "origin": "author-self-correction-not-independent-review",
+  "batch": "lv-007.json",
+  "id": "s155",
+  "receipts": [
+   "correction-receipts-author-corrections-002.json"
+  ],
+  "independent_reviewer": "Latvian independent AI reviewer 2",
+  "independent_disposition": "accept-final-author-receipt-change",
+  "independent_reason": "Pa notīm correctly expresses individual picked notes without falsely asserting fingerpicking; chorus and fret 5 remain explicit.",
+  "read_context_ids": [
+   "U0453"
+  ],
+  "additional_lesson_context_ids": [],
+  "scope": "Independent AI semantic assessment of this historical old→final-author change, not native/device certification; final integrated title-policy changes may separately supersede the accepted author value."
+ },
+ {
+  "key": "Lc99c55e349",
+  "source": "The major scale",
+  "source_sha256": "609bd9d4f9ff03575f2c4888168c490398b24964daa862dd160a8058779bd925",
+  "old": "Mažora gammu",
+  "old_sha256": "d61f82d9379bb31dd982f2842bc550a14a13a35645b0263af1ea725d69f9b703",
+  "new": "Mažora gamma",
+  "new_sha256": "6f5ede91efc04550e84be5bb0221e9896f5de0791dfc3bf1dd3426ad23956faf",
+  "author": "Latvian draft author",
+  "origin": "author-self-correction-not-independent-review",
+  "batch": "lv-009.json",
+  "id": "s024",
+  "receipts": [
+   "correction-receipts-author-corrections-002.json"
+  ],
+  "independent_reviewer": "Latvian independent AI reviewer 2",
+  "independent_disposition": "accept-final-author-receipt-change",
+  "independent_reason": "Mažora gamma is a neutral nominal answer and a grammatical standalone lesson title in both S0745 and S0746; the former accusative was unsuitable as a title.",
+  "read_context_ids": [
+   "S0745",
+   "S0746"
+  ],
+  "additional_lesson_context_ids": [],
+  "scope": "Independent AI semantic assessment of this historical old→final-author change, not native/device certification; final integrated title-policy changes may separately supersede the accepted author value."
+ },
+ {
+  "key": "Lee8da162d0",
+  "source": "Picked verse, strummed chorus",
+  "source_sha256": "cc172fcb81100d52dfde993df005c282fdcb885207207447fe20c43a24e47071",
+  "old": "Pants ar pirkstiem, pārvilkts piedziedājums",
+  "old_sha256": "9b49b034c2cfde461e12117998269f390e3fcb1fbfcf8361808506cb1bf4a77e",
+  "new": "Pants: pirksti; piedziedājums: pārvilkumi",
+  "new_sha256": "b09918b6552cf1399343f0f6575dd8726219af8490a15a7308cee47ee50ca960",
+  "author": "Latvian draft author",
+  "origin": "author-self-correction-not-independent-review",
+  "batch": "lv-009.json",
+  "id": "s137",
+  "receipts": [
+   "correction-receipts-author-corrections-002.json"
+  ],
+  "independent_reviewer": "Latvian independent AI reviewer 2",
+  "independent_disposition": "accept-final-author-receipt-change",
+  "independent_reason": "The full enclosing lesson explicitly says Fingerpick the verse softly in U0584, followed by Travis verse and strummed chorus. The compact pirksti/pārvilkumi title therefore preserves the actual contrast, not a generic-pick/finger conflation.",
+  "read_context_ids": [
+   "U0583"
+  ],
+  "additional_lesson_context_ids": [
+   "S0752",
+   "U0584",
+   "U0585",
+   "U0586",
+   "U0587"
+  ],
+  "scope": "Independent AI semantic assessment of this historical old→final-author change, not native/device certification; final integrated title-policy changes may separately supersede the accepted author value."
+ },
+ {
+  "key": "Le636d3cc22",
+  "source": "The down on 1",
+  "source_sha256": "fbcf6db3c8eb34e01b75f9626eebb4c0892c0e94779fbbf06439cb7deaef8a4b",
+  "old": "Vēzienu lejup uz 1",
+  "old_sha256": "d9e6b663040bf02c8ae8fa683b1d6d9cf80172ab9f85f1ecf7f0188ccf819179",
+  "new": "Vēziens lejup uz 1",
+  "new_sha256": "f9fdf346632c74805370518fdacbaf2d0e0c630a1fe0d53daf3a8db17f678e08",
+  "author": "Latvian draft author",
+  "origin": "author-self-correction-not-independent-review",
+  "batch": "lv-010.json",
+  "id": "s159",
+  "receipts": [
+   "correction-receipts-author-corrections-003.json"
+  ],
+  "independent_reviewer": "Latvian independent AI reviewer 2",
+  "independent_disposition": "accept-final-author-receipt-change",
+  "independent_reason": "The shared answer is a nominal stroke label: Vēziens lejup uz 1 works in both the skipped-strum and chunk-conversion quizzes; stroke direction and beat remain unchanged.",
+  "read_context_ids": [
+   "S0790",
+   "S0791"
+  ],
+  "additional_lesson_context_ids": [],
+  "scope": "Independent AI semantic assessment of this historical old→final-author change, not native/device certification; final integrated title-policy changes may separately supersede the accepted author value."
+ },
+ {
+  "key": "L7515b995d9",
+  "source": "A half note",
+  "source_sha256": "e7abaa2b73c6ff07206ee97396472b9506e412363da9487813bafac76d74629f",
+  "old": "Pusnotij",
+  "old_sha256": "19c7cc3a33d680fe1384602ce426132d8fdeec553284c19a9efd2da7e4e7e78c",
+  "new": "Pusnots",
+  "new_sha256": "49655fde7bc068b93a4977b4fa12e244eea6f57b0468e5b2653adf3d340b0c9e",
+  "author": "Latvian draft author",
+  "origin": "author-self-correction-not-independent-review",
+  "batch": "lv-015.json",
+  "id": "s034",
+  "receipts": [
+   "correction-receipts-author-corrections-003.json"
+  ],
+  "independent_reviewer": "Latvian independent AI reviewer 2",
+  "independent_disposition": "accept-final-author-receipt-change",
+  "independent_reason": "Pusnots is the neutral note-name answer across bow allocation, relative duration, 3/4, 4/4 and dotted-quarter equivalence questions; the former dative did not work in all roles.",
+  "read_context_ids": [
+   "S0836",
+   "S0837",
+   "S0838",
+   "S0839",
+   "S0840"
+  ],
+  "additional_lesson_context_ids": [],
+  "scope": "Independent AI semantic assessment of this historical old→final-author change, not native/device certification; final integrated title-policy changes may separately supersede the accepted author value."
+ },
+ {
+  "key": "L5887ff3d74",
+  "source": "A quarter note",
+  "source_sha256": "a10a2773fabee54b99da1608fb71559c01afffd6160f6595f712e1140a7fd797",
+  "old": "Ceturtdaļnotij",
+  "old_sha256": "3dfc93047bd665bfd003e8f99c5be8508f06f164d31261ad37ec66177def7dd7",
+  "new": "Ceturtdaļnots",
+  "new_sha256": "feb4941543693d81971c75e0adeaf8cf9bd3c814d33fe0dabe3a30c63f5e698a",
+  "author": "Latvian draft author",
+  "origin": "author-self-correction-not-independent-review",
+  "batch": "lv-015.json",
+  "id": "s035",
+  "receipts": [
+   "correction-receipts-author-corrections-003.json"
+  ],
+  "independent_reviewer": "Latvian independent AI reviewer 2",
+  "independent_disposition": "accept-final-author-receipt-change",
+  "independent_reason": "Ceturtdaļnots is a neutral note-name label across bow use, longest-duration and 4/4 questions. The quarter-note duration is not confused with an eighth or half.",
+  "read_context_ids": [
+   "S0836",
+   "S0837",
+   "S0839"
+  ],
+  "additional_lesson_context_ids": [],
+  "scope": "Independent AI semantic assessment of this historical old→final-author change, not native/device certification; final integrated title-policy changes may separately supersede the accepted author value."
+ },
+ {
+  "key": "Lc35a7488e9",
+  "source": "This minuet comes from the notebook Bach gave his wife Anna Magdalena in 1725. It's now credited to Christian Petzold. Count three beats to a bar.",
+  "source_sha256": "5033d5fa3688ea3d14c227b67eef923e0ebff9edf2c5378831bcc056906af2ff",
+  "old": "Šis menuets ir no nošu burtnīcas, ko Bahs 1725. gadā uzdāvināja sievai Annai Magdalēnai. Tagad tā autorību piedēvē Christian Petzold. Skaitiet trīs sitienus taktī.",
+  "old_sha256": "676917b18f7d1f94b5caadd6dcf95148a7be0533ffbbbd832208e1a94729437a",
+  "new": "Šis menuets ir no nošu burtnīcas, ko Bahs 1725. gadā uzdāvināja sievai Annai Magdalēnai. Tagad tā autorību piedēvē Kristianam Pecoldam. Skaitiet trīs sitienus taktī.",
+  "new_sha256": "ea0b4f58490f69e1ef8a107e28021c168430d3a9174e66820baa1d4f139d3488",
+  "author": "Latvian draft author",
+  "origin": "author-self-correction-not-independent-review",
+  "batch": "lv-016.json",
+  "id": "s074",
+  "receipts": [
+   "correction-receipts-author-corrections-006.json"
+  ],
+  "independent_reviewer": "Latvian independent AI reviewer 2",
+  "independent_disposition": "accept-final-author-receipt-change",
+  "independent_reason": "The established Latvian composer-name form in prose is appropriately inflected after piedēvē; the 1725 gift, now-attributed authorship and three beats are preserved. Original credit strings are not altered.",
+  "read_context_ids": [
+   "S0882"
+  ],
+  "additional_lesson_context_ids": [],
+  "scope": "Independent AI semantic assessment of this historical old→final-author change, not native/device certification; final integrated title-policy changes may separately supersede the accepted author value."
+ },
+ {
+  "key": "Lf9d1ec4c42",
+  "source": "A tune from the 1700s",
+  "source_sha256": "755a05a497fad26082e2a26ae972e884e807a2c6389ff9b1b120e0043c9e7f3e",
+  "old": "Melodija no gadsimta pēc 1700. gada",
+  "old_sha256": "2117aeaf2c8940289e0f7c93079c607becdc47a1df84c4daf81cb611c5a11409",
+  "new": "1700. gadā sāktā gadsimta melodija",
+  "new_sha256": "fdad6b0622deeafcfc7f39dd36f93a90d336b33066ff0837c78c28e0b4fe0e1e",
+  "author": "Latvian draft author",
+  "origin": "author-self-correction-not-independent-review",
+  "batch": "lv-016.json",
+  "id": "s091",
+  "receipts": [
+   "correction-receipts-author-corrections-003.json"
+  ],
+  "independent_reviewer": "Latvian independent AI reviewer 2",
+  "independent_disposition": "accept-final-author-receipt-change",
+  "independent_reason": "The revised title preserves the exact digits and the source clarification of the whole century beginning 1700, with the Soldier’s Joy body giving the same full-century reading.",
+  "read_context_ids": [
+   "U1033"
+  ],
+  "additional_lesson_context_ids": [],
+  "scope": "Independent AI semantic assessment of this historical old→final-author change, not native/device certification; final integrated title-policy changes may separately supersede the accepted author value."
+ },
+ {
+  "key": "Le649e3afe7",
+  "source": "Sit, bow and play in tune, from open strings to The Swan",
+  "source_sha256": "1c46114b74364cd7708532ebe47436d236d06214e202e3f6357e5f63d28c5d91",
+  "old": "Sēdiet, spēlējiet ar lociņu un tīri intonējiet — no brīvām stīgām līdz Gulbim",
+  "old_sha256": "e1ef33460d2c5507675d44f60cade15207570fbc31280d659682b995957a47f5",
+  "new": "No brīvām stīgām līdz skaņdarbam Gulbis: sēdiet un tīri spēlējiet ar lociņu",
+  "new_sha256": "1cbcecae776391c03ea48296927135535c3a447287d09036c2bce5434a50e059",
+  "author": "Latvian draft author",
+  "origin": "author-self-correction-not-independent-review",
+  "batch": "lv-017.json",
+  "id": "s021",
+  "receipts": [
+   "correction-receipts-author-corrections-004.json"
+  ],
+  "independent_reviewer": "Latvian independent AI reviewer 2",
+  "independent_disposition": "accept-final-author-receipt-change",
+  "independent_reason": "The course subtitle retains sitting, bowing and accurate pitch, while framing Gulbis as a work title rather than inflecting the catalog title.",
+  "read_context_ids": [
+   "U1075"
+  ],
+  "additional_lesson_context_ids": [],
+  "scope": "Independent AI semantic assessment of this historical old→final-author change, not native/device certification; final integrated title-policy changes may separately supersede the accepted author value."
+ },
+ {
+  "key": "Ld76be5db4d",
+  "source": "Slide to fourth position, check it by ear, and play The Swan and Amazing Grace.",
+  "source_sha256": "3c5831e12db19624678f4fb59994c0dc337ee7119c1f89d3f7d0e0485c4ccb71",
+  "old": "Slīdiet uz ceturto pozīciju, pārbaudiet pēc dzirdes un spēlējiet Gulbi un Amazing Grace.",
+  "old_sha256": "bbc97c0835a95cae9f7f7f73ab50aa0fcf905be3492d52e64c6856134471d8a9",
+  "new": "Slīdiet uz ceturto pozīciju, pārbaudiet pēc dzirdes un spēlējiet skaņdarbus Gulbis un Amazing Grace.",
+  "new_sha256": "4d19c0b44424f7ba5e848b1e3f8def7f25d1234817fa5c356d10e1e47ad03cbf",
+  "author": "Latvian draft author",
+  "origin": "author-self-correction-not-independent-review",
+  "batch": "lv-017.json",
+  "id": "s156",
+  "receipts": [
+   "correction-receipts-author-corrections-004.json"
+  ],
+  "independent_reviewer": "Latvian independent AI reviewer 2",
+  "independent_disposition": "accept-final-author-receipt-change",
+  "independent_reason": "The fourth-position move and ear check remain explicit, and framing skaņdarbus permits the exact titles Gulbis and Amazing Grace without case inflection. Separate Amazing Grace naming policy remains under review, not a defect introduced by this receipt.",
+  "read_context_ids": [
+   "U1142"
+  ],
+  "additional_lesson_context_ids": [],
+  "scope": "Independent AI semantic assessment of this historical old→final-author change, not native/device certification; final integrated title-policy changes may separately supersede the accepted author value."
+ },
+ {
+  "key": "L48fa43c2ec",
+  "source": "A banjo has four full-length strings and a fifth that starts partway up the neck, at its own little tuning peg. That short string is the banjo's signature sound.",
+  "source_sha256": "7c98325ecb356e23900db6423eb4c1ac3b94cdcc015c5ab043319a0147f171f3",
+  "old": "Bandžo ir četras pilna garuma stīgas un piektā, kas sākas augstāk uz grifa pie sava mazā skaņošanas tapas. Šī īsā stīga rada bandžo raksturīgo skanējumu.",
+  "old_sha256": "d7de0359006d7807f82959afaafbdd10f14556ac2693ed650f54ba9c131b1457",
+  "new": "Bandžo ir četras pilna garuma stīgas un piektā, kas sākas augstāk uz grifa pie savas mazās skaņošanas tapas. Šī īsā stīga rada bandžo raksturīgo skanējumu.",
+  "new_sha256": "4c37850d95ead6f204c4fec8d47925e792c79640d8d275261bc230934891dcb4",
+  "author": "Latvian draft author",
+  "origin": "author-self-correction-not-independent-review",
+  "batch": "lv-020.json",
+  "id": "s022",
+  "receipts": [
+   "correction-receipts-author-corrections-004.json"
+  ],
+  "independent_reviewer": "Latvian independent AI reviewer 2",
+  "independent_disposition": "accept-final-author-receipt-change",
+  "independent_reason": "The correction repairs feminine genitive agreement savas mazās skaņošanas tapas; full-length strings, the short fifth and its own peg are all retained.",
+  "read_context_ids": [
+   "U1299"
+  ],
+  "additional_lesson_context_ids": [],
+  "scope": "Independent AI semantic assessment of this historical old→final-author change, not native/device certification; final integrated title-policy changes may separately supersede the accepted author value."
+ },
+ {
+  "key": "L9dde1e9060",
+  "source": "The right-hand patterns behind the rolling bluegrass sound: pinch, alternating thumb and forward roll.",
+  "source_sha256": "ffd5473236043dfb7590f41364790dd9c1fca1df2ef81feec3fd4b9cf4fb62a8",
+  "old": "Labās rokas raksti, kas rada ritošo blūgrāsa skanējumu: divu stīgu iesvārstījums, raksts ar īkšķi pamīšus un raksts uz priekšu.",
+  "old_sha256": "0fea62897e7af25cd75cda79622a0b3d096568a7aa7d60a384130c2b5567a362",
+  "new": "Ritošā blūgrāsa labās rokas raksti: divu stīgu iesvārstījums, raksts ar īkšķi pamīšus un raksts uz priekšu.",
+  "new_sha256": "5c730c0d862f5672f9dd1103eeec73bd922f6d3934a4ae19a1bdb31a6a929302",
+  "author": "Latvian draft author",
+  "origin": "author-self-correction-not-independent-review",
+  "batch": "lv-020.json",
+  "id": "s066",
+  "receipts": [
+   "correction-receipts-author-corrections-004.json"
+  ],
+  "independent_reviewer": "Latvian independent AI reviewer 2",
+  "independent_disposition": "accept-final-author-receipt-change",
+  "independent_reason": "The shortened unit description still covers the rolling bluegrass right-hand patterns and all three named techniques; terminology remains descriptive author wording subject to native-instrument review, not standardized certification.",
+  "read_context_ids": [
+   "U1317"
+  ],
+  "additional_lesson_context_ids": [],
+  "scope": "Independent AI semantic assessment of this historical old→final-author change, not native/device certification; final integrated title-policy changes may separately supersede the accepted author value."
+ },
+ {
+  "key": "L2e9170d9ae",
+  "source": "Claw shape",
+  "source_sha256": "fe6c4e40267b0a92a0568faebf246f258c48c4d986f108b0bc7f94f9c1d22f6b",
+  "old": "Naga formas roka",
+  "old_sha256": "c6184e734ed5d7eea3f6513740020a99d3a96c4a51600895f10e5c18bdac20b1",
+  "new": "Ieliektas plaukstas forma",
+  "new_sha256": "46fe4df6cb1e4fb79bb3dd8793ba9a8be2b28a588602a0930c83a4facf6759f5",
+  "author": "Latvian draft author",
+  "origin": "author-self-correction-not-independent-review",
+  "batch": "lv-021.json",
+  "id": "s055",
+  "receipts": [
+   "correction-receipts-author-corrections-005.json"
+  ],
+  "independent_reviewer": "Latvian independent AI reviewer 2",
+  "independent_disposition": "accept-final-author-receipt-change",
+  "independent_reason": "Ieliektas plaukstas forma describes the relaxed claw-shaped hand rather than a literal nail-shaped hand; the matching body gives the downward nail action.",
+  "read_context_ids": [
+   "U1373"
+  ],
+  "additional_lesson_context_ids": [],
+  "scope": "Independent AI semantic assessment of this historical old→final-author change, not native/device certification; final integrated title-policy changes may separately supersede the accepted author value."
+ },
+ {
+  "key": "Lad8b46c5e0",
+  "source": "Clawhammer uses no picks. Curl your hand into a loose claw and strike down on a string with the back of your index or middle fingernail, moving from the wrist and forearm.",
+  "source_sha256": "c78d08fc6724479feb303b52e2edead8f4a0ed040d81f64d2d7fb88f391486ce",
+  "old": "Clawhammer spēlē nelieto mediatorus. Brīvi ielieciet plaukstu kā nagu un sitiet lejup pa stīgu ar rādītājpirksta vai vidējā pirksta naga virspusi, kustinot plaukstas locītavu un apakšdelmu.",
+  "old_sha256": "eeabc1c405e12b74b3b96e97a6f203f586d5055af2d2bb51e2f6c6b7c5883686",
+  "new": "Clawhammer spēlē nelieto mediatorus. Brīvi salieciet pirkstus tvēriena formā un sitiet lejup pa stīgu ar rādītājpirksta vai vidējā pirksta naga virspusi, kustinot plaukstas locītavu un apakšdelmu.",
+  "new_sha256": "8ef9b9a1e8207f189a78c592eccae65e3292fe2d011a2d1aff7824883a365a99",
+  "author": "Latvian draft author",
+  "origin": "author-self-correction-not-independent-review",
+  "batch": "lv-021.json",
+  "id": "s056",
+  "receipts": [
+   "correction-receipts-author-corrections-005.json"
+  ],
+  "independent_reviewer": "Latvian independent AI reviewer 2",
+  "independent_disposition": "accept-final-author-receipt-change",
+  "independent_reason": "The current relaxed finger curl and downward strike with the back of the index/middle fingernail are physically coherent with wrist/forearm movement and no picks. The old literal plaukstu kā nagu was misleading.",
+  "read_context_ids": [
+   "U1373"
+  ],
+  "additional_lesson_context_ids": [],
+  "scope": "Independent AI semantic assessment of this historical old→final-author change, not native/device certification; final integrated title-policy changes may separately supersede the accepted author value."
+ },
+ {
+  "key": "L29eafff6e4",
+  "source": "Ear Training",
+  "source_sha256": "3594444bcbe3ce4b2ecc95fcc0f06d68127da83d5a68d6cc2c55a82a22585704",
+  "old": "Dzirdes treniņš",
+  "old_sha256": "8f87ba42f922df19f923d89117f7b95112db6c42c25ebeca71679d75e6d5b8b8",
+  "new": "Dzirdes trenažieris",
+  "new_sha256": "6a483a048188a085a578afe2b51e4a887e5f47dbd8c8faa3308defe478a70a7d",
+  "author": "Latvian draft author",
+  "origin": "author-self-correction-not-independent-review",
+  "batch": "lv-021.json",
+  "id": "s101",
+  "receipts": [
+   "correction-receipts-author-corrections-007.json"
+  ],
+  "independent_reviewer": "Latvian independent AI reviewer 2",
+  "independent_disposition": "accept-final-author-receipt-change",
+  "independent_reason": "Dzirdes trenažieris is the glossary’s shipped Ear trainer feature name, appropriate for the named course navigation per the course-name rule; the subtitle clearly retains hearing intervals/chords and singing them back.",
+  "read_context_ids": [
+   "U1389"
+  ],
+  "additional_lesson_context_ids": [],
+  "scope": "Independent AI semantic assessment of this historical old→final-author change, not native/device certification; final integrated title-policy changes may separately supersede the accepted author value."
+ },
+ {
+  "key": "L894a2efb3d",
+  "source": "Frère Jacques opens with a major second, a whole step up. Für Elise opens by rocking down and up a minor second, a half step. Small sizes, big difference.",
+  "source_sha256": "244f5ea5614668be08ed067348e503ef98f1c673470c0a0ce96c3366f7f137d1",
+  "old": "Frère Jacques sākas ar lielo sekundu — toni augšup. Für Elise sākumā šūpojas lejup un augšup pa mazo sekundu — pustoni. Mazi lielumi, liela atšķirība.",
+  "old_sha256": "d65d5673950420173c4a14d3b563ef42592b7a958dfe4c9972404308293a1810",
+  "new": "Frère Jacques sākas ar lielo sekundu — toni augšup. Skaņdarbs Elīzei sākumā šūpojas lejup un augšup pa mazo sekundu — pustoni. Mazi lielumi, liela atšķirība.",
+  "new_sha256": "c917d9f599a24f635d9a9a048c113a6dc1f1e0a98c29422de70ff964752f5222",
+  "author": "Latvian draft author",
+  "origin": "author-self-correction-not-independent-review",
+  "batch": "lv-022.json",
+  "id": "s078",
+  "receipts": [
+   "correction-receipts-author-corrections-006.json"
+  ],
+  "independent_reviewer": "Latvian independent AI reviewer 2",
+  "independent_disposition": "accept-final-author-receipt-change",
+  "independent_reason": "The exact catalog title Elīzei replaces Für Elise behind Skaņdarbs, retaining the half-step rocking comparison against Frère Jacques’s major second.",
+  "read_context_ids": [
+   "U1434"
+  ],
+  "additional_lesson_context_ids": [],
+  "scope": "Independent AI semantic assessment of this historical old→final-author change, not native/device certification; final integrated title-policy changes may separately supersede the accepted author value."
+ },
+ {
+  "key": "L899658e27a",
+  "source": "Tempo",
+  "source_sha256": "214b5b846cf3925f87ea67310e74493e27d226b85e43eaa96c0a75a7a57b9c63",
+  "old": "Tempo",
+  "old_sha256": "214b5b846cf3925f87ea67310e74493e27d226b85e43eaa96c0a75a7a57b9c63",
+  "new": "Temps",
+  "new_sha256": "47b15010ccb454c0cce6be19d03a3b29554d7c952380a0fb1dd41f10b72b20ed",
+  "author": "Latvian draft author",
+  "origin": "author-self-correction-not-independent-review",
+  "batch": "lv-027.json",
+  "id": "s157",
+  "receipts": [
+   "correction-receipts-author-corrections-005.json"
+  ],
+  "independent_reviewer": "Latvian independent AI reviewer 2",
+  "independent_disposition": "accept-final-author-receipt-change",
+  "independent_reason": "Temps is the binding Latvian musical tempo noun and the natural lesson title; the historical unchanged Tempo candidate is correctly superseded, not approved as an invariant.",
+  "read_context_ids": [
+   "U1624"
+  ],
+  "additional_lesson_context_ids": [],
+  "scope": "Independent AI semantic assessment of this historical old→final-author change, not native/device certification; final integrated title-policy changes may separately supersede the accepted author value."
+ },
+ {
+  "key": "L3903101dc3",
+  "source": "Ma-ry had a lit-tle lamb: E D C D E E E.",
+  "source_sha256": "effed501617c6a55e504bcf1e9844b66f5b702bc41591e3873de3ee604ce6281",
+  "old": "Mē-ri-jai bij mazs jē-riņš: E D C D E E E.",
+  "old_sha256": "76020c7f68b244bad98a3b2fc4436e4c972a22460a3b0c119720ac908eb037ce",
+  "new": "Ma-ry had a lit-tle lamb: E D C D E E E.",
+  "new_sha256": "effed501617c6a55e504bcf1e9844b66f5b702bc41591e3873de3ee604ce6281",
+  "author": "Latvian draft author",
+  "origin": "author-self-correction-not-independent-review",
+  "batch": "lv-029.json",
+  "id": "s124",
+  "receipts": [
+   "lyric-underlay-correction.json"
+  ],
+  "independent_reviewer": "Latvian independent AI reviewer 2",
+  "independent_disposition": "accept-final-author-receipt-change",
+  "independent_reason": "The complete final string is the source syllabified sung underlay plus pitch notation, not instructional prose. Restoring it follows the no-translated-lyrics rule; predecessor individual identity approval is preserved with its original reviewer.",
+  "read_context_ids": [
+   "U1711"
+  ],
+  "additional_lesson_context_ids": [],
+  "scope": "Independent AI semantic assessment of this historical old→final-author change, not native/device certification; final integrated title-policy changes may separately supersede the accepted author value."
+ },
+ {
+  "key": "Lb2cc664816",
+  "source": "Birdsong",
+  "source_sha256": "294c59497f15f65ab70d5515064c2afcc2647cb21022639d5064eba43cd436e9",
+  "old": "Putnu dziesmas",
+  "old_sha256": "ec85770d0440ad3f4bc828830035e99e778714717f319ee6ec9f25dc5774f75f",
+  "new": "Putnu balsis",
+  "new_sha256": "b375824f18f438e127a34d130e48d2e2197cf9728dd27d4d2ee0d35f9917d2e2",
+  "author": "Latvian draft author",
+  "origin": "author-self-correction-not-independent-review",
+  "batch": "lv-037.json",
+  "id": "s092",
+  "receipts": [
+   "correction-receipts-author-corrections-006.json"
+  ],
+  "independent_reviewer": "Latvian independent AI reviewer 2",
+  "independent_disposition": "accept-final-author-receipt-change",
+  "independent_reason": "Putnu balsis is a natural section label for birdsong in the Spring sequence, preserving the local repertoire title and neighboring Theme/Brooks sections.",
+  "read_context_ids": [
+   "S0324"
+  ],
+  "additional_lesson_context_ids": [],
+  "scope": "Independent AI semantic assessment of this historical old→final-author change, not native/device certification; final integrated title-policy changes may separately supersede the accepted author value."
+ },
+ {
+  "key": "L6142dc5601",
+  "source": "Second theme again",
+  "source_sha256": "d0006070bcd0696a0b54e3a200a4d34f9ffaeb49b0efe141a6bb95f3d82aa4ed",
+  "old": "Atkal 2. tēma",
+  "old_sha256": "04c5c1f9d977af3ffe75e50bb3caa5e0ffac7276cefacacc2fc81113b6b6ce8e",
+  "new": "Atkal otrā tēma",
+  "new_sha256": "ff16121f27451afb8b35b09b8f920462408d4152671bf606aae0cb12e9af43b6",
+  "author": "Latvian draft author",
+  "origin": "author-self-correction-not-independent-review",
+  "batch": "lv-037.json",
+  "id": "s094",
+  "receipts": [
+   "correction-receipts-author-corrections-006.json"
+  ],
+  "independent_reviewer": "Latvian independent AI reviewer 2",
+  "independent_disposition": "accept-final-author-receipt-change",
+  "independent_reason": "Atkal otrā tēma preserves the source’s spelled-out ordinal and matches Otrā tēma in the same section sequence. The rejected digit-bearing proposal Atkal 2. tēma is not silently approved.",
+  "read_context_ids": [
+   "S0324"
+  ],
+  "additional_lesson_context_ids": [],
+  "scope": "Independent AI semantic assessment of this historical old→final-author change, not native/device certification; final integrated title-policy changes may separately supersede the accepted author value."
+ }
+]

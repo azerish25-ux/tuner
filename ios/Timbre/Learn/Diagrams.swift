@@ -896,25 +896,29 @@ extension Array {
 struct EdgeNamesRow: View {
     let leading: Text?
     let trailing: Text?
+    @Environment(\.layoutDirection) private var textDirection
 
     var body: some View {
         ViewThatFits(in: .horizontal) {
             HStack(spacing: 4) {
-                leading
+                leading.environment(\.layoutDirection, textDirection)
                 Spacer(minLength: 0)
-                trailing
+                trailing.environment(\.layoutDirection, textDirection)
             }
             VStack(spacing: 1) {
                 HStack(spacing: 0) {
-                    leading
+                    leading.environment(\.layoutDirection, textDirection)
                     Spacer(minLength: 0)
                 }
                 HStack(spacing: 0) {
                     Spacer(minLength: 0)
-                    trailing
+                    trailing.environment(\.layoutDirection, textDirection)
                 }
             }
         }
+        // Labels follow the canvas's physical string positions, not prose reading order.
+        // Keep each label's own bidirectional text while pinning both layout alternatives.
+        .environment(\.layoutDirection, .leftToRight)
         .font(.system(.caption2, design: .rounded).weight(.semibold))
         .foregroundStyle(Palette.inkSoft)
         .lineLimit(1)

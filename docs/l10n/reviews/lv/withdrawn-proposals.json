@@ -1,0 +1,23 @@
+[
+ {
+  "locale": "lv",
+  "key": "La40c51e83e",
+  "source": "Blues chords sit on the first, fourth and fifth notes of the key. In E that's E7, A7 and B7. Move to the key of A and they become A7, D7 and E7.",
+  "old": "Blūza akordi balstās uz tonalitātes pirmās, ceturtās un piektās pakāpes. E tonalitātē tie ir E7, A7 un B7. A tonalitātē tie kļūst par A7, D7 un E7.",
+  "new": "Blūza akordu pamattoņi ir tonalitātes pirmā, ceturtā un piektā pakāpe. E tonalitātē tie ir E7, A7 un B7. A tonalitātē tie kļūst par A7, D7 un E7.",
+  "reason": "Full explanatory context U0296 read. Replace grammatically malformed balstās uz ... pakāpes with an explicit root/scale-degree construction; preserve degree sequence and all chord symbols.",
+  "source_sha256": "dc85cf8078ebb1ab9ecbc63cb2a38fababa0b92b13274848b717f626a2245c41",
+  "old_sha256": "d0cac06b8136e6cd344515fea4effab70d3505c12b9d49cb23812a393ff49fcc",
+  "new_sha256": "28e18093454df6f5dc83b11420761cd3e0ab1d50a8cd41e0ea9ce3cc0fd728af",
+  "reviewer": "Latvian independent AI reviewer 2",
+  "read_context_ids": [
+   "U0296"
+  ],
+  "context_reviewers": {
+   "U0296": "Latvian independent AI reviewer 2"
+  },
+  "reference_url": null,
+  "status": "withdrawn-on-independent-reread",
+  "withdrawal_reason": "Second grammatical pass: uz can govern genitive for location in Latvian; distributive singular pakāpes is not enough evidence of an error. The frozen author translation preserves all source scale degrees and chord symbols; avoid an unnecessary rewrite."
+ }
+]

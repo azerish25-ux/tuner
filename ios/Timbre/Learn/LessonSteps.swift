@@ -447,6 +447,7 @@ struct ChordStep: View {
     let done: (Double?) -> Void
     @EnvironmentObject private var store: AppStore
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.layoutDirection) private var textDirection
     @State private var owner = UUID()
     @State private var judge: NoteSequenceJudge
     @State private var verified: Set<Int> = []
@@ -804,11 +805,14 @@ struct ChordStep: View {
             ForEach(0..<count, id: \.self) { i in
                 LessonStringCheck(note: i < open.count ? NoteName.pitchClass(open[i] + max(0, chord.frets[i])) : "",
                                   number: count - i, mark: mark(i, next: next, open: open), accent: accent, side: side)
+                    .environment(\.layoutDirection, textDirection)
                     .position(x: xs[i], y: 22)
                     .animation(reduceMotion ? Motion.reduced : Motion.pluck.delay(Double(i) * 0.04), value: verified.contains(i))
             }
         }
         .frame(width: width, height: 44)
+        // The x coordinates come from a physical instrument canvas, never reading order.
+        .environment(\.layoutDirection, .leftToRight)
         .animation(Motion.quick, value: judge.index)
     }
 

@@ -1,0 +1,85 @@
+{
+ "locale": "lv",
+ "status": "integrated-and-mechanically-verified-not-device-or-release-certified",
+ "commands": [
+  {
+   "command": "strict sealed-review importer: verify, guarded write, then verify installed values",
+   "result": "passed",
+   "pairs": 6083,
+   "all_current_contexts": 3767,
+   "required_full_contexts": 1545,
+   "corrected_final_contexts": 234
+  },
+  {
+   "command": "python tools/l10n/apply_learn.py",
+   "result": "passed",
+   "lv_emitted": 6083,
+   "rejected": 0
+  },
+  {
+   "command": "python tools/l10n/report.py",
+   "result": "passed",
+   "generated_files_changed": 3
+  },
+  {
+   "command": "python -m unittest discover -s tools/l10n/tests -p 'test_*.py'",
+   "result": "passed",
+   "tests": 152,
+   "seconds": 25.857
+  },
+  {
+   "command": "python tools/verify-ios-resources.py",
+   "result": "passed",
+   "locales": 49
+  },
+  {
+   "command": "python tools/l10n/critical.py --baseline --github",
+   "result": "passed",
+   "shipped_locales": 48,
+   "legal_permission_voiceover_gaps": 0
+  },
+  {
+   "command": "python tools/l10n/report.py --check --strict",
+   "result": "passed",
+   "outdated_files": 0
+  },
+  {
+   "command": "python tools/l10n/drafts/verify.py",
+   "result": "passed",
+   "scope": "preserved partial and complete author draft hashes and source bindings, not independent semantic approval"
+  },
+  {
+   "command": "python tools/l10n/lessons.py",
+   "result": "report completed; global lesson coverage remains incomplete",
+   "lv_complete": 6083,
+   "lv_rejected_or_unapproved_identical": 0,
+   "remaining_locales": [
+    "is",
+    "lt",
+    "sk",
+    "sl",
+    "uk"
+   ],
+   "remaining_pairs": 30415
+  },
+  {
+   "command": "git diff --check",
+   "result": "passed"
+  }
+ ],
+ "registry_changes": "Only locale lv added; all existing locale entries and metadata preserved exactly as JSON values.",
+ "locale_artifact_sha256": {
+  "tools/l10n/learn/lv.json": "7c937de0478992c734fc854a003b4384051cee918636c7a72bf9bb884a225343",
+  "ios/Timbre/Resources/lv.lproj/Learn.strings": "eb726101725026bde07c950004852b803033893d1078aae193e25a34ac4aef0a",
+  "docs/l10n/glossary/lv.md": "d8dfe40b363ca459f9e0a023a7d4cdb8b8f39e562edfe39e725d0532d830b0f3"
+ },
+ "integration_verifier_sha256": "054c077c5a986e70dfa261c09847864908eeba51ae1010ff28c3a58dd1a56b76",
+ "execution_note": "An earlier report/test execution was interrupted. Its terminated process state was checked before rerunning; only completed reruns are reported as passed.",
+ "verification_limits": {
+  "native_human": false,
+  "musician": false,
+  "audio": false,
+  "device_layout": false,
+  "release_certification": false
+ }
+}

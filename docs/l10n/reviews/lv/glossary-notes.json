@@ -1,0 +1,40 @@
+{
+ "reviewer": "Latvian independent AI reviewer 2",
+ "status": "AI-contextual-decisions-complete-no-native-or-audio-certification",
+ "notes": [
+  {
+   "topic": "physical chord shape",
+   "disposition": "Use tvēriens for a physical fretting configuration. Guarded fixes cover inconsistent chord-shape forma occurrences; scale-pattern forma is not blindly replaced."
+  },
+  {
+   "topic": "low second finger",
+   "disposition": "Two bowed-string descriptions now specify zemo otro pirkstu rather than implying a whole-hand lower position."
+  },
+  {
+   "topic": "spiritual",
+   "disposition": "Use masculine Latvian spiričuels with matching agreement.",
+   "reference_url": "https://llvv.tezaurs.lv/spiri%C4%8Duels%3A1"
+  },
+  {
+   "topic": "beats and tempo",
+   "disposition": "Guarded grammatical repairs distinguish ordinal beat positions, quoted spoken counts, chord degrees and six eighth-note counts grouped into two large beats; source numerals remain unchanged."
+  },
+  {
+   "topic": "movable-do ti",
+   "disposition": "Read all current source-defined movable-do contexts and retain the course’s seventh-degree ti. Do not substitute fixed-do si or confuse source B with German-system H. The LU publication attests ti within Latvian relative-solmization discussion but is not proof that every course syllable is the sole Latvian pedagogy standard. Native pedagogical preference/audio remains uncertified.",
+   "reference_url": "https://www.lu.lv/materiali/apgads/raksti/715.pdf"
+  },
+  {
+   "topic": "specialized performance terms",
+   "disposition": "Banjo rolls, crosspicking, re-entrant tuning, tremolo and physical instructions were read in full context. Descriptive Latvian explanations carry meaning; no native-musician or actual-device/audio testing is claimed."
+  },
+  {
+   "topic": "source facts",
+   "disposition": "Source history, composers, dates and lyric underlay are immutable; this localization review is not a general historical fact-check or score/audio certification."
+  },
+  {
+   "topic": "withdrawn proposal",
+   "disposition": "One proposed rewrite of the blues chord-degree sentence was withdrawn after recognizing the original locative construction as valid. It is not an active correction; see withdrawn-proposals.json."
+  }
+ ]
+}

@@ -1,0 +1,64 @@
+{
+  "source_commit": "608796707ab5155fe16fe71f30e2ead0580f0a9c",
+  "run": 40355877297,
+  "job": 121688072804,
+  "locale": "ar_SA",
+  "device": "iPhone 17 Pro",
+  "conclusion": "success",
+  "required_frames": 6,
+  "artifact": 12668179838,
+  "artifact_sha256": "914166f683845ee3476f4a6da70ab632b57a86d8c05d5274dadccfc2d67c1e1f",
+  "actual_visual_review": "All six exported images directly inspected. Arabic shaping and RTL navigation are visible; song chorus lyrics remain source English intentionally, localized title/stop/section label fit; actual combo61 and score21900. Violin results show92%, three stars, complete visible coach/share/level/next controls. Tuner and strum note order remains physical. Selected instrument family and card names are readable.",
+  "issue_found": "Chord canvas correctly has string6 left and string1 right, but the localized edge captions were reversed: Thinnest(1) appeared left and Thickest(6) right. Successful capture tests did not detect this musical-direction error. The heard-note chips were also reversed (E B G E B E rather than E B E G B E) relative to canvas strings.",
+  "layout_followup": "EdgeNamesRow now pins row layout to physical left-to-right for both single-row and two-row alternatives, while restoring inherited text direction to each localized Text. Existing handedness selection still chooses physical labels. Fresh simulator capture and independent code review pending. ChordStep stringChecks now pins its absolute x-coordinate container to left-to-right while retaining each chip's localized text direction; capture tests require actual string IDs in physical6-to1 order.",
+  "not_claimed": [
+    "all50listingassetsets",
+    "native-human-language-certification",
+    "full-app-accessibility-pass",
+    "AppStoreConnect-release-readiness"
+  ],
+  "attachments": [
+    {
+      "attachment": "10b-tune-locked_0_364A20D1-D56C-41D0-B0EB-1A53B00C5F23.png",
+      "sha256": "695016e678d45fe568451f4e875861d8cb0ff6c29944715043bcefc4766ee2c2",
+      "test": "TimbreUITests/test11StoreTunerLock()",
+      "failure_attachment": false
+    },
+    {
+      "attachment": "52b-lesson-chord_0_95A6FA0F-8CEC-49E5-A598-564A732601D8.png",
+      "sha256": "3937879111518dde708c4a7ca261b13387621221d809bf852e3e556b1158e352",
+      "test": "TimbreUITests/test12StoreChord()",
+      "failure_attachment": false
+    },
+    {
+      "attachment": "11b-tune-strum_0_E0FE0982-4B7B-4BE4-9389-2F24B69FAAF1.png",
+      "sha256": "ed90c4b7806077ba2fc5a87dfd6bce4af344cfb214482684bee0b6e8688a1b53",
+      "test": "TimbreUITests/test13StoreStrum()",
+      "failure_attachment": false
+    },
+    {
+      "attachment": "65-song-perform_0_7EE67D90-6B11-4AB3-BB9B-640730C0DF73.png",
+      "sha256": "5269bb397ecb57a5419076424aaca3a1c12ef1710930fc2e2de5227948d851e2",
+      "test": "TimbreUITests/test14StoreSongPerform()",
+      "failure_attachment": false
+    },
+    {
+      "attachment": "31b-instruments-folk_0_AC01A05A-4644-496E-B85C-96C9D9B801D2.png",
+      "sha256": "27ab5b2b7f7be6dcd476bcd979134d99e15664b8b5517615370dac3a4d75710c",
+      "test": "TimbreUITests/test17StoreInstrumentWall()",
+      "failure_attachment": false
+    },
+    {
+      "attachment": "62b-lesson-results-violin_0_1C8547D3-8677-4722-BEB3-0211E173363F.png",
+      "sha256": "30f9604fd033db23a19d4ee9200551c64699a41bcbb4acd5ccc7ac88ea3346f8",
+      "test": "TimbreUITests/test19StoreViolinResults()",
+      "failure_attachment": false
+    }
+  ],
+  "independent_code_review": {
+    "status": "no blocker identified",
+    "scope": "EdgeNamesRow optional Text modifiers and inherited text direction, ChordStep physical coordinate container, handedness mirroring, capture snapshot semantic-ID parsing",
+    "local_tests": 152,
+    "limitations": "No local Swift compiler or simulator; fresh native build and captured image required."
+  }
+}

@@ -1,0 +1,90 @@
+{
+ "locale": "lv",
+ "review_type": "independent AI semantic review, not native-human, musician, audio, device or release certification",
+ "frozen_packages": {
+  "final_review": {
+   "manifest_sha256": "194caeb49235aa7a23560140983042ac344451c8fc08c09a45faed3095127402",
+   "verified_files": 60
+  },
+  "predecessor_review": {
+   "manifest_sha256": "fc97349bbfca0b2229d894d79b9b04aedb6735f58d2a112cf0bb4c7528416251",
+   "verified_files": 25
+  },
+  "author": {
+   "manifest_sha256": "49e9d270b16b8ca54c31d458e4c9fffa4d3b80ec65c9be7a838b35adaf3ca54a",
+   "verified_files": 345,
+   "fullmap_sha256": "4d8460ce544ca95e93788f6cb445a7633f3e5b6c9a9f5b0db79076dffbb2ad49"
+  }
+ },
+ "current_source_hashes": {
+  "ios/Timbre/Resources/en.lproj/Learn.strings": "718a9431e97997dcad904b99eb00f0072385142d63ebb7ffc1c27ff374ca6de3",
+  "tools/l10n/gpt_l10n.py": "b74452e7165145c82449bf7fc70a0a114282a69ed875a18a7ba46e7ff0c70731",
+  "ios/Sources/TimbreCore/Resources/curriculum.json": "f5399d3d13edd2f94b660648e7dd23aceef66a21e095567988bbb6bd38995bf1"
+ },
+ "exact_pairs": 6083,
+ "decisions": {
+  "accept": 5586,
+  "guarded-correction": 173,
+  "genuine-identity-approval": 324
+ },
+ "all_contexts": 3767,
+ "required_contexts": 1545,
+ "final_corrected_contexts_reread": 234,
+ "individual_author_receipts_reviewed": 22,
+ "reviewers": {
+  "Latvian independent AI reviewer 1": {
+   "contexts": 755,
+   "corrections": 17,
+   "identities": 51
+  },
+  "Latvian independent AI reviewer 2": {
+   "contexts": 3012,
+   "corrections": 156,
+   "identities": 273,
+   "final_context_rereads": 234
+  }
+ },
+ "nonidentity_hard_errors": 0,
+ "identity_errors_after_registry_installation": 0,
+ "warnings": {
+  "device_pending_layout": 3,
+  "accepted_attested_title_punctuation": 3
+ },
+ "verified_original_evidence_hashes": {
+  "HANDOFF.md": "84cf1efd2dde92d692e30d1e2f9ed0e32bcbfbd2f6c5a81d13385a18e3232201",
+  "author-receipt-context-ids.json": "b577b05f143d6a83477f569ab7595b8d5fea1b47178189ad290194ab62ce59d0",
+  "author-receipt-review.json": "72083eada68d99d8e4f6e4f2628276634bdb31ea600f38f03696f0cda6b16668",
+  "context-judgments.json": "f5aba62cccc53a0cbf445021735906f97b242d2daf3bd12d281d0b94c7e1c89c",
+  "contexts-full.json": "ca049c9c598f463fbe3d4afaa1fdb770a73f7d00e9680bd6ba040ac9bd874862",
+  "correction-reread-contexts.json": "02fe89577ceabf7b93d53816ade063f35cfe4b6850c0735ed5d2fac06b34098b",
+  "correction-reread-judgments.json": "e7c71ecdd203917ed495112917908a4976c506c0af7a0fe45c4fd849f8a7fe59",
+  "coverage.json": "35c253d3220d63a9eb46893a91e2615b2bafe93bef4fd1fb9dd8ce64261cd97d",
+  "current-option-contexts.json": "af2680071535080167b4f44fc5c32b161b5a627aff0bb41916c9d62c64d3e1aa",
+  "current-shared-contexts.json": "3122da09f9af58840dbe43b48fa3dac4ce94ead4a7ac09f878aeb8d14e1d6e75",
+  "final-verification.json": "b73455ea02dba1fc74a4ed3394c568480d5bc8d2d2dfd47cf2d532e3b6bad2c8",
+  "fullmap.checkpoint.json": "dd2652f895d377bdd2040f97804f371018a81577ca8efb35ff2254f6c388f2cb",
+  "fullmap.reviewed.json": "dd2652f895d377bdd2040f97804f371018a81577ca8efb35ff2254f6c388f2cb",
+  "glossary-and-source-notes.json": "ecfca3b66a4f40c72ea74aadf5a1078f39abf911ad8d017a65f9c6aba62e0f12",
+  "guarded-corrections.json": "cb4464494d4dd139420c76eb46b8f6671643d3b94618d42eb114ca349d4a3dcc",
+  "indexed-pairs.json": "dca81200a06fb371cdd65f50b933df6a973c13c1373ccc177f5110d920c6b61e",
+  "individual-invariants.json": "26e9e10207f6e4ae7ca185e0316d8fb8d62a5f194a4005f09bfeea5717727bee",
+  "integrity.json": "b58188bc2e19db34ba185ca671e66841f71abea69c2d8bee0b130907159a3c20",
+  "layout-warnings.json": "9b42970d129ff338187efd38235d3ea7e3b967df9bb7becf82bd3b4d33d3cd7a",
+  "pending-correction-reread-indices.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+  "predecessor-HANDOFF.md": "fc35a8fdf0b3d7b7926cce299e07b4bdbaab3e0154864289e8e51687bc01848a",
+  "predecessor-manifest.json": "fc97349bbfca0b2229d894d79b9b04aedb6735f58d2a112cf0bb4c7528416251",
+  "qa.checkpoint.json": "f82883f0d060a1c5a1d9fbec3c2c83a7d6ca235e0decfe4e155269563f23a119",
+  "qa.final.json": "b5d552ad5358ff57bbca1785e0e49637421afb8745d4301d02027e8277fa62bb",
+  "remaining-contexts.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+  "remaining-keys.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+  "remaining-required-context-ids.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+  "source-context-rematch.json": "898cb40bdb13ff773e19956b8bc9239dc74327b532626797f189b99ab5e96222",
+  "summary.json": "e376e4ba85c326c32b67cdd702701e964c959ba311012a13614427d68bcfc5f3",
+  "title-continuation-context-ids.json": "d76fba54647dff7be9980983482b8596bc1657120237fdee87900d6aaedfe1c9",
+  "title-evidence-continuation.json": "b6377b338882a511d5754f9fc19955f65d41b5345f9aa51811f9727f885eff6d",
+  "title-evidence.json": "31671853cbf4020bb6049a5353bcc66cdf09e4b34d762349b1828ddd21adba24",
+  "translation-map.json": "7c937de0478992c734fc854a003b4384051cee918636c7a72bf9bb884a225343",
+  "withdrawn-proposals.json": "9ae09c763aea5b398fc5dcf43186468c7e51e4cb4a84545ed003e9a8bc023921"
+ },
+ "predecessor_contexts_corrections_and_identities_preserved_exactly": true
+}

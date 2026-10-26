@@ -218,6 +218,24 @@ class LocalizedCaptureChecksTests(unittest.TestCase):
         self.assertIn('the actual performance capture barrier was not reached', method)
         self.assertIn('heldBeat == nil || heldBeat != endingHeldBeat || combo != endingCombo', method)
 
+    def test_diagram_edge_names_keep_physical_sides_in_rtl(self):
+        source = (ROOT / 'ios/Timbre/Learn/Diagrams.swift').read_text()
+        row = source.split('struct EdgeNamesRow: View {', 1)[1].split("/// A chord's shape", 1)[0]
+        self.assertIn('@Environment(\\.layoutDirection) private var textDirection', row)
+        self.assertIn('.environment(\\.layoutDirection, .leftToRight)', row)
+        self.assertEqual(row.count('leading.environment(\\.layoutDirection, textDirection)'), 2)
+        self.assertEqual(row.count('trailing.environment(\\.layoutDirection, textDirection)'), 2)
+        self.assertIn('leading: mirrored ? first : lowest, trailing: mirrored ? lowest : first', source)
+
+    def test_chord_checks_pin_canvas_coordinates_and_verify_physical_order(self):
+        source = (ROOT / 'ios/Timbre/Learn/LessonSteps.swift').read_text()
+        checks = source.split('private func stringChecks(width:', 1)[1].split('private func mark(', 1)[0]
+        self.assertIn('.environment(\\.layoutDirection, .leftToRight)', checks)
+        self.assertIn('.environment(\\.layoutDirection, textDirection)', checks)
+        test = (ROOT / 'ios/TimbreUITests/TimbreUITests.swift').read_text().split('func test12StoreChord()', 1)[1].split('func ', 1)[0]
+        self.assertIn('numbersLeftToRight == [6, 5, 4, 3, 2, 1]', test)
+        self.assertIn('ok: complete && physicalOrder', test)
+
     def test_estimate_badge_uses_complete_label_or_existing_symbol(self):
         source = (ROOT / 'ios/Timbre/Tune/StrumMeters.swift').read_text()
         badge = source.split('struct StrumEstimateBadge:', 1)[1].split('struct StrumTurnBadge:', 1)[0]

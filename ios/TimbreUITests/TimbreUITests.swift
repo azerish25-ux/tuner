@@ -981,6 +981,7 @@ final class TimbreUITests: XCTestCase {
         var complete = false
         var heard: Set<Int> = []
         var checkCount = 0
+        var physicalOrder = false
         for attempt in 0..<6 {
             let nodes = appNodes()
             let ringing = nodes.contains { $0.identifier == "lesson.chord.complete" }
@@ -989,6 +990,10 @@ final class TimbreUITests: XCTestCase {
                 checks.contains { $0.identifier == "lesson.chord.string.\(number).heard" }
             })
             checkCount = checks.count
+            let numbersLeftToRight = checks.sorted { $0.frame.midX < $1.frame.midX }.compactMap { node in
+                Int(node.identifier.split(separator: ".").dropFirst(3).first ?? "")
+            }
+            physicalOrder = numbersLeftToRight == [6, 5, 4, 3, 2, 1]
             complete = ringing && checks.count == 6 && heard == Set(1...6)
             if complete { break }
             if attempt < 5 { settle(10) }
@@ -996,8 +1001,8 @@ final class TimbreUITests: XCTestCase {
         // The scene holds its completed chord; capture after confirmation, never approve
         // an earlier incomplete picture using a later successful snapshot.
         settle(1.2)
-        storeFrame("52b-lesson-chord", picture: XCUIScreen.main.screenshot(), ok: complete,
-                   "\(heard.count) of 6 strings heard; \(checkCount) checks visible after bounded quiet waits")
+        storeFrame("52b-lesson-chord", picture: XCUIScreen.main.screenshot(), ok: complete && physicalOrder,
+                   "\(heard.count) of 6 strings heard; \(checkCount) checks visible; physical string order correct: \(physicalOrder)")
     }
 
     /// App Store frame #8: Strum to tune, every string of the guitar read from one strum (polyphonic, the tuner no
