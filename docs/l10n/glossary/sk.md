@@ -193,3 +193,12 @@ E–A–D–G–B–E mnemonic adaptation: Eva a Dávid grilujú bez elektriny. 
 - Jukebox Moon → Jukeboxový mesiac
 - Song-form bridge → mostík (not instrument kobylka); tag → opakovaný záver; fill → výplň; texture in arranging → spôsob sprievodu.
 - Ukulele G C E A mnemonic proposal: Gorila cíti egrešovú arómu. Exact initials G C E A preserved; independent review pending.
+- Bass E A D G mnemonic: Eva a Dávid grilujú. Exact initials preserved; independent review pending.
+- Re-entrant tuning → reentrantné ladenie, with explicit high-G/lower-C explanation. Rest stroke → opretý úder, explicitly resting on the adjacent thicker string.
+- Violin → husle; bow → sláčik; frog → žabka; bow stick → prút; bow hair → vlásie; rosin → kolofónia; chin rest → podbradník; tailpiece → strunník.
+- Down-bow → ťah od žabky; up-bow → ťah k žabke. Directions are explicitly tied to frog/tip rather than implying a vertical arm motion.
+- Violin G D A E mnemonic: Gorila dnes asi experimentuje. Inclusive fifth/octave counting is explicitly clarified when the source describes letter-name distances.
+- High 2 / low 2 → vysoký prst 2 / nízky prst 2, not second hand position. Preserve each repeated source digit even where Slovak could naturally coalesce it.
+- Cello → violončelo; endpin → bodec; shift → výmena polohy; fourth position → štvrtá poloha. Distinguish a hand position from a low/high placement of finger 2.
+- Slur → legatový oblúčik / legato jedným ťahom; do not confuse with a duration tie. The Swan → Labuť; Brahms’ Lullaby → Brahmsova uspávanka.
+- Cello C G D A mnemonic: Cirkusová gorila dáva autogramy. Exact initials retained, review pending.
