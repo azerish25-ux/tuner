@@ -1,0 +1,61 @@
+{
+ "status": "PASS",
+ "semantic_scope": "Independent AI review; not native-human, device-layout, audio-performance or medical certification",
+ "primary_pairs": 6083,
+ "primary_reviewers": {
+  "/root/review_croatian_lessons": 1200,
+  "/root/continue_croatian_review": 3120,
+  "/root/finish_croatian_review": 1763
+ },
+ "full_contexts": 1545,
+ "initial_context_reviewers": {
+  "/root/review_croatian_lessons": 280,
+  "/root/continue_croatian_review": 880,
+  "/root/finish_croatian_review": 385
+ },
+ "own_context_overlay_reviews": 109,
+ "own_context_overlay_unique": 108,
+ "withdrawn_own_corrections": 1,
+ "primary_amendments": 3,
+ "previously_unresolved_resolved": 97,
+ "remaining_pairs": 0,
+ "remaining_contexts": 0,
+ "unresolved_contexts": 0,
+ "guarded_corrections": 138,
+ "correction_reviewers": {
+  "/root/review_croatian_lessons": 26,
+  "/root/continue_croatian_review": 84,
+  "/root/finish_croatian_review": 28
+ },
+ "invariants": 304,
+ "invariant_reviewers": {
+  "/root/review_croatian_lessons": 44,
+  "/root/continue_croatian_review": 180,
+  "/root/finish_croatian_review": 80
+ },
+ "exact_source_key_set_verified": 6083,
+ "option_keys": 1224,
+ "shared_keys": 610,
+ "full_contexts_reconstructed": 1545,
+ "errors": [],
+ "near_cap_count": 26,
+ "author_and_predecessor_manifests": [
+  {
+   "path": "frozen artifact FINAL-MANIFEST.json",
+   "sha256": "c9813325ef9c3c6fdd45e14833e558d9b37c31d0deb64cedfc83fd062e62ef76",
+   "artifacts": 571
+  },
+  {
+   "path": "frozen artifact CHECKPOINT-MANIFEST.json",
+   "sha256": "4bc3fe138d8055208505b82244bbb85b4b1c534b1a3a877cb53ee954d5396537",
+   "artifacts": 87
+  },
+  {
+   "path": "frozen artifact CHECKPOINT-MANIFEST.json",
+   "sha256": "579690854deffbdcf185f4675eded95d17e8c174a5e9adaee0fcebcb5df82432",
+   "artifacts": 124
+  }
+ ],
+ "source_sha256": "f5399d3d13edd2f94b660648e7dd23aceef66a21e095567988bbb6bd38995bf1",
+ "writes": "Own review directory only; no author, publisher, registry or Git writes"
+}
