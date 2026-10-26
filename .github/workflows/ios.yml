@@ -15,7 +15,9 @@ permissions:
   contents: read
 concurrency:
   group: ios-native-${{ github.ref }}
-  cancel-in-progress: true
+  # Frequent main checkpoints must not restart simulator builds before they can finish.
+  # PR updates, manual requests and explicit refreshes may supersede an obsolete run.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[ci-refresh]') }}
 env:
   DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
   HOMEBREW_NO_AUTO_UPDATE: "1"

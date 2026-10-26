@@ -284,3 +284,20 @@ The matrix now requires the AX5 status and string rail to be reachable above the
 bar and captures both after scrolling. This is an implementation candidate: actual
 Xcode/simulator execution and fresh visual inspection are still required. It does not
 resolve or waive the separate contrast findings elsewhere in the app.
+
+
+## Shared-answer context and uninterrupted CI
+
+New helper batches include every distinct prompt/explanation for each quiz-answer
+key. This prevents the first occurrence from hiding other meanings, such as Up/Down
+being both melody directions and mandolin picking strokes. Earlier frozen batches
+remain untouched; independent review must inspect current shared contexts. Three
+new regression tests cover aggregation, all41 direction uses and8 One beat uses.
+
+Ordinary main checkpoints now let a running iOS verification finish rather than
+restarting its builds on every translation push. The newest pending checkpoint is
+still tested afterward. PR updates, manual dispatch and an explicit `[ci-refresh]`
+request retain cancellation behavior. Every result remains bound to its exact SHA;
+a prior pass is not evidence for later code. The a291229 eight-group language matrix
+finished successfully, covering48 launches and its17 available lesson locales. A
+fresh explicit matrix request is needed for the20-locale and layout checkpoint.

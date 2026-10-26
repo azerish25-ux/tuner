@@ -77,6 +77,41 @@ def code_line(repo, where):
         return ""
 
 
+def option_contexts(repo):
+    """All distinct prompts for shared answer keys, not just the first TODO occurrence.
+
+    A direction can describe pitch or a picking stroke; a duration answer may appear
+    under several grammatical questions. Preserve every distinct prompt/explanation
+    so translators can choose a target that works everywhere or flag a source split.
+    """
+    path = repo / "ios/Sources/TimbreCore/Resources/curriculum.json"
+    if not path.exists():
+        return {}
+    catalog = json.loads(path.read_text(encoding="utf-8"))
+    grouped = {}
+    for course in catalog.get("courses", []):
+        for unit in course.get("units", []):
+            for lesson in unit.get("lessons", []):
+                for step in lesson.get("steps", []):
+                    prompt = step.get("prompt", {})
+                    why = step.get("why", {})
+                    prompt = prompt.get("t", "") if isinstance(prompt, dict) else str(prompt)
+                    why = why.get("t", "") if isinstance(why, dict) else str(why)
+                    for option in step.get("options", []):
+                        if not isinstance(option, dict) or not option.get("k"):
+                            continue
+                        key = option["k"]
+                        signature = (prompt, why)
+                        contexts = grouped.setdefault(key, {})
+                        row = contexts.setdefault(signature, {"prompt": prompt, "explanation": why,
+                                                              "occurrences": 0, "example_lessons": []})
+                        row["occurrences"] += 1
+                        ident = lesson.get("id", "")
+                        if ident and ident not in row["example_lessons"] and len(row["example_lessons"]) < 2:
+                            row["example_lessons"].append(ident)
+    return {key: list(contexts.values()) for key, contexts in grouped.items()}
+
+
 def split(repo, loc, size, out, review=False):
     sys.path.insert(0, str(repo / "tools/l10n"))
     import report
@@ -86,6 +121,7 @@ def split(repo, loc, size, out, review=False):
     learn_path = repo / "tools/l10n/learn" / f"{loc}.json"
     learned = json.loads(learn_path.read_text(encoding="utf-8")) if learn_path.exists() else {}
     forms = plural_forms(repo, loc)
+    answer_contexts = option_contexts(repo)
     def group(item):
         """A batch holds one kind: one launch-critical kind, the rest of the interface, or whole lessons."""
         if item["table"] == "Learn.strings":
@@ -116,6 +152,8 @@ def split(repo, loc, size, out, review=False):
             for field in ("context", "layout", "max_length", "launch", "status", "previous", "problem"):
                 if item.get(field):
                     row[field] = item[field]
+            if item["table"] == "Learn.strings" and item["key"] in answer_contexts:
+                row["answer_contexts"] = answer_contexts[item["key"]]
             if item.get("status") == "rejected" and item.get("translation"):
                 row["rejected_text"] = item["translation"]
             if review:
@@ -162,6 +200,10 @@ Locale decisions and glossary for {language} (binding):
 How Timbre already reads in {language} (current translations; match their register, terms and punctuation):
 {anchors}
 
+When answer_contexts is present, the SAME target must work under every listed prompt and explanation.
+Do not use pitch-only or past-tense wording for a key also used for physical picking directions.
+Flag incompatible shared contexts instead of guessing; do not change source keys or metadata.
+
 The batch: {count} strings, kind "{kind}". Return exactly one item per id, in the JSON format the system prompt gives.
 {batch}
 """
@@ -178,6 +220,10 @@ Locale decisions and glossary for {language} (binding):
 
 How Timbre already reads in {language}:
 {anchors}
+
+When answer_contexts is present, the SAME target must work under every listed prompt and explanation.
+Do not use pitch-only or past-tense wording for a key also used for physical picking directions.
+Flag incompatible shared contexts instead of guessing; do not change source keys or metadata.
 
 The batch: {count} strings, kind "{kind}".
 {batch}

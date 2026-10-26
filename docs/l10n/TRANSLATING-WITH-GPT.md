@@ -872,3 +872,10 @@ What can still go wrong after every check above passes, and what to do about it:
 8. **Shared keys**: "Next", "Again" and "Slower" are on-screen labels and Siri's command words; one translation has to serve both ([§4.14](#414-grammar-around-arguments)).
 9. **Store semantic and visual quality** cannot be proven by the all-50 text validator. Current-payload/source hashes protect independent AI review evidence from silently going stale; actual localized assets, device checks, production privacy and account configuration remain separate release gates (§9).
 10. **`ship_min_coverage`** in the delivery workflow doesn't require the critical strings: a locale above the bar without them fails the upload instead of being left out ([§7.6](#76-shipping-fewer-locales)).
+
+
+### Shared answer contexts (26 October 2026)
+
+New `gpt_l10n.py split` batches include `answer_contexts` for lesson answer keys: every distinct current prompt/explanation, total occurrences and example lesson IDs. Translate a shared answer for **all** listed uses, not only the first TODO context. Bare Up/Down have 41 uses each, including mandolin picking strokes as well as pitch movement; neutral direction wording avoids a past-tense pitch-only error. One beat has eight uses across duration/count/missing-beat questions. When no target can serve every context, hold the key and request a bounded source-reference repair instead of silently changing quiz semantics.
+
+Frozen batches created earlier remain valid historical artifacts; do not overwrite them mid-review. Reviewers can call `gpt_l10n.option_contexts(repo)` against the current integration source to inspect all current answer contexts. This context enrichment does not approve translations, rewrite TODO metadata, or waive independent review.
