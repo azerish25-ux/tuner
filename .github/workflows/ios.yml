@@ -88,6 +88,7 @@ jobs:
         run: |
           set -o pipefail
           python3 tools/ci/test_hygiene.py 2>&1 | tee ci-out/hygiene-tests.log
+          python3 tools/ci/test_song_cover_contrast.py 2>&1 | tee ci-out/song-cover-contrast-tests.log
           python3 tools/ci/comment_hygiene.py --github 2>&1 | tee ci-out/hygiene.log
       - name: SwiftLint (new error-severity violations fail)
         # .swiftlint.yml at the repository root, against the committed baseline (tools/ci/swiftlint-baseline.json):

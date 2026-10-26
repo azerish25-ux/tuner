@@ -1246,7 +1246,8 @@ struct SongCover: View {
         let ink = (art.field ? Palette.stage : Palette.ink)
         let number = Text(verbatim: String(format: "%02d", art.number))
             .font(.custom("Sora-Medium", fixedSize: size)).monospacedDigit()
-            .foregroundStyle(ink.opacity(0.62))
+            // Small catalogue numbers need full ink beneath the sleeve's top-light wash.
+            .foregroundStyle(ink)
         switch art.imprint {
         case .catalogue:
             ZStack(alignment: .topLeading) {

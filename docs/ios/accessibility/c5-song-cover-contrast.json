@@ -1,0 +1,90 @@
+{
+  "schema": 1,
+  "run_id": 40321755925,
+  "job_id": 121568951162,
+  "artifact_id": 12651044308,
+  "artifact_zip_sha256": "eb8f1430a48ce752024c8f8cd029bac19e5ba213b65a6ab0f723d4bffb829c03",
+  "source_commit": "c5f19f4",
+  "image": "7877179E-17BD-40A5-8CEF-CF701116CA2D.png",
+  "image_sha256": "a5d46ef74234c99330f6accbabcebc974d556838105a37517e6a03f8e29cef8f",
+  "image_size_px": [
+    1206,
+    2622
+  ],
+  "color_space": "sRGB",
+  "pixel_scale": 3,
+  "samples": [
+    {
+      "name": "light catalogue 03 core",
+      "xy_px": [
+        155,
+        2104
+      ],
+      "rgb": [
+        78,
+        88,
+        104
+      ]
+    },
+    {
+      "name": "light catalogue adjacent field",
+      "xy_px": [
+        145,
+        2104
+      ],
+      "rgb": [
+        149,
+        171,
+        212
+      ]
+    },
+    {
+      "name": "light catalogue frame brightest pixel",
+      "xy_px": [
+        134,
+        2127
+      ],
+      "rgb": [
+        152,
+        180,
+        218
+      ]
+    },
+    {
+      "name": "dark sleeve title background",
+      "xy_px": [
+        937,
+        879
+      ],
+      "rgb": [
+        49,
+        28,
+        48
+      ]
+    },
+    {
+      "name": "dark sleeve brighter title background",
+      "xy_px": [
+        831,
+        940
+      ],
+      "rgb": [
+        106,
+        64,
+        103
+      ]
+    }
+  ],
+  "failing_number_frame_points": [
+    44.02928,
+    699.1,
+    11.0,
+    10.333333333333258
+  ],
+  "limitations": [
+    "The dark samples are from the visible dark featured sleeve, not its own numbered imprint.",
+    "Source-colour compositing is an sRGB arithmetic regression model, not a SwiftUI rerender or universal cover proof.",
+    "The background samples already include their actual top-light overlay; modelled new foreground uses the full source overlay range.",
+    "Native rerender of light and dark numbered covers, including locked and off-edge states, is pending."
+  ]
+}
