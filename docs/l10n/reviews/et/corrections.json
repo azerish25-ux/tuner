@@ -1,0 +1,844 @@
+[
+ {
+  "locale": "et",
+  "key": "Leba98ce894",
+  "source": "From thick to thin: E, A, D, G, B, E. Try: Every Amateur Does Get Better Eventually.",
+  "old": "Jämedamast peenemani: E, A, D, G, B, E. Jäta meelde: Ema Aias Draakon Grilli Banaanidega Ehib.",
+  "new": "Jämedamast peenemani: E, A, D, G, B, E. Jäta meelde: Ema Aias Draakoniga Grillib Banaane Edukalt.",
+  "reason": "The prior mnemonic leaves Draakon unconnected grammatically and makes Grilli an unclear object. The replacement means mother successfully grills bananas with a dragon in the garden, forms a grammatical mnemonic, and preserves exactly E A D G B E. Apply with its matching quiz explanation.",
+  "source_sha256": "9f2944594c612a8c3d32cf7153fbf13c3086cd18c099df1dc0964da61aa9a890",
+  "old_sha256": "a07b3b32b88dc539f494e14e5474761761e707b79765032e2a59430fca99c73d",
+  "new_sha256": "7fe33ad462ff31a3824218eb6c3429f539d9cffd06c639dc3d30c133782040a1",
+  "reviewer": "Estonian independent AI reviewer 1",
+  "evidence": [
+   "read-rows-0001-0120.txt",
+   "read-contexts-0001-0080.txt#C3"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "L3534785c8b",
+  "source": "Every Amateur Does Get Better Eventually: E A D G B E, string 6 to string 1.",
+  "old": "Ema Aias Draakon Grilli Banaanidega Ehib: E A D G B E, keelest 6 keeleni 1.",
+  "new": "Ema Aias Draakoniga Grillib Banaane Edukalt: E A D G B E, keelest 6 keeleni 1.",
+  "reason": "Use the same grammatical E A D G B E mnemonic as the introduction; preserve both note order and numeric string endpoints.",
+  "source_sha256": "61d877a18961bc865984e38b39b093d8c9960e1c0a5ae74586d972b7f5a75cf8",
+  "old_sha256": "8860e20ff34776b9643aac85016b48315bdc1ac162ed29b15face58bdff9917e",
+  "new_sha256": "11212d9e77cef8bdea96b9cab9b58d952edc5cca710072e41e3653f2c52d3493",
+  "reviewer": "Estonian independent AI reviewer 1",
+  "evidence": [
+   "read-rows-0001-0120.txt",
+   "read-contexts-0001-0080.txt#C4"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "Lbdd78d8957",
+  "source": "Each line ends with a lilt: a longer note, a quick one, then a held one. Count one-and-two, and slip the quick note in on the and.",
+  "old": "Iga rida lõpeb õõtsuvalt: pikem noot, kiire noot ja siis hoitud noot. Loe üks-ja-kaks ning mängi kiire noot ja ajal.",
+  "new": "Iga rida lõpeb õõtsuvalt: pikem noot, kiire noot ja siis hoitud noot. Loe üks-ja-kaks ning mängi kiire noot „ja” ajal.",
+  "reason": "Quote the rhythmic counting syllable ja so it cannot be read as the conjunction and in the instruction.",
+  "source_sha256": "7b7ed0e345cdc428917689c53eeec42a9bd0349cd78b2a94a2f55c7be4d0e50e",
+  "old_sha256": "39ce4cffe2eac18aeb3ec77a88569803256887a74bee1b812eb304c091fc19fb",
+  "new_sha256": "0a3e426238b2a53aff206842a8a052d84c4409ea2dc3c62f15ec59abd481f1be",
+  "reviewer": "Estonian independent AI reviewer 1",
+  "evidence": [
+   "read-contexts-0441-0540.txt#C465"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "L53cc9a5bfd",
+  "source": "Split each beat in two. Strum down on the number and up on the and: one and two and. That's eight strums per bar.",
+  "old": "Jaga iga löök kaheks. Tõmba numbri ajal alla ja ja ajal üles: üks ja kaks ja. See on kaheksa tõmmet taktis.",
+  "new": "Jaga iga löök kaheks. Tõmba numbri ajal alla ja „ja” ajal üles: üks ja kaks ja. See on kaheksa tõmmet taktis.",
+  "reason": "Quote the counted offbeat ja while leaving the joining conjunction and complete count pattern intact; this removes the ambiguous ja ja sequence.",
+  "source_sha256": "5b7fea3c4ad5ca4f0d3c967c74b660103ffae9e5fe5980e709ee8267480e4aea",
+  "old_sha256": "1064bb104bf1d21d3eebd755555eee304da11ab7a949954e88c907c83264b4a0",
+  "new_sha256": "7e777b2d53fcb8ec176a68040b5bfc3de123a252b1974a771de667ebbeb5ba83",
+  "reviewer": "Estonian independent AI reviewer 2",
+  "evidence": [
+   "read-unread-0001-0070.txt#R240"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "Lc953224dbf",
+  "source": "On the and",
+  "old": "Ja ajal",
+  "new": "„Ja” ajal",
+  "reason": "Quote the rhythmic counting syllable so the standalone offbeat answer is not mistaken for the conjunction and; consistent with related corrected counting choices.",
+  "source_sha256": "b02e6a85581b7d2aec77793809a7d10e4297bd372870f798e578937f044d68b4",
+  "old_sha256": "46e83e7ec8b5fd4a03eb61dd9d98cef7523effb79f96d1dcb8054a8c26929341",
+  "new_sha256": "65a028ac40e3ef2b756bdc8c1d81c23906b5531d4d1b467b3b00758477036da5",
+  "reviewer": "Estonian independent AI reviewer 2",
+  "evidence": [
+   "read-contexts-1346-1445.txt#C1350"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "L66ae417c89",
+  "source": "Down on the number, up on the and. Your hand goes down and up once per beat.",
+  "old": "Numbri ajal alla, ja ajal üles. Käsi liigub igal löögil korra alla ja üles.",
+  "new": "Numbri ajal alla, „ja” ajal üles. Käsi liigub igal löögil korra alla ja üles.",
+  "reason": "Quote the offbeat counting syllable ja to distinguish it from a conjunction and make down/up instruction unambiguous.",
+  "source_sha256": "5a12f4f780589af3b7a24455d1aeb35acd9bcdb81bf76af964f23c7492fb03b6",
+  "old_sha256": "d45f06f69210fdc7f5a50da646188796292438a5cb250c894cb532ce45ebd0ea",
+  "new_sha256": "99ddd468d787689f70628a519a89acdaa1dc05e1e4f77baddf09be2b8cae23ce",
+  "reviewer": "Estonian independent AI reviewer 2",
+  "evidence": [
+   "read-contexts-1346-1445.txt#C1350"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "Le8195a4ce0",
+  "source": "Every and",
+  "old": "Iga ja",
+  "new": "Iga „ja”",
+  "reason": "The whole option identifies every counted offbeat syllable, not an unfinished conjunction; quote the syllable consistently in both accent questions.",
+  "source_sha256": "08420597f1b6724f376fcb25d249bb94208a9d76b8ddf53fa7ecd0db72bde7dc",
+  "old_sha256": "686d7f182ea28f2a5eecc3b4e5a70902dd31e58adca060523996ae98307bf347",
+  "new_sha256": "77267b5768c4a81ceddc041a4569a306f7f649e685e880045d005fd82b3f1c75",
+  "reviewer": "Estonian independent AI reviewer 1",
+  "evidence": [
+   "read-contexts-0541-0640.txt#C601",
+   "read-contexts-0541-0640.txt#C602"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "L2671f18144",
+  "source": "On three the hand swings down past the strings, then strums up on the and.",
+  "old": "Kolme ajal liigub käsi alla keeltest mööda, siis ja ajal üle keelte üles.",
+  "new": "Kolme ajal liigub käsi alla keeltest mööda, siis „ja” ajal üle keelte üles.",
+  "reason": "Quote ja as the rhythmic counting syllable to make the skipped-stroke instruction grammatical and unambiguous.",
+  "source_sha256": "bfa4bce2c30db5ba900fb4c9d2da764ced647970b874b40cd864f01015acdd1e",
+  "old_sha256": "aab7babff9aa39f5bd8d1111a299ce73ccb715a78ab5b9726810872fde6565e5",
+  "new_sha256": "afb9dfa31fe6f55ff32e2c138f65c0c1298f2a4c6b97fdda1ec64cc0a8b7028e",
+  "reviewer": "Estonian independent AI reviewer 1",
+  "evidence": [
+   "read-contexts-0541-0640.txt#C552"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "L40de34d2de",
+  "source": "Reggae on the ands",
+  "old": "Reggae ja-de peal",
+  "new": "Reggae „ja” ajal",
+  "reason": "Quote the rhythmic offbeat syllable in this explanatory title rather than the unclear ja-de compound; refers to the ands, not an ordinary conjunction.",
+  "source_sha256": "f163295349dad455c8aca7114a310f0f38f50932ce89709fe2fb54897ca1b1f2",
+  "old_sha256": "1913144b1d945e27a031fa00bd6c7ca7fb70deb591ae8d157fb6293990b584b8",
+  "new_sha256": "5278237131ca0251af8653993ae4914672e1e204b7b070dae3b34930a1f76bec",
+  "reviewer": "Estonian independent AI reviewer 2",
+  "evidence": [
+   "read-unread-0071-0160.txt#R274"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "L749ac2f07c",
+  "source": "Low Tide Radio is a Timbre Original: laid-back reggae on E minor and A. The guitar plays only the ands. Keep your hand swinging down and up, miss the strings on each number and catch every and. The whole song is in Songs, under Originals.",
+  "old": "„Low Tide Radio” on Timbre originaallugu: mõnus reggae akordidel E-moll ja A. Kitarr mängib ainult ja ajal. Hoia käsi liikumas alla-üles, möödu keeltest igal numbril ja taba iga ja. Kogu lugu on vahekaardi Laulud jaotises Originaallood.",
+  "new": "„Low Tide Radio” on Timbre originaallugu: mõnus reggae akordidel E-moll ja A. Kitarr mängib ainult „ja” ajal. Hoia käsi liikumas alla-üles, möödu keeltest igal numbril ja taba iga „ja”. Kogu lugu on vahekaardi Laulud jaotises Originaallood.",
+  "reason": "Quote both references to the counted offbeat syllable ja so the instruction does not end with a bare conjunction. Preserve the alternating hand motion, missed numbers, chord symbols and navigation.",
+  "source_sha256": "b4141222c599eadbdc4893be8b786e6741733587804a23d7caadf9b192fea27a",
+  "old_sha256": "dd9659c8a960fc9f051752782bbbebef3888989f9284fbb26d077871a28e408f",
+  "new_sha256": "392acd25e6d1553c1dfc69b99fa0c19f9f36ebc63c6fe08f4a441bd17526cf7f",
+  "reviewer": "Estonian independent AI reviewer 2",
+  "evidence": [
+   "read-unread-0071-0160.txt#R275"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "Lefda538736",
+  "source": "Only on the ands",
+  "old": "Ainult ja ajal",
+  "new": "Ainult „ja” ajal",
+  "reason": "Quote the counted offbeat syllable rather than leaving the conjunction ja bare.",
+  "source_sha256": "9ba1efebdc84b00bdd040895c99f0bacafd0506f163c9865cede0e13f2178215",
+  "old_sha256": "a85aa4533bc80b8ec045722ead6ad25d501793fc489c0929c795e551a49649fc",
+  "new_sha256": "0a83ae03b7ef9782cc76d45f43470fb2b746be23f574739667113f45fabc3e5d",
+  "reviewer": "Estonian independent AI reviewer 1",
+  "evidence": [
+   "read-contexts-0541-0640.txt#C607"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "Lbaaaeb8ba6",
+  "source": "Bass and drums hold the numbers. The guitar answers between them, on the ands.",
+  "old": "Bass ja trummid hoiavad numbreid. Kitarr vastab nende vahel, ja ajal.",
+  "new": "Bass ja trummid hoiavad numbreid. Kitarr vastab nende vahel, „ja” ajal.",
+  "reason": "Quote the offbeat counting syllable; the first ja remains the ordinary conjunction joining bass and drums.",
+  "source_sha256": "bca8d0c3dec9bc087263f4e5d9cfa7333ef515a589f1d01a39c0ddbdbe392dfe",
+  "old_sha256": "2dcaf975293c1814084b8d84fff27acb60154f83d0818893f2fa50dcfbbc638a",
+  "new_sha256": "c9701e632386e7707f22f083fd889fe82feda705bfc34afc403ffc9b46c3eb23",
+  "reviewer": "Estonian independent AI reviewer 1",
+  "evidence": [
+   "read-contexts-0541-0640.txt#C607"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "L026036a0e5",
+  "source": "On every and",
+  "old": "Iga ja ajal",
+  "new": "Iga „ja” ajal",
+  "reason": "Mark ja as the rhythmic counting syllable in both eighth-note strumming and two-step distractor contexts.",
+  "source_sha256": "042f268606c704517f54004a60115eb7135b88a55824b0b479aa4d45f7529f8c",
+  "old_sha256": "c62c73f4d6a783583937df9ea68ae17ae57acbed239cd51124ff14179df619a6",
+  "new_sha256": "258fb2de9ce4284f39289d610aa6b5d432953f422213c373fc39dcf10c29d95d",
+  "reviewer": "Estonian independent AI reviewer 1",
+  "evidence": [
+   "read-contexts-0541-0640.txt#C608",
+   "read-contexts-0541-0640.txt#C610"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "Lbf48d3e80a",
+  "source": "Ghost Light is a Timbre Original: a slow, dark ballad. Its verse walks A minor, F, C and E, so your mini F gets a song, and the G sharp in E pulls the tune back home. The whole song is in Songs, under Originals.",
+  "old": "„Ghost Light” on Timbre originaallugu: aeglane, tume ballaad. Salm liigub läbi A-molli, F, C ja E, nii et väike F saab oma laulu. E G-diees tõmbab viisi koju. Kogu lugu on vahekaardi Laulud jaotises Originaallood.",
+  "new": "„Ghost Light” on Timbre originaallugu: aeglane, tume ballaad. Salm liigub läbi A-molli, F, C ja E, nii et väike F saab oma laulu. E-akordi G-diees tõmbab viisi koju. Kogu lugu on vahekaardi Laulud jaotises Originaallood.",
+  "reason": "Make explicit that G-sharp is in the E chord. The draft adjacent bare E G-diees can be misread as two notes instead of the harmonic membership described by the source.",
+  "source_sha256": "ee996fe9a88bbb7be2ad5e59b1f232a50e38f5d54ebd8e4f631478f9f6f3f8cd",
+  "old_sha256": "c10bbdbffca47aa7ac4ef5966f64764b4a5afa70686edd162033167c3293f82a",
+  "new_sha256": "52961f1e0a23a424da1acfece16fdfd604c97be8456f39612b0ee740ea408d77",
+  "reviewer": "Estonian independent AI reviewer 2",
+  "evidence": [
+   "read-unread-0161-0250.txt#R456"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "Lfc5748dd2c",
+  "source": "Songs often answer a riff with power chords. Play the riff, then hit the chords on one, the and of two, and four.",
+  "old": "Lauludes vastavad rifile tihti kvintakordid. Mängi riff, siis löö akorde ühe, kahe ja ning nelja ajal.",
+  "new": "Lauludes vastavad rifile tihti kvintakordid. Mängi riff, siis löö akorde esimesel löögil, teise löögi „ja” ajal ja neljandal löögil.",
+  "reason": "Explicitly attach the counted and to beat two, and quote that syllable, preserving the three attacks on one, the and of two, and four; the draft kahe ja ning is syntactically unclear.",
+  "source_sha256": "eedeb2c3d173d5d3ee5d213c010c0d691f4c0324860b2ed60b7fb1165f59dbf9",
+  "old_sha256": "612d78b1c874e4d9733e7b94b59ffc27afc1cdff0597485d674c1e158ef77c62",
+  "new_sha256": "d7004727bcede26a0a6fedac21bf2d61076a0f7a2ba134495929f86b5dcc731b",
+  "reviewer": "Estonian independent AI reviewer 2",
+  "evidence": [
+   "read-unread-0161-0250.txt#R567"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "L73601df885",
+  "source": "Basement Weather is a Timbre Original: garage rock in A. A riff on the low strings opens it, then power chords punch back on one, the and of two, and four. Keep your palm at the bridge. The whole song is in Songs, under Originals.",
+  "old": "„Basement Weather” on Timbre originaallugu: garaažirokk A-s. Algab madalate keelte riff, siis vastavad kvintakordid ühe, kahe ja ning nelja ajal. Hoia peopesa roobi juures. Kogu lugu on vahekaardi Laulud jaotises Originaallood.",
+  "new": "„Basement Weather” on Timbre originaallugu: garaažirokk A-s. Algab madalate keelte riff, siis vastavad kvintakordid esimesel löögil, teise löögi „ja” ajal ja neljandal löögil. Hoia peopesa roobi juures. Kogu lugu on vahekaardi Laulud jaotises Originaallood.",
+  "reason": "Clarify the three chord attacks and quote the counted offbeat, matching the companion riff lesson: one, and of two, four. The draft kahe ja ning is ambiguous.",
+  "source_sha256": "39c4701f4bc20fe140e7d835967132d0f5014a3ffa4713605d7519097f2769f4",
+  "old_sha256": "23c71a47cb3363f4fb0c025bff9f4da6c0d5df4acab7b4dd6eb9ce03e05422b8",
+  "new_sha256": "eba187d6ab5188ca037d21098416502ab55984c7fee391ce32d5b0dd9d2a0427",
+  "reviewer": "Estonian independent AI reviewer 2",
+  "evidence": [
+   "read-unread-0251-0340.txt#R574"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "L71adeb9248",
+  "source": "Travis picking, named after Merle Travis, keeps the thumb alternating on every beat while the fingers pluck in between, on the ands.",
+  "old": "Merle Travise järgi nimetatud sõrmitsemises vahetab pöial igal löögil bassikeelt, sõrmed tõmbavad nende vahel, ja ajal.",
+  "new": "Merle Travise järgi nimetatud sõrmitsemises vahetab pöial igal löögil bassikeelt, sõrmed tõmbavad nende vahel, „ja” ajal.",
+  "reason": "Quote the rhythmic syllable ja instead of presenting it as a bare conjunction after the comma; alternating-thumb technique remains unchanged.",
+  "source_sha256": "53389cda4298dfd3840151083dcb1fbf280e41d12f2b59da64e8d3c9e4e81955",
+  "old_sha256": "2ba3e9804d6645ef1764c14c8517b04ddf0c91311448e25e2c64b1435759b153",
+  "new_sha256": "2600223371c303215cc1f3494bb30d3fd76f6e94929a3228fc27eb8cc65f8fb1",
+  "reviewer": "Estonian independent AI reviewer 2",
+  "evidence": [
+   "read-unread-0251-0340.txt#R684"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "Lf7d58e48dc",
+  "source": "In the key of A, which chord does the job B7 did in E?",
+  "old": "Milline akord täidab A-helistikus sama rolli kui B7 E-helis?",
+  "new": "Milline akord täidab A-helistikus sama rolli kui B7 E-helistikus?",
+  "reason": "E-helis incorrectly compresses key into sound; restore E-helistikus to preserve comparison of harmonic roles in the keys of A and E.",
+  "source_sha256": "af916eee8995181ca599d8c557e383112d0be094201b9099e4c77bd3c30924d8",
+  "old_sha256": "9e47f3b1baf65d1bdd9efe371cfa4b5b9b493c57bc9d3f7bac91be98ef085b6e",
+  "new_sha256": "19efd98173c00e5529df3a59a8302e93f3bc51f5b4f6a127dc298fa6a0aea7b7",
+  "reviewer": "Estonian independent AI reviewer 1",
+  "evidence": [
+   "read-contexts-0641-0740.txt#C651"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "Lba82c8d6f4",
+  "source": "Syncopation puts the strum where you don't expect it. Down on one, up on the and of two, up on the and of three, then down-up on four.",
+  "old": "Sünkoop asetab tõmbe ootamatusse kohta. Alla ühe ajal, üles kahe ja ajal, üles kolme ja ajal, siis alla-üles nelja ajal.",
+  "new": "Sünkoop asetab tõmbe ootamatusse kohta. Alla ühe ajal, üles kahe „ja” ajal, üles kolme „ja” ajal, siis alla-üles nelja ajal.",
+  "reason": "Quote both counted offbeats to distinguish them from conjunctions and preserve the exact down/up strum timing.",
+  "source_sha256": "de0829520d2d94570dce56b0fcc44f144982494cb70d7f8d343545acabb641ee",
+  "old_sha256": "2b5101f0a8ec97dad3ab425be5fadb59ddae035816f1466b0c794b39a77de8ce",
+  "new_sha256": "691cf936699bf9eefb898e7ca9f658f4a36867c94e12405c5b585b0bb1f251e6",
+  "reviewer": "Estonian independent AI reviewer 2",
+  "evidence": [
+   "read-unread-0431-0520.txt#R993"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "L145d6e81c2",
+  "source": "Pop players often change chords on the last up strum, the and of four, so the new chord arrives a hair early. It pushes the song forward.",
+  "old": "Popis vahetatakse akordi tihti viimasel üleslöögil, nelja ja ajal, et uus akord saabuks pisut vara. See viib laulu edasi.",
+  "new": "Popis vahetatakse akordi tihti viimasel üleslöögil, nelja „ja” ajal, et uus akord saabuks pisut vara. See viib laulu edasi.",
+  "reason": "Mark the offbeat after four as the counted syllable ja; otherwise nelja ja ajal reads as an unfinished conjunction.",
+  "source_sha256": "9b3e8a540f52ee4bb5fdb6e72a11c8acea7d898d8164a92d8914ccefbfabdb83",
+  "old_sha256": "f612b50d2041c14fe21c06542c37fab3d28c0b0e6b31dac7423e246c1b88678f",
+  "new_sha256": "8d44cfc3e7f566774169197304d0c71bf359e6b10ac873b56792fe3ee63d49a7",
+  "reviewer": "Estonian independent AI reviewer 2",
+  "evidence": [
+   "read-unread-0431-0520.txt#R999"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "L46c4bede0a",
+  "source": "Sparkler Season is a Timbre Original: a summer anthem in C on C, G, A minor and F. Give it the syncopated pop strum, and change a hair early, on the and of four. The whole song is in Songs, under Originals.",
+  "old": "„Sparkler Season” on Timbre originaallugu: suvehümn C-s akordidel C, G, A-moll ja F. Anna sellele sünkopeeritud popisaade ning vaheta pisut vara, nelja ja ajal. Kogu lugu on vahekaardi Laulud jaotises Originaallood.",
+  "new": "„Sparkler Season” on Timbre originaallugu: suvehümn C-s akordidel C, G, A-moll ja F. Anna sellele sünkopeeritud popisaade ning vaheta pisut vara, nelja „ja” ajal. Kogu lugu on vahekaardi Laulud jaotises Originaallood.",
+  "reason": "Quote the counted and of four consistently with the preceding syncopated-pop lesson and explanation.",
+  "source_sha256": "d935d26f3ad7626b4ec49862f5573340cda524416e77238d22b5691940669367",
+  "old_sha256": "787b60d2fbcd9db00012ec2a37a472add87edb4ea0c9705ce005b407feafbdb0",
+  "new_sha256": "334a3865ddb2e5d703fbb7b3bbdc766f7dfd64d396aecf1786a023172556f2ab",
+  "reviewer": "Estonian independent AI reviewer 2",
+  "evidence": [
+   "read-unread-0431-0520.txt#R1002"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "L77f34acf11",
+  "source": "Why change chords on the and of four?",
+  "old": "Miks vahetada akordi nelja ja ajal?",
+  "new": "Miks vahetada akordi nelja „ja” ajal?",
+  "reason": "Quote the counted and of four; the unquoted phrase nelja ja ajal reads as a broken conjunction sequence.",
+  "source_sha256": "1fbe432c1fe3e8399cc57dfc7cd60d84f5ff5f7f78e58b09e934ee22f8a66d95",
+  "old_sha256": "0838cc097de917290e892d45a3158828ae0a6ea8938d93232698221046db1e1c",
+  "new_sha256": "6c1c00590931298f65a27a3a7557dc2b56f1d3aaefc127ece0b0ba7eea0bdc8d",
+  "reviewer": "Estonian independent AI reviewer 2",
+  "evidence": [
+   "read-contexts-1346-1445.txt#C1371"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "Lf46578d518",
+  "source": "It starts on the and and rings across the next beat. That push is syncopation, like your pop strum.",
+  "old": "See algab ja ajal ning kõlab üle järgmise löögi. See tõuge on sünkoop, nagu sinu popisaates.",
+  "new": "See algab „ja” ajal ning kõlab üle järgmise löögi. See tõuge on sünkoop, nagu sinu popisaates.",
+  "reason": "Quote the offbeat counting syllable ja so the syncopation explanation is grammatically clear; note timing is unchanged.",
+  "source_sha256": "99ffcf1f6fd2e203352d021ec7c68ef3312222e7ab904664cffbc866d6fc9789",
+  "old_sha256": "3a7514cc7c4ca0455367ed531c113ac4a8ee08a0664a3d2236aa188f9a060dbc",
+  "new_sha256": "0e42c4e42707e239bee54d9eda96176cd528b463a6552c2a8ec83a5f6d150daf",
+  "reviewer": "Estonian independent AI reviewer 2",
+  "evidence": [
+   "read-contexts-1346-1445.txt#C1372"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "L1aca87acef",
+  "source": "D at frets 7, 7 and 5 has the root-position shape of your C at fret 5. Lower down, frets 2, 3 and 2 are the top of your open D.",
+  "old": "D krihvidel 7, 7 ja 5 kasutab sama põhikuju kui C krihvil 5. Madalamal on krihvid 2, 3 ja 2 lahtise D ülemine osa.",
+  "new": "D krihvidel 7, 7 ja 5 kasutab sama põhiseisu võtet kui C krihvil 5. Madalamal on krihvid 2, 3 ja 2 lahtise D ülemine osa.",
+  "reason": "Retain root position as the musical term põhiseis rather than generic basic shape põhikuju; this is an inversion lesson, so root-position identity matters. Preserve all fret numbers.",
+  "source_sha256": "50d159df23bd1816223e3e32a300b42c6eb4fc46c4326aad667c16a9df24e63f",
+  "old_sha256": "bf354833e62ecc3134733cbd35ee837d4113afe0851b1149e341bffc9debdebb",
+  "new_sha256": "d85cf2d28460074a8e82bad1156a2387bde593498143370b1ec1ce3d0046ad3b",
+  "reviewer": "Estonian independent AI reviewer 2",
+  "evidence": [
+   "read-unread-0521-0610.txt#R1161"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "L3d062b60ba",
+  "source": "Swing guitarists comp: short chords that answer the band. The Charleston rhythm hits beat one and the swung and of two, then leaves space.",
+  "old": "Svingikitarrist saadab bändi lühikeste vastavate akordidega. Charlestoni rütm tabab esimest lööki ja kahe svingivat ja-d, siis jätab ruumi.",
+  "new": "Svingikitarrist saadab bändi lühikeste vastavate akordidega. Charlestoni rütm tabab esimest lööki ja teise löögi svingivat „ja”-silpi, siis jätab ruumi.",
+  "reason": "Make the second-beat offbeat explicit and quote the counting syllable; the prior bare kahe svingivat ja-d is awkward and obscures the rhythmic label.",
+  "source_sha256": "822f8edf99722c8b963bcdabb0d3d47aa4b2982fa9b8ba096c9fc73c6f25a4e9",
+  "old_sha256": "a1887107259406c12cb9bffaacfbb9c07195a8a6ed720fbe9d95865d098bbe6e",
+  "new_sha256": "58eb57db9ca819c37078a003aecb45096da7ce4228db898e30b8a50cfdc76af3",
+  "reviewer": "Estonian independent AI reviewer 2",
+  "evidence": [
+   "read-unread-0611-0700.txt#R1244"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "L9ab9e50ce5",
+  "source": "No new ideas: major, minor and dominant sevenths, open and barred, and the ii–V–I in C and G. Keep the chords short and the swing steady.",
+  "old": "Uusi võtteid pole: suured, väikesed ja dominantseptakordid lahtiste keeltega ja barré-võttena ning ii–V–I helistikes C ja G. Hoia akordid lühikesed ja sving ühtlane.",
+  "new": "Uusi võtteid pole: suured mažoor-, väikesed minoor- ja dominantseptakordid lahtiste keeltega ja barré-võttena ning ii–V–I helistikes C ja G. Hoia akordid lühikesed ja sving ühtlane.",
+  "reason": "Restore the full chord qualities for major seventh and minor seventh, consistently with this unit introduction. Bare suured and väikesed only state size and can omit the triad quality in a seventh-chord summary.",
+  "source_sha256": "7e3f93a30f01a863384a0ea7f78eb1000310e26863ddaf42ae5107b6183e729d",
+  "old_sha256": "297922260f32b434b6b0de0330092a574a27711b9a67fb0b1aaf58ea6494ca7c",
+  "new_sha256": "2af18425831f0639b92355902049e2ffbed1b11c9c9ca512e7bfc5e93d764d41",
+  "reviewer": "Estonian independent AI reviewer 2",
+  "evidence": [
+   "read-unread-0611-0700.txt#R1255"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "L438e5aaa6d",
+  "source": "Whole, whole, half: the first half step is from 3 to 4. Whole, whole, whole, half: the second is from 7 to 8.",
+  "old": "Täistoon, täistoon, pooltoon: esimene pooltoon on nootidelt 3 kuni 4. Täistoon, täistoon, täistoon, pooltoon: teine on nootidelt 7 kuni 8.",
+  "new": "Täistoon, täistoon, pooltoon: esimene pooltoon on noodilt 3 noodile 4. Täistoon, täistoon, täistoon, pooltoon: teine on noodilt 7 noodile 8.",
+  "reason": "Use singular from-note/to-note case agreement for the interval endpoints rather than the malformed plural ablative nootidelt with kuni. Retain all four scale degrees and whole/half-step order.",
+  "source_sha256": "31a21c6bf4b2cd751422709c638b43e6b128b85e61c393dc72977add7b8586a1",
+  "old_sha256": "5e573e1acdab5bfc054edacf68f0a93f82dc0640e001705be5b16bb079be3783",
+  "new_sha256": "384121f1ec920d71d04e6912e50c8502e5a64b39d3e5708600508b268419ed9d",
+  "reviewer": "Estonian independent AI reviewer 2",
+  "evidence": [
+   "read-contexts-1346-1445.txt#C1380"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "Le636d3cc22",
+  "source": "The down on 1",
+  "old": "Allalöögi 1",
+  "new": "Allalöök löögil 1",
+  "reason": "Use a standalone nominative stroke label that works both for which stroke is omitted and which becomes the chunk; explicitly attach 1 to the beat, not the ordinal stroke.",
+  "source_sha256": "fbcf6db3c8eb34e01b75f9626eebb4c0892c0e94779fbbf06439cb7deaef8a4b",
+  "old_sha256": "136555c3b2a0ce29eb8ce56ca219a5ea0f0af20c2eb19a7e8f87ac9c9cec7aa2",
+  "new_sha256": "71114d935f9e23bcca9825498671f9175ad0424fec17903037a74a4d3716651b",
+  "reviewer": "Estonian independent AI reviewer 1",
+  "evidence": [
+   "read-contexts-0741-0840.txt#C790",
+   "read-contexts-0741-0840.txt#C791"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "L56db6392a5",
+  "source": "The down on 3",
+  "old": "Allalöögi 3",
+  "new": "Allalöök löögil 3",
+  "reason": "Make the beat association explicit instead of the ambiguous downstroke 3; retain number and downward direction.",
+  "source_sha256": "9d5ef94c4df61d2aecf1249a9fbaa50dd0303a2e1ba7fd18b56ada243529e34a",
+  "old_sha256": "9dc18780e7cd1ea29c0e261559b7513e77d50134940db5d4db40fb23c3bc47fd",
+  "new_sha256": "0856ad0f9a0d6b57521ca46ffabe766eb06d8ff2a533692b1ec7d36e52c6d3dc",
+  "reviewer": "Estonian independent AI reviewer 1",
+  "evidence": [
+   "read-contexts-0741-0840.txt#C790"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "L47cef636b2",
+  "source": "On G",
+  "old": "Noodil G",
+  "new": "G-l",
+  "reason": "Shared option covers both the note where a melodic line ends and the chord where a harmonic loop lands. Neutral G-l avoids narrowing the chord-context answer to a note.",
+  "source_sha256": "3201dbfc77ef28cc3520a62f30cdbd00559f5a8d38045276f7864e75dda67e7a",
+  "old_sha256": "22efaf3eec267ee35fc4cfcfaf07e1453c7b7bd04789084ba185f23225f14cda",
+  "new_sha256": "db565f2d3632c6aab506932009370cc0c13658e55a96bc2c832a6958e1f43517",
+  "reviewer": "Estonian independent AI reviewer 1",
+  "evidence": [
+   "read-contexts-0741-0840.txt#C794",
+   "read-contexts-0741-0840.txt#C795"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "Lc0ded9cc39",
+  "source": "Take the island strum, D, DU, UDU, and turn the down on 2 into a chunk. The rhythm stays the same; the groove gets a backbeat.",
+  "old": "Võta saarerütm D, DU, UDU ja muuda allalöök 2 summutatud löögiks. Rütm jääb samaks, kuid saade saab tagalöögirõhu.",
+  "new": "Võta saarerütm D, DU, UDU ja muuda allalöök löögil 2 summutatud löögiks. Rütm jääb samaks, kuid saade saab tagalöögirõhu.",
+  "reason": "Explicitly identify the downstroke on beat 2 rather than the ambiguous numbered downstroke 2; match the already corrected shared beat-bound stroke answers. Preserve D/U notation.",
+  "source_sha256": "6736239d649c439cdd64d3af9e1271d76522af6639fe17fa422218e666d864a0",
+  "old_sha256": "604fcc8c463f0f1918e6cecd2cf92e7203a7f2da8fbd54bf43e06402a81e8aee",
+  "new_sha256": "350a263a8607b7c725dff03f5653afcc27a2004ee27809321c101fb82067b6ec",
+  "reviewer": "Estonian independent AI reviewer 2",
+  "evidence": [
+   "read-unread-0971-1060.txt#R1805"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "Lc4c42a1802",
+  "source": "The down on 2",
+  "old": "Allalöök 2",
+  "new": "Allalöök löögil 2",
+  "reason": "Make explicit that the downstroke occurs on beat 2, consistently with the other beat-bound stroke options.",
+  "source_sha256": "05e6da8ae899ab9eae9dd7e4d48db6c3ac8209037792fd89aef1f5931b425b93",
+  "old_sha256": "96fcf83c5c4c919fcf6a137c3911013596ad810584d95bff62c4d283444c67f5",
+  "new_sha256": "84e4591e7b974476ed81ffe03322d8bd890cf66aade7a1dac9aab2242d8d6f3d",
+  "reviewer": "Estonian independent AI reviewer 1",
+  "evidence": [
+   "read-contexts-0741-0840.txt#C791"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "L98e6fb6780",
+  "source": "From thick to thin: E, A, D, G. They match the four lowest guitar strings, an octave down. Try: Every Amp Drives Grooves.",
+  "old": "Jämedast peeneni: E, A, D, G. Need vastavad kitarri neljale madalaimale keelele, oktavi võrra madalamal. Jäta meelde: Ema Aias Draakon Grillib.",
+  "new": "Jämedast peeneni: E, A, D, G. Need vastavad kitarri neljale madalaimale keelele, oktavi võrra madalamal. Jäta meelde: Ema Aias Draakoniga Grillib.",
+  "reason": "Draakon as an extra nominative leaves the mnemonic ungrammatical. Draakoniga gives mother grills with a dragon in the garden, retaining exactly E A D G initials.",
+  "source_sha256": "5a5769cbbdaaf4c0ef58aa8f864aa535a8c79046b9c054caad112b4258199e7f",
+  "old_sha256": "ae91f7ac945c5fa93fb866bc70a25a999f690642a0c2c69296af4258405754a2",
+  "new_sha256": "7b924bcd1e6b2880596f109a924f82ebfb2298061b50d40ba7a2a977ef8891a2",
+  "reviewer": "Estonian independent AI reviewer 1",
+  "evidence": [
+   "read-contexts-0741-0840.txt#C781"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "L75ae4744f4",
+  "source": "Let each finger cover one fret: index on fret 2, middle on 3, ring on 4, little on 5. Your thumb rests behind the neck, across from your middle finger.",
+  "old": "Anna igale sõrmele üks krihv: nimetissõrm krihvile 2, keskmine krihvile 3, sõrmusesõrm krihvile 4, väike krihvile 5. Pöial toetub kaela taha, keskmise sõrme vastu.",
+  "new": "Anna igale sõrmele üks krihv: nimetissõrm krihvile 2, keskmine krihvile 3, sõrmusesõrm krihvile 4, väike krihvile 5. Pöial toetub kaela taha, keskmise sõrme vastas.",
+  "reason": "Across from the middle finger is vastas (opposite), not vastu (against). The original case can imply touching the middle finger rather than placing the thumb opposite it behind the neck.",
+  "source_sha256": "d3413cd0ed19119e1716a6aa57ce21f47008b93d4f4bb1d15581e643fcb19494",
+  "old_sha256": "a01042fa1de083ac753ab04fb7cf398ca643b38647c873f50fecf71a049bb72e",
+  "new_sha256": "460929a4c7d7e7686fcd0c54f67c50e595e81865db03d07d68b734ad80d8e4fa",
+  "reviewer": "Estonian independent AI reviewer 2",
+  "evidence": [
+   "read-unread-1061-1140.txt#R2043"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "Lebec87bbfe",
+  "source": "Each line ends long, short, long: a dotted quarter, an eighth and a half note. A dot after a note adds half its length.",
+  "old": "Iga rida lõpeb pikk, lühike, pikk: punktiga veerandnoot, kaheksandik ja poolnoot. Punkt noodi järel lisab poole selle kestusest.",
+  "new": "Iga rida lõpeb mustriga pikk, lühike, pikk: punktiga veerandnoot, kaheksandik ja poolnoot. Punkt noodi järel lisab poole selle kestusest.",
+  "reason": "Add mustriga so the sequence is grammatically the pattern with which each line ends; note values and dotted-duration explanation are unchanged.",
+  "source_sha256": "421c46dad8393cf1d638ee2325b436a89dff3b35d3ebe1967d741c05cf3465a4",
+  "old_sha256": "7d0d077b6f8bf43ad85aefa5c002205e453b05dd4028f2eb6290304cfce98653",
+  "new_sha256": "19bfe82ca6a9b4eb67b230fc5c526b7a203394d2d9fb6a5e79aada319c952e8a",
+  "reviewer": "Estonian independent AI reviewer 1",
+  "evidence": [
+   "read-contexts-0441-0540.txt#C467"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "L285b045a4f",
+  "source": "Slide second finger back until it touches first. On the A string that's C natural, a half step below C sharp. Players call it low 2.",
+  "old": "Libista teist sõrme tagasi, kuni see puudutab esimest. A-keelel on see C-bekarr, pooltoon C-dieesist madalam. Mängijad nimetavad seda madalaks 2.",
+  "new": "Libista teist sõrme tagasi, kuni see puudutab esimest. A-keelel on see C-bekarr, pooltoon C-dieesist madalam. Mängijad nimetavad seda asendiks „madal 2”.",
+  "reason": "Use a quoted name for the low-second-finger position instead of the ungrammatical madalaks 2 construction. Keep the exact finger number and natural-versus-sharp instruction.",
+  "source_sha256": "41f6d4dad49d8ad90454197995b73f425c72aebef5c8b82d9d45d56b05378b92",
+  "old_sha256": "fc09c435007bd9215f20ba724b7feef172739b736ea76dca2132ebb5112e4550",
+  "new_sha256": "ba1e7d30cd7bfc72e9cfad7414f8ee3fc74386ef042414b9dfed1319ab8b1e90",
+  "reviewer": "Estonian independent AI reviewer 2",
+  "evidence": [
+   "read-unread-1301-1380.txt#R2476"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "Lb2b38f116f",
+  "source": "The open fifth string",
+  "old": "Lahtiselt viiendalt keelelt",
+  "new": "Lahtine viies keel",
+  "reason": "Shared option must answer both the source of a high G and what the thumb plays. The previous ablative from the open fifth string fails the latter; a standalone nominal label preserves the string identity in both contexts.",
+  "source_sha256": "a5cd472bb622059ce097af1d28e5022e20d9f86c41457bf4f70ce8c381c88775",
+  "old_sha256": "5a8a817359cd2c7074795858c4cc7d6edc9733884bc52ef40e2aa00ed81e0e9c",
+  "new_sha256": "52cfd13c384f8cb14961060ce1fdbfc2da25dac896853dee8b29d86b7926a123",
+  "reviewer": "Estonian independent AI reviewer 1",
+  "evidence": [
+   "read-contexts-0641-0740.txt#C740",
+   "read-contexts-0841-0940.txt#C935"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "L639b70b19b",
+  "source": "Mountain minor",
+  "old": "Mägiminoor",
+  "new": "Mountain minor",
+  "reason": "Retain the documented English technical name mountain minor rather than the unverified calque Mägiminoor. This standalone name is individually approved; the following Estonian introduction explains its sound without adding unsupported retuning instructions.",
+  "source_sha256": "7a75d55265c61569b7d39f7be3b5622f11aaf1ef1b51240baff1a601380ececc",
+  "old_sha256": "717e3dd33486b5d69670208a50ca3076830c0027dedc1448157ec77fcb50799c",
+  "new_sha256": "7a75d55265c61569b7d39f7be3b5622f11aaf1ef1b51240baff1a601380ececc",
+  "reviewer": "Estonian independent AI reviewer 1",
+  "evidence": [
+   "read-rows-3265-3266.txt"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "L532c25828a",
+  "source": "Shady Grove has the dark, old sound players call mountain minor. It comes to rest on A instead of G, and the high G of the fifth string sings against it.",
+  "old": "Lool Shady Grove on tume vana kõla, mida mängijad nimetavad mägiminooriks. See jääb G asemel pidama A-le ning viienda keele kõrge G heliseb selle vastu.",
+  "new": "Loo Shady Grove tume vana kõla kannab mängijate seas nime „mountain minor”. Viis jääb G asemel pidama A-le ning viienda keele kõrge G heliseb selle vastu.",
+  "reason": "Preserve the documented technical name inside fully Estonian prose instead of claiming the unverified Estonian term mägiminoor is players’ usage. Keep the source A tonal centre and high G unchanged; do not convert this sound description into new tuning directions.",
+  "source_sha256": "c4c1e016ae023ea54e0de2191b56f654d404d96a7d3a3533d87e7a23b3295bca",
+  "old_sha256": "8c5bc76aa336d2fd67b0e0ee8c53f64ac4b922c008994c0c26406b39881f89db",
+  "new_sha256": "1ef29151bdf924dc9ba37c83d084b7bfc97b2673d8811c712428393cb17a05b4",
+  "reviewer": "Estonian independent AI reviewer 1",
+  "evidence": [
+   "read-rows-3265-3266.txt"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "La6191327f7",
+  "source": "Shady Grove is in mountain minor, centered on A. The others come home to G.",
+  "old": "Shady Grove on mägiminooris, keskmega A. Teised jõuavad koju G-le.",
+  "new": "Shady Grove kõla kannab nime „mountain minor” ja selle keskmes on A. Teised jõuavad koju G-le.",
+  "reason": "Use the same original technical term as the corrected introduction and title while keeping the A-versus-G answer explanation unchanged.",
+  "source_sha256": "4b309e758964f08ce160909d22a221eaa36a304effb4ded2dc79b5747fb46fd1",
+  "old_sha256": "f842abd49e7c4cb727b5157994c3e3d9a1fe8443380c2481aae294fb6bb2506a",
+  "new_sha256": "0e4a2e608e464aeb1139136343b77a10620324ec80aba282da7dd6b28c632326",
+  "reviewer": "Estonian independent AI reviewer 1",
+  "evidence": [
+   "read-contexts-0841-0940.txt#C934"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "L9f29e18cb2",
+  "source": "What's another word for a bar?",
+  "old": "Mis on takti teine ingliskeelne nimetus?",
+  "new": "Milline valik tähendab muusikas sama mis ingliskeelne „bar”?",
+  "reason": "Ask for the localized musical equivalent of the English term bar, rather than asking for another English word while Beat and Rest choices are Estonian. This is not circular and matches the localized Measure choice and existing English-synonym explanation.",
+  "source_sha256": "b8e5aba08cd34244b85dc754a4738411806442539886cdc39033997eec441c4c",
+  "old_sha256": "7f201ac54f577667ccb9927c395d75f8c2087fc30135ac810256e358995f9c2f",
+  "new_sha256": "ddc4e624bdcc64a7e92ea51cf37179e6ff744098149bda9c7d947a457d495c06",
+  "reviewer": "Estonian independent AI reviewer 2",
+  "evidence": [
+   "read-contexts-1446-1495.txt#C1477"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "Ld4fd0a232e",
+  "source": "Measure",
+  "old": "Takt (measure)",
+  "new": "Takt",
+  "reason": "Localize the entire generic option Measure as Takt, in concert with the corrected equivalent-meaning prompt; the explanation still explicitly teaches that English bar and measure are synonyms. Beat and Rest remain localized peers.",
+  "source_sha256": "ebf940f2b3eaa86c4ca34f4bfe7241f2c2815c1358cbb6b841818ca7a4aaadc7",
+  "old_sha256": "a4d418625f97553ade460e71c9885b9cf0e12d9133beba848beb74aea06ade85",
+  "new_sha256": "2038d9ea6b84182aa94df283320913e789eb544a7b88ba96cd4c503e8e25109c",
+  "reviewer": "Estonian independent AI reviewer 2",
+  "evidence": [
+   "read-contexts-1446-1495.txt#C1477"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "L0a43370b6e",
+  "source": "An eighth note lasts half a beat, so two fit in each beat. Count them 1 and 2 and 3 and 4 and, saying and between the beats.",
+  "old": "Kaheksandiknoot kestab pool lööki, seega mahub igasse lööki kaks. Loe neid 1 ja 2 ja 3 ja 4 ja, öeldes löökide vahel ja.",
+  "new": "Kaheksandiknoot kestab pool lööki, seega mahub igasse lööki kaks. Loe neid 1 ja 2 ja 3 ja 4 ja, öeldes löökide vahel „ja”.",
+  "reason": "Quote the final counting syllable ja to distinguish it from an unfinished conjunction; the count pattern and note duration stay unchanged.",
+  "source_sha256": "23b2f85670e90f89f658e9e74f8efdd31ac0b460a04a08dba341502e17610817",
+  "old_sha256": "da91377978258e20f8ae468f846a5c4b6597c817daf317354fdfaa3f758b3ff5",
+  "new_sha256": "e95c37b2060aed8d949c50c1745e92ab2dcd85ae2415f82aa7373bcf6c78f73f",
+  "reviewer": "Estonian independent AI reviewer 1",
+  "evidence": [
+   "read-contexts-0841-0940.txt#C846"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "Le8c2381325",
+  "source": "Rather than writing F♯ every time, music in G major puts one sharp at the start of each line. That's the key signature: it lists the notes that are always sharp or flat.",
+  "old": "Selle asemel et iga kord F♯ kirjutada, pannakse G-duuris iga noodirea algusse üks diees. Need on võtmemärgid: noodid, mida alati kõrgendatakse või madaldatakse.",
+  "new": "Selle asemel et iga kord F♯ kirjutada, pannakse G-duuris iga noodirea algusse üks diees. Need on võtmemärgid: need näitavad, milliseid noote alati kõrgendatakse või madaldatakse.",
+  "reason": "The draft equates key-signature signs with notes; restore the source relationship that the signs identify the notes to alter.",
+  "source_sha256": "d2f4953775871e9db79bc0a9621a49c51f5903ec8ff0847086b3af3a30e77eee",
+  "old_sha256": "3c29da920223c75ff5c6a322f561e9ba7ffee5659f971429fb48e4b4727aa3d0",
+  "new_sha256": "1fd75f22f7ca37a6e37c7aad84be73f8550dbcc74921da564acf27c1b470fce7",
+  "reviewer": "Estonian independent AI reviewer 1",
+  "evidence": [
+   "read-contexts-1041-1145.txt#C1097"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "L63b5f26523",
+  "source": "In six-eight a quarter and an eighth make one big beat: long, short. Count one-two-three, four-five-six, and play on one, three, four and six.",
+  "old": "Kuus kaheksandikku taktis moodustavad veerand ja kaheksandik ühe suure löögi: pikk, lühike. Loe üks-kaks-kolm, neli-viis-kuus ning mängi ühel, kolmel, neljal ja kuuel.",
+  "new": "Taktimõõdus kuus kaheksandikku moodustavad veerandnoot ja kaheksandik ühe suure löögi: pikk, lühike. Loe üks-kaks-kolm, neli-viis-kuus ning mängi ühel, kolmel, neljal ja kuuel.",
+  "reason": "Move the spelled-out meter name into a clear in-this-meter phrase; the draft begins as if six eighth notes are the subject of the statement. Preserve one quarter plus one eighth per compound beat and the exact count instructions.",
+  "source_sha256": "60fc139f3b43a2a52c9598d8193121b07b6c850da14f8a83e9509a0e954785e3",
+  "old_sha256": "2f13d19fc024304ac9fb95e899d4260109d959c2e5ed8b773211b9095dba6a33",
+  "new_sha256": "12986d5cb9b4a0f29a33b9463f6868bbad5fda645d240ffe5d56accf80155802",
+  "reviewer": "Estonian independent AI reviewer 1",
+  "evidence": [
+   "read-contexts-1041-1145.txt#C1137"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "Lfbcc1404d0",
+  "source": "Bend your thumb and set its tip where the frog meets the stick, across from your middle finger. Drape all four fingers over the stick and let the hand hang heavy.",
+  "old": "Painuta pöialt ja aseta selle ots kohta, kus kand puutub poognapuuga kokku, keskmise sõrme vastu. Lase kõigil neljal sõrmel üle puu kaarduda ja käel raskelt rippuda.",
+  "new": "Painuta pöialt ja aseta selle ots kohta, kus kand puutub poognapuuga kokku, keskmise sõrme vastas. Lase kõigil neljal sõrmel üle puu kaarduda ja käel raskelt rippuda.",
+  "reason": "Across from the middle finger denotes opposite placement, not contact against it; vastas preserves the physical bow-grip instruction, consistently with the reviewed bass hand-placement correction.",
+  "source_sha256": "f60e0a2055df65b7863031fc989c5af758e53523d611cab6be6ec397684dfbf3",
+  "old_sha256": "f980c82ae0506cec4c04c303b007476677f6df2dff59e1da84c8c5443371d039",
+  "new_sha256": "da79ceff04a2cb8249969160534875a3270369543370c890311c31709d2a2ae1",
+  "reviewer": "Estonian independent AI reviewer 3",
+  "evidence": [
+   "read-unread-1445-1544.txt#U1460/R2644",
+   "correction-context-reread.txt#Lfbcc1404d0"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "Lad8b46c5e0",
+  "source": "Clawhammer uses no picks. Curl your hand into a loose claw and strike down on a string with the back of your index or middle fingernail, moving from the wrist and forearm.",
+  "old": "Clawhammer ei kasuta sõrmemediaatoreid. Kõverda käsi lõdvaks küüniseks ja löö keelele nimetissõrme või keskmise sõrme küüne välisküljega alla, liikudes randmest ja küünarvarrest.",
+  "new": "Clawhammer ei kasuta mediaatoreid. Kõverda käsi lõdvaks küüniseks ja löö keelele nimetissõrme või keskmise sõrme küüne välisküljega alla, liikudes randmest ja küünarvarrest.",
+  "reason": "The source excludes all picks, including the thumb pick introduced earlier. Sõrmemediaatorid can narrow this to finger picks; the generic mediaatorid preserves the complete no-picks instruction.",
+  "source_sha256": "c78d08fc6724479feb303b52e2edead8f4a0ed040d81f64d2d7fb88f391486ce",
+  "old_sha256": "80fe799973069c8006250237c9e598295c3693e4ee7ec6765ccf1b9e41bedc49",
+  "new_sha256": "9b6521a88b0eea84e1533602182c60f1f425f46b1a236eb5ca39111d8a5aadaa",
+  "reviewer": "Estonian independent AI reviewer 3",
+  "evidence": [
+   "read-unread-1745-1844.txt#U1843/R3319",
+   "correction-context-reread.txt#Lad8b46c5e0"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "Lcfd577be2d",
+  "source": "F is the white key just left of each group of three black keys. Find C and F first, and every other white key is a short count away.",
+  "old": "F on valge klahv iga kolmest mustast klahvist koosneva rühma vahetult vasakul küljel. Leia esmalt C ja F ning iga teine valge klahv on vaid lühikese loenduse kaugusel.",
+  "new": "F on valge klahv iga kolmest mustast klahvist koosneva rühma vahetult vasakul küljel. Leia esmalt C ja F ning kõik ülejäänud valged klahvid leiad lühikese loendusega.",
+  "reason": "Every other white key means all remaining white keys here, not every second key. Replace ambiguous iga teine with kõik ülejäänud while retaining the F-left-of-three-black-keys locator.",
+  "source_sha256": "25311cc80567adf5ecfe6e9398e4be2da0ab1f5675ebd8112a5765b8fe3b2418",
+  "old_sha256": "4dd49cbf5b105c8ce0cc0e0313ff40108286d8d53f587b8b9509752b9b23b1d3",
+  "new_sha256": "74c00e7745dae45fab965639323862b9c0db692d99b48b20c7e0e6a9512a430f",
+  "reviewer": "Estonian independent AI reviewer 3",
+  "evidence": [
+   "read-unread-1945-2044.txt#U2008/R3726",
+   "correction-context-reread.txt#Lcfd577be2d"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "L833e16fa33",
+  "source": "IV to I is a plagal cadence, the soft amen at the end of many hymns. Stopping on V is a half cadence, like a comma. V to vi is deceptive: you expect home and get a surprise.",
+  "old": "IV-lt I-le on plagaalne kadents, paljude hümnide lõpu pehme aamen. V-le peatumine on poolkadents, nagu koma. V-lt vi-le on katkestatud kadents: ootad kojujõudmist, kuid saad üllatuse.",
+  "new": "IV-lt I-le on plagaalne kadents, paljude hümnide lõpu pehme aamen. V-l peatumine on poolkadents, nagu koma. V-lt vi-le on katkestatud kadents: ootad kojujõudmist, kuid saad üllatuse.",
+  "reason": "Stopping on chord V requires the location case V-l, not the destination case V-le. Keep all three cadence types and chord directions unchanged.",
+  "source_sha256": "d47d7155ef27a1f958b03d2ccf954c9f34d1d17e711649007e73ef1004e3b0b3",
+  "old_sha256": "b184bc7bb017c55b3a460a74efb5f1b1575bd613cb9758959fcc75d42ecbc368",
+  "new_sha256": "f8dc0be2c1b0eefcc8da678e289b5d61444f9d058a87156ab751c49407f5e94d",
+  "reviewer": "Estonian independent AI reviewer 3",
+  "evidence": [
+   "read-unread-2145-2244.txt#U2200/R4343",
+   "correction-context-reread.txt#L833e16fa33"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "Ld82fdaf023",
+  "source": "The \"and\" should land exactly halfway between beats. If your eighths sound like a gallop, slow down and say the counts as you tap.",
+  "old": "„Ja“ peaks langema täpselt löökide keskele. Kui su kaheksandikud kõlavad nagu galopp, aeglusta ja loe koputades kaasa.",
+  "new": "„Ja” peaks langema täpselt kahe löögi vahe keskele. Kui su kaheksandikud kõlavad nagu galopp, aeglusta ja loe koputades kaasa.",
+  "reason": "The offbeat is halfway between beats, not in the middle of the beats themselves. Specify the midpoint of the gap between two beats; retain the gallop diagnostic and slowing/counting advice.",
+  "source_sha256": "97d216a07d9b54330f4ac6cc2d2c29d49c24d5c5e13bf55aa0b0e1a7c5614d0d",
+  "old_sha256": "02be6a7ed01a0310eeb9508d1c1b6e7f20bd24f71114005201526168cfd24ad0",
+  "new_sha256": "1c42086d23490fc98141e3d9bddbcce479e665c40d79fa4f1721ffc880c75fb5",
+  "reviewer": "Estonian independent AI reviewer 3",
+  "evidence": [
+   "read-unread-2145-2244.txt#U2241/R4460",
+   "correction-context-reread.txt#Ld82fdaf023"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "L944e411624",
+  "source": "In the middle section, E and F share a single beat. Count one, two-and, three, four, and play E on two and F on the and.",
+  "old": "Keskosas jagavad E ja F ühte lööki. Loe üks, kaks-ja, kolm, neli ning mängi E kahe ja F „ja“ ajal.",
+  "new": "Keskosas jagavad E ja F ühte lööki. Loe üks, kaks-ja, kolm, neli ning mängi E sõnal „kaks” ja F sõnal „ja”.",
+  "reason": "Make the two distinct attacks explicit: E on the counted beat two and F on its and. The draft E kahe ja F construction obscures the boundary between beat two and its offbeat; retain the full spoken count pattern.",
+  "source_sha256": "178bdfbe1761e00894406bad4f4384d2b4c38e70754c6e54e15412101ff9bb57",
+  "old_sha256": "0349efb24780007e7bb9ecadbecde49b94a5f2044bdcd0051842b1a221c16a90",
+  "new_sha256": "b729162a6800fedba85574a5a3b13b528572f183e0b9446b20e35b92fecfceee",
+  "reviewer": "Estonian independent AI reviewer 3",
+  "evidence": [
+   "read-unread-2445-2544.txt#U2487/R4967",
+   "correction-context-reread.txt#L944e411624"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "L7d35795799",
+  "source": "Sevenths, sus and swing",
+  "old": "Septimid, sus-akordid ja sving",
+  "new": "Septakordid, sus-akordid ja sving",
+  "reason": "Sevenths names seventh chords in this unit, as the unit summary and all its lessons specify; septimid names the intervals instead. Use septakordid consistently with the adjoining chord-focused headings.",
+  "source_sha256": "5f188f558dec4cec6ed78c94e6efc84764669f017d72e002cbf6aad963a610c2",
+  "old_sha256": "f331c1abbc30e507e50c20c9bf8ea1f5a6cc8d93e46ab09f66f4fe7f36d57a0a",
+  "new_sha256": "5843c0d91fb0e4a44d10c4b52c9ac713a7b2b5b510b72016f257bf3d1b70face",
+  "reviewer": "Estonian independent AI reviewer 3",
+  "evidence": [
+   "read-unread-2645-2744.txt#U2718/R5363",
+   "correction-context-reread.txt#L7d35795799"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "L037f025d31",
+  "source": "Ghost Light is a slow, dark ballad in A minor at 70 beats per minute. The verse sinks from A minor through F and C to E major, which pulls hard back to A minor.",
+  "old": "Ghost Light on aeglane tume ballaad A-mollis tempos 70 lööki minutis. Salm laskub A-mollist läbi F-i ja C E-duuri, mis tõmbab tugevalt tagasi A-molli.",
+  "new": "Ghost Light on aeglane tume ballaad A-mollis tempos 70 lööki minutis. Salm laskub A-mollist läbi F- ja C-akordi E-duurini, mis tõmbab tugevalt tagasi A-molli.",
+  "reason": "Explicitly separate the intermediate F and C chords from the destination E-major chord. The unmarked C E-duuri adjacency in the draft obscures the through-F-and-C-to-E progression; preserve its harmonic direction and tempo.",
+  "source_sha256": "ada198fd04ac197a385e4aca9be578130cfe3133f19239ecb415333d325abb69",
+  "old_sha256": "6d3ef669f738a57a571c4cc5bdc37e48a600a6caf9308c14d80da909a5aa76ba",
+  "new_sha256": "56abc5899c5b49849703a41d4b1d730311239575d2ced4ef7f8e3dd23efc6634",
+  "reviewer": "Estonian independent AI reviewer 3",
+  "evidence": [
+   "read-unread-2745-2844.txt#U2821/R5515",
+   "correction-context-reread.txt#L037f025d31"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "L4ed6671eed",
+  "source": "A lullaby carol",
+  "old": "Hällilaulust jõululaul",
+  "new": "Hällilauluna kõlav jõululaul",
+  "reason": "A lullaby carol describes the carol’s lullaby character, not a historical transformation from a lullaby into a carol. The replacement preserves the descriptive relationship without inventing an origin story.",
+  "source_sha256": "feff0d77c2b3906e6d62f7ca0806f1419210a178ea07dbcf17e27b00c9927239",
+  "old_sha256": "f2834bbf90d4c3281a7d1bf8a17198e10361148f1fe7b011e2a37d5a9b95ff4c",
+  "new_sha256": "afb93c42afbef8133185c0426996192bc7d8ca015ce735b35e3c8eb9e2f41e5f",
+  "reviewer": "Estonian independent AI reviewer 3",
+  "evidence": [
+   "read-unread-2945-3044.txt#U2984/R5791",
+   "correction-context-reread.txt#L4ed6671eed"
+  ]
+ },
+ {
+  "locale": "et",
+  "key": "L28c9fda397",
+  "source": "Every line starts on the beat before the bar: O, our, our, and. Count four, then sing the first word on it.",
+  "old": "Iga rida algab taktieelset lööki pidi: O, our, our, and. Loe neli ja laula esimene sõna sellel.",
+  "new": "Iga rida algab taktile eelneval löögil: O, our, our, and. Loe neli ja laula esimene sõna sellel.",
+  "reason": "Use the natural on-the-beat construction taktile eelneval löögil for the pickup. The draft taktieelset lööki pidi is not a clear temporal placement instruction. Preserve all four original lyric cues and the beat-four count.",
+  "source_sha256": "1135fecae9882869272857c51fca657fb83d3113c37a7f2811fed2dc7dea752f",
+  "old_sha256": "23e26253c3b7f09a562fdde32b246c6362d7278415e5e2b2c38b6d7bfee86e1c",
+  "new_sha256": "00ed85fe07110dc58b069c7a4f7fce8b42dd8622da1ea528c83e1f91af5a862e",
+  "reviewer": "Estonian independent AI reviewer 3",
+  "evidence": [
+   "read-unread-2945-3044.txt#U3033/R5878",
+   "correction-context-reread.txt#L28c9fda397"
+  ]
+ }
+]
