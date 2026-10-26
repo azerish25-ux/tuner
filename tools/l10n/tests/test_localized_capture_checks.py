@@ -1,5 +1,7 @@
 from pathlib import Path
 import unittest
+import json
+import re
 
 ROOT = Path(__file__).resolve().parents[3]
 
@@ -18,7 +20,7 @@ class LocalizedCaptureChecksTests(unittest.TestCase):
 
     def test_capture_checks_do_not_require_english_or_allow_empty_string_checks(self):
         source = (ROOT / 'ios/TimbreUITests/TimbreUITests.swift').read_text()
-        self.assertIn('element("lesson.chord.complete").waitForExistence', source)
+        self.assertIn('nodes.contains { $0.identifier == "lesson.chord.complete" }', source)
         self.assertIn('checks.count == 6 && heard == Set(1...6)', source)
         self.assertNotIn('$0.label.hasPrefix("String ")', source)
         self.assertNotIn('labeled("3 of 3 stars")', source)
@@ -41,6 +43,32 @@ class LocalizedCaptureChecksTests(unittest.TestCase):
         self.assertIn('contentBottom <= safeBottom + 1', bounds)
         self.assertIn('XCTAssertFalse(CaptureFrameBounds.fits(contentBottom: 771, safeBottom: 752))', checks)
         self.assertIn('XCTAssertFalse(CaptureFrameBounds.fits(contentBottom: 782, safeBottom: 780))', checks)
+
+    def test_violin_capture_wait_covers_actual_curriculum_without_mid_take_queries(self):
+        curriculum = json.loads((ROOT / 'ios/Sources/TimbreCore/Resources/curriculum.json').read_text())
+        def dictionaries(value):
+            if isinstance(value, dict):
+                yield value
+                for child in value.values():
+                    yield from dictionaries(child)
+            elif isinstance(value, list):
+                for child in value:
+                    yield from dictionaries(child)
+        lesson = next(x for x in dictionaries(curriculum) if x.get('id') == 'vln-1-6')
+        take = next(x for x in reversed(lesson['steps']) if x['type'] == 'along')
+        beats = max(n['b'] + n['d'] for n in take['notes'])
+        session = (ROOT / 'ios/Sources/TimbreCore/Learn/PlayAlongSession.swift').read_text()
+        tail = float(re.search(r'public static let tail = ([0-9.]+)', session).group(1))
+        seconds = (beats + take['beatsPerBar']) * 60 / take['bpm'] + tail
+        self.assertLess(seconds, 40, 'Increase quiet capture wait when this fixture grows')
+        source = (ROOT / 'ios/TimbreUITests/TimbreUITests.swift').read_text()
+        test = source.split('func test19StoreViolinResults()', 1)[1].split('func testStoreResultsBoundsCalculation()', 1)[0]
+        between = test.split('start.tap()', 1)[1].split('element("along.again")', 1)[0]
+        self.assertIn('settle(40)', between)
+        self.assertNotIn('waitForExistence', between)
+        chord = source.split('func test12StoreChord()', 1)[1].split('func ', 1)[0]
+        self.assertIn('settle(45)', chord)
+        self.assertNotIn('waitForExistence', chord)
 
     def test_focused_ci_checks_ltr_rtl_and_requires_real_valid_attachments(self):
         source = (ROOT / '.github/workflows/localized-capture-check.yml').read_text()

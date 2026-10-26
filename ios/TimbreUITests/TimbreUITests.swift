@@ -760,8 +760,11 @@ final class TimbreUITests: XCTestCase {
         for _ in 0..<40 where !(start.exists && start.isEnabled) { settle(0.5) }
         XCTAssertTrue(start.exists && start.isEnabled, "The play-along start control was not ready")
         start.tap()
-        // A one-bar count-in and four open strings: the take is over well inside 15 s.
-        settle(15)
+        // This checkup now has 28 beats at 60 BPM, plus a four-beat count-in and
+        // the 1.2-second session tail. Do not poll accessibility during the take:
+        // simulator snapshots stall the demo pitch's main-thread readings.
+        // The source-contract test below guards this quiet 40-second interval.
+        settle(40)
         XCTAssertTrue(element("along.again").waitForExistence(timeout: 30), "The violin play-along never finished")
         settle(1)
         element("lesson.continue").tap()
@@ -935,13 +938,15 @@ final class TimbreUITests: XCTestCase {
     /// every string lit instead of handing over to the next step.
     func test12StoreChord() throws {
         launch(pitch: true, scene: "lesson-chord")
-        let ringing = element("lesson.chord.complete").waitForExistence(timeout: 45)
-        // The last string's tick and the burst land.
-        settle(1.2)
+        // This scene holds the completed chord. Let its six strings be heard without
+        // repeated accessibility queries stalling the software-rendered 3D scene.
+        settle(45)
         let picture = XCUIScreen.main.screenshot()
         // The E-minor scene must expose all six individually heard strings. No English labels or
         // localized-number parsing, and an empty/missing check set cannot pass vacuously.
-        let checks = appNodes().filter { $0.identifier.hasPrefix("lesson.chord.string.") }
+        let nodes = appNodes()
+        let ringing = nodes.contains { $0.identifier == "lesson.chord.complete" }
+        let checks = nodes.filter { $0.identifier.hasPrefix("lesson.chord.string.") }
         let heard = Set((1...6).filter { number in
             checks.contains { $0.identifier == "lesson.chord.string.\(number).heard" }
         })

@@ -1,0 +1,30 @@
+{
+  "source_commit": "c5f19f4b1fcb9b9a8032e3a9528755308a8c3191",
+  "run": 40321755946,
+  "job": 121568167038,
+  "conclusion": "failure",
+  "artifact": 12650453716,
+  "artifact_sha256": "8c68d6c4136767e75ed85493d35b396b1dfabf0dedd82199f53e26c2aed35bb3",
+  "image_inspected": "AAA0F6DD-02B2-423C-B9CD-EECD458AB8D9.png",
+  "observed_result": "92 percent, three stars, missed A4 to D4 transition, additional coach and weak-spot action; level bar below fold",
+  "actual_bounds": {
+    "viewport": 718,
+    "fade": 28,
+    "share_bottom": 694,
+    "level_bottom": 774,
+    "safe_bottom": 690,
+    "fits": false
+  },
+  "chord_failure": "XCUITest snapshot query timeout before completion assertion",
+  "verified_fixture_duration": {
+    "beats": 28,
+    "bpm": 60,
+    "count_in_beats": 4,
+    "tail_seconds": 1.2,
+    "total_seconds": 33.2,
+    "old_quiet_wait_seconds": 15
+  },
+  "diagnosis": "Old quiet wait demonstrably ended mid-take. Accessibility polling stalls main-thread demo readings and is a plausible cause of the missed transition; exact causation and replacement outcome require fresh CI. This is a real clipped result frame, not the earlier German false positive.",
+  "bounded_change": "Wait40 seconds before querying results; wait45 seconds before single chord snapshot. Preserve all completion, six-string, three-star and active-fade geometry assertions. No grading, production layout or source curriculum changes.",
+  "status": "timing repair locally tested; fresh runtime verification pending"
+}
