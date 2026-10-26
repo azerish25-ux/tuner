@@ -17,6 +17,7 @@ final class TimbreUITests: XCTestCase {
         storeKit.disableDialogs = true
         app = XCUIApplication()
         app.launchEnvironment["TIMBRE_TEST_STORAGE_ID"] = UUID().uuidString
+        app.launchEnvironment["TIMBRE_DEBUG_STATE"] = "1"
         app.launchArguments = ["-AppleLanguages", "(\(Self.language))", "-AppleLocale", Self.locale]
     }
 
@@ -773,9 +774,19 @@ final class TimbreUITests: XCTestCase {
                             : "the violin results don't show three stars: the play-along wasn't played clean")
     }
 
+    func testStoreResultsBoundsCalculation() {
+        XCTAssertEqual(CaptureFrameBounds.safeBottom(viewportBottom: 780, buttonsTop: 788, fadeHeight: 0), 780)
+        XCTAssertEqual(CaptureFrameBounds.safeBottom(viewportBottom: 780, buttonsTop: 788, fadeHeight: 28), 752)
+        XCTAssertTrue(CaptureFrameBounds.fits(contentBottom: 771, safeBottom: 780))
+        XCTAssertFalse(CaptureFrameBounds.fits(contentBottom: 771, safeBottom: 752))
+        XCTAssertFalse(CaptureFrameBounds.fits(contentBottom: 782, safeBottom: 780))
+        XCTAssertNil(CaptureFrameBounds.safeBottom(viewportBottom: 0, buttonsTop: 788, fadeHeight: 0))
+        XCTAssertNil(CaptureFrameBounds.safeBottom(viewportBottom: .infinity, buttonsTop: 788, fadeHeight: 0))
+    }
+
     /// Whether the results' first screen fits above the pinned buttons (LessonResults): the Share pill and the level bar
-    /// end above the fade the scroll view draws over its last 28 pt (it ends 8 pt above the buttons), so neither is
-    /// dimmed (a Share pill half under the fade reads as disabled). Read from one snapshot.
+    /// end above the actual visible viewport and, only when active, its bottom fade. The previous unconditional
+    /// 36-point allowance falsely rejected intact translated layouts whose fade was off. Read from one snapshot.
     private func resultsFit() -> (fits: Bool, summary: String) {
         let nodes = appNodes()
         func frame(_ id: String) -> CGRect? { nodes.first { $0.identifier == id }?.frame }
@@ -785,9 +796,23 @@ final class TimbreUITests: XCTestCase {
         guard let buttons, let level else {
             return (false, "the results show no level bar or no buttons (level \(level != nil), buttons \(buttons != nil))")
         }
-        let clear = buttons - 36
-        let lowest = max(level.maxY, share?.maxY ?? 0)
-        return (lowest <= clear, "the results run under the fade over the buttons: Share ends at \(Int(share?.maxY ?? 0)), the level bar at \(Int(level.maxY)), the fade starts at \(Int(clear))")
+        guard let probe = nodes.first(where: { $0.identifier == "lesson.results.layout" })?.label else {
+            return (false, "the actual results viewport/fade probe is missing")
+        }
+        var fields: [String: Double] = [:]
+        for token in probe.split(separator: " ") {
+            let pair = token.split(separator: "=", maxSplits: 1)
+            if pair.count == 2, let value = Double(pair[1]) { fields[String(pair[0])] = value }
+        }
+        guard let viewport = fields["bottom"], let fade = fields["fade"],
+              let clear = CaptureFrameBounds.safeBottom(viewportBottom: viewport, buttonsTop: Double(buttons), fadeHeight: fade) else {
+            return (false, "the actual results viewport/fade probe is invalid: \(probe)")
+        }
+        let lowest = Double(max(level.maxY, share?.maxY ?? 0))
+        let fits = CaptureFrameBounds.fits(contentBottom: lowest, safeBottom: clear)
+        let details = "Share bottom=\(share?.maxY ?? 0), level bottom=\(level.maxY), viewport=\(viewport), fade=\(fade), buttons=\(buttons), safe bottom=\(clear), fits=\(fits)"
+        print("TIMBRE_RESULTS_BOUNDS \(details)")
+        return (fits, details)
     }
 
     /// App Store frame #1 through the `tune-locked` scene (ios/Timbre/Root/DemoScenes.swift): the demo pitch plays the

@@ -5,13 +5,14 @@ manual's human-review step. No human native-speaker, legal, accessibility-listen
 or market review is claimed. Automated checks cannot establish perfect fluency
 or release readiness. This work does not authorize App Store submission.
 
-## Current checkpoint — 26 October 2026, 11:25 UTC
+## Current checkpoint — 26 October 2026, 12:18 UTC
 
 - Interface resources: all 49 app languages have literal-key coverage; this is not a universal device/semantic certification.
-- Lessons: 28 translated targets plus English now cover all 6,083 current source keys. Finnish, Danish, Swedish, Dutch and Norwegian were imported after full independent AI review, 842 guarded corrections and 1,940 exact-source retention approvals. Bridge and interval source splits and the sustained-tremolo repair reconcile their frozen drafts with current content.
+- Lessons: 30 translated targets plus English now cover all 6,083 current source keys. Finnish, Danish, Swedish, Dutch and Norwegian were imported after full independent AI review, 842 guarded corrections and 1,940 exact-source retention approvals. Bridge and interval source splits and the sustained-tremolo repair reconcile their frozen drafts with current content.
 - Romanian is now imported after full independent AI review: 164 guarded corrections, 370 exact source-bound retention approvals, and all 6,083 current targets independently hash-verified.
 - Hebrew and Thai are now independently reviewed and imported: 14 and 13 guarded corrections, 231 and 261 exact retention approvals respectively; all 6,083 current targets verified in each.
-- Telugu, Swahili and Greek complete drafts are undergoing independent review. Zulu authoring is complete with final author QA in progress. Polish, Czech and Indonesian drafting continue. 13 further targets have not yet entered lesson drafting.
+- Swahili and Greek are now imported after full independent AI review: 122 and 92 guarded corrections, with 412 and 168 individual retention approvals. Layout advisories remain explicit.
+- Telugu and Zulu are undergoing independent review. Polish and Czech complete drafts await review. Indonesian, Turkish, Hungarian and Vietnamese drafting continue; 10 further targets have not yet entered lesson drafting.
 - 18 additional first/second musical-item label corrections across nine earlier locales passed independent review of all 369 locale/context rows. Some changes fix demonstrated referent/gender defects; others improve precision.
 - Context tooling now exposes nested arrangement section names in semantic bundles. Source curriculum is unchanged; frozen review inputs remain preserved.
 - Store text: all 50 Apple-supported locale payloads have independent AI text review. Localized screenshot/preview renders, production privacy URL and account-side checks are not complete; release_ready remains false.
@@ -389,3 +390,7 @@ checks accept only complete known source versions, not arbitrary subsets.
 ## Localized capture implementation checkpoint
 
 Chord and result-frame checks now use semantic state identifiers without altering localized VoiceOver speech. The chord capture requires all six distinct heard strings. A focused English/German/Arabic workflow is requested; compilation and real captures are pending. Other tour selectors and iPad setup still need localized verification, so this does not certify complete listing assets.
+
+## Results-capture boundary diagnosis
+
+The German chord frame passed on 6290561. The German results image retained full opaque level-card colors even inside the test’s assumed fade region, so the initial interpretation as visible overlap is not established. The new check reads the actual DEBUG-only viewport/fade state, rejects missing or invalid probe data, preserves active-fade clipping checks, and allows at most one point of accessibility-rectangle rounding. Fresh simulator proof is pending; the earlier -wrong image is not relabelled as valid.

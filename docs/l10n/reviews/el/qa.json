@@ -1,0 +1,4927 @@
+{
+ "locale": "el",
+ "reviewer": "Independent AI lesson reviewer",
+ "status": "independent-AI-semantic-review-completed-not-native-or-device-certification",
+ "source_keys": 6083,
+ "reviewed_keys": 6083,
+ "semantic_groups_read": 3767,
+ "pair_appearances": 9966,
+ "corrections": 92,
+ "final_identity_count": 168,
+ "protected_token_errors": [],
+ "soft_warning_rows": [
+  {
+   "key": "L5d7cef323e",
+   "source": "Sarah Josepha Hale (1830)",
+   "translation": "Sarah Josepha Hale (1830)",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L7d6c1cd2a4",
+   "source": "Friedrich Schiller (1785)",
+   "translation": "Friedrich Schiller (1785)",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L423f20489c",
+   "source": "John Newton (1779)",
+   "translation": "John Newton (1779)",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L53d54b3da0",
+   "source": "Percy Montrose (1884)",
+   "translation": "Percy Montrose (1884)",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L340c93526e",
+   "source": "Bar nine, over B7: F sharp at fret 2 on string 1, open E, D sharp at fret 4 on string 2 with your little finger, then B.",
+   "translation": "Ένατο μέτρο, στην B7: F δίεση στο τάστο 2 της χορδής 1, ανοιχτή E, D δίεση στο τάστο 4 της χορδής 2 με το μικρό δάχτυλο και B.",
+   "warnings": [
+    "longer than max_length 120 (126)"
+   ]
+  },
+  {
+   "key": "L9cf127a892",
+   "source": "Visit the four chord early",
+   "translation": "Νωρίτερα στη συγχορδία της τέταρτης βαθμίδας",
+   "warnings": [
+    "longer than max_length 42 (44)"
+   ]
+  },
+  {
+   "key": "L0f3d32305b",
+   "source": "Stephen Foster (1848)",
+   "translation": "Stephen Foster (1848)",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L1b32faec74",
+   "source": "AABA",
+   "translation": "AABA",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L47207f2354",
+   "source": "Jane Taylor (1806)",
+   "translation": "Jane Taylor (1806)",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Ld975a3a9d1",
+   "source": "W. W. Fosdick (1861)",
+   "translation": "W. W. Fosdick (1861)",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "La8645a16b1",
+   "source": "Stephen Foster (1850)",
+   "translation": "Stephen Foster (1850)",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L1b7f99964a",
+   "source": "Sir Harold Boulton (1884)",
+   "translation": "Sir Harold Boulton (1884)",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Le649e3afe7",
+   "source": "Sit, bow and play in tune, from open strings to The Swan",
+   "translation": "Καθίστε, παίξτε με το δοξάρι και πετύχετε το σωστό τονικό ύψος, από τις ανοιχτές χορδές μέχρι τον Κύκνο",
+   "warnings": [
+    "longer than max_length 80 (103)"
+   ]
+  },
+  {
+   "key": "L15bf5e9c0d",
+   "source": "Slow down until it feels right",
+   "translation": "Επιβραδύνετε ώσπου ο ρυθμός να σας φαίνεται σωστός",
+   "warnings": [
+    "longer than max_length 48 (50)"
+   ]
+  },
+  {
+   "key": "L4437fdb426",
+   "source": "Skip to My Lou",
+   "translation": "Skip to My Lou",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L48d87087f9",
+   "source": "How music works, from note names to the chords behind songs",
+   "translation": "Πώς λειτουργεί η μουσική, από τα ονόματα των νοτών ως τις συγχορδίες των τραγουδιών",
+   "warnings": [
+    "longer than max_length 80 (83)"
+   ]
+  },
+  {
+   "key": "L239059aba7",
+   "source": "Every Good Boy Does Fine",
+   "translation": "Every Good Boy Does Fine",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L0f18f4693e",
+   "source": "Good Boys Do Fine Always",
+   "translation": "Good Boys Do Fine Always",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L3903101dc3",
+   "source": "Ma-ry had a lit-tle lamb: E D C D E E E.",
+   "translation": "Ma-ry had a lit-tle lamb: E D C D E E E.",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L51fd07643b",
+   "source": "Robert Burns (1788)",
+   "translation": "Robert Burns (1788)",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L2777cf39fb",
+   "source": "James Lord Pierpont (1857)",
+   "translation": "James Lord Pierpont (1857)",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lbbf56e1506",
+   "source": "Largo",
+   "translation": "Largo",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L1c3d60852e",
+   "source": "The second section starts low: open B, A, open D, then C sharp at fret 4 and B at fret 2 on string 5, and open A.",
+   "translation": "Το δεύτερο μέρος αρχίζει χαμηλά: ανοιχτό B, A, ανοιχτό D, μετά C δίεση στο τάστο 4 και B στο τάστο 2 της χορδής 5, και ανοιχτό A.",
+   "warnings": [
+    "longer than max_length 120 (129)"
+   ]
+  },
+  {
+   "key": "L9c2b93a151",
+   "source": "Samuel Francis Smith (1831)",
+   "translation": "Samuel Francis Smith (1831)",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "La3f0345a76",
+   "source": "Joseph Brackett (1848)",
+   "translation": "Joseph Brackett (1848)",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L84690acdde",
+   "source": "John Mason Neale (1853)",
+   "translation": "John Mason Neale (1853)",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L500ab3c359",
+   "source": "Thomas Oliphant (1862)",
+   "translation": "Thomas Oliphant (1862)",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L2826c276b1",
+   "source": "The middle repeats open B and steps up to D, then repeats A at fret 2 on string 3 and steps up to C.",
+   "translation": "Η μέση επαναλαμβάνει το ανοιχτό B και ανεβαίνει βηματικά στο D, μετά επαναλαμβάνει το A στο τάστο 2 της χορδής 3 και ανεβαίνει στο C.",
+   "warnings": [
+    "longer than max_length 120 (133)"
+   ]
+  },
+  {
+   "key": "Ld89817766e",
+   "source": "Isaac Watts (1719)",
+   "translation": "Isaac Watts (1719)",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L70aebab32e",
+   "source": "Frederic Weatherly (1913)",
+   "translation": "Frederic Weatherly (1913)",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lab3fc46a0c",
+   "source": "Five new songs on the open chords you know: campfire pop, a ballad, stomp-folk, reggae and country.",
+   "translation": "Πέντε νέα τραγούδια με γνώριμες ανοιχτές συγχορδίες: ποπ της παρέας, μπαλάντα, φολκ με χτυπήματα ποδιών, ρέγκε και κάντρι.",
+   "warnings": [
+    "longer than max_length 120 (122)"
+   ]
+  },
+  {
+   "key": "L8768723bfb",
+   "source": "G at fret 3 on string 1 and open E, twice, then D at fret 3 on string 2 and F sharp at fret 2 on string 1.",
+   "translation": "G στο τάστο 3 της χορδής 1 και ανοιχτό E, δύο φορές, μετά D στο τάστο 3 της χορδής 2 και F δίεση στο τάστο 2 της χορδής 1.",
+   "warnings": [
+    "longer than max_length 120 (122)"
+   ]
+  },
+  {
+   "key": "L8a5e6d018b",
+   "source": "Cmaj7",
+   "translation": "Cmaj7",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L52abc3a14b",
+   "source": "G sharp at fret 4 on string 1, F sharp, open E, open B, then D sharp at fret 4 on string 2, C sharp, D sharp.",
+   "translation": "G δίεση στο τάστο 4 της χορδής 1, F δίεση, ανοιχτό E, ανοιχτό B, μετά D δίεση στο τάστο 4 της χορδής 2, C δίεση, D δίεση.",
+   "warnings": [
+    "longer than max_length 120 (121)"
+   ]
+  },
+  {
+   "key": "L873c7db571",
+   "source": "Fly",
+   "translation": "Fly",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L9ec4d86f6b",
+   "source": "Wide",
+   "translation": "Wide",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lef58de4ff0",
+   "source": "Boat",
+   "translation": "Boat",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L6f9084b461",
+   "source": "Harold Boulton (1884)",
+   "translation": "Harold Boulton (1884)",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Le658e66d4e",
+   "source": "Ernst Anschütz (1824)",
+   "translation": "Ernst Anschütz (1824)",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L306ba6fcb7",
+   "source": "G at fret 3 on string 6 twice, B on string 5, open D, then leap up to D at fret 3 on string 2 and down to open B.",
+   "translation": "G στο τάστο 3 της χορδής 6 δύο φορές, B στη χορδή 5, ανοιχτό D, μετά άλμα στο D του τάστου 3 της χορδής 2 και κάτω στο ανοιχτό B.",
+   "warnings": [
+    "longer than max_length 120 (129)"
+   ]
+  },
+  {
+   "key": "L0938f25e07",
+   "source": "Open D, D sharp at fret 1, E at fret 2 on string 4, then leap to C at fret 1 on string 2 and back, three times.",
+   "translation": "Ανοιχτό D, D δίεση στο τάστο 1, E στο τάστο 2 της χορδής 4, μετά άλμα στο C του τάστου 1 της χορδής 2 και πίσω, τρεις φορές.",
+   "warnings": [
+    "longer than max_length 120 (124)"
+   ]
+  },
+  {
+   "key": "L31658ea8ce",
+   "source": "Last march",
+   "translation": "Τελικό εμβατήριο",
+   "warnings": [
+    "longer than max_length 15 (16)"
+   ]
+  },
+  {
+   "key": "L0b1b8ea495",
+   "source": "Full sun",
+   "translation": "Λαμπρός ήλιος",
+   "warnings": [
+    "longer than max_length 12 (13)"
+   ]
+  },
+  {
+   "key": "L9ef4f969e4",
+   "source": "Open D, open G twice, F sharp at fret 4 on string 4, G, then open B twice and A at fret 2 on string 3.",
+   "translation": "Ανοιχτό D, ανοιχτό G δύο φορές, F δίεση στο τάστο 4 της χορδής 4, G, μετά ανοιχτό B δύο φορές και A στο τάστο 2 της χορδής 3.",
+   "warnings": [
+    "longer than max_length 120 (125)"
+   ]
+  },
+  {
+   "key": "L5d9c113b57",
+   "source": "Town",
+   "translation": "Town",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L4c40cf3873",
+   "source": "Bethlehem",
+   "translation": "Bethlehem",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Le177db0c02",
+   "source": "Phillips Brooks (1868)",
+   "translation": "Phillips Brooks (1868)",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L1b69c1b683",
+   "source": "Edmund H. Sears (1849)",
+   "translation": "Edmund H. Sears (1849)",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L6c65dbe5e7",
+   "source": "Cecil Frances Alexander (1848)",
+   "translation": "Cecil Frances Alexander (1848)",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L0fd26bc07a",
+   "source": "Christina Rossetti (1872)",
+   "translation": "Christina Rossetti (1872)",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Ld0955e7e58",
+   "source": "A on string 3, F sharp at fret 4 on string 4, D at fret 3 on string 2, A, then F sharp at fret 2 on string 1, E and D.",
+   "translation": "A στη χορδή 3, F δίεση στο τάστο 4 της χορδής 4, D στο τάστο 3 της χορδής 2, A, μετά F δίεση στο τάστο 2 της χορδής 1, E και D.",
+   "warnings": [
+    "longer than max_length 120 (127)"
+   ]
+  },
+  {
+   "key": "L366309b7d1",
+   "source": "James Montgomery (1816)",
+   "translation": "James Montgomery (1816)",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L6e7ad389a8",
+   "source": "Open G, E at fret 2 on string 4, A at fret 2 on string 3, G, then C at fret 1 on string 2, C, open B and C.",
+   "translation": "Ανοιχτό G, E στο τάστο 2 της χορδής 4, A στο τάστο 2 της χορδής 3, G, μετά C στο τάστο 1 της χορδής 2, C, ανοιχτό B και C.",
+   "warnings": [
+    "longer than max_length 120 (122)"
+   ]
+  },
+  {
+   "key": "Lf76e88c357",
+   "source": "Reginald Heber (1826)",
+   "translation": "Reginald Heber (1826)",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L7a6cca45fb",
+   "source": "Open B twice, A at fret 2 on string 3, open G, then D at fret 3 and E on string 1, back through D and C to B.",
+   "translation": "Ανοιχτό B δύο φορές, A στο τάστο 2 της χορδής 3, ανοιχτό G, μετά D στο τάστο 3 και E στη χορδή 1, πίσω μέσω D και C στο B.",
+   "warnings": [
+    "longer than max_length 120 (122)"
+   ]
+  },
+  {
+   "key": "L07cd0ccf75",
+   "source": "Henry Francis Lyte (1847)",
+   "translation": "Henry Francis Lyte (1847)",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L25c9e2591c",
+   "source": "Sarah Flower Adams (1841)",
+   "translation": "Sarah Flower Adams (1841)",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L94739b8015",
+   "source": "Open G, F sharp at fret 4 on string 4, G, A at fret 2 on string 3, G, then C at fret 1 on string 2 twice and open B.",
+   "translation": "Ανοιχτό G, F δίεση στο τάστο 4 της χορδής 4, G, A στο τάστο 2 της χορδής 3, G, μετά C στο τάστο 1 της χορδής 2 δύο φορές και ανοιχτό B.",
+   "warnings": [
+    "longer than max_length 120 (135)"
+   ]
+  },
+  {
+   "key": "Laf82ad96c4",
+   "source": "Folliott S. Pierpoint (1864)",
+   "translation": "Folliott S. Pierpoint (1864)",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lf25c3da65a",
+   "source": "John Howard Payne (1823)",
+   "translation": "John Howard Payne (1823)",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L38751b4dc8",
+   "source": "Stephen Foster (1854)",
+   "translation": "Stephen Foster (1854)",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "L169aa3a3af",
+   "source": "Thomas Moore (1813)",
+   "translation": "Thomas Moore (1813)",
+   "warnings": [
+    "identical to the English"
+   ]
+  },
+  {
+   "key": "Lab5a1d35e6",
+   "source": "Hard Times and The Last Rose of Summer",
+   "translation": "Δύσκολοι καιροί και Το τελευταίο ρόδο του καλοκαιριού",
+   "warnings": [
+    "longer than max_length 48 (53)"
+   ]
+  },
+  {
+   "key": "L043e57dc85",
+   "source": "E at fret 2 on string 4, G sharp at fret 1 on string 3 three times, F sharp at fret 4 on string 4, E, then open B.",
+   "translation": "E στο τάστο 2 της χορδής 4, G δίεση στο τάστο 1 της χορδής 3 τρεις φορές, F δίεση στο τάστο 4 της χορδής 4, E, μετά ανοιχτό B.",
+   "warnings": [
+    "longer than max_length 120 (126)"
+   ]
+  },
+  {
+   "key": "L10571eabbd",
+   "source": "B at fret 2 on string 5, open A, G sharp at fret 4 on string 6, A, then C at fret 3 on string 5, open D, C, B and C.",
+   "translation": "B στο τάστο 2 της χορδής 5, ανοιχτό A, G δίεση στο τάστο 4 της χορδής 6, A, μετά C στο τάστο 3 της χορδής 5, ανοιχτό D, C, B και C.",
+   "warnings": [
+    "longer than max_length 120 (131)"
+   ]
+  }
+ ],
+ "raw_pitch_token_diagnostics": [
+  {
+   "key": "L8ab2f23db2",
+   "source": "Tab draws six lines, one per string, with string 1 on top. A number on a line is the fret to press. A 0 means play that string open.",
+   "translation": "Η ταμπλατούρα έχει έξι γραμμές, μία για κάθε χορδή, με τη χορδή 1 επάνω. Ο αριθμός στη γραμμή δείχνει ποιο τάστο να πατήσετε. Το 0 σημαίνει ανοιχτή χορδή.",
+   "source_tokens": {
+    "A": 2
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L7c796e01f6",
+   "source": "A 0 on the second line means…",
+   "translation": "Το 0 στη δεύτερη γραμμή σημαίνει…",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L67d0dcf34e",
+   "source": "A note that lasts two beats",
+   "translation": "Μια νότα που κρατά δύο χρόνους",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L476514910a",
+   "source": "A half note rings for two beats. Pick once, count one, two, and let it sustain until the next note.",
+   "translation": "Το μισό ηχεί για δύο χρόνους. Χτυπήστε μία φορά, μετρήστε ένα, δύο και αφήστε το να ηχήσει μέχρι την επόμενη νότα.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L38ba47812c",
+   "source": "Half of a four-beat bar is two beats. A quarter note lasts one beat.",
+   "translation": "Το μισό ενός μέτρου τεσσάρων χρόνων είναι δύο χρόνοι. Ένα τέταρτο διαρκεί έναν χρόνο.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lb0714174a7",
+   "source": "A tune by Beethoven",
+   "translation": "Μια μελωδία του Μπετόβεν",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L49b5f5c9cb",
+   "source": "A ballad on two strings",
+   "translation": "Μια μπαλάντα σε δύο χορδές",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L777cf155db",
+   "source": "Pick the strings one at a time, thick to thin. A dull thud means a finger is touching that string. Adjust and pick it again.",
+   "translation": "Παίξτε τις χορδές μία μία, από τη χοντρή στη λεπτή. Ένας πνιχτός ήχος σημαίνει ότι κάποιο δάχτυλο ακουμπά τη χορδή. Διορθώστε τη θέση του και ξαναπαίξτε.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L741d9469c2",
+   "source": "A finger is touching it",
+   "translation": "Την ακουμπά ένα δάχτυλο",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L29e791ecc4",
+   "source": "A fingertip leaning on a neighboring string stops it ringing. Arch your fingers more.",
+   "translation": "Ένα δάχτυλο που ακουμπά γειτονική χορδή τη σταματά από το να ηχήσει. Λυγίστε περισσότερο τα δάχτυλα.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lf30e266da0",
+   "source": "A quarter note lasts one beat. Strum down on every beat and count out loud: one, two, three, four.",
+   "translation": "Ένα τέταρτο διαρκεί έναν χρόνο. Χτυπήστε προς τα κάτω σε κάθε χρόνο και μετρήστε δυνατά: ένα, δύο, τρία, τέσσερα.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L4d8264bf18",
+   "source": "Let the motion come from a loose wrist and forearm, like shaking water off your hand. A stiff arm sounds harsh.",
+   "translation": "Αφήστε την κίνηση να έρχεται από χαλαρό καρπό και αντιβράχιο, σαν να τινάζετε νερό από το χέρι. Ένα σφιγμένο χέρι δίνει σκληρό ήχο.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lefe5a8489c",
+   "source": "Beat one starts the bar. A slightly louder first strum keeps you, and anyone listening, in time.",
+   "translation": "Ο πρώτος χρόνος αρχίζει το μέτρο. Ένα λίγο δυνατότερο πρώτο χτύπημα κρατά εσάς και όσους ακούν στον ρυθμό.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Le30d7248ff",
+   "source": "A pendulum hand",
+   "translation": "Το χέρι σαν εκκρεμές",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L32f5531fae",
+   "source": "A hand that never stops keeps steady time. The skipped strum is a swing that doesn't touch the strings.",
+   "translation": "Ένα χέρι που δεν σταματά κρατά σταθερό ρυθμό. Το χτύπημα που παραλείπεται είναι μια κίνηση που δεν αγγίζει τις χορδές.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Laf19c95d48",
+   "source": "A three-step staircase",
+   "translation": "Μια σκάλα με τρία σκαλοπάτια",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lcfad049f54",
+   "source": "A small triangle",
+   "translation": "Ένα μικρό τρίγωνο",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L5ef3f68e90",
+   "source": "A key is a song's home base. In the key of G, the chords G, C and D do most of the work. Countless folk and rock songs use only these three.",
+   "translation": "Η τονικότητα είναι η βάση ενός τραγουδιού. Στην τονικότητα G, οι συγχορδίες G, C και D κάνουν την περισσότερη δουλειά. Αμέτρητα φολκ και ροκ τραγούδια χρησιμοποιούν μόνο αυτές τις τρεις.",
+   "source_tokens": {
+    "A": 1,
+    "G": 2,
+    "C": 1,
+    "D": 1
+   },
+   "target_tokens": {
+    "G": 2,
+    "C": 1,
+    "D": 1
+   }
+  },
+  {
+   "key": "L80ac1b08fc",
+   "source": "A progression is a chord sequence that repeats. A minor, C, G, D starts dark and brightens as it climbs.",
+   "translation": "Ακολουθία είναι μια σειρά συγχορδιών που επαναλαμβάνεται. Η A ελάσσονα, C, G, D αρχίζει σκοτεινά και φωτίζει καθώς ανεβαίνει.",
+   "source_tokens": {
+    "A": 2,
+    "C": 1,
+    "G": 1,
+    "D": 1
+   },
+   "target_tokens": {
+    "A": 1,
+    "C": 1,
+    "G": 1,
+    "D": 1
+   }
+  },
+  {
+   "key": "L515a00d6bf",
+   "source": "A scale is a ladder",
+   "translation": "Η κλίμακα είναι μια σκάλα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lf665d58f2a",
+   "source": "A scale climbs note by note from one letter to the same letter an octave higher. C major uses only plain letter names: C D E F G A B C.",
+   "translation": "Η κλίμακα ανεβαίνει νότα νότα από ένα γράμμα στο ίδιο γράμμα μία οκτάβα ψηλότερα. Η C μείζονα χρησιμοποιεί μόνο απλά ονόματα γραμμάτων: C D E F G A B C.",
+   "source_tokens": {
+    "A": 2,
+    "C": 3,
+    "D": 1,
+    "E": 1,
+    "F": 1,
+    "G": 1,
+    "B": 1
+   },
+   "target_tokens": {
+    "C": 3,
+    "D": 1,
+    "E": 1,
+    "F": 1,
+    "G": 1,
+    "A": 1,
+    "B": 1
+   }
+  },
+  {
+   "key": "La7dd2f8d1e",
+   "source": "A New Orleans favorite",
+   "translation": "Ένα αγαπημένο της Νέας Ορλεάνης",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L8546634af5",
+   "source": "A pickup is a few notes that lead into a strong beat. Here beat one is silent, and C, E and F lead into a long G.",
+   "translation": "Ανάκρουση είναι λίγες νότες που οδηγούν σε ισχυρό χρόνο. Εδώ ο πρώτος χρόνος είναι σιωπηλός και οι C, E και F οδηγούν σε μια παρατεταμένη G.",
+   "source_tokens": {
+    "A": 1,
+    "C": 1,
+    "E": 1,
+    "F": 1,
+    "G": 1
+   },
+   "target_tokens": {
+    "C": 1,
+    "E": 1,
+    "F": 1,
+    "G": 1
+   }
+  },
+  {
+   "key": "L17a25d3e18",
+   "source": "A bar of three feels like a gentle sway: strong, weak, weak.",
+   "translation": "Ένα μέτρο τριών χρόνων μοιάζει με απαλό λίκνισμα: ισχυρός, ασθενής, ασθενής.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L9d4df7ea29",
+   "source": "A riff on strings 3, 4 and 5",
+   "translation": "Ένα ριφ στις χορδές 3, 4 και 5",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L648ac30e5c",
+   "source": "A mini F, D7, and two traditional songs with both chords and melody.",
+   "translation": "Μια μικρή F, η D7 και δύο παραδοσιακά τραγούδια με συγχορδίες και μελωδία.",
+   "source_tokens": {
+    "A": 1,
+    "F": 1,
+    "D7": 1
+   },
+   "target_tokens": {
+    "F": 1,
+    "D7": 1
+   }
+  },
+  {
+   "key": "L35377d621e",
+   "source": "A sharp raises a note by one fret. Greensleeves uses G sharp on string 3, fret 1, and F sharp on string 4, fret 4. Reach that one with your little finger.",
+   "translation": "Η δίεση ανεβάζει μια νότα κατά ένα τάστο. Το «Πράσινα μανίκια» χρησιμοποιεί G δίεση στη χορδή 3, τάστο 1, και F δίεση στη χορδή 4, τάστο 4. Φτάστε τη δεύτερη με το μικρό δάχτυλο.",
+   "source_tokens": {
+    "A": 1,
+    "G": 1,
+    "F": 1
+   },
+   "target_tokens": {
+    "G": 1,
+    "F": 1
+   }
+  },
+  {
+   "key": "L3f1bdf177c",
+   "source": "A sharp moves a note…",
+   "translation": "Η δίεση μετακινεί μια νότα…",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L8e1f78c027",
+   "source": "A seventh chord adds a note that pulls toward home. D7 wants to move to G. Fingers: 2 on string 3, fret 2; 1 on string 2, fret 1; 3 on string 1, fret 2.",
+   "translation": "Η συγχορδία έβδομης προσθέτει μια νότα που έλκει προς την τονική. Η D7 θέλει να πάει στην G. Δάχτυλα: 2 στη χορδή 3, τάστο 2· 1 στη χορδή 2, τάστο 1· 3 στη χορδή 1, τάστο 2.",
+   "source_tokens": {
+    "A": 1,
+    "D7": 1,
+    "G": 1
+   },
+   "target_tokens": {
+    "D7": 1,
+    "G": 1
+   }
+  },
+  {
+   "key": "L93ad46cbed",
+   "source": "A ballad in A minor",
+   "translation": "Μια μπαλάντα σε A ελάσσονα",
+   "source_tokens": {
+    "A": 2
+   },
+   "target_tokens": {
+    "A": 1
+   }
+  },
+  {
+   "key": "L090369bc10",
+   "source": "A shuffle splits each beat unevenly: a long strum down, a short one up. It's the heartbeat of the blues. Think hum-pty, dum-pty.",
+   "translation": "Το σαφλ χωρίζει κάθε χρόνο άνισα: ένα παρατεταμένο χτύπημα κάτω και ένα σύντομο πάνω. Είναι ο παλμός των μπλουζ. Σκεφτείτε «νταα-ντα, νταα-ντα».",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lf068a34024",
+   "source": "A sus chord swaps the note that makes it major or minor for a neighbor. It sounds open and unresolved until it settles home.",
+   "translation": "Η συγχορδία sus αντικαθιστά τη νότα που την κάνει μείζονα ή ελάσσονα με μια γειτονική. Ακούγεται ανοιχτή και άλυτη ώσπου να καταλήξει στη βάση της.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L96bda2a527",
+   "source": "A shuffle with a tune",
+   "translation": "Σαφλ με μελωδία",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L7755242089",
+   "source": "A power chord plays only the root and the fifth, the note five letters up. Neither major nor minor, it stays punchy, even loud. E5 is the bottom of E minor.",
+   "translation": "Η συγχορδία πέμπτης έχει μόνο τη θεμέλιο και την πέμπτη, τη νότα πέντε γράμματα ψηλότερα. Ούτε μείζονα ούτε ελάσσονα, διατηρεί τη δύναμή της και σε μεγάλη ένταση. Η E5 είναι το χαμηλό μέρος της E ελάσσονας.",
+   "source_tokens": {
+    "A": 1,
+    "E5": 1,
+    "E": 1
+   },
+   "target_tokens": {
+    "E5": 1,
+    "E": 1
+   }
+  },
+  {
+   "key": "Lfcefd84a99",
+   "source": "A riff is a hook",
+   "translation": "Το ριφ μένει στο αυτί",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L14d9aa4e87",
+   "source": "A riff is a short, catchy phrase that repeats. This one bounces off open low E. Rest your palm at the bridge to keep it tight.",
+   "translation": "Το ριφ είναι μια σύντομη, πιασάρικη φράση που επαναλαμβάνεται. Αυτό επιστρέφει στην ανοιχτή χαμηλή E. Ακουμπήστε την παλάμη στον καβαλάρη για σφιχτό ήχο.",
+   "source_tokens": {
+    "A": 1,
+    "E": 1
+   },
+   "target_tokens": {
+    "E": 1
+   }
+  },
+  {
+   "key": "L73601df885",
+   "source": "Basement Weather is a Timbre Original: garage rock in A. A riff on the low strings opens it, then power chords punch back on one, the and of two, and four. Keep your palm at the bridge. The whole song is in Songs, under Originals.",
+   "translation": "Το «Καιρός στο υπόγειο» είναι πρωτότυπο του Timbre: γκαράζ ροκ σε A. Αρχίζει με ριφ στις χαμηλές χορδές και απαντά με συγχορδίες πέμπτης στο ένα, στο «και» του δύο και στο τέσσερα. Κρατήστε την παλάμη στον καβαλάρη. Βρείτε όλο το τραγούδι στα Τραγούδια, στα Πρωτότυπα.",
+   "source_tokens": {
+    "A": 2
+   },
+   "target_tokens": {
+    "A": 1
+   }
+  },
+  {
+   "key": "L3b333cca44",
+   "source": "A few minutes every day",
+   "translation": "Λίγα λεπτά κάθε μέρα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L196a01000e",
+   "source": "A solo is a melody built from short phrases. Play a few notes, leave a gap, then answer. Ending on A, the root, sounds like a full stop.",
+   "translation": "Το σόλο είναι μια μελωδία από σύντομες φράσεις. Παίξτε λίγες νότες, αφήστε ένα κενό και μετά απαντήστε. Η κατάληξη στην A, τη θεμέλιο, ακούγεται σαν τελεία.",
+   "source_tokens": {
+    "A": 2
+   },
+   "target_tokens": {
+    "A": 1
+   }
+  },
+  {
+   "key": "Lf9a25d207e",
+   "source": "A power ballad with a barre",
+   "translation": "Μια ροκ μπαλάντα με μπαρέ",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L6eec260feb",
+   "source": "A solo over the loop",
+   "translation": "Σόλο πάνω στον κύκλο",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L5d28917df7",
+   "source": "A fingerpicked ballad",
+   "translation": "Μια μπαλάντα με τα δάχτυλα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L05a0c1c0fd",
+   "source": "A ballad, fingerpicked",
+   "translation": "Μια μπαλάντα παιγμένη με τα δάχτυλα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L9cef33917d",
+   "source": "A boogie bass line",
+   "translation": "Μια γραμμή μπάσου μπούγκι",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Ldd672a79e0",
+   "source": "A boogie line walks up the chord and back, each note twice, long-short like the shuffle. Over A7 it climbs A, C sharp, E, F sharp, G, then walks back down.",
+   "translation": "Η γραμμή μπούγκι ανεβαίνει στη συγχορδία και επιστρέφει, κάθε νότα δύο φορές, μακριά-κοντή όπως στο σαφλ. Πάνω στην A7 ανεβαίνει A, C δίεση, E, F δίεση, G και μετά κατεβαίνει.",
+   "source_tokens": {
+    "A": 2,
+    "A7": 1,
+    "C": 1,
+    "E": 1,
+    "F": 1,
+    "G": 1
+   },
+   "target_tokens": {
+    "A7": 1,
+    "A": 1,
+    "C": 1,
+    "E": 1,
+    "F": 1,
+    "G": 1
+   }
+  },
+  {
+   "key": "Lf3949e8a3d",
+   "source": "A lick that turns you around",
+   "translation": "Μια φράση που σας γυρίζει πίσω",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lf115cd0d4d",
+   "source": "A hammer-on sounds a second note with the fretting hand alone. Pick a note, then bring another finger down hard, just behind a higher fret. The string keeps ringing.",
+   "translation": "Το hammer-on παράγει δεύτερη νότα μόνο με το χέρι της ταστιέρας. Παίξτε μια νότα με την πένα και κατεβάστε δυναμικά άλλο δάχτυλο, ακριβώς πίσω από ψηλότερο τάστο. Η χορδή συνεχίζει να ηχεί.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Le06a043bf5",
+   "source": "A fast, firm landing right behind the fret",
+   "translation": "Γρήγορο, σταθερό πάτημα πίσω από το τάστο",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L1ed5100909",
+   "source": "A phrase with hammer-ons",
+   "translation": "Μια φράση με hammer-on",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "La833694ea5",
+   "source": "A pull-off drops to a lower note. With both fingers down, pick the higher note, then flick the top finger off sideways so it plucks the string as it leaves.",
+   "translation": "Το pull-off κατεβαίνει σε χαμηλότερη νότα. Με τα δύο δάχτυλα πατημένα, παίξτε την ψηλότερη νότα με την πένα. Μετά τραβήξτε πλάγια το δάχτυλο της ψηλότερης νότας, τσιμπώντας τη χορδή καθώς φεύγει.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L99d64bf6a6",
+   "source": "Lifting straight up lets the note die. A small sideways flick plucks the lower note into life.",
+   "translation": "Αν σηκωθεί κάθετα, η νότα σβήνει. Ένα μικρό πλάγιο τράβηγμα τσιμπά τη χορδή και ζωντανεύει τη χαμηλότερη νότα.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Labd92f9cd8",
+   "source": "A lighter touch",
+   "translation": "Ελαφρύτερο άγγιγμα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L6d1bcd1968",
+   "source": "A phrase with a slide",
+   "translation": "Μια φράση με ολίσθηση",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L6d9391f723",
+   "source": "A bend pushes the string across the fret to raise its pitch. A whole-step bend, the size of two frets, from fret 7 must sound exactly like fret 9.",
+   "translation": "Το τράβηγμα σπρώχνει τη χορδή εγκάρσια στο τάστο και ανεβάζει το τονικό ύψος. Τράβηγμα ενός τόνου, όσο δύο τάστα, από το τάστο 7 πρέπει να ακούγεται ακριβώς όπως το τάστο 9.",
+   "source_tokens": {
+    "A": 2
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L8d02931319",
+   "source": "A bend that falls short sounds sour. Push until it matches the target you heard.",
+   "translation": "Ένα τράβηγμα που δεν φτάνει τον στόχο ακούγεται φάλτσο. Σπρώξτε ώσπου να ταιριάξει με τη νότα-στόχο που ακούσατε.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lbb3ea9fcee",
+   "source": "A second box",
+   "translation": "Ένα δεύτερο σχήμα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L9d61a6de39",
+   "source": "A whole-step bend from fret 7 should match…",
+   "translation": "Ένα τράβηγμα ενός τόνου από το τάστο 7 πρέπει να ταιριάζει με…",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L865d289220",
+   "source": "A new key: A major",
+   "translation": "Νέα τονικότητα: A μείζονα",
+   "source_tokens": {
+    "A": 2
+   },
+   "target_tokens": {
+    "A": 1
+   }
+  },
+  {
+   "key": "Lacaf77ea57",
+   "source": "Use the top four strings only. This A minor is the top of your A minor barre at fret 5: finger 3 on string 4, fret 7, finger 1 barring the rest.",
+   "translation": "Χρησιμοποιήστε μόνο τις τέσσερις ψηλότερες χορδές. Αυτή η A ελάσσονα είναι το ψηλό μέρος του μπαρέ της στο τάστο 5: δάχτυλο 3 στη χορδή 4, τάστο 7, δάχτυλο 1 με μπαρέ στις υπόλοιπες.",
+   "source_tokens": {
+    "A": 2
+   },
+   "target_tokens": {
+    "A": 1
+   }
+  },
+  {
+   "key": "L7dab99667b",
+   "source": "A single bass note",
+   "translation": "Μία μπάσα νότα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L177fe81816",
+   "source": "A short strum of the thin strings",
+   "translation": "Κοφτό χτύπημα στις λεπτές χορδές",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L5dab3832af",
+   "source": "A capo, G and D shapes on capo 2, and Oh! Susanna arranged with a verse and a chorus.",
+   "translation": "Καποτάστο, σχήματα G και D με καποτάστο στο 2 και ενορχήστρωση του «Ω! Σουζάνα» με στροφή και ρεφρέν.",
+   "source_tokens": {
+    "A": 1,
+    "G": 1,
+    "D": 1
+   },
+   "target_tokens": {
+    "G": 1,
+    "D": 1
+   }
+  },
+  {
+   "key": "L6d611c78b6",
+   "source": "A clamp across the neck",
+   "translation": "Ένας σφιγκτήρας στο μπράτσο",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L303e509ef4",
+   "source": "A capo clamps every string at one fret. On fret 2, each open string sounds two frets higher, and your open chord shapes all move up with it.",
+   "translation": "Το καποτάστο πιέζει όλες τις χορδές σε ένα τάστο. Στο τάστο 2, κάθε ανοιχτή χορδή ακούγεται δύο τάστα ψηλότερα και μαζί της ανεβαίνουν όλα τα ανοιχτά σχήματα συγχορδιών.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Laab6a0ec9b",
+   "source": "Capo on fret 2. A D shape sounds as…",
+   "translation": "Καποτάστο στο τάστο 2. Το σχήμα D ακούγεται ως…",
+   "source_tokens": {
+    "A": 1,
+    "D": 1
+   },
+   "target_tokens": {
+    "D": 1
+   }
+  },
+  {
+   "key": "Le19e0e9d18",
+   "source": "A few bars of chords tell everyone where home is and how fast to go.",
+   "translation": "Λίγα μέτρα συγχορδιών δείχνουν σε όλους πού είναι η βάση και πόσο γρήγορα θα παίξουν.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L7d106663f4",
+   "source": "Capo on fret 2. A C shape sounds as…",
+   "translation": "Καποτάστο στο τάστο 2. Το σχήμα C ακούγεται ως…",
+   "source_tokens": {
+    "A": 1,
+    "C": 1
+   },
+   "target_tokens": {
+    "C": 1
+   }
+  },
+  {
+   "key": "Lc2e1fbccbe",
+   "source": "A shared note",
+   "translation": "Μια κοινή νότα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L54ee8eebd8",
+   "source": "A triad is the smallest full chord: a root, a third and a fifth. On strings 3, 2 and 1, triads ring clear and bright, and they work anywhere on the neck.",
+   "translation": "Η τρίφωνη είναι η μικρότερη πλήρης συγχορδία: θεμέλιος, τρίτη και πέμπτη. Στις χορδές 3, 2 και 1 ηχεί καθαρά και φωτεινά και λειτουργεί παντού στο μπράτσο.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Le3cfddf702",
+   "source": "A minor triad is a major triad with its third one fret lower. On these strings, A minor at frets 2, 1 and 0 is the top of your open A minor.",
+   "translation": "Η ελάσσονα τρίφωνη είναι μια μείζονα τρίφωνη με την τρίτη ένα τάστο χαμηλότερα. Σε αυτές τις χορδές, η A ελάσσονα στα τάστα 2, 1 και 0 είναι το ψηλό μέρος της ανοιχτής A ελάσσονας.",
+   "source_tokens": {
+    "A": 3
+   },
+   "target_tokens": {
+    "A": 2
+   }
+  },
+  {
+   "key": "L78633b9ee3",
+   "source": "A chord played one note at a time",
+   "translation": "Συγχορδία παιγμένη νότα νότα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L018f21ccb1",
+   "source": "A chord strummed twice",
+   "translation": "Συγχορδία χτυπημένη δύο φορές",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L0c1baf4aaf",
+   "source": "A scale played fast",
+   "translation": "Κλίμακα παιγμένη γρήγορα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L921bfa2279",
+   "source": "The top notes here run G, G, G, F sharp: almost still while the chords change under them. A note that two chords share is a common tone, and it's why triads sound so smooth.",
+   "translation": "Οι ψηλότερες νότες εδώ είναι G, G, G, F δίεση: σχεδόν ακίνητες ενώ οι συγχορδίες αλλάζουν από κάτω. Μια νότα που μοιράζονται δύο συγχορδίες λέγεται κοινός φθόγγος και κάνει τις τρίφωνες να ακούγονται τόσο ομαλές.",
+   "source_tokens": {
+    "G": 3,
+    "F": 1,
+    "A": 1
+   },
+   "target_tokens": {
+    "G": 3,
+    "F": 1
+   }
+  },
+  {
+   "key": "Ld6792109fd",
+   "source": "A minor triad is a major triad with…",
+   "translation": "Μια ελάσσονα τρίφωνη είναι μια μείζονα τρίφωνη με…",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L716191664d",
+   "source": "A major seventh chord adds the note one fret below the root's octave. It turns a plain major chord soft and dreamy. Open Cmaj7 is C with finger 1 lifted.",
+   "translation": "Η συγχορδία μεγάλης εβδόμης προσθέτει τη νότα ένα τάστο κάτω από την οκτάβα της θεμελίου. Κάνει μια απλή μείζονα συγχορδία απαλή και ονειρική. Η ανοιχτή Cmaj7 είναι η C με σηκωμένο δάχτυλο 1.",
+   "source_tokens": {
+    "A": 1,
+    "Cmaj7": 1,
+    "C": 1
+   },
+   "target_tokens": {
+    "Cmaj7": 1,
+    "C": 1
+   }
+  },
+  {
+   "key": "L29086447c1",
+   "source": "A minor seventh chord adds the note two frets below the root's octave. It sounds mellow, between dark and bright. Am7 is A minor with finger 3 lifted.",
+   "translation": "Η ελάσσονα συγχορδία εβδόμης προσθέτει τη νότα δύο τάστα κάτω από την οκτάβα της θεμελίου. Ακούγεται γλυκιά, ανάμεσα στο σκοτεινό και το φωτεινό. Η Am7 είναι η A ελάσσονα με σηκωμένο δάχτυλο 3.",
+   "source_tokens": {
+    "A": 2,
+    "Am7": 1
+   },
+   "target_tokens": {
+    "Am7": 1,
+    "A": 1
+   }
+  },
+  {
+   "key": "L9339e8e2bf",
+   "source": "A ii–V–I on a loop",
+   "translation": "Μια ii–V–I σε επανάληψη",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lea7bfd4382",
+   "source": "A half step is one fret, a whole step two. Every major scale climbs whole, whole, half, whole, whole, whole, half. That pattern gives major its sound.",
+   "translation": "Το ημιτόνιο είναι ένα τάστο, ο τόνος δύο. Κάθε μείζονα κλίμακα ανεβαίνει τόνο, τόνο, ημιτόνιο, τόνο, τόνο, τόνο, ημιτόνιο. Αυτό το μοτίβο δίνει τον ήχο της μείζονας.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L3ceeb038fb",
+   "source": "A carol built on the scale",
+   "translation": "Ένας ύμνος πάνω στην κλίμακα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L2a3e5173be",
+   "source": "A chord on every note",
+   "translation": "Μια συγχορδία σε κάθε νότα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "La22b83738d",
+   "source": "A hook in second position",
+   "translation": "Ένα βασικό μοτίβο στη δεύτερη θέση",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L03c23e6b0b",
+   "source": "A sweet phrase",
+   "translation": "Μια γλυκιά φράση",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L5f380cb28f",
+   "source": "A trill",
+   "translation": "Η τρίλια",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L084aa60332",
+   "source": "A trill flutters between two notes: one pick, then hammer-on, pull-off, over and over. Keep it even before you make it fast.",
+   "translation": "Η τρίλια φτερουγίζει ανάμεσα σε δύο νότες: ένα χτύπημα πένας και μετά hammer-on, pull-off, ξανά και ξανά. Κρατήστε τη σταθερή πριν την επιταχύνετε.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L78854cbe8a",
+   "source": "A slow trill",
+   "translation": "Μια αργή τρίλια",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lc5abbe00c0",
+   "source": "To end, repeat the last line, often twice more, and let the final chord ring. A tag tells everyone the song is closing.",
+   "translation": "Για να τελειώσετε, επαναλάβετε την τελευταία φράση, συχνά άλλες δύο φορές, και αφήστε την τελική συγχορδία να ηχήσει. Η κατάληξη δείχνει σε όλους ότι το τραγούδι κλείνει.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Ld5d4d1e8a8",
+   "source": "A tag ending",
+   "translation": "Τελείωμα με κατάληξη",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Ldb1265c2e8",
+   "source": "A change of texture",
+   "translation": "Αλλαγή υφής",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L54c4ef86e9",
+   "source": "A faster tempo",
+   "translation": "Γρηγορότερο τέμπο",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L8c79b32d43",
+   "source": "A new key",
+   "translation": "Νέα τονικότητα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lcf4b7fbfde",
+   "source": "A solo in G major pentatonic",
+   "translation": "Σόλο στην G μείζονα πεντατονική",
+   "source_tokens": {
+    "A": 1,
+    "G": 1
+   },
+   "target_tokens": {
+    "G": 1
+   }
+  },
+  {
+   "key": "L4d16667656",
+   "source": "A chord that wants to go home",
+   "translation": "Μια συγχορδία που ζητά επιστροφή",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L53b763e406",
+   "source": "A late chord is better than a broken beat. Keep strumming, even if a string buzzes.",
+   "translation": "Καλύτερα μια αργοπορημένη συγχορδία παρά διακοπή του ρυθμού. Συνεχίστε τα χτυπήματα, ακόμα κι αν μια χορδή τρίζει.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lcf3f09ac3d",
+   "source": "A silent up stroke keeps your hand in time for the next down.",
+   "translation": "Μια αθόρυβη κίνηση προς τα πάνω κρατά το χέρι συγχρονισμένο για το επόμενο κάτω χτύπημα.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L67c3806843",
+   "source": "D, DU, UDU",
+   "translation": "Κ, ΚΠ, ΠΚΠ",
+   "source_tokens": {
+    "D": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Ld8cef08bd1",
+   "source": "D, D, D, D",
+   "translation": "Κ, Κ, Κ, Κ",
+   "source_tokens": {
+    "D": 4
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L23f779f92c",
+   "source": "A melody you already know",
+   "translation": "Μια μελωδία που ήδη ξέρετε",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L17b60e5ba0",
+   "source": "A leap, then steps down",
+   "translation": "Ένα άλμα και μετά βήματα κάτω",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lb68a4cce15",
+   "source": "A quarter note lasts one beat, a half note two, a whole note four. Hold each one until the next note starts.",
+   "translation": "Το τέταρτο διαρκεί έναν χρόνο, το μισό δύο, το ολόκληρο τέσσερις. Κρατήστε το καθένα ώσπου να αρχίσει η επόμενη νότα.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L1fb6203851",
+   "source": "A dot adds half the note's length. A dotted half note lasts three beats; a dotted quarter lasts one and a half.",
+   "translation": "Η τελεία προσθέτει τη μισή διάρκεια της νότας. Ένα παρεστιγμένο μισό διαρκεί τρεις χρόνους· ένα παρεστιγμένο τέταρτο ενάμιση.",
+   "source_tokens": {
+    "A": 2
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lcef55285d3",
+   "source": "A slow love song from 1861",
+   "translation": "Ένα αργό ερωτικό τραγούδι του 1861",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L0620855030",
+   "source": "A new note: F sharp",
+   "translation": "Μια νέα νότα: F δίεση",
+   "source_tokens": {
+    "A": 1,
+    "F": 1
+   },
+   "target_tokens": {
+    "F": 1
+   }
+  },
+  {
+   "key": "Lb42872a8e7",
+   "source": "Fret 2 on string 2 is F sharp, one fret above F. A sharp raises a note by one fret.",
+   "translation": "Το τάστο 2 στη χορδή 2 είναι F δίεση, ένα τάστο πάνω από την F. Η δίεση ανεβάζει μια νότα κατά ένα τάστο.",
+   "source_tokens": {
+    "F": 2,
+    "A": 1
+   },
+   "target_tokens": {
+    "F": 2
+   }
+  },
+  {
+   "key": "L73b7c2973b",
+   "source": "A sharp sign raises a note by how much?",
+   "translation": "Πόσο ανεβάζει μια νότα η δίεση;",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lc54363da2f",
+   "source": "A slow cowboy song",
+   "translation": "Ένα αργό καουμπόικο τραγούδι",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L3802807193",
+   "source": "A big leap up",
+   "translation": "Μεγάλο άλμα προς τα πάνω",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L97c5cae16c",
+   "source": "A song in F usually ends on which chord?",
+   "translation": "Ένα τραγούδι σε F συνήθως τελειώνει σε ποια συγχορδία;",
+   "source_tokens": {
+    "A": 1,
+    "F": 1
+   },
+   "target_tokens": {
+    "F": 1
+   }
+  },
+  {
+   "key": "L0858349791",
+   "source": "A song's chords are steps of its key: I, IV and V. Change key and the numbers stay. In C that's C, F and G7; in G, it's G, C and D7; in F, F, B flat and C7.",
+   "translation": "Οι συγχορδίες ενός τραγουδιού είναι βαθμίδες της τονικότητάς του: I, IV και V. Αλλάξτε τονικότητα και οι αριθμοί μένουν. Στην C είναι C, F και G7· στην G, G, C και D7· στην F, F, B ύφεση και C7.",
+   "source_tokens": {
+    "A": 1,
+    "C": 3,
+    "F": 3,
+    "G7": 1,
+    "G": 2,
+    "D7": 1,
+    "B": 1,
+    "C7": 1
+   },
+   "target_tokens": {
+    "C": 3,
+    "F": 3,
+    "G7": 1,
+    "G": 2,
+    "D7": 1,
+    "B": 1,
+    "C7": 1
+   }
+  },
+  {
+   "key": "L19badd88d9",
+   "source": "A strum that clicks",
+   "translation": "Ένα χτύπημα που κάνει κλικ",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L328873ffaf",
+   "source": "A chunk is a strum that stops dead. Strum down and let the side of your palm land on the strings at the same moment: a short, dry click, like a snare drum.",
+   "translation": "Το πνιχτό χτύπημα κόβεται αμέσως. Χτυπήστε προς τα κάτω και ακουμπήστε ταυτόχρονα την άκρη της παλάμης στις χορδές: ένα σύντομο, ξερό κλικ, σαν ταμπούρο ντραμς.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L80a64c52c1",
+   "source": "Two and four are the backbeat, where the snare drum plays. A chunk there gives the strum a drummer's punch.",
+   "translation": "Το δύο και το τέσσερα είναι οι τονισμοί backbeat, εκεί που παίζει το ταμπούρο. Ένα πνιχτό χτύπημα εκεί δίνει δύναμη ντράμερ στο παίξιμο.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lc0ded9cc39",
+   "source": "Take the island strum, D, DU, UDU, and turn the down on 2 into a chunk. The rhythm stays the same; the groove gets a backbeat.",
+   "translation": "Πάρτε το νησιώτικο μοτίβο, Κ, ΚΠ, ΠΚΠ, και κάντε πνιχτό το κάτω χτύπημα στο 2. Ο ρυθμός μένει ίδιος· προστίθεται έμφαση backbeat.",
+   "source_tokens": {
+    "D": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L91116aad75",
+   "source": "In three, strum down on 1, then down-up on 2 and on 3: D, DU, DU. Lean on 1 so the sway is clear.",
+   "translation": "Σε τρεις χρόνους, χτυπήστε κάτω στο 1 και κάτω-πάνω στο 2 και στο 3: Κ, ΚΠ, ΚΠ. Τονίστε το 1 για καθαρό λίκνισμα.",
+   "source_tokens": {
+    "D": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L4b8aa1bb43",
+   "source": "A finger for each string",
+   "translation": "Ένα δάχτυλο για κάθε χορδή",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L5b72ac2ae5",
+   "source": "A zigzag, not a ladder",
+   "translation": "Ζιγκ ζαγκ, όχι σκάλα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L8cef689ea3",
+   "source": "A whole chord-melody arrangement",
+   "translation": "Πλήρης ενορχήστρωση μελωδίας-συγχορδιών",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L5ba3d0bd26",
+   "source": "The verse starts a beat early, on its pickup. A long last note keeps that beat clear.",
+   "translation": "Η στροφή αρχίζει έναν χρόνο νωρίτερα, με την ανάκρουσή της. Μια μακριά τελευταία νότα αφήνει ελεύθερο αυτόν τον χρόνο.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L8803cd54d0",
+   "source": "A spiritual for a crowd",
+   "translation": "Ένα σπιρίτσουαλ για όλους",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Le1348be58b",
+   "source": "A ballad to pick",
+   "translation": "Μια μπαλάντα με τα δάχτυλα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Ldc0a18e3ea",
+   "source": "Miss a chord? Keep strumming and catch the next one. A singing room follows the beat, not every note.",
+   "translation": "Χάσατε μια συγχορδία; Συνεχίστε τα χτυπήματα και πιάστε την επόμενη. Όταν ο κόσμος τραγουδά, ακολουθεί τον ρυθμό, όχι κάθε νότα.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lcab27391c5",
+   "source": "A rest is a beat of silence. Stop the string by touching it lightly with a free finger, so the rest is as clean as the note.",
+   "translation": "Η παύση είναι ένας χρόνος σιωπής. Σταματήστε τη χορδή αγγίζοντάς την απαλά με ελεύθερο δάχτυλο, ώστε η παύση να είναι τόσο καθαρή όσο η νότα.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L0fef6b0819",
+   "source": "A chord chart tells you which chord is coming. Play its root on every beat until the chart changes.",
+   "translation": "Το φύλλο συγχορδιών δείχνει ποια συγχορδία ακολουθεί. Παίξτε τη θεμέλιό της σε κάθε χρόνο ώσπου να αλλάξει η ένδειξη.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L81c2793151",
+   "source": "A three-note shape",
+   "translation": "Ένα σχήμα τριών νοτών",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L1238e66b00",
+   "source": "A new note on every beat",
+   "translation": "Μια νέα νότα σε κάθε χρόνο",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Leeafc98b67",
+   "source": "A walking bass line plays a new note on every beat. Start with root, third, fifth, sixth: over A that's A, C sharp, E, F sharp.",
+   "translation": "Η περπατητή γραμμή μπάσου παίζει νέα νότα σε κάθε χρόνο. Αρχίστε με θεμέλιο, τρίτη, πέμπτη, έκτη: πάνω στην A είναι A, C δίεση, E, F δίεση.",
+   "source_tokens": {
+    "A": 3,
+    "C": 1,
+    "E": 1,
+    "F": 1
+   },
+   "target_tokens": {
+    "A": 2,
+    "C": 1,
+    "E": 1,
+    "F": 1
+   }
+  },
+  {
+   "key": "L30eee1ef36",
+   "source": "C sharp is one fret below D. A half step slides right into the new root.",
+   "translation": "Η C δίεση είναι ένα τάστο κάτω από την D. Ένα ημιτόνιο οδηγεί κατευθείαν στη νέα θεμέλιο.",
+   "source_tokens": {
+    "C": 1,
+    "D": 1,
+    "A": 1
+   },
+   "target_tokens": {
+    "C": 1,
+    "D": 1
+   }
+  },
+  {
+   "key": "L1f53cfa218",
+   "source": "A dotted quarter lasts one and a half beats. Play on 1, hold through 2, then play on the and of 2, then on 3 and 4.",
+   "translation": "Το παρεστιγμένο τέταρτο διαρκεί ενάμιση χρόνο. Παίξτε στο 1, κρατήστε μέσα στο 2, παίξτε στο «και» του 2 και μετά στα 3 και 4.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L9658de26f1",
+   "source": "A Motown-style line",
+   "translation": "Μια γραμμή σε στυλ Motown",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "La79365f454",
+   "source": "A light left hand",
+   "translation": "Ελαφρύ αριστερό χέρι",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L68fd09b287",
+   "source": "A tight left-hand grip",
+   "translation": "Σφιχτό κράτημα με το αριστερό χέρι",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L2a765315e4",
+   "source": "Let your head rest on the chin rest. A squeezing hand or a raised shoulder makes you tense, and tension pulls notes out of tune.",
+   "translation": "Αφήστε το κεφάλι να ακουμπά στο υποσιάγωνο. Το σφιγμένο χέρι ή ο σηκωμένος ώμος προκαλούν ένταση, που χαλά την ακρίβεια των νοτών.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lfe521a9e0c",
+   "source": "A soft, round bow hold",
+   "translation": "Χαλαρό κράτημα, καμπύλα δάχτυλα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L9d88ee8093",
+   "source": "A bent thumb at the frog lets the hand stay soft and balance the bow.",
+   "translation": "Ο λυγισμένος αντίχειρας στη βάση αφήνει το χέρι χαλαρό και ισορροπεί το δοξάρι.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L9ed656b194",
+   "source": "Bare hair slides over the string without a sound. Rub the cake of rosin along the hair a few times before you play. A light coat is enough.",
+   "translation": "Οι σκέτες τρίχες γλιστρούν στη χορδή χωρίς ήχο. Περάστε το κομμάτι κολοφωνίου κατά μήκος τους λίγες φορές πριν παίξετε. Μια λεπτή στρώση αρκεί.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L98171b4591",
+   "source": "A string is a little flat. What do you do?",
+   "translation": "Μια χορδή ακούγεται λίγο χαμηλά. Τι κάνετε;",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "La8ff6396ce",
+   "source": "A down-bow pulls the bow to the right, from frog to tip. An up-bow pushes it back to the left. In music, a down-bow mark looks like a little table and an up-bow like a V.",
+   "translation": "Η κάτω δοξαριά τραβά το δοξάρι δεξιά, από τη βάση στη μύτη. Η πάνω δοξαριά το σπρώχνει πίσω αριστερά. Στη γραφή, το σημάδι της κάτω δοξαριάς μοιάζει με μικρό τραπέζι και της πάνω με V.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lac289dd846",
+   "source": "A quarter note lasts one beat. Quick notes need less bow, so use the middle half of the bow and keep every stroke the same length.",
+   "translation": "Το τέταρτο διαρκεί έναν χρόνο. Οι γρήγορες νότες θέλουν λιγότερο δοξάρι, οπότε χρησιμοποιήστε το μεσαίο μισό του και κρατήστε κάθε δοξαριά στο ίδιο μήκος.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L8e244d0df6",
+   "source": "A half note lasts two beats. Use a longer, slower bow so the sound doesn't fade on the second beat.",
+   "translation": "Το μισό διαρκεί δύο χρόνους. Χρησιμοποιήστε μακρύτερη, πιο αργή δοξαριά για να μη σβήσει ο ήχος στον δεύτερο χρόνο.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L7515b995d9",
+   "source": "A half note",
+   "translation": "Ένα μισό",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L5887ff3d74",
+   "source": "A quarter note",
+   "translation": "Ένα τέταρτο",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Le8dac5b894",
+   "source": "A half note lasts twice as long, so it gets a longer, slower stroke.",
+   "translation": "Το μισό διαρκεί διπλάσιο χρόνο, οπότε παίρνει μακρύτερη, πιο αργή δοξαριά.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L213a272b97",
+   "source": "A whole step",
+   "translation": "Διάστημα ενός τόνου",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L2ede7957fd",
+   "source": "A half step",
+   "translation": "Διάστημα ενός ημιτονίου",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Ld618b875d9",
+   "source": "A tune you know",
+   "translation": "Μια γνώριμη μελωδία",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L90c41c755e",
+   "source": "A German folk song",
+   "translation": "Ένα γερμανικό δημοτικό τραγούδι",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lebec87bbfe",
+   "source": "Each line ends long, short, long: a dotted quarter, an eighth and a half note. A dot after a note adds half its length.",
+   "translation": "Κάθε φράση τελειώνει μακριά, κοντή, μακριά: παρεστιγμένο τέταρτο, όγδοο και μισό. Η τελεία μετά από νότα προσθέτει τη μισή διάρκειά της.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L8017d0e097",
+   "source": "A darker scale",
+   "translation": "Μια σκοτεινότερη κλίμακα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lf888fd7aa7",
+   "source": "A dance in three",
+   "translation": "Ένας χορός σε τρεις χρόνους",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lf9d1ec4c42",
+   "source": "A tune from the 1700s",
+   "translation": "Μελωδία του αιώνα που αρχίζει το 1700",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L3d2766c8fc",
+   "source": "A curved line over notes is a slur: play them all in one bow. Your left hand changes notes while the bow keeps moving.",
+   "translation": "Η καμπύλη γραμμή πάνω από νότες είναι σύζευξη έκφρασης: παίξτε τις όλες με μία δοξαριά. Το αριστερό χέρι αλλάζει νότες ενώ το δοξάρι συνεχίζει να κινείται.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L75b727a923",
+   "source": "A whole step above third",
+   "translation": "Έναν τόνο πάνω από το τρίτο",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Le62599f375",
+   "source": "A fingered note keeps the line on one string and blends with the notes around it. Open strings ring brighter.",
+   "translation": "Η πατημένη νότα κρατά τη γραμμή σε μία χορδή και δένει με τις γύρω νότες. Οι ανοιχτές χορδές ηχούν φωτεινότερα.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L33ff97aed5",
+   "source": "A slow hymn tune",
+   "translation": "Μια αργή μελωδία ύμνου",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Le3ba6fce09",
+   "source": "A first motion, no bow",
+   "translation": "Πρώτη κίνηση, χωρίς δοξάρι",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L43a99bfc67",
+   "source": "Set second finger on the A string. Keep the fingertip in place, soften the knuckle, and slowly rock your hand toward the scroll and back. Small and even. A teacher's eye helps here.",
+   "translation": "Βάλτε το δεύτερο δάχτυλο στη χορδή A. Κρατήστε την άκρη στη θέση της, χαλαρώστε την άρθρωση και λικνίστε αργά το χέρι προς τον κοχλία και πίσω. Μικρά και ομοιόμορφα. Εδώ βοηθά η ματιά ενός δασκάλου.",
+   "source_tokens": {
+    "A": 2
+   },
+   "target_tokens": {
+    "A": 1
+   }
+  },
+  {
+   "key": "L5921a5b2b8",
+   "source": "Pull out the endpin until the cello's top edge meets your chest at the breastbone and the C peg sits near your left ear. Tighten the screw. A rest or strap keeps it from sliding.",
+   "translation": "Τραβήξτε την ακίδα στήριξης προς τα έξω, ώσπου το επάνω άκρο του βιολοντσέλου να ακουμπά στο στήθος σας, στο στέρνο, και το κλειδί της C να βρίσκεται κοντά στο αριστερό σας αυτί. Σφίξτε τη βίδα. Ένα αντιολισθητικό στήριγμα ή ένας ιμάντας την εμποδίζει να γλιστρήσει.",
+   "source_tokens": {
+    "C": 1,
+    "A": 1
+   },
+   "target_tokens": {
+    "C": 1
+   }
+  },
+  {
+   "key": "Lb5260b8803",
+   "source": "A round, heavy hand",
+   "translation": "Στρογγυλεμένο χέρι με βάρος",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L4313c2f8b2",
+   "source": "A half step is the smallest step in music. In first position your fingers sit a half step apart, starting a whole step (two half steps) above the open string. Thumb behind the neck, across from second finger.",
+   "translation": "Το ημιτόνιο είναι το μικρότερο βήμα στη μουσική. Στην πρώτη θέση τα δάχτυλά σας απέχουν μεταξύ τους ένα ημιτόνιο, ξεκινώντας έναν τόνο (δύο ημιτόνια) πάνω από την ανοιχτή χορδή. Ο αντίχειρας είναι πίσω από το μπράτσο, απέναντι από το δεύτερο δάχτυλο.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lfeddc76ee1",
+   "source": "Cellists give each finger its own half step, so F takes second finger and F sharp takes third. A note just past the hand, like F sharp on the C string, needs an extension, a wider hand. This course picks keys that avoid it.",
+   "translation": "Οι τσελίστες δίνουν σε κάθε δάχτυλο ένα ημιτόνιο, οπότε η F παίζεται με το δεύτερο και η F δίεση με το τρίτο. Μια νότα λίγο πέρα από το χέρι, όπως η F δίεση στη χορδή C, θέλει έκταση: πιο ανοιχτό χέρι. Αυτός ο κύκλος μαθημάτων επιλέγει τονικότητες που την αποφεύγουν.",
+   "source_tokens": {
+    "F": 3,
+    "A": 1,
+    "C": 1
+   },
+   "target_tokens": {
+    "F": 3,
+    "C": 1
+   }
+  },
+  {
+   "key": "L4bcca0fb8f",
+   "source": "A cradle song from 1868",
+   "translation": "Ένα νανούρισμα από το 1868",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L59c1350d23",
+   "source": "A French folk song",
+   "translation": "Ένα γαλλικό παραδοσιακό τραγούδι",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L1bd94a1b93",
+   "source": "A shift moves your whole hand to a new place on the string. Lighten the finger, slide it along the string without lifting, and let your thumb travel with the hand.",
+   "translation": "Η αλλαγή θέσης μετακινεί ολόκληρο το χέρι σε νέο σημείο της χορδής. Ελαφρύνετε το δάχτυλο, γλιστρήστε το κατά μήκος της χορδής χωρίς να το σηκώσετε και αφήστε τον αντίχειρα να ακολουθήσει το χέρι.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lcfb04f7e59",
+   "source": "A singing bow",
+   "translation": "Ένα δοξάρι που τραγουδά",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L6daff2d5e5",
+   "source": "A mandolin has eight strings in four pairs, called courses. The two strings of a pair are tuned to the same note and played together, so you treat each pair as one string.",
+   "translation": "Το μαντολίνο έχει οκτώ χορδές σε τέσσερα ζευγάρια, τις λεγόμενες διπλές χορδές. Οι δύο χορδές κάθε ζευγαριού κουρδίζονται στην ίδια νότα και παίζονται μαζί, οπότε αντιμετωπίζετε κάθε ζευγάρι σαν μία χορδή.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "La26dc12fc6",
+   "source": "A relaxed pinch",
+   "translation": "Ένα χαλαρό κράτημα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lf27727d913",
+   "source": "A short tip gives you control and a clean sound. Too much pick snags on the paired strings.",
+   "translation": "Η μικρή μύτη προσφέρει έλεγχο και καθαρό ήχο. Αν προεξέχει πολύ η πένα, σκαλώνει στις διπλές χορδές.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L0d1d2365f7",
+   "source": "From low to high, the pairs are G, D, A and E. Try: Good Dogs Always Eat. A violin is tuned the same way, so fiddle tunes sit naturally on a mandolin.",
+   "translation": "Από χαμηλά προς ψηλά, τα ζευγάρια είναι G, D, A και E. Δοκιμάστε την αγγλική φράση Good Dogs Always Eat, με αρχικά τα ονόματα των χορδών. Το βιολί κουρδίζεται το ίδιο, οπότε οι μελωδίες του ταιριάζουν φυσικά στο μαντολίνο.",
+   "source_tokens": {
+    "G": 1,
+    "D": 1,
+    "A": 2,
+    "E": 1
+   },
+   "target_tokens": {
+    "G": 1,
+    "D": 1,
+    "A": 1,
+    "E": 1
+   }
+  },
+  {
+   "key": "L15c4cd55a2",
+   "source": "A tune from the scale",
+   "translation": "Μια μελωδία από την κλίμακα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L335ef982fd",
+   "source": "A mandolin note fades quickly. Tremolo keeps it singing: pick down and up fast and evenly on one pair, so the note sounds unbroken.",
+   "translation": "Η νότα του μαντολίνου σβήνει γρήγορα. Το τρέμολο τη διατηρεί: χτυπήστε με την πένα κάτω και πάνω γρήγορα και ομοιόμορφα σε ένα ζευγάρι, ώστε η νότα να ακούγεται αδιάκοπη.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L48172fabe6",
+   "source": "A single pick fades long before three beats are up. Tremolo keeps it ringing to the end of the bar.",
+   "translation": "Ένα μόνο χτύπημα σβήνει πολύ πριν περάσουν τρεις χρόνοι. Το τρέμολο κρατά τη νότα ως το τέλος του μέτρου.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L9ddbb93cb1",
+   "source": "A chop for G",
+   "translation": "Ένα κοφτό χτύπημα για την G",
+   "source_tokens": {
+    "A": 1,
+    "G": 1
+   },
+   "target_tokens": {
+    "G": 1
+   }
+  },
+  {
+   "key": "L6281828c75",
+   "source": "A first jam tune",
+   "translation": "Μια πρώτη μελωδία για παρέα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L8595b7bfc8",
+   "source": "A very old favorite",
+   "translation": "Μια πολύ παλιά αγαπημένη μελωδία",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lc3a60c012e",
+   "source": "A new key and a twist",
+   "translation": "Νέα τονικότητα και μια ανατροπή",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L3f33d819a0",
+   "source": "A second pick stroke",
+   "translation": "Ένα δεύτερο χτύπημα της πένας",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L6e5c726d4d",
+   "source": "A three-note pattern repeated across a bar of eight makes the accent shift each time. That is the rolling feel.",
+   "translation": "Ένα μοτίβο τριών νοτών που επαναλαμβάνεται μέσα σε μέτρο οκτώ νοτών μετατοπίζει κάθε φορά τον τονισμό. Έτσι δημιουργείται η κυκλική αίσθηση.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L48fa43c2ec",
+   "source": "A banjo has four full-length strings and a fifth that starts partway up the neck, at its own little tuning peg. That short string is the banjo's signature sound.",
+   "translation": "Το μπάντζο έχει τέσσερις χορδές πλήρους μήκους και μια πέμπτη που ξεκινά πιο πάνω στο μπράτσο, από το δικό της μικρό κλειδί κουρδίσματος. Αυτή η κοντή χορδή είναι ο χαρακτηριστικός ήχος του μπάντζο.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lfc56d00ef5",
+   "source": "A note that never changes",
+   "translation": "Μια νότα που δεν αλλάζει ποτέ",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L9e89481c16",
+   "source": "A pinch is your thumb and middle finger plucking at the same moment, on strings 5 and 1. It sounds like a little two-note chord and often starts or ends a phrase.",
+   "translation": "Στο διπλό τσίμπημα, ο αντίχειρας και ο μέσος τσιμπούν ταυτόχρονα τις χορδές 5 και 1. Ακούγεται σαν μικρή συγχορδία δύο νοτών και συχνά αρχίζει ή τελειώνει μια φράση.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lcdcaed23c4",
+   "source": "A roll is only as good as its timing. Keep all eight notes even, like a ticking clock, and land the first note of each bar right on the beat.",
+   "translation": "Η ποιότητα ενός κυκλικού μοτίβου εξαρτάται από τον χρονισμό του. Κρατήστε και τις οκτώ νότες ισόχρονες, σαν ρολόι, και βάλτε την πρώτη νότα κάθε μέτρου ακριβώς στον χρόνο.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L166b5e18e3",
+   "source": "A tune named for a mountain pass",
+   "translation": "Μια μελωδία για ορεινό πέρασμα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L6caa2001f9",
+   "source": "Lifting straight up only stops the note. A small sideways flick plucks the open string.",
+   "translation": "Το κατακόρυφο σήκωμα απλώς σταματά τη νότα. Ένα μικρό τίναγμα στο πλάι τσιμπά την ανοιχτή χορδή.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L9a1a0b1a2b",
+   "source": "A hammer-on",
+   "translation": "Ένα hammer-on",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L756a84dff3",
+   "source": "A pull-off",
+   "translation": "Ένα pull-off",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lba49802c4e",
+   "source": "A slide",
+   "translation": "Μια ολίσθηση",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L6b484d8196",
+   "source": "A different right hand: strike down with a fingernail and catch the drone with your thumb.",
+   "translation": "Ένα διαφορετικό δεξί χέρι: χτυπήστε κάτω με το νύχι και πιάστε τον ισοκράτη με τον αντίχειρα.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L9d29cbe530",
+   "source": "A new right hand",
+   "translation": "Ένα νέο δεξί χέρι",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L476dec716c",
+   "source": "A melody in bum-ditty",
+   "translation": "Μια μελωδία σε μπαμ-ντίτι",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "La7590147b6",
+   "source": "A play-party tune",
+   "translation": "Μια μελωδία για ομαδικό παιχνίδι",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L2268114181",
+   "source": "A flat pick",
+   "translation": "Μια επίπεδη πένα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Ladf64025c0",
+   "source": "A loose claw, striking down",
+   "translation": "Χαλαρή δαγκάνα που χτυπά προς τα κάτω",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L9e1965d434",
+   "source": "A chord",
+   "translation": "Συγχορδία",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L96108a5b85",
+   "source": "A half step moves to the very next key. A whole step skips one key, so it equals two half steps. Both sound like steps, but a whole step opens a little wider.",
+   "translation": "Το ημιτόνιο πηγαίνει στο αμέσως επόμενο πλήκτρο. Ο τόνος παραλείπει ένα πλήκτρο, οπότε ισούται με δύο ημιτόνια. Και τα δύο ακούγονται σαν βήματα, αλλά ο τόνος ανοίγει λίγο περισσότερο.",
+   "source_tokens": {
+    "A": 2
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lb2360e94c0",
+   "source": "A whole step skips one key, so it's two half steps.",
+   "translation": "Ο τόνος παραλείπει ένα πλήκτρο, οπότε είναι δύο ημιτόνια.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L872e57ca81",
+   "source": "Musicians call a step a second, because it moves to the next letter: C to D. A half step is a minor second. A whole step is a major second.",
+   "translation": "Οι μουσικοί λένε το βήμα δευτέρα, επειδή πηγαίνει στο επόμενο όνομα φθόγγου: από C σε D. Το ημιτόνιο είναι μικρή δευτέρα. Ο τόνος είναι μεγάλη δευτέρα.",
+   "source_tokens": {
+    "C": 1,
+    "D": 1,
+    "A": 2
+   },
+   "target_tokens": {
+    "C": 1,
+    "D": 1
+   }
+  },
+  {
+   "key": "Lacd96bd87b",
+   "source": "A step moves to the next letter. A skip jumps over one, like C to E, skipping D. That gap is called a third. Skips sound more open than steps.",
+   "translation": "Το βήμα πηγαίνει στο επόμενο όνομα φθόγγου. Το πήδημα παραλείπει ένα, όπως από C σε E παραλείποντας την D. Αυτή η απόσταση λέγεται τρίτη. Τα πηδήματα ακούγονται πιο ανοιχτά από τα βήματα.",
+   "source_tokens": {
+    "A": 2,
+    "C": 1,
+    "E": 1,
+    "D": 1
+   },
+   "target_tokens": {
+    "C": 1,
+    "E": 1,
+    "D": 1
+   }
+  },
+  {
+   "key": "Lde34a0e125",
+   "source": "A major third spans four half steps and sounds bright. A minor third spans three and sounds darker, a little wistful. Listen for the brightness.",
+   "translation": "Η μεγάλη τρίτη καλύπτει τέσσερα ημιτόνια και ακούγεται φωτεινή. Η μικρή τρίτη καλύπτει τρία και ακούγεται πιο σκοτεινή, λίγο νοσταλγική. Ακούστε τη φωτεινότητα.",
+   "source_tokens": {
+    "A": 2
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L623729eeb4",
+   "source": "An interval is the distance between two notes. A unison is no distance at all: the same note twice. An octave runs from one letter to the same letter above, like C to C. It sounds like one note, only brighter.",
+   "translation": "Διάστημα είναι η απόσταση ανάμεσα σε δύο νότες. Στην ταυτοφωνία δεν υπάρχει απόσταση: η ίδια νότα δύο φορές. Η οκτάβα πηγαίνει από ένα όνομα νότας στο ίδιο ψηλότερα, όπως από C σε C. Ακούγεται σαν μία νότα, μόνο πιο φωτεινή.",
+   "source_tokens": {
+    "A": 1,
+    "C": 2
+   },
+   "target_tokens": {
+    "C": 2
+   }
+  },
+  {
+   "key": "L4f53f58670",
+   "source": "A perfect fifth spans seven half steps, like C up to G. It sounds open and strong. Twinkle, Twinkle, Little Star leaps up a fifth after its first two notes.",
+   "translation": "Η καθαρή πέμπτη καλύπτει επτά ημιτόνια, όπως από C προς τα πάνω ως G. Ακούγεται ανοιχτή και δυνατή. Το Φεγγαράκι μου λαμπρό ανεβαίνει κατά πέμπτη μετά τις πρώτες δύο νότες.",
+   "source_tokens": {
+    "A": 1,
+    "C": 1,
+    "G": 1
+   },
+   "target_tokens": {
+    "C": 1,
+    "G": 1
+   }
+  },
+  {
+   "key": "Lb77b87e57b",
+   "source": "A perfect fourth spans five half steps, like C up to F. It sounds like a call to attention. Amazing Grace opens with a rising fourth.",
+   "translation": "Η καθαρή τετάρτη καλύπτει πέντε ημιτόνια, όπως από C προς τα πάνω ως F. Ακούγεται σαν κάλεσμα προσοχής. Η Θαυμαστή χάρη αρχίζει με ανοδική τετάρτη.",
+   "source_tokens": {
+    "A": 1,
+    "C": 1,
+    "F": 1
+   },
+   "target_tokens": {
+    "C": 1,
+    "F": 1
+   }
+  },
+  {
+   "key": "Lbd93c9428c",
+   "source": "A perfect fourth",
+   "translation": "Μια καθαρή τετάρτη",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L62ab25cde7",
+   "source": "A perfect fifth",
+   "translation": "Μια καθαρή πέμπτη",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L7fb3d77868",
+   "source": "A fifth spans seven half steps; a fourth spans five.",
+   "translation": "Η πέμπτη καλύπτει επτά ημιτόνια· η τετάρτη καλύπτει πέντε.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Laca97f5add",
+   "source": "When two notes sound together, listen to the blend. An octave melts into one sound. A fifth sounds hollow and strong. A fourth sounds open but restless.",
+   "translation": "Όταν δύο νότες ηχούν μαζί, ακούστε τον συνδυασμό τους. Η οκτάβα λιώνει σε έναν ήχο. Η πέμπτη ακούγεται κούφια και δυνατή. Η τετάρτη ακούγεται ανοιχτή, αλλά ανήσυχη.",
+   "source_tokens": {
+    "A": 2
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lc46628c627",
+   "source": "A minor third spans three half steps, like A to C. A major third spans four.",
+   "translation": "Η μικρή τρίτη καλύπτει τρία ημιτόνια, όπως από A σε C. Η μεγάλη τρίτη καλύπτει τέσσερα.",
+   "source_tokens": {
+    "A": 3,
+    "C": 1
+   },
+   "target_tokens": {
+    "A": 1,
+    "C": 1
+   }
+  },
+  {
+   "key": "L0daa2701cc",
+   "source": "A major sixth spans nine half steps; My Bonnie Lies Over the Ocean opens with one. A minor sixth spans eight and sounds darker. The Entertainer leaps up one right after its quick opening notes.",
+   "translation": "Η μεγάλη έκτη καλύπτει εννέα ημιτόνια· με αυτή αρχίζει το «My Bonnie Lies Over the Ocean». Η μικρή έκτη καλύπτει οκτώ και ακούγεται πιο σκοτεινή. Ο «Διασκεδαστής» ανεβαίνει κατά μικρή έκτη αμέσως μετά τις γρήγορες αρχικές νότες.",
+   "source_tokens": {
+    "A": 2
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L894a2efb3d",
+   "source": "Frère Jacques opens with a major second, a whole step up. Für Elise opens by rocking down and up a minor second, a half step. Small sizes, big difference.",
+   "translation": "Ο «Αδελφός Ιάκωβος» αρχίζει με μεγάλη δευτέρα, έναν τόνο προς τα πάνω. Το «Για την Ελίζα» αρχίζει πηγαίνοντας κάτω και πάνω κατά μικρή δευτέρα, ένα ημιτόνιο. Μικρά μεγέθη, μεγάλη διαφορά.",
+   "source_tokens": {
+    "F": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L1a906f22e5",
+   "source": "A minor second is one half step. A major second is two.",
+   "translation": "Η μικρή δευτέρα είναι ένα ημιτόνιο. Η μεγάλη δευτέρα είναι δύο.",
+   "source_tokens": {
+    "A": 2
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L3f1d4501ff",
+   "source": "A major sixth",
+   "translation": "Μια μεγάλη έκτη",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L1778300a86",
+   "source": "A minor sixth",
+   "translation": "Μια μικρή έκτη",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lf66662ae8c",
+   "source": "A chord is three or more notes sounding together. A major chord sounds bright and settled. A minor chord sounds darker. Only the middle note differs between them.",
+   "translation": "Συγχορδία είναι τρεις ή περισσότερες νότες που ηχούν μαζί. Η μείζονα συγχορδία ακούγεται φωτεινή και ήρεμη. Η ελάσσονα ακούγεται πιο σκοτεινή. Ανάμεσά τους διαφέρει μόνο η μεσαία νότα.",
+   "source_tokens": {
+    "A": 3
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lb9c69f6a3b",
+   "source": "A major chord turns minor. How many of its notes change?",
+   "translation": "Μια μείζονα συγχορδία γίνεται ελάσσονα. Πόσες νότες της αλλάζουν;",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L4824ce7499",
+   "source": "A diminished chord stacks two minor thirds and sounds tight and uneasy. An augmented chord stacks two major thirds and sounds stretched, like a question left hanging.",
+   "translation": "Η ελαττωμένη συγχορδία στοιβάζει δύο μικρές τρίτες και ακούγεται σφιχτή και ανήσυχη. Η αυξημένη στοιβάζει δύο μεγάλες τρίτες και ακούγεται τεντωμένη, σαν ερώτηση που μένει μετέωρη.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L3efc69511f",
+   "source": "A major third plus a major third, like C E G♯, makes an augmented chord.",
+   "translation": "Μια μεγάλη τρίτη μαζί με άλλη μία, όπως C E G♯, σχηματίζουν αυξημένη συγχορδία.",
+   "source_tokens": {
+    "A": 1,
+    "C": 1,
+    "E": 1,
+    "G♯": 1
+   },
+   "target_tokens": {
+    "C": 1,
+    "E": 1,
+    "G♯": 1
+   }
+  },
+  {
+   "key": "L541d5448c4",
+   "source": "A dominant seventh chord is a major chord plus one more note on top: a minor seventh above the root, the note the chord is named for. It sounds bluesy and restless.",
+   "translation": "Η συγχορδία έβδομης δεσπόζουσας είναι μια μείζονα με μία ακόμη νότα πάνω της: μια μικρή έβδομη πάνω από τη θεμέλιο, τη νότα που της δίνει το όνομα. Ακούγεται μπλουζ και ανήσυχη.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Ld01f5c0bf4",
+   "source": "A cadence is a short chord pattern that ends a phrase. Hearing one sets the key firmly. Sing do quietly to yourself, then measure the new note from there.",
+   "translation": "Η πτώση είναι ένα σύντομο μοτίβο συγχορδιών που τελειώνει μια φράση. Ακούγοντάς την καθορίζεται σταθερά η τονικότητα. Τραγουδήστε σιγανά το ντο και έπειτα μετρήστε τη νέα νότα από εκεί.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L2aaf9f51be",
+   "source": "A melody goes do, mi, sol. How does it move?",
+   "translation": "Μια μελωδία πηγαίνει ντο, μι, σολ. Πώς κινείται;",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L712f15d2f4",
+   "source": "A step, then a skip",
+   "translation": "Ένα βήμα και έπειτα ένα πήδημα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L71af01d18d",
+   "source": "A melody stops on ti. How does it sound?",
+   "translation": "Μια μελωδία σταματά στο τι. Πώς ακούγεται;",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lc8409274a3",
+   "source": "A keyboard's black keys come in groups of two and three. They're your map. C is the white key just left of each group of two.",
+   "translation": "Τα μαύρα πλήκτρα σχηματίζουν ομάδες των δύο και των τριών. Είναι ο χάρτης σας. Η C είναι το λευκό πλήκτρο ακριβώς αριστερά από κάθε δυάδα.",
+   "source_tokens": {
+    "A": 1,
+    "C": 1
+   },
+   "target_tokens": {
+    "C": 1
+   }
+  },
+  {
+   "key": "L80af5bfd06",
+   "source": "A half step moves from one key to the very next, black or white, with nothing in between. It's the smallest distance on a keyboard and in most music.",
+   "translation": "Το ημιτόνιο πηγαίνει από ένα πλήκτρο στο αμέσως επόμενο, μαύρο ή λευκό, χωρίς τίποτα ανάμεσά τους. Είναι η μικρότερη απόσταση στο πληκτρολόγιο και στην περισσότερη μουσική.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lda5241c1fb",
+   "source": "A sharp (♯) raises a note by a half step. A flat (♭) lowers it by a half step. The black key just above C is C♯; the one just below D is D♭.",
+   "translation": "Η δίεση (♯) ανεβάζει μια νότα κατά ένα ημιτόνιο. Η ύφεση (♭) τη χαμηλώνει κατά ένα ημιτόνιο. Το μαύρο πλήκτρο ακριβώς πάνω από την C είναι C♯· εκείνο ακριβώς κάτω από την D είναι D♭.",
+   "source_tokens": {
+    "A": 2,
+    "C": 1,
+    "C♯": 1,
+    "D": 1,
+    "D♭": 1
+   },
+   "target_tokens": {
+    "C": 1,
+    "C♯": 1,
+    "D": 1,
+    "D♭": 1
+   }
+  },
+  {
+   "key": "L7cfee748e2",
+   "source": "A whole step equals two half steps: it skips exactly one key. C to D is a whole step, with C♯ in between. E to F♯ is too.",
+   "translation": "Ο τόνος ισούται με δύο ημιτόνια: παραλείπει ακριβώς ένα πλήκτρο. Από C σε D είναι τόνος, με την C♯ ανάμεσα. Το ίδιο και από E σε F♯.",
+   "source_tokens": {
+    "A": 1,
+    "C": 1,
+    "D": 1,
+    "C♯": 1,
+    "E": 1,
+    "F♯": 1
+   },
+   "target_tokens": {
+    "C": 1,
+    "D": 1,
+    "C♯": 1,
+    "E": 1,
+    "F♯": 1
+   }
+  },
+  {
+   "key": "L5b0e679c41",
+   "source": "A note on a line moves up one letter. Where does it land?",
+   "translation": "Μια νότα πάνω σε γραμμή ανεβαίνει ένα γράμμα. Πού καταλήγει;",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Le85340c0a6",
+   "source": "A note's shape tells you how long it lasts. In a four-beat bar, a whole note lasts all four beats, a half note two, and a quarter note one.",
+   "translation": "Το σχήμα μιας νότας δείχνει πόσο διαρκεί. Σε μέτρο τεσσάρων χρόνων, το ολόκληρο διαρκεί και τους τέσσερις, το μισό δύο και το τέταρτο έναν.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lc7e57d3f46",
+   "source": "A quarter note lasts one beat, so four fill the bar.",
+   "translation": "Το τέταρτο διαρκεί έναν χρόνο, οπότε τέσσερα γεμίζουν το μέτρο.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L1a4a15ecc0",
+   "source": "A whole note",
+   "translation": "Ένα ολόκληρο",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L8441f7bc03",
+   "source": "A whole note lasts four beats, a half note two, a quarter note one.",
+   "translation": "Το ολόκληρο διαρκεί τέσσερις χρόνους, το μισό δύο και το τέταρτο έναν.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lc9549834f0",
+   "source": "A bar can mix values, as long as they add up. A half note plus two quarter notes fills four beats: 2 + 1 + 1.",
+   "translation": "Ένα μέτρο μπορεί να συνδυάζει αξίες, αρκεί το άθροισμα να ταιριάζει. Ένα μισό μαζί με δύο τέταρτα γεμίζουν τέσσερις χρόνους: 2 + 1 + 1.",
+   "source_tokens": {
+    "A": 2
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lc4eb4d4416",
+   "source": "A sixteenth note lasts a quarter of a beat, so four fit in each beat. Count them 1 e and a, 2 e and a.",
+   "translation": "Το δέκατο έκτο διαρκεί ένα τέταρτο του χρόνου, οπότε τέσσερα χωρούν σε κάθε χρόνο. Μετρήστε 1 ε και α, 2 ε και α.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Ld9963a291e",
+   "source": "A quarter note is one beat, and four sixteenths fit in a beat.",
+   "translation": "Το τέταρτο είναι ένας χρόνος και τέσσερα δέκατα έκτα χωρούν σε έναν χρόνο.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L3e4f84ee53",
+   "source": "A dot after a note adds half its value. A half note lasts two beats, so a dotted half lasts three. A dotted quarter lasts one and a half.",
+   "translation": "Η τελεία, ή στιγμή, μετά από μια νότα προσθέτει τη μισή της αξία. Το μισό διαρκεί δύο χρόνους, οπότε το παρεστιγμένο μισό διαρκεί τρεις. Το παρεστιγμένο τέταρτο διαρκεί ενάμιση.",
+   "source_tokens": {
+    "A": 3
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L2b7813665a",
+   "source": "A rest is a measured silence. Each note value has a matching rest: a quarter rest lasts one beat, a half rest two. Keep counting through them.",
+   "translation": "Η παύση είναι μετρημένη σιωπή. Κάθε αξία νότας έχει αντίστοιχη παύση: η παύση τετάρτου διαρκεί έναν χρόνο, η παύση μισού δύο. Συνεχίστε να μετράτε κατά τη διάρκειά τους.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Ld7991c59cb",
+   "source": "A quarter is one beat; the dot adds half of that.",
+   "translation": "Το τέταρτο είναι ένας χρόνος· η στιγμή προσθέτει το μισό του.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L6ccca6a2ed",
+   "source": "A four-beat bar has a half note and a quarter note. What fills the gap?",
+   "translation": "Ένα μέτρο τεσσάρων χρόνων έχει ένα μισό και ένα τέταρτο. Τι γεμίζει το κενό;",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L19c4a070ac",
+   "source": "A quarter rest",
+   "translation": "Μια παύση τετάρτου",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L24a2ed78a1",
+   "source": "A half rest",
+   "translation": "Μια παύση μισού",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lafd8fec905",
+   "source": "A whole rest",
+   "translation": "Μια παύση ολόκληρου",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L4668dbcb15",
+   "source": "A waltz counts in threes: 1, 2, 3.",
+   "translation": "Το βαλς μετριέται ανά τρεις: 1, 2, 3.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L89ccbe333e",
+   "source": "A dotted half note",
+   "translation": "Ένα παρεστιγμένο μισό",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Ld51954d3dc",
+   "source": "A bar of 3/4 has a quarter note and a quarter rest. What's missing?",
+   "translation": "Ένα μέτρο 3/4 έχει ένα τέταρτο και μια παύση τετάρτου. Τι λείπει;",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L0e7c35d2b5",
+   "source": "A scale",
+   "translation": "Μια κλίμακα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L99e23b6e69",
+   "source": "A scale is a set of notes climbing in order from a home note to the same note an octave up. C major uses only white keys: C, D, E, F, G, A, B, C.",
+   "translation": "Η κλίμακα είναι ένα σύνολο νοτών που ανεβαίνουν με τη σειρά από μια νότα βάσης ως την ίδια μία οκτάβα ψηλότερα. Η C μείζονα χρησιμοποιεί μόνο λευκά πλήκτρα: C, D, E, F, G, A, B, C.",
+   "source_tokens": {
+    "A": 2,
+    "C": 3,
+    "D": 1,
+    "E": 1,
+    "F": 1,
+    "G": 1,
+    "B": 1
+   },
+   "target_tokens": {
+    "C": 3,
+    "D": 1,
+    "E": 1,
+    "F": 1,
+    "G": 1,
+    "A": 1,
+    "B": 1
+   }
+  },
+  {
+   "key": "L0cee63f97a",
+   "source": "A key signature has one sharp, F♯. Which major key is it?",
+   "translation": "Ένας οπλισμός έχει μία δίεση, F♯. Ποια μείζονα τονικότητα είναι;",
+   "source_tokens": {
+    "A": 1,
+    "F♯": 1
+   },
+   "target_tokens": {
+    "F♯": 1
+   }
+  },
+  {
+   "key": "L7e90bc9187",
+   "source": "A key signature has one flat, B♭. Which major key is it?",
+   "translation": "Ένας οπλισμός έχει μία ύφεση, B♭. Ποια μείζονα τονικότητα είναι;",
+   "source_tokens": {
+    "A": 1,
+    "B♭": 1
+   },
+   "target_tokens": {
+    "B♭": 1
+   }
+  },
+  {
+   "key": "L0d05f4bd7b",
+   "source": "A sharp shortcut",
+   "translation": "Ένα τέχνασμα με τις διέσεις",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lfb653af5fb",
+   "source": "A key signature has two sharps, F♯ and C♯. Which major key is it?",
+   "translation": "Ένας οπλισμός έχει δύο διέσεις, F♯ και C♯. Ποια μείζονα τονικότητα είναι;",
+   "source_tokens": {
+    "A": 1,
+    "F♯": 1,
+    "C♯": 1
+   },
+   "target_tokens": {
+    "F♯": 1,
+    "C♯": 1
+   }
+  },
+  {
+   "key": "Lf8adc1eed0",
+   "source": "The key signature shows B♭. Which Bs are played as B♭?",
+   "translation": "Ο οπλισμός δείχνει B♭. Ποιες νότες B παίζονται ως B♭;",
+   "source_tokens": {
+    "B♭": 2
+   },
+   "target_tokens": {
+    "B♭": 2,
+    "B": 1
+   }
+  },
+  {
+   "key": "Lf7bb2a06a9",
+   "source": "A key signature applies to every B in every octave, unless the music marks otherwise.",
+   "translation": "Ο οπλισμός ισχύει για κάθε B σε κάθε οκτάβα, εκτός αν η παρτιτούρα σημειώνει κάτι άλλο.",
+   "source_tokens": {
+    "A": 1,
+    "B": 1
+   },
+   "target_tokens": {
+    "B": 1
+   }
+  },
+  {
+   "key": "L0674eef56c",
+   "source": "A third of four half steps is a major third, like C to E. A third of three is a minor third, like C to E♭ or A to C.",
+   "translation": "Μια τρίτη τεσσάρων ημιτονίων είναι μεγάλη τρίτη, όπως από C σε E. Μια τρίτη τριών είναι μικρή τρίτη, όπως από C σε E♭ ή από A σε C.",
+   "source_tokens": {
+    "A": 3,
+    "C": 3,
+    "E": 1,
+    "E♭": 1
+   },
+   "target_tokens": {
+    "C": 3,
+    "E": 1,
+    "E♭": 1,
+    "A": 1
+   }
+  },
+  {
+   "key": "L165cd7b317",
+   "source": "Unisons, fourths, fifths and octaves are called perfect. A perfect fourth spans five half steps, a perfect fifth seven, and an octave twelve.",
+   "translation": "Οι ταυτοφωνίες, οι τετάρτες, οι πέμπτες και οι οκτάβες λέγονται καθαρές. Η καθαρή τετάρτη καλύπτει πέντε ημιτόνια, η καθαρή πέμπτη επτά και η οκτάβα δώδεκα.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L849cac39df",
+   "source": "A triad is three notes stacked in thirds. Start on any note, skip a letter, take the next, skip again. C, skip D, E, skip F, G: C E G.",
+   "translation": "Η τρίφωνη συγχορδία έχει τρεις νότες στοιβαγμένες σε τρίτες. Ξεκινήστε από οποιαδήποτε νότα, παραλείψτε ένα γράμμα, πάρτε το επόμενο και παραλείψτε ξανά. C, παραλείψτε D, E, παραλείψτε F, G: C E G.",
+   "source_tokens": {
+    "A": 1,
+    "C": 2,
+    "D": 1,
+    "E": 2,
+    "F": 1,
+    "G": 2
+   },
+   "target_tokens": {
+    "C": 2,
+    "D": 1,
+    "E": 2,
+    "F": 1,
+    "G": 2
+   }
+  },
+  {
+   "key": "Ld03983b022",
+   "source": "A major triad has a major third on the bottom, four half steps, then a minor third on top. C E G is major. So are F A C and G B D.",
+   "translation": "Η μείζονα τρίφωνη έχει μεγάλη τρίτη κάτω, τέσσερα ημιτόνια, και μικρή τρίτη πάνω. Η C E G είναι μείζονα. Το ίδιο και οι F A C και G B D.",
+   "source_tokens": {
+    "A": 2,
+    "C": 2,
+    "E": 1,
+    "G": 2,
+    "F": 1,
+    "B": 1,
+    "D": 1
+   },
+   "target_tokens": {
+    "C": 2,
+    "E": 1,
+    "G": 2,
+    "F": 1,
+    "A": 1,
+    "B": 1,
+    "D": 1
+   }
+  },
+  {
+   "key": "L46f673a218",
+   "source": "A cadence is the chord move that ends a phrase, like punctuation. V to I is the strongest, a full stop. It's called an authentic cadence.",
+   "translation": "Η πτώση είναι η κίνηση συγχορδιών που τελειώνει μια φράση, σαν σημείο στίξης. Από V σε I είναι η ισχυρότερη, μια τελεία. Λέγεται αυθεντική πτώση.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Ld4c44f8425",
+   "source": "A half cadence pauses on V, like a comma.",
+   "translation": "Η μισή πτώση σταματά στη V, σαν κόμμα.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L86b2480183",
+   "source": "A beat keeps the same space between pulses, like a clock ticking.",
+   "translation": "Ο παλμός κρατά ίση απόσταση ανάμεσα στα χτυπήματα, όπως το τικ-τακ ενός ρολογιού.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L628db1ad7e",
+   "source": "A bar is one group of beats. Here each bar holds four beats, written 4/4. Beat 1 starts every bar, so lean on it a little as you count.",
+   "translation": "Το μέτρο είναι μια ομάδα χρόνων. Εδώ κάθε μέτρο περιέχει τέσσερις χρόνους και γράφεται 4/4. Ο χρόνος 1 αρχίζει κάθε μέτρο, οπότε τονίστε τον λίγο καθώς μετράτε.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L0488810a08",
+   "source": "A note that lasts one beat is a quarter note. Four of them fill a bar of 4/4, so tapping on every beat means tapping quarter notes.",
+   "translation": "Μια νότα που διαρκεί έναν χρόνο είναι τέταρτο. Τέσσερα τέταρτα γεμίζουν ένα μέτρο 4/4, οπότε χτυπώντας σε κάθε χρόνο χτυπάτε τέταρτα.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L83d998b5c9",
+   "source": "A whole note: just beat 1",
+   "translation": "Ολόκληρο: μόνο στον χρόνο 1",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L5c0543142b",
+   "source": "A whole note lasts all four beats. Tap once on 1 and count 2, 3, 4 under your breath so the next 1 lands on time.",
+   "translation": "Το ολόκληρο διαρκεί και τους τέσσερις χρόνους. Χτυπήστε μία φορά στο 1 και μετρήστε σιγανά 2, 3, 4, ώστε το επόμενο 1 να πέσει στην ώρα του.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Le040064175",
+   "source": "A whole note lasts four beats, the full bar of 4/4.",
+   "translation": "Το ολόκληρο διαρκεί τέσσερις χρόνους, ολόκληρο το μέτρο 4/4.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L32d45d5138",
+   "source": "Hover just above the glass between taps. A short, light motion is easier to keep even at faster tempos.",
+   "translation": "Μείνετε λίγο πάνω από το γυαλί ανάμεσα στα χτυπήματα. Μια μικρή, ελαφριά κίνηση διατηρείται ευκολότερα ομοιόμορφη σε γρηγορότερα τέμπο.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L9130b5f088",
+   "source": "A rest is counted silence",
+   "translation": "Η παύση είναι μετρημένη σιωπή",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L3cf87b8db7",
+   "source": "A rest is a silence with a set length. You still count it; you just don't tap. A quarter rest lasts one beat.",
+   "translation": "Η παύση είναι σιωπή με καθορισμένη διάρκεια. Εξακολουθείτε να τη μετράτε· απλώς δεν χτυπάτε. Η παύση τετάρτου διαρκεί έναν χρόνο.",
+   "source_tokens": {
+    "A": 2
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Le3809226fc",
+   "source": "A rest takes up time just like a note. Counting it keeps your place.",
+   "translation": "Η παύση καταλαμβάνει χρόνο όπως μια νότα. Μετρώντας τη διατηρείτε τη θέση σας.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lf4f417cd76",
+   "source": "A tie joins two notes",
+   "translation": "Η σύζευξη διαρκείας ενώνει δύο νότες",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L1a04a8417f",
+   "source": "A tie is a curved line joining two notes. You play the first and hold it through the second, so the tied note gets no new tap.",
+   "translation": "Η σύζευξη διαρκείας είναι μια καμπύλη γραμμή που ενώνει δύο νότες. Παίζετε την πρώτη και την κρατάτε και στη δεύτερη, οπότε η δεμένη νότα δεν παίρνει νέο χτύπημα.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lfe1a786af8",
+   "source": "A tie stretches one note. You count 3, but the note from beat 2 keeps sounding.",
+   "translation": "Η σύζευξη διαρκείας παρατείνει μία νότα. Μετράτε 3, αλλά η νότα από τον χρόνο 2 συνεχίζει να ηχεί.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L6bb87f0675",
+   "source": "A dot adds half",
+   "translation": "Η στιγμή προσθέτει το μισό",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L3b2aad0768",
+   "source": "A dot after a note adds half its length. A half note lasts two beats, so a dotted half lasts three. Tap 1, count 2 and 3, tap 4.",
+   "translation": "Η στιγμή μετά από μια νότα προσθέτει τη μισή διάρκειά της. Το μισό διαρκεί δύο χρόνους, οπότε το παρεστιγμένο μισό τρεις. Χτυπήστε στο 1, μετρήστε 2 και 3, χτυπήστε στο 4.",
+   "source_tokens": {
+    "A": 2
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L18e059a807",
+   "source": "A quarter note lasts one beat. How long is a dotted quarter?",
+   "translation": "Το τέταρτο διαρκεί έναν χρόνο. Πόσο διαρκεί το παρεστιγμένο τέταρτο;",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L8082440e36",
+   "source": "A dotted quarter lasts one and a half beats, so the next note lands on an \"and.\" Count 1 and 2 and: tap 1, then the \"and\" of 2.",
+   "translation": "Το παρεστιγμένο τέταρτο διαρκεί ενάμιση χρόνο, οπότε η επόμενη νότα πέφτει σε ένα «και». Μετρήστε 1 και 2 και: χτυπήστε στο 1 και έπειτα στο «και» του 2.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lcffbe42188",
+   "source": "A dotted quarter plus an eighth fills two beats: long, short. Count 1 and 2 and; tap 1 and the \"and\" of 2.",
+   "translation": "Ένα παρεστιγμένο τέταρτο μαζί με ένα όγδοο γεμίζουν δύο χρόνους: μακρύ, σύντομο. Μετρήστε 1 και 2 και· χτυπήστε στο 1 και στο «και» του 2.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lca299fc41b",
+   "source": "A dotted quarter and an eighth together last how long?",
+   "translation": "Πόσο διαρκούν μαζί ένα παρεστιγμένο τέταρτο και ένα όγδοο;",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Ld39b7ad826",
+   "source": "A quarter tied to an eighth",
+   "translation": "Τέταρτο με σύζευξη διαρκείας σε όγδοο",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lb2e2dd9539",
+   "source": "A half note is two beats; the dot adds one more.",
+   "translation": "Το μισό είναι δύο χρόνοι· η στιγμή προσθέτει άλλον έναν.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Le466d7815d",
+   "source": "A tie connects two notes. How many times do you tap?",
+   "translation": "Μια σύζευξη διαρκείας ενώνει δύο νότες. Πόσες φορές χτυπάτε;",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L7364a9324b",
+   "source": "A triplet fits three even notes into one beat. Count 1-trip-let, 2-trip-let, with each syllable the same length.",
+   "translation": "Το τρίηχο χωρά τρεις ισόχρονες νότες σε έναν χρόνο. Μετρήστε 1-τρί-ο, 2-τρί-ο, δίνοντας ίδια διάρκεια σε κάθε συλλαβή.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lc07db2c832",
+   "source": "A swung \"and\" waits for the last triplet of the beat.",
+   "translation": "Το «και» με σουίνγκ περιμένει την τελευταία νότα του τριήχου του χρόνου.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L6d329f74b9",
+   "source": "A half note fills two of the three beats. Tap 1, count 2, tap 3. It feels like the big step and small step of a waltz.",
+   "translation": "Το μισό γεμίζει δύο από τους τρεις χρόνους. Χτυπήστε στο 1, μετρήστε 2, χτυπήστε στο 3. Μοιάζει με το μεγάλο και το μικρό βήμα του βαλς.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lb930de3a01",
+   "source": "A favorite 6/8 pattern goes long-short, long-short: tap 1, 3, 4 and 6. It rocks like a lullaby or a sea shanty.",
+   "translation": "Ένα αγαπημένο μοτίβο στα 6/8 είναι μακρύ-σύντομο, μακρύ-σύντομο: χτυπήστε 1, 3, 4 και 6. Λικνίζεται σαν νανούρισμα ή ναυτικό τραγούδι.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L35ded56000",
+   "source": "A note played longer",
+   "translation": "Μια νότα που παίζεται με μεγαλύτερη διάρκεια",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L5b57dfbaff",
+   "source": "A note left out",
+   "translation": "Μια νότα που παραλείπεται",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lff43cc465c",
+   "source": "A note played stronger",
+   "translation": "Μια νότα που παίζεται πιο δυνατά",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L7122f02be1",
+   "source": "A low breath widens your ribs and belly. Lifting your shoulders tightens your neck and throat.",
+   "translation": "Η χαμηλή αναπνοή ανοίγει τα πλευρά και την κοιλιά. Το σήκωμα των ώμων σφίγγει τον αυχένα και τον λαιμό.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L732983c362",
+   "source": "A note feels tight or scratchy. What do you do?",
+   "translation": "Μια νότα σας σφίγγει ή σας γδέρνει. Τι κάνετε;",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lb2831d7e9b",
+   "source": "A step is the next note",
+   "translation": "Το βήμα είναι η επόμενη νότα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L981d9283c7",
+   "source": "A step moves to the next note of a scale, up or down. Steps are the smallest, easiest moves to sing in tune.",
+   "translation": "Το βήμα πηγαίνει στην επόμενη νότα της κλίμακας, πάνω ή κάτω. Τα βήματα είναι οι μικρότερες και ευκολότερες κινήσεις για τραγούδι στο σωστό τονικό ύψος.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lea5cdedfc3",
+   "source": "A half step is the smallest step, like E to F, with no note between. Most neighboring scale notes, like C and D, are a whole step apart: two half steps.",
+   "translation": "Το ημιτόνιο είναι το μικρότερο βήμα, όπως από E σε F, χωρίς ενδιάμεση νότα. Οι περισσότερες γειτονικές νότες της κλίμακας, όπως C και D, απέχουν έναν τόνο: δύο ημιτόνια.",
+   "source_tokens": {
+    "A": 1,
+    "E": 1,
+    "F": 1,
+    "C": 1,
+    "D": 1
+   },
+   "target_tokens": {
+    "E": 1,
+    "F": 1,
+    "C": 1,
+    "D": 1
+   }
+  },
+  {
+   "key": "Ld137efde5a",
+   "source": "A step or a skip?",
+   "translation": "Βήμα ή πήδημα;",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Led384ddf62",
+   "source": "A step",
+   "translation": "Ένα βήμα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L7b6e740eb2",
+   "source": "A skip (a third)",
+   "translation": "Ένα πήδημα (τρίτη)",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lf5e69b5b0c",
+   "source": "A fifth",
+   "translation": "Μια πέμπτη",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L006392a6a7",
+   "source": "A third",
+   "translation": "Μια τρίτη",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L77f22a7a1f",
+   "source": "A tune you already know",
+   "translation": "Μια μελωδία που ήδη ξέρετε",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L92d2225f42",
+   "source": "A rest at the end",
+   "translation": "Μια παύση στο τέλος",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L29182bf967",
+   "source": "A note before the first full bar",
+   "translation": "Μια νότα πριν από το πρώτο πλήρες μέτρο",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Ld880b8a0f5",
+   "source": "A pickup leads into beat 1 of the first full bar.",
+   "translation": "Η ανάκρουση οδηγεί στον χρόνο 1 του πρώτου πλήρους μέτρου.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lf6f5c19850",
+   "source": "A slow river song",
+   "translation": "Ένα αργό τραγούδι του ποταμού",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L5acf76b488",
+   "source": "A relaxed throat and steady breath",
+   "translation": "Από χαλαρό λαιμό και σταθερή αναπνοή",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L2cefd57e14",
+   "source": "A straight, steady A. No wave, just a clear line.",
+   "translation": "Μια σταθερή A χωρίς κυματισμό. Κανένα κύμα, μόνο καθαρή γραμμή.",
+   "source_tokens": {
+    "A": 2
+   },
+   "target_tokens": {
+    "A": 1
+   }
+  },
+  {
+   "key": "L2820b37f02",
+   "source": "A wide, fast wobble",
+   "translation": "Ένα πλατύ, γρήγορο τρέμουλο",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lce2e0519ba",
+   "source": "A steady, straight tone",
+   "translation": "Ένας σταθερός ήχος χωρίς κυματισμό",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L28f5480fae",
+   "source": "A steady tone is the foundation. Vibrato that grows from it sounds natural.",
+   "translation": "Ο σταθερός ήχος είναι το θεμέλιο. Το βιμπράτο που αναπτύσσεται από αυτόν ακούγεται φυσικό.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L898398980e",
+   "source": "A swell grows from soft to louder and back on one breath. Start quietly, grow gently, then fade, all on the same pitch.",
+   "translation": "Με μία αναπνοή, ο ήχος δυναμώνει και ξαναχαμηλώνει. Ξεκινήστε σιγά, δυναμώστε απαλά και μετά σβήστε τον ήχο, πάντα στο ίδιο τονικό ύψος.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L4648e71e66",
+   "source": "A short warm-up eases your voice in: breathe low, hum, lip trill, then sing a scale. Start in the middle of your range and stay comfortable.",
+   "translation": "Ένα σύντομο ζέσταμα προετοιμάζει σταδιακά τη φωνή: αναπνοή χαμηλά, σιγοτραγούδισμα με κλειστά χείλη, δονήσεις χειλιών και μετά μια κλίμακα. Ξεκινήστε στη μέση της έκτασής σας, χωρίς πίεση.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L13cff1bcaa",
+   "source": "A regular wave in pitch",
+   "translation": "Μια τακτική κυμάτωση του τονικού ύψους",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L8df5dae6c0",
+   "source": "A very loud note",
+   "translation": "Μια πολύ δυνατή νότα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L407ff5e2bb",
+   "source": "A French folk tune",
+   "translation": "Μια γαλλική λαϊκή μελωδία",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lb0e2035c69",
+   "source": "A tune that chases itself",
+   "translation": "Μια μελωδία που κυνηγά τον εαυτό της",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L1bd66542b0",
+   "source": "A sleigh-ride song",
+   "translation": "Ένα τραγούδι για βόλτα με έλκηθρο",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L0acfbda2eb",
+   "source": "A Gold Rush anthem",
+   "translation": "Ένας ύμνος του πυρετού του χρυσού",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Le9fa15352e",
+   "source": "A song that changed sides",
+   "translation": "Ένα τραγούδι που άλλαξε στρατόπεδο",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L2fe30e7339",
+   "source": "A sailor's sweetheart",
+   "translation": "Το ταίρι ενός ναύτη",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L9e34d9f4dd",
+   "source": "A repeating bass like this is called a ground. Everything else in the piece is built on top of it.",
+   "translation": "Ένα τέτοιο επαναλαμβανόμενο μπάσο λέγεται επίμονο βάσιμο. Όλα τα υπόλοιπα στοιχεία του κομματιού χτίζονται πάνω του.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L84e2828100",
+   "source": "A sharp is one fret above its letter. The melody uses C sharp on string 2, fret 2, and F sharp on string 4, fret 4. Reach that one with your little finger.",
+   "translation": "Μια νότα με δίεση βρίσκεται ένα τάστο πάνω από τη φυσική νότα. Η μελωδία έχει C δίεση στη χορδή 2, τάστο 2, και F δίεση στη χορδή 4, τάστο 4. Φτάστε το τελευταίο με το μικρό δάχτυλο.",
+   "source_tokens": {
+    "A": 1,
+    "C": 1,
+    "F": 1
+   },
+   "target_tokens": {
+    "C": 1,
+    "F": 1
+   }
+  },
+  {
+   "key": "L3da91dbb34",
+   "source": "A melody from America",
+   "translation": "Μια μελωδία από την Αμερική",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lee1430e2c9",
+   "source": "A gift for a baby",
+   "translation": "Ένα δώρο για ένα μωρό",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L1872354e80",
+   "source": "D at fret 3 on string 2, then climb from open G: A, B, C, D. Then two open Gs.",
+   "translation": "D στο τάστο 3 της χορδής 2, μετά άνοδος από το ανοιχτό G: A, B, C, D. Μετά δύο ανοιχτά G.",
+   "source_tokens": {
+    "D": 2,
+    "G": 1,
+    "A": 1,
+    "B": 1,
+    "C": 1
+   },
+   "target_tokens": {
+    "D": 2,
+    "G": 2,
+    "A": 1,
+    "B": 1,
+    "C": 1
+   }
+  },
+  {
+   "key": "L8c57590db7",
+   "source": "A minuet is a dance in three. Most bars start with a long beat, then quick pairs: one, two-and, three-and.",
+   "translation": "Το μενουέτο είναι χορός σε τρεις χρόνους. Τα περισσότερα μέτρα αρχίζουν με μια νότα του ενός χρόνου, μετά γρήγορα ζευγάρια: ένα, δύο-και, τρία-και.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L146c1bf23b",
+   "source": "Für Elise",
+   "translation": "Για την Ελίζα",
+   "source_tokens": {
+    "F": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L25e2728d01",
+   "source": "A short recital",
+   "translation": "Ένα μικρό ρεσιτάλ",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L4351df04dd",
+   "source": "A minuet is a dance in three. The Canon and the trolls' march both count in four.",
+   "translation": "Το μενουέτο είναι χορός σε τρεις χρόνους. Ο Κανόνας και το εμβατήριο των τρολ μετριούνται σε τέσσερις.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L0afd91534e",
+   "source": "A Gold Rush ballad, two beloved hymns and a Shaker song from America's songbook.",
+   "translation": "Μια μπαλάντα του πυρετού του χρυσού, δύο αγαπημένοι ύμνοι και ένα τραγούδι των Σέικερ από την Αμερική.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L74e60d76a3",
+   "source": "A Gold Rush ballad",
+   "translation": "Μια μπαλάντα του πυρετού του χρυσού",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lb7b411fff0",
+   "source": "A pickup",
+   "translation": "Ανάκρουση",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lc98c57281c",
+   "source": "A rest",
+   "translation": "Παύση",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "La002bb134a",
+   "source": "A pickup is a few notes that lead into the first strong beat. Here they fall on the and of beat three.",
+   "translation": "Η ανάκρουση είναι λίγες νότες που οδηγούν στον πρώτο ισχυρό χρόνο. Εδώ πέφτουν στο και του τρίτου χρόνου.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lf23c32ed91",
+   "source": "A dot makes a note half again as long. In bar two, F sharp rings for a beat and a half, G slips in on the and of two, and A lands on three.",
+   "translation": "Η στιγμή προσθέτει στη νότα τη μισή αξία της. Στο δεύτερο μέτρο, το F δίεση ηχεί για ενάμιση χρόνο, το G μπαίνει στο και του δύο και το A στο τρία.",
+   "source_tokens": {
+    "A": 2,
+    "F": 1,
+    "G": 1
+   },
+   "target_tokens": {
+    "F": 1,
+    "G": 1,
+    "A": 1
+   }
+  },
+  {
+   "key": "L96e7ede57d",
+   "source": "A Shaker dance song",
+   "translation": "Ένα χορευτικό τραγούδι των Σέικερ",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lb6636c4525",
+   "source": "A dotted quarter lasts a beat and a half. The note after it is usually quick, to fill out the beat.",
+   "translation": "Ένα παρεστιγμένο τέταρτο διαρκεί ενάμιση χρόνο. Η επόμενη νότα είναι συνήθως γρήγορη, για να συμπληρώσει τον χρόνο.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Ld15aab05ef",
+   "source": "A spring song turned carol",
+   "translation": "Ανοιξιάτικο τραγούδι που έγινε κάλαντα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L08bc967946",
+   "source": "A Welsh New Year's tune",
+   "translation": "Μια ουαλική πρωτοχρονιάτικη μελωδία",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lb20b5d720b",
+   "source": "An octave is the same letter, eight steps higher or lower. The two Ds blend, but one sounds brighter.",
+   "translation": "Η οκτάβα είναι η νότα με το ίδιο γράμμα, οκτώ βαθμίδες ψηλότερα ή χαμηλότερα. Τα δύο D συνδυάζονται, αλλά το ένα ακούγεται πιο λαμπερό.",
+   "source_tokens": {},
+   "target_tokens": {
+    "D": 1
+   }
+  },
+  {
+   "key": "Lac2f0f32ff",
+   "source": "A holiday concert",
+   "translation": "Μια γιορτινή συναυλία",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L18159d6543",
+   "source": "A little night music",
+   "translation": "Μικρή νυχτερινή μουσική",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "La01f60fc50",
+   "source": "A rest is a silent beat. Touch the string with your fretting fingers so the silence is crisp, then come back in exactly on time.",
+   "translation": "Η παύση είναι ένας σιωπηλός χρόνος. Αγγίξτε τη χορδή με τα δάχτυλα που πατούν τα τάστα, ώστε η σιωπή να είναι καθαρή, και ξαναμπείτε ακριβώς στην ώρα σας.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L5fbe60e018",
+   "source": "The high point: three As, up to F sharp at fret 2 on string 1, then E E D B D, A F sharp D.",
+   "translation": "Η ψηλότερη στιγμή: τρία A, πάνω στο F δίεση του τάστου 2 της χορδής 1, μετά E E D B D, A F δίεση D.",
+   "source_tokens": {
+    "F": 2,
+    "E": 2,
+    "D": 3,
+    "B": 1,
+    "A": 1
+   },
+   "target_tokens": {
+    "A": 2,
+    "F": 2,
+    "E": 2,
+    "D": 3,
+    "B": 1
+   }
+  },
+  {
+   "key": "Lca6c0fd71a",
+   "source": "A position is named for where finger 1 sits. In third position, finger 1 plays fret 3 and finger 4 reaches fret 6.",
+   "translation": "Η θέση παίρνει το όνομά της από το σημείο όπου βρίσκεται το δάχτυλο 1. Στην τρίτη θέση, το δάχτυλο 1 παίζει στο τάστο 3 και το δάχτυλο 4 φτάνει στο τάστο 6.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "La05a917a5f",
+   "source": "A slow ballad in D",
+   "translation": "Μια αργή μπαλάντα σε D",
+   "source_tokens": {
+    "A": 1,
+    "D": 1
+   },
+   "target_tokens": {
+    "D": 1
+   }
+  },
+  {
+   "key": "L1c02b78748",
+   "source": "Porchlight drifts along at 70 beats per minute. A ballad is a slow song that tells a story, so give every chord room to ring. Listen for the long note that closes each line.",
+   "translation": "Το «Φως στη βεράντα» κυλά σε 70 χρόνους το λεπτό. Η μπαλάντα είναι αργό τραγούδι που αφηγείται μια ιστορία, γι’ αυτό δώστε σε κάθε συγχορδία χώρο να ηχήσει. Ακούστε την παρατεταμένη νότα που κλείνει κάθε γραμμή.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L761695b22b",
+   "source": "A sequence",
+   "translation": "Αλυσίδα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lced9ebde6f",
+   "source": "A sequence repeats a melodic shape from a new starting note. It makes a hook easy to remember.",
+   "translation": "Η αλυσίδα επαναλαμβάνει ένα μελωδικό σχήμα ξεκινώντας από άλλη νότα. Έτσι το βασικό μοτίβο απομνημονεύεται εύκολα.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L12c5fe98e9",
+   "source": "A Friday-night anthem",
+   "translation": "Ένας ύμνος για το βράδυ της Παρασκευής",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L7e8d3d1635",
+   "source": "A waltz in D minor",
+   "translation": "Ένα βαλς σε D ελάσσονα",
+   "source_tokens": {
+    "A": 1,
+    "D": 1
+   },
+   "target_tokens": {
+    "D": 1
+   }
+  },
+  {
+   "key": "L8b259aba31",
+   "source": "A funk vamp",
+   "translation": "Ένα επαναλαμβανόμενο μοτίβο φανκ",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L5490c1ee9f",
+   "source": "Neon Laundromat stays on one chord, A7, the whole way through. A vamp like this lives on rhythm: tight, choppy strums at 96 beats per minute and a hook that dodges the beat.",
+   "translation": "Τα «Πλυντήρια νέον» μένουν σε μία συγχορδία, την A7, σε όλο το τραγούδι. Ένα τέτοιο επαναλαμβανόμενο μοτίβο ζει από τον ρυθμό: σφιχτά, κοφτά χτυπήματα σε 96 χρόνους το λεπτό και ένα βασικό μοτίβο που αποφεύγει τον χρόνο.",
+   "source_tokens": {
+    "A7": 1,
+    "A": 1
+   },
+   "target_tokens": {
+    "A7": 1
+   }
+  },
+  {
+   "key": "Ld302bd06f2",
+   "source": "A slow dance in 6/8",
+   "translation": "Ένας αργός χορός σε 6/8",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L2562517239",
+   "source": "A power chord is a root and its fifth, with no third, so it is neither major nor minor.",
+   "translation": "Η συγχορδία πέμπτης έχει τη θεμέλιο και την πέμπτη της, χωρίς τρίτη, άρα δεν είναι ούτε μείζονα ούτε ελάσσονα.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L38100b9832",
+   "source": "A ballad, a sea story in 6/8, a music-box waltz, a bright folk strummer and a dark song in A minor.",
+   "translation": "Μπαλάντα, θαλασσινή ιστορία σε 6/8, βαλς μουσικού κουτιού, φωτεινή φολκ συνοδεία και σκοτεινό τραγούδι σε A ελάσσονα.",
+   "source_tokens": {
+    "A": 2
+   },
+   "target_tokens": {
+    "A": 1
+   }
+  },
+  {
+   "key": "La0177ef800",
+   "source": "A singer-songwriter ballad",
+   "translation": "Μια μπαλάντα τραγουδοποιού",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L4f75706770",
+   "source": "A story in 6/8",
+   "translation": "Μια ιστορία σε 6/8",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L6eba02a654",
+   "source": "A music-box waltz",
+   "translation": "Ένα βαλς μουσικού κουτιού",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lff2a2c32e4",
+   "source": "A folk strummer",
+   "translation": "Φολκ με χτυπήματα συγχορδιών",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L93454789e3",
+   "source": "A minor-key ballad",
+   "translation": "Μια μπαλάντα σε ελάσσονα τονικότητα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L06b832525f",
+   "source": "A key change up a whole step moves every note up…",
+   "translation": "Μια αλλαγή τονικότητας έναν τόνο ψηλότερα ανεβάζει κάθε νότα κατά…",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L5ebd5cc8aa",
+   "source": "A whole step is two half steps, and each fret is a half step. C becomes D, and G becomes A.",
+   "translation": "Ένας τόνος είναι δύο ημιτόνια, και κάθε τάστο είναι ένα ημιτόνιο. Το C γίνεται D και το G γίνεται A.",
+   "source_tokens": {
+    "A": 2,
+    "C": 1,
+    "D": 1,
+    "G": 1
+   },
+   "target_tokens": {
+    "C": 1,
+    "D": 1,
+    "G": 1,
+    "A": 1
+   }
+  },
+  {
+   "key": "La98b0c0ae0",
+   "source": "A leads home to D. Landing on it turns the whole song toward the new key.",
+   "translation": "Η A οδηγεί στην τονική D. Η άφιξη στην A στρέφει ολόκληρο το τραγούδι προς τη νέα τονικότητα.",
+   "source_tokens": {
+    "A": 1,
+    "D": 1
+   },
+   "target_tokens": {
+    "A": 2,
+    "D": 1
+   }
+  },
+  {
+   "key": "L382c638d14",
+   "source": "A railroad song",
+   "translation": "Ένα τραγούδι του σιδηροδρόμου",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L5e0badd310",
+   "source": "The first line: open D, E, four open Gs, a dip to B on string 5, then home to G.",
+   "translation": "Η πρώτη γραμμή: ανοιχτό D, E, τέσσερα ανοιχτά G, κάτω στο B της χορδής 5 και επιστροφή στο G.",
+   "source_tokens": {
+    "D": 1,
+    "E": 1,
+    "B": 1,
+    "G": 1
+   },
+   "target_tokens": {
+    "D": 1,
+    "E": 1,
+    "G": 2,
+    "B": 1
+   }
+  },
+  {
+   "key": "L72cb6a906d",
+   "source": "A chorus",
+   "translation": "Ρεφρέν",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L0cf065e1f1",
+   "source": "A pickup is a few notes that lead into the first strong beat. Here they run up to the word com-.",
+   "translation": "Η ανάκρουση είναι λίγες νότες που οδηγούν στον πρώτο ισχυρό χρόνο. Εδώ ανεβαίνουν ως τη συλλαβή «com-».",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lf6ce724330",
+   "source": "A song of peace",
+   "translation": "Ένα τραγούδι ειρήνης",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L300573ec25",
+   "source": "In Dublin's fair city: open D, four open Gs, up to open B and back to G.",
+   "translation": "In Dublin's fair city: ανοιχτό D, τέσσερα ανοιχτά G, πάνω στο ανοιχτό B και πίσω στο G.",
+   "source_tokens": {
+    "D": 1,
+    "B": 1,
+    "G": 1
+   },
+   "target_tokens": {
+    "D": 1,
+    "G": 2,
+    "B": 1
+   }
+  },
+  {
+   "key": "Leaa1e0fc89",
+   "source": "A waltz in three",
+   "translation": "Ένα βαλς σε τρεις χρόνους",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L9023afb03a",
+   "source": "A Welsh lullaby, a Highland boat song and three carols, in German, Latin and English.",
+   "translation": "Ένα ουαλικό νανούρισμα, ένα τραγούδι βάρκας από τα Χάιλαντς και τρία κάλαντα, στα γερμανικά, λατινικά και αγγλικά.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L93e511e9a3",
+   "source": "A Welsh lullaby",
+   "translation": "Ένα ουαλικό νανούρισμα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L69c68aba96",
+   "source": "Speed, bonnie boat, like a bird on the wing: open D, E, D, three open Gs, then A, B, A and up to D.",
+   "translation": "Speed, bonnie boat, like a bird on the wing: ανοιχτό D, E, D, τρία ανοιχτά G, μετά A, B, A και πάνω στο D.",
+   "source_tokens": {
+    "D": 3,
+    "E": 1,
+    "A": 2,
+    "B": 1
+   },
+   "target_tokens": {
+    "D": 3,
+    "E": 1,
+    "G": 1,
+    "A": 2,
+    "B": 1
+   }
+  },
+  {
+   "key": "Ld658920971",
+   "source": "A German carol from 1824",
+   "translation": "Γερμανικά κάλαντα του 1824",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L89c21ba2e6",
+   "source": "O Tannenbaum, o Tannenbaum: open D, three open Gs, then A at fret 2 and three open Bs.",
+   "translation": "O Tannenbaum, o Tannenbaum: ανοιχτό D, τρία ανοιχτά G, μετά A στο τάστο 2 και τρία ανοιχτά B.",
+   "source_tokens": {
+    "D": 1,
+    "A": 1
+   },
+   "target_tokens": {
+    "D": 1,
+    "G": 1,
+    "A": 1,
+    "B": 1
+   }
+  },
+  {
+   "key": "L84a6e8dbed",
+   "source": "A carol from Cornwall",
+   "translation": "Κάλαντα από την Κορνουάλη",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lb330a6d587",
+   "source": "A winter evening",
+   "translation": "Ένα χειμωνιάτικο βράδυ",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lbc89ebf38d",
+   "source": "A pipe march, a Russian folk dance, the Blue Danube and the can-can.",
+   "translation": "Ένα εμβατήριο για γκάιντα, ένας ρωσικός λαϊκός χορός, ο Γαλάζιος Δούναβης και το καν καν.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L040c7ac884",
+   "source": "A pipe-band favorite",
+   "translation": "Αγαπημένο των συγκροτημάτων γκάιντας",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L74f91db36a",
+   "source": "A marching snap",
+   "translation": "Η κοφτή ζωντάνια του εμβατηρίου",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L8bbca3e54a",
+   "source": "A dotted note and a quick one give a march its snap: long, then short. In the first bar, the second D is long and E slips in just before beat two.",
+   "translation": "Μια παρεστιγμένη νότα και μία γρήγορη δίνουν στο εμβατήριο τη ζωντάνια του: μακρύ, μετά σύντομο. Στο πρώτο μέτρο, το δεύτερο D έχει μεγάλη διάρκεια και το E μπαίνει λίγο πριν από τον δεύτερο χρόνο.",
+   "source_tokens": {
+    "A": 1,
+    "D": 1,
+    "E": 1
+   },
+   "target_tokens": {
+    "D": 1,
+    "E": 1
+   }
+  },
+  {
+   "key": "L2977c0d349",
+   "source": "Nikolay Nekrasov's poem about traveling peddlers was printed in 1861, and this folk tune was published with it in 1898. A video game made it famous worldwide almost a century later.",
+   "translation": "Το ποίημα του Νικολάι Νεκράσοφ για πλανόδιους πραματευτάδες τυπώθηκε το 1861, και αυτή η λαϊκή μελωδία εκδόθηκε μαζί του το 1898. Σχεδόν έναν αιώνα αργότερα, ένα βιντεοπαιχνίδι το έκανε παγκοσμίως γνωστό.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lb24b17b8ee",
+   "source": "A galop from the underworld",
+   "translation": "Ένας γκαλόπ από τον Κάτω Κόσμο",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Ldbdc65cb5e",
+   "source": "A long open G, then A, C, B, A, and two Ds at fret 3 on string 2.",
+   "translation": "Ένα παρατεταμένο ανοιχτό G, μετά A, C, B, A και δύο D στο τάστο 3 της χορδής 2.",
+   "source_tokens": {
+    "A": 3,
+    "G": 1,
+    "C": 1,
+    "B": 1
+   },
+   "target_tokens": {
+    "G": 1,
+    "A": 2,
+    "C": 1,
+    "B": 1,
+    "D": 1
+   }
+  },
+  {
+   "key": "L3f35020108",
+   "source": "A waltz counts one, two, three. The can-can and the pipe march both count in four.",
+   "translation": "Το βαλς μετρά ένα, δύο, τρία. Το καν καν και το εμβατήριο γκάιντας μετριούνται και τα δύο σε τέσσερις.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Le967f72320",
+   "source": "A march by Sousa",
+   "translation": "Ένα εμβατήριο του Σούζα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lae1ef95ea5",
+   "source": "Four As at fret 2 on string 3, then down to E at fret 2 on string 4, open D and E.",
+   "translation": "Τέσσερα A στο τάστο 2 της χορδής 3, μετά κάτω στο E του τάστου 2 της χορδής 4, ανοιχτό D και E.",
+   "source_tokens": {
+    "E": 2,
+    "D": 1
+   },
+   "target_tokens": {
+    "A": 1,
+    "E": 2,
+    "D": 1
+   }
+  },
+  {
+   "key": "L18a3050970",
+   "source": "The theme uses just G, A, B, D and E. A five-note scale like this is called pentatonic, and it sounds calm and open.",
+   "translation": "Το θέμα χρησιμοποιεί μόνο G, A, B, D και E. Μια τέτοια κλίμακα πέντε νοτών λέγεται πεντατονική και ακούγεται ήρεμη και ανοιχτή.",
+   "source_tokens": {
+    "G": 1,
+    "A": 2,
+    "B": 1,
+    "D": 1,
+    "E": 1
+   },
+   "target_tokens": {
+    "G": 1,
+    "A": 1,
+    "B": 1,
+    "D": 1,
+    "E": 1
+   }
+  },
+  {
+   "key": "Lebb54df167",
+   "source": "A dotted step",
+   "translation": "Ένα παρεστιγμένο βήμα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L4ed6671eed",
+   "source": "A lullaby carol",
+   "translation": "Κάλαντα σαν νανούρισμα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L5e61ddbe60",
+   "source": "A carol from Philadelphia",
+   "translation": "Κάλαντα από τη Φιλαδέλφεια",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L493d6a3068",
+   "source": "A carol in six-eight",
+   "translation": "Κάλαντα σε έξι όγδοα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L14c8dc8c34",
+   "source": "A poem and a quiet tune",
+   "translation": "Ένα ποίημα και μια ήσυχη μελωδία",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L05d69233ea",
+   "source": "A folk carol",
+   "translation": "Λαϊκά κάλαντα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lf3f836de8c",
+   "source": "Four open Gs, then a leap to open E on string 1, down to D at fret 3 on string 2 and open B.",
+   "translation": "Τέσσερα ανοιχτά G, μετά άλμα στο ανοιχτό E της χορδής 1, κάτω στο D του τάστου 3 της χορδής 2 και στο ανοιχτό B.",
+   "source_tokens": {
+    "E": 1,
+    "D": 1,
+    "B": 1
+   },
+   "target_tokens": {
+    "G": 1,
+    "E": 1,
+    "D": 1,
+    "B": 1
+   }
+  },
+  {
+   "key": "Lc763767afa",
+   "source": "A newspaper carol",
+   "translation": "Κάλαντα από μια εφημερίδα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lce0270b1a0",
+   "source": "A hymn from 1708",
+   "translation": "Ένας ύμνος του 1708",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Le6e53cf8ec",
+   "source": "A hymn for the morning",
+   "translation": "Ένας ύμνος για το πρωί",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Lbc55866e36",
+   "source": "A hymn from 1856",
+   "translation": "Ένας ύμνος του 1856",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Ld2e697126e",
+   "source": "A hymn of thanks",
+   "translation": "Ένας ύμνος ευχαριστίας",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L9702ee0f0e",
+   "source": "A song from an opera",
+   "translation": "Ένα τραγούδι από όπερα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L3832343e4b",
+   "source": "A quick pickup",
+   "translation": "Μια γρήγορη ανάκρουση",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L58fe8858cf",
+   "source": "A turn to B minor",
+   "translation": "Μια στροφή στην B ελάσσονα",
+   "source_tokens": {
+    "A": 1,
+    "B": 1
+   },
+   "target_tokens": {
+    "B": 1
+   }
+  },
+  {
+   "key": "L7ad16b9d12",
+   "source": "A tune from The Planets",
+   "translation": "Μια μελωδία από τους Πλανήτες",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "L3865605f6e",
+   "source": "A turn around one note",
+   "translation": "Μια στροφή γύρω από μία νότα",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  },
+  {
+   "key": "Leee3f0f189",
+   "source": "A ballad, a sea story in 6/8, a music-box waltz, a bright folk strummer and a dark song in a minor key.",
+   "translation": "Μπαλάντα, θαλασσινή ιστορία σε 6/8, βαλς μουσικού κουτιού, φωτεινή φολκ συνοδεία και σκοτεινό τραγούδι σε ελάσσονα.",
+   "source_tokens": {
+    "A": 1
+   },
+   "target_tokens": {}
+  }
+ ],
+ "read_receipts": [
+  {
+   "path": "contexts-0001-0065.json",
+   "sha256": "530fa73fca92305d5400813d3ef97efc5d08c4a73a02eb674f59202e8a0db270",
+   "range": [
+    1,
+    65
+   ]
+  },
+  {
+   "path": "contexts-0066-0140.json",
+   "sha256": "29c6c16acd3fd7d72ced9fc330780431e5ae51d1f4a4d07d8f6b20a07199e2b9",
+   "range": [
+    66,
+    140
+   ]
+  },
+  {
+   "path": "contexts-0141-0220.json",
+   "sha256": "014c2f0d81dc5703a1f281a8d49b1296b0ec55125e5f613454cd94afbf739104",
+   "range": [
+    141,
+    220
+   ]
+  },
+  {
+   "path": "contexts-0221-0310.json",
+   "sha256": "51a8d7d36e0f5f3b80d4d8a1a423004e6c0afe0219715241027bf2d603c86efb",
+   "range": [
+    221,
+    310
+   ]
+  },
+  {
+   "path": "contexts-0311-0400.json",
+   "sha256": "2691879c421fbcce5662f4ed5d479cd34c207a5937f28a0fe6ca330f5bc8f9f5",
+   "range": [
+    311,
+    400
+   ]
+  },
+  {
+   "path": "contexts-0401-0490.json",
+   "sha256": "8b2953d54229a2d39a10f34fa377c1b4612b9a28117fabc07077f93a48c27543",
+   "range": [
+    401,
+    490
+   ]
+  },
+  {
+   "path": "contexts-0491-0585.json",
+   "sha256": "375af5b4ce38330a32f46fedf7cd0d577e4a0a0623b74a641b83f08ba3187375",
+   "range": [
+    491,
+    585
+   ]
+  },
+  {
+   "path": "contexts-0586-0680.json",
+   "sha256": "c3c9f55909a3be8b7648609f6cbca509deed2b6dc503e323a8a99bd367161995",
+   "range": [
+    586,
+    680
+   ]
+  },
+  {
+   "path": "contexts-0681-0775.json",
+   "sha256": "bfa03aa57fe4f578160366400ee231c2b0509e3c76d99e93b03b17f29f8ceed5",
+   "range": [
+    681,
+    775
+   ]
+  },
+  {
+   "path": "contexts-0776-0870.json",
+   "sha256": "58bfd572e8b8ad4927106d35c5d8cd21cd930a3cddcc4ed1097e035db19764ef",
+   "range": [
+    776,
+    870
+   ]
+  },
+  {
+   "path": "contexts-0871-0970.json",
+   "sha256": "9110a8b548039e0d8e9d419f25ebae98e0b34f87dfff5cd507d4e5048cd459dc",
+   "range": [
+    871,
+    970
+   ]
+  },
+  {
+   "path": "contexts-0971-1070.json",
+   "sha256": "7d263491c410665db321fe88843f6a221bcf802f73db0138ddf3f275bc7c8eb2",
+   "range": [
+    971,
+    1070
+   ]
+  },
+  {
+   "path": "contexts-1071-1170.json",
+   "sha256": "6dcab9ff6944c00eadd7d585d7e545d38d3174b9d038d9d17144e3c9d0f31ac9",
+   "range": [
+    1071,
+    1170
+   ]
+  },
+  {
+   "path": "contexts-1171-1270.json",
+   "sha256": "2a79926d789efa6f7e84491b3c3eff2ea39ae5f815b52ca30ec01db41bab123b",
+   "range": [
+    1171,
+    1270
+   ]
+  },
+  {
+   "path": "contexts-1271-1370.json",
+   "sha256": "4cc93c55337a90fa2d5bb56035dc3a505d185b1b2b64f9992492e63d63e5ebe2",
+   "range": [
+    1271,
+    1370
+   ]
+  },
+  {
+   "path": "contexts-1371-1470.json",
+   "sha256": "542af6c0faffed987161aaf57657c02bbc56a6f2a57c76c553933eb5cfe81453",
+   "range": [
+    1371,
+    1470
+   ]
+  },
+  {
+   "path": "contexts-1471-1570.json",
+   "sha256": "830f55057d6feaf811de02e7e7edd6bff3a309d689a60d770af0eb36290f70f2",
+   "range": [
+    1471,
+    1570
+   ]
+  },
+  {
+   "path": "contexts-1571-1670.json",
+   "sha256": "7110efa2a9f8cdf340f0620dd37e6a251bf83cd06e7f2dda7d78122a7604bf6d",
+   "range": [
+    1571,
+    1670
+   ]
+  },
+  {
+   "path": "contexts-1671-1770.json",
+   "sha256": "bbaeef73119ebf03542b6e0ce9b77a7741d3f14def6f636698afd2084863e4a1",
+   "range": [
+    1671,
+    1770
+   ]
+  },
+  {
+   "path": "contexts-1771-1870.json",
+   "sha256": "4d85c9214a5d3b2e92d6f8bd4d82bfd8eaaf69138a9952643dd38092bc112506",
+   "range": [
+    1771,
+    1870
+   ]
+  },
+  {
+   "path": "contexts-1871-1970.json",
+   "sha256": "2b66ff3897a1e7bb2ddbc71a2b3743aa126a722973d3f273c49494b9420012cf",
+   "range": [
+    1871,
+    1970
+   ]
+  },
+  {
+   "path": "contexts-1971-2070.json",
+   "sha256": "c05200e4555da8e0019e59a78038518d748fe78009ba905b135f82dc79571dfc",
+   "range": [
+    1971,
+    2070
+   ]
+  },
+  {
+   "path": "contexts-2071-2170.json",
+   "sha256": "b659d444a64b3fd0e809723cadaecc6bc43dd8574be19a53da2a3e2b1df22b29",
+   "range": [
+    2071,
+    2170
+   ]
+  },
+  {
+   "path": "contexts-2171-2270.json",
+   "sha256": "296ee24898e47d43062cdde9ed41e5923317aa91356254692ab246dbafec7318",
+   "range": [
+    2171,
+    2270
+   ]
+  },
+  {
+   "path": "contexts-2271-2370.json",
+   "sha256": "12d28d9395ac7d7f32b12f6c9be5e2da37bdc71f36a8c14da6235cdd69595c2b",
+   "range": [
+    2271,
+    2370
+   ]
+  },
+  {
+   "path": "contexts-2371-2470.json",
+   "sha256": "51edc046553516c85ffef2b81d27632f4561ff73efedff028fbaee72ba11d571",
+   "range": [
+    2371,
+    2470
+   ]
+  },
+  {
+   "path": "contexts-2471-2570.json",
+   "sha256": "58dbe841025a41cae94f909d7ee3b5ca7ea4f4d15cd2b39f4619e837411c7d78",
+   "range": [
+    2471,
+    2570
+   ]
+  },
+  {
+   "path": "contexts-2571-2670.json",
+   "sha256": "db87d26ce8203704da4bc8f095be7b93b29faad0426938b41670e35d822db1c9",
+   "range": [
+    2571,
+    2670
+   ]
+  },
+  {
+   "path": "contexts-2671-2770.json",
+   "sha256": "e074043b71041d6c2de1aa81dc5129a44f30e60e7726b393ca265ae751c37bd3",
+   "range": [
+    2671,
+    2770
+   ]
+  },
+  {
+   "path": "contexts-2771-2870.json",
+   "sha256": "e54fd2ae5d9fc7a947b5ab7001deb885efefc7853365e7bb8fffdb1a216e03f6",
+   "range": [
+    2771,
+    2870
+   ]
+  },
+  {
+   "path": "contexts-2871-2970.json",
+   "sha256": "a080ff4187eb6060b5ebb9a6f157fab75661b32d5f9b47242226d1de94c69e72",
+   "range": [
+    2871,
+    2970
+   ]
+  },
+  {
+   "path": "contexts-2971-3070.json",
+   "sha256": "e08b3270727d502b927f16ca53907aba886a3da16bf0de5ad189d9c37bcb2145",
+   "range": [
+    2971,
+    3070
+   ]
+  },
+  {
+   "path": "contexts-3071-3170.json",
+   "sha256": "9afc00ba58404c35d0c90c47acc0b9c43922d94f012c0c405133bd90289e3d63",
+   "range": [
+    3071,
+    3170
+   ]
+  },
+  {
+   "path": "contexts-3171-3270.json",
+   "sha256": "2c4c3f26d795b1c583eb8bd6aa6ca4e3627906dc9308266ba1e3eb24891d5d79",
+   "range": [
+    3171,
+    3270
+   ]
+  },
+  {
+   "path": "contexts-3271-3370.json",
+   "sha256": "0b65a9c60a22d19d236ff91b00fd579a886a0ad31f77887aa15ef6404d3d8c5e",
+   "range": [
+    3271,
+    3370
+   ]
+  },
+  {
+   "path": "contexts-3371-3470.json",
+   "sha256": "ee662a6ba34f5c0388a7c0c873cde482841a3e8c0663a08a131434c260868c59",
+   "range": [
+    3371,
+    3470
+   ]
+  },
+  {
+   "path": "contexts-3471-3570.json",
+   "sha256": "23d6f3882ba220f1e04c14a75a828d46bea6a0645cd10bc7043d1c90a1080331",
+   "range": [
+    3471,
+    3570
+   ]
+  },
+  {
+   "path": "contexts-3571-3670.json",
+   "sha256": "b28b38886f7a5ef79035fd4cfc34261667706f6d6e6e988f686ab0651c68a466",
+   "range": [
+    3571,
+    3670
+   ]
+  },
+  {
+   "path": "contexts-3671-3767.json",
+   "sha256": "bd5380a4140daa6f6778d7f878b791f30dcac3c30733eeaed76eebdc44e60bb8",
+   "range": [
+    3671,
+    3767
+   ]
+  }
+ ],
+ "exact_source_map_current": true,
+ "pitch_diagnostic_disposition": {
+  "raw_rows": 402,
+  "method_limitations": "Regex cannot distinguish English article A, F in Für, plural note names Gs/As/Bs/Ds, or D/U strumming codes from pitch tokens. All rows were already reviewed semantically in full context; non-A differences and nontrivial A differences were separately redisplayed in the closing audit.",
+  "specific_semantic_exceptions": {
+   "L67c3806843": "D/U stroke initials localized as Κ/Π; not pitch D.",
+   "Ld8cef08bd1": "Repeated downstrokes localized Κ; not pitch D.",
+   "Lc0ded9cc39": "Island strum D/DU/UDU consistently Κ/ΚΠ/ΠΚΠ.",
+   "L91116aad75": "Waltz stroke initials localized Κ/ΚΠ/ΚΠ.",
+   "Lacaf77ea57": "Second A minor is replaced by an unambiguous possessive anaphor, not a different chord.",
+   "La98b0c0ae0": "Source it is explicitly resolved to A in Greek; no added musical event."
+  },
+  "unresolved_note_or_chord_changes": []
+ },
+ "shared_helper_contexts_mapped": {
+  "shared": 4127,
+  "option": 2284,
+  "unmatched": 0
+ },
+ "coverage_decisions": {
+  "accept": 5824,
+  "genuine-identity-approval": 167,
+  "guarded-correction": 92
+ },
+ "final_length_warning_count": 22,
+ "identity_approvals_file": "invariant-approvals.json",
+ "publisher_registry_not_modified": true,
+ "author_row_hashes_verified": 6083,
+ "read_receipt_context_hashes_verified": 39,
+ "final_map_sha256": "d7af906dd583ba8e8085dadde03decb53fe78371a2c84a61819197cd3394ff56",
+ "correction_packet_sha256": "c80e22dc609ca1744e1091d7b883d4565bb845743329709b051f35f236e02163",
+ "identity_packet_sha256": "38fc6d757e164d692dd9c2cc59149ac55f830a4f7f27b0e4aecc34cc89ae70ef"
+}

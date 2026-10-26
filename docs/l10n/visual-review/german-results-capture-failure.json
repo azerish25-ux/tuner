@@ -10,7 +10,39 @@
     "level_bar_bottom": 771,
     "safe_area_before_button_fade": 742
   },
-  "status": "real layout failure, not waived; image inspection and responsive fix pending",
+  "status": "Original runtime capture failed; later image inspection supports an unconditional-fade test false positive, not demonstrated visible overlap. Actual-state probe rerun pending.",
   "artifact": 12647381730,
-  "artifact_sha256": "32e3795199d124cae1408d623a61465e157cd2f539751ff89da5c23d2e469eb0"
+  "artifact_sha256": "32e3795199d124cae1408d623a61465e157cd2f539751ff89da5c23d2e469eb0",
+  "image_inspected": "4A47E527-98B2-4EF8-A8A3-CDADFC88E637.png",
+  "pixel_evidence": {
+    "image_dimensions": [
+      1206,
+      2622
+    ],
+    "assumed_fade_start_points": 742,
+    "full_mint_progress_color_at_y_points": [
+      746,
+      750
+    ],
+    "mint_rgb": [
+      76,
+      242,
+      184
+    ],
+    "opaque_card_rgb": [
+      17,
+      19,
+      23
+    ],
+    "opaque_card_sample_y_points": [
+      710,
+      738,
+      742,
+      754,
+      758,
+      762,
+      766
+    ]
+  },
+  "bounded_repair": "Read actual global viewport bottom and active fade height from DEBUG-only probe; missing/invalid probe fails; active fade still enforced; at most1point accessibility rectangle rounding."
 }

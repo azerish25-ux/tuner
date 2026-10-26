@@ -11,12 +11,12 @@ Every launch-critical string is translated in every locale.
 ## What is missing now
 
 - **App interface:** 0 distinct strings are missing somewhere, 0 locale-string pairs in all.
-- **Lessons:** 121,660 locale-string pairs across the 48 lesson languages (Arabic (ar), Bulgarian (bg), Bengali (bn), Catalan (ca), Czech (cs), Danish (da), German (de), Greek (el), Spanish (es), Estonian (et), Persian (fa), Finnish (fi), French (fr), Gujarati (gu), Hebrew (he), Hindi (hi), Croatian (hr), Hungarian (hu), Indonesian (id), Icelandic (is), Italian (it), Japanese (ja), Kannada (kn), Korean (ko), Lithuanian (lt), Latvian (lv), Malayalam (ml), Marathi (mr), Dutch (nl), Norwegian (no), Punjabi (pa), Polish (pl), Portuguese (pt), Romanian (ro), Russian (ru), Slovak (sk), Slovenian (sl), Swedish (sv), Swahili (sw), Tamil (ta), Telugu (te), Thai (th), Turkish (tr), Ukrainian (uk), Urdu (ur), Vietnamese (vi), Chinese (Simplified) (zh-CN), Zulu (zu)).
+- **Lessons:** 109,494 locale-string pairs across the 48 lesson languages (Arabic (ar), Bulgarian (bg), Bengali (bn), Catalan (ca), Czech (cs), Danish (da), German (de), Greek (el), Spanish (es), Estonian (et), Persian (fa), Finnish (fi), French (fr), Gujarati (gu), Hebrew (he), Hindi (hi), Croatian (hr), Hungarian (hu), Indonesian (id), Icelandic (is), Italian (it), Japanese (ja), Kannada (kn), Korean (ko), Lithuanian (lt), Latvian (lv), Malayalam (ml), Marathi (mr), Dutch (nl), Norwegian (no), Punjabi (pa), Polish (pl), Portuguese (pt), Romanian (ro), Russian (ru), Slovak (sk), Slovenian (sl), Swedish (sv), Swahili (sw), Tamil (ta), Telugu (te), Thai (th), Turkish (tr), Ukrainian (uk), Urdu (ur), Vietnamese (vi), Chinese (Simplified) (zh-CN), Zulu (zu)).
 
 | Locales | App strings missing | Lesson strings missing |
 |---|---:|---:|
-| bg, ca, cs, el, et, hr, hu, id, is, lt, lv, pl, sk, sl, sw, te, tr, uk, vi, zu | 0 | 6083 |
-| complete: ar, bn, da, de, es, fa, fi, fr, gu, he, hi, it, ja, kn, ko, ml, mr, nl, no, pa, pt, ro, ru, sv, ta, th, ur, zh-CN | 0 | 0 |
+| bg, ca, cs, et, hr, hu, id, is, lt, lv, pl, sk, sl, te, tr, uk, vi, zu | 0 | 6083 |
+| complete: ar, bn, da, de, el, es, fa, fi, fr, gu, he, hi, it, ja, kn, ko, ml, mr, nl, no, pa, pt, ro, ru, sv, sw, ta, th, ur, zh-CN | 0 | 0 |
 
 Lessons and interface are required in all 49 app languages (English source + 48 translations). English fallback is temporary missing content, never completed localization.
 English-identical lesson strings need explicit source-bound independent semantic review in `tools/l10n/lesson-invariants.json` (locale/key, exact `source`, `reason`, actual `reviewed_by`). Proper names, original song titles, notation and credits may legitimately remain unchanged; review the entire string, never approve untranslated surrounding prose or fabricate reviewer evidence.

@@ -26,6 +26,22 @@ class LocalizedCaptureChecksTests(unittest.TestCase):
         self.assertNotIn('start.label == "Start"', source)
         self.assertEqual(source.count('element("lesson.results.stars.3").exists'), 2)
 
+    def test_results_use_actual_fade_state_without_waiving_clipping(self):
+        results = (ROOT / 'ios/Timbre/Learn/LessonResults.swift').read_text()
+        checks = (ROOT / 'ios/TimbreUITests/TimbreUITests.swift').read_text()
+        bounds = (ROOT / 'ios/TimbreUITests/CaptureFrameBounds.swift').read_text()
+        self.assertIn('TestSupport.isOn(.debugState)', results)
+        self.assertIn('moreBelow ? Self.foldFadeHeight : 0', results)
+        self.assertIn('.frame(height: Self.foldFadeHeight)', results)
+        self.assertIn('lesson.results.layout', results)
+        self.assertNotIn('let clear = buttons - 36', checks)
+        self.assertIn('CaptureFrameBounds.safeBottom', checks)
+        self.assertIn('the actual results viewport/fade probe is missing', checks)
+        self.assertIn('min(viewportBottom, buttonsTop) - fadeHeight', bounds)
+        self.assertIn('contentBottom <= safeBottom + 1', bounds)
+        self.assertIn('XCTAssertFalse(CaptureFrameBounds.fits(contentBottom: 771, safeBottom: 752))', checks)
+        self.assertIn('XCTAssertFalse(CaptureFrameBounds.fits(contentBottom: 782, safeBottom: 780))', checks)
+
     def test_focused_ci_checks_ltr_rtl_and_requires_real_valid_attachments(self):
         source = (ROOT / '.github/workflows/localized-capture-check.yml').read_text()
         for language in ['en', 'de', 'ar']:

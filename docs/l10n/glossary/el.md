@@ -56,7 +56,7 @@ Status: AI-drafted and AI-reviewed terminology decisions; not human-reviewed or 
 | Restore purchases | `Restore purchases` | Επαναφορά αγορών |
 | Terms | `Terms` | Όροι |
 | Next | `Next` | Ακολουθεί |
-| Again | `Again` | Again |
+| Again | `Again` | Ξανά |
 | Slower | `Slower` | Πιο αργά |
 | Songs | | Τραγούδια |
 | Quest | | Αποστολή |
@@ -125,3 +125,61 @@ Instrument courses use the catalogue instrument names. Songs uses the term above
 
 ## 4. Words that mislead
 Tune means bringing pitch to the target; a tune is a melody. Sharp/flat direction uses the existing flat/sharp labels (too low/high), not accidental names. Bar means musical measure, key means tonality, pick means plectrum/plucking or choose according to context. Lock means pitch confirmation, not a padlock. Take means recorded attempt, run a streak or passage attempt, not running. Chart means chord diagram/sheet unless statistical context. Intonation means pitch accuracy over a sustained tone, not saddle adjustment or speech stress. Practice means musical practice; Feel means vibration feedback, not emotion. Chop/chunk are muted rhythmic strokes, never a missed note.
+
+## Lesson authoring decisions (independent review pending)
+
+- Follow existing formal/plural instructions. Fret: τάστο; string: χορδή; neck: μπράτσο; root: θεμέλιος; beat: χρόνος; bar: μέτρο; half note: μισό; quarter note: τέταρτο.
+- Chord qualities: μείζονα / ελάσσονα; explicit interval-quality wording must use interval grammar rather than assuming every major/minor reference denotes a chord.
+- Shared direction options: Προς τα πάνω / Προς τα κάτω (pitch and pickstroke compatible). Mixed-context ordinals: Το πρώτο παράδειγμα / Το δεύτερο παράδειγμα. These identify musical examples, never answer-button positions. Phrase-only The third / The last must use Η τρίτη φράση / Η τελευταία φράση. Standalone one/three/four use Ο αριθμός … when needed across mixed-gender contexts.
+- Tab: ταμπλατούρα; chorus: ρεφρέν; verse: στροφή; intro: εισαγωγή; outro: κλείσιμο. Preserve literal note/chord notation and sung lyric contents.
+- Corrected stale glossary Again entry to the actual reviewed interface resource Ξανά; no app resource change.
+
+## New 6,083-key lesson author draft — review gate
+
+Status: **unreviewed author draft**. The entries below describe choices made while authoring, not native-speaker or independent semantic approval. Mechanical checks do not certify musical terminology, idiom, title authenticity, accessibility or device layout.
+
+### Notation and musical grammar
+- Keep note letters, chord symbols, accidentals in symbolic notation, finger/string/fret digits, metrical numbers and original sung lyrics unchanged. Spelled `sharp` / `flat` are δίεση / ύφεση for accidentals, but ψηλότερα / χαμηλότερα από το σωστό τονικό ύψος for tuning accuracy.
+- Lesson beat = χρόνος; pulse = παλμός. This refines the older general χτύπος table entry for metrical instruction. Bar and measure both = μέτρο.
+- Whole / half / quarter / eighth / sixteenth notes = ολόκληρο / μισό / τέταρτο / όγδοο / δέκατο έκτο. Dotted = παρεστιγμένο; augmentation dot = στιγμή, explained as a τελεία when introduced.
+- Major/minor chords = μείζονα / ελάσσονα; major/minor intervals use μεγάλη / μικρή with δευτέρα, τρίτη, έκτη, έβδομη. Perfect fourth/fifth = καθαρή τετάρτη / πέμπτη; unison = ταυτοφωνία. Shared whole-step/half-step answers now use Διάστημα ενός τόνου / Διάστημα ενός ημιτονίου, compatible with all seven current distance/step prompts.
+- Root = θεμέλιος; key signature = οπλισμός; triad = τρίφωνη συγχορδία; inversion = αναστροφή; arpeggio = άρπισμα; diminished/augmented = ελαττωμένη/αυξημένη. Authentic/half/plagal/deceptive cadences = αυθεντική/μισή/πλάγια/απατηλή πτώση. Leading note = προσαγωγέας.
+- Verse = στροφή (including the unnumbered section chip); pickup/anacrusis = ανάκρουση. Late author corrections align the few κουπλέ/άρση drafts with these existing glossary decisions, preserving the earlier bytes in receipts.
+- Hook = βασικό μοτίβο; riff = ριφ; sequence = αλυσίδα; ground bass = επίμονο βάσιμο. `Long-short` describes relative duration, not one fixed pair of note values across every meter.
+
+### Instrument-specific draft terms
+- Instrument bridge = καβαλάρης, never song-section γέφυρα. Nut = πάνω καβαλάρης; neck = μπράτσο; fingerboard = ταστιέρα.
+- Fingerstyle p-i-m-a and hammer-on / pull-off stay recognizable technical labels; palm muting = σίγαση με την παλάμη; bend = τράβηγμα; slide = ολίσθηση; vibrato = βιμπράτο. A short bend means insufficient pitch rise, not short duration.
+- Ukulele follows the existing catalogue spelling γιουκαλίλι. Re-entrant tuning is provisionally επανεισερχόμενο κούρδισμα, explicitly described; native instrument-teacher verification remains open.
+- Bow = δοξάρι; stroke = δοξαριά; frog = βάση, stick = ράβδος, tip = μύτη. Chin rest = υποσιάγωνο; scroll = κοχλίας; tailpiece = χορδοστάτης; fine tuners = βιδάκια μικρορύθμισης; rosin = κολοφώνιο; pizzicato = πιτσικάτο. Slur = σύζευξη έκφρασης, distinct from tie = σύζευξη διαρκείας.
+- Cello endpin = ακίδα στήριξης; shifting = αλλαγή θέσης; extension = έκταση. Native string-player review should verify these descriptions and the high/low finger labels.
+- Mandolin paired course = ζευγάρι χορδών; beating = διακρότημα; crosspicking retains its technical name with explanation.
+- Banjo head = μεμβράνη; drone string = χορδή ισοκράτη; roll = κυκλικό μοτίβο; forward roll = εμπρόσθιο κυκλικό μοτίβο; alternating thumb = εναλλαγή αντίχειρα; pinch = διπλό τσίμπημα; clawhammer remains a technical name. These descriptive banjo terms require specialist/native review, not automatic acceptance.
+- Chunk/chop = πνιχτό/κοφτό χτύπημα according to instrument context. `Skank`, `one-drop`, `highlife`, `lo-fi` remain recognizable genre/technique labels when explained. Shuffle = σαφλ; swing = σουίνγκ; backbeat retains the technical label with its beat explanation.
+
+### Deliberate source-context adaptations
+- English D/U strum-direction mnemonic becomes Κ/Π for Κάτω/Πάνω, not a changed note D. The original p-i-m-a finger notation remains literal. Review the exercise labels together with their explanation.
+- English tuning/staff mnemonics retain their complete English wording where their initial letters encode note names; surrounding Greek explicitly explains the English initials. FACE and W/H interval formulas likewise keep the encoded Latin characters. These are per-key held candidates, not blanket English allowances.
+- Movable-do solfège uses ντο, ρε, μι, φα, σολ, λα, **τι**, ντο. `Ti` is deliberate: the source teaches movable do, not fixed C solfège. Do not silently replace τι with σι or map ντο to C regardless of key. Greek pedagogical convention remains an explicit review question.
+- Triplet `1-trip-let` becomes `1-τρί-ο`; swing omits the middle `τρί` and retains `ο` consistently. Banjo `bum-ditty` becomes μπαμ-ντίτι. Sung exercise vowels/syllables such as ah/da/loo become α/ντα/λου; actual song lyrics do not.
+- The bar/measure synonym quiz asks what the English term `bar` means, because both synonyms are μέτρο in Greek. Its explanation explicitly identifies both English terms. This preserves the tested concept without a tautological Greek synonym question.
+- Tuning-accuracy `sharp` is framed as singing ψηλά relative to the intended pitch, not singing an accidental. Check the question, options and explanation together.
+- Source `1700s`/`1800s` refers to the entire century beginning with that number. Wording such as «στον αιώνα που αρχίζει το 1700» preserves numeric tokens without misreading a century as a decade. Explicit `1840s`, `1580s`, `1890s` and `1950s` retain decade meaning.
+- Shared first/second labels identify musical examples, not answer-button indices. The third/last phrase labels explicitly say φράση. The first option is displayed second in the All Through the Night quiz; the root author-correction receipt documents this.
+
+### Unresolved title and layout questions
+- Traditional/hymn titles without a verified established Greek title have **proposed descriptive working translations**, not claims of canonical Greek titles. This is a review exception to the earlier “otherwise retain English” policy, not a silently approved policy change. Review may retain the English title where appropriate, with a genuine whole-string rationale.
+- In particular review Twinkle → «Φεγγαράκι μου λαμπρό» and Jingle Bells → «Τρίγωνα κάλαντα» as familiar Greek melody-title adaptations while the English lyrics remain unchanged; Skip to My Lou → «Χοροπηδήστε στη Λου μου» requires a title/meaning decision. All other descriptive folk/hymn titles and composer-name transliterations remain subject to review.
+- Timbre Originals use consistent translated working titles. Review the wordplay of Constellation Prize → «Βραβείο αστερισμού», Keeper's Daughter → «Η κόρη του φύλακα», and the idiomatic naturalness of descriptive titles; do not infer a more specific kind of keeper without source evidence.
+- Course summaries, long note-location hints and small section chips with mechanical length warnings require device/layout review. Never truncate notes, digits, chord spelling or pedagogical facts merely to remove a warning.
+- The source-bound title inventory and exact per-key context-adaptation evidence are supplied with the frozen author packet in `/tmp/timbre-new-lessons/el/`. None of this is a whole-locale independent review or a native/device sign-off.
+
+
+## Independent AI review resolutions
+
+These reviewed exact-context choices supersede conflicting draft wording above.
+- Challenge labels/references use Πρόκληση; Beethoven prose uses Μπετόβεν; cents use σεντς; medley uses ποτ πουρί.
+- Shared Καμία remains valid after the violin question is narrowly rephrased with feminine δυάδα; finger-pair meaning and English source are unchanged.
+- Shared first/second refer to musical examples, never answer button positions.
+- Skip to My Lou and embedded My Bonnie Lies Over the Ocean retain their original identifiable titles to avoid unsupported name interpretations. Other reviewed descriptive folk/hymn labels are working Greek localizations, not assertions of canonical published Greek titles.
+- Native-human and device review remain pending, including documented layout warnings. Guarded corrections and exact source-bound identity decisions are under ../reviews/el/.

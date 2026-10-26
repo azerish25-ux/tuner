@@ -51,6 +51,7 @@ jobs:
           xcodebuild test -project ios/Timbre.xcodeproj -scheme Timbre \
             -destination "platform=iOS Simulator,id=$DEVICE_ID" \
             -derivedDataPath ios/build/capture-check -parallel-testing-enabled NO \
+            -only-testing:TimbreUITests/TimbreUITests/testStoreResultsBoundsCalculation \
             -only-testing:TimbreUITests/TimbreUITests/test12StoreChord \
             -only-testing:TimbreUITests/TimbreUITests/test19StoreViolinResults \
             -resultBundlePath ci-out/CaptureCheck.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/test.log

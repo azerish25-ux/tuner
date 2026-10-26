@@ -57,6 +57,10 @@ struct LessonResults: View {
     @State private var coachShown = false
     /// The content runs on below the scroll view's foot: the fade over it shows.
     @State private var moreBelow = false
+    private static let foldFadeHeight: CGFloat = 28
+    #if DEBUG
+    @State private var captureViewportBottom: CGFloat = 0
+    #endif
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(\.requestReview) private var requestReview
@@ -85,6 +89,9 @@ struct LessonResults: View {
         // The content scrolls inside its own frame: nothing slides under the buttons.
         VStack(spacing: 0) {
             ScrollView { content }.scrollBounceBehavior(.basedOnSize).scrollIndicators(.hidden)
+                #if DEBUG
+                .onGeometryChange(for: CGFloat.self) { $0.frame(in: .global).maxY } action: { captureViewportBottom = $0 }
+                #endif
                 // Content that continues below the fold fades out instead of being cut at the buttons. Only then: a
                 // screen that ends above them keeps its last row whole, not dimmed for nothing.
                 .onScrollGeometryChange(for: Bool.self) { geometry in
@@ -100,6 +107,18 @@ struct LessonResults: View {
         // clip the rings flat where they cross its top edge.
         .background(alignment: .topLeading) { burstLayer }
         .task { await reveal() }
+        #if DEBUG
+        .overlay(alignment: .bottomLeading) {
+            if TestSupport.isOn(.debugState) {
+                // Test-only actual viewport/fade state, never drawn or shipped in release builds.
+                Text(verbatim: "bottom=\(Double(captureViewportBottom)) fade=\(Double(moreBelow ? Self.foldFadeHeight : 0))")
+                    .font(.system(size: 9, design: .monospaced))
+                    .foregroundStyle(Color.clear)
+                    .allowsHitTesting(false)
+                    .accessibilityIdentifier("lesson.results.layout")
+            }
+        }
+        #endif
         .overlay {
             if let days = celebrating {
                 StreakCelebration(days: days) { withAnimation(Motion.fade) { celebrating = nil } }
@@ -112,7 +131,7 @@ struct LessonResults: View {
     private var foldFade: some View {
         VStack(spacing: 0) {
             Color.black
-            LinearGradient(colors: [.black, moreBelow ? .clear : .black], startPoint: .top, endPoint: .bottom).frame(height: 28)
+            LinearGradient(colors: [.black, moreBelow ? .clear : .black], startPoint: .top, endPoint: .bottom).frame(height: Self.foldFadeHeight)
         }
         .animation(Motion.fade, value: moreBelow)
     }

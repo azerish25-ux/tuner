@@ -1,9 +1,9 @@
 # Swahili (sw) glossary
 
-Review: AI-reviewed working glossary, 2026-10-25. Not human-approved. Native musician and device review remain outstanding. Applies to interface; lessons deliberately remain English in this locale.
+Review: AI-reviewed working glossary, 2026-10-25. Not human-approved. Native musician and device review remain outstanding. Interface anchors plus Swahili lesson author decisions dated 2026-10-26. Lesson drafts are unreviewed author work; no independent approval is implied.
 
 ## 1. Locale decisions
-- Locale/variant: sw, standard Swahili; Norwegian is Bokmål.
+- Locale/variant: sw, standard Swahili.
 - Register: Informal singular, warm direct second person; avoid gender assumptions. Short imperative actions; noun labels; third-person VoiceOver hints. Avoid reader-gender marking.
 - Typography: sentence case, normal word spaces, no double or edge spaces. Curly apostrophe where needed; single ellipsis …. Quotes follow shipped table (Nordic ”…”/“…”; Baltic „…“/„…”; sw/zu “…”). Digits ASCII 0–9. Preserve line structure.
 - Units: Hz, BPM, XP, ¢, A4 unchanged; cents = Senti. Minutes use existing minutes entry; seconds s, milliseconds ms on screen, full words in spoken hints.
@@ -176,3 +176,78 @@ Use the instrument-name anchors for Guitar, Ukulele, Bass, Violin, Cello, Mandol
 
 ## 4. Words that mislead
 Tune: tuning verb/tab versus melody noun; use separate terms above. Sharp/flat: tuning too high/low versus musical accidental. Bar: musical measure, never pub or toolbar. Key: musical tonality, never password/keycap. Pick: plectrum or pluck, but choose in interface. Lock: confirmation of stable correct pitch, not a padlock; locked content is separate. Take: a recorded attempt. Run: streak or complete performance, not running. Chart: chord sheet/diagram except statistical plots in Progress. Intonation: pitch accuracy over a drone, not saddle setup. Next/Again/Slower: one term must work both on controls and as spoken commands, using shipped anchors. Practice: music practice, not professional business. Feel: haptic sensation, not emotion. Quest: optional side goal distinct from the Today activity set. Challenge: friend competition versus cumulative lesson test; translate by context. Finger numbers 1–4 and open 0 remain unchanged. Loop A–B labels are markers, not note names. For hammer-on/pull-off/slide/bend/vibrato use established guitar-teaching loanwords, not everyday translations; I–IV–V and V/I chord symbols remain intact.
+
+## 5. Lesson author additions (2026-10-26; unreviewed)
+Author: `/root/translate_swahili_lessons`. No external machine translation or native-review claim.
+- Major quality in lesson chords/scales: **meja**, paired with **minori**. This sense-specific lesson override avoids reading the UI anchor *Kuu* as a principal chord. Interval uses are separately contextualized.
+- Pitch: **kimo cha sauti**; high/low direction: **juu/chini**, never loud/quiet.
+- Tab/tablature: **tabulacha**; half note: **noti nusu**; quarter note: **noti robo**.
+- Root/tonic: **noti msingi**. Hook: **kishazi cha kuvutia**, distinct from chorus **kiitikio**.
+- First/second audio choice: **Ya kwanza/Ya pili**, referring neutrally to the sound; explicit finger choices use **kidole cha …**.
+- Up/Down shared pitch and picking answers: **Juu/Chini**, neutral direction rather than a past-tense pitch-only verb.
+- The E A D G B E English initial-letter mnemonic is kept explicitly labelled *kwa Kiingereza*: translating its words literally would destroy the mnemonic. All surrounding instructions are translated.
+- Whole-string notation, credits, retained titles and established loanwords remain held candidates with individual reasons, not author-approved invariants.
+
+- **Amazing Grace → Neema ya Ajabu**, established Swahili hymn title, used consistently in titles and prose. Other retained titles keep their exact names unless separately documented.
+- Physical bridge: **daraja la nyuzi**; song bridge: **daraja** (separate source keys).
+- Palm muting: **kufifisha kwa kiganja**, because this damping shortens but does not silence the note; complete muting still uses **nyamazisha**.
+- Box (pentatonic fretboard fingering): **umbo**, not a literal storage box.
+- Technical names **hammer-on, pull-off, slide, bend, vibrato, shuffle, riff** remain recognizable teaching loanwords, with the source's plain-language definitions translated.
+- Syncopation: **sinkopa**; a numbered on-beat contrasted with offbeat: **pigo kuu**, not always the first beat of a bar.
+- Sixteenth counting uses **moja-e-na-a** for *one-e-and-a*: translated count and conjunction, retained subdivision syllables e/a.
+
+- Triad: **kodi ya noti tatu**; inversion: **mgeuzo** (plural **mageuzo**); scale degree: **daraja la skeli** (plural **madaraja ya skeli**); mode: **modi**.
+- Short instrumental fills: **fill** as a recognizable teaching loanword; explanatory action **kujaza nafasi**. Do not coin literal labels where the teaching loanword fits.
+- Re-entrant tuning: **upangaji wa sauti wa re-entrant**, preserving the technical name after the translated explanation of high G.
+- Ukulele mnemonic **Good Cooks Eat Apples** is explicitly identified as English, preserving G C E A initial letters just as the guitar mnemonic does.
+- Dorian and Mixolydian retain their international modal names; whole-string note-root plus mode names are held candidates, not approvals.
+- Backbeat: **backbeat**, explained through the numbered accented beats, not a literal spatial “back” label. Chunk, swing and walking bass retain recognizable technical names; surrounding teaching prose explains the action.
+- Bow: **upinde**; bow frog: **frog (sehemu ya kushikia)** on introduction, then **frog**, never the animal *chura*. Fingerboard on fretless strings: **ubao wa vidole**, not fretboard. Rosin: **rosini**.
+- Bass English mnemonic **Every Amp Drives Grooves** and violin **Good Dogs Always Eat** remain explicitly labelled English so their note-name initials survive.
+- Endpin (cello): **mguu wa cello**, described as the adjustable support; cello/mandolin/banjo instrument names follow existing app anchors and remain held where the entire string is unchanged.
+- Banjo roll: **mfuatano wa vidole**; the specifically named **forward roll**, **pinch**, **clawhammer**, **bum-ditty**, and regional **mountain minor** retain recognizable technical names with translated explanations. Do not translate pinch as squeezing or clawhammer as a literal hammer tool.
+- Piano/keyboard key: **kitufe**, distinct from tonal key **ufunguo**. Numbered interval labels: **umbali wa pili/wa tatu/…**; quality **wa meja/wa minori**, distinct from finger ordinals and audio first/second choices. Unison: **unisoni**.
+- International chord-quality labels **diminished** and **augmented** remain recognizable technical loanwords, defined by their stacked thirds in translated prose; exact standalone labels are held candidates. Dominant seventh: **dominant ya saba**. Perfect interval: **umbali … kamili**.
+- Staff: **stafu** (introduced as five musical lines); treble/bass clef: **klefu ya trebo/besi**; ledger lines: **mistari ya ziada**. The English initial-letter staff mnemonics and FACE stay explicitly labelled as English in explanations.
+- The bar/measure synonym quiz explicitly asks about English **bar**, with **kipimo** as the answer, because both English words translate to kipimo; this avoids a tautological Swahili synonym question while preserving the learning point.
+- Time signature: **alama ya kipimo**; key signature: **alama ya ufunguo**. Meter in explanatory prose: **mpangilio wa mapigo**, distinct from the metric length unit.
+- Rhythm screen action tap: **gonga**; individual tap: **mguso**, distinct from metrical beat **pigo**. Offbeats: **mapigo ya katikati**, explained as the and counts between numbered beats.
+- Tie: **kiungo cha tie**, distinct from slur; triplet: **tripleti**, defined as three equal notes in one beat. Counting syllables **trip-let** and **doo-ba** retain their phonetic rhythmic role.
+- Cadence teaching labels: authentic V–I **kadensi kamili**; half **kadensi nusu**; plagal **kadensi ya plagali**; deceptive **kadensi danganyifu**, with source chord movements and explanations preserved.
+- Singing breathe low: **vuta pumzi ukipanua tumbo** / **pumzi ya tumboni**, accompanied by the source's lower-rib and relaxed-shoulder explanation; flat/sharp intonation means **chini/juu ya kimo sahihi**, never bemoli/diesi in these voice-adjustment contexts.
+- Solfège: **solfeji**; syllables do/re/mi/fa/sol/la/ti and entire melodic syllable sequences remain notation candidates with exact individual reasons. Original English sung lyric syllabification is retained where it is the complete string, per the lyric policy.
+- Existing pitch-step anchors remain **nusu toni** / **toni nzima**, not generic nusu hatua / hatua nzima. Scale-degree counting can still use **hatua**. Existing power-chord anchor remains **kodi ya tano** (plural **kodi za tano**), distinct from an arbitrary fifth scale-degree chord by its root-plus-fifth explanation.
+- Music-form **concerto** is retained as the international form name, not confused with **konsati** (a concert event). **Rondo**, **sonata**, **fantasia**, **waltz**, **trio**, and **galop** similarly refer to musical forms; surrounding explanations are translated. **Bagpipe** and **oboe** retain recognizable instrument names rather than invented literal calques.
+- March: **muziki wa gwaride** in prose, compact **gwaride** in section labels. Theme: **melodi kuu**; compact low-register theme label **Melodi chini** where the section budget excludes redundant kuu. Final-theme/march labels use a colon (**Melodi: mwisho**, **Gwaride: mwisho**) rather than truncate a word.
+- Genre labels including **garage rock**, **surf rock**, **heartland rock**, **desert rock**, **punk-pop**, **doo-wop**, **neo-soul**, **gospel-pop**, **bedroom pop** and **one-drop reggae** retain their specific style identity. Standalone identical genre labels are held candidates with separate reasons, never blanket-approved. **Spiritual** denotes the African American song tradition in these lessons, not a generic adjective meaning spiritual.
+- **Carmen: Prelude → Carmen: Utangulizi** translates the descriptive section label while retaining the opera's proper title. **Toreador Song → Wimbo wa Toreador** is used consistently in headings and prose. Other conventional composition/song titles are retained except previously documented localized titles.
+- Songbook explanatory **chati ya kodi** means the accompaniment chord chart, while the existing UI **mchoro wa kodi** anchor can describe a chord diagram. Shared “In C / In D / …” headings use neutral **Katika C / Katika D / …** across ukulele, mandolin, violin, cello and bass contexts.
+- Original lyrics remain in their sung language. Mixed teaching strings translate surrounding prose but retain exact quoted words/syllables such as **Fly**, **Wide**, **Town**, **Tan-nen**, **Da-vid's** and **'Mid**. Whole-string lyric-word quiz choices remain held candidates because translating them would disconnect the answer from the unchanged lyric, not because ordinary English nouns are generally invariant.
+- Pre-chorus: **Kabla ya kiitikio** is the natural author choice (17 characters versus advisory limit 15). This one layout warning remains open for independent linguistic/device review; no device-fit claim.
+
+
+## Independent review resolutions
+
+These exact-context decisions supersede conflicting author draft wording.
+
+# Swahili independent glossary and consistency decisions
+
+Reviewer: `Independent AI Swahili reviewer`. AI review, not native certification.
+
+- **Changamoto** is now uniform for cumulative lesson challenges (class 9: *ya, hii, inachanganya*). **Jaribio** remains appropriate for check/checkup/try. Twenty-six exact guarded changes; no blind global substitution is an integration instruction.
+- **Melodi** follows the glossary; three *Melodia* variants normalized. **Dominant** follows the teaching definition and glossary; two *dominanti* variants normalized. Chord/scale quality **meja/minori** is distinct from general **kuu**.
+- **Sauti, noti, kodi, jozi, sehemu** take class-9 audio-item ordinals **Ya kwanza/Ya pili**. The two open-string questions explicitly name *sauti* rather than requiring class-11 *uzi* agreement. The phrase question uses **sehemu ya melodi**; its display remains third/first/last, with **Ya tatu/Ya kwanza/Ya mwisho**. These ordinals name musical items, never button positions. All 21 distinct shared contexts were reread in final wording.
+- The chunk question names class-5 **pigo**, matching **La juu/La chini**. Banjo thumb alternation explicitly means one note played, the next skipped; it does not incorrectly assign thumb to only even-numbered notes.
+- **Gawa … katika sehemu mbili/tatu/nne** means subdivision into parts, not repeated division *mara …*. Legitimate repeated playing/counting *mara mbili/tatu* is retained.
+- **Spiritual** identifies the African American genre, not generic *kiroho*. Singular hymn uses **wimbo wa dini/ibada**; both are natural contextual equivalents. Plural **tenzi** is valid and retained where the source is plural.
+- Pitch **kimo cha sauti**, not loudness, is explicit where needed. Shared **Juu/Chini** stays neutral for pitch and pick-stroke directions. **Daraja** is song form; **daraja la nyuzi** is instrument hardware. **Kipimo** in the bar/measure quiz remains a localized answer to the meaning of English *bar*, with the English synonym pair explained noncircularly.
+- **Chati ya kodi** denotes the accompaniment chart; the UI **mchoro wa kodi** can denote a chord diagram. **Diesi/bemoli** name accidentals; **juu/chini ya kimo sahihi** names tuning error.
+- Musical **march** is **muziki wa gwaride**, compact **gwaride** in section labels. **Development → Uendelezaji** names musical development. **Birdsong → Wimbo wa ndege** restores song meaning rather than merely naming birds.
+- Recognizable technique/genre/form/instrument loanwords were evaluated individually, not blanket exempted. **Vuma** is used for the closed-mouth hum with the course's explicit definition. Original work names and exact sung lyric words retain identity where necessary; **Amazing Grace → Neema ya Ajabu** remains the documented localized title.
+- Two source passages use *slide* figuratively for melodic approach across to open B; actual note/string metadata supports **kwa ulaini** rather than adding the technical instruction *kwa slide*. Genuine taught slides elsewhere retain the technical term.
+
+## Device-fit advisories
+- `L0bcbdaf96d`: **Kabla ya kiitikio**, 17 vs advisory 15.
+- `Lb2cc664816`: **Wimbo wa ndege**, 14 vs advisory 12 (current helper's actual limit, not 15).
+
+Both preserve meaning. Device clipping remains unverified; no semantic failure is inferred solely from length. Long subdivision options were shortened naturally and now fit their advisory limits.

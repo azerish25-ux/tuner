@@ -1,0 +1,2909 @@
+{
+ "locale": "sw",
+ "reviewer": "Independent AI lesson reviewer",
+ "status": "independent-full-review-qa",
+ "native_human_review": false,
+ "device_fit_verified": false,
+ "counts": {
+  "current_source_keys": 6083,
+  "primary_pairs_read": 6083,
+  "shared_nodes_read": 1344,
+  "shared_key_context_bindings": 4127,
+  "option_key_context_bindings": 2284,
+  "additional_option_nodes_read": 201,
+  "corrections": 122,
+  "identities": 412,
+  "unchanged_accepts": 5549
+ },
+ "frozen_manifest_sha256": "a429403dfcc433a1de1ff78808cafe5b461ad6c360fded8c81612f1ef1329d8c",
+ "frozen_manifest_files_verified": 512,
+ "frozen_manifest_errors": [],
+ "current_source_matches": true,
+ "current_contexts_match_review_snapshot": true,
+ "source_hashes": {
+  "ios/Timbre/Resources/en.lproj/Learn.strings": "718a9431e97997dcad904b99eb00f0072385142d63ebb7ffc1c27ff374ca6de3",
+  "ios/Sources/TimbreCore/Resources/curriculum.json": "f5399d3d13edd2f94b660648e7dd23aceef66a21e095567988bbb6bd38995bf1",
+  "tools/l10n/gpt_l10n.py": "b74452e7165145c82449bf7fc70a0a114282a69ed875a18a7ba46e7ff0c70731",
+  "tools/l10n/report.py": "3b8bd499ef8c8f1f3d55a64919e2d54b67e60d9c70730ccae29708e4b2512274"
+ },
+ "hard_errors": [],
+ "newline_mismatches": [],
+ "format_mismatches": [],
+ "raw_publisher_identity_gate_count": 412,
+ "identity_gate_note": "No live registry modified. These raw gate failures are covered by 412 individually approved invariant records; parent must register exact source-bound receipts before import.",
+ "soft_warnings": [
+  {
+   "key": "Ldb4211a03a",
+   "source": "Mary Had a Little Lamb",
+   "translation": "Mary Had a Little Lamb",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · step 6 (along) · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L9fc93acaa4",
+   "source": "Solo",
+   "translation": "Solo",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 12,
+   "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · arrangement · song section label (Intro, Verse 1 …) on a small chip",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L5d7cef323e",
+   "source": "Sarah Josepha Hale (1830)",
+   "translation": "Sarah Josepha Hale (1830)",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": null,
+   "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · arrangement · lyric credit (a name and year: usually keep as is)",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lde97f92a64",
+   "source": "Ode to Joy",
+   "translation": "Ode to Joy",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Guitar · Unit 2 · song gtr-2-4 “Ode to Joy” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L7d6c1cd2a4",
+   "source": "Friedrich Schiller (1785)",
+   "translation": "Friedrich Schiller (1785)",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": null,
+   "context": "Guitar · Unit 2 · song gtr-2-4 “Ode to Joy” · arrangement · lyric credit (a name and year: usually keep as is)",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L1ac3ce2b0d",
+   "source": "Letters in a Shoebox",
+   "translation": "Letters in a Shoebox",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Guitar · Unit 2 · lesson gtr-2-spotlight “Song spotlight: Letters in a Shoebox” · step 7 (along) · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L3602bcec2f",
+   "source": "When the Saints Go Marching In",
+   "translation": "When the Saints Go Marching In",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Guitar · Unit 6 · song gtr-6-4 “When the Saints Go Marching In” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L423f20489c",
+   "source": "John Newton (1779)",
+   "translation": "John Newton (1779)",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": null,
+   "context": "Guitar · Unit 6 · song gtr-6-5 “Amazing Grace” · arrangement · lyric credit (a name and year: usually keep as is)",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L9f9413d895",
+   "source": "Greensleeves",
+   "translation": "Greensleeves",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Guitar · Unit 7 · song gtr-7-2 “Greensleeves: the chords” · step 1 (explain) · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L2bf2d48e26",
+   "source": "Clementine",
+   "translation": "Clementine",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Guitar · Unit 7 · lesson gtr-7-4 “D7 and the Clementine chords” · step 5 (explain) · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L53d54b3da0",
+   "source": "Percy Montrose (1884)",
+   "translation": "Percy Montrose (1884)",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": null,
+   "context": "Guitar · Unit 7 · song gtr-7-5 “Clementine” · arrangement · lyric credit (a name and year: usually keep as is)",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lfcff5b9fa2",
+   "source": "Blues",
+   "translation": "Blues",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Guitar · Unit 12 “Blues” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Ld5cd3af1c1",
+   "source": "Oh! Susanna",
+   "translation": "Oh! Susanna",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Guitar · Unit 16 · song gtr-16-3 “Oh! Susanna: the verse” · step 9 (along) · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L0f3d32305b",
+   "source": "Stephen Foster (1848)",
+   "translation": "Stephen Foster (1848)",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": null,
+   "context": "Guitar · Unit 16 · song gtr-16-3 “Oh! Susanna: the verse” · arrangement · lyric credit (a name and year: usually keep as is)",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L45df8aaa94",
+   "source": "A Dorian",
+   "translation": "A Dorian",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Guitar · Unit 20 · lesson gtr-20-4 “A Dorian” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L454672c296",
+   "source": "D Mixolydian",
+   "translation": "D Mixolydian",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Guitar · Unit 20 · lesson gtr-20-5 “D Mixolydian” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L1b32faec74",
+   "source": "AABA",
+   "translation": "AABA",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Guitar · Unit 22 · lesson gtr-22-1 “How songs are built” · step 3 (explain) · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lcbd53803e4",
+   "source": "Down by the Riverside",
+   "translation": "Down by the Riverside",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Guitar · Unit 22 · song gtr-22-5 “Down by the Riverside: your arrangement” · step 8 (along) · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L8608911070",
+   "source": "Ukulele",
+   "translation": "Ukulele",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Ukulele course · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Leb5d689f09",
+   "source": "Row, Row, Row Your Boat",
+   "translation": "Row, Row, Row Your Boat",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Ukulele · Unit 1 · song uke-1-7 “Row, Row, Row Your Boat” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L67c3806843",
+   "source": "D, DU, UDU",
+   "translation": "D, DU, UDU",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Ukulele · Unit 3 · lesson uke-3-4 “The island strum” · step 1 (explain) · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "La35051bafe",
+   "source": "Twinkle, Twinkle, Little Star",
+   "translation": "Twinkle, Twinkle, Little Star",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Ukulele · Unit 4 · song uke-4-3 “Twinkle, Twinkle, Little Star” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L47207f2354",
+   "source": "Jane Taylor (1806)",
+   "translation": "Jane Taylor (1806)",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": null,
+   "context": "Ukulele · Unit 4 · song uke-4-3 “Twinkle, Twinkle, Little Star” · arrangement · lyric credit (a name and year: usually keep as is)",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L565f5c8676",
+   "source": "Aura Lee",
+   "translation": "Aura Lee",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Ukulele · Unit 4 · song uke-4-5 “Aura Lee” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Ld975a3a9d1",
+   "source": "W. W. Fosdick (1861)",
+   "translation": "W. W. Fosdick (1861)",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": null,
+   "context": "Ukulele · Unit 4 · song uke-4-5 “Aura Lee” · arrangement · lyric credit (a name and year: usually keep as is)",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lcdef3f1f1e",
+   "source": "Camptown Races",
+   "translation": "Camptown Races",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Ukulele · Unit 6 · song uke-6-2 “Camptown Races” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "La8645a16b1",
+   "source": "Stephen Foster (1850)",
+   "translation": "Stephen Foster (1850)",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": null,
+   "context": "Ukulele · Unit 6 · song uke-6-2 “Camptown Races” · arrangement · lyric credit (a name and year: usually keep as is)",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lc329cf4ac6",
+   "source": "Red River Valley",
+   "translation": "Red River Valley",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Ukulele · Unit 6 · song uke-6-4 “Red River Valley” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L7ac2aa3ed2",
+   "source": "The Water Is Wide",
+   "translation": "The Water Is Wide",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Ukulele · Unit 10 · song uke-10-2 “The Water Is Wide” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L88b9f64029",
+   "source": "Molly Malone",
+   "translation": "Molly Malone",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Ukulele · Unit 10 · song uke-10-4 “Molly Malone” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lbdefafacbc",
+   "source": "The Skye Boat Song",
+   "translation": "The Skye Boat Song",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Ukulele · Unit 10 · song uke-10-5 “The Skye Boat Song” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L1b7f99964a",
+   "source": "Sir Harold Boulton (1884)",
+   "translation": "Sir Harold Boulton (1884)",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": null,
+   "context": "Ukulele · Unit 10 · song uke-10-5 “The Skye Boat Song” · arrangement · lyric credit (a name and year: usually keep as is)",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Le9d9ccfa2d",
+   "source": "Walking bass",
+   "translation": "Walking bass",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Bass · Unit 5 “Walking bass” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L84fcf011f2",
+   "source": "Lightly Row",
+   "translation": "Lightly Row",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Violin · Unit 4 · song vln-4-3 “Lightly Row” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lbd4d7f2e87",
+   "source": "Boil Them Cabbage Down",
+   "translation": "Boil Them Cabbage Down",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Violin · Unit 4 · song vln-4-6 “Boil Them Cabbage Down” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L1430f1810f",
+   "source": "Old Joe Clark",
+   "translation": "Old Joe Clark",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Violin · Unit 5 · song vln-5-5 “Old Joe Clark” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L435eef57b3",
+   "source": "Soldier's Joy",
+   "translation": "Soldier's Joy",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Violin · Unit 5 · song vln-5-6 “Soldier's Joy” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lf7d33a22a5",
+   "source": "Arkansas Traveler",
+   "translation": "Arkansas Traveler",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Violin · Unit 6 · song vln-6-6 “Arkansas Traveler” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lb6873a215b",
+   "source": "Crescendo",
+   "translation": "Crescendo",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Violin · Unit 6 · challenge vln-6-7 “Recital: Ode to Joy” · step 3 (quiz) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L7e327ea06c",
+   "source": "Diminuendo",
+   "translation": "Diminuendo",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Violin · Unit 6 · challenge vln-6-7 “Recital: Ode to Joy” · step 3 (quiz) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L71e5b1f872",
+   "source": "Piano",
+   "translation": "Piano",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Violin · Unit 6 · challenge vln-6-7 “Recital: Ode to Joy” · step 3 (quiz) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L705c9442a0",
+   "source": "Cello",
+   "translation": "Cello",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Cello course · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L6a1333dc6b",
+   "source": "Brahms' Lullaby",
+   "translation": "Brahms' Lullaby",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Cello · Unit 4 · song vc-4-5 “Brahms' Lullaby” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L98357cd0f3",
+   "source": "Au clair de la lune",
+   "translation": "Au clair de la lune",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Cello · Unit 4 · song vc-4-6 “Au clair de la lune” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L0b5acb7191",
+   "source": "The Swan",
+   "translation": "The Swan",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Cello · Unit 5 · song vc-5-4 “The Swan” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L9279caa296",
+   "source": "Saint-Saëns, 1886",
+   "translation": "Saint-Saëns, 1886",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Cello · Unit 5 · song vc-5-4 “The Swan” · step 1 (explain) · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L7af2d04324",
+   "source": "Mandolin",
+   "translation": "Mandolin",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Mandolin course · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lcd439df6f5",
+   "source": "Tremolo",
+   "translation": "Tremolo",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Mandolin · Unit 3 · lesson man-3-3 “Tremolo” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L61da910eb5",
+   "source": "Angeline the Baker",
+   "translation": "Angeline the Baker",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Mandolin · Unit 5 · song man-5-2 “Angeline the Baker” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lf592a06d42",
+   "source": "Hammer-on",
+   "translation": "Hammer-on",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Mandolin · Unit 6 · lesson man-6-2 “Hammer-ons and pull-offs” · step 1 (explain) · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Leb8b5de3ca",
+   "source": "Pull-off",
+   "translation": "Pull-off",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Mandolin · Unit 6 · lesson man-6-2 “Hammer-ons and pull-offs” · step 3 (explain) · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L30be5259ed",
+   "source": "Crosspicking",
+   "translation": "Crosspicking",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Mandolin · Unit 6 · lesson man-6-4 “Crosspicking” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lf7745eab6a",
+   "source": "Banjo",
+   "translation": "Banjo",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Banjo course · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L3a454df338",
+   "source": "Forward roll",
+   "translation": "Forward roll",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Banjo · Unit 2 · lesson bjo-2-3 “Forward roll” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Ld26b5595e3",
+   "source": "Pinch",
+   "translation": "Pinch",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Banjo · Unit 2 · challenge bjo-2-5 “Roll challenge” · step 4 (quiz) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lf88ebdd5e8",
+   "source": "Cripple Creek",
+   "translation": "Cripple Creek",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Banjo · Unit 4 · song bjo-4-2 “Cripple Creek” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lce7001df87",
+   "source": "Cumberland Gap",
+   "translation": "Cumberland Gap",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Banjo · Unit 4 · song bjo-4-3 “Cumberland Gap” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L5a5d8340b2",
+   "source": "Shady Grove",
+   "translation": "Shady Grove",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Banjo · Unit 4 · song bjo-4-4 “Shady Grove” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L639b70b19b",
+   "source": "Mountain minor",
+   "translation": "Mountain minor",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Banjo · Unit 4 · song bjo-4-4 “Shady Grove” · step 1 (explain) · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L15297afb76",
+   "source": "Clawhammer",
+   "translation": "Clawhammer",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Banjo · Unit 6 “Clawhammer” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L185628e4e2",
+   "source": "Bum-ditty",
+   "translation": "Bum-ditty",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Banjo · Unit 6 · lesson bjo-6-2 “Bum-ditty” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lb75aac01fa",
+   "source": "Bum, dit, ty",
+   "translation": "Bum, dit, ty",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Banjo · Unit 6 · lesson bjo-6-2 “Bum-ditty” · step 1 (explain) · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L4437fdb426",
+   "source": "Skip to My Lou",
+   "translation": "Skip to My Lou",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Banjo · Unit 6 · song bjo-6-4 “Skip to My Lou” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L2e7d43d0bf",
+   "source": "Diminished",
+   "translation": "Diminished",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Ear Training · Unit 6 · lesson ear-6-3 “Diminished and augmented” · step 2 (listen) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Ld8b9875fa7",
+   "source": "Augmented",
+   "translation": "Augmented",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Ear Training · Unit 6 · lesson ear-6-3 “Diminished and augmented” · step 3 (listen) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Ldf5d466476",
+   "source": "Sol",
+   "translation": "Sol",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Ear Training · Unit 7 · lesson ear-7-1 “Do, the home note” · step 6 (listen) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L27b86d297c",
+   "source": "Do mi sol",
+   "translation": "Do mi sol",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Ear Training · Unit 8 · lesson ear-8-1 “Three-note melodies” · step 5 (listen) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lccb1461a57",
+   "source": "Sol mi do",
+   "translation": "Sol mi do",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Ear Training · Unit 8 · lesson ear-8-1 “Three-note melodies” · step 5 (listen) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lc15da70e80",
+   "source": "Do sol mi",
+   "translation": "Do sol mi",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Ear Training · Unit 8 · lesson ear-8-1 “Three-note melodies” · step 5 (listen) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L55f002b223",
+   "source": "Sol fa mi",
+   "translation": "Sol fa mi",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Ear Training · Unit 8 · lesson ear-8-2 “Skips in a melody” · step 3 (listen) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lec981d2bd2",
+   "source": "Mi sol do",
+   "translation": "Mi sol do",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Ear Training · Unit 8 · lesson ear-8-2 “Skips in a melody” · step 3 (listen) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L9a9f9c28f6",
+   "source": "Mi do sol",
+   "translation": "Mi do sol",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Ear Training · Unit 8 · lesson ear-8-2 “Skips in a melody” · step 6 (listen) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lca56896c9c",
+   "source": "Do la sol",
+   "translation": "Do la sol",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Ear Training · Unit 8 · lesson ear-8-2 “Skips in a melody” · step 7 (listen) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L848c7a54ea",
+   "source": "Do sol la",
+   "translation": "Do sol la",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Ear Training · Unit 8 · lesson ear-8-2 “Skips in a melody” · step 7 (listen) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L878228b1a7",
+   "source": "Mi fa sol mi",
+   "translation": "Mi fa sol mi",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Ear Training · Unit 8 · lesson ear-8-3 “Four-note melodies” · step 3 (listen) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Le4c868e589",
+   "source": "Sol la sol mi",
+   "translation": "Sol la sol mi",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Ear Training · Unit 8 · lesson ear-8-3 “Four-note melodies” · step 5 (listen) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Le9371f17bc",
+   "source": "Sol mi re do",
+   "translation": "Sol mi re do",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Ear Training · Unit 8 · lesson ear-8-3 “Four-note melodies” · step 5 (listen) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L82bc2b06b9",
+   "source": "Sol fa mi re",
+   "translation": "Sol fa mi re",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Ear Training · Unit 8 · lesson ear-8-3 “Four-note melodies” · step 5 (listen) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L377d5c926e",
+   "source": "Do mi sol do",
+   "translation": "Do mi sol do",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Ear Training · Unit 8 · lesson ear-8-3 “Four-note melodies” · step 7 (listen) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L72e4578411",
+   "source": "Do mi sol mi",
+   "translation": "Do mi sol mi",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Ear Training · Unit 8 · lesson ear-8-3 “Four-note melodies” · step 7 (listen) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L8a8b9cc525",
+   "source": "Sol do re",
+   "translation": "Sol do re",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Ear Training · Unit 8 · lesson ear-8-4 “Below do” · step 2 (listen) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Le543807b2f",
+   "source": "Sol ti do",
+   "translation": "Sol ti do",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Ear Training · Unit 8 · lesson ear-8-4 “Below do” · step 2 (listen) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L87ea4d596c",
+   "source": "Do sol do",
+   "translation": "Do sol do",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Ear Training · Unit 8 · lesson ear-8-4 “Below do” · step 2 (listen) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L1c0240672b",
+   "source": "Do ti la sol",
+   "translation": "Do ti la sol",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Ear Training · Unit 8 · lesson ear-8-4 “Below do” · step 3 (listen) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L2b2f41ff19",
+   "source": "Do sol la ti",
+   "translation": "Do sol la ti",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Ear Training · Unit 8 · lesson ear-8-4 “Below do” · step 6 (listen) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L8358224416",
+   "source": "Sol la ti do",
+   "translation": "Sol la ti do",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Ear Training · Unit 8 · lesson ear-8-4 “Below do” · step 7 (listen) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L7fdd1f14cb",
+   "source": "Sol do ti do",
+   "translation": "Sol do ti do",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Ear Training · Unit 8 · lesson ear-8-4 “Below do” · step 7 (listen) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "La32484a6d1",
+   "source": "Sol mi do re",
+   "translation": "Sol mi do re",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Ear Training · Unit 8 · challenge ear-8-5 “Dictation challenge” · step 4 (listen) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L6abdd41c99",
+   "source": "Sol fa mi do",
+   "translation": "Sol fa mi do",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Ear Training · Unit 8 · challenge ear-8-5 “Dictation challenge” · step 4 (listen) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lec6173309d",
+   "source": "Mi sol do ti",
+   "translation": "Mi sol do ti",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Ear Training · Unit 8 · challenge ear-8-5 “Dictation challenge” · step 6 (listen) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L70a67c5399",
+   "source": "Mi sol la sol",
+   "translation": "Mi sol la sol",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Ear Training · Unit 8 · challenge ear-8-5 “Dictation challenge” · step 6 (listen) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lb8b54bd04f",
+   "source": "Mi fa sol la",
+   "translation": "Mi fa sol la",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Ear Training · Unit 8 · challenge ear-8-5 “Dictation challenge” · step 6 (listen) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "La4154244ab",
+   "source": "Sol do mi sol",
+   "translation": "Sol do mi sol",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Ear Training · Unit 8 · challenge ear-8-5 “Dictation challenge” · step 8 (listen) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L1f749cf405",
+   "source": "Sol ti re sol",
+   "translation": "Sol ti re sol",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Ear Training · Unit 8 · challenge ear-8-5 “Dictation challenge” · step 8 (listen) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L239059aba7",
+   "source": "Every Good Boy Does Fine",
+   "translation": "Every Good Boy Does Fine",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Music Theory · Unit 3 · lesson thy-3-2 “Treble clef lines” · step 3 (explain) · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L0f18f4693e",
+   "source": "Good Boys Do Fine Always",
+   "translation": "Good Boys Do Fine Always",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Music Theory · Unit 3 · lesson thy-3-5 “Bass clef basics” · step 3 (explain) · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L72b3117837",
+   "source": "D diminished",
+   "translation": "D diminished",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Music Theory · Unit 7 · lesson thy-7-3 “The chords of a key” · step 2 (quiz) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Le48c7961de",
+   "source": "G diminished",
+   "translation": "G diminished",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Music Theory · Unit 7 · lesson thy-7-3 “The chords of a key” · step 3 (quiz) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L05a2271256",
+   "source": "A diminished",
+   "translation": "A diminished",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Music Theory · Unit 7 · lesson thy-7-3 “The chords of a key” · step 7 (quiz) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L899658e27a",
+   "source": "Tempo",
+   "translation": "Tempo",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Rhythm · Unit 1 · lesson rhy-1-4 “Tempo” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L3903101dc3",
+   "source": "Ma-ry had a lit-tle lamb: E D C D E E E.",
+   "translation": "Ma-ry had a lit-tle lamb: E D C D E E E.",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 120,
+   "context": "Singing · Unit 1 · song voc-1-6 “Mary Had a Little Lamb” · step 3 (notes) · hint under an exercise",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L8b3ccea2a5",
+   "source": "Do, mi, sol",
+   "translation": "Do, mi, sol",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Singing · Unit 4 · lesson voc-4-2 “Fifths” · step 7 (along) · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L893275da51",
+   "source": "Twinkle Twinkle Little Star",
+   "translation": "Twinkle Twinkle Little Star",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Singing · Unit 5 · song voc-5-1 “Twinkle Twinkle Little Star” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lb944af0880",
+   "source": "Auld Lang Syne",
+   "translation": "Auld Lang Syne",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Singing · Unit 5 · song voc-5-3 “Auld Lang Syne” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L51fd07643b",
+   "source": "Robert Burns (1788)",
+   "translation": "Robert Burns (1788)",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": null,
+   "context": "Singing · Unit 5 · song voc-5-3 “Auld Lang Syne” · arrangement · lyric credit (a name and year: usually keep as is)",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L5ded105f41",
+   "source": "Shenandoah",
+   "translation": "Shenandoah",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Singing · Unit 5 · song voc-5-5 “Shenandoah” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L09054f67ac",
+   "source": "Jingle Bells",
+   "translation": "Jingle Bells",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Songs · Unit 1 · song song-twinkle “Twinkle, Twinkle, Little Star” · step 4 (quiz) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L3b0a573dce",
+   "source": "Yankee Doodle",
+   "translation": "Yankee Doodle",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Songs · Unit 1 · song song-twinkle “Twinkle, Twinkle, Little Star” · step 4 (quiz) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lf57eae0697",
+   "source": "Frère Jacques",
+   "translation": "Frère Jacques",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Songs · Unit 1 · song song-frere-jacques “Frère Jacques” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L2777cf39fb",
+   "source": "James Lord Pierpont (1857)",
+   "translation": "James Lord Pierpont (1857)",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": null,
+   "context": "Songs · Unit 1 · song song-jingle-bells “Jingle Bells” · arrangement · lyric credit (a name and year: usually keep as is)",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L2358e4572b",
+   "source": "Old MacDonald Had a Farm",
+   "translation": "Old MacDonald Had a Farm",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Songs · Unit 2 · song song-old-macdonald “Old MacDonald Had a Farm” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lebb146d631",
+   "source": "Bobby Shafto",
+   "translation": "Bobby Shafto",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Songs · Unit 2 · song song-bobby-shafto “Bobby Shafto” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L6a92c479e4",
+   "source": "Canon in D",
+   "translation": "Canon in D",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Songs · Unit 3 · song song-canon-in-d “Canon in D” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lfde6285917",
+   "source": "Largo, New World Symphony",
+   "translation": "Largo, New World Symphony",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Songs · Unit 3 · song song-largo “Largo, New World Symphony” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lbbf56e1506",
+   "source": "Largo",
+   "translation": "Largo",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Songs · Unit 3 · song song-largo “Largo, New World Symphony” · step 7 (along) · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L5533d4675e",
+   "source": "In the Hall of the Mountain King",
+   "translation": "In the Hall of the Mountain King",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Songs · Unit 3 · song song-mountain-king “In the Hall of the Mountain King” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L146c1bf23b",
+   "source": "Für Elise",
+   "translation": "Für Elise",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Songs · Unit 3 · song song-fur-elise “Für Elise” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lcacba260e6",
+   "source": "My Country, 'Tis of Thee",
+   "translation": "My Country, 'Tis of Thee",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Songs · Unit 4 · song song-my-country “My Country, 'Tis of Thee” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L9c2b93a151",
+   "source": "Samuel Francis Smith (1831)",
+   "translation": "Samuel Francis Smith (1831)",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": null,
+   "context": "Songs · Unit 4 · song song-my-country “My Country, 'Tis of Thee” · arrangement · lyric credit (a name and year: usually keep as is)",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lae0e4af3a3",
+   "source": "Simple Gifts",
+   "translation": "Simple Gifts",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Songs · Unit 4 · song song-simple-gifts “Simple Gifts” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "La3f0345a76",
+   "source": "Joseph Brackett (1848)",
+   "translation": "Joseph Brackett (1848)",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": null,
+   "context": "Songs · Unit 4 · song song-simple-gifts “Simple Gifts” · arrangement · lyric credit (a name and year: usually keep as is)",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L406b881188",
+   "source": "Good King Wenceslas",
+   "translation": "Good King Wenceslas",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Songs · Unit 5 · song song-good-king-wenceslas “Good King Wenceslas” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L84690acdde",
+   "source": "John Mason Neale (1853)",
+   "translation": "John Mason Neale (1853)",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": null,
+   "context": "Songs · Unit 5 · song song-good-king-wenceslas “Good King Wenceslas” · arrangement · lyric credit (a name and year: usually keep as is)",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lf38952de44",
+   "source": "Deck the Halls",
+   "translation": "Deck the Halls",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Songs · Unit 5 · song song-deck-the-halls “Deck the Halls” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L500ab3c359",
+   "source": "Thomas Oliphant (1862)",
+   "translation": "Thomas Oliphant (1862)",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": null,
+   "context": "Songs · Unit 5 · song song-deck-the-halls “Deck the Halls” · arrangement · lyric credit (a name and year: usually keep as is)",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L869c163632",
+   "source": "We Wish You a Merry Christmas",
+   "translation": "We Wish You a Merry Christmas",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Songs · Unit 5 · song song-we-wish-you “We Wish You a Merry Christmas” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Ld9afe70020",
+   "source": "Joy to the World",
+   "translation": "Joy to the World",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Songs · Unit 5 · song song-joy-to-the-world “Joy to the World” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Ld89817766e",
+   "source": "Isaac Watts (1719)",
+   "translation": "Isaac Watts (1719)",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": null,
+   "context": "Songs · Unit 5 · song song-joy-to-the-world “Joy to the World” · arrangement · lyric credit (a name and year: usually keep as is)",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lf319af35dc",
+   "source": "Silent Night",
+   "translation": "Silent Night",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Songs · Unit 5 · song song-silent-night “Silent Night” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Ld052b9a30c",
+   "source": "Eine kleine Nachtmusik",
+   "translation": "Eine kleine Nachtmusik",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Songs · Unit 6 · song song-eine-kleine “Eine kleine Nachtmusik” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L21a9f4f643",
+   "source": "Danny Boy (Londonderry Air)",
+   "translation": "Danny Boy (Londonderry Air)",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Songs · Unit 6 · song song-danny-boy “Danny Boy (Londonderry Air)” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "La06e04321c",
+   "source": "Danny Boy",
+   "translation": "Danny Boy",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Songs · Unit 6 · song song-danny-boy “Danny Boy (Londonderry Air)” · step 5 (along) · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L70aebab32e",
+   "source": "Frederic Weatherly (1913)",
+   "translation": "Frederic Weatherly (1913)",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": null,
+   "context": "Songs · Unit 6 · song song-danny-boy “Danny Boy (Londonderry Air)” · arrangement · lyric credit (a name and year: usually keep as is)",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lf4ae93d3b6",
+   "source": "Kite Weather",
+   "translation": "Kite Weather",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 1 · song orig-kite-weather “Kite Weather” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L135e3a84c9",
+   "source": "Porchlight",
+   "translation": "Porchlight",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 1 · song orig-porchlight “Porchlight” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lb4f4a898b0",
+   "source": "Moth and Ember",
+   "translation": "Moth and Ember",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 1 · song orig-moth-and-ember “Moth and Ember” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L140525c1cd",
+   "source": "Low Tide Radio",
+   "translation": "Low Tide Radio",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 1 · song orig-low-tide-radio “Low Tide Radio” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "La629e1f318",
+   "source": "Dust on the Dashboard",
+   "translation": "Dust on the Dashboard",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 1 · song orig-dust-on-the-dashboard “Dust on the Dashboard” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L4cc78df1b7",
+   "source": "Lantern Hill",
+   "translation": "Lantern Hill",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 2 · song orig-lantern-hill “Lantern Hill” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L76775d6156",
+   "source": "Gravel Road Two-Step",
+   "translation": "Gravel Road Two-Step",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 2 · song orig-gravel-road-two-step “Gravel Road Two-Step” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lf237c6e813",
+   "source": "First Frost",
+   "translation": "First Frost",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 2 · song orig-first-frost “First Frost” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L0d3104ffd5",
+   "source": "Hammock Season",
+   "translation": "Hammock Season",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 2 · song orig-hammock-season “Hammock Season” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L9d25dea184",
+   "source": "Glow-in-the-Dark Stars",
+   "translation": "Glow-in-the-Dark Stars",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 2 · song orig-glow-in-the-dark-stars “Glow-in-the-Dark Stars” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lc2f7df0e02",
+   "source": "Bedroom pop",
+   "translation": "Bedroom pop",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 2 · song orig-glow-in-the-dark-stars “Glow-in-the-Dark Stars” · step 1 (explain) · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L42657f23ba",
+   "source": "Sparkler Season",
+   "translation": "Sparkler Season",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 3 · song orig-sparkler-season “Sparkler Season” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L0bcbdaf96d",
+   "source": "Pre-chorus",
+   "translation": "Kabla ya kiitikio",
+   "warnings": [
+    "longer than max_length 15 (17)"
+   ],
+   "max_length": 15,
+   "context": "Originals · Unit 3 · song orig-sparkler-season “Sparkler Season” · arrangement · song section label (Intro, Verse 1 …) on a small chip",
+   "disposition": "meaning-retained-device-layout-unverified"
+  },
+  {
+   "key": "L948eb34feb",
+   "source": "Roller Rink",
+   "translation": "Roller Rink",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 3 · song orig-roller-rink “Roller Rink” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L7d5a055e37",
+   "source": "Echo Canyon",
+   "translation": "Echo Canyon",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 3 · song orig-echo-canyon “Echo Canyon” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L4cf432a342",
+   "source": "Open Windows",
+   "translation": "Open Windows",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 3 · song orig-open-windows “Open Windows” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L5155fc0931",
+   "source": "Scoreboard Lights",
+   "translation": "Scoreboard Lights",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 3 · song orig-scoreboard-lights “Scoreboard Lights” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L3f63ae8b8d",
+   "source": "Rust Belt Shuffle",
+   "translation": "Rust Belt Shuffle",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 4 · song orig-rust-belt-shuffle “Rust Belt Shuffle” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lf2ecba4f27",
+   "source": "Carousel at Closing Time",
+   "translation": "Carousel at Closing Time",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 4 · song orig-carousel-at-closing-time “Carousel at Closing Time” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lb1c589af79",
+   "source": "Cedar Smoke",
+   "translation": "Cedar Smoke",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 4 · song orig-cedar-smoke “Cedar Smoke” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L79edc518ec",
+   "source": "Rain on the Skylight",
+   "translation": "Rain on the Skylight",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 4 · song orig-rain-on-the-skylight “Rain on the Skylight” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L22a125fda7",
+   "source": "Neon Laundromat",
+   "translation": "Neon Laundromat",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 4 · song orig-neon-laundromat “Neon Laundromat” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L8e081d8487",
+   "source": "Late Checkout",
+   "translation": "Late Checkout",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 5 · song orig-late-checkout “Late Checkout” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L4cad552525",
+   "source": "Saltwater Sunday",
+   "translation": "Saltwater Sunday",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 5 · song orig-saltwater-sunday “Saltwater Sunday” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L48a7d118fd",
+   "source": "One-drop reggae",
+   "translation": "One-drop reggae",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 5 · song orig-saltwater-sunday “Saltwater Sunday” · step 1 (explain) · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lab9322ed00",
+   "source": "Pocket Change",
+   "translation": "Pocket Change",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 5 · song orig-pocket-change “Pocket Change” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L6ab1a75a8e",
+   "source": "Kitchen Slow Dance",
+   "translation": "Kitchen Slow Dance",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 5 · song orig-kitchen-slow-dance “Kitchen Slow Dance” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L2385db8e9f",
+   "source": "Houseplants",
+   "translation": "Houseplants",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 5 · song orig-houseplants “Houseplants” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L8a5e6d018b",
+   "source": "Cmaj7",
+   "translation": "Cmaj7",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Originals · Unit 5 · challenge orig-groove-set “Groove set” · step 6 (quiz) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L0995a331f6",
+   "source": "Static on Channel Nine",
+   "translation": "Static on Channel Nine",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 6 · song orig-static-on-channel-nine “Static on Channel Nine” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lc91deeae6c",
+   "source": "Basement Weather",
+   "translation": "Basement Weather",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 6 · song orig-basement-weather “Basement Weather” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lb93f36c524",
+   "source": "Garage rock",
+   "translation": "Garage rock",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 6 · song orig-basement-weather “Basement Weather” · step 1 (explain) · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L4957f52b01",
+   "source": "Riff",
+   "translation": "Riff",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 12,
+   "context": "Originals · Unit 6 · song orig-basement-weather “Basement Weather” · arrangement · song section label (Intro, Verse 1 …) on a small chip",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lefc1ea7915",
+   "source": "Jukebox Moon",
+   "translation": "Jukebox Moon",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 6 · song orig-jukebox-moon “Jukebox Moon” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lad5fe25684",
+   "source": "Boardwalk Comet",
+   "translation": "Boardwalk Comet",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 6 · song orig-boardwalk-comet “Boardwalk Comet” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L46a6cedfce",
+   "source": "Surf rock",
+   "translation": "Surf rock",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 6 · song orig-boardwalk-comet “Boardwalk Comet” · step 1 (explain) · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L16d416a1dc",
+   "source": "Mile Marker Zero",
+   "translation": "Mile Marker Zero",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 6 · song orig-mile-marker-zero “Mile Marker Zero” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L6dddb64ee4",
+   "source": "Heartland rock",
+   "translation": "Heartland rock",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 6 · song orig-mile-marker-zero “Mile Marker Zero” · step 1 (explain) · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L3895894ce1",
+   "source": "Surf",
+   "translation": "Surf",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Originals · Unit 6 · challenge orig-throwback-set “Throwback set” · step 6 (quiz) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Le5e1f8817f",
+   "source": "Punk",
+   "translation": "Punk",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Originals · Unit 6 · challenge orig-throwback-set “Throwback set” · step 6 (quiz) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L9d06bca5d4",
+   "source": "Doo-wop",
+   "translation": "Doo-wop",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Originals · Unit 6 · challenge orig-throwback-set “Throwback set” · step 6 (quiz) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L30e03d8db8",
+   "source": "Last Bell",
+   "translation": "Last Bell",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 7 · song orig-last-bell “Last Bell” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L443929a467",
+   "source": "Punk-pop",
+   "translation": "Punk-pop",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 7 · song orig-last-bell “Last Bell” · step 1 (explain) · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L9a1fc5bd94",
+   "source": "Copper Wire",
+   "translation": "Copper Wire",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 7 · song orig-copper-wire “Copper Wire” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lc28f954374",
+   "source": "Cold Lake",
+   "translation": "Cold Lake",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 7 · song orig-cold-lake “Cold Lake” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lef7f677c71",
+   "source": "Parking Lot Cathedral",
+   "translation": "Parking Lot Cathedral",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 7 · song orig-parking-lot-cathedral “Parking Lot Cathedral” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L5067110091",
+   "source": "Halogen",
+   "translation": "Halogen",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 7 · song orig-halogen “Halogen” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L5b90e239db",
+   "source": "Desert rock",
+   "translation": "Desert rock",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 7 · song orig-halogen “Halogen” · step 1 (explain) · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L365db7dc82",
+   "source": "Keeper's Daughter",
+   "translation": "Keeper's Daughter",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 8 · song orig-keepers-daughter “Keeper's Daughter” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L4a732fabe7",
+   "source": "Snow Globe Town",
+   "translation": "Snow Globe Town",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 8 · song orig-snow-globe-town “Snow Globe Town” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L3c3628688b",
+   "source": "Thistle and Thread",
+   "translation": "Thistle and Thread",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 8 · song orig-thistle-and-thread “Thistle and Thread” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L1f9582c5c2",
+   "source": "Ghost Light",
+   "translation": "Ghost Light",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 8 · song orig-ghost-light “Ghost Light” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L78ad8f08fc",
+   "source": "Late Bus Home",
+   "translation": "Late Bus Home",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 9 · song orig-late-bus-home “Late Bus Home” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lc0d7bcfb41",
+   "source": "Glass Satellites",
+   "translation": "Glass Satellites",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 9 · song orig-glass-satellites “Glass Satellites” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L5d43afb2a2",
+   "source": "Market Day",
+   "translation": "Market Day",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 9 · song orig-market-day “Market Day” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Ldfade6dea5",
+   "source": "Velvet Hour",
+   "translation": "Velvet Hour",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 9 · song orig-velvet-hour “Velvet Hour” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "La6be98d6c0",
+   "source": "Neo-soul",
+   "translation": "Neo-soul",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 9 · song orig-velvet-hour “Velvet Hour” · step 1 (explain) · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L3351283c9f",
+   "source": "Rooftop Choir",
+   "translation": "Rooftop Choir",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 9 · song orig-rooftop-choir “Rooftop Choir” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L6ede73e021",
+   "source": "Slow Motion Strobe",
+   "translation": "Slow Motion Strobe",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 10 · song orig-slow-motion-strobe “Slow Motion Strobe” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L47d5277660",
+   "source": "Bright Side of the Block",
+   "translation": "Bright Side of the Block",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 10 · song orig-bright-side-of-the-block “Bright Side of the Block” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lfc41746da3",
+   "source": "Gospel-pop",
+   "translation": "Gospel-pop",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 10 · song orig-bright-side-of-the-block “Bright Side of the Block” · step 1 (explain) · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L1c651c4a0f",
+   "source": "Over You Soon",
+   "translation": "Over You Soon",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 10 · song orig-over-you-soon “Over You Soon” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L44cdb5a27f",
+   "source": "Spray Paint Sunrise",
+   "translation": "Spray Paint Sunrise",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 10 · song orig-spray-paint-sunrise “Spray Paint Sunrise” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L85848424e2",
+   "source": "Constellation Prize",
+   "translation": "Constellation Prize",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Originals · Unit 10 · song orig-constellation-prize “Constellation Prize” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L7dce4b7666",
+   "source": "She'll Be Coming 'Round the Mountain",
+   "translation": "She'll Be Coming 'Round the Mountain",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Standards & Classics · Unit 1 · song std-shell-be-coming “She'll Be Coming 'Round the Mountain” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Le2a484a070",
+   "source": "Loch Lomond",
+   "translation": "Loch Lomond",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Standards & Classics · Unit 1 · song std-loch-lomond “Loch Lomond” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L873c7db571",
+   "source": "Fly",
+   "translation": "Fly",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Standards & Classics · Unit 1 · song std-the-water-is-wide “The Water Is Wide” · step 5 (quiz) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L9ec4d86f6b",
+   "source": "Wide",
+   "translation": "Wide",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Standards & Classics · Unit 1 · song std-the-water-is-wide “The Water Is Wide” · step 5 (quiz) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lef58de4ff0",
+   "source": "Boat",
+   "translation": "Boat",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Standards & Classics · Unit 1 · song std-the-water-is-wide “The Water Is Wide” · step 5 (quiz) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lfb3b1e8607",
+   "source": "All Through the Night",
+   "translation": "All Through the Night",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Standards & Classics · Unit 2 · song std-all-through-the-night “All Through the Night” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L6f9084b461",
+   "source": "Harold Boulton (1884)",
+   "translation": "Harold Boulton (1884)",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": null,
+   "context": "Standards & Classics · Unit 2 · song std-all-through-the-night “All Through the Night” · arrangement · lyric credit (a name and year: usually keep as is)",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "La44a4911f1",
+   "source": "O Christmas Tree",
+   "translation": "O Christmas Tree",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Standards & Classics · Unit 2 · song std-o-christmas-tree “O Christmas Tree” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Le658e66d4e",
+   "source": "Ernst Anschütz (1824)",
+   "translation": "Ernst Anschütz (1824)",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": null,
+   "context": "Standards & Classics · Unit 2 · song std-o-christmas-tree “O Christmas Tree” · arrangement · lyric credit (a name and year: usually keep as is)",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L038dcfc2fa",
+   "source": "O Come, All Ye Faithful",
+   "translation": "O Come, All Ye Faithful",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Standards & Classics · Unit 2 · song std-o-come-all-ye-faithful “O Come, All Ye Faithful” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lb5ba032118",
+   "source": "The First Noel",
+   "translation": "The First Noel",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Standards & Classics · Unit 2 · song std-the-first-noel “The First Noel” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L5b11880954",
+   "source": "Scotland the Brave",
+   "translation": "Scotland the Brave",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Standards & Classics · Unit 3 · song std-scotland-the-brave “Scotland the Brave” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L26cf298a3d",
+   "source": "Korobeiniki",
+   "translation": "Korobeiniki",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Standards & Classics · Unit 3 · song std-korobeiniki “Korobeiniki” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L515a6d791f",
+   "source": "The Blue Danube",
+   "translation": "The Blue Danube",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Standards & Classics · Unit 3 · song std-blue-danube “The Blue Danube” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Ld7b53d2c2f",
+   "source": "Waltz",
+   "translation": "Waltz",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 12,
+   "context": "Standards & Classics · Unit 3 · song std-blue-danube “The Blue Danube” · arrangement · song section label (Intro, Verse 1 …) on a small chip",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lc09802b908",
+   "source": "Can-can",
+   "translation": "Can-can",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Standards & Classics · Unit 3 · song std-can-can “Can-can” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L7140cafdab",
+   "source": "The Entertainer",
+   "translation": "The Entertainer",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Standards & Classics · Unit 4 · song std-the-entertainer “The Entertainer” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L4c0b79f89f",
+   "source": "The Liberty Bell",
+   "translation": "The Liberty Bell",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Standards & Classics · Unit 4 · song std-the-liberty-bell “The Liberty Bell” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lf6b456d043",
+   "source": "Trio",
+   "translation": "Trio",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 12,
+   "context": "Standards & Classics · Unit 4 · song std-the-liberty-bell “The Liberty Bell” · arrangement · song section label (Intro, Verse 1 …) on a small chip",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L5456c995d6",
+   "source": "Morning Mood",
+   "translation": "Morning Mood",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Standards & Classics · Unit 4 · song std-morning-mood “Morning Mood” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Le335eaa0a3",
+   "source": "Oboe",
+   "translation": "Oboe",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 12,
+   "context": "Standards & Classics · Unit 4 · song std-morning-mood “Morning Mood” · arrangement · song section label (Intro, Verse 1 …) on a small chip",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lc79f013aef",
+   "source": "Hark! The Herald Angels Sing",
+   "translation": "Hark! The Herald Angels Sing",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Standards & Classics · Unit 5 · song std-hark-the-herald “Hark! The Herald Angels Sing” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lb47027890d",
+   "source": "Away in a Manger",
+   "translation": "Away in a Manger",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Standards & Classics · Unit 5 · song std-away-in-a-manger “Away in a Manger” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lf49c331357",
+   "source": "O Little Town of Bethlehem",
+   "translation": "O Little Town of Bethlehem",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Standards & Classics · Unit 5 · song std-o-little-town “O Little Town of Bethlehem” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L5d9c113b57",
+   "source": "Town",
+   "translation": "Town",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Standards & Classics · Unit 5 · song std-o-little-town “O Little Town of Bethlehem” · step 5 (quiz) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L4c40cf3873",
+   "source": "Bethlehem",
+   "translation": "Bethlehem",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Standards & Classics · Unit 5 · song std-o-little-town “O Little Town of Bethlehem” · step 5 (quiz) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Le177db0c02",
+   "source": "Phillips Brooks (1868)",
+   "translation": "Phillips Brooks (1868)",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": null,
+   "context": "Standards & Classics · Unit 5 · song std-o-little-town “O Little Town of Bethlehem” · arrangement · lyric credit (a name and year: usually keep as is)",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L1114ff3a6f",
+   "source": "It Came Upon the Midnight Clear",
+   "translation": "It Came Upon the Midnight Clear",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Standards & Classics · Unit 5 · song std-it-came-upon “It Came Upon the Midnight Clear” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L1b69c1b683",
+   "source": "Edmund H. Sears (1849)",
+   "translation": "Edmund H. Sears (1849)",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": null,
+   "context": "Standards & Classics · Unit 5 · song std-it-came-upon “It Came Upon the Midnight Clear” · arrangement · lyric credit (a name and year: usually keep as is)",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L55ea61dde9",
+   "source": "Once in Royal David's City",
+   "translation": "Once in Royal David's City",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Standards & Classics · Unit 6 · song std-royal-davids-city “Once in Royal David's City” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L6c65dbe5e7",
+   "source": "Cecil Frances Alexander (1848)",
+   "translation": "Cecil Frances Alexander (1848)",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": null,
+   "context": "Standards & Classics · Unit 6 · song std-royal-davids-city “Once in Royal David's City” · arrangement · lyric credit (a name and year: usually keep as is)",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lfa0db53fe8",
+   "source": "In the Bleak Midwinter",
+   "translation": "In the Bleak Midwinter",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Standards & Classics · Unit 6 · song std-bleak-midwinter “In the Bleak Midwinter” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L0fd26bc07a",
+   "source": "Christina Rossetti (1872)",
+   "translation": "Christina Rossetti (1872)",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": null,
+   "context": "Standards & Classics · Unit 6 · song std-bleak-midwinter “In the Bleak Midwinter” · arrangement · lyric credit (a name and year: usually keep as is)",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lee21f7bcbe",
+   "source": "The Holly and the Ivy",
+   "translation": "The Holly and the Ivy",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Standards & Classics · Unit 6 · song std-holly-and-ivy “The Holly and the Ivy” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L58d40ef087",
+   "source": "Angels from the Realms of Glory",
+   "translation": "Angels from the Realms of Glory",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Standards & Classics · Unit 6 · song std-angels-from-the-realms “Angels from the Realms of Glory” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L366309b7d1",
+   "source": "James Montgomery (1816)",
+   "translation": "James Montgomery (1816)",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": null,
+   "context": "Standards & Classics · Unit 6 · song std-angels-from-the-realms “Angels from the Realms of Glory” · arrangement · lyric credit (a name and year: usually keep as is)",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L362a6b5f4f",
+   "source": "O God, Our Help in Ages Past",
+   "translation": "O God, Our Help in Ages Past",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Standards & Classics · Unit 7 · song std-o-god-our-help “O God, Our Help in Ages Past” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L8d6cc94f22",
+   "source": "Holy, Holy, Holy",
+   "translation": "Holy, Holy, Holy",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Standards & Classics · Unit 7 · song std-holy-holy-holy “Holy, Holy, Holy” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lf76e88c357",
+   "source": "Reginald Heber (1826)",
+   "translation": "Reginald Heber (1826)",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": null,
+   "context": "Standards & Classics · Unit 7 · song std-holy-holy-holy “Holy, Holy, Holy” · arrangement · lyric credit (a name and year: usually keep as is)",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lb5bbe0ebe3",
+   "source": "Abide with Me",
+   "translation": "Abide with Me",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Standards & Classics · Unit 7 · song std-abide-with-me “Abide with Me” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L07cd0ccf75",
+   "source": "Henry Francis Lyte (1847)",
+   "translation": "Henry Francis Lyte (1847)",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": null,
+   "context": "Standards & Classics · Unit 7 · song std-abide-with-me “Abide with Me” · arrangement · lyric credit (a name and year: usually keep as is)",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L9ca1f7efa7",
+   "source": "Nearer, My God, to Thee",
+   "translation": "Nearer, My God, to Thee",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Standards & Classics · Unit 7 · song std-nearer-my-god “Nearer, My God, to Thee” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L25c9e2591c",
+   "source": "Sarah Flower Adams (1841)",
+   "translation": "Sarah Flower Adams (1841)",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": null,
+   "context": "Standards & Classics · Unit 7 · song std-nearer-my-god “Nearer, My God, to Thee” · arrangement · lyric credit (a name and year: usually keep as is)",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L76f05876f1",
+   "source": "For the Beauty of the Earth",
+   "translation": "For the Beauty of the Earth",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Standards & Classics · Unit 7 · song std-for-the-beauty “For the Beauty of the Earth” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Laf82ad96c4",
+   "source": "Folliott S. Pierpoint (1864)",
+   "translation": "Folliott S. Pierpoint (1864)",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": null,
+   "context": "Standards & Classics · Unit 7 · song std-for-the-beauty “For the Beauty of the Earth” · arrangement · lyric credit (a name and year: usually keep as is)",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L97762a0998",
+   "source": "Bethany (Nearer, My God), 1856",
+   "translation": "Bethany (Nearer, My God), 1856",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Standards & Classics · Unit 7 · challenge std-medley-hymns “Hymn medley” · step 5 (quiz) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Ldb4a6bf41c",
+   "source": "Nicaea (Holy, Holy, Holy), 1861",
+   "translation": "Nicaea (Holy, Holy, Holy), 1861",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Standards & Classics · Unit 7 · challenge std-medley-hymns “Hymn medley” · step 5 (quiz) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L964cd16960",
+   "source": "St Anne (O God, Our Help), 1708",
+   "translation": "St Anne (O God, Our Help), 1708",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 48,
+   "context": "Standards & Classics · Unit 7 · challenge std-medley-hymns “Hymn medley” · step 5 (quiz) · quiz answer",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L41ad61ca24",
+   "source": "Home! Sweet Home!",
+   "translation": "Home! Sweet Home!",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Standards & Classics · Unit 8 · song std-home-sweet-home “Home! Sweet Home!” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lf25c3da65a",
+   "source": "John Howard Payne (1823)",
+   "translation": "John Howard Payne (1823)",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": null,
+   "context": "Standards & Classics · Unit 8 · song std-home-sweet-home “Home! Sweet Home!” · arrangement · lyric credit (a name and year: usually keep as is)",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Labf6980bc4",
+   "source": "Hard Times Come Again No More",
+   "translation": "Hard Times Come Again No More",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Standards & Classics · Unit 8 · song std-hard-times “Hard Times Come Again No More” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L38751b4dc8",
+   "source": "Stephen Foster (1854)",
+   "translation": "Stephen Foster (1854)",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": null,
+   "context": "Standards & Classics · Unit 8 · song std-hard-times “Hard Times Come Again No More” · arrangement · lyric credit (a name and year: usually keep as is)",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lf914feac4e",
+   "source": "The Last Rose of Summer",
+   "translation": "The Last Rose of Summer",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Standards & Classics · Unit 8 · song std-last-rose “The Last Rose of Summer” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L169aa3a3af",
+   "source": "Thomas Moore (1813)",
+   "translation": "Thomas Moore (1813)",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": null,
+   "context": "Standards & Classics · Unit 8 · song std-last-rose “The Last Rose of Summer” · arrangement · lyric credit (a name and year: usually keep as is)",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L88d1577dcc",
+   "source": "Jupiter",
+   "translation": "Jupiter",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Standards & Classics · Unit 8 · song std-jupiter “Jupiter” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L89677615c2",
+   "source": "Spring",
+   "translation": "Spring",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Standards & Classics · Unit 9 · song std-spring “Spring” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "Lb2cc664816",
+   "source": "Birdsong",
+   "translation": "Wimbo wa ndege",
+   "warnings": [
+    "longer than max_length 12 (14)"
+   ],
+   "max_length": 12,
+   "context": "Standards & Classics · Unit 9 · song std-spring “Spring” · arrangement · song section label (Intro, Verse 1 …) on a small chip",
+   "disposition": "meaning-retained-device-layout-unverified"
+  },
+  {
+   "key": "L6980bcdcd2",
+   "source": "Rondo alla Turca",
+   "translation": "Rondo alla Turca",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Standards & Classics · Unit 9 · song std-rondo-alla-turca “Rondo alla Turca” · title",
+   "disposition": "individually-approved-identity"
+  },
+  {
+   "key": "L47fea81827",
+   "source": "The Stars and Stripes Forever",
+   "translation": "The Stars and Stripes Forever",
+   "warnings": [
+    "identical to the English"
+   ],
+   "max_length": 42,
+   "context": "Standards & Classics · Unit 9 · song std-stars-and-stripes “The Stars and Stripes Forever” · title",
+   "disposition": "individually-approved-identity"
+  }
+ ],
+ "changed_string_layout_warnings": [
+  {
+   "key": "L0bcbdaf96d",
+   "source": "Pre-chorus",
+   "translation": "Kabla ya kiitikio",
+   "warnings": [
+    "longer than max_length 15 (17)"
+   ],
+   "max_length": 15,
+   "context": "Originals · Unit 3 · song orig-sparkler-season “Sparkler Season” · arrangement · song section label (Intro, Verse 1 …) on a small chip",
+   "disposition": "meaning-retained-device-layout-unverified"
+  },
+  {
+   "key": "Lb2cc664816",
+   "source": "Birdsong",
+   "translation": "Wimbo wa ndege",
+   "warnings": [
+    "longer than max_length 12 (14)"
+   ],
+   "max_length": 12,
+   "context": "Standards & Classics · Unit 9 · song std-spring “Spring” · arrangement · song section label (Intro, Verse 1 …) on a small chip",
+   "disposition": "meaning-retained-device-layout-unverified"
+  }
+ ],
+ "primary_method": "All source/old-target pairs and identity reasons read; every distinct shared node and additional option node read. Mechanical checks supplement, never replace, semantic reading.",
+ "as_of_utc": "2026-10-26T11:47:22.365318+00:00",
+ "final_read_receipts": [
+  {
+   "file": "final-corrections-read.txt",
+   "sha256": "274e783463f5e0126aad9821eb54b357ffb751c5fe14a330e2d3d8c71e2429b1",
+   "scope": "All 122 source/final correction pairs reread; new open-string prompt pairs read after their final addition."
+  },
+  {
+   "file": "final-all-ordinal-contexts-read.txt",
+   "sha256": "2f06d100730893108f6e3fccb02b34fff74e01bec42b1bbb4a1210243f6515b1",
+   "scope": "All 21 final shared first/second musical-item contexts, including third/first/last phrase display and both open-string prompts."
+  },
+  {
+   "file": "shared-contract-final-read.txt",
+   "sha256": "8b6d2f85402b9a14dcb6fcbbf1be8f1fa9f3da64fdaa3e4be97ae9f06253b845",
+   "scope": "One beat, neutral Up/Down, distinct song/instrument bridges and noncircular localized bar/measure quiz."
+  },
+  {
+   "file": "slide-physical-read.txt",
+   "sha256": "a1daa9347dfd45b1a80fba0bfceb6147befeeff972f1d4989bd8dd4d6b064572",
+   "scope": "Complete relevant exercise note/string metadata, surrounding texts and played prefixes inspected for the two smooth-approach corrections."
+  }
+ ],
+ "reviewed_current_map_sha256": "48fed05d0880a10b36276b96aa46defe2d4fba32fb6045720309468609f961e3",
+ "unresolved_semantic_blockers": 0,
+ "mechanical_checks_note": "Numbers, notes/chords/protected tokens, newline and format contracts passed; 254 identity warnings are covered by individual whole-string approvals. Two nonidentity layout advisories remain.",
+ "limitations": [
+  "AI independent review, not native-human musician certification.",
+  "No rendered device layout or audio/performance certification.",
+  "Historical factual statements inherited from the provided English were assessed for translation fidelity, not independently researched.",
+  "Publisher integration/registry/import/build/Git remain parent responsibilities; review is frozen against exact source/old bytes."
+ ]
+}

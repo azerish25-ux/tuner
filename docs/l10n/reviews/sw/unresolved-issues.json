@@ -1,0 +1,49 @@
+{
+ "locale": "sw",
+ "reviewer": "Independent AI lesson reviewer",
+ "semantic_blockers": [],
+ "unread_keys": [],
+ "unreviewed_contexts": [],
+ "layout_advisories": [
+  {
+   "key": "L0bcbdaf96d",
+   "source": "Pre-chorus",
+   "translation": "Kabla ya kiitikio",
+   "warnings": [
+    "longer than max_length 15 (17)"
+   ],
+   "max_length": 15,
+   "context": "Originals · Unit 3 · song orig-sparkler-season “Sparkler Season” · arrangement · song section label (Intro, Verse 1 …) on a small chip",
+   "disposition": "meaning-retained-device-layout-unverified"
+  },
+  {
+   "key": "Lb2cc664816",
+   "source": "Birdsong",
+   "translation": "Wimbo wa ndege",
+   "warnings": [
+    "longer than max_length 12 (14)"
+   ],
+   "max_length": 12,
+   "context": "Standards & Classics · Unit 9 · song std-spring “Spring” · arrangement · song section label (Intro, Verse 1 …) on a small chip",
+   "disposition": "meaning-retained-device-layout-unverified"
+  }
+ ],
+ "nonblocking_source_wording": [
+  {
+   "keys": [
+    "Lcb89454ade",
+    "L4b49795891"
+   ],
+   "concern": "English sliding wording can suggest a physical same-string slide, but the specified target is open B on string 2.",
+   "evidence": "slide-physical-read.txt",
+   "evidence_sha256": "a1daa9347dfd45b1a80fba0bfceb6147befeeff972f1d4989bd8dd4d6b064572",
+   "interpretation": "Rust Belt Shuffle note exercise ends MIDI55 at string3/fret0, MIDI56 at string3/fret1, MIDI59 at string2/fret0; Down by the Riverside exercise moves MIDI58 at string3/fret3 to MIDI59 at string2/fret0. Notes are separately specified, with no explicit slide-technique flag. Surrounding instruction teaches melodic blues approach, not a physical slide across strings.",
+   "resolution": "The two Swahili strings use smooth melodic movement kwa ulaini rather than the added technical loanword kwa slide; note/string/fret identities stay exact. English wording may be clarified later, but no locale blocker remains."
+  }
+ ],
+ "external_review_pending": [
+  "Native musician review",
+  "Rendered device fit, especially the two section labels"
+ ],
+ "source_changes_made": false
+}
