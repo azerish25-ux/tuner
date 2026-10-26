@@ -8,7 +8,7 @@ Three files go with it:
 - [GLOSSARY-TEMPLATE.md](GLOSSARY-TEMPLATE.md): the term list fixed once per locale and given to GPT with every batch.
 - [tools/curriculum/STYLE.md](../../tools/curriculum/STYLE.md): the English voice the translations carry over.
 
-Everything here was checked against the code at commit `0bbf273` (branch `v2/foundations`). Counts are that commit's; HANDOFF.md always has the current ones.
+Historical implementation details below were checked against the code at commit `0bbf273` (branch `v2/foundations`). Counts are that commit's; HANDOFF.md always has the current ones. **Store requirements were expanded on 2026-10-26 to all 50 Apple-supported listing locales; requirements are not completion claims.**
 
 ## Contents
 
@@ -34,7 +34,7 @@ Per locale, in this order:
 5. **Review.** A GPT review pass over the merged text ([§5.5](#55-review-pass)), then the human sample ([§8.5](#85-human-review)). Corrections go into the same `translation` fields.
 6. **Import and gates.** `python3 tools/l10n/report.py --import tools/l10n/todo`, then the gates ([§7](#7-apply-and-verify)). Commit.
 7. **See it.** Screenshots and a pass on a phone in the language ([§8](#8-qa)).
-8. **Listing** (the nine store locales): [§9](#9-the-app-store-listing).
+8. **Listing** (every Apple-supported listing locale; currently 50 including primary English): [§9](#9-the-app-store-listing).
 
 ## 2. What is translated, where, and in which order
 
@@ -48,7 +48,7 @@ Per locale, in this order:
 | Siri and Shortcuts phrases | `AppShortcut` phrases in `ios/Timbre/Intents/` | `AppShortcuts.strings` | `AppShortcuts.strings` | all 48 |
 | System permission prompts, home-screen name | the Timbre target's Info.plist keys in `ios/project.yml` (`NSMicrophoneUsageDescription`, `NSAppleMusicUsageDescription`, `CFBundleDisplayName`) | `InfoPlist.strings` | `InfoPlist.strings`, `launch: permission` | all 48 |
 | Lessons: course, unit and lesson titles, lesson cards, prompts, quiz answers and explanations, hints, unit summaries, course subtitles, song section chips, lyric credits | `tools/curriculum/courses/*.py` → `tools/curriculum/build.py` → `en.lproj/Learn.strings` (keys are a hash of the English, so an edited sentence gets a new key) | `tools/l10n/learn/<locale>.json` → `apply_learn.py` → `<locale>.lproj/Learn.strings` | `Learn.strings` | the 9 lesson languages |
-| App Store listing: name, subtitle, keywords, promotional text, description, What's New, screenshot captions, App Preview captions | `docs/ios/APP-STORE-LISTING.md`, and its "Source for translators" (counts as variables) in `docs/ios/APP-STORE-LISTING-LOCALIZED.md` | `APP-STORE-LISTING-LOCALIZED.md`, pasted into App Store Connect; captions rendered by `tools/marketing/screenshots.py` | none (no TODO file) | the 9 listing locales |
+| App Store listing: name, subtitle, keywords, promotional text, description, What's New, screenshot captions, App Preview captions | `docs/ios/APP-STORE-LISTING.md`, and its "Source for translators" (counts as variables) in `docs/ios/APP-STORE-LISTING-LOCALIZED.md` | `APP-STORE-LISTING-LOCALIZED.md`, pasted into App Store Connect; captions rendered by `tools/marketing/screenshots.py` | none (no TODO file) | all 50 Apple-supported listing locales |
 | Other App Store Connect text: in-app purchase display names and descriptions, Game Center leaderboard and achievement names | the tables in `APP-STORE-LISTING.md`; `ios/Timbre/Services/GameCenterIDs.swift` (achievement titles and details are the app's own badge texts) | App Store Connect only | none | as the listing |
 
 Not translated: sung lyrics (the public-domain originals, or Timbre's own for the Originals), App Review notes (English), product and file names. "What's New" exists only as the App Store version text; the app has no What's New screen of its own.
@@ -56,10 +56,12 @@ Not translated: sung lyrics (the public-domain originals, or Timbre's own for th
 ### 2.2 Locales
 
 - **49 string tables**: English, the source, and 48 translations: ar, bg, bn, ca, cs, da, de, el, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, is, it, ja, kn, ko, lt, lv, ml, mr, nl, no, pa, pl, pt, ro, ru, sk, sl, sv, sw, ta, te, th, tr, uk, ur, vi, zh-CN, zu. `tools/verify-ios-resources.py` asserts there are 49 `.lproj` folders. All 48 ship today (`CFBundleLocalizations` in `ios/project.yml`).
-- **The 9 major locales**, de, es, fr, it, ja, ko, pt, ru and zh-CN: the interface, the lessons (they have `tools/l10n/learn/<locale>.json` and a `Learn.strings`), and the store listing (as de-DE, es-MX, fr-FR, it, ja, ko, pt-BR, ru and zh-Hans).
-- **The 39 others**: the interface only. Lessons show in English there by design; `report.py` gives them no lesson TODO.
+- **The 9 major locales**, de, es, fr, it, ja, ko, pt, ru and zh-CN: the interface, the lessons (they have `tools/l10n/learn/<locale>.json` and a `Learn.strings`), and existing partial store blocks (as de-DE, es-MX, fr-FR, it, ja, ko, pt-BR, ru and zh-Hans). These nine lesson locales are unchanged; they no longer define the store scope.
+- **The 39 others**: the app interface only (store requirements are separate). Lessons show in English there by design; `report.py` gives them no lesson TODO.
 - **Right to left**: ar, fa, he, ur ([§4.11](#411-right-to-left-ar-fa-he-ur)).
-- **Variants**: one table per language serves every region. `es` serves Spain and Latin America (the current table uses Spain's iOS wording, "Ajustes"; the store listing is es-MX, "Configuración"), `pt` serves Brazil and Portugal (the current table is Brazilian, "você"), `zh-CN` is Simplified Chinese, `no` is Norwegian Bokmål. The glossary records the variant.
+- **Variants**: one table per language serves every region. `es` serves Spain and Latin America (the current table uses Spain's iOS wording, "Ajustes"; the existing store block is es-MX, "Configuración"; es-ES is also required), `pt` serves Brazil and Portugal (the current table is Brazilian, "você"), `zh-CN` is Simplified Chinese, `no` is Norwegian Bokmål. The glossary records the variant.
+
+**Store scope:** all 50 Apple locales in [store-locales.json](../../tools/l10n/store-locales.json), with exact API shortcodes, app mappings, primary English fallback policy and source URLs. Eight app languages (`fa`, `bg`, `et`, `is`, `lt`, `lv`, `sw`, `zu`) have no Apple listing locale: do not invent one. Malay (`ms`), Odia (`or-IN`) and Traditional Chinese (`zh-Hant`) listings are required but do not add app UI languages or justify claiming UI support. English regional listings and French, Portuguese and Spanish regional variants are distinct metadata deliverables. The app remains 49 languages (English + 48 translations), with nine translated lesson languages.
 
 ### 2.3 What is missing (at 0bbf273)
 
@@ -77,13 +79,13 @@ The TODO files are already in this order: `report.py` puts the launch-critical e
 | 4 | Onboarding, welcome to paywall | `launch: funnel` | 46 | No gate, but it is the first thing every new user reads, and `LocalizationLaunchUITests` checks the German welcome ([§8.2](#82-the-localization-launch-tests)). |
 | 5 | The rest of the interface | none | 488 | The shipping bar: `shipping.py --min 95` ships a locale only when 95 % of its interface is translated ([§7.6](#76-shipping-fewer-locales)). |
 | 6 | Lessons (9 locales) | `table: Learn.strings` | 1,467 | Nothing gates them: an untranslated lesson string shows in English. |
-| 7 | Store listing (9 locales) | none | 13 caption rows plus the text blocks | `screenshots.py --check` ([§9](#9-the-app-store-listing)). |
+| 7 | Store listing (all 50 Apple locales) | none | 13 caption rows plus the text blocks | `screenshots.py --check` ([§9](#9-the-app-store-listing)). |
 
 Across locales, the order that gets an upload through soonest:
 
 1. Steps 1–4 for all 48 locales. Then `critical.py --strict` passes with every locale shipped.
 2. Step 5 for the 9 major locales: they are complete.
-3. Step 6, then step 7, for the 9 major locales.
+3. Step 6 for the 9 lesson locales. Step 7 for **all 50 listing locales**, starting with the nine existing partial blocks and primary English, then the 40 additional listings.
 4. Step 5 for the other 39, shipping each one as it reaches the bar.
 
 Until a locale has steps 1–3, either it doesn't ship (`shipping.py --min … --critical --apply`) or the upload fails.
@@ -609,7 +611,8 @@ python3 tools/l10n/critical.py --strict --locales de   # the App Store gate, for
 python3 tools/l10n/shipping.py                         # coverage per locale
 python3 tools/verify-ios-resources.py                  # 49 tables, every timbre_* key the code uses exists
 python3 tools/l10n/xcstrings.py --check                # every table still converts to a String Catalog
-python3 tools/marketing/screenshots.py --check         # listing work only (§9)
+python3 tools/l10n/tests/test_store_locales.py          # requirements/mapping only; NOT translation completion
+python3 tools/marketing/screenshots.py --check         # current supported listing subset only (§9)
 plutil -lint ios/Timbre/Resources/*.lproj/*.strings ios/Timbre/Resources/*.lproj/*.stringsdict   # on a Mac
 ```
 
@@ -638,6 +641,8 @@ The import prints one line per refused translation ("de Localizable.strings 'Bea
 - **Every pull request and push to main** (`.github/workflows/ios.yml`, the core job): `report.py --check --strict` (fails when the committed handoff is out of date; publishes fresh TODO files to the `ci-results/core` branch, folder `l10n`), `critical.py --baseline --github` (fails on a new critical gap), and `tools/verify-ios-resources.py`. The accessibility job runs `LocalizationLaunchUITests` with the accessibility audit.
 - **Localization export** (`.github/workflows/l10n.yml`, Actions → Localization export → Run workflow, or any push to a branch named `l10n/…`): exports the English from source with Xcode (`xcodebuild -exportLocalizations`), runs `report.py --check --xliff` and `critical.py --xliff` with Xcode's own keys, and publishes `en.xliff`, the handoff files, `report.log`, `critical.log` and `critical-missing.json` to `ci-results/l10n` (a side branch publishes to `ci-results/l10n--<branch name with dashes>`): `git fetch origin ci-results/l10n` and read them from `FETCH_HEAD`.
 - **App Store delivery** (`.github/workflows/apple-delivery.yml`): `critical.py --strict` over the shipped locales, after the optional `ship_min_coverage` bar. Only an internal TestFlight build (`internal_testflight_untranslated`) skips it, and that build can't be submitted.
+
+**Expanded completion gate:** keep GitHub Actions translation work scoped to all 49 app languages (English source + 48 targets), the existing nine lesson languages, and a separate all-50 listing queue. The app TODO importer does not import store metadata. A green app translation job, manifest test or existing screenshot check does not prove all listings complete. Track per-locale/per-field drafts, placeholder removal, mechanical validation, independent AI review, native review and device/render review separately; retain failed/pending work for the next run. No App Store account changes or submission are implied by generating or checking translations.
 
 ### 7.4 Confirm guessed keys (key_check)
 
@@ -804,7 +809,11 @@ For the 11 legal strings and the permission prompts of each locale, a separate G
 
 ## 9. The App Store listing
 
-Nine listing locales: de-DE, fr-FR, es-MX, pt-BR, it, ja, ko, zh-Hans, ru (the app's de, fr, es, pt, it, ja, ko, zh-CN, ru). Everything lives in `docs/ios/APP-STORE-LISTING-LOCALIZED.md`; App Store Connect gets it by hand. Its "State" section is the to-do: each locale's name, subtitle and keywords are current; its promotional text, description, What's New and screenshot captions must be translated from the "Source for translators", where every count the build can change is a variable (`{instruments}`, `{tunings}`, `{courses}`, `{lessons}`, `{songs_floor}`, `{originals}`) with its value in a table that `screenshots.py --check` keeps equal to the build.
+**Required scope: every Apple-supported listing locale, currently 50 including `en-US`.** The authoritative inventory is [store-locales.json](../../tools/l10n/store-locales.json), verified on 2026-10-26 against [Apple’s supported languages](https://developer.apple.com/help/app-store-connect/reference/app-information/app-store-localizations) and [Apple’s API shortcodes](https://developer.apple.com/documentation/appstoreconnectapi/managing-metadata-in-your-app-by-using-locale-shortcodes). The expanded scope does not change the 49 app languages or nine lesson locales (§2.2).
+
+The English source is `docs/ios/APP-STORE-LISTING.md`; localized work belongs in `docs/ios/APP-STORE-LISTING-LOCALIZED.md`. Existing nine blocks remain partial: name/subtitle/keywords exist, but long text is stale and captions contain placeholders. **The 40 other non-primary listings are pending**, not translated by adding an inventory row. Every locale requires name, subtitle, keywords, promotional text, description, What's New, iPhone/iPad screenshot and App Preview captions, IAP display names/descriptions, and Game Center leaderboard/achievement names and descriptions. For an asset or product genuinely not used, record an explicit reviewed not-applicable reason rather than silently dropping the field.
+
+Use the source’s count variables (`{instruments}`, `{tunings}`, `{courses}`, `{lessons}`, `{songs_floor}`, `{originals}`) and current build values. `TRANSLATE:`, empty text, stale blocks, unresolved variables, `<privacy policy URL>` and copied-English fallback never count as finished. Preserve the privacy placeholder while drafting, but replace it with the verified production URL before release. AI-generated, AI-reviewed, native-reviewed and device/render-reviewed are different evidence states; do not claim one from another. Current tools cover only their existing subset until extended; a green check is not all-50 coverage or permission to submit.
 
 ### 9.1 Fields and limits
 
@@ -835,7 +844,7 @@ Apple's rules, as `APP-STORE-LISTING.md` and `APP-STORE-LISTING-LOCALIZED.md` ap
 
 ### 9.3 Promotional text, description, What's New
 
-GPT gets the English source block with its variables, the locale's current name, subtitle and keywords, its stale earlier text (folded under "Earlier text", for wording that still fits), the glossary, and these rules from the listing doc:
+GPT gets the English source block with its variables, the locale's existing name, subtitle and keywords when present (otherwise draft these too), its stale earlier text when present (folded under "Earlier text", for wording that still fits), the glossary, and these rules from the listing doc:
 
 - Same facts as the English, no stronger: the free tier, no ads, no account, audio never recorded, the trial reminder ("with notifications on, Timbre reminds you two days before a free trial ends").
 - Adapted, not word for word, with the app's own terms (the glossary): drone, streak, quest, badge, unit, course.
@@ -860,7 +869,7 @@ Then `python3 tools/marketing/screenshots.py --check`, the localized captures ([
 ### 9.5 Other App Store Connect text
 
 - In-app purchase display names and descriptions, per locale (the English table is in `APP-STORE-LISTING.md`; App Store Connect shows the limits).
-- Game Center: leaderboard names ("Bullseye", "Bullseye this week", "Ear trainer level", "Practice streak", featured songs' titles) and the 31 achievements, whose titles and descriptions are the app's own badge texts: reuse the locale's translations from `Localizable.strings` so the app and Game Center agree.
+- Game Center (every listing locale; use reviewed English-source translations when no matching app UI table exists, without claiming UI language support): leaderboard names ("Bullseye", "Bullseye this week", "Ear trainer level", "Practice streak", featured songs' titles) and the 31 achievements, whose titles and descriptions are the app's own badge texts: reuse the locale's translations from `Localizable.strings` so the app and Game Center agree.
 - Review notes stay in English.
 
 ## 10. Traps the tooling doesn't catch
@@ -875,5 +884,5 @@ What can still go wrong after every check above passes, and what to do about it:
 6. **Localized store frames #3 and #7** come out `-wrong` in a localized capture run, because their checks read English text (`ios/TimbreUITests/TimbreUITests.swift`, the comment on `language`): a full localized set can't be rendered until those checks read identifiers.
 7. **Wrong terms in the shipped tables**, which the anchors and `refs` may show GPT: "Intonation" (the drone trainer) is translated as the guitar-setup adjustment in ca (Octavació), es (Octavación), ja (オクターブ調整), pt (Oitavado) and zh-CN (八度音准); the register is mixed in he, hr, ro, sl and tr; "Bullseye" is translated everywhere although HANDOFF.md says to keep game names. The glossary overrules the tables; a clean-up batch for those keys means editing `tools/l10n/translations/<locale>.json` and running `apply.py`, since they aren't in the TODO files.
 8. **Shared keys**: "Next", "Again" and "Slower" are on-screen labels and Siri's command words; one translation has to serve both ([§4.14](#414-grammar-around-arguments)).
-9. **Localized listing text** (promotional text, description, What's New) and the localized keyword rules beyond length are not checked by `screenshots.py` ([§9.1](#91-fields-and-limits), [§9.2](#92-keywords)); a listing locale outside its nine is not checked at all.
+9. **Localized listing text** (promotional text, description, What's New) and the localized keyword rules beyond length are not checked by `screenshots.py` ([§9.1](#91-fields-and-limits), [§9.2](#92-keywords)); the 40 additional non-primary listing locales are required but outside its current nine-locale implementation. The manifest test checks scope/mapping only, not translated text or review evidence.
 10. **`ship_min_coverage`** in the delivery workflow doesn't require the critical strings: a locale above the bar without them fails the upload instead of being left out ([§7.6](#76-shipping-fewer-locales)).

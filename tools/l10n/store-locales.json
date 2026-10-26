@@ -1,0 +1,562 @@
+{
+  "schema_version": 1,
+  "verified_on": "2026-10-26",
+  "scope": "every_apple_supported_listing_locale",
+  "listing_locale_count": 50,
+  "app_language_count": 49,
+  "primary_locale": "en-US",
+  "sources": {
+    "supported_locales": "https://developer.apple.com/help/app-store-connect/reference/app-information/app-store-localizations",
+    "locale_shortcodes": "https://developer.apple.com/documentation/appstoreconnectapi/managing-metadata-in-your-app-by-using-locale-shortcodes",
+    "locale_shortcodes_markdown": "https://developer.apple.com/documentation/appstoreconnectapi/managing-metadata-in-your-app-by-using-locale-shortcodes.md"
+  },
+  "required_fields": [
+    "name",
+    "subtitle",
+    "keywords",
+    "promotional_text",
+    "description",
+    "whats_new",
+    "iphone_screenshot_captions",
+    "ipad_screenshot_captions",
+    "app_preview_captions",
+    "iap_display_names",
+    "iap_descriptions",
+    "game_center_leaderboard_names",
+    "game_center_achievement_names",
+    "game_center_achievement_descriptions"
+  ],
+  "fallback_policy": {
+    "listing_primary": "en-US",
+    "note": "Primary English is the project fallback when a listing translation is unavailable, not a guarantee of Apple storefront selection. Apple chooses display metadata using its localization rules. Fallback or copied English is never completed translation.",
+    "app_only_languages": [
+      "bg",
+      "et",
+      "fa",
+      "is",
+      "lt",
+      "lv",
+      "sw",
+      "zu"
+    ],
+    "listing_without_app_language": [
+      "ms",
+      "or-IN",
+      "zh-Hant"
+    ],
+    "app_note": "Listing-only locales do not add app UI languages. English is the documented project fallback for these locales, subject to device language preferences; device behavior must be verified."
+  },
+  "existing_localized_blocks": [
+    "de-DE",
+    "fr-FR",
+    "es-MX",
+    "pt-BR",
+    "it",
+    "ja",
+    "ko",
+    "zh-Hans",
+    "ru"
+  ],
+  "locales": [
+    {
+      "locale": "ar-SA",
+      "language": "Arabic",
+      "apple_api_language": "Arabic",
+      "app_locale": "ar",
+      "app_fallback": null,
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "bn-BD",
+      "language": "Bangla",
+      "apple_api_language": "Bengali",
+      "app_locale": "bn",
+      "app_fallback": null,
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "ca",
+      "language": "Catalan",
+      "apple_api_language": "Catalan",
+      "app_locale": "ca",
+      "app_fallback": null,
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "zh-Hans",
+      "language": "Chinese (Simplified)",
+      "apple_api_language": "Chinese (Simplified)",
+      "app_locale": "zh-CN",
+      "app_fallback": null,
+      "state": "existing_partial_stale",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "zh-Hant",
+      "language": "Chinese (Traditional)",
+      "apple_api_language": "Chinese (Traditional)",
+      "app_locale": null,
+      "app_fallback": "en",
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "hr",
+      "language": "Croatian",
+      "apple_api_language": "Croatian",
+      "app_locale": "hr",
+      "app_fallback": null,
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "cs",
+      "language": "Czech",
+      "apple_api_language": "Czech",
+      "app_locale": "cs",
+      "app_fallback": null,
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "da",
+      "language": "Danish",
+      "apple_api_language": "Danish",
+      "app_locale": "da",
+      "app_fallback": null,
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "nl-NL",
+      "language": "Dutch",
+      "apple_api_language": "Dutch",
+      "app_locale": "nl",
+      "app_fallback": null,
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "en-AU",
+      "language": "English (Australia)",
+      "apple_api_language": "English (Australia)",
+      "app_locale": "en",
+      "app_fallback": null,
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "en-CA",
+      "language": "English (Canada)",
+      "apple_api_language": "English (Canada)",
+      "app_locale": "en",
+      "app_fallback": null,
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "en-GB",
+      "language": "English (U.K.)",
+      "apple_api_language": "English (U.K.)",
+      "app_locale": "en",
+      "app_fallback": null,
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "en-US",
+      "language": "English (U.S.)",
+      "apple_api_language": "English (U.S.)",
+      "app_locale": "en",
+      "app_fallback": null,
+      "state": "english_source",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "fi",
+      "language": "Finnish",
+      "apple_api_language": "Finnish",
+      "app_locale": "fi",
+      "app_fallback": null,
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "fr-FR",
+      "language": "French",
+      "apple_api_language": "French",
+      "app_locale": "fr",
+      "app_fallback": null,
+      "state": "existing_partial_stale",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "fr-CA",
+      "language": "French (Canada)",
+      "apple_api_language": "French (Canada)",
+      "app_locale": "fr",
+      "app_fallback": null,
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "de-DE",
+      "language": "German",
+      "apple_api_language": "German",
+      "app_locale": "de",
+      "app_fallback": null,
+      "state": "existing_partial_stale",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "el",
+      "language": "Greek",
+      "apple_api_language": "Greek",
+      "app_locale": "el",
+      "app_fallback": null,
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "gu-IN",
+      "language": "Gujarati",
+      "apple_api_language": "Gujarati",
+      "app_locale": "gu",
+      "app_fallback": null,
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "he",
+      "language": "Hebrew",
+      "apple_api_language": "Hebrew",
+      "app_locale": "he",
+      "app_fallback": null,
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "hi",
+      "language": "Hindi",
+      "apple_api_language": "Hindi",
+      "app_locale": "hi",
+      "app_fallback": null,
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "hu",
+      "language": "Hungarian",
+      "apple_api_language": "Hungarian",
+      "app_locale": "hu",
+      "app_fallback": null,
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "id",
+      "language": "Indonesian",
+      "apple_api_language": "Indonesian",
+      "app_locale": "id",
+      "app_fallback": null,
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "it",
+      "language": "Italian",
+      "apple_api_language": "Italian",
+      "app_locale": "it",
+      "app_fallback": null,
+      "state": "existing_partial_stale",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "ja",
+      "language": "Japanese",
+      "apple_api_language": "Japanese",
+      "app_locale": "ja",
+      "app_fallback": null,
+      "state": "existing_partial_stale",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "kn-IN",
+      "language": "Kannada",
+      "apple_api_language": "Kannada",
+      "app_locale": "kn",
+      "app_fallback": null,
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "ko",
+      "language": "Korean",
+      "apple_api_language": "Korean",
+      "app_locale": "ko",
+      "app_fallback": null,
+      "state": "existing_partial_stale",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "ms",
+      "language": "Malay",
+      "apple_api_language": "Malay",
+      "app_locale": null,
+      "app_fallback": "en",
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "ml-IN",
+      "language": "Malayalam",
+      "apple_api_language": "Malayalam",
+      "app_locale": "ml",
+      "app_fallback": null,
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "mr-IN",
+      "language": "Marathi",
+      "apple_api_language": "Marathi",
+      "app_locale": "mr",
+      "app_fallback": null,
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "no",
+      "language": "Norwegian",
+      "apple_api_language": "Norwegian",
+      "app_locale": "no",
+      "app_fallback": null,
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "or-IN",
+      "language": "Odia",
+      "apple_api_language": "Oriya",
+      "app_locale": null,
+      "app_fallback": "en",
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "pl",
+      "language": "Polish",
+      "apple_api_language": "Polish",
+      "app_locale": "pl",
+      "app_fallback": null,
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "pt-BR",
+      "language": "Portuguese (Brazil)",
+      "apple_api_language": "Portuguese (Brazil)",
+      "app_locale": "pt",
+      "app_fallback": null,
+      "state": "existing_partial_stale",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "pt-PT",
+      "language": "Portuguese (Portugal)",
+      "apple_api_language": "Portuguese (Portugal)",
+      "app_locale": "pt",
+      "app_fallback": null,
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "pa-IN",
+      "language": "Punjabi",
+      "apple_api_language": "Punjabi",
+      "app_locale": "pa",
+      "app_fallback": null,
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "ro",
+      "language": "Romanian",
+      "apple_api_language": "Romanian",
+      "app_locale": "ro",
+      "app_fallback": null,
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "ru",
+      "language": "Russian",
+      "apple_api_language": "Russian",
+      "app_locale": "ru",
+      "app_fallback": null,
+      "state": "existing_partial_stale",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "sk",
+      "language": "Slovak",
+      "apple_api_language": "Slovak",
+      "app_locale": "sk",
+      "app_fallback": null,
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "sl-SI",
+      "language": "Slovenian",
+      "apple_api_language": "Slovenian",
+      "app_locale": "sl",
+      "app_fallback": null,
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "es-MX",
+      "language": "Spanish (Mexico)",
+      "apple_api_language": "Spanish (Mexico)",
+      "app_locale": "es",
+      "app_fallback": null,
+      "state": "existing_partial_stale",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "es-ES",
+      "language": "Spanish (Spain)",
+      "apple_api_language": "Spanish (Spain)",
+      "app_locale": "es",
+      "app_fallback": null,
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "sv",
+      "language": "Swedish",
+      "apple_api_language": "Swedish",
+      "app_locale": "sv",
+      "app_fallback": null,
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "ta-IN",
+      "language": "Tamil",
+      "apple_api_language": "Tamil",
+      "app_locale": "ta",
+      "app_fallback": null,
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "te-IN",
+      "language": "Telugu",
+      "apple_api_language": "Telugu",
+      "app_locale": "te",
+      "app_fallback": null,
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "th",
+      "language": "Thai",
+      "apple_api_language": "Thai",
+      "app_locale": "th",
+      "app_fallback": null,
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "tr",
+      "language": "Turkish",
+      "apple_api_language": "Turkish",
+      "app_locale": "tr",
+      "app_fallback": null,
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "uk",
+      "language": "Ukrainian",
+      "apple_api_language": "Ukrainian",
+      "app_locale": "uk",
+      "app_fallback": null,
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "ur-PK",
+      "language": "Urdu",
+      "apple_api_language": "Urdu",
+      "app_locale": "ur",
+      "app_fallback": null,
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    },
+    {
+      "locale": "vi",
+      "language": "Vietnamese",
+      "apple_api_language": "Vietnamese",
+      "app_locale": "vi",
+      "app_fallback": null,
+      "state": "pending",
+      "native_review": "not_verified",
+      "device_review": "not_verified"
+    }
+  ]
+}

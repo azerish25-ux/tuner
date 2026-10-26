@@ -1,0 +1,78 @@
+name: Localization simulator matrix
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: localization-matrix-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  localized-launch:
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[l10n-matrix]')
+    runs-on: macos-15
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        locales:
+          - 'ar,fa,he,ur,bg,bn'
+          - 'de,es,fr,it,pt,ca'
+          - 'ja,ko,zh-CN,th,vi,id'
+          - 'cs,sk,pl,ru,uk,hr'
+          - 'da,no,sv,fi,is,nl'
+          - 'et,lt,lv,hu,ro,sl'
+          - 'hi,gu,kn,ml,mr,pa'
+          - 'ta,te,tr,el,sw,zu'
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+      HOMEBREW_NO_AUTO_UPDATE: '1'
+      HOMEBREW_NO_INSTALL_CLEANUP: '1'
+      TIMBRE_L10N_MATRIX: ${{ matrix.locales }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Generate exact localized expectations
+        run: python3 tools/l10n/matrix_fixture.py --locales "$TIMBRE_L10N_MATRIX" --out ios/TimbreUITests/LocalizationWelcomeExpected.json --check-workflow .github/workflows/localization-matrix.yml
+      - name: Generate project and select simulator
+        run: |
+          command -v xcodegen >/dev/null 2>&1 || brew install xcodegen
+          (cd ios && xcodegen generate)
+          # JSON under the test target's sources must be copied into the test bundle.
+          grep -F 'LocalizationWelcomeExpected.json in Resources' ios/Timbre.xcodeproj/project.pbxproj
+          DEVICE_ID=$(xcrun simctl list devices available -j | python3 -c 'import json,re,sys; d=json.load(sys.stdin); runtimes=sorted(d["devices"].items(),key=lambda p:tuple(map(int,re.findall(r"\d+",p[0]))),reverse=True); print(next(x["udid"] for k,v in runtimes if "iOS" in k for x in v if "iPhone" in x["name"]))')
+          echo "DEVICE_ID=$DEVICE_ID" >> "$GITHUB_ENV"
+          xcrun simctl boot "$DEVICE_ID" || true
+      - name: Ensure Metal toolchain
+        run: bash tools/ci/ensure-metal.sh
+      - name: Build once and test each selected language
+        env:
+          TEST_RUNNER_TIMBRE_L10N_MATRIX: ${{ matrix.locales }}
+        run: |
+          set -euo pipefail
+          mkdir -p ci-out
+          xcodebuild test -project ios/Timbre.xcodeproj -scheme Timbre -destination "platform=iOS Simulator,id=$DEVICE_ID" \
+            -derivedDataPath ios/build/l10n -parallel-testing-enabled NO \
+            -only-testing:TimbreUITests/LocalizationMatrixUITests \
+            -resultBundlePath ci-out/Localization.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/test.log
+          IFS=',' read -ra LOCALES <<< "$TIMBRE_L10N_MATRIX"
+          for locale in "${LOCALES[@]}"; do
+            grep -Fx "TIMBRE_L10N_MATRIX_TESTED $locale" ci-out/test.log >/dev/null || {
+              echo "::error::No executed localization check for $locale"; exit 1;
+            }
+          done
+      - name: Export screenshots
+        if: always()
+        run: |
+          if [ -d ci-out/Localization.xcresult ]; then
+            xcrun xcresulttool export attachments --path ci-out/Localization.xcresult --output-path ci-out/screenshots
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: localization-${{ matrix.locales }}
+          path: ci-out
+          retention-days: 7

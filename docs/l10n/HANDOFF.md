@@ -6,26 +6,18 @@ This is the brief for whoever translates Timbre: people, or GPT run as described
 
 ## Launch-critical first
 
-These come first in every TODO file (`launch` on the entry says which kind). The App Store upload refuses a build when a shipped language lacks a purchase term, a permission prompt or a VoiceOver string (`tools/l10n/critical.py --strict`), and the onboarding is the first thing a new user reads.
-
-| Kind | Strings | Locale-string pairs |
-|---|---:|---:|
-| Purchase terms (legal) | 11 | 528 |
-| Permission prompts | 1 | 48 |
-| VoiceOver | 93 | 4,464 |
-| Onboarding, welcome to paywall | 46 | 2,208 |
-| **All launch-critical** | **151** | **7,248** |
+Every launch-critical string is translated in every locale.
 
 ## What is missing now
 
-- **App interface:** 639 distinct strings are missing somewhere, 30,672 locale-string pairs in all.
+- **App interface:** 488 distinct strings are missing somewhere, 23,424 locale-string pairs in all.
 - **Lessons:** 13,203 locale-string pairs across the 9 lesson languages (German (de), Spanish (es), French (fr), Italian (it), Japanese (ja), Korean (ko), Portuguese (pt), Russian (ru), Chinese (Simplified) (zh-CN)).
-- **Changed English:** 1,410 of these locale-string pairs replace a string whose English was edited. The TODO entry carries the old English and its old translation under `previous`, to update rather than start over.
+- **Changed English:** 1,122 of these locale-string pairs replace a string whose English was edited. The TODO entry carries the old English and its old translation under `previous`, to update rather than start over.
 
 | Locales | App strings missing | Lesson strings missing |
 |---|---:|---:|
-| de, es, fr, it, ja, ko, pt, ru, zh-CN | 639 | 1467 |
-| ar, bg, bn, ca, cs, da, el, et, fa, fi, gu, he, hi, hr, hu, id, is, kn, lt, lv, ml, mr, nl, no, pa, pl, ro, sk, sl, sv, sw, ta, te, th, tr, uk, ur, vi, zu | 639 | — |
+| de, es, fr, it, ja, ko, pt, ru, zh-CN | 488 | 1467 |
+| ar, bg, bn, ca, cs, da, el, et, fa, fi, gu, he, hi, hr, hu, id, is, kn, lt, lv, ml, mr, nl, no, pa, pl, ro, sk, sl, sv, sw, ta, te, th, tr, uk, ur, vi, zu | 488 | — |
 
 Where the missing lesson strings are (the same in every lesson language):
 

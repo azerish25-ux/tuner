@@ -1,0 +1,291 @@
+# Timbre glossary — ar
+
+Status: AI-authored and AI-reviewed terminology decisions, 2026-10-25. Not human/native-speaker approved. Device wording and RTL layout require native/device QA.
+
+## 1. Locale decisions
+- Locale and variant: ar, neutral Modern Standard Arabic, not a regional dialect.
+- Register: direct neutral masculine singular imperatives, avoiding gendered adjectives about the reader where possible. Warm teacher voice; no added marketing or celebration.
+- Buttons: short verbal nouns or direct action verbs. Instructions use clear imperatives. Preserve pinned tabs ضبط، تعلّم، التقدّم.
+- Quotes/punctuation: «…», Arabic comma ، and question mark ؟; ordinary full stop. Apostrophe ’ only in retained foreign names; ellipsis … only. Normal Arabic word spacing, no double spaces.
+- Digits: ASCII 0–9 in literal numbers, including lessons. Runtime placeholders use device formatting. Units Hz, BPM, XP, ¢, A4 unchanged; other units below.
+- Capitalization: no Arabic casing; brands retain their spelling. Never translate or inflect Timbre, Timbre Pro, Pro, Apple, iPhone, iPad, Apple Watch, App Store, Apple Music, Game Center, Siri, ChordPro.
+- Interface note names come from placeholders. Lesson note/chord letters and signs remain exactly C, B, F♯, B♭, Em, G7 etc. Accidentals: دييز / بيمول / دييز مزدوج / بيمول مزدوج. Tuner direction is أخفض / أعلى, not accidentals.
+- Legal path: الإعدادات › حساب Apple › الاشتراكات. Keep every cancellation, renewal and free-tier fact; do not shorten legal facts for layout.
+- Apple features: الشاشة الرئيسية / شاشة القفل / أداة / الأنشطة المباشرة / الاختصارات / مركز التحكم / المشاركة العائلية / الحس اللمسي. Apple Watch, Game Center, Siri unchanged.
+- Siri: short spoken commands; retain ${applicationName} and every token. Next/Again/Slower must work spoken and on controls.
+- RTL: begin with an Arabic word. When unavoidable, prefix U+200F and document it. Isolate Latin values adjoining punctuation with U+2068/U+2069 and document each use. Do not apply needless invisible marks.
+- Arguments: no inflection or suffix attached to unknown values; rephrase around a label. Preserve argument order or number all arguments when reordering.
+- Plurals: zero, one, two, few, many, other; preserve the numeric argument in each. Flat counted strings use neutral labels where necessary.
+
+## 2. Binding terminology
+Instrument names and tunings use the catalogue rows. Precision Expert is خبير, distinct from the Pro plan. Keep all ChordPro syntax and loop markers A/B unchanged.
+
+| English / App key | Translation |
+|---|---|
+| Songs | الأغاني |
+| Your songs | أغانيك |
+| Quest | مهمة |
+| Song sheet | صفحة الكلمات والتآلفات |
+| Chart | مخطط التآلفات |
+| Player view | عرض العازف |
+| Chord view / Neck view | عرض التآلف / عرض العنق |
+| Show me | أرني |
+| Strum to tune | اضبط بالعزف على الأوتار |
+| Tune by feel / Feel | الضبط بالاهتزاز / الاهتزاز |
+| Tanpura drone | نغمة التانبورا الممتدة |
+| Intonation | دقة النغمات |
+| Placement check | اختبار المستوى |
+| Play along | العزف مع المرافقة |
+| Take | محاولة مسجلة |
+| Loop A–B, Set A, Set B | تكرار A–B، تعيين A، تعيين B |
+| Studio (lighter) / Real-time 3D | الاستوديو (أخف) / عرض ثلاثي الأبعاد آني |
+| tuner / tune (verb) / tuning | موالف / ضبط / توليفة ضبط |
+| flat / sharp (direction) | أخفض من المطلوب / أعلى من المطلوب |
+| cents / minutes / seconds / milliseconds | سنت / دقائق / ثوانٍ / ميلي ثانية |
+| lock | ثبات النغمة عند الضبط الصحيح |
+| string / peg / headstock | وتر / مفتاح ضبط / رأس العنق |
+| reference tone / reference pitch / Concert Pitch | نغمة مرجعية / طبقة مرجعية / الطبقة الفعلية |
+| written pitch / temperament | الطبقة المكتوبة / نظام التقسيم النغمي |
+| chromatic / strobe | كروماتي / ستروب |
+| capo / transpose / transposition | كابو / نقل المقام / نقل المقام |
+| fret / open string / finger 1–4 | دستان / وتر مطلق / إصبع 1–4 |
+| chord / chord shape / barre | تآلف / شكل التآلف / باريه |
+| major / minor / seventh / power chord | كبير / صغير / سابع / تآلف القوة |
+| key / scale / major scale / pentatonic box | مقام / سلم / سلم كبير / نمط السلم الخماسي |
+| half step / whole step / interval / third / fifth / octave | نصف درجة / درجة كاملة / مسافة نغمية / ثالثة / خامسة / أوكتاف |
+| bar / beat / tempo / downbeat / count | مازورة / نبضة / سرعة الإيقاع / النبضة الأولى / العد |
+| strum / downstroke / upstroke / chop / chunk / mute | عزف على الأوتار / ضربة لأسفل / ضربة لأعلى / ضربة مكتومة قصيرة / ضربة مكتومة / كتم |
+| pick (plectrum / play / choose) | ريشة / نقر / اختيار |
+| fingerpicking / hammer-on / pull-off / slide / bend / vibrato | نقر بالأصابع / هامر أون / بول أوف / انزلاق / ثني الوتر / اهتزاز النغمة |
+| bowing / open-string bowing / tune (noun) | العزف بالقوس / العزف بالقوس على وتر مطلق / لحن |
+| cadence / V chord / I–IV–V / pickup | قفلة / تآلف V / I–IV–V / تمهيد قبل المازورة |
+| Intro / Verse 1 / Chorus / Bridge / Solo / Outro / Tag / section | مقدمة / مقطع 1 / لازمة / جسر / عزف منفرد / خاتمة / ذيل / قسم |
+| streak / streak freeze / best run | سلسلة أيام متتالية / حماية السلسلة / أطول سلسلة |
+| badge / achievement / level / stars / combo / score / round | شارة / إنجاز / مستوى / نجوم / سلسلة إصابات / نتيجة / جولة |
+| challenge (friend / lesson) | تحدّي صديق / تحدّي الدرس |
+| course / unit / lesson / step / quiz / hint | مسار / وحدة / درس / خطوة / اختبار / تلميح |
+| subscription / renew / cancel / free trial / trial ends | اشتراك / تجديد / إلغاء / تجربة مجانية / نهاية التجربة |
+| yearly / monthly / lifetime / payment method / billing issue | سنوي / شهري / مدى الحياة / طريقة الدفع / مشكلة فوترة |
+| Privacy Policy | سياسة الخصوصية |
+| Ear Training / Music Theory / Rhythm / Singing | تدريب الأذن / نظرية الموسيقى / الإيقاع / الغناء |
+| Originals / Standards & Classics / Songbook | أغانٍ أصلية / المعايير والكلاسيكيات / كتاب الأغاني |
+| Timbre | Timbre |
+| Timbre Pro | Timbre Pro |
+| XP | XP |
+| Hz | Hz |
+| A4 | A4 |
+| Standard | قياسي |
+| Tune | ضبط |
+| Learn | تعلّم |
+| Practice | التمرين |
+| Progress | التقدّم |
+| Settings | الإعدادات |
+| Today | اليوم |
+| Bullseye | في الصميم |
+| Ear training | تدريب الأذن |
+| Drone | نغمة ممتدة |
+| Tanpura | تانبورا |
+| Metronome | مترونوم |
+| Speed trainer | مدرّب السرعة |
+| Chords | الكوردات |
+| Scales | السلالم |
+| Haptics | الاهتزاز |
+| Tune up | ضبط الآلة |
+| Tuning | الضبط |
+| In tune | مضبوط |
+| flat | منخفض |
+| sharp | مرتفع |
+| Cents | سنت |
+| Concert Pitch | طبقة الحفل |
+| Temperament | نظام التسوية |
+| Chromatic | كروماتيك |
+| Note names | أسماء النوتات |
+| Solfège | صولفيج |
+| Sargam | سارغام |
+| Key | النغمة |
+| Octave | الأوكتاف |
+| Tempo | سرعة الإيقاع |
+| best run | أفضل سلسلة |
+| Combo | كومبو |
+| Lesson | درس |
+| Free trial | تجربة مجانية |
+| Yearly | سنوي |
+| Monthly | شهري |
+| Lifetime | مدى الحياة |
+| Restore purchases | استعادة المشتريات |
+| Terms | الشروط |
+| timbre_catalog_family_bowed_strings | الوتريات ذات القوس |
+| timbre_catalog_family_folk_world_strings | آلات وترية شعبية وعالمية |
+| timbre_catalog_family_guitar | جيتار |
+| timbre_catalog_family_keys | مفاتيح |
+| timbre_catalog_family_mallet_percussion_hand | آلات النقر، الإيقاع واليد |
+| timbre_catalog_family_mandolin | مندولين |
+| timbre_catalog_family_ukulele | يوكوليلي |
+| timbre_catalog_family_winds | آلات نفخ |
+| timbre_catalog_instrument_autoharp_chromatic_36 | أوتوهارب |
+| timbre_catalog_instrument_balalaika_prima_3 | بالالايكا (بريما) |
+| timbre_catalog_instrument_banjo_five_5 | بانجو (5 أوتار) |
+| timbre_catalog_instrument_bansuri_standard_0 | بانسوري |
+| timbre_catalog_instrument_bass_double_4 | كونترباص (4 و 5 أوتار) |
+| timbre_catalog_instrument_bass_electric_4 | غيتار باس (4 و 5 أوتار) |
+| timbre_catalog_instrument_bouzouki_greek_8 | بزق يوناني (تيتراخوردو) |
+| timbre_catalog_instrument_bouzouki_irish_8 | بوزوكي أيرلندي |
+| timbre_catalog_instrument_cello_standard_4 | تشيلو |
+| timbre_catalog_instrument_charango_standard_10 | تشارانغو |
+| timbre_catalog_instrument_clarinet_bb_0 | كلارينيت (Bb / A) |
+| timbre_catalog_instrument_didgeridoo_standard_0 | ديدجيريدو |
+| timbre_catalog_instrument_domra_prima_3 | دومرا |
+| timbre_catalog_instrument_dulcimer_appalachian_3 | دالسيمر أبالاشي / جبلي |
+| timbre_catalog_instrument_dulcimer_hammered_0 | دولسيمر مطروق |
+| timbre_catalog_instrument_erhu_standard_2 | إرهو |
+| timbre_catalog_instrument_flute_concert_0 | ناي |
+| timbre_catalog_instrument_french_horn_f_0 | هورن فرنسي (فا) |
+| timbre_catalog_instrument_gayageum_standard_12 | جاياغوم |
+| timbre_catalog_instrument_guitar_acoustic_12 | غيتار 12 وتراً |
+| timbre_catalog_instrument_guitar_acoustic_6 | جيتار صوتي / كهربائي |
+| timbre_catalog_instrument_guitar_baritone_6 | جيتار باريتون |
+| timbre_catalog_instrument_guitar_electric_7 | غيتار بـ 7 أوتار |
+| timbre_catalog_instrument_guitar_guitalele_6 | جيتاليل / غويليل |
+| timbre_catalog_instrument_guitar_guitarron_6 | جيتارون (مكسيكي) |
+| timbre_catalog_instrument_guitar_tenor_4 | جيتار تينور |
+| timbre_catalog_instrument_guqin_standard_7 | غوتشين |
+| timbre_catalog_instrument_guzheng_standard_21 | غوتشنغ |
+| timbre_catalog_instrument_handpan_standard_0 | هانبان / طبلة اللسان الفولاذية |
+| timbre_catalog_instrument_harmonica_diatonic_0 | هارمونيكا (دياتونيك) |
+| timbre_catalog_instrument_kalimba_standard_17 | كاليمبا (بيانو الإبهام) |
+| timbre_catalog_instrument_keys_accordion_0 | أكورديون / كونسرتينا |
+| timbre_catalog_instrument_keys_harpsichord_0 | هاربسيكورد |
+| timbre_catalog_instrument_keys_piano_0 | بيانو / بيانو رقمي |
+| timbre_catalog_instrument_kora_standard_21 | كورا |
+| timbre_catalog_instrument_koto_standard_13 | كوتو |
+| timbre_catalog_instrument_lute_renaissance_6 | العود النهضوي |
+| timbre_catalog_instrument_mallet_marimba_0 | ماريمبا / إكسيليفون / غلوكنسبيل / فيبرافون |
+| timbre_catalog_instrument_mandocello_standard_8 | ماندوتشيلو |
+| timbre_catalog_instrument_mandola_standard_8 | ماندولا |
+| timbre_catalog_instrument_mandolin_octave_8 | ماندولين أوكتاف |
+| timbre_catalog_instrument_mandolin_standard_8 | مندولين |
+| timbre_catalog_instrument_ocarina_standard_0 | أوكارينا |
+| timbre_catalog_instrument_oud_arabic_11 | عود (عربي) |
+| timbre_catalog_instrument_pipa_standard_4 | بيبا |
+| timbre_catalog_instrument_recorder_standard_0 | ريكوردر (سوبرانو / ألتو) |
+| timbre_catalog_instrument_sarod_standard_0 | سارود |
+| timbre_catalog_instrument_saxophone_standard_0 | ساكسفون (ألتو Eb / تينور Bb) |
+| timbre_catalog_instrument_shakuhachi_1_8_0 | شاكوهاتشي (1.8 شاكو) |
+| timbre_catalog_instrument_shamisen_standard_3 | شاميسن |
+| timbre_catalog_instrument_sitar_standard_7 | سيتار |
+| timbre_catalog_instrument_timpani_standard_0 | تيمباني |
+| timbre_catalog_instrument_tin_whistle_d_0 | صافرة القصدير |
+| timbre_catalog_instrument_trombone_bb_0 | ترومبون (Bb) |
+| timbre_catalog_instrument_trumpet_bb_0 | بوق (Bb) |
+| timbre_catalog_instrument_ukulele_baritone_4 | يوكوليلي باريتون |
+| timbre_catalog_instrument_ukulele_bass_4 | يوكوليلي باس (UBass) |
+| timbre_catalog_instrument_ukulele_soprano_4 | يوكوليلي (سوبرانو / كونسرت / تينور) |
+| timbre_catalog_instrument_viola_standard_4 | فيولا |
+| timbre_catalog_instrument_violin_standard_4 | كمان |
+| timbre_catalog_reference_mode_reference_chromatic | كروماتيك / نغمة مرجعية |
+| timbre_catalog_tuning_autoharp_chromatic_36_standard | قياسي |
+| timbre_catalog_tuning_balalaika_prima_3_guitar_style | نمط الجيتار |
+| timbre_catalog_tuning_balalaika_prima_3_standard | قياسي |
+| timbre_catalog_tuning_banjo_five_5_double_c | دو مزدوج (Double C) |
+| timbre_catalog_tuning_banjo_five_5_open_d | ري مفتوح (Open D) |
+| timbre_catalog_tuning_banjo_five_5_standard | قياسي |
+| timbre_catalog_tuning_bansuri_standard_0_standard | العرف الشائع (حدد الخاص بك) |
+| timbre_catalog_tuning_bass_double_4_five | خمسة أوتار (سي منخفض) |
+| timbre_catalog_tuning_bass_double_4_solo | ضبط منفرد |
+| timbre_catalog_tuning_bass_double_4_standard | قياسي |
+| timbre_catalog_tuning_bass_electric_4_drop_d | Drop D |
+| timbre_catalog_tuning_bass_electric_4_five | خمسة أوتار (سي منخفض) |
+| timbre_catalog_tuning_bass_electric_4_standard | قياسي |
+| timbre_catalog_tuning_bouzouki_greek_8_standard | قياسي |
+| timbre_catalog_tuning_bouzouki_greek_8_trichordo | تريتشوردو (D A D) |
+| timbre_catalog_tuning_bouzouki_irish_8_standard | قياسي |
+| timbre_catalog_tuning_cello_standard_4_standard | قياسي |
+| timbre_catalog_tuning_charango_standard_10_standard | قياسي |
+| timbre_catalog_tuning_clarinet_bb_0_standard | قياسي |
+| timbre_catalog_tuning_didgeridoo_standard_0_standard | العرف الشائع (حدد الخاص بك) |
+| timbre_catalog_tuning_domra_prima_3_four_string | 4 أوتار (أخماس، تشبه الماندولين) |
+| timbre_catalog_tuning_domra_prima_3_standard | قياسي |
+| timbre_catalog_tuning_dulcimer_appalachian_3_daa | DAA |
+| timbre_catalog_tuning_dulcimer_appalachian_3_dac | DAC |
+| timbre_catalog_tuning_dulcimer_appalachian_3_dgd | DGD |
+| timbre_catalog_tuning_dulcimer_appalachian_3_standard | قياسي |
+| timbre_catalog_tuning_dulcimer_hammered_0_common_g | Pathfinder 15/14 |
+| timbre_catalog_tuning_dulcimer_hammered_0_standard | Pathfinder 12/11 |
+| timbre_catalog_tuning_erhu_standard_2_standard | قياسي |
+| timbre_catalog_tuning_flute_concert_0_standard | قياسي |
+| timbre_catalog_tuning_french_horn_f_0_standard | قياسي |
+| timbre_catalog_tuning_gayageum_standard_12_standard | العرف الشائع (قم بتعيين الخاص بك) |
+| timbre_catalog_tuning_guitar_acoustic_12_standard | قياسي |
+| timbre_catalog_tuning_guitar_acoustic_6_dadgad | DADGAD |
+| timbre_catalog_tuning_guitar_acoustic_6_drop_d | دروب دي (Drop D) |
+| timbre_catalog_tuning_guitar_acoustic_6_eb_std | Eb قياسي |
+| timbre_catalog_tuning_guitar_acoustic_6_open_d | ضبط D المفتوح |
+| timbre_catalog_tuning_guitar_acoustic_6_open_g | سول مفتوح (Open G) |
+| timbre_catalog_tuning_guitar_acoustic_6_standard | قياسي |
+| timbre_catalog_tuning_guitar_baritone_6_a_to_a | من A إلى A |
+| timbre_catalog_tuning_guitar_baritone_6_standard | قياسي |
+| timbre_catalog_tuning_guitar_electric_7_drop_a | Drop A |
+| timbre_catalog_tuning_guitar_electric_7_standard | قياسي |
+| timbre_catalog_tuning_guitar_guitalele_6_standard | قياسي |
+| timbre_catalog_tuning_guitar_guitarron_6_standard | قياسي |
+| timbre_catalog_tuning_guitar_tenor_4_standard | قياسي |
+| timbre_catalog_tuning_guqin_standard_7_standard | اتفاقية شائعة (قم بضبطها بنفسك) |
+| timbre_catalog_tuning_guzheng_standard_21_c_pentatonic | دو الكبير الخماسي |
+| timbre_catalog_tuning_guzheng_standard_21_g_pentatonic | صول الكبير الخماسي |
+| timbre_catalog_tuning_guzheng_standard_21_standard | قياسي |
+| timbre_catalog_tuning_handpan_standard_0_standard | الاتفاقية الشائعة (حدد الخاصة بك) |
+| timbre_catalog_tuning_harmonica_diatonic_0_key_a | مفتاح لا (A) |
+| timbre_catalog_tuning_harmonica_diatonic_0_key_bb | مفتاح سي بيمول (Bb) |
+| timbre_catalog_tuning_harmonica_diatonic_0_key_d | مفتاح ري (D) |
+| timbre_catalog_tuning_harmonica_diatonic_0_key_eb | مفتاح مي بيمول (Eb) |
+| timbre_catalog_tuning_harmonica_diatonic_0_key_f | مفتاح F |
+| timbre_catalog_tuning_harmonica_diatonic_0_key_g | مفتاح صول (G) |
+| timbre_catalog_tuning_harmonica_diatonic_0_standard | قياسي |
+| timbre_catalog_tuning_kalimba_standard_17_standard | الاصطلاح الشائع (حدد اصطلاحك الخاص) |
+| timbre_catalog_tuning_keys_accordion_0_a440 | A4 = 440 |
+| timbre_catalog_tuning_keys_accordion_0_standard | قياسي |
+| timbre_catalog_tuning_keys_harpsichord_0_modern_a440 | النغمة الحديثة (A4 = 440) |
+| timbre_catalog_tuning_keys_harpsichord_0_standard | قياسي |
+| timbre_catalog_tuning_keys_piano_0_standard | قياسي |
+| timbre_catalog_tuning_koto_standard_13_standard | اتفاقية شائعة (قم بضبطها بنفسك) |
+| timbre_catalog_tuning_mallet_marimba_0_glockenspiel | غلوكنسبيل |
+| timbre_catalog_tuning_mallet_marimba_0_standard | قياسي |
+| timbre_catalog_tuning_mallet_marimba_0_vibraphone | فيبرافون |
+| timbre_catalog_tuning_mallet_marimba_0_xylophone | إكسيليفون |
+| timbre_catalog_tuning_mandocello_standard_8_standard | قياسي |
+| timbre_catalog_tuning_mandola_standard_8_standard | قياسي |
+| timbre_catalog_tuning_mandolin_octave_8_standard | قياسي |
+| timbre_catalog_tuning_mandolin_standard_8_standard | قياسي |
+| timbre_catalog_tuning_ocarina_standard_0_standard | الاصطلاح الشائع (حدد الخاص بك) |
+| timbre_catalog_tuning_oud_arabic_11_standard | قياسي |
+| timbre_catalog_tuning_oud_arabic_11_turkish | الدوزان التركي |
+| timbre_catalog_tuning_pipa_standard_4_standard | قياسي |
+| timbre_catalog_tuning_recorder_standard_0_standard | قياسي |
+| timbre_catalog_tuning_sarod_standard_0_standard | العرف الشائع (قم بتعيين عرفك الخاص) |
+| timbre_catalog_tuning_saxophone_standard_0_standard | قياسي |
+| timbre_catalog_tuning_shakuhachi_1_8_0_shaku_1_6 | 1.6 شاكو (E) |
+| timbre_catalog_tuning_shakuhachi_1_8_0_shaku_2_0 | 2.0 شاكو (C) |
+| timbre_catalog_tuning_shakuhachi_1_8_0_standard | قياسي |
+| timbre_catalog_tuning_shamisen_standard_3_niagari | نياغاري |
+| timbre_catalog_tuning_shamisen_standard_3_standard | قياسي |
+| timbre_catalog_tuning_sitar_standard_7_standard | الاصطلاح الشائع (حدد الخاص بك) |
+| timbre_catalog_tuning_timpani_standard_0_standard | الاتفاقية الشائعة (حدد الخاصة بك) |
+| timbre_catalog_tuning_tin_whistle_d_0_key_c | مفتاح دو (C) |
+| timbre_catalog_tuning_tin_whistle_d_0_key_eb | مفتاح Eb |
+| timbre_catalog_tuning_tin_whistle_d_0_standard | قياسي |
+| timbre_catalog_tuning_trombone_bb_0_standard | قياسي |
+| timbre_catalog_tuning_trumpet_bb_0_standard | قياسي |
+| timbre_catalog_tuning_ukulele_baritone_4_standard | قياسي |
+| timbre_catalog_tuning_ukulele_bass_4_standard | قياسي |
+| timbre_catalog_tuning_ukulele_soprano_4_d_tuning | ضبط D |
+| timbre_catalog_tuning_ukulele_soprano_4_low_g | صول منخفض (Low-G) |
+| timbre_catalog_tuning_ukulele_soprano_4_standard | قياسي |
+| timbre_catalog_tuning_viola_standard_4_standard | قياسي |
+| timbre_catalog_tuning_violin_standard_4_cross_ae | تقاطع / AE (كمان) |
+| timbre_catalog_tuning_violin_standard_4_standard | قياسي |
+
+## 3. Course and song names
+Instrument course titles use the corresponding catalogue names; remaining courses use the rows above. Songs tab and course both use الأغاني. Combine instrument name with كتاب الأغاني naturally. Use an established Arabic title for a public-domain song when one exists; otherwise retain the English title unless the existing lesson has an established transliteration. Translate Timbre Originals consistently with existing lesson titles. Prose and leaderboards must match the lesson title exactly. Preserve lyrics, personal names and years in credits; translate connecting words.
+
+## 4. Sense distinctions
+Tune verb/tab means ضبط, melody means لحن. Flat/sharp direction is not an accidental. Bar means مازورة, not a pub or UI bar. Key is مقام, not a keyboard key. Pick means ريشة, نقر or اختيار by context. Lock means stable correct pitch, not a padlock. Take is محاولة مسجلة, not taking a lesson. Run means a streak or complete performance, never running. Chart is chord notation unless the context specifies a statistics graph. Intonation is pitch accuracy over a drone, not saddle setup. Practice is musical التمرين, not a professional practice. Feel is haptic sensation, not emotion. Challenge-friend and lesson challenge use their distinct senses above.

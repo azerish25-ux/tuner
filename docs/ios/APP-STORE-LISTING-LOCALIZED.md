@@ -1,16 +1,79 @@
-# App Store listing, localized (9 locales)
+# App Store listing, localized (all 50 Apple-supported locales)
 
-Store text for Timbre in de-DE, fr-FR, es-MX, pt-BR, it, ja, ko, zh-Hans and ru, adapted from [APP-STORE-LISTING.md](APP-STORE-LISTING.md) (English, U.S., the primary locale). Paste each locale's blocks into App Store Connect → the app → the version's page (description, promotional text, keywords, What's New) and App Information (name, subtitle) for that localization.
+Existing partial store text for Timbre in de-DE, fr-FR, es-MX, pt-BR, it, ja, ko, zh-Hans and ru, adapted from [APP-STORE-LISTING.md](APP-STORE-LISTING.md) (English, U.S., the primary locale). After translation, validation and review, paste each locale's blocks into App Store Connect → the app → the version's page (description, promotional text, keywords, What's New) and App Information (name, subtitle) for that localization.
+
+## Required scope (verified 2026-10-26)
+
+All **50** Apple-supported listing locales are required, including primary `en-US`; this is independent of the app’s **49 languages** (English + 48 translations) and the **nine lesson languages**, which remain unchanged. Sources: [Apple’s supported listing languages](https://developer.apple.com/help/app-store-connect/reference/app-information/app-store-localizations) and [official API shortcodes](https://developer.apple.com/documentation/appstoreconnectapi/managing-metadata-in-your-app-by-using-locale-shortcodes). Machine-readable inventory: [store-locales.json](../../tools/l10n/store-locales.json).
+
+The existing nine localized blocks below are preserved, not certified finished. **All 40 additional non-primary locales are pending.** An inventory entry is a requirement, not translated content. Each listing needs name, subtitle, keywords, promotional text, description, What's New, iPhone/iPad screenshot captions and supporting lines, App Preview captions, IAP display names/descriptions and Game Center leaderboard/achievement names/descriptions. Explicit reviewed not-applicable reasons are required for unused assets/products.
+
+| Apple listing locale | Language | App UI table | Current listing evidence |
+|---|---|---|---|
+| `ar-SA` | Arabic | `ar` | Pending; no completed block |
+| `bn-BD` | Bangla | `bn` | Pending; no completed block |
+| `ca` | Catalan | `ca` | Pending; no completed block |
+| `zh-Hans` | Chinese (Simplified) | `zh-CN` | Existing partial/stale block below |
+| `zh-Hant` | Chinese (Traditional) | No matching UI language | Pending; no completed block |
+| `hr` | Croatian | `hr` | Pending; no completed block |
+| `cs` | Czech | `cs` | Pending; no completed block |
+| `da` | Danish | `da` | Pending; no completed block |
+| `nl-NL` | Dutch | `nl` | Pending; no completed block |
+| `en-AU` | English (Australia) | `en` | Pending; no completed block |
+| `en-CA` | English (Canada) | `en` | Pending; no completed block |
+| `en-GB` | English (U.K.) | `en` | Pending; no completed block |
+| `en-US` | English (U.S.) | `en` | English source; not release certification |
+| `fi` | Finnish | `fi` | Pending; no completed block |
+| `fr-FR` | French | `fr` | Existing partial/stale block below |
+| `fr-CA` | French (Canada) | `fr` | Pending; no completed block |
+| `de-DE` | German | `de` | Existing partial/stale block below |
+| `el` | Greek | `el` | Pending; no completed block |
+| `gu-IN` | Gujarati | `gu` | Pending; no completed block |
+| `he` | Hebrew | `he` | Pending; no completed block |
+| `hi` | Hindi | `hi` | Pending; no completed block |
+| `hu` | Hungarian | `hu` | Pending; no completed block |
+| `id` | Indonesian | `id` | Pending; no completed block |
+| `it` | Italian | `it` | Existing partial/stale block below |
+| `ja` | Japanese | `ja` | Existing partial/stale block below |
+| `kn-IN` | Kannada | `kn` | Pending; no completed block |
+| `ko` | Korean | `ko` | Existing partial/stale block below |
+| `ms` | Malay | No matching UI language | Pending; no completed block |
+| `ml-IN` | Malayalam | `ml` | Pending; no completed block |
+| `mr-IN` | Marathi | `mr` | Pending; no completed block |
+| `no` | Norwegian | `no` | Pending; no completed block |
+| `or-IN` | Odia | No matching UI language | Pending; no completed block |
+| `pl` | Polish | `pl` | Pending; no completed block |
+| `pt-BR` | Portuguese (Brazil) | `pt` | Existing partial/stale block below |
+| `pt-PT` | Portuguese (Portugal) | `pt` | Pending; no completed block |
+| `pa-IN` | Punjabi | `pa` | Pending; no completed block |
+| `ro` | Romanian | `ro` | Pending; no completed block |
+| `ru` | Russian | `ru` | Existing partial/stale block below |
+| `sk` | Slovak | `sk` | Pending; no completed block |
+| `sl-SI` | Slovenian | `sl` | Pending; no completed block |
+| `es-MX` | Spanish (Mexico) | `es` | Existing partial/stale block below |
+| `es-ES` | Spanish (Spain) | `es` | Pending; no completed block |
+| `sv` | Swedish | `sv` | Pending; no completed block |
+| `ta-IN` | Tamil | `ta` | Pending; no completed block |
+| `te-IN` | Telugu | `te` | Pending; no completed block |
+| `th` | Thai | `th` | Pending; no completed block |
+| `tr` | Turkish | `tr` | Pending; no completed block |
+| `uk` | Ukrainian | `uk` | Pending; no completed block |
+| `ur-PK` | Urdu | `ur` | Pending; no completed block |
+| `vi` | Vietnamese | `vi` | Pending; no completed block |
+
+**Fallback and honest claims.** The app languages `fa`, `bg`, `et`, `is`, `lt`, `lv`, `sw`, `zu` have no Apple listing locale: do not create invented locale codes. Project metadata fallback is primary `en-US` when localized copy is absent; Apple’s actual displayed localization follows its own selection rules. Malay (`ms`), Odia (`or-IN`) and Traditional Chinese (`zh-Hant`) listings do not add UI support; English is the documented project UI fallback, subject to device preferences and device verification. Never claim that a listing language is an app-supported language merely because metadata exists.
+
+**Evidence and completion.** Placeholder/empty text, copied-English fallback, stale text and unresolved count or URL variables are unfinished. AI drafting/review is not native-speaker review or device/render verification. Record those independently per locale and field, including the English regional variants. Existing `screenshots.py --check` covers its current nine localized blocks, not this whole inventory; the manifest test verifies requirements/mappings only. No account changes or App Store submission are authorized by this document update.
 
 ## State: what is current, and what is waiting for translators
 
-> **Don't paste any locale's promotional text, description, What's New or screenshot captions yet.** They were written for an earlier build (499 lessons, 13 courses, 20 Originals, a six-frame screenshot set) and are kept under each locale only as reference, folded away. Each locale's **name, subtitle and keywords are current** and within the limits.
+> **Don't paste any locale's promotional text, description, What's New or screenshot captions yet.** They were written for an earlier build (499 lessons, 13 courses, 20 Originals, a six-frame screenshot set) and are kept under each locale only as reference, folded away. Each of the existing nine blocks' **name, subtitle and keywords are current** and within the limits.
 
 The English listing was rewritten for this build (a free-tuner lead, honest song counts, a new nine-frame screenshot set and App Preview captions). Translators work from [Source for translators](#source-for-translators) below: the English text with every count the build can change written as a variable, so a translation never carries a stale number again. Then, per locale:
 
 1. Translate the promotional text, description and What's New from the source, filling the variables from the values table, and paste them in place of the locale's stale reference.
 2. Replace every `TRANSLATE:` cell of the locale's two screenshot caption tables with its translation (a caption is at most 30 characters). `tools/marketing/screenshots.py` reads those tables to render the locale's frames, and refuses rows still marked.
-3. Run `python3 tools/marketing/screenshots.py --check`: it checks every locale's name, subtitle and keywords against Apple's limits, that its caption tables name the English set's captures in the English order, and that a translated caption quotes no number its English row doesn't. Rows still marked `TRANSLATE:` are listed, not failed.
+3. Run `python3 tools/marketing/screenshots.py --check`: it checks its existing nine localized blocks' name, subtitle and keywords against Apple's limits, that its caption tables name the English set's captures in the English order, and that a translated caption quotes no number its English row doesn't. Rows still marked `TRANSLATE:` are listed, not failed.
 4. Capture the locale's screens and render its frames: run the UI tests with `TEST_RUNNER_TIMBRE_UI_LANGUAGE=de TEST_RUNNER_TIMBRE_UI_LOCALE=de_DE`, then `python3 tools/marketing/screenshots.py <captures> <out> --locale de-DE` (and `--ipad`). Japanese, Korean, Chinese and Russian captions are set in a system font with those glyphs (or the one `--font` names), since Sora has none.
 
 ## How the earlier text was made (still the rules)
@@ -1269,6 +1332,6 @@ Captions (the old six frames):
 
 - **The free tier changed.** Every instrument's standard tuning is now free, and guitar, bass, ukulele, violin and cello tune free in every tuning. The stale descriptions name only guitar, bass and ukulele; the source above has the current paragraph.
 - **Apple Account spelling (de).** The legal line uses Apple's German "Apple-Account" (hyphenated). The app's `de.lproj` subscription footers say "Apple Account" without the hyphen; worth aligning in the app so the store text and the in-app text match.
-- **Settings name (es-MX).** The store text uses Mexican Apple wording: "Configuración › Cuenta de Apple › Suscripciones". The app's `es.lproj` uses "Ajustes" (Spain wording) in its subscription footer. If the app only ships one Spanish file, decide which market it serves; the store text can switch to "Ajustes" if es-ES is added later.
+- **Settings name (es-MX).** The store text uses Mexican Apple wording: "Configuración › Cuenta de Apple › Suscripciones". The app's `es.lproj` uses "Ajustes" (Spain wording) in its subscription footer. If the app only ships one Spanish file, decide which market it serves; the store text can switch to "Ajustes" when completing the now-required es-ES listing.
 - **Native-speaker pass.** The search terms come from market knowledge, not from keyword-tool volumes. Have a native reader check tone and the keyword choices, and compare with App Store Connect's keyword and search-popularity tools once the locales are live.
-- **Not covered here.** In-app purchase display names and descriptions (they need a localization per locale in App Store Connect too), review notes (stay in English), and Custom Product Pages (English first; localize the violin, cello and ukulele pages next, since those are the queries with the weakest competition abroad too).
+- **Required, still pending here.** In-app purchase display names/descriptions and Game Center leaderboard/achievement names/descriptions for every listing locale (see the translation guide §9.5). Review notes stay in English. Custom Product Pages are separate assets: localize the violin, cello and ukulele pages and record any not-applicable decisions explicitly.

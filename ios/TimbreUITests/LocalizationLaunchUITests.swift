@@ -53,14 +53,8 @@ final class LocalizationLaunchUITests: XCTestCase {
         XCTAssertNotEqual(start.label, "Get started", "the welcome's button is in German, not English")
         settle(1)
         shot("l10n-de-welcome")
-        // The headline and the line under it, not only the button. They wait for the translators today (the funnel
-        // strings lead docs/l10n/HANDOFF.md): the expected failure records the gap and turns into a failure of its own
-        // the day the German arrives, so whoever imports it removes this expectation and the check guards it from then on.
-        let waiting = "The welcome's headline and subline stay English in German until the funnel strings are delivered"
-        XCTExpectFailure(waiting) {
-            XCTAssertFalse(labeled("(?s)Tune in seconds\\..*").exists, "the welcome's headline is English")
-            XCTAssertFalse(labeled("Timbre listens and tells you exactly how you did\\.").exists, "the line under the headline is English")
-        }
+        XCTAssertFalse(labeled("(?s)Tune in seconds\\..*").exists, "the welcome's headline is English")
+        XCTAssertFalse(labeled("Timbre listens and tells you exactly how you did\\.").exists, "the line under the headline is English")
     }
 
     func testAGermanDeviceNamesTheTabsInGerman() {
