@@ -123,6 +123,25 @@ final class LocalizationMatrixUITests: XCTestCase {
             XCTAssertLessThanOrEqual(target.frame.maxY, tabBar.frame.minY, "\(identifier) behind tab bar")
             capture(app, name: "l10n-\(language)-ax5-\(identifier)")
         }
+        // A reachable rail container does not prove that its last horizontally scrolling control is usable.
+        // Fresh storage opens the standard guitar: course 6 is its high E string, at the right-hand end.
+        let rail = app.descendants(matching: .any).matching(identifier: "tune.string.rail").firstMatch
+        let lastString = app.buttons["string.6"]
+        XCTAssertTrue(lastString.waitForExistence(timeout: 10))
+        for _ in 0..<6 {
+            if lastString.isHittable,
+               lastString.frame.minX >= app.frame.minX,
+               lastString.frame.maxX <= app.frame.maxX { break }
+            rail.swipeLeft(velocity: .slow)
+        }
+        XCTAssertTrue(lastString.isHittable, "The high E string must be reachable by scrolling at AX5")
+        XCTAssertGreaterThanOrEqual(lastString.frame.minX, app.frame.minX)
+        XCTAssertLessThanOrEqual(lastString.frame.maxX, app.frame.maxX)
+        lastString.tap()
+        let selected = XCTNSPredicateExpectation(predicate: NSPredicate(format: "selected == true"), object: lastString)
+        XCTAssertEqual(XCTWaiter.wait(for: [selected], timeout: 5), .completed,
+                       "The revealed high E string must respond to a tap at AX5")
+        capture(app, name: "l10n-\(language)-ax5-last-string-selected")
     }
 
     private func assertInstrumentFits(_ app: XCUIApplication) throws {

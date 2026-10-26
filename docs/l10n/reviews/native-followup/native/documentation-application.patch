@@ -1,0 +1,604 @@
+diff --git a/docs/l10n/GLOSSARY-TEMPLATE.md b/docs/l10n/GLOSSARY-TEMPLATE.md
+index 1762024..c872150 100644
+--- a/docs/l10n/GLOSSARY-TEMPLATE.md
++++ b/docs/l10n/GLOSSARY-TEMPLATE.md
+@@ -94,7 +94,8 @@ Every row is mandatory. The "Current table" hints come from reading the shipped
+ | Ear trainer / Ear training | The ear games and the ear course | Practice, Learn | `Ear training` | | |
+ | Drone | A sustained reference tone to play or sing against | Practice, lessons | `Drone` | | de Bordun, fr Bourdon, es Nota pedal, ja ドローン (current tables). |
+ | Tanpura drone | The drone voiced as an Indian tanpura | Practice, paywall | `Tanpura` | | |
+-| Intonation | The Practice tool for playing or singing in tune over a drone ("Intonation over a drone") | Practice, paywall | `Intonation` | | Not the guitar-setup adjustment of the saddle (octave intonation). The current ca (Octavació), es (Octavación), ja (オクターブ調整), pt (Oitavado) and zh-CN (八度音准) tables use that wrong sense: fix them. |
++| Intonation | Guided instrument setup: harmonic/stopped-note comparison and saddle advice | Practice tool, setup-specific paywall references | `Intonation` | | Check `IntonationView.swift` and the routed screen. Do not apply the separate drone-practice sense to this literal key. |
++| Intonation over a drone | Playing or singing accurately against a reference drone | Today activity, drone paywall outcome | `Intonation over a drone` | | Distinct literal key and source sense; generic lesson intonation also means pitch accuracy when its context says so. |
+ | Metronome, Speed trainer | The metronome, and its mode that raises the tempo every few bars | Practice, Watch | `Metronome`, `Speed trainer` | | |
+ | Chords, Scales | The chord library and the scales across the neck | Practice | `Chords`, `Scales` | | |
+ | Placement check | A 45-second check in onboarding that picks the first lesson | onboarding | `Placement check` | | |
+@@ -212,7 +213,7 @@ Write the translation that applies in Timbre, and the one GPT must avoid.
+ | take | one recorded attempt | "take a lesson" | | |
+ | run | a streak ("best run"), a clean run through a passage | running | | |
+ | chart | a chord chart; the Chart view | a statistics chart (the Progress screen's charts are "charts" in that sense: check `context`) | | |
+-| Intonation | playing in tune over a drone | guitar setup octave adjustment | | |
++| Intonation | instrument setup for the current `Intonation` tool; pitch accuracy in drone/generic lesson contexts | assuming all occurrences mean drone practice, or all mean saddle adjustment | | |
+ | Next, Again, Slower | on-screen labels and also Siri command words (`ios/Timbre/Intents/PracticeIntents.swift`): one translation serves both | — | | |
+ | Practice | the tab and the activity | a medical or legal practice | | |
+ | Feel | the haptic tuning feature, feeling the beat | emotions | | |
+diff --git a/docs/l10n/TRANSLATING-WITH-GPT.md b/docs/l10n/TRANSLATING-WITH-GPT.md
+index 235aed6..6c8c0c6 100644
+--- a/docs/l10n/TRANSLATING-WITH-GPT.md
++++ b/docs/l10n/TRANSLATING-WITH-GPT.md
+@@ -868,7 +868,7 @@ What can still go wrong after every check above passes, and what to do about it:
+ 4. **Interface line breaks, length, register, terminology and meaning** are not checked by the import; the helper warns on the first two, the review catches the rest.
+ 5. **The German funnel** turns `testAGermanDeviceWelcomesInGerman` red until its `XCTExpectFailure` wrapper is removed ([§8.2](#82-the-localization-launch-tests)).
+ 6. **Localized store frames #3 and #7** come out `-wrong` in a localized capture run, because their checks read English text (`ios/TimbreUITests/TimbreUITests.swift`, the comment on `language`): a full localized set can't be rendered until those checks read identifiers.
+-7. **Wrong terms in the shipped tables**, which the anchors and `refs` may show GPT: "Intonation" (the drone trainer) is translated as the guitar-setup adjustment in ca (Octavació), es (Octavación), ja (オクターブ調整), pt (Oitavado) and zh-CN (八度音准); the register is mixed in he, hr, ro, sl and tr; "Bullseye" is translated everywhere although HANDOFF.md says to keep game names. The glossary overrules the tables; a clean-up batch for those keys means editing `tools/l10n/translations/<locale>.json` and running `apply.py`, since they aren't in the TODO files.
++7. **Context-dependent terms and stale anchors.** The literal app key `Intonation` names the guided instrument-setup check (`PracticeRoute.intonation` → `IntonationView`): compare the 12th-fret harmonic with the stopped/fretted note and interpret the saddle-direction advice. The current ca (Octavació), es (Octavación), ja (オクターブ調整), pt (Oitavado) and zh-CN (八度音准) setup labels fit that route; do not replace them with drone-training terminology. `Intonation over a drone` is a distinct pitch-accuracy practice key, and generic lesson uses follow their own context. Historical he/hr/ro/sl/tr register anchors and translated game names such as Bullseye must also follow the current locale glossary, rather than an old blanket rule. A source-confirmed cleanup of shipped keys goes into `tools/l10n/translations/<locale>.json` followed by `apply.py`, since completed keys are absent from TODO files.
+ 8. **Shared keys**: "Next", "Again" and "Slower" are on-screen labels and Siri's command words; one translation has to serve both ([§4.14](#414-grammar-around-arguments)).
+ 9. **Store semantic and visual quality** cannot be proven by the all-50 text validator. Current-payload/source hashes protect independent AI review evidence from silently going stale; actual localized assets, device checks, production privacy and account configuration remain separate release gates (§9).
+ 10. **`ship_min_coverage`** in the delivery workflow doesn't require the critical strings: a locale above the bar without them fails the upload instead of being left out ([§7.6](#76-shipping-fewer-locales)).
+diff --git a/docs/l10n/glossary/ar.md b/docs/l10n/glossary/ar.md
+index 35dc8b6..91d3416 100644
+--- a/docs/l10n/glossary/ar.md
++++ b/docs/l10n/glossary/ar.md
+@@ -1,5 +1,7 @@
+ # Timbre glossary — ar
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Status: AI-authored and AI-reviewed terminology decisions, 2026-10-25. Not human/native-speaker approved. Device wording and RTL layout require native/device QA.
+ 
+ ## 1. Locale decisions
+diff --git a/docs/l10n/glossary/bg.md b/docs/l10n/glossary/bg.md
+index 5db1b9c..f34730e 100644
+--- a/docs/l10n/glossary/bg.md
++++ b/docs/l10n/glossary/bg.md
+@@ -1,5 +1,7 @@
+ # Bulgarian glossary
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Status: AI-drafted and AI-reviewed, 2026-10-25. Native-human sign-off and device verification pending. Shipped labels inspected; explicit decisions below override conflicting anchors.
+ 
+ ## 1. Locale decisions
+diff --git a/docs/l10n/glossary/bn.md b/docs/l10n/glossary/bn.md
+index 8dea0d0..4050958 100644
+--- a/docs/l10n/glossary/bn.md
++++ b/docs/l10n/glossary/bn.md
+@@ -1,5 +1,7 @@
+ # Bengali (bn) glossary
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Status: AI-reviewed translation decisions, not human-reviewed or native-speaker approved. Device QA pending.
+ 
+ ## 1. Locale decisions
+diff --git a/docs/l10n/glossary/ca.md b/docs/l10n/glossary/ca.md
+index 5e998b0..97c4d1c 100644
+--- a/docs/l10n/glossary/ca.md
++++ b/docs/l10n/glossary/ca.md
+@@ -138,7 +138,8 @@ Brand names Timbre, Timbre Pro, Pro, Apple, iPhone, iPad, Apple Watch, App Store
+ | Ear training | Context-specific musical/UI sense | UI and lessons | `Ear training` | Entrenament auditiu |  |
+ | Drone | Context-specific musical/UI sense | UI and lessons | `Drone` | Bordó |  |
+ | Tanpura | Context-specific musical/UI sense | UI and lessons | `Tanpura` | Tanpura |  |
+-| Intonation | Context-specific musical/UI sense | UI and lessons | `Intonation` | Entonació | Correct drone-training sense; supersedes octave-adjustment mistranslation in shipped table. |
++| Intonation | Instrument setup: harmonic/stopped-note comparison | Practice tool and setup paywall | `Intonation` | Octavació | Current route is `IntonationView`; retain this applied setup label. |
++| Intonation over a drone | Pitch accuracy against a reference drone | Today activity and drone paywall | `Intonation over a drone` | Entonació sobre un bordó | Separate key; retain its applied drone-practice wording. |
+ | Metronome | Context-specific musical/UI sense | UI and lessons | `Metronome` | Metrònom |  |
+ | Speed trainer | Context-specific musical/UI sense | UI and lessons | `Speed trainer` | Entrenador de velocitat |  |
+ | Chords | Context-specific musical/UI sense | UI and lessons | `Chords` | Acords |  |
+@@ -174,7 +175,7 @@ Brand names Timbre, Timbre Pro, Pro, Apple, iPhone, iPad, Apple Watch, App Store
+ Instrument course titles match catalogue instrument names. Ear Training, Music Theory, Rhythm and Singing match their existing localized Learn titles; Songs must match the Songs tab. Originals and Standards & Classics use existing localized course titles. Instrument Songbook titles use the localized instrument plus the existing localized Songbook term. Established public-domain song titles use their established local titles; other traditional titles stay English. Timbre Originals retain existing localized lesson titles. Every prose mention and leaderboard uses the exact lesson title. Lyric credits preserve names and years and translate connecting prose. Sung lyrics remain unchanged.
+ 
+ ## 4. Words that mislead
+-Tune as a verb means tuning, as a noun a melody. Sharp/flat on the tuner mean too high/low, not accidentals. Bar means measure; key means tonality. Pick means plectrum or plucking in music, choose in UI. Lock means a stable in-tune confirmation, not a padlock. Take is one recorded performance, not taking a lesson. Run means a practice streak or an uninterrupted passage, not running. Chart means an instrumental chord diagram/sheet unless progress statistics explicitly demand a graph. Intonation is playing in tune over a drone, never octave/saddle adjustment. Practice is musical practice. Feel is haptic vibration, not emotion. A challenge to a friend differs from the unit's final challenge lesson; preserve context.
++Tune as a verb means tuning, as a noun a melody. Sharp/flat on the tuner mean too high/low, not accidentals. Bar means measure; key means tonality. Pick means plectrum or plucking in music, choose in UI. Lock means a stable in-tune confirmation, not a padlock. Take is one recorded performance, not taking a lesson. Run means a practice streak or an uninterrupted passage, not running. Chart means an instrumental chord diagram/sheet unless progress statistics explicitly demand a graph. Intonation is context-dependent: the current literal app key `Intonation` labels the harmonic/stopped-note instrument-setup check; `Intonation over a drone` is a separate pitch-accuracy practice key. Generic lesson uses follow their own source context. Do not infer a blanket ban on saddle setup from the English word alone. Practice is musical practice. Feel is haptic vibration, not emotion. A challenge to a friend differs from the unit's final challenge lesson; preserve context.
+ 
+ ## 5. Lesson-author additions (2026-10-26; unreviewed)
+ 
+diff --git a/docs/l10n/glossary/cs.md b/docs/l10n/glossary/cs.md
+index bb4cb46..371278d 100644
+--- a/docs/l10n/glossary/cs.md
++++ b/docs/l10n/glossary/cs.md
+@@ -1,5 +1,7 @@
+ # Czech glossary
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Status: The prior app/UI glossary was AI-drafted and AI-reviewed on 2026-10-25. The current 6,083-key lesson addendum below was directly authored and self-checked on 2026-10-26 by `/root/translate_czech_lessons`; it has NOT received independent semantic review, native-human sign-off, or device verification. Prior UI review is not review of these new lesson drafts. Explicit decisions below override conflicting anchors.
+ 
+ ## 1. Locale decisions
+diff --git a/docs/l10n/glossary/da.md b/docs/l10n/glossary/da.md
+index 1c1369b..8fa7c22 100644
+--- a/docs/l10n/glossary/da.md
++++ b/docs/l10n/glossary/da.md
+@@ -1,5 +1,7 @@
+ # Danish (da) glossary
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Review: AI-reviewed working glossary, 2026-10-25. Not human-approved. Native musician and device review remain outstanding. Applies to interface and the lesson draft. Lesson draft by /root/translate_danish_lessons, 2026-10-26; independent semantic review pending.
+ 
+ ## 1. Locale decisions
+diff --git a/docs/l10n/glossary/de.md b/docs/l10n/glossary/de.md
+index 6fb8e59..4da764f 100644
+--- a/docs/l10n/glossary/de.md
++++ b/docs/l10n/glossary/de.md
+@@ -1,5 +1,7 @@
+ # German (de) glossary
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Status: AI-reviewed terminology decisions, 2026-10-25. No human or native-speaker sign-off claimed. In-device and VoiceOver verification pending.
+ 
+ ## 1. Locale decisions
+diff --git a/docs/l10n/glossary/el.md b/docs/l10n/glossary/el.md
+index be7e885..507ac57 100644
+--- a/docs/l10n/glossary/el.md
++++ b/docs/l10n/glossary/el.md
+@@ -1,5 +1,7 @@
+ # Timbre glossary — el
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Status: AI-drafted and AI-reviewed terminology decisions; not human-reviewed or native-speaker signed off. Device terminology verification remains pending.
+ 
+ ## 1. Locale decisions
+diff --git a/docs/l10n/glossary/es.md b/docs/l10n/glossary/es.md
+index ba68a5e..d445831 100644
+--- a/docs/l10n/glossary/es.md
++++ b/docs/l10n/glossary/es.md
+@@ -136,7 +136,8 @@ Brand names Timbre, Timbre Pro, Pro, Apple, iPhone, iPad, Apple Watch, App Store
+ | Ear training | Context-specific musical/UI sense | UI and lessons | `Ear training` | Entrenamiento auditivo |  |
+ | Drone | Context-specific musical/UI sense | UI and lessons | `Drone` | Nota pedal |  |
+ | Tanpura | Context-specific musical/UI sense | UI and lessons | `Tanpura` | Tanpura |  |
+-| Intonation | Context-specific musical/UI sense | UI and lessons | `Intonation` | Afinación | Correct drone-training sense; supersedes octave-adjustment mistranslation in shipped table. |
++| Intonation | Instrument setup: harmonic/stopped-note comparison | Practice tool and setup paywall | `Intonation` | Octavación | Current route is `IntonationView`; retain this applied setup label. |
++| Intonation over a drone | Pitch accuracy against a reference drone | Today activity and drone paywall | `Intonation over a drone` | Afinación sobre nota pedal | Separate key; retain its applied drone-practice wording. |
+ | Metronome | Context-specific musical/UI sense | UI and lessons | `Metronome` | Metrónomo |  |
+ | Speed trainer | Context-specific musical/UI sense | UI and lessons | `Speed trainer` | Entrenador de tempo |  |
+ | Chords | Context-specific musical/UI sense | UI and lessons | `Chords` | Acordes |  |
+@@ -192,7 +193,7 @@ Retained exact repertoire titles in this review (each has its own source-bound r
+ `Originals` is a generic collection label here, not an invariant brand. Use the selected collection term in navigation and the Words & music credit. Timbre itself is unchanged. Singular description “a Timbre original” may remain a natural local noun phrase rather than forcing the plural navigation label into a sentence.
+ 
+ ## 4. Words that mislead
+-Tune as a verb means tuning, as a noun a melody. Sharp/flat on the tuner mean too high/low, not accidentals. Bar means measure; key means tonality. Pick means plectrum or plucking in music, choose in UI. Lock means a stable in-tune confirmation, not a padlock. Take is one recorded performance, not taking a lesson. Run means a practice streak or an uninterrupted passage, not running. Chart means an instrumental chord diagram/sheet unless progress statistics explicitly demand a graph. Intonation is playing in tune over a drone, never octave/saddle adjustment. Practice is musical practice. Feel is haptic vibration, not emotion. A challenge to a friend differs from the unit's final challenge lesson; preserve context.
++Tune as a verb means tuning, as a noun a melody. Sharp/flat on the tuner mean too high/low, not accidentals. Bar means measure; key means tonality. Pick means plectrum or plucking in music, choose in UI. Lock means a stable in-tune confirmation, not a padlock. Take is one recorded performance, not taking a lesson. Run means a practice streak or an uninterrupted passage, not running. Chart means an instrumental chord diagram/sheet unless progress statistics explicitly demand a graph. Intonation is context-dependent: the current literal app key `Intonation` labels the harmonic/stopped-note instrument-setup check; `Intonation over a drone` is a separate pitch-accuracy practice key. Generic lesson uses follow their own source context. Do not infer a blanket ban on saddle setup from the English word alone. Practice is musical practice. Feel is haptic vibration, not emotion. A challenge to a friend differs from the unit's final challenge lesson; preserve context.
+ 
+ ## Reviewed shared musical-item ordinals
+ 
+diff --git a/docs/l10n/glossary/et.md b/docs/l10n/glossary/et.md
+index d409cfe..6690346 100644
+--- a/docs/l10n/glossary/et.md
++++ b/docs/l10n/glossary/et.md
+@@ -1,5 +1,7 @@
+ # Estonian (et) glossary
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Review: AI-reviewed working glossary, 2026-10-25. Not human-approved. Native musician and device review remain outstanding. Applies to interface and the current unreviewed Estonian lesson draft.
+ 
+ ## 1. Locale decisions
+diff --git a/docs/l10n/glossary/fi.md b/docs/l10n/glossary/fi.md
+index 0d6c7e4..14f660f 100644
+--- a/docs/l10n/glossary/fi.md
++++ b/docs/l10n/glossary/fi.md
+@@ -1,5 +1,7 @@
+ # Finnish (fi) glossary
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Review: AI-reviewed working glossary, 2026-10-25. Not human-approved. Native musician and device review remain outstanding. Applies to interface and lessons. Complete 6,082-row lesson author draft, 2026-10-26; independent full-locale, native musician and device review are outstanding.
+ 
+ ## 1. Locale decisions
+diff --git a/docs/l10n/glossary/fr.md b/docs/l10n/glossary/fr.md
+index f5cca5a..e80140e 100644
+--- a/docs/l10n/glossary/fr.md
++++ b/docs/l10n/glossary/fr.md
+@@ -1,5 +1,7 @@
+ # French (fr) glossary
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Status: AI-reviewed terminology decisions, 2026-10-25. No human or native-speaker sign-off claimed. In-device and VoiceOver verification pending.
+ 
+ ## 1. Locale decisions
+diff --git a/docs/l10n/glossary/gu.md b/docs/l10n/glossary/gu.md
+index a218085..08779f5 100644
+--- a/docs/l10n/glossary/gu.md
++++ b/docs/l10n/glossary/gu.md
+@@ -1,5 +1,7 @@
+ # Gujarati (gu) glossary
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Status: AI-reviewed translation decisions, not human-reviewed or native-speaker approved. Device QA pending.
+ 
+ ## 1. Locale decisions
+diff --git a/docs/l10n/glossary/he.md b/docs/l10n/glossary/he.md
+index 8789ad2..fce4bb3 100644
+--- a/docs/l10n/glossary/he.md
++++ b/docs/l10n/glossary/he.md
+@@ -1,5 +1,7 @@
+ # Hebrew glossary
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Status: AI-drafted and AI-reviewed, 2026-10-25. Native-human sign-off and device verification pending. Shipped labels inspected; explicit decisions below override conflicting anchors.
+ 
+ ## 1. Locale decisions
+diff --git a/docs/l10n/glossary/hi.md b/docs/l10n/glossary/hi.md
+index 666590e..8d11dda 100644
+--- a/docs/l10n/glossary/hi.md
++++ b/docs/l10n/glossary/hi.md
+@@ -1,5 +1,7 @@
+ # Hindi (hi) glossary
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Status: AI-reviewed translation decisions, not human-reviewed or native-speaker approved. Device QA pending.
+ 
+ ## 1. Locale decisions
+diff --git a/docs/l10n/glossary/hr.md b/docs/l10n/glossary/hr.md
+index 1bdab12..2997bc2 100644
+--- a/docs/l10n/glossary/hr.md
++++ b/docs/l10n/glossary/hr.md
+@@ -1,5 +1,7 @@
+ # Timbre glossary — hr
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Status: The historical pre-lesson terminology was AI-drafted and AI-reviewed, not human/native-speaker approved. The 6,083 new lesson strings and the lesson decisions below are an unreviewed author draft by /root/translate_croatian_lessons. No independent, native, device or import approval is claimed.
+ 
+ ## 1. Locale decisions
+diff --git a/docs/l10n/glossary/hu.md b/docs/l10n/glossary/hu.md
+index db50a61..fc75ec2 100644
+--- a/docs/l10n/glossary/hu.md
++++ b/docs/l10n/glossary/hu.md
+@@ -1,5 +1,7 @@
+ # Timbre glossary — hu
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Status: AI-drafted and AI-reviewed terminology decisions; not human-reviewed or native-speaker signed off. Device terminology verification remains pending.
+ 
+ ## 1. Locale decisions
+diff --git a/docs/l10n/glossary/id.md b/docs/l10n/glossary/id.md
+index 70976e2..11aa2dc 100644
+--- a/docs/l10n/glossary/id.md
++++ b/docs/l10n/glossary/id.md
+@@ -1,5 +1,7 @@
+ # Timbre glossary — id
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Status: AI-authored and AI-reviewed terminology decisions, 2026-10-25. Not human/native-speaker approved. Legal/device wording and layout still need native/device QA. Overrides take precedence over inconsistent legacy anchors.
+ 
+ ## 1. Locale decisions
+diff --git a/docs/l10n/glossary/is.md b/docs/l10n/glossary/is.md
+index 340c67c..e86222c 100644
+--- a/docs/l10n/glossary/is.md
++++ b/docs/l10n/glossary/is.md
+@@ -1,5 +1,7 @@
+ # Icelandic (is) glossary
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Review: AI-reviewed working glossary, 2026-10-25. Not human-approved. Native musician and device review remain outstanding. Applies to interface; lessons deliberately remain English in this locale.
+ 
+ ## 1. Locale decisions
+diff --git a/docs/l10n/glossary/it.md b/docs/l10n/glossary/it.md
+index 5cfc883..868ad81 100644
+--- a/docs/l10n/glossary/it.md
++++ b/docs/l10n/glossary/it.md
+@@ -1,5 +1,7 @@
+ # Italian (it) glossary
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Status: AI-reviewed terminology decisions, 2026-10-25. No human or native-speaker sign-off claimed. In-device and VoiceOver verification pending.
+ 
+ ## 1. Locale decisions
+diff --git a/docs/l10n/glossary/ja.md b/docs/l10n/glossary/ja.md
+index a9dd6c0..cd6a0b7 100644
+--- a/docs/l10n/glossary/ja.md
++++ b/docs/l10n/glossary/ja.md
+@@ -35,7 +35,8 @@ Brands unchanged: Timbre, Timbre Pro, Pro, Apple, iPhone, iPad, Apple Watch, App
+ | Strum to tune | かき鳴らしてチューニング |
+ | Tune by feel / Feel | 振動でチューニング / 振動 |
+ | Tanpura drone | タンプーラのドローン |
+-| Intonation | 音程 |
++| Intonation | オクターブ調整 |
++| Intonation over a drone | ドローンで音程練習 |
+ | Placement check | レベルチェック |
+ | Play along | 合わせて演奏 |
+ | Take | テイク |
+@@ -307,7 +308,7 @@ These are exact-work decisions from independent AI contextual review, not human/
+ Retained exact repertoire titles in this review (each has its own source-bound rationale in `lesson-invariants.json`; this list is not a blanket exemption): Soldier's Joy; Angeline the Baker; Boil Them Cabbage Down; My Country, 'Tis of Thee.
+ 
+ ## 4. Sense distinctions
+-Tune verb/tab ≠ tune melody; direction flat/sharp ≠ accidentals. Bar means measure, never pub or UI bar. Key means tonality, not keyboard/password. Pick means plectrum/pluck/choose by context. Lock means stable correct pitch, not padlock. Take means recorded performance attempt, not taking a lesson. Run means streak or continuous performance, not running. Chart means chord notation unless explicitly a progress graph. Intonation means playing/singing accurately over a drone, never saddle or octave adjustment (legacy ja/zh-CN entries are overridden above). Practice means musical practice, not a professional office. Feel means haptic feedback, not emotion. Challenge-friend and unit challenge use the separate senses above.
++Tune verb/tab ≠ tune melody; direction flat/sharp ≠ accidentals. Bar means measure, never pub or UI bar. Key means tonality, not keyboard/password. Pick means plectrum/pluck/choose by context. Lock means stable correct pitch, not padlock. Take means recorded performance attempt, not taking a lesson. Run means streak or continuous performance, not running. Chart means chord notation unless explicitly a progress graph. Intonation is context-dependent: the current literal app key `Intonation` labels the harmonic/stopped-note instrument-setup check; `Intonation over a drone` is a separate pitch-accuracy practice key. Generic lesson uses follow their own source context. Do not infer a blanket ban on saddle setup from the English word alone. Practice means musical practice, not a professional office. Feel means haptic feedback, not emotion. Challenge-friend and unit challenge use the separate senses above.
+ 
+ ## Reviewed shared musical-item ordinals
+ 
+diff --git a/docs/l10n/glossary/kn.md b/docs/l10n/glossary/kn.md
+index 7014a5a..060735a 100644
+--- a/docs/l10n/glossary/kn.md
++++ b/docs/l10n/glossary/kn.md
+@@ -1,5 +1,7 @@
+ # Kannada (kn) glossary
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Status: AI-reviewed translation decisions, not human-reviewed or native-speaker approved. Device QA pending.
+ 
+ ## 1. Locale decisions
+diff --git a/docs/l10n/glossary/ko.md b/docs/l10n/glossary/ko.md
+index 10e96c6..1f0afc4 100644
+--- a/docs/l10n/glossary/ko.md
++++ b/docs/l10n/glossary/ko.md
+@@ -1,5 +1,7 @@
+ # Timbre glossary — ko
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Status: AI-authored and AI-reviewed terminology decisions, 2026-10-25. Not human/native-speaker approved. Legal/device wording and layout still need native/device QA. Overrides take precedence over inconsistent legacy anchors.
+ 
+ ## 1. Locale decisions
+diff --git a/docs/l10n/glossary/lt.md b/docs/l10n/glossary/lt.md
+index 9ad7083..06c6789 100644
+--- a/docs/l10n/glossary/lt.md
++++ b/docs/l10n/glossary/lt.md
+@@ -1,5 +1,7 @@
+ # Lithuanian (lt) glossary
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Review: AI-reviewed working glossary, 2026-10-25. Not human-approved. Native musician and device review remain outstanding. Interface anchors retained; Lithuanian lesson drafting began 2026-10-26. Lesson text is an unreviewed AI author draft until separately reviewed.
+ 
+ ## 1. Locale decisions
+diff --git a/docs/l10n/glossary/lv.md b/docs/l10n/glossary/lv.md
+index fc1cbc2..b1a6133 100644
+--- a/docs/l10n/glossary/lv.md
++++ b/docs/l10n/glossary/lv.md
+@@ -1,5 +1,7 @@
+ # Latvian (lv) glossary
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Review: Interface glossary AI-reviewed on 2026-10-25; all 6,083 current lesson pairs independently AI-reviewed on 2026-10-26. The author supplement below is preserved as historical context and superseded by the reviewed integration addendum. Not human-approved: native-musician, audio and device verification remain outstanding.
+ 
+ ## 1. Locale decisions
+diff --git a/docs/l10n/glossary/ml.md b/docs/l10n/glossary/ml.md
+index d1aff4b..4882610 100644
+--- a/docs/l10n/glossary/ml.md
++++ b/docs/l10n/glossary/ml.md
+@@ -1,5 +1,7 @@
+ # Malayalam (ml) glossary
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Status: AI-reviewed translation decisions, not human-reviewed or native-speaker approved. Device QA pending.
+ 
+ ## 1. Locale decisions
+diff --git a/docs/l10n/glossary/mr.md b/docs/l10n/glossary/mr.md
+index 8179d4d..d1ee25a 100644
+--- a/docs/l10n/glossary/mr.md
++++ b/docs/l10n/glossary/mr.md
+@@ -1,5 +1,7 @@
+ # Marathi (mr) glossary
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Status: AI-reviewed translation decisions, not human-reviewed or native-speaker approved. Device QA pending.
+ 
+ ## 1. Locale decisions
+diff --git a/docs/l10n/glossary/no.md b/docs/l10n/glossary/no.md
+index 82260b4..0459f41 100644
+--- a/docs/l10n/glossary/no.md
++++ b/docs/l10n/glossary/no.md
+@@ -1,5 +1,7 @@
+ # Norwegian (no) glossary
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Review: AI-reviewed working glossary, 2026-10-25. Not human-approved. Native musician and device review remain outstanding. Applies to interface and Norwegian Bokmål lesson drafts. Lesson translations drafted 2026-10-26; independent linguistic review is pending.
+ 
+ ## 1. Locale decisions
+diff --git a/docs/l10n/glossary/pa.md b/docs/l10n/glossary/pa.md
+index eba1638..6a17d4b 100644
+--- a/docs/l10n/glossary/pa.md
++++ b/docs/l10n/glossary/pa.md
+@@ -1,5 +1,7 @@
+ # Punjabi (pa) glossary
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Status: AI-reviewed translation decisions, not human-reviewed or native-speaker approved. Device QA pending.
+ 
+ ## 1. Locale decisions
+diff --git a/docs/l10n/glossary/pt.md b/docs/l10n/glossary/pt.md
+index 6be0d78..f3b830e 100644
+--- a/docs/l10n/glossary/pt.md
++++ b/docs/l10n/glossary/pt.md
+@@ -136,7 +136,8 @@ Brand names Timbre, Timbre Pro, Pro, Apple, iPhone, iPad, Apple Watch, App Store
+ | Ear training | Context-specific musical/UI sense | UI and lessons | `Ear training` | Treino auditivo |  |
+ | Drone | Context-specific musical/UI sense | UI and lessons | `Drone` | Nota pedal |  |
+ | Tanpura | Context-specific musical/UI sense | UI and lessons | `Tanpura` | Tanpura |  |
+-| Intonation | Context-specific musical/UI sense | UI and lessons | `Intonation` | Afinação | Correct drone-training sense; supersedes octave-adjustment mistranslation in shipped table. |
++| Intonation | Instrument setup: harmonic/stopped-note comparison | Practice tool and setup paywall | `Intonation` | Oitavado | Current route is `IntonationView`; retain this applied setup label. |
++| Intonation over a drone | Pitch accuracy against a reference drone | Today activity and drone paywall | `Intonation over a drone` | Afinação sobre nota pedal | Separate key; retain its applied drone-practice wording. |
+ | Metronome | Context-specific musical/UI sense | UI and lessons | `Metronome` | Metrônomo |  |
+ | Speed trainer | Context-specific musical/UI sense | UI and lessons | `Speed trainer` | Treino de velocidade |  |
+ | Chords | Context-specific musical/UI sense | UI and lessons | `Chords` | Acordes |  |
+@@ -194,7 +195,7 @@ Retained exact repertoire titles in this review (each has its own source-bound r
+ `Mountain minor` is the named old-time modal-sound appellation in this Shady Grove lesson (German spelling: `Mountain Minor`; Portuguese: `mountain minor`). The source arrangement is A-centered with the high G drone; do not interpret this as a natural-minor key or a request to retune to G-modal/sawmill. Retain the appellation, quote it in explanatory prose, and use “tonal center” for the A-versus-G distinction.
+ 
+ ## 4. Words that mislead
+-Tune as a verb means tuning, as a noun a melody. Sharp/flat on the tuner mean too high/low, not accidentals. Bar means measure; key means tonality. Pick means plectrum or plucking in music, choose in UI. Lock means a stable in-tune confirmation, not a padlock. Take is one recorded performance, not taking a lesson. Run means a practice streak or an uninterrupted passage, not running. Chart means an instrumental chord diagram/sheet unless progress statistics explicitly demand a graph. Intonation is playing in tune over a drone, never octave/saddle adjustment. Practice is musical practice. Feel is haptic vibration, not emotion. A challenge to a friend differs from the unit's final challenge lesson; preserve context.
++Tune as a verb means tuning, as a noun a melody. Sharp/flat on the tuner mean too high/low, not accidentals. Bar means measure; key means tonality. Pick means plectrum or plucking in music, choose in UI. Lock means a stable in-tune confirmation, not a padlock. Take is one recorded performance, not taking a lesson. Run means a practice streak or an uninterrupted passage, not running. Chart means an instrumental chord diagram/sheet unless progress statistics explicitly demand a graph. Intonation is context-dependent: the current literal app key `Intonation` labels the harmonic/stopped-note instrument-setup check; `Intonation over a drone` is a separate pitch-accuracy practice key. Generic lesson uses follow their own source context. Do not infer a blanket ban on saddle setup from the English word alone. Practice is musical practice. Feel is haptic vibration, not emotion. A challenge to a friend differs from the unit's final challenge lesson; preserve context.
+ 
+ ## Reviewed shared musical-item ordinals
+ 
+diff --git a/docs/l10n/glossary/ro.md b/docs/l10n/glossary/ro.md
+index 043cc68..129caf9 100644
+--- a/docs/l10n/glossary/ro.md
++++ b/docs/l10n/glossary/ro.md
+@@ -1,5 +1,7 @@
+ # Timbre glossary — ro
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Status: Existing app terminology with AI-authored lesson additions. The lesson draft is not independently reviewed, human-reviewed or native-speaker signed off. Device terminology verification remains pending.
+ 
+ ## 1. Locale decisions
+diff --git a/docs/l10n/glossary/sk.md b/docs/l10n/glossary/sk.md
+index 11fecf2..cc086b9 100644
+--- a/docs/l10n/glossary/sk.md
++++ b/docs/l10n/glossary/sk.md
+@@ -1,5 +1,7 @@
+ # Slovak glossary
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Status: AI-drafted and AI-reviewed, 2026-10-25. Native-human sign-off and device verification pending. Shipped labels inspected; explicit decisions below override conflicting anchors.
+ 
+ ## 1. Locale decisions
+diff --git a/docs/l10n/glossary/sl.md b/docs/l10n/glossary/sl.md
+index be64399..1eaaec8 100644
+--- a/docs/l10n/glossary/sl.md
++++ b/docs/l10n/glossary/sl.md
+@@ -1,5 +1,7 @@
+ # Timbre glossary — sl
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Status: AI-drafted and AI-reviewed terminology decisions; not human-reviewed or native-speaker signed off. Device terminology verification remains pending.
+ 
+ ## 1. Locale decisions
+diff --git a/docs/l10n/glossary/sv.md b/docs/l10n/glossary/sv.md
+index aa47bef..b82c38d 100644
+--- a/docs/l10n/glossary/sv.md
++++ b/docs/l10n/glossary/sv.md
+@@ -1,5 +1,7 @@
+ # Swedish (sv) glossary
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Review: AI-reviewed working glossary, 2026-10-25. Not human-approved. Native musician and device review remain outstanding. Applies to interface and the full lesson curriculum. Swedish lesson author draft complete (6,082 strings), 2026-10-26; independent semantic review, human/native-musician review and device review are not claimed.
+ 
+ ## 1. Locale decisions
+diff --git a/docs/l10n/glossary/sw.md b/docs/l10n/glossary/sw.md
+index 46dc3d7..e48d3c8 100644
+--- a/docs/l10n/glossary/sw.md
++++ b/docs/l10n/glossary/sw.md
+@@ -1,5 +1,7 @@
+ # Swahili (sw) glossary
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Review: AI-reviewed working glossary, 2026-10-25. Not human-approved. Native musician and device review remain outstanding. Interface anchors plus Swahili lesson author decisions dated 2026-10-26. Lesson drafts are unreviewed author work; no independent approval is implied.
+ 
+ ## 1. Locale decisions
+diff --git a/docs/l10n/glossary/ta.md b/docs/l10n/glossary/ta.md
+index 6d5febb..8f22f2a 100644
+--- a/docs/l10n/glossary/ta.md
++++ b/docs/l10n/glossary/ta.md
+@@ -1,5 +1,7 @@
+ # Tamil (ta) glossary
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Status: AI-reviewed translation decisions, not human-reviewed or native-speaker approved. Device QA pending.
+ 
+ ## 1. Locale decisions
+diff --git a/docs/l10n/glossary/te.md b/docs/l10n/glossary/te.md
+index f9997b4..999b7f6 100644
+--- a/docs/l10n/glossary/te.md
++++ b/docs/l10n/glossary/te.md
+@@ -1,5 +1,7 @@
+ # Telugu (te) glossary
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Status: AI-authored and self-checked translation decisions, not independently reviewed or native-speaker approved. Device QA pending.
+ 
+ ## 1. Locale decisions
+diff --git a/docs/l10n/glossary/th.md b/docs/l10n/glossary/th.md
+index dea6a60..86be060 100644
+--- a/docs/l10n/glossary/th.md
++++ b/docs/l10n/glossary/th.md
+@@ -1,5 +1,7 @@
+ # Timbre glossary — th
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Status: AI-authored and AI-reviewed terminology decisions, 2026-10-25. Not human/native-speaker approved. Legal/device wording and layout still need native/device QA. Overrides take precedence over inconsistent legacy anchors.
+ 
+ ## 1. Locale decisions
+diff --git a/docs/l10n/glossary/uk.md b/docs/l10n/glossary/uk.md
+index 0b0b2a5..3619a90 100644
+--- a/docs/l10n/glossary/uk.md
++++ b/docs/l10n/glossary/uk.md
+@@ -1,5 +1,7 @@
+ # Ukrainian glossary
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Status: AI-drafted and AI-reviewed, 2026-10-25. Native-human sign-off and device verification pending. Shipped labels inspected; explicit decisions below override conflicting anchors.
+ 
+ ## 1. Locale decisions
+diff --git a/docs/l10n/glossary/ur.md b/docs/l10n/glossary/ur.md
+index 3c04a24..820f8f8 100644
+--- a/docs/l10n/glossary/ur.md
++++ b/docs/l10n/glossary/ur.md
+@@ -1,5 +1,7 @@
+ # Urdu (ur) glossary
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Status: AI-reviewed translation decisions, not human-reviewed or native-speaker approved. Device QA pending.
+ 
+ ## 1. Locale decisions
+diff --git a/docs/l10n/glossary/vi.md b/docs/l10n/glossary/vi.md
+index f531a29..155644d 100644
+--- a/docs/l10n/glossary/vi.md
++++ b/docs/l10n/glossary/vi.md
+@@ -1,5 +1,7 @@
+ # Timbre glossary — vi
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Status: AI-authored and AI-reviewed terminology decisions, 2026-10-25. Not human/native-speaker approved. Legal/device wording and layout still need native/device QA. Overrides take precedence over inconsistent legacy anchors.
+ 
+ ## 1. Locale decisions
+diff --git a/docs/l10n/glossary/zh-CN.md b/docs/l10n/glossary/zh-CN.md
+index e20a679..5784f1b 100644
+--- a/docs/l10n/glossary/zh-CN.md
++++ b/docs/l10n/glossary/zh-CN.md
+@@ -35,7 +35,8 @@ Brands unchanged: Timbre, Timbre Pro, Pro, Apple, iPhone, iPad, Apple Watch, App
+ | Strum to tune | 扫弦调音 |
+ | Tune by feel / Feel | 触感调音 / 触感 |
+ | Tanpura drone | 坦普拉琴持续音 |
+-| Intonation | 音准 |
++| Intonation | 八度音准 |
++| Intonation over a drone | 持续音下的音准练习 |
+ | Placement check | 水平测试 |
+ | Play along | 跟奏 |
+ | Take | 一次演奏 |
+@@ -304,4 +305,4 @@ These are exact-work decisions from independent AI contextual review, not human/
+ Retained exact repertoire titles in this review (each has its own source-bound rationale in `lesson-invariants.json`; this list is not a blanket exemption): Old Joe Clark; Soldier's Joy; Skip to My Lou; Aura Lee; Shady Grove; Shenandoah; Angeline the Baker; Boil Them Cabbage Down; My Country, 'Tis of Thee; Cumberland Gap; Deck the Halls; Arkansas Traveler; Cripple Creek.
+ 
+ ## 4. Sense distinctions
+-Tune verb/tab ≠ tune melody; direction flat/sharp ≠ accidentals. Bar means measure, never pub or UI bar. Key means tonality, not keyboard/password. Pick means plectrum/pluck/choose by context. Lock means stable correct pitch, not padlock. Take means recorded performance attempt, not taking a lesson. Run means streak or continuous performance, not running. Chart means chord notation unless explicitly a progress graph. Intonation means playing/singing accurately over a drone, never saddle or octave adjustment (legacy ja/zh-CN entries are overridden above). Practice means musical practice, not a professional office. Feel means haptic feedback, not emotion. Challenge-friend and unit challenge use the separate senses above.
++Tune verb/tab ≠ tune melody; direction flat/sharp ≠ accidentals. Bar means measure, never pub or UI bar. Key means tonality, not keyboard/password. Pick means plectrum/pluck/choose by context. Lock means stable correct pitch, not padlock. Take means recorded performance attempt, not taking a lesson. Run means streak or continuous performance, not running. Chart means chord notation unless explicitly a progress graph. Intonation is context-dependent: the current literal app key `Intonation` labels the harmonic/stopped-note instrument-setup check; `Intonation over a drone` is a separate pitch-accuracy practice key. Generic lesson uses follow their own source context. Do not infer a blanket ban on saddle setup from the English word alone. Practice means musical practice, not a professional office. Feel means haptic feedback, not emotion. Challenge-friend and unit challenge use the separate senses above.
+diff --git a/docs/l10n/glossary/zu.md b/docs/l10n/glossary/zu.md
+index 3249ef4..b36e87f 100644
+--- a/docs/l10n/glossary/zu.md
++++ b/docs/l10n/glossary/zu.md
+@@ -1,5 +1,7 @@
+ # Zulu (zu) glossary
+ 
++> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
++
+ Review: AI-reviewed working glossary, 2026-10-25. Not human-approved. Native musician and device review remain outstanding. Interface anchors retained; lesson glossary extensions below are author drafts for independent review.
+ 
+ ## 1. Locale decisions

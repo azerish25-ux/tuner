@@ -1,0 +1,48 @@
+{
+  "reviewer": "Codex review_sk (source-aware AI design/code recommendation)",
+  "decision": "recommend Tamil-only welcome headline typography candidate; native measurement required",
+  "live_edits": false,
+  "evidence": {
+    "screenshot_path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\localization-final\\named\\screenshots\\l10n-ta-welcome.png",
+    "screenshot_sha256": "661023c4e17195be85eb99fc1494fcde21db8c3732edad277fdffff67fb5e4b8",
+    "visual_read": "1206x2622 screenshot displayed at942x2048. Full headline and separate final period visibly read: final Tamil word nearly fills penultimate line; period sits alone below.",
+    "source_hashes": {
+      "ios/Timbre/Onboarding/OnboardingView.swift": "193a756677ef45ef6ca1720f603617bc517e7ce816dfc0dd0b0ea40ea821c336",
+      "ios/Timbre/Design/Theme.swift": "caf1d87434c49d1af6bfb0f42e0bdbba92d77e07b8671a7f087b87b759debbc4",
+      "ios/Timbre/Resources/ta.lproj/Localizable.strings": "ea7b3705651a2e2fc15817a1489f1584ed9892a27f729f34ec1a7048daaee07c",
+      "tools/ci/comment_hygiene.py": "2d9b939b1612f1bbc7ed5c69c14a0b758e9ae7b4b1eee97ebc62dd507a5b0ae7"
+    }
+  },
+  "recommendation": {
+    "scope": "Only welcome headline for environment Tamil; regional Tamil locales included. Other47 keep existing40pt.",
+    "selector": "@Environment(\\.locale) private var locale; locale.language.languageCode?.identifier == \"ta\"",
+    "font": "Typeface.display(36, relativeTo: .largeTitle) for Tamil; existing Typeface.display(40) otherwise.",
+    "preserve": [
+      "exact localized words/punctuation",
+      "explicit newline",
+      "tracking(-1)",
+      "unlimited wrapping and fixedSize(horizontal:false,vertical:true)",
+      "header accessibility trait/identifier",
+      "DynamicType growth through custom font relativeTo.largeTitle"
+    ],
+    "reason": "Ten percent smaller base size gives the unusually long Tamil word plus punctuation breathing room on the demonstrated phone. Both36 and40 already map to.largeTitle through Font.TextStyle.matching, so explicit.largeTitle documents the same scaling curve.",
+    "hygiene_caveat": "36 is NOT an existing on-scale token or existing display36 use: current scale12/13/15/17/20/28/40/64. Document a deliberate scoped typography exception and handle hygiene honestly; do not hide a variable merely to evade literal scanning."
+  },
+  "alternative_assessment": {
+    "longest_word_responsive_font": "Not recommended for one evidenced surface. Correct measuring must match SwiftUI Tamil fallback shaping, weight/BoldText, tracking, width, localized tokenization and DynamicType. Measurement-driven font choice adds feedback/stale geometry risks and needs a readability policy at AX sizes. Consider only after demonstrated broader need.",
+    "global_shrink": "No evidence justifies changing47 other layouts.",
+    "word_joiner_or_translation_mutation": "Excluded: no invisible joiner, punctuation removal or paraphrase.",
+    "font_family_change": "No evidence supports changing Tamil glyph style."
+  },
+  "validation_required": [
+    "Render exact candidate on demonstrated phone plus narrower supported phone. Confirm period stays with text and no Tamil cluster clipping.",
+    "Check Tamil usual text sizes, accessibility categories and BoldText.36 is a candidate, not proof of every width/size being orphan-free. Preserve font growth and allow additional content height; add no new DynamicType cap or lineLimit.",
+    "Verify selector leaves English/Telugu/other locales40 and includes ta-IN/ta-LK.",
+    "Localized key/resource and expected-label fixtures remain byte-identical; only typography selection changes."
+  ],
+  "limitations": [
+    "Recommendation only; Windows host has no native render/compile evidence.",
+    "Parent must verify candidate before claiming defect fixed.",
+    "No live source, translation, test or glossary edits."
+  ]
+}

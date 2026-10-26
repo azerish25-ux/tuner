@@ -1,0 +1,387 @@
+{
+  "source_commit": "970a12db87dd5751d3674b1321e20706a576e03e",
+  "run_id": 40396032371,
+  "job_id": 121829199801,
+  "artifact_id": 12691154093,
+  "reviewer": "Codex review_uk",
+  "scope": "All 18 actual normal-text iPhone 17 Pro welcome/tuner/first-explain-card images for ta/te/tr/el/sw/zu directly viewed individually.",
+  "index_sha256": "4c08ed22dbdb638c6ad20eb91253fb890ac8894daa12dd2af8cc037b2e753a71",
+  "directly_viewed_count": 18,
+  "frames_with_observed_visual_issues": 1,
+  "observed_visual_issue_count": 1,
+  "conclusion": "One demonstrated Tamil orphan-period typography issue. Other 17 frames have no observed missing-glyph boxes, unintended ellipsis, clipping or overlapping visible controls.",
+  "limits": [
+    "Independent AI visual review, not native-human linguistic or script-shaping certification.",
+    "Exact base 970 frames do not visually verify subsequent register/translation/layout fixes. Existing Turkish register issues have separate review evidence.",
+    "No Dynamic Type/tablet/landscape/interaction/VoiceOver runtime/universal accessibility certification.",
+    "Only first lesson explain card step 1/5 reviewed, not remaining lesson steps or corpus.",
+    "Zulu icon-only Reference control is visible; spoken label and interaction not runtime-tested by this visual review.",
+    "No live source/maps/tests changed. Any product fix requires new native rendering evidence."
+  ],
+  "frames": [
+    {
+      "name": "l10n-ta-welcome.png",
+      "locale": "ta",
+      "screen": "welcome",
+      "source_folder": "screenshots",
+      "original_exported_filename": "C18A0535-CF47-4D7D-BFAE-139D0695F4F3.png",
+      "screenshot_sha256": "661023c4e17195be85eb99fc1494fcde21db8c3732edad277fdffff67fb5e4b8",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "device": "iPhone 17 Pro",
+      "reviewer": "Codex review_uk",
+      "directly_viewed": true,
+      "view_method": "Original individual PNG opened through view_image; displayed proportionally at 942×2048 from 1206×2622. No montage-only inference or OCR-only review.",
+      "issues": [
+        {
+          "id": "ta-welcome-orphan-period",
+          "priority": "P2 typography polish",
+          "description": "Terminal period of Tamil welcome headline is isolated on a fifth line. All words and controls remain visible; no text omission.",
+          "source_context": {
+            "path": "ios/Timbre/Onboarding/OnboardingView.swift",
+            "line_at_base": 331,
+            "source_blob_sha256": "193a756677ef45ef6ca1720f603617bc517e7ce816dfc0dd0b0ea40ea821c336",
+            "exact_source": "Text(\"Tune in seconds.\\nThen learn to play.\").font(Typeface.display(40)).tracking(-1).foregroundStyle(Palette.ink)",
+            "layout": "Subsequent fixedSize(horizontal:false,vertical:true), header trait, onboarding.headline identifier; no lineLimit."
+          },
+          "translation_guard": {
+            "path": "tools/l10n/translations/ta.json",
+            "section": "Localizable.strings",
+            "key": "Tune in seconds.\nThen learn to play.",
+            "exact_old": "வினாடிகளில் டியூன் செய்யுங்கள்.\nபிறகு வாசிக்கக் கற்றுக்கொள்ளுங்கள்.",
+            "note": "No explicit newline separates last word from terminal punctuation."
+          },
+          "proposed_direction": "Preserve all words and punctuation. Prevent isolated terminal punctuation using appropriate text-layout handling or bounded headline fitting; verify new native Tamil welcome capture. No speculative source patch or translation shortening supplied.",
+          "required_validation": "New actual Tamil normal-size welcome screenshot, with period attached to prior word and all controls still visible. Inspect narrow/larger-text states if layout behavior changes."
+        }
+      ],
+      "observations": "Headline ends in orphaned period alone on fifth line; description, three complete chips plus More and all entry actions visible.",
+      "scope": "Captured normal-size phone state; lesson is first explain card step 1/5 only."
+    },
+    {
+      "name": "l10n-ta-tuner.png",
+      "locale": "ta",
+      "screen": "tuner",
+      "source_folder": "screenshots",
+      "original_exported_filename": "1366F6A4-B410-43FF-BB93-AB3C9B0BBBC4.png",
+      "screenshot_sha256": "e394535538d0768d56eb996c9e0464e4d6ed54bba533214093fb34297a4f0769",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "device": "iPhone 17 Pro",
+      "reviewer": "Codex review_uk",
+      "directly_viewed": true,
+      "view_method": "Original individual PNG opened through view_image; displayed proportionally at 942×2048 from 1206×2622. No montage-only inference or OCR-only review.",
+      "issues": [],
+      "observations": "Instrument/reference labels, long modes and side labels, target, six strings and all five tabs fit without ellipsis.",
+      "scope": "Captured normal-size phone state; lesson is first explain card step 1/5 only."
+    },
+    {
+      "name": "l10n-ta-lesson.png",
+      "locale": "ta",
+      "screen": "lesson",
+      "source_folder": "screenshots",
+      "original_exported_filename": "F68FC8F6-EBB5-410B-827A-8E6232976784.png",
+      "screenshot_sha256": "3088bbb02479c14de2b662ea81f5c4a7a642d13ff4e764300afdcd4c11cfaa7b",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "device": "iPhone 17 Pro",
+      "reviewer": "Codex review_uk",
+      "directly_viewed": true,
+      "view_method": "Original individual PNG opened through view_image; displayed proportionally at 942×2048 from 1206×2622. No montage-only inference or OCR-only review.",
+      "issues": [],
+      "observations": "Full header, one-line heading and complete four-line body through string 6 sentence fit above Continue; no observed cluster clipping.",
+      "scope": "Captured normal-size phone state; lesson is first explain card step 1/5 only."
+    },
+    {
+      "name": "l10n-te-welcome.png",
+      "locale": "te",
+      "screen": "welcome",
+      "source_folder": "screenshots",
+      "original_exported_filename": "D8296C6C-1D91-4A1D-96C6-631635E42D8B.png",
+      "screenshot_sha256": "32657318e09c2ac90f7c52e383548159ab342b3401aea83a281735b173dd0d1f",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "device": "iPhone 17 Pro",
+      "reviewer": "Codex review_uk",
+      "directly_viewed": true,
+      "view_method": "Original individual PNG opened through view_image; displayed proportionally at 942×2048 from 1206×2622. No montage-only inference or OCR-only review.",
+      "issues": [],
+      "observations": "Four-line Telugu headline, two-line description, three full chips plus More and all entry controls visible; no observed clipped clusters.",
+      "scope": "Captured normal-size phone state; lesson is first explain card step 1/5 only."
+    },
+    {
+      "name": "l10n-te-tuner.png",
+      "locale": "te",
+      "screen": "tuner",
+      "source_folder": "screenshots",
+      "original_exported_filename": "F44A0BF2-B6B9-4B50-A5E5-F8C0CBB2108D.png",
+      "screenshot_sha256": "10eabb4ba63bdfb49771fa01d29b568b6daa01c7a03934014cd39da08597b7db",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "device": "iPhone 17 Pro",
+      "reviewer": "Codex review_uk",
+      "directly_viewed": true,
+      "view_method": "Original individual PNG opened through view_image; displayed proportionally at 942×2048 from 1206×2622. No montage-only inference or OCR-only review.",
+      "issues": [],
+      "observations": "Full instrument/reference title, side/mode controls, target, six strings and all five tabs fit without observed clipping.",
+      "scope": "Captured normal-size phone state; lesson is first explain card step 1/5 only."
+    },
+    {
+      "name": "l10n-te-lesson.png",
+      "locale": "te",
+      "screen": "lesson",
+      "source_folder": "screenshots",
+      "original_exported_filename": "53A2D85A-4209-4E87-A643-9717B12C70DA.png",
+      "screenshot_sha256": "17484cc66e0629132b9308f3498f3f74ee8f4aeef46d5fddc8817ace2247c9d6",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "device": "iPhone 17 Pro",
+      "reviewer": "Codex review_uk",
+      "directly_viewed": true,
+      "view_method": "Original individual PNG opened through view_image; displayed proportionally at 942×2048 from 1206×2622. No montage-only inference or OCR-only review.",
+      "issues": [],
+      "observations": "Full header and one-line heading, complete four-line body ending string 6 sentence, close and Continue visible.",
+      "scope": "Captured normal-size phone state; lesson is first explain card step 1/5 only."
+    },
+    {
+      "name": "l10n-tr-welcome.png",
+      "locale": "tr",
+      "screen": "welcome",
+      "source_folder": "screenshots",
+      "original_exported_filename": "4155A58D-D73B-4CED-9C4A-20CFA67C8901.png",
+      "screenshot_sha256": "ff6098056927aed3cebf704f47ab88db1be432f878f836b9af25bf70edae2473",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "device": "iPhone 17 Pro",
+      "reviewer": "Codex review_uk",
+      "directly_viewed": true,
+      "view_method": "Original individual PNG opened through view_image; displayed proportionally at 942×2048 from 1206×2622. No montage-only inference or OCR-only review.",
+      "issues": [],
+      "observations": "Four-line headline, two-line description, four chips plus More and all actions visible. Historical Başlayın formal register is separately reviewed; this capture does not verify subsequent register corrections.",
+      "scope": "Captured normal-size phone state; lesson is first explain card step 1/5 only."
+    },
+    {
+      "name": "l10n-tr-tuner.png",
+      "locale": "tr",
+      "screen": "tuner",
+      "source_folder": "screenshots",
+      "original_exported_filename": "46EA739D-2BB1-4D38-8962-3BCE1A23B07A.png",
+      "screenshot_sha256": "8d1c4d774b3e54abe89c67871202d69de80e33001720fbf8e36999843d0339c8",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "device": "iPhone 17 Pro",
+      "reviewer": "Codex review_uk",
+      "directly_viewed": true,
+      "view_method": "Original individual PNG opened through view_image; displayed proportionally at 942×2048 from 1206×2622. No montage-only inference or OCR-only review.",
+      "issues": [],
+      "observations": "Title/reference row, modes, target, side controls, six strings and all five tabs fit. Historical Dinlemek için dokunun belongs to separate register review, not a newly discovered layout defect.",
+      "scope": "Captured normal-size phone state; lesson is first explain card step 1/5 only."
+    },
+    {
+      "name": "l10n-tr-lesson.png",
+      "locale": "tr",
+      "screen": "lesson",
+      "source_folder": "screenshots",
+      "original_exported_filename": "7C4ADA30-F6C6-439A-A955-CE52D04E9687.png",
+      "screenshot_sha256": "64d8ee9b95199ca6a21fc908ce736edc7ebfc66f87dc61fac467f47c231c02c4",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "device": "iPhone 17 Pro",
+      "reviewer": "Codex review_uk",
+      "directly_viewed": true,
+      "view_method": "Original individual PNG opened through view_image; displayed proportionally at 942×2048 from 1206×2622. No montage-only inference or OCR-only review.",
+      "issues": [],
+      "observations": "Full header, one-line heading, complete two-line body and Continue fit. Dotted/dotless Turkish glyphs display without observed boxes.",
+      "scope": "Captured normal-size phone state; lesson is first explain card step 1/5 only."
+    },
+    {
+      "name": "l10n-el-welcome.png",
+      "locale": "el",
+      "screen": "welcome",
+      "source_folder": "screenshots",
+      "original_exported_filename": "4CE1E4A7-999E-48E3-A732-66BBB3CBC220.png",
+      "screenshot_sha256": "52e33e05236ed1df0e495b3fc4124ec905ccef86bc2a52fbaee6b140992619e9",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "device": "iPhone 17 Pro",
+      "reviewer": "Codex review_uk",
+      "directly_viewed": true,
+      "view_method": "Original individual PNG opened through view_image; displayed proportionally at 942×2048 from 1206×2622. No montage-only inference or OCR-only review.",
+      "issues": [],
+      "observations": "Four-line Greek headline, two-line supporting text, three chips plus More and all entry controls visible; no observed accent clipping.",
+      "scope": "Captured normal-size phone state; lesson is first explain card step 1/5 only."
+    },
+    {
+      "name": "l10n-el-tuner.png",
+      "locale": "el",
+      "screen": "tuner",
+      "source_folder": "screenshots",
+      "original_exported_filename": "5E71376F-A334-4CDC-9B69-D9F2CAEFF2B3.png",
+      "screenshot_sha256": "ce997fdeef70901cabb2fa5651f55d40f2ff73b66635616b8103f0c75ff35dae",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "device": "iPhone 17 Pro",
+      "reviewer": "Codex review_uk",
+      "directly_viewed": true,
+      "view_method": "Original individual PNG opened through view_image; displayed proportionally at 942×2048 from 1206×2622. No montage-only inference or OCR-only review.",
+      "issues": [],
+      "observations": "Long Greek modes/title fit. Side controls, target, six strings and all five tabs remain visible and separate.",
+      "scope": "Captured normal-size phone state; lesson is first explain card step 1/5 only."
+    },
+    {
+      "name": "l10n-el-lesson.png",
+      "locale": "el",
+      "screen": "lesson",
+      "source_folder": "screenshots",
+      "original_exported_filename": "88FABBE2-FF8E-488D-A657-A5902A0DB986.png",
+      "screenshot_sha256": "dca19eaa542022e473ee51dc2d7cd86b048159ebc4af69173bdb6b4669429ca5",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "device": "iPhone 17 Pro",
+      "reviewer": "Codex review_uk",
+      "directly_viewed": true,
+      "view_method": "Original individual PNG opened through view_image; displayed proportionally at 942×2048 from 1206×2622. No montage-only inference or OCR-only review.",
+      "issues": [],
+      "observations": "Full header and single-line heading fit. Complete four-line body ends with token 6. alone on last line; sparse wrap observation, not omission. Continue visible.",
+      "scope": "Captured normal-size phone state; lesson is first explain card step 1/5 only."
+    },
+    {
+      "name": "l10n-sw-welcome.png",
+      "locale": "sw",
+      "screen": "welcome",
+      "source_folder": "screenshots",
+      "original_exported_filename": "452E771B-4F48-4CEE-B43D-30F0796C46D6.png",
+      "screenshot_sha256": "f60a7719afde69a5b21f23fe27ce7c8b3efd44748b4ed906f183fd467fedd707",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "device": "iPhone 17 Pro",
+      "reviewer": "Codex review_uk",
+      "directly_viewed": true,
+      "view_method": "Original individual PNG opened through view_image; displayed proportionally at 942×2048 from 1206×2622. No montage-only inference or OCR-only review.",
+      "issues": [],
+      "observations": "Four-line headline and two-line description fit; four chips plus More and all actions visible.",
+      "scope": "Captured normal-size phone state; lesson is first explain card step 1/5 only."
+    },
+    {
+      "name": "l10n-sw-tuner.png",
+      "locale": "sw",
+      "screen": "tuner",
+      "source_folder": "screenshots",
+      "original_exported_filename": "191DE9ED-BC72-422A-A53C-3B5A63CF4238.png",
+      "screenshot_sha256": "b1aef004b7b3ca18ee3498e93f58b5330782d62720a85bb0ff6a8254dd561584",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "device": "iPhone 17 Pro",
+      "reviewer": "Codex review_uk",
+      "directly_viewed": true,
+      "view_method": "Original individual PNG opened through view_image; displayed proportionally at 942×2048 from 1206×2622. No montage-only inference or OCR-only review.",
+      "issues": [],
+      "observations": "Full title/reference row, mode/side controls, target, six strings and all five tab labels fit without observed overlap.",
+      "scope": "Captured normal-size phone state; lesson is first explain card step 1/5 only."
+    },
+    {
+      "name": "l10n-sw-lesson.png",
+      "locale": "sw",
+      "screen": "lesson",
+      "source_folder": "screenshots",
+      "original_exported_filename": "6CE3F199-7834-4E42-9375-93AF5DD0A6FA.png",
+      "screenshot_sha256": "4705f9c30f55a4beb779d9e0650e23ba10a2d58c653ed8ea5a1ba3505066d7e2",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "device": "iPhone 17 Pro",
+      "reviewer": "Codex review_uk",
+      "directly_viewed": true,
+      "view_method": "Original individual PNG opened through view_image; displayed proportionally at 942×2048 from 1206×2622. No montage-only inference or OCR-only review.",
+      "issues": [],
+      "observations": "Full header/step label, one-line heading, complete three-line body through final string 6 sentence and Continue visible.",
+      "scope": "Captured normal-size phone state; lesson is first explain card step 1/5 only."
+    },
+    {
+      "name": "l10n-zu-welcome.png",
+      "locale": "zu",
+      "screen": "welcome",
+      "source_folder": "screenshots",
+      "original_exported_filename": "39928BF7-4F5E-437F-826B-C218FA9D2F56.png",
+      "screenshot_sha256": "39857a01ba2d0694261d86280f5845156692a454d12fbbe732f60e061d9a68b6",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "device": "iPhone 17 Pro",
+      "reviewer": "Codex review_uk",
+      "directly_viewed": true,
+      "view_method": "Original individual PNG opened through view_image; displayed proportionally at 942×2048 from 1206×2622. No montage-only inference or OCR-only review.",
+      "issues": [],
+      "observations": "Four-line headline and two-line description fit; three full chips plus More and all entry actions visible. Long words wrap without observed clipping.",
+      "scope": "Captured normal-size phone state; lesson is first explain card step 1/5 only."
+    },
+    {
+      "name": "l10n-zu-tuner.png",
+      "locale": "zu",
+      "screen": "tuner",
+      "source_folder": "screenshots",
+      "original_exported_filename": "48192AA9-CEFF-40EA-9E36-C6D053CB4FBD.png",
+      "screenshot_sha256": "00c086abbc3cf5499ec30cc2f2dd83709a2642bf882764d0a29e0e5bcb11fd7c",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "device": "iPhone 17 Pro",
+      "reviewer": "Codex review_uk",
+      "directly_viewed": true,
+      "view_method": "Original individual PNG opened through view_image; displayed proportionally at 942×2048 from 1206×2622. No montage-only inference or OCR-only review.",
+      "issues": [],
+      "observations": "Instrument title wraps fully across three lines; reference row and side labels fit. Long Auto/Manual controls fit; Reference appears as visible tuning-fork icon only, an adaptive presentation observation rather than demonstrated lost functionality. Six strings and all five tab labels visible.",
+      "scope": "Captured normal-size phone state; lesson is first explain card step 1/5 only."
+    },
+    {
+      "name": "l10n-zu-lesson.png",
+      "locale": "zu",
+      "screen": "lesson",
+      "source_folder": "screenshots",
+      "original_exported_filename": "4D512316-E8D8-48BE-ADC5-AE618C3AA0C6.png",
+      "screenshot_sha256": "3455786a7d4f5805adbf9602197cba5c3bb3b9244f958c3a88e85c0d4935be31",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "device": "iPhone 17 Pro",
+      "reviewer": "Codex review_uk",
+      "directly_viewed": true,
+      "view_method": "Original individual PNG opened through view_image; displayed proportionally at 942×2048 from 1206×2622. No montage-only inference or OCR-only review.",
+      "issues": [],
+      "observations": "Full header and long step label fit side by side; two-line heading and full four-line body through string 6 sentence fit above Continue.",
+      "scope": "Captured normal-size phone state; lesson is first explain card step 1/5 only."
+    }
+  ]
+}

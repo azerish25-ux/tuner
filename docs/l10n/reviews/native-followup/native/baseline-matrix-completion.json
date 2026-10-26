@@ -1,0 +1,92 @@
+{
+  "base_commit": "970a12db87dd5751d3674b1321e20706a576e03e",
+  "run_id": 40396032371,
+  "run_url": "https://github.com/azerish25-ux/tuner/actions/runs/40396032371",
+  "all_eight_jobs_completed_successfully": true,
+  "target_locales": 48,
+  "actual_frames_reviewed": 147,
+  "scope": "Welcome, normal tuner and first guitar lesson card in every target language; three extra Bulgarian AX5 frames. Successful assertion execution and actual image review are distinct evidence.",
+  "visual_findings": [
+    "French lesson header ellipsis",
+    "Japanese welcome headline kana/punctuation widow",
+    "Tamil welcome terminal-period orphan",
+    "Separate baseline iOS audit screenshot: paywall lesson caption ellipsis"
+  ],
+  "followup": "All original images inspected. Current changes require fresh hosted native verification. Baseline screenshot reviews do not certify revised resources or all app states.",
+  "jobs": [
+    {
+      "job_id": 121829199031,
+      "name": "localized-launch (ja,ko,zh-CN,th,vi,id)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-26T20:49:41Z",
+      "completed_at": "2026-10-26T21:10:40Z"
+    },
+    {
+      "job_id": 121829199340,
+      "name": "localized-launch (ar,fa,he,ur,bg,bn)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-26T20:29:07Z",
+      "completed_at": "2026-10-26T20:54:34Z"
+    },
+    {
+      "job_id": 121829199369,
+      "name": "localized-launch (et,lt,lv,hu,ro,sl)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-26T21:20:09Z",
+      "completed_at": "2026-10-26T21:42:18Z"
+    },
+    {
+      "job_id": 121829199411,
+      "name": "localized-launch (cs,sk,pl,ru,uk,hr)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-26T20:55:09Z",
+      "completed_at": "2026-10-26T21:20:07Z"
+    },
+    {
+      "job_id": 121829199581,
+      "name": "localized-launch (da,no,sv,fi,is,nl)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-26T21:10:52Z",
+      "completed_at": "2026-10-26T21:32:44Z"
+    },
+    {
+      "job_id": 121829199702,
+      "name": "localized-launch (de,es,fr,it,pt,ca)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-26T20:29:06Z",
+      "completed_at": "2026-10-26T20:49:38Z"
+    },
+    {
+      "job_id": 121829199801,
+      "name": "localized-launch (ta,te,tr,el,sw,zu)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-26T21:42:21Z",
+      "completed_at": "2026-10-26T22:01:19Z"
+    },
+    {
+      "job_id": 121829199818,
+      "name": "localized-launch (hi,gu,kn,ml,mr,pa)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-26T21:32:46Z",
+      "completed_at": "2026-10-26T21:53:50Z"
+    }
+  ],
+  "visual_reports": [
+    "native/western-visual-review.json",
+    "native/rtl-visual-review.json",
+    "native/east-asian-visual-review.json",
+    "native/nordic-visual-review.json",
+    "native/slavic-visual-review.json",
+    "native/baltic-visual-review.json",
+    "native/indic-visual-review.json",
+    "native/final-group-visual-review.json"
+  ]
+}

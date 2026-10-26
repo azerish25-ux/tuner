@@ -1,0 +1,79 @@
+{
+  "reviewer": "Codex review_sk (independent bounded source/code review; AI, not native-human)",
+  "decision": "approve source candidate with native aesthetic and fit verification pending",
+  "blocking_findings": [],
+  "scope": "Applied Tamil-only welcome-headline base28 font selection; exact text, locale propagation, DynamicType curve, unaffected locale branch and hygiene constraints.",
+  "supersedes": {
+    "proposal": "docs/l10n/reviews/native-followup/native/tamil-headline-design-recommendation.json",
+    "sha256": "e0da1893be2b8e06e15ccba4733fe7a397f71d31ab2b3beaa6e21b76c95ed95b",
+    "original_preserved": true,
+    "reason": "Earlier36 candidate is superseded by existing on-scale28 after root supplied the ratcheting hygiene constraint. No new type token, waiver or hidden scanner bypass is warranted."
+  },
+  "source_hashes": {
+    "ios/Timbre/Onboarding/OnboardingView.swift": "52b6f1a5f8820afb016d8fa19cc9f3adaf7fef4a3448c82f60550b1c5e080d20",
+    "ios/Timbre/Root/RootView.swift": "f1f38f0ec713ad39d79ee836223cb4ac34f70d1f616a6f739acb32551969796e",
+    "ios/Timbre/Settings/SettingsView.swift": "14a600250a7ad864868440049733a645e1f251d76d11c24f65abdb1f068d6117",
+    "ios/Timbre/Services/AppStore.swift": "7d4dcdfab40b490493a43fb12e09e187c0625bc46b017b4811b493e22e180ee4",
+    "ios/Sources/TimbreCore/Catalog/TimbreLocalization.swift": "c58a864e02b7d8cf6967ce3b9736ce47dcbeb96d722f804d81000517b0238dec",
+    "ios/Timbre/Onboarding/OnboardingDeferral.swift": "eaa45a1624abb0a24831012d0033be7efc666f4ec906d7ea395e4fdc51a8de8f",
+    "ios/Timbre/Design/Theme.swift": "caf1d87434c49d1af6bfb0f42e0bdbba92d77e07b8671a7f087b87b759debbc4",
+    "ios/Timbre/Resources/ta.lproj/Localizable.strings": "ea7b3705651a2e2fc15817a1489f1584ed9892a27f729f34ec1a7048daaee07c",
+    "tools/l10n/translations/ta.json": "89986a31cee145cc05e60d7bbf53ebe119be881ed4c34adf0eecf8f0b0578e22",
+    "tools/ci/comment_hygiene.py": "2d9b939b1612f1bbc7ed5c69c14a0b758e9ae7b4b1eee97ebc62dd507a5b0ae7",
+    "tools/ci/hygiene-baseline.json": "95e9184da83291289e8ef267667ec7aeb05c491f6a70a3b5f61846398eeb23f9"
+  },
+  "source_checks": {
+    "selector": "@Environment locale is read inside View. Tamil language identifier ta selects Typeface.display(28, relativeTo:.largeTitle); regional Tamil identifiers share languageCode ta. Missing/non-Tamil language codes take the unchanged Typeface.display(40) branch.",
+    "manual_app_selection": "SettingsView App language picker calls AppStore.updateSettings, saves settings.language, and updates TimbreLocalization.language. RootView injects TimbreLocalization.locale(for:store.settings.language); an explicit ta returns Locale(identifier:ta). First-run fullScreenCover presents OnboardingView from this root environment; deferred questions inherit the same root locale and do not display welcome.",
+    "system_selection": "For system setting, TimbreLocalization.locale(for:) supplies Locale.current. Apple documents current as the app-effective locale incorporating system settings, app-specific Settings choice and supported localization availability. Therefore the selector follows existing system/iOS per-app language resolution without separately guessing device language. In-app explicit selection overrides system through the root injection.",
+    "dynamic_type": "Typeface.display delegates to sora(.semiBold), then Font.custom(name,size,relativeTo:style). Old40 maps to.largeTitle through Font.TextStyle.matching; new Tamil28 explicitly retains.largeTitle rather than implicitly changing its curve to.title. This remains scalable custom font, not fixedSize font or minimumScaleFactor. Existing BoldText heavier-face selection is unchanged.",
+    "other_locales": "All non-ta branches return the exact previous Typeface.display(40). No other locale typography, fallback font, DynamicType cap, lineLimit or global theme rule changes.",
+    "text": "Same literal source key, tracking(-1), foregroundStyle, fixedSize(horizontal:false,vertical:true), isHeader trait and onboarding.headline identifier remain. Entire Tamil Localizable.strings is byte-identical to970a12d, including words, two periods and one newline.",
+    "scale": "28 and40 are both existing TypeStep point values. No CI/design-system rule or baseline adjustment is needed. The code names28 literally, allowing the hygiene scanner to assess it honestly.",
+    "isolation_build": "Synchronous computed Font reads a normal SwiftUI environment value; no mutable cache, geometry feedback, Task, new API dependency, actor annotation or cross-test state is introduced."
+  },
+  "exact_Tamil_guard": {
+    "key": "Tune in seconds.\nThen learn to play.",
+    "translation": "வினாடிகளில் டியூன் செய்யுங்கள்.\nபிறகு வாசிக்கக் கற்றுக்கொள்ளுங்கள்.",
+    "translation_sha256": "940b182d471ecda8d895b85c39bf13cbee0c3f520d27687a07057b5a1cfe6a7b",
+    "resource_same_as_970a12d": true,
+    "resource_sha256": "ea7b3705651a2e2fc15817a1489f1584ed9892a27f729f34ec1a7048daaee07c"
+  },
+  "official_primary_support": [
+    {
+      "url": "https://developer.apple.com/documentation/foundation/locale/current",
+      "retrieval": "Official Markdown fetched successfully through Python urllib after web renderer rejected text/markdown.",
+      "claim": "Locale.current incorporates system locale, app-specific choice in Settings, and localization availability; it is a consistent snapshot."
+    },
+    {
+      "url": "https://developer.apple.com/documentation/swiftui/font/custom(_:size:relativeTo:)",
+      "retrieval": "Official Markdown fetched successfully through Python urllib.",
+      "claim": "The custom font scales relative to the supplied text style."
+    }
+  ],
+  "verification_observed": {
+    "exact_Tamil_resource_base_guard": true,
+    "type_scale_findings": 0,
+    "actual_CI_hygiene_command": "python tools/ci/comment_hygiene.py --github",
+    "actual_CI_hygiene_exit": 0,
+    "actual_CI_hygiene_result": "OK: no new error-level occurrences. Existing warn-level inline-orb at PaywallWinBack.swift:132 is reported as warning.",
+    "additional_strict_probe_command": "python tools/ci/comment_hygiene.py --strict",
+    "additional_strict_probe_exit": 1,
+    "additional_strict_probe_result": "Strict arms the existing warn-level inline-orb rule and fails on the same pre-existing PaywallWinBack.swift:132 occurrence; this is not an applied-change regression.",
+    "PaywallWinBack_byte_identical_to_970a12d": true,
+    "hygiene_baseline_byte_identical_to_970a12d": true,
+    "hygiene_rule_diff_against_970a12d": "none",
+    "correction_to_interim_report": "Earlier description of the strict finding as newly introduced was incorrect. Verified the entire source file and baseline are byte-identical to970a12d; actual CI command passes."
+  },
+  "pending_native": [
+    "Compile actual candidate with Xcode.",
+    "Capture Tamil welcome at demonstrated phone and narrower supported width; inspect complete last word plus period, glyph shaping and visual balance against hero/body/buttons.28 is30percent smaller than prior40, so source approval alone cannot establish aesthetic quality.",
+    "Check usual/large/accessibility text sizes and BoldText, preserving growth/unlimited text and reachable controls.",
+    "Check system/iOS per-app Tamil and explicit in-app Tamil path; regional ta-IN/ta-LK selector is source-supported, not device-certified here."
+  ],
+  "limitations": [
+    "No native execution, new candidate screenshot, VoiceOver listening or human native-speaker certification.",
+    "The original baseline screenshot demonstrates the orphan; it does not demonstrate the28-point result.",
+    "No live source/resources/tests/glossary/CI files mutated during this review."
+  ]
+}

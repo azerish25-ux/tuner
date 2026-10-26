@@ -1,0 +1,35 @@
+{
+  "reviewer": "Codex review_uk",
+  "source_sha": "970a12db87dd5751d3674b1321e20706a576e03e",
+  "status": "bounded proposal; live implementation and native rendering delegated to root",
+  "finding": "Baseline paywall Today lesson subtitle truncates the E minor lesson name",
+  "priority": "P2 visual completeness; additional observed issue, not one of49 enforced audit errors",
+  "evidence_png": "2BFB9353-1B77-46AD-87F2-23EDA141413A.png",
+  "evidence_png_sha256": "637565958a8fafcf90def188ebeb33761469e2d97c44d53917670b095583c74a",
+  "visible_text": "Your first chord: E mi…",
+  "approximate_caption_region_original_px": [
+    60,
+    2000,
+    367,
+    2037
+  ],
+  "region_method": "Approximate visual region in original1206×2622px screenshot; not an AX-reported frame or exact glyph segmentation",
+  "guard": {
+    "path": "ios/Timbre/Paywall/PaywallView.swift",
+    "line_at_base": 1213,
+    "source_blob_sha256": "950cae30c2c0a7abf3844cc3a750f48170ec7557c6148cd86215f66ebbc068b8",
+    "exact_old": ".lineLimit(typeSize > .large ? 2 : 1).minimumScaleFactor(0.75)",
+    "proposed_new": ".lineLimit(2).minimumScaleFactor(0.75)"
+  },
+  "rationale": "Allow the lesson-specific Today detail to wrap to two lines at ordinary text sizes. Keep the full source lesson name and current spoken track label; avoid shortening musical facts or global font changes. Existing TrackLayout computes maximum detail height at each measured column width and includes it in total height, so this is a bounded wrapping change.",
+  "related_comment_at_base": [
+    1203,
+    1204
+  ],
+  "required_validation": [
+    "Render this exact trial paywall at same size and verify full E minor name, timeline spacing and CTA position.",
+    "Inspect narrow viewport, long localized lesson names and larger text sizes; allow a row fallback if two lines still fail.",
+    "Retain full VoiceOver label and existing legal/purchase wording.",
+    "Do not claim the49 accessibility findings are fixed by this unrelated caption change."
+  ]
+}

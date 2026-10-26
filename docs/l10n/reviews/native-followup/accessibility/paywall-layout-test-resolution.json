@@ -1,0 +1,43 @@
+{
+  "reviewer": "Codex independent code reviewer /root/review_is (AI)",
+  "decision": "resolve PAYWALL-TEST-01 by direct source review; native execution and candidate render pending",
+  "initial_review": {
+    "path": "docs/l10n/reviews/native-followup/accessibility/paywall-layout-code-review.json",
+    "sha256": "61b7f0f0fb628398e3d3263d2b30b263ffd2210c242d25419a630f431a981ebd",
+    "preserved_unmodified": true
+  },
+  "bindings": {
+    "source": {
+      "path": "ios/Timbre/Paywall/PaywallView.swift",
+      "sha256": "aff644fcad9d59d7e9a6bec28d44ed69342cb9de1239ec100f57b62dc34a051b",
+      "unchanged_from_initial_review": true
+    },
+    "strengthened_test": {
+      "path": "ios/TimbreAppTests/PaywallLayoutTests.swift",
+      "sha256": "aa4af5ddf2c92f13f2c3623b61ead0f915da9c68deeb13d852eb2785c84f82f8",
+      "test_block_sha256": "273d4992327770efe00682b18f3de6d5b39fd84a6ea7f8565b25c59ef7d2d157"
+    }
+  },
+  "actual_read_coverage": [
+    "Complete final testTodayTimelineKeepsTheCompleteFirstLessonName function",
+    "Shared measure helper and its locale/direction/Dynamic Type environment setup",
+    "Initial review finding and original file bindings"
+  ],
+  "resolution": {
+    "finding": "PAYWALL-TEST-01",
+    "status": "resolved-in-code-review",
+    "rationale": [
+      "At the same 100-point width, the test measures heading-only detail and an independent standalone caption Text with unconstrained vertical intrinsic size. The row must reserve at least their combined heights (within 0.5-point tolerance); the extra 1-point VStack spacing makes this conservative.",
+      "A wrapping heading alone no longer satisfies the assertion: its measured height appears on both sides, and full lesson height is additionally required.",
+      "The natural Russian long-title fixture explicitly must exceed twice its wide one-line height. A restored one- or two-line cap therefore cannot satisfy the complete-lesson-height requirement for this fixture.",
+      "All four fixtures run in LTR and RTL and at explicit .large and .xxxLarge, covering the horizontal-track Dynamic Type range requested. The shared measure helper pins locale to en_US and applies requested direction and size, avoiding dependence on ambient simulator text size.",
+      "Using Text(verbatim:) makes these controlled literal layout fixtures. This verifies intrinsic size reservation rather than localized-resource lookup, which remains outside this unit test."
+    ]
+  },
+  "remaining_limits": [
+    "No iOS hosted tests were run by this Windows reviewer. Assertions are accepted by source analysis, not claimed empirically passing.",
+    "The helper test does not render the whole TrackLayout, scroll view or pinned CTA; candidate native renders must verify full title visibility, timeline separation and scroll reachability.",
+    "No blanket all-locale visual or human-native certification."
+  ],
+  "source_mutations_by_reviewer": false
+}

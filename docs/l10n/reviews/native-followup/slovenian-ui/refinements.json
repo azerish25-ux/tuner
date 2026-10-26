@@ -1,0 +1,62 @@
+[
+  {
+    "index": 58,
+    "locale": "sl",
+    "table": "Localizable.strings",
+    "key": "A precision tuner for sixty instruments, with the practice that keeps you in tune.",
+    "source": "A precision tuner for sixty instruments, with the practice that keeps you in tune.",
+    "old": "Natančen uglaševalec za šestdeset inštrumentov, z vadbo, ki vas ohranja uglašene.",
+    "root_proposed_new": "Natančen uglaševalnik za šestdeset glasbil z vadbo za čisto igranje.",
+    "new": "Natančen uglaševalnik za šestdeset glasbil z vadbo za čisto intonacijo.",
+    "source_sha256": "c95e6bddb22907b2d1c136724a0b9fe8c9ab9c134c29881bda719f45a5cf2fb0",
+    "old_sha256": "597719138a21cc42344a7779d4db4d3a723ffc795b577a687178c843e8ade749",
+    "new_sha256": "64595e62442acba622547f02f10c1fc0eea24704f81fcc1204791f73ccb42e65",
+    "reviewer": "Codex review_sk (independent Slovenian UI register review)",
+    "reason": "Keep the source pitch-accuracy promise explicit. Čisto igranje could mean general clean technique; čista intonacija expresses staying in tune and uses the glossary intonation sense."
+  },
+  {
+    "index": 89,
+    "locale": "sl",
+    "table": "Localizable.strings",
+    "key": "A precision tuner, hundreds of lessons that listen as you play, and a daily quest to keep you going.",
+    "source": "A precision tuner, hundreds of lessons that listen as you play, and a daily quest to keep you going.",
+    "old": "Natančen uglaševalec, na stotine lekcij, ki vas poslušajo med igranjem, in dnevni izziv, ki vas ohranja v zagonu.",
+    "root_proposed_new": "Natančen uglaševalnik, na stotine lekcij, ki poslušajo tvoje igranje, in dnevna naloga za nadaljnji napredek.",
+    "new": "Natančen uglaševalnik, na stotine lekcij, ki poslušajo tvoje igranje, in dnevna naloga, ki te spodbuja k nadaljevanju.",
+    "source_sha256": "e2bf8e527f972b856156fa0a8bd2c6d2943794ea6c96aea12c6faaafd0d2e6f8",
+    "old_sha256": "39871c527a62f8a95669d4bf567a9b29465c7b5bedd365652cb7c0d2f603398f",
+    "new_sha256": "9a160b9e237ff646a94031f6c7226ab804090540ac8e4bbe53bd3ad14ff225b5",
+    "reviewer": "Codex review_sk (independent Slovenian UI register review)",
+    "reason": "The source daily quest encourages continuation, not an additional promise of further progress. Retain the listening-lesson and precision-tuner facts and informal ti while keeping the persistence meaning."
+  },
+  {
+    "index": 102,
+    "locale": "sl",
+    "table": "Localizable.strings",
+    "key": "%@ lessons that listen as you play",
+    "source": "%@ lessons that listen as you play",
+    "old": "Lekcije za %@, ki poslušajo vaše igranje",
+    "root_proposed_new": "Lekcije za %@, ki poslušajo tvoje igranje",
+    "new": "%@: lekcije, ki poslušajo tvoje igranje",
+    "source_sha256": "c2b46fe699c7c83cb1e15f6f6ebf0162083a2f1c82f979896840b8e9134ecbcf",
+    "old_sha256": "a3528c205644989895bc04a2d03a5c17c8094cde87b092dc7dd0b0a49219c70f",
+    "new_sha256": "f38195797b73491bf070441b79ca05c942b827e0f4d5c8dc4de12c78f9812af9",
+    "reviewer": "Codex review_sk (independent Slovenian UI register review)",
+    "reason": "PaywallPlan.swift inserts the localized course title (e.g. Kitara) in dictionary form. Lekcije za Kitara requires a missing accusative ending; prefixing the unchanged value as a nominative heading avoids inflecting an unknown placeholder."
+  },
+  {
+    "index": 107,
+    "locale": "sl",
+    "table": "Localizable.strings",
+    "key": "You're on a %lld-day streak, and you've practised today.",
+    "source": "You're on a %lld-day streak, and you've practised today.",
+    "old": "Vaš %lld-dnevni niz traja, danes pa ste že vadili.",
+    "root_proposed_new": "Tvoj %lld-dnevni niz traja, danes pa že šteje vadba.",
+    "new": "Tvoj %lld-dnevni niz traja, za danes pa je vadba že opravljena.",
+    "source_sha256": "e110fc8facabbc3d5f52166d7f2467d47d7bbde82b9469052ce8b4b1dcb6c3cf",
+    "old_sha256": "e3b7b594c5113d3d2a079f6473b02f64a79c463417dd86b02d9ca689674f8eee",
+    "new_sha256": "724f9b4c01c5c0b0d2ce81c8db0a7bdc6677ae322eacbcb698ee3e9bb1b25436",
+    "reviewer": "Codex review_sk (independent Slovenian UI register review)",
+    "reason": "Replace awkward danes pa že šteje vadba with a natural gender-neutral completed-practice statement. StreakSnippet uses this branch only when practicedToday is true; preserve the day placeholder and avoid user-gender agreement."
+  }
+]

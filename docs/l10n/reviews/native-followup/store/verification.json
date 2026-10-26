@@ -1,0 +1,47 @@
+{
+  "status": "verified",
+  "commands": [
+    {
+      "command": "python -m unittest discover -s tools/l10n/tests -p test_store*.py",
+      "exit_code": 0,
+      "tests_passed": 45,
+      "failures": 0
+    },
+    {
+      "command": "python tools/l10n/store.py",
+      "exit_code": 0,
+      "listing_locales_checked": 50,
+      "problems": 0
+    },
+    {
+      "command": "git diff --check -- tools/l10n/store/hr.json tools/l10n/store/sl-SI.json tools/l10n/store-review-independent.json tools/l10n/store-corrections.json tools/l10n/store-review.json",
+      "exit_code": 0,
+      "whitespace_errors": 0
+    }
+  ],
+  "files": {
+    "tools/l10n/store/sl-SI.json": {
+      "sha256": "a02a52fefb85092b110137b69fea94f5aa69d39033ae542f81ffcf6175c0da81",
+      "uses_LF_without_CRLF": true
+    },
+    "tools/l10n/store/hr.json": {
+      "sha256": "0e3b1bac18ff01afaeb72b27bb213178f7f71821dc7157a9c6e5dfdaa0952c9b",
+      "uses_LF_without_CRLF": true
+    },
+    "tools/l10n/store-review-independent.json": {
+      "sha256": "692f5401a1fcba61af35b28a35c70d5a904359e9eedd37561163c167c82b99ac",
+      "uses_LF_without_CRLF": true
+    },
+    "tools/l10n/store-corrections.json": {
+      "sha256": "c6d5d69bc785d4dbfff929b9114cadb5aaf546cbcd11c90166afbdd40c4e0586",
+      "uses_LF_without_CRLF": true
+    },
+    "tools/l10n/store-review.json": {
+      "sha256": "a1f4fde1db16da5691e14f17a167695691d4abb1b833f9d678538fb881f4526e",
+      "uses_LF_without_CRLF": true
+    }
+  },
+  "git_line_ending_advisory": "Git printed its configured next-checkout LF-to-CRLF advisory; actual working bytes were independently checked and remain UTF-8 LF in all five tracked writes. No Git configuration was changed.",
+  "release_readiness": "All50 payload review.release_ready flags remain false; passing text gates is not release approval.",
+  "apply_receipt_sha256": "b7b8851f351686a098b24c05a9a88b8b357e06a87e844edf22e412993e3e36ff"
+}

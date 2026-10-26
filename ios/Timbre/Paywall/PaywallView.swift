@@ -1200,21 +1200,12 @@ struct PaywallView: View {
         .accessibilityHidden(true)
     }
 
-    /// Today: "Everything unlocked" over the first lesson, a line each at the usual text sizes (VoiceOver reads
-    /// the whole title). The price stays on one line. The others keep two lines, so the track keeps its height.
+    /// Today's first lesson keeps its complete name within the column. The layout measures its wrapped height.
+    /// The price stays on one line; the other steps keep their compact two-line captions.
     @ViewBuilder private func trackDetail(_ step: TrackStep) -> some View {
         switch step.kind {
         case .today:
-            VStack(alignment: .leading, spacing: 1) {
-                Text("Everything unlocked").foregroundStyle(Palette.ink)
-                    .lineLimit(1).minimumScaleFactor(0.75)
-                if let lesson = step.detail {
-                    lesson.foregroundStyle(Palette.inkSoft)
-                        .lineLimit(typeSize > .large ? 2 : 1).minimumScaleFactor(0.75)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-            }
-            .font(.caption)
+            PaywallTodayTrackDetail(lesson: step.detail)
         case .billing:
             (step.detail ?? Text(verbatim: "")).font(.caption).foregroundStyle(Palette.inkSoft)
                 .lineLimit(1).minimumScaleFactor(0.7)
@@ -1478,6 +1469,21 @@ struct PaywallView: View {
             guard let tuning = store.catalog.tuning(id: instrument.defaultTuningId) else { return true }
             return AccessPolicy.canUse(tuning: tuning, of: instrument, pro: false)
         }
+    }
+}
+
+/// A localized lesson name can need several lines in a narrow timeline column.
+struct PaywallTodayTrackDetail: View {
+    let lesson: Text?
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 1) {
+            Text("Everything unlocked").foregroundStyle(Palette.ink)
+            if let lesson { lesson.foregroundStyle(Palette.inkSoft) }
+        }
+        .font(.caption)
+        .lineLimit(nil)
+        .fixedSize(horizontal: false, vertical: true)
     }
 }
 

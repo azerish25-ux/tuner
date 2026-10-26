@@ -1,0 +1,28 @@
+{
+  "reviewer": "Codex review_sk (independent bounded SwiftUI code review)",
+  "skill": "C:/Users/shahr/.agents/skills/code-review-and-quality/SKILL.md",
+  "scope": "LessonHeader title intrinsic-height wrapping fix and its new hosted measurement tests only.",
+  "reviewed_file_sha256": {
+    "ios/Timbre/Learn/LessonPlayer.swift": "1f375133631a2ba523f9f3a8c099ec54332999dfbaffa1d52cadd76c353b4bf5",
+    "ios/TimbreAppTests/LessonHeaderLayoutTests.swift": "9a0b17ff1b797b54d2be4a54c7867d2c90ef77834d3b5cc8a4bf83d0ec674230"
+  },
+  "verdict": "approve implementation candidate; native compilation/test/capture verification still pending",
+  "blocking_findings": [],
+  "axes": {
+    "correctness": "lineLimit(nil) plus fixedSize(horizontal:false,vertical:true) reserves all wrapped title lines under the HStack width while retaining fixed counter sizing, first-baseline alignment, the unchanged dynamic-type cap and existing combined accessibility semantics. Parent VStack permits a taller header.",
+    "readability": "Two local text-layout modifiers fix the demonstrated one-line truncation. Updated topBar and shared-header comments now describe wrapping rather than a forced single row.",
+    "architecture": "The change stays inside the canonical shared LessonHeader and introduces no parallel renderer, new dependency, state or conditional policy.",
+    "security": "No new external data flow, storage, permissions or executable inputs.",
+    "performance": "Ordinary finite localized-title text reflow; no new loops, timers, network operations or retained UI state."
+  },
+  "tests_reviewed": {
+    "meaningful_regression": "The old lineLimit(1) implementation would keep the same narrow/wide height. The new tests compare actual UIHostingController sizing at1200 and240 points, cover French/Russian long names, both layout directions and normal/accessibility1 sizing, and retain a short-name compactness check. A full accessibility label is not used as a proxy for visible text.",
+    "limits": "Height growth alone does not certify every string or whole-screen layout. The implementation explicitly permits unlimited lines, and actual post-change simulator screenshots remain needed."
+  },
+  "verification": {
+    "swift_xcode_tests": "not run on this Windows host",
+    "native_screenshot": "root has baseline truncation evidence; no post-change capture inspected by this reviewer",
+    "source_diff": "directly read final working diff, shared header/counter/progress track, parent topBar/VStack and complete new tests; compared existing PaywallLayoutTests hosting pattern"
+  },
+  "resolved_optional_note": "The stale shared-header on-one-line comment noted in the review message is now updated in the final reviewed diff."
+}

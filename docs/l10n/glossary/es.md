@@ -136,7 +136,8 @@ Brand names Timbre, Timbre Pro, Pro, Apple, iPhone, iPad, Apple Watch, App Store
 | Ear training | Context-specific musical/UI sense | UI and lessons | `Ear training` | Entrenamiento auditivo |  |
 | Drone | Context-specific musical/UI sense | UI and lessons | `Drone` | Nota pedal |  |
 | Tanpura | Context-specific musical/UI sense | UI and lessons | `Tanpura` | Tanpura |  |
-| Intonation | Context-specific musical/UI sense | UI and lessons | `Intonation` | Afinación | Correct drone-training sense; supersedes octave-adjustment mistranslation in shipped table. |
+| Intonation | Instrument setup: harmonic/stopped-note comparison | Practice tool and setup paywall | `Intonation` | Octavación | Current route is `IntonationView`; retain this applied setup label. |
+| Intonation over a drone | Pitch accuracy against a reference drone | Today activity and drone paywall | `Intonation over a drone` | Afinación sobre nota pedal | Separate key; retain its applied drone-practice wording. |
 | Metronome | Context-specific musical/UI sense | UI and lessons | `Metronome` | Metrónomo |  |
 | Speed trainer | Context-specific musical/UI sense | UI and lessons | `Speed trainer` | Entrenador de tempo |  |
 | Chords | Context-specific musical/UI sense | UI and lessons | `Chords` | Acordes |  |
@@ -192,7 +193,7 @@ Retained exact repertoire titles in this review (each has its own source-bound r
 `Originals` is a generic collection label here, not an invariant brand. Use the selected collection term in navigation and the Words & music credit. Timbre itself is unchanged. Singular description “a Timbre original” may remain a natural local noun phrase rather than forcing the plural navigation label into a sentence.
 
 ## 4. Words that mislead
-Tune as a verb means tuning, as a noun a melody. Sharp/flat on the tuner mean too high/low, not accidentals. Bar means measure; key means tonality. Pick means plectrum or plucking in music, choose in UI. Lock means a stable in-tune confirmation, not a padlock. Take is one recorded performance, not taking a lesson. Run means a practice streak or an uninterrupted passage, not running. Chart means an instrumental chord diagram/sheet unless progress statistics explicitly demand a graph. Intonation is playing in tune over a drone, never octave/saddle adjustment. Practice is musical practice. Feel is haptic vibration, not emotion. A challenge to a friend differs from the unit's final challenge lesson; preserve context.
+Tune as a verb means tuning, as a noun a melody. Sharp/flat on the tuner mean too high/low, not accidentals. Bar means measure; key means tonality. Pick means plectrum or plucking in music, choose in UI. Lock means a stable in-tune confirmation, not a padlock. Take is one recorded performance, not taking a lesson. Run means a practice streak or an uninterrupted passage, not running. Chart means an instrumental chord diagram/sheet unless progress statistics explicitly demand a graph. Intonation is context-dependent: the current literal app key `Intonation` labels the harmonic/stopped-note instrument-setup check; `Intonation over a drone` is a separate pitch-accuracy practice key. Generic lesson uses follow their own source context. Do not infer a blanket ban on saddle setup from the English word alone. Practice is musical practice. Feel is haptic vibration, not emotion. A challenge to a friend differs from the unit's final challenge lesson; preserve context.
 
 ## Reviewed shared musical-item ordinals
 

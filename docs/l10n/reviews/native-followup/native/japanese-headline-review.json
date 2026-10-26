@@ -1,0 +1,55 @@
+{
+  "reviewer": "Codex independent Japanese headline reviewer /root/review_is (source-aware AI, not native-human)",
+  "decision": "accept-bounded-descriptive-prose-variant",
+  "locale": "ja",
+  "table": "Localizable.strings",
+  "key": "Tune in seconds.\nThen learn to play.",
+  "source": "Tune in seconds.\nThen learn to play.",
+  "old": "数秒でチューニング。\n次は演奏を学びましょう。",
+  "new": "数秒で音合わせ。\n次は演奏を学びましょう。",
+  "source_sha256": "cae1bcb95b5e422412a523360cdc701edce1658d5e175293fea6bc7d1a1e3562",
+  "old_sha256": "2245145978f7b664559601141057e0a33d9624cd356dd0992ecc4bc9e7ecc3bd",
+  "new_sha256": "5f7610c306f62f55a7a1385a536d74b9e9d7b7e800bc9991e2d0bfa8ae49889a",
+  "source_location": "ios/Timbre/Onboarding/OnboardingView.swift:331",
+  "source_file_sha256": "193a756677ef45ef6ca1720f603617bc517e7ce816dfc0dd0b0ea40ea821c336",
+  "current_resource_file_sha256": "6280aa6cf455ee80e625f38315ad46c8d3c31f543bb883fd353e428cdd8289e6",
+  "glossary_file_sha256": "ad18cbf5a7af01d3e2a617ed80c775dc7fbdf7d106ebb4a5f21955321d04c83e",
+  "semantic_rationale": [
+    "数秒 retains the quick-in-seconds claim; 音合わせ is natural descriptive pitch-tuning wording rather than a manufactured phonetic or abbreviated label. It covers general instrument tuning without narrowing the claim to strings alone as 調弦 would.",
+    "次は preserves the tune-then-learn sequence. 演奏を学びましょう retains learning to play and the warm polite invitation. No claim, count, pronoun, price or permission fact is added.",
+    "The explicit source newline remains exactly one. No characters are removed merely to make a broken form pass a length scanner; the replacement is an independently meaningful Japanese synonym."
+  ],
+  "glossary_scope_exception": {
+    "bound_key": "Tune in seconds.\nThen learn to play.",
+    "generic_tuning_synonym": "音合わせ",
+    "pinned_control_terms_unchanged": [
+      "Tune = チューニング",
+      "tuner = チューナー",
+      "Strum to tune = かき鳴らしてチューニング",
+      "Just tune = current pinned control wording"
+    ],
+    "note": "This is generic onboarding description, not a reference instructing the user to tap a named Tune control. It does not authorize a global terminology replacement."
+  },
+  "primary_terminology_evidence": {
+    "url": "https://jp.yamaha.com/files/download/other_assets/6/315646/frenchhorn_om_ja_a0.pdf",
+    "support": "Yamaha Japanese instrument manual explicitly pairs チューニング with 音合わせ; this supports semantic equivalence, not the app visual result."
+  },
+  "visual_evidence": {
+    "baseline_image_path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\localization-east-asian\\named\\screenshots\\l10n-ja-welcome.png",
+    "baseline_image_sha256": "75102fa6b8ff8caefdabeb320fbb73087735637e04667f43819599c5c67e3d66",
+    "actual_baseline_image_viewed": true,
+    "view_method": "tools.view_image(original)",
+    "observed_baseline_finding": "The first clause wraps after チューニン, leaving グ。 alone on the next line. All text is present, but the isolated final kana/punctuation is an awkward headline widow.",
+    "proposed_native_image_viewed": false,
+    "required_followup": "Render this exact candidate on the native iPhone welcome view and inspect balance, complete phrasing, glyphs and action visibility. This semantic approval does not assert that the new layout is already balanced."
+  },
+  "contracts": {
+    "newline_count": 1,
+    "placeholder_or_named_token_changes": 0,
+    "report_check_errors": []
+  },
+  "limitations": [
+    "No live target/source/assets modified by this reviewer.",
+    "No native-human fluency, full-app/device, or release certification."
+  ]
+}

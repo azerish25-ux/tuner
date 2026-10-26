@@ -278,7 +278,7 @@ struct LessonPlayer: View {
     }
 
     /// The close button beside the lesson's compact header: its name, "Step 2 of 7" (or "Tune up" over the tune check)
-    /// and a track with a segment per step, all in one 44 pt row.
+    /// and a track with a segment per step. Long names can make the row taller than the close button's target.
     private var topBar: some View {
         HStack(spacing: 8) {
             if opening, let part {
@@ -375,8 +375,8 @@ struct StepView: View {
 
 // MARK: - Shared pieces
 
-/// A lesson's compact header beside its close button: the lesson's name and "Step 2 of 7" on one line, over a track
-/// with a segment per step. VoiceOver reads it as one element.
+/// A lesson's compact header beside its close button: its wrapping name beside "Step 2 of 7", over a track with a
+/// segment per step. VoiceOver reads it as one element.
 ///
 /// The tune check before the first step that listens is no step of its own: over it the counter reads "Tune up" (a
 /// tuning fork in the accent) and the track shows only the steps done, so every screen moves the header on: "Step 1
@@ -398,13 +398,14 @@ struct LessonHeader: View {
                 Text(verbatim: title)
                     .font(Typeface.label(.footnote))
                     .foregroundStyle(Palette.ink)
-                    .lineLimit(1)
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
                 Spacer(minLength: 0)
                 counter
             }
             LessonProgressTrack(index: index, steps: steps, accent: accent, current: !tuningUp)
         }
-        // One row beside the 44 pt close button: the words stop growing before they'd crowd it.
+        // Keep the close control and counter clear; the title reserves every line at this readable type size.
         .dynamicTypeSize(...DynamicTypeSize.accessibility1)
         .adaptiveAnimation(Motion.page, value: index)
         .adaptiveAnimation(Motion.page, value: tuningUp)

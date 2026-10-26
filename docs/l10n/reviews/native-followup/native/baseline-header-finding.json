@@ -1,0 +1,12 @@
+{
+  "source_commit": "970a12db87dd5751d3674b1321e20706a576e03e",
+  "run_id": 40396032371,
+  "job_id": 121829199702,
+  "screenshot": "baseline-fr-lesson-header-truncated.png",
+  "screenshot_sha256": "ad273e1de096a4f75f407d64754651bfe1e7d8ff712926674ae1f7a033767695",
+  "finding": "French full lesson name is visibly ellipsized in the compact header before the word guitare. Full accessibility label/lookup assertions did not catch visual truncation.",
+  "source_location": "ios/Timbre/Learn/LessonPlayer.swift:401",
+  "candidate_fix": "Let full lesson names reserve intrinsic wrapped height rather than one visual line; keep counter and close target.",
+  "regression_test": "ios/TimbreAppTests/LessonHeaderLayoutTests.swift",
+  "native_regression_execution": "pending new Xcode run; not executable on this Windows host"
+}

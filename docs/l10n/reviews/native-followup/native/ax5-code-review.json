@@ -1,0 +1,43 @@
+{
+  "reviewer": "Codex review_sk (independent bounded AX5 interaction code review)",
+  "scope": "New last-string reveal/frame/hit/tap/selection assertions inside assertAccessibleTunerCanScroll only.",
+  "reviewed_source_sha256": {
+    "ios/TimbreUITests/LocalizationMatrixUITests.swift": "3917165ce21f3cad63d71021e82b331d95027994c633cb65b2a732ad9214076d",
+    "ios/Timbre/Tune/StringRail.swift": "6b7af1328028000bb6eb47ef932d6aff33e708c70f62c1a9ec916851c3c39f60",
+    "ios/Timbre/Tune/TuneView.swift": "9505bc85a385e3cd96822cd1f086d08cf0694baab69a48f58b471bffac90040f",
+    "ios/Timbre/Services/TunerSession.swift": "8495a000d259855876cedee1711c21bf4467c711c0eea3913d834c3d61f70001",
+    "ios/Sources/TimbreCore/Tuning/CourseGroups.swift": "d8661506c74c383778adc2c797737ee7d6fcf1123965bf39807ea127a2d25f42",
+    "ios/Sources/TimbreCore/Persistence/LocalStore.swift": "aa27b5759fd562512ac6ad22c8abfe3c9d91cd6e2cf92b1d860bcf0a28caca29",
+    "ios/Timbre/Learn/Diagrams.swift": "9827ff2edcab023a754f02de4aadd85974161baa6eee24122203a10532ea85ba",
+    "ios/Sources/TimbreCore/Resources/catalog.json": "22630d1a311423e21f5b4cd6ec009d6e48c3dbef7b8aafcbab9093907e58501e"
+  },
+  "verdict": "approve final source-supported AX5 interaction candidate; no blocking code-review findings; native execution still required",
+  "blocking_findings": [],
+  "source_checks": {
+    "fixture": "Fresh storage uses guitar.acoustic.6, right handedness and standard tuning. Catalog indices1..6 end with course6 E4 (MIDI64, anchor s1), not physical string6 E2.",
+    "identifier": "CourseGroup.id is the lead Course.index; CourseChip exposes string.group.id as a button identifier, and TuneView preserves rail children using accessibilityElement(children:.contain).",
+    "gesture_direction": "StringRail explicitly forces leftToRight layout in every locale and reverses order only for left-handed settings. A left swipe reveals the rightmost E4 for this fresh right-handed fixture, including RTL phone languages.",
+    "geometry": "The test does not mistake a partially hittable chip for complete reveal: both horizontal edges must fit within app bounds. The preceding vertical-reachability checks place the rail above the tab bar before horizontal gestures. Six finite attempts bound the gesture loop.",
+    "selection": "CourseChip tap chooses the unpaired E4 course; TunerSession.choose(course:) sets selectedCourse and disables automatic retargeting. After the tap, XCTNSPredicateExpectation observes selected == true on that button and XCTWaiter requires completion within5seconds before the screenshot.",
+    "query_existence": "The HStack is not lazy; waitForExistence precedes frame checks, avoiding reading a nonexistent virtualized last chip.",
+    "concurrency": "No new async shared state or environment mutation is introduced; per-language app execution remains sequential with per-run UUID storage.",
+    "timing_and_actor_isolation": "Freshly reread final source uses the established XCTNSPredicateExpectation + XCTWaiter APIs. There is no new wait(for:keyPath...) call or actor annotation. The bounded condition wait resolves the immediate-snapshot timing concern without adding a new MainActor-isolated method call in the nonisolated helper."
+  },
+  "nonblocking_recommendations": [
+    {
+      "kind": "coverage limitation",
+      "recommendation": "Keep scope reporting explicit: the current AX5 branch runs only for bg. It exercises the physically LTR rail at AX5; it is not proof of RTL-language AX5 interaction, left-handed order or other instruments."
+    }
+  ],
+  "verification": {
+    "native_tests": "not run by this reviewer on Windows",
+    "new_screenshot": "not inspected; source review does not establish reveal/tap success",
+    "baseline_pixels": "Parent-provided visual report documents partial sixth-chip horizontal visibility and explicitly says scrolling usability was unproven. This new assertion targets that missing interaction evidence."
+  },
+  "resolved_review_notes": [
+    "The earlier immediate isSelected snapshot concern is resolved by the actual final bounded selected-state expectation.",
+    "The short-lived key-path wait isolation caveat does not apply to the final freshly read source: no such call remains."
+  ],
+  "final_source_reread_sha256": "3917165ce21f3cad63d71021e82b331d95027994c633cb65b2a732ad9214076d",
+  "final_source_reread_scope": "Reread the complete reveal/geometry/tap/selected-expectation/capture block after root changed it; exact final bytes contain the legacy predicate expectation and no new actor-isolated wait call."
+}

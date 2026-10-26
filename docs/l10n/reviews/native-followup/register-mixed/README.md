@@ -1,0 +1,11 @@
+# Croatian, Romanian and Turkish UI register review
+
+The glossary selects informal singular ti / tu / sen. All 191 requested candidates were directly read, followed by 62 permission/Siri rows and 387 neighbouring active-key candidates. The final proposal contains 284 exact source/current-old/new guarded corrections (Croatian 161, Romanian 16, Turkish 107) and 356 accepted rows. Every proposed final target was reread. No non-catalogue legacy timbre_* row was changed.
+
+The expanded reads distinguish real imperatives from ordinary noun/adjective endings and existing singular forms. In particular, Turkish Get Timbre uses the already singular edin (from edinmek); kalın remains thick in string descriptions and changes only where the command means stay. Romanian noun plurals such as cenți and existing singular cânți/poți remain. Croatian instrumente/note/kvinte and musical Andante remain. Croatian practice-status wording avoids assigning an unknown reader a gender. Turkish app/plan head nouns carry grammatical case rather than suffixing Timbre/Timbre Pro where those sentences are already being corrected.
+
+Source context is bound to active Swift/catalogue locations where available. Relevant tuning, microphone, streak/Watch, play-along and share-text code contexts were inspected; this does not claim a full semantic rereview of every three-language UI row or every source file. Permission purposes, on-device processing, no-save/no-upload promises, subscription cancellation/renewal/free-tier facts, named Siri tokens, format arguments, digit groups and line breaks are preserved. Importer/helper checks have no hard errors for these proposals.
+
+The original candidate inventories remain in adjacent/expanded/Turkish-suffix files so each accepted regex match is auditable. proposals.json contains all 640 decisions; corrections.json contains only the 284 proposed changes. store-sync-impact-preview.json identifies badge/board fields whose wording would need separate app/store reconciliation after approved import; it does not update any payload or evidence hash.
+
+No live resources/maps, glossary, store, commit or push were modified. No native-human fluency, device layout, VoiceOver listening or release certification is claimed.

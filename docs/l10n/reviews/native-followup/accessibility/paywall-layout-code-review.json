@@ -1,0 +1,93 @@
+{
+  "reviewer": "Codex independent code reviewer /root/review_is (AI, not native-device or human certification)",
+  "base_commit": "970a12db87dd5751d3674b1321e20706a576e03e",
+  "decision": "accept-implementation; strengthen regression test before claiming complete-name coverage; native verification pending",
+  "scope": {
+    "actual_baseline_image_viewed": true,
+    "source_diff_directly_read": true,
+    "new_test_directly_read": true,
+    "surrounding_source_directly_read": [
+      "outer body ScrollView and safeAreaInset bottomBar",
+      "viewport, trackReserve, essentials, fold and content geometry observers",
+      "planTrack, trackSpread, trackDetail, trackRows",
+      "TrackLayout column allocation, band measurement, sizeThatFits and placement"
+    ],
+    "native_tests_run_by_this_reviewer": false,
+    "new_candidate_native_render_viewed": false,
+    "source_mutations": false
+  },
+  "bindings": {
+    "source": {
+      "path": "ios/Timbre/Paywall/PaywallView.swift",
+      "sha256": "aff644fcad9d59d7e9a6bec28d44ed69342cb9de1239ec100f57b62dc34a051b"
+    },
+    "test": {
+      "path": "ios/TimbreAppTests/PaywallLayoutTests.swift",
+      "sha256": "f492414b405f79f51e5d97fb5d62f17fb635bed6c38a70fd1b6e53f57d6fb28c"
+    },
+    "reviewed_test_block_sha256": "7282f883a67bdfcf806920888bace0f559adf9ad3181748c5eeef70142c26ef1",
+    "reviewed_helper_block_sha256": "b0e182eecec53ce96ace01ecaf93a98283f040baf9dcb882006cf9cf1c879525",
+    "baseline_image": {
+      "path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-970\\screenshots\\2BFB9353-1B77-46AD-87F2-23EDA141413A.png",
+      "sha256": "637565958a8fafcf90def188ebeb33761469e2d97c44d53917670b095583c74a",
+      "actual_viewed": true,
+      "display_resize_notice": "Tool displayed 1206x2622 source at 942x2048; the visible truncation is still clear."
+    }
+  },
+  "baseline_observation": "Actual English baseline Today detail visibly reads Your first chord: E mi... below Everything unlocked. Its purchase CTA and trial price terms are visible. This is evidence of baseline truncation only, not a candidate-pass render.",
+  "implementation_assessment": [
+    {
+      "area": "complete localized text",
+      "decision": "accept",
+      "reason": "Removing both normal-size one-line and larger-size two-line caps, plus minimumScaleFactor, lets both heading and lesson use readable caption lines. A two-line replacement is not a complete-title contract across languages and intermediate Dynamic Type sizes. No lesson content or localized key is shortened."
+    },
+    {
+      "area": "helper extraction and styles",
+      "decision": "accept",
+      "reason": "Internal helper receives the existing optional Text, preserving its localization/interpolation and foreground styles. Font remains caption, spacing remains 1. Nil lesson still leaves the heading. Outer multiline alignment and frame/layoutValue remain at the existing call site."
+    },
+    {
+      "area": "layout height and horizontal bounds",
+      "decision": "accept-by-source-inspection",
+      "reason": "TrackLayout proposes each allocated column width with nil height to detail subviews, takes maximum detail height in layoutBands, returns it in sizeThatFits, and places using that same width with nil height. fixedSize(horizontal:false,vertical:true) preserves wrapping at proposed width while allowing required vertical size. No fixed detail-band height is introduced."
+    },
+    {
+      "area": "accessibility",
+      "decision": "preserved-by-source-inspection",
+      "reason": "planTrack still ignores child accessibility elements and exposes trackSpoken as one combined label. No helper accessibility overrides are added. Accessibility-size trackRows already wraps and is unchanged; this helper is used in the horizontal non-accessibility-size track."
+    },
+    {
+      "area": "CTA and scrolling",
+      "decision": "acceptable-with-native-followup",
+      "reason": "Additional height can push selling content below the fold, but the content lives in a ScrollView. Its frame uses minHeight, not a clipping fixed height. Track geometry feeds trialTrackHeight/planTrackHeight and fold. bottomBar remains pinned by safeAreaInset. Initial render and geometry-driven reflow, scroll reachability and no overlap still need native validation; source inspection alone cannot certify them."
+    },
+    {
+      "area": "scope and risk",
+      "decision": "bounded",
+      "reason": "Only Today detail wrapping changes. Other price, song and reminder caps remain as before. Very long titles may occupy more vertical space; preserving complete meaningful names is appropriate, using the existing scrolling fallback. No purchase/privacy facts or interactions change."
+    }
+  ],
+  "findings": [
+    {
+      "id": "PAYWALL-TEST-01",
+      "severity": "P2",
+      "category": "regression-test-strength",
+      "file": "ios/TimbreAppTests/PaywallLayoutTests.swift",
+      "line": 80,
+      "status": "requested-parent-followup",
+      "observation": "The assertion narrow.height > wide.height + 5 proves some wrapping only. At width 100, Everything unlocked may itself wrap; a one-line truncated lesson could therefore satisfy the check. A two-line capped lesson also typically satisfies it, despite longer translations still losing text. The test does not pin Dynamic Type or locale, and does not exercise TrackLayout integration.",
+      "requested_improvement": "Measure an independent unlimited-wrap VStack reference with the same caption font/spacing and title at the same width. Assert helper height equals the reference and remains within width. Include a deliberately long natural lesson name whose independent reference is taller than an explicit two-line-capped reference, so a future cap mutation fails. Pin .large and .xxxLarge for the horizontal-track path and retain both directions. A full-track/native render remains a separate integration check.",
+      "implementation_change_required": false
+    }
+  ],
+  "verification_required_before_visual_completion": [
+    "Run hosted PaywallLayoutTests on the iOS test target after strengthening the assertion.",
+    "View candidate paywall renders at normal and intermediate large Dynamic Type, including a long localized lesson and RTL. Verify complete Today name, stable timeline separation and pinned CTA/terms.",
+    "Check narrow-device scrolling when taller track content exceeds the fold and retain combined VoiceOver track label."
+  ],
+  "coverage_limitations": [
+    "No Swift/iOS compiler or simulator execution by this Windows reviewer.",
+    "No new candidate render inspected; baseline screenshot does not prove post-change behavior.",
+    "No exhaustive all-language paywall visual certification or payment-flow test claimed."
+  ]
+}

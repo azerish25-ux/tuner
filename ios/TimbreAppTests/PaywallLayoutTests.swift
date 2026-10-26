@@ -77,6 +77,37 @@ final class PaywallLayoutTests: XCTestCase {
         }
     }
 
+    func testTodayTimelineKeepsTheCompleteFirstLessonName() {
+        let titles = [
+            "Your first chord: E minor",
+            "Votre premier accord : Mi mineur",
+            "أول وتر تعزفه: مي الصغير",
+            "Ролл с чередованием большого пальца: смена аккордов",
+        ]
+        for title in titles {
+            for direction in [LayoutDirection.leftToRight, .rightToLeft] {
+                for typeSize in [DynamicTypeSize.large, .xxxLarge] {
+                    let example = Example(locale: "en_US", direction: direction, offer: "", detail: "", price: "", anchor: "")
+                    let heading = measure(PaywallTodayTrackDetail(lesson: nil), width: 100,
+                                          typeSize: typeSize, example: example)
+                    let completeLesson = Text(verbatim: title).font(.caption)
+                        .fixedSize(horizontal: false, vertical: true)
+                    let fullText = measure(completeLesson, width: 100, typeSize: typeSize, example: example)
+                    let row = measure(PaywallTodayTrackDetail(lesson: Text(verbatim: title)), width: 100,
+                                      typeSize: typeSize, example: example)
+                    XCTAssertGreaterThanOrEqual(row.height, heading.height + fullText.height - 0.5,
+                                               "Reserve the complete lesson's intrinsic height: \(title)")
+                    XCTAssertLessThanOrEqual(row.width, 100.5)
+                    if title.hasPrefix("Ролл") {
+                        let oneLine = measure(completeLesson, width: 1200, typeSize: typeSize, example: example)
+                        XCTAssertGreaterThan(fullText.height, oneLine.height * 2,
+                                             "This fixture must expose a two-line truncation too")
+                    }
+                }
+            }
+        }
+    }
+
     private func assertSeparateOfferRow(_ example: Example, width: CGFloat, typeSize: DynamicTypeSize,
                                         arrangement: PlanFace.Arrangement, file: StaticString = #filePath, line: UInt = #line) {
         let face = PlanFace(title: "Yearly", detail: example.detail, price: example.price, saving: 58,

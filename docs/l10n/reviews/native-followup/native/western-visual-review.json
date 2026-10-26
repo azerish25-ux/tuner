@@ -1,0 +1,173 @@
+{
+  "source_commit": "970a12db87dd5751d3674b1321e20706a576e03e",
+  "run_id": 40396032371,
+  "job_id": 121829199702,
+  "device": "iPhone 17 Pro",
+  "scope": "Actual exported welcome/tuner/first-guitar-lesson screenshots only; no universal screen, Dynamic Type or native-human certification.",
+  "frames": [
+    {
+      "locale": "de",
+      "frame": "welcome",
+      "screenshot_sha256": "d503beeaa0cd55f1c36e146d0b670ab862a7be333e22be37b4a6c697963a9828",
+      "reviewer": "Codex root visual review",
+      "directly_viewed": true,
+      "issues": [],
+      "other_observations": "Readable glyphs, visible controls/tab labels, no other demonstrated clipping or overlap in this frame."
+    },
+    {
+      "locale": "de",
+      "frame": "tuner",
+      "screenshot_sha256": "4dcd02b44c9a3f9db7f34df0f480f9a7725b71ff9c630039055e51965cfa01bc",
+      "reviewer": "Codex root visual review",
+      "directly_viewed": true,
+      "issues": [],
+      "other_observations": "Readable glyphs, visible controls/tab labels, no other demonstrated clipping or overlap in this frame."
+    },
+    {
+      "locale": "de",
+      "frame": "lesson",
+      "screenshot_sha256": "bc4820dbb3c92ef01e01d609064265aac721b0d7ad00ea189143e5ac7adbc7a7",
+      "reviewer": "Codex root visual review",
+      "directly_viewed": true,
+      "issues": [],
+      "other_observations": "Readable glyphs, visible controls/tab labels, no other demonstrated clipping or overlap in this frame."
+    },
+    {
+      "locale": "es",
+      "frame": "welcome",
+      "screenshot_sha256": "c018296b77ef35fee96978d4e9ccf24a9b465a6c5b4307193689be1ed993a874",
+      "reviewer": "Codex root visual review",
+      "directly_viewed": true,
+      "issues": [],
+      "other_observations": "Readable glyphs, visible controls/tab labels, no other demonstrated clipping or overlap in this frame."
+    },
+    {
+      "locale": "es",
+      "frame": "tuner",
+      "screenshot_sha256": "cc7b83fc3a5e9ae57c37c469409632719373ebbb0da4b51916477f2a332d9add",
+      "reviewer": "Codex root visual review",
+      "directly_viewed": true,
+      "issues": [],
+      "other_observations": "Readable glyphs, visible controls/tab labels, no other demonstrated clipping or overlap in this frame."
+    },
+    {
+      "locale": "es",
+      "frame": "lesson",
+      "screenshot_sha256": "32f6a5a00f207357e8bdd2fdaabfa94b6f3ff8272cde6edc197bc8885ac143a1",
+      "reviewer": "Codex root visual review",
+      "directly_viewed": true,
+      "issues": [],
+      "other_observations": "Readable glyphs, visible controls/tab labels, no other demonstrated clipping or overlap in this frame."
+    },
+    {
+      "locale": "fr",
+      "frame": "welcome",
+      "screenshot_sha256": "f21e896324f15b437a6690b7b4b6632b3898b3c3d7973db9c3f18186fa7aadde",
+      "reviewer": "Codex root visual review",
+      "directly_viewed": true,
+      "issues": [],
+      "other_observations": "Readable glyphs, visible controls/tab labels, no other demonstrated clipping or overlap in this frame."
+    },
+    {
+      "locale": "fr",
+      "frame": "tuner",
+      "screenshot_sha256": "cd227b077915f7f792f49940a9aac3ec80e030f19aabd86e47f71fabd140f9cf",
+      "reviewer": "Codex root visual review",
+      "directly_viewed": true,
+      "issues": [],
+      "other_observations": "Readable glyphs, visible controls/tab labels, no other demonstrated clipping or overlap in this frame."
+    },
+    {
+      "locale": "fr",
+      "frame": "lesson",
+      "screenshot_sha256": "ad273e1de096a4f75f407d64754651bfe1e7d8ff712926674ae1f7a033767695",
+      "reviewer": "Codex root visual review",
+      "directly_viewed": true,
+      "issues": [
+        "French full lesson name is visibly ellipsized in the compact header before the word guitare. Full accessibility label/lookup assertions did not catch visual truncation."
+      ],
+      "other_observations": "Readable glyphs, visible controls/tab labels, no other demonstrated clipping or overlap in this frame."
+    },
+    {
+      "locale": "it",
+      "frame": "welcome",
+      "screenshot_sha256": "fcd55b5582a6fa74fa449ab6e2961dc63c03dddf80a4f3039906fe0a395b28cb",
+      "reviewer": "Codex root visual review",
+      "directly_viewed": true,
+      "issues": [],
+      "other_observations": "Readable complete text/glyphs and visible controls/tab labels; no demonstrated clipping or overlap in this frame."
+    },
+    {
+      "locale": "it",
+      "frame": "tuner",
+      "screenshot_sha256": "2f6f5322e431e1b9a408b63c8f2c45399fd49f2aed67499ab22fca11c4a6f6c0",
+      "reviewer": "Codex root visual review",
+      "directly_viewed": true,
+      "issues": [],
+      "other_observations": "Readable complete text/glyphs and visible controls/tab labels; no demonstrated clipping or overlap in this frame."
+    },
+    {
+      "locale": "it",
+      "frame": "lesson",
+      "screenshot_sha256": "f97c341a868dafe4eb51c0e067937054ccf8ecf1e2bd2cb66c1adcfc8d3c1fb8",
+      "reviewer": "Codex root visual review",
+      "directly_viewed": true,
+      "issues": [],
+      "other_observations": "Readable complete text/glyphs and visible controls/tab labels; no demonstrated clipping or overlap in this frame."
+    },
+    {
+      "locale": "pt",
+      "frame": "welcome",
+      "screenshot_sha256": "c8c8c5cdbb48e6d180e91bdba9d7d6702ed07411948dddc4dc58d6e7a1f37cc5",
+      "reviewer": "Codex root visual review",
+      "directly_viewed": true,
+      "issues": [],
+      "other_observations": "Readable complete text/glyphs and visible controls/tab labels; no demonstrated clipping or overlap in this frame."
+    },
+    {
+      "locale": "pt",
+      "frame": "tuner",
+      "screenshot_sha256": "ae90ebc183514d2205d12a50f4b998532b2b097d75f53b738592604b2658b026",
+      "reviewer": "Codex root visual review",
+      "directly_viewed": true,
+      "issues": [],
+      "other_observations": "Readable complete text/glyphs and visible controls/tab labels; no demonstrated clipping or overlap in this frame."
+    },
+    {
+      "locale": "pt",
+      "frame": "lesson",
+      "screenshot_sha256": "1e01bff5fd38ea041cf0efa6e8cdf9cc153fe7829495fb0b0e834fc45494e2ae",
+      "reviewer": "Codex root visual review",
+      "directly_viewed": true,
+      "issues": [],
+      "other_observations": "Readable complete text/glyphs and visible controls/tab labels; no demonstrated clipping or overlap in this frame."
+    },
+    {
+      "locale": "ca",
+      "frame": "welcome",
+      "screenshot_sha256": "b33fa1261ea802f4ec4e83fdc0c509d4c11f15a009fc9be1399c1ce6b316dce7",
+      "reviewer": "Codex root visual review",
+      "directly_viewed": true,
+      "issues": [],
+      "other_observations": "Readable complete text/glyphs and visible controls/tab labels; no demonstrated clipping or overlap in this frame."
+    },
+    {
+      "locale": "ca",
+      "frame": "tuner",
+      "screenshot_sha256": "80bb86141c534c560faa1d2519e8c2e823ee33e4f82dc9fd141aedeef3bec8b7",
+      "reviewer": "Codex root visual review",
+      "directly_viewed": true,
+      "issues": [],
+      "other_observations": "Readable complete text/glyphs and visible controls/tab labels; no demonstrated clipping or overlap in this frame."
+    },
+    {
+      "locale": "ca",
+      "frame": "lesson",
+      "screenshot_sha256": "c52cddacac9acaf191bf7dbf833d9ea682b094e1ef6ff4b528111b04fb4beafa",
+      "reviewer": "Codex root visual review",
+      "directly_viewed": true,
+      "issues": [],
+      "other_observations": "Readable complete text/glyphs and visible controls/tab labels; no demonstrated clipping or overlap in this frame."
+    }
+  ]
+}

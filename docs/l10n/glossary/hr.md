@@ -1,5 +1,7 @@
 # Timbre glossary — hr
 
+> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
+
 Status: The historical pre-lesson terminology was AI-drafted and AI-reviewed, not human/native-speaker approved. The 6,083 new lesson strings and the lesson decisions below are an unreviewed author draft by /root/translate_croatian_lessons. No independent, native, device or import approval is claimed.
 
 ## 1. Locale decisions

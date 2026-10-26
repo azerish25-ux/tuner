@@ -94,7 +94,8 @@ Every row is mandatory. The "Current table" hints come from reading the shipped 
 | Ear trainer / Ear training | The ear games and the ear course | Practice, Learn | `Ear training` | | |
 | Drone | A sustained reference tone to play or sing against | Practice, lessons | `Drone` | | de Bordun, fr Bourdon, es Nota pedal, ja ドローン (current tables). |
 | Tanpura drone | The drone voiced as an Indian tanpura | Practice, paywall | `Tanpura` | | |
-| Intonation | The Practice tool for playing or singing in tune over a drone ("Intonation over a drone") | Practice, paywall | `Intonation` | | Not the guitar-setup adjustment of the saddle (octave intonation). The current ca (Octavació), es (Octavación), ja (オクターブ調整), pt (Oitavado) and zh-CN (八度音准) tables use that wrong sense: fix them. |
+| Intonation | Guided instrument setup: harmonic/stopped-note comparison and saddle advice | Practice tool, setup-specific paywall references | `Intonation` | | Check `IntonationView.swift` and the routed screen. Do not apply the separate drone-practice sense to this literal key. |
+| Intonation over a drone | Playing or singing accurately against a reference drone | Today activity, drone paywall outcome | `Intonation over a drone` | | Distinct literal key and source sense; generic lesson intonation also means pitch accuracy when its context says so. |
 | Metronome, Speed trainer | The metronome, and its mode that raises the tempo every few bars | Practice, Watch | `Metronome`, `Speed trainer` | | |
 | Chords, Scales | The chord library and the scales across the neck | Practice | `Chords`, `Scales` | | |
 | Placement check | A 45-second check in onboarding that picks the first lesson | onboarding | `Placement check` | | |
@@ -212,7 +213,7 @@ Write the translation that applies in Timbre, and the one GPT must avoid.
 | take | one recorded attempt | "take a lesson" | | |
 | run | a streak ("best run"), a clean run through a passage | running | | |
 | chart | a chord chart; the Chart view | a statistics chart (the Progress screen's charts are "charts" in that sense: check `context`) | | |
-| Intonation | playing in tune over a drone | guitar setup octave adjustment | | |
+| Intonation | instrument setup for the current `Intonation` tool; pitch accuracy in drone/generic lesson contexts | assuming all occurrences mean drone practice, or all mean saddle adjustment | | |
 | Next, Again, Slower | on-screen labels and also Siri command words (`ios/Timbre/Intents/PracticeIntents.swift`): one translation serves both | — | | |
 | Practice | the tab and the activity | a medical or legal practice | | |
 | Feel | the haptic tuning feature, feeling the beat | emotions | | |

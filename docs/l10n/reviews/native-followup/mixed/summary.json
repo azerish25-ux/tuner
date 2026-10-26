@@ -1,0 +1,26 @@
+{
+  "status": "independent-proposals-awaiting-parent-review",
+  "reviewer": "Codex independent native-followup reviewer review_is (source-aware AI, not native-human)",
+  "audit_sha256": "61216e236a0370a803b6b19e197a4669aef3e6e893c700d64d17191f612a461e",
+  "warning_rows": 71,
+  "corrected_warning_rows": 52,
+  "accepted_warning_rows": 19,
+  "coupled_card_corrections": 1,
+  "all_non_bidi_warning_rows_covered": true,
+  "locales": [
+    "da",
+    "fi",
+    "sv",
+    "el",
+    "it",
+    "ru",
+    "ja",
+    "ko",
+    "kn",
+    "lv",
+    "ml",
+    "pl",
+    "sw"
+  ],
+  "scope": "Every flagged source/current-target/context read; targeted related card/shared-role checks. Not a new full-locale review or native-human/device certification."
+}

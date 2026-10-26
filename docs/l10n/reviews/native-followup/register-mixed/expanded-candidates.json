@@ -1,0 +1,1287 @@
+[
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "timbre_catalog_family_folk_world_strings",
+    "source": "Folk & world strings",
+    "translation": "Folk i svjetske žičane instrumente",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Resources\\catalog.json:57"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "timbre_catalog_tuning_domra_prima_3_four_string",
+    "source": "4-string (fifths, mandolin-like)",
+    "translation": "4-žičana (kvinte, poput mandoline)",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Resources\\catalog.json:7286"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Andante",
+    "source": "Andante",
+    "translation": "Andante",
+    "where": [
+      "ios\\Timbre\\Practice\\MetronomeView.swift:233",
+      "ios\\TimbreWatch\\MetronomeScreen.swift:96"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Cancel anytime",
+    "source": "Cancel anytime",
+    "translation": "Otkažite bilo kada",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallView.swift:908",
+      "ios\\Timbre\\Paywall\\PaywallView.swift:1019"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Capo and transposition change the names you see, never the pitch Timbre measures.",
+    "source": "Capo and transposition change the names you see, never the pitch Timbre measures.",
+    "translation": "Kapodaster i transpozicija mijenjaju samo nazive koje vidite, nikada visinu tona koju Timbre mjeri.",
+    "where": [
+      "ios\\Timbre\\Settings\\SettingsView.swift:132"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Let the string ring",
+    "source": "Let the string ring",
+    "translation": "Pustite žicu da zvoni",
+    "where": [
+      "ios\\Timbre\\Onboarding\\FirstTuneStep.swift:322",
+      "ios\\Timbre\\Services\\AppStore.swift:406"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Microphone access is off. Turn it on in Settings to tune.",
+    "source": "Microphone access is off. Turn it on in Settings to tune.",
+    "translation": "Pristup mikrofonu je isključen. Uključite ga u Postavkama za ugađanje.",
+    "where": [
+      "ios\\Timbre\\Audio\\AudioService.swift:204",
+      "ios\\Timbre\\Practice\\DroneSingAlong.swift:202"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Name the chord",
+    "source": "Name the chord",
+    "translation": "Imenujte akord",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallPlan.swift:250",
+      "ios\\Timbre\\Paywall\\PaywallPlan.swift:252"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Name the interval",
+    "source": "Name the interval",
+    "translation": "Imenujte interval",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallPlan.swift:250",
+      "ios\\Timbre\\Paywall\\PaywallPlan.swift:252"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Search instruments",
+    "source": "Search instruments",
+    "translation": "Pretraži instrumente",
+    "where": [
+      "ios\\Timbre\\Instruments\\InstrumentsView.swift:111",
+      "ios\\Timbre\\Instruments\\InstrumentsView.swift:309"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "See yourself improve",
+    "source": "See yourself improve",
+    "translation": "Pratite svoj napredak",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallView.swift:364"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "learn one new shape",
+    "source": "learn one new shape",
+    "translation": "naučite jedan novi hvat",
+    "where": [
+      "ios\\Timbre\\Practice\\DailySetCard.swift:27"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Hit %lld bullseyes to win the round.",
+    "source": "Hit %lld bullseyes to win the round.",
+    "translation": "Za pobjedu u rundi pogodite desetku %lld puta.",
+    "where": [
+      "ios\\Timbre\\Practice\\PitchSniperView.swift:162"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Tuning now · %lld tunings",
+    "source": "Tuning now · %lld tunings",
+    "translation": "Sada ugađate · ugađanja: %lld",
+    "where": [
+      "ios\\Timbre\\Instruments\\InstrumentsView.swift:417"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "%lld BPM · %lld notes",
+    "source": "%lld BPM · %lld notes",
+    "translation": "%lld BPM · note: %lld",
+    "where": [
+      "ios\\Timbre\\Learn\\Highway.swift:210",
+      "ios\\Timbre\\Learn\\LessonInspector.swift:441"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Play-along, %lld notes",
+    "source": "Play-along, %lld notes",
+    "translation": "Sviranje u ritmu, note: %lld",
+    "where": [
+      "ios\\Timbre\\Learn\\Highway.swift:245",
+      "ios\\Timbre\\Learn\\SongPerform.swift:408"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Finish your first lesson",
+    "source": "Finish your first lesson",
+    "translation": "Završite prvu lekciju",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:395"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Finish 25 lessons",
+    "source": "Finish 25 lessons",
+    "translation": "Završite 25 lekcija",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:396"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Finish 100 lessons",
+    "source": "Finish 100 lessons",
+    "translation": "Završite 100 lekcija",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:397"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Earn three stars on 10 lessons",
+    "source": "Earn three stars on 10 lessons",
+    "translation": "Osvojite tri zvjezdice u 10 lekcija",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:398"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Cancel anytime in Settings before day %lld.",
+    "source": "Cancel anytime in Settings before day %lld.",
+    "translation": "Otkažite bilo kada u Postavkama prije %lld. dana.",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallView.swift:1154",
+      "ios\\Timbre\\Paywall\\PaywallView.swift:1289"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Keep your %lld-day streak alive. Next up: %@",
+    "source": "Keep your %lld-day streak alive. Next up: %@",
+    "translation": "Održite svoj niz od %lld dana. Slijedi: %@",
+    "where": [
+      "ios\\Timbre\\Services\\PracticeReminder.swift:121"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Save %lld%%",
+    "source": "Save %lld%%",
+    "translation": "Uštedite %lld%%",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallView.swift:1714"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Answer 50 ear questions right",
+    "source": "Answer 50 ear questions right",
+    "translation": "Točno odgovorite na 50 pitanja za sluh",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:389"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Create a custom tuning",
+    "source": "Create a custom tuning",
+    "translation": "Napravite prilagođeno ugađanje",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:392"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Finish a daily set",
+    "source": "Finish a daily set",
+    "translation": "Dovršite jedan dnevni plan",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:408"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Finish 30 daily sets",
+    "source": "Finish 30 daily sets",
+    "translation": "Dovršite 30 dnevnih planova",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:409"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Hit 50 bullseyes",
+    "source": "Hit 50 bullseyes",
+    "translation": "Pogodite u desetku 50 puta",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:412"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Get all ten right in an ear round",
+    "source": "Get all ten right in an ear round",
+    "translation": "Točno odgovorite na svih deset pitanja u rundi za sluh",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:413"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Answer 500 ear questions right",
+    "source": "Answer 500 ear questions right",
+    "translation": "Točno odgovorite na 500 pitanja za sluh",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:414"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Finish every lesson in a unit",
+    "source": "Finish every lesson in a unit",
+    "translation": "Završite sve lekcije u jednoj cjelini",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:416"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Finish ten units",
+    "source": "Finish ten units",
+    "translation": "Završite deset cjelina",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:417"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Finish a whole course",
+    "source": "Finish a whole course",
+    "translation": "Završite cijeli tečaj",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:418"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Finish 10 guitar lessons",
+    "source": "Finish 10 guitar lessons",
+    "translation": "Završite 10 lekcija gitare",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:422"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Finish 10 ukulele lessons",
+    "source": "Finish 10 ukulele lessons",
+    "translation": "Završite 10 lekcija ukulelea",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:423"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Finish 10 bass lessons",
+    "source": "Finish 10 bass lessons",
+    "translation": "Završite 10 lekcija basa",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:424"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Finish 10 violin lessons",
+    "source": "Finish 10 violin lessons",
+    "translation": "Završite 10 lekcija violine",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:425"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Finish 10 cello lessons",
+    "source": "Finish 10 cello lessons",
+    "translation": "Završite 10 lekcija violončela",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:426"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Finish 10 mandolin lessons",
+    "source": "Finish 10 mandolin lessons",
+    "translation": "Završite 10 lekcija mandoline",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:427"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Finish 10 banjo lessons",
+    "source": "Finish 10 banjo lessons",
+    "translation": "Završite 10 lekcija bendža",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:428"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Finish 10 singing lessons",
+    "source": "Finish 10 singing lessons",
+    "translation": "Završite 10 lekcija pjevanja",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:429"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Tap the pad with every click, for 10 seconds.",
+    "source": "Tap the pad with every click, for 10 seconds.",
+    "translation": "Dodirujte polje sa svakim klikom 10 sekundi.",
+    "where": [
+      "ios\\Timbre\\Learn\\LatencyCalibration.swift:130"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Just warming up",
+    "source": "Just warming up",
+    "translation": "Tek se zagrijavate",
+    "where": [
+      "ios\\Timbre\\Learn\\Highway.swift:465",
+      "ios\\Timbre\\Learn\\SongStoryCard.swift:84"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Opens the tuner on the instrument you name.",
+    "source": "Opens the tuner on the instrument you name.",
+    "translation": "Otvara štimer za instrument koji imenujete.",
+    "where": [
+      "ios\\Timbre\\Intents\\PracticeIntents.swift:11",
+      "ios\\Timbre\\Intents\\SpotlightIndex.swift:26"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Subscriptions renew automatically until cancelled in Settings › Apple Account › Subscriptions. Cancel at least a day before renewal to avoid the next charge. Every instrument’s standard tuning stays free.",
+    "source": "Subscriptions renew automatically until cancelled in Settings › Apple Account › Subscriptions. Cancel at least a day before renewal to avoid the next charge. Every instrument’s standard tuning stays free.",
+    "translation": "Pretplate se automatski obnavljaju dok ih ne otkažeš u odjeljku Postavke › Apple račun › Pretplate. Otkaži najmanje dan prije obnove da izbjegneš sljedeću naplatu. Standardno ugađanje svakog instrumenta ostaje besplatno.",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallView.swift:1466"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Subscriptions renew automatically until cancelled in Settings › Apple Account › Subscriptions. Cancel at least a day before renewal to avoid the next charge. The tuner for guitar, bass, ukulele, violin and cello stays free.",
+    "source": "Subscriptions renew automatically until cancelled in Settings › Apple Account › Subscriptions. Cancel at least a day before renewal to avoid the next charge. The tuner for guitar, bass, ukulele, violin and cello stays free.",
+    "translation": "Pretplate se automatski obnavljaju dok ih ne otkažeš u odjeljku Postavke › Apple račun › Pretplate. Otkaži najmanje dan prije obnove da izbjegneš sljedeću naplatu. Štimer za gitaru, bas, ukulele, violinu i violončelo ostaje besplatan.",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallView.swift:1468"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Turn spoken cues off",
+    "source": "Turn spoken cues off",
+    "translation": "Isključi govorne upute",
+    "where": [
+      "ios\\Timbre\\Learn\\Highway.swift:904"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Turn spoken cues on",
+    "source": "Turn spoken cues on",
+    "translation": "Uključi govorne upute",
+    "where": [
+      "ios\\Timbre\\Learn\\Highway.swift:904"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Clean, quick changes and a steady strum: your plan starts further in.",
+    "source": "Clean, quick changes and a steady strum: your plan starts further in.",
+    "translation": "Čiste, brze izmjene i ujednačen ritam: tvoj plan počinje na naprednijoj razini.",
+    "where": [
+      "ios\\Timbre\\Onboarding\\PlacementCheckView.swift:253"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Tune all %lld instruments",
+    "source": "Tune all %lld instruments",
+    "translation": "Ugodi sve instrumente: %lld",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallPlan.swift:227",
+      "ios\\Timbre\\Paywall\\PaywallView.swift:388"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Every tuning for all %lld instruments",
+    "source": "Every tuning for all %lld instruments",
+    "translation": "Sva ugađanja za sve instrumente: %lld",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallPlan.swift:553"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Songs you know",
+    "source": "Songs you know",
+    "translation": "Poznate pjesme",
+    "where": [
+      "ios\\Timbre\\Songs\\SongsView.swift:1482"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Your %@ string drifts %lld¢ sharp a day. Tune up before you play, and check it is wound firmly at the peg.",
+    "source": "Your %@ string drifts %lld¢ sharp a day. Tune up before you play, and check it is wound firmly at the peg.",
+    "translation": "Žica %@ raste za %lld¢ dnevno. Ugodi prije sviranja i provjeri je li čvrsto namotana na čiviju.",
+    "where": [
+      "ios\\Timbre\\Journey\\CoachVoice.swift:72"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "minutes this week",
+    "source": "minutes this week",
+    "translation": "minute ovaj tjedan",
+    "where": [
+      "ios\\Timbre\\Journey\\JourneyView.swift:226",
+      "ios\\Timbre\\Journey\\JourneyView.swift:249"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Open the Music app once to accept Apple Music's privacy terms, then try again.",
+    "source": "Open the Music app once to accept Apple Music's privacy terms, then try again.",
+    "translation": "Otvori aplikaciju Glazba da prihvatiš uvjete privatnosti za Apple Music, pa pokušaj ponovno.",
+    "where": [
+      "ios\\Timbre\\YourSongs\\AppleMusicListen.swift:124"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Timbre can't play that file. Use an audio file of your own that isn't copy-protected.",
+    "source": "Timbre can't play that file. Use an audio file of your own that isn't copy-protected.",
+    "translation": "Timbre ne može reproducirati tu datoteku. Upotrijebi vlastitu zvučnu datoteku bez zaštite od kopiranja.",
+    "where": [
+      "ios\\Timbre\\YourSongs\\YourSongsStore.swift:219"
+    ]
+  },
+  {
+    "locale": "hr",
+    "table": "Localizable.strings",
+    "key": "Which features get used, never audio or anything linked to you.",
+    "source": "Which features get used, never audio or anything linked to you.",
+    "translation": "Samo koje se značajke koriste, nikad zvuk ni podatke povezane s tobom.",
+    "where": [
+      "ios\\Timbre\\Settings\\SettingsView.swift:536"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "Cents",
+    "source": "Cents",
+    "translation": "Cenți",
+    "where": [
+      "ios\\Timbre\\Journey\\JourneyView.swift:654",
+      "ios\\Timbre\\Journey\\JourneyView.swift:656"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "Fretboard maps",
+    "source": "Fretboard maps",
+    "translation": "Hărți ale grifului",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallPlan.swift:467"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "How long have you been playing?",
+    "source": "How long have you been playing?",
+    "translation": "De cât timp cânți?",
+    "where": [
+      "ios\\Timbre\\Onboarding\\OnboardingView.swift:581"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "Many years",
+    "source": "Many years",
+    "translation": "De mulți ani",
+    "where": [
+      "ios\\Timbre\\Onboarding\\OnboardingView.swift:553"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "Ten minutes keeps it alive",
+    "source": "Ten minutes keeps it alive",
+    "translation": "Zece minute îți păstrează seria",
+    "where": [
+      "ios\\TimbreWidgets\\TimbreWidgets.swift:208"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "Within 3 cents: nothing to change.",
+    "source": "Within 3 cents: nothing to change.",
+    "translation": "În limita a 3 cenți: nu e nimic de schimbat.",
+    "where": [
+      "ios\\Timbre\\Practice\\IntonationView.swift:242"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "A five-minute lesson keeps your streak going.",
+    "source": "A five-minute lesson keeps your streak going.",
+    "translation": "O lecție de cinci minute îți menține seria.",
+    "where": [
+      "ios\\Timbre\\Services\\PracticeReminder.swift:123"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "Strum on the arrows",
+    "source": "Strum on the arrows",
+    "translation": "Lovește corzile după săgeți",
+    "where": [
+      "ios\\Timbre\\Learn\\LessonInspector.swift:448",
+      "ios\\Timbre\\Learn\\LessonInspector.swift:458"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "Time to play",
+    "source": "Time to play",
+    "translation": "E timpul să cânți",
+    "where": [
+      "ios\\Timbre\\Services\\PracticeReminder.swift:112"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "We remind you",
+    "source": "We remind you",
+    "translation": "Îți amintim",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallView.swift:1097"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "Keeps your streak if you miss a day",
+    "source": "Keeps your streak if you miss a day",
+    "translation": "Îți păstrează seria dacă ratezi o zi",
+    "where": [
+      "ios\\Timbre\\Design\\GameUI.swift:588"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "Pluck your thickest string",
+    "source": "Pluck your thickest string",
+    "translation": "Ciupiți coarda cea mai groasă",
+    "where": [
+      "ios\\Timbre\\Onboarding\\FirstTuneStep.swift:216",
+      "ios\\Timbre\\Onboarding\\FirstTuneStep.swift:239"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "Keep going: %@",
+    "source": "Keep going: %@",
+    "translation": "Continuați: %@",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallView.swift:360"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "Ten units",
+    "source": "Ten units",
+    "translation": "Zece unități",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:417"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "Finish ten units",
+    "source": "Finish ten units",
+    "translation": "Finalizează zece unități",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:417"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "Calibrate timing",
+    "source": "Calibrate timing",
+    "translation": "Calibrați sincronizarea",
+    "where": [
+      "ios\\Timbre\\Learn\\Highway.swift:511",
+      "ios\\Timbre\\Learn\\Highway.swift:922"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "Unlock your full plan",
+    "source": "Unlock your full plan",
+    "translation": "Deblocați planul complet",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallView.swift:347"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "Name intervals and chords by ear",
+    "source": "Name intervals and chords by ear",
+    "translation": "Recunoașteți intervale și acorduri după ureche",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallPlan.swift:473",
+      "ios\\Timbre\\Paywall\\PaywallPlan.swift:516"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "Tells you your practice streak without opening Timbre.",
+    "source": "Tells you your practice streak without opening Timbre.",
+    "translation": "Îți spune seria de exersare fără să deschizi Timbre.",
+    "where": [
+      "ios\\Timbre\\Intents\\PracticeIntents.swift:131"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "Listens while you play the chord.",
+    "source": "Listens while you play the chord.",
+    "translation": "Ascultă în timp ce cânți acordul.",
+    "where": [
+      "ios\\Timbre\\Practice\\ChordsView.swift:329"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "%lld cents higher",
+    "source": "%lld cents higher",
+    "translation": "Mai sus, cu acest număr de cenți: %lld",
+    "where": [
+      "ios\\Timbre\\Practice\\EarTrainingView.swift:762"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "%lld cents lower",
+    "source": "%lld cents lower",
+    "translation": "Mai jos, cu acest număr de cenți: %lld",
+    "where": [
+      "ios\\Timbre\\Practice\\EarTrainingView.swift:762"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "Listens and lights each note as you play it.",
+    "source": "Listens and lights each note as you play it.",
+    "translation": "Ascultă și luminează fiecare notă când o cânți.",
+    "where": [
+      "ios\\Timbre\\Practice\\ScalesView.swift:251"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "Want to feel it?",
+    "source": "Want to feel it?",
+    "translation": "Vrei să simți vibrațiile?",
+    "where": [
+      "ios\\Timbre\\Onboarding\\FirstTuneStep.swift:476"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "Tune in seconds.\nThen learn to play.",
+    "source": "Tune in seconds.\nThen learn to play.",
+    "translation": "Acordează în câteva secunde.\nApoi învață să cânți.",
+    "where": [
+      "ios\\Timbre\\Onboarding\\OnboardingView.swift:331"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "Timbre listens and tells you exactly how you did.",
+    "source": "Timbre listens and tells you exactly how you did.",
+    "translation": "Timbre ascultă și îți spune exact cum te-ai descurcat.",
+    "where": [
+      "ios\\Timbre\\Onboarding\\OnboardingView.swift:334"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "Which hand do you play with?",
+    "source": "Which hand do you play with?",
+    "translation": "Cu ce mână cânți?",
+    "where": [
+      "ios\\Timbre\\Onboarding\\OnboardingView.swift:596"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "Show us how you play",
+    "source": "Show us how you play",
+    "translation": "Arată-ne cum cânți",
+    "where": [
+      "ios\\Timbre\\Onboarding\\PlacementCheckView.swift:125"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "The changes and the strum need a little more time, so your plan starts a few units earlier.",
+    "source": "The changes and the strum need a little more time, so your plan starts a few units earlier.",
+    "translation": "Schimbările și ritmul mai au nevoie de puțin timp, așa că planul tău începe cu câteva unități mai devreme.",
+    "where": [
+      "ios\\Timbre\\Onboarding\\PlacementCheckView.swift:255"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "We remind you on day %lld",
+    "source": "We remind you on day %lld",
+    "translation": "Îți amintim în ziua %lld",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallView.swift:1001",
+      "ios\\Timbre\\Paywall\\PaywallView.swift:1009"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "Tune %@ up %lld cents first",
+    "source": "Tune %@ up %lld cents first",
+    "translation": "Mai întâi ridică %@; numărul de cenți: %lld",
+    "where": [
+      "ios\\Timbre\\Tune\\StrumModel.swift:373"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "Tune %@ down %lld cents first",
+    "source": "Tune %@ down %lld cents first",
+    "translation": "Mai întâi coboară %@; numărul de cenți: %lld",
+    "where": [
+      "ios\\Timbre\\Tune\\StrumModel.swift:374"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "Follows the note you play",
+    "source": "Follows the note you play",
+    "translation": "Urmărește nota pe care o cânți",
+    "where": [
+      "ios\\Timbre\\Tune\\TunerControls.swift:107"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "Follows the string you play",
+    "source": "Follows the string you play",
+    "translation": "Urmărește coarda pe care o cânți",
+    "where": [
+      "ios\\Timbre\\Tune\\TunerControls.swift:107"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "What slipped in recent lessons, back just before you’d forget it.",
+    "source": "What slipped in recent lessons, back just before you’d forget it.",
+    "translation": "Ce nu a mers în lecțiile recente revine chiar înainte să uiți.",
+    "where": [
+      "ios\\Timbre\\Learn\\WeakSpotReview.swift:71"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "Tell us a song you'd like to play. Requests decide what we add next.",
+    "source": "Tell us a song you'd like to play. Requests decide what we add next.",
+    "translation": "Spune-ne ce cântec vrei să cânți. Propunerile decid ce adăugăm în continuare.",
+    "where": [
+      "ios\\Timbre\\Songs\\SongsView.swift:173"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "%lld%%, but only below the lesson tempo, so two stars. One take at the full %lld BPM earns the third.",
+    "source": "%lld%%, but only below the lesson tempo, so two stars. One take at the full %lld BPM earns the third.",
+    "translation": "%lld%%, dar doar sub tempoul lecției, deci două stele. O interpretare la tempoul complet de %lld BPM îți aduce a treia stea.",
+    "where": [
+      "ios\\Timbre\\Journey\\CoachVoice.swift:62"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "Your %@ string drifts %lld¢ flat a day. Time for new strings; until then, tune up before you play.",
+    "source": "Your %@ string drifts %lld¢ flat a day. Time for new strings; until then, tune up before you play.",
+    "translation": "Coarda %@ coboară cu %lld¢ pe zi. E timpul pentru corzi noi; până atunci, acordează înainte să cânți.",
+    "where": [
+      "ios\\Timbre\\Journey\\CoachVoice.swift:70"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "Your %@ string drifts %lld¢ sharp a day. Tune up before you play, and check it is wound firmly at the peg.",
+    "source": "Your %@ string drifts %lld¢ sharp a day. Tune up before you play, and check it is wound firmly at the peg.",
+    "translation": "Coarda %@ urcă cu %lld¢ pe zi. Acordează înainte să cânți și verifică dacă este înfășurată ferm pe cheie.",
+    "where": [
+      "ios\\Timbre\\Journey\\CoachVoice.swift:72"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "%lld minutes this week, %lld%% more than last week. That is how it sticks.",
+    "source": "%lld minutes this week, %lld%% more than last week. That is how it sticks.",
+    "translation": "Minute săptămâna aceasta: %lld, cu %lld%% mai mult decât săptămâna trecută. Așa se fixează ce înveți.",
+    "where": [
+      "ios\\Timbre\\Journey\\CoachVoice.swift:80"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "Avg. cents off",
+    "source": "Avg. cents off",
+    "translation": "Abatere medie în cenți",
+    "where": [
+      "ios\\Timbre\\Journey\\JourneyView.swift:227",
+      "ios\\Timbre\\Journey\\JourneyView.swift:238"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "Each string’s drift, in cents a day.",
+    "source": "Each string’s drift, in cents a day.",
+    "translation": "Deriva fiecărei corzi, în cenți pe zi.",
+    "where": [
+      "ios\\Timbre\\Journey\\JourneyView.swift:354"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "Timbre isn't allowed to use Apple Music. You can allow it in Settings.",
+    "source": "Timbre isn't allowed to use Apple Music. You can allow it in Settings.",
+    "translation": "Timbre nu are permisiunea de a folosi Apple Music. O poți acorda din Setări.",
+    "where": [
+      "ios\\Timbre\\YourSongs\\AppleMusicListen.swift:128"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "Plays in Apple Music for subscribers, separate from the chart.",
+    "source": "Plays in Apple Music for subscribers, separate from the chart.",
+    "translation": "Se redă în Apple Music pentru abonați, separat de diagramă.",
+    "where": [
+      "ios\\Timbre\\YourSongs\\AppleMusicListen.swift:197"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "Starts, repeats, slows down or moves on the lesson step on screen, so your hands can stay on your instrument.",
+    "source": "Starts, repeats, slows down or moves on the lesson step on screen, so your hands can stay on your instrument.",
+    "translation": "Pornește, repetă sau încetinește pasul lecției de pe ecran ori trece la pasul următor, ca să îți poți ține mâinile pe instrument.",
+    "where": [
+      "ios\\Timbre\\Intents\\PracticeIntents.swift:82"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "It renews in two days; cancel anytime in Settings.",
+    "source": "It renews in two days; cancel anytime in Settings.",
+    "translation": "Se reînnoiește peste două zile; poți anula oricând din Setări.",
+    "where": [
+      "ios\\Timbre\\Services\\PracticeReminder.swift:195"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "It renews in two days. Keep playing, or cancel anytime in Settings.",
+    "source": "It renews in two days. Keep playing, or cancel anytime in Settings.",
+    "translation": "Se reînnoiește peste două zile. Continuă să cânți sau anulează oricând din Setări.",
+    "where": [
+      "ios\\Timbre\\Services\\PracticeReminder.swift:197"
+    ]
+  },
+  {
+    "locale": "ro",
+    "table": "Localizable.strings",
+    "key": "A month of Timbre Pro on me: a precise tuner and lessons that listen as you play.",
+    "source": "A month of Timbre Pro on me: a precise tuner and lessons that listen as you play.",
+    "translation": "O lună de Timbre Pro din partea mea: un acordor precis și lecții care te ascultă când cânți.",
+    "where": [
+      "ios\\Timbre\\Services\\ShareDestination.swift:112"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "timbre_catalog_tuning_bansuri_standard_0_standard",
+    "source": "Common convention (set your own)",
+    "translation": "Yaygın gelenek (kendinizinkini ayarlayın)",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Resources\\catalog.json:10319"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "timbre_catalog_tuning_didgeridoo_standard_0_standard",
+    "source": "Common convention (set your own)",
+    "translation": "Yaygın gelenek (kendinizinkini ayarlayın)",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Resources\\catalog.json:10508"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "timbre_catalog_tuning_gayageum_standard_12_standard",
+    "source": "Common convention (set your own)",
+    "translation": "Yaygın gelenek (kendinizinkini ayarlayın)",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Resources\\catalog.json:7100"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "timbre_catalog_tuning_guqin_standard_7_standard",
+    "source": "Common convention (set your own)",
+    "translation": "Yaygın gelenek (kendinizinkini ayarlayın)",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Resources\\catalog.json:6395"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "timbre_catalog_tuning_timpani_standard_0_standard",
+    "source": "Common convention (set your own)",
+    "translation": "Yaygın gelenek (kendinizinkini ayarlayın)",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Resources\\catalog.json:11621"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Chord of the day",
+    "source": "Chord of the day",
+    "translation": "Günün akoru",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallPlan.swift:255",
+      "ios\\Timbre\\Practice\\DailySetCard.swift:10"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Start today's practice",
+    "source": "Start today's practice",
+    "translation": "Bugünün çalışmasını başlat",
+    "where": [
+      "ios\\Timbre\\Intents\\SharedIntents.swift:38",
+      "ios\\TimbreWatch\\TodayScreen.swift:220"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "The App Store returned an unknown status. Please restore purchases.",
+    "source": "The App Store returned an unknown status. Please restore purchases.",
+    "translation": "App Store bilinmeyen bir durum döndürdü. Lütfen satın alımları geri yükleyin.",
+    "where": [
+      "ios\\Timbre\\Services\\CommerceService.swift:200"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Today's set",
+    "source": "Today's set",
+    "translation": "Bugünün seti",
+    "where": [
+      "ios\\TimbreWatch\\TodayScreen.swift:19"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Practiced on %lld of the last 35 days",
+    "source": "Practiced on %lld of the last 35 days",
+    "translation": "Son 35 günün %lld gününde çalışıldı",
+    "where": [
+      "ios\\Timbre\\Journey\\JourneyView.swift:319"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Today’s quests",
+    "source": "Today’s quests",
+    "translation": "Bugünün görevleri",
+    "where": [
+      "ios\\Timbre\\Practice\\PracticeView.swift:401"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Everything unlocked",
+    "source": "Everything unlocked",
+    "translation": "Her şeyin kilidi açık",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallView.swift:1209",
+      "ios\\Timbre\\Paywall\\PaywallView.swift:1239"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Song of the day",
+    "source": "Song of the day",
+    "translation": "Günün şarkısı",
+    "where": [
+      "ios\\Timbre\\Songs\\SongsView.swift:526",
+      "ios\\Timbre\\Songs\\SongsView.swift:847"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Get all ten right in an ear round",
+    "source": "Get all ten right in an ear round",
+    "translation": "Kulak turunda on sorunun hepsini doğru yanıtla",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:413"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Set the end of the loop",
+    "source": "Set the end of the loop",
+    "translation": "Döngünün sonunu ayarla",
+    "where": [
+      "ios\\Timbre\\YourSongs\\ChartDock.swift:202"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Today’s challenge",
+    "source": "Today’s challenge",
+    "translation": "Bugünün meydan okuması",
+    "where": [
+      "ios\\Timbre\\Practice\\PlayHubGames.swift:435"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "%lld%%, but only below the lesson tempo, so two stars. One take at the full %lld BPM earns the third.",
+    "source": "%lld%%, but only below the lesson tempo, so two stars. One take at the full %lld BPM earns the third.",
+    "translation": "%lld%%, ama ders temposunun altında; bu yüzden iki yıldız. Tam %lld BPM hızında bir icra üçüncüyü kazandırır.",
+    "where": [
+      "ios\\Timbre\\Journey\\CoachVoice.swift:62"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Today’s set",
+    "source": "Today’s set",
+    "translation": "Bugünün etkinlikleri",
+    "where": [
+      "ios\\Timbre\\Journey\\CoachVoice.swift:164"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "the chord of the day",
+    "source": "the chord of the day",
+    "translation": "günün akoru",
+    "where": [
+      "ios\\Timbre\\Journey\\CoachVoice.swift:241"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "%lld min of practice across %lld of 7 days. Keep the run going.",
+    "source": "%lld min of practice across %lld of 7 days. Keep the run going.",
+    "translation": "7 günün %2$lld gününde %1$lld dk. çalışma. Seriyi sürdür.",
+    "where": [
+      "ios\\Timbre\\Services\\PracticeReminder.swift:134"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Your streak and today's set.",
+    "source": "Your streak and today's set.",
+    "translation": "Serin ve bugünün etkinlikleri.",
+    "where": [
+      "ios\\TimbreWatchWidgets\\TimbreWatchWidgets.swift:63"
+    ]
+  }
+]

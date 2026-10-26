@@ -1,0 +1,750 @@
+{
+  "applied_by": "Codex review_sk",
+  "status": "applied documentation only, awaiting root final diff review",
+  "original_proposal_path": "docs/l10n/reviews/native-followup/native/source-context-doc-proposal.json",
+  "original_proposal_sha256": "58204a0b49a74c23fe14908132b81960491393bd2c7d4fd89a3d6e93614bffbd",
+  "proposal_evidence_unchanged": true,
+  "reviewed_core_edits_applied": 13,
+  "core_document_count": 7,
+  "inventory_claim_rows_addressed": 58,
+  "inventory_glossaries_receiving_one_note_each": 38,
+  "total_document_count_changed": 45,
+  "exact_top_note": "> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.",
+  "context_rule": "Choose the actual source-routed meaning: literal Intonation is guided instrument setup, while Intonation over a drone is a separate pitch-accuracy practice key. Generic lessons follow their own context. The top note explicitly supersedes copied blanket bans below.",
+  "core_guards": [
+    {
+      "path": "docs/l10n/TRANSLATING-WITH-GPT.md",
+      "old_sha256": "50219f939c9cad7d1256b2bddc4b5d4aed7d7c5dbb2964b1cd1688dc1a3e626b",
+      "new_sha256": "f35dc48bd699b300a951e545844352a3f08708ac947c85dd832f22a16c67d7c9",
+      "old_occurrence_count": 1,
+      "full_file_matches_reviewed_proposal_hash": true
+    },
+    {
+      "path": "docs/l10n/GLOSSARY-TEMPLATE.md",
+      "old_sha256": "3109d88273bd24f60121fa8f733920667da0ca862735425cf374643e59cbeee7",
+      "new_sha256": "04ccfc17b1f11b5de16fc250af0260ee24d95c0d3e472a632d9f506fe220b863",
+      "old_occurrence_count": 1,
+      "full_file_matches_reviewed_proposal_hash": true
+    },
+    {
+      "path": "docs/l10n/GLOSSARY-TEMPLATE.md",
+      "old_sha256": "f843b6363bfcf3b2f5c4784abd02db9e8d20bb68787dc9eee9d31db6aeee8ab0",
+      "new_sha256": "2b2cac0a0c661d3496b8100be5617c9bea40e76bdfb6122b4e6a4876ead29421",
+      "old_occurrence_count": 1,
+      "full_file_matches_reviewed_proposal_hash": true
+    },
+    {
+      "path": "docs/l10n/glossary/ca.md",
+      "old_sha256": "80b20d6acc99b0bcc34ed90216cd1fe7976280fbd90061991eb4ab365260b2b2",
+      "new_sha256": "53e693e3ce85e97e241743971667cf404a0a27278abc9a06e19424051aec0fc2",
+      "old_occurrence_count": 1,
+      "full_file_matches_reviewed_proposal_hash": true
+    },
+    {
+      "path": "docs/l10n/glossary/ca.md",
+      "old_sha256": "765341448755b94b5779c1c5852c9eea9e28a959ad028c0f4a0cc7b68a655595",
+      "new_sha256": "00ff038bbc2ff2ba1adcf0b701ed1e5a88a0a1d6af853e4ff12ece1a9bebcaec",
+      "old_occurrence_count": 1,
+      "full_file_matches_reviewed_proposal_hash": true
+    },
+    {
+      "path": "docs/l10n/glossary/es.md",
+      "old_sha256": "d8b03aafdf3312e8b0778638b560751c465c7e78374067c06ab57e461e4b561b",
+      "new_sha256": "5d923370a7532e4edc92b08dc1b34c19c0ee5f82d304cf5f62f187d8ea2ebdcf",
+      "old_occurrence_count": 1,
+      "full_file_matches_reviewed_proposal_hash": true
+    },
+    {
+      "path": "docs/l10n/glossary/es.md",
+      "old_sha256": "765341448755b94b5779c1c5852c9eea9e28a959ad028c0f4a0cc7b68a655595",
+      "new_sha256": "00ff038bbc2ff2ba1adcf0b701ed1e5a88a0a1d6af853e4ff12ece1a9bebcaec",
+      "old_occurrence_count": 1,
+      "full_file_matches_reviewed_proposal_hash": true
+    },
+    {
+      "path": "docs/l10n/glossary/ja.md",
+      "old_sha256": "4c7e7da17a1d3ff4f697a6e242b6d0c8f99070086f1f99de9934368f44a903a8",
+      "new_sha256": "7c8bcdaa5ebd9b7a0058dbcffbc012a14b36ac9b2fb4a3d1ae9c6f9d337be422",
+      "old_occurrence_count": 1,
+      "full_file_matches_reviewed_proposal_hash": true
+    },
+    {
+      "path": "docs/l10n/glossary/ja.md",
+      "old_sha256": "82d01cd95a8678845bdcbb594525b74cf0152cc96af25244017120459667fb67",
+      "new_sha256": "00ff038bbc2ff2ba1adcf0b701ed1e5a88a0a1d6af853e4ff12ece1a9bebcaec",
+      "old_occurrence_count": 1,
+      "full_file_matches_reviewed_proposal_hash": true
+    },
+    {
+      "path": "docs/l10n/glossary/pt.md",
+      "old_sha256": "978e932314d5decb248f746d53558cbcb294318df9ea330682622340364fc90a",
+      "new_sha256": "340dec8ce1d76936755f19e91cf3c26a8635aca546a6e0514b80474bcbb64f9f",
+      "old_occurrence_count": 1,
+      "full_file_matches_reviewed_proposal_hash": true
+    },
+    {
+      "path": "docs/l10n/glossary/pt.md",
+      "old_sha256": "765341448755b94b5779c1c5852c9eea9e28a959ad028c0f4a0cc7b68a655595",
+      "new_sha256": "00ff038bbc2ff2ba1adcf0b701ed1e5a88a0a1d6af853e4ff12ece1a9bebcaec",
+      "old_occurrence_count": 1,
+      "full_file_matches_reviewed_proposal_hash": true
+    },
+    {
+      "path": "docs/l10n/glossary/zh-CN.md",
+      "old_sha256": "cdd2e10b08e0b4fb4820c062258a3c3d15e35e07e0524064217698e46f532798",
+      "new_sha256": "83c5bc00b68d94ee12fdf0c9dd74e35699bf45940500e6da79ed8033381079e0",
+      "old_occurrence_count": 1,
+      "full_file_matches_reviewed_proposal_hash": true
+    },
+    {
+      "path": "docs/l10n/glossary/zh-CN.md",
+      "old_sha256": "82d01cd95a8678845bdcbb594525b74cf0152cc96af25244017120459667fb67",
+      "new_sha256": "00ff038bbc2ff2ba1adcf0b701ed1e5a88a0a1d6af853e4ff12ece1a9bebcaec",
+      "old_occurrence_count": 1,
+      "full_file_matches_reviewed_proposal_hash": true
+    }
+  ],
+  "context_note_application": [
+    {
+      "path": "docs/l10n/glossary/ar.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 1,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    },
+    {
+      "path": "docs/l10n/glossary/bg.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 1,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    },
+    {
+      "path": "docs/l10n/glossary/bn.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 2,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    },
+    {
+      "path": "docs/l10n/glossary/cs.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 1,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    },
+    {
+      "path": "docs/l10n/glossary/da.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 2,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    },
+    {
+      "path": "docs/l10n/glossary/de.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 1,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    },
+    {
+      "path": "docs/l10n/glossary/el.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 1,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    },
+    {
+      "path": "docs/l10n/glossary/et.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 2,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    },
+    {
+      "path": "docs/l10n/glossary/fi.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 2,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    },
+    {
+      "path": "docs/l10n/glossary/fr.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 1,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    },
+    {
+      "path": "docs/l10n/glossary/gu.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 2,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    },
+    {
+      "path": "docs/l10n/glossary/he.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 1,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    },
+    {
+      "path": "docs/l10n/glossary/hi.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 2,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    },
+    {
+      "path": "docs/l10n/glossary/hr.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 1,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    },
+    {
+      "path": "docs/l10n/glossary/hu.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 1,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    },
+    {
+      "path": "docs/l10n/glossary/id.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 1,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    },
+    {
+      "path": "docs/l10n/glossary/is.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 2,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    },
+    {
+      "path": "docs/l10n/glossary/it.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 1,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    },
+    {
+      "path": "docs/l10n/glossary/kn.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 2,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    },
+    {
+      "path": "docs/l10n/glossary/ko.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 1,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    },
+    {
+      "path": "docs/l10n/glossary/lt.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 2,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    },
+    {
+      "path": "docs/l10n/glossary/lv.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 2,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    },
+    {
+      "path": "docs/l10n/glossary/ml.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 2,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    },
+    {
+      "path": "docs/l10n/glossary/mr.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 2,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    },
+    {
+      "path": "docs/l10n/glossary/no.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 2,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    },
+    {
+      "path": "docs/l10n/glossary/pa.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 2,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    },
+    {
+      "path": "docs/l10n/glossary/ro.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 1,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    },
+    {
+      "path": "docs/l10n/glossary/sk.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 1,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    },
+    {
+      "path": "docs/l10n/glossary/sl.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 1,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    },
+    {
+      "path": "docs/l10n/glossary/sv.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 2,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    },
+    {
+      "path": "docs/l10n/glossary/sw.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 2,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    },
+    {
+      "path": "docs/l10n/glossary/ta.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 2,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    },
+    {
+      "path": "docs/l10n/glossary/te.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 2,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    },
+    {
+      "path": "docs/l10n/glossary/th.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 1,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    },
+    {
+      "path": "docs/l10n/glossary/uk.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 1,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    },
+    {
+      "path": "docs/l10n/glossary/ur.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 2,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    },
+    {
+      "path": "docs/l10n/glossary/vi.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 1,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    },
+    {
+      "path": "docs/l10n/glossary/zu.md",
+      "insertion_after_H1": true,
+      "inventory_claim_rows": 2,
+      "only_change_is_the_exact_context_note": true,
+      "all_preexisting_table_and_prose_bytes_preserved_after_removing_note": true
+    }
+  ],
+  "files": [
+    {
+      "path": "docs/l10n/GLOSSARY-TEMPLATE.md",
+      "before_sha256": "47b9e664a4d40ae9910adcbf41ee77895ab0d83774667933b84942c728bab768",
+      "after_sha256": "6c3907961f6e461e978da6dead9a72aecab0b369f299f2f6a5fd1a890c8f4d42",
+      "line_endings": "LF",
+      "operation": "reviewed exact replacements",
+      "applied_core_edits": 2
+    },
+    {
+      "path": "docs/l10n/TRANSLATING-WITH-GPT.md",
+      "before_sha256": "33e65f159f482f9bda001b6da68c88affdb01dc88e82d55d06859ab6902a7f44",
+      "after_sha256": "ff0abd2fae5e3960d299b265487542a59681993eb4a19d58a20434dc56de7336",
+      "line_endings": "LF",
+      "operation": "reviewed exact replacements",
+      "applied_core_edits": 1
+    },
+    {
+      "path": "docs/l10n/glossary/ar.md",
+      "before_sha256": "33149c0047916771e934da198010acd8b9ff0bc5b47e8c60b97aa2e9a815a6dc",
+      "after_sha256": "7a854703673afe1f0110ace426ba1dbb35f255ad16b2b7ee134fdb2e9c45d391",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    },
+    {
+      "path": "docs/l10n/glossary/bg.md",
+      "before_sha256": "4d02fedc8b73b49b81ea08a3823bea0093f1b707b653f497a006d05722e58eca",
+      "after_sha256": "f90198c8012266e1828dce873d66e29fadae8fd13856ed2f16dd30d138326189",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    },
+    {
+      "path": "docs/l10n/glossary/bn.md",
+      "before_sha256": "5e8c533bb3c3f8edd35815ded09d2f201aed39fce96632e8e0de07bcf8506b3b",
+      "after_sha256": "6b67c6147f8edc3c56996938aa06bf7b21d5c987899f1080b6262c1dd730735d",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    },
+    {
+      "path": "docs/l10n/glossary/ca.md",
+      "before_sha256": "37d286ce1f3d4701bc8ca77b9eedcf69af797af8fb495174990cd2a958e9863d",
+      "after_sha256": "0705d86767ddf4e7f0b72b52a25788781f39a5a45320200712c9fb8f214c9b41",
+      "line_endings": "LF",
+      "operation": "reviewed exact replacements",
+      "applied_core_edits": 2
+    },
+    {
+      "path": "docs/l10n/glossary/cs.md",
+      "before_sha256": "fc498fddb97679f95ff7876eb16dd0f3f9f697ef37642a490b170a1a1ce37aef",
+      "after_sha256": "3788e1297ba49bee6d92fa4058b86b397dea34ab65259c8b98e9775deca5d0c2",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    },
+    {
+      "path": "docs/l10n/glossary/da.md",
+      "before_sha256": "dcf166026ac8317ca6de73c7640fde9cde2dcfd92c328706161219eab4f5965f",
+      "after_sha256": "a1815f27ab10b26efc444beb6810a2bab865a0e1bf37d6f3b912cf84b4717899",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    },
+    {
+      "path": "docs/l10n/glossary/de.md",
+      "before_sha256": "def572d2b962d1f29332c3c27cb5060daa5d2361356fa9e0bd559c06ae33d29b",
+      "after_sha256": "7af0807d95357a42df1009c6855a876b8a0f83696255263b19052d472d8f6a12",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    },
+    {
+      "path": "docs/l10n/glossary/el.md",
+      "before_sha256": "c01edbb05777a6102ce1f171c7edadf6d2458d21b0ded7f33bcecbd3220de255",
+      "after_sha256": "5fceb92ed4899d93a4865ec91038b2efb7e1ea896a7db19a95330673650206b3",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    },
+    {
+      "path": "docs/l10n/glossary/es.md",
+      "before_sha256": "7edb90002835e731cb6618b05b002663e455ebe19f35411db62408cda6855d80",
+      "after_sha256": "5dc54645f82dc536e527ed066852ab33b813a62977f145a5c23aa10d606c165c",
+      "line_endings": "LF",
+      "operation": "reviewed exact replacements",
+      "applied_core_edits": 2
+    },
+    {
+      "path": "docs/l10n/glossary/et.md",
+      "before_sha256": "3d0d6fa92d77196ef75c9502d1dbf950a1ef099a2b729cc87c7b1265920398f4",
+      "after_sha256": "3acd5b1efacf12d49c7e9f62815f9e0d4422015255efdf8c805a8b3897a64496",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    },
+    {
+      "path": "docs/l10n/glossary/fi.md",
+      "before_sha256": "69ac14c6b88ea7bc5689ad21c6f580e22a96292e55c67339ae6073c9bc73bd23",
+      "after_sha256": "76fdab0f321e3e187e6c89561ac9b7e50936633acc746462ec0a0bc759216ec1",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    },
+    {
+      "path": "docs/l10n/glossary/fr.md",
+      "before_sha256": "2700f10a6a76ac8cf3eae86e45c3481ecc4ad1e35afcf845a5c5c08325208b11",
+      "after_sha256": "ef9613e242a7caf0d4c760ac4b82b863a23c19df96755d7c3e0fd6f39cf28a35",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    },
+    {
+      "path": "docs/l10n/glossary/gu.md",
+      "before_sha256": "830a039388144fed9eb82f861d2714a5816f98b4f1a65ec3a908a8f0ec3f764e",
+      "after_sha256": "2f4c1e4525460ea3ef1bd0e77030aa20519ceca7c2b2f4de445ff9dfe121a809",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    },
+    {
+      "path": "docs/l10n/glossary/he.md",
+      "before_sha256": "1e36d1026a9b20c2ec9bf8bdba1c91896af249100b0d416c91c412b8021b46f7",
+      "after_sha256": "f30d2e760e70df1b020c50d40b34d834cf5df439e195e94f24fae7225add6a1c",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    },
+    {
+      "path": "docs/l10n/glossary/hi.md",
+      "before_sha256": "1a9e9be519eeb1aa430d09a6eb3149d100e5f3e3ce1d1991dbc0d1d4de0c7776",
+      "after_sha256": "4a4504d0fa1a62f7e0c0d4f6d302761bd2017c3726196de76d526b6c5a324989",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    },
+    {
+      "path": "docs/l10n/glossary/hr.md",
+      "before_sha256": "7fbbd0dbd5be1f89c112414cce3bfd447b2b108ae91eab3a5eea948bb418cd66",
+      "after_sha256": "776252de88cdf961d28b3915f9540fae82d3b2408b81a8f3e6b282c34d239bb8",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    },
+    {
+      "path": "docs/l10n/glossary/hu.md",
+      "before_sha256": "fd808b8153a12e61b386d5500535d883804d5a27ddcd2f09d4520a96f6411067",
+      "after_sha256": "195f00460cc43447d66b4d421cc2de925a7dabf460ffc7dc50912a667d42e27e",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    },
+    {
+      "path": "docs/l10n/glossary/id.md",
+      "before_sha256": "bc9d2dffbd6691a212c7e7f09ae97c127ff986d4515ada729f0af875ede2a230",
+      "after_sha256": "d123145da438f8c4e2a4b512e0b12e47650b21730bd9b24963e8d89ea109316a",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    },
+    {
+      "path": "docs/l10n/glossary/is.md",
+      "before_sha256": "1131cca5ac72ae34ffd3ee2ef36de21998ccb2daa26dbf21d44b33bd9264e2ba",
+      "after_sha256": "64ba936e9457a5b5e3d75b193e04c1ebce3713f781bb81c8387102eb42a21aac",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    },
+    {
+      "path": "docs/l10n/glossary/it.md",
+      "before_sha256": "1812d127822ee52e684c4a08b67cadff5301b082ca7ac5f08176327166b77761",
+      "after_sha256": "5719ba42622ba1f38f72194006ccbbede8cda52cd9dec24adab912f72af9b9dd",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    },
+    {
+      "path": "docs/l10n/glossary/ja.md",
+      "before_sha256": "ad18cbf5a7af01d3e2a617ed80c775dc7fbdf7d106ebb4a5f21955321d04c83e",
+      "after_sha256": "829e5fee8a475dc887cf05ba288432cef52e432fccd6bfba5ed008dfcad95570",
+      "line_endings": "LF",
+      "operation": "reviewed exact replacements",
+      "applied_core_edits": 2
+    },
+    {
+      "path": "docs/l10n/glossary/kn.md",
+      "before_sha256": "43fe79a66ce2210ba6acf50df89de0276e1081d2d8ab293e9dd04484df253995",
+      "after_sha256": "07010a6e4582ab359ed98757fafd1d26de7eb596d40221e0c890ae0c65773e69",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    },
+    {
+      "path": "docs/l10n/glossary/ko.md",
+      "before_sha256": "95618ae5cd668afa67fb47624e4ffb4ae5eb09053f304a2b909c7ee1d95d920b",
+      "after_sha256": "45f752759ccb3a436f1b59498e38b8b88a1421246ec39d3ae775cf2ca6d47091",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    },
+    {
+      "path": "docs/l10n/glossary/lt.md",
+      "before_sha256": "b5a8ea3fcd7757c928b53721ac10e3b3c5e12dc15b267bf5503775d8776cc8e2",
+      "after_sha256": "60bb26916bba852fdf1a8fae79f5f64a5d9909920fa2442c3297dc898b399a52",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    },
+    {
+      "path": "docs/l10n/glossary/lv.md",
+      "before_sha256": "d8dfe40b363ca459f9e0a023a7d4cdb8b8f39e562edfe39e725d0532d830b0f3",
+      "after_sha256": "c9c99da6117158edbd3312deee34e5171141192bdbe117dce1ffc5191a0af08e",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    },
+    {
+      "path": "docs/l10n/glossary/ml.md",
+      "before_sha256": "ddc66fbbec47dda75150afa6bb9bc8286c2f81f5877b00187211630b2aa40fd4",
+      "after_sha256": "5e28e255d3102c0700ea1116e9c1ebf8a476a673c39ecbc60ee20f14d2757d3c",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    },
+    {
+      "path": "docs/l10n/glossary/mr.md",
+      "before_sha256": "170e32223def3dcd35e3abe3c6c9ea8320a83224e7077b9180d9c61b24281bd3",
+      "after_sha256": "784bde2c17a6b33c33165d0a8ce3e93d4bd8708fad53b2763434556be8707e1c",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    },
+    {
+      "path": "docs/l10n/glossary/no.md",
+      "before_sha256": "ad80beeacae06719be2520e76c353dc5b393130016e7deb7e0277aebe3ca8364",
+      "after_sha256": "491954e86aa71b66eade3c1e9f29203f51ceec8b440b6ed4e502a9e2d4dcce52",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    },
+    {
+      "path": "docs/l10n/glossary/pa.md",
+      "before_sha256": "0dc0060495248d58ea3dab3a2f62782d5b874960a35e0dec5b7185281f6695b2",
+      "after_sha256": "a3670ba8a9e0f81cd842dd47c93cc19800013c64703348e9fb9e639e2e2c2a68",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    },
+    {
+      "path": "docs/l10n/glossary/pt.md",
+      "before_sha256": "17187127ea1199a85ae398b243678ec454450debac26dbb2db52b682abb74649",
+      "after_sha256": "8287edb0a57195413d7436b26a4b207b9d4fb7ed5329f36dcf6ef5fa887f5356",
+      "line_endings": "LF",
+      "operation": "reviewed exact replacements",
+      "applied_core_edits": 2
+    },
+    {
+      "path": "docs/l10n/glossary/ro.md",
+      "before_sha256": "ac76b38c4c4bf1746d924137c559fee004ad689712b03d65bb5956c2b2abd9ec",
+      "after_sha256": "f271f34522b493d08ed37c7f7e78dfcf8818ffd8e1dbbc3e6c0283317f837e25",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    },
+    {
+      "path": "docs/l10n/glossary/sk.md",
+      "before_sha256": "ab4f2bac8dc48a187db669a1a9286b5892defede2772265cf64bc8dca5fb822b",
+      "after_sha256": "80cbbf6659d5ed1f3a99a384786b6913473e07b890c37e90da8d00d9cfb5a9ca",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    },
+    {
+      "path": "docs/l10n/glossary/sl.md",
+      "before_sha256": "0130fbb0209cfde96c863af636f3ce640337bb9ed78bdb627837c4b3bacf8796",
+      "after_sha256": "5ec7971e1465f6d97c9983f1f0f3f7a308740524fff578048246ebf1c1a7681c",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    },
+    {
+      "path": "docs/l10n/glossary/sv.md",
+      "before_sha256": "657e1be58b6d01b41b4f7267a63d4aebbdce87b592819255a469764c8d68868c",
+      "after_sha256": "b3a90fcb4402f35df562c8434d904c1059782a08d99abd8c7c6a201db122dd94",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    },
+    {
+      "path": "docs/l10n/glossary/sw.md",
+      "before_sha256": "69e1160aff4f4c92c8520bfb3d5dc461d38febe5c7a8b059628acf3eb49d5429",
+      "after_sha256": "f21b91af5d196839d71b657107699eaa96677d6878f07c86f068c1b1637e10af",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    },
+    {
+      "path": "docs/l10n/glossary/ta.md",
+      "before_sha256": "c522df23eb75ccefdf22e0bf2fd6fa22e73211d50aeb4d415c91f0fd204adccd",
+      "after_sha256": "d8e1eedb45801ca16020c6d0b07ba5bd26d5e32479a077b11456d6e37a271e8c",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    },
+    {
+      "path": "docs/l10n/glossary/te.md",
+      "before_sha256": "ee4e018f489ca5b7407466ea9880a33cb624ff0baa11aa7607b8a358a3ca793d",
+      "after_sha256": "265cd30759d02c7c18c4b80fa23c84a7812964cc706a07ba86bc6141562ca022",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    },
+    {
+      "path": "docs/l10n/glossary/th.md",
+      "before_sha256": "36122a8c974423131fe460aedf2641469c289e37ee353d81e2fba019e710f701",
+      "after_sha256": "a66b0bba11548a37654e4c175bb20badfd045d7aac2881b80ff6187f815d3b3f",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    },
+    {
+      "path": "docs/l10n/glossary/uk.md",
+      "before_sha256": "f29617454e2801c8cd3bca091e415c9cdd641aacd7fe583ee9bd37a4674afc53",
+      "after_sha256": "814ade63c839bf3960f8e8316b107ddc9fbf6204f1d605155e7a39c578016b9d",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    },
+    {
+      "path": "docs/l10n/glossary/ur.md",
+      "before_sha256": "729090b26fe4353bf9c6a3a0bf01133d7f92bd579a36bbfb34f274ee16ea13e1",
+      "after_sha256": "9564c4e24b875813d35fb28bc61519cf1f2e3b378af1438c9b3a5b09166df0e5",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    },
+    {
+      "path": "docs/l10n/glossary/vi.md",
+      "before_sha256": "2819f5de47f7cf9dd956146d53ec643dd19159b3a05df264b0655ffb27ea8e33",
+      "after_sha256": "db177f5cd147e69d2ae9f714edf14a68606bd78f96bffbec9f7a55595a91a150",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    },
+    {
+      "path": "docs/l10n/glossary/zh-CN.md",
+      "before_sha256": "b01f6176ebe700171c6e0b5f08d9cfdc59eeaee57c84b357a4ca15c791cec06a",
+      "after_sha256": "1ee83180b03e6514ad191c3ad53d8aa51fb03bd81fb6bd27234a6e9eec368706",
+      "line_endings": "LF",
+      "operation": "reviewed exact replacements",
+      "applied_core_edits": 2
+    },
+    {
+      "path": "docs/l10n/glossary/zu.md",
+      "before_sha256": "57b40a5f6d7d9fe5bb4228022c0a9b219ea7e37f5438e725074112dc3dee2635",
+      "after_sha256": "446c8511c701d01b93b93306272496fac47b1666b6f9dc3ebe3b00e8c30b1122",
+      "line_endings": "LF",
+      "operation": "context-only superseding top note",
+      "applied_core_edits": 0
+    }
+  ],
+  "actual_diff_patch": "docs/l10n/reviews/native-followup/native/documentation-application.patch",
+  "actual_diff_patch_sha256": "44c50f4676ab89aa95f27aafb82a8b841f185600ccf3b3579deda0a40a9bad26",
+  "git_diff_numstat": "3\t2\tdocs/l10n/GLOSSARY-TEMPLATE.md\n1\t1\tdocs/l10n/TRANSLATING-WITH-GPT.md\n2\t0\tdocs/l10n/glossary/ar.md\n2\t0\tdocs/l10n/glossary/bg.md\n2\t0\tdocs/l10n/glossary/bn.md\n3\t2\tdocs/l10n/glossary/ca.md\n2\t0\tdocs/l10n/glossary/cs.md\n2\t0\tdocs/l10n/glossary/da.md\n2\t0\tdocs/l10n/glossary/de.md\n2\t0\tdocs/l10n/glossary/el.md\n3\t2\tdocs/l10n/glossary/es.md\n2\t0\tdocs/l10n/glossary/et.md\n2\t0\tdocs/l10n/glossary/fi.md\n2\t0\tdocs/l10n/glossary/fr.md\n2\t0\tdocs/l10n/glossary/gu.md\n2\t0\tdocs/l10n/glossary/he.md\n2\t0\tdocs/l10n/glossary/hi.md\n2\t0\tdocs/l10n/glossary/hr.md\n2\t0\tdocs/l10n/glossary/hu.md\n2\t0\tdocs/l10n/glossary/id.md\n2\t0\tdocs/l10n/glossary/is.md\n2\t0\tdocs/l10n/glossary/it.md\n3\t2\tdocs/l10n/glossary/ja.md\n2\t0\tdocs/l10n/glossary/kn.md\n2\t0\tdocs/l10n/glossary/ko.md\n2\t0\tdocs/l10n/glossary/lt.md\n2\t0\tdocs/l10n/glossary/lv.md\n2\t0\tdocs/l10n/glossary/ml.md\n2\t0\tdocs/l10n/glossary/mr.md\n2\t0\tdocs/l10n/glossary/no.md\n2\t0\tdocs/l10n/glossary/pa.md\n3\t2\tdocs/l10n/glossary/pt.md\n2\t0\tdocs/l10n/glossary/ro.md\n2\t0\tdocs/l10n/glossary/sk.md\n2\t0\tdocs/l10n/glossary/sl.md\n2\t0\tdocs/l10n/glossary/sv.md\n2\t0\tdocs/l10n/glossary/sw.md\n2\t0\tdocs/l10n/glossary/ta.md\n2\t0\tdocs/l10n/glossary/te.md\n2\t0\tdocs/l10n/glossary/th.md\n2\t0\tdocs/l10n/glossary/uk.md\n2\t0\tdocs/l10n/glossary/ur.md\n2\t0\tdocs/l10n/glossary/vi.md\n3\t2\tdocs/l10n/glossary/zh-CN.md\n2\t0\tdocs/l10n/glossary/zu.md\n",
+  "verification": {
+    "git_diff_check": "pass",
+    "all_old_source_snippet_and_file_hash_guards": "pass",
+    "all58_inventory_line_hashes_and_contents": "pass",
+    "all38_context_note_changes_reverse_to_exact_pre_edit_bytes": "pass",
+    "all_written_document_line_endings": "LF",
+    "all13_reviewed_new_snippets_present": "pass",
+    "original_proposal_bytes": "unchanged"
+  },
+  "scope_limit": "Only authorized documentation files and this application evidence were written. No live translation map/resource, source code, tests, stores, registry or commits changed by this application."
+}

@@ -1,0 +1,1953 @@
+[
+  {
+    "locale": "fa",
+    "table": "Learn.strings",
+    "key": "L728cd633f1",
+    "source": "A minor",
+    "old": "A مینور",
+    "new": "⁨A⁩ مینور",
+    "decision": "correct-bounded-isolates",
+    "reason": "Isolate only the complete Latin root-note token; its Persian major/minor suffix remains outside, so UAX9 P2 skips the isolated note and finds Persian AL, and P3 derives an RTL paragraph. Keep the glossary root-plus-mode logical order and neutral chord/scale/key usage; do not prepend آکورد or گام. No U+200F prefix is necessary.",
+    "reviewer": "Codex independent RTL follow-up reviewer review_is (source-aware AI, not native/device certification)",
+    "context": "Guitar · Unit 3 · lesson gtr-3-3 “A minor” · title",
+    "max_length": 42,
+    "source_sha256": "c76d73664513e43e04100d760c62d897624c951e9523379cfb402d6b05762c03",
+    "old_sha256": "221751c225397279db7a3ba9d87675e902826f3702919decfe2a13cc6e6dd11f",
+    "new_sha256": "441527bdd214225fc0ec8488813e11c3ecb2fa2bb3ab3a2b18d95ce74ea41b58",
+    "old_p2_p3": {
+      "index": 0,
+      "codepoint": "U+0041",
+      "bidi_type": "L",
+      "p3_base_level": 0
+    },
+    "new_p2_p3": {
+      "index": 4,
+      "codepoint": "U+0645",
+      "bidi_type": "AL",
+      "p3_base_level": 1
+    },
+    "new_isolate_spans": [
+      {
+        "start": 0,
+        "end_inclusive": 2,
+        "initiator": "U+2068",
+        "terminator": "U+2069",
+        "contents": "A"
+      }
+    ],
+    "added_controls": [
+      {
+        "codepoint": "U+2068",
+        "count": 1
+      },
+      {
+        "codepoint": "U+2069",
+        "count": 1
+      }
+    ],
+    "added_RLM_count": 0,
+    "visible_text_unchanged": true,
+    "contract_errors": [],
+    "raw_helper_warnings": [
+      "starts with %@ or Latin text: begin with a word of the language, or with U+200F",
+      "invisible direction marks: U+2068, U+2069"
+    ],
+    "helper_warning_disposition": "The helper first-strong heuristic scans inside isolates, unlike normative P2; the remaining starts/marks advisories do not prove an RTL failure. Real device checks remain separate.",
+    "source_option_contexts": [
+      {
+        "prompt": "The F barre is which open shape, moved up a fret?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "gtr-10-2"
+        ]
+      },
+      {
+        "prompt": "Which chord shares a finger with F?",
+        "explanation": "Your second finger sits on fret 2 of string 4 for both. Keep it down when you change.",
+        "occurrences": 1,
+        "example_lessons": [
+          "uke-2-3"
+        ]
+      },
+      {
+        "prompt": "In the key of C, which chord is IV?",
+        "explanation": "Count up the scale from C: C, D, E, F. F is the fourth note, so F is the IV chord.",
+        "occurrences": 1,
+        "example_lessons": [
+          "uke-5-5"
+        ]
+      },
+      {
+        "prompt": "Which chord is vi in C?",
+        "explanation": "Lowercase numbers mean minor chords. The sixth note of C major is A.",
+        "occurrences": 1,
+        "example_lessons": [
+          "uke-5-5"
+        ]
+      },
+      {
+        "prompt": "In the key of C, which chord is V?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "uke-5-6"
+        ]
+      },
+      {
+        "prompt": "Which chord shares finger 1's spot on string 2 with B flat?",
+        "explanation": "F also puts finger 1 on string 2, fret 1. Keep it there as you change.",
+        "occurrences": 1,
+        "example_lessons": [
+          "uke-7-1"
+        ]
+      },
+      {
+        "prompt": "Using only C major notes, what triad is built on A?",
+        "explanation": "A C E: a minor third, then a major third.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-7-3"
+        ]
+      },
+      {
+        "prompt": "In C major, which chord is vi?",
+        "explanation": "The sixth note is A, and lowercase vi means minor.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-7-4"
+        ]
+      },
+      {
+        "prompt": "In F major, which chord is vi?",
+        "explanation": "F, G, A, B♭, C, D: the sixth note is D, and vi is minor.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-8-2"
+        ]
+      }
+    ],
+    "shared_source_roles": [
+      {
+        "role": "lessons",
+        "field": "title",
+        "occurrences": 2,
+        "example_locations": [
+          "/courses/0/units/2/lessons/2/title",
+          "/courses/3/units/4/lessons/2/title"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/9/lessons/1/steps/4/options/0"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/1/units/1/lessons/1/steps/2/options/1"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/1/units/4/lessons/4/steps/1/options/1"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/1/units/4/lessons/4/steps/3/options/0"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/1/units/4/lessons/5/steps/4/options/3"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/1/units/6/lessons/0/steps/4/options/2"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/6/lessons/2/steps/6/options/2"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/6/lessons/3/steps/3/options/1"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/7/lessons/1/steps/6/options/2"
+        ]
+      }
+    ]
+  },
+  {
+    "locale": "fa",
+    "table": "Learn.strings",
+    "key": "L3c6bc13182",
+    "source": "A major",
+    "old": "A ماژور",
+    "new": "⁨A⁩ ماژور",
+    "decision": "correct-bounded-isolates",
+    "reason": "Isolate only the complete Latin root-note token; its Persian major/minor suffix remains outside, so UAX9 P2 skips the isolated note and finds Persian AL, and P3 derives an RTL paragraph. Keep the glossary root-plus-mode logical order and neutral chord/scale/key usage; do not prepend آکورد or گام. No U+200F prefix is necessary.",
+    "reviewer": "Codex independent RTL follow-up reviewer review_is (source-aware AI, not native/device certification)",
+    "context": "Guitar · Unit 3 · lesson gtr-3-4 “A major” · title",
+    "max_length": 42,
+    "source_sha256": "6e71b17899f31529ac150e25e7244c99a15bdf3094c611f7dfa3ffb8cd7b3707",
+    "old_sha256": "8f359f87fa3ad42368b14701031ba89a70fb62b92cc42c1c2ec7c92bca3d5e52",
+    "new_sha256": "bcbee992115f5b925def52531e534ac9a1f69599d5688063e36c5eb82dc654cb",
+    "old_p2_p3": {
+      "index": 0,
+      "codepoint": "U+0041",
+      "bidi_type": "L",
+      "p3_base_level": 0
+    },
+    "new_p2_p3": {
+      "index": 4,
+      "codepoint": "U+0645",
+      "bidi_type": "AL",
+      "p3_base_level": 1
+    },
+    "new_isolate_spans": [
+      {
+        "start": 0,
+        "end_inclusive": 2,
+        "initiator": "U+2068",
+        "terminator": "U+2069",
+        "contents": "A"
+      }
+    ],
+    "added_controls": [
+      {
+        "codepoint": "U+2068",
+        "count": 1
+      },
+      {
+        "codepoint": "U+2069",
+        "count": 1
+      }
+    ],
+    "added_RLM_count": 0,
+    "visible_text_unchanged": true,
+    "contract_errors": [],
+    "raw_helper_warnings": [
+      "starts with %@ or Latin text: begin with a word of the language, or with U+200F",
+      "invisible direction marks: U+2068, U+2069"
+    ],
+    "helper_warning_disposition": "The helper first-strong heuristic scans inside isolates, unlike normative P2; the remaining starts/marks advisories do not prove an RTL failure. Real device checks remain separate.",
+    "source_option_contexts": [
+      {
+        "prompt": "You move the shape so it starts on fret 5 of string 4. Which scale is it now?",
+        "explanation": "Fret 5 on string 4 is A, so the same shape plays A major.",
+        "occurrences": 1,
+        "example_lessons": [
+          "bass-3-4"
+        ]
+      },
+      {
+        "prompt": "D, F♯ and A together spell which chord?",
+        "explanation": "D, F♯ and A are the three notes of D major. Fiddle tunes often trace their chords like this.",
+        "occurrences": 1,
+        "example_lessons": [
+          "man-5-3"
+        ]
+      },
+      {
+        "prompt": "A key signature has two sharps, F♯ and C♯. Which major key is it?",
+        "explanation": "The last sharp, C♯, is a half step below D.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-5-5"
+        ]
+      },
+      {
+        "prompt": "Which scale has the notes D, E, F♯, G, A, B, C♯?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-5-6"
+        ]
+      },
+      {
+        "prompt": "Using only C major notes, what triad is built on A?",
+        "explanation": "A C E: a minor third, then a major third.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-7-3"
+        ]
+      },
+      {
+        "prompt": "In C major, which chord is vi?",
+        "explanation": "The sixth note is A, and lowercase vi means minor.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-7-4"
+        ]
+      },
+      {
+        "prompt": "In D major, which chord is IV?",
+        "explanation": "D, E, F♯, G: the fourth note is G.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-8-1"
+        ]
+      }
+    ],
+    "shared_source_roles": [
+      {
+        "role": "lessons",
+        "field": "title",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/2/lessons/3/title"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/2/units/2/lessons/3/steps/5/options/0"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/5/units/4/lessons/2/steps/3/options/0"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/4/lessons/4/steps/4/options/0"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/4/lessons/5/steps/4/options/2"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/6/lessons/2/steps/6/options/0"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/6/lessons/3/steps/3/options/0"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/7/lessons/0/steps/6/options/1"
+        ]
+      }
+    ]
+  },
+  {
+    "locale": "fa",
+    "table": "Learn.strings",
+    "key": "Laa87302d09",
+    "source": "C major",
+    "old": "C ماژور",
+    "new": "⁨C⁩ ماژور",
+    "decision": "correct-bounded-isolates",
+    "reason": "Isolate only the complete Latin root-note token; its Persian major/minor suffix remains outside, so UAX9 P2 skips the isolated note and finds Persian AL, and P3 derives an RTL paragraph. Keep the glossary root-plus-mode logical order and neutral chord/scale/key usage; do not prepend آکورد or گام. No U+200F prefix is necessary.",
+    "reviewer": "Codex independent RTL follow-up reviewer review_is (source-aware AI, not native/device certification)",
+    "context": "Guitar · Unit 5 · lesson gtr-5-1 “C major” · title",
+    "max_length": 42,
+    "source_sha256": "95cd4b1ef209d5fa9eec8b4cd92a729585395bbf97c8c99e0c749fe3d39f088e",
+    "old_sha256": "f0756f46d5735f646b9328c4952bc290135b7ae9dffa2fda88b4882515330add",
+    "new_sha256": "e49969ce78687f5e0cfe81a13efd0fdcc8885332355f40cec185750ebfaf8ec0",
+    "old_p2_p3": {
+      "index": 0,
+      "codepoint": "U+0043",
+      "bidi_type": "L",
+      "p3_base_level": 0
+    },
+    "new_p2_p3": {
+      "index": 4,
+      "codepoint": "U+0645",
+      "bidi_type": "AL",
+      "p3_base_level": 1
+    },
+    "new_isolate_spans": [
+      {
+        "start": 0,
+        "end_inclusive": 2,
+        "initiator": "U+2068",
+        "terminator": "U+2069",
+        "contents": "C"
+      }
+    ],
+    "added_controls": [
+      {
+        "codepoint": "U+2068",
+        "count": 1
+      },
+      {
+        "codepoint": "U+2069",
+        "count": 1
+      }
+    ],
+    "added_RLM_count": 0,
+    "visible_text_unchanged": true,
+    "contract_errors": [],
+    "raw_helper_warnings": [
+      "starts with %@ or Latin text: begin with a word of the language, or with U+200F",
+      "invisible direction marks: U+2068, U+2069"
+    ],
+    "helper_warning_disposition": "The helper first-strong heuristic scans inside isolates, unlike normative P2; the remaining starts/marks advisories do not prove an RTL failure. Real device checks remain separate.",
+    "source_option_contexts": [
+      {
+        "prompt": "You move the shape so it starts on fret 5 of string 4. Which scale is it now?",
+        "explanation": "Fret 5 on string 4 is A, so the same shape plays A major.",
+        "occurrences": 1,
+        "example_lessons": [
+          "bass-3-4"
+        ]
+      },
+      {
+        "prompt": "Which of these keys has no sharps?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "vc-4-7"
+        ]
+      },
+      {
+        "prompt": "A key signature has one sharp, F♯. Which major key is it?",
+        "explanation": "G major is the major key with just F♯.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-5-5"
+        ]
+      },
+      {
+        "prompt": "Which major key has no sharps or flats?",
+        "explanation": "C major uses only white keys.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-5-5"
+        ]
+      },
+      {
+        "prompt": "Which major key has one flat?",
+        "explanation": "F major's one flat is B♭.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-5-6"
+        ]
+      },
+      {
+        "prompt": "In G major, which chord is V?",
+        "explanation": "Count up from G: G, A, B, C, D. The fifth note is D, and V is major.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-7-4"
+        ]
+      },
+      {
+        "prompt": "In G major, which chord is IV?",
+        "explanation": "G, A, B, C: the fourth note is C.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-7-4"
+        ]
+      },
+      {
+        "prompt": "In F major, which chord is V?",
+        "explanation": "F, G, A, B♭, C: the fifth note is C.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-7-5"
+        ]
+      }
+    ],
+    "shared_source_roles": [
+      {
+        "role": "lessons",
+        "field": "title",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/4/lessons/0/title"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/2/units/2/lessons/3/steps/5/options/2"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/4/units/3/lessons/6/steps/3/options/0"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/4/lessons/4/steps/1/options/0"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/4/lessons/4/steps/5/options/2"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/4/lessons/5/steps/3/options/2"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/6/lessons/3/steps/4/options/0"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/6/lessons/3/steps/6/options/0"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/6/lessons/4/steps/6/options/1"
+        ]
+      }
+    ]
+  },
+  {
+    "locale": "fa",
+    "table": "Learn.strings",
+    "key": "L2449e81b73",
+    "source": "G major",
+    "old": "G ماژور",
+    "new": "⁨G⁩ ماژور",
+    "decision": "correct-bounded-isolates",
+    "reason": "Isolate only the complete Latin root-note token; its Persian major/minor suffix remains outside, so UAX9 P2 skips the isolated note and finds Persian AL, and P3 derives an RTL paragraph. Keep the glossary root-plus-mode logical order and neutral chord/scale/key usage; do not prepend آکورد or گام. No U+200F prefix is necessary.",
+    "reviewer": "Codex independent RTL follow-up reviewer review_is (source-aware AI, not native/device certification)",
+    "context": "Guitar · Unit 5 · lesson gtr-5-2 “G major” · title",
+    "max_length": 42,
+    "source_sha256": "c0f139bd17ded126e4542dac16ab190c166677b885d9670a8ae2eaf8a08551ec",
+    "old_sha256": "a3793ca4b5eb989c1faf20c594a6224ba1792cc6803d922c41141cafa41bcaaa",
+    "new_sha256": "2830131ae263ff9a01138665b619e287a7e7c99eb15b171dacb47f658a745872",
+    "old_p2_p3": {
+      "index": 0,
+      "codepoint": "U+0047",
+      "bidi_type": "L",
+      "p3_base_level": 0
+    },
+    "new_p2_p3": {
+      "index": 4,
+      "codepoint": "U+0645",
+      "bidi_type": "AL",
+      "p3_base_level": 1
+    },
+    "new_isolate_spans": [
+      {
+        "start": 0,
+        "end_inclusive": 2,
+        "initiator": "U+2068",
+        "terminator": "U+2069",
+        "contents": "G"
+      }
+    ],
+    "added_controls": [
+      {
+        "codepoint": "U+2068",
+        "count": 1
+      },
+      {
+        "codepoint": "U+2069",
+        "count": 1
+      }
+    ],
+    "added_RLM_count": 0,
+    "visible_text_unchanged": true,
+    "contract_errors": [],
+    "raw_helper_warnings": [
+      "starts with %@ or Latin text: begin with a word of the language, or with U+200F",
+      "invisible direction marks: U+2068, U+2069"
+    ],
+    "helper_warning_disposition": "The helper first-strong heuristic scans inside isolates, unlike normative P2; the remaining starts/marks advisories do not prove an RTL failure. Real device checks remain separate.",
+    "source_option_contexts": [
+      {
+        "prompt": "Slide the minor box from fret 5 to fret 2 and it plays…",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "gtr-21-6"
+        ]
+      },
+      {
+        "prompt": "You move the shape so it starts on fret 5 of string 4. Which scale is it now?",
+        "explanation": "Fret 5 on string 4 is A, so the same shape plays A major.",
+        "occurrences": 1,
+        "example_lessons": [
+          "bass-3-4"
+        ]
+      },
+      {
+        "prompt": "Which of these keys has no sharps?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "vc-4-7"
+        ]
+      },
+      {
+        "prompt": "D, F♯ and A together spell which chord?",
+        "explanation": "D, F♯ and A are the three notes of D major. Fiddle tunes often trace their chords like this.",
+        "occurrences": 1,
+        "example_lessons": [
+          "man-5-3"
+        ]
+      },
+      {
+        "prompt": "Which major key has two sharps?",
+        "explanation": "D major has F♯ and C♯.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-5-4"
+        ]
+      },
+      {
+        "prompt": "A key signature has one sharp, F♯. Which major key is it?",
+        "explanation": "G major is the major key with just F♯.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-5-5"
+        ]
+      },
+      {
+        "prompt": "A key signature has one flat, B♭. Which major key is it?",
+        "explanation": "F major is the major key with just B♭.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-5-5"
+        ]
+      },
+      {
+        "prompt": "Which major key has no sharps or flats?",
+        "explanation": "C major uses only white keys.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-5-5"
+        ]
+      },
+      {
+        "prompt": "Which scale has the notes D, E, F♯, G, A, B, C♯?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-5-6"
+        ]
+      },
+      {
+        "prompt": "Using only C major notes, what triad is built on G?",
+        "explanation": "G B D: a major third, then a minor third.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-7-3"
+        ]
+      },
+      {
+        "prompt": "In C major, which chord is IV?",
+        "explanation": "The fourth note of C major is F.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-7-4"
+        ]
+      },
+      {
+        "prompt": "In D major, which chord is IV?",
+        "explanation": "D, E, F♯, G: the fourth note is G.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-8-1"
+        ]
+      }
+    ],
+    "shared_source_roles": [
+      {
+        "role": "lessons",
+        "field": "title",
+        "occurrences": 2,
+        "example_locations": [
+          "/courses/0/units/4/lessons/1/title",
+          "/courses/8/units/4/lessons/2/title"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/20/lessons/6/steps/1/options/1"
+        ]
+      },
+      {
+        "role": "steps:explain",
+        "field": "title",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/1/units/1/lessons/3/steps/0/title"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/2/units/2/lessons/3/steps/5/options/1"
+        ]
+      },
+      {
+        "role": "steps:explain",
+        "field": "title",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/4/units/3/lessons/0/steps/2/title"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/4/units/3/lessons/6/steps/3/options/1"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/5/units/4/lessons/2/steps/3/options/1"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/4/lessons/3/steps/5/options/0"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/4/lessons/4/steps/1/options/2"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/4/lessons/4/steps/2/options/2"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/4/lessons/4/steps/5/options/0"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/4/lessons/5/steps/4/options/0"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/6/lessons/2/steps/2/options/0"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/6/lessons/3/steps/2/options/2"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/7/lessons/0/steps/6/options/0"
+        ]
+      }
+    ]
+  },
+  {
+    "locale": "fa",
+    "table": "Learn.strings",
+    "key": "Lc3e1440b37",
+    "source": "E minor",
+    "old": "E مینور",
+    "new": "⁨E⁩ مینور",
+    "decision": "correct-bounded-isolates",
+    "reason": "Isolate only the complete Latin root-note token; its Persian major/minor suffix remains outside, so UAX9 P2 skips the isolated note and finds Persian AL, and P3 derives an RTL paragraph. Keep the glossary root-plus-mode logical order and neutral chord/scale/key usage; do not prepend آکورد or گام. No U+200F prefix is necessary.",
+    "reviewer": "Codex independent RTL follow-up reviewer review_is (source-aware AI, not native/device certification)",
+    "context": "Guitar · Unit 5 · lesson gtr-5-spotlight “Song spotlight: Kite Weather” · step 3 (quiz) · quiz answer",
+    "max_length": 48,
+    "source_sha256": "1641ec2355030a8a8f092207f8f861619747f96cb20019ca09afe8289aa88928",
+    "old_sha256": "a6b5c9d5e5d38e56c9ae063903ec262574e41e289e7569df87d3d5919b08f2fd",
+    "new_sha256": "aba70ca30a160109959e9a6273b678e69ff824fcfd7ef2a0f1c075d92c882762",
+    "old_p2_p3": {
+      "index": 0,
+      "codepoint": "U+0045",
+      "bidi_type": "L",
+      "p3_base_level": 0
+    },
+    "new_p2_p3": {
+      "index": 4,
+      "codepoint": "U+0645",
+      "bidi_type": "AL",
+      "p3_base_level": 1
+    },
+    "new_isolate_spans": [
+      {
+        "start": 0,
+        "end_inclusive": 2,
+        "initiator": "U+2068",
+        "terminator": "U+2069",
+        "contents": "E"
+      }
+    ],
+    "added_controls": [
+      {
+        "codepoint": "U+2068",
+        "count": 1
+      },
+      {
+        "codepoint": "U+2069",
+        "count": 1
+      }
+    ],
+    "added_RLM_count": 0,
+    "visible_text_unchanged": true,
+    "contract_errors": [],
+    "raw_helper_warnings": [
+      "starts with %@ or Latin text: begin with a word of the language, or with U+200F",
+      "invisible direction marks: U+2068, U+2069"
+    ],
+    "helper_warning_disposition": "The helper first-strong heuristic scans inside isolates, unlike normative P2; the remaining starts/marks advisories do not prove an RTL failure. Real device checks remain separate.",
+    "source_option_contexts": [
+      {
+        "prompt": "Which chord in Kite Weather skips strings 5 and 6?",
+        "explanation": "D's root is open string 4, so strings 5 and 6 stay quiet.",
+        "occurrences": 1,
+        "example_lessons": [
+          "gtr-5-spotlight"
+        ]
+      },
+      {
+        "prompt": "Which chord pulls toward G?",
+        "explanation": "D7's extra note leans toward G. When G arrives, the tension lets go.",
+        "occurrences": 1,
+        "example_lessons": [
+          "gtr-7-5"
+        ]
+      },
+      {
+        "prompt": "Which chord pulls hardest toward G?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "gtr-7-6"
+        ]
+      },
+      {
+        "prompt": "Which chord does B7 lead to most naturally?",
+        "explanation": "B7 pulls toward E. Its tension melts into E minor or E.",
+        "occurrences": 1,
+        "example_lessons": [
+          "gtr-8-2"
+        ]
+      },
+      {
+        "prompt": "Roller Rink's loop is the one, six, four and five of G. Which chord is the six?",
+        "explanation": "Count up G major: G 1, A 2, B 3, C 4, D 5, E 6. The chord on 6 is minor: E minor.",
+        "occurrences": 1,
+        "example_lessons": [
+          "gtr-18-spotlight"
+        ]
+      },
+      {
+        "prompt": "In G major, which chord is built on 6?",
+        "explanation": "The sixth note is E, and chords on 2, 3 and 6 are minor. Stack E, G and B: E minor.",
+        "occurrences": 1,
+        "example_lessons": [
+          "gtr-20-3"
+        ]
+      },
+      {
+        "prompt": "Which mode starts on the second note of G major?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "gtr-20-6"
+        ]
+      },
+      {
+        "prompt": "Which chord is vi in C?",
+        "explanation": "Lowercase numbers mean minor chords. The sixth note of C major is A.",
+        "occurrences": 1,
+        "example_lessons": [
+          "uke-5-5"
+        ]
+      },
+      {
+        "prompt": "In the key of C, which chord is V?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "uke-5-6"
+        ]
+      },
+      {
+        "prompt": "In the key of G, which chord is V?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "uke-7-6"
+        ]
+      },
+      {
+        "prompt": "In C major, which chord is IV?",
+        "explanation": "The fourth note of C major is F.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-7-4"
+        ]
+      },
+      {
+        "prompt": "In C major, which chord is ii?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-7-5"
+        ]
+      },
+      {
+        "prompt": "In D major, which chord is IV?",
+        "explanation": "D, E, F♯, G: the fourth note is G.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-8-1"
+        ]
+      },
+      {
+        "prompt": "F sharp minor is which shape, barred at fret 2?",
+        "explanation": "Barre at fret 2 and the E minor shape sits in front of your first finger: F sharp minor.",
+        "occurrences": 1,
+        "example_lessons": [
+          "orig-barre-set"
+        ]
+      }
+    ],
+    "shared_source_roles": [
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/4/lessons/5/steps/2/options/2"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/6/lessons/4/steps/2/options/2"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/6/lessons/6/steps/1/options/0"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/7/lessons/1/steps/5/options/2"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/17/lessons/5/steps/1/options/0"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/19/lessons/2/steps/3/options/0"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/0/units/19/lessons/6/steps/3/options/2"
+        ]
+      },
+      {
+        "role": "lessons",
+        "field": "title",
+        "occurrences": 2,
+        "example_locations": [
+          "/courses/1/units/4/lessons/1/title",
+          "/courses/6/units/2/lessons/3/title"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/1/units/4/lessons/4/steps/3/options/1"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/1/units/4/lessons/5/steps/4/options/2"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/1/units/6/lessons/5/steps/3/options/1"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/6/lessons/3/steps/2/options/1"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/6/lessons/4/steps/4/options/2"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/7/lessons/0/steps/6/options/2"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/12/units/9/lessons/5/steps/5/options/0"
+        ]
+      }
+    ]
+  },
+  {
+    "locale": "fa",
+    "table": "Learn.strings",
+    "key": "L5ca845ae96",
+    "source": "G, C, D, G",
+    "old": "G، C، D، G",
+    "new": "G، C، D، G",
+    "decision": "accept-intentional-ltr-notation",
+    "reason": "Accept intentional LTR music notation: this entire label is the ordered G, C, D, G sequence with localized comma separators, not Persian prose. All strong characters are L and the intervening commas/spaces are neutral/weak; both source play-along and chord-progression distractor require this same note order. Do not force it into an artificial RTL prose paragraph or add a Persian chord-only noun.",
+    "reviewer": "Codex independent RTL follow-up reviewer review_is (source-aware AI, not native/device certification)",
+    "context": "Bass · Unit 2 · lesson bass-2-4 “Roots from a chord chart” · step 3 (along) · title",
+    "max_length": 42,
+    "source_sha256": "499c8d5f5473db8acb2fa70d3d3a601301a92cf14a21b32a63a0465f323e79a6",
+    "old_sha256": "63d8b60745061f37ff119143c785ba1c36241b6c71cab9d1debf8fd9519e9be3",
+    "new_sha256": "63d8b60745061f37ff119143c785ba1c36241b6c71cab9d1debf8fd9519e9be3",
+    "old_p2_p3": {
+      "index": 0,
+      "codepoint": "U+0047",
+      "bidi_type": "L",
+      "p3_base_level": 0
+    },
+    "new_p2_p3": {
+      "index": 0,
+      "codepoint": "U+0047",
+      "bidi_type": "L",
+      "p3_base_level": 0
+    },
+    "new_isolate_spans": [],
+    "added_controls": [
+      {
+        "codepoint": "U+2068",
+        "count": 0
+      },
+      {
+        "codepoint": "U+2069",
+        "count": 0
+      }
+    ],
+    "added_RLM_count": 0,
+    "visible_text_unchanged": true,
+    "contract_errors": [],
+    "raw_helper_warnings": [
+      "starts with %@ or Latin text: begin with a word of the language, or with U+200F"
+    ],
+    "helper_warning_disposition": "The helper first-strong heuristic scans inside isolates, unlike normative P2; the remaining starts/marks advisories do not prove an RTL failure. Real device checks remain separate.",
+    "source_option_contexts": [
+      {
+        "prompt": "In G major, what is I–V–vi–IV?",
+        "explanation": "In G: I is G, V is D, vi is E minor, IV is C.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-8-2"
+        ]
+      }
+    ],
+    "shared_source_roles": [
+      {
+        "role": "steps:along",
+        "field": "title",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/2/units/1/lessons/3/steps/2/title"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/7/lessons/1/steps/2/options/1"
+        ]
+      }
+    ]
+  },
+  {
+    "locale": "fa",
+    "table": "Learn.strings",
+    "key": "L42626aabd8",
+    "source": "D major",
+    "old": "D ماژور",
+    "new": "⁨D⁩ ماژور",
+    "decision": "correct-bounded-isolates",
+    "reason": "Isolate only the complete Latin root-note token; its Persian major/minor suffix remains outside, so UAX9 P2 skips the isolated note and finds Persian AL, and P3 derives an RTL paragraph. Keep the glossary root-plus-mode logical order and neutral chord/scale/key usage; do not prepend آکورد or گام. No U+200F prefix is necessary.",
+    "reviewer": "Codex independent RTL follow-up reviewer review_is (source-aware AI, not native/device certification)",
+    "context": "Cello · Unit 4 · challenge vc-4-7 “Low strings checkup” · step 4 (quiz) · quiz answer",
+    "max_length": 48,
+    "source_sha256": "50d1efe32ef1c57b6b65df5da20ca4156c8b855ef4bb986ee9a0c33af81bc276",
+    "old_sha256": "d07c52db6710c3334bef69edb1a156d8ec028096756020c6537623d357f9a7f2",
+    "new_sha256": "1a209db431ccee1a1df575f2efa60cb79f1c05b446e5f06123eca54a8c74019b",
+    "old_p2_p3": {
+      "index": 0,
+      "codepoint": "U+0044",
+      "bidi_type": "L",
+      "p3_base_level": 0
+    },
+    "new_p2_p3": {
+      "index": 4,
+      "codepoint": "U+0645",
+      "bidi_type": "AL",
+      "p3_base_level": 1
+    },
+    "new_isolate_spans": [
+      {
+        "start": 0,
+        "end_inclusive": 2,
+        "initiator": "U+2068",
+        "terminator": "U+2069",
+        "contents": "D"
+      }
+    ],
+    "added_controls": [
+      {
+        "codepoint": "U+2068",
+        "count": 1
+      },
+      {
+        "codepoint": "U+2069",
+        "count": 1
+      }
+    ],
+    "added_RLM_count": 0,
+    "visible_text_unchanged": true,
+    "contract_errors": [],
+    "raw_helper_warnings": [
+      "starts with %@ or Latin text: begin with a word of the language, or with U+200F",
+      "invisible direction marks: U+2068, U+2069"
+    ],
+    "helper_warning_disposition": "The helper first-strong heuristic scans inside isolates, unlike normative P2; the remaining starts/marks advisories do not prove an RTL failure. Real device checks remain separate.",
+    "source_option_contexts": [
+      {
+        "prompt": "Which of these keys has no sharps?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "vc-4-7"
+        ]
+      },
+      {
+        "prompt": "D, F♯ and A together spell which chord?",
+        "explanation": "D, F♯ and A are the three notes of D major. Fiddle tunes often trace their chords like this.",
+        "occurrences": 1,
+        "example_lessons": [
+          "man-5-3"
+        ]
+      },
+      {
+        "prompt": "Which major key has two sharps?",
+        "explanation": "D major has F♯ and C♯.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-5-4"
+        ]
+      },
+      {
+        "prompt": "A key signature has one sharp, F♯. Which major key is it?",
+        "explanation": "G major is the major key with just F♯.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-5-5"
+        ]
+      },
+      {
+        "prompt": "A key signature has two sharps, F♯ and C♯. Which major key is it?",
+        "explanation": "The last sharp, C♯, is a half step below D.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-5-5"
+        ]
+      },
+      {
+        "prompt": "Which major key has one flat?",
+        "explanation": "F major's one flat is B♭.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-5-6"
+        ]
+      },
+      {
+        "prompt": "Which scale has the notes D, E, F♯, G, A, B, C♯?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-5-6"
+        ]
+      },
+      {
+        "prompt": "Using only C major notes, what triad is built on D?",
+        "explanation": "D F A: a minor third, then a major third.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-7-3"
+        ]
+      },
+      {
+        "prompt": "In G major, which chord is V?",
+        "explanation": "Count up from G: G, A, B, C, D. The fifth note is D, and V is major.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-7-4"
+        ]
+      },
+      {
+        "prompt": "In G major, which chord is IV?",
+        "explanation": "G, A, B, C: the fourth note is C.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-7-4"
+        ]
+      },
+      {
+        "prompt": "In C major, which chord is ii?",
+        "explanation": "",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-7-5"
+        ]
+      },
+      {
+        "prompt": "In F major, which chord is vi?",
+        "explanation": "F, G, A, B♭, C, D: the sixth note is D, and vi is minor.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-8-2"
+        ]
+      }
+    ],
+    "shared_source_roles": [
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/4/units/3/lessons/6/steps/3/options/2"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/5/units/4/lessons/2/steps/3/options/2"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/4/lessons/3/steps/5/options/2"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/4/lessons/4/steps/1/options/1"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/4/lessons/4/steps/4/options/2"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/4/lessons/5/steps/3/options/1"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/4/lessons/5/steps/4/options/1"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/6/lessons/2/steps/1/options/0"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/6/lessons/3/steps/4/options/2"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/6/lessons/3/steps/6/options/2"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/6/lessons/4/steps/4/options/1"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/7/lessons/1/steps/6/options/1"
+        ]
+      }
+    ]
+  },
+  {
+    "locale": "fa",
+    "table": "Learn.strings",
+    "key": "Lea785300c4",
+    "source": "F major",
+    "old": "F ماژور",
+    "new": "⁨F⁩ ماژور",
+    "decision": "correct-bounded-isolates",
+    "reason": "Isolate only the complete Latin root-note token; its Persian major/minor suffix remains outside, so UAX9 P2 skips the isolated note and finds Persian AL, and P3 derives an RTL paragraph. Keep the glossary root-plus-mode logical order and neutral chord/scale/key usage; do not prepend آکورد or گام. No U+200F prefix is necessary.",
+    "reviewer": "Codex independent RTL follow-up reviewer review_is (source-aware AI, not native/device certification)",
+    "context": "Music Theory · Unit 5 · lesson thy-5-4 “D major and F major” · step 6 (quiz) · quiz answer",
+    "max_length": 48,
+    "source_sha256": "d031e218066d2680e9b28d0aed141ed34b8a0ad98c37c524e9ad7c8a8557bb73",
+    "old_sha256": "383527d93ed00a4c6d3424a2c582a0ea3f538bdbacdc8989c93febeeb31e71e8",
+    "new_sha256": "a6a9d20ccbc63dc3b926b9a191d2e3f9ab2b4b535e3a8d3a5d5293cff1cbde5e",
+    "old_p2_p3": {
+      "index": 0,
+      "codepoint": "U+0046",
+      "bidi_type": "L",
+      "p3_base_level": 0
+    },
+    "new_p2_p3": {
+      "index": 4,
+      "codepoint": "U+0645",
+      "bidi_type": "AL",
+      "p3_base_level": 1
+    },
+    "new_isolate_spans": [
+      {
+        "start": 0,
+        "end_inclusive": 2,
+        "initiator": "U+2068",
+        "terminator": "U+2069",
+        "contents": "F"
+      }
+    ],
+    "added_controls": [
+      {
+        "codepoint": "U+2068",
+        "count": 1
+      },
+      {
+        "codepoint": "U+2069",
+        "count": 1
+      }
+    ],
+    "added_RLM_count": 0,
+    "visible_text_unchanged": true,
+    "contract_errors": [],
+    "raw_helper_warnings": [
+      "starts with %@ or Latin text: begin with a word of the language, or with U+200F",
+      "invisible direction marks: U+2068, U+2069"
+    ],
+    "helper_warning_disposition": "The helper first-strong heuristic scans inside isolates, unlike normative P2; the remaining starts/marks advisories do not prove an RTL failure. Real device checks remain separate.",
+    "source_option_contexts": [
+      {
+        "prompt": "Which major key has two sharps?",
+        "explanation": "D major has F♯ and C♯.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-5-4"
+        ]
+      },
+      {
+        "prompt": "A key signature has one flat, B♭. Which major key is it?",
+        "explanation": "F major is the major key with just B♭.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-5-5"
+        ]
+      },
+      {
+        "prompt": "Which major key has no sharps or flats?",
+        "explanation": "C major uses only white keys.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-5-5"
+        ]
+      },
+      {
+        "prompt": "Which major key has one flat?",
+        "explanation": "F major's one flat is B♭.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-5-6"
+        ]
+      },
+      {
+        "prompt": "In C major, which chord is IV?",
+        "explanation": "The fourth note of C major is F.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-7-4"
+        ]
+      },
+      {
+        "prompt": "In C major, which chord is vi?",
+        "explanation": "The sixth note is A, and lowercase vi means minor.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-7-4"
+        ]
+      }
+    ],
+    "shared_source_roles": [
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/4/lessons/3/steps/5/options/1"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/4/lessons/4/steps/2/options/0"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/4/lessons/4/steps/5/options/1"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/4/lessons/5/steps/3/options/0"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/6/lessons/3/steps/2/options/0"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/6/lessons/3/steps/3/options/2"
+        ]
+      }
+    ]
+  },
+  {
+    "locale": "fa",
+    "table": "Learn.strings",
+    "key": "L4b65fb9aa1",
+    "source": "B♭ major",
+    "old": "B♭ ماژور",
+    "new": "⁨B♭⁩ ماژور",
+    "decision": "correct-bounded-isolates",
+    "reason": "Isolate only the complete Latin root-note token; its Persian major/minor suffix remains outside, so UAX9 P2 skips the isolated note and finds Persian AL, and P3 derives an RTL paragraph. Keep the glossary root-plus-mode logical order and neutral chord/scale/key usage; do not prepend آکورد or گام. No U+200F prefix is necessary.",
+    "reviewer": "Codex independent RTL follow-up reviewer review_is (source-aware AI, not native/device certification)",
+    "context": "Music Theory · Unit 5 · lesson thy-5-5 “Key signatures” · step 3 (quiz) · quiz answer",
+    "max_length": 48,
+    "source_sha256": "fa0c7e48b0f1f263bec3344b576b4f3f4287c7e8bc85216ecf25cbd9706a1c08",
+    "old_sha256": "bbcfcc5eb8e77977bc11f1978b0068f34403975f54e652fc3ed815fea3511024",
+    "new_sha256": "f87402567014d14c4222b86bb3f9d08491b6f710c54073b39a9f92159a42d1b1",
+    "old_p2_p3": {
+      "index": 0,
+      "codepoint": "U+0042",
+      "bidi_type": "L",
+      "p3_base_level": 0
+    },
+    "new_p2_p3": {
+      "index": 5,
+      "codepoint": "U+0645",
+      "bidi_type": "AL",
+      "p3_base_level": 1
+    },
+    "new_isolate_spans": [
+      {
+        "start": 0,
+        "end_inclusive": 3,
+        "initiator": "U+2068",
+        "terminator": "U+2069",
+        "contents": "B♭"
+      }
+    ],
+    "added_controls": [
+      {
+        "codepoint": "U+2068",
+        "count": 1
+      },
+      {
+        "codepoint": "U+2069",
+        "count": 1
+      }
+    ],
+    "added_RLM_count": 0,
+    "visible_text_unchanged": true,
+    "contract_errors": [],
+    "raw_helper_warnings": [
+      "starts with %@ or Latin text: begin with a word of the language, or with U+200F",
+      "invisible direction marks: U+2068, U+2069"
+    ],
+    "helper_warning_disposition": "The helper first-strong heuristic scans inside isolates, unlike normative P2; the remaining starts/marks advisories do not prove an RTL failure. Real device checks remain separate.",
+    "source_option_contexts": [
+      {
+        "prompt": "A key signature has one flat, B♭. Which major key is it?",
+        "explanation": "F major is the major key with just B♭.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-5-5"
+        ]
+      },
+      {
+        "prompt": "In F major, which chord is V?",
+        "explanation": "F, G, A, B♭, C: the fifth note is C.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-7-5"
+        ]
+      }
+    ],
+    "shared_source_roles": [
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/4/lessons/4/steps/2/options/1"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/6/lessons/4/steps/6/options/0"
+        ]
+      }
+    ]
+  },
+  {
+    "locale": "fa",
+    "table": "Learn.strings",
+    "key": "Lcba5dd879c",
+    "source": "G, B and D",
+    "old": "G، B و D",
+    "new": "⁨G⁩، ⁨B⁩ و ⁨D⁩",
+    "decision": "correct-bounded-isolates",
+    "reason": "Isolate each of the three Latin note/chord names independently. Keep the Persian comma and conjunction outside spans; the conjunction و supplies the outer AL character and RTL paragraph direction. Preserve G, B, D order in both chord-family and melodic-note contexts, without adding a chord-only noun or globally isolating Persian text.",
+    "reviewer": "Codex independent RTL follow-up reviewer review_is (source-aware AI, not native/device certification)",
+    "context": "Music Theory · Unit 8 · lesson thy-8-1 “I, IV and V” · step 2 (quiz) · quiz answer",
+    "max_length": 48,
+    "source_sha256": "d83491474d2c2c472b5092a9d78f27f08b75a88c8d356eecae5c531eec1f97ec",
+    "old_sha256": "0ac370a9612ebfc81f9165ab06ebe89b48b8c1cfbd2407cc5893f7d5347c412d",
+    "new_sha256": "5141a37e051afdcc88480343dcc7ab974d448da38720d46ea12b5fa6d6e96fa5",
+    "old_p2_p3": {
+      "index": 0,
+      "codepoint": "U+0047",
+      "bidi_type": "L",
+      "p3_base_level": 0
+    },
+    "new_p2_p3": {
+      "index": 9,
+      "codepoint": "U+0648",
+      "bidi_type": "AL",
+      "p3_base_level": 1
+    },
+    "new_isolate_spans": [
+      {
+        "start": 0,
+        "end_inclusive": 2,
+        "initiator": "U+2068",
+        "terminator": "U+2069",
+        "contents": "G"
+      },
+      {
+        "start": 5,
+        "end_inclusive": 7,
+        "initiator": "U+2068",
+        "terminator": "U+2069",
+        "contents": "B"
+      },
+      {
+        "start": 11,
+        "end_inclusive": 13,
+        "initiator": "U+2068",
+        "terminator": "U+2069",
+        "contents": "D"
+      }
+    ],
+    "added_controls": [
+      {
+        "codepoint": "U+2068",
+        "count": 3
+      },
+      {
+        "codepoint": "U+2069",
+        "count": 3
+      }
+    ],
+    "added_RLM_count": 0,
+    "visible_text_unchanged": true,
+    "contract_errors": [],
+    "raw_helper_warnings": [
+      "starts with %@ or Latin text: begin with a word of the language, or with U+200F",
+      "invisible direction marks: U+2068, U+2069, U+2068, U+2069, U+2068, U+2069"
+    ],
+    "helper_warning_disposition": "The helper first-strong heuristic scans inside isolates, unlike normative P2; the remaining starts/marks advisories do not prove an RTL failure. Real device checks remain separate.",
+    "source_option_contexts": [
+      {
+        "prompt": "In G major, what are I, IV and V?",
+        "explanation": "Count up from G: note 1 is G, note 4 is C, note 5 is D.",
+        "occurrences": 1,
+        "example_lessons": [
+          "thy-8-1"
+        ]
+      },
+      {
+        "prompt": "Holy, holy, holy climbs which notes?",
+        "explanation": "G, B and D are the notes of a G major chord, so the tune climbs the chord itself.",
+        "occurrences": 1,
+        "example_lessons": [
+          "std-holy-holy-holy"
+        ]
+      }
+    ],
+    "shared_source_roles": [
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/8/units/7/lessons/0/steps/1/options/1"
+        ]
+      },
+      {
+        "role": "steps:quiz",
+        "field": "options/*",
+        "occurrences": 1,
+        "example_locations": [
+          "/courses/13/units/6/lessons/1/steps/2/options/2"
+        ]
+      }
+    ]
+  },
+  {
+    "locale": "fa",
+    "table": "Learn.strings",
+    "key": "Ld3953a8b28",
+    "source": "Joseph Mohr (1818), English by John Freeman Young (1859)",
+    "old": "Joseph Mohr (1818)، نسخهٔ انگلیسی از John Freeman Young (1859)",
+    "new": "⁨Joseph Mohr (1818)⁩، نسخهٔ انگلیسی از ⁨John Freeman Young (1859)⁩",
+    "decision": "correct-bounded-isolates",
+    "reason": "Isolate each complete Latin creator-name plus its own parenthesized date as one LTR span. The translated Persian credit connector remains outside and supplies AL paragraph direction under P2/P3. Preserve creator identity, year association and English-version/printed-version facts. No leading U+200F or isolated standalone trailing year is required.",
+    "reviewer": "Codex independent RTL follow-up reviewer review_is (source-aware AI, not native/device certification)",
+    "context": "Songs · Unit 5 · song song-silent-night “Silent Night” · arrangement · lyric credit (a name and year: usually keep as is)",
+    "max_length": null,
+    "source_sha256": "1e7c026ef9786aa6b324ed667899cc348f6d20e37ca2f4bbcbdc20f436aaddfc",
+    "old_sha256": "66d2eb998e4437085d815b8027cb935d9d5677185b94a8c22ea71bdeab788b27",
+    "new_sha256": "f8fdecb8e39cbe283c13af14118edf14db1546c9f37cca6626eaf9d0e5254fb3",
+    "old_p2_p3": {
+      "index": 0,
+      "codepoint": "U+004A",
+      "bidi_type": "L",
+      "p3_base_level": 0
+    },
+    "new_p2_p3": {
+      "index": 22,
+      "codepoint": "U+0646",
+      "bidi_type": "AL",
+      "p3_base_level": 1
+    },
+    "new_isolate_spans": [
+      {
+        "start": 0,
+        "end_inclusive": 19,
+        "initiator": "U+2068",
+        "terminator": "U+2069",
+        "contents": "Joseph Mohr (1818)"
+      },
+      {
+        "start": 39,
+        "end_inclusive": 65,
+        "initiator": "U+2068",
+        "terminator": "U+2069",
+        "contents": "John Freeman Young (1859)"
+      }
+    ],
+    "added_controls": [
+      {
+        "codepoint": "U+2068",
+        "count": 2
+      },
+      {
+        "codepoint": "U+2069",
+        "count": 2
+      }
+    ],
+    "added_RLM_count": 0,
+    "visible_text_unchanged": true,
+    "contract_errors": [],
+    "raw_helper_warnings": [
+      "starts with %@ or Latin text: begin with a word of the language, or with U+200F",
+      "invisible direction marks: U+2068, U+2069, U+2068, U+2069"
+    ],
+    "helper_warning_disposition": "The helper first-strong heuristic scans inside isolates, unlike normative P2; the remaining starts/marks advisories do not prove an RTL failure. Real device checks remain separate.",
+    "source_option_contexts": [],
+    "shared_source_roles": []
+  },
+  {
+    "locale": "fa",
+    "table": "Learn.strings",
+    "key": "La18434bfcf",
+    "source": "Charles Wesley (1739), as printed in 1861",
+    "old": "Charles Wesley (1739)، مطابق چاپ 1861",
+    "new": "⁨Charles Wesley (1739)⁩، مطابق چاپ 1861",
+    "decision": "correct-bounded-isolates",
+    "reason": "Isolate each complete Latin creator-name plus its own parenthesized date as one LTR span. The translated Persian credit connector remains outside and supplies AL paragraph direction under P2/P3. Preserve creator identity, year association and English-version/printed-version facts. No leading U+200F or isolated standalone trailing year is required.",
+    "reviewer": "Codex independent RTL follow-up reviewer review_is (source-aware AI, not native/device certification)",
+    "context": "Standards & Classics · Unit 5 · song std-hark-the-herald “Hark! The Herald Angels Sing” · arrangement · lyric credit (a name and year: usually keep as is)",
+    "max_length": null,
+    "source_sha256": "8ba2a27eba311df58a4fb8c38a1e565542cbb42b11b4146d37a6cacd011b3108",
+    "old_sha256": "f99c4b36c1ad7b35ecaacc7d522b947cba6741ccc4cad9796f0cda4cb9429eea",
+    "new_sha256": "c51e52ddddd3ddca437dc8253c6728a24544219d97f3d8ba52f96d4766274e4a",
+    "old_p2_p3": {
+      "index": 0,
+      "codepoint": "U+0043",
+      "bidi_type": "L",
+      "p3_base_level": 0
+    },
+    "new_p2_p3": {
+      "index": 25,
+      "codepoint": "U+0645",
+      "bidi_type": "AL",
+      "p3_base_level": 1
+    },
+    "new_isolate_spans": [
+      {
+        "start": 0,
+        "end_inclusive": 22,
+        "initiator": "U+2068",
+        "terminator": "U+2069",
+        "contents": "Charles Wesley (1739)"
+      }
+    ],
+    "added_controls": [
+      {
+        "codepoint": "U+2068",
+        "count": 1
+      },
+      {
+        "codepoint": "U+2069",
+        "count": 1
+      }
+    ],
+    "added_RLM_count": 0,
+    "visible_text_unchanged": true,
+    "contract_errors": [],
+    "raw_helper_warnings": [
+      "starts with %@ or Latin text: begin with a word of the language, or with U+200F",
+      "invisible direction marks: U+2068, U+2069"
+    ],
+    "helper_warning_disposition": "The helper first-strong heuristic scans inside isolates, unlike normative P2; the remaining starts/marks advisories do not prove an RTL failure. Real device checks remain separate.",
+    "source_option_contexts": [],
+    "shared_source_roles": []
+  }
+]

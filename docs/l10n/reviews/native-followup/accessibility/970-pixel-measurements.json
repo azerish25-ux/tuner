@@ -1,0 +1,530 @@
+{
+  "source_sha": "970a12db87dd5751d3674b1321e20706a576e03e",
+  "run": 40396032285,
+  "published_results_sha": "103f9a120ef71d303319c7f8cca391bec2996ab9",
+  "images": {
+    "songs": {
+      "file": "60402883-CEC8-4139-94ED-FFD1F416A642.png",
+      "sha256": "14a8c4eeaf047b726927ffd8831d9cbfda5b596721a12299cd791db25cb0f0a5",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "srgb_metadata": 0,
+      "scale": 3
+    },
+    "practice": {
+      "file": "9316BE55-DBCE-4930-825D-22E7DEDEE3EA.png",
+      "sha256": "b200169ac21b2652edca17619e5240f3e58bbc2570c5bbec29139f0888017f27",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "srgb_metadata": 0,
+      "scale": 3
+    },
+    "progress": {
+      "file": "03949922-0D37-442D-AF3E-B0AF73803882.png",
+      "sha256": "247dd587585456000bad8b17657f7fa2755498698d096d9a4aa7cff5f1382186",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "srgb_metadata": 0,
+      "scale": 3
+    },
+    "paywall": {
+      "file": "2BFB9353-1B77-46AD-87F2-23EDA141413A.png",
+      "sha256": "637565958a8fafcf90def188ebeb33761469e2d97c44d53917670b095583c74a",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "srgb_metadata": 0,
+      "scale": 3
+    }
+  },
+  "measurements": [
+    {
+      "screen": "songs",
+      "label": "Songs",
+      "reported_frame_pt": [
+        20,
+        74,
+        87.6667,
+        35.3333
+      ],
+      "core_selection": "Closest actual pixel to the requested role-colour reference inside this text-only reported frame. The selected actual RGB and its distance are recorded; anti-aliasing/compositing can differ. No edge-antialias minimum-ratio assertion.",
+      "role_colour_target_rgb": [
+        245,
+        243,
+        239
+      ],
+      "core_colour_squared_distance": 0,
+      "foreground_xy_px": [
+        64,
+        285
+      ],
+      "foreground_rgb": [
+        245,
+        243,
+        239
+      ],
+      "background_xy_px": [
+        54,
+        285
+      ],
+      "background_rgb": [
+        14,
+        11,
+        14
+      ],
+      "local_core_contrast": 17.661888687141396,
+      "scope": "One exact pre-audit screenshot state/local pair, not every glyph pixel, background position or later SDK audit state."
+    },
+    {
+      "screen": "songs",
+      "label": "Play the melody\u2026",
+      "reported_frame_pt": [
+        20,
+        113.3333,
+        254,
+        38
+      ],
+      "core_selection": "Closest actual pixel to the requested role-colour reference inside this text-only reported frame. The selected actual RGB and its distance are recorded; anti-aliasing/compositing can differ. No edge-antialias minimum-ratio assertion.",
+      "role_colour_target_rgb": [
+        163,
+        168,
+        177
+      ],
+      "core_colour_squared_distance": 0,
+      "foreground_xy_px": [
+        63,
+        433
+      ],
+      "foreground_rgb": [
+        163,
+        168,
+        177
+      ],
+      "background_xy_px": [
+        54,
+        433
+      ],
+      "background_rgb": [
+        16,
+        13,
+        18
+      ],
+      "local_core_contrast": 8.079512869192992,
+      "scope": "One exact pre-audit screenshot state/local pair, not every glyph pixel, background position or later SDK audit state."
+    },
+    {
+      "screen": "songs",
+      "label": "When the",
+      "reported_frame_pt": [
+        290.0333,
+        283.504,
+        64.6667,
+        17.3333
+      ],
+      "core_selection": "Closest actual pixel to the requested role-colour reference inside this text-only reported frame. The selected actual RGB and its distance are recorded; anti-aliasing/compositing can differ. No edge-antialias minimum-ratio assertion.",
+      "role_colour_target_rgb": [
+        245,
+        243,
+        239
+      ],
+      "core_colour_squared_distance": 0,
+      "foreground_xy_px": [
+        873,
+        864
+      ],
+      "foreground_rgb": [
+        245,
+        243,
+        239
+      ],
+      "background_xy_px": [
+        864,
+        864
+      ],
+      "background_rgb": [
+        62,
+        42,
+        61
+      ],
+      "local_core_contrast": 11.81811771649268,
+      "scope": "One exact pre-audit screenshot state/local pair, not every glyph pixel, background position or later SDK audit state."
+    },
+    {
+      "screen": "songs",
+      "label": "Song of the day",
+      "reported_frame_pt": [
+        68.3333,
+        267.3333,
+        95.3333,
+        15.3333
+      ],
+      "core_selection": "Closest actual pixel to the requested role-colour reference inside this text-only reported frame. The selected actual RGB and its distance are recorded; anti-aliasing/compositing can differ. No edge-antialias minimum-ratio assertion.",
+      "role_colour_target_rgb": [
+        245,
+        243,
+        239
+      ],
+      "core_colour_squared_distance": 0,
+      "foreground_xy_px": [
+        208,
+        817
+      ],
+      "foreground_rgb": [
+        245,
+        243,
+        239
+      ],
+      "background_xy_px": [
+        201,
+        817
+      ],
+      "background_rgb": [
+        19,
+        10,
+        17
+      ],
+      "local_core_contrast": 17.55849670246955,
+      "scope": "One exact pre-audit screenshot state/local pair, not every glyph pixel, background position or later SDK audit state."
+    },
+    {
+      "screen": "songs",
+      "label": "Play",
+      "reported_frame_pt": [
+        77.6667,
+        467.8333,
+        36,
+        21.6667
+      ],
+      "core_selection": "Closest actual pixel to the requested role-colour reference inside this text-only reported frame. The selected actual RGB and its distance are recorded; anti-aliasing/compositing can differ. No edge-antialias minimum-ratio assertion.",
+      "role_colour_target_rgb": [
+        6,
+        7,
+        8
+      ],
+      "core_colour_squared_distance": 173,
+      "foreground_xy_px": [
+        238,
+        1415
+      ],
+      "foreground_rgb": [
+        4,
+        19,
+        13
+      ],
+      "background_xy_px": [
+        345,
+        1415
+      ],
+      "background_rgb": [
+        76,
+        242,
+        184
+      ],
+      "local_core_contrast": 13.313996899551626,
+      "scope": "One exact pre-audit screenshot state/local pair, not every glyph pixel, background position or later SDK audit state."
+    },
+    {
+      "screen": "songs",
+      "label": "D",
+      "reported_frame_pt": [
+        292,
+        471,
+        9.6667,
+        15.3333
+      ],
+      "core_selection": "Closest actual pixel to the requested role-colour reference inside this text-only reported frame. The selected actual RGB and its distance are recorded; anti-aliasing/compositing can differ. No edge-antialias minimum-ratio assertion.",
+      "role_colour_target_rgb": [
+        255,
+        255,
+        255
+      ],
+      "core_colour_squared_distance": 500,
+      "foreground_xy_px": [
+        880,
+        1422
+      ],
+      "foreground_rgb": [
+        245,
+        243,
+        239
+      ],
+      "background_xy_px": [
+        873,
+        1422
+      ],
+      "background_rgb": [
+        44,
+        29,
+        43
+      ],
+      "local_core_contrast": 14.380196607819247,
+      "scope": "One exact pre-audit screenshot state/local pair, not every glyph pixel, background position or later SDK audit state."
+    },
+    {
+      "screen": "songs",
+      "label": "Your songs",
+      "reported_frame_pt": [
+        104,
+        554.6667,
+        96.3333,
+        21.6667
+      ],
+      "core_selection": "Closest actual pixel to the requested role-colour reference inside this text-only reported frame. The selected actual RGB and its distance are recorded; anti-aliasing/compositing can differ. No edge-antialias minimum-ratio assertion.",
+      "role_colour_target_rgb": [
+        245,
+        243,
+        239
+      ],
+      "core_colour_squared_distance": 0,
+      "foreground_xy_px": [
+        314,
+        1676
+      ],
+      "foreground_rgb": [
+        245,
+        243,
+        239
+      ],
+      "background_xy_px": [
+        306,
+        1676
+      ],
+      "background_rgb": [
+        22,
+        39,
+        37
+      ],
+      "local_core_contrast": 14.025624583541056,
+      "scope": "One exact pre-audit screenshot state/local pair, not every glyph pixel, background position or later SDK audit state."
+    },
+    {
+      "screen": "practice",
+      "label": "LV (in LV5)",
+      "reported_frame_pt": [
+        50.3333,
+        392.6667,
+        37.3333,
+        28
+      ],
+      "core_selection": "Closest actual pixel to the requested role-colour reference inside this text-only reported frame. The selected actual RGB and its distance are recorded; anti-aliasing/compositing can differ. No edge-antialias minimum-ratio assertion.",
+      "role_colour_target_rgb": [
+        76,
+        242,
+        184
+      ],
+      "core_colour_squared_distance": 0,
+      "foreground_xy_px": [
+        156,
+        1210
+      ],
+      "foreground_rgb": [
+        76,
+        242,
+        184
+      ],
+      "background_xy_px": [
+        147,
+        1210
+      ],
+      "background_rgb": [
+        25,
+        47,
+        43
+      ],
+      "local_core_contrast": 9.91371025448333,
+      "scope": "One exact pre-audit screenshot state/local pair, not every glyph pixel, background position or later SDK audit state."
+    },
+    {
+      "screen": "progress",
+      "label": "Tune up",
+      "reported_frame_pt": [
+        78,
+        389,
+        113,
+        44
+      ],
+      "core_selection": "Closest actual pixel to the requested role-colour reference inside this text-only reported frame. The selected actual RGB and its distance are recorded; anti-aliasing/compositing can differ. No edge-antialias minimum-ratio assertion.",
+      "role_colour_target_rgb": [
+        255,
+        181,
+        71
+      ],
+      "core_colour_squared_distance": 0,
+      "foreground_xy_px": [
+        275,
+        1246
+      ],
+      "foreground_rgb": [
+        255,
+        181,
+        71
+      ],
+      "background_xy_px": [
+        228,
+        1246
+      ],
+      "background_rgb": [
+        30,
+        28,
+        26
+      ],
+      "local_core_contrast": 9.668602427348354,
+      "scope": "One exact pre-audit screenshot state/local pair, not every glyph pixel, background position or later SDK audit state."
+    },
+    {
+      "screen": "progress",
+      "label": "Last five weeks",
+      "reported_frame_pt": [
+        38,
+        749.3333,
+        131,
+        21.6667
+      ],
+      "core_selection": "Closest actual pixel to the requested role-colour reference inside this text-only reported frame. The selected actual RGB and its distance are recorded; anti-aliasing/compositing can differ. No edge-antialias minimum-ratio assertion.",
+      "role_colour_target_rgb": [
+        245,
+        243,
+        239
+      ],
+      "core_colour_squared_distance": 48,
+      "foreground_xy_px": [
+        257,
+        2259
+      ],
+      "foreground_rgb": [
+        241,
+        239,
+        235
+      ],
+      "background_xy_px": [
+        108,
+        2259
+      ],
+      "background_rgb": [
+        17,
+        19,
+        23
+      ],
+      "local_core_contrast": 16.191879174417256,
+      "scope": "One exact pre-audit screenshot state/local pair, not every glyph pixel, background position or later SDK audit state."
+    },
+    {
+      "screen": "progress",
+      "label": "20 of 35 days",
+      "reported_frame_pt": [
+        286,
+        754.3333,
+        78,
+        14.3333
+      ],
+      "core_selection": "Closest actual pixel to the requested role-colour reference inside this text-only reported frame. The selected actual RGB and its distance are recorded; anti-aliasing/compositing can differ. No edge-antialias minimum-ratio assertion.",
+      "role_colour_target_rgb": [
+        163,
+        168,
+        177
+      ],
+      "core_colour_squared_distance": 66,
+      "foreground_xy_px": [
+        864,
+        2273
+      ],
+      "foreground_rgb": [
+        159,
+        163,
+        172
+      ],
+      "background_xy_px": [
+        855,
+        2273
+      ],
+      "background_rgb": [
+        16,
+        18,
+        22
+      ],
+      "local_core_contrast": 7.417622563874469,
+      "scope": "One exact pre-audit screenshot state/local pair, not every glyph pixel, background position or later SDK audit state."
+    },
+    {
+      "screen": "paywall",
+      "label": "SAVE 58%",
+      "reported_frame_pt": [
+        291.6667,
+        417.6667,
+        69.3333,
+        15.3333
+      ],
+      "core_selection": "Closest actual pixel to the requested role-colour reference inside this text-only reported frame. The selected actual RGB and its distance are recorded; anti-aliasing/compositing can differ. No edge-antialias minimum-ratio assertion.",
+      "role_colour_target_rgb": [
+        6,
+        7,
+        8
+      ],
+      "core_colour_squared_distance": 563,
+      "foreground_xy_px": [
+        896,
+        1275
+      ],
+      "foreground_rgb": [
+        27,
+        18,
+        7
+      ],
+      "background_xy_px": [
+        870,
+        1275
+      ],
+      "background_rgb": [
+        239,
+        176,
+        93
+      ],
+      "local_core_contrast": 9.71519977577148,
+      "scope": "One exact pre-audit screenshot state/local pair, not every glyph pixel, background position or later SDK audit state."
+    },
+    {
+      "screen": "songs",
+      "label": "03",
+      "reported_frame_pt": [
+        44.02928,
+        699.1,
+        11,
+        10.333333333333258
+      ],
+      "core_selection": "Exact same predefined core/background coordinates as the earlier failed c5 receipt",
+      "foreground_xy_px": [
+        155,
+        2104
+      ],
+      "foreground_rgb": [
+        36,
+        37,
+        38
+      ],
+      "background_xy_px": [
+        145,
+        2104
+      ],
+      "background_rgb": [
+        149,
+        171,
+        212
+      ],
+      "local_core_contrast": 6.620048501528929,
+      "previous_c5_core_rgb": [
+        78,
+        88,
+        104
+      ],
+      "previous_c5_same_pair_contrast": 3.1008981076,
+      "scope": "Confirms improvement for this clear, light-field numbered sleeve only; not a pass for every cover/locked/faded state or a waiver of audit findings."
+    }
+  ]
+}

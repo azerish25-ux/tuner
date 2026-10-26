@@ -1,0 +1,773 @@
+{
+  "reviewer": "Codex review_uk",
+  "source_sha": "970a12db87dd5751d3674b1321e20706a576e03e",
+  "run": 40396032285,
+  "scope": "All49 unique enforced/incomplete XCTest failure messages read and classified against actual four failed-screen baseline PNGs and source. No rerun/native device certification.",
+  "failure_count": 49,
+  "classification_counts": {
+    "audit_incomplete": 3,
+    "readable_baseline_sdk_disagrees_or_unproven": 25,
+    "rail_edge_or_offscreen_state": 5,
+    "dock_overlap_or_lower_fade_state": 14,
+    "previous_defect_visibly_improved_sdk_disagrees": 1,
+    "missing_target_snapshot": 1
+  },
+  "records": [
+    {
+      "failure_number": 1,
+      "exact_report": "tab-1-tune: the accessibility audit could not run (3 isolated tries): element detection: Audit failed to complete in time",
+      "screen": "tab-1-tune",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "disposition": "audit_incomplete",
+      "reason": "Three isolated attempts timed out; screenshot does not establish which product behavior or SDK issue caused the incomplete audit.",
+      "next_evidence": "Keep failing completion requirement. Reproduce per-kind on the same exact screen; preserve individual attempt diagnostics and capture audit-time state."
+    },
+    {
+      "failure_number": 2,
+      "exact_report": "tab-3-songs: the accessibility audit could not run (3 isolated tries): Dynamic Type: Audit failed to complete in time",
+      "screen": "tab-3-songs",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "disposition": "audit_incomplete",
+      "reason": "Three isolated attempts timed out; screenshot does not establish which product behavior or SDK issue caused the incomplete audit.",
+      "next_evidence": "Keep failing completion requirement. Reproduce per-kind on the same exact screen; preserve individual attempt diagnostics and capture audit-time state."
+    },
+    {
+      "failure_number": 3,
+      "exact_report": "tab-3-songs: the accessibility audit could not run (3 isolated tries): clipped text: Audit failed to complete in time",
+      "screen": "tab-3-songs",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "disposition": "audit_incomplete",
+      "reason": "Three isolated attempts timed out; screenshot does not establish which product behavior or SDK issue caused the incomplete audit.",
+      "next_evidence": "Keep failing completion requirement. Reproduce per-kind on the same exact screen; preserve individual attempt diagnostics and capture audit-time state."
+    },
+    {
+      "failure_number": 4,
+      "exact_report": "tab-3-songs: [contrast, enforced] Contrast failed | id - | label \"Songs\" | frame (20.0, 74.0, 87.66666666666666, 35.33333333333333) | type 48",
+      "screen": "tab-3-songs",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "Songs",
+      "reported_frame_pt": [
+        20.0,
+        74.0,
+        87.66666666666666,
+        35.33333333333333
+      ],
+      "disposition": "readable_baseline_sdk_disagrees_or_unproven",
+      "reason": "Text is visibly readable in the captured baseline. Representative local core/background pixel pairs are recorded separately where measured; no claim that every glyph/background or later SDK state passes.",
+      "next_evidence": "Per-kind audit-time screenshot plus same-target geometry. Do not recolour globally or exempt the label on the strength of this baseline."
+    },
+    {
+      "failure_number": 5,
+      "exact_report": "tab-3-songs: [contrast, enforced] Contrast failed | id - | label \"Play the melody, or strum the chords and sing\" | frame (20.0, 113.33333333333333, 254.0, 37.999999999999986) | type 48",
+      "screen": "tab-3-songs",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "Play the melody, or strum the chords and sing",
+      "reported_frame_pt": [
+        20.0,
+        113.33333333333333,
+        254.0,
+        37.999999999999986
+      ],
+      "disposition": "readable_baseline_sdk_disagrees_or_unproven",
+      "reason": "Text is visibly readable in the captured baseline. Representative local core/background pixel pairs are recorded separately where measured; no claim that every glyph/background or later SDK state passes.",
+      "next_evidence": "Per-kind audit-time screenshot plus same-target geometry. Do not recolour globally or exempt the label on the strength of this baseline."
+    },
+    {
+      "failure_number": 6,
+      "exact_report": "tab-3-songs: [contrast, enforced] Contrast failed | id - | label \"7\" | frame (282.0, 90.66666666666666, 54.0, 44.0) | type 48",
+      "screen": "tab-3-songs",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "7",
+      "reported_frame_pt": [
+        282.0,
+        90.66666666666666,
+        54.0,
+        44.0
+      ],
+      "disposition": "readable_baseline_sdk_disagrees_or_unproven",
+      "reason": "Text is visibly readable in the captured baseline. Representative local core/background pixel pairs are recorded separately where measured; no claim that every glyph/background or later SDK state passes.",
+      "next_evidence": "Per-kind audit-time screenshot plus same-target geometry. Do not recolour globally or exempt the label on the strength of this baseline."
+    },
+    {
+      "failure_number": 7,
+      "exact_report": "tab-3-songs: [contrast, enforced] Contrast failed | id - | label \"LV 5\" | frame (347.8333333333333, 102.5, 24.333333333333314, 20.33333333333333) | type 48",
+      "screen": "tab-3-songs",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "LV 5",
+      "reported_frame_pt": [
+        347.8333333333333,
+        102.5,
+        24.333333333333314,
+        20.33333333333333
+      ],
+      "disposition": "readable_baseline_sdk_disagrees_or_unproven",
+      "reason": "Text is visibly readable in the captured baseline. Representative local core/background pixel pairs are recorded separately where measured; no claim that every glyph/background or later SDK state passes.",
+      "next_evidence": "Per-kind audit-time screenshot plus same-target geometry. Do not recolour globally or exempt the label on the strength of this baseline."
+    },
+    {
+      "failure_number": 8,
+      "exact_report": "tab-3-songs: [contrast, enforced] Contrast failed | id - | label \"When the\" | frame (290.03333333333336, 283.5040373333333, 64.66666666666669, 17.333333333333314) | type 48",
+      "screen": "tab-3-songs",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "When the",
+      "reported_frame_pt": [
+        290.03333333333336,
+        283.5040373333333,
+        64.66666666666669,
+        17.333333333333314
+      ],
+      "disposition": "readable_baseline_sdk_disagrees_or_unproven",
+      "reason": "Text is visibly readable in the captured baseline. Representative local core/background pixel pairs are recorded separately where measured; no claim that every glyph/background or later SDK state passes.",
+      "next_evidence": "Per-kind audit-time screenshot plus same-target geometry. Do not recolour globally or exempt the label on the strength of this baseline."
+    },
+    {
+      "failure_number": 9,
+      "exact_report": "tab-3-songs: [contrast, enforced] Contrast failed | id - | label \"Saints Go\" | frame (289.70000000000005, 297.15496133854833, 65.0, 17.333333333333314) | type 48",
+      "screen": "tab-3-songs",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "Saints Go",
+      "reported_frame_pt": [
+        289.70000000000005,
+        297.15496133854833,
+        65.0,
+        17.333333333333314
+      ],
+      "disposition": "readable_baseline_sdk_disagrees_or_unproven",
+      "reason": "Text is visibly readable in the captured baseline. Representative local core/background pixel pairs are recorded separately where measured; no claim that every glyph/background or later SDK state passes.",
+      "next_evidence": "Per-kind audit-time screenshot plus same-target geometry. Do not recolour globally or exempt the label on the strength of this baseline."
+    },
+    {
+      "failure_number": 10,
+      "exact_report": "tab-3-songs: [contrast, enforced] Contrast failed | id - | label \"Marching In\" | frame (275.03333333333336, 310.8058853437633, 79.66666666666669, 17.33333333333337) | type 48",
+      "screen": "tab-3-songs",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "Marching In",
+      "reported_frame_pt": [
+        275.03333333333336,
+        310.8058853437633,
+        79.66666666666669,
+        17.33333333333337
+      ],
+      "disposition": "readable_baseline_sdk_disagrees_or_unproven",
+      "reason": "Text is visibly readable in the captured baseline. Representative local core/background pixel pairs are recorded separately where measured; no claim that every glyph/background or later SDK state passes.",
+      "next_evidence": "Per-kind audit-time screenshot plus same-target geometry. Do not recolour globally or exempt the label on the strength of this baseline."
+    },
+    {
+      "failure_number": 11,
+      "exact_report": "tab-3-songs: [contrast, enforced] Contrast failed | id - | label \"Song of the day\" | frame (68.33333333333334, 267.3333333333333, 95.33333333333334, 15.333333333333314) | type 48",
+      "screen": "tab-3-songs",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "Song of the day",
+      "reported_frame_pt": [
+        68.33333333333334,
+        267.3333333333333,
+        95.33333333333334,
+        15.333333333333314
+      ],
+      "disposition": "readable_baseline_sdk_disagrees_or_unproven",
+      "reason": "Text is visibly readable in the captured baseline. Representative local core/background pixel pairs are recorded separately where measured; no claim that every glyph/background or later SDK state passes.",
+      "next_evidence": "Per-kind audit-time screenshot plus same-target geometry. Do not recolour globally or exempt the label on the strength of this baseline."
+    },
+    {
+      "failure_number": 12,
+      "exact_report": "tab-3-songs: [contrast, enforced] Contrast failed | id - | label \"Violin Songbook\" | frame (62.0, 428.66666666666663, 111.33333333333331, 18.0) | type 48",
+      "screen": "tab-3-songs",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "Violin Songbook",
+      "reported_frame_pt": [
+        62.0,
+        428.66666666666663,
+        111.33333333333331,
+        18.0
+      ],
+      "disposition": "readable_baseline_sdk_disagrees_or_unproven",
+      "reason": "Text is visibly readable in the captured baseline. Representative local core/background pixel pairs are recorded separately where measured; no claim that every glyph/background or later SDK state passes.",
+      "next_evidence": "Per-kind audit-time screenshot plus same-target geometry. Do not recolour globally or exempt the label on the strength of this baseline."
+    },
+    {
+      "failure_number": 13,
+      "exact_report": "tab-3-songs: [contrast, enforced] Contrast failed | id - | label \"\u00b7 2:06 \u00b7 +30 XP\" | frame (179.33333333333331, 428.66666666666663, 103.0, 18.0) | type 48",
+      "screen": "tab-3-songs",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "\u00b7 2:06 \u00b7 +30 XP",
+      "reported_frame_pt": [
+        179.33333333333331,
+        428.66666666666663,
+        103.0,
+        18.0
+      ],
+      "disposition": "readable_baseline_sdk_disagrees_or_unproven",
+      "reason": "Text is visibly readable in the captured baseline. Representative local core/background pixel pairs are recorded separately where measured; no claim that every glyph/background or later SDK state passes.",
+      "next_evidence": "Per-kind audit-time screenshot plus same-target geometry. Do not recolour globally or exempt the label on the strength of this baseline."
+    },
+    {
+      "failure_number": 14,
+      "exact_report": "tab-3-songs: [contrast, enforced] Contrast failed | id - | label \"Play\" | frame (77.66666666666667, 467.83333333333326, 36.0, 21.666666666666686) | type 48",
+      "screen": "tab-3-songs",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "Play",
+      "reported_frame_pt": [
+        77.66666666666667,
+        467.83333333333326,
+        36.0,
+        21.666666666666686
+      ],
+      "disposition": "readable_baseline_sdk_disagrees_or_unproven",
+      "reason": "Text is visibly readable in the captured baseline. Representative local core/background pixel pairs are recorded separately where measured; no claim that every glyph/background or later SDK state passes.",
+      "next_evidence": "Per-kind audit-time screenshot plus same-target geometry. Do not recolour globally or exempt the label on the strength of this baseline."
+    },
+    {
+      "failure_number": 15,
+      "exact_report": "tab-3-songs: [contrast, enforced] Contrast failed | id - | label \"D\" | frame (292.0, 471.0, 9.666666666666686, 15.333333333333314) | type 48",
+      "screen": "tab-3-songs",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "D",
+      "reported_frame_pt": [
+        292.0,
+        471.0,
+        9.666666666666686,
+        15.333333333333314
+      ],
+      "disposition": "readable_baseline_sdk_disagrees_or_unproven",
+      "reason": "Text is visibly readable in the captured baseline. Representative local core/background pixel pairs are recorded separately where measured; no claim that every glyph/background or later SDK state passes.",
+      "next_evidence": "Per-kind audit-time screenshot plus same-target geometry. Do not recolour globally or exempt the label on the strength of this baseline."
+    },
+    {
+      "failure_number": 16,
+      "exact_report": "tab-3-songs: [contrast, enforced] Contrast failed | id - | label \"A\" | frame (319.6666666666667, 471.0, 9.333333333333314, 15.333333333333314) | type 48",
+      "screen": "tab-3-songs",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "A",
+      "reported_frame_pt": [
+        319.6666666666667,
+        471.0,
+        9.333333333333314,
+        15.333333333333314
+      ],
+      "disposition": "readable_baseline_sdk_disagrees_or_unproven",
+      "reason": "Text is visibly readable in the captured baseline. Representative local core/background pixel pairs are recorded separately where measured; no claim that every glyph/background or later SDK state passes.",
+      "next_evidence": "Per-kind audit-time screenshot plus same-target geometry. Do not recolour globally or exempt the label on the strength of this baseline."
+    },
+    {
+      "failure_number": 17,
+      "exact_report": "tab-3-songs: [contrast, enforced] Contrast failed | id - | label \"G\" | frame (347.0, 471.0, 10.0, 15.333333333333314) | type 48",
+      "screen": "tab-3-songs",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "G",
+      "reported_frame_pt": [
+        347.0,
+        471.0,
+        10.0,
+        15.333333333333314
+      ],
+      "disposition": "readable_baseline_sdk_disagrees_or_unproven",
+      "reason": "Text is visibly readable in the captured baseline. Representative local core/background pixel pairs are recorded separately where measured; no claim that every glyph/background or later SDK state passes.",
+      "next_evidence": "Per-kind audit-time screenshot plus same-target geometry. Do not recolour globally or exempt the label on the strength of this baseline."
+    },
+    {
+      "failure_number": 18,
+      "exact_report": "tab-3-songs: [contrast, enforced] Contrast failed | id - | label \"Your songs\" | frame (104.0, 554.6666666666666, 96.33333333333331, 21.66666666666663) | type 48",
+      "screen": "tab-3-songs",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "Your songs",
+      "reported_frame_pt": [
+        104.0,
+        554.6666666666666,
+        96.33333333333331,
+        21.66666666666663
+      ],
+      "disposition": "readable_baseline_sdk_disagrees_or_unproven",
+      "reason": "Text is visibly readable in the captured baseline. Representative local core/background pixel pairs are recorded separately where measured; no claim that every glyph/background or later SDK state passes.",
+      "next_evidence": "Per-kind audit-time screenshot plus same-target geometry. Do not recolour globally or exempt the label on the strength of this baseline."
+    },
+    {
+      "failure_number": 19,
+      "exact_report": "tab-3-songs: [contrast, enforced] Contrast failed | id - | label \"Add a song\" | frame (262.6666564941406, 575.0, 95.33334350585938, 16.66668701171875) | type 48",
+      "screen": "tab-3-songs",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "Add a song",
+      "reported_frame_pt": [
+        262.6666564941406,
+        575.0,
+        95.33334350585938,
+        16.66668701171875
+      ],
+      "disposition": "readable_baseline_sdk_disagrees_or_unproven",
+      "reason": "Text is visibly readable in the captured baseline. Representative local core/background pixel pairs are recorded separately where measured; no claim that every glyph/background or later SDK state passes.",
+      "next_evidence": "Per-kind audit-time screenshot plus same-target geometry. Do not recolour globally or exempt the label on the strength of this baseline."
+    },
+    {
+      "failure_number": 20,
+      "exact_report": "tab-3-songs: [contrast, enforced] Contrast failed | id - | label \"Bass\" | frame (286.0, 175.33333333333331, 83.66666666666663, 44.0) | type 48",
+      "screen": "tab-3-songs",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "Bass",
+      "reported_frame_pt": [
+        286.0,
+        175.33333333333331,
+        83.66666666666663,
+        44.0
+      ],
+      "disposition": "readable_baseline_sdk_disagrees_or_unproven",
+      "reason": "Text is visibly readable in the captured baseline. Representative local core/background pixel pairs are recorded separately where measured; no claim that every glyph/background or later SDK state passes.",
+      "next_evidence": "Per-kind audit-time screenshot plus same-target geometry. Do not recolour globally or exempt the label on the strength of this baseline."
+    },
+    {
+      "failure_number": 21,
+      "exact_report": "tab-3-songs: [contrast, enforced] Contrast failed | id - | label \"Violin\" | frame (377.66666666666663, 175.33333333333331, 89.0, 44.0) | type 48",
+      "screen": "tab-3-songs",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "Violin",
+      "reported_frame_pt": [
+        377.66666666666663,
+        175.33333333333331,
+        89.0,
+        44.0
+      ],
+      "disposition": "rail_edge_or_offscreen_state",
+      "reason": "Reported frame is partly outside402pt viewport or within the visibly faded right rail edge. The PNG cannot establish the same text contrast when centered/clear.",
+      "next_evidence": "Bring exact instrument/song element fully clear of both rail fades and dock; assert meaningful label and full bounds; retain at-rest audit as well."
+    },
+    {
+      "failure_number": 22,
+      "exact_report": "tab-3-songs: [contrast, enforced] Contrast failed | id - | label \"SONGS\" | frame (31.1, 754.9996, 36.333333333333336, 10.0) | type 48",
+      "screen": "tab-3-songs",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "SONGS",
+      "reported_frame_pt": [
+        31.1,
+        754.9996,
+        36.333333333333336,
+        10.0
+      ],
+      "disposition": "readable_baseline_sdk_disagrees_or_unproven",
+      "reason": "Text is visibly readable in the captured baseline. Representative local core/background pixel pairs are recorded separately where measured; no claim that every glyph/background or later SDK state passes.",
+      "next_evidence": "Per-kind audit-time screenshot plus same-target geometry. Do not recolour globally or exempt the label on the strength of this baseline."
+    },
+    {
+      "failure_number": 23,
+      "exact_report": "tab-3-songs: [contrast, enforced] Contrast failed | id - | label \"Ode to\" | frame (31.1, 767.6932, 85.66666666666666, 32.0) | type 48",
+      "screen": "tab-3-songs",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "Ode to",
+      "reported_frame_pt": [
+        31.1,
+        767.6932,
+        85.66666666666666,
+        32.0
+      ],
+      "disposition": "readable_baseline_sdk_disagrees_or_unproven",
+      "reason": "Text is visibly readable in the captured baseline. Representative local core/background pixel pairs are recorded separately where measured; no claim that every glyph/background or later SDK state passes.",
+      "next_evidence": "Per-kind audit-time screenshot plus same-target geometry. Do not recolour globally or exempt the label on the strength of this baseline."
+    },
+    {
+      "failure_number": 24,
+      "exact_report": "tab-3-songs: [contrast, enforced] Contrast failed | id - | label \"Joy\" | frame (31.1, 792.9, 45.99999999999999, 32.0) | type 48",
+      "screen": "tab-3-songs",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "Joy",
+      "reported_frame_pt": [
+        31.1,
+        792.9,
+        45.99999999999999,
+        32.0
+      ],
+      "disposition": "dock_overlap_or_lower_fade_state",
+      "reason": "The actual screenshot places this target partly behind/under the translucent navigation dock or lower fade. This may explain captured low readability but does not establish the cause of SDK finding or unreadability when deliberately scrolled clear.",
+      "next_evidence": "Scroll exact same target fully above measured dock bounds and below header. Record clear-state frame and screenshot; retain original at-rest audit and investigate any persistent defect."
+    },
+    {
+      "failure_number": 25,
+      "exact_report": "tab-3-songs: [contrast, enforced] Contrast failed | id - | label \"03\" | frame (44.02928, 699.1, 11.0, 10.333333333333258) | type 48",
+      "screen": "tab-3-songs",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "03",
+      "reported_frame_pt": [
+        44.02928,
+        699.1,
+        11.0,
+        10.333333333333258
+      ],
+      "disposition": "previous_defect_visibly_improved_sdk_disagrees",
+      "reason": "Same fixed pixel positions as previous c5 receipt now show6.6200:1 instead of3.1009:1; full catalogue-number ink is visible. Pre-audit state differs from SDK finding; not a universal cover pass.",
+      "next_evidence": "Exact song-ode-to-joy clear-state per-kind audit and callback capture; test locked/other fields separately."
+    },
+    {
+      "failure_number": 26,
+      "exact_report": "tab-3-songs: [contrast, enforced] Contrast failed | id - | label \"C\" | frame (27.0, 850.3333333333334, 9.666666666666664, 15.333333333333371) | type 48",
+      "screen": "tab-3-songs",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "C",
+      "reported_frame_pt": [
+        27.0,
+        850.3333333333334,
+        9.666666666666664,
+        15.333333333333371
+      ],
+      "disposition": "dock_overlap_or_lower_fade_state",
+      "reason": "The actual screenshot places this target partly behind/under the translucent navigation dock or lower fade. This may explain captured low readability but does not establish the cause of SDK finding or unreadability when deliberately scrolled clear.",
+      "next_evidence": "Scroll exact same target fully above measured dock bounds and below header. Record clear-state frame and screenshot; retain original at-rest audit and investigate any persistent defect."
+    },
+    {
+      "failure_number": 27,
+      "exact_report": "tab-3-songs: [contrast, enforced] Contrast failed | id - | label \"Guitar\" | frame (193.1, 771.9514002476653, 27.666666666666657, 10.666666666666629) | type 48",
+      "screen": "tab-3-songs",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "Guitar",
+      "reported_frame_pt": [
+        193.1,
+        771.9514002476653,
+        27.666666666666657,
+        10.666666666666629
+      ],
+      "disposition": "readable_baseline_sdk_disagrees_or_unproven",
+      "reason": "Text is visibly readable in the captured baseline. Representative local core/background pixel pairs are recorded separately where measured; no claim that every glyph/background or later SDK state passes.",
+      "next_evidence": "Per-kind audit-time screenshot plus same-target geometry. Do not recolour globally or exempt the label on the strength of this baseline."
+    },
+    {
+      "failure_number": 28,
+      "exact_report": "tab-3-songs: [contrast, enforced] Contrast failed | id - | label \"Amazing\" | frame (193.1, 785.311666914332, 81.33333333333334, 24.0) | type 48",
+      "screen": "tab-3-songs",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "Amazing",
+      "reported_frame_pt": [
+        193.1,
+        785.311666914332,
+        81.33333333333334,
+        24.0
+      ],
+      "disposition": "dock_overlap_or_lower_fade_state",
+      "reason": "The actual screenshot places this target partly behind/under the translucent navigation dock or lower fade. This may explain captured low readability but does not establish the cause of SDK finding or unreadability when deliberately scrolled clear.",
+      "next_evidence": "Scroll exact same target fully above measured dock bounds and below header. Record clear-state frame and screenshot; retain original at-rest audit and investigate any persistent defect."
+    },
+    {
+      "failure_number": 29,
+      "exact_report": "tab-3-songs: [contrast, enforced] Contrast failed | id - | label \"Grace\" | frame (193.1, 804.23, 55.66666666666666, 24.0) | type 48",
+      "screen": "tab-3-songs",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "Grace",
+      "reported_frame_pt": [
+        193.1,
+        804.23,
+        55.66666666666666,
+        24.0
+      ],
+      "disposition": "dock_overlap_or_lower_fade_state",
+      "reason": "The actual screenshot places this target partly behind/under the translucent navigation dock or lower fade. This may explain captured low readability but does not establish the cause of SDK finding or unreadability when deliberately scrolled clear.",
+      "next_evidence": "Scroll exact same target fully above measured dock bounds and below header. Record clear-state frame and screenshot; retain original at-rest audit and investigate any persistent defect."
+    },
+    {
+      "failure_number": 30,
+      "exact_report": "tab-3-songs: [contrast, enforced] Contrast failed | id - | label \"SONGS\" | frame (401.08840672810874, 719.7035143963428, 33.823186543782526, 9.30913391113279) | type 48",
+      "screen": "tab-3-songs",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "SONGS",
+      "reported_frame_pt": [
+        401.08840672810874,
+        719.7035143963428,
+        33.823186543782526,
+        9.30913391113279
+      ],
+      "disposition": "rail_edge_or_offscreen_state",
+      "reason": "Reported frame is partly outside402pt viewport or within the visibly faded right rail edge. The PNG cannot establish the same text contrast when centered/clear.",
+      "next_evidence": "Bring exact instrument/song element fully clear of both rail fades and dock; assert meaningful label and full bounds; retain at-rest audit as well."
+    },
+    {
+      "failure_number": 31,
+      "exact_report": "tab-3-songs: [contrast, enforced] Contrast failed | id - | label \"Silent\" | frame (386.50409693400064, 731.5201566177783, 62.991806131998715, 27.617097269694) | type 48",
+      "screen": "tab-3-songs",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "Silent",
+      "reported_frame_pt": [
+        386.50409693400064,
+        731.5201566177783,
+        62.991806131998715,
+        27.617097269694
+      ],
+      "disposition": "rail_edge_or_offscreen_state",
+      "reason": "Reported frame is partly outside402pt viewport or within the visibly faded right rail edge. The PNG cannot establish the same text contrast when centered/clear.",
+      "next_evidence": "Bring exact instrument/song element fully clear of both rail fades and dock; assert meaningful label and full bounds; retain at-rest audit as well."
+    },
+    {
+      "failure_number": 32,
+      "exact_report": "tab-3-songs: [contrast, enforced] Contrast failed | id - | label \"Night\" | frame (386.81440139770507, 753.2560446983573, 62.37119720458986, 27.617097269694) | type 48",
+      "screen": "tab-3-songs",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "Night",
+      "reported_frame_pt": [
+        386.81440139770507,
+        753.2560446983573,
+        62.37119720458986,
+        27.617097269694
+      ],
+      "disposition": "rail_edge_or_offscreen_state",
+      "reason": "Reported frame is partly outside402pt viewport or within the visibly faded right rail edge. The PNG cannot establish the same text contrast when centered/clear.",
+      "next_evidence": "Bring exact instrument/song element fully clear of both rail fades and dock; assert meaningful label and full bounds; retain at-rest audit as well."
+    },
+    {
+      "failure_number": 33,
+      "exact_report": "tab-3-songs: [contrast, enforced] Contrast failed | id - | label \"28\" | frame (371.4815875884277, 705.4030016174316, 10.240047302246126, 9.619438374837273) | type 48",
+      "screen": "tab-3-songs",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "28",
+      "reported_frame_pt": [
+        371.4815875884277,
+        705.4030016174316,
+        10.240047302246126,
+        9.619438374837273
+      ],
+      "disposition": "rail_edge_or_offscreen_state",
+      "reason": "Reported frame is partly outside402pt viewport or within the visibly faded right rail edge. The PNG cannot establish the same text contrast when centered/clear.",
+      "next_evidence": "Bring exact instrument/song element fully clear of both rail fades and dock; assert meaningful label and full bounds; retain at-rest audit as well."
+    },
+    {
+      "failure_number": 34,
+      "exact_report": "tab-3-songs: [contrast, enforced] Contrast failed | id - | label \"A7\" | frame (355.62880279541014, 846.1881368001302, 15.515223185221373, 14.274005330403725) | type 48",
+      "screen": "tab-3-songs",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "A7",
+      "reported_frame_pt": [
+        355.62880279541014,
+        846.1881368001302,
+        15.515223185221373,
+        14.274005330403725
+      ],
+      "disposition": "dock_overlap_or_lower_fade_state",
+      "reason": "The actual screenshot places this target partly behind/under the translucent navigation dock or lower fade. This may explain captured low readability but does not establish the cause of SDK finding or unreadability when deliberately scrolled clear.",
+      "next_evidence": "Scroll exact same target fully above measured dock bounds and below header. Record clear-state frame and screenshot; retain original at-rest audit and investigate any persistent defect."
+    },
+    {
+      "failure_number": 35,
+      "exact_report": "tab-3-songs: [contrast, enforced] Contrast failed | id - | label \"+5\" | frame (106.0, 836.0, 62.0, 44.0) | type 48",
+      "screen": "tab-3-songs",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "+5",
+      "reported_frame_pt": [
+        106.0,
+        836.0,
+        62.0,
+        44.0
+      ],
+      "disposition": "dock_overlap_or_lower_fade_state",
+      "reason": "The actual screenshot places this target partly behind/under the translucent navigation dock or lower fade. This may explain captured low readability but does not establish the cause of SDK finding or unreadability when deliberately scrolled clear.",
+      "next_evidence": "Scroll exact same target fully above measured dock bounds and below header. Record clear-state frame and screenshot; retain original at-rest audit and investigate any persistent defect."
+    },
+    {
+      "failure_number": 36,
+      "exact_report": "tab-3-songs: [contrast, enforced] Contrast failed | id - | label \"+5\" | frame (268.0, 836.0, 62.0, 44.0) | type 48",
+      "screen": "tab-3-songs",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "+5",
+      "reported_frame_pt": [
+        268.0,
+        836.0,
+        62.0,
+        44.0
+      ],
+      "disposition": "dock_overlap_or_lower_fade_state",
+      "reason": "The actual screenshot places this target partly behind/under the translucent navigation dock or lower fade. This may explain captured low readability but does not establish the cause of SDK finding or unreadability when deliberately scrolled clear.",
+      "next_evidence": "Scroll exact same target fully above measured dock bounds and below header. Record clear-state frame and screenshot; retain original at-rest audit and investigate any persistent defect."
+    },
+    {
+      "failure_number": 37,
+      "exact_report": "tab-4-practice: [contrast, enforced] Contrast failed | id - | label - | snapshot unavailable",
+      "screen": "tab-4-practice",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "disposition": "missing_target_snapshot",
+      "reason": "Contrast callback has no label, identifier or frame. Cannot attribute it to a UI element or invent a palette fix.",
+      "next_evidence": "Capture callback diagnostics and contemporaneous hierarchy/screenshot; retain this failure until explained."
+    },
+    {
+      "failure_number": 38,
+      "exact_report": "tab-4-practice: [contrast, enforced] Contrast failed | id - | label \"LV 5\" | frame (50.33333333333334, 392.66666666666663, 37.33333333333333, 28.0) | type 48",
+      "screen": "tab-4-practice",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "LV 5",
+      "reported_frame_pt": [
+        50.33333333333334,
+        392.66666666666663,
+        37.33333333333333,
+        28.0
+      ],
+      "disposition": "readable_baseline_sdk_disagrees_or_unproven",
+      "reason": "Text is visibly readable in the captured baseline. Representative local core/background pixel pairs are recorded separately where measured; no claim that every glyph/background or later SDK state passes.",
+      "next_evidence": "Per-kind audit-time screenshot plus same-target geometry. Do not recolour globally or exempt the label on the strength of this baseline."
+    },
+    {
+      "failure_number": 39,
+      "exact_report": "tab-5-progress: [contrast, enforced] Contrast failed | id - | label \"Last five weeks\" | frame (38.0, 749.3333333333333, 131.0, 21.66666666666663) | type 48",
+      "screen": "tab-5-progress",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "Last five weeks",
+      "reported_frame_pt": [
+        38.0,
+        749.3333333333333,
+        131.0,
+        21.66666666666663
+      ],
+      "disposition": "readable_baseline_sdk_disagrees_or_unproven",
+      "reason": "Text is visibly readable in the captured baseline. Representative local core/background pixel pairs are recorded separately where measured; no claim that every glyph/background or later SDK state passes.",
+      "next_evidence": "Per-kind audit-time screenshot plus same-target geometry. Do not recolour globally or exempt the label on the strength of this baseline."
+    },
+    {
+      "failure_number": 40,
+      "exact_report": "tab-5-progress: [contrast, enforced] Contrast failed | id - | label \"20 of 35 days\" | frame (286.00000000000006, 754.3333333333333, 78.0, 14.333333333333371) | type 48",
+      "screen": "tab-5-progress",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "20 of 35 days",
+      "reported_frame_pt": [
+        286.00000000000006,
+        754.3333333333333,
+        78.0,
+        14.333333333333371
+      ],
+      "disposition": "readable_baseline_sdk_disagrees_or_unproven",
+      "reason": "Text is visibly readable in the captured baseline. Representative local core/background pixel pairs are recorded separately where measured; no claim that every glyph/background or later SDK state passes.",
+      "next_evidence": "Per-kind audit-time screenshot plus same-target geometry. Do not recolour globally or exempt the label on the strength of this baseline."
+    },
+    {
+      "failure_number": 41,
+      "exact_report": "tab-5-progress: [contrast, enforced] Contrast failed | id - | label \"T\" | frame (55.04761904761905, 782.9999999999999, 7.333333333333336, 15.333333333333371) | type 48",
+      "screen": "tab-5-progress",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "T",
+      "reported_frame_pt": [
+        55.04761904761905,
+        782.9999999999999,
+        7.333333333333336,
+        15.333333333333371
+      ],
+      "disposition": "dock_overlap_or_lower_fade_state",
+      "reason": "The actual screenshot places this target partly behind/under the translucent navigation dock or lower fade. This may explain captured low readability but does not establish the cause of SDK finding or unreadability when deliberately scrolled clear.",
+      "next_evidence": "Scroll exact same target fully above measured dock bounds and below header. Record clear-state frame and screenshot; retain original at-rest audit and investigate any persistent defect."
+    },
+    {
+      "failure_number": 42,
+      "exact_report": "tab-5-progress: [contrast, enforced] Contrast failed | id - | label \"W\" | frame (99.64285714285717, 782.9999999999999, 13.0, 15.333333333333371) | type 48",
+      "screen": "tab-5-progress",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "W",
+      "reported_frame_pt": [
+        99.64285714285717,
+        782.9999999999999,
+        13.0,
+        15.333333333333371
+      ],
+      "disposition": "dock_overlap_or_lower_fade_state",
+      "reason": "The actual screenshot places this target partly behind/under the translucent navigation dock or lower fade. This may explain captured low readability but does not establish the cause of SDK finding or unreadability when deliberately scrolled clear.",
+      "next_evidence": "Scroll exact same target fully above measured dock bounds and below header. Record clear-state frame and screenshot; retain original at-rest audit and investigate any persistent defect."
+    },
+    {
+      "failure_number": 43,
+      "exact_report": "tab-5-progress: [contrast, enforced] Contrast failed | id - | label \"T\" | frame (149.90476190476193, 782.9999999999999, 7.333333333333343, 15.333333333333371) | type 48",
+      "screen": "tab-5-progress",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "T",
+      "reported_frame_pt": [
+        149.90476190476193,
+        782.9999999999999,
+        7.333333333333343,
+        15.333333333333371
+      ],
+      "disposition": "dock_overlap_or_lower_fade_state",
+      "reason": "The actual screenshot places this target partly behind/under the translucent navigation dock or lower fade. This may explain captured low readability but does not establish the cause of SDK finding or unreadability when deliberately scrolled clear.",
+      "next_evidence": "Scroll exact same target fully above measured dock bounds and below header. Record clear-state frame and screenshot; retain original at-rest audit and investigate any persistent defect."
+    },
+    {
+      "failure_number": 44,
+      "exact_report": "tab-5-progress: [contrast, enforced] Contrast failed | id - | label \"F\" | frame (197.50000000000006, 782.9999999999999, 7.0, 15.333333333333371) | type 48",
+      "screen": "tab-5-progress",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "F",
+      "reported_frame_pt": [
+        197.50000000000006,
+        782.9999999999999,
+        7.0,
+        15.333333333333371
+      ],
+      "disposition": "dock_overlap_or_lower_fade_state",
+      "reason": "The actual screenshot places this target partly behind/under the translucent navigation dock or lower fade. This may explain captured low readability but does not establish the cause of SDK finding or unreadability when deliberately scrolled clear.",
+      "next_evidence": "Scroll exact same target fully above measured dock bounds and below header. Record clear-state frame and screenshot; retain original at-rest audit and investigate any persistent defect."
+    },
+    {
+      "failure_number": 45,
+      "exact_report": "tab-5-progress: [contrast, enforced] Contrast failed | id - | label \"S\" | frame (244.26190476190482, 782.9999999999999, 8.333333333333343, 15.333333333333371) | type 48",
+      "screen": "tab-5-progress",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "S",
+      "reported_frame_pt": [
+        244.26190476190482,
+        782.9999999999999,
+        8.333333333333343,
+        15.333333333333371
+      ],
+      "disposition": "dock_overlap_or_lower_fade_state",
+      "reason": "The actual screenshot places this target partly behind/under the translucent navigation dock or lower fade. This may explain captured low readability but does not establish the cause of SDK finding or unreadability when deliberately scrolled clear.",
+      "next_evidence": "Scroll exact same target fully above measured dock bounds and below header. Record clear-state frame and screenshot; retain original at-rest audit and investigate any persistent defect."
+    },
+    {
+      "failure_number": 46,
+      "exact_report": "tab-5-progress: [contrast, enforced] Contrast failed | id - | label \"S\" | frame (291.69047619047626, 782.9999999999999, 8.333333333333314, 15.333333333333371) | type 48",
+      "screen": "tab-5-progress",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "S",
+      "reported_frame_pt": [
+        291.69047619047626,
+        782.9999999999999,
+        8.333333333333314,
+        15.333333333333371
+      ],
+      "disposition": "dock_overlap_or_lower_fade_state",
+      "reason": "The actual screenshot places this target partly behind/under the translucent navigation dock or lower fade. This may explain captured low readability but does not establish the cause of SDK finding or unreadability when deliberately scrolled clear.",
+      "next_evidence": "Scroll exact same target fully above measured dock bounds and below header. Record clear-state frame and screenshot; retain original at-rest audit and investigate any persistent defect."
+    },
+    {
+      "failure_number": 47,
+      "exact_report": "tab-5-progress: [contrast, enforced] Contrast failed | id - | label \"M\" | frame (337.4523809523811, 782.9999999999999, 11.666666666666686, 15.333333333333371) | type 48",
+      "screen": "tab-5-progress",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "M",
+      "reported_frame_pt": [
+        337.4523809523811,
+        782.9999999999999,
+        11.666666666666686,
+        15.333333333333371
+      ],
+      "disposition": "dock_overlap_or_lower_fade_state",
+      "reason": "The actual screenshot places this target partly behind/under the translucent navigation dock or lower fade. This may explain captured low readability but does not establish the cause of SDK finding or unreadability when deliberately scrolled clear.",
+      "next_evidence": "Scroll exact same target fully above measured dock bounds and below header. Record clear-state frame and screenshot; retain original at-rest audit and investigate any persistent defect."
+    },
+    {
+      "failure_number": 48,
+      "exact_report": "tab-5-progress: [contrast, enforced] Contrast failed | id - | label \"Tune up\" | frame (78.00000000000006, 389.0, 113.0, 44.0) | type 48",
+      "screen": "tab-5-progress",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "Tune up",
+      "reported_frame_pt": [
+        78.00000000000006,
+        389.0,
+        113.0,
+        44.0
+      ],
+      "disposition": "readable_baseline_sdk_disagrees_or_unproven",
+      "reason": "Text is visibly readable in the captured baseline. Representative local core/background pixel pairs are recorded separately where measured; no claim that every glyph/background or later SDK state passes.",
+      "next_evidence": "Per-kind audit-time screenshot plus same-target geometry. Do not recolour globally or exempt the label on the strength of this baseline."
+    },
+    {
+      "failure_number": 49,
+      "exact_report": "paywall: [contrast, enforced] Contrast failed | id - | label \"SAVE 58%\" | frame (291.6666666666667, 417.66666666666663, 69.33333333333331, 15.333333333333314) | type 48",
+      "screen": "paywall",
+      "resolution": "unresolved native failure; no exception or audit weakening proposed",
+      "label": "SAVE 58%",
+      "reported_frame_pt": [
+        291.6666666666667,
+        417.66666666666663,
+        69.33333333333331,
+        15.333333333333314
+      ],
+      "disposition": "readable_baseline_sdk_disagrees_or_unproven",
+      "reason": "Text is visibly readable in the captured baseline. Representative local core/background pixel pairs are recorded separately where measured; no claim that every glyph/background or later SDK state passes.",
+      "next_evidence": "Per-kind audit-time screenshot plus same-target geometry. Do not recolour globally or exempt the label on the strength of this baseline."
+    }
+  ]
+}

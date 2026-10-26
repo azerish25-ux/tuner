@@ -35,7 +35,8 @@ Brands unchanged: Timbre, Timbre Pro, Pro, Apple, iPhone, iPad, Apple Watch, App
 | Strum to tune | 扫弦调音 |
 | Tune by feel / Feel | 触感调音 / 触感 |
 | Tanpura drone | 坦普拉琴持续音 |
-| Intonation | 音准 |
+| Intonation | 八度音准 |
+| Intonation over a drone | 持续音下的音准练习 |
 | Placement check | 水平测试 |
 | Play along | 跟奏 |
 | Take | 一次演奏 |
@@ -304,4 +305,4 @@ These are exact-work decisions from independent AI contextual review, not human/
 Retained exact repertoire titles in this review (each has its own source-bound rationale in `lesson-invariants.json`; this list is not a blanket exemption): Old Joe Clark; Soldier's Joy; Skip to My Lou; Aura Lee; Shady Grove; Shenandoah; Angeline the Baker; Boil Them Cabbage Down; My Country, 'Tis of Thee; Cumberland Gap; Deck the Halls; Arkansas Traveler; Cripple Creek.
 
 ## 4. Sense distinctions
-Tune verb/tab ≠ tune melody; direction flat/sharp ≠ accidentals. Bar means measure, never pub or UI bar. Key means tonality, not keyboard/password. Pick means plectrum/pluck/choose by context. Lock means stable correct pitch, not padlock. Take means recorded performance attempt, not taking a lesson. Run means streak or continuous performance, not running. Chart means chord notation unless explicitly a progress graph. Intonation means playing/singing accurately over a drone, never saddle or octave adjustment (legacy ja/zh-CN entries are overridden above). Practice means musical practice, not a professional office. Feel means haptic feedback, not emotion. Challenge-friend and unit challenge use the separate senses above.
+Tune verb/tab ≠ tune melody; direction flat/sharp ≠ accidentals. Bar means measure, never pub or UI bar. Key means tonality, not keyboard/password. Pick means plectrum/pluck/choose by context. Lock means stable correct pitch, not padlock. Take means recorded performance attempt, not taking a lesson. Run means streak or continuous performance, not running. Chart means chord notation unless explicitly a progress graph. Intonation is context-dependent: the current literal app key `Intonation` labels the harmonic/stopped-note instrument-setup check; `Intonation over a drone` is a separate pitch-accuracy practice key. Generic lesson uses follow their own source context. Do not infer a blanket ban on saddle setup from the English word alone. Practice means musical practice, not a professional office. Feel means haptic feedback, not emotion. Challenge-friend and unit challenge use the separate senses above.

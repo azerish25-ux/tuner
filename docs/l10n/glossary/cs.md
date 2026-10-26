@@ -1,5 +1,7 @@
 # Czech glossary
 
+> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
+
 Status: The prior app/UI glossary was AI-drafted and AI-reviewed on 2026-10-25. The current 6,083-key lesson addendum below was directly authored and self-checked on 2026-10-26 by `/root/translate_czech_lessons`; it has NOT received independent semantic review, native-human sign-off, or device verification. Prior UI review is not review of these new lesson drafts. Explicit decisions below override conflicting anchors.
 
 ## 1. Locale decisions

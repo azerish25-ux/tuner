@@ -1,0 +1,49 @@
+{
+  "base_commit": "970a12db87dd5751d3674b1321e20706a576e03e",
+  "status": "local checks passed; native source changes and revised Japanese layout not yet executed",
+  "checks": [
+    {
+      "command": "python -m unittest discover -s tools/l10n/tests -p test_*.py",
+      "result": "152 tests passed"
+    },
+    {
+      "command": "python tools/l10n/lessons.py --strict",
+      "result": "48 complete targets;0 unresolved pairs"
+    },
+    {
+      "command": "python tools/l10n/report.py --check --strict",
+      "result": "passed"
+    },
+    {
+      "command": "python tools/l10n/critical.py --strict",
+      "result": "0 legal/permission/VoiceOver gaps"
+    },
+    {
+      "command": "python tools/verify-ios-resources.py",
+      "result": "49 locales,resources and literalkeys passed"
+    },
+    {
+      "command": "python tools/l10n/shipping.py --all",
+      "result": "all48 translated locales100percent,none leftout"
+    },
+    {
+      "command": "python tools/l10n/store.py",
+      "result": "50listinglocales0problems"
+    },
+    {
+      "command": "python tools/ci/test_hygiene.py",
+      "result": "25 tests passed"
+    },
+    {
+      "command": "python tools/ci/test_song_cover_contrast.py",
+      "result": "4 tests passed"
+    }
+  ],
+  "log_hashes": {
+    "localization-tests-final.log": "3dad243662ef662d1696f14ab7fcd1ffa9f5df2f2b1f03f20794c8bb8fd7b043",
+    "lessons-final.log": "ed8729a22580dc0fd5f24ae0b45ca7e6162e9cc35207a19684bf7b2fc739d9d1",
+    "shipping-final.log": "ce30ea2f36b831f9c05f245c37a883afbfa27a033960e43f0c3e2782d32ca00f",
+    "apply-ui-final.log": "8357dec8b4c03353a0db12c401335b49e8846b06644643294a6af049e6046cf3"
+  },
+  "native_tests_not_run_locally": "Windows host lacks Xcode/SwiftUI simulator; hosted CI required; no red/green native assertion made."
+}

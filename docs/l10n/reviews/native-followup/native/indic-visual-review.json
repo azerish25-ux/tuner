@@ -1,0 +1,453 @@
+{
+  "source_commit": "970a12db87dd5751d3674b1321e20706a576e03e",
+  "run_id": 40396032371,
+  "job_id": 121829199818,
+  "artifact_id": 12691742064,
+  "reviewer": "Codex review_uk",
+  "scope": "18 actual normal-text iPhone 17 Pro frames: welcome, tuner and first guitar lesson explain card for hi/gu/kn/ml/mr/pa. Every individual source image was directly opened and visually inspected.",
+  "index_sha256": "ed3dfa6c83f6067f2a8b076897065feafbe88d2f9a2ca9d4da485642056ff179",
+  "directly_viewed_count": 18,
+  "observed_issue_count": 0,
+  "conclusion": "No demonstrated visible localization layout or missing-glyph defect in these 18 captured normal-size frames.",
+  "limits": [
+    "This is an independent AI visual review, not native-human linguistic or script-shaping certification.",
+    "Only captured normal-size phone states reviewed; no Dynamic Type, tablet, landscape, interaction, VoiceOver runtime or universal accessibility claims.",
+    "Lesson review covers first explain card at step 1/5, not the remaining four steps or the full lesson corpus.",
+    "Screenshots bind exact base 970; they do not visually verify later source or translation fixes.",
+    "No live source, translations or tests were modified. Any future product fix needs new native captures."
+  ],
+  "frames": [
+    {
+      "name": "l10n-hi-welcome.png",
+      "locale": "hi",
+      "screen": "welcome",
+      "source_folder": "screenshots",
+      "original_exported_filename": "1F6BAEC4-7D4E-4DD4-B120-B0FAC31B7EAC.png",
+      "screenshot_sha256": "25d26b0c8514079da8cf7ae8738b610cb15293dd0cbc91a243175eb32e124776",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "device": "iPhone 17 Pro",
+      "reviewer": "Codex review_uk",
+      "directly_viewed": true,
+      "view_method": "Original individual PNG opened through view_image; tool displayed proportional 942×2048 rendition of 1206×2622 source. No contact sheet, synthetic reconstruction or OCR-only review.",
+      "issues": [],
+      "observations": "Two-line Devanagari headline and two-line description fit. Four instrument chips plus intentional more-options control, primary start, tune-only and existing-Pro controls are visible. Upper/lower vowel marks show no observed clipping.",
+      "checks": {
+        "visible_glyph_clusters": "No observed missing-glyph boxes or visibly clipped clusters; this is a visual observation, not native-language shaping certification.",
+        "clipping_ellipsis_overlap": "No unintended clipping, ellipsis or overlap observed in visible text. Intentional more-options dots on welcome are a control, not truncated text.",
+        "controls": "Screen-specific visible controls remain identifiable and unobscured.",
+        "lesson_scope": "Not a lesson frame."
+      }
+    },
+    {
+      "name": "l10n-hi-tuner.png",
+      "locale": "hi",
+      "screen": "tuner",
+      "source_folder": "screenshots",
+      "original_exported_filename": "FE914EBC-7E4E-4829-A585-F3071AB0C0E6.png",
+      "screenshot_sha256": "17fb6ecabdf2f2096b75a481b179b0fe77e9ed4ae079aa4cd6358b4dd96d0b8d",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "device": "iPhone 17 Pro",
+      "reviewer": "Codex review_uk",
+      "directly_viewed": true,
+      "view_method": "Original individual PNG opened through view_image; tool displayed proportional 942×2048 rendition of 1206×2622 source. No contact sheet, synthetic reconstruction or OCR-only review.",
+      "issues": [],
+      "observations": "Instrument title and tuning/reference row fit; Auto/Manual/Reference, side Strum/Listen, six string selectors, target 82.41 Hz and all five tab labels are visible without ellipsis.",
+      "checks": {
+        "visible_glyph_clusters": "No observed missing-glyph boxes or visibly clipped clusters; this is a visual observation, not native-language shaping certification.",
+        "clipping_ellipsis_overlap": "No unintended clipping, ellipsis or overlap observed in visible text. Intentional more-options dots on welcome are a control, not truncated text.",
+        "controls": "Screen-specific visible controls remain identifiable and unobscured.",
+        "lesson_scope": "Not a lesson frame."
+      }
+    },
+    {
+      "name": "l10n-hi-lesson.png",
+      "locale": "hi",
+      "screen": "lesson",
+      "source_folder": "screenshots",
+      "original_exported_filename": "F1364412-0115-43EC-A356-3EE70C0ABAF5.png",
+      "screenshot_sha256": "fb4166b66090216dc8f965a9ab9ccd73f64b385878798a239c52703d9530c762",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "device": "iPhone 17 Pro",
+      "reviewer": "Codex review_uk",
+      "directly_viewed": true,
+      "view_method": "Original individual PNG opened through view_image; tool displayed proportional 942×2048 rendition of 1206×2622 source. No contact sheet, synthetic reconstruction or OCR-only review.",
+      "issues": [],
+      "observations": "Header title and step 1/5 fit. Single-line card heading and full three-line body ending with the string 6 sentence fit above Continue; close and Continue are visible.",
+      "checks": {
+        "visible_glyph_clusters": "No observed missing-glyph boxes or visibly clipped clusters; this is a visual observation, not native-language shaping certification.",
+        "clipping_ellipsis_overlap": "No unintended clipping, ellipsis or overlap observed in visible text. Intentional more-options dots on welcome are a control, not truncated text.",
+        "controls": "Screen-specific visible controls remain identifiable and unobscured.",
+        "lesson_scope": "Only first explain card (step 1/5), including full visible header/heading/body and Continue, inspected."
+      }
+    },
+    {
+      "name": "l10n-gu-welcome.png",
+      "locale": "gu",
+      "screen": "welcome",
+      "source_folder": "screenshots",
+      "original_exported_filename": "FB1E37E8-068A-44FC-848D-19CD94826423.png",
+      "screenshot_sha256": "f89a7d5b22c0480e5a4fa1b698a0cd8cfbac5f609e57abf19c370301362bb2c1",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "device": "iPhone 17 Pro",
+      "reviewer": "Codex review_uk",
+      "directly_viewed": true,
+      "view_method": "Original individual PNG opened through view_image; tool displayed proportional 942×2048 rendition of 1206×2622 source. No contact sheet, synthetic reconstruction or OCR-only review.",
+      "issues": [],
+      "observations": "Two-line Gujarati headline and two-line description fit. Four full instrument chips plus intentional more-options control and all three entry actions are visible; no observed missing glyph boxes or clipped vowel marks.",
+      "checks": {
+        "visible_glyph_clusters": "No observed missing-glyph boxes or visibly clipped clusters; this is a visual observation, not native-language shaping certification.",
+        "clipping_ellipsis_overlap": "No unintended clipping, ellipsis or overlap observed in visible text. Intentional more-options dots on welcome are a control, not truncated text.",
+        "controls": "Screen-specific visible controls remain identifiable and unobscured.",
+        "lesson_scope": "Not a lesson frame."
+      }
+    },
+    {
+      "name": "l10n-gu-tuner.png",
+      "locale": "gu",
+      "screen": "tuner",
+      "source_folder": "screenshots",
+      "original_exported_filename": "29CA3CAB-91CC-4151-A1E3-2614225A7ECF.png",
+      "screenshot_sha256": "9ccbb23e1e810b71c83964a6ed2c884db88cda59617485f5ca7b7b72defd05f2",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "device": "iPhone 17 Pro",
+      "reviewer": "Codex review_uk",
+      "directly_viewed": true,
+      "view_method": "Original individual PNG opened through view_image; tool displayed proportional 942×2048 rendition of 1206×2622 source. No contact sheet, synthetic reconstruction or OCR-only review.",
+      "issues": [],
+      "observations": "Gujarati instrument/reference labels, mode controls and side labels fit. Six string targets and all five tab labels remain separate and visible.",
+      "checks": {
+        "visible_glyph_clusters": "No observed missing-glyph boxes or visibly clipped clusters; this is a visual observation, not native-language shaping certification.",
+        "clipping_ellipsis_overlap": "No unintended clipping, ellipsis or overlap observed in visible text. Intentional more-options dots on welcome are a control, not truncated text.",
+        "controls": "Screen-specific visible controls remain identifiable and unobscured.",
+        "lesson_scope": "Not a lesson frame."
+      }
+    },
+    {
+      "name": "l10n-gu-lesson.png",
+      "locale": "gu",
+      "screen": "lesson",
+      "source_folder": "screenshots",
+      "original_exported_filename": "6F5EDE23-D482-4C83-B9AA-3B965D76959E.png",
+      "screenshot_sha256": "a5d339f87c4cbdc280bce271d33b8c97d99e13b71b3fd128bcc0564842d5652f",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "device": "iPhone 17 Pro",
+      "reviewer": "Codex review_uk",
+      "directly_viewed": true,
+      "view_method": "Original individual PNG opened through view_image; tool displayed proportional 942×2048 rendition of 1206×2622 source. No contact sheet, synthetic reconstruction or OCR-only review.",
+      "issues": [],
+      "observations": "Full header, one-line heading and three-line body including final string 6 sentence fit. Gujarati combining marks show no observed clipping; Continue remains fully visible.",
+      "checks": {
+        "visible_glyph_clusters": "No observed missing-glyph boxes or visibly clipped clusters; this is a visual observation, not native-language shaping certification.",
+        "clipping_ellipsis_overlap": "No unintended clipping, ellipsis or overlap observed in visible text. Intentional more-options dots on welcome are a control, not truncated text.",
+        "controls": "Screen-specific visible controls remain identifiable and unobscured.",
+        "lesson_scope": "Only first explain card (step 1/5), including full visible header/heading/body and Continue, inspected."
+      }
+    },
+    {
+      "name": "l10n-kn-welcome.png",
+      "locale": "kn",
+      "screen": "welcome",
+      "source_folder": "screenshots",
+      "original_exported_filename": "E537982F-AC1B-4FCB-A629-6EF0AC1E4A9B.png",
+      "screenshot_sha256": "d526cb43faf4574373de62b8e7fff5e3dc7751c0e63e55c74ea2eebff72bc05d",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "device": "iPhone 17 Pro",
+      "reviewer": "Codex review_uk",
+      "directly_viewed": true,
+      "view_method": "Original individual PNG opened through view_image; tool displayed proportional 942×2048 rendition of 1206×2622 source. No contact sheet, synthetic reconstruction or OCR-only review.",
+      "issues": [],
+      "observations": "Four-line Kannada headline uses a smaller illustration area. Three complete instrument chips plus intentional more-options control fit; start, tune-only and existing-Pro actions remain visible. No observed clipped clusters at headline line boundaries.",
+      "checks": {
+        "visible_glyph_clusters": "No observed missing-glyph boxes or visibly clipped clusters; this is a visual observation, not native-language shaping certification.",
+        "clipping_ellipsis_overlap": "No unintended clipping, ellipsis or overlap observed in visible text. Intentional more-options dots on welcome are a control, not truncated text.",
+        "controls": "Screen-specific visible controls remain identifiable and unobscured.",
+        "lesson_scope": "Not a lesson frame."
+      }
+    },
+    {
+      "name": "l10n-kn-tuner.png",
+      "locale": "kn",
+      "screen": "tuner",
+      "source_folder": "screenshots",
+      "original_exported_filename": "D81C6469-F5AA-451F-A795-3B7653566110.png",
+      "screenshot_sha256": "ed2a9dc1b532c56d66aa511b9a1b8684456e824f07e6ccfd8c4ebe665c6b7aa2",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "device": "iPhone 17 Pro",
+      "reviewer": "Codex review_uk",
+      "directly_viewed": true,
+      "view_method": "Original individual PNG opened through view_image; tool displayed proportional 942×2048 rendition of 1206×2622 source. No contact sheet, synthetic reconstruction or OCR-only review.",
+      "issues": [],
+      "observations": "Longer Kannada instrument title and reference row fit without ellipsis. Mode controls, side controls, string row and all five tab labels are visible. No observed glyph substitution boxes.",
+      "checks": {
+        "visible_glyph_clusters": "No observed missing-glyph boxes or visibly clipped clusters; this is a visual observation, not native-language shaping certification.",
+        "clipping_ellipsis_overlap": "No unintended clipping, ellipsis or overlap observed in visible text. Intentional more-options dots on welcome are a control, not truncated text.",
+        "controls": "Screen-specific visible controls remain identifiable and unobscured.",
+        "lesson_scope": "Not a lesson frame."
+      }
+    },
+    {
+      "name": "l10n-kn-lesson.png",
+      "locale": "kn",
+      "screen": "lesson",
+      "source_folder": "screenshots",
+      "original_exported_filename": "E7E8354A-02FF-41DE-8F85-971962E96D6A.png",
+      "screenshot_sha256": "5d1e7e5f3d0d8ee2c00e5f33918501695e37105b828f871388b9029a4f26f30d",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "device": "iPhone 17 Pro",
+      "reviewer": "Codex review_uk",
+      "directly_viewed": true,
+      "view_method": "Original individual PNG opened through view_image; tool displayed proportional 942×2048 rendition of 1206×2622 source. No contact sheet, synthetic reconstruction or OCR-only review.",
+      "issues": [],
+      "observations": "Header title fits; one-line card heading and three-line explanation ending in the string 6 sentence are complete above Continue. Lower vowel/conjunct marks remain visible; no observed overlap.",
+      "checks": {
+        "visible_glyph_clusters": "No observed missing-glyph boxes or visibly clipped clusters; this is a visual observation, not native-language shaping certification.",
+        "clipping_ellipsis_overlap": "No unintended clipping, ellipsis or overlap observed in visible text. Intentional more-options dots on welcome are a control, not truncated text.",
+        "controls": "Screen-specific visible controls remain identifiable and unobscured.",
+        "lesson_scope": "Only first explain card (step 1/5), including full visible header/heading/body and Continue, inspected."
+      }
+    },
+    {
+      "name": "l10n-ml-welcome.png",
+      "locale": "ml",
+      "screen": "welcome",
+      "source_folder": "screenshots",
+      "original_exported_filename": "7354D7FF-6FF8-400F-85E4-395CAEEF22CF.png",
+      "screenshot_sha256": "03acc910d579d7b76f44e19fad30512d9e50281901a756ab0baab0ddc883baa8",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "device": "iPhone 17 Pro",
+      "reviewer": "Codex review_uk",
+      "directly_viewed": true,
+      "view_method": "Original individual PNG opened through view_image; tool displayed proportional 942×2048 rendition of 1206×2622 source. No contact sheet, synthetic reconstruction or OCR-only review.",
+      "issues": [],
+      "observations": "Four-line Malayalam headline and two-line description fit with compact illustration. Three full instrument chips plus intentional more-options control and all entry actions remain visible. No observed missing-glyph boxes or clipped cluster extenders.",
+      "checks": {
+        "visible_glyph_clusters": "No observed missing-glyph boxes or visibly clipped clusters; this is a visual observation, not native-language shaping certification.",
+        "clipping_ellipsis_overlap": "No unintended clipping, ellipsis or overlap observed in visible text. Intentional more-options dots on welcome are a control, not truncated text.",
+        "controls": "Screen-specific visible controls remain identifiable and unobscured.",
+        "lesson_scope": "Not a lesson frame."
+      }
+    },
+    {
+      "name": "l10n-ml-tuner.png",
+      "locale": "ml",
+      "screen": "tuner",
+      "source_folder": "screenshots",
+      "original_exported_filename": "CEF74F05-9D40-40A6-84E7-F56229E56B0E.png",
+      "screenshot_sha256": "feb0b1de77ac539ed59bde49c8477d0775671d583e1fe84e742a037fffcf5764",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "device": "iPhone 17 Pro",
+      "reviewer": "Codex review_uk",
+      "directly_viewed": true,
+      "view_method": "Original individual PNG opened through view_image; tool displayed proportional 942×2048 rendition of 1206×2622 source. No contact sheet, synthetic reconstruction or OCR-only review.",
+      "issues": [],
+      "observations": "Malayalam instrument title/reference row fit, with visible Strum/Listen, Auto/Manual/Reference, target and six string selectors. All five lower tab labels fit and remain separate.",
+      "checks": {
+        "visible_glyph_clusters": "No observed missing-glyph boxes or visibly clipped clusters; this is a visual observation, not native-language shaping certification.",
+        "clipping_ellipsis_overlap": "No unintended clipping, ellipsis or overlap observed in visible text. Intentional more-options dots on welcome are a control, not truncated text.",
+        "controls": "Screen-specific visible controls remain identifiable and unobscured.",
+        "lesson_scope": "Not a lesson frame."
+      }
+    },
+    {
+      "name": "l10n-ml-lesson.png",
+      "locale": "ml",
+      "screen": "lesson",
+      "source_folder": "screenshots",
+      "original_exported_filename": "B0799208-9A58-47F6-B5D4-F0C6E9C89EC6.png",
+      "screenshot_sha256": "e1d8e9feb33181059cb2948af7c360814d7ada5ad47ffc5a82334c34c7b13a70",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "device": "iPhone 17 Pro",
+      "reviewer": "Codex review_uk",
+      "directly_viewed": true,
+      "view_method": "Original individual PNG opened through view_image; tool displayed proportional 942×2048 rendition of 1206×2622 source. No contact sheet, synthetic reconstruction or OCR-only review.",
+      "issues": [],
+      "observations": "Full header and single-line heading visible; four-line Malayalam body reaches complete final string 6 sentence above Continue. No observed ellipsis, descender clipping or overlap with the button.",
+      "checks": {
+        "visible_glyph_clusters": "No observed missing-glyph boxes or visibly clipped clusters; this is a visual observation, not native-language shaping certification.",
+        "clipping_ellipsis_overlap": "No unintended clipping, ellipsis or overlap observed in visible text. Intentional more-options dots on welcome are a control, not truncated text.",
+        "controls": "Screen-specific visible controls remain identifiable and unobscured.",
+        "lesson_scope": "Only first explain card (step 1/5), including full visible header/heading/body and Continue, inspected."
+      }
+    },
+    {
+      "name": "l10n-mr-welcome.png",
+      "locale": "mr",
+      "screen": "welcome",
+      "source_folder": "screenshots",
+      "original_exported_filename": "00289C3E-A9EC-418C-A463-4C357A3B24BC.png",
+      "screenshot_sha256": "c1a36c2a86167c74f395f3baba7275bd2fbf9e8c6101b31d0e3f7e76061a4008",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "device": "iPhone 17 Pro",
+      "reviewer": "Codex review_uk",
+      "directly_viewed": true,
+      "view_method": "Original individual PNG opened through view_image; tool displayed proportional 942×2048 rendition of 1206×2622 source. No contact sheet, synthetic reconstruction or OCR-only review.",
+      "issues": [],
+      "observations": "Two-line Marathi headline and one-line supporting description fit. Four full instrument chips plus intentional more-options control and start/tune-only/existing-Pro actions are visible. No observed Devanagari mark clipping.",
+      "checks": {
+        "visible_glyph_clusters": "No observed missing-glyph boxes or visibly clipped clusters; this is a visual observation, not native-language shaping certification.",
+        "clipping_ellipsis_overlap": "No unintended clipping, ellipsis or overlap observed in visible text. Intentional more-options dots on welcome are a control, not truncated text.",
+        "controls": "Screen-specific visible controls remain identifiable and unobscured.",
+        "lesson_scope": "Not a lesson frame."
+      }
+    },
+    {
+      "name": "l10n-mr-tuner.png",
+      "locale": "mr",
+      "screen": "tuner",
+      "source_folder": "screenshots",
+      "original_exported_filename": "551536A8-0E11-46A1-BBCE-1BB57E4A3A89.png",
+      "screenshot_sha256": "1cdcee6f242fc327b6d4a6515d371bb7312d23c7cca3310ddaf58dce15af1f78",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "device": "iPhone 17 Pro",
+      "reviewer": "Codex review_uk",
+      "directly_viewed": true,
+      "view_method": "Original individual PNG opened through view_image; tool displayed proportional 942×2048 rendition of 1206×2622 source. No contact sheet, synthetic reconstruction or OCR-only review.",
+      "issues": [],
+      "observations": "Instrument/reference title, side labels and mode controls fit. Target, six strings and all five Marathi tab labels remain visible without overlap or ellipsis.",
+      "checks": {
+        "visible_glyph_clusters": "No observed missing-glyph boxes or visibly clipped clusters; this is a visual observation, not native-language shaping certification.",
+        "clipping_ellipsis_overlap": "No unintended clipping, ellipsis or overlap observed in visible text. Intentional more-options dots on welcome are a control, not truncated text.",
+        "controls": "Screen-specific visible controls remain identifiable and unobscured.",
+        "lesson_scope": "Not a lesson frame."
+      }
+    },
+    {
+      "name": "l10n-mr-lesson.png",
+      "locale": "mr",
+      "screen": "lesson",
+      "source_folder": "screenshots",
+      "original_exported_filename": "18902FE6-5E93-4BC6-A4A8-81669A64F8E3.png",
+      "screenshot_sha256": "6ed92e0b8ba33f18611df738bf293e5fa03724551aed4ee1d85b8edce118352f",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "device": "iPhone 17 Pro",
+      "reviewer": "Codex review_uk",
+      "directly_viewed": true,
+      "view_method": "Original individual PNG opened through view_image; tool displayed proportional 942×2048 rendition of 1206×2622 source. No contact sheet, synthetic reconstruction or OCR-only review.",
+      "issues": [],
+      "observations": "Header title, one-line heading and full three-line body ending in string 6 sentence fit. Continue and close are fully visible; no observed clipped Devanagari clusters.",
+      "checks": {
+        "visible_glyph_clusters": "No observed missing-glyph boxes or visibly clipped clusters; this is a visual observation, not native-language shaping certification.",
+        "clipping_ellipsis_overlap": "No unintended clipping, ellipsis or overlap observed in visible text. Intentional more-options dots on welcome are a control, not truncated text.",
+        "controls": "Screen-specific visible controls remain identifiable and unobscured.",
+        "lesson_scope": "Only first explain card (step 1/5), including full visible header/heading/body and Continue, inspected."
+      }
+    },
+    {
+      "name": "l10n-pa-welcome.png",
+      "locale": "pa",
+      "screen": "welcome",
+      "source_folder": "screenshots",
+      "original_exported_filename": "6425B5F7-032E-4933-A86A-C165312A088A.png",
+      "screenshot_sha256": "e80920c6ee539c82b69beec3e76727feebb148cf4a5b5fec544495222dce4881",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "device": "iPhone 17 Pro",
+      "reviewer": "Codex review_uk",
+      "directly_viewed": true,
+      "view_method": "Original individual PNG opened through view_image; tool displayed proportional 942×2048 rendition of 1206×2622 source. No contact sheet, synthetic reconstruction or OCR-only review.",
+      "issues": [],
+      "observations": "Two-line Gurmukhi headline and two-line description fit. Four instrument chips plus intentional more-options control and all entry actions remain visible. No observed clipped upper/lower vowel marks.",
+      "checks": {
+        "visible_glyph_clusters": "No observed missing-glyph boxes or visibly clipped clusters; this is a visual observation, not native-language shaping certification.",
+        "clipping_ellipsis_overlap": "No unintended clipping, ellipsis or overlap observed in visible text. Intentional more-options dots on welcome are a control, not truncated text.",
+        "controls": "Screen-specific visible controls remain identifiable and unobscured.",
+        "lesson_scope": "Not a lesson frame."
+      }
+    },
+    {
+      "name": "l10n-pa-tuner.png",
+      "locale": "pa",
+      "screen": "tuner",
+      "source_folder": "screenshots",
+      "original_exported_filename": "3B8CA92F-3EA8-4234-9B9A-FCBA5FB2B1FA.png",
+      "screenshot_sha256": "8c0b258fd53aab5acadb7676ab60ed96cecc33230d82b169e364afd5e778083d",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "device": "iPhone 17 Pro",
+      "reviewer": "Codex review_uk",
+      "directly_viewed": true,
+      "view_method": "Original individual PNG opened through view_image; tool displayed proportional 942×2048 rendition of 1206×2622 source. No contact sheet, synthetic reconstruction or OCR-only review.",
+      "issues": [],
+      "observations": "Gurmukhi instrument and reference labels fit; side/mode controls, target and six strings remain visible. All five tab labels fit without overlap or ellipsis.",
+      "checks": {
+        "visible_glyph_clusters": "No observed missing-glyph boxes or visibly clipped clusters; this is a visual observation, not native-language shaping certification.",
+        "clipping_ellipsis_overlap": "No unintended clipping, ellipsis or overlap observed in visible text. Intentional more-options dots on welcome are a control, not truncated text.",
+        "controls": "Screen-specific visible controls remain identifiable and unobscured.",
+        "lesson_scope": "Not a lesson frame."
+      }
+    },
+    {
+      "name": "l10n-pa-lesson.png",
+      "locale": "pa",
+      "screen": "lesson",
+      "source_folder": "screenshots",
+      "original_exported_filename": "83D4AAE4-D31B-4EB5-A26D-E32D0A32C1E9.png",
+      "screenshot_sha256": "86a659ac855813c273c1b183acb480056e510b0b6b7974ded77cdc89b7c0992c",
+      "size_px": [
+        1206,
+        2622
+      ],
+      "device": "iPhone 17 Pro",
+      "reviewer": "Codex review_uk",
+      "directly_viewed": true,
+      "view_method": "Original individual PNG opened through view_image; tool displayed proportional 942×2048 rendition of 1206×2622 source. No contact sheet, synthetic reconstruction or OCR-only review.",
+      "issues": [],
+      "observations": "Full header, one-line card heading and complete three-line explanation including final string 6 sentence visible above Continue; no observed clipping of Gurmukhi marks.",
+      "checks": {
+        "visible_glyph_clusters": "No observed missing-glyph boxes or visibly clipped clusters; this is a visual observation, not native-language shaping certification.",
+        "clipping_ellipsis_overlap": "No unintended clipping, ellipsis or overlap observed in visible text. Intentional more-options dots on welcome are a control, not truncated text.",
+        "controls": "Screen-specific visible controls remain identifiable and unobscured.",
+        "lesson_scope": "Only first explain card (step 1/5), including full visible header/heading/body and Continue, inspected."
+      }
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "input_audit_sha256": "61216e236a0370a803b6b19e197a4669aef3e6e893c700d64d17191f612a461e",
+  "source_resource_sha256": "718a9431e97997dcad904b99eb00f0072385142d63ebb7ffc1c27ff374ca6de3",
+  "glossary_sha256": {
+    "de": "def572d2b962d1f29332c3c27cb5060daa5d2361356fa9e0bd559c06ae33d29b",
+    "es": "7edb90002835e731cb6618b05b002663e455ebe19f35411db62408cda6855d80",
+    "fr": "2700f10a6a76ac8cf3eae86e45c3481ecc4ad1e35afcf845a5c5c08325208b11",
+    "pt": "17187127ea1199a85ae398b243678ec454450debac26dbb2db52b682abb74649"
+  },
+  "curriculum_sha256": "f5399d3d13edd2f94b660648e7dd23aceef66a21e095567988bbb6bd38995bf1",
+  "guarded_corrections": 90,
+  "hard_errors": [],
+  "new_correction_warnings": [],
+  "accepted_original_warning_entries": 13,
+  "validation": "report.check and gpt_l10n.problems against exact current source/old; all proposed values preserve the source-protected contract."
+}

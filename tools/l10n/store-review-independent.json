@@ -977,7 +977,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "66141b585ea67d70102e7c854fe628788e380fed4bafbb74b1ee186e13a4b915",
+    "proposed_content_sha256": "a45cd38b49cb1d082ba171ac6748f7e4882b8e6a43f02f9b16e7837135db8e7f",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -1001,6 +1001,60 @@
           "game_center_leaderboard_names.timbre.song.dashboard",
           "game_center_leaderboard_names.timbre.song.kiteweather"
         ]
+      },
+      {
+        "date": "2026-10-26",
+        "reviewer": "Codex independent source-aware native-followup store reviewer /root/review_is",
+        "method": "independent_source_aware_ai_changed_field_review",
+        "scope": "All 28 changed Game Center achievement description fields reviewed against exact English badge IDs, current app UI and old/new payload; prior full-payload review retained for unchanged fields.",
+        "previous_content_sha256": "66141b585ea67d70102e7c854fe628788e380fed4bafbb74b1ee186e13a4b915",
+        "reviewed_content_sha256": "a45cd38b49cb1d082ba171ac6748f7e4882b8e6a43f02f9b16e7837135db8e7f",
+        "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+        "source_revision_base": "970a12db87dd5751d3674b1321e20706a576e03e",
+        "previous_full_registry_sha256": "ed54f0a2dfd6ffadaa35a5b4d6c8939e7b212285446dd43c7cfde348b4feb37c",
+        "previous_full_evidence_sha256": "86145f0fe5f18bbdd4fe6205cbad7a858eff6324349000dac25e2ac0e226c143",
+        "previous_correction_ledger_sha256": "62515e51ca782cec045a007ca710e46a430ac884a54e2681e412655def5b41d5",
+        "previous_correction_ledger_entries": 253,
+        "review_artifacts": {
+          "docs/l10n/reviews/native-followup/store/review.json": "8dd4082b5ad928ca8f8716a4d32d33045e8b1a049acd56481ae6432fbbfd8802"
+        },
+        "changed_fields": [
+          "game_center_achievement_descriptions.timbre.badge.daily_1",
+          "game_center_achievement_descriptions.timbre.badge.strings_100",
+          "game_center_achievement_descriptions.timbre.badge.first_lesson",
+          "game_center_achievement_descriptions.timbre.badge.bullseyes_50",
+          "game_center_achievement_descriptions.timbre.badge.ear_500",
+          "game_center_achievement_descriptions.timbre.badge.full_tune",
+          "game_center_achievement_descriptions.timbre.badge.level_5",
+          "game_center_achievement_descriptions.timbre.badge.strings_1000",
+          "game_center_achievement_descriptions.timbre.badge.streak_100",
+          "game_center_achievement_descriptions.timbre.badge.lessons_25",
+          "game_center_achievement_descriptions.timbre.badge.minutes_60",
+          "game_center_achievement_descriptions.timbre.badge.full_25",
+          "game_center_achievement_descriptions.timbre.badge.streak_3",
+          "game_center_achievement_descriptions.timbre.badge.streak_30",
+          "game_center_achievement_descriptions.timbre.badge.ear_perfect",
+          "game_center_achievement_descriptions.timbre.badge.first_tune",
+          "game_center_achievement_descriptions.timbre.badge.perfect_10",
+          "game_center_achievement_descriptions.timbre.badge.units_10",
+          "game_center_achievement_descriptions.timbre.badge.multi",
+          "game_center_achievement_descriptions.timbre.badge.songs_1",
+          "game_center_achievement_descriptions.timbre.badge.course_done",
+          "game_center_achievement_descriptions.timbre.badge.golden_ear",
+          "game_center_achievement_descriptions.timbre.badge.songs_25",
+          "game_center_achievement_descriptions.timbre.badge.streak_7",
+          "game_center_achievement_descriptions.timbre.badge.minutes_600",
+          "game_center_achievement_descriptions.timbre.badge.units_1",
+          "game_center_achievement_descriptions.timbre.badge.daily_30",
+          "game_center_achievement_descriptions.timbre.badge.lessons_100"
+        ],
+        "identified_corrections": 28,
+        "resolved_corrections": 28,
+        "unresolved_corrections": [],
+        "native_review": "not_verified",
+        "device_review": "not_verified",
+        "account_changes": "none",
+        "release_ready": false
       }
     ]
   },
@@ -1188,7 +1242,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "8e4d8b71a2e337411345730136124c18252b905f53604019b92d409394b37e68",
+    "proposed_content_sha256": "aaef1fcd332f51b214991ffe72d13b5a6cdcf3a770534ac5d35630a4e6b060a2",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -1235,6 +1289,60 @@
           "game_center_leaderboard_names.timbre.song.kiteweather",
           "game_center_leaderboard_names.timbre.song.jinglebells"
         ]
+      },
+      {
+        "date": "2026-10-26",
+        "reviewer": "Codex independent source-aware native-followup store reviewer /root/review_is",
+        "method": "independent_source_aware_ai_changed_field_review",
+        "scope": "All 28 changed Game Center achievement description fields reviewed against exact English badge IDs, current app UI and old/new payload; prior full-payload review retained for unchanged fields.",
+        "previous_content_sha256": "8e4d8b71a2e337411345730136124c18252b905f53604019b92d409394b37e68",
+        "reviewed_content_sha256": "aaef1fcd332f51b214991ffe72d13b5a6cdcf3a770534ac5d35630a4e6b060a2",
+        "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+        "source_revision_base": "970a12db87dd5751d3674b1321e20706a576e03e",
+        "previous_full_registry_sha256": "ed54f0a2dfd6ffadaa35a5b4d6c8939e7b212285446dd43c7cfde348b4feb37c",
+        "previous_full_evidence_sha256": "86145f0fe5f18bbdd4fe6205cbad7a858eff6324349000dac25e2ac0e226c143",
+        "previous_correction_ledger_sha256": "62515e51ca782cec045a007ca710e46a430ac884a54e2681e412655def5b41d5",
+        "previous_correction_ledger_entries": 253,
+        "review_artifacts": {
+          "docs/l10n/reviews/native-followup/store/review.json": "8dd4082b5ad928ca8f8716a4d32d33045e8b1a049acd56481ae6432fbbfd8802"
+        },
+        "changed_fields": [
+          "game_center_achievement_descriptions.timbre.badge.daily_1",
+          "game_center_achievement_descriptions.timbre.badge.strings_100",
+          "game_center_achievement_descriptions.timbre.badge.first_lesson",
+          "game_center_achievement_descriptions.timbre.badge.bullseyes_50",
+          "game_center_achievement_descriptions.timbre.badge.ear_500",
+          "game_center_achievement_descriptions.timbre.badge.full_tune",
+          "game_center_achievement_descriptions.timbre.badge.level_5",
+          "game_center_achievement_descriptions.timbre.badge.strings_1000",
+          "game_center_achievement_descriptions.timbre.badge.streak_100",
+          "game_center_achievement_descriptions.timbre.badge.lessons_25",
+          "game_center_achievement_descriptions.timbre.badge.minutes_60",
+          "game_center_achievement_descriptions.timbre.badge.full_25",
+          "game_center_achievement_descriptions.timbre.badge.streak_3",
+          "game_center_achievement_descriptions.timbre.badge.streak_30",
+          "game_center_achievement_descriptions.timbre.badge.ear_perfect",
+          "game_center_achievement_descriptions.timbre.badge.first_tune",
+          "game_center_achievement_descriptions.timbre.badge.perfect_10",
+          "game_center_achievement_descriptions.timbre.badge.units_10",
+          "game_center_achievement_descriptions.timbre.badge.multi",
+          "game_center_achievement_descriptions.timbre.badge.songs_1",
+          "game_center_achievement_descriptions.timbre.badge.course_done",
+          "game_center_achievement_descriptions.timbre.badge.golden_ear",
+          "game_center_achievement_descriptions.timbre.badge.songs_25",
+          "game_center_achievement_descriptions.timbre.badge.streak_7",
+          "game_center_achievement_descriptions.timbre.badge.minutes_600",
+          "game_center_achievement_descriptions.timbre.badge.units_1",
+          "game_center_achievement_descriptions.timbre.badge.daily_30",
+          "game_center_achievement_descriptions.timbre.badge.lessons_100"
+        ],
+        "identified_corrections": 28,
+        "resolved_corrections": 28,
+        "unresolved_corrections": [],
+        "native_review": "not_verified",
+        "device_review": "not_verified",
+        "account_changes": "none",
+        "release_ready": false
       }
     ]
   },

@@ -1,0 +1,121 @@
+{
+  "reviewer": "Codex catalogue identity reviewer /root/review_uk",
+  "scope": "Four identity-audit catalogue fields directly read alongside English/current isiZulu catalogue anchors. No live resource/map changes. Proper/technical name identity is assessed semantically, not mechanically called untranslated.",
+  "records": [
+    {
+      "locale": "zu",
+      "table": "Localizable.strings",
+      "key": "timbre_catalog_instrument_mallet_marimba_0",
+      "source": "Marimba / xylophone / glockenspiel / vibraphone",
+      "old": "Marimba / xylophone / glockenspiel / vibraphone",
+      "new": "Marimba / xylophone / glockenspiel / vibraphone",
+      "source_sha256": "500e41ec0f9ee76727c4dfa3adc1ddcb523eef93662d9fdfb723d03f4d27645c",
+      "old_sha256": "500e41ec0f9ee76727c4dfa3adc1ddcb523eef93662d9fdfb723d03f4d27645c",
+      "new_sha256": "500e41ec0f9ee76727c4dfa3adc1ddcb523eef93662d9fdfb723d03f4d27645c",
+      "decision": "retain-conventional-technical-name",
+      "reason": "This is an inventory of four internationally named instruments, not an untranslated English teaching sentence. Each loan name identifies a distinct catalogue instrument; inventing opaque isiZulu replacements or removing members would impair recognition.",
+      "reviewer": "Codex catalogue identity reviewer /root/review_uk",
+      "context": "Instrument/tuning catalogue name or instrument photo accessibility caption",
+      "hard_errors": []
+    },
+    {
+      "locale": "zu",
+      "table": "Localizable.strings",
+      "key": "timbre_catalog_instrument_ukulele_soprano_4",
+      "source": "Ukulele (soprano / concert / tenor)",
+      "old": "Ukulele (soprano / concert / tenor)",
+      "new": "Ukulele (soprano / concert / tenor)",
+      "source_sha256": "a9f2a6adcfc193c4fd8bfe9e724f006eea03f21a1c8aefdb7bc04a8dadfd91d8",
+      "old_sha256": "a9f2a6adcfc193c4fd8bfe9e724f006eea03f21a1c8aefdb7bc04a8dadfd91d8",
+      "new_sha256": "a9f2a6adcfc193c4fd8bfe9e724f006eea03f21a1c8aefdb7bc04a8dadfd91d8",
+      "decision": "retain-conventional-technical-name",
+      "reason": "Ukulele and soprano/concert/tenor are established product/type labels for the ukulele family. The entire field is the instrument name plus variant nomenclature; retention is defensible under the catalogue loan-name policy, not proof of a missed prose translation.",
+      "reviewer": "Codex catalogue identity reviewer /root/review_uk",
+      "context": "Instrument/tuning catalogue name or instrument photo accessibility caption",
+      "hard_errors": []
+    },
+    {
+      "locale": "zu",
+      "table": "Localizable.strings",
+      "key": "timbre_catalog_tuning_bouzouki_greek_8_trichordo",
+      "source": "Trichordo (D A D)",
+      "old": "Trichordo (D A D)",
+      "new": "Trichordo (D A D)",
+      "source_sha256": "34a5fb48340b9a26f04c8b5e20bfa66d2dee0e86a5d44afca11dbae0b970579b",
+      "old_sha256": "34a5fb48340b9a26f04c8b5e20bfa66d2dee0e86a5d44afca11dbae0b970579b",
+      "new_sha256": "34a5fb48340b9a26f04c8b5e20bfa66d2dee0e86a5d44afca11dbae0b970579b",
+      "decision": "retain-conventional-technical-name",
+      "reason": "Trichordo is the named Greek bouzouki tuning/type, and D A D is literal pitch notation. The whole label is technical naming/notation with no ordinary English sentence to translate.",
+      "reviewer": "Codex catalogue identity reviewer /root/review_uk",
+      "context": "Instrument/tuning catalogue name or instrument photo accessibility caption",
+      "hard_errors": []
+    },
+    {
+      "locale": "zu",
+      "table": "Localizable.strings",
+      "key": "timbre_photo_52_winds_alto_eb_saxophone",
+      "source": "E-flat alto saxophone",
+      "old": "E-flat alto saxophone",
+      "new": "I-alto saxophone ye-E-flat",
+      "source_sha256": "77a26580e0738f30d3f711498722a54bd6efe1a7a5f5a3946e8e3f52dae78670",
+      "old_sha256": "77a26580e0738f30d3f711498722a54bd6efe1a7a5f5a3946e8e3f52dae78670",
+      "new_sha256": "27a15bf8b6771fef255cd88539d6dd39c2be11000c26cb910be62d429a344909",
+      "decision": "proposed-correction-awaiting-separate-review",
+      "reason": "The identity audit alone cannot prove an omission because alto/saxophone/E-flat are technical names. However, this photo-caption phrase can use the same localized isiZulu noun-class/possessive construction as the adjacent reviewed I-tenor saxophone ye-B-flat and I-clarinet ye-B-flat. The proposed I-alto saxophone ye-E-flat preserves the complete instrument/register/transposition identity while making catalogue syntax consistent.",
+      "reviewer": "Codex catalogue identity reviewer /root/review_uk",
+      "context": "Instrument/tuning catalogue name or instrument photo accessibility caption",
+      "hard_errors": []
+    }
+  ],
+  "comparators": {
+    "timbre_photo_53_winds_tenor_bb_saxophone": "I-tenor saxophone ye-B-flat",
+    "timbre_photo_50_winds_clarinet_in_bb": "I-clarinet ye-B-flat",
+    "timbre_catalog_instrument_saxophone_standard_0": "I-Saxophone (alto Eb / tenor Bb)"
+  },
+  "family_labels_inspected": [
+    {
+      "key": "timbre_catalog_family_bowed_strings",
+      "source": "Bowed strings",
+      "translation": "Izintambo ezidlalwa ngomnsalo"
+    },
+    {
+      "key": "timbre_catalog_family_folk_world_strings",
+      "source": "Folk & world strings",
+      "translation": "Izintambo zomdabu nezomhlaba"
+    },
+    {
+      "key": "timbre_catalog_family_guitar",
+      "source": "Guitar",
+      "translation": "Isiginci"
+    },
+    {
+      "key": "timbre_catalog_family_keys",
+      "source": "Keys",
+      "translation": "Okhiye"
+    },
+    {
+      "key": "timbre_catalog_family_mallet_percussion_hand",
+      "source": "Mallet, percussion & hand",
+      "translation": "I-Mallet, isigubhu & nesandla"
+    },
+    {
+      "key": "timbre_catalog_family_mandolin",
+      "source": "Mandolin",
+      "translation": "IMandolin"
+    },
+    {
+      "key": "timbre_catalog_family_ukulele",
+      "source": "Ukulele",
+      "translation": "Ukulele"
+    },
+    {
+      "key": "timbre_catalog_family_winds",
+      "source": "Winds",
+      "translation": "Izinsimbi zomoya"
+    }
+  ],
+  "family_label_scope_note": "The existing family labels were inspected as anchors. No universal family-label/native approval is asserted and no speculative replacements are proposed for the source's elliptical Mallet, percussion & hand grouping.",
+  "native_certification": false,
+  "source_table_sha256": "21481569a6613879c44ea6f15b94516c6ae27720705c4f075af0c8c783873737",
+  "old_table_sha256": "a6faab005a534b141135620a25ab81ab76900a6f63aa98c64faf94d8c3d305fb"
+}

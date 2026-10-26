@@ -1,0 +1,25 @@
+{
+  "reviewer": "Codex independent native-followup reviewer review_is (source-aware AI, not native-human)",
+  "scope": "Bounded refinement after root independent review; frozen initial proposals remain unchanged.",
+  "refinements": [
+    {
+      "locale": "ru",
+      "table": "Learn.strings",
+      "key": "L56151fcf69",
+      "source": "Alternating thumb through the changes",
+      "old": "Чередующийся большой палец через смены аккордов",
+      "previous_proposal": "Чередование большого пальца со сменами",
+      "new": "Ролл с чередованием большого пальца: смена аккордов",
+      "source_sha256": "8bae3c389058219e6f6381adf5e50d3b8c6b1b8ebf0e8a8affe4ca01ec3ddc2f",
+      "old_sha256": "4cbae535c8317f7bdbedd27079b06ced8ebb088c7259391025ff9249bb2d8fc6",
+      "previous_proposal_sha256": "4db71d4cadb5ee8e3499ab01a475d1362ba32c04b7ea3e690cde171c834fc001",
+      "new_sha256": "bc3905befa6887d7d93f9d6075d572dfcbbb188c8eecfcd9a553d2a8c5da8aa5",
+      "decision": "replace-initial-proposal-accept-soft-layout-overrun",
+      "max_length": 42,
+      "new_width": 51,
+      "reason": "Name the alternating-thumb roll and its application to chord changes explicitly. A pattern name followed by a natural colon subtitle avoids the compressed literal со сменами wording. Keep all thumb/alternation/roll/chord-change meaning despite the soft 42-character budget; 51 characters require actual layout review, not a forced abbreviation. Existing initial source/current-old and previous-proposal hashes bind this exact refinement.",
+      "reviewer": "Codex independent native-followup reviewer review_is (source-aware AI, not native-human)"
+    }
+  ],
+  "prior_artifact_manifest_sha256": "c59b059816c404b6ddcd160e9b30abac2b825f48a8f6e7e590bf6840aef4f043"
+}

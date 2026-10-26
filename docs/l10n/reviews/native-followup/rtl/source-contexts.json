@@ -1,0 +1,2005 @@
+{
+  "source_path": "ios/Sources/TimbreCore/Resources/curriculum.json",
+  "source_sha256": "f5399d3d13edd2f94b660648e7dd23aceef66a21e095567988bbb6bd38995bf1",
+  "scope": "Exact shared contexts supplied by current helper; all target values, all quiz/listen prompt/explanations and source role inventories were read. Complete source contexts are preserved for rematching; no claim of fresh full-locale semantic rereview.",
+  "rows": [
+    {
+      "key": "L728cd633f1",
+      "source": "A minor",
+      "option_contexts": [
+        {
+          "prompt": "The F barre is which open shape, moved up a fret?",
+          "explanation": "",
+          "occurrences": 1,
+          "example_lessons": [
+            "gtr-10-2"
+          ]
+        },
+        {
+          "prompt": "Which chord shares a finger with F?",
+          "explanation": "Your second finger sits on fret 2 of string 4 for both. Keep it down when you change.",
+          "occurrences": 1,
+          "example_lessons": [
+            "uke-2-3"
+          ]
+        },
+        {
+          "prompt": "In the key of C, which chord is IV?",
+          "explanation": "Count up the scale from C: C, D, E, F. F is the fourth note, so F is the IV chord.",
+          "occurrences": 1,
+          "example_lessons": [
+            "uke-5-5"
+          ]
+        },
+        {
+          "prompt": "Which chord is vi in C?",
+          "explanation": "Lowercase numbers mean minor chords. The sixth note of C major is A.",
+          "occurrences": 1,
+          "example_lessons": [
+            "uke-5-5"
+          ]
+        },
+        {
+          "prompt": "In the key of C, which chord is V?",
+          "explanation": "",
+          "occurrences": 1,
+          "example_lessons": [
+            "uke-5-6"
+          ]
+        },
+        {
+          "prompt": "Which chord shares finger 1's spot on string 2 with B flat?",
+          "explanation": "F also puts finger 1 on string 2, fret 1. Keep it there as you change.",
+          "occurrences": 1,
+          "example_lessons": [
+            "uke-7-1"
+          ]
+        },
+        {
+          "prompt": "Using only C major notes, what triad is built on A?",
+          "explanation": "A C E: a minor third, then a major third.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-7-3"
+          ]
+        },
+        {
+          "prompt": "In C major, which chord is vi?",
+          "explanation": "The sixth note is A, and lowercase vi means minor.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-7-4"
+          ]
+        },
+        {
+          "prompt": "In F major, which chord is vi?",
+          "explanation": "F, G, A, B♭, C, D: the sixth note is D, and vi is minor.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-8-2"
+          ]
+        }
+      ],
+      "shared_lesson_contexts": [
+        {
+          "role": "lessons",
+          "field": "title",
+          "text": {
+            "title": "A minor"
+          },
+          "occurrences": 2,
+          "example_locations": [
+            "/courses/0/units/2/lessons/2/title",
+            "/courses/3/units/4/lessons/2/title"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "The F barre is which open shape, moved up a fret?",
+            "options": [
+              "A minor",
+              "D",
+              "E"
+            ]
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/0/units/9/lessons/1/steps/4/options/0"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "Which chord shares a finger with F?",
+            "options": [
+              "C",
+              "A minor",
+              "Neither"
+            ],
+            "why": "Your second finger sits on fret 2 of string 4 for both. Keep it down when you change."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/1/units/1/lessons/1/steps/2/options/1"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "In the key of C, which chord is IV?",
+            "options": [
+              "G",
+              "A minor",
+              "F",
+              "D minor"
+            ],
+            "why": "Count up the scale from C: C, D, E, F. F is the fourth note, so F is the IV chord."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/1/units/4/lessons/4/steps/1/options/1"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "Which chord is vi in C?",
+            "options": [
+              "A minor",
+              "E minor",
+              "D minor"
+            ],
+            "why": "Lowercase numbers mean minor chords. The sixth note of C major is A."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/1/units/4/lessons/4/steps/3/options/0"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "In the key of C, which chord is V?",
+            "options": [
+              "F",
+              "G",
+              "E minor",
+              "A minor"
+            ]
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/1/units/4/lessons/5/steps/4/options/3"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "Which chord shares finger 1's spot on string 2 with B flat?",
+            "options": [
+              "C",
+              "F",
+              "A minor"
+            ],
+            "why": "F also puts finger 1 on string 2, fret 1. Keep it there as you change."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/1/units/6/lessons/0/steps/4/options/2"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "Using only C major notes, what triad is built on A?",
+            "options": [
+              "A major",
+              "A diminished",
+              "A minor"
+            ],
+            "why": "A C E: a minor third, then a major third."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/6/lessons/2/steps/6/options/2"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "In C major, which chord is vi?",
+            "options": [
+              "A major",
+              "A minor",
+              "F major"
+            ],
+            "why": "The sixth note is A, and lowercase vi means minor."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/6/lessons/3/steps/3/options/1"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "In F major, which chord is vi?",
+            "options": [
+              "D minor",
+              "D major",
+              "A minor"
+            ],
+            "why": "F, G, A, B♭, C, D: the sixth note is D, and vi is minor."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/7/lessons/1/steps/6/options/2"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "L3c6bc13182",
+      "source": "A major",
+      "option_contexts": [
+        {
+          "prompt": "You move the shape so it starts on fret 5 of string 4. Which scale is it now?",
+          "explanation": "Fret 5 on string 4 is A, so the same shape plays A major.",
+          "occurrences": 1,
+          "example_lessons": [
+            "bass-3-4"
+          ]
+        },
+        {
+          "prompt": "D, F♯ and A together spell which chord?",
+          "explanation": "D, F♯ and A are the three notes of D major. Fiddle tunes often trace their chords like this.",
+          "occurrences": 1,
+          "example_lessons": [
+            "man-5-3"
+          ]
+        },
+        {
+          "prompt": "A key signature has two sharps, F♯ and C♯. Which major key is it?",
+          "explanation": "The last sharp, C♯, is a half step below D.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-5-5"
+          ]
+        },
+        {
+          "prompt": "Which scale has the notes D, E, F♯, G, A, B, C♯?",
+          "explanation": "",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-5-6"
+          ]
+        },
+        {
+          "prompt": "Using only C major notes, what triad is built on A?",
+          "explanation": "A C E: a minor third, then a major third.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-7-3"
+          ]
+        },
+        {
+          "prompt": "In C major, which chord is vi?",
+          "explanation": "The sixth note is A, and lowercase vi means minor.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-7-4"
+          ]
+        },
+        {
+          "prompt": "In D major, which chord is IV?",
+          "explanation": "D, E, F♯, G: the fourth note is G.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-8-1"
+          ]
+        }
+      ],
+      "shared_lesson_contexts": [
+        {
+          "role": "lessons",
+          "field": "title",
+          "text": {
+            "title": "A major"
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/0/units/2/lessons/3/title"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "You move the shape so it starts on fret 5 of string 4. Which scale is it now?",
+            "options": [
+              "A major",
+              "G major",
+              "C major"
+            ],
+            "why": "Fret 5 on string 4 is A, so the same shape plays A major."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/2/units/2/lessons/3/steps/5/options/0"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "D, F♯ and A together spell which chord?",
+            "options": [
+              "A major",
+              "G major",
+              "D major"
+            ],
+            "why": "D, F♯ and A are the three notes of D major. Fiddle tunes often trace their chords like this."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/5/units/4/lessons/2/steps/3/options/0"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "A key signature has two sharps, F♯ and C♯. Which major key is it?",
+            "options": [
+              "A major",
+              "E major",
+              "D major"
+            ],
+            "why": "The last sharp, C♯, is a half step below D."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/4/lessons/4/steps/4/options/0"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "Which scale has the notes D, E, F♯, G, A, B, C♯?",
+            "options": [
+              "G major",
+              "D major",
+              "A major"
+            ]
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/4/lessons/5/steps/4/options/2"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "Using only C major notes, what triad is built on A?",
+            "options": [
+              "A major",
+              "A diminished",
+              "A minor"
+            ],
+            "why": "A C E: a minor third, then a major third."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/6/lessons/2/steps/6/options/0"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "In C major, which chord is vi?",
+            "options": [
+              "A major",
+              "A minor",
+              "F major"
+            ],
+            "why": "The sixth note is A, and lowercase vi means minor."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/6/lessons/3/steps/3/options/0"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "In D major, which chord is IV?",
+            "options": [
+              "G major",
+              "A major",
+              "E minor"
+            ],
+            "why": "D, E, F♯, G: the fourth note is G."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/7/lessons/0/steps/6/options/1"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "Laa87302d09",
+      "source": "C major",
+      "option_contexts": [
+        {
+          "prompt": "You move the shape so it starts on fret 5 of string 4. Which scale is it now?",
+          "explanation": "Fret 5 on string 4 is A, so the same shape plays A major.",
+          "occurrences": 1,
+          "example_lessons": [
+            "bass-3-4"
+          ]
+        },
+        {
+          "prompt": "Which of these keys has no sharps?",
+          "explanation": "",
+          "occurrences": 1,
+          "example_lessons": [
+            "vc-4-7"
+          ]
+        },
+        {
+          "prompt": "A key signature has one sharp, F♯. Which major key is it?",
+          "explanation": "G major is the major key with just F♯.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-5-5"
+          ]
+        },
+        {
+          "prompt": "Which major key has no sharps or flats?",
+          "explanation": "C major uses only white keys.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-5-5"
+          ]
+        },
+        {
+          "prompt": "Which major key has one flat?",
+          "explanation": "F major's one flat is B♭.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-5-6"
+          ]
+        },
+        {
+          "prompt": "In G major, which chord is V?",
+          "explanation": "Count up from G: G, A, B, C, D. The fifth note is D, and V is major.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-7-4"
+          ]
+        },
+        {
+          "prompt": "In G major, which chord is IV?",
+          "explanation": "G, A, B, C: the fourth note is C.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-7-4"
+          ]
+        },
+        {
+          "prompt": "In F major, which chord is V?",
+          "explanation": "F, G, A, B♭, C: the fifth note is C.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-7-5"
+          ]
+        }
+      ],
+      "shared_lesson_contexts": [
+        {
+          "role": "lessons",
+          "field": "title",
+          "text": {
+            "title": "C major"
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/0/units/4/lessons/0/title"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "You move the shape so it starts on fret 5 of string 4. Which scale is it now?",
+            "options": [
+              "A major",
+              "G major",
+              "C major"
+            ],
+            "why": "Fret 5 on string 4 is A, so the same shape plays A major."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/2/units/2/lessons/3/steps/5/options/2"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "Which of these keys has no sharps?",
+            "options": [
+              "C major",
+              "G major",
+              "D major"
+            ]
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/4/units/3/lessons/6/steps/3/options/0"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "A key signature has one sharp, F♯. Which major key is it?",
+            "options": [
+              "C major",
+              "D major",
+              "G major"
+            ],
+            "why": "G major is the major key with just F♯."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/4/lessons/4/steps/1/options/0"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "Which major key has no sharps or flats?",
+            "options": [
+              "G major",
+              "F major",
+              "C major"
+            ],
+            "why": "C major uses only white keys."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/4/lessons/4/steps/5/options/2"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "Which major key has one flat?",
+            "options": [
+              "F major",
+              "D major",
+              "C major"
+            ],
+            "why": "F major's one flat is B♭."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/4/lessons/5/steps/3/options/2"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "In G major, which chord is V?",
+            "options": [
+              "C major",
+              "D minor",
+              "D major"
+            ],
+            "why": "Count up from G: G, A, B, C, D. The fifth note is D, and V is major."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/6/lessons/3/steps/4/options/0"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "In G major, which chord is IV?",
+            "options": [
+              "C major",
+              "C minor",
+              "D major"
+            ],
+            "why": "G, A, B, C: the fourth note is C."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/6/lessons/3/steps/6/options/0"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "In F major, which chord is V?",
+            "options": [
+              "B♭ major",
+              "C major",
+              "C minor"
+            ],
+            "why": "F, G, A, B♭, C: the fifth note is C."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/6/lessons/4/steps/6/options/1"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "L2449e81b73",
+      "source": "G major",
+      "option_contexts": [
+        {
+          "prompt": "Slide the minor box from fret 5 to fret 2 and it plays…",
+          "explanation": "",
+          "occurrences": 1,
+          "example_lessons": [
+            "gtr-21-6"
+          ]
+        },
+        {
+          "prompt": "You move the shape so it starts on fret 5 of string 4. Which scale is it now?",
+          "explanation": "Fret 5 on string 4 is A, so the same shape plays A major.",
+          "occurrences": 1,
+          "example_lessons": [
+            "bass-3-4"
+          ]
+        },
+        {
+          "prompt": "Which of these keys has no sharps?",
+          "explanation": "",
+          "occurrences": 1,
+          "example_lessons": [
+            "vc-4-7"
+          ]
+        },
+        {
+          "prompt": "D, F♯ and A together spell which chord?",
+          "explanation": "D, F♯ and A are the three notes of D major. Fiddle tunes often trace their chords like this.",
+          "occurrences": 1,
+          "example_lessons": [
+            "man-5-3"
+          ]
+        },
+        {
+          "prompt": "Which major key has two sharps?",
+          "explanation": "D major has F♯ and C♯.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-5-4"
+          ]
+        },
+        {
+          "prompt": "A key signature has one sharp, F♯. Which major key is it?",
+          "explanation": "G major is the major key with just F♯.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-5-5"
+          ]
+        },
+        {
+          "prompt": "A key signature has one flat, B♭. Which major key is it?",
+          "explanation": "F major is the major key with just B♭.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-5-5"
+          ]
+        },
+        {
+          "prompt": "Which major key has no sharps or flats?",
+          "explanation": "C major uses only white keys.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-5-5"
+          ]
+        },
+        {
+          "prompt": "Which scale has the notes D, E, F♯, G, A, B, C♯?",
+          "explanation": "",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-5-6"
+          ]
+        },
+        {
+          "prompt": "Using only C major notes, what triad is built on G?",
+          "explanation": "G B D: a major third, then a minor third.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-7-3"
+          ]
+        },
+        {
+          "prompt": "In C major, which chord is IV?",
+          "explanation": "The fourth note of C major is F.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-7-4"
+          ]
+        },
+        {
+          "prompt": "In D major, which chord is IV?",
+          "explanation": "D, E, F♯, G: the fourth note is G.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-8-1"
+          ]
+        }
+      ],
+      "shared_lesson_contexts": [
+        {
+          "role": "lessons",
+          "field": "title",
+          "text": {
+            "title": "G major"
+          },
+          "occurrences": 2,
+          "example_locations": [
+            "/courses/0/units/4/lessons/1/title",
+            "/courses/8/units/4/lessons/2/title"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "Slide the minor box from fret 5 to fret 2 and it plays…",
+            "options": [
+              "D minor pentatonic",
+              "G major",
+              "A major pentatonic"
+            ]
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/0/units/20/lessons/6/steps/1/options/1"
+          ]
+        },
+        {
+          "role": "steps:explain",
+          "field": "title",
+          "text": {
+            "title": "G major",
+            "body": "First finger on fret 2 of string 3, second on fret 2 of string 1, third on fret 3 of string 2. Arch your fingers so string 4 rings."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/1/units/1/lessons/3/steps/0/title"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "You move the shape so it starts on fret 5 of string 4. Which scale is it now?",
+            "options": [
+              "A major",
+              "G major",
+              "C major"
+            ],
+            "why": "Fret 5 on string 4 is A, so the same shape plays A major."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/2/units/2/lessons/3/steps/5/options/1"
+          ]
+        },
+        {
+          "role": "steps:explain",
+          "field": "title",
+          "text": {
+            "title": "G major",
+            "body": "G, A, B, C on the G string plus D, E, F sharp, G on the D string make the G major scale. Same fingers on both strings."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/4/units/3/lessons/0/steps/2/title"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "Which of these keys has no sharps?",
+            "options": [
+              "C major",
+              "G major",
+              "D major"
+            ]
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/4/units/3/lessons/6/steps/3/options/1"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "D, F♯ and A together spell which chord?",
+            "options": [
+              "A major",
+              "G major",
+              "D major"
+            ],
+            "why": "D, F♯ and A are the three notes of D major. Fiddle tunes often trace their chords like this."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/5/units/4/lessons/2/steps/3/options/1"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "Which major key has two sharps?",
+            "options": [
+              "G major",
+              "F major",
+              "D major"
+            ],
+            "why": "D major has F♯ and C♯."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/4/lessons/3/steps/5/options/0"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "A key signature has one sharp, F♯. Which major key is it?",
+            "options": [
+              "C major",
+              "D major",
+              "G major"
+            ],
+            "why": "G major is the major key with just F♯."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/4/lessons/4/steps/1/options/2"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "A key signature has one flat, B♭. Which major key is it?",
+            "options": [
+              "F major",
+              "B♭ major",
+              "G major"
+            ],
+            "why": "F major is the major key with just B♭."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/4/lessons/4/steps/2/options/2"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "Which major key has no sharps or flats?",
+            "options": [
+              "G major",
+              "F major",
+              "C major"
+            ],
+            "why": "C major uses only white keys."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/4/lessons/4/steps/5/options/0"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "Which scale has the notes D, E, F♯, G, A, B, C♯?",
+            "options": [
+              "G major",
+              "D major",
+              "A major"
+            ]
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/4/lessons/5/steps/4/options/0"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "Using only C major notes, what triad is built on G?",
+            "options": [
+              "G major",
+              "G minor",
+              "G diminished"
+            ],
+            "why": "G B D: a major third, then a minor third."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/6/lessons/2/steps/2/options/0"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "In C major, which chord is IV?",
+            "options": [
+              "F major",
+              "E minor",
+              "G major"
+            ],
+            "why": "The fourth note of C major is F."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/6/lessons/3/steps/2/options/2"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "In D major, which chord is IV?",
+            "options": [
+              "G major",
+              "A major",
+              "E minor"
+            ],
+            "why": "D, E, F♯, G: the fourth note is G."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/7/lessons/0/steps/6/options/0"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "Lc3e1440b37",
+      "source": "E minor",
+      "option_contexts": [
+        {
+          "prompt": "Which chord in Kite Weather skips strings 5 and 6?",
+          "explanation": "D's root is open string 4, so strings 5 and 6 stay quiet.",
+          "occurrences": 1,
+          "example_lessons": [
+            "gtr-5-spotlight"
+          ]
+        },
+        {
+          "prompt": "Which chord pulls toward G?",
+          "explanation": "D7's extra note leans toward G. When G arrives, the tension lets go.",
+          "occurrences": 1,
+          "example_lessons": [
+            "gtr-7-5"
+          ]
+        },
+        {
+          "prompt": "Which chord pulls hardest toward G?",
+          "explanation": "",
+          "occurrences": 1,
+          "example_lessons": [
+            "gtr-7-6"
+          ]
+        },
+        {
+          "prompt": "Which chord does B7 lead to most naturally?",
+          "explanation": "B7 pulls toward E. Its tension melts into E minor or E.",
+          "occurrences": 1,
+          "example_lessons": [
+            "gtr-8-2"
+          ]
+        },
+        {
+          "prompt": "Roller Rink's loop is the one, six, four and five of G. Which chord is the six?",
+          "explanation": "Count up G major: G 1, A 2, B 3, C 4, D 5, E 6. The chord on 6 is minor: E minor.",
+          "occurrences": 1,
+          "example_lessons": [
+            "gtr-18-spotlight"
+          ]
+        },
+        {
+          "prompt": "In G major, which chord is built on 6?",
+          "explanation": "The sixth note is E, and chords on 2, 3 and 6 are minor. Stack E, G and B: E minor.",
+          "occurrences": 1,
+          "example_lessons": [
+            "gtr-20-3"
+          ]
+        },
+        {
+          "prompt": "Which mode starts on the second note of G major?",
+          "explanation": "",
+          "occurrences": 1,
+          "example_lessons": [
+            "gtr-20-6"
+          ]
+        },
+        {
+          "prompt": "Which chord is vi in C?",
+          "explanation": "Lowercase numbers mean minor chords. The sixth note of C major is A.",
+          "occurrences": 1,
+          "example_lessons": [
+            "uke-5-5"
+          ]
+        },
+        {
+          "prompt": "In the key of C, which chord is V?",
+          "explanation": "",
+          "occurrences": 1,
+          "example_lessons": [
+            "uke-5-6"
+          ]
+        },
+        {
+          "prompt": "In the key of G, which chord is V?",
+          "explanation": "",
+          "occurrences": 1,
+          "example_lessons": [
+            "uke-7-6"
+          ]
+        },
+        {
+          "prompt": "In C major, which chord is IV?",
+          "explanation": "The fourth note of C major is F.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-7-4"
+          ]
+        },
+        {
+          "prompt": "In C major, which chord is ii?",
+          "explanation": "",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-7-5"
+          ]
+        },
+        {
+          "prompt": "In D major, which chord is IV?",
+          "explanation": "D, E, F♯, G: the fourth note is G.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-8-1"
+          ]
+        },
+        {
+          "prompt": "F sharp minor is which shape, barred at fret 2?",
+          "explanation": "Barre at fret 2 and the E minor shape sits in front of your first finger: F sharp minor.",
+          "occurrences": 1,
+          "example_lessons": [
+            "orig-barre-set"
+          ]
+        }
+      ],
+      "shared_lesson_contexts": [
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "Which chord in Kite Weather skips strings 5 and 6?",
+            "options": [
+              "C",
+              "D",
+              "E minor"
+            ],
+            "why": "D's root is open string 4, so strings 5 and 6 stay quiet."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/0/units/4/lessons/5/steps/2/options/2"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "Which chord pulls toward G?",
+            "options": [
+              "D7",
+              "C",
+              "E minor"
+            ],
+            "why": "D7's extra note leans toward G. When G arrives, the tension lets go."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/0/units/6/lessons/4/steps/2/options/2"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "Which chord pulls hardest toward G?",
+            "options": [
+              "E minor",
+              "C",
+              "D7"
+            ]
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/0/units/6/lessons/6/steps/1/options/0"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "Which chord does B7 lead to most naturally?",
+            "options": [
+              "D",
+              "C",
+              "E minor"
+            ],
+            "why": "B7 pulls toward E. Its tension melts into E minor or E."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/0/units/7/lessons/1/steps/5/options/2"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "Roller Rink's loop is the one, six, four and five of G. Which chord is the six?",
+            "options": [
+              "E minor",
+              "C",
+              "D"
+            ],
+            "why": "Count up G major: G 1, A 2, B 3, C 4, D 5, E 6. The chord on 6 is minor: E minor."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/0/units/17/lessons/5/steps/1/options/0"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "In G major, which chord is built on 6?",
+            "options": [
+              "E minor",
+              "E",
+              "C"
+            ],
+            "why": "The sixth note is E, and chords on 2, 3 and 6 are minor. Stack E, G and B: E minor."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/0/units/19/lessons/2/steps/3/options/0"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "Which mode starts on the second note of G major?",
+            "options": [
+              "D Mixolydian",
+              "A Dorian",
+              "E minor"
+            ]
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/0/units/19/lessons/6/steps/3/options/2"
+          ]
+        },
+        {
+          "role": "lessons",
+          "field": "title",
+          "text": {
+            "title": "E minor"
+          },
+          "occurrences": 2,
+          "example_locations": [
+            "/courses/1/units/4/lessons/1/title",
+            "/courses/6/units/2/lessons/3/title"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "Which chord is vi in C?",
+            "options": [
+              "A minor",
+              "E minor",
+              "D minor"
+            ],
+            "why": "Lowercase numbers mean minor chords. The sixth note of C major is A."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/1/units/4/lessons/4/steps/3/options/1"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "In the key of C, which chord is V?",
+            "options": [
+              "F",
+              "G",
+              "E minor",
+              "A minor"
+            ]
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/1/units/4/lessons/5/steps/4/options/2"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "In the key of G, which chord is V?",
+            "options": [
+              "C",
+              "E minor",
+              "D7"
+            ]
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/1/units/6/lessons/5/steps/3/options/1"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "In C major, which chord is IV?",
+            "options": [
+              "F major",
+              "E minor",
+              "G major"
+            ],
+            "why": "The fourth note of C major is F."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/6/lessons/3/steps/2/options/1"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "In C major, which chord is ii?",
+            "options": [
+              "D minor",
+              "D major",
+              "E minor"
+            ]
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/6/lessons/4/steps/4/options/2"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "In D major, which chord is IV?",
+            "options": [
+              "G major",
+              "A major",
+              "E minor"
+            ],
+            "why": "D, E, F♯, G: the fourth note is G."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/7/lessons/0/steps/6/options/2"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "F sharp minor is which shape, barred at fret 2?",
+            "options": [
+              "E minor",
+              "A",
+              "D"
+            ],
+            "why": "Barre at fret 2 and the E minor shape sits in front of your first finger: F sharp minor."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/12/units/9/lessons/5/steps/5/options/0"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "L5ca845ae96",
+      "source": "G, C, D, G",
+      "option_contexts": [
+        {
+          "prompt": "In G major, what is I–V–vi–IV?",
+          "explanation": "In G: I is G, V is D, vi is E minor, IV is C.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-8-2"
+          ]
+        }
+      ],
+      "shared_lesson_contexts": [
+        {
+          "role": "steps:along",
+          "field": "title",
+          "text": {
+            "title": "G, C, D, G"
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/2/units/1/lessons/3/steps/2/title"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "In G major, what is I–V–vi–IV?",
+            "options": [
+              "G, D, E minor, C",
+              "G, C, D, G",
+              "G, D, C, E minor"
+            ],
+            "why": "In G: I is G, V is D, vi is E minor, IV is C."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/7/lessons/1/steps/2/options/1"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "L42626aabd8",
+      "source": "D major",
+      "option_contexts": [
+        {
+          "prompt": "Which of these keys has no sharps?",
+          "explanation": "",
+          "occurrences": 1,
+          "example_lessons": [
+            "vc-4-7"
+          ]
+        },
+        {
+          "prompt": "D, F♯ and A together spell which chord?",
+          "explanation": "D, F♯ and A are the three notes of D major. Fiddle tunes often trace their chords like this.",
+          "occurrences": 1,
+          "example_lessons": [
+            "man-5-3"
+          ]
+        },
+        {
+          "prompt": "Which major key has two sharps?",
+          "explanation": "D major has F♯ and C♯.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-5-4"
+          ]
+        },
+        {
+          "prompt": "A key signature has one sharp, F♯. Which major key is it?",
+          "explanation": "G major is the major key with just F♯.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-5-5"
+          ]
+        },
+        {
+          "prompt": "A key signature has two sharps, F♯ and C♯. Which major key is it?",
+          "explanation": "The last sharp, C♯, is a half step below D.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-5-5"
+          ]
+        },
+        {
+          "prompt": "Which major key has one flat?",
+          "explanation": "F major's one flat is B♭.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-5-6"
+          ]
+        },
+        {
+          "prompt": "Which scale has the notes D, E, F♯, G, A, B, C♯?",
+          "explanation": "",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-5-6"
+          ]
+        },
+        {
+          "prompt": "Using only C major notes, what triad is built on D?",
+          "explanation": "D F A: a minor third, then a major third.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-7-3"
+          ]
+        },
+        {
+          "prompt": "In G major, which chord is V?",
+          "explanation": "Count up from G: G, A, B, C, D. The fifth note is D, and V is major.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-7-4"
+          ]
+        },
+        {
+          "prompt": "In G major, which chord is IV?",
+          "explanation": "G, A, B, C: the fourth note is C.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-7-4"
+          ]
+        },
+        {
+          "prompt": "In C major, which chord is ii?",
+          "explanation": "",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-7-5"
+          ]
+        },
+        {
+          "prompt": "In F major, which chord is vi?",
+          "explanation": "F, G, A, B♭, C, D: the sixth note is D, and vi is minor.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-8-2"
+          ]
+        }
+      ],
+      "shared_lesson_contexts": [
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "Which of these keys has no sharps?",
+            "options": [
+              "C major",
+              "G major",
+              "D major"
+            ]
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/4/units/3/lessons/6/steps/3/options/2"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "D, F♯ and A together spell which chord?",
+            "options": [
+              "A major",
+              "G major",
+              "D major"
+            ],
+            "why": "D, F♯ and A are the three notes of D major. Fiddle tunes often trace their chords like this."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/5/units/4/lessons/2/steps/3/options/2"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "Which major key has two sharps?",
+            "options": [
+              "G major",
+              "F major",
+              "D major"
+            ],
+            "why": "D major has F♯ and C♯."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/4/lessons/3/steps/5/options/2"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "A key signature has one sharp, F♯. Which major key is it?",
+            "options": [
+              "C major",
+              "D major",
+              "G major"
+            ],
+            "why": "G major is the major key with just F♯."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/4/lessons/4/steps/1/options/1"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "A key signature has two sharps, F♯ and C♯. Which major key is it?",
+            "options": [
+              "A major",
+              "E major",
+              "D major"
+            ],
+            "why": "The last sharp, C♯, is a half step below D."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/4/lessons/4/steps/4/options/2"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "Which major key has one flat?",
+            "options": [
+              "F major",
+              "D major",
+              "C major"
+            ],
+            "why": "F major's one flat is B♭."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/4/lessons/5/steps/3/options/1"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "Which scale has the notes D, E, F♯, G, A, B, C♯?",
+            "options": [
+              "G major",
+              "D major",
+              "A major"
+            ]
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/4/lessons/5/steps/4/options/1"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "Using only C major notes, what triad is built on D?",
+            "options": [
+              "D major",
+              "D minor",
+              "D diminished"
+            ],
+            "why": "D F A: a minor third, then a major third."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/6/lessons/2/steps/1/options/0"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "In G major, which chord is V?",
+            "options": [
+              "C major",
+              "D minor",
+              "D major"
+            ],
+            "why": "Count up from G: G, A, B, C, D. The fifth note is D, and V is major."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/6/lessons/3/steps/4/options/2"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "In G major, which chord is IV?",
+            "options": [
+              "C major",
+              "C minor",
+              "D major"
+            ],
+            "why": "G, A, B, C: the fourth note is C."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/6/lessons/3/steps/6/options/2"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "In C major, which chord is ii?",
+            "options": [
+              "D minor",
+              "D major",
+              "E minor"
+            ]
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/6/lessons/4/steps/4/options/1"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "In F major, which chord is vi?",
+            "options": [
+              "D minor",
+              "D major",
+              "A minor"
+            ],
+            "why": "F, G, A, B♭, C, D: the sixth note is D, and vi is minor."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/7/lessons/1/steps/6/options/1"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "Lea785300c4",
+      "source": "F major",
+      "option_contexts": [
+        {
+          "prompt": "Which major key has two sharps?",
+          "explanation": "D major has F♯ and C♯.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-5-4"
+          ]
+        },
+        {
+          "prompt": "A key signature has one flat, B♭. Which major key is it?",
+          "explanation": "F major is the major key with just B♭.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-5-5"
+          ]
+        },
+        {
+          "prompt": "Which major key has no sharps or flats?",
+          "explanation": "C major uses only white keys.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-5-5"
+          ]
+        },
+        {
+          "prompt": "Which major key has one flat?",
+          "explanation": "F major's one flat is B♭.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-5-6"
+          ]
+        },
+        {
+          "prompt": "In C major, which chord is IV?",
+          "explanation": "The fourth note of C major is F.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-7-4"
+          ]
+        },
+        {
+          "prompt": "In C major, which chord is vi?",
+          "explanation": "The sixth note is A, and lowercase vi means minor.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-7-4"
+          ]
+        }
+      ],
+      "shared_lesson_contexts": [
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "Which major key has two sharps?",
+            "options": [
+              "G major",
+              "F major",
+              "D major"
+            ],
+            "why": "D major has F♯ and C♯."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/4/lessons/3/steps/5/options/1"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "A key signature has one flat, B♭. Which major key is it?",
+            "options": [
+              "F major",
+              "B♭ major",
+              "G major"
+            ],
+            "why": "F major is the major key with just B♭."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/4/lessons/4/steps/2/options/0"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "Which major key has no sharps or flats?",
+            "options": [
+              "G major",
+              "F major",
+              "C major"
+            ],
+            "why": "C major uses only white keys."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/4/lessons/4/steps/5/options/1"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "Which major key has one flat?",
+            "options": [
+              "F major",
+              "D major",
+              "C major"
+            ],
+            "why": "F major's one flat is B♭."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/4/lessons/5/steps/3/options/0"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "In C major, which chord is IV?",
+            "options": [
+              "F major",
+              "E minor",
+              "G major"
+            ],
+            "why": "The fourth note of C major is F."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/6/lessons/3/steps/2/options/0"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "In C major, which chord is vi?",
+            "options": [
+              "A major",
+              "A minor",
+              "F major"
+            ],
+            "why": "The sixth note is A, and lowercase vi means minor."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/6/lessons/3/steps/3/options/2"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "L4b65fb9aa1",
+      "source": "B♭ major",
+      "option_contexts": [
+        {
+          "prompt": "A key signature has one flat, B♭. Which major key is it?",
+          "explanation": "F major is the major key with just B♭.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-5-5"
+          ]
+        },
+        {
+          "prompt": "In F major, which chord is V?",
+          "explanation": "F, G, A, B♭, C: the fifth note is C.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-7-5"
+          ]
+        }
+      ],
+      "shared_lesson_contexts": [
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "A key signature has one flat, B♭. Which major key is it?",
+            "options": [
+              "F major",
+              "B♭ major",
+              "G major"
+            ],
+            "why": "F major is the major key with just B♭."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/4/lessons/4/steps/2/options/1"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "In F major, which chord is V?",
+            "options": [
+              "B♭ major",
+              "C major",
+              "C minor"
+            ],
+            "why": "F, G, A, B♭, C: the fifth note is C."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/6/lessons/4/steps/6/options/0"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "Lcba5dd879c",
+      "source": "G, B and D",
+      "option_contexts": [
+        {
+          "prompt": "In G major, what are I, IV and V?",
+          "explanation": "Count up from G: note 1 is G, note 4 is C, note 5 is D.",
+          "occurrences": 1,
+          "example_lessons": [
+            "thy-8-1"
+          ]
+        },
+        {
+          "prompt": "Holy, holy, holy climbs which notes?",
+          "explanation": "G, B and D are the notes of a G major chord, so the tune climbs the chord itself.",
+          "occurrences": 1,
+          "example_lessons": [
+            "std-holy-holy-holy"
+          ]
+        }
+      ],
+      "shared_lesson_contexts": [
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "In G major, what are I, IV and V?",
+            "options": [
+              "G, C and D",
+              "G, B and D",
+              "G, A and D"
+            ],
+            "why": "Count up from G: note 1 is G, note 4 is C, note 5 is D."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/8/units/7/lessons/0/steps/1/options/1"
+          ]
+        },
+        {
+          "role": "steps:quiz",
+          "field": "options/*",
+          "text": {
+            "prompt": "Holy, holy, holy climbs which notes?",
+            "options": [
+              "G, A and B",
+              "D, E and F sharp",
+              "G, B and D"
+            ],
+            "why": "G, B and D are the notes of a G major chord, so the tune climbs the chord itself."
+          },
+          "occurrences": 1,
+          "example_locations": [
+            "/courses/13/units/6/lessons/1/steps/2/options/2"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "Ld3953a8b28",
+      "source": "Joseph Mohr (1818), English by John Freeman Young (1859)",
+      "option_contexts": [],
+      "shared_lesson_contexts": []
+    },
+    {
+      "key": "La18434bfcf",
+      "source": "Charles Wesley (1739), as printed in 1861",
+      "option_contexts": [],
+      "shared_lesson_contexts": []
+    }
+  ]
+}

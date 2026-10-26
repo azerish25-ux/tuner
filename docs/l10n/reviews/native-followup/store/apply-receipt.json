@@ -1,0 +1,372 @@
+{
+  "status": "applied-and-store-text-validated",
+  "reviewer": "Codex independent source-aware native-followup store reviewer /root/review_is",
+  "review_evidence": "docs/l10n/reviews/native-followup/store/review.json",
+  "review_evidence_sha256": "8dd4082b5ad928ca8f8716a4d32d33045e8b1a049acd56481ae6432fbbfd8802",
+  "source_revision_base": "970a12db87dd5751d3674b1321e20706a576e03e",
+  "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+  "applied_consumer_fields": 56,
+  "applied_locales": [
+    "hr",
+    "sl-SI"
+  ],
+  "production_synchronizer_scope_proof": "Ran store.sync_game_center against a temporary copy of all 50 payloads; exactly hr/sl-SI consumer content changed and every change matched the 56 reviewed source/old/new fields before tracked writes.",
+  "temporary_sync_directory": "C:\\Users\\shahr\\AppData\\Local\\Temp\\timbre-reviewed-gc-sync-4qp984bs",
+  "previous_ledger_sha256": "62515e51ca782cec045a007ca710e46a430ac884a54e2681e412655def5b41d5",
+  "previous_ledger_entries": 253,
+  "preserved_ledger_prefix_sha256": "6b8baff29049d4f6a28059c8be1a849888afdd61f444f823161a95c778a8b452",
+  "preserved_ledger_prefix_bytes": 626422,
+  "ledger_append_count": 56,
+  "ledger_total_entries": 309,
+  "original_253_objects_unchanged": true,
+  "original_253_raw_prefix_unchanged": true,
+  "prior_registry_file_sha256": "ed54f0a2dfd6ffadaa35a5b4d6c8939e7b212285446dd43c7cfde348b4feb37c",
+  "prior_independent_evidence_file_sha256": "86145f0fe5f18bbdd4fe6205cbad7a858eff6324349000dac25e2ac0e226c143",
+  "prior_locale_registry_records": {
+    "hr": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "66141b585ea67d70102e7c854fe628788e380fed4bafbb74b1ee186e13a4b915",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 4,
+      "resolved_corrections": 4,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification.",
+      "post_review_updates": [
+        {
+          "previous_content_sha256": "21bf64c9feea295d63fad7eed313fb9f4de185994be9f86d3204ef902e9d4815",
+          "reviewed_content_sha256": "66141b585ea67d70102e7c854fe628788e380fed4bafbb74b1ee186e13a4b915",
+          "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+          "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+          "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+          "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+          "review_artifacts": {
+            "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+            "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+          },
+          "changed_fields": [
+            "game_center_leaderboard_names.timbre.song.dashboard",
+            "game_center_leaderboard_names.timbre.song.kiteweather"
+          ]
+        }
+      ]
+    },
+    "sl-SI": {
+      "reviewer": "Independent AI semantic review (2026-10-26)",
+      "method": "independent_source_aware_ai",
+      "status": "reviewed_identified_corrections_resolved",
+      "reviewed_content_sha256": "8e4d8b71a2e337411345730136124c18252b905f53604019b92d409394b37e68",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "identified_corrections": 7,
+      "resolved_corrections": 7,
+      "unresolved_corrections": [],
+      "scope": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification.",
+      "supplemental_reviews": [
+        {
+          "date": "2026-10-26",
+          "reviewer": "Slovenian independent AI terminology reviewer",
+          "method": "source-aware guarded instrument morphology delta review",
+          "prior_reviewed_content_sha256": "1de371c3dabcdeac8014f723bd3fe8b9a51d4ec566a50f1984e1e0318d939905",
+          "reviewed_content_sha256": "ddbbf6e92174543ceea9a71d7fc246306343fc10bc6473403779a0a314005479",
+          "fields": [
+            "subtitle",
+            "description"
+          ],
+          "identified_corrections": 2,
+          "resolved_corrections": 2,
+          "unresolved_corrections": [],
+          "references": [
+            "https://www.zrss.si/arhiv_clankov/ukulele-v-vrtcu/",
+            "https://fran.si/iskanje?View=1&Query=ukulela"
+          ],
+          "native_review": false,
+          "device_review": false
+        }
+      ],
+      "post_review_updates": [
+        {
+          "previous_content_sha256": "ddbbf6e92174543ceea9a71d7fc246306343fc10bc6473403779a0a314005479",
+          "reviewed_content_sha256": "8e4d8b71a2e337411345730136124c18252b905f53604019b92d409394b37e68",
+          "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+          "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+          "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+          "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+          "review_artifacts": {
+            "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+            "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+          },
+          "changed_fields": [
+            "game_center_leaderboard_names.timbre.song.dashboard",
+            "game_center_leaderboard_names.timbre.song.kiteweather",
+            "game_center_leaderboard_names.timbre.song.jinglebells"
+          ]
+        }
+      ]
+    }
+  },
+  "prior_locale_independent_records": {
+    "hr": {
+      "file_sha256": "81cf38d4e96539485684b89a8962da1f96cfc83fdb090d923e8a8fe5b2a12220",
+      "content_sha256": "55df839643610b0d60f951b1d23e7e00c46c009079a3e20c81c3c81d24baa476",
+      "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
+      "status": "corrections_proposed",
+      "checked": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "proposed_content_sha256": "66141b585ea67d70102e7c854fe628788e380fed4bafbb74b1ee186e13a4b915",
+      "draft_structural_validation": "pass",
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "post_review_updates": [
+        {
+          "previous_content_sha256": "21bf64c9feea295d63fad7eed313fb9f4de185994be9f86d3204ef902e9d4815",
+          "reviewed_content_sha256": "66141b585ea67d70102e7c854fe628788e380fed4bafbb74b1ee186e13a4b915",
+          "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+          "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+          "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+          "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+          "review_artifacts": {
+            "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+            "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+          },
+          "changed_fields": [
+            "game_center_leaderboard_names.timbre.song.dashboard",
+            "game_center_leaderboard_names.timbre.song.kiteweather"
+          ]
+        }
+      ]
+    },
+    "sl-SI": {
+      "file_sha256": "9b25a7725d3e74b526e1626d82caa9528c0cbc5f18e4629c60c116feab20aaa1",
+      "content_sha256": "6cc94aa7994384f1453ca576f654f9184177d6a5c05f2d20be4f8302c74b9bea",
+      "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
+      "status": "corrections_proposed",
+      "checked": [
+        "counts and course scope",
+        "free tier and notification condition",
+        "privacy and 24h auto-renewal/cancellation equivalence",
+        "name/subtitle/keywords and CPP mapping",
+        "13 caption pairs and both preview cuts",
+        "three IAP names/descriptions",
+        "12 GC board names and 31 achievement name/description pairs"
+      ],
+      "proposed_content_sha256": "8e4d8b71a2e337411345730136124c18252b905f53604019b92d409394b37e68",
+      "draft_structural_validation": "pass",
+      "limitations": [
+        "Not blinded back-translation, native/legal certification, or market search",
+        "No localized screenshot/video/device/RTL rendering verified",
+        "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
+        "Review detects identified issues, not a guarantee of idiomatic perfection"
+      ],
+      "supplemental_reviews": [
+        {
+          "date": "2026-10-26",
+          "reviewer": "Slovenian independent AI terminology reviewer",
+          "method": "source-aware guarded instrument morphology delta review",
+          "prior_reviewed_content_sha256": "1de371c3dabcdeac8014f723bd3fe8b9a51d4ec566a50f1984e1e0318d939905",
+          "reviewed_content_sha256": "ddbbf6e92174543ceea9a71d7fc246306343fc10bc6473403779a0a314005479",
+          "fields": [
+            "subtitle",
+            "description"
+          ],
+          "identified_corrections": 2,
+          "resolved_corrections": 2,
+          "unresolved_corrections": [],
+          "references": [
+            "https://www.zrss.si/arhiv_clankov/ukulele-v-vrtcu/",
+            "https://fran.si/iskanje?View=1&Query=ukulela"
+          ],
+          "native_review": false,
+          "device_review": false
+        }
+      ],
+      "post_review_updates": [
+        {
+          "previous_content_sha256": "ddbbf6e92174543ceea9a71d7fc246306343fc10bc6473403779a0a314005479",
+          "reviewed_content_sha256": "8e4d8b71a2e337411345730136124c18252b905f53604019b92d409394b37e68",
+          "baseline_commit": "4be2d9986c113c8deb1fbf4687d9b9b582775bba",
+          "previous_full_evidence_sha256": "141d98cd4d702d480f91c97be4003f5465879b9200ac82ca1d485cf7a5cd06f8",
+          "reviewer": "Independent Codex review_is/review_sk title-delta reviewers",
+          "scope": "Every changed named-song leaderboard field reviewed against English, exact curriculum mapping, shipped app and identity approvals. Unchanged full payload review inherited; no native/device/account claims.",
+          "review_artifacts": {
+            "docs/l10n/reviews/store-title-alignment/is-review.json": "ed078055653b870d0d72c866c33d4b2bebadebb716e4baf8ef30a1f3278a03df",
+            "docs/l10n/reviews/store-title-alignment/sk-review.json": "ca7dba52efa1f3723bbb3032fdcc55b2c72da36abfdb0fa6b7176f82abe442f5"
+          },
+          "changed_fields": [
+            "game_center_leaderboard_names.timbre.song.dashboard",
+            "game_center_leaderboard_names.timbre.song.kiteweather",
+            "game_center_leaderboard_names.timbre.song.jinglebells"
+          ]
+        }
+      ]
+    }
+  },
+  "locale_updates": {
+    "hr": {
+      "date": "2026-10-26",
+      "reviewer": "Codex independent source-aware native-followup store reviewer /root/review_is",
+      "method": "independent_source_aware_ai_changed_field_review",
+      "scope": "All 28 changed Game Center achievement description fields reviewed against exact English badge IDs, current app UI and old/new payload; prior full-payload review retained for unchanged fields.",
+      "previous_content_sha256": "66141b585ea67d70102e7c854fe628788e380fed4bafbb74b1ee186e13a4b915",
+      "reviewed_content_sha256": "a45cd38b49cb1d082ba171ac6748f7e4882b8e6a43f02f9b16e7837135db8e7f",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "source_revision_base": "970a12db87dd5751d3674b1321e20706a576e03e",
+      "previous_full_registry_sha256": "ed54f0a2dfd6ffadaa35a5b4d6c8939e7b212285446dd43c7cfde348b4feb37c",
+      "previous_full_evidence_sha256": "86145f0fe5f18bbdd4fe6205cbad7a858eff6324349000dac25e2ac0e226c143",
+      "previous_correction_ledger_sha256": "62515e51ca782cec045a007ca710e46a430ac884a54e2681e412655def5b41d5",
+      "previous_correction_ledger_entries": 253,
+      "review_artifacts": {
+        "docs/l10n/reviews/native-followup/store/review.json": "8dd4082b5ad928ca8f8716a4d32d33045e8b1a049acd56481ae6432fbbfd8802"
+      },
+      "changed_fields": [
+        "game_center_achievement_descriptions.timbre.badge.daily_1",
+        "game_center_achievement_descriptions.timbre.badge.strings_100",
+        "game_center_achievement_descriptions.timbre.badge.first_lesson",
+        "game_center_achievement_descriptions.timbre.badge.bullseyes_50",
+        "game_center_achievement_descriptions.timbre.badge.ear_500",
+        "game_center_achievement_descriptions.timbre.badge.full_tune",
+        "game_center_achievement_descriptions.timbre.badge.level_5",
+        "game_center_achievement_descriptions.timbre.badge.strings_1000",
+        "game_center_achievement_descriptions.timbre.badge.streak_100",
+        "game_center_achievement_descriptions.timbre.badge.lessons_25",
+        "game_center_achievement_descriptions.timbre.badge.minutes_60",
+        "game_center_achievement_descriptions.timbre.badge.full_25",
+        "game_center_achievement_descriptions.timbre.badge.streak_3",
+        "game_center_achievement_descriptions.timbre.badge.streak_30",
+        "game_center_achievement_descriptions.timbre.badge.ear_perfect",
+        "game_center_achievement_descriptions.timbre.badge.first_tune",
+        "game_center_achievement_descriptions.timbre.badge.perfect_10",
+        "game_center_achievement_descriptions.timbre.badge.units_10",
+        "game_center_achievement_descriptions.timbre.badge.multi",
+        "game_center_achievement_descriptions.timbre.badge.songs_1",
+        "game_center_achievement_descriptions.timbre.badge.course_done",
+        "game_center_achievement_descriptions.timbre.badge.golden_ear",
+        "game_center_achievement_descriptions.timbre.badge.songs_25",
+        "game_center_achievement_descriptions.timbre.badge.streak_7",
+        "game_center_achievement_descriptions.timbre.badge.minutes_600",
+        "game_center_achievement_descriptions.timbre.badge.units_1",
+        "game_center_achievement_descriptions.timbre.badge.daily_30",
+        "game_center_achievement_descriptions.timbre.badge.lessons_100"
+      ],
+      "identified_corrections": 28,
+      "resolved_corrections": 28,
+      "unresolved_corrections": [],
+      "native_review": "not_verified",
+      "device_review": "not_verified",
+      "account_changes": "none",
+      "release_ready": false
+    },
+    "sl-SI": {
+      "date": "2026-10-26",
+      "reviewer": "Codex independent source-aware native-followup store reviewer /root/review_is",
+      "method": "independent_source_aware_ai_changed_field_review",
+      "scope": "All 28 changed Game Center achievement description fields reviewed against exact English badge IDs, current app UI and old/new payload; prior full-payload review retained for unchanged fields.",
+      "previous_content_sha256": "8e4d8b71a2e337411345730136124c18252b905f53604019b92d409394b37e68",
+      "reviewed_content_sha256": "aaef1fcd332f51b214991ffe72d13b5a6cdcf3a770534ac5d35630a4e6b060a2",
+      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "source_revision_base": "970a12db87dd5751d3674b1321e20706a576e03e",
+      "previous_full_registry_sha256": "ed54f0a2dfd6ffadaa35a5b4d6c8939e7b212285446dd43c7cfde348b4feb37c",
+      "previous_full_evidence_sha256": "86145f0fe5f18bbdd4fe6205cbad7a858eff6324349000dac25e2ac0e226c143",
+      "previous_correction_ledger_sha256": "62515e51ca782cec045a007ca710e46a430ac884a54e2681e412655def5b41d5",
+      "previous_correction_ledger_entries": 253,
+      "review_artifacts": {
+        "docs/l10n/reviews/native-followup/store/review.json": "8dd4082b5ad928ca8f8716a4d32d33045e8b1a049acd56481ae6432fbbfd8802"
+      },
+      "changed_fields": [
+        "game_center_achievement_descriptions.timbre.badge.daily_1",
+        "game_center_achievement_descriptions.timbre.badge.strings_100",
+        "game_center_achievement_descriptions.timbre.badge.first_lesson",
+        "game_center_achievement_descriptions.timbre.badge.bullseyes_50",
+        "game_center_achievement_descriptions.timbre.badge.ear_500",
+        "game_center_achievement_descriptions.timbre.badge.full_tune",
+        "game_center_achievement_descriptions.timbre.badge.level_5",
+        "game_center_achievement_descriptions.timbre.badge.strings_1000",
+        "game_center_achievement_descriptions.timbre.badge.streak_100",
+        "game_center_achievement_descriptions.timbre.badge.lessons_25",
+        "game_center_achievement_descriptions.timbre.badge.minutes_60",
+        "game_center_achievement_descriptions.timbre.badge.full_25",
+        "game_center_achievement_descriptions.timbre.badge.streak_3",
+        "game_center_achievement_descriptions.timbre.badge.streak_30",
+        "game_center_achievement_descriptions.timbre.badge.ear_perfect",
+        "game_center_achievement_descriptions.timbre.badge.first_tune",
+        "game_center_achievement_descriptions.timbre.badge.perfect_10",
+        "game_center_achievement_descriptions.timbre.badge.units_10",
+        "game_center_achievement_descriptions.timbre.badge.multi",
+        "game_center_achievement_descriptions.timbre.badge.songs_1",
+        "game_center_achievement_descriptions.timbre.badge.course_done",
+        "game_center_achievement_descriptions.timbre.badge.golden_ear",
+        "game_center_achievement_descriptions.timbre.badge.songs_25",
+        "game_center_achievement_descriptions.timbre.badge.streak_7",
+        "game_center_achievement_descriptions.timbre.badge.minutes_600",
+        "game_center_achievement_descriptions.timbre.badge.units_1",
+        "game_center_achievement_descriptions.timbre.badge.daily_30",
+        "game_center_achievement_descriptions.timbre.badge.lessons_100"
+      ],
+      "identified_corrections": 28,
+      "resolved_corrections": 28,
+      "unresolved_corrections": [],
+      "native_review": "not_verified",
+      "device_review": "not_verified",
+      "account_changes": "none",
+      "release_ready": false
+    }
+  },
+  "written_files": {
+    "tools/l10n/store/sl-SI.json": "a02a52fefb85092b110137b69fea94f5aa69d39033ae542f81ffcf6175c0da81",
+    "tools/l10n/store/hr.json": "0e3b1bac18ff01afaeb72b27bb213178f7f71821dc7157a9c6e5dfdaa0952c9b",
+    "tools/l10n/store-review-independent.json": "692f5401a1fcba61af35b28a35c70d5a904359e9eedd37561163c167c82b99ac",
+    "tools/l10n/store-corrections.json": "c6d5d69bc785d4dbfff929b9114cadb5aaf546cbcd11c90166afbdd40c4e0586",
+    "tools/l10n/store-review.json": "a1f4fde1db16da5691e14f17a167695691d4abb1b833f9d678538fb881f4526e"
+  },
+  "bytes": "All tracked writes use UTF-8 LF, never CRLF. Reviewed temporary byte-format differences are not consumer text changes; applied content hashes equal the approved preview content hashes.",
+  "unaffected_48_payloads_byte_identical": true,
+  "source_en_US_byte_unchanged": true,
+  "release_ready_promoted": false,
+  "local_validation": {
+    "store_review_artifact_errors": [],
+    "store_check_all_errors": [],
+    "correction_count_crosscheck": 309
+  },
+  "native_device_account_limits": "No new native/device/audio/account evidence or release approval. Prior optional/native and mandatory release gates remain unchanged."
+}

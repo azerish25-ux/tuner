@@ -1,0 +1,637 @@
+{
+  "reviewer": "Codex review_sk (source-context documentation audit)",
+  "scope": "Bounded documentation-only proposal: guide, glossary template and five expressly conflicting locale glossary entries/definitions. No product redesign, source behavior change or translation sweep.",
+  "finding": "The guide/template/glossaries incorrectly diagnose the current Intonation setup labels as drone-practice mistranslations. Routed source and exact applied keys distinguish genuine instrument setup from separate drone pitch-accuracy practice.",
+  "proposed_guarded_edit_count": 13,
+  "proposed_guarded_edits": [
+    {
+      "path": "docs/l10n/TRANSLATING-WITH-GPT.md",
+      "old": "7. **Wrong terms in the shipped tables**, which the anchors and `refs` may show GPT: \"Intonation\" (the drone trainer) is translated as the guitar-setup adjustment in ca (Octavació), es (Octavación), ja (オクターブ調整), pt (Oitavado) and zh-CN (八度音准); the register is mixed in he, hr, ro, sl and tr; \"Bullseye\" is translated everywhere although HANDOFF.md says to keep game names. The glossary overrules the tables; a clean-up batch for those keys means editing `tools/l10n/translations/<locale>.json` and running `apply.py`, since they aren't in the TODO files.",
+      "new": "7. **Context-dependent terms and stale anchors.** The literal app key `Intonation` names the guided instrument-setup check (`PracticeRoute.intonation` → `IntonationView`): compare the 12th-fret harmonic with the stopped/fretted note and interpret the saddle-direction advice. The current ca (Octavació), es (Octavación), ja (オクターブ調整), pt (Oitavado) and zh-CN (八度音准) setup labels fit that route; do not replace them with drone-training terminology. `Intonation over a drone` is a distinct pitch-accuracy practice key, and generic lesson uses follow their own context. Historical he/hr/ro/sl/tr register anchors and translated game names such as Bullseye must also follow the current locale glossary, rather than an old blanket rule. A source-confirmed cleanup of shipped keys goes into `tools/l10n/translations/<locale>.json` followed by `apply.py`, since completed keys are absent from TODO files.",
+      "old_sha256": "50219f939c9cad7d1256b2bddc4b5d4aed7d7c5dbb2964b1cd1688dc1a3e626b",
+      "new_sha256": "f35dc48bd699b300a951e545844352a3f08708ac947c85dd832f22a16c67d7c9",
+      "current_file_sha256": "33e65f159f482f9bda001b6da68c88affdb01dc88e82d55d06859ab6902a7f44",
+      "reason": "Remove the false drone-only diagnosis and protect the source-confirmed setup/drone key distinction; retain the existing shipped-key cleanup workflow without claiming new device or native review."
+    },
+    {
+      "path": "docs/l10n/GLOSSARY-TEMPLATE.md",
+      "old": "| Intonation | The Practice tool for playing or singing in tune over a drone (\"Intonation over a drone\") | Practice, paywall | `Intonation` | | Not the guitar-setup adjustment of the saddle (octave intonation). The current ca (Octavació), es (Octavación), ja (オクターブ調整), pt (Oitavado) and zh-CN (八度音准) tables use that wrong sense: fix them. |",
+      "new": "| Intonation | Guided instrument setup: harmonic/stopped-note comparison and saddle advice | Practice tool, setup-specific paywall references | `Intonation` | | Check `IntonationView.swift` and the routed screen. Do not apply the separate drone-practice sense to this literal key. |\n| Intonation over a drone | Playing or singing accurately against a reference drone | Today activity, drone paywall outcome | `Intonation over a drone` | | Distinct literal key and source sense; generic lesson intonation also means pitch accuracy when its context says so. |",
+      "old_sha256": "3109d88273bd24f60121fa8f733920667da0ca862735425cf374643e59cbeee7",
+      "new_sha256": "04ccfc17b1f11b5de16fc250af0260ee24d95c0d3e472a632d9f506fe220b863",
+      "current_file_sha256": "47b9e664a4d40ae9910adcbf41ee77895ab0d83774667933b84942c728bab768",
+      "reason": "Separate the two source-backed app keys before new locale glossaries are drafted; do not teach the incorrect never-saddle override."
+    },
+    {
+      "path": "docs/l10n/GLOSSARY-TEMPLATE.md",
+      "old": "| Intonation | playing in tune over a drone | guitar setup octave adjustment | | |",
+      "new": "| Intonation | instrument setup for the current `Intonation` tool; pitch accuracy in drone/generic lesson contexts | assuming all occurrences mean drone practice, or all mean saddle adjustment | | |",
+      "old_sha256": "f843b6363bfcf3b2f5c4784abd02db9e8d20bb68787dc9eee9d31db6aeee8ab0",
+      "new_sha256": "2b2cac0a0c661d3496b8100be5617c9bea40e76bdfb6122b4e6a4876ead29421",
+      "current_file_sha256": "47b9e664a4d40ae9910adcbf41ee77895ab0d83774667933b84942c728bab768",
+      "reason": "The misleading-word table must require actual context rather than declaring the genuine setup sense wrong."
+    },
+    {
+      "path": "docs/l10n/glossary/ca.md",
+      "old": "| Intonation | Context-specific musical/UI sense | UI and lessons | `Intonation` | Entonació | Correct drone-training sense; supersedes octave-adjustment mistranslation in shipped table. |",
+      "new": "| Intonation | Instrument setup: harmonic/stopped-note comparison | Practice tool and setup paywall | `Intonation` | Octavació | Current route is `IntonationView`; retain this applied setup label. |\n| Intonation over a drone | Pitch accuracy against a reference drone | Today activity and drone paywall | `Intonation over a drone` | Entonació sobre un bordó | Separate key; retain its applied drone-practice wording. |",
+      "old_sha256": "80b20d6acc99b0bcc34ed90216cd1fe7976280fbd90061991eb4ab365260b2b2",
+      "new_sha256": "53e693e3ce85e97e241743971667cf404a0a27278abc9a06e19424051aec0fc2",
+      "current_file_sha256": "37d286ce1f3d4701bc8ca77b9eedcf69af797af8fb495174990cd2a958e9863d",
+      "reason": "Document the actual current source-routed UI label and its separate drone counterpart. Values are read from the applied resources; no translation value is changed."
+    },
+    {
+      "path": "docs/l10n/glossary/ca.md",
+      "old": "Intonation is playing in tune over a drone, never octave/saddle adjustment.",
+      "new": "Intonation is context-dependent: the current literal app key `Intonation` labels the harmonic/stopped-note instrument-setup check; `Intonation over a drone` is a separate pitch-accuracy practice key. Generic lesson uses follow their own source context. Do not infer a blanket ban on saddle setup from the English word alone.",
+      "old_sha256": "765341448755b94b5779c1c5852c9eea9e28a959ad028c0f4a0cc7b68a655595",
+      "new_sha256": "00ff038bbc2ff2ba1adcf0b701ed1e5a88a0a1d6af853e4ff12ece1a9bebcaec",
+      "current_file_sha256": "37d286ce1f3d4701bc8ca77b9eedcf69af797af8fb495174990cd2a958e9863d",
+      "reason": "Replace the blanket ban with source-context selection; both current meanings are legitimate and use distinct app keys."
+    },
+    {
+      "path": "docs/l10n/glossary/es.md",
+      "old": "| Intonation | Context-specific musical/UI sense | UI and lessons | `Intonation` | Afinación | Correct drone-training sense; supersedes octave-adjustment mistranslation in shipped table. |",
+      "new": "| Intonation | Instrument setup: harmonic/stopped-note comparison | Practice tool and setup paywall | `Intonation` | Octavación | Current route is `IntonationView`; retain this applied setup label. |\n| Intonation over a drone | Pitch accuracy against a reference drone | Today activity and drone paywall | `Intonation over a drone` | Afinación sobre nota pedal | Separate key; retain its applied drone-practice wording. |",
+      "old_sha256": "d8b03aafdf3312e8b0778638b560751c465c7e78374067c06ab57e461e4b561b",
+      "new_sha256": "5d923370a7532e4edc92b08dc1b34c19c0ee5f82d304cf5f62f187d8ea2ebdcf",
+      "current_file_sha256": "7edb90002835e731cb6618b05b002663e455ebe19f35411db62408cda6855d80",
+      "reason": "Document the actual current source-routed UI label and its separate drone counterpart. Values are read from the applied resources; no translation value is changed."
+    },
+    {
+      "path": "docs/l10n/glossary/es.md",
+      "old": "Intonation is playing in tune over a drone, never octave/saddle adjustment.",
+      "new": "Intonation is context-dependent: the current literal app key `Intonation` labels the harmonic/stopped-note instrument-setup check; `Intonation over a drone` is a separate pitch-accuracy practice key. Generic lesson uses follow their own source context. Do not infer a blanket ban on saddle setup from the English word alone.",
+      "old_sha256": "765341448755b94b5779c1c5852c9eea9e28a959ad028c0f4a0cc7b68a655595",
+      "new_sha256": "00ff038bbc2ff2ba1adcf0b701ed1e5a88a0a1d6af853e4ff12ece1a9bebcaec",
+      "current_file_sha256": "7edb90002835e731cb6618b05b002663e455ebe19f35411db62408cda6855d80",
+      "reason": "Replace the blanket ban with source-context selection; both current meanings are legitimate and use distinct app keys."
+    },
+    {
+      "path": "docs/l10n/glossary/ja.md",
+      "old": "| Intonation | 音程 |",
+      "new": "| Intonation | オクターブ調整 |\n| Intonation over a drone | ドローンで音程練習 |",
+      "old_sha256": "4c7e7da17a1d3ff4f697a6e242b6d0c8f99070086f1f99de9934368f44a903a8",
+      "new_sha256": "7c8bcdaa5ebd9b7a0058dbcffbc012a14b36ac9b2fb4a3d1ae9c6f9d337be422",
+      "current_file_sha256": "ad18cbf5a7af01d3e2a617ed80c775dc7fbdf7d106ebb4a5f21955321d04c83e",
+      "reason": "Document the actual current source-routed UI label and its separate drone counterpart. Values are read from the applied resources; no translation value is changed."
+    },
+    {
+      "path": "docs/l10n/glossary/ja.md",
+      "old": "Intonation means playing/singing accurately over a drone, never saddle or octave adjustment (legacy ja/zh-CN entries are overridden above).",
+      "new": "Intonation is context-dependent: the current literal app key `Intonation` labels the harmonic/stopped-note instrument-setup check; `Intonation over a drone` is a separate pitch-accuracy practice key. Generic lesson uses follow their own source context. Do not infer a blanket ban on saddle setup from the English word alone.",
+      "old_sha256": "82d01cd95a8678845bdcbb594525b74cf0152cc96af25244017120459667fb67",
+      "new_sha256": "00ff038bbc2ff2ba1adcf0b701ed1e5a88a0a1d6af853e4ff12ece1a9bebcaec",
+      "current_file_sha256": "ad18cbf5a7af01d3e2a617ed80c775dc7fbdf7d106ebb4a5f21955321d04c83e",
+      "reason": "Replace the blanket ban with source-context selection; both current meanings are legitimate and use distinct app keys."
+    },
+    {
+      "path": "docs/l10n/glossary/pt.md",
+      "old": "| Intonation | Context-specific musical/UI sense | UI and lessons | `Intonation` | Afinação | Correct drone-training sense; supersedes octave-adjustment mistranslation in shipped table. |",
+      "new": "| Intonation | Instrument setup: harmonic/stopped-note comparison | Practice tool and setup paywall | `Intonation` | Oitavado | Current route is `IntonationView`; retain this applied setup label. |\n| Intonation over a drone | Pitch accuracy against a reference drone | Today activity and drone paywall | `Intonation over a drone` | Afinação sobre nota pedal | Separate key; retain its applied drone-practice wording. |",
+      "old_sha256": "978e932314d5decb248f746d53558cbcb294318df9ea330682622340364fc90a",
+      "new_sha256": "340dec8ce1d76936755f19e91cf3c26a8635aca546a6e0514b80474bcbb64f9f",
+      "current_file_sha256": "17187127ea1199a85ae398b243678ec454450debac26dbb2db52b682abb74649",
+      "reason": "Document the actual current source-routed UI label and its separate drone counterpart. Values are read from the applied resources; no translation value is changed."
+    },
+    {
+      "path": "docs/l10n/glossary/pt.md",
+      "old": "Intonation is playing in tune over a drone, never octave/saddle adjustment.",
+      "new": "Intonation is context-dependent: the current literal app key `Intonation` labels the harmonic/stopped-note instrument-setup check; `Intonation over a drone` is a separate pitch-accuracy practice key. Generic lesson uses follow their own source context. Do not infer a blanket ban on saddle setup from the English word alone.",
+      "old_sha256": "765341448755b94b5779c1c5852c9eea9e28a959ad028c0f4a0cc7b68a655595",
+      "new_sha256": "00ff038bbc2ff2ba1adcf0b701ed1e5a88a0a1d6af853e4ff12ece1a9bebcaec",
+      "current_file_sha256": "17187127ea1199a85ae398b243678ec454450debac26dbb2db52b682abb74649",
+      "reason": "Replace the blanket ban with source-context selection; both current meanings are legitimate and use distinct app keys."
+    },
+    {
+      "path": "docs/l10n/glossary/zh-CN.md",
+      "old": "| Intonation | 音准 |",
+      "new": "| Intonation | 八度音准 |\n| Intonation over a drone | 持续音下的音准练习 |",
+      "old_sha256": "cdd2e10b08e0b4fb4820c062258a3c3d15e35e07e0524064217698e46f532798",
+      "new_sha256": "83c5bc00b68d94ee12fdf0c9dd74e35699bf45940500e6da79ed8033381079e0",
+      "current_file_sha256": "b01f6176ebe700171c6e0b5f08d9cfdc59eeaee57c84b357a4ca15c791cec06a",
+      "reason": "Document the actual current source-routed UI label and its separate drone counterpart. Values are read from the applied resources; no translation value is changed."
+    },
+    {
+      "path": "docs/l10n/glossary/zh-CN.md",
+      "old": "Intonation means playing/singing accurately over a drone, never saddle or octave adjustment (legacy ja/zh-CN entries are overridden above).",
+      "new": "Intonation is context-dependent: the current literal app key `Intonation` labels the harmonic/stopped-note instrument-setup check; `Intonation over a drone` is a separate pitch-accuracy practice key. Generic lesson uses follow their own source context. Do not infer a blanket ban on saddle setup from the English word alone.",
+      "old_sha256": "82d01cd95a8678845bdcbb594525b74cf0152cc96af25244017120459667fb67",
+      "new_sha256": "00ff038bbc2ff2ba1adcf0b701ed1e5a88a0a1d6af853e4ff12ece1a9bebcaec",
+      "current_file_sha256": "b01f6176ebe700171c6e0b5f08d9cfdc59eeaee57c84b357a4ca15c791cec06a",
+      "reason": "Replace the blanket ban with source-context selection; both current meanings are legitimate and use distinct app keys."
+    }
+  ],
+  "source_anchors": [
+    {
+      "path": "ios/Timbre/Practice/PracticeView.swift",
+      "start": 33,
+      "end": 35,
+      "source_excerpt": "                        case .drone: DroneView()\n                        case .voice: VoiceView()\n                        case .intonation: IntonationView()",
+      "current_file_sha256": "cdd1f924dba46c5228812cf660581d82ab3ba72b5a4c355634a96b18de1c678f",
+      "supports": "Distinct .drone and .intonation routes open DroneView and IntonationView."
+    },
+    {
+      "path": "ios/Timbre/Practice/IntonationView.swift",
+      "start": 4,
+      "end": 6,
+      "source_excerpt": "/// Guided intonation check: for each string, the 12th-fret harmonic and the fretted\n/// 12th-fret note should match. The difference tells which way to move the saddle.\nstruct IntonationView: View {",
+      "current_file_sha256": "f7f1f34badd1503e368c6fa0cb9197626d3f5425f274228e831f82b767e082ce",
+      "supports": "The component explicitly compares 12th-fret harmonic and stopped/fretted pitches."
+    },
+    {
+      "path": "ios/Timbre/Practice/IntonationView.swift",
+      "start": 106,
+      "end": 115,
+      "source_excerpt": "                if step == .harmonic {\n                    Eyebrow(\"Step 1 of 2\")\n                    Text(\"Play the 12th-fret harmonic on \\(label)\").font(Typeface.display(.title)).foregroundStyle(Palette.ink)\n                        .fixedSize(horizontal: false, vertical: true)\n                    Text(\"Touch the string lightly right above the 12th fret, pluck, and let it ring.\").font(.subheadline).foregroundStyle(Palette.inkSoft)\n                } else {\n                    Eyebrow(\"Step 2 of 2\")\n                    Text(\"Now fret \\(label) at the 12th fret\").font(Typeface.display(.title)).foregroundStyle(Palette.ink)\n                        .fixedSize(horizontal: false, vertical: true)\n                    Text(\"Press just behind the fret with normal pressure and let it ring.\").font(.subheadline).foregroundStyle(Palette.inkSoft)",
+      "current_file_sha256": "f7f1f34badd1503e368c6fa0cb9197626d3f5425f274228e831f82b767e082ce",
+      "supports": "Actual instructions separately request the harmonic, light touch above fret12, and then the stopped/fretted note."
+    },
+    {
+      "path": "ios/Timbre/Practice/IntonationView.swift",
+      "start": 236,
+      "end": 244,
+      "source_excerpt": "    private func verdict(_ cents: Double) -> String {\n        if abs(cents) <= 3 { return String(localized: \"Intonation is good\") }\n        return cents > 0 ? String(localized: \"Sharp at the 12th fret\") : String(localized: \"Flat at the 12th fret\")\n    }\n\n    private func advice(_ cents: Double) -> String {\n        if abs(cents) <= 3 { return String(localized: \"Within 3 cents: nothing to change.\") }\n        return cents > 0 ? String(localized: \"Lengthen the string: move its saddle away from the neck.\")\n                         : String(localized: \"Shorten the string: move its saddle toward the neck.\")",
+      "current_file_sha256": "f7f1f34badd1503e368c6fa0cb9197626d3f5425f274228e831f82b767e082ce",
+      "supports": "Result/advice chooses good intonation or lengthening/shortening by saddle direction."
+    },
+    {
+      "path": "ios/Timbre/Practice/DailySetCard.swift",
+      "start": 14,
+      "end": 14,
+      "source_excerpt": "        case .drone: return \"Intonation over a drone\"",
+      "current_file_sha256": "ffd2e19015ab7f394d0783e815335844a35f8fd70a29887cf4d5495e61c24708",
+      "supports": "The .drone activity uses Intonation over a drone, a separate literal key."
+    },
+    {
+      "path": "ios/Timbre/Practice/PlayHubTools.swift",
+      "start": 106,
+      "end": 107,
+      "source_excerpt": "        case .intonation:\n            return Text(\"Intonation checks at the 12th fret\")",
+      "current_file_sha256": "844ed0b2b4dc11311ca119ce966e1a4512f54f4939b1e64d8b2b11212aee8474",
+      "supports": "The .intonation tool preview explicitly says Intonation checks at the12th fret."
+    },
+    {
+      "path": "ios/Timbre/Paywall/PaywallPlan.swift",
+      "start": 244,
+      "end": 245,
+      "source_excerpt": "        if reason.hasSuffix(\"intonation\") {\n            return Focus(today: String(localized: \"Intonation\"), next: String(localized: \"Intonation over a drone\"), symbol: \"ruler\")",
+      "current_file_sha256": "6e6ccaf832aba07a78b428b7250f6f6da1a249c178c295a2a18b5c86cd94d994",
+      "supports": "An intonation-source paywall focus uses the setup key today and the distinct drone-benefit key next; adjacent copy does not make them synonymous."
+    },
+    {
+      "path": "ios/Timbre/Paywall/PaywallPlan.swift",
+      "start": 460,
+      "end": 470,
+      "source_excerpt": "        if reason.hasSuffix(\"drone\") {\n            return [Outcome(id: \"drone\", text: Text(\"Intonation over a drone\"), symbol: \"waveform.path\"), tools]\n        }\n        if reason.hasSuffix(\"chords\") || reason.hasSuffix(\"chord\") {\n            return [Outcome(id: \"chords\", text: Text(\"Every shape, any tuning\"), symbol: \"hand.raised.fingers.spread\"), kit]\n        }\n        if reason.hasSuffix(\"scales\") || reason.hasSuffix(\"scale\") {\n            return [Outcome(id: \"scales\", text: Text(\"Fretboard maps\"), symbol: \"point.3.connected.trianglepath.dotted\"), kit]\n        }\n        if reason.hasSuffix(\"intonation\") {\n            return [Outcome(id: \"intonation\", text: Text(\"Intonation checks at the 12th fret\"), symbol: \"ruler\"), kit]",
+      "current_file_sha256": "6e6ccaf832aba07a78b428b7250f6f6da1a249c178c295a2a18b5c86cd94d994",
+      "supports": "Drone and intonation outcomes use different source strings, ending in explicit12th-fret checks for setup."
+    }
+  ],
+  "applied_UI_values_observed_without_modification": {
+    "ca": {
+      "Intonation": "Octavació",
+      "Intonation over a drone": "Entonació sobre un bordó",
+      "Intonation checks at the 12th fret": "Control d'entonació al 12è trast"
+    },
+    "es": {
+      "Intonation": "Octavación",
+      "Intonation over a drone": "Afinación sobre nota pedal",
+      "Intonation checks at the 12th fret": "Control de afinación en el traste 12"
+    },
+    "ja": {
+      "Intonation": "オクターブ調整",
+      "Intonation over a drone": "ドローンで音程練習",
+      "Intonation checks at the 12th fret": "12フレットでオクターブ調整チェック"
+    },
+    "pt": {
+      "Intonation": "Oitavado",
+      "Intonation over a drone": "Afinação sobre nota pedal",
+      "Intonation checks at the 12th fret": "Testes de oitavado na 12ª casa"
+    },
+    "zh-CN": {
+      "Intonation": "八度音准",
+      "Intonation over a drone": "持续音下的音准练习",
+      "Intonation checks at the 12th fret": "第 12 品八度音准检查"
+    }
+  },
+  "same_legacy_claim_inventory_outside_five_focused_glossaries": [
+    {
+      "path": "docs/l10n/glossary/ar.md",
+      "line": 291,
+      "old_line": "Tune verb/tab means ضبط, melody means لحن. Flat/sharp direction is not an accidental. Bar means مازورة, not a pub or UI bar. Key is مقام, not a keyboard key. Pick means ريشة, نقر or اختيار by context. Lock means stable correct pitch, not a padlock. Take is محاولة مسجلة, not taking a lesson. Run means a streak or complete performance, never running. Chart is chord notation unless the context specifies a statistics graph. Intonation is pitch accuracy over a drone, not saddle setup. Practice is musical التمرين, not a professional practice. Feel is haptic sensation, not emotion. Challenge-friend and lesson challenge use their distinct senses above.",
+      "old_line_sha256": "31f13a71a8a7072cbcb81217ceeac3195b80d03e0c3a1c6854c539ff316b38d4",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/bg.md",
+      "line": 147,
+      "old_line": "| Intonation | Интонация; pitch accuracy, not saddle adjustment |",
+      "old_line_sha256": "7434bc9c6e3458d3ca2f569ba09e923ad8513b8d8b739aba03e1f0409592de25",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/bn.md",
+      "line": 68,
+      "old_line": "| Intonation | The Practice tool for playing or singing in tune over a drone (\"Intonation over a drone\") | Practice, paywall | `Intonation` | ইন্টোনেশন — টানা সুরের সঙ্গে সুরে বাজানো; not saddle adjustment | Not the guitar-setup adjustment of the saddle (octave intonation). The current ca (Octavació), es (Octavación), ja (オクターブ調整), pt (Oitavado) and zh-CN (八度音准) tables use that wrong sense: fix them. |",
+      "old_line_sha256": "2b49ab8c018343d095e03ba937e90b5c601b67c2b1b5647484b6b5dac7fdc041",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/bn.md",
+      "line": 359,
+      "old_line": "| Intonation | playing in tune over a drone | guitar setup octave adjustment | ইন্টোনেশন — টানা সুরের সঙ্গে সুরে বাজানো; not saddle adjustment | guitar setup octave adjustment |",
+      "old_line_sha256": "5db9b8a1d5799f79698602b67539de848e9dbdde1fca44fe0fa34ff394839fe6",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/cs.md",
+      "line": 147,
+      "old_line": "| Intonation | Intonace; pitch accuracy, not saddle adjustment |",
+      "old_line_sha256": "f88b580fe96accaddb8d8dbb4c526995adb641209b80d1297b4a05102fa07e18",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/da.md",
+      "line": 15,
+      "old_line": "- Musical tuning terminology overrides: the drone-training Intonation is pitch accuracy, not saddle adjustment. da/no/sv Temperament means musical temperament (not physical temperature); use Temperering / Temperering / Temperering respectively when this source occurs.",
+      "old_line_sha256": "c20ef6f2dde2448b6a25c82f100e7a97d399d1f41deda6403e469dc86ef0cb4c",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/da.md",
+      "line": 187,
+      "old_line": "Tune: tuning verb/tab versus melody noun; use separate terms above. Sharp/flat: tuning too high/low versus musical accidental. Bar: musical measure, never pub or toolbar. Key: musical tonality, never password/keycap. Pick: plectrum or pluck, but choose in interface. Lock: confirmation of stable correct pitch, not a padlock; locked content is separate. Take: a recorded attempt. Run: streak or complete performance, not running. Chart: chord sheet/diagram except statistical plots in Progress. Intonation: pitch accuracy over a drone, not saddle setup. Next/Again/Slower: one term must work both on controls and as spoken commands, using shipped anchors. Practice: music practice, not professional business. Feel: haptic sensation, not emotion. Quest: optional side goal distinct from the Today activity set. Challenge: friend competition versus cumulative lesson test; translate by context. Finger numbers 1–4 and open 0 remain unchanged. Loop A–B labels are markers, not note names. For hammer-on/pull-off/slide/bend/vibrato use established guitar-teaching loanwords, not everyday translations; I–IV–V and V/I chord symbols remain intact.",
+      "old_line_sha256": "844ec2faac812b56e19fc0886d5e51332c90d19e22c5f5adf8ff17884e39bff1",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/de.md",
+      "line": 201,
+      "old_line": "Tune as a verb means tuning, as a noun a melody. Sharp/flat on the tuner mean too high/low, not accidentals. Bar means measure; key means tonality. Pick means plectrum or plucking in music, choose in UI. Lock means a stable in-tune confirmation, not a padlock. Take is one recorded performance, not taking a lesson. Run means a practice streak or an uninterrupted passage, not running. Chart means an instrumental chord diagram/sheet unless progress statistics explicitly demand a graph. Intonation is playing in tune over a drone, never octave/saddle adjustment. Practice is musical practice. Feel is haptic vibration, not emotion. A challenge to a friend differs from the unit's final challenge lesson; preserve context.",
+      "old_line_sha256": "3956df5ea41380ae0c20f8c37231bee07822df323838dae6172b9453403d6ba5",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/el.md",
+      "line": 127,
+      "old_line": "Tune means bringing pitch to the target; a tune is a melody. Sharp/flat direction uses the existing flat/sharp labels (too low/high), not accidental names. Bar means musical measure, key means tonality, pick means plectrum/plucking or choose according to context. Lock means pitch confirmation, not a padlock. Take means recorded attempt, run a streak or passage attempt, not running. Chart means chord diagram/sheet unless statistical context. Intonation means pitch accuracy over a sustained tone, not saddle adjustment or speech stress. Practice means musical practice; Feel means vibration feedback, not emotion. Chop/chunk are muted rhythmic strokes, never a missed note.",
+      "old_line_sha256": "5c5fc3b58c8bd9cbf1bd89c932582196266fce470f780e1e566d000b9c797cb3",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/et.md",
+      "line": 15,
+      "old_line": "- Musical tuning terminology overrides: the drone-training Intonation is pitch accuracy, not saddle adjustment. da/no/sv Temperament means musical temperament (not physical temperature); use Temperering / Temperering / Temperering respectively when this source occurs.",
+      "old_line_sha256": "c20ef6f2dde2448b6a25c82f100e7a97d399d1f41deda6403e469dc86ef0cb4c",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/et.md",
+      "line": 178,
+      "old_line": "Tune: tuning verb/tab versus melody noun; use separate terms above. Sharp/flat: tuning too high/low versus musical accidental. Bar: musical measure, never pub or toolbar. Key: musical tonality, never password/keycap. Pick: plectrum or pluck, but choose in interface. Lock: confirmation of stable correct pitch, not a padlock; locked content is separate. Take: a recorded attempt. Run: streak or complete performance, not running. Chart: chord sheet/diagram except statistical plots in Progress. Intonation: pitch accuracy over a drone, not saddle setup. Next/Again/Slower: one term must work both on controls and as spoken commands, using shipped anchors. Practice: music practice, not professional business. Feel: haptic sensation, not emotion. Quest: optional side goal distinct from the Today activity set. Challenge: friend competition versus cumulative lesson test; translate by context. Finger numbers 1–4 and open 0 remain unchanged. Loop A–B labels are markers, not note names. For hammer-on/pull-off/slide/bend/vibrato use established guitar-teaching loanwords, not everyday translations; I–IV–V and V/I chord symbols remain intact.",
+      "old_line_sha256": "844ec2faac812b56e19fc0886d5e51332c90d19e22c5f5adf8ff17884e39bff1",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/fi.md",
+      "line": 15,
+      "old_line": "- Musical tuning terminology overrides: the drone-training Intonation is pitch accuracy, not saddle adjustment. da/no/sv Temperament means musical temperament (not physical temperature); use Temperering / Temperering / Temperering respectively when this source occurs.",
+      "old_line_sha256": "c20ef6f2dde2448b6a25c82f100e7a97d399d1f41deda6403e469dc86ef0cb4c",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/fi.md",
+      "line": 187,
+      "old_line": "Tune: tuning verb/tab versus melody noun; use separate terms above. Sharp/flat: tuning too high/low versus musical accidental. Bar: musical measure, never pub or toolbar. Key: musical tonality, never password/keycap. Pick: plectrum or pluck, but choose in interface. Lock: confirmation of stable correct pitch, not a padlock; locked content is separate. Take: a recorded attempt. Run: streak or complete performance, not running. Chart: chord sheet/diagram except statistical plots in Progress. Intonation: pitch accuracy over a drone, not saddle setup. Next/Again/Slower: one term must work both on controls and as spoken commands, using shipped anchors. Practice: music practice, not professional business. Feel: haptic sensation, not emotion. Quest: optional side goal distinct from the Today activity set. Challenge: friend competition versus cumulative lesson test; translate by context. Finger numbers 1–4 and open 0 remain unchanged. Loop A–B labels are markers, not note names. For hammer-on/pull-off/slide/bend/vibrato use established guitar-teaching loanwords, not everyday translations; I–IV–V and V/I chord symbols remain intact.",
+      "old_line_sha256": "844ec2faac812b56e19fc0886d5e51332c90d19e22c5f5adf8ff17884e39bff1",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/fr.md",
+      "line": 199,
+      "old_line": "Tune as a verb means tuning, as a noun a melody. Sharp/flat on the tuner mean too high/low, not accidentals. Bar means measure; key means tonality. Pick means plectrum or plucking in music, choose in UI. Lock means a stable in-tune confirmation, not a padlock. Take is one recorded performance, not taking a lesson. Run means a practice streak or an uninterrupted passage, not running. Chart means an instrumental chord diagram/sheet unless progress statistics explicitly demand a graph. Intonation is playing in tune over a drone, never octave/saddle adjustment. Practice is musical practice. Feel is haptic vibration, not emotion. A challenge to a friend differs from the unit's final challenge lesson; preserve context.",
+      "old_line_sha256": "3956df5ea41380ae0c20f8c37231bee07822df323838dae6172b9453403d6ba5",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/gu.md",
+      "line": 68,
+      "old_line": "| Intonation | The Practice tool for playing or singing in tune over a drone (\"Intonation over a drone\") | Practice, paywall | `Intonation` | ઇન્ટોનેશન — આધાર સ્વર સાથે સૂરમાં વગાડવું; not saddle adjustment | Not the guitar-setup adjustment of the saddle (octave intonation). The current ca (Octavació), es (Octavación), ja (オクターブ調整), pt (Oitavado) and zh-CN (八度音准) tables use that wrong sense: fix them. |",
+      "old_line_sha256": "db75ad722bba6f804fc790d9dd74a8c62411e9b945c6baa9fb86fb2b3f34d3bd",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/gu.md",
+      "line": 186,
+      "old_line": "| Intonation | playing in tune over a drone | guitar setup octave adjustment | ઇન્ટોનેશન — આધાર સ્વર સાથે સૂરમાં વગાડવું; not saddle adjustment | guitar setup octave adjustment |",
+      "old_line_sha256": "46d8e62c02bc249e10ea423bf9d1919d9fcf311a4291a05faea6269e04862804",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/he.md",
+      "line": 147,
+      "old_line": "| Intonation | אינטונציה, pitch accuracy not saddle adjustment |",
+      "old_line_sha256": "8b36e6ee06d354844b547a887e681ed6c3d38b223f1173d7791f380b4135fad0",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/hi.md",
+      "line": 68,
+      "old_line": "| Intonation | The Practice tool for playing or singing in tune over a drone (\"Intonation over a drone\") | Practice, paywall | `Intonation` | इंटोनेशन — आधार स्वर के साथ सुर में बजाना; not saddle adjustment | Not the guitar-setup adjustment of the saddle (octave intonation). The current ca (Octavació), es (Octavación), ja (オクターブ調整), pt (Oitavado) and zh-CN (八度音准) tables use that wrong sense: fix them. |",
+      "old_line_sha256": "07a456de6aeb0021f79e3b790c72a8dd027dc5ffdc249ba5cc13585d69fc11f1",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/hi.md",
+      "line": 189,
+      "old_line": "| Intonation | playing in tune over a drone | guitar setup octave adjustment | इंटोनेशन — आधार स्वर के साथ सुर में बजाना; not saddle adjustment | guitar setup octave adjustment |",
+      "old_line_sha256": "0c45c7e59f5442c37815bd5ca100cc4eac99e292f491f3d3d6741835c3c6eaf3",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/hr.md",
+      "line": 127,
+      "old_line": "Tune means bringing pitch to the target; a tune is a melody. Sharp/flat direction uses the existing flat/sharp labels (too low/high), not accidental names. Bar means musical measure, key means tonality, pick means plectrum/plucking or choose according to context. Lock means pitch confirmation, not a padlock. Take means recorded attempt, run a streak or passage attempt, not running. Chart means chord diagram/sheet unless statistical context. Intonation means pitch accuracy over a sustained tone, not saddle adjustment or speech stress. Practice means musical practice; Feel means vibration feedback, not emotion. Chop/chunk are muted rhythmic strokes, never a missed note.",
+      "old_line_sha256": "5c5fc3b58c8bd9cbf1bd89c932582196266fce470f780e1e566d000b9c797cb3",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/hu.md",
+      "line": 127,
+      "old_line": "Tune means bringing pitch to the target; a tune is a melody. Sharp/flat direction uses the existing flat/sharp labels (too low/high), not accidental names. Bar means musical measure, key means tonality, pick means plectrum/plucking or choose according to context. Lock means pitch confirmation, not a padlock. Take means recorded attempt, run a streak or passage attempt, not running. Chart means chord diagram/sheet unless statistical context. Intonation means pitch accuracy over a sustained tone, not saddle adjustment or speech stress. Practice means musical practice; Feel means vibration feedback, not emotion. Chop/chunk are muted rhythmic strokes, never a missed note.",
+      "old_line_sha256": "5c5fc3b58c8bd9cbf1bd89c932582196266fce470f780e1e566d000b9c797cb3",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/id.md",
+      "line": 294,
+      "old_line": "Tune verb/tab ≠ tune melody; direction flat/sharp ≠ accidentals. Bar means measure, never pub or UI bar. Key means tonality, not keyboard/password. Pick means plectrum/pluck/choose by context. Lock means stable correct pitch, not padlock. Take means recorded performance attempt, not taking a lesson. Run means streak or continuous performance, not running. Chart means chord notation unless explicitly a progress graph. Intonation means playing/singing accurately over a drone, never saddle or octave adjustment (legacy ja/zh-CN entries are overridden above). Practice means musical practice, not a professional office. Feel means haptic feedback, not emotion. Challenge-friend and unit challenge use the separate senses above.",
+      "old_line_sha256": "a6d948f6adadd88284bac3d7f76282fb05a38ea15e1bbd281bd105d464c31917",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/is.md",
+      "line": 15,
+      "old_line": "- Musical tuning terminology overrides: the drone-training Intonation is pitch accuracy, not saddle adjustment. da/no/sv Temperament means musical temperament (not physical temperature); use Temperering / Temperering / Temperering respectively when this source occurs.",
+      "old_line_sha256": "c20ef6f2dde2448b6a25c82f100e7a97d399d1f41deda6403e469dc86ef0cb4c",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/is.md",
+      "line": 178,
+      "old_line": "Tune: tuning verb/tab versus melody noun; use separate terms above. Sharp/flat: tuning too high/low versus musical accidental. Bar: musical measure, never pub or toolbar. Key: musical tonality, never password/keycap. Pick: plectrum or pluck, but choose in interface. Lock: confirmation of stable correct pitch, not a padlock; locked content is separate. Take: a recorded attempt. Run: streak or complete performance, not running. Chart: chord sheet/diagram except statistical plots in Progress. Intonation: pitch accuracy over a drone, not saddle setup. Next/Again/Slower: one term must work both on controls and as spoken commands, using shipped anchors. Practice: music practice, not professional business. Feel: haptic sensation, not emotion. Quest: optional side goal distinct from the Today activity set. Challenge: friend competition versus cumulative lesson test; translate by context. Finger numbers 1–4 and open 0 remain unchanged. Loop A–B labels are markers, not note names. For hammer-on/pull-off/slide/bend/vibrato use established guitar-teaching loanwords, not everyday translations; I–IV–V and V/I chord symbols remain intact.",
+      "old_line_sha256": "844ec2faac812b56e19fc0886d5e51332c90d19e22c5f5adf8ff17884e39bff1",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/it.md",
+      "line": 191,
+      "old_line": "Tune as a verb means tuning, as a noun a melody. Sharp/flat on the tuner mean too high/low, not accidentals. Bar means measure; key means tonality. Pick means plectrum or plucking in music, choose in UI. Lock means a stable in-tune confirmation, not a padlock. Take is one recorded performance, not taking a lesson. Run means a practice streak or an uninterrupted passage, not running. Chart means an instrumental chord diagram/sheet unless progress statistics explicitly demand a graph. Intonation is playing in tune over a drone, never octave/saddle adjustment. Practice is musical practice. Feel is haptic vibration, not emotion. A challenge to a friend differs from the unit's final challenge lesson; preserve context.",
+      "old_line_sha256": "3956df5ea41380ae0c20f8c37231bee07822df323838dae6172b9453403d6ba5",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/kn.md",
+      "line": 68,
+      "old_line": "| Intonation | The Practice tool for playing or singing in tune over a drone (\"Intonation over a drone\") | Practice, paywall | `Intonation` | ಇಂಟೋನೇಶನ್ — ಡ್ರೋನ್ ಜೊತೆ ಶ್ರುತಿಯಲ್ಲಿ ನುಡಿಸುವುದು; not saddle adjustment | Not the guitar-setup adjustment of the saddle (octave intonation). The current ca (Octavació), es (Octavación), ja (オクターブ調整), pt (Oitavado) and zh-CN (八度音准) tables use that wrong sense: fix them. |",
+      "old_line_sha256": "2979eaced3855c312716e1f617d6d05d3bf0414a3ea87081f3bb3988c1da7ab3",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/kn.md",
+      "line": 186,
+      "old_line": "| Intonation | playing in tune over a drone | guitar setup octave adjustment | ಇಂಟೋನೇಶನ್ — ಡ್ರೋನ್ ಜೊತೆ ಶ್ರುತಿಯಲ್ಲಿ ನುಡಿಸುವುದು; not saddle adjustment | guitar setup octave adjustment |",
+      "old_line_sha256": "c1802c68f04ec5abd7526d3e1bc3b9bad1540f4576973f277a254b5f07862fe0",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/ko.md",
+      "line": 313,
+      "old_line": "Tune verb/tab ≠ tune melody; direction flat/sharp ≠ accidentals. Bar means measure, never pub or UI bar. Key means tonality, not keyboard/password. Pick means plectrum/pluck/choose by context. Lock means stable correct pitch, not padlock. Take means recorded performance attempt, not taking a lesson. Run means streak or continuous performance, not running. Chart means chord notation unless explicitly a progress graph. Intonation means playing/singing accurately over a drone, never saddle or octave adjustment (legacy ja/zh-CN entries are overridden above). Practice means musical practice, not a professional office. Feel means haptic feedback, not emotion. Challenge-friend and unit challenge use the separate senses above.",
+      "old_line_sha256": "a6d948f6adadd88284bac3d7f76282fb05a38ea15e1bbd281bd105d464c31917",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/lt.md",
+      "line": 15,
+      "old_line": "- Musical tuning terminology overrides: the drone-training Intonation is pitch accuracy, not saddle adjustment. da/no/sv Temperament means musical temperament (not physical temperature); use Temperering / Temperering / Temperering respectively when this source occurs.",
+      "old_line_sha256": "c20ef6f2dde2448b6a25c82f100e7a97d399d1f41deda6403e469dc86ef0cb4c",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/lt.md",
+      "line": 178,
+      "old_line": "Tune: tuning verb/tab versus melody noun; use separate terms above. Sharp/flat: tuning too high/low versus musical accidental. Bar: musical measure, never pub or toolbar. Key: musical tonality, never password/keycap. Pick: plectrum or pluck, but choose in interface. Lock: confirmation of stable correct pitch, not a padlock; locked content is separate. Take: a recorded attempt. Run: streak or complete performance, not running. Chart: chord sheet/diagram except statistical plots in Progress. Intonation: pitch accuracy over a drone, not saddle setup. Next/Again/Slower: one term must work both on controls and as spoken commands, using shipped anchors. Practice: music practice, not professional business. Feel: haptic sensation, not emotion. Quest: optional side goal distinct from the Today activity set. Challenge: friend competition versus cumulative lesson test; translate by context. Finger numbers 1–4 and open 0 remain unchanged. Loop A–B labels are markers, not note names. For hammer-on/pull-off/slide/bend/vibrato use established guitar-teaching loanwords, not everyday translations; I–IV–V and V/I chord symbols remain intact.",
+      "old_line_sha256": "844ec2faac812b56e19fc0886d5e51332c90d19e22c5f5adf8ff17884e39bff1",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/lv.md",
+      "line": 15,
+      "old_line": "- Musical tuning terminology overrides: the drone-training Intonation is pitch accuracy, not saddle adjustment. da/no/sv Temperament means musical temperament (not physical temperature); use Temperering / Temperering / Temperering respectively when this source occurs.",
+      "old_line_sha256": "c20ef6f2dde2448b6a25c82f100e7a97d399d1f41deda6403e469dc86ef0cb4c",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/lv.md",
+      "line": 178,
+      "old_line": "Tune: tuning verb/tab versus melody noun; use separate terms above. Sharp/flat: tuning too high/low versus musical accidental. Bar: musical measure, never pub or toolbar. Key: musical tonality, never password/keycap. Pick: plectrum or pluck, but choose in interface. Lock: confirmation of stable correct pitch, not a padlock; locked content is separate. Take: a recorded attempt. Run: streak or complete performance, not running. Chart: chord sheet/diagram except statistical plots in Progress. Intonation: pitch accuracy over a drone, not saddle setup. Next/Again/Slower: one term must work both on controls and as spoken commands, using shipped anchors. Practice: music practice, not professional business. Feel: haptic sensation, not emotion. Quest: optional side goal distinct from the Today activity set. Challenge: friend competition versus cumulative lesson test; translate by context. Finger numbers 1–4 and open 0 remain unchanged. Loop A–B labels are markers, not note names. For hammer-on/pull-off/slide/bend/vibrato use established guitar-teaching loanwords, not everyday translations; I–IV–V and V/I chord symbols remain intact.",
+      "old_line_sha256": "844ec2faac812b56e19fc0886d5e51332c90d19e22c5f5adf8ff17884e39bff1",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/ml.md",
+      "line": 68,
+      "old_line": "| Intonation | The Practice tool for playing or singing in tune over a drone (\"Intonation over a drone\") | Practice, paywall | `Intonation` | ഇന്റണേഷൻ — ഡ്രോണിനൊപ്പം ശ്രുതിയിൽ വായിക്കൽ; not saddle adjustment | Not the guitar-setup adjustment of the saddle (octave intonation). The current ca (Octavació), es (Octavación), ja (オクターブ調整), pt (Oitavado) and zh-CN (八度音准) tables use that wrong sense: fix them. |",
+      "old_line_sha256": "c5b4d81b7ad9893c2946a7bae8b4cce09c8487b7613a661a6a3d94d41c79b7aa",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/ml.md",
+      "line": 186,
+      "old_line": "| Intonation | playing in tune over a drone | guitar setup octave adjustment | ഇന്റണേഷൻ — ഡ്രോണിനൊപ്പം ശ്രുതിയിൽ വായിക്കൽ; not saddle adjustment | guitar setup octave adjustment |",
+      "old_line_sha256": "e8a6e50433100b249c3288c844e76bd82de75009cfa382c4bdc9d387d5201531",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/mr.md",
+      "line": 68,
+      "old_line": "| Intonation | The Practice tool for playing or singing in tune over a drone (\"Intonation over a drone\") | Practice, paywall | `Intonation` | इंटोनेशन — आधार स्वरासोबत सुरात वाजवणे; not saddle adjustment | Not the guitar-setup adjustment of the saddle (octave intonation). The current ca (Octavació), es (Octavación), ja (オクターブ調整), pt (Oitavado) and zh-CN (八度音准) tables use that wrong sense: fix them. |",
+      "old_line_sha256": "ea67ab28450828c50a9b75fcb0c6f46bd319074cfb25344ad415366a21cf101a",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/mr.md",
+      "line": 186,
+      "old_line": "| Intonation | playing in tune over a drone | guitar setup octave adjustment | इंटोनेशन — आधार स्वरासोबत सुरात वाजवणे; not saddle adjustment | guitar setup octave adjustment |",
+      "old_line_sha256": "40cfe5628f475e3aae49be4cb7bd65785ed8ee600f476ff2fbb37d54aacbfb5c",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/no.md",
+      "line": 15,
+      "old_line": "- Musical tuning terminology overrides: the drone-training Intonation is pitch accuracy, not saddle adjustment. da/no/sv Temperament means musical temperament (not physical temperature); use Temperering / Temperering / Temperering respectively when this source occurs.",
+      "old_line_sha256": "c20ef6f2dde2448b6a25c82f100e7a97d399d1f41deda6403e469dc86ef0cb4c",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/no.md",
+      "line": 187,
+      "old_line": "Tune: tuning verb/tab versus melody noun; use separate terms above. Sharp/flat: tuning too high/low versus musical accidental. Bar: musical measure, never pub or toolbar. Key: musical tonality, never password/keycap. Pick: plectrum or pluck, but choose in interface. Lock: confirmation of stable correct pitch, not a padlock; locked content is separate. Take: a recorded attempt. Run: streak or complete performance, not running. Chart: chord sheet/diagram except statistical plots in Progress. Intonation: pitch accuracy over a drone, not saddle setup. Next/Again/Slower: one term must work both on controls and as spoken commands, using shipped anchors. Practice: music practice, not professional business. Feel: haptic sensation, not emotion. Quest: optional side goal distinct from the Today activity set. Challenge: friend competition versus cumulative lesson test; translate by context. Finger numbers 1–4 and open 0 remain unchanged. Loop A–B labels are markers, not note names. For hammer-on/pull-off/slide/bend/vibrato use established guitar-teaching loanwords, not everyday translations; I–IV–V and V/I chord symbols remain intact.",
+      "old_line_sha256": "844ec2faac812b56e19fc0886d5e51332c90d19e22c5f5adf8ff17884e39bff1",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/pa.md",
+      "line": 68,
+      "old_line": "| Intonation | The Practice tool for playing or singing in tune over a drone (\"Intonation over a drone\") | Practice, paywall | `Intonation` | ਇੰਟੋਨੇਸ਼ਨ — ਆਧਾਰ ਸੁਰ ਨਾਲ ਸੁਰ ਵਿੱਚ ਵਜਾਉਣਾ; not saddle adjustment | Not the guitar-setup adjustment of the saddle (octave intonation). The current ca (Octavació), es (Octavación), ja (オクターブ調整), pt (Oitavado) and zh-CN (八度音准) tables use that wrong sense: fix them. |",
+      "old_line_sha256": "7ac793d063dba20d354a027c4017de1e70c1a804f04bd3daff79f9a1b54b83e6",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/pa.md",
+      "line": 186,
+      "old_line": "| Intonation | playing in tune over a drone | guitar setup octave adjustment | ਇੰਟੋਨੇਸ਼ਨ — ਆਧਾਰ ਸੁਰ ਨਾਲ ਸੁਰ ਵਿੱਚ ਵਜਾਉਣਾ; not saddle adjustment | guitar setup octave adjustment |",
+      "old_line_sha256": "1b8dbe56d0648f820c72f9c579383a0332a1da4ee9e081b95ef2ee7bff76ec07",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/ro.md",
+      "line": 127,
+      "old_line": "Tune means bringing pitch to the target; a tune is a melody. Sharp/flat direction uses the existing flat/sharp labels (too low/high), not accidental names. Bar means musical measure, key means tonality, pick means plectrum/plucking or choose according to context. Lock means pitch confirmation, not a padlock. Take means recorded attempt, run a streak or passage attempt, not running. Chart means chord diagram/sheet unless statistical context. Intonation means pitch accuracy over a sustained tone, not saddle adjustment or speech stress. Practice means musical practice; Feel means vibration feedback, not emotion. Chop/chunk are muted rhythmic strokes, never a missed note.",
+      "old_line_sha256": "5c5fc3b58c8bd9cbf1bd89c932582196266fce470f780e1e566d000b9c797cb3",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/sk.md",
+      "line": 147,
+      "old_line": "| Intonation | Intonácia; pitch accuracy, not saddle adjustment |",
+      "old_line_sha256": "81288f8a02042edafd68852d40c77aac292e8bd69f00d2c9da256ee37e968970",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/sl.md",
+      "line": 127,
+      "old_line": "Tune means bringing pitch to the target; a tune is a melody. Sharp/flat direction uses the existing flat/sharp labels (too low/high), not accidental names. Bar means musical measure, key means tonality, pick means plectrum/plucking or choose according to context. Lock means pitch confirmation, not a padlock. Take means recorded attempt, run a streak or passage attempt, not running. Chart means chord diagram/sheet unless statistical context. Intonation means pitch accuracy over a sustained tone, not saddle adjustment or speech stress. Practice means musical practice; Feel means vibration feedback, not emotion. Chop/chunk are muted rhythmic strokes, never a missed note.",
+      "old_line_sha256": "5c5fc3b58c8bd9cbf1bd89c932582196266fce470f780e1e566d000b9c797cb3",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/sv.md",
+      "line": 15,
+      "old_line": "- Musical tuning terminology overrides: the drone-training Intonation is pitch accuracy, not saddle adjustment. da/no/sv Temperament means musical temperament (not physical temperature); use Temperering / Temperering / Temperering respectively when this source occurs.",
+      "old_line_sha256": "c20ef6f2dde2448b6a25c82f100e7a97d399d1f41deda6403e469dc86ef0cb4c",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/sv.md",
+      "line": 187,
+      "old_line": "Tune: tuning verb/tab versus melody noun; use separate terms above. Sharp/flat: tuning too high/low versus musical accidental. Bar: musical measure, never pub or toolbar. Key: musical tonality, never password/keycap. Pick: plectrum or pluck, but choose in interface. Lock: confirmation of stable correct pitch, not a padlock; locked content is separate. Take: a recorded attempt. Run: streak or complete performance, not running. Chart: chord sheet/diagram except statistical plots in Progress. Intonation: pitch accuracy over a drone, not saddle setup. Next/Again/Slower: one term must work both on controls and as spoken commands, using shipped anchors. Practice: music practice, not professional business. Feel: haptic sensation, not emotion. Quest: optional side goal distinct from the Today activity set. Challenge: friend competition versus cumulative lesson test; translate by context. Finger numbers 1–4 and open 0 remain unchanged. Loop A–B labels are markers, not note names. For hammer-on/pull-off/slide/bend/vibrato use established guitar-teaching loanwords, not everyday translations; I–IV–V and V/I chord symbols remain intact.",
+      "old_line_sha256": "844ec2faac812b56e19fc0886d5e51332c90d19e22c5f5adf8ff17884e39bff1",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/sw.md",
+      "line": 15,
+      "old_line": "- Musical tuning terminology overrides: the drone-training Intonation is pitch accuracy, not saddle adjustment. da/no/sv Temperament means musical temperament (not physical temperature); use Temperering / Temperering / Temperering respectively when this source occurs.",
+      "old_line_sha256": "c20ef6f2dde2448b6a25c82f100e7a97d399d1f41deda6403e469dc86ef0cb4c",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/sw.md",
+      "line": 178,
+      "old_line": "Tune: tuning verb/tab versus melody noun; use separate terms above. Sharp/flat: tuning too high/low versus musical accidental. Bar: musical measure, never pub or toolbar. Key: musical tonality, never password/keycap. Pick: plectrum or pluck, but choose in interface. Lock: confirmation of stable correct pitch, not a padlock; locked content is separate. Take: a recorded attempt. Run: streak or complete performance, not running. Chart: chord sheet/diagram except statistical plots in Progress. Intonation: pitch accuracy over a drone, not saddle setup. Next/Again/Slower: one term must work both on controls and as spoken commands, using shipped anchors. Practice: music practice, not professional business. Feel: haptic sensation, not emotion. Quest: optional side goal distinct from the Today activity set. Challenge: friend competition versus cumulative lesson test; translate by context. Finger numbers 1–4 and open 0 remain unchanged. Loop A–B labels are markers, not note names. For hammer-on/pull-off/slide/bend/vibrato use established guitar-teaching loanwords, not everyday translations; I–IV–V and V/I chord symbols remain intact.",
+      "old_line_sha256": "844ec2faac812b56e19fc0886d5e51332c90d19e22c5f5adf8ff17884e39bff1",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/ta.md",
+      "line": 68,
+      "old_line": "| Intonation | The Practice tool for playing or singing in tune over a drone (\"Intonation over a drone\") | Practice, paywall | `Intonation` | இன்டோனேஷன் — ஆதார சுருதியுடன் சுருதி சேர்த்து வாசித்தல்; not saddle adjustment | Not the guitar-setup adjustment of the saddle (octave intonation). The current ca (Octavació), es (Octavación), ja (オクターブ調整), pt (Oitavado) and zh-CN (八度音准) tables use that wrong sense: fix them. |",
+      "old_line_sha256": "2f403c8da5e2c906337b1ac88c281602a30f5244a0ea380a38f85507569dc7a5",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/ta.md",
+      "line": 186,
+      "old_line": "| Intonation | playing in tune over a drone | guitar setup octave adjustment | இன்டோனேஷன் — ஆதார சுருதியுடன் சுருதி சேர்த்து வாசித்தல்; not saddle adjustment | guitar setup octave adjustment |",
+      "old_line_sha256": "c8b4a73ef5086ff808e10385d732673555fcbe01763674060ad3d58bea490a9a",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/te.md",
+      "line": 68,
+      "old_line": "| Intonation | The Practice tool for playing or singing in tune over a drone (\"Intonation over a drone\") | Practice, paywall | `Intonation` | ఇంటొనేషన్ — డ్రోన్‌తో శ్రుతిలో వాయించడం; not saddle adjustment | Not the guitar-setup adjustment of the saddle (octave intonation). The current ca (Octavació), es (Octavación), ja (オクターブ調整), pt (Oitavado) and zh-CN (八度音准) tables use that wrong sense: fix them. |",
+      "old_line_sha256": "93d9e33ea39e58960f0baa1bc688e0922ec9415bba8150bca187520d9fefa0a3",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/te.md",
+      "line": 186,
+      "old_line": "| Intonation | playing in tune over a drone | guitar setup octave adjustment | ఇంటొనేషన్ — డ్రోన్‌తో శ్రుతిలో వాయించడం; not saddle adjustment | guitar setup octave adjustment |",
+      "old_line_sha256": "0a4a0da726bb6745519690c182b146ef992aef4f532500b3802043255e43f60e",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/th.md",
+      "line": 294,
+      "old_line": "Tune verb/tab ≠ tune melody; direction flat/sharp ≠ accidentals. Bar means measure, never pub or UI bar. Key means tonality, not keyboard/password. Pick means plectrum/pluck/choose by context. Lock means stable correct pitch, not padlock. Take means recorded performance attempt, not taking a lesson. Run means streak or continuous performance, not running. Chart means chord notation unless explicitly a progress graph. Intonation means playing/singing accurately over a drone, never saddle or octave adjustment (legacy ja/zh-CN entries are overridden above). Practice means musical practice, not a professional office. Feel means haptic feedback, not emotion. Challenge-friend and unit challenge use the separate senses above.",
+      "old_line_sha256": "a6d948f6adadd88284bac3d7f76282fb05a38ea15e1bbd281bd105d464c31917",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/uk.md",
+      "line": 147,
+      "old_line": "| Intonation | Інтонація, pitch accuracy not saddle adjustment |",
+      "old_line_sha256": "02f62e2739c28c4a19f258b3d9419adbda41da7f1a6860649a08325737801069",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/ur.md",
+      "line": 68,
+      "old_line": "| Intonation | The Practice tool for playing or singing in tune over a drone (\"Intonation over a drone\") | Practice, paywall | `Intonation` | سُر کی درستگی — مسلسل سُر کے ساتھ سُر میں بجانا؛ not saddle adjustment | Not the guitar-setup adjustment of the saddle (octave intonation). The current ca (Octavació), es (Octavación), ja (オクターブ調整), pt (Oitavado) and zh-CN (八度音准) tables use that wrong sense: fix them. |",
+      "old_line_sha256": "d59f5c1aac29104d737d1917e9c9d6099c9f5a3b1d8bc432d5c4f64ccb591bd4",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/ur.md",
+      "line": 186,
+      "old_line": "| Intonation | playing in tune over a drone | guitar setup octave adjustment | سُر کی درستگی — مسلسل سُر کے ساتھ سُر میں بجانا؛ not saddle adjustment | guitar setup octave adjustment |",
+      "old_line_sha256": "cb2bd4d95dfe2b9854c293cc5f16633c1f6410f95efbbb49495a984f34da9b9b",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/vi.md",
+      "line": 294,
+      "old_line": "Tune verb/tab ≠ tune melody; direction flat/sharp ≠ accidentals. Bar means measure, never pub or UI bar. Key means tonality, not keyboard/password. Pick means plectrum/pluck/choose by context. Lock means stable correct pitch, not padlock. Take means recorded performance attempt, not taking a lesson. Run means streak or continuous performance, not running. Chart means chord notation unless explicitly a progress graph. Intonation means playing/singing accurately over a drone, never saddle or octave adjustment (legacy ja/zh-CN entries are overridden above). Practice means musical practice, not a professional office. Feel means haptic feedback, not emotion. Challenge-friend and unit challenge use the separate senses above.",
+      "old_line_sha256": "a6d948f6adadd88284bac3d7f76282fb05a38ea15e1bbd281bd105d464c31917",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/zu.md",
+      "line": 15,
+      "old_line": "- Musical tuning terminology overrides: the drone-training Intonation is pitch accuracy, not saddle adjustment. da/no/sv Temperament means musical temperament (not physical temperature); use Temperering / Temperering / Temperering respectively when this source occurs.",
+      "old_line_sha256": "c20ef6f2dde2448b6a25c82f100e7a97d399d1f41deda6403e469dc86ef0cb4c",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    },
+    {
+      "path": "docs/l10n/glossary/zu.md",
+      "line": 178,
+      "old_line": "Tune: tuning verb/tab versus melody noun; use separate terms above. Sharp/flat: tuning too high/low versus musical accidental. Bar: musical measure, never pub or toolbar. Key: musical tonality, never password/keycap. Pick: plectrum or pluck, but choose in interface. Lock: confirmation of stable correct pitch, not a padlock; locked content is separate. Take: a recorded attempt. Run: streak or complete performance, not running. Chart: chord sheet/diagram except statistical plots in Progress. Intonation: pitch accuracy over a drone, not saddle setup. Next/Again/Slower: one term must work both on controls and as spoken commands, using shipped anchors. Practice: music practice, not professional business. Feel: haptic sensation, not emotion. Quest: optional side goal distinct from the Today activity set. Challenge: friend competition versus cumulative lesson test; translate by context. Finger numbers 1–4 and open 0 remain unchanged. Loop A–B labels are markers, not note names. For hammer-on/pull-off/slide/bend/vibrato use established guitar-teaching loanwords, not everyday translations; I–IV–V and V/I chord symbols remain intact.",
+      "old_line_sha256": "844ec2faac812b56e19fc0886d5e51332c90d19e22c5f5adf8ff17884e39bff1",
+      "classification": "copied drone-only/context restriction; same bounded context clarification applies without blind locale-value replacement"
+    }
+  ],
+  "shared_followup_rule_for_inventory": "Intonation is context-dependent: the current literal app key `Intonation` labels the harmonic/stopped-note instrument-setup check; `Intonation over a drone` is a separate pitch-accuracy practice key. Generic lesson uses follow their own source context. Do not infer a blanket ban on saddle setup from the English word alone.",
+  "inventory_limit": "Inventory records replicated stale claims for the same context-only clarification. It does not propose changing any other locale translation value or certify a full glossary audit.",
+  "live_translation_edits": [],
+  "live_document_edits": [],
+  "source_code_edits": [],
+  "status": "proposal awaiting root review/apply; none of the proposed documentation edits are applied",
+  "limitations": [
+    "Context/mapping audit from current repository source, not native-human lexical certification or device execution.",
+    "Instrument-setup guidance is described as the source currently implements it; this proposal does not independently validate hardware adjustment advice.",
+    "Generic lesson pitch-accuracy terms and all separately correct Intonation over a drone translations must be retained."
+  ]
+}

@@ -1,5 +1,7 @@
 # Danish (da) glossary
 
+> **Intonation: current source context.** App key `Intonation` labels the guided 12th-fret instrument-setup check (`IntonationView`: harmonic/fretted comparison and saddle advice). `Intonation over a drone` is separate pitch-accuracy practice; lesson uses follow their own context. This rule supersedes copied drone-only definitions and “never saddle/octave adjustment” claims below.
+
 Review: AI-reviewed working glossary, 2026-10-25. Not human-approved. Native musician and device review remain outstanding. Applies to interface and the lesson draft. Lesson draft by /root/translate_danish_lessons, 2026-10-26; independent semantic review pending.
 
 ## 1. Locale decisions

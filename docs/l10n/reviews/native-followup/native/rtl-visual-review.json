@@ -1,0 +1,480 @@
+{
+  "reviewer": "Codex independent visual reviewer review_is (actual exported-image inspection; not native-human certification)",
+  "source_base_short_sha": "970a12d",
+  "source_base_sha": "970a12db87dd5751d3674b1321e20706a576e03e",
+  "matrix_run_id": 40396032371,
+  "matrix_job_id": 121829199340,
+  "reported_job_status": "success (parent-provided run/job result; not inferred from screenshots)",
+  "matrix_job_url": "https://github.com/azerish25-ux/tuner/actions/runs/40396032371/job/121829199340",
+  "scope": "21 actual exported simulator frames: welcome, tuner and first guitar lesson in ar/fa/he/ur/bn/bg, plus three distinct Bulgarian AX5 tuner scroll positions. No other language/screen/device/size is certified.",
+  "index_sha256": "ae92a265c7bf75d43b963269a301b5cb9e369591d1296e83e4ac3883ef54bea2",
+  "actual_image_count_viewed": 21,
+  "all_indexed_images_actually_viewed": true,
+  "observed_actionable_visual_defects": 0,
+  "lesson_header_truncation_observed_in_this_set": false,
+  "bulgarian_ax5_assessment": {
+    "initial_header": "Complete acoustic-guitar title and standard/reference metadata readable at accessibility size.",
+    "vertical_reachability_visible": "Separate status and string-rail frames show the intended lower content at different scroll positions; full quest/counter/XP/end captions are visible in the rail capture.",
+    "horizontal_rail_limit": "Sixth E4 partly beyond the horizontal viewport. Source StringRail.swift explicitly provides horizontal scrolling; neither these pixels nor the container-only reachability test establishes actual reveal/tap of the sixth chip.",
+    "alias_distinction_preserved": true,
+    "inspected_source_paths": [
+      "ios/Timbre/Tune/StringRail.swift",
+      "ios/Timbre/Tune/TuneView.swift",
+      "ios/TimbreUITests/LocalizationMatrixUITests.swift"
+    ]
+  },
+  "candidate_change_limit": "The parent has a local general lesson-header wrapping candidate for a French baseline finding. These 970a12d frames do not execute or verify that unpushed candidate or any newly proposed text edits.",
+  "limitations": [
+    "Visual review by an AI of captured simulator pixels, not native-human typography/fluency certification.",
+    "No VoiceOver listening, spoken pronunciation, contrast measurement, physical-device interaction or full-app QA performed.",
+    "No claim for paywalls, other lessons/steps, quizzes, widgets, Watch, store screenshot/preview assets or App Store account configuration.",
+    "The Persian major/minor/credit isolation follow-up strings are not displayed in these first-lesson frames; no rendering signoff for those new proposals is inferred.",
+    "A successful matrix job and these limited readable captures do not imply release readiness."
+  ],
+  "frames": [
+    {
+      "name": "l10n-ar-welcome.png",
+      "sha256": "0d1f273ebeda825a789f2adc36ba42f97f22bf7d753db962aa12df463a7465c6",
+      "pixel_width": 1206,
+      "pixel_height": 2622,
+      "actual_image_viewed": true,
+      "view_method": "tools.view_image(path, detail=original), image pixels inspected directly in tool response",
+      "locale": "ar",
+      "source_folder": "screenshots",
+      "original_exported_file_name": "68EDBC47-CE72-4961-A7F5-54DE4AFB0B29.png",
+      "original_attachment_name": "l10n-ar-welcome_0_EB72454D-D935-400D-A17F-14BE6A9A8B92.png",
+      "index_associated_with_failure": false,
+      "device_name": "iPhone 17 Pro",
+      "configuration_name": "Test Scheme Action",
+      "observations": [
+        "Arabic headline is complete over two lines; joined letterforms and diacritics are visibly present. Subtitle, instrument chips, primary/secondary actions and existing-Pro line remain separated and readable.",
+        "RTL alignment and instrument-chip order are visible, while embedded Timbre/Timbre Pro remain intact Latin words. No missing-glyph boxes, clipped text or overlapping controls observed."
+      ],
+      "visual_result": "no-actionable-defect-observed-in-captured-visible-content",
+      "actionable_findings": []
+    },
+    {
+      "name": "l10n-ar-tuner.png",
+      "sha256": "1a77d592e8f711a5fc4f229cd71fbed7f12f51b33f8780f62d8f57d29ef58801",
+      "pixel_width": 1206,
+      "pixel_height": 2622,
+      "actual_image_viewed": true,
+      "view_method": "tools.view_image(path, detail=original), image pixels inspected directly in tool response",
+      "locale": "ar",
+      "source_folder": "screenshots",
+      "original_exported_file_name": "6AE86E0E-A7E7-4696-9AA7-60CAB123C7CF.png",
+      "original_attachment_name": "l10n-ar-tuner_0_706ED720-C535-42E3-B5A9-D63CE88DCF47.png",
+      "index_associated_with_failure": false,
+      "device_name": "iPhone 17 Pro",
+      "configuration_name": "Test Scheme Action",
+      "observations": [
+        "Arabic instrument/standard labels, strum/listen controls, Auto/Manual/reference controls and all five navigation labels are visible without ellipsis or collisions.",
+        "The physical string rail remains E2, A2, D3, G3, B3, E4 from left to right despite RTL page/navigation layout. Big E2 and the 82.41 Hz target remain intact; quest 0/6 and +20 XP are readable."
+      ],
+      "visual_result": "no-actionable-defect-observed-in-captured-visible-content",
+      "actionable_findings": []
+    },
+    {
+      "name": "l10n-ar-lesson.png",
+      "sha256": "f7066ee08d9a5d92708b795e8cbe0a81fda7ae2b483e58861637b328633f9d69",
+      "pixel_width": 1206,
+      "pixel_height": 2622,
+      "actual_image_viewed": true,
+      "view_method": "tools.view_image(path, detail=original), image pixels inspected directly in tool response",
+      "locale": "ar",
+      "source_folder": "screenshots",
+      "original_exported_file_name": "902FEA72-B1CE-413B-8AC5-81C0E7F9BD2B.png",
+      "original_attachment_name": "l10n-ar-lesson_0_EB9E4E61-F1FF-4EC7-9432-9D04839F87AB.png",
+      "index_associated_with_failure": false,
+      "device_name": "iPhone 17 Pro",
+      "configuration_name": "Test Scheme Action",
+      "observations": [
+        "Full Arabic Meet-your-guitar header fits beside Step 1 of 5 and the close control; first progress segment is on the RTL leading side.",
+        "The six-strings heading, complete paragraph ending with string 6 and Continue button fit beneath the illustration. No clipped joining/diacritics or title/body/button collision observed."
+      ],
+      "visual_result": "no-actionable-defect-observed-in-captured-visible-content",
+      "actionable_findings": []
+    },
+    {
+      "name": "l10n-fa-welcome.png",
+      "sha256": "10ac06ae13987b003b337b684a710edcf06c1086a1e2fec9908199d119d3c98d",
+      "pixel_width": 1206,
+      "pixel_height": 2622,
+      "actual_image_viewed": true,
+      "view_method": "tools.view_image(path, detail=original), image pixels inspected directly in tool response",
+      "locale": "fa",
+      "source_folder": "screenshots",
+      "original_exported_file_name": "6B2DC79A-CA63-4875-8677-CB27303F85BB.png",
+      "original_attachment_name": "l10n-fa-welcome_0_BB4736A0-B81C-423A-922C-F7646CAD4E7C.png",
+      "index_associated_with_failure": false,
+      "device_name": "iPhone 17 Pro",
+      "configuration_name": "Test Scheme Action",
+      "observations": [
+        "Persian welcome headline wraps completely over three lines. Subtitle wraps below it; all chip labels, start/just-tune actions and existing-Pro line remain visible and separated.",
+        "Persian letter joining and ZWNJ-style word forms render without missing-glyph boxes. Timbre/Timbre Pro Latin names remain intact in RTL sentences."
+      ],
+      "visual_result": "no-actionable-defect-observed-in-captured-visible-content",
+      "actionable_findings": []
+    },
+    {
+      "name": "l10n-fa-tuner.png",
+      "sha256": "efdb96115740e6340760d7e6673ee9f8cb67df80c5f0ab2a8998713163dc51d6",
+      "pixel_width": 1206,
+      "pixel_height": 2622,
+      "actual_image_viewed": true,
+      "view_method": "tools.view_image(path, detail=original), image pixels inspected directly in tool response",
+      "locale": "fa",
+      "source_folder": "screenshots",
+      "original_exported_file_name": "CC619EB8-5C5A-40F4-AD60-C0203409EB3F.png",
+      "original_attachment_name": "l10n-fa-tuner_0_A73B3DC0-AA7A-4C1B-934B-FD5D0E23347A.png",
+      "index_associated_with_failure": false,
+      "device_name": "iPhone 17 Pro",
+      "configuration_name": "Test Scheme Action",
+      "observations": [
+        "Persian instrument, standard, strum/listen, Auto/Manual/reference and navigation labels are visible and readable.",
+        "The rail stays E2, A2, D3, G3, B3, E4 left-to-right; the big E2 label keeps its octave at the expected side. Mixed A4/440/Hz and target-frequency groups remain intact. Localized digit shapes in level/quest/XP values are not treated as missing translations or reordered note names."
+      ],
+      "visual_result": "no-actionable-defect-observed-in-captured-visible-content",
+      "actionable_findings": []
+    },
+    {
+      "name": "l10n-fa-lesson.png",
+      "sha256": "4e26e689367b64a60eeeaf50dad8b4c5e79e18993f3534ce84de04bf60d93826",
+      "pixel_width": 1206,
+      "pixel_height": 2622,
+      "actual_image_viewed": true,
+      "view_method": "tools.view_image(path, detail=original), image pixels inspected directly in tool response",
+      "locale": "fa",
+      "source_folder": "screenshots",
+      "original_exported_file_name": "C9C2F95E-D8F7-42AD-BDE6-69452122FF51.png",
+      "original_attachment_name": "l10n-fa-lesson_0_A831FED2-5F8F-424C-B371-4C7F99F65C0E.png",
+      "index_associated_with_failure": false,
+      "device_name": "iPhone 17 Pro",
+      "configuration_name": "Test Scheme Action",
+      "observations": [
+        "Full Persian lesson header fits with the step counter and close control; no French-like header ellipsis is present.",
+        "Six-strings heading and complete three-line body remain readable; the final source digit 6 stays associated with the string reference. Continue is visible below with no text overlap."
+      ],
+      "visual_result": "no-actionable-defect-observed-in-captured-visible-content",
+      "actionable_findings": []
+    },
+    {
+      "name": "l10n-he-welcome.png",
+      "sha256": "85f156da866cd32d4d75cdc2281447c1db4aa4d76076be26e92f9ed1cf1e955f",
+      "pixel_width": 1206,
+      "pixel_height": 2622,
+      "actual_image_viewed": true,
+      "view_method": "tools.view_image(path, detail=original), image pixels inspected directly in tool response",
+      "locale": "he",
+      "source_folder": "screenshots",
+      "original_exported_file_name": "753A71AA-B2BF-40B1-9801-CB30EFC62631.png",
+      "original_attachment_name": "l10n-he-welcome_0_DE0498EE-A238-4A43-A1E5-81B8A4B14C7A.png",
+      "index_associated_with_failure": false,
+      "device_name": "iPhone 17 Pro",
+      "configuration_name": "Test Scheme Action",
+      "observations": [
+        "Hebrew welcome headline is complete over two lines, followed by a distinct wrapped subtitle. Instrument chips and all actions fit without clipping.",
+        "Hebrew glyphs and embedded Latin product names remain readable in RTL layout. No unsupported-glyph squares or control collisions observed."
+      ],
+      "visual_result": "no-actionable-defect-observed-in-captured-visible-content",
+      "actionable_findings": []
+    },
+    {
+      "name": "l10n-he-tuner.png",
+      "sha256": "cf014f8783019f298e59e28b774c66020258172990a0ba6f684cc9bacf22671e",
+      "pixel_width": 1206,
+      "pixel_height": 2622,
+      "actual_image_viewed": true,
+      "view_method": "tools.view_image(path, detail=original), image pixels inspected directly in tool response",
+      "locale": "he",
+      "source_folder": "screenshots",
+      "original_exported_file_name": "57736FAE-04B1-4DC6-AB6F-2B643791EE48.png",
+      "original_attachment_name": "l10n-he-tuner_0_E1E5C6CF-A551-452C-853E-ECF278786672.png",
+      "index_associated_with_failure": false,
+      "device_name": "iPhone 17 Pro",
+      "configuration_name": "Test Scheme Action",
+      "observations": [
+        "Full Hebrew acoustic-guitar header and standard/reference metadata fit; strum/listen and mode/reference controls remain separated.",
+        "Rail note/octave labels remain E2, A2, D3, G3, B3, E4 left-to-right, while navigation is RTL. Big E2, 82.41 Hz, 0/6 and +20 XP remain intact. No clipping or label collisions observed."
+      ],
+      "visual_result": "no-actionable-defect-observed-in-captured-visible-content",
+      "actionable_findings": []
+    },
+    {
+      "name": "l10n-he-lesson.png",
+      "sha256": "9d0e245d1ab7dd9cf19257a598e153ce4717d3091c324785b00fb3c49a32b1cb",
+      "pixel_width": 1206,
+      "pixel_height": 2622,
+      "actual_image_viewed": true,
+      "view_method": "tools.view_image(path, detail=original), image pixels inspected directly in tool response",
+      "locale": "he",
+      "source_folder": "screenshots",
+      "original_exported_file_name": "6B58D6A1-9E05-4C05-9A11-C104B1ADDAC6.png",
+      "original_attachment_name": "l10n-he-lesson_0_72B71754-7825-4C72-B5C9-27150D104A18.png",
+      "index_associated_with_failure": false,
+      "device_name": "iPhone 17 Pro",
+      "configuration_name": "Test Scheme Action",
+      "observations": [
+        "Full Hebrew Meet-your-guitar header and Step 1 of 5 are visible without ellipsis; progress direction and close-control placement match RTL layout.",
+        "The complete six-strings heading and body ending with string 6 fit above Continue. No clipping or title/body/control overlap observed."
+      ],
+      "visual_result": "no-actionable-defect-observed-in-captured-visible-content",
+      "actionable_findings": []
+    },
+    {
+      "name": "l10n-ur-welcome.png",
+      "sha256": "5255f2a29780c6ed9aa2c30093355741f6f6603bc912056929b88f0b96bfeeaf",
+      "pixel_width": 1206,
+      "pixel_height": 2622,
+      "actual_image_viewed": true,
+      "view_method": "tools.view_image(path, detail=original), image pixels inspected directly in tool response",
+      "locale": "ur",
+      "source_folder": "screenshots",
+      "original_exported_file_name": "4570B738-56C5-4A13-9F0C-C8EFD1087734.png",
+      "original_attachment_name": "l10n-ur-welcome_0_B961577E-B75F-45D7-9D7C-F33ACFD953C2.png",
+      "index_associated_with_failure": false,
+      "device_name": "iPhone 17 Pro",
+      "configuration_name": "Test Scheme Action",
+      "observations": [
+        "Urdu Nastaliq welcome lettering renders with its connected diagonal forms; headline is complete over three tall, tightly stacked lines. Visible words remain legible; tall Nastaliq extents alone are not classified as a proven collision.",
+        "Subtitle, chips, Start, Just tune and existing-Pro text remain visible and separated. Embedded Latin product names are intact. Fine stroke appearance is a visual observation, not a native typography or contrast certification."
+      ],
+      "visual_result": "no-actionable-defect-observed-in-captured-visible-content",
+      "actionable_findings": []
+    },
+    {
+      "name": "l10n-ur-tuner.png",
+      "sha256": "ae6362cebc727f11c60fc60df99591eb8f05ad25a1ca47e398e68704a8f56507",
+      "pixel_width": 1206,
+      "pixel_height": 2622,
+      "actual_image_viewed": true,
+      "view_method": "tools.view_image(path, detail=original), image pixels inspected directly in tool response",
+      "locale": "ur",
+      "source_folder": "screenshots",
+      "original_exported_file_name": "A33CCBE9-19C7-47FC-B315-1D17488C9F90.png",
+      "original_attachment_name": "l10n-ur-tuner_0_46F86033-46F2-47E0-88D5-F318CE5598C1.png",
+      "index_associated_with_failure": false,
+      "device_name": "iPhone 17 Pro",
+      "configuration_name": "Test Scheme Action",
+      "observations": [
+        "Urdu Nastaliq acoustic-guitar/standard, side controls, Auto/Manual/reference, quest and navigation labels render without missing-glyph boxes or visible truncation.",
+        "Physical string order remains E2, A2, D3, G3, B3, E4 left-to-right; big E2, A4 440 Hz, 82.41 Hz, 0/6 and +20 XP remain intact in the mixed-script screen. No control/text collision observed."
+      ],
+      "visual_result": "no-actionable-defect-observed-in-captured-visible-content",
+      "actionable_findings": []
+    },
+    {
+      "name": "l10n-ur-lesson.png",
+      "sha256": "156f8afae3482de2a39db85554ae0b461afbcdab82dc30c457bfb8878a49b3c4",
+      "pixel_width": 1206,
+      "pixel_height": 2622,
+      "actual_image_viewed": true,
+      "view_method": "tools.view_image(path, detail=original), image pixels inspected directly in tool response",
+      "locale": "ur",
+      "source_folder": "screenshots",
+      "original_exported_file_name": "BA9E4815-4F5B-4D04-B474-1516CF5BA78B.png",
+      "original_attachment_name": "l10n-ur-lesson_0_16F307C1-0F42-429B-A1BB-33D2D7A830A3.png",
+      "index_associated_with_failure": false,
+      "device_name": "iPhone 17 Pro",
+      "configuration_name": "Test Scheme Action",
+      "observations": [
+        "Full Urdu lesson header fits beside the step counter; no header ellipsis is present. Nastaliq forms remain connected and readable.",
+        "Six-strings heading, the complete two-line body and Continue button are visible. Source string 6 remains readable within the Urdu sentence; no clipping or text/button collision observed."
+      ],
+      "visual_result": "no-actionable-defect-observed-in-captured-visible-content",
+      "actionable_findings": []
+    },
+    {
+      "name": "l10n-bn-welcome.png",
+      "sha256": "b0021374b67390a8127187cb6db3982608be8ca6437a76efd426ac7f2e0a3be8",
+      "pixel_width": 1206,
+      "pixel_height": 2622,
+      "actual_image_viewed": true,
+      "view_method": "tools.view_image(path, detail=original), image pixels inspected directly in tool response",
+      "locale": "bn",
+      "source_folder": "screenshots",
+      "original_exported_file_name": "42C27125-CAAE-4745-AE84-E86945511888.png",
+      "original_attachment_name": "l10n-bn-welcome_0_14DB8AF3-1A8B-4928-ADAF-A27341F7F4EB.png",
+      "index_associated_with_failure": false,
+      "device_name": "iPhone 17 Pro",
+      "configuration_name": "Test Scheme Action",
+      "observations": [
+        "Bengali headline is complete over three lines with visible vowel/conjunct forms rather than missing-glyph boxes. The subtitle and complete primary/secondary action labels remain readable.",
+        "LTR layout, full instrument chips, Start, Just tune and existing-Pro line are separated. The long last headline line stays within the captured viewport without ellipsis."
+      ],
+      "visual_result": "no-actionable-defect-observed-in-captured-visible-content",
+      "actionable_findings": []
+    },
+    {
+      "name": "l10n-bn-tuner.png",
+      "sha256": "8f0a1d0384465fb2a548e900679bfb0c42df65e1baf7b799148223021d045304",
+      "pixel_width": 1206,
+      "pixel_height": 2622,
+      "actual_image_viewed": true,
+      "view_method": "tools.view_image(path, detail=original), image pixels inspected directly in tool response",
+      "locale": "bn",
+      "source_folder": "screenshots",
+      "original_exported_file_name": "C5E6FD91-13FE-45E7-815A-AD334C52AFD6.png",
+      "original_attachment_name": "l10n-bn-tuner_0_C30C5182-16ED-49F2-B69B-321EFD8BBB01.png",
+      "index_associated_with_failure": false,
+      "device_name": "iPhone 17 Pro",
+      "configuration_name": "Test Scheme Action",
+      "observations": [
+        "Bengali acoustic-guitar heading, standard/reference, strum/listen, Auto/Manual/reference, quest and all navigation labels are visibly complete.",
+        "Latin musical E2/A2/D3/G3/B3/E4 rail labels and A4 440 Hz/82.41 Hz groups remain intact. No missing Bengali glyph boxes, text clipping or control collisions observed."
+      ],
+      "visual_result": "no-actionable-defect-observed-in-captured-visible-content",
+      "actionable_findings": []
+    },
+    {
+      "name": "l10n-bn-lesson.png",
+      "sha256": "b1674877e104c06e622a1e6023e94b37fbc4089dc03f3b8f88f39d9533184d81",
+      "pixel_width": 1206,
+      "pixel_height": 2622,
+      "actual_image_viewed": true,
+      "view_method": "tools.view_image(path, detail=original), image pixels inspected directly in tool response",
+      "locale": "bn",
+      "source_folder": "screenshots",
+      "original_exported_file_name": "574E8E0D-043E-49E8-8A24-D984408C7BDE.png",
+      "original_attachment_name": "l10n-bn-lesson_0_3CA62F12-1F0B-4786-B5A7-4097DD524D83.png",
+      "index_associated_with_failure": false,
+      "device_name": "iPhone 17 Pro",
+      "configuration_name": "Test Scheme Action",
+      "observations": [
+        "Full Bengali Meet-your-guitar header fits next to Step 1/5 with no ellipsis. Bengali headline and body shaping remains legible.",
+        "Six-strings heading and complete three-line body ending in source digit 6 fit above Continue. No illustration/text/button overlap or clipped vowel/conjunct marks observed."
+      ],
+      "visual_result": "no-actionable-defect-observed-in-captured-visible-content",
+      "actionable_findings": []
+    },
+    {
+      "name": "l10n-bg-welcome.png",
+      "sha256": "a82f582a5effb5a99cab20bbbce157f315099c7c76b93c88ff8032dfe56e2a5a",
+      "pixel_width": 1206,
+      "pixel_height": 2622,
+      "actual_image_viewed": true,
+      "view_method": "tools.view_image(path, detail=original), image pixels inspected directly in tool response",
+      "locale": "bg",
+      "source_folder": "screenshots",
+      "original_exported_file_name": "0ADD1AFA-ECC2-4FF8-BF7F-46FB55BA5773.png",
+      "original_attachment_name": "l10n-bg-welcome_0_98B63101-95F5-4A4B-B3FE-0C1689BE500B.png",
+      "index_associated_with_failure": false,
+      "device_name": "iPhone 17 Pro",
+      "configuration_name": "Test Scheme Action",
+      "observations": [
+        "Bulgarian headline is complete over four lines, including the final playing-learning sentence. Subtitle wraps below it and the visible instrument choices and actions remain separate.",
+        "Cyrillic glyphs, Start, Just tuning and existing-Pro line are readable without ellipsis or missing-glyph boxes."
+      ],
+      "visual_result": "no-actionable-defect-observed-in-captured-visible-content",
+      "actionable_findings": []
+    },
+    {
+      "name": "l10n-bg-tuner.png",
+      "sha256": "7d9356aab1429dba57ca2ed723d9e835a2112cc5ab2c857acaaab9fd18ea1d74",
+      "pixel_width": 1206,
+      "pixel_height": 2622,
+      "actual_image_viewed": true,
+      "view_method": "tools.view_image(path, detail=original), image pixels inspected directly in tool response",
+      "locale": "bg",
+      "source_folder": "screenshots",
+      "original_exported_file_name": "D2F34A29-06C7-44A6-A69C-F3651F9622B8.png",
+      "original_attachment_name": "l10n-bg-tuner_0_EBF238AD-4183-47D5-B766-1BC8F9D49490.png",
+      "index_associated_with_failure": false,
+      "device_name": "iPhone 17 Pro",
+      "configuration_name": "Test Scheme Action",
+      "observations": [
+        "Acoustic guitar wraps over two complete lines rather than truncating. Standard/A4 440 Hz metadata, side actions and Auto/Manual/reference control labels are visible.",
+        "Rail remains E2, A2, D3, G3, B3, E4, with readable end captions; note/target/quest/XP and all five navigation labels fit without visible text collision."
+      ],
+      "visual_result": "no-actionable-defect-observed-in-captured-visible-content",
+      "actionable_findings": []
+    },
+    {
+      "name": "l10n-bg-lesson.png",
+      "sha256": "4366a397aff456756fbe602145b973c7c707f23ac2aefe9d5a72df9235385a41",
+      "pixel_width": 1206,
+      "pixel_height": 2622,
+      "actual_image_viewed": true,
+      "view_method": "tools.view_image(path, detail=original), image pixels inspected directly in tool response",
+      "locale": "bg",
+      "source_folder": "screenshots",
+      "original_exported_file_name": "ECC74EB4-C381-4CEA-A8FD-0028BAB50F43.png",
+      "original_attachment_name": "l10n-bg-lesson_0_389DC6A3-9527-45EB-BC1A-54B5D43FA056.png",
+      "index_associated_with_failure": false,
+      "device_name": "iPhone 17 Pro",
+      "configuration_name": "Test Scheme Action",
+      "observations": [
+        "Full Bulgarian Meet-your-guitar header is visible beside Step 1 of 5; no French-like header truncation is present.",
+        "Six-strings heading and complete four-line paragraph fit above Continue. Line breaks at existing най- prefixes are normal wrapping, not missing text. No text/illustration/button collision observed."
+      ],
+      "visual_result": "no-actionable-defect-observed-in-captured-visible-content",
+      "actionable_findings": []
+    },
+    {
+      "name": "l10n-bg-tuner-ax5.png",
+      "sha256": "8efa314e46791fdb80798e18cacedeba67f76cf08a5217b4d39a5144cf279987",
+      "pixel_width": 1206,
+      "pixel_height": 2622,
+      "actual_image_viewed": true,
+      "view_method": "tools.view_image(path, detail=original), image pixels inspected directly in tool response",
+      "locale": "bg",
+      "source_folder": "screenshots",
+      "original_exported_file_name": "77B9FB12-768E-492A-9AFD-85527D65ABDB.png",
+      "original_attachment_name": "l10n-bg-tuner-ax5_0_57D6B48D-0A03-4809-9CB2-D065945818A2.png",
+      "index_associated_with_failure": false,
+      "device_name": "iPhone 17 Pro",
+      "configuration_name": "Test Scheme Action",
+      "observations": [
+        "At AX5 the complete Acoustic guitar heading wraps over two large lines, and Standard/A4 440 Hz metadata wraps below without truncation. Header controls and Auto/Manual/reference controls remain visible.",
+        "Large side-action caption overlaps only the decorative guitar area, not another text/control; its wording remains readable. Lower tuning content is offscreen in this initial vertical-scroll position; this frame alone is not evidence it is missing."
+      ],
+      "visual_result": "no-actionable-defect-observed-in-captured-visible-content",
+      "actionable_findings": []
+    },
+    {
+      "name": "l10n-bg-ax5-tune.png",
+      "sha256": "cf7848ce9731a998b46104c9f85251cc04a8a834a307998105aa0bb1b8201a50",
+      "pixel_width": 1206,
+      "pixel_height": 2622,
+      "actual_image_viewed": true,
+      "view_method": "tools.view_image(path, detail=original), image pixels inspected directly in tool response",
+      "locale": "bg",
+      "source_folder": "screenshots",
+      "original_exported_file_name": "B4E13AA6-8717-4E5B-B288-957A4A9CFE9A.png",
+      "original_attachment_name": "l10n-bg-ax5-tune_0_5CE9A61F-2B33-4D40-B5C7-5F4F6AEB762D.status",
+      "index_associated_with_failure": false,
+      "device_name": "iPhone 17 Pro",
+      "configuration_name": "Test Scheme Action",
+      "observations": [
+        "This is the distinct status-target capture, not the string-rail capture. The large E2 readout, complete target-frequency group, meter and full two-line tap-to-listen status are visible after scrolling.",
+        "The beginning of the quest paragraph extends beneath the fixed navigation bar in this scroll position; the next distinct rail capture exposes it completely. Earlier stage/header content is naturally cropped above the vertical viewport; no simultaneous-all-content claim is made."
+      ],
+      "visual_result": "no-actionable-defect-observed-in-captured-visible-content",
+      "actionable_findings": []
+    },
+    {
+      "name": "l10n-bg-ax5-tune.string.png",
+      "sha256": "ed49323a86298597d69548789577f038599327427ba6c15e642853d8ef204418",
+      "pixel_width": 1206,
+      "pixel_height": 2622,
+      "actual_image_viewed": true,
+      "view_method": "tools.view_image(path, detail=original), image pixels inspected directly in tool response",
+      "locale": "bg",
+      "source_folder": "screenshots",
+      "original_exported_file_name": "14A75AF7-ED7A-48B5-AA23-9267D01FCCC0.png",
+      "original_attachment_name": "l10n-bg-ax5-tune.string_0_526A876F-55EF-4298-8E99-E97BC7CEFD85.rail",
+      "index_associated_with_failure": false,
+      "device_name": "iPhone 17 Pro",
+      "configuration_name": "Test Scheme Action",
+      "observations": [
+        "This is the distinct string-rail target capture. The complete quest paragraph, 0/6 counter, +20 XP and both two-line thickest/thinnest captions are visible above the fixed navigation bar after vertical scrolling.",
+        "Large E2, A2, D3, G3 and B3 string chips are readable in source order. The rightmost E4 chip is only partially visible beyond the horizontal viewport. StringRail has an explicit horizontal ScrollView for this overflow; this screenshot alone does not prove a clipping bug or prove that a horizontal swipe reveals/taps the sixth chip. That interaction remains unverified by this visual review."
+      ],
+      "visual_result": "visible-rail-and-quest-readable-with-horizontal-interaction-limit",
+      "actionable_findings": [],
+      "unverified_interactions": [
+        "Horizontally scroll the AX5 rail until the complete sixth E4 chip is visible and verify its action; the source supports horizontal scrolling but this exported frame and rail-container reachability assertion do not execute that interaction."
+      ]
+    }
+  ]
+}

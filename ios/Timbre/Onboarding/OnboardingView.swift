@@ -50,6 +50,7 @@ struct OnboardingView: View {
     @EnvironmentObject private var store: AppStore
     /// Observed so the Pro badges on the instrument chips go when a restore unlocks everything.
     @EnvironmentObject private var commerce: CommerceService
+    @Environment(\.locale) private var locale
     @Environment(\.dismiss) private var dismiss
     /// An instrument a link chose (an instrument's Custom Product Page): the welcome screen selects it.
     @ObservedObject private var link = OnboardingLink.shared
@@ -302,6 +303,15 @@ struct OnboardingView: View {
 
     // MARK: Welcome
 
+    private var welcomeHeadlineFont: Font {
+        // Tamil's wide letter clusters use the title step so the final word and its punctuation fit together.
+        // Keep the display face's Dynamic Type curve and allow the complete promise to wrap at every size.
+        if locale.language.languageCode?.identifier == "ta" {
+            return Typeface.display(28, relativeTo: .largeTitle)
+        }
+        return Typeface.display(40)
+    }
+
     /// Spotlit instrument, the promise, and the instrument picker in one screen.
     private var welcome: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -328,7 +338,7 @@ struct OnboardingView: View {
             .frame(maxHeight: .infinity)
             VStack(alignment: .leading, spacing: 12) {
                 // Translations may need more than the English copy's two lines, even at the usual text sizes.
-                Text("Tune in seconds.\nThen learn to play.").font(Typeface.display(40)).tracking(-1).foregroundStyle(Palette.ink)
+                Text("Tune in seconds.\nThen learn to play.").font(welcomeHeadlineFont).tracking(-1).foregroundStyle(Palette.ink)
                     .fixedSize(horizontal: false, vertical: true).accessibilityAddTraits(.isHeader)
                     .accessibilityIdentifier("onboarding.headline")
                 Text("Timbre listens and tells you exactly how you did.")

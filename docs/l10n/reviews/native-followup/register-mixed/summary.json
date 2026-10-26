@@ -1,0 +1,74 @@
+{
+  "reviewer": "Codex independent register reviewer /root/review_uk",
+  "scope": "Direct read of all191 requested mixed-register candidates plus all62 additional permission/Siri rows and387 adjacent active-key regex candidates. Every proposed target was reread; false-positive noun, numeral-name, musical-term, third-person and valid informal forms remain unchanged. This is not a universal semantic rereview of the complete three UI corpora or native-human/device certification.",
+  "reviewed_rows": 640,
+  "guarded_proposed_corrections": 284,
+  "accepted_existing_rows": 356,
+  "by_locale": {
+    "hr": {
+      "read_rows": 200,
+      "proposed_corrections": 161
+    },
+    "ro": {
+      "read_rows": 80,
+      "proposed_corrections": 16
+    },
+    "tr": {
+      "read_rows": 360,
+      "proposed_corrections": 107
+    }
+  },
+  "input_counts": {
+    "requested_seed": 191,
+    "additional_permission_and_Siri": 62,
+    "adjacent_formal_scan": 27,
+    "expanded_endings": 126,
+    "Turkish_short_imperative_disambiguation": 234
+  },
+  "registers": {
+    "hr": "informal singular ti",
+    "ro": "informal singular tu",
+    "tr": "informal singular sen"
+  },
+  "important_accepts": [
+    "Turkish Get Timbre: %@ uses singular edin from edinmek, not the formal auxiliary edin.",
+    "Turkish kalın remains thick/thickest where it modifies strings; it becomes kal only in the explicit stay-inside-the-ring command.",
+    "Günün/Bugünün and other genitives, purpose word için and singular possessives remain unchanged.",
+    "Romanian cenți/părți/unități/abonați are normal noun plurals; cânți/poți/îți/înveți already express singular address.",
+    "Croatian note/instrumente/kvinte/upute and plural adjective forms are objects/names, not polite imperatives."
+  ],
+  "source_contracts": {
+    "all_current_old_values_match": true,
+    "format_arguments_and_named_tokens_preserved": true,
+    "literal_digit_groups_and_line_breaks_preserved": true,
+    "permission_privacy_and_purchase_conditions_preserved": true,
+    "noncatalogue_legacy_timbre_keys_modified": 0
+  },
+  "source_inputs_sha256": {
+    "../native-qa/mixed-ui-register-candidates.json": "0839c4ab3e172a3f8610312670f7f6ef014b93f2beab7fab763561553976f710",
+    "docs/l10n/glossary/hr.md": "7fbbd0dbd5be1f89c112414cce3bfd447b2b108ae91eab3a5eea948bb418cd66",
+    "docs/l10n/glossary/ro.md": "ac76b38c4c4bf1746d924137c559fee004ad689712b03d65bb5956c2b2abd9ec",
+    "docs/l10n/glossary/tr.md": "8461c04e9a543a52b465cc7e4898b38efbfebbe3bd9a8d7d5bebfdeb7f4b45d4",
+    "ios/project.yml": "2c5b94fa6e17370f89dff4d4b1b1e21669d8f2a811e7ba22d10c648548a6f92d"
+  },
+  "locale_tables_sha256": {
+    "hr": {
+      "Localizable.strings": "ee47573dd1d5ba49bbe3d0395f9cb4d56ba5eec20af2abf313aa28c6dbf3b50d",
+      "InfoPlist.strings": "8912457f681e6a64e7e7e9909c1a9576e2d64c7aa7fca69fb93296fbbe708cc9",
+      "AppShortcuts.strings": "ae1184757a36806e6ef5f57661a247a0431e9d2056031897bfcd21eda545e6aa"
+    },
+    "ro": {
+      "Localizable.strings": "7ea0ced41782aa10c2e3de21be603f38af18eff6efc55212eeab1ee66d1c44c8",
+      "InfoPlist.strings": "fecbe6841fa8e365c9c4f63eb1a3e62192690a4e00a8d366ea1000528541704b",
+      "AppShortcuts.strings": "880dc4efca91e9e0684b2b47e796fa00011ad9fea41c10b3f347ed5227ed669c"
+    },
+    "tr": {
+      "Localizable.strings": "b80384c17da86f0e7fbdd7ad17fff4cc436823b8cf77eed98ece82a16a735263",
+      "InfoPlist.strings": "f54402979e153aa637f02aedb50770859b80db9451c24d5406297a3beb572aa5",
+      "AppShortcuts.strings": "996df22395ff9963037ba832aa3c0895cc96acbf5f8fa99cb3a3d3c525361535"
+    }
+  },
+  "native_certification": false,
+  "device_layout_voiceover_verified": false,
+  "hard_errors": []
+}

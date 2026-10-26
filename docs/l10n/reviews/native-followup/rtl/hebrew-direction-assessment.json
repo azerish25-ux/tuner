@@ -1,0 +1,709 @@
+{
+  "scope": "Directional rationale only, not a fresh full semantic review of the Hebrew translations. All 22 raw target strings and isolate-aware first-strong results were inspected; Soldier’s Joy, brand-led Timbre and multi-title Last Rose/Jupiter prose are representative cross-checks.",
+  "unicode_primary_source": "https://www.unicode.org/reports/tr9/#P2",
+  "rows": [
+    {
+      "key": "Lf210cbbe01",
+      "source": "Soldier's Joy was in print in Scotland by 1780 and has filled American jams ever since. Its first part bounces between D, F♯ and A.",
+      "current_target": "⁨Soldier's Joy⁩ כבר הופיעה בדפוס בסקוטלנד בשנת 1780, ומאז היא מככבת בג׳אמים אמריקאיים. החלק הראשון שלה מקפץ בין ⁨D, F♯, A⁩.",
+      "current_target_sha256": "b8ee9e9b610687b5593a743cca6188a982f2edec3e544205b8321128c424301e",
+      "p2_p3": {
+        "index": 16,
+        "codepoint": "U+05DB",
+        "bidi_type": "R",
+        "p3_base_level": 1
+      },
+      "balanced_isolate_spans": [
+        {
+          "start": 0,
+          "end_inclusive": 14,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "Soldier's Joy"
+        },
+        {
+          "start": 112,
+          "end_inclusive": 121,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "D, F♯, A"
+        }
+      ],
+      "decision": "accept-isolate-aware-rtl-direction",
+      "reason": "P2 ignores the initial isolated Latin work/brand name; the first strong character outside it is Hebrew R. P3 therefore yields RTL. The helper warning is an isolate-unaware false positive; do not add a redundant RLM prefix.",
+      "reviewer": "Codex independent RTL follow-up reviewer review_is (source-aware AI, not native/device certification)"
+    },
+    {
+      "key": "La00cba78ab",
+      "source": "Arkansas Traveler starts low, down on the G pair, then jumps up to the E pair for a part that tumbles down the scale. It was in print by the 1840s.",
+      "current_target": "⁨Arkansas Traveler⁩ מתחילה נמוך, בזוג ⁨G⁩, ואז קופצת לזוג ⁨E⁩ לחלק שמתגלגל במורד הסולם. היא כבר הופיעה בדפוס בשנות ה־1840.",
+      "current_target_sha256": "371cbc48c4f1235b98ec1242bc05d19c7c5f8ba85d3f42d38415cc3a5c779dc0",
+      "p2_p3": {
+        "index": 20,
+        "codepoint": "U+05DE",
+        "bidi_type": "R",
+        "p3_base_level": 1
+      },
+      "balanced_isolate_spans": [
+        {
+          "start": 0,
+          "end_inclusive": 18,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "Arkansas Traveler"
+        },
+        {
+          "start": 38,
+          "end_inclusive": 40,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "G"
+        },
+        {
+          "start": 58,
+          "end_inclusive": 60,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "E"
+        }
+      ],
+      "decision": "accept-isolate-aware-rtl-direction",
+      "reason": "P2 ignores the initial isolated Latin work/brand name; the first strong character outside it is Hebrew R. P3 therefore yields RTL. The helper warning is an isolate-unaware false positive; do not add a redundant RLM prefix.",
+      "reviewer": "Codex independent RTL follow-up reviewer review_is (source-aware AI, not native/device certification)"
+    },
+    {
+      "key": "La40f15dda0",
+      "source": "Old Joe Clark is in A, so you use C♯ and G♯. In the second part, G♯ drops to plain G on fret 3 of the E pair. That one note gives the tune its old-time sound.",
+      "current_target": "⁨Old Joe Clark⁩ היא בסולם ⁨A⁩, ולכן משתמשים ב־⁨C♯⁩ וב־⁨G♯⁩. בחלק השני, ⁨G♯⁩ יורד ל־⁨G⁩ טבעי בסריג 3 של זוג ⁨E⁩. הצליל היחיד הזה מעניק למנגינה את אופי האולד־טיים שלה.",
+      "current_target_sha256": "9f798ce7c88cd2f3613e3ce5c6b47e07fc4421aa777371d1f8f30717d24219a3",
+      "p2_p3": {
+        "index": 16,
+        "codepoint": "U+05D4",
+        "bidi_type": "R",
+        "p3_base_level": 1
+      },
+      "balanced_isolate_spans": [
+        {
+          "start": 0,
+          "end_inclusive": 14,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "Old Joe Clark"
+        },
+        {
+          "start": 26,
+          "end_inclusive": 28,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "A"
+        },
+        {
+          "start": 46,
+          "end_inclusive": 49,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "C♯"
+        },
+        {
+          "start": 54,
+          "end_inclusive": 57,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "G♯"
+        },
+        {
+          "start": 71,
+          "end_inclusive": 74,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "G♯"
+        },
+        {
+          "start": 83,
+          "end_inclusive": 85,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "G"
+        },
+        {
+          "start": 107,
+          "end_inclusive": 109,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "E"
+        }
+      ],
+      "decision": "accept-isolate-aware-rtl-direction",
+      "reason": "P2 ignores the initial isolated Latin work/brand name; the first strong character outside it is Hebrew R. P3 therefore yields RTL. The helper warning is an isolate-unaware false positive; do not add a redundant RLM prefix.",
+      "reviewer": "Codex independent RTL follow-up reviewer review_is (source-aware AI, not native/device certification)"
+    },
+    {
+      "key": "La389d618e8",
+      "source": "Old Joe Clark is in A but uses G in its second part. That lowered note is its signature.",
+      "current_target": "⁨Old Joe Clark⁩ היא בסולם ⁨A⁩, אבל בחלקה השני משתמשים ב־⁨G⁩. הצליל המונמך הזה הוא סימן ההיכר שלה.",
+      "current_target_sha256": "2eed50001ee7b5f77a87517f2f7a234a002e4564d6a9198709e8828883745688",
+      "p2_p3": {
+        "index": 16,
+        "codepoint": "U+05D4",
+        "bidi_type": "R",
+        "p3_base_level": 1
+      },
+      "balanced_isolate_spans": [
+        {
+          "start": 0,
+          "end_inclusive": 14,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "Old Joe Clark"
+        },
+        {
+          "start": 26,
+          "end_inclusive": 28,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "A"
+        },
+        {
+          "start": 56,
+          "end_inclusive": 58,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "G"
+        }
+      ],
+      "decision": "accept-isolate-aware-rtl-direction",
+      "reason": "P2 ignores the initial isolated Latin work/brand name; the first strong character outside it is Hebrew R. P3 therefore yields RTL. The helper warning is an isolate-unaware false positive; do not add a redundant RLM prefix.",
+      "reviewer": "Codex independent RTL follow-up reviewer review_is (source-aware AI, not native/device certification)"
+    },
+    {
+      "key": "La6191327f7",
+      "source": "Shady Grove is in mountain minor, centered on A. The others come home to G.",
+      "current_target": "⁨Shady Grove⁩ היא במינור הררי, שמרכזו ⁨A⁩. האחרות חוזרות הביתה ל־⁨G⁩.",
+      "current_target_sha256": "2c508461b0bbe5eaf1ef529e09b2e5e486c37ebed2898e7ea428e622175617dd",
+      "p2_p3": {
+        "index": 14,
+        "codepoint": "U+05D4",
+        "bidi_type": "R",
+        "p3_base_level": 1
+      },
+      "balanced_isolate_spans": [
+        {
+          "start": 0,
+          "end_inclusive": 12,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "Shady Grove"
+        },
+        {
+          "start": 38,
+          "end_inclusive": 40,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "A"
+        },
+        {
+          "start": 65,
+          "end_inclusive": 67,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "G"
+        }
+      ],
+      "decision": "accept-isolate-aware-rtl-direction",
+      "reason": "P2 ignores the initial isolated Latin work/brand name; the first strong character outside it is Hebrew R. P3 therefore yields RTL. The helper warning is an isolate-unaware false positive; do not add a redundant RLM prefix.",
+      "reviewer": "Codex independent RTL follow-up reviewer review_is (source-aware AI, not native/device certification)"
+    },
+    {
+      "key": "Lafb891a39d",
+      "source": "Old Joe Clark is in G, but its second part uses F instead of F♯, on string 1 at fret 3. That lowered note gives the tune its old-time sound.",
+      "current_target": "⁨Old Joe Clark⁩ היא בסולם ⁨G⁩, אבל בחלקה השני משתמשים ב־⁨F⁩ במקום ב־⁨F♯⁩, במיתר 1 בסריג 3. הצליל המונמך הזה מעניק למנגינה את אופי האולד־טיים שלה.",
+      "current_target_sha256": "15d18968271684f22f8b8de51e3ad247845fc8d11ff6d6774c23bf779ea50271",
+      "p2_p3": {
+        "index": 16,
+        "codepoint": "U+05D4",
+        "bidi_type": "R",
+        "p3_base_level": 1
+      },
+      "balanced_isolate_spans": [
+        {
+          "start": 0,
+          "end_inclusive": 14,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "Old Joe Clark"
+        },
+        {
+          "start": 26,
+          "end_inclusive": 28,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "G"
+        },
+        {
+          "start": 56,
+          "end_inclusive": 58,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "F"
+        },
+        {
+          "start": 68,
+          "end_inclusive": 71,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "F♯"
+        }
+      ],
+      "decision": "accept-isolate-aware-rtl-direction",
+      "reason": "P2 ignores the initial isolated Latin work/brand name; the first strong character outside it is Hebrew R. P3 therefore yields RTL. The helper warning is an isolate-unaware false positive; do not add a redundant RLM prefix.",
+      "reviewer": "Codex independent RTL follow-up reviewer review_is (source-aware AI, not native/device certification)"
+    },
+    {
+      "key": "L0db3144f34",
+      "source": "Skip to My Lou was a party game in the 1840s. In clawhammer each melody note is a bum, followed by a brush and the thumb on string 5.",
+      "current_target": "⁨Skip to My Lou⁩ היה משחק מסיבה בשנות ה־1840. בקלאוהאמר כל צליל מנגינה הוא באם, ואחריו הברשה והאגודל על מיתר 5.",
+      "current_target_sha256": "369ad57186f7eeb51563f65465aa7a163dbcb39d1e6ec708cc0ac777608aa972",
+      "p2_p3": {
+        "index": 17,
+        "codepoint": "U+05D4",
+        "bidi_type": "R",
+        "p3_base_level": 1
+      },
+      "balanced_isolate_spans": [
+        {
+          "start": 0,
+          "end_inclusive": 15,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "Skip to My Lou"
+        }
+      ],
+      "decision": "accept-isolate-aware-rtl-direction",
+      "reason": "P2 ignores the initial isolated Latin work/brand name; the first strong character outside it is Hebrew R. P3 therefore yields RTL. The helper warning is an isolate-unaware false positive; do not add a redundant RLM prefix.",
+      "reviewer": "Codex independent RTL follow-up reviewer review_is (source-aware AI, not native/device certification)"
+    },
+    {
+      "key": "L208999255e",
+      "source": "Jingle Bells opens on one note repeated: a unison. Take Me Out to the Ball Game opens with a leap up an octave. Hum each opening to recall the sound.",
+      "current_target": "⁨Jingle Bells⁩ נפתח בצליל אחד שחוזר: אוניסון. ⁨Take Me Out to the Ball Game⁩ נפתח בקפיצה של אוקטבה למעלה. זמזמו כל פתיחה כדי להיזכר בצליל.",
+      "current_target_sha256": "38faa232780cb725d17de67f09a7f5933f7d3dd7dc0283898faaccb4fd9b4600",
+      "p2_p3": {
+        "index": 15,
+        "codepoint": "U+05E0",
+        "bidi_type": "R",
+        "p3_base_level": 1
+      },
+      "balanced_isolate_spans": [
+        {
+          "start": 0,
+          "end_inclusive": 13,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "Jingle Bells"
+        },
+        {
+          "start": 46,
+          "end_inclusive": 75,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "Take Me Out to the Ball Game"
+        }
+      ],
+      "decision": "accept-isolate-aware-rtl-direction",
+      "reason": "P2 ignores the initial isolated Latin work/brand name; the first strong character outside it is Hebrew R. P3 therefore yields RTL. The helper warning is an isolate-unaware false positive; do not add a redundant RLM prefix.",
+      "reviewer": "Codex independent RTL follow-up reviewer review_is (source-aware AI, not native/device certification)"
+    },
+    {
+      "key": "L156d88a521",
+      "source": "When the Saints Go Marching In opens with a major third, bright and bold. Greensleeves opens with a minor third, softer and sadder. Hum both to fix the sounds.",
+      "current_target": "⁨When the Saints Go Marching In⁩ נפתח בטרצה גדולה, בהירה ובטוחה. ⁨Greensleeves⁩ נפתח בטרצה קטנה, רכה ועצובה יותר. זמזמו את שניהם כדי לקבע את הצלילים בזיכרון.",
+      "current_target_sha256": "109b2881694a832452b3da3e33f8c9db6a302bd5cc648a54ed5b5241a67d232c",
+      "p2_p3": {
+        "index": 33,
+        "codepoint": "U+05E0",
+        "bidi_type": "R",
+        "p3_base_level": 1
+      },
+      "balanced_isolate_spans": [
+        {
+          "start": 0,
+          "end_inclusive": 31,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "When the Saints Go Marching In"
+        },
+        {
+          "start": 65,
+          "end_inclusive": 78,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "Greensleeves"
+        }
+      ],
+      "decision": "accept-isolate-aware-rtl-direction",
+      "reason": "P2 ignores the initial isolated Latin work/brand name; the first strong character outside it is Hebrew R. P3 therefore yields RTL. The helper warning is an isolate-unaware false positive; do not add a redundant RLM prefix.",
+      "reviewer": "Codex independent RTL follow-up reviewer review_is (source-aware AI, not native/device certification)"
+    },
+    {
+      "key": "L18beadc879",
+      "source": "Amazing Grace starts on sol below do and leaps up. To which note?",
+      "current_target": "⁨Amazing Grace⁩ מתחיל בסול שמתחת לדו וקופץ למעלה. לאיזה צליל?",
+      "current_target_sha256": "7cdc6138564850891cbb95776db073090f4eceb63a2066211f9343a389854445",
+      "p2_p3": {
+        "index": 16,
+        "codepoint": "U+05DE",
+        "bidi_type": "R",
+        "p3_base_level": 1
+      },
+      "balanced_isolate_spans": [
+        {
+          "start": 0,
+          "end_inclusive": 14,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "Amazing Grace"
+        }
+      ],
+      "decision": "accept-isolate-aware-rtl-direction",
+      "reason": "P2 ignores the initial isolated Latin work/brand name; the first strong character outside it is Hebrew R. P3 therefore yields RTL. The helper warning is an isolate-unaware false positive; do not add a redundant RLM prefix.",
+      "reviewer": "Codex independent RTL follow-up reviewer review_is (source-aware AI, not native/device certification)"
+    },
+    {
+      "key": "L34ea735774",
+      "source": "Timbre listens for the note's name, so a C sung low or high both count. Pick the octave that feels easy, never strained.",
+      "current_target": "⁨Timbre⁩ מקשיבה לשם הצליל, ולכן ⁨C⁩ ששרים נמוך או גבוה מתקבל באותה מידה. בחרו את האוקטבה שמרגישה קלה, בלי מאמץ.",
+      "current_target_sha256": "f0d6cf212f419cce3110832696de281c0bdfd61363cdd6830f4e3eb5d4f53396",
+      "p2_p3": {
+        "index": 9,
+        "codepoint": "U+05DE",
+        "bidi_type": "R",
+        "p3_base_level": 1
+      },
+      "balanced_isolate_spans": [
+        {
+          "start": 0,
+          "end_inclusive": 7,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "Timbre"
+        },
+        {
+          "start": 32,
+          "end_inclusive": 34,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "C"
+        }
+      ],
+      "decision": "accept-isolate-aware-rtl-direction",
+      "reason": "P2 ignores the initial isolated Latin work/brand name; the first strong character outside it is Hebrew R. P3 therefore yields RTL. The helper warning is an isolate-unaware false positive; do not add a redundant RLM prefix.",
+      "reviewer": "Codex independent RTL follow-up reviewer review_is (source-aware AI, not native/device certification)"
+    },
+    {
+      "key": "L21c0a8fdd8",
+      "source": "Timbre says you're flat. What do you do?",
+      "current_target": "⁨Timbre⁩ אומרת שאתם נמוכים מדי. מה עושים?",
+      "current_target_sha256": "19a1f4d0c95f11bebb08231534fe359317ddf87d396b10cf0ffae7262a64c630",
+      "p2_p3": {
+        "index": 9,
+        "codepoint": "U+05D0",
+        "bidi_type": "R",
+        "p3_base_level": 1
+      },
+      "balanced_isolate_spans": [
+        {
+          "start": 0,
+          "end_inclusive": 7,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "Timbre"
+        }
+      ],
+      "decision": "accept-isolate-aware-rtl-direction",
+      "reason": "P2 ignores the initial isolated Latin work/brand name; the first strong character outside it is Hebrew R. P3 therefore yields RTL. The helper warning is an isolate-unaware false positive; do not add a redundant RLM prefix.",
+      "reviewer": "Codex independent RTL follow-up reviewer review_is (source-aware AI, not native/device certification)"
+    },
+    {
+      "key": "L0b05ac9d2a",
+      "source": "Aura Lee is a slow ballad. Keep each finger down until the next note sounds, so the notes join smoothly.",
+      "current_target": "⁨Aura Lee⁩ היא בלדה איטית. השאירו כל אצבע לחוצה עד שהצליל הבא נשמע, כדי שהצלילים יתחברו בצורה חלקה.",
+      "current_target_sha256": "456d471bfc1bb1779961e1563bfcbbae5234bc364dd2c92eca74ca89f692ec87",
+      "p2_p3": {
+        "index": 11,
+        "codepoint": "U+05D4",
+        "bidi_type": "R",
+        "p3_base_level": 1
+      },
+      "balanced_isolate_spans": [
+        {
+          "start": 0,
+          "end_inclusive": 9,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "Aura Lee"
+        }
+      ],
+      "decision": "accept-isolate-aware-rtl-direction",
+      "reason": "P2 ignores the initial isolated Latin work/brand name; the first strong character outside it is Hebrew R. P3 therefore yields RTL. The helper warning is an isolate-unaware false positive; do not add a redundant RLM prefix.",
+      "reviewer": "Codex independent RTL follow-up reviewer review_is (source-aware AI, not native/device certification)"
+    },
+    {
+      "key": "Lfffcb19506",
+      "source": "Clementine starts with two quick notes before beat one. What are they called?",
+      "current_target": "⁨Clementine⁩ מתחיל בשני צלילים מהירים לפני פעמה אחת. איך קוראים להם?",
+      "current_target_sha256": "e29ba31ef4d1f7fdc8dd17cc0a2b6166814b99d46fdd79e203df791ca7cd74ec",
+      "p2_p3": {
+        "index": 13,
+        "codepoint": "U+05DE",
+        "bidi_type": "R",
+        "p3_base_level": 1
+      },
+      "balanced_isolate_spans": [
+        {
+          "start": 0,
+          "end_inclusive": 11,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "Clementine"
+        }
+      ],
+      "decision": "accept-isolate-aware-rtl-direction",
+      "reason": "P2 ignores the initial isolated Latin work/brand name; the first strong character outside it is Hebrew R. P3 therefore yields RTL. The helper warning is an isolate-unaware false positive; do not add a redundant RLM prefix.",
+      "reviewer": "Codex independent RTL follow-up reviewer review_is (source-aware AI, not native/device certification)"
+    },
+    {
+      "key": "La75bd4a533",
+      "source": "Deck the Halls comes from Nos Galan, a Welsh New Year's Eve song from the 1700s. The English words came in 1862.",
+      "current_target": "⁨Deck the Halls⁩ מקורו ב־⁨Nos Galan⁩, שיר ולשי לערב השנה החדשה מהמאה שהחלה בשנת 1700. המילים באנגלית הגיעו בשנת 1862.",
+      "current_target_sha256": "c6bada11b429b3a7921b9355b5b62be8d6530cf4dbe09a160372966d855945e2",
+      "p2_p3": {
+        "index": 17,
+        "codepoint": "U+05DE",
+        "bidi_type": "R",
+        "p3_base_level": 1
+      },
+      "balanced_isolate_spans": [
+        {
+          "start": 0,
+          "end_inclusive": 15,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "Deck the Halls"
+        },
+        {
+          "start": 25,
+          "end_inclusive": 35,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "Nos Galan"
+        }
+      ],
+      "decision": "accept-isolate-aware-rtl-direction",
+      "reason": "P2 ignores the initial isolated Latin work/brand name; the first strong character outside it is Hebrew R. P3 therefore yields RTL. The helper warning is an isolate-unaware false positive; do not add a redundant RLM prefix.",
+      "reviewer": "Codex independent RTL follow-up reviewer review_is (source-aware AI, not native/device certification)"
+    },
+    {
+      "key": "Lab281c21d4",
+      "source": "Auld lang syne is Scots for old long since, meaning days gone by. Robert Burns sent the words to a songbook in 1788, and this melody was printed with them in 1799.",
+      "current_target": "⁨Auld lang syne⁩ בסקוטית פירושו ״ימים עברו״. רוברט ברנס שלח את המילים לספר שירים בשנת 1788, והמנגינה הזאת פורסמה איתן בדפוס בשנת 1799.",
+      "current_target_sha256": "1278e767a1b0e941312d7cd3452b5f830adf29f99a1ce02458e2113aca178c50",
+      "p2_p3": {
+        "index": 17,
+        "codepoint": "U+05D1",
+        "bidi_type": "R",
+        "p3_base_level": 1
+      },
+      "balanced_isolate_spans": [
+        {
+          "start": 0,
+          "end_inclusive": 15,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "Auld lang syne"
+        }
+      ],
+      "decision": "accept-isolate-aware-rtl-direction",
+      "reason": "P2 ignores the initial isolated Latin work/brand name; the first strong character outside it is Hebrew R. P3 therefore yields RTL. The helper warning is an isolate-unaware false positive; do not add a redundant RLM prefix.",
+      "reviewer": "Codex independent RTL follow-up reviewer review_is (source-aware AI, not native/device certification)"
+    },
+    {
+      "key": "Lf11be4708d",
+      "source": "Greensleeves was sung in England by the 1580s, and Shakespeare mentions it in The Merry Wives of Windsor. Here it's in E minor, low and dark.",
+      "current_target": "⁨Greensleeves⁩ כבר הושר באנגליה בשנות ה־1580, ושייקספיר מזכיר אותו ב״נשות וינדזור העליזות״. כאן הוא בסולם ⁨E⁩ מינור, נמוך וכהה.",
+      "current_target_sha256": "8f4b973c18e9a3d845e002e6803b212b59678ac8aff90a8c87168d29fedd03cd",
+      "p2_p3": {
+        "index": 15,
+        "codepoint": "U+05DB",
+        "bidi_type": "R",
+        "p3_base_level": 1
+      },
+      "balanced_isolate_spans": [
+        {
+          "start": 0,
+          "end_inclusive": 13,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "Greensleeves"
+        },
+        {
+          "start": 106,
+          "end_inclusive": 108,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "E"
+        }
+      ],
+      "decision": "accept-isolate-aware-rtl-direction",
+      "reason": "P2 ignores the initial isolated Latin work/brand name; the first strong character outside it is Hebrew R. P3 therefore yields RTL. The helper warning is an isolate-unaware false positive; do not add a redundant RLM prefix.",
+      "reviewer": "Codex independent RTL follow-up reviewer review_is (source-aware AI, not native/device certification)"
+    },
+    {
+      "key": "L53c771e316",
+      "source": "Greensleeves is built on this chord. Major or minor?",
+      "current_target": "⁨Greensleeves⁩ בנוי על האקורד הזה. מז׳ור או מינור?",
+      "current_target_sha256": "83757e999dc1877e279245674de6563d89066a87c0f0034b53a47781a30bb38f",
+      "p2_p3": {
+        "index": 15,
+        "codepoint": "U+05D1",
+        "bidi_type": "R",
+        "p3_base_level": 1
+      },
+      "balanced_isolate_spans": [
+        {
+          "start": 0,
+          "end_inclusive": 13,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "Greensleeves"
+        }
+      ],
+      "decision": "accept-isolate-aware-rtl-direction",
+      "reason": "P2 ignores the initial isolated Latin work/brand name; the first strong character outside it is Hebrew R. P3 therefore yields RTL. The helper warning is an isolate-unaware false positive; do not add a redundant RLM prefix.",
+      "reviewer": "Codex independent RTL follow-up reviewer review_is (source-aware AI, not native/device certification)"
+    },
+    {
+      "key": "L5b73319e44",
+      "source": "The Skye Boat Song rocks in six-eight. O Christmas Tree is in three, and All Through the Night in four.",
+      "current_target": "⁨The Skye Boat Song⁩ מתנדנד במשקל שש שמיניות. ⁨O Christmas Tree⁩ הוא בשלוש, ו־⁨All Through the Night⁩ בארבע.",
+      "current_target_sha256": "d47514b823a6b05187f3f7313da044101c84d5ed2be1f47d565973208fb59124",
+      "p2_p3": {
+        "index": 21,
+        "codepoint": "U+05DE",
+        "bidi_type": "R",
+        "p3_base_level": 1
+      },
+      "balanced_isolate_spans": [
+        {
+          "start": 0,
+          "end_inclusive": 19,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "The Skye Boat Song"
+        },
+        {
+          "start": 46,
+          "end_inclusive": 63,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "O Christmas Tree"
+        },
+        {
+          "start": 78,
+          "end_inclusive": 100,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "All Through the Night"
+        }
+      ],
+      "decision": "accept-isolate-aware-rtl-direction",
+      "reason": "P2 ignores the initial isolated Latin work/brand name; the first strong character outside it is Hebrew R. P3 therefore yields RTL. The helper warning is an isolate-unaware false positive; do not add a redundant RLM prefix.",
+      "reviewer": "Codex independent RTL follow-up reviewer review_is (source-aware AI, not native/device certification)"
+    },
+    {
+      "key": "L54853f9ed5",
+      "source": "Away in a Manger is a waltz: one, two, three. The other two count in four.",
+      "current_target": "⁨Away in a Manger⁩ הוא ואלס: אחת, שתיים, שלוש. את שני האחרים סופרים בארבע.",
+      "current_target_sha256": "55faabc18010f412a23f474973d8a8912739d774ac5bf79b7d9888f52a2629d6",
+      "p2_p3": {
+        "index": 19,
+        "codepoint": "U+05D4",
+        "bidi_type": "R",
+        "p3_base_level": 1
+      },
+      "balanced_isolate_spans": [
+        {
+          "start": 0,
+          "end_inclusive": 17,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "Away in a Manger"
+        }
+      ],
+      "decision": "accept-isolate-aware-rtl-direction",
+      "reason": "P2 ignores the initial isolated Latin work/brand name; the first strong character outside it is Hebrew R. P3 therefore yields RTL. The helper warning is an isolate-unaware false positive; do not add a redundant RLM prefix.",
+      "reviewer": "Codex independent RTL follow-up reviewer review_is (source-aware AI, not native/device certification)"
+    },
+    {
+      "key": "Lf048e06f81",
+      "source": "The Holly and the Ivy is in three. The other two count in four.",
+      "current_target": "⁨The Holly and the Ivy⁩ הוא בשלוש. את שני האחרים סופרים בארבע.",
+      "current_target_sha256": "ae8fe7f2274761c818f6d85b3a1a95a6f4ffc3f53b47357dbfb44cca56fbc0d7",
+      "p2_p3": {
+        "index": 24,
+        "codepoint": "U+05D4",
+        "bidi_type": "R",
+        "p3_base_level": 1
+      },
+      "balanced_isolate_spans": [
+        {
+          "start": 0,
+          "end_inclusive": 22,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "The Holly and the Ivy"
+        }
+      ],
+      "decision": "accept-isolate-aware-rtl-direction",
+      "reason": "P2 ignores the initial isolated Latin work/brand name; the first strong character outside it is Hebrew R. P3 therefore yields RTL. The helper warning is an isolate-unaware false positive; do not add a redundant RLM prefix.",
+      "reviewer": "Codex independent RTL follow-up reviewer review_is (source-aware AI, not native/device certification)"
+    },
+    {
+      "key": "L7cd7cf4d00",
+      "source": "The Last Rose of Summer and Jupiter are both in three. Home! Sweet Home! and Hard Times count in four.",
+      "current_target": "⁨The Last Rose of Summer⁩ ו״יופיטר״ הם שניהם בשלוש. את ⁨Home! Sweet Home!⁩ ואת ⁨Hard Times⁩ סופרים בארבע.",
+      "current_target_sha256": "bde6a3b90153e8534bb3de9b4e8f3255f9029d54e96aec0f0e63b49ba7ec0e8a",
+      "p2_p3": {
+        "index": 26,
+        "codepoint": "U+05D5",
+        "bidi_type": "R",
+        "p3_base_level": 1
+      },
+      "balanced_isolate_spans": [
+        {
+          "start": 0,
+          "end_inclusive": 24,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "The Last Rose of Summer"
+        },
+        {
+          "start": 55,
+          "end_inclusive": 73,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "Home! Sweet Home!"
+        },
+        {
+          "start": 79,
+          "end_inclusive": 90,
+          "initiator": "U+2068",
+          "terminator": "U+2069",
+          "contents": "Hard Times"
+        }
+      ],
+      "decision": "accept-isolate-aware-rtl-direction",
+      "reason": "P2 ignores the initial isolated Latin work/brand name; the first strong character outside it is Hebrew R. P3 therefore yields RTL. The helper warning is an isolate-unaware false positive; do not add a redundant RLM prefix.",
+      "reviewer": "Codex independent RTL follow-up reviewer review_is (source-aware AI, not native/device certification)"
+    }
+  ]
+}

@@ -1,0 +1,2376 @@
+[
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "timbre_catalog_family_mandolin",
+    "source": "Mandolin",
+    "translation": "Mandolin",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Resources\\catalog.json:39"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "timbre_catalog_instrument_guqin_standard_7",
+    "source": "Guqin",
+    "translation": "Guqin",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Resources\\catalog.json:891"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "timbre_catalog_instrument_mandolin_octave_8",
+    "source": "Octave mandolin",
+    "translation": "Oktav mandolin",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Resources\\catalog.json:420"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "timbre_catalog_instrument_mandolin_standard_8",
+    "source": "Mandolin",
+    "translation": "Mandolin",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Resources\\catalog.json:394"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "timbre_catalog_instrument_tin_whistle_d_0",
+    "source": "Tin whistle",
+    "translation": "Tin whistle",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Resources\\catalog.json:1384"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "timbre_catalog_tuning_domra_prima_3_four_string",
+    "source": "4-string (fifths, mandolin-like)",
+    "translation": "4 telli (beşli aralıklarla, mandolin benzeri)",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Resources\\catalog.json:7286"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "%lld-day free trial",
+    "source": "%lld-day free trial",
+    "translation": "%lld gün ücretsiz deneme",
+    "where": [
+      "ios\\Timbre\\Services\\CommerceService.swift:133",
+      "ios\\Timbre\\Services\\CommerceService.swift:134"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "A strobe tuner for any note: voice, piano, winds or anything else.",
+    "source": "A strobe tuner for any note: voice, piano, winds or anything else.",
+    "translation": "Her nota için strobe akort cihazı: ses, piyano, üflemeliler ya da başka herhangi bir şey.",
+    "where": [
+      "ios\\Timbre\\Instruments\\InstrumentsView.swift:353"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Allow microphone",
+    "source": "Allow microphone",
+    "translation": "Mikrofona izin ver",
+    "where": [
+      "ios\\Timbre\\Onboarding\\OnboardingView.swift:703"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Clear practice history?",
+    "source": "Clear practice history?",
+    "translation": "Çalışma geçmişi temizlensin mi?",
+    "where": [
+      "ios\\Timbre\\Settings\\SettingsView.swift:63"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Day %lld",
+    "source": "Day %lld",
+    "translation": "%lld. gün",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallView.swift:1096",
+      "ios\\Timbre\\Paywall\\PaywallView.swift:1099"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Let the string ring",
+    "source": "Let the string ring",
+    "translation": "Tel tınlasın",
+    "where": [
+      "ios\\Timbre\\Onboarding\\FirstTuneStep.swift:322",
+      "ios\\Timbre\\Services\\AppStore.swift:406"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Lower is closer. Measured on stable readings only.",
+    "source": "Lower is closer. Measured on stable readings only.",
+    "translation": "Düşük değer daha yakın demektir. Yalnızca sabit okumalarda ölçülür.",
+    "where": [
+      "ios\\Timbre\\Journey\\JourneyView.swift:660"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Mandolin",
+    "source": "Mandolin",
+    "translation": "Mandolin",
+    "where": [
+      "ios\\Timbre\\Onboarding\\OnboardingView.swift:540"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Many years",
+    "source": "Many years",
+    "translation": "Uzun yıllar",
+    "where": [
+      "ios\\Timbre\\Onboarding\\OnboardingView.swift:553"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "No Timbre Pro purchase was found for this Apple Account.",
+    "source": "No Timbre Pro purchase was found for this Apple Account.",
+    "translation": "Bu Apple Hesabı için Timbre Pro satın alımı bulunamadı.",
+    "where": [
+      "ios\\Timbre\\Services\\CommerceService.swift:246"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "No comfortable shape for this chord in this tuning.",
+    "source": "No comfortable shape for this chord in this tuning.",
+    "translation": "Bu akortta bu akor için rahat bir şekil yok.",
+    "where": [
+      "ios\\Timbre\\Practice\\ChordsView.swift:148"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Plays this string's note",
+    "source": "Plays this string's note",
+    "translation": "Bu telin notasını çalar",
+    "where": [
+      "ios\\Timbre\\Instruments\\CustomTuningEditor.swift:130"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Practice every day",
+    "source": "Practice every day",
+    "translation": "Her gün çalışma",
+    "where": [
+      "ios\\Timbre\\Onboarding\\OnboardingView.swift:562"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Restore purchases",
+    "source": "Restore purchases",
+    "translation": "Satın alımları geri yükle",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallView.swift:1421",
+      "ios\\Timbre\\Paywall\\PaywallView.swift:1432"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "See how close you land, session after session, with Timbre Pro.",
+    "source": "See how close you land, session after session, with Timbre Pro.",
+    "translation": "Timbre Pro ile her oturumda hedefe ne kadar yaklaştığınızı görün.",
+    "where": [
+      "ios\\Timbre\\Journey\\JourneyView.swift:677"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "See yourself improve",
+    "source": "See yourself improve",
+    "translation": "Gelişiminizi görün",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallView.swift:364"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Still point",
+    "source": "Still point",
+    "translation": "Durgun nokta",
+    "where": [
+      "ios\\Timbre\\Previews\\DesignSystemPreviews.swift:76"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Tap",
+    "source": "Tap",
+    "translation": "Dokun",
+    "where": [
+      "ios\\Timbre\\Learn\\LatencyCalibration.swift:239",
+      "ios\\Timbre\\Learn\\RhythmStep.swift:467"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Timbre Pro is active",
+    "source": "Timbre Pro is active",
+    "translation": "Timbre Pro etkin",
+    "where": [
+      "ios\\Timbre\\Settings\\SettingsView.swift:111"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Today",
+    "source": "Today",
+    "translation": "Bugün",
+    "where": [
+      "ios\\Timbre\\Design\\GameUI.swift:67",
+      "ios\\Timbre\\Paywall\\PaywallView.swift:1084"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "every string to a still point",
+    "source": "every string to a still point",
+    "translation": "her tel durgun noktaya",
+    "where": [
+      "ios\\Timbre\\Practice\\DailySetCard.swift:25"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "learn one new shape",
+    "source": "learn one new shape",
+    "translation": "yeni bir şekil öğrenin",
+    "where": [
+      "ios\\Timbre\\Practice\\DailySetCard.swift:27"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Keep it alive today",
+    "source": "Keep it alive today",
+    "translation": "Bugün serini koru",
+    "where": [
+      "ios\\Timbre\\Intents\\StreakSnippet.swift:65",
+      "ios\\TimbreWidgets\\TimbreWidgets.swift:198"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Last 7 days",
+    "source": "Last 7 days",
+    "translation": "Son 7 gün",
+    "where": [
+      "ios\\Timbre\\Intents\\StreakSnippet.swift:72",
+      "ios\\TimbreWidgets\\TimbreWidgets.swift:214"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "%@ · rigged, relit and rendered for Timbre",
+    "source": "%@ · rigged, relit and rendered for Timbre",
+    "translation": "%@ · Timbre için riglendi, yeniden ışıklandırıldı ve render edildi",
+    "where": [
+      "ios\\Timbre\\Settings\\SettingsView.swift:775"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "%lld days free",
+    "source": "%lld days free",
+    "translation": "%lld gün ücretsiz",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallView.swift:909",
+      "ios\\Timbre\\Paywall\\PaywallView.swift:931"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "%lld of 35 days",
+    "source": "%lld of 35 days",
+    "translation": "35 günde %lld gün",
+    "where": [
+      "ios\\Timbre\\Journey\\JourneyView.swift:296"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Hit %lld bullseyes to win the round.",
+    "source": "Hit %lld bullseyes to win the round.",
+    "translation": "Turu kazanmak için %lld tam isabet yapın.",
+    "where": [
+      "ios\\Timbre\\Practice\\PitchSniperView.swift:162"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Hold inside the green ring for a bullseye",
+    "source": "Hold inside the green ring for a bullseye",
+    "translation": "Tam isabet için yeşil halkanın içinde kalın",
+    "where": [
+      "ios\\Timbre\\Practice\\PitchSniperView.swift:133"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Instruments without a credit are modelled and rendered from code for Timbre.",
+    "source": "Instruments without a credit are modelled and rendered from code for Timbre.",
+    "translation": "Kaynak belirtilmeyen enstrümanlar Timbre için kodla modellenip render edilmiştir.",
+    "where": [
+      "ios\\Timbre\\Settings\\SettingsView.swift:770"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Lengthen the string: move its saddle away from the neck.",
+    "source": "Lengthen the string: move its saddle away from the neck.",
+    "translation": "Teli uzatın: eşiğini saptan uzaklaştırın.",
+    "where": [
+      "ios\\Timbre\\Practice\\IntonationView.swift:243"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Mark new strings on %@?",
+    "source": "Mark new strings on %@?",
+    "translation": "%@ için yeni teller kaydedilsin mi?",
+    "where": [
+      "ios\\Timbre\\Journey\\JourneyView.swift:374"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Shorten the string: move its saddle toward the neck.",
+    "source": "Shorten the string: move its saddle toward the neck.",
+    "translation": "Teli kısaltın: eşiğini sapa doğru yaklaştırın.",
+    "where": [
+      "ios\\Timbre\\Practice\\IntonationView.swift:244"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Fingers in place, then let it ring.",
+    "source": "Fingers in place, then let it ring.",
+    "translation": "Parmaklarınızı yerleştirin, sonra tınlamaya bırakın.",
+    "where": [
+      "ios\\Timbre\\Learn\\LessonSteps.swift:577"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Leave this lesson?",
+    "source": "Leave this lesson?",
+    "translation": "Bu dersten çıkılsın mı?",
+    "where": [
+      "ios\\Timbre\\Learn\\LessonPlayer.swift:112"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Make it a habit",
+    "source": "Make it a habit",
+    "translation": "Alışkanlık haline getirin",
+    "where": [
+      "ios\\Timbre\\Learn\\LessonResults.swift:599"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Pluck the string",
+    "source": "Pluck the string",
+    "translation": "Teli çekin",
+    "where": [
+      "ios\\Timbre\\Learn\\LessonSteps.swift:1298",
+      "ios\\Timbre\\Onboarding\\FirstTuneStep.swift:326"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Practised today",
+    "source": "Practised today",
+    "translation": "Bugün çalışıldı",
+    "where": [
+      "ios\\Timbre\\Intents\\StreakSnippet.swift:63",
+      "ios\\TimbreWidgets\\TimbreWidgets.swift:198"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Strum it, or pluck each string",
+    "source": "Strum it, or pluck each string",
+    "translation": "Tellere vurun ya da tek tek çekin",
+    "where": [
+      "ios\\Timbre\\Learn\\LessonSteps.swift:523"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Strum on the arrows",
+    "source": "Strum on the arrows",
+    "translation": "Oklarla birlikte tellere vurun",
+    "where": [
+      "ios\\Timbre\\Learn\\LessonInspector.swift:448",
+      "ios\\Timbre\\Learn\\LessonInspector.swift:458"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Timbre needs the microphone to hear you play.",
+    "source": "Timbre needs the microphone to hear you play.",
+    "translation": "Timbre'nin çaldığınızı duyması için mikrofon gerekir.",
+    "where": [
+      "ios\\Timbre\\Learn\\LessonPlayer.swift:727"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Tune down a little",
+    "source": "Tune down a little",
+    "translation": "Biraz düşürün",
+    "where": [
+      "ios\\Timbre\\Learn\\LessonSteps.swift:1300"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Tune up a little",
+    "source": "Tune up a little",
+    "translation": "Biraz yükseltin",
+    "where": [
+      "ios\\Timbre\\Learn\\LessonSteps.swift:1299"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Scholar",
+    "source": "Scholar",
+    "translation": "Bilgin",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:397"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Free for %lld days, then %@ a year.",
+    "source": "Free for %lld days, then %@ a year.",
+    "translation": "%lld gün ücretsiz, ardından yıllık %@.",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallView.swift:1335"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Keep your %lld-day streak alive. Next up: %@",
+    "source": "Keep your %lld-day streak alive. Next up: %@",
+    "translation": "%lld günlük serinizi sürdürün. Sıradaki: %@",
+    "where": [
+      "ios\\Timbre\\Services\\PracticeReminder.swift:121"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Pluck your thickest string",
+    "source": "Pluck your thickest string",
+    "translation": "En kalın telinize vurun",
+    "where": [
+      "ios\\Timbre\\Onboarding\\FirstTuneStep.swift:216",
+      "ios\\Timbre\\Onboarding\\FirstTuneStep.swift:239"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Tune every string of an instrument",
+    "source": "Tune every string of an instrument",
+    "translation": "Bir enstrümanın tüm tellerini akort et",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:384"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Play seven days in a row",
+    "source": "Play seven days in a row",
+    "translation": "Yedi gün üst üste çalış",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:385"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Golden ear",
+    "source": "Golden ear",
+    "translation": "Altın kulak",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:389"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Your own sound",
+    "source": "Your own sound",
+    "translation": "Kendi sesin",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:392"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Play thirty days in a row",
+    "source": "Play thirty days in a row",
+    "translation": "Otuz gün üst üste çalış",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:393"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Thousand strings",
+    "source": "Thousand strings",
+    "translation": "Bin tel",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:394"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Play three days in a row",
+    "source": "Play three days in a row",
+    "translation": "Üç gün üst üste çalış",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:404"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Hundred days",
+    "source": "Hundred days",
+    "translation": "Yüz gün",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:405"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Play 100 days in a row",
+    "source": "Play 100 days in a row",
+    "translation": "100 gün üst üste çalış",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:405"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Graduate",
+    "source": "Graduate",
+    "translation": "Mezun",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:418"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Finish a whole course",
+    "source": "Finish a whole course",
+    "translation": "Bir kursun tamamını bitir",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:418"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Finish 10 mandolin lessons",
+    "source": "Finish 10 mandolin lessons",
+    "translation": "10 mandolin dersi bitir",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:427"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Golden Ratio",
+    "source": "Golden Ratio",
+    "translation": "Altın oran",
+    "where": [
+      "ios\\Sources\\TimbreCore\\Practice\\Progression.swift:147"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Full tempo for 3 stars",
+    "source": "Full tempo for 3 stars",
+    "translation": "3 yıldız için tam tempo",
+    "where": [
+      "ios\\Timbre\\Learn\\Highway.swift:651",
+      "ios\\Timbre\\Learn\\SongPerform.swift:297"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Thickest (%lld)",
+    "source": "Thickest (%lld)",
+    "translation": "En kalın (%lld)",
+    "where": [
+      "ios\\Timbre\\Learn\\Diagrams.swift:242"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Unlock your full plan",
+    "source": "Unlock your full plan",
+    "translation": "Tüm planının kilidini aç",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallView.swift:347"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "%lld minutes a day, planned for you",
+    "source": "%lld minutes a day, planned for you",
+    "translation": "Günde %lld dakika, senin için planlandı",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallPlan.swift:513"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "No streak running. Ten minutes today starts one.",
+    "source": "No streak running. Ten minutes today starts one.",
+    "translation": "Çalışan bir seri yok. Bugün on dakika çalışmak yeni bir tane başlatır.",
+    "where": [
+      "ios\\Timbre\\Intents\\StreakSnippet.swift:32"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Pro stays on until %@. Update your payment method to keep it.",
+    "source": "Pro stays on until %@. Update your payment method to keep it.",
+    "translation": "Pro şu tarihe kadar etkin kalır: %@. Kullanmaya devam etmek için ödeme yöntemini güncelle.",
+    "where": [
+      "ios\\Timbre\\Paywall\\BillingIssueBanner.swift:76"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Update your payment method to keep Timbre Pro.",
+    "source": "Update your payment method to keep Timbre Pro.",
+    "translation": "Timbre Pro kullanımını sürdürmek için ödeme yöntemini güncelle.",
+    "where": [
+      "ios\\Timbre\\Paywall\\BillingIssueBanner.swift:78"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "The App Store couldn't renew your subscription. Update your payment method to pick up where you left off.",
+    "source": "The App Store couldn't renew your subscription. Update your payment method to pick up where you left off.",
+    "translation": "App Store aboneliğini yenileyemedi. Kaldığın yerden devam etmek için ödeme yöntemini güncelle.",
+    "where": [
+      "ios\\Timbre\\Paywall\\BillingIssueBanner.swift:80"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Cancel anytime in Settings",
+    "source": "Cancel anytime in Settings",
+    "translation": "İstediğin zaman Ayarlar’dan iptal et",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallView.swift:999",
+      "ios\\Timbre\\Paywall\\PaywallView.swift:1007"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Subscriptions renew automatically until cancelled in Settings › Apple Account › Subscriptions. Cancel at least a day before renewal to avoid the next charge. Every instrument’s standard tuning stays free.",
+    "source": "Subscriptions renew automatically until cancelled in Settings › Apple Account › Subscriptions. Cancel at least a day before renewal to avoid the next charge. Every instrument’s standard tuning stays free.",
+    "translation": "Abonelikler, Ayarlar › Apple Hesabı › Abonelikler bölümünden iptal edilene kadar otomatik yenilenir. Bir sonraki ödemenin alınmasını önlemek için yenilemeden en az bir gün önce iptal et. Her enstrümanın standart akordu ücretsiz kalır.",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallView.swift:1466"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Subscriptions renew automatically until cancelled in Settings › Apple Account › Subscriptions. Cancel at least a day before renewal to avoid the next charge. The tuner for guitar, bass, ukulele, violin and cello stays free.",
+    "source": "Subscriptions renew automatically until cancelled in Settings › Apple Account › Subscriptions. Cancel at least a day before renewal to avoid the next charge. The tuner for guitar, bass, ukulele, violin and cello stays free.",
+    "translation": "Abonelikler, Ayarlar › Apple Hesabı › Abonelikler bölümünden iptal edilene kadar otomatik yenilenir. Bir sonraki ödemenin alınmasını önlemek için yenilemeden en az bir gün önce iptal et. Gitar, bas gitar, ukulele, keman ve çello için akort cihazı ücretsiz kalır.",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallView.swift:1468"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Opens the tuner now. Your plan can wait.",
+    "source": "Opens the tuner now. Your plan can wait.",
+    "translation": "Akort cihazını şimdi açar. Planın bekleyebilir.",
+    "where": [
+      "ios\\Timbre\\Onboarding\\OnboardingView.swift:365"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "≈ estimate",
+    "source": "≈ estimate",
+    "translation": "≈ tahmin",
+    "where": [
+      "ios\\Timbre\\Tune\\StrumMeters.swift:305"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Pluck to tune",
+    "source": "Pluck to tune",
+    "translation": "Akort için teli çek",
+    "where": [
+      "ios\\Timbre\\Tune\\StrumTuneView.swift:103",
+      "ios\\Timbre\\Tune\\StrumTuneView.swift:565"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Pluck every open string once to read them all",
+    "source": "Pluck every open string once to read them all",
+    "translation": "Hepsini ölçmek için her boş teli bir kez çek",
+    "where": [
+      "ios\\Timbre\\Tune\\StrumTuneView.swift:567"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Play a note to start",
+    "source": "Play a note to start",
+    "translation": "Başlamak için bir nota çal",
+    "where": [
+      "ios\\Timbre\\Learn\\Highway.swift:270",
+      "ios\\Timbre\\Learn\\PlayAlongCues.swift:372"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Tap a miss to loop its bar",
+    "source": "Tap a miss to loop its bar",
+    "translation": "Ölçüsünü tekrarlamak için bir hataya dokun",
+    "where": [
+      "ios\\Timbre\\Learn\\HighwayTimingStrip.swift:49"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Let it stop",
+    "source": "Let it stop",
+    "translation": "Sesin durmasını sağla",
+    "where": [
+      "ios\\Timbre\\Learn\\LessonBeatRow.swift:314",
+      "ios\\Timbre\\Learn\\LessonBeatRow.swift:338"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Plays it on a 3D model of the instrument",
+    "source": "Plays it on a 3D model of the instrument",
+    "translation": "Enstrümanın 3D modeli üzerinde çalar",
+    "where": [
+      "ios\\Timbre\\Learn\\ShowMe.swift:512"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Thanks. Your request is in.",
+    "source": "Thanks. Your request is in.",
+    "translation": "Teşekkürler. İsteğin alındı.",
+    "where": [
+      "ios\\Timbre\\Songs\\SongsView.swift:327",
+      "ios\\Timbre\\Songs\\SongsView.swift:348"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Listens and lights each note as you play it.",
+    "source": "Listens and lights each note as you play it.",
+    "translation": "Dinler ve çaldığın her notayı aydınlatır.",
+    "where": [
+      "ios\\Timbre\\Practice\\ScalesView.swift:251"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Tap on the change to %@",
+    "source": "Tap on the change to %@",
+    "translation": "Şu akora geçişte dokun: %@",
+    "where": [
+      "ios\\Timbre\\YourSongs\\ChartDock.swift:261"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Your songs",
+    "source": "Your songs",
+    "translation": "Şarkıların",
+    "where": [
+      "ios\\Timbre\\YourSongs\\YourSongsShelf.swift:144",
+      "ios\\Timbre\\YourSongs\\YourSongsShelf.swift:184"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Play the songs you love",
+    "source": "Play the songs you love",
+    "translation": "Sevdiğin şarkıları çal",
+    "where": [
+      "ios\\Timbre\\YourSongs\\YourSongsShelf.swift:185"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Bring a chord chart (ChordPro or chords over the words), paste one or write your own. Play it along with your own recording, or listen on Apple Music.",
+    "source": "Bring a chord chart (ChordPro or chords over the words), paste one or write your own. Play it along with your own recording, or listen on Apple Music.",
+    "translation": "Bir akor sayfası (ChordPro veya sözlerin üzerindeki akorlar) içe aktar, yapıştır ya da kendin yaz. Kendi kaydınla birlikte çal veya Apple Music üzerinden dinle.",
+    "where": [
+      "ios\\Timbre\\YourSongs\\YourSongsShelf.swift:196"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Plays the tuner's detents, then the lock",
+    "source": "Plays the tuner's detents, then the lock",
+    "translation": "Akort cihazının kademelerini ve ardından sabitlenme geri bildirimini çalar",
+    "where": [
+      "ios\\Timbre\\Settings\\SettingsView.swift:403"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Strum every open string once to read them all",
+    "source": "Strum every open string once to read them all",
+    "translation": "Hepsini ölçmek için her boş teli bir kez tara",
+    "where": [
+      "ios\\Timbre\\Tips\\TimbreTips.swift:31",
+      "ios\\Timbre\\Tune\\StrumTuneView.swift:567"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Your first chord",
+    "source": "Your first chord",
+    "translation": "İlk akorun",
+    "where": [
+      "ios\\Timbre\\Onboarding\\FirstChordStep.swift:97"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Lowest first, then your plan.",
+    "source": "Lowest first, then your plan.",
+    "translation": "Önce en pes tel, sonra planın.",
+    "where": [
+      "ios\\Timbre\\Onboarding\\FirstChordStep.swift:102"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Thirty seconds, then your plan.",
+    "source": "Thirty seconds, then your plan.",
+    "translation": "Otuz saniye, sonra planın.",
+    "where": [
+      "ios\\Timbre\\Onboarding\\FirstChordStep.swift:102"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "You just played your first chord",
+    "source": "You just played your first chord",
+    "translation": "İlk akorunu az önce çaldın",
+    "where": [
+      "ios\\Timbre\\Onboarding\\FirstChordStep.swift:121",
+      "ios\\Timbre\\Onboarding\\FirstChordStep.swift:152"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Your plan is next.",
+    "source": "Your plan is next.",
+    "translation": "Sırada planın var.",
+    "where": [
+      "ios\\Timbre\\Onboarding\\FirstChordStep.swift:130"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Want to feel it?",
+    "source": "Want to feel it?",
+    "translation": "Hissetmek ister misin?",
+    "where": [
+      "ios\\Timbre\\Onboarding\\FirstTuneStep.swift:476"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Your Today plan is built around it.",
+    "source": "Your Today plan is built around it.",
+    "translation": "Bugün planın buna göre hazırlanır.",
+    "where": [
+      "ios\\Timbre\\Onboarding\\OnboardingView.swift:587"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Necks, chord charts and the stage follow your hand.",
+    "source": "Necks, chord charts and the stage follow your hand.",
+    "translation": "Saplar, akor diyagramları ve sahne çaldığın ele uyum sağlar.",
+    "where": [
+      "ios\\Timbre\\Onboarding\\OnboardingView.swift:596"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Which hand do you play with?",
+    "source": "Which hand do you play with?",
+    "translation": "Hangi elinle çalıyorsun?",
+    "where": [
+      "ios\\Timbre\\Onboarding\\OnboardingView.swift:596"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "You start at Unit %lld — skip what you already know.",
+    "source": "You start at Unit %lld — skip what you already know.",
+    "translation": "Ünite %lld ile başlarsın — bildiklerini atla.",
+    "where": [
+      "ios\\Timbre\\Onboarding\\OnboardingView.swift:958"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Not sure? Take a 45-second check",
+    "source": "Not sure? Take a 45-second check",
+    "translation": "Emin değil misin? 45 saniyelik testi yap",
+    "where": [
+      "ios\\Timbre\\Onboarding\\OnboardingView.swift:993"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Your first lesson follows how you played.",
+    "source": "Your first lesson follows how you played.",
+    "translation": "İlk dersin nasıl çaldığına göre belirlenir.",
+    "where": [
+      "ios\\Timbre\\Onboarding\\OnboardingView.swift:998"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Change between three chords, then strum a pattern. About 45 seconds, and your plan moves to match.",
+    "source": "Change between three chords, then strum a pattern. About 45 seconds, and your plan moves to match.",
+    "translation": "Üç akor arasında geçiş yap, sonra bir tarama kalıbı çal. Yaklaşık 45 saniyede planın sana uyum sağlar.",
+    "where": [
+      "ios\\Timbre\\Onboarding\\PlacementCheckView.swift:128"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Moving you up",
+    "source": "Moving you up",
+    "translation": "Daha ileriden başlıyorsun",
+    "where": [
+      "ios\\Timbre\\Onboarding\\PlacementCheckView.swift:243"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Starting a little earlier",
+    "source": "Starting a little earlier",
+    "translation": "Biraz daha önceden başlıyorsun",
+    "where": [
+      "ios\\Timbre\\Onboarding\\PlacementCheckView.swift:245"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Right where you said",
+    "source": "Right where you said",
+    "translation": "Tam söylediğin yerden",
+    "where": [
+      "ios\\Timbre\\Onboarding\\PlacementCheckView.swift:247"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Clean, quick changes and a steady strum: your plan starts further in.",
+    "source": "Clean, quick changes and a steady strum: your plan starts further in.",
+    "translation": "Temiz, hızlı geçişler ve düzenli tarama: planın daha ileriden başlar.",
+    "where": [
+      "ios\\Timbre\\Onboarding\\PlacementCheckView.swift:253"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "The changes and the strum need a little more time, so your plan starts a few units earlier.",
+    "source": "The changes and the strum need a little more time, so your plan starts a few units earlier.",
+    "translation": "Geçişler ve tarama için biraz daha zaman gerekiyor, bu yüzden planın birkaç ünite önceden başlar.",
+    "where": [
+      "ios\\Timbre\\Onboarding\\PlacementCheckView.swift:255"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Your plan starts where your answer put it.",
+    "source": "Your plan starts where your answer put it.",
+    "translation": "Planın, yanıtının belirlediği yerden başlar.",
+    "where": [
+      "ios\\Timbre\\Onboarding\\PlacementCheckView.swift:257"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "On days you haven't played yet, one reminder that names your next lesson.",
+    "source": "On days you haven't played yet, one reminder that names your next lesson.",
+    "translation": "Henüz çalmadığın günlerde sıradaki dersini belirten tek bir hatırlatma.",
+    "where": [
+      "ios\\Timbre\\Onboarding\\ReminderAskStep.swift:34"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Tune all %lld instruments",
+    "source": "Tune all %lld instruments",
+    "translation": "%lld enstrümanın hepsini akort et",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallPlan.swift:227",
+      "ios\\Timbre\\Paywall\\PaywallView.swift:388"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Your own song charts",
+    "source": "Your own song charts",
+    "translation": "Kendi akor sayfaların",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallPlan.swift:272",
+      "ios\\Timbre\\Paywall\\PaywallView.swift:708"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Every tuning for all %lld instruments",
+    "source": "Every tuning for all %lld instruments",
+    "translation": "%lld enstrümanın tüm akortları",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallPlan.swift:553"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Any song you love: paste the chords, play along",
+    "source": "Any song you love: paste the chords, play along",
+    "translation": "Sevdiğin her şarkı: akorları yapıştır, birlikte çal",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallPlan.swift:567"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "The chromatic tuner stays free for any instrument.",
+    "source": "The chromatic tuner stays free for any instrument.",
+    "translation": "Kromatik akort cihazı her enstrüman için ücretsiz kalır.",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallView.swift:764"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "We remind you on day %lld",
+    "source": "We remind you on day %lld",
+    "translation": "%lld. gün hatırlatırız",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallView.swift:1001",
+      "ios\\Timbre\\Paywall\\PaywallView.swift:1009"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Free for %lld days, then %@ a month.",
+    "source": "Free for %lld days, then %@ a month.",
+    "translation": "%lld gün ücretsiz, sonra ayda %@.",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallView.swift:1334"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Have an offer code?",
+    "source": "Have an offer code?",
+    "translation": "Teklif kodun var mı?",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallView.swift:1452"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Not ready for a year?",
+    "source": "Not ready for a year?",
+    "translation": "Bir yıl için hazır değil misin?",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallWinBack.swift:136"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Welcome back",
+    "source": "Welcome back",
+    "translation": "Tekrar hoş geldin",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallWinBack.swift:136"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "%@ for your first %@",
+    "source": "%@ for your first %@",
+    "translation": "İlk %2$@ için %1$@",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallWinBack.swift:196"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "%@ every %@",
+    "source": "%@ every %@",
+    "translation": "Her %2$@ için %1$@",
+    "where": [
+      "ios\\Timbre\\Paywall\\PaywallWinBack.swift:234"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "%@, estimate",
+    "source": "%@, estimate",
+    "translation": "%@, tahmin",
+    "where": [
+      "ios\\Timbre\\Tune\\StrumModel.swift:396"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Only one string rang. Let every string ring.",
+    "source": "Only one string rang. Let every string ring.",
+    "translation": "Yalnızca bir tel çınladı. Her telin çınlamasını sağla.",
+    "where": [
+      "ios\\Timbre\\Tune\\StrumTuneView.swift:196"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Follows the note you play",
+    "source": "Follows the note you play",
+    "translation": "Çaldığın notayı izler",
+    "where": [
+      "ios\\Timbre\\Tune\\TunerControls.swift:107"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Follows the string you play",
+    "source": "Follows the string you play",
+    "translation": "Çaldığın teli izler",
+    "where": [
+      "ios\\Timbre\\Tune\\TunerControls.swift:107"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Holds the note. Tap the wheel for another",
+    "source": "Holds the note. Tap the wheel for another",
+    "translation": "Notayı sabitler. Başkası için tekerleğe dokun",
+    "where": [
+      "ios\\Timbre\\Tune\\TunerControls.swift:108"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Tap a string to tune it",
+    "source": "Tap a string to tune it",
+    "translation": "Akort etmek için bir tele dokun",
+    "where": [
+      "ios\\Timbre\\Tune\\TunerControls.swift:108"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Thickest",
+    "source": "Thickest",
+    "translation": "En kalın",
+    "where": [
+      "ios\\Timbre\\Learn\\Diagrams.swift:249",
+      "ios\\Timbre\\Tune\\StringRail.swift:61"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "String %lld isn’t ringing: press finger %lld right behind the fret",
+    "source": "String %lld isn’t ringing: press finger %lld right behind the fret",
+    "translation": "Tel %lld çınlamıyor: parmak %lld ile perdenin hemen arkasına bas",
+    "where": [
+      "ios\\Timbre\\Learn\\LessonSteps.swift:905"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "String %lld isn’t ringing: press the capo right behind the fret",
+    "source": "String %lld isn’t ringing: press the capo right behind the fret",
+    "translation": "Tel %lld çınlamıyor: kapoyu perdenin hemen arkasına bastır",
+    "where": [
+      "ios\\Timbre\\Learn\\LessonSteps.swift:906"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "String %lld isn’t ringing: press it right behind the fret",
+    "source": "String %lld isn’t ringing: press it right behind the fret",
+    "translation": "Tel %lld çınlamıyor: perdenin hemen arkasına bas",
+    "where": [
+      "ios\\Timbre\\Learn\\LessonSteps.swift:907"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "String %lld isn’t ringing: arch finger %lld",
+    "source": "String %lld isn’t ringing: arch finger %lld",
+    "translation": "Tel %lld çınlamıyor: parmak %lld kavisli dursun",
+    "where": [
+      "ios\\Timbre\\Learn\\LessonSteps.swift:910"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "String %lld isn’t ringing: strum across it",
+    "source": "String %lld isn’t ringing: strum across it",
+    "translation": "Tel %lld çınlamıyor: tararken bu tele de dokun",
+    "where": [
+      "ios\\Timbre\\Learn\\LessonSteps.swift:912"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "All %lld notes",
+    "source": "All %lld notes",
+    "translation": "%lld notanın tamamı",
+    "where": [
+      "ios\\Timbre\\Learn\\PlayAlongCues.swift:389"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "As you look down at it: the thickest on top",
+    "source": "As you look down at it: the thickest on top",
+    "translation": "Yukarıdan baktığın gibi: en kalın tel üstte",
+    "where": [
+      "ios\\Timbre\\Learn\\PlayerNeck.swift:75"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Down strokes go from the thickest string to the thinnest, up strokes back.",
+    "source": "Down strokes go from the thickest string to the thinnest, up strokes back.",
+    "translation": "Aşağı vuruşlar en kalın telden en ince tele, yukarı vuruşlar ters yönde gider.",
+    "where": [
+      "ios\\Timbre\\Learn\\RhythmStep.swift:396",
+      "ios\\Timbre\\Learn\\ShowMe.swift:449"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Watch one finger lie flat, then the rest land",
+    "source": "Watch one finger lie flat, then the rest land",
+    "translation": "Bir parmağın düz yatışını, sonra diğerlerinin yerleşmesini izle",
+    "where": [
+      "ios\\Timbre\\Learn\\ShowMe.swift:60"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Watch one finger lie flat across the strings",
+    "source": "Watch one finger lie flat across the strings",
+    "translation": "Bir parmağın tellerin üzerine düz yatışını izle",
+    "where": [
+      "ios\\Timbre\\Learn\\ShowMe.swift:61"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Watch every string ring",
+    "source": "Watch every string ring",
+    "translation": "Her telin çınlamasını izle",
+    "where": [
+      "ios\\Timbre\\Learn\\ShowMe.swift:64"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Watch the finger land, then let it ring",
+    "source": "Watch the finger land, then let it ring",
+    "translation": "Parmağın yerleşmesini izle, sonra sesi uzat",
+    "where": [
+      "ios\\Timbre\\Learn\\ShowMe.swift:65"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Watch the fingers land in order",
+    "source": "Watch the fingers land in order",
+    "translation": "Parmakların sırayla yerleşmesini izle",
+    "where": [
+      "ios\\Timbre\\Learn\\ShowMe.swift:66"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Watch each note land as it sounds",
+    "source": "Watch each note land as it sounds",
+    "translation": "Her notanın sesiyle birlikte yerleşmesini izle",
+    "where": [
+      "ios\\Timbre\\Learn\\ShowMe.swift:87"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Words & music · Timbre Originals",
+    "source": "Words & music · Timbre Originals",
+    "translation": "Söz ve müzik · Timbre Özgün şarkılar",
+    "where": [
+      "ios\\Timbre\\Learn\\SongOpener.swift:348"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "What slipped in recent lessons, back just before you’d forget it.",
+    "source": "What slipped in recent lessons, back just before you’d forget it.",
+    "translation": "Son derslerde zorlandıkların, tam unutmak üzereyken geri gelir.",
+    "where": [
+      "ios\\Timbre\\Learn\\WeakSpotReview.swift:71"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Tell us a song you'd like to play. Requests decide what we add next.",
+    "source": "Tell us a song you'd like to play. Requests decide what we add next.",
+    "translation": "Çalmak istediğin bir şarkıyı söyle. Sırada ne ekleyeceğimizi istekler belirler.",
+    "where": [
+      "ios\\Timbre\\Songs\\SongsView.swift:173"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Missing a song you love?",
+    "source": "Missing a song you love?",
+    "translation": "Sevdiğin bir şarkı eksik mi?",
+    "where": [
+      "ios\\Timbre\\Songs\\SongsView.swift:327"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Songs you know",
+    "source": "Songs you know",
+    "translation": "Bildiğin şarkılar",
+    "where": [
+      "ios\\Timbre\\Songs\\SongsView.swift:1482"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Because you learned %@",
+    "source": "Because you learned %@",
+    "translation": "Şunu öğrendiğin için: %@",
+    "where": [
+      "ios\\Timbre\\Songs\\SongsView.swift:1498"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Every note is part of a hidden tune",
+    "source": "Every note is part of a hidden tune",
+    "translation": "Her nota gizli bir ezginin parçası",
+    "where": [
+      "ios\\Timbre\\Practice\\PitchSniperView.swift:133"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "%lld more to beat %lld",
+    "source": "%lld more to beat %lld",
+    "translation": "%2$lld hedefini geçmek için %1$lld daha",
+    "where": [
+      "ios\\Timbre\\Practice\\PlayHubGames.swift:393"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "You beat %lld",
+    "source": "You beat %lld",
+    "translation": "Geçtiğin puan: %lld",
+    "where": [
+      "ios\\Timbre\\Practice\\PlayHubGames.swift:408"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Whole neck · pick a position to focus on",
+    "source": "Whole neck · pick a position to focus on",
+    "translation": "Tüm sap · odaklanacağın pozisyonu seç",
+    "where": [
+      "ios\\Timbre\\Practice\\ScalesView.swift:104"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Today complete",
+    "source": "Today complete",
+    "translation": "Bugün tamamlandı",
+    "where": [
+      "ios\\Timbre\\Design\\GameUI.swift:559",
+      "ios\\Timbre\\Design\\GameUI.swift:560"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Play a lesson or tune up on a few days: notes on your timing, chords and strings show up here.",
+    "source": "Play a lesson or tune up on a few days: notes on your timing, chords and strings show up here.",
+    "translation": "Birkaç gün ders çal veya akort yap: zamanlama, akorlar ve tellerle ilgili ipuçları burada görünür.",
+    "where": [
+      "ios\\Timbre\\Journey\\CoachCard.swift:153"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Your notes sat about %lld ms behind the click. Play along with the metronome at %lld BPM and land right on it.",
+    "source": "Your notes sat about %lld ms behind the click. Play along with the metronome at %lld BPM and land right on it.",
+    "translation": "Notaların klikten yaklaşık %lld ms sonra geldi. Metronomla %lld BPM hızında çal ve tam kliğe denk getir.",
+    "where": [
+      "ios\\Timbre\\Journey\\CoachVoice.swift:54"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Your notes ran about %lld ms ahead of the click. Play with the metronome at %lld BPM and let each beat come to you.",
+    "source": "Your notes ran about %lld ms ahead of the click. Play with the metronome at %lld BPM and let each beat come to you.",
+    "translation": "Notaların klikten yaklaşık %lld ms önce geldi. Metronomla %lld BPM hızında çal ve her vuruşu bekle.",
+    "where": [
+      "ios\\Timbre\\Journey\\CoachVoice.swift:56"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Your play-along came in at %lld%%. Three stars need %lld%% on it.",
+    "source": "Your play-along came in at %lld%%. Three stars need %lld%% on it.",
+    "translation": "Eşlikle çalarken %lld%% elde ettin. Üç yıldız için %lld%% gerekiyor.",
+    "where": [
+      "ios\\Timbre\\Journey\\CoachVoice.swift:64"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Your %@ string drifts %lld¢ flat a day. Time for new strings; until then, tune up before you play.",
+    "source": "Your %@ string drifts %lld¢ flat a day. Time for new strings; until then, tune up before you play.",
+    "translation": "%@ telin günde %lld¢ pesleşiyor. Yeni tel zamanı; o zamana kadar çalmadan önce akort et.",
+    "where": [
+      "ios\\Timbre\\Journey\\CoachVoice.swift:70"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Your %@ string drifts %lld¢ sharp a day. Tune up before you play, and check it is wound firmly at the peg.",
+    "source": "Your %@ string drifts %lld¢ sharp a day. Tune up before you play, and check it is wound firmly at the peg.",
+    "translation": "%@ telin günde %lld¢ tizleşiyor. Çalmadan önce akort et ve burguda sıkıca sarılı olduğunu kontrol et.",
+    "where": [
+      "ios\\Timbre\\Journey\\CoachVoice.swift:72"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Your strings went on %lld weeks ago. A fresh set holds its tune and sounds brighter.",
+    "source": "Your strings went on %lld weeks ago. A fresh set holds its tune and sounds brighter.",
+    "translation": "Tellerini %lld hafta önce taktın. Yeni bir takım akordunu korur ve daha parlak tınlar.",
+    "where": [
+      "ios\\Timbre\\Journey\\CoachVoice.swift:74"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Your %lld-day streak is still on. A one-minute tune-up keeps it going.",
+    "source": "Your %lld-day streak is still on. A one-minute tune-up keeps it going.",
+    "translation": "%lld günlük serin sürüyor. Bir dakikalık akort onu devam ettirir.",
+    "where": [
+      "ios\\Timbre\\Journey\\CoachVoice.swift:76"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "%lld of %lld done today. Next up: %@, about %lld min.",
+    "source": "%lld of %lld done today. Next up: %@, about %lld min.",
+    "translation": "Bugün %lld / %lld tamam. Sıradaki: %@, yaklaşık %lld dk.",
+    "where": [
+      "ios\\Timbre\\Journey\\CoachVoice.swift:78"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Your tune-ups land within ±%@¢ now, down from ±%@¢ a few weeks ago.",
+    "source": "Your tune-ups land within ±%@¢ now, down from ±%@¢ a few weeks ago.",
+    "translation": "Akortların artık ±%@¢ içinde; birkaç hafta önce ±%@¢ idi.",
+    "where": [
+      "ios\\Timbre\\Journey\\CoachVoice.swift:84"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "%@ → %@ didn’t land (%lld of %lld). Practice the change at %lld BPM until your hand knows the way.",
+    "source": "%@ → %@ didn’t land (%lld of %lld). Practice the change at %lld BPM until your hand knows the way.",
+    "translation": "%@ → %@ olmadı (%lld / %lld). Elin yolu öğrenene kadar geçişi %lld BPM hızında çalış.",
+    "where": [
+      "ios\\Timbre\\Journey\\CoachVoice.swift:92"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "%@ → %@ didn’t land (%lld of %lld). Practice the move at %lld BPM until your hand knows the way.",
+    "source": "%@ → %@ didn’t land (%lld of %lld). Practice the move at %lld BPM until your hand knows the way.",
+    "translation": "%@ → %@ olmadı (%lld / %lld). Elin yolu öğrenene kadar hareketi %lld BPM hızında çalış.",
+    "where": [
+      "ios\\Timbre\\Journey\\CoachVoice.swift:94"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Next level: %@ → %@ came %lld ms early on beat %lld. Let that change wait for the click.",
+    "source": "Next level: %@ → %@ came %lld ms early on beat %lld. Let that change wait for the click.",
+    "translation": "Sonraki seviye: %@ → %@ geçişi %lld ms erken, vuruş %lld üzerinde geldi. Geçiş için kliği bekle.",
+    "where": [
+      "ios\\Timbre\\Journey\\CoachVoice.swift:117"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Next level: %@ → %@ came %lld ms early on beat %lld. Let that move wait for the click.",
+    "source": "Next level: %@ → %@ came %lld ms early on beat %lld. Let that move wait for the click.",
+    "translation": "Sonraki seviye: %@ → %@ hareketi %lld ms erken, vuruş %lld üzerinde geldi. Hareket için kliği bekle.",
+    "where": [
+      "ios\\Timbre\\Journey\\CoachVoice.swift:119"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "You nail %@ (%lld%%), but chords are your weak spot (%lld%%).",
+    "source": "You nail %@ (%lld%%), but chords are your weak spot (%lld%%).",
+    "translation": "%@ konusunda iyisin (%lld%%), ama akorlar zayıf noktan (%lld%%).",
+    "where": [
+      "ios\\Timbre\\Journey\\CoachVoice.swift:134"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "You nail %@ (%lld%%), but single notes are your weak spot (%lld%%).",
+    "source": "You nail %@ (%lld%%), but single notes are your weak spot (%lld%%).",
+    "translation": "%@ konusunda iyisin (%lld%%), ama tek notalar zayıf noktan (%lld%%).",
+    "where": [
+      "ios\\Timbre\\Journey\\CoachVoice.swift:135"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "You nail %@ (%lld%%), but rhythm is your weak spot (%lld%%).",
+    "source": "You nail %@ (%lld%%), but rhythm is your weak spot (%lld%%).",
+    "translation": "%@ konusunda iyisin (%lld%%), ama ritim zayıf noktan (%lld%%).",
+    "where": [
+      "ios\\Timbre\\Journey\\CoachVoice.swift:136"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "You nail %@ (%lld%%), but ear questions are your weak spot (%lld%%).",
+    "source": "You nail %@ (%lld%%), but ear questions are your weak spot (%lld%%).",
+    "translation": "%@ konusunda iyisin (%lld%%), ama kulak soruları zayıf noktan (%lld%%).",
+    "where": [
+      "ios\\Timbre\\Journey\\CoachVoice.swift:137"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "your next lesson",
+    "source": "your next lesson",
+    "translation": "sıradaki dersin",
+    "where": [
+      "ios\\Timbre\\Journey\\CoachVoice.swift:246"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Each string’s drift, in cents a day.",
+    "source": "Each string’s drift, in cents a day.",
+    "translation": "Her telin günlük sapması, sent cinsinden.",
+    "where": [
+      "ios\\Timbre\\Journey\\JourneyView.swift:354"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Your %@ string drifts %@ about %lld¢ a day.",
+    "source": "Your %@ string drifts %@ about %lld¢ a day.",
+    "translation": "%@ telin %@ yönde günde yaklaşık %lld¢ kayıyor.",
+    "where": [
+      "ios\\Timbre\\Journey\\JourneyView.swift:357",
+      "ios\\Timbre\\Tune\\TuneSidePane.swift:329"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Apple Music isn't available in this version of Timbre.",
+    "source": "Apple Music isn't available in this version of Timbre.",
+    "translation": "Apple Music, Timbre uygulamasının bu sürümünde kullanılamıyor.",
+    "where": [
+      "ios\\Timbre\\YourSongs\\AppleMusicListen.swift:122"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Open the Music app once to accept Apple Music's privacy terms, then try again.",
+    "source": "Open the Music app once to accept Apple Music's privacy terms, then try again.",
+    "translation": "Apple Music gizlilik koşullarını kabul etmek için Müzik uygulamasını bir kez aç, sonra yeniden dene.",
+    "where": [
+      "ios\\Timbre\\YourSongs\\AppleMusicListen.swift:124"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Timbre isn't allowed to use Apple Music. You can allow it in Settings.",
+    "source": "Timbre isn't allowed to use Apple Music. You can allow it in Settings.",
+    "translation": "Timbre uygulamasının Apple Music kullanmasına izin verilmiyor. Ayarlar’dan izin verebilirsin.",
+    "where": [
+      "ios\\Timbre\\YourSongs\\AppleMusicListen.swift:128"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Plays in Apple Music for subscribers, separate from the chart.",
+    "source": "Plays in Apple Music for subscribers, separate from the chart.",
+    "translation": "Aboneler için Apple Music üzerinde, akor sayfasından ayrı çalar.",
+    "where": [
+      "ios\\Timbre\\YourSongs\\AppleMusicListen.swift:197"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Listening needs an Apple Music subscription.",
+    "source": "Listening needs an Apple Music subscription.",
+    "translation": "Dinlemek için Apple Music aboneliği gerekir.",
+    "where": [
+      "ios\\Timbre\\YourSongs\\AppleMusicListen.swift:207"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Your recording",
+    "source": "Your recording",
+    "translation": "Kendi kaydın",
+    "where": [
+      "ios\\Timbre\\YourSongs\\ChartDock.swift:36"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "This recording's file is missing.",
+    "source": "This recording's file is missing.",
+    "translation": "Bu kaydın dosyası eksik.",
+    "where": [
+      "ios\\Timbre\\YourSongs\\ChartDock.swift:105"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Tap Sync, then tap along once: from then on the chart follows this recording.",
+    "source": "Tap Sync, then tap along once: from then on the chart follows this recording.",
+    "translation": "Eşitle seçeneğine dokun, sonra geçişlerle bir kez birlikte dokun: bundan sonra akor sayfası bu kaydı izler.",
+    "where": [
+      "ios\\Timbre\\YourSongs\\ChartDock.swift:152"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Tap as each chord comes in",
+    "source": "Tap as each chord comes in",
+    "translation": "Her akor başladığında dokun",
+    "where": [
+      "ios\\Timbre\\YourSongs\\ChartDock.swift:242"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Text",
+    "source": "Text",
+    "translation": "Metin",
+    "where": [
+      "ios\\Timbre\\YourSongs\\ChartEditorView.swift:38"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Type or paste the words under Text, then come back to put chords on them.",
+    "source": "Type or paste the words under Text, then come back to put chords on them.",
+    "translation": "Metin bölümüne sözleri yaz veya yapıştır, sonra akorları yerleştirmek için geri dön.",
+    "where": [
+      "ios\\Timbre\\YourSongs\\ChartEditorView.swift:77"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Tap a word to put a chord on it.",
+    "source": "Tap a word to put a chord on it.",
+    "translation": "Akor yerleştirmek için bir sözcüğe dokun.",
+    "where": [
+      "ios\\Timbre\\YourSongs\\ChartEditorView.swift:79"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Chords go in brackets just before their word: [G]Amazing [C]grace. {start_of_chorus} and {end_of_chorus} mark a chorus.",
+    "source": "Chords go in brackets just before their word: [G]Amazing [C]grace. {start_of_chorus} and {end_of_chorus} mark a chorus.",
+    "translation": "Akorlar sözcüğün hemen önüne köşeli parantezle yazılır: [G]Amazing [C]grace. {start_of_chorus} ve {end_of_chorus} nakaratı işaretler.",
+    "where": [
+      "ios\\Timbre\\YourSongs\\ChartEditorView.swift:172"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Stop practising?",
+    "source": "Stop practising?",
+    "translation": "Çalışma durdurulsun mu?",
+    "where": [
+      "ios\\Timbre\\YourSongs\\ChartPracticeView.swift:207"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Delete this song?",
+    "source": "Delete this song?",
+    "translation": "Bu şarkı silinsin mi?",
+    "where": [
+      "ios\\Timbre\\YourSongs\\ChartSongView.swift:71",
+      "ios\\Timbre\\YourSongs\\YourSongsShelf.swift:125"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "The chart and the recording you added go from this iPhone.",
+    "source": "The chart and the recording you added go from this iPhone.",
+    "translation": "Eklediğin akor sayfası ve kayıt bu iPhone üzerinden kaldırılır.",
+    "where": [
+      "ios\\Timbre\\YourSongs\\ChartSongView.swift:79",
+      "ios\\Timbre\\YourSongs\\YourSongsShelf.swift:129"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Text size",
+    "source": "Text size",
+    "translation": "Metin boyutu",
+    "where": [
+      "ios\\Timbre\\YourSongs\\ChartSongView.swift:134"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Edit it to add the words and chords.",
+    "source": "Edit it to add the words and chords.",
+    "translation": "Sözleri ve akorları eklemek için düzenle.",
+    "where": [
+      "ios\\Timbre\\YourSongs\\ChartSongView.swift:168"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Your charts and recordings stay on this iPhone.",
+    "source": "Your charts and recordings stay on this iPhone.",
+    "translation": "Akor sayfaların ve kayıtların bu iPhone üzerinde kalır.",
+    "where": [
+      "ios\\Timbre\\YourSongs\\ChartSongView.swift:170"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Your song",
+    "source": "Your song",
+    "translation": "Senin şarkın",
+    "where": [
+      "ios\\Timbre\\YourSongs\\ChartSongView.swift:236"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Your recording plays in the new key too.",
+    "source": "Your recording plays in the new key too.",
+    "translation": "Kaydın da yeni tonda çalar.",
+    "where": [
+      "ios\\Timbre\\YourSongs\\ChartSongView.swift:295"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Tap one to hear it",
+    "source": "Tap one to hear it",
+    "translation": "Dinlemek için bir akora dokun",
+    "where": [
+      "ios\\Timbre\\YourSongs\\ChartSongView.swift:341"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "A ChordPro file, or a text file with the chords over the words.",
+    "source": "A ChordPro file, or a text file with the chords over the words.",
+    "translation": "Bir ChordPro dosyası veya akorların sözlerin üzerinde olduğu bir metin dosyası.",
+    "where": [
+      "ios\\Timbre\\YourSongs\\YourSongsShelf.swift:374"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Write one",
+    "source": "Write one",
+    "translation": "Kendin yaz",
+    "where": [
+      "ios\\Timbre\\YourSongs\\YourSongsShelf.swift:377"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Add only charts and recordings you have the right to use. They stay on this iPhone; Timbre never uploads or shares them.",
+    "source": "Add only charts and recordings you have the right to use. They stay on this iPhone; Timbre never uploads or shares them.",
+    "translation": "Yalnızca kullanma hakkına sahip olduğun akor sayfalarını ve kayıtları ekle. Bunlar bu iPhone üzerinde kalır; Timbre bunları asla yüklemez veya paylaşmaz.",
+    "where": [
+      "ios\\Timbre\\YourSongs\\YourSongsShelf.swift:384"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "The free plan keeps %lld songs. Timbre Pro keeps as many as you like.",
+    "source": "The free plan keeps %lld songs. Timbre Pro keeps as many as you like.",
+    "translation": "Ücretsiz plan %lld şarkı saklar. Timbre Pro istediğin kadar saklar.",
+    "where": [
+      "ios\\Timbre\\YourSongs\\YourSongsShelf.swift:403"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Copied from a chord sheet you own, in ChordPro or with chords over the words.",
+    "source": "Copied from a chord sheet you own, in ChordPro or with chords over the words.",
+    "translation": "Sahip olduğun bir akor sayfasından, ChordPro biçiminde veya akorlar sözlerin üzerinde olacak şekilde kopyalanmış.",
+    "where": [
+      "ios\\Timbre\\YourSongs\\YourSongsShelf.swift:439"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Copied from a chord sheet you own.",
+    "source": "Copied from a chord sheet you own.",
+    "translation": "Sahip olduğun bir akor sayfasından kopyalanmış.",
+    "where": [
+      "ios\\Timbre\\YourSongs\\YourSongsShelf.swift:457"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Timbre couldn't find a beat and chords in this recording. Try one with the band or a strummed instrument playing in time.",
+    "source": "Timbre couldn't find a beat and chords in this recording. Try one with the band or a strummed instrument playing in time.",
+    "translation": "Timbre bu kayıtta ritim ve akor bulamadı. Bir grubun veya zamanında tarayarak çalan bir enstrümanın olduğu kaydı dene.",
+    "where": [
+      "ios\\Timbre\\YourSongs\\YourSongsShelf.swift:484"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Listening to your recording…",
+    "source": "Listening to your recording…",
+    "translation": "Kaydın dinleniyor…",
+    "where": [
+      "ios\\Timbre\\YourSongs\\YourSongsShelf.swift:488"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Your songs can't be saved on this device right now.",
+    "source": "Your songs can't be saved on this device right now.",
+    "translation": "Şarkıların şu anda bu aygıta kaydedilemiyor.",
+    "where": [
+      "ios\\Timbre\\YourSongs\\YourSongsStore.swift:58"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "There's no text on the clipboard.",
+    "source": "There's no text on the clipboard.",
+    "translation": "Panoda metin yok.",
+    "where": [
+      "ios\\Timbre\\YourSongs\\YourSongsStore.swift:129"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "That file is too big to be a chord chart.",
+    "source": "That file is too big to be a chord chart.",
+    "translation": "Bu dosya akor sayfası olmak için fazla büyük.",
+    "where": [
+      "ios\\Timbre\\YourSongs\\YourSongsStore.swift:149"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "That file isn't a text chord chart.",
+    "source": "That file isn't a text chord chart.",
+    "translation": "Bu dosya metin biçiminde bir akor sayfası değil.",
+    "where": [
+      "ios\\Timbre\\YourSongs\\YourSongsStore.swift:152"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Simple tuner shows the tuner on its own. Calm mode leaves out XP, levels, quests and streaks; your stars and badges stay.",
+    "source": "Simple tuner shows the tuner on its own. Calm mode leaves out XP, levels, quests and streaks; your stars and badges stay.",
+    "translation": "Sade akort cihazı yalnızca akort cihazını gösterir. Sakin mod XP, seviyeler, görevler ve serileri gizler; yıldızların ve rozetlerin kalır.",
+    "where": [
+      "ios\\Timbre\\Settings\\SettingsView.swift:295"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Calm mode",
+    "source": "Calm mode",
+    "translation": "Sakin mod",
+    "where": [
+      "ios\\Timbre\\Settings\\SettingsView.swift:311"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Which features get used, never audio or anything linked to you.",
+    "source": "Which features get used, never audio or anything linked to you.",
+    "translation": "Hangi özelliklerin kullanıldığı; asla ses veya sana bağlı bilgiler değil.",
+    "where": [
+      "ios\\Timbre\\Settings\\SettingsView.swift:536"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Recorded instruments, shared under CC0 by their makers.",
+    "source": "Recorded instruments, shared under CC0 by their makers.",
+    "translation": "Üreticilerinin CC0 altında paylaştığı enstrüman kayıtları.",
+    "where": [
+      "ios\\Timbre\\Settings\\SettingsView.swift:797"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Starts, repeats, slows down or moves on the lesson step on screen, so your hands can stay on your instrument.",
+    "source": "Starts, repeats, slows down or moves on the lesson step on screen, so your hands can stay on your instrument.",
+    "translation": "Ekrandaki ders adımını başlatır, tekrarlar, yavaşlatır veya sonraki adıma geçer; böylece ellerin enstrümanında kalır.",
+    "where": [
+      "ios\\Timbre\\Intents\\PracticeIntents.swift:82"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Opens the lesson or song you choose.",
+    "source": "Opens the lesson or song you choose.",
+    "translation": "Seçtiğin dersi veya şarkıyı açar.",
+    "where": [
+      "ios\\Timbre\\Intents\\SpotlightIndex.swift:143"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Beat my %lld on %@ in Timbre: %@",
+    "source": "Beat my %lld on %@ in Timbre: %@",
+    "translation": "Timbre üzerinde %2$@ için %1$lld puanımı geç: %3$@",
+    "where": [
+      "ios\\Timbre\\Services\\GameCenter.swift:38"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Your review is ready.",
+    "source": "Your review is ready.",
+    "translation": "Tekrarın hazır.",
+    "where": [
+      "ios\\Timbre\\Services\\PracticeReminder.swift:113"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "No practice this week yet. Five minutes today gets you going again.",
+    "source": "No practice this week yet. Five minutes today gets you going again.",
+    "translation": "Bu hafta henüz çalışmadın. Bugün beş dakika seni yeniden başlatır.",
+    "where": [
+      "ios\\Timbre\\Services\\PracticeReminder.swift:132"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "It renews in two days; cancel anytime in Settings.",
+    "source": "It renews in two days; cancel anytime in Settings.",
+    "translation": "İki gün sonra yenilenir; istediğin zaman Ayarlar’dan iptal et.",
+    "where": [
+      "ios\\Timbre\\Services\\PracticeReminder.swift:195"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "It renews in two days. Keep playing, or cancel anytime in Settings.",
+    "source": "It renews in two days. Keep playing, or cancel anytime in Settings.",
+    "translation": "İki gün sonra yenilenir. Çalmaya devam et veya istediğin zaman Ayarlar’dan iptal et.",
+    "where": [
+      "ios\\Timbre\\Services\\PracticeReminder.swift:197"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "You've practised %lld min with Pro so far.",
+    "source": "You've practised %lld min with Pro so far.",
+    "translation": "Şimdiye kadar Pro ile %lld dk. çalıştın.",
+    "where": [
+      "ios\\Timbre\\Services\\PracticeReminder.swift:198"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "You've played with Pro once so far.",
+    "source": "You've played with Pro once so far.",
+    "translation": "Şimdiye kadar Pro ile bir kez çaldın.",
+    "where": [
+      "ios\\Timbre\\Services\\PracticeReminder.swift:199"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "You've practised %lld min on %lld days with Pro.",
+    "source": "You've practised %lld min on %lld days with Pro.",
+    "translation": "Pro ile %2$lld günde %1$lld dk. çalıştın.",
+    "where": [
+      "ios\\Timbre\\Services\\PracticeReminder.swift:200"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "You've practised on %lld days with Pro.",
+    "source": "You've practised on %lld days with Pro.",
+    "translation": "Pro ile %lld gün çalıştın.",
+    "where": [
+      "ios\\Timbre\\Services\\PracticeReminder.swift:201"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Timbre couldn't read its saved file, so it opened the copy kept before your last change. That change may be missing.",
+    "source": "Timbre couldn't read its saved file, so it opened the copy kept before your last change. That change may be missing.",
+    "translation": "Timbre kayıtlı dosyasını okuyamadığı için son değişikliğinden önceki kopyayı açtı. Bu değişiklik eksik olabilir.",
+    "where": [
+      "ios\\Timbre\\TimbreApp.swift:164"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Timbre couldn't read its saved progress on this device, so it started over. Timbre Pro isn't affected.",
+    "source": "Timbre couldn't read its saved progress on this device, so it started over. Timbre Pro isn't affected.",
+    "translation": "Timbre bu aygıttaki kayıtlı ilerlemeyi okuyamadığı için sıfırdan başladı. Timbre Pro etkilenmez.",
+    "where": [
+      "ios\\Timbre\\TimbreApp.swift:166"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Open Timbre without its saved file?",
+    "source": "Open Timbre without its saved file?",
+    "translation": "Timbre kayıtlı dosyası olmadan açılsın mı?",
+    "where": [
+      "ios\\Timbre\\TimbreApp.swift:195"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Something went wrong while Timbre was opening.",
+    "source": "Something went wrong while Timbre was opening.",
+    "translation": "Timbre açılırken bir sorun oluştu.",
+    "where": [
+      "ios\\Timbre\\TimbreApp.swift:206"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Strum to tune",
+    "source": "Strum to tune",
+    "translation": "Akort için telleri tara",
+    "where": [
+      "ios\\Timbre\\Tips\\TimbreTips.swift:30",
+      "ios\\Timbre\\Tune\\StrumTuneView.swift:103"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "The song to play next, one tap away.",
+    "source": "The song to play next, one tap away.",
+    "translation": "Sıradaki şarkıyı çalmaya bir dokunuş uzaktasın.",
+    "where": [
+      "ios\\TimbreWidgets\\ConfigurationIntents.swift:102",
+      "ios\\TimbreWidgets\\NextSongWidget.swift:53"
+    ]
+  },
+  {
+    "locale": "tr",
+    "table": "Localizable.strings",
+    "key": "Open Timbre to pick your next song.",
+    "source": "Open Timbre to pick your next song.",
+    "translation": "Sonraki şarkını seçmek için Timbre uygulamasını aç.",
+    "where": [
+      "ios\\TimbreWidgets\\NextSongWidget.swift:145",
+      "ios\\TimbreWidgets\\NextSongWidget.swift:154"
+    ]
+  }
+]

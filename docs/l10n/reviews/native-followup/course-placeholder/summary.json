@@ -1,0 +1,52 @@
+{
+  "reviewer": "Codex independent course-placeholder reviewer /root/review_uk",
+  "scope": "One live UI template across all48 translated app locales, with all7 actual played-instrument course title values. Nominative argument contract verified from PaywallPlan.lessonsOutcome; voice excluded and matching Songs instrument resolves to first corresponding instrument course.",
+  "reviewed_locales": 48,
+  "actual_runtime_title_bindings": 336,
+  "proposed_locale_corrections": 14,
+  "accepted_argument_constructions": 34,
+  "proposed_locales": [
+    "cs",
+    "de",
+    "el",
+    "et",
+    "hr",
+    "is",
+    "lt",
+    "lv",
+    "mr",
+    "pl",
+    "sk",
+    "sl",
+    "zu",
+    "zh-CN"
+  ],
+  "frozen_register_addenda": {
+    "hr": "Case-safe target replaces the earlier register-only proposal, with exact current-old and prior-proposed guards preserved.",
+    "ro": "Existing de+noun construction accepted; earlier register-only te/cânți correction remains unchanged.",
+    "tr": "No previous frozen register proposal exists for this key; existing template is already singular and accepts bare instrument modifiers."
+  },
+  "source_inputs_sha256": {
+    "ios/Timbre/Paywall/PaywallPlan.swift": "6e6ccaf832aba07a78b428b7250f6f6da1a249c178c295a2a18b5c86cd94d994",
+    "ios/Sources/TimbreCore/Resources/curriculum.json": "f5399d3d13edd2f94b660648e7dd23aceef66a21e095567988bbb6bd38995bf1",
+    "docs/l10n/reviews/native-followup/register-mixed/proposals.json": "87a9fe4f89bd4e9da858f8d6a2793e7a5d07d72e50304e4a400e3d910c459b57"
+  },
+  "supporting_usage": [
+    {
+      "locale": "mr",
+      "topic": "Instrument-specific lesson phrase uses genitive; apposition avoids guessing that ending.",
+      "source": "First-person Marathi published guitar-learning account",
+      "url": "https://maharashtratimes.com/lifestyle-news/relationships/siddhesh/articleshow/74963842.cms"
+    },
+    {
+      "locale": "de",
+      "topic": "Ordinary generic guitar-lesson compound uses Gitarren-, unlike runtime Gitarre.",
+      "source": "Native German guitar-teacher published usage",
+      "url": "https://www.ma-guitar.de/"
+    }
+  ],
+  "native_certification": false,
+  "device_layout_verified": false,
+  "code_or_live_maps_changed": false,
+  "hard_errors": []
+}
