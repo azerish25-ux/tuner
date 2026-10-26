@@ -498,7 +498,7 @@ UNIT_6 = unit("thy-6", "Intervals", "Name the distance between two notes by numb
         listen("Which interval do you hear?", [["G3"], ["C4"]], ["Perfect fourth", "Perfect fifth", "Octave"], 0),
     ]),
     lesson("thy-6-4", "Seconds, sixths and sevenths", [
-        explain("Major and minor everywhere", "Seconds, thirds, sixths and sevenths come in major and minor sizes. Minor is "
+        explain("Major and minor intervals", "Seconds, thirds, sixths and sevenths come in major and minor sizes. Minor is "
                 "always one half step smaller than major.", keyboard(["C4", "A4"])),
         explain("The sizes in half steps", "Minor second 1, major second 2. Minor third 3, major third 4. Minor sixth 8, major "
                 "sixth 9. Minor seventh 10, major seventh 11."),

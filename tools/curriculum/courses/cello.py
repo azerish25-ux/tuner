@@ -237,7 +237,7 @@ UNIT_1 = unit("vc-1", "Hello, cello", "Sit, set the endpin, hold the bow, play t
                 "From low to high the strings are C, G, D and A. C is the thickest and lowest. A is the thinnest "
                 "and highest, and we call it string 1.",
                 part("strings")),
-        explain("The bridge", BRIDGE, part("bridge")),
+        explain("The instrument bridge", BRIDGE, part("bridge")),
         quiz("Which string is the lowest?", ["C", "A", "D", "G"], 0,
              "C is the thickest string and the lowest. Strings count from A (1) to C (4)."),
         explain("Pluck first", PLUCK),

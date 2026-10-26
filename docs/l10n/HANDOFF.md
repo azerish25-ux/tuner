@@ -11,11 +11,11 @@ Every launch-critical string is translated in every locale.
 ## What is missing now
 
 - **App interface:** 0 distinct strings are missing somewhere, 0 locale-string pairs in all.
-- **Lessons:** 170,296 locale-string pairs across the 48 lesson languages (Arabic (ar), Bulgarian (bg), Bengali (bn), Catalan (ca), Czech (cs), Danish (da), German (de), Greek (el), Spanish (es), Estonian (et), Persian (fa), Finnish (fi), French (fr), Gujarati (gu), Hebrew (he), Hindi (hi), Croatian (hr), Hungarian (hu), Indonesian (id), Icelandic (is), Italian (it), Japanese (ja), Kannada (kn), Korean (ko), Lithuanian (lt), Latvian (lv), Malayalam (ml), Marathi (mr), Dutch (nl), Norwegian (no), Punjabi (pa), Polish (pl), Portuguese (pt), Romanian (ro), Russian (ru), Slovak (sk), Slovenian (sl), Swedish (sv), Swahili (sw), Tamil (ta), Telugu (te), Thai (th), Turkish (tr), Ukrainian (uk), Urdu (ur), Vietnamese (vi), Chinese (Simplified) (zh-CN), Zulu (zu)).
+- **Lessons:** 170,324 locale-string pairs across the 48 lesson languages (Arabic (ar), Bulgarian (bg), Bengali (bn), Catalan (ca), Czech (cs), Danish (da), German (de), Greek (el), Spanish (es), Estonian (et), Persian (fa), Finnish (fi), French (fr), Gujarati (gu), Hebrew (he), Hindi (hi), Croatian (hr), Hungarian (hu), Indonesian (id), Icelandic (is), Italian (it), Japanese (ja), Kannada (kn), Korean (ko), Lithuanian (lt), Latvian (lv), Malayalam (ml), Marathi (mr), Dutch (nl), Norwegian (no), Punjabi (pa), Polish (pl), Portuguese (pt), Romanian (ro), Russian (ru), Slovak (sk), Slovenian (sl), Swedish (sv), Swahili (sw), Tamil (ta), Telugu (te), Thai (th), Turkish (tr), Ukrainian (uk), Urdu (ur), Vietnamese (vi), Chinese (Simplified) (zh-CN), Zulu (zu)).
 
 | Locales | App strings missing | Lesson strings missing |
 |---|---:|---:|
-| bg, ca, cs, da, el, et, fi, he, hr, hu, id, is, lt, lv, nl, no, pl, ro, sk, sl, sv, sw, te, th, tr, uk, vi, zu | 0 | 6082 |
+| bg, ca, cs, da, el, et, fi, he, hr, hu, id, is, lt, lv, nl, no, pl, ro, sk, sl, sv, sw, te, th, tr, uk, vi, zu | 0 | 6083 |
 | complete: ar, bn, de, es, fa, fr, gu, hi, it, ja, kn, ko, ml, mr, pa, pt, ru, ta, ur, zh-CN | 0 | 0 |
 
 Lessons and interface are required in all 49 app languages (English source + 48 translations). English fallback is temporary missing content, never completed localization.
@@ -86,4 +86,4 @@ Which languages ship is the owner's decision: `CFBundleLocalizations` in `ios/pr
 
 Interface strings are found by `tools/l10n/swiftstrings.py`, a scanner that reads Swift without Xcode. It infers the type of each interpolation (`%lld` for Int, `%@` for text); when a new string's key carries `key_check`, the inferred specifier is a guess. Confirm it with Xcode's export: run the *Localization export* workflow (`l10n.yml`) and pass its `en.xliff` with `--xliff`.
 
-Stale entries: 158 keys that some locale still holds have no English in the app any more (5,790 locale-key pairs; the keys are listed under `stale` in `tools/l10n/todo/index.json`). They are harmless, and they are where `changed` entries find their old translations.
+Stale entries: 159 keys that some locale still holds have no English in the app any more (5,810 locale-key pairs; the keys are listed under `stale` in `tools/l10n/todo/index.json`). They are harmless, and they are where `changed` entries find their old translations.

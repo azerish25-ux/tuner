@@ -355,3 +355,19 @@ and full-context hashes. Six new tests reject stale source/audio/context evidenc
 and unbound/duplicate notes. All117 Python localization tests pass. Existing frozen
 translation/review packets are not rewritten; future batches gain these distinctions
 without changing English keys, answers, music data or translator TODO metadata.
+
+## Applied cross-role repairs and historical source versions
+
+Two physical bridge titles now use an explicit instrument-part key; one interval
+explanation now has an interval-specific title rather than a chord-quality title.
+The incorrect next-beat tremolo answer reuses the existing sustained-long-note
+instruction, preserving answer1 and the actual three-beat note. All notes, IDs,
+patterns and counters remain unchanged. Exact independent reviews, parent rebuild
+proofs and receipts are under `bridge-context/`, `interval-context/`, and
+`tremolo-context/`.
+
+The resulting current source contains6,083 keys: the frozen6,082 plus two additions
+minus one explicitly retired obsolete key. All20 applied target resources cover
+this exact current set. The six new reviews remain bound to their historical source
+sets plus reviewed addenda; they are not falsely counted as imported. Draft integrity
+checks accept only complete known source versions, not arbitrary subsets.

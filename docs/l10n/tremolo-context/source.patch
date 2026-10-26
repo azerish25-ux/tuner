@@ -1,0 +1,11 @@
+--- a/tools/curriculum/courses/mandolin.py
++++ b/tools/curriculum/courses/mandolin.py
+@@ -396,7 +396,7 @@
+         play(["A3", "B3"], hint="Pair 4, fret 2 with your first finger, then fret 4 with your second."),
+         tap(WALTZ, bpm=66, bars=2, beats_per_bar=3),
+         tune(AMAZING_1_ALONE, bpm=66, beats_per_bar=3, title="First line"),
+-        quiz("How do you hold the long A at the end?", ["Pick once and wait", "Tremolo until the next beat", "Mute it right away"], 1,
++        quiz("How do you hold the long A at the end?", ["Pick once and wait", "Tremolo through long notes", "Mute it right away"], 1,
+              "A single pick fades long before three beats are up. Tremolo keeps it ringing to the end of the bar."),
+         tune(f"r:2 {AMAZING_2}", bpm=66, beats_per_bar=3, title="Second line"),
+         tune(AMAZING, bpm=66, beats_per_bar=3, title="Amazing Grace"),

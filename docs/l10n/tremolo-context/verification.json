@@ -1,0 +1,47 @@
+{
+  "status": "passed-isolated-rebuild",
+  "publisher": "/workspace/scratch/6b683a119bde/tuner-publish",
+  "source_guard_verified": true,
+  "parent_lesson_exactly_matches_current": true,
+  "parent_guard_sha256": "13a3405b1b08492e0a6da23c3417380a7136aad6660fc57e3b4b681274904e7b",
+  "parent_patch_sha256": "b74266a192792bfcd144f4b9218df8cd36234d056f843c9f2e50fc14e3ecd3e6",
+  "parent_lesson_sha256": "c05687732e6719698023d7ffaea6390d7f68d34607311899fa1f0a047f0cc667",
+  "source_file": "tools/curriculum/courses/mandolin.py",
+  "source_before_sha256": "873a03f12c50fcffc1e931abea80c6ed862e3814c8f061fad34b45b861b8f9a8",
+  "source_after_sha256": "25c193601939e11e58e6e39dd741b860d1a13cf999c3ecd6ba0285017dfff741",
+  "current_and_isolated_before_curriculum_sha256": "9ee7f9b9af81b878122f0031d512b55552902c9c98b3b4634f9c114d932bf1b9",
+  "after_curriculum_sha256": "f5399d3d13edd2f94b660648e7dd23aceef66a21e095567988bbb6bd38995bf1",
+  "before_english_sha256": "66ed543d69ecb15f48e94336561210da630dca2487b08379f49fc17460e93651",
+  "after_english_sha256": "718a9431e97997dcad904b99eb00f0072385142d63ebb7ffc1c27ff374ca6de3",
+  "before_unique_keys": 6084,
+  "after_unique_keys": 6083,
+  "retired_keys": [
+    "L4d1c8b1ea7"
+  ],
+  "added_keys": [],
+  "retained_sources_unchanged": true,
+  "old_key_before_occurrences": 1,
+  "old_key_after_occurrences": 0,
+  "existing_key_before_occurrences": 1,
+  "existing_key_after_occurrences": 2,
+  "only_changed_object": "/courses/5/units/2/lessons/3/steps/4/options/1",
+  "only_changed_leaf_fields": [
+    "k",
+    "t"
+  ],
+  "answer_index_before_and_after": 1,
+  "all_other_structure_music_patterns_ids_and_texts_unchanged": true,
+  "first_line_final_note": {
+    "m": 57,
+    "b": 12.0,
+    "d": 3.0,
+    "at": {
+      "s": 4,
+      "f": 2,
+      "g": 1
+    }
+  },
+  "beats_per_bar": 3,
+  "publisher_unmodified_and_hashes_rechecked": true,
+  "review_boundary": "Isolated build plus exact structural comparison, not device/audio/native certification."
+}

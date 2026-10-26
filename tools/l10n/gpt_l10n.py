@@ -112,6 +112,60 @@ def option_contexts(repo):
     return {key: list(contexts.values()) for key, contexts in grouped.items()}
 
 
+def shared_lesson_contexts(repo):
+    """Distinct textual roles for repeated keys, including non-option titles and bodies.
+
+    Music/note arrays are deliberately omitted; equal semantic text contexts are
+    counted once with examples rather than multiplying identical readings.
+    """
+    path = repo / "ios/Sources/TimbreCore/Resources/curriculum.json"
+    if not path.exists():
+        return {}
+    catalog = json.loads(path.read_text(encoding="utf-8"))
+    grouped = {}
+
+    def text_fields(value, prefix=""):
+        found = {}
+        if isinstance(value, dict):
+            for key, item in value.items():
+                if key in {"courses", "units", "lessons", "steps", "notes", "sound"}:
+                    continue
+                field = prefix + key
+                if isinstance(item, dict) and set(("k", "t")).issubset(item):
+                    found[field] = item["t"]
+                elif isinstance(item, dict):
+                    found.update(text_fields(item, field + "."))
+                elif isinstance(item, list):
+                    words = [x["t"] for x in item if isinstance(x, dict) and "k" in x and "t" in x]
+                    if words:
+                        found[field] = words
+        return found
+
+    def walk(value, pointer="", context=None, context_pointer="", role=""):
+        if isinstance(value, dict):
+            boundary = re.search(r"/(courses|units|lessons|steps)/[0-9]+$", pointer)
+            if boundary:
+                context, context_pointer = value, pointer
+                role = boundary.group(1) + (":" + str(value.get("type", "")) if boundary.group(1) == "steps" else "")
+            if "k" in value and "t" in value and context is not None:
+                field = re.sub(r"/[0-9]+", "/*", pointer[len(context_pointer):].strip("/"))
+                semantic = {"role": role, "field": field, "text": text_fields(context)}
+                signature = json.dumps(semantic, sort_keys=True, ensure_ascii=False)
+                contexts = grouped.setdefault(value["k"], {})
+                row = contexts.setdefault(signature, {**semantic, "occurrences": 0, "example_locations": []})
+                row["occurrences"] += 1
+                if len(row["example_locations"]) < 2:
+                    row["example_locations"].append(pointer)
+            for key, item in value.items():
+                walk(item, pointer + "/" + key, context, context_pointer, role)
+        elif isinstance(value, list):
+            for index, item in enumerate(value):
+                walk(item, pointer + "/" + str(index), context, context_pointer, role)
+
+    walk(catalog)
+    return {key: list(contexts.values()) for key, contexts in grouped.items() if len(contexts) > 1}
+
+
 def source_clarifications(repo):
     """Verified source distinctions, bound to exact English and full curriculum contexts."""
     path = repo / "tools/l10n/source-clarifications.json"
@@ -146,6 +200,7 @@ def split(repo, loc, size, out, review=False):
     learned = json.loads(learn_path.read_text(encoding="utf-8")) if learn_path.exists() else {}
     forms = plural_forms(repo, loc)
     answer_contexts = option_contexts(repo)
+    repeated_contexts = shared_lesson_contexts(repo)
     clarifications = source_clarifications(repo)
     def group(item):
         """A batch holds one kind: one launch-critical kind, the rest of the interface, or whole lessons."""
@@ -177,6 +232,8 @@ def split(repo, loc, size, out, review=False):
             for field in ("context", "layout", "max_length", "launch", "status", "previous", "problem"):
                 if item.get(field):
                     row[field] = item[field]
+            if item["table"] == "Learn.strings" and item["key"] in repeated_contexts:
+                row["shared_lesson_contexts"] = repeated_contexts[item["key"]]
             if item["table"] == "Learn.strings" and item["key"] in clarifications:
                 note = clarifications[item["key"]]
                 if item["source"] != note["source"]:
@@ -230,6 +287,8 @@ Locale decisions and glossary for {language} (binding):
 How Timbre already reads in {language} (current translations; match their register, terms and punctuation):
 {anchors}
 
+shared_lesson_contexts includes non-option uses too: a title can name a song section or a physical instrument part.
+The same target must fit every distinct role; flag genuine meaning collisions instead of silently approving one role.
 source_clarification records verified curriculum meaning; preserve that distinction without changing notes or answers.
 When answer_contexts is present, the SAME target must work under every listed prompt and explanation.
 Do not use pitch-only or past-tense wording for a key also used for physical picking directions.
@@ -252,6 +311,8 @@ Locale decisions and glossary for {language} (binding):
 How Timbre already reads in {language}:
 {anchors}
 
+shared_lesson_contexts includes non-option uses too: a title can name a song section or a physical instrument part.
+The same target must fit every distinct role; flag genuine meaning collisions instead of silently approving one role.
 source_clarification records verified curriculum meaning; preserve that distinction without changing notes or answers.
 When answer_contexts is present, the SAME target must work under every listed prompt and explanation.
 Do not use pitch-only or past-tense wording for a key also used for physical picking directions.

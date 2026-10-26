@@ -1,0 +1,46 @@
+{
+  "status": "isolated-proposal-passed-not-applied",
+  "repository_head": "387c276604b04fdf40c7255534dd289a64afc278",
+  "source_files_changed": 2,
+  "source_lines_changed": 2,
+  "localized_title_objects_changed": 2,
+  "old_source_context_count_before": 5,
+  "old_source_context_count_after": 3,
+  "new_source_context_count_after": 2,
+  "source_key_count_before": 6082,
+  "source_key_count_after": 6083,
+  "existing_6082_sources_unchanged": true,
+  "added_sources": {
+    "Lc9e2d70b52": "The instrument bridge"
+  },
+  "baseline_generation_matches_repository": true,
+  "only_expected_localized_objects_changed": true,
+  "all_nonlocalized_data_unchanged": true,
+  "nonlocalized_sha256": "2b6f5657e32e0d928c2b26ce93c7f26fd36f9887923bea624869df2dc217f89d",
+  "curriculum_before_sha256": "9d17bcb3e3b78e4ca203c6c9bd4caa87f9a6f86346ee8c4ed683b93d86b43639",
+  "curriculum_after_sha256": "a7e6d2cbf466645e6cf0bb07e79a20ca1d447290c80deaa776302b5eed05d03a",
+  "english_before_sha256": "94328042f9d1334dba75f26e6e1889abc048a0f1f95c849d95c01b1f9136bfa2",
+  "english_after_sha256": "a2dba5c74f166a88b6be6f48871d0cd5d1959d0802bd5121fb157c2bed44595f",
+  "marketing_counts_before": {
+    "lessons": 526,
+    "courses": 11,
+    "instruments": 60,
+    "tunings": 132,
+    "songs": 146,
+    "originals": 50,
+    "songs_floor": 140
+  },
+  "marketing_counts_after": {
+    "lessons": 526,
+    "courses": 11,
+    "instruments": 60,
+    "tunings": 132,
+    "songs": 146,
+    "originals": 50,
+    "songs_floor": 140
+  },
+  "human_native_review": "not performed",
+  "device_qa": "not performed",
+  "commit_push": "not performed",
+  "english_exactly_one_added_line_other_bytes_identical": true
+}

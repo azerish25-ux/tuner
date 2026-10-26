@@ -1,0 +1,23 @@
+{
+  "migrations": [
+    {
+      "operation": "add",
+      "key": "Lc9e2d70b52",
+      "source": "The instrument bridge",
+      "evidence": "docs/l10n/bridge-context/application-receipt.json"
+    },
+    {
+      "operation": "add",
+      "key": "L418aadaeed",
+      "source": "Major and minor intervals",
+      "evidence": "docs/l10n/interval-context/application-receipt.json"
+    },
+    {
+      "operation": "remove",
+      "key": "L4d1c8b1ea7",
+      "source": "Tremolo until the next beat",
+      "replacement_existing_key": "Le56240b1d1",
+      "evidence": "docs/l10n/tremolo-context/application-receipt.json"
+    }
+  ]
+}

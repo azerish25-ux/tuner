@@ -1,0 +1,67 @@
+{
+  "status": "approved-exact-source-remap-and-existing-Swedish-target",
+  "reviewer": "claire AI participant review_swedish_lessons, independent AI reviewer; continuation of original source issue2965",
+  "source_issue_closed": "The next-beat/three-beat contradiction is resolved by this exact proposed remap, conditional on applying and verifying the after constraints. Live integration is not claimed.",
+  "old_key": "L4d1c8b1ea7",
+  "old_source": "Tremolo until the next beat",
+  "old_source_sha256": "563b9bc79f25bca6cfc53f5889154ee73404e01a542b5229820938cc7a5b6ecd",
+  "new_key": "Le56240b1d1",
+  "new_source": "Tremolo through long notes",
+  "new_source_sha256": "fef51002764149f0fe4baa67d8866fd2186dcf1b6126e0c152e40f37d14dc33b",
+  "translation": "Tremolo genom långa toner",
+  "translation_sha256": "976d832125745832446252a17fb8505ba68154d74b8371d3c75a7cd9ee7064c2",
+  "translation_decision": "accept-existing-target-without-correction",
+  "translation_provenance": "Existing reviewed frozen Swedish lesson target, row2959; no published sv resource was assumed.",
+  "translation_reason": "The Swedish noun phrase names the method: tremolo throughout long notes, not merely until the next pulse. It is natural as the man-3-3 exercise heading and sufficiently explicit as the method-answer to Hur håller du det långa A på slutet? The generic plural covers the specific long A. It preserves full-note sustain and introduces no new duration, pitch, fingering or notation. Adjacent Swedish explanation says the tone keeps ringing to the end of the bar.",
+  "contexts_read": [
+    {
+      "lesson": "man-3-3",
+      "role": "along title",
+      "evidence": "Four notes D4/Fiss4/A4/D5, each duration2 at beats0/2/4/6 in four-beat bars; heading directs tremolo through each long note.",
+      "pointer": "/courses/5/units/2/lessons/2/steps/5/title"
+    },
+    {
+      "lesson": "man-3-4",
+      "role": "correct quiz answer",
+      "evidence": "Prompt asks how to sustain the final long A of First line. Last note m57,b12,d3 in beatsPerBar3 lasts to beat15/bar end. Explanation explicitly requires the full three beats; alternate answers pick once/wait and mute immediately remain distractors. Correct answer remains index1.",
+      "pointer": "/courses/5/units/2/lessons/3/steps/4/options/1"
+    }
+  ],
+  "after_constraints": {
+    "source_file": "tools/curriculum/courses/mandolin.py",
+    "source_before_sha256": "873a03f12c50fcffc1e931abea80c6ed862e3814c8f061fad34b45b861b8f9a8",
+    "source_after_sha256": "25c193601939e11e58e6e39dd741b860d1a13cf999c3ecd6ba0285017dfff741",
+    "curriculum_before_sha256": "9ee7f9b9af81b878122f0031d512b55552902c9c98b3b4634f9c114d932bf1b9",
+    "curriculum_after_sha256": "f5399d3d13edd2f94b660648e7dd23aceef66a21e095567988bbb6bd38995bf1",
+    "only_remapped_object": "/courses/5/units/2/lessons/3/steps/4/options/1",
+    "old_value": {
+      "k": "L4d1c8b1ea7",
+      "t": "Tremolo until the next beat"
+    },
+    "new_value": {
+      "k": "Le56240b1d1",
+      "t": "Tremolo through long notes"
+    },
+    "answer_index": 1,
+    "all_other_source_texts_music_patterns_notes_ids_and_structure_unchanged": true,
+    "before_keys": 6084,
+    "after_keys": 6083,
+    "retire_only_key": "L4d1c8b1ea7",
+    "retired_key_after_occurrences": 0,
+    "added_translation_keys": [],
+    "existing_key_after_roles": [
+      "original along title",
+      "new correct quiz answer"
+    ],
+    "existing_key_after_occurrences": 2,
+    "translation_must_equal": "Tremolo genom långa toner",
+    "translation_sha256": "976d832125745832446252a17fb8505ba68154d74b8371d3c75a7cd9ee7064c2"
+  },
+  "mechanical_evidence": "verification.json; before/after isolated builds both passed; unmodified baseline rebuilt byte-exactly to current publisher; structural equality after one expected object remap; publisher source and curriculum hashes rechecked unchanged.",
+  "before_contexts_sha256": "f3e8d4221d22ff09048e54db3cb184ca31d902ca29f4c5177bd979a79c537e39",
+  "after_contexts_sha256": "126da0665cc0b15456ebd8f987e822c6803b9204881a9da2830558421ac48346",
+  "after_contexts_canonical_sha256": "02194bcdabaffec97d0febe73961f5d76a5d6ebc659b377d824639805d04879d",
+  "layout_codepoints": 25,
+  "minimum_applicable_limit": 42,
+  "boundary": "AI semantic/source review and isolated build only; no native-human, device, audio or visual-layout certification. Original frozen Swedish review packet remains untouched; this is a separate addendum. No live edits, maps, registry, reports, Git writes or key retirement performed by reviewer."
+}

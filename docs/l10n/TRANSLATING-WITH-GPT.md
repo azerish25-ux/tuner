@@ -891,3 +891,13 @@ answer, instruction or context fails closed until the note is rechecked. The not
 reference metadata, not text to copy into the translation and not review approval.
 Preserve source numeric tokens; do not copy explanatory MIDI/example numbers from
 metadata into a target that did not contain them.
+
+### Repeated text outside quiz choices
+
+`shared_lesson_contexts` includes distinct non-option title/body roles as well as
+quiz roles. It deduplicates identical semantic text contexts, preserves counts and
+example locations, and excludes large music arrays. Do not assume a shared title
+has the same meaning everywhere: song-form bridge versus physical instrument bridge
+and chord qualities versus interval sizes now have explicit source keys. Known
+historical draft versions remain verifiable through exact source migrations; no
+arbitrary missing-key waiver or copied-English completion is introduced.

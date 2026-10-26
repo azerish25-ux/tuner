@@ -1,0 +1,22 @@
+[
+  {
+    "file": "tools/curriculum/courses/cello.py",
+    "line": 240,
+    "old": "        explain(\"The bridge\", BRIDGE, part(\"bridge\")),",
+    "new": "        explain(\"The instrument bridge\", BRIDGE, part(\"bridge\")),",
+    "old_line_sha256": "0a4b9323f356b7250d88757916610fc4b8f50ea8e792dd99dd46269f8fc81d4b",
+    "new_line_sha256": "580f6bbc3d313abc5e1dea2177e84e7a8f131666559b680625e58ded7a051509",
+    "source_file_sha256": "e08348c1f4d8e21ee4938982699657af88eb4ff027d1d67590956636eb0b2914",
+    "expected_occurrences": 1
+  },
+  {
+    "file": "tools/curriculum/courses/violin.py",
+    "line": 246,
+    "old": "        explain(\"The bridge\", BRIDGE, part(\"bridge\")),",
+    "new": "        explain(\"The instrument bridge\", BRIDGE, part(\"bridge\")),",
+    "old_line_sha256": "0a4b9323f356b7250d88757916610fc4b8f50ea8e792dd99dd46269f8fc81d4b",
+    "new_line_sha256": "580f6bbc3d313abc5e1dea2177e84e7a8f131666559b680625e58ded7a051509",
+    "source_file_sha256": "ee4f908bd034185911686d04e655c9d4d0a7d9f0871f358f297609a0bbcbfb30",
+    "expected_occurrences": 1
+  }
+]

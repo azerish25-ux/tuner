@@ -11,6 +11,10 @@ from apply_learn import LINE, unescape
 ROOT = BASE.parents[3]
 source = {key: unescape(value) for key, value in LINE.findall(
     (ROOT / 'ios/Timbre/Resources/en.lproj/Learn.strings').read_text())}
+historical_source = dict(source)
+for delta in json.loads((BASE.parent / 'source-deltas.json').read_text())['migrations']:
+    historical_source.setdefault(delta['key'], delta['source'])
+    assert historical_source[delta['key']] == delta['source']
 manifest = json.loads((BASE / 'manifest.json').read_text())
 for name, expected in manifest['files'].items():
     assert hashlib.sha256((BASE / name).read_bytes()).hexdigest() == expected, name
@@ -21,7 +25,7 @@ for locale, count in manifest['counts'].items():
     rows = data['rows']
     assert len(rows) == len({r['key'] for r in rows}) == count == data['drafted_nonempty_entries']
     for row in rows:
-        assert row['table'] == 'Learn.strings' and source[row['key']] == row['source']
+        assert row['table'] == 'Learn.strings' and historical_source[row['key']] == row['source']
         assert isinstance(row['translation'], str) and row['translation'].strip()
 print('PASS: partial draft hashes and source bindings; semantic review and import remain pending')
 
@@ -36,9 +40,29 @@ if final.exists():
         data = json.loads(path.read_text())
         assert data['status'] == 'complete-author-draft-awaiting-independent-review-not-imported'
         rows = data['rows']
-        assert len(rows) == len({r['key'] for r in rows}) == len(source) == data['source_keys']
+        migrations = json.loads((BASE.parent / 'source-deltas.json').read_text())['migrations']
+        historical_sources = dict(source)
+        states = [set(source)]
+        current = set(source)
+        for delta in reversed(migrations):
+            assert delta['key'] == 'L' + hashlib.sha1(delta['source'].encode()).hexdigest()[:10]
+            historical_sources.setdefault(delta['key'], delta['source'])
+            assert historical_sources[delta['key']] == delta['source']
+            if delta['operation'] == 'add':
+                assert delta['key'] in current
+                current.remove(delta['key'])
+            elif delta['operation'] == 'remove':
+                assert delta['key'] not in current
+                current.add(delta['key'])
+            else:
+                raise AssertionError('Unknown source migration')
+            states.append(set(current))
+        keys = {row['key'] for row in rows}
+        assert len(rows) == len(keys) == data['source_keys']
+        assert keys in states, 'Draft is not a complete known source version'
+        # Exact known historical key sets are allowed, never arbitrary subsets or current-completion claims.
         for row in rows:
-            assert row['source'] == source[row['key']] and row['translation'].strip()
+            assert row['source'] == historical_sources[row['key']] and row['translation'].strip()
             for field in ['source', 'translation']:
                 assert hashlib.sha256(row[field].encode()).hexdigest() == row[field + '_sha256']
     print('PASS: complete draft hashes/coverage only; independent semantic approval remains pending')

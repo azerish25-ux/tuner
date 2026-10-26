@@ -1,0 +1,45 @@
+{
+  "status": "isolated-proposal-passed-not-applied",
+  "source_files_changed": 1,
+  "source_lines_changed": 1,
+  "localized_title_objects_changed": 1,
+  "old_source_context_count_before": 2,
+  "old_source_context_count_after": 1,
+  "new_source_context_count_after": 1,
+  "source_key_count_before": 6083,
+  "source_key_count_after": 6084,
+  "existing_6083_sources_unchanged": true,
+  "english_bytes_identical_after_removing_single_new_line": true,
+  "added_sources": {
+    "L418aadaeed": "Major and minor intervals"
+  },
+  "baseline_generation_matches_repository": true,
+  "only_expected_localized_objects_changed": true,
+  "all_nonlocalized_data_unchanged": true,
+  "nonlocalized_sha256": "2b6f5657e32e0d928c2b26ce93c7f26fd36f9887923bea624869df2dc217f89d",
+  "curriculum_before_sha256": "a7e6d2cbf466645e6cf0bb07e79a20ca1d447290c80deaa776302b5eed05d03a",
+  "curriculum_after_sha256": "9ee7f9b9af81b878122f0031d512b55552902c9c98b3b4634f9c114d932bf1b9",
+  "english_before_sha256": "a2dba5c74f166a88b6be6f48871d0cd5d1959d0802bd5121fb157c2bed44595f",
+  "english_after_sha256": "66ed543d69ecb15f48e94336561210da630dca2487b08379f49fc17460e93651",
+  "marketing_counts_before": {
+    "lessons": 526,
+    "courses": 11,
+    "instruments": 60,
+    "tunings": 132,
+    "songs": 146,
+    "originals": 50,
+    "songs_floor": 140
+  },
+  "marketing_counts_after": {
+    "lessons": 526,
+    "courses": 11,
+    "instruments": 60,
+    "tunings": 132,
+    "songs": 146,
+    "originals": 50,
+    "songs_floor": 140
+  },
+  "human_native_review": "not performed",
+  "device_qa": "not performed",
+  "live_edit_import_reports_registry_git": "not performed"
+}

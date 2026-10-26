@@ -1,0 +1,92 @@
+[
+  {
+    "pointer": "/courses/5/units/2/lessons/2/steps/5/title",
+    "key": "Le56240b1d1",
+    "source": "Tremolo through long notes",
+    "lesson_id": "man-3-3",
+    "step": {
+      "type": "along",
+      "notes": [
+        {
+          "m": 62,
+          "b": 0.0,
+          "d": 2.0,
+          "at": {
+            "s": 3,
+            "f": 0
+          }
+        },
+        {
+          "m": 66,
+          "b": 2.0,
+          "d": 2.0,
+          "at": {
+            "s": 3,
+            "f": 4,
+            "g": 2
+          }
+        },
+        {
+          "m": 69,
+          "b": 4.0,
+          "d": 2.0,
+          "at": {
+            "s": 2,
+            "f": 0
+          }
+        },
+        {
+          "m": 74,
+          "b": 6.0,
+          "d": 2.0,
+          "at": {
+            "s": 2,
+            "f": 5,
+            "g": 3
+          }
+        }
+      ],
+      "bpm": 60,
+      "beatsPerBar": 4,
+      "title": {
+        "k": "Le56240b1d1",
+        "t": "Tremolo through long notes"
+      }
+    }
+  },
+  {
+    "pointer": "/courses/5/units/2/lessons/3/steps/4/options/1",
+    "key": "L4d1c8b1ea7",
+    "source": "Tremolo until the next beat",
+    "lesson_id": "man-3-4",
+    "step": {
+      "type": "quiz",
+      "prompt": {
+        "k": "L30af854113",
+        "t": "How do you hold the long A at the end?"
+      },
+      "options": [
+        {
+          "k": "L8688e3688b",
+          "t": "Pick once and wait"
+        },
+        {
+          "k": "L4d1c8b1ea7",
+          "t": "Tremolo until the next beat"
+        },
+        {
+          "k": "Ld3f98b5075",
+          "t": "Mute it right away"
+        }
+      ],
+      "answer": 1,
+      "why": {
+        "k": "L48172fabe6",
+        "t": "A single pick fades long before three beats are up. Tremolo keeps it ringing to the end of the bar."
+      },
+      "visual": {
+        "type": "none"
+      }
+    }
+  }
+]

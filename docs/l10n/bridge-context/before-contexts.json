@@ -1,0 +1,760 @@
+{
+  "L690a93e955": [
+    {
+      "pointer": "/courses/0/units/21/lessons/5/steps/1/options/0",
+      "parents": [
+        {
+          "id": "guitar",
+          "title": "Guitar"
+        },
+        {
+          "id": "gtr-22",
+          "title": "Song form and arranging"
+        },
+        {
+          "id": "gtr-22-spotlight",
+          "title": "Song spotlight: Jukebox Moon"
+        }
+      ],
+      "value": {
+        "k": "L690a93e955",
+        "t": "The bridge"
+      },
+      "context": {
+        "type": "quiz",
+        "prompt": {
+          "k": "Ld11c9d9455",
+          "t": "In Jukebox Moon, which section is the B?"
+        },
+        "options": [
+          {
+            "k": "L690a93e955",
+            "t": "The bridge"
+          },
+          {
+            "k": "L6adc0545bd",
+            "t": "The first verse"
+          },
+          {
+            "k": "Leb529bd03f",
+            "t": "The last verse"
+          }
+        ],
+        "answer": 0,
+        "why": {
+          "k": "La3c433fca2",
+          "t": "The verses share one tune: A, A. The bridge brings new chords and a new tune, B, then the verse returns."
+        },
+        "visual": {
+          "type": "none"
+        }
+      },
+      "context_sha256": "37307fe073b728d434956562c28325cf32b8a0fd60cc890ce1df91918f3ab99e"
+    },
+    {
+      "pointer": "/courses/0/units/21/lessons/5/steps/6/title",
+      "parents": [
+        {
+          "id": "guitar",
+          "title": "Guitar"
+        },
+        {
+          "id": "gtr-22",
+          "title": "Song form and arranging"
+        },
+        {
+          "id": "gtr-22-spotlight",
+          "title": "Song spotlight: Jukebox Moon"
+        }
+      ],
+      "value": {
+        "k": "L690a93e955",
+        "t": "The bridge"
+      },
+      "context": {
+        "type": "along",
+        "notes": [
+          {
+            "m": 57,
+            "b": 0.0,
+            "d": 0.667,
+            "at": {
+              "s": 3,
+              "f": 2,
+              "g": 2
+            },
+            "y": "Some-",
+            "yl": 1
+          },
+          {
+            "m": 60,
+            "b": 0.667,
+            "d": 0.333,
+            "at": {
+              "s": 2,
+              "f": 1,
+              "g": 1
+            },
+            "y": "day"
+          },
+          {
+            "m": 65,
+            "b": 1.0,
+            "d": 2.0,
+            "at": {
+              "s": 1,
+              "f": 1,
+              "g": 1
+            },
+            "y": "we'll"
+          },
+          {
+            "m": 64,
+            "b": 3.0,
+            "d": 0.667,
+            "at": {
+              "s": 1,
+              "f": 0
+            },
+            "y": "be"
+          },
+          {
+            "m": 62,
+            "b": 3.667,
+            "d": 0.333,
+            "at": {
+              "s": 2,
+              "f": 3,
+              "g": 3
+            },
+            "y": "old"
+          },
+          {
+            "m": 60,
+            "b": 4.0,
+            "d": 2.0,
+            "at": {
+              "s": 2,
+              "f": 1,
+              "g": 1
+            },
+            "y": "and"
+          },
+          {
+            "m": 57,
+            "b": 6.0,
+            "d": 2.0,
+            "at": {
+              "s": 3,
+              "f": 2,
+              "g": 2
+            },
+            "y": "gray,"
+          },
+          {
+            "m": 55,
+            "b": 8.0,
+            "d": 0.667,
+            "at": {
+              "s": 3,
+              "f": 0
+            },
+            "y": "and",
+            "yl": 1
+          },
+          {
+            "m": 60,
+            "b": 8.667,
+            "d": 0.333,
+            "at": {
+              "s": 2,
+              "f": 1,
+              "g": 1
+            },
+            "y": "the"
+          },
+          {
+            "m": 64,
+            "b": 9.0,
+            "d": 2.0,
+            "at": {
+              "s": 1,
+              "f": 0
+            },
+            "y": "place"
+          },
+          {
+            "m": 62,
+            "b": 11.0,
+            "d": 0.667,
+            "at": {
+              "s": 2,
+              "f": 3,
+              "g": 3
+            },
+            "y": "will"
+          },
+          {
+            "m": 60,
+            "b": 11.667,
+            "d": 0.333,
+            "at": {
+              "s": 2,
+              "f": 1,
+              "g": 1
+            },
+            "y": "be"
+          },
+          {
+            "m": 64,
+            "b": 12.0,
+            "d": 4.0,
+            "at": {
+              "s": 1,
+              "f": 0
+            },
+            "y": "gone,"
+          },
+          {
+            "m": 57,
+            "b": 16.0,
+            "d": 0.667,
+            "at": {
+              "s": 3,
+              "f": 2,
+              "g": 2
+            },
+            "y": "but",
+            "yl": 1
+          },
+          {
+            "m": 60,
+            "b": 16.667,
+            "d": 0.333,
+            "at": {
+              "s": 2,
+              "f": 1,
+              "g": 1
+            },
+            "y": "this"
+          },
+          {
+            "m": 65,
+            "b": 17.0,
+            "d": 2.0,
+            "at": {
+              "s": 1,
+              "f": 1,
+              "g": 1
+            },
+            "y": "moon"
+          },
+          {
+            "m": 67,
+            "b": 19.0,
+            "d": 0.667,
+            "at": {
+              "s": 1,
+              "f": 3,
+              "g": 3
+            },
+            "y": "will"
+          },
+          {
+            "m": 65,
+            "b": 19.667,
+            "d": 0.333,
+            "at": {
+              "s": 1,
+              "f": 1,
+              "g": 1
+            },
+            "y": "still"
+          },
+          {
+            "m": 64,
+            "b": 20.0,
+            "d": 2.0,
+            "at": {
+              "s": 1,
+              "f": 0
+            },
+            "y": "be"
+          },
+          {
+            "m": 62,
+            "b": 22.0,
+            "d": 2.0,
+            "at": {
+              "s": 2,
+              "f": 3,
+              "g": 3
+            },
+            "y": "here,"
+          },
+          {
+            "m": 62,
+            "b": 24.0,
+            "d": 0.667,
+            "at": {
+              "s": 2,
+              "f": 3,
+              "g": 3
+            },
+            "y": "and",
+            "yl": 1
+          },
+          {
+            "m": 64,
+            "b": 24.667,
+            "d": 0.333,
+            "at": {
+              "s": 1,
+              "f": 0
+            },
+            "y": "it"
+          },
+          {
+            "m": 65,
+            "b": 25.0,
+            "d": 1.0,
+            "at": {
+              "s": 1,
+              "f": 1,
+              "g": 1
+            },
+            "y": "will"
+          },
+          {
+            "m": 62,
+            "b": 26.0,
+            "d": 1.0,
+            "at": {
+              "s": 2,
+              "f": 3,
+              "g": 3
+            },
+            "y": "play"
+          },
+          {
+            "m": 59,
+            "b": 27.0,
+            "d": 1.0,
+            "at": {
+              "s": 2,
+              "f": 0
+            },
+            "y": "our"
+          },
+          {
+            "m": 55,
+            "b": 28.0,
+            "d": 4.0,
+            "at": {
+              "s": 3,
+              "f": 0
+            },
+            "y": "song."
+          }
+        ],
+        "bpm": 66,
+        "beatsPerBar": 4,
+        "title": {
+          "k": "L690a93e955",
+          "t": "The bridge"
+        }
+      },
+      "context_sha256": "a8b247ac7b6fd187db99da7ecd2e9feae72af8fef9a1e385b33bb9fe645b2328"
+    },
+    {
+      "pointer": "/courses/3/units/0/lessons/0/steps/1/title",
+      "parents": [
+        {
+          "id": "violin",
+          "title": "Violin"
+        },
+        {
+          "id": "vln-1",
+          "title": "Hello, violin"
+        },
+        {
+          "id": "vln-1-1",
+          "title": "Meet your violin"
+        }
+      ],
+      "value": {
+        "k": "L690a93e955",
+        "t": "The bridge"
+      },
+      "context": {
+        "type": "explain",
+        "title": {
+          "k": "L690a93e955",
+          "t": "The bridge"
+        },
+        "body": {
+          "k": "La4f090a431",
+          "t": "The bridge is the thin wooden arch that holds the strings up. String pressure alone keeps it standing. If it starts to lean, ask a teacher or shop to set it straight."
+        },
+        "visual": {
+          "type": "instrument",
+          "part": "bridge"
+        }
+      },
+      "context_sha256": "e33bfb8804cde5f200931a49aec8b3b8d60fb19caa787f87fdb149b91890b610"
+    },
+    {
+      "pointer": "/courses/4/units/0/lessons/0/steps/1/title",
+      "parents": [
+        {
+          "id": "cello",
+          "title": "Cello"
+        },
+        {
+          "id": "vc-1",
+          "title": "Hello, cello"
+        },
+        {
+          "id": "vc-1-1",
+          "title": "Meet your cello"
+        }
+      ],
+      "value": {
+        "k": "L690a93e955",
+        "t": "The bridge"
+      },
+      "context": {
+        "type": "explain",
+        "title": {
+          "k": "L690a93e955",
+          "t": "The bridge"
+        },
+        "body": {
+          "k": "La4f090a431",
+          "t": "The bridge is the thin wooden arch that holds the strings up. String pressure alone keeps it standing. If it starts to lean, ask a teacher or shop to set it straight."
+        },
+        "visual": {
+          "type": "instrument",
+          "part": "bridge"
+        }
+      },
+      "context_sha256": "e33bfb8804cde5f200931a49aec8b3b8d60fb19caa787f87fdb149b91890b610"
+    },
+    {
+      "pointer": "/courses/12/units/5/lessons/2/steps/6/title",
+      "parents": [
+        {
+          "id": "originals",
+          "title": "Originals"
+        },
+        {
+          "id": "orig-3",
+          "title": "Riffs, power chords and throwbacks"
+        },
+        {
+          "id": "orig-jukebox-moon",
+          "title": "Jukebox Moon"
+        }
+      ],
+      "value": {
+        "k": "L690a93e955",
+        "t": "The bridge"
+      },
+      "context": {
+        "type": "along",
+        "notes": [
+          {
+            "m": 57,
+            "b": 0.0,
+            "d": 0.667,
+            "at": {
+              "s": 3,
+              "f": 2,
+              "g": 2
+            },
+            "y": "Some-",
+            "yl": 1
+          },
+          {
+            "m": 60,
+            "b": 0.667,
+            "d": 0.333,
+            "at": {
+              "s": 2,
+              "f": 1,
+              "g": 1
+            },
+            "y": "day"
+          },
+          {
+            "m": 65,
+            "b": 1.0,
+            "d": 2.0,
+            "at": {
+              "s": 1,
+              "f": 1,
+              "g": 1
+            },
+            "y": "we'll"
+          },
+          {
+            "m": 64,
+            "b": 3.0,
+            "d": 0.667,
+            "at": {
+              "s": 1,
+              "f": 0
+            },
+            "y": "be"
+          },
+          {
+            "m": 62,
+            "b": 3.667,
+            "d": 0.333,
+            "at": {
+              "s": 2,
+              "f": 3,
+              "g": 3
+            },
+            "y": "old"
+          },
+          {
+            "m": 60,
+            "b": 4.0,
+            "d": 2.0,
+            "at": {
+              "s": 2,
+              "f": 1,
+              "g": 1
+            },
+            "y": "and"
+          },
+          {
+            "m": 57,
+            "b": 6.0,
+            "d": 2.0,
+            "at": {
+              "s": 3,
+              "f": 2,
+              "g": 2
+            },
+            "y": "gray,"
+          },
+          {
+            "m": 55,
+            "b": 8.0,
+            "d": 0.667,
+            "at": {
+              "s": 3,
+              "f": 0
+            },
+            "y": "and",
+            "yl": 1
+          },
+          {
+            "m": 60,
+            "b": 8.667,
+            "d": 0.333,
+            "at": {
+              "s": 2,
+              "f": 1,
+              "g": 1
+            },
+            "y": "the"
+          },
+          {
+            "m": 64,
+            "b": 9.0,
+            "d": 2.0,
+            "at": {
+              "s": 1,
+              "f": 0
+            },
+            "y": "place"
+          },
+          {
+            "m": 62,
+            "b": 11.0,
+            "d": 0.667,
+            "at": {
+              "s": 2,
+              "f": 3,
+              "g": 3
+            },
+            "y": "will"
+          },
+          {
+            "m": 60,
+            "b": 11.667,
+            "d": 0.333,
+            "at": {
+              "s": 2,
+              "f": 1,
+              "g": 1
+            },
+            "y": "be"
+          },
+          {
+            "m": 64,
+            "b": 12.0,
+            "d": 4.0,
+            "at": {
+              "s": 1,
+              "f": 0
+            },
+            "y": "gone,"
+          },
+          {
+            "m": 57,
+            "b": 16.0,
+            "d": 0.667,
+            "at": {
+              "s": 3,
+              "f": 2,
+              "g": 2
+            },
+            "y": "but",
+            "yl": 1
+          },
+          {
+            "m": 60,
+            "b": 16.667,
+            "d": 0.333,
+            "at": {
+              "s": 2,
+              "f": 1,
+              "g": 1
+            },
+            "y": "this"
+          },
+          {
+            "m": 65,
+            "b": 17.0,
+            "d": 2.0,
+            "at": {
+              "s": 1,
+              "f": 1,
+              "g": 1
+            },
+            "y": "moon"
+          },
+          {
+            "m": 67,
+            "b": 19.0,
+            "d": 0.667,
+            "at": {
+              "s": 1,
+              "f": 3,
+              "g": 3
+            },
+            "y": "will"
+          },
+          {
+            "m": 65,
+            "b": 19.667,
+            "d": 0.333,
+            "at": {
+              "s": 1,
+              "f": 1,
+              "g": 1
+            },
+            "y": "still"
+          },
+          {
+            "m": 64,
+            "b": 20.0,
+            "d": 2.0,
+            "at": {
+              "s": 1,
+              "f": 0
+            },
+            "y": "be"
+          },
+          {
+            "m": 62,
+            "b": 22.0,
+            "d": 2.0,
+            "at": {
+              "s": 2,
+              "f": 3,
+              "g": 3
+            },
+            "y": "here,"
+          },
+          {
+            "m": 62,
+            "b": 24.0,
+            "d": 0.667,
+            "at": {
+              "s": 2,
+              "f": 3,
+              "g": 3
+            },
+            "y": "and",
+            "yl": 1
+          },
+          {
+            "m": 64,
+            "b": 24.667,
+            "d": 0.333,
+            "at": {
+              "s": 1,
+              "f": 0
+            },
+            "y": "it"
+          },
+          {
+            "m": 65,
+            "b": 25.0,
+            "d": 1.0,
+            "at": {
+              "s": 1,
+              "f": 1,
+              "g": 1
+            },
+            "y": "will"
+          },
+          {
+            "m": 62,
+            "b": 26.0,
+            "d": 1.0,
+            "at": {
+              "s": 2,
+              "f": 3,
+              "g": 3
+            },
+            "y": "play"
+          },
+          {
+            "m": 59,
+            "b": 27.0,
+            "d": 1.0,
+            "at": {
+              "s": 2,
+              "f": 0
+            },
+            "y": "our"
+          },
+          {
+            "m": 55,
+            "b": 28.0,
+            "d": 4.0,
+            "at": {
+              "s": 3,
+              "f": 0
+            },
+            "y": "song."
+          }
+        ],
+        "bpm": 66,
+        "beatsPerBar": 4,
+        "title": {
+          "k": "L690a93e955",
+          "t": "The bridge"
+        }
+      },
+      "context_sha256": "a8b247ac7b6fd187db99da7ecd2e9feae72af8fef9a1e385b33bb9fe645b2328"
+    }
+  ],
+  "Lc9e2d70b52": []
+}

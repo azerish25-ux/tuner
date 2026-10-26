@@ -1,0 +1,323 @@
+{
+  "L775c034932": [
+    {
+      "pointer": "/courses/7/units/5/lessons/1/title",
+      "context_pointer": "/courses/7/units/5/lessons/1",
+      "parents": [
+        {
+          "id": "ear",
+          "title": "Ear Training"
+        },
+        {
+          "id": "ear-6",
+          "title": "Chord qualities"
+        },
+        {
+          "id": "ear-6-2",
+          "title": "Major and minor everywhere"
+        }
+      ],
+      "value": {
+        "k": "L775c034932",
+        "t": "Major and minor everywhere"
+      },
+      "context": {
+        "id": "ear-6-2",
+        "title": {
+          "k": "L775c034932",
+          "t": "Major and minor everywhere"
+        },
+        "kind": "lesson",
+        "minutes": 5,
+        "xp": 25,
+        "free": false,
+        "steps": [
+          {
+            "type": "explain",
+            "title": {
+              "k": "L44618ba47a",
+              "t": "Listen to the middle"
+            },
+            "body": {
+              "k": "L19de9ca598",
+              "t": "Unsure? Focus on the middle note. In a major chord it sits four half steps above the bottom. In minor it sits one half step lower, which darkens everything."
+            },
+            "visual": {
+              "type": "keyboard",
+              "midi": [
+                62,
+                65,
+                69
+              ]
+            }
+          },
+          {
+            "type": "listen",
+            "prompt": {
+              "k": "L8e449bf03d",
+              "t": "Major or minor?"
+            },
+            "sound": [
+              [
+                64,
+                67,
+                71
+              ]
+            ],
+            "options": [
+              {
+                "k": "L8a52ed17c5",
+                "t": "Major"
+              },
+              {
+                "k": "L100b455471",
+                "t": "Minor"
+              }
+            ],
+            "answer": 1
+          },
+          {
+            "type": "listen",
+            "prompt": {
+              "k": "L8e449bf03d",
+              "t": "Major or minor?"
+            },
+            "sound": [
+              [
+                58,
+                62,
+                65
+              ]
+            ],
+            "options": [
+              {
+                "k": "L8a52ed17c5",
+                "t": "Major"
+              },
+              {
+                "k": "L100b455471",
+                "t": "Minor"
+              }
+            ],
+            "answer": 0
+          },
+          {
+            "type": "listen",
+            "prompt": {
+              "k": "L8e449bf03d",
+              "t": "Major or minor?"
+            },
+            "sound": [
+              [
+                72,
+                75,
+                79
+              ]
+            ],
+            "options": [
+              {
+                "k": "L8a52ed17c5",
+                "t": "Major"
+              },
+              {
+                "k": "L100b455471",
+                "t": "Minor"
+              }
+            ],
+            "answer": 1
+          },
+          {
+            "type": "listen",
+            "prompt": {
+              "k": "L8e449bf03d",
+              "t": "Major or minor?"
+            },
+            "sound": [
+              [
+                67
+              ],
+              [
+                71
+              ],
+              [
+                74
+              ],
+              [
+                67,
+                71,
+                74
+              ]
+            ],
+            "options": [
+              {
+                "k": "L8a52ed17c5",
+                "t": "Major"
+              },
+              {
+                "k": "L100b455471",
+                "t": "Minor"
+              }
+            ],
+            "answer": 0
+          },
+          {
+            "type": "quiz",
+            "prompt": {
+              "k": "L3f7e88d302",
+              "t": "Which notes spell a C minor chord?"
+            },
+            "options": [
+              {
+                "k": "L439cc8cefc",
+                "t": "C E G"
+              },
+              {
+                "k": "Lb4edf8f910",
+                "t": "C E♭ G"
+              },
+              {
+                "k": "L37fc0760bc",
+                "t": "C F A"
+              }
+            ],
+            "answer": 1,
+            "why": {
+              "k": "L2c2543a31d",
+              "t": "Lower the middle note of C major by a half step: E becomes E♭."
+            },
+            "visual": {
+              "type": "none"
+            }
+          },
+          {
+            "type": "listen",
+            "prompt": {
+              "k": "L8e449bf03d",
+              "t": "Major or minor?"
+            },
+            "sound": [
+              [
+                54,
+                57,
+                61
+              ]
+            ],
+            "options": [
+              {
+                "k": "L8a52ed17c5",
+                "t": "Major"
+              },
+              {
+                "k": "L100b455471",
+                "t": "Minor"
+              }
+            ],
+            "answer": 1
+          },
+          {
+            "type": "listen",
+            "prompt": {
+              "k": "L8e449bf03d",
+              "t": "Major or minor?"
+            },
+            "sound": [
+              [
+                62
+              ],
+              [
+                66
+              ],
+              [
+                69
+              ],
+              [
+                62,
+                66,
+                69
+              ]
+            ],
+            "options": [
+              {
+                "k": "L8a52ed17c5",
+                "t": "Major"
+              },
+              {
+                "k": "L100b455471",
+                "t": "Minor"
+              }
+            ],
+            "answer": 0
+          },
+          {
+            "type": "notes",
+            "notes": [
+              {
+                "m": 62,
+                "b": 0.0,
+                "d": 1.0
+              },
+              {
+                "m": 66,
+                "b": 1.0,
+                "d": 1.0
+              },
+              {
+                "m": 69,
+                "b": 2.0,
+                "d": 1.0
+              }
+            ],
+            "hint": {
+              "k": "L598c2fd0e7",
+              "t": "Sing or play back the chord's notes, low to high."
+            }
+          }
+        ]
+      },
+      "context_sha256": "eca63086694e169d4e20cadb22952c707114af0f0c2beb9ba04c8f8a2c7cc5be"
+    }
+  ],
+  "L418aadaeed": [
+    {
+      "pointer": "/courses/8/units/5/lessons/3/steps/0/title",
+      "context_pointer": "/courses/8/units/5/lessons/3/steps/0",
+      "parents": [
+        {
+          "id": "theory",
+          "title": "Music Theory"
+        },
+        {
+          "id": "thy-6",
+          "title": "Intervals"
+        },
+        {
+          "id": "thy-6-4",
+          "title": "Seconds, sixths and sevenths"
+        }
+      ],
+      "value": {
+        "k": "L418aadaeed",
+        "t": "Major and minor intervals"
+      },
+      "context": {
+        "type": "explain",
+        "title": {
+          "k": "L418aadaeed",
+          "t": "Major and minor intervals"
+        },
+        "body": {
+          "k": "L01e269d40a",
+          "t": "Seconds, thirds, sixths and sevenths come in major and minor sizes. Minor is always one half step smaller than major."
+        },
+        "visual": {
+          "type": "keyboard",
+          "midi": [
+            60,
+            69
+          ]
+        }
+      },
+      "context_sha256": "e10d65b5321dd837d086f33eaa8d8c02d4e91c352c90ee91677e2103e5941d88"
+    }
+  ]
+}

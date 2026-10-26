@@ -243,7 +243,7 @@ UNIT_1 = unit("vln-1", "Hello, violin", "Hold it, bow it, tune it, play the open
                 "With the violin under your chin, the strings run G, D, A, E from left to right. G is the thickest "
                 "and lowest. E is the thinnest and highest, and we call it string 1.",
                 part("strings")),
-        explain("The bridge", BRIDGE, part("bridge")),
+        explain("The instrument bridge", BRIDGE, part("bridge")),
         quiz("Which string is the highest?", ["E", "G", "D", "A"], 0,
              "E is the thinnest string and the highest. Strings count from E (1) to G (4)."),
         explain("Pluck first", PLUCK),

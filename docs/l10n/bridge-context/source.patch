@@ -1,0 +1,22 @@
+--- a/tools/curriculum/courses/cello.py
++++ b/tools/curriculum/courses/cello.py
+@@ -237,7 +237,7 @@
+                 "From low to high the strings are C, G, D and A. C is the thickest and lowest. A is the thinnest "
+                 "and highest, and we call it string 1.",
+                 part("strings")),
+-        explain("The bridge", BRIDGE, part("bridge")),
++        explain("The instrument bridge", BRIDGE, part("bridge")),
+         quiz("Which string is the lowest?", ["C", "A", "D", "G"], 0,
+              "C is the thickest string and the lowest. Strings count from A (1) to C (4)."),
+         explain("Pluck first", PLUCK),
+--- a/tools/curriculum/courses/violin.py
++++ b/tools/curriculum/courses/violin.py
+@@ -243,7 +243,7 @@
+                 "With the violin under your chin, the strings run G, D, A, E from left to right. G is the thickest "
+                 "and lowest. E is the thinnest and highest, and we call it string 1.",
+                 part("strings")),
+-        explain("The bridge", BRIDGE, part("bridge")),
++        explain("The instrument bridge", BRIDGE, part("bridge")),
+         quiz("Which string is the highest?", ["E", "G", "D", "A"], 0,
+              "E is the thinnest string and the highest. Strings count from E (1) to G (4)."),
+         explain("Pluck first", PLUCK),
