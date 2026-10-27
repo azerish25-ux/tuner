@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scope": "published_policy_and_source_alignment_only",
-  "source_revision": "6a9329aa0d2bc6cdf77e1d050adea1a4e11234f3",
+  "source_revision": "f97713eb7a8ceef3f94e0399f7fcb5ad8023dc29",
   "verified_utc": "2026-10-27T08:20:41Z",
   "reviewer": "dot independent release-scope audit",
   "routes": [
@@ -112,7 +112,7 @@
     "ios/Timbre/Design/RewardStar.swift": "af6647b42a2ae9515ec5f551cb7f5297d003287e0fb236d8000f00401c904278",
     "ios/Timbre/Design/Shaders.swift": "7e05d1b30b91ec61eadbfe89740a12df9610bb44a1e4fc36b96578e0cc88ce3e",
     "ios/Timbre/Design/SparkBurst.swift": "88dd57cb2d474f0f00eac2bfdf2f85687d15e48bfbd123bea585fc9f40c9e851",
-    "ios/Timbre/Design/Theme.swift": "caf1d87434c49d1af6bfb0f42e0bdbba92d77e07b8671a7f087b87b759debbc4",
+    "ios/Timbre/Design/Theme.swift": "a381a42bbfc2e732b3d6122df05a5ca75024a64bc5c5b2116e0feddf2fd3f816",
     "ios/Timbre/Instruments/CustomTuningEditor.swift": "db2b644024e6cdc077c1e1cda050394ec9bdb5c838110c4d5ceafc9aa82ed8b4",
     "ios/Timbre/Instruments/InstrumentsView.swift": "857a2b9f7242c9ef272d971b9f444a8c399f418933ada9578aa5e56c1eca20d3",
     "ios/Timbre/Instruments/ProLock.swift": "d9befc49342cf5fd4793db785910ccf19ef9d18c56337ca1ae93423bf649f3c2",
@@ -176,7 +176,7 @@
     "ios/Timbre/Paywall/PaywallPlanHero.swift": "a14e3aba2fb315758b8e4714c678aa950fa42474e021757ebec68f20aad16fda",
     "ios/Timbre/Paywall/PaywallPreview.swift": "ad9a842882c03b9f608fbbe1f130a7be0a127571261daaa3299f91b90d255170",
     "ios/Timbre/Paywall/PaywallScenes.swift": "5bc348ca02f2d5ce1fb191b1cc5d4b428c55b1723f5d9bc857d93a11f841aa15",
-    "ios/Timbre/Paywall/PaywallView.swift": "62fe12d1881645529693586c8bb9434bda064e5bb9b68022fbae9fe155833c63",
+    "ios/Timbre/Paywall/PaywallView.swift": "9fea1dd7bf2a18fc90f325376cdabd7c2dd2a168af753856c487077e1107a5c5",
     "ios/Timbre/Paywall/PaywallWinBack.swift": "dd82f6c31133c7d80d27bcaab4011face2544fc0b83122b8e65657a369595840",
     "ios/Timbre/Practice/CardColumns.swift": "bcd62a1e0cea834485421437bb7aca9e77d05456ce604dd9009b9fc5de0d40fb",
     "ios/Timbre/Practice/ChordScaleTheory.swift": "d6ce25f6d75151b4da7a13e58b724e02ed44b6b60968e10b7921cd7f5b7b1586",
@@ -272,7 +272,7 @@
     "ios/Timbre/Songs/SongCover.swift": "98177f2a9007ae00889969569150c41972b79f6c2102a2566e86122626b497bb",
     "ios/Timbre/Songs/SongRailMeasurement.swift": "9ad0659e862b3dc6cf2a6e69b75191e316ea741acc99622562f17c69f750d2b8",
     "ios/Timbre/Songs/SongShelfRail.swift": "eb90f4f77f824d30b5f4141643c42d4e79046a55fe6dbb40afb4437e65eb0938",
-    "ios/Timbre/Songs/SongsView.swift": "ad2ed64d1ade08898ce2663ef923b399d7a101ef266524f27e897e05ca0e4698",
+    "ios/Timbre/Songs/SongsView.swift": "1c0afc72307e755f40b175d3e86b06896323529b85fb40e0d122ca7adac356c0",
     "ios/Timbre/Stage/InstrumentRig.swift": "63356f8555b6735c9c27e18c2c5d3b1475887d412544a703d6e18c0139227ba0",
     "ios/Timbre/Stage/InstrumentStage.swift": "7c4c5c4a571ac4cf0be4edc78b549dcdaeab56980a152588a6b0317a4c7f17e4",
     "ios/Timbre/Stage/ModelCache.swift": "4f7b59451752824c23c7bcb54f14b884856395d6d4978ce05629a4ffc1f082ed",
@@ -407,29 +407,36 @@
   "mutations": "Only this receipt written. No listing verification/readiness flags, policy text, public website, signing, credentials or account settings changed.",
   "source_inventory_scope": "All shipped app/core/extension Swift, Objective-C/C/C++ sources and headers, app privacy manifests, xcconfig/plist/entitlement/permission configuration and package dependency inputs. Any edit/addition invalidates this source-review receipt; tests/docs outside named policy sources do not.",
   "source_review_refresh": {
-    "reviewed_utc": "2026-10-27T16:07:13Z",
-    "base_revision": "6a9329aa0d2bc6cdf77e1d050adea1a4e11234f3",
-    "source_state": "base_revision_plus_cumulative_explicit_uncommitted_deltas",
+    "reviewed_utc": "2026-10-27T16:36:55Z",
+    "base_revision": "f97713eb7a8ceef3f94e0399f7fcb5ad8023dc29",
+    "source_state": "base_revision_plus_explicit_uncommitted_deltas",
     "changes": [
       {
-        "path": "ios/Timbre/Design/Kit.swift",
-        "previous_reviewed_sha256": "499be160afccd08c8b95d2eb25ff037926752b9445bca356310b8808e7782bf9",
-        "reviewed_sha256": "306a5160617640eac0fdcb5b898afd4535ab8ffbd4b519d8adb5a21832bfdef6",
-        "diff_sha256": "35948e78b3b9c359821f51a9eea1c99136bba1ee7f0d10a4b68302751102f36e",
-        "privacy_assessment": "Adds only the static-text accessibility trait to the existing fraction layout container, retaining its existing numeric inputs and spoken label. No new collection, logging, persistence, network requests, permissions or capabilities."
+        "path": "ios/Timbre/Design/Theme.swift",
+        "previous_reviewed_sha256": "caf1d87434c49d1af6bfb0f42e0bdbba92d77e07b8671a7f087b87b759debbc4",
+        "reviewed_sha256": "a381a42bbfc2e732b3d6122df05a5ca75024a64bc5c5b2116e0feddf2fd3f816",
+        "diff_sha256": "23543a4d6fe21be7a6ecfc4bd9f61a5721fcd54c13d0522a1dbdbae1749d4fd1",
+        "privacy_assessment": "Adds only an opaque light-gold offer palette token; no collection, permissions, storage, networking or capabilities."
       },
       {
-        "path": "ios/Timbre/Learn/LessonSteps.swift",
-        "previous_reviewed_sha256": "729625456ae3b4a7005d37726a78476dd358a27e87a557efe87f8c6be679eb1a",
-        "reviewed_sha256": "0d9d76c5dc0e019b2365314b3b832e48994b765c065adf727f2b1a3f82d3532d",
-        "diff_sha256": "0f3d4116901a15fd467ec078723f44c4db2586f72e3aad21d63c40cf3ca230eb",
-        "privacy_assessment": "TuneCheckStep presentation changes only: reads existing Dynamic Type size to choose a scrollable teaching-content layout at accessibility sizes with pinned skip action; preserves normal content ordering, adds accessibility identifiers, and permits multiline hint height. The onAppear/onDisappear, lock cancellation, listening callbacks and scene-phase restart logic remain unchanged in this diff. No new collection, analytics payloads, persistence, network endpoints, permission or capability behavior. Native layout/audio lifecycle validation remains separate."
+        "path": "ios/Timbre/Paywall/PaywallView.swift",
+        "previous_reviewed_sha256": "62fe12d1881645529693586c8bb9434bda064e5bb9b68022fbae9fe155833c63",
+        "reviewed_sha256": "9fea1dd7bf2a18fc90f325376cdabd7c2dd2a168af753856c487077e1107a5c5",
+        "diff_sha256": "13069cdf3064e452068e7b64545684d59ae7226120ede0265067268f8542f780",
+        "privacy_assessment": "Changes only the non-trial offer badge backing from a gold gradient to the opaque light-gold token. Dark ink, trial mint, labels, prices and geometry unchanged. No analytics, purchase or data-flow changes; native audit outcome not asserted."
+      },
+      {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "previous_reviewed_sha256": "ad2ed64d1ade08898ce2663ef923b399d7a101ef266524f27e897e05ca0e4698",
+        "reviewed_sha256": "1c0afc72307e755f40b175d3e86b06896323529b85fb40e0d122ca7adac356c0",
+        "diff_sha256": "690533c20383f5aeae0e630969fc637139dc2aea1f89870a81e2ad078b479a90",
+        "privacy_assessment": "Compiler/lint-only refactoring: expands the existing in-memory rail cache signature into individually typed appends with the same field order, and turns the existing caption function into a View value with explicit identical inputs. Existing metadata/settings/stars are neither newly persisted nor transmitted; no new collection, logging, permissions or networking."
       }
     ],
-    "source_inventory_delta": "291 bound inputs; only Kit.swift and LessonSteps.swift differ from the immediately preceding reviewed snapshot. Previously reviewed Songs additions/changes remain recorded in source_review_refresh_history and bound by current source_sha256.",
-    "listing_delta": "All50 listing content hashes unchanged from the independently reviewed130+ count correction.",
-    "publication_observation": "Original08:20UTC public HTTP observations and privacy/support policy/HTML bytes preserved. No fresh public fetch, deployment or uptime certification claimed.",
-    "limitations": "Bounded source-diff privacy review only. Static trait/layout source approval does not establish native RTL/VoiceOver, microphone lifecycle, physical-device, signed archive, legal or Apple portal verification."
+    "source_inventory_delta": "291 bound inputs unchanged in membership; only Theme.swift, PaywallView.swift and SongsView.swift differ from the preceding reviewed snapshot. Test sources are not shipped inventory inputs.",
+    "listing_delta": "All 50 listing content hashes remain unchanged from the independently reviewed 130+ count correction.",
+    "publication_observation": "Original 08:20 UTC public HTTP observations and policy/HTML bytes preserved. No fresh fetch or publication asserted.",
+    "limitations": "Bounded source-diff review only, not native accessibility execution, physical-device verification, signed archive validation, legal certification or Apple portal verification."
   },
   "source_review_refresh_history": [
     {
@@ -569,6 +576,31 @@
       },
       "publication_observation": "Original 08:20 UTC public HTTP timestamps and privacy/support HTML/policy bytes remain unchanged. No new publication or fetch claimed.",
       "limitations": "Bounded source-diff and quantity-only listing assessment; independent source approval is not native execution, hardware verification, legal certification, archive or Apple portal approval."
+    },
+    {
+      "reviewed_utc": "2026-10-27T16:07:13Z",
+      "base_revision": "6a9329aa0d2bc6cdf77e1d050adea1a4e11234f3",
+      "source_state": "base_revision_plus_cumulative_explicit_uncommitted_deltas",
+      "changes": [
+        {
+          "path": "ios/Timbre/Design/Kit.swift",
+          "previous_reviewed_sha256": "499be160afccd08c8b95d2eb25ff037926752b9445bca356310b8808e7782bf9",
+          "reviewed_sha256": "306a5160617640eac0fdcb5b898afd4535ab8ffbd4b519d8adb5a21832bfdef6",
+          "diff_sha256": "35948e78b3b9c359821f51a9eea1c99136bba1ee7f0d10a4b68302751102f36e",
+          "privacy_assessment": "Adds only the static-text accessibility trait to the existing fraction layout container, retaining its existing numeric inputs and spoken label. No new collection, logging, persistence, network requests, permissions or capabilities."
+        },
+        {
+          "path": "ios/Timbre/Learn/LessonSteps.swift",
+          "previous_reviewed_sha256": "729625456ae3b4a7005d37726a78476dd358a27e87a557efe87f8c6be679eb1a",
+          "reviewed_sha256": "0d9d76c5dc0e019b2365314b3b832e48994b765c065adf727f2b1a3f82d3532d",
+          "diff_sha256": "0f3d4116901a15fd467ec078723f44c4db2586f72e3aad21d63c40cf3ca230eb",
+          "privacy_assessment": "TuneCheckStep presentation changes only: reads existing Dynamic Type size to choose a scrollable teaching-content layout at accessibility sizes with pinned skip action; preserves normal content ordering, adds accessibility identifiers, and permits multiline hint height. The onAppear/onDisappear, lock cancellation, listening callbacks and scene-phase restart logic remain unchanged in this diff. No new collection, analytics payloads, persistence, network endpoints, permission or capability behavior. Native layout/audio lifecycle validation remains separate."
+        }
+      ],
+      "source_inventory_delta": "291 bound inputs; only Kit.swift and LessonSteps.swift differ from the immediately preceding reviewed snapshot. Previously reviewed Songs additions/changes remain recorded in source_review_refresh_history and bound by current source_sha256.",
+      "listing_delta": "All50 listing content hashes unchanged from the independently reviewed130+ count correction.",
+      "publication_observation": "Original08:20UTC public HTTP observations and privacy/support policy/HTML bytes preserved. No fresh public fetch, deployment or uptime certification claimed.",
+      "limitations": "Bounded source-diff privacy review only. Static trait/layout source approval does not establish native RTL/VoiceOver, microphone lifecycle, physical-device, signed archive, legal or Apple portal verification."
     }
   ]
 }

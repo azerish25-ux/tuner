@@ -89,6 +89,8 @@ enum Palette {
     static let starGold = Color(hex: 0xF0A93B)
     /// A star's fill, lit from the top.
     static let starFill = LinearGradient(colors: [Color(hex: 0xFFE29A), starGold], startPoint: .top, endPoint: .bottom)
+    /// Opaque offer backing: 12.89:1 with onGold, without a darker gradient edge.
+    static let proGoldOffer = Color(hex: 0xFFD08A)
     /// The deep end of Timbre Pro gold, as one colour.
     static let proGoldDeep = Color(hex: 0xE39A3B)
     // Earlier names, mapped onto the new system. They hide which colour you get (brass is mint, ember is amber):

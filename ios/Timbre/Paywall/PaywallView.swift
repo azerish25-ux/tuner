@@ -1598,7 +1598,7 @@ struct PaywallOfferBadge: View {
             .padding(.horizontal, 7).padding(.vertical, 3)
             .background {
                 let shape = RoundedRectangle(cornerRadius: Metrics.cornerChip, style: .continuous)
-                if trial { shape.fill(Palette.mint) } else { shape.fill(Palette.proGold) }
+                if trial { shape.fill(Palette.mint) } else { shape.fill(Palette.proGoldOffer) }
             }
     }
 }

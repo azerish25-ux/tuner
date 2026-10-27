@@ -24,13 +24,29 @@ class SongRailContractTests(unittest.TestCase):
         self.assertIn('EdgeRail', (ROOT / 'ios/Timbre/YourSongs/YourSongsShelf.swift').read_text())
 
     def test_static_caption_receives_compact_or_regular_version_limit(self):
-        self.assertIn('calm: Bool, versionLimit: Int, others:', SONGS)
+        self.assertIn('let versionLimit: Int', SONGS)
         self.assertEqual(SONGS.count('calm: store.settings.calmMode, versionLimit: versionLimit'), 2)
         self.assertIn('private var versionLimit: Int { sizeClass == .regular ? 3 : 2 }', SONGS)
 
+    def test_caption_component_preserves_all_nine_immutable_inputs(self):
+        component = SONGS.split('struct TileCaption: View {', 1)[1].split('var body: some View', 1)[0]
+        inputs = re.findall(r'let (\w+): ([^\n]+)', component)
+        self.assertEqual(inputs, [
+            ('song', 'Song'), ('sheet', 'SongSheet'), ('accent', 'Color'),
+            ('standing', 'SongsCatalog.Standing'), ('stars', 'Int'), ('calm', 'Bool'),
+            ('versionLimit', 'Int'), ('others', '[LearnCourse]'), ('identity', 'String'),
+        ])
+        self.assertNotIn('init(', component)
+        self.assertNotIn('func tileCaption', SONGS)
+        self.assertEqual(SONGS.count('Self.TileCaption(song: song,'), 2)
+        oracle = (ROOT / 'ios/TimbreAppTests/SongRailMeasurementTests.swift').read_text()
+        self.assertIn('SongsView.TileCaption(song: song,', oracle)
+        self.assertIn('calm: false, versionLimit: versionLimit, others: versions', oracle)
+        self.assertIn('[(CGFloat(148), 2), (CGFloat(176), 3)]', oracle)
+
     def test_actual_caption_measurement_not_guessed_font_caps(self):
         height = SONGS.split('private func railHeight', 1)[1].split('/// `shelf` names', 1)[0]
-        self.assertIn('tileCaption(song,', height)
+        self.assertIn('TileCaption(song: song,', height)
         self.assertIn('.environmentObject(store)', height)
         self.assertIn('tileWidth + Self.captionGap + captionHeight', height)
         for forbidden in ['SongCover(', 'PreviewDisc(', 'versionsMenu(', 'minimumScaleFactor', 'lineLimit(']:
@@ -47,10 +63,28 @@ class SongRailContractTests(unittest.TestCase):
         height = SONGS.split('private func railHeight', 1)[1].split('/// `shelf` names', 1)[0]
         for dependency in ['song.lesson.title.localized', 'standing.access', 'standing.gate?.title.localized',
                            'store.learn.stars', 'song.lesson.xp', 'sheet.length', 'sheet.keyName',
-                           'versionLimit', 'store.settings.calmMode', 'sheet.chords.map', 'versions.map',
+                           'versionLimit', 'store.settings.calmMode', 'for chord in sheet.chords', 'for version in versions',
                            'locale.identifier', 'TimbreLocalization.language', 'typeSize', 'direction',
                            'legibility', 'Typeface.boldText', 'displayScale']:
             self.assertIn(dependency, height)
+
+    def test_imperative_signature_preserves_every_field_and_order(self):
+        signature = SONGS.split('var content: [String] = []', 1)[1].split('let key = SongRailMeasurement.Key', 1)[0]
+        self.assertIn('for song in songs {', signature)
+        self.assertNotIn('flatMap', signature)
+        fields = [
+            'song.id', 'song.lesson.title.localized', 'String(describing: standing.access)',
+            'standing.gate?.id ?? ""', 'standing.gate?.title.localized ?? ""',
+            'String(store.learn.stars[song.id] ?? 0)', 'String(song.lesson.xp)', 'sheet.length',
+            'sheet.keyName ?? ""', 'String(versionLimit)', 'String(store.settings.calmMode)',
+            'String(sheet.chords.count)', 'String(versions.count)', 'chord.name', 'version.id',
+        ]
+        # One append per line makes the native compiler constraint system small; compare the exact
+        # sequence, including counts delimiting the trailing variable-length chord/version arrays.
+        actual = re.findall(r'content\.append\((.*)\)', signature)
+        self.assertEqual(actual, fields)
+        self.assertIn('for chord in sheet.chords { content.append(chord.name) }', signature)
+        self.assertIn('for version in versions { content.append(version.id) }', signature)
 
     def test_selection_browsing_fades_and_unclipped_height_remain(self):
         self.assertIn('.railBleed(leading: Metrics.gutter, trailing: Metrics.gutter)', RAIL)
@@ -76,7 +110,7 @@ class SongRailContractTests(unittest.TestCase):
                       (ROOT / '.github/workflows/nightly.yml').read_text())
 
     def test_caption_subtree_has_no_lifecycle_or_playback_work(self):
-        caption = SONGS.split('static func tileCaption(', 1)[1].split('/// The part of a title', 1)[0]
+        caption = SONGS.split('struct TileCaption: View {', 1)[1].split('/// The part of a title', 1)[0]
         pieces = SONGS.split('private struct LockReason:', 1)[1]
         course_art = (ROOT / 'ios/Timbre/Learn/CourseArt.swift').read_text()
         for block in [caption, pieces, course_art]:

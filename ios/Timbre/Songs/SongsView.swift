@@ -1003,23 +1003,35 @@ struct SongsView: View {
     /// Preserve the eager row's maximum natural caption height without keeping offscreen card trees alive.
     /// Every geometry-affecting caption input is in the signature, including localized fallback text and versions.
     private func railHeight(_ songs: [Song]) -> CGFloat {
-        let content = songs.flatMap { song -> [String] in
+        // Keep each field individually typed: the concatenated heterogeneous expression exceeded
+        // Swift's type-checking budget during native localization extraction. Order is cache identity.
+        var content: [String] = []
+        for song in songs {
             let sheet = SongSheet.of(song.lesson)
             let standing = catalog.standing(song)
             let versions = Self.otherCourses(catalog.versions(of: song))
-            return [song.id, song.lesson.title.localized, String(describing: standing.access),
-                    standing.gate?.id ?? "", standing.gate?.title.localized ?? "",
-                    String(store.learn.stars[song.id] ?? 0), String(song.lesson.xp), sheet.length,
-                    sheet.keyName ?? "", String(versionLimit), String(store.settings.calmMode),
-                    String(sheet.chords.count), String(versions.count)]
-                + sheet.chords.map(\.name) + versions.map(\.id)
+            content.append(song.id)
+            content.append(song.lesson.title.localized)
+            content.append(String(describing: standing.access))
+            content.append(standing.gate?.id ?? "")
+            content.append(standing.gate?.title.localized ?? "")
+            content.append(String(store.learn.stars[song.id] ?? 0))
+            content.append(String(song.lesson.xp))
+            content.append(sheet.length)
+            content.append(sheet.keyName ?? "")
+            content.append(String(versionLimit))
+            content.append(String(store.settings.calmMode))
+            content.append(String(sheet.chords.count))
+            content.append(String(versions.count))
+            for chord in sheet.chords { content.append(chord.name) }
+            for version in versions { content.append(version.id) }
         }
         let key = SongRailMeasurement.Key(content: content, width: tileWidth, locale: locale.identifier,
                                          language: TimbreLocalization.language, typeSize: typeSize, direction: direction,
                                          legibility: legibility, bold: Typeface.boldText, scale: displayScale)
         let captionHeight = railMeasurement.maximum(key: key, count: songs.count) { index in
             let song = songs[index]
-            Self.tileCaption(song, sheet: SongSheet.of(song.lesson), accent: Palette.accent(song.course.accent),
+            Self.TileCaption(song: song, sheet: SongSheet.of(song.lesson), accent: Palette.accent(song.course.accent),
                         standing: catalog.standing(song), stars: store.learn.stars[song.id] ?? 0,
                         calm: store.settings.calmMode, versionLimit: versionLimit,
                         others: Self.otherCourses(catalog.versions(of: song)), identity: Self.tileSource(song.lesson))
@@ -1045,7 +1057,7 @@ struct SongsView: View {
         return Button { open(song.course, song.lesson, from: source) } label: {
             VStack(alignment: .leading, spacing: Self.captionGap) {
                 tileCover(song, art: art, access: access)
-                Self.tileCaption(song, sheet: sheet, accent: accent, standing: standing, stars: stars,
+                Self.TileCaption(song: song, sheet: sheet, accent: accent, standing: standing, stars: stars,
                                  calm: store.settings.calmMode, versionLimit: versionLimit, others: others, identity: source)
             }
             .frame(width: tileWidth, alignment: .leading)
@@ -1168,39 +1180,50 @@ struct SongsView: View {
     /// title it leaves off ("The chords"), else the song's chords ("G D Em C"; its key for a melody), with room at the
     /// end for the tune's other versions (`others`, drawn over it by `tile`); then how hard it is, how long it runs and
     /// its XP (its stars, once it has some).
-    static func tileCaption(_ song: Song, sheet: SongSheet, accent: Color, standing: SongsCatalog.Standing, stars: Int,
-                            calm: Bool, versionLimit: Int, others: [LearnCourse], identity: String) -> some View {
-        VStack(alignment: .leading, spacing: 7) {
-            HStack(alignment: .top, spacing: 6) {
-                Group {
-                    if standing.access == .locked {
-                        LockReason(access: standing.access, gate: standing.gate)
-                    } else if let subtitle = Self.subtitle(song.lesson.title.localized) {
-                        Text(verbatim: subtitle).font(Typeface.label(.footnote)).foregroundStyle(Palette.ink)
-                            .lineLimit(1).minimumScaleFactor(0.8)
-                    } else {
-                        ChordChips(chords: sheet.chords, key: sheet.keyName, tint: accent, identity: identity + ".chords")
+    struct TileCaption: View {
+        let song: Song
+        let sheet: SongSheet
+        let accent: Color
+        let standing: SongsCatalog.Standing
+        let stars: Int
+        let calm: Bool
+        let versionLimit: Int
+        let others: [LearnCourse]
+        let identity: String
+
+        var body: some View {
+            VStack(alignment: .leading, spacing: 7) {
+                HStack(alignment: .top, spacing: 6) {
+                    Group {
+                        if standing.access == .locked {
+                            LockReason(access: standing.access, gate: standing.gate)
+                        } else if let subtitle = SongsView.subtitle(song.lesson.title.localized) {
+                            Text(verbatim: subtitle).font(Typeface.label(.footnote)).foregroundStyle(Palette.ink)
+                                .lineLimit(1).minimumScaleFactor(0.8)
+                        } else {
+                            ChordChips(chords: sheet.chords, key: sheet.keyName, tint: accent, identity: identity + ".chords")
+                        }
+                    }
+                    // At least a plate's height, so captions line up; a two-line plate or larger text grows it.
+                    .frame(maxWidth: .infinity, minHeight: 24, alignment: .leading)
+                    if !others.isEmpty {
+                        // The versions menu's own pill, held in place here so the chords make room for it.
+                        VersionBadges(courses: others, limit: versionLimit, identity: identity + ".versions.placeholder").hidden()
                     }
                 }
-                // At least a plate's height, so captions line up; a two-line plate or larger text grows it.
-                .frame(maxWidth: .infinity, minHeight: 24, alignment: .leading)
-                if !others.isEmpty {
-                    // The versions menu's own pill, held in place here so the chords make room for it.
-                    VersionBadges(courses: others, limit: versionLimit, identity: identity + ".versions.placeholder").hidden()
+                HStack(spacing: 7) {
+                    DifficultyDots(level: sheet.difficulty(unit: song.unitIndex, of: song.course.units.count), tint: accent)
+                    Text(verbatim: sheet.length).font(Typeface.number(.caption)).foregroundStyle(Palette.inkSoft)
+                        .accessibilityIdentifier(identity + ".duration")
+                    if stars > 0 {
+                        StarRow(stars: stars, size: 10)
+                    } else if !calm {
+                        Text("+\(song.lesson.xp) XP").font(.footnote).foregroundStyle(Palette.inkSoft)
+                            .accessibilityIdentifier(identity + ".xp")
+                    }
                 }
+                .lineLimit(1)
             }
-            HStack(spacing: 7) {
-                DifficultyDots(level: sheet.difficulty(unit: song.unitIndex, of: song.course.units.count), tint: accent)
-                Text(verbatim: sheet.length).font(Typeface.number(.caption)).foregroundStyle(Palette.inkSoft)
-                    .accessibilityIdentifier(identity + ".duration")
-                if stars > 0 {
-                    StarRow(stars: stars, size: 10)
-                } else if !calm {
-                    Text("+\(song.lesson.xp) XP").font(.footnote).foregroundStyle(Palette.inkSoft)
-                        .accessibilityIdentifier(identity + ".xp")
-                }
-            }
-            .lineLimit(1)
         }
     }
 

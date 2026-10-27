@@ -115,7 +115,7 @@ final class SongRailMeasurementTests: XCTestCase {
                     let captions: (Int) -> AnyView = { index in
                         let song = songs[index]
                         let access: LessonAccess = index == 0 ? .locked : index == 1 ? .play : .pro
-                        return AnyView(SongsView.tileCaption(song, sheet: SongSheet.of(song.lesson), accent: Palette.mint,
+                        return AnyView(SongsView.TileCaption(song: song, sheet: SongSheet.of(song.lesson), accent: Palette.mint,
                             standing: .init(access: access, gate: gate), stars: index == 2 ? 3 : 0,
                             calm: false, versionLimit: versionLimit, others: versions, identity: "production-caption.\(index)").environmentObject(store))
                     }

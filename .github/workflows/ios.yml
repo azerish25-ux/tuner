@@ -106,6 +106,7 @@ jobs:
           python3 tools/ci/test_song_rail_contract.py
           python3 tools/ci/test_listing_artifact_review.py
           python3 tools/ci/test_lesson_turn_cue_contract.py
+          python3 tools/ci/test_paywall_offer_contrast.py
       - name: SwiftLint (new error-severity violations fail)
         # .swiftlint.yml at the repository root, against the committed baseline (tools/ci/swiftlint-baseline.json):
         # a violation the baseline doesn't hold is reported, and fails the job at error severity. A fresh baseline
