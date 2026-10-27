@@ -2,8 +2,12 @@ from pathlib import Path
 import unittest
 import json
 import re
+import sys
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(ROOT / 'tools/ci'))
+import capture_check
 
 
 class LocalizedCaptureChecksTests(unittest.TestCase):
@@ -100,7 +104,8 @@ class LocalizedCaptureChecksTests(unittest.TestCase):
         self.assertNotIn('app.tabBars.buttons[name]', phone)
         self.assertIn('CaptureLocalizationExpected.json', workflow)
         self.assertLess(workflow.index('CaptureLocalizationExpected.json'), workflow.index('(cd ios && xcodegen generate)'))
-        self.assertIn('-only-testing:TimbreUITests/TimbreUITests/testCaptureLocalizationNavigationFixture', workflow)
+        self.assertIn('run: python3 tools/ci/capture_check.py', workflow)
+        self.assertIn('TimbreUITests/TimbreUITests/testCaptureLocalizationNavigationFixture', capture_check.EXPECTED)
 
     def test_capture_fixture_supports_english_source_and_all_translation_targets(self):
         import sys
@@ -273,12 +278,28 @@ class LocalizedCaptureChecksTests(unittest.TestCase):
         source = (ROOT / '.github/workflows/localized-capture-check.yml').read_text()
         for language in ['en', 'de', 'ar']:
             self.assertIn('language: ' + language, source)
-        for name in ['test12StoreChord', 'test19StoreViolinResults']:
-            self.assertIn('-only-testing:TimbreUITests/TimbreUITests/' + name, source)
+        self.assertIn('run: python3 tools/ci/capture_check.py', source)
+        self.assertIn('run: python3 tools/ci/test_capture_check.py', source)
+        expected = {'TimbreUITests/TimbreUITests/' + name for name in (
+            'testCaptureLocalizationNavigationFixture', 'testStoreResultsBoundsCalculation',
+            'test11StoreTunerLock', 'test13StoreStrum', 'test14StoreSongPerform',
+            'test17StoreInstrumentWall', 'test12StoreChord', 'test19StoreViolinResults')}
+        self.assertEqual(capture_check.EXPECTED, expected)
+        with patch.dict('os.environ', {'DEVICE_ID': 'contract-device'}):
+            command = capture_check.command('test-without-building', Path('contract.xcresult'))
+        selected = [arg.removeprefix('-only-testing:') for arg in command if arg.startswith('-only-testing:')]
+        self.assertEqual(len(selected), 8)
+        self.assertEqual(set(selected), expected)
+        self.assertEqual(set(capture_check.CAPTURES), {
+            '10b-tune-locked', '11b-tune-strum', '31b-instruments-folk',
+            '52b-lesson-chord', '62b-lesson-results-violin', '65-song-perform'})
+        helper = (ROOT / 'tools/ci/capture_check.py').read_text()
+        self.assertIn("name + '-wrong' in found", helper)
+        self.assertIn('len(found.get(name, [])) != 1', helper)
+        self.assertIn('not path.is_file()', helper)
+        self.assertIn('len(set(paths)) != len(CAPTURES)', helper)
         self.assertIn('TEST_RUNNER_TIMBRE_UI_LANGUAGE:', source)
         self.assertIn('TEST_RUNNER_TIMBRE_UI_LOCALE:', source)
-        self.assertIn("name + '-wrong' not in captures", source)
-        self.assertIn('len(captures.get(name, [])) == 1', source)
         self.assertIn('persist-credentials: false', source)
 
 
