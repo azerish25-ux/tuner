@@ -31,17 +31,29 @@ final class FirstSessionUITests: XCTestCase {
 
     private func element(_ id: String) -> XCUIElement { app.descendants(matching: .any).matching(identifier: id).firstMatch }
 
+    private func assertHittable(_ target: XCUIElement, timeout: TimeInterval = 10,
+                                file: StaticString = #filePath, line: UInt = #line) {
+        let ready = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == true AND hittable == true"), object: target)
+        XCTAssertEqual(XCTWaiter.wait(for: [ready], timeout: timeout), .completed,
+                       "The control must be exposed, not merely present behind onboarding", file: file, line: line)
+    }
+
     func testDeferredQuestionsPersistOnlyForTheInstallationThatSkippedThem() {
         app.launchEnvironment["TIMBRE_DEMO_PITCH"] = "1"
         app.launch()
         let justTune = element("onboarding.justTune")
         XCTAssertTrue(justTune.waitForExistence(timeout: 25))
         justTune.tap()
+        XCTAssertTrue(justTune.waitForNonExistence(timeout: 15), "The welcome must actually dismiss")
         XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 15))
+        assertHittable(app.tabBars.buttons["Learn"])
 
         // The same installation keeps its promise to ask when Learn opens, even after relaunch.
         app.terminate()
         app.launch()
+        XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 25))
+        XCTAssertTrue(justTune.waitForNonExistence(timeout: 10), "Relaunch must not return to the welcome")
+        assertHittable(app.tabBars.buttons["Learn"])
         app.tabBars.buttons["Learn"].tap()
         let question = element("onboarding.option.beginner")
         XCTAssertTrue(question.waitForExistence(timeout: 10))
@@ -105,7 +117,9 @@ final class FirstSessionUITests: XCTestCase {
         let justTune = element("onboarding.justTune")
         XCTAssertTrue(justTune.waitForExistence(timeout: 25))
         justTune.tap()
+        XCTAssertTrue(justTune.waitForNonExistence(timeout: 15), "The welcome must actually dismiss")
         XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 15), "the tuner is on screen")
+        assertHittable(app.tabBars.buttons["Learn"])
         XCTAssertFalse(element("onboarding.option.beginner").exists, "no question came first")
         let probe = element("stage.state")
         let deadline = Date().addingTimeInterval(15)

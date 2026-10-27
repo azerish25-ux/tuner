@@ -286,7 +286,7 @@ struct OnboardingView: View {
             store.selectReference()
         }
         OnboardingDeferral.shared.deferQuestions()
-        store.updateSettings { $0.onboardingCompleted = true }
+        store.completeTunerOnboarding()
         store.selectedTab = .tune
         Analytics.log("onboarding_complete", ["instrument": instrumentID ?? "chromatic", "path": "just_tune"])
         store.startListening()

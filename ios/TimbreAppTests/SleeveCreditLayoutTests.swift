@@ -202,7 +202,10 @@ final class SleeveCreditLayoutTests: XCTestCase {
         let visible = CTFrameGetVisibleStringRange(frame)
         XCTAssertEqual(visible.location, 0, file: file, line: line)
         XCTAssertEqual(visible.length, (fit.text as NSString).length, fit.text, file: file, line: line)
-        let lines = CTFrameGetLines(frame) as! [CTLine]
+        guard let lines = CTFrameGetLines(frame) as? [CTLine] else {
+            XCTFail("Core Text did not return a valid line array", file: file, line: line)
+            return
+        }
         var origins = [CGPoint](repeating: .zero, count: lines.count)
         CTFrameGetLineOrigins(frame, CFRange(location: 0, length: 0), &origins)
         for (index, textLine) in lines.enumerated() {

@@ -45,41 +45,10 @@ jobs:
           xcrun simctl bootstatus "$DEVICE_ID" -b
       - name: Ensure Metal toolchain
         run: bash tools/ci/ensure-metal.sh
-      - name: Verify six store frames in selected language
-        run: |
-          set -euo pipefail
-          mkdir -p ci-out
-          xcodebuild test -project ios/Timbre.xcodeproj -scheme Timbre \
-            -destination "platform=iOS Simulator,id=$DEVICE_ID" \
-            -derivedDataPath ios/build/capture-check -parallel-testing-enabled NO \
-            -only-testing:TimbreUITests/TimbreUITests/testCaptureLocalizationNavigationFixture \
-            -only-testing:TimbreUITests/TimbreUITests/testStoreResultsBoundsCalculation \
-            -only-testing:TimbreUITests/TimbreUITests/test11StoreTunerLock \
-            -only-testing:TimbreUITests/TimbreUITests/test13StoreStrum \
-            -only-testing:TimbreUITests/TimbreUITests/test14StoreSongPerform \
-            -only-testing:TimbreUITests/TimbreUITests/test17StoreInstrumentWall \
-            -only-testing:TimbreUITests/TimbreUITests/test12StoreChord \
-            -only-testing:TimbreUITests/TimbreUITests/test19StoreViolinResults \
-            -resultBundlePath ci-out/CaptureCheck.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/test.log
-      - name: Export actual screenshots
-        if: always()
-        run: |
-          test -d ci-out/CaptureCheck.xcresult
-          xcrun xcresulttool export attachments --path ci-out/CaptureCheck.xcresult --output-path ci-out/screenshots
-      - name: Require all six valid capture attachments
-        run: |
-          python3 - <<'PY'
-          import sys
-          from pathlib import Path
-          sys.path.insert(0, 'tools/marketing')
-          from screenshots import attachments
-          captures = attachments(Path('ci-out/screenshots'))
-          for name in ['10b-tune-locked', '11b-tune-strum', '31b-instruments-folk', '52b-lesson-chord', '62b-lesson-results-violin', '65-song-perform']:
-              assert name + '-wrong' not in captures, name + ': invalid frame retained'
-              assert len(captures.get(name, [])) == 1, name + ': missing or duplicate capture'
-              assert captures[name][0].is_file(), name + ': missing image file'
-          print('Six actual locale-specific frames verified; this is not all listing assets.')
-          PY
+      - name: Verify bounded capture recovery contracts
+        run: python3 tools/ci/test_capture_check.py
+      - name: Verify six store frames with bounded native launch recovery
+        run: python3 tools/ci/capture_check.py
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()
         with:

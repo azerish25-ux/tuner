@@ -45,6 +45,18 @@ class LessonAccessibilityLayoutContract(unittest.TestCase):
                       'capture("unreachable")', "isClear(target, within: contentViewport(scroll, above: bottom))"]:
             self.assertIn(token, self.ui)
 
+    def test_controls_use_their_actual_layout_container(self):
+        along = (ROOT / "ios/Timbre/Learn/Highway.swift").read_text()
+        body = along.split("var body: some View {", 1)[1].split("// MARK: Pieces", 1)[0]
+        content = along.split("private var stepContent: some View {", 1)[1].split("private var header:", 1)[0]
+        self.assertIn("ScrollView { stepContent }", body)
+        self.assertIn("controls", content)
+        self.assertIn("scrollClear(start)", self.ui)
+        self.assertIn("scrollClear(again)", self.ui)
+        # TuneCheckStep uses a fixed VStack/action bar, not the AlongStep scrolling body.
+        self.assertIn('XCTAssertTrue(isClear(skip), "Tune-check skip must be fully on screen")', self.ui)
+        self.assertNotIn("scrollClear(skip)", self.ui)
+
     def test_real_playback_not_forced_result(self):
         for token in ['["TIMBRE_DEMO_PITCH"] = "1"', '["TIMBRE_SCENE_SONG"] = "gtr-1-2"',
                       "Thread.sleep(forTimeInterval: 7)", "Thread.sleep(forTimeInterval: 14)",

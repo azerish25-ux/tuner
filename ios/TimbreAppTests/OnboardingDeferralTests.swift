@@ -1,4 +1,5 @@
 import XCTest
+import TimbreCore
 @testable import Timbre
 
 @MainActor
@@ -17,6 +18,24 @@ final class OnboardingDeferralTests: XCTestCase {
         defaults = nil
         suite = nil
         try await super.tearDown()
+    }
+
+    func testJustTuneCompletionIsOnDiskBeforeItsActionReturns() throws {
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let store = try AppStore(directory: directory)
+        let storageID = UUID().uuidString
+        let questions = OnboardingDeferral(defaults: defaults, storageID: storageID)
+        questions.deferQuestions()
+
+        store.completeTunerOnboarding()
+
+        // Reopen synchronously: no sleep, run-loop turn, background scene transition, or test-only flush.
+        // The production action itself must have persisted the welcome dismissal.
+        let reopened = try LocalStore(directory: directory)
+        XCTAssertEqual(reopened.settings.onboardingCompleted, true)
+        XCTAssertTrue(OnboardingDeferral(defaults: defaults, storageID: storageID).pending)
+        XCTAssertFalse(OnboardingDeferral(defaults: defaults, storageID: UUID().uuidString).pending)
     }
 
     func testFreshStorageDoesNotInheritDeferredQuestionsFromAnotherInstall() {

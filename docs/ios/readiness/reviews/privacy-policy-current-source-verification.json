@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scope": "published_policy_and_source_alignment_only",
-  "source_revision": "59380e3f2e892bcfb43578dbc0b769b8bfef78f8",
+  "source_revision": "476a3f09bbef7473786978301439a3be44f7a327",
   "verified_utc": "2026-10-27T08:20:41Z",
   "reviewer": "dot independent release-scope audit",
   "routes": [
@@ -145,7 +145,7 @@
     "ios/Timbre/Learn/LessonAnalyzer.swift": "a7c1601bb54091f9bb92c587363dcfab28bf84d13252ebe89816b00e272e0127",
     "ios/Timbre/Learn/LessonBeatRow.swift": "eacf9acf56a4b93bbbae970bb8ab176f9b11615b544ee1d6edf05499bc7350f2",
     "ios/Timbre/Learn/LessonClip.swift": "6af6f739a7b80315c62ce652024fbd80625bfef0ddf905ea658001a5f5080f63",
-    "ios/Timbre/Learn/LessonExplain.swift": "d98f64214263c99091fbca0c0cc9b992e699263a3e05fb0c51bfc24be114bcbb",
+    "ios/Timbre/Learn/LessonExplain.swift": "93653aab28cf316f769c3819d4e789146e3ce2be9829fcdbf1924abc070de73f",
     "ios/Timbre/Learn/LessonInspector.swift": "a8c4417f103511e41762a1494f8d766fb8db99c7531ee31a79a31fd8a913db3f",
     "ios/Timbre/Learn/LessonMotion.swift": "ab46a5a3ff36f1a52f15231dbdf6a9f3cf940cc6bb590116afb47a93d61fa3ec",
     "ios/Timbre/Learn/LessonPlayer.swift": "1f375133631a2ba523f9f3a8c099ec54332999dfbaffa1d52cadd76c353b4bf5",
@@ -168,7 +168,7 @@
     "ios/Timbre/Onboarding/FirstChordStep.swift": "55cf05d664764f0ed78a42a2ffe720d2dacd723d4d12dd2e04798011d44fcd3c",
     "ios/Timbre/Onboarding/FirstTuneStep.swift": "eb6fb21098225e27f09237e2d797dd096c08ffd9fae9e3a96eca95ba5bd58897",
     "ios/Timbre/Onboarding/OnboardingDeferral.swift": "5961fad59af5878701266ff351a90ec5121d0825734c27f291dd4810410c415e",
-    "ios/Timbre/Onboarding/OnboardingView.swift": "52b6f1a5f8820afb016d8fa19cc9f3adaf7fef4a3448c82f60550b1c5e080d20",
+    "ios/Timbre/Onboarding/OnboardingView.swift": "1e2a2465c56ae19052c27dc3bb0fe1b573a3c37b28ebe523c351a7a3fbf5049e",
     "ios/Timbre/Onboarding/PlacementCheckView.swift": "61ebbfe2c956cf39641138aa5c2cba60a917d75ff581cff9ca1f140ec1696a58",
     "ios/Timbre/Onboarding/ReminderAskStep.swift": "c720577fd380fc87c4d7c8dc4be11b2eebcd03c9c583995fbf5ab8ca1d0c3f3b",
     "ios/Timbre/Paywall/BillingIssueBanner.swift": "fe1695fc7fa15997dc5b000376505e6222c0cf9a8f09f13a046761dc2ed18806",
@@ -251,7 +251,7 @@
     "ios/Timbre/Root/RootView.swift": "f1f38f0ec713ad39d79ee836223cb4ac34f70d1f616a6f739acb32551969796e",
     "ios/Timbre/Services/Analytics.swift": "6c7f75c6610355dde2607121e17d9fee43d97b429d9e7bd4c625b7a53ac791f1",
     "ios/Timbre/Services/AnalyticsTransport.swift": "63fcdb0f8de22a76dafe47d4219ad7c53096a24e81bced7bc3e75b9216cb877e",
-    "ios/Timbre/Services/AppStore.swift": "48a9109dabdd161869139e9094c3e47876308886435fbb56207e453fae0cd223",
+    "ios/Timbre/Services/AppStore.swift": "b39dcbdf6b524cc622d56e0f5166f83f225fc4503af004a8abdc9f55ca5e0292",
     "ios/Timbre/Services/CommerceService.swift": "755909449e217b5588b255ce395aca0e117a4354e2353488f436299cdb75482f",
     "ios/Timbre/Services/GameCenter.swift": "0bbeca933eef5c29f19734f1ba787d5df1d877886aafd20390ae5fb3d6f86e30",
     "ios/Timbre/Services/GameCenterIDs.swift": "2a209332092bc44d533e22e25784cbd152b644c0e66f691badbfc82a1fa93d9b",
@@ -405,20 +405,53 @@
   "mutations": "Only this receipt written. No listing verification/readiness flags, policy text, public website, signing, credentials or account settings changed.",
   "source_inventory_scope": "All shipped app/core/extension Swift, Objective-C/C/C++ sources and headers, app privacy manifests, xcconfig/plist/entitlement/permission configuration and package dependency inputs. Any edit/addition invalidates this source-review receipt; tests/docs outside named policy sources do not.",
   "source_review_refresh": {
-    "reviewed_utc": "2026-10-27T08:37:49Z",
-    "base_revision": "59380e3f2e892bcfb43578dbc0b769b8bfef78f8",
+    "reviewed_utc": "2026-10-27T08:44:03Z",
+    "base_revision": "476a3f09bbef7473786978301439a3be44f7a327",
     "source_state": "base_revision_plus_explicit_uncommitted_delta",
     "changes": [
       {
-        "path": "ios/Timbre/Learn/LessonSteps.swift",
-        "previous_reviewed_sha256": "1156e9b665451e3deba645bb5ef9e901b3a529698136f68292c15b3efbafa2b8",
-        "reviewed_sha256": "729625456ae3b4a7005d37726a78476dd358a27e87a557efe87f8c6be679eb1a",
-        "diff_sha256": "c6b1395a7df1d0f8afe3054b2da0e60207a9bcec7dd150bb1da45c1fddbd3bd8",
-        "privacy_assessment": "Dynamic Type presentation only: accessibility-size scroll container and pinned actions, external multiline status text, normal-size layout preservation and an accessibility identifier. No new analytics/logging/payload producers, network endpoints, persistence, permissions or capability changes. Existing onAppear/onDisappear/listening/cancellation/scene-phase callbacks and audio behavior are unchanged in the diff."
+        "path": "ios/Timbre/Learn/LessonExplain.swift",
+        "previous_reviewed_sha256": "d98f64214263c99091fbca0c0cc9b992e699263a3e05fb0c51bfc24be114bcbb",
+        "reviewed_sha256": "93653aab28cf316f769c3819d4e789146e3ce2be9829fcdbf1924abc070de73f",
+        "diff_sha256": "5e9c8e194dd296e55291a0305515161d1e16d928a124ca4e901395e933f7f784",
+        "privacy_assessment": "Adds only an accessibility identifier to the existing turn cue. No collection, persistence, permissions, logging, network or capability behavior added."
+      },
+      {
+        "path": "ios/Timbre/Onboarding/OnboardingView.swift",
+        "previous_reviewed_sha256": "52b6f1a5f8820afb016d8fa19cc9f3adaf7fef4a3448c82f60550b1c5e080d20",
+        "reviewed_sha256": "1e2a2465c56ae19052c27dc3bb0fe1b573a3c37b28ebe523c351a7a3fbf5049e",
+        "diff_sha256": "cbcbd5a8f6d6f900989cb98c46c1a8c8ea78357c7398f056ad333ad2d0b74293",
+        "privacy_assessment": "Replaces the existing onboardingCompleted settings mutation with completeTunerOnboarding(). The pre-existing onboarding_complete event and instrument/path payload, deferred-question behavior, selected tab and startListening call remain unchanged. No new data fields or consent choice are introduced."
+      },
+      {
+        "path": "ios/Timbre/Services/AppStore.swift",
+        "previous_reviewed_sha256": "48a9109dabdd161869139e9094c3e47876308886435fbb56207e453fae0cd223",
+        "reviewed_sha256": "b39dcbdf6b524cc622d56e0f5166f83f225fc4503af004a8abdc9f55ca5e0292",
+        "diff_sha256": "c146c087f4c547f590734dc7dcb021e4e115a4afc633ce2d3ce16d6d62fea8e4",
+        "privacy_assessment": "Adds completeTunerOnboarding(): existing updateSettings(onboardingCompleted=true) followed by existing flushSettings(). This changes durability timing, not stored schema or destination. flushSettings drains any already-pending settings/work through existing updateSettings semantics, cancels the delayed write and waits for LocalStore.flush(wait:true); normal sharesUsage change detection and Analytics.setSharing remain intact. Existing settings/practice data may be persisted earlier, before the following microphone start. No new analytics payload, network endpoint, permission, storage category or capability is added. Existing write failures still use the existing error path; successful device durability/native execution is not certified by this source review."
       }
     ],
-    "source_inventory_delta": "Only the named file differs from the previous 289-input source inventory; all other bound source/configuration hashes unchanged.",
-    "publication_observation": "Original 08:20 UTC HTTP observations, policy/HTML bytes and source findings remain unchanged. No new HTTP fetch or publication claimed.",
-    "limitations": "Source-diff privacy assessment only; not native layout/lifecycle verification, hardware validation, legal certification, signed-archive or Apple portal approval."
-  }
+    "source_inventory_delta": "Only these three files differ from the previous 289-input source inventory; all other bound source/configuration hashes unchanged.",
+    "publication_observation": "Original 08:20 UTC HTTP observations and published policy/HTML bytes preserved unchanged. No new HTTP fetch or deployment claimed.",
+    "limitations": "Bounded source-diff privacy and persistence-flow assessment only. No new full-source/legal certification, native/device validation, signed archive or Apple portal approval."
+  },
+  "source_review_refresh_history": [
+    {
+      "reviewed_utc": "2026-10-27T08:37:49Z",
+      "base_revision": "59380e3f2e892bcfb43578dbc0b769b8bfef78f8",
+      "source_state": "base_revision_plus_explicit_uncommitted_delta",
+      "changes": [
+        {
+          "path": "ios/Timbre/Learn/LessonSteps.swift",
+          "previous_reviewed_sha256": "1156e9b665451e3deba645bb5ef9e901b3a529698136f68292c15b3efbafa2b8",
+          "reviewed_sha256": "729625456ae3b4a7005d37726a78476dd358a27e87a557efe87f8c6be679eb1a",
+          "diff_sha256": "c6b1395a7df1d0f8afe3054b2da0e60207a9bcec7dd150bb1da45c1fddbd3bd8",
+          "privacy_assessment": "Dynamic Type presentation only: accessibility-size scroll container and pinned actions, external multiline status text, normal-size layout preservation and an accessibility identifier. No new analytics/logging/payload producers, network endpoints, persistence, permissions or capability changes. Existing onAppear/onDisappear/listening/cancellation/scene-phase callbacks and audio behavior are unchanged in the diff."
+        }
+      ],
+      "source_inventory_delta": "Only the named file differs from the previous 289-input source inventory; all other bound source/configuration hashes unchanged.",
+      "publication_observation": "Original 08:20 UTC HTTP observations, policy/HTML bytes and source findings remain unchanged. No new HTTP fetch or publication claimed.",
+      "limitations": "Source-diff privacy assessment only; not native layout/lifecycle verification, hardware validation, legal certification, signed-archive or Apple portal approval."
+    }
+  ]
 }

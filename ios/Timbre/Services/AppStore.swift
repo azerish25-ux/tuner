@@ -525,6 +525,14 @@ final class AppStore: ObservableObject {
     static let dailyMinutesKey = Preferences.Key.dailyMinutes
     var dailyMinutes: Int { Preferences.dailyMinutes }
 
+    /// "Just tune" is a durable first-session boundary, not a coalesced slider change. The welcome
+    /// must not reappear if the process ends immediately after its dismissal. Keep ordinary settings
+    /// batching unchanged, but drain this one transition before the tuner starts listening.
+    func completeTunerOnboarding() {
+        guard updateSettings({ $0.onboardingCompleted = true }) else { return }
+        flushSettings()
+    }
+
     /// Ends onboarding: the instrument, the placement and the daily commitment are saved, then Learn opens
     /// the plan's first lesson (`pendingLessonId`) rather than leaving the player on the tuner.
     func completeOnboarding(instrument: Instrument?, level: String, goal: String, minutes: Int = 10) {
