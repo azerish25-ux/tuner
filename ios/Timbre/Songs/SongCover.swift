@@ -1321,15 +1321,20 @@ struct SongCover: View {
         typeWidth = max(1, size.width - pad - typeTrailing)
         credit = SleeveCreditFit(text: art.imprint.credited ? art.label : "", width: typeWidth,
                                  labelSize: labelSize, capitals: art.imprint == .catalogue)
-        fit = TitleFit.make(art.title, width: typeWidth, maxHeight: side * (art.titleOnTop ? 0.36 : 0.4), largest: side * 0.17,
-                            smallest: side * 0.075, font: art.face)
         let creditHeight = art.imprint.credited ? credit.height + labelSize * 0.35 : 0
+        bandInset = pad * 0.7
+        let bottomInset = art.banner ? bandInset : pad
+        // Credit wrapping spends the same finite type area as the title. Let the existing title
+        // fitter adapt within its original point-size bounds, rather than giving it a second,
+        // independent height budget that can push the combined block outside a compact sleeve.
+        let availableTypeHeight = max(0, size.height - (art.titleOnTop ? typeTop : pad) - bottomInset)
+        let titleBudget = min(side * (art.titleOnTop ? 0.36 : 0.4), max(0, availableTypeHeight - creditHeight))
+        fit = TitleFit.make(art.title, width: typeWidth, maxHeight: titleBudget, largest: side * 0.17,
+                            smallest: side * 0.075, font: art.face)
         let block = creditHeight + fit.height
         typeBlockHeight = block
         let gap = side * 0.05
-        bandInset = pad * 0.7
         bandHeight = art.banner ? min(size.height, block + bandInset * 2) : 0
-        let bottomInset = art.banner ? bandInset : pad
         typeFitsBounds = block <= max(0, size.height - (art.titleOnTop ? typeTop : pad) - bottomInset)
         // A long localized credit spends motif space, never a fictitious 20% minimum that extends
         // past the sleeve or underneath its type. Zero motif room is valid: the ground/glow remain.
@@ -1469,11 +1474,21 @@ struct TitleFit {
     /// The block's height: Sora's line box is 1.26 em, and lines stack 0.99 em apart.
     var height: CGFloat { lines.isEmpty ? 0 : points * (1.26 + 0.99 * CGFloat(lines.count - 1)) }
 
-    @MainActor private static var cache: [String: TitleFit] = [:]
+    private struct Key: Hashable {
+        let text: String
+        let font: String
+        let width: CGFloat
+        let maxHeight: CGFloat
+        let largest: CGFloat
+        let smallest: CGFloat
+    }
+    @MainActor private static var cache: [Key: TitleFit] = [:]
 
     @MainActor static func make(_ text: String, width: CGFloat, maxHeight: CGFloat, largest: CGFloat, smallest: CGFloat,
                                 font: String = TitleFit.font) -> TitleFit {
-        let key = "\(text)|\(font)|\(Int(width.rounded()))|\(Int(maxHeight.rounded()))|\(Int(largest.rounded()))"
+        // A fractional change in the credit's remaining budget can change the fitting title size.
+        // Include both size bounds and exact geometry; a rounded cache hit can violate that budget.
+        let key = Key(text: text, font: font, width: width, maxHeight: maxHeight, largest: largest, smallest: smallest)
         if let hit = cache[key] { return hit }
         let result = compute(text, width: width, maxHeight: maxHeight, largest: largest, smallest: min(smallest, largest), font: font)
         if cache.count > 500 { cache.removeAll() }

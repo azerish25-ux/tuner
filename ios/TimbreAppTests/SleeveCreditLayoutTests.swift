@@ -60,7 +60,13 @@ final class SleeveCreditLayoutTests: XCTestCase {
                 let layout = SleeveLayout(art: art, size: CGSize(width: side, height: side), titled: true)
                 let block = layout.credit.height + layout.labelSize * 0.35 + layout.fit.height
                 XCTAssertEqual(layout.credit.width, layout.typeWidth)
-                XCTAssertTrue(layout.typeFitsBounds)
+                XCTAssertTrue(layout.typeFitsBounds, "side=\(side), seed=\(index), imprint=\(art.imprint), top=\(art.titleOnTop)")
+                let bottomInset = art.banner ? layout.bandInset : layout.pad
+                let available = side - (art.titleOnTop ? layout.typeTop : layout.pad) - bottomInset
+                XCTAssertLessThanOrEqual(layout.fit.height, available - layout.credit.height - layout.labelSize * 0.35 + 0.001)
+                XCTAssertGreaterThanOrEqual(layout.fit.points, side * 0.075, "Keep the original title size floor")
+                XCTAssertLessThanOrEqual(layout.fit.points, side * 0.17)
+                XCTAssertFalse(layout.fit.lines.joined().contains("…"), "This short title must not be truncated to fit")
                 assertAllGlyphsFit(layout.credit)
                 assertRegionFits(layout, side: side)
                 if art.titleOnTop {
@@ -119,6 +125,23 @@ final class SleeveCreditLayoutTests: XCTestCase {
         XCTAssertEqual(first.height, repeatFit.height)
         XCTAssertEqual(first.tracking, repeatFit.tracking)
         assertAllGlyphsFit(narrower)
+    }
+
+    func testTitleCacheRespectsFractionalRemainingCreditBudget() {
+        let text = "Folk Song"
+        let width: CGFloat = 42.12
+        let largest: CGFloat = 12.24
+        let smallest: CGFloat = 5.4
+        let initial = TitleFit.make(text, width: width, maxHeight: 30, largest: largest, smallest: smallest)
+        // Prime a cache entry just above an actual line-height threshold, then ask just below it.
+        // Rounding the two budgets to points must not return the first, now-too-tall title.
+        let upper = initial.height + 0.001
+        let lower = initial.height - 0.001
+        _ = TitleFit.make(text, width: width, maxHeight: upper, largest: largest, smallest: smallest)
+        let tighter = TitleFit.make(text, width: width, maxHeight: lower, largest: largest, smallest: smallest)
+        XCTAssertLessThanOrEqual(tighter.height, lower)
+        XCTAssertGreaterThanOrEqual(tighter.points, smallest)
+        XCTAssertFalse(tighter.lines.joined().contains("…"))
     }
 
     func testRealLongCourseCreditsFitCompactSleeves() {
