@@ -9,7 +9,7 @@ final class LocalizationMatrixUITests: XCTestCase {
     }
 
     override func tearDownWithError() throws {
-        app?.terminate()
+        if let app, app.state != .notRunning { app.terminate() }
         app = nil
     }
 
@@ -42,7 +42,7 @@ final class LocalizationMatrixUITests: XCTestCase {
             if language == "bg" {
                 try assertNoClipping(application, identifiers: ["onboarding.headline"], labels: [try XCTUnwrap(labels["headline"])])
             }
-            application.terminate()
+            if application.state != .notRunning { application.terminate() }
             application.launchEnvironment["TIMBRE_SKIP_ONBOARDING"] = "1"
             application.launch()
             let tabs = application.tabBars.firstMatch
@@ -60,7 +60,7 @@ final class LocalizationMatrixUITests: XCTestCase {
                 print("TIMBRE_L10N_LESSON_PENDING \(language)")
             }
             try assertUnavailableSongRequest(application, language: language, labels: labels)
-            application.terminate()
+            if application.state != .notRunning { application.terminate() }
             if language == "bg" {
                 application.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
                 application.launch()
@@ -69,7 +69,7 @@ final class LocalizationMatrixUITests: XCTestCase {
                 capture(application, name: "l10n-\(language)-tuner-ax5")
                 try assertInstrumentFits(application)
                 try assertAccessibleTunerCanScroll(application, language: language)
-                application.terminate()
+                if application.state != .notRunning { application.terminate() }
             }
             print("TIMBRE_L10N_MATRIX_TESTED \(language)")
         }

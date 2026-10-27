@@ -1,0 +1,1366 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-10-27T03:34:29.634790+00:00",
+  "reviewer": "Independent integration review agent",
+  "skills": [
+    "systematic-debugging",
+    "code-review-and-quality",
+    "accessibility"
+  ],
+  "revision": "b6efd36f5f72d7ec723229949f7c54c32972b72c",
+  "run_id": 40434233016,
+  "job_id": 121958964450,
+  "scope": "Completed current b6 audit log, all13 raw audit reports, five failing-screen baseline PNGs inspected plus raw crops, current component/palette source. This is distinct from the older970 run.",
+  "verdict": "59_enforced_contrast_and2_incomplete_audits_remain_open_no_demonstrated_callback_contrast_defect_or_blanket_waiver",
+  "counts": {
+    "unique_enforced_contrast": 59,
+    "incomplete_required_audits": 2,
+    "demonstrated_callback_product_defects": 0,
+    "contrast_classifications": {
+      "unproved_callback_state_or_SDK_disagreement": 35,
+      "baseline_viewport_or_fade_confound": 23,
+      "baseline_target_geometry_mismatch": 1
+    }
+  },
+  "classification_policy": {
+    "baseline_viewport_or_fade_confound": "Initial raw image/report bounds place target at horizontal edge, beneath the bottom dock/fade or outside the visible viewport. This is a confound, not proof of false positive or permission to exempt. Obtain callback pixels, then scroll the same target fully clear and rerun the unchanged contrast check.",
+    "unproved_callback_state_or_SDK_disagreement": "Target is generally readable/high contrast in initial image and its current source inks are plausible, but actual callback pixels/state are unavailable. Retain failure; do not call SDK bug or recolor from source alone.",
+    "baseline_target_geometry_mismatch": "Initial target position differs from reported issue bounds, directly showing the initial still cannot be used as same-target contrast evidence."
+  },
+  "per_failure": [
+    {
+      "id": "B6-AX-01",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "Songs",
+      "frame_points": [
+        20.0,
+        74.0,
+        87.66666666666666,
+        35.33333333333333
+      ],
+      "element_type": 48,
+      "first_log_line": 623,
+      "classification": "unproved_callback_state_or_SDK_disagreement",
+      "source_group": "songs_header_controls",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-02",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "Play the melody, or strum the chords and sing",
+      "frame_points": [
+        20.0,
+        113.33333333333333,
+        254.0,
+        37.999999999999986
+      ],
+      "element_type": 48,
+      "first_log_line": 624,
+      "classification": "unproved_callback_state_or_SDK_disagreement",
+      "source_group": "songs_header_controls",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-03",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "7",
+      "frame_points": [
+        282.0,
+        90.66666666666666,
+        54.0,
+        44.0
+      ],
+      "element_type": 48,
+      "first_log_line": 625,
+      "classification": "unproved_callback_state_or_SDK_disagreement",
+      "source_group": "songs_header_controls",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-04",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "LV 5",
+      "frame_points": [
+        347.8333333333333,
+        102.5,
+        24.333333333333314,
+        20.33333333333333
+      ],
+      "element_type": 48,
+      "first_log_line": 626,
+      "classification": "unproved_callback_state_or_SDK_disagreement",
+      "source_group": "songs_header_controls",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-05",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "MANDOLIN SONGBOOK",
+      "frame_points": [
+        249.3,
+        326.69919817333334,
+        70.0,
+        6.0
+      ],
+      "element_type": 48,
+      "first_log_line": 627,
+      "classification": "unproved_callback_state_or_SDK_disagreement",
+      "source_group": "songs_hero_cover",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-06",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "JINGLE",
+      "frame_points": [
+        249.3,
+        334.95599817333334,
+        68.0,
+        23.0
+      ],
+      "element_type": 48,
+      "first_log_line": 628,
+      "classification": "unproved_callback_state_or_SDK_disagreement",
+      "source_group": "songs_hero_cover",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-07",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "BELLS",
+      "frame_points": [
+        249.3,
+        353.0333333333333,
+        54.0,
+        23.0
+      ],
+      "element_type": 48,
+      "first_log_line": 629,
+      "classification": "unproved_callback_state_or_SDK_disagreement",
+      "source_group": "songs_hero_cover",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-08",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "Play",
+      "frame_points": [
+        77.66666666666667,
+        438.5,
+        36.0,
+        21.666666666666686
+      ],
+      "element_type": 48,
+      "first_log_line": 630,
+      "classification": "unproved_callback_state_or_SDK_disagreement",
+      "source_group": "songs_hero_play_chords",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-09",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "A",
+      "frame_points": [
+        259.6666666666667,
+        441.66666666666663,
+        9.333333333333314,
+        15.333333333333314
+      ],
+      "element_type": 48,
+      "first_log_line": 631,
+      "classification": "unproved_callback_state_or_SDK_disagreement",
+      "source_group": "songs_hero_play_chords",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-10",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "D",
+      "frame_points": [
+        287.0,
+        441.66666666666663,
+        9.666666666666686,
+        15.333333333333314
+      ],
+      "element_type": 48,
+      "first_log_line": 632,
+      "classification": "unproved_callback_state_or_SDK_disagreement",
+      "source_group": "songs_hero_play_chords",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-11",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "G",
+      "frame_points": [
+        314.6666666666667,
+        441.66666666666663,
+        10.0,
+        15.333333333333314
+      ],
+      "element_type": 48,
+      "first_log_line": 633,
+      "classification": "unproved_callback_state_or_SDK_disagreement",
+      "source_group": "songs_hero_play_chords",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-12",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "E7",
+      "frame_points": [
+        342.6666666666667,
+        441.66666666666663,
+        14.333333333333314,
+        15.333333333333314
+      ],
+      "element_type": 48,
+      "first_log_line": 634,
+      "classification": "unproved_callback_state_or_SDK_disagreement",
+      "source_group": "songs_hero_play_chords",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-13",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "songs.filter.all",
+      "label": "All",
+      "frame_points": [
+        20.0,
+        175.33333333333331,
+        46.0,
+        44.0
+      ],
+      "element_type": 9,
+      "first_log_line": 635,
+      "classification": "unproved_callback_state_or_SDK_disagreement",
+      "source_group": "songs_filters",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-14",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "Your songs",
+      "frame_points": [
+        104.0,
+        525.3333333333333,
+        96.33333333333331,
+        21.666666666666742
+      ],
+      "element_type": 48,
+      "first_log_line": 636,
+      "classification": "unproved_callback_state_or_SDK_disagreement",
+      "source_group": "your_songs_shelf",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-15",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "Play the songs you love",
+      "frame_points": [
+        104.0,
+        549.0,
+        92.0,
+        33.66666666666663
+      ],
+      "element_type": 48,
+      "first_log_line": 637,
+      "classification": "unproved_callback_state_or_SDK_disagreement",
+      "source_group": "your_songs_shelf",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-16",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "Add a song",
+      "frame_points": [
+        262.6666564941406,
+        545.6666870117188,
+        95.33334350585938,
+        16.66668701171875
+      ],
+      "element_type": 48,
+      "first_log_line": 638,
+      "classification": "unproved_callback_state_or_SDK_disagreement",
+      "source_group": "your_songs_shelf",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-17",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "Guitar",
+      "frame_points": [
+        74.0,
+        175.33333333333331,
+        93.33333333333331,
+        44.0
+      ],
+      "element_type": 48,
+      "first_log_line": 639,
+      "classification": "unproved_callback_state_or_SDK_disagreement",
+      "source_group": "songs_filters",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-18",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "Ukulele",
+      "frame_points": [
+        175.33333333333331,
+        175.33333333333331,
+        102.66666666666669,
+        44.0
+      ],
+      "element_type": 48,
+      "first_log_line": 640,
+      "classification": "unproved_callback_state_or_SDK_disagreement",
+      "source_group": "songs_filters",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-19",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "Bass",
+      "frame_points": [
+        286.0,
+        175.33333333333331,
+        83.66666666666663,
+        44.0
+      ],
+      "element_type": 48,
+      "first_log_line": 641,
+      "classification": "unproved_callback_state_or_SDK_disagreement",
+      "source_group": "songs_filters",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-20",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "Violin",
+      "frame_points": [
+        377.66666666666663,
+        175.33333333333331,
+        89.0,
+        44.0
+      ],
+      "element_type": 48,
+      "first_log_line": 642,
+      "classification": "baseline_viewport_or_fade_confound",
+      "source_group": "songs_filters",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-21",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "SONGS",
+      "frame_points": [
+        31.1,
+        725.6662666666666,
+        36.333333333333336,
+        10.0
+      ],
+      "element_type": 48,
+      "first_log_line": 643,
+      "classification": "unproved_callback_state_or_SDK_disagreement",
+      "source_group": "songs_shelf_covers_captions",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-22",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "Ode to",
+      "frame_points": [
+        31.1,
+        738.3598666666667,
+        85.66666666666666,
+        32.0
+      ],
+      "element_type": 48,
+      "first_log_line": 644,
+      "classification": "unproved_callback_state_or_SDK_disagreement",
+      "source_group": "songs_shelf_covers_captions",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-23",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "Joy",
+      "frame_points": [
+        31.1,
+        763.5666666666666,
+        45.99999999999999,
+        32.0
+      ],
+      "element_type": 48,
+      "first_log_line": 645,
+      "classification": "unproved_callback_state_or_SDK_disagreement",
+      "source_group": "songs_shelf_covers_captions",
+      "status": "unresolved_no_waiver",
+      "note": "Cover title is close to bottom dock boundary; match full target at callback time before measuring."
+    },
+    {
+      "id": "B6-AX-24",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "03",
+      "frame_points": [
+        44.02928,
+        669.7666666666667,
+        11.0,
+        10.333333333333258
+      ],
+      "element_type": 48,
+      "first_log_line": 646,
+      "classification": "unproved_callback_state_or_SDK_disagreement",
+      "source_group": "songs_shelf_covers_captions",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-25",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "C",
+      "frame_points": [
+        27.0,
+        821.0,
+        9.666666666666664,
+        15.333333333333258
+      ],
+      "element_type": 48,
+      "first_log_line": 647,
+      "classification": "baseline_viewport_or_fade_confound",
+      "source_group": "songs_shelf_covers_captions",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-26",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "G",
+      "frame_points": [
+        54.666666666666664,
+        821.0,
+        9.999999999999993,
+        15.333333333333258
+      ],
+      "element_type": 48,
+      "first_log_line": 648,
+      "classification": "baseline_viewport_or_fade_confound",
+      "source_group": "songs_shelf_covers_captions",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-27",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "2:07",
+      "frame_points": [
+        51.0,
+        847.8333333333333,
+        27.666666666666657,
+        15.333333333333371
+      ],
+      "element_type": 48,
+      "first_log_line": 649,
+      "classification": "baseline_viewport_or_fade_confound",
+      "source_group": "songs_shelf_covers_captions",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-28",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "+35 XP",
+      "frame_points": [
+        85.66666666666666,
+        847.6666666666666,
+        44.66666666666666,
+        15.666666666666629
+      ],
+      "element_type": 48,
+      "first_log_line": 650,
+      "classification": "baseline_viewport_or_fade_confound",
+      "source_group": "songs_shelf_covers_captions",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-29",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "Guitar",
+      "frame_points": [
+        193.1,
+        742.618066914332,
+        27.666666666666657,
+        10.666666666666629
+      ],
+      "element_type": 48,
+      "first_log_line": 651,
+      "classification": "unproved_callback_state_or_SDK_disagreement",
+      "source_group": "songs_shelf_covers_captions",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-30",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "Amazing",
+      "frame_points": [
+        193.1,
+        755.9783335809987,
+        81.33333333333334,
+        24.0
+      ],
+      "element_type": 48,
+      "first_log_line": 652,
+      "classification": "unproved_callback_state_or_SDK_disagreement",
+      "source_group": "songs_shelf_covers_captions",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-31",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "Grace",
+      "frame_points": [
+        193.1,
+        774.8966666666666,
+        55.66666666666666,
+        24.0
+      ],
+      "element_type": 48,
+      "first_log_line": 653,
+      "classification": "unproved_callback_state_or_SDK_disagreement",
+      "source_group": "songs_shelf_covers_captions",
+      "status": "unresolved_no_waiver",
+      "note": "Cover title is close to bottom dock boundary; match full target at callback time before measuring."
+    },
+    {
+      "id": "B6-AX-32",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "G",
+      "frame_points": [
+        189.0,
+        821.0,
+        10.0,
+        15.333333333333258
+      ],
+      "element_type": 48,
+      "first_log_line": 654,
+      "classification": "baseline_viewport_or_fade_confound",
+      "source_group": "songs_shelf_covers_captions",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-33",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "2:48",
+      "frame_points": [
+        213.0,
+        847.8333333333333,
+        27.666666666666657,
+        15.333333333333371
+      ],
+      "element_type": 48,
+      "first_log_line": 655,
+      "classification": "baseline_viewport_or_fade_confound",
+      "source_group": "songs_shelf_covers_captions",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-34",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "+35 XP",
+      "frame_points": [
+        247.66666666666666,
+        847.6666666666666,
+        44.66666666666666,
+        15.666666666666629
+      ],
+      "element_type": 48,
+      "first_log_line": 656,
+      "classification": "baseline_viewport_or_fade_confound",
+      "source_group": "songs_shelf_covers_captions",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-35",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "SONGS",
+      "frame_points": [
+        401.08840672810874,
+        690.3701810630095,
+        33.823186543782526,
+        9.30913391113279
+      ],
+      "element_type": 48,
+      "first_log_line": 657,
+      "classification": "baseline_viewport_or_fade_confound",
+      "source_group": "songs_shelf_covers_captions",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-36",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "Silent",
+      "frame_points": [
+        386.50409693400064,
+        702.1868232844449,
+        62.991806131998715,
+        27.617097269694
+      ],
+      "element_type": 48,
+      "first_log_line": 658,
+      "classification": "baseline_viewport_or_fade_confound",
+      "source_group": "songs_shelf_covers_captions",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-37",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "Night",
+      "frame_points": [
+        386.81440139770507,
+        723.9227113650239,
+        62.37119720458986,
+        27.617097269694
+      ],
+      "element_type": 48,
+      "first_log_line": 659,
+      "classification": "baseline_viewport_or_fade_confound",
+      "source_group": "songs_shelf_covers_captions",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-38",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "28",
+      "frame_points": [
+        371.4815875884277,
+        676.0696682840983,
+        10.240047302246126,
+        9.619438374837273
+      ],
+      "element_type": 48,
+      "first_log_line": 660,
+      "classification": "baseline_viewport_or_fade_confound",
+      "source_group": "songs_shelf_covers_captions",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-39",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "2:53",
+      "frame_points": [
+        377.9707241821289,
+        841.8343127950031,
+        25.755270487467442,
+        14.274005330403725
+      ],
+      "element_type": 48,
+      "first_log_line": 661,
+      "classification": "baseline_viewport_or_fade_confound",
+      "source_group": "songs_shelf_covers_captions",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-40",
+      "screen": "tab-3-songs",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "+5",
+      "frame_points": [
+        106.0,
+        806.6666666666666,
+        62.0,
+        44.0
+      ],
+      "element_type": 48,
+      "first_log_line": 662,
+      "classification": "baseline_viewport_or_fade_confound",
+      "source_group": "songs_shelf_covers_captions",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-41",
+      "screen": "tab-4-practice",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "7",
+      "frame_points": [
+        282.0,
+        74.0,
+        54.0,
+        44.0
+      ],
+      "element_type": 48,
+      "first_log_line": 698,
+      "classification": "unproved_callback_state_or_SDK_disagreement",
+      "source_group": "shared_streak_level",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-42",
+      "screen": "tab-4-practice",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "LV 5",
+      "frame_points": [
+        347.8333333333333,
+        85.83333333333334,
+        24.333333333333314,
+        20.33333333333333
+      ],
+      "element_type": 48,
+      "first_log_line": 699,
+      "classification": "unproved_callback_state_or_SDK_disagreement",
+      "source_group": "shared_streak_level",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-43",
+      "screen": "tab-4-practice",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "LV 5",
+      "frame_points": [
+        50.33333333333334,
+        392.66666666666663,
+        37.33333333333333,
+        28.0
+      ],
+      "element_type": 48,
+      "first_log_line": 700,
+      "classification": "unproved_callback_state_or_SDK_disagreement",
+      "source_group": "shared_streak_level",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-44",
+      "screen": "tab-4-practice",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "Challenge",
+      "frame_points": [
+        276.0,
+        638.6666666666666,
+        102.0,
+        44.0
+      ],
+      "element_type": 48,
+      "first_log_line": 701,
+      "classification": "unproved_callback_state_or_SDK_disagreement",
+      "source_group": "practice_game_cards",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-45",
+      "screen": "tab-4-practice",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "Ear training",
+      "frame_points": [
+        38.0,
+        840.3333333333333,
+        100.0,
+        21.66666666666663
+      ],
+      "element_type": 48,
+      "first_log_line": 702,
+      "classification": "baseline_viewport_or_fade_confound",
+      "source_group": "practice_game_cards",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-46",
+      "screen": "tab-4-practice",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "Hear two notes. Name the gap.",
+      "frame_points": [
+        38.0,
+        866.9999999999999,
+        187.66666666666666,
+        15.666666666666629
+      ],
+      "element_type": 48,
+      "first_log_line": 703,
+      "classification": "baseline_viewport_or_fade_confound",
+      "source_group": "practice_game_cards",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-47",
+      "screen": "tab-4-practice",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "Win a round",
+      "frame_points": [
+        72.0,
+        767.8333333333333,
+        75.33333333333331,
+        15.666666666666629
+      ],
+      "element_type": 48,
+      "first_log_line": 704,
+      "classification": "unproved_callback_state_or_SDK_disagreement",
+      "source_group": "practice_game_cards",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-48",
+      "screen": "tab-5-progress",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "Last five weeks",
+      "frame_points": [
+        38.0,
+        749.3333333333333,
+        131.0,
+        21.66666666666663
+      ],
+      "element_type": 48,
+      "first_log_line": 748,
+      "classification": "unproved_callback_state_or_SDK_disagreement",
+      "source_group": "journey_month_heading_weekdays",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-49",
+      "screen": "tab-5-progress",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "20 of 35 days",
+      "frame_points": [
+        286.00000000000006,
+        754.3333333333333,
+        78.0,
+        14.333333333333371
+      ],
+      "element_type": 48,
+      "first_log_line": 749,
+      "classification": "unproved_callback_state_or_SDK_disagreement",
+      "source_group": "journey_month_heading_weekdays",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-50",
+      "screen": "tab-5-progress",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "W",
+      "frame_points": [
+        52.21428571428572,
+        782.9999999999999,
+        13.0,
+        15.333333333333371
+      ],
+      "element_type": 48,
+      "first_log_line": 750,
+      "classification": "baseline_viewport_or_fade_confound",
+      "source_group": "journey_month_heading_weekdays",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-51",
+      "screen": "tab-5-progress",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "T",
+      "frame_points": [
+        102.4761904761905,
+        782.9999999999999,
+        7.333333333333329,
+        15.333333333333371
+      ],
+      "element_type": 48,
+      "first_log_line": 751,
+      "classification": "baseline_viewport_or_fade_confound",
+      "source_group": "journey_month_heading_weekdays",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-52",
+      "screen": "tab-5-progress",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "F",
+      "frame_points": [
+        150.0714285714286,
+        782.9999999999999,
+        7.0,
+        15.333333333333371
+      ],
+      "element_type": 48,
+      "first_log_line": 752,
+      "classification": "baseline_viewport_or_fade_confound",
+      "source_group": "journey_month_heading_weekdays",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-53",
+      "screen": "tab-5-progress",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "S",
+      "frame_points": [
+        196.83333333333337,
+        782.9999999999999,
+        8.333333333333343,
+        15.333333333333371
+      ],
+      "element_type": 48,
+      "first_log_line": 753,
+      "classification": "baseline_viewport_or_fade_confound",
+      "source_group": "journey_month_heading_weekdays",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-54",
+      "screen": "tab-5-progress",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "S",
+      "frame_points": [
+        244.26190476190482,
+        782.9999999999999,
+        8.333333333333343,
+        15.333333333333371
+      ],
+      "element_type": 48,
+      "first_log_line": 754,
+      "classification": "baseline_viewport_or_fade_confound",
+      "source_group": "journey_month_heading_weekdays",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-55",
+      "screen": "tab-5-progress",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "M",
+      "frame_points": [
+        290.02380952380963,
+        782.9999999999999,
+        11.666666666666686,
+        15.333333333333371
+      ],
+      "element_type": 48,
+      "first_log_line": 755,
+      "classification": "baseline_viewport_or_fade_confound",
+      "source_group": "journey_month_heading_weekdays",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-56",
+      "screen": "tab-5-progress",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "T",
+      "frame_points": [
+        339.6190476190477,
+        782.9999999999999,
+        7.333333333333314,
+        15.333333333333371
+      ],
+      "element_type": 48,
+      "first_log_line": 756,
+      "classification": "baseline_viewport_or_fade_confound",
+      "source_group": "journey_month_heading_weekdays",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-57",
+      "screen": "tab-5-progress",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "Tune up",
+      "frame_points": [
+        78.00000000000006,
+        389.0,
+        113.0,
+        44.0
+      ],
+      "element_type": 48,
+      "first_log_line": 757,
+      "classification": "unproved_callback_state_or_SDK_disagreement",
+      "source_group": "coach_action",
+      "status": "unresolved_no_waiver"
+    },
+    {
+      "id": "B6-AX-58",
+      "screen": "settings",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "Note names",
+      "frame_points": [
+        70.0,
+        713.3333333333333,
+        91.66666666666666,
+        20.33333333333337
+      ],
+      "element_type": 48,
+      "first_log_line": 1157,
+      "classification": "baseline_target_geometry_mismatch",
+      "source_group": "settings_row_label",
+      "status": "unresolved_no_waiver",
+      "note": "Initial raw Note names text is roughly70pt above reported713pt target; reported region overlaps later Capo row. The initial still is not the same-target callback state."
+    },
+    {
+      "id": "B6-AX-59",
+      "screen": "paywall",
+      "kind": "contrast",
+      "element_id": "-",
+      "label": "SAVE 58%",
+      "frame_points": [
+        291.6666666666667,
+        386.3333333333333,
+        69.33333333333331,
+        15.333333333333314
+      ],
+      "element_type": 48,
+      "first_log_line": 1199,
+      "classification": "unproved_callback_state_or_SDK_disagreement",
+      "source_group": "paywall_offer_badge",
+      "status": "unresolved_no_waiver"
+    }
+  ],
+  "incomplete_audits": [
+    {
+      "id": "B6-AX-60",
+      "screen": "tab-3-songs",
+      "kind": "Dynamic Type",
+      "log_line": 621,
+      "evidence": "Combined audit timed out, then all3 isolated attempts timed out.",
+      "status": "unresolved_audit_did_not_complete",
+      "action": "Obtain a completed exact-revision audit; inspect new callback captures and current screen state/performance. Do not drop the kind, suppress the timeout or claim this screen passed."
+    },
+    {
+      "id": "B6-AX-61",
+      "screen": "tab-3-songs",
+      "kind": "clipped text",
+      "log_line": 622,
+      "evidence": "All3 isolated attempts timed out after combined failure.",
+      "status": "unresolved_audit_did_not_complete",
+      "action": "Complete the actual kind with current content. Use timing/state evidence to diagnose workload; no threshold relaxation or blanket waiver."
+    }
+  ],
+  "baseline_report_timing": "All screenshots are initial pre-audit stills. Manifest timestamp gaps below are screenshot-to-final-report-attachment creation, NOT exact callback delays; no per-issue callback timestamp exists in these inputs. Songs374.913s and Paywall87.17s especially prevent relying on those stills as current callback evidence.",
+  "audit_reports": {
+    "settings": {
+      "report": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-b6efd36\\screenshots\\2523A07D-B169-4E68-B88C-3FBD02034753.txt",
+      "report_sha256": "8ca58c4aa4e7eb5dee328fa1127f6d3083c81760aa2b5e4a72125fc04f34466d",
+      "baseline_png": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-b6efd36\\named\\screenshots\\ax-audit-settings.png",
+      "baseline_sha256": "0c61e28164e7ed426b5ee196edd882ed30dd457d09eae3c7ebe02af4e2dc6bff",
+      "baseline_timestamp": 1793068952.289,
+      "report_timestamp": 1793068966.531,
+      "baseline_to_report_seconds": 14.242,
+      "reported_lines": 9,
+      "enforced_count": 1
+    },
+    "tab-2-learn": {
+      "report": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-b6efd36\\screenshots\\2945E15E-42C1-43A1-AA32-5C2CC9845443.txt",
+      "report_sha256": "e8fd6f6ba368450a49e011a76d1ef8cdd1f1dbb6d3a0d8dcd068ebb29921cc43",
+      "baseline_png": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-b6efd36\\named\\screenshots\\ax-audit-tab-2-learn.png",
+      "baseline_sha256": "2c76997bccf24295c9bcb9417ee6f147941b3eea625e687c7199e598aa945cd2",
+      "baseline_timestamp": 1793068191.394,
+      "report_timestamp": 1793068201.339,
+      "baseline_to_report_seconds": 9.945,
+      "reported_lines": 10,
+      "enforced_count": 0
+    },
+    "tab-4-practice": {
+      "report": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-b6efd36\\screenshots\\3DC1FA3E-8BC6-41BB-8736-DFC7369108BA.txt",
+      "report_sha256": "5dbc26b0ff12c670e12da9ebfaa7ea0a40994bce8e2e8c43c6b6f8f540b7b703",
+      "baseline_png": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-b6efd36\\named\\screenshots\\ax-audit-tab-4-practice.png",
+      "baseline_sha256": "ab7437fc02a6f587fcfc6b48575c0b086d651d26108ee767cae72d208c0543b1",
+      "baseline_timestamp": 1793068650.059,
+      "report_timestamp": 1793068666.93,
+      "baseline_to_report_seconds": 16.871,
+      "reported_lines": 10,
+      "enforced_count": 7
+    },
+    "lesson-explain": {
+      "report": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-b6efd36\\screenshots\\496C2ED1-0C8F-4892-B251-D7FFD4EA90E9.txt",
+      "report_sha256": "87a69ffab1e358cfb1b6f719b0f3317d1a7c180439b9549e898d40fc6843b014",
+      "baseline_png": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-b6efd36\\named\\screenshots\\ax-audit-lesson-explain.png",
+      "baseline_sha256": "6c1f8102e7284738eac44d8aa276122f017744706554358569c68905e9ca225a",
+      "baseline_timestamp": 1793068770.53,
+      "report_timestamp": 1793068777.153,
+      "baseline_to_report_seconds": 6.623,
+      "reported_lines": 3,
+      "enforced_count": 0
+    },
+    "paywall": {
+      "report": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-b6efd36\\screenshots\\5EB94E58-6D2C-488B-A4A3-E8E355B832E0.txt",
+      "report_sha256": "4332b909cf96d4372a336bdbef38b17b87f106efaf34ea095a6d327e607943a4",
+      "baseline_png": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-b6efd36\\named\\screenshots\\ax-audit-paywall.png",
+      "baseline_sha256": "1a2e28d0cd59391ee9147f48681c03478db1912db50dca8d0c7dbd5923247302",
+      "baseline_timestamp": 1793068977.496,
+      "report_timestamp": 1793069064.666,
+      "baseline_to_report_seconds": 87.17,
+      "reported_lines": 21,
+      "enforced_count": 1
+    },
+    "tab-5-progress": {
+      "report": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-b6efd36\\screenshots\\6B11BCCF-0F98-4D0B-A375-88CCE145BFF5.txt",
+      "report_sha256": "46281fab6dc4774742403ef38705bee33f6acbc1134af5cc5a4c1b4de5428e30",
+      "baseline_png": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-b6efd36\\named\\screenshots\\ax-audit-tab-5-progress.png",
+      "baseline_sha256": "886bde8b34d112811651c4d4e1d2ddaf056b29c28d0ce2eee5a08fa731969e99",
+      "baseline_timestamp": 1793068700.024,
+      "report_timestamp": 1793068713.108,
+      "baseline_to_report_seconds": 13.084,
+      "reported_lines": 13,
+      "enforced_count": 10
+    },
+    "metronome": {
+      "report": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-b6efd36\\screenshots\\747BD5E6-C2AA-4346-B0C7-9D05CCC1657B.txt",
+      "report_sha256": "ac717bcad15c64e4eda4f5fbaff9f845ac6b37136c49cf32da79f8bcbdd8038b",
+      "baseline_png": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-b6efd36\\named\\screenshots\\ax-audit-metronome.png",
+      "baseline_sha256": "7a027b1be5f0091fbf94e9f2826055ddda1e77e9e3ae373def4bb85dfd7c266d",
+      "baseline_timestamp": 1793068918.496,
+      "report_timestamp": 1793068929.479,
+      "baseline_to_report_seconds": 10.983,
+      "reported_lines": 30,
+      "enforced_count": 0
+    },
+    "lesson-along-ready": {
+      "report": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-b6efd36\\screenshots\\7FF716D1-4336-4F6C-99C5-2AA52E41DD40.txt",
+      "report_sha256": "d10fcd157a42daf06838311edf40b82546cd86e499b048c944caa7ae385137b7",
+      "baseline_png": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-b6efd36\\named\\screenshots\\ax-audit-lesson-along-ready.png",
+      "baseline_sha256": "0ccd123f8d495dedb9f8999626a43f151e37f8c7a538ecbd351da7bc6fc85211",
+      "baseline_timestamp": 1793068857.889,
+      "report_timestamp": 1793068868.668,
+      "baseline_to_report_seconds": 10.779,
+      "reported_lines": 7,
+      "enforced_count": 0
+    },
+    "lesson-notes": {
+      "report": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-b6efd36\\screenshots\\87961173-E142-46EB-8124-5333C0C01E30.txt",
+      "report_sha256": "104b081a9630fff4771579105ceb99a016ab4b4f09f48df1f61449dcebfef397",
+      "baseline_png": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-b6efd36\\named\\screenshots\\ax-audit-lesson-notes.png",
+      "baseline_sha256": "79ef3b57ffc1612f5612b3b38a2d8224810556eeb030d7874bf53572f702724a",
+      "baseline_timestamp": 1793068815.726,
+      "report_timestamp": 1793068823.45,
+      "baseline_to_report_seconds": 7.724,
+      "reported_lines": 4,
+      "enforced_count": 0
+    },
+    "lesson-tunecheck": {
+      "report": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-b6efd36\\screenshots\\B2CB3758-EFBB-4B75-8C06-3496DBF7ADE2.txt",
+      "report_sha256": "b03619ebb59b00dc024a6d4490eeb1651172d6bba8b782cb6e9cd701e5b8bd64",
+      "baseline_png": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-b6efd36\\named\\screenshots\\ax-audit-lesson-tunecheck.png",
+      "baseline_sha256": "8f70aa3f0ac2e5c9f7fa967d876b3df8ccd7a621faf2a064aabb245ef709d8f2",
+      "baseline_timestamp": 1793068790.691,
+      "report_timestamp": 1793068805.113,
+      "baseline_to_report_seconds": 14.422,
+      "reported_lines": 17,
+      "enforced_count": 0
+    },
+    "tab-3-songs": {
+      "report": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-b6efd36\\screenshots\\CA57C005-B5A4-4EEA-A5A7-95423CB46A1E.txt",
+      "report_sha256": "53c13a1c76946150a793019c7be587dc7a325d8b008bb33b19351d8ddf7e5681",
+      "baseline_png": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-b6efd36\\named\\screenshots\\ax-audit-tab-3-songs.png",
+      "baseline_sha256": "fbf5bf07c0cb7112905dfdd5dbb59b50b0a6a4dfb70e7c16b8aa6aa8f517b6f8",
+      "baseline_timestamp": 1793068237.141,
+      "report_timestamp": 1793068612.054,
+      "baseline_to_report_seconds": 374.913,
+      "reported_lines": 52,
+      "enforced_count": 40
+    },
+    "welcome": {
+      "report": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-b6efd36\\screenshots\\E1091CE2-F74F-4E7D-9080-211CE3AC4D76.txt",
+      "report_sha256": "e98eefe120fb533be5d36763848ba626d00186b1cc476a5923065faaa841a7fd",
+      "baseline_png": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-b6efd36\\named\\screenshots\\ax-audit-welcome.png",
+      "baseline_sha256": "b4ba207979ac026e0f1e663a3a4bee6af53d7b11a1fc33640296b7125b4d2763",
+      "baseline_timestamp": 1793069083.373,
+      "report_timestamp": 1793069092.808,
+      "baseline_to_report_seconds": 9.435,
+      "reported_lines": 12,
+      "enforced_count": 0
+    },
+    "tab-1-tune": {
+      "report": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-b6efd36\\screenshots\\E9A4B26A-D39A-4F6D-8887-DBC166136F84.txt",
+      "report_sha256": "2364f5be2c043e3ad5d63caa529351a241adf36927038f7593946a40f5fd1221",
+      "baseline_png": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-b6efd36\\named\\screenshots\\ax-audit-tab-1-tune.png",
+      "baseline_sha256": "1200e800e0cc9cac54cc016567a3822a0c03de28f2ee917a7381a8e7271c230e",
+      "baseline_timestamp": 1793068097.601,
+      "report_timestamp": 1793068158.779,
+      "baseline_to_report_seconds": 61.178,
+      "reported_lines": 59,
+      "enforced_count": 0
+    }
+  },
+  "source_groups": {
+    "songs_header_controls": [
+      "ios/Timbre/Design/Components.swift:173",
+      "ios/Timbre/Design/GameUI.swift:37",
+      "ios/Timbre/Design/GameUI.swift:119"
+    ],
+    "songs_hero_cover": [
+      "ios/Timbre/Songs/SongCover.swift:1157",
+      "ios/Timbre/Songs/SongCover.swift:1213"
+    ],
+    "songs_hero_play_chords": [
+      "ios/Timbre/Songs/SongsView.swift:782",
+      "ios/Timbre/Songs/SongsView.swift:887"
+    ],
+    "songs_filters": [
+      "ios/Timbre/Songs/SongsView.swift",
+      "ios/Timbre/Design/EdgeFade.swift"
+    ],
+    "your_songs_shelf": [
+      "ios/Timbre/YourSongs/YourSongsShelf.swift"
+    ],
+    "songs_shelf_covers_captions": [
+      "ios/Timbre/Songs/SongCover.swift:1213",
+      "ios/Timbre/Songs/SongsView.swift:1037"
+    ],
+    "shared_streak_level": [
+      "ios/Timbre/Design/GameUI.swift:37",
+      "ios/Timbre/Design/GameUI.swift:119"
+    ],
+    "practice_game_cards": [
+      "ios/Timbre/Practice/PlayHubGames.swift:191",
+      "ios/Timbre/Practice/PlayHubGames.swift:311",
+      "ios/Timbre/Practice/PlayHubGames.swift:438"
+    ],
+    "journey_month_heading_weekdays": [
+      "ios/Timbre/Journey/JourneyView.swift:295",
+      "ios/Timbre/Journey/JourneyView.swift:330"
+    ],
+    "coach_action": [
+      "ios/Timbre/Journey/CoachCard.swift:46"
+    ],
+    "settings_row_label": [
+      "ios/Timbre/Settings/SettingsView.swift:582",
+      "ios/Timbre/Settings/SettingsView.swift:645"
+    ],
+    "paywall_offer_badge": [
+      "ios/Timbre/Paywall/PaywallView.swift:1584"
+    ]
+  },
+  "source_pair_calculations_only": {
+    "method": "WCAG sRGB relative luminance formula applied to declared token endpoints. Not screenshot sampling, not actual composited callback ratios and never waiver evidence.",
+    "ink_on_stageRaised": 16.779,
+    "inkSoft_on_surface": 7.377,
+    "inkFaint_on_surface": 5.479,
+    "onGold_on_goldDeep": 7.882,
+    "onGold_on_goldLight": 12.891,
+    "onAccent_on_mint": 13.314
+  },
+  "safe_product_fixes_supported_by_current_evidence": [],
+  "specific_observations": [
+    "Actual five failing-screen raw PNGs inspected. Header/body/primary button/offer text appears readable in baseline; no callback-time low-contrast pixels are demonstrated. Source alone does not prove a pass.",
+    "Offscreen/faded candidates include Songs Violin/Silent Night peeking at horizontal edge and lower C/G/time/XP labels, Practice lower Ear training content and Progress weekdays behind the tab dock. Fully visible same-target evidence is required before product changes.",
+    "Settings initial Note names remains readable but does not occupy the reported callback bounds. Paywall SAVE58% is dark-on-gold in initial PNG, yet its callback happened during a later audit state not preserved here.",
+    "SongCover already accessibilityHidden because it is decorative; visual audit can still report its rendered text. Adding more semantic hiding would not establish a contrast correction.",
+    "Preexisting known contrast exceptions remain unchanged. Reported zero-enforced counts on other8 screens mean only this run/policy result; not all49 or universal accessibility acceptance."
+  ],
+  "additional_report_entries": {
+    "Dynamic_Type_reported_entries": 101,
+    "clipped_text_reported_entries": 22,
+    "element_detection_reported_entries": 4,
+    "known_contrast_reported_entries": 23,
+    "limits": "These informational/preexisting-known entries are preserved in hashed raw reports; they are not newly waived or all adjudicated by this enforced-failure triage."
+  },
+  "next_required_evidence": [
+    "Wait for the PR callback-screenshot run; pair each failing line with its new ax-failure-screen-index image, exact bounds, timestamp/state and revision. Preserve all original failures.",
+    "For viewport/fade targets, capture actual issue state then rerun the same target wholly above dock/within horizontal viewport at unchanged font/appearance; prove it is reachable and measure actual core foreground/background pixels there.",
+    "If a fully visible callback image shows genuine low contrast, fix only that demonstrated component/pair and rerun its original audit. If measured pixels pass but SDK still fails, retain original issue and isolate a minimal fresh-process single-kind reproduction before proposing a bounded disposition.",
+    "Diagnose Songs combined/isolated timeouts with fresh per-kind execution/timing and retained state. A source-only audit, partial run or passing baseline screenshot cannot close them.",
+    "Keep full-language layout/VoiceOver/hardware/media requirements separate; current inputs are one English audit on iPhone17Pro."
+  ],
+  "input_sha256": {
+    "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-b6efd36-final.log": "d4dc42898c0aca7b7a604cedd7e97af27e26bde041fea3489405bd4749eb7d7b",
+    "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-b6efd36\\screenshots\\manifest.json": "ea61686ca862c4ac41270900bb300de40a676c0e687e6d5a0612a4d6cbd5612c",
+    "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-b6efd36\\named\\index.json": "096fa6c44ca99146c5f4c3a0dd661bbcfd7045b8b9c9ab52cc5e7632b431e1fa"
+  },
+  "reviewed_source_sha256": {
+    "ios/Timbre/Design/Theme.swift": "caf1d87434c49d1af6bfb0f42e0bdbba92d77e07b8671a7f087b87b759debbc4",
+    "ios/Timbre/Design/Components.swift": "aed4ceeb6bc888cda01f5a119941491364937cde09386ba9f390fd6d04c36eb0",
+    "ios/Timbre/Design/GameUI.swift": "82b0cd8c3b09d10bf2a680373be76e21496d44a53960bdc493d39650ebfec98b",
+    "ios/Timbre/Design/EdgeFade.swift": "27d3c89df0e85a36e01a498b349c770766feed2fad241bccf1251c66c90a162a",
+    "ios/Timbre/Songs/SongsView.swift": "8bc9d66086b76ea1745d27ac9c5852d9b9fea4e5319d79dd2c4e7a30ea670796",
+    "ios/Timbre/Songs/SongCover.swift": "8a9fb42a4cd80dbb3e7b3f39f381d7d3a85016f6fdb5cf1633dfceef642a2238",
+    "ios/Timbre/YourSongs/YourSongsShelf.swift": "68a84d4d9e502567533f05371ab3555a8f24895b4c18f102d2239757ddb73589",
+    "ios/Timbre/Practice/PlayHubGames.swift": "ce3eecadf7688ccca47c4f66ac245e438d1e3b630ee817daaaa8cda581d80533",
+    "ios/Timbre/Journey/JourneyView.swift": "003e5d1aab08d6a885dadfb8fc85fdfd250795fabe73d066ed2e6e983ea4edac",
+    "ios/Timbre/Journey/CoachCard.swift": "82eec95bf39e88a00c9a79f90bc8b6dc339262c496f2de5fc690d266995dd43b",
+    "ios/Timbre/Settings/SettingsView.swift": "14a600250a7ad864868440049733a645e1f251d76d11c24f65abdb1f068d6117",
+    "ios/Timbre/Paywall/PaywallView.swift": "aff644fcad9d59d7e9a6bec28d44ed69342cb9de1239ec100f57b62dc34a051b",
+    "ios/TimbreUITests/AccessibilityAuditUITests.swift": "29044a20865dfa1b1d3557c46f9edd0c18ff0337af9559eda75993cb376f1ae3"
+  },
+  "verification": "59 log findings independently deduplicated and reconciled against13 report totals. All13 named audit PNGs byte-match original exported attachments; five failing-screen raw PNGs and selected raw crops visually inspected. No local native execution.",
+  "qa_derivatives": "Clearly labeled QA-ONLY crops in C:/Users/shahr/Desktop/Translation/native-qa/qa-accessibility-b6; originals unchanged.",
+  "mutations": "Only this triage receipt and QA derivative crops outside git created. No code, known exceptions, thresholds or original receipts changed."
+}

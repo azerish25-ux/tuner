@@ -1,0 +1,1211 @@
+{
+  "recorded_at_utc": "2026-10-27T03:28:35.617938+00:00",
+  "reviewer": "Codex root",
+  "run_id": 40440109281,
+  "job_id": 121978169245,
+  "artifact_id": 12706598588,
+  "source_revision": "d292f88c3439e3e09f751f9a15e57c1b8f720bbc",
+  "manifest_sha256": "ab8fa1333281b480e303c4b64c055d5e610dd5e81d52a2daadce28543c7eb770",
+  "capture_tool_sha256": "3b1f9e1ba54ea6e65c9234e53b5875473488bb1d97621d50b849722de0aba329",
+  "native_images": 98,
+  "app_languages": 49,
+  "store_locale_mappings": 50,
+  "format": "png",
+  "all_dimensions": [
+    416,
+    496
+  ],
+  "all_images_opaque_RGB_without_alpha": true,
+  "launch_attempts": 100,
+  "failed_launch_attempts_retained": 2,
+  "mechanical_verification": "Each original PNG CRC/decode/opacity/hash, before/after probe identity and freshness, exact applied labels, source tool hash, native capability evidence,49x2 coverage and50 locale mappings independently rechecked on downloaded bytes. Hosted capture also completed native sips decode.",
+  "visual_review": {
+    "method": "All98 original-size images viewed on seven clearly labeled unscaled QA contact boards; original French,Bulgarian,Greek,Lithuanian,Latvian andKannada Today images directly rechecked to exclude apparent board-edge clipping.",
+    "finding": "No new obvious tofu, malformed script joining, overlap, ellipsis or clipped hero/status/metronome controls demonstrated in this standard-size sample. Today is vertically scrollable; the activity list continues below the captured viewport.",
+    "acceptance_scope": "These98 captured Today/metronome states only. Not a native-speaker fluency certificate, all-screen audit or hardware haptic pass."
+  },
+  "remaining": [
+    "No genuine system complication-face capture claimed; separate optional media.",
+    "Physical watch haptics, wrist-down behavior, sync and device audio remain unrun.",
+    "Regional system formatting/chrome outside the controlled app-language contract is not certified.",
+    "Full iPhone/iPad listing sets and remaining native gates are separate."
+  ],
+  "frames": [
+    {
+      "language": "en",
+      "page": "today",
+      "file": "en/today.png",
+      "sha256": "b1669e8a1a89f7637278ec058655e04fd6c1baabfe044784d1d26f17b7d61089",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "en",
+      "page": "metronome",
+      "file": "en/metronome.png",
+      "sha256": "d84619662d876b3f8e5cac0a48cb10065a56e35d71082c6691270d04a439067f",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "ar",
+      "page": "today",
+      "file": "ar/today.png",
+      "sha256": "913df9a91de3b6b36a296fd0d1dcd0606720c3e32671bb8a41e2529af17ff110",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "ar",
+      "page": "metronome",
+      "file": "ar/metronome.png",
+      "sha256": "8a1c83444dfa26bebb6ec7793dd6b911c48380f6375929182233c24b105a6345",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "bg",
+      "page": "today",
+      "file": "bg/today.png",
+      "sha256": "ec531352b6110507514bfb4ad9243f0c2c8b5c922becb6c961cc7dcfe08661b3",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "bg",
+      "page": "metronome",
+      "file": "bg/metronome.png",
+      "sha256": "a0db2db215c4bcf5da0eb7d7ccf4dd3e47d670a4983c3ee85c93009ca5df36fd",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "bn",
+      "page": "today",
+      "file": "bn/today.png",
+      "sha256": "3beda47c59cf957dd407a14e962be72649993a35914f10dde296e10056b0ee3d",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "bn",
+      "page": "metronome",
+      "file": "bn/metronome.png",
+      "sha256": "9088b8e67f7ee09f82dfbaa43ea5043c735784b304af428e889d9c9f8c517d7d",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "ca",
+      "page": "today",
+      "file": "ca/today.png",
+      "sha256": "014e36f4a3f124b32743d758f10f5013c2601a8ff185218170f14b9196a00384",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "ca",
+      "page": "metronome",
+      "file": "ca/metronome.png",
+      "sha256": "95fe32f7726e2b570da4b87491b463e15cf17e224e73d4c841c073d1036a14b3",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "cs",
+      "page": "today",
+      "file": "cs/today.png",
+      "sha256": "0a8237be45ec9279cb4a1cd602cdb2eb882036f938c56893392ae223be7c79e8",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "cs",
+      "page": "metronome",
+      "file": "cs/metronome.png",
+      "sha256": "1d50139a5b6bc3be1df43b88525321f0c5ecfa8e7c99b971b24116bc9ed09c5d",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "da",
+      "page": "today",
+      "file": "da/today.png",
+      "sha256": "006036aa91960fdeec40c932f98e9d98394f98718c35bd0681402fd1f21de024",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "da",
+      "page": "metronome",
+      "file": "da/metronome.png",
+      "sha256": "cdcd97769d7d13cf0b04092750a97bc5b7dc1ddd8fcc6251192c096edea8ac51",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "de",
+      "page": "today",
+      "file": "de/today.png",
+      "sha256": "adcceaed58affa783463e659d030f0f3eaa8b216017c7f77db5bdb85bb580143",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "de",
+      "page": "metronome",
+      "file": "de/metronome.png",
+      "sha256": "1ddf35c733c5f155d89d57766451ac68550bc5c2519c29234bec4bc99aa72d96",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "el",
+      "page": "today",
+      "file": "el/today.png",
+      "sha256": "b3b9a834db8d76c6b602db3a9bd1d21f2ffef7ffbce46ba7a79356536a32a472",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "el",
+      "page": "metronome",
+      "file": "el/metronome.png",
+      "sha256": "ab72dd6d1898c842d74364a8765830634b122735811ffb1bc6c56c8b722c415b",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "es",
+      "page": "today",
+      "file": "es/today.png",
+      "sha256": "d0f3462e684fe94c8ddc5839f80d3d3959c4f4a539e95b80e23e3c279b16b89a",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "es",
+      "page": "metronome",
+      "file": "es/metronome.png",
+      "sha256": "2123cfb53e1c9ac38620434bd4dab9d3f90b358fdde7de812ca20aed26a97b09",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "et",
+      "page": "today",
+      "file": "et/today.png",
+      "sha256": "3356269398d9b7ad3f1e7a07dc6c097b97b861a3b60640fe83ce3e25f6033d6f",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "et",
+      "page": "metronome",
+      "file": "et/metronome.png",
+      "sha256": "4cd31335040ee993ac25123a56d6cdd27312dedf6f73e05d43cedf25f5e46ba8",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "fa",
+      "page": "today",
+      "file": "fa/today.png",
+      "sha256": "c2a41933524b927e7cefd09e077fbc47328b3be52ff7282de1c5f2d19198b490",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "fa",
+      "page": "metronome",
+      "file": "fa/metronome.png",
+      "sha256": "3f34057bba258bd73b660f7dcac3b9770341c435e1c04bec96a5bc3b52ac0af9",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "fi",
+      "page": "today",
+      "file": "fi/today.png",
+      "sha256": "f1b6544cd6c6e7fc60745d930cbb879a28954662b12d0246aa7d0721605bde28",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "fi",
+      "page": "metronome",
+      "file": "fi/metronome.png",
+      "sha256": "c70e5d45277ea76fec7695314a4fc8c289d4b4c2d8b383b38de73a1a63a7ba8c",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "fr",
+      "page": "today",
+      "file": "fr/today.png",
+      "sha256": "7c97f5f428aee7e23f4d7ca73539e77bad36586c875697acc85501646492df71",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "fr",
+      "page": "metronome",
+      "file": "fr/metronome.png",
+      "sha256": "bbe6dfa88211c2c2ce581e909042678863a29bb748b3719a3fa42be74146cf78",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "gu",
+      "page": "today",
+      "file": "gu/today.png",
+      "sha256": "226ac2b50473f56ba2b0af4f3f26bc4111b614efc0453b799945116e2c9503e8",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "gu",
+      "page": "metronome",
+      "file": "gu/metronome.png",
+      "sha256": "8d1c63736b6ecba319055e02d9071fb4a7f96c5f9df5b3c6ca791340a9d17dad",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "he",
+      "page": "today",
+      "file": "he/today.png",
+      "sha256": "c1d9159f13d3426314c54c363fd61a648d6962aaba075ca5bd2862d8dd9fb565",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "he",
+      "page": "metronome",
+      "file": "he/metronome.png",
+      "sha256": "87c2090eb7499abeb6789369d89ba796f28df57922bc4e8efe901de9bfb0bb3d",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "hi",
+      "page": "today",
+      "file": "hi/today.png",
+      "sha256": "3aa3ba953cc7417ee1fa3c96f1ec47c8e411eeda3dc225cb7497ee0e7d7bf343",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "hi",
+      "page": "metronome",
+      "file": "hi/metronome.png",
+      "sha256": "6f23d60990711c3e3b50b69b654c8e6dd5cb55f12f7bdbd5a4c0a39bd604abba",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "hr",
+      "page": "today",
+      "file": "hr/today.png",
+      "sha256": "c606054a57b144af9828e1b29d98d5f43d21a9c3f482480a58f0e88824053fc3",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "hr",
+      "page": "metronome",
+      "file": "hr/metronome.png",
+      "sha256": "b7b564aec90be30513efbcb196809b4a0d27a4871e7b846bccf821bbd6cb4126",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "hu",
+      "page": "today",
+      "file": "hu/today.png",
+      "sha256": "718cb81f7c2833edebfaf18d29a03c19cfea5a2f823168ed4098a8f89d3d74cf",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "hu",
+      "page": "metronome",
+      "file": "hu/metronome.png",
+      "sha256": "cd8239cee9c2b97e6f49ef6983d2e91f37e68d3ff82ede5bcf1fed27c6665f51",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "id",
+      "page": "today",
+      "file": "id/today.png",
+      "sha256": "3909e95c08f4861c329189e5b1371ed6206c533e9380b41ad87948f96426718e",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "id",
+      "page": "metronome",
+      "file": "id/metronome.png",
+      "sha256": "ac202552631102849507caf32eb4467563cce060bb1ba0f2c16d3d978298cbab",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "is",
+      "page": "today",
+      "file": "is/today.png",
+      "sha256": "ee8060618c5730adfb13dca21624a3a32281f0059c1c8ee9925c0c3f023d6277",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "is",
+      "page": "metronome",
+      "file": "is/metronome.png",
+      "sha256": "32ea2b2e7ea6c48f5586964dcca2ae24c1c0c7fe1b9dbb9d79cdf734ae8eab3b",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "it",
+      "page": "today",
+      "file": "it/today.png",
+      "sha256": "02dce0af3084420e07a68e8a2b82fe4f3e9fb494a29c52a253fc3f6799d129e5",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "it",
+      "page": "metronome",
+      "file": "it/metronome.png",
+      "sha256": "3d9fad4b60081091340d253e87e8ec02aca99709dba6f9a37d24344e02638570",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "ja",
+      "page": "today",
+      "file": "ja/today.png",
+      "sha256": "82d997832e213b49945150ca374516dbc4308d328f81ad38af01178e3a41a17f",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "ja",
+      "page": "metronome",
+      "file": "ja/metronome.png",
+      "sha256": "b48da736a08855d79f864fc58dd659bcd674058ebcebb9e4030d7da8456348c9",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "kn",
+      "page": "today",
+      "file": "kn/today.png",
+      "sha256": "9368860c1ba38fbf8a975da5dd5224cd1d6496ea22d61c8d701afdcd1d012a54",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "kn",
+      "page": "metronome",
+      "file": "kn/metronome.png",
+      "sha256": "efa879ce62c41c7e0bfa54b0ce50b005518be39152fb1b002da873b3a5627fb8",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "ko",
+      "page": "today",
+      "file": "ko/today.png",
+      "sha256": "52b1cfae7faef53d650134ae360d5d63da4160dbb3cbe3964d1bc88dbdfafa9e",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "ko",
+      "page": "metronome",
+      "file": "ko/metronome.png",
+      "sha256": "b6ebb0fbb2bcbaff24431846440edb9ea34f304bd234167a6f3c562a38a3ef72",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "lt",
+      "page": "today",
+      "file": "lt/today.png",
+      "sha256": "6a740909eb47f0f67b4a2aa84d6f39a1f25abec4a3fa5357cb3a335701a9d6d1",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "lt",
+      "page": "metronome",
+      "file": "lt/metronome.png",
+      "sha256": "18a0e04b89e1fc7b135f950c8a04485342dc8c2fc4f29ddcc7196cdd4211139b",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "lv",
+      "page": "today",
+      "file": "lv/today.png",
+      "sha256": "a051324c9d32b16d172e24c9e83d20090444627a69599bda0074dd27124f9bed",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "lv",
+      "page": "metronome",
+      "file": "lv/metronome.png",
+      "sha256": "6610c41910366ffec4af0bf4ee80ac279e6e578e5127801c960a75b23582b8d2",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "ml",
+      "page": "today",
+      "file": "ml/today.png",
+      "sha256": "3573737d34036c1a3f490909efe28f99ae14e99c6bf8f80a2acba65b5422b3c8",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "ml",
+      "page": "metronome",
+      "file": "ml/metronome.png",
+      "sha256": "0369dc997d4af282bab009f2862eadb8ab6a1655dc748388b87eebc4ce63c61f",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "mr",
+      "page": "today",
+      "file": "mr/today.png",
+      "sha256": "5ee1e07920df5207c3c6beadcf1cbd924b51f242688d611bb3dc06f584f64757",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "mr",
+      "page": "metronome",
+      "file": "mr/metronome.png",
+      "sha256": "a3e5651fe7a5424ceb363dc32bd9f6fc788f3d700d0a0bc09ea98ad042638d1c",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "nl",
+      "page": "today",
+      "file": "nl/today.png",
+      "sha256": "f8b7846626235abbb2350894d736cc2ebcec57a2b0a6f6f0929e1d22d52f8caa",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "nl",
+      "page": "metronome",
+      "file": "nl/metronome.png",
+      "sha256": "92e4f4f7bd8d23e37f47307c6f35bebeed6e8de51fe9b289e185a02653221832",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "no",
+      "page": "today",
+      "file": "no/today.png",
+      "sha256": "fb0cf162e5f9c3b0a19fba82ea2453feaf1d88398fdf77de02af6a1409e1d5e2",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "no",
+      "page": "metronome",
+      "file": "no/metronome.png",
+      "sha256": "d0e5480db45c8779038b4959305531a8685e6606d4ed4ea7a32c6e8af7b0c9d2",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "pa",
+      "page": "today",
+      "file": "pa/today.png",
+      "sha256": "17aac16aad9273bbef4f292d4457fe9188d1d008e22a872160aba1ae874937db",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "pa",
+      "page": "metronome",
+      "file": "pa/metronome.png",
+      "sha256": "cc99043dd885c1c5f6a6fc667df3839899aeed59b2746fad011e3624f95e0f3c",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "pl",
+      "page": "today",
+      "file": "pl/today.png",
+      "sha256": "18d4f7588fa021ccd0c960865f354771a6bca8931bccf990e44c8c3ebb942c95",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "pl",
+      "page": "metronome",
+      "file": "pl/metronome.png",
+      "sha256": "4726fbb5660fd1d9d397024eb3c988b429ae931548d541661dd95b24d4434af8",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "pt",
+      "page": "today",
+      "file": "pt/today.png",
+      "sha256": "4eb8eb828356c7687b111f79cf94f79b63ddf719bd5906329c0d463937f74af9",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "pt",
+      "page": "metronome",
+      "file": "pt/metronome.png",
+      "sha256": "3b7e4e7a48ff070d6b2af6ffdda481adb826d32ac5796bc8f50b2d6a80d4e109",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "ro",
+      "page": "today",
+      "file": "ro/today.png",
+      "sha256": "0c471f33729fbdbb0c51fd47fd411a2342a8bbb98dbdefaeb2f6a68793e93648",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "ro",
+      "page": "metronome",
+      "file": "ro/metronome.png",
+      "sha256": "d6555642b8f17d997da5ce19ad68960b2aec2b570e19d31d69e47138c71843e3",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "ru",
+      "page": "today",
+      "file": "ru/today.png",
+      "sha256": "80b0f918824f06807432603755c2eaaf90c8343714aef6087b41c4dadc791f69",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "ru",
+      "page": "metronome",
+      "file": "ru/metronome.png",
+      "sha256": "25ee76b24db5c349b7a780505b430002b6bcdcd90a766d8bd2c6edf3422803c8",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "sk",
+      "page": "today",
+      "file": "sk/today.png",
+      "sha256": "22c3b3065503f21d4228a43ca8d6009c50b4103a32590766d5f2ec7211e110fa",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "sk",
+      "page": "metronome",
+      "file": "sk/metronome.png",
+      "sha256": "46ecb14bbb6030a9590e7e6f7daf380817920f72aaa5a3726a210fcfa923a822",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "sl",
+      "page": "today",
+      "file": "sl/today.png",
+      "sha256": "38075fa5dd4d324e74d596484b4ccca94c87399f63129d12084caba2aba969aa",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "sl",
+      "page": "metronome",
+      "file": "sl/metronome.png",
+      "sha256": "091afcdaed5b9733fd20cba5c5dda5fcc02a5672f7c8392cdceabe8a785d0d73",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "sv",
+      "page": "today",
+      "file": "sv/today.png",
+      "sha256": "d008f0ee557783daa60b540e92c9afd005a6f1d0aaf9bff596311469a8e77f8e",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "sv",
+      "page": "metronome",
+      "file": "sv/metronome.png",
+      "sha256": "fc1ac76172a439aec5245a58cd5ccf7eb18289b3b7eecd76eb3a5575792e4ab9",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "sw",
+      "page": "today",
+      "file": "sw/today.png",
+      "sha256": "e8b98afa9f74a8cce3993f8c657aeb5678f704542b48c982dce3484bf2d57e2f",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "sw",
+      "page": "metronome",
+      "file": "sw/metronome.png",
+      "sha256": "28be630adc767c1b2df88f2cbe7f7bcaa3a737ea73415d52ce0e7eb80b0b8c58",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "ta",
+      "page": "today",
+      "file": "ta/today.png",
+      "sha256": "4ee82fd45a25fb8abc83df6850a0145a73c6357f81ebd7949dbcb99ac3098b48",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "ta",
+      "page": "metronome",
+      "file": "ta/metronome.png",
+      "sha256": "9c4fc2427e7a6c1707a5294dfbbf0a8c31a0688def90a6e8fd0fa286fde5c509",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "te",
+      "page": "today",
+      "file": "te/today.png",
+      "sha256": "d604443fd5fe36bac96142649b0ffb91dbade971a0917ffa032ec806b9a6d672",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "te",
+      "page": "metronome",
+      "file": "te/metronome.png",
+      "sha256": "13650aad4f4190d56ead348537fbb4ea2f13c098c13e003fbf4529590bcaa80b",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "th",
+      "page": "today",
+      "file": "th/today.png",
+      "sha256": "3fe7e726f5be16dda027bd09d17897f44db80afe4323a4215b645abcb552ac87",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "th",
+      "page": "metronome",
+      "file": "th/metronome.png",
+      "sha256": "a0ac20648e35b44820a275ee2432a8bbc9ca767e6d2caba6e3a5be4eec7558f6",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "tr",
+      "page": "today",
+      "file": "tr/today.png",
+      "sha256": "ab78ec1d1ab81c19b229e23e5d3836a8aa76763ffc0bd99133ebccaba3a62aae",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "tr",
+      "page": "metronome",
+      "file": "tr/metronome.png",
+      "sha256": "0007c57072dc82c2c983259e968987fdbf3d830d8d45ef742581e29fd843f321",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "uk",
+      "page": "today",
+      "file": "uk/today.png",
+      "sha256": "e2f27655e501e542d57fadadacd4ef8b9bc9bbda58d3e3f53b0047e82c775e7b",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "uk",
+      "page": "metronome",
+      "file": "uk/metronome.png",
+      "sha256": "123c9efbe34f97f4a7b36fd72837702e2abcc9bce0244ae447f1c88b14277f80",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "ur",
+      "page": "today",
+      "file": "ur/today.png",
+      "sha256": "20d08a1b861d7e36e3356cb5b4845c0ef92ee579a6b33466bf861512a9a97d17",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "ur",
+      "page": "metronome",
+      "file": "ur/metronome.png",
+      "sha256": "5089d6953658c2203396b5780ff1be24ef5807f4a25382848de262b3ef14886f",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "vi",
+      "page": "today",
+      "file": "vi/today.png",
+      "sha256": "59dab55b3056da26a54de23791f3565ef013854abf5931ac7d34e514f9f15153",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "vi",
+      "page": "metronome",
+      "file": "vi/metronome.png",
+      "sha256": "7515dc484b3fb6819bd3a722d3c2aea5d23cc28b94eda88f94581fa3f641c871",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "zh-CN",
+      "page": "today",
+      "file": "zh-CN/today.png",
+      "sha256": "d9aa4ee39ec50ccf3387f09dcabfbabd2db1dc0125e546057d5ee0f4c49499a7",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "zh-CN",
+      "page": "metronome",
+      "file": "zh-CN/metronome.png",
+      "sha256": "858f7e922b7bff88f0f85e67e58681a68628a5bb7bcfba5f23a9e896f7c46c68",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "zu",
+      "page": "today",
+      "file": "zu/today.png",
+      "sha256": "7ba5737f64727b2e4fd8d5e21f85701e105778008bc1102baa6f9d89a8fe2862",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    },
+    {
+      "language": "zu",
+      "page": "metronome",
+      "file": "zu/metronome.png",
+      "sha256": "f07a6c3d6629e16684c7e5bfe03ce8c276efd8a4b296dd7e05235d0c9bd9cf84",
+      "dimensions": [
+        416,
+        496
+      ],
+      "alpha_channel": false,
+      "visual_review": "reviewed_on_unscaled_QA_board"
+    }
+  ]
+}
