@@ -87,14 +87,16 @@ FOCUS = {
     "31b-instruments-folk": {"y0": 0.0},
     "63-songs": {"y0": 0.0},
     "50-learn": {"y0": 0.0},
-    # The flip's top edge falls between the screen's subtitle and "Tune A2 up 12¢ first", which leads the frame.
-    "11b-tune-strum": {"y0": 0.118},
+    # Below the complete toolbar (including its grey subtitle and pause button), above the lead instruction.
+    # Measured medium EN/DE native captures: row367 is clear; old row309 sliced the subtitle.
+    # Do not transfer that fraction to the large role without its native capture evidence.
+    "11b-tune-strum": {"y0": 0.118, "y0_by_device": {"iphone": 0.140}},
     "32-journey": {"y0": 0.0},
 }
 
 # A frame's top edge may not cut through text ("9:41" or a screen title sliced in half): a capture row there with this
-# many columns at SLICE_LEVEL or brighter is a slice. Clean edges measure 0; the slices this guard was made for, 103
-# (the status bar on the results) and 141 (the strum screen's title).
+# many bright or secondary-neutral text columns is a slice. Include grey subtitles, not just white titles;
+# this is a conservative pixel guard, not OCR or a substitute for visual review.
 SLICE_COLUMNS = 8
 SLICE_LEVEL = 200
 
@@ -606,6 +608,14 @@ def _screen_radius(width: int) -> int:
     return int(width * 0.105)
 
 
+def focus_for(capture: str, device: str) -> dict:
+    """Keep measured crop adjustments role-specific even when caption tables are shared."""
+    focus = dict(FOCUS.get(capture, {}))
+    if device in focus.get("y0_by_device", {}):
+        focus["y0"] = focus["y0_by_device"][device]
+    return focus
+
+
 def compose(look: str, shot_path: Path, capture: str, title: str, line: str, device: str, out: Path) -> tuple:
     shot = upright(shot_path)
     role = screenshot_role(device)
@@ -616,7 +626,7 @@ def compose(look: str, shot_path: Path, capture: str, title: str, line: str, dev
     layout = parts[0] if parts else "zoom"
     accent = parts[1] if len(parts) > 1 else "mint"
     landscape = size[0] > size[1]
-    focus = FOCUS.get(capture, {})
+    focus = focus_for(capture, device)
     if landscape:
         layout = layout if layout in ("side", "side-right", "light") else "side"
         return _landscape(layout, accent, shot, title, line, size, out)
@@ -799,18 +809,26 @@ def _offset(layout, accent, shot, focus, title, line, size):
     return frame
 
 
+def _flip_geometry(shot, size, y0):
+    """Actual integer crop and placement, shared by composition and the edge guard."""
+    unit = min(size) / 1320
+    px = lambda value: int(round(value * unit))
+    scale = (size[0] - 2 * px(64)) / shot.width
+    bottom = size[1] - px(560)
+    start = int(round(y0 * shot.height))
+    end = int(round(min(shot.height, y0 * shot.height + (bottom + px(60)) / scale)))
+    screen_height = max(1, int((end - start) * scale))
+    return (0, start, shot.width, end), scale, bottom - screen_height, bottom
+
+
 def _flip(layout, accent, shot, focus, title, line, size):
     """The screen from the top, bleeding off it, the caption at the foot."""
     frame = Frame(size, accent, glow=(0.5, 0.86))
     m = frame.px(84)
     width = frame.w - 2 * frame.px(64)
-    scale = width / shot.width
-    caption_room = frame.px(560)
-    bottom = frame.h - caption_room
-    y0 = focus.get("y0", 0.0)
-    visible = (bottom + frame.px(60)) / scale
-    screen = _scaled(shot, scale, (0, y0 * shot.height, shot.width, min(shot.height, y0 * shot.height + visible)))
-    frame.card(screen, frame.px(64), bottom - screen.height, _screen_radius(width), corners=(False, False, True, True))
+    box, scale, top, bottom = _flip_geometry(shot, size, focus.get("y0", 0.0))
+    screen = _scaled(shot, scale, box)
+    frame.card(screen, frame.px(64), top, _screen_radius(width), corners=(False, False, True, True))
     frame.caption(title, line, bottom + frame.px(110), m, frame.w - m)
     return frame
 
@@ -856,22 +874,28 @@ def top_row(look: str, capture: str, device: str, shot) -> int | None:
         layout = "light" if layout == "light" else "zoom"
     if layout == "breakout":
         return None
-    y0 = FOCUS.get(capture, {}).get("y0", 0.0)
+    y0 = focus_for(capture, device).get("y0", 0.0)
     row = y0 * shot.height
     if layout == "flip":
-        # `_flip` lets the picture run 60 px (at 1320 wide) past the frame's top edge.
-        unit = min(size) / 1320
-        scale = (size[0] - 2 * int(round(64 * unit))) / shot.width
-        row += int(round(60 * unit)) / scale
+        # Shorter native crops end before the nominal bleed, placing the card below the canvas top.
+        # Inspect the actual visible source row, not a hypothetical fixed 60px bleed.
+        box, scale, top, _ = _flip_geometry(shot, size, y0)
+        row = box[1] + max(0, -top) / scale
     return int(row) if row >= 1 else None
 
 
 def sliced(shot, row: int) -> int:
-    """How many columns of the capture hold near-white (text) within two rows of `row`."""
-    gray = shot.convert("L")
-    pixels = gray.load()
-    rows = range(max(0, row - 2), min(gray.height, row + 3))
-    return sum(1 for x in range(gray.width) if any(pixels[x, y] >= SLICE_LEVEL for y in rows))
+    """Count bright or secondary neutral text at the visible edge, including grey subtitles."""
+    rgb = shot.convert("RGB")
+    pixels = rgb.load()
+    rows = range(max(0, row - 2), min(rgb.height, row + 3))
+
+    def text_pixel(pixel):
+        r, g, b = pixel
+        luminance = 0.299 * r + 0.587 * g + 0.114 * b
+        return luminance >= SLICE_LEVEL or (luminance >= 100 and max(pixel) - min(pixel) <= 24)
+
+    return sum(1 for x in range(rgb.width) if any(text_pixel(pixels[x, y]) for y in rows))
 
 
 def size_problem(device: str, path: Path, shot_path: Path):
@@ -960,7 +984,7 @@ def render(folder: Path, out: Path, device: str, page: str | None, locale: str |
         row = top_row(look, name, device, shot)
         if row is not None and sliced(shot, row) >= SLICE_COLUMNS:
             unusable.append(f"{where}: its top edge cuts through text at row {row} of the capture ({sliced(shot, row)} "
-                            "bright columns): move its y0 in FOCUS into a gap")
+                            "text-like columns): move its y0 in FOCUS into a gap")
             continue
         written.append(target)
         print("wrote", target, f"{size[0]}x{size[1]}", look)

@@ -207,6 +207,43 @@ enum DemoScene: String {
     /// test's last look for the lesson (a query stalls the main thread; a note heard late would break the run).
     static let performDelay: Duration = .seconds(3)
 
+    /// Still captures release the take only after their initial accessibility queries finish.
+    /// No cue means the existing auto-start path (including preview videos) is unchanged.
+    static func waitForPerformCue() async -> Bool {
+        guard TestSupport.isOn(.sceneStill), let path = Option.cue else { return true }
+        performDiagnostic("waiting-for-cue")
+        let deadline = Date().addingTimeInterval(90)
+        while !FileManager.default.fileExists(atPath: path) {
+            guard !Task.isCancelled, Date() < deadline else {
+                performDiagnostic("cue-timeout-or-cancelled")
+                return false
+            }
+            do { try await Task.sleep(for: .milliseconds(50)) } catch { return false }
+        }
+        performDiagnostic("cue-received")
+        return !Task.isCancelled
+    }
+
+    /// Bounded, non-sensitive scene timing evidence, shared with the simulator UI test.
+    /// No audio, account data or file paths are recorded. Release builds omit this entire file.
+    static func performDiagnostic(_ event: String, beat: Double? = nil) {
+        guard current == .songPerform, TestSupport.isOn(.sceneStill), let path = Option.cue else { return }
+        var record: [String: Any] = ["event": event, "epoch": Date().timeIntervalSince1970]
+        if let beat, beat.isFinite { record["beat"] = beat }
+        guard var data = try? JSONSerialization.data(withJSONObject: record, options: [.sortedKeys]) else { return }
+        data.append(0x0A)
+        let url = URL(fileURLWithPath: path + ".events")
+        if !FileManager.default.fileExists(atPath: url.path) {
+            FileManager.default.createFile(atPath: url.path, contents: nil)
+        }
+        guard let file = try? FileHandle(forWritingTo: url) else { return }
+        defer { try? file.close() }
+        do {
+            try file.seekToEnd()
+            try file.write(contentsOf: data)
+        } catch { /* Diagnostics never change the actual take. */ }
+    }
+
     /// In `song-perform`, the beat of `lesson`'s performance its take starts at (nil otherwise: the player taps Perform).
     /// The take's clock starts a bar earlier (`SongPerformStep.startScene`): its first click is beat `beat − meter`.
     static func performBeat(_ lesson: Lesson, beatsPerBar: Int) -> Double? {

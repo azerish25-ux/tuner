@@ -1051,8 +1051,10 @@ final class TimbreUITests: XCTestCase {
         // Start at the first chorus, leaving enough real music for both capture and validation.
         app.launchEnvironment["TIMBRE_SCENE_BAR"] = "12"
         app.launchEnvironment["TIMBRE_SCENE_STILL"] = "1"
+        let cue = FileManager.default.temporaryDirectory.appendingPathComponent("timbre-take-\(UUID().uuidString)")
+        app.launchEnvironment["TIMBRE_SCENE_CUE"] = cue.path
         launch(pitch: true, scene: "song-perform")
-        storePerformFrame("65-song-perform", song: "Kite Weather", chorus: ["kite weather", "let it climb", "summer winds"])
+        storePerformFrame("65-song-perform", cue: cue, song: "Kite Weather", chorus: ["kite weather", "let it climb", "summer winds"])
     }
 
     /// The violin page's second frame: Jingle Bells from the violin songbook (free) on the runway, its last chorus
@@ -1061,8 +1063,10 @@ final class TimbreUITests: XCTestCase {
         app.launchEnvironment["TIMBRE_SCENE_SONG"] = "vln-sb-song-jingle-bells"
         app.launchEnvironment["TIMBRE_SCENE_BAR"] = "42"
         app.launchEnvironment["TIMBRE_SCENE_STILL"] = "1"
+        let cue = FileManager.default.temporaryDirectory.appendingPathComponent("timbre-take-\(UUID().uuidString)")
+        app.launchEnvironment["TIMBRE_SCENE_CUE"] = cue.path
         launch(pitch: true, scene: "song-perform")
-        storePerformFrame("65b-song-perform-violin", song: "Jingle Bells", chorus: ["jingle bells", "jingle all the way", "what fun"])
+        storePerformFrame("65b-song-perform-violin", cue: cue, song: "Jingle Bells", chorus: ["jingle bells", "jingle all the way", "what fun"])
     }
 
     /// Where a performance's bottom button sits, as fractions of the screen: the stage's Perform (mint, mean grey about
@@ -1073,8 +1077,27 @@ final class TimbreUITests: XCTestCase {
 
     /// Read the current performance state, then choose a stable pair without an unnecessary
     /// six-pair delay. The HUD and lyric region must all be present and stable.
-    private func storePerformFrame(_ name: String, song: String, chorus: [String]) {
+    private func storePerformFrame(_ name: String, cue: URL, song: String, chorus: [String]) {
+        defer {
+            let events = URL(fileURLWithPath: cue.path + ".events")
+            if let data = try? Data(contentsOf: events), let text = String(data: data, encoding: .utf8) {
+                let attachment = XCTAttachment(string: text)
+                attachment.name = name + "-timing"
+                attachment.lifetime = .keepAlways
+                add(attachment)
+                print("TIMBRE_PERFORM_TIMING \(text)")
+            }
+            try? FileManager.default.removeItem(at: cue)
+            try? FileManager.default.removeItem(at: events)
+        }
         let opened = element("lesson.close").waitForExistence(timeout: 30)
+        // Finish the initial AX lookup before releasing the scene. During startup/playing,
+        // screenshot-only observation leaves the main actor free for the real demo take.
+        guard opened, FileManager.default.createFile(atPath: cue.path, contents: Data()) else {
+            storeFrame(name, ok: false, "the lesson did not open or its capture cue could not be written")
+            return
+        }
+        print("TIMBRE_PERFORM_CUE epoch=\(Date().timeIntervalSince1970)")
         let playing = waitForDark(Self.takeButton, hold: Self.takeHold, timeout: 40)
         let held = waitSparingly(for: element("performance.capture.frozen"), timeout: 30)
         // The explicit still barrier stops the actual take, not its displayed numbers alone.

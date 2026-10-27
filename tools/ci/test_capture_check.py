@@ -149,5 +149,59 @@ class ExecutionTests(unittest.TestCase):
                     capture.validate_captures(folder)
 
 
+class PerformSceneContractTests(unittest.TestCase):
+    def setUp(self):
+        root = capture.ROOT
+        self.scene = (root / 'ios/Timbre/Root/DemoScenes.swift').read_text()
+        self.perform = (root / 'ios/Timbre/Learn/SongPerform.swift').read_text()
+        self.ui = (root / 'ios/TimbreUITests/TimbreUITests.swift').read_text()
+
+    def test_cue_is_opt_in_bounded_and_cancellation_aware(self):
+        wait = self.scene.split('static func waitForPerformCue()')[1].split('static func performDiagnostic')[0]
+        self.assertIn('guard TestSupport.isOn(.sceneStill), let path = Option.cue else { return true }', wait)
+        self.assertIn('addingTimeInterval(90)', wait)
+        self.assertIn('!Task.isCancelled', wait)
+        self.assertIn('FileManager.default.fileExists(atPath: path)', wait)
+        self.assertIn('catch { return false }', wait)
+        self.assertLess(self.perform.index('await DemoScene.waitForPerformCue()'),
+                        self.perform.index('Task.sleep(for: DemoScene.performDelay)'))
+
+    def test_both_still_scenes_use_unique_cues(self):
+        for method in ('test14StoreSongPerform', 'test18StoreViolinSong'):
+            body = self.ui.split('func ' + method + '()')[1].split('\n    }')[0]
+            self.assertIn('UUID().uuidString', body)
+            self.assertIn('app.launchEnvironment["TIMBRE_SCENE_CUE"] = cue.path', body)
+            self.assertIn('cue: cue', body)
+
+    def test_release_follows_initial_query_and_precedes_picture_only_hold(self):
+        body = self.ui.split('private func storePerformFrame(')[1].split('let held =')[0]
+        self.assertLess(body.index('waitForExistence(timeout: 30)'), body.index('createFile(atPath: cue.path'))
+        self.assertLess(body.index('createFile(atPath: cue.path'), body.index('waitForDark('))
+        between = body.split('createFile(atPath: cue.path')[1].split('waitForDark(')[0]
+        self.assertNotIn('.exists', between)
+        self.assertNotIn('.snapshot()', between)
+
+    def test_capture_requirements_are_not_weakened(self):
+        self.assertIn('takeHold: TimeInterval = 4.5', self.ui)
+        self.assertIn('hold: Self.takeHold, timeout: 40', self.ui)
+        self.assertIn('opened && playing && held && combo >= 8', self.ui)
+        self.assertIn('regions.count == 4', self.ui)
+        self.assertIn('heldBeat != endingHeldBeat || combo != endingCombo', self.ui)
+        self.assertIn('StillScreen.regionsMatch(first, second, regions)', self.ui)
+
+    def test_timing_uses_actual_state_and_is_kept_on_failure(self):
+        for event in ('start-requested', 'audio-ready', 'first-rendered-tick', 'capture-frozen'):
+            self.assertIn('performDiagnostic("' + event + '"', self.perform)
+        self.assertIn('"capture-frozen", beat: session.clock(at: now) / spb', self.perform)
+        self.assertIn('"first-rendered-tick", beat: session.clock(at: now) / spb', self.perform)
+        self.assertTrue(self.scene.startswith('#if DEBUG'))
+        self.assertIn('guard current == .songPerform, TestSupport.isOn(.sceneStill), let path = Option.cue', self.scene)
+        body = self.ui.split('private func storePerformFrame(')[1]
+        self.assertLess(body.index('defer {'), body.index('let opened'))
+        self.assertIn('attachment.lifetime = .keepAlways', body)
+        self.assertIn('removeItem(at: cue)', body)
+        self.assertIn('removeItem(at: events)', body)
+
+
 if __name__ == '__main__':
     unittest.main()

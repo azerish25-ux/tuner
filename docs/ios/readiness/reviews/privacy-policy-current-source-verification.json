@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scope": "published_policy_and_source_alignment_only",
-  "source_revision": "17091417a12d68841bde5176319d34e795e39565",
+  "source_revision": "878e49a29e9544ddff0a9cfa276cfccd44b25d7f",
   "verified_utc": "2026-10-27T08:20:41Z",
   "reviewer": "dot independent release-scope audit",
   "routes": [
@@ -161,7 +161,7 @@
     "ios/Timbre/Learn/ShowMeScene.swift": "6602f8a6d6f2870132ee7a5afe151aab4b9c9ebcf048d945c23c3f4939e8b0f4",
     "ios/Timbre/Learn/SongChords.swift": "c8117b7920185cce3f155e0fa3453863cda14f21eabc91b3119098dc375e044a",
     "ios/Timbre/Learn/SongOpener.swift": "4d358603563b3e099a9e44724204a150ae78fd198571f77ec136624f563b8c67",
-    "ios/Timbre/Learn/SongPerform.swift": "6bc72b992d209610a1a5a9f7ca834b9e6951253eb0efbd8f87b02537433f0633",
+    "ios/Timbre/Learn/SongPerform.swift": "5118fc03fbf2c6be0f623af3b9d29ee6226f3ca74f698c45c68a089cef9aa673",
     "ios/Timbre/Learn/SongSheet.swift": "69c95fbe2e44c94dcb3f5ecfadbc800d75498a4809adb01854ff01a3dfd09ff5",
     "ios/Timbre/Learn/SongStoryCard.swift": "0c066e00e202792f40e7943c5fe4a9f8feb3cc4bdd1dbd0eb08efa496ebebb21",
     "ios/Timbre/Learn/WeakSpotReview.swift": "f6bf1491eb16f8a480e59f3ae39b2c9c7dbc9c2b8f8f6d07880fb4f8eda45ea2",
@@ -248,7 +248,7 @@
     "ios/Timbre/Resources/vi.lproj/InfoPlist.strings": "4c6d95102f3e93cd7e5c0ab25d8debec1c99d69e75a223352c27ed71e282039b",
     "ios/Timbre/Resources/zh-CN.lproj/InfoPlist.strings": "d39a18d65243742b5d917be4c8e018f37bbba188bdad93ae4ee27841f95fcc9d",
     "ios/Timbre/Resources/zu.lproj/InfoPlist.strings": "8a1a7cdfbb20fcd9a855dbdbce0215545bedf0ab3a4fb3a42b032b96e58a648d",
-    "ios/Timbre/Root/DemoScenes.swift": "1b3615f2f5226b64f3bee64d4c22eff1c7801f2206a46533ce4c9d5aedbce47c",
+    "ios/Timbre/Root/DemoScenes.swift": "8077610e747b285bbc3ec01b1a1509c5f266e9b800b3f46913e0c34838ca1748",
     "ios/Timbre/Root/RootView.swift": "f1f38f0ec713ad39d79ee836223cb4ac34f70d1f616a6f739acb32551969796e",
     "ios/Timbre/Services/Analytics.swift": "6c7f75c6610355dde2607121e17d9fee43d97b429d9e7bd4c625b7a53ac791f1",
     "ios/Timbre/Services/AnalyticsTransport.swift": "63fcdb0f8de22a76dafe47d4219ad7c53096a24e81bced7bc3e75b9216cb877e",
@@ -408,29 +408,29 @@
   "mutations": "Only this receipt written. No listing verification/readiness flags, policy text, public website, signing, credentials or account settings changed.",
   "source_inventory_scope": "All shipped app/core/extension Swift, Objective-C/C/C++ sources and headers, app privacy manifests, xcconfig/plist/entitlement/permission configuration and package dependency inputs. Any edit/addition invalidates this source-review receipt; tests/docs outside named policy sources do not.",
   "source_review_refresh": {
-    "reviewed_utc": "2026-10-27T18:05:36Z",
-    "base_revision": "17091417a12d68841bde5176319d34e795e39565",
+    "reviewed_utc": "2026-10-27T18:26:36Z",
+    "base_revision": "878e49a29e9544ddff0a9cfa276cfccd44b25d7f",
     "source_state": "base_revision_plus_explicit_uncommitted_deltas",
     "changes": [
       {
-        "path": "ios/Timbre/Practice/PracticeView.swift",
-        "previous_reviewed_sha256": "58b9c518a54e13f3685aa4ee65f989a4607e4d14e7399d12c91f7411049ad38c",
-        "reviewed_sha256": "11fa623267c15c98b42801068ac887bc4c988997113bc71645593b0de6953584",
-        "diff_sha256": "fd889a3320b13b69a01e0eb505d0b9ee4183c61732466f0dd74cc37eeaa9f13a",
-        "privacy_assessment": "Replaces two existing XP sentence presentations with the helper using the same done/total/next values. No changed XP calculation, storage, logging, permissions or collection."
+        "path": "ios/Timbre/Learn/SongPerform.swift",
+        "previous_reviewed_sha256": "6bc72b992d209610a1a5a9f7ca834b9e6951253eb0efbd8f87b02537433f0633",
+        "reviewed_sha256": "5118fc03fbf2c6be0f623af3b9d29ee6226f3ca74f698c45c68a089cef9aa673",
+        "diff_sha256": "8bd9cbb28c66af21c67eb960ce7be3c2a83ddaf2a78ccc20f36bffff6b566203",
+        "privacy_assessment": "Adds DEBUG-only still-scene startup cue and actual session-clock diagnostic calls. Release behavior is unchanged. Diagnostic values are event names, timestamps and finite beat positions only; no audio, account information, identifiers or network transmission."
       },
       {
-        "path": "ios/Timbre/Practice/PracticeXPProgress.swift",
-        "previous_reviewed_sha256": null,
-        "reviewed_sha256": "1134f8110f094110e9f4da44795ee67b83769bdae66c96b77a5d1f26fae51e8c",
-        "diff_sha256": null,
-        "privacy_assessment": "New presentation-only helper reads existing locale and localization resources, isolates numeric operands left-to-right while retaining the existing translation key, localized suffix and spoken sentence. Unknown future format shapes fall back to the original spoken Text. No networking, persistence, analytics or new permission/capability behavior. New-file bytes are identified by reviewed_sha256 rather than an empty untracked Git diff."
+        "path": "ios/Timbre/Root/DemoScenes.swift",
+        "previous_reviewed_sha256": "1b3615f2f5226b64f3bee64d4c22eff1c7801f2206a46533ce4c9d5aedbce47c",
+        "reviewed_sha256": "8077610e747b285bbc3ec01b1a1509c5f266e9b800b3f46913e0c34838ca1748",
+        "diff_sha256": "5e3b697f676aefdc9b95a392e79d59620c8e357593fc0630aa109f67b6d7386a",
+        "privacy_assessment": "Adds bounded cancellable polling of an explicitly supplied simulator capture cue and local JSONL timing evidence for the opt-in DEBUG song-perform still scene. This entire file is excluded from Release. No new production persistence, analytics, networking, permission or capability; diagnostics omit cue paths and user data."
       }
     ],
-    "source_inventory_delta": "292 shipped inputs: adds PracticeXPProgress.swift; only existing PracticeView.swift hash changes. Smoke, rail and XP regression tests are not production inventory inputs; no production rail change.",
+    "source_inventory_delta": "292 bound inputs unchanged in membership; only SongPerform.swift and DemoScenes.swift hashes change. New behavior is conditional on DEBUG; UI-test changes are outside the production inventory.",
     "listing_delta": "All 50 listing content hashes unchanged.",
-    "publication_observation": "Original 08:20 UTC HTTP observation times and policy/support bytes preserved. No fresh public fetch or deployment asserted.",
-    "limitations": "Bounded source-diff privacy review only. Does not establish native RTL/VoiceOver rendering, physical-device behavior, signed archive, legal or Apple account verification."
+    "publication_observation": "Original 08:20 UTC public HTTP observations and policy/support bytes preserved. No new public fetch or deployment asserted.",
+    "limitations": "Bounded source-diff privacy review only, not native capture correctness, simulator cross-process execution, physical-device verification, signed archive validation, legal certification or Apple account verification."
   },
   "source_review_refresh_history": [
     {
@@ -627,6 +627,31 @@
       "listing_delta": "All 50 listing content hashes remain unchanged from the independently reviewed 130+ count correction.",
       "publication_observation": "Original 08:20 UTC public HTTP observations and policy/HTML bytes preserved. No fresh fetch or publication asserted.",
       "limitations": "Bounded source-diff review only, not native accessibility execution, physical-device verification, signed archive validation, legal certification or Apple portal verification."
+    },
+    {
+      "reviewed_utc": "2026-10-27T18:05:36Z",
+      "base_revision": "17091417a12d68841bde5176319d34e795e39565",
+      "source_state": "base_revision_plus_explicit_uncommitted_deltas",
+      "changes": [
+        {
+          "path": "ios/Timbre/Practice/PracticeView.swift",
+          "previous_reviewed_sha256": "58b9c518a54e13f3685aa4ee65f989a4607e4d14e7399d12c91f7411049ad38c",
+          "reviewed_sha256": "11fa623267c15c98b42801068ac887bc4c988997113bc71645593b0de6953584",
+          "diff_sha256": "fd889a3320b13b69a01e0eb505d0b9ee4183c61732466f0dd74cc37eeaa9f13a",
+          "privacy_assessment": "Replaces two existing XP sentence presentations with the helper using the same done/total/next values. No changed XP calculation, storage, logging, permissions or collection."
+        },
+        {
+          "path": "ios/Timbre/Practice/PracticeXPProgress.swift",
+          "previous_reviewed_sha256": null,
+          "reviewed_sha256": "1134f8110f094110e9f4da44795ee67b83769bdae66c96b77a5d1f26fae51e8c",
+          "diff_sha256": null,
+          "privacy_assessment": "New presentation-only helper reads existing locale and localization resources, isolates numeric operands left-to-right while retaining the existing translation key, localized suffix and spoken sentence. Unknown future format shapes fall back to the original spoken Text. No networking, persistence, analytics or new permission/capability behavior. New-file bytes are identified by reviewed_sha256 rather than an empty untracked Git diff."
+        }
+      ],
+      "source_inventory_delta": "292 shipped inputs: adds PracticeXPProgress.swift; only existing PracticeView.swift hash changes. Smoke, rail and XP regression tests are not production inventory inputs; no production rail change.",
+      "listing_delta": "All 50 listing content hashes unchanged.",
+      "publication_observation": "Original 08:20 UTC HTTP observation times and policy/support bytes preserved. No fresh public fetch or deployment asserted.",
+      "limitations": "Bounded source-diff privacy review only. Does not establish native RTL/VoiceOver rendering, physical-device behavior, signed archive, legal or Apple account verification."
     }
   ]
 }
