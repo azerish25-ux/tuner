@@ -659,10 +659,16 @@ extension Text {
     /// A compact counter, "3 / 10" (thin spaces, the numbers in the reader's locale); VoiceOver reads "3 of 10".
     /// Every compact count uses it; running prose keeps "of".
     static func fraction(_ done: Int, _ total: Int) -> some View {
-        // The counter owns its numeric direction; the surrounding row and the digits keep the reader's locale.
-        Text("\(done)\u{2009}/\u{2009}\(total)")
-            .environment(\.layoutDirection, .leftToRight)
-            .accessibilityLabel(Text("\(done) of \(total)"))
+        // Separate numeral runs keep the completed count physically left of the total: a neutral slash
+        // between Arabic-Indic runs can reverse their order even in a left-to-right text paragraph.
+        HStack(spacing: 0) {
+            Text("\(done)").lineLimit(1)
+            Text(verbatim: "\u{2009}/\u{2009}").lineLimit(1)
+            Text("\(total)").lineLimit(1)
+        }
+        .environment(\.layoutDirection, .leftToRight)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text("\(done) of \(total)"))
     }
 }
 

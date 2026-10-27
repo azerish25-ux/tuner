@@ -102,6 +102,7 @@ jobs:
           python3 tools/ci/test_accessibility_partitions.py
           python3 tools/ci/test_capture_check.py
           python3 tools/ci/test_simulator_warmup.py
+          python3 tools/ci/test_fraction_direction_contract.py
       - name: SwiftLint (new error-severity violations fail)
         # .swiftlint.yml at the repository root, against the committed baseline (tools/ci/swiftlint-baseline.json):
         # a violation the baseline doesn't hold is reported, and fails the job at error severity. A fresh baseline

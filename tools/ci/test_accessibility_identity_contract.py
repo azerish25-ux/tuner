@@ -17,7 +17,9 @@ SEMANTIC_HASHES = {'Songs/SongsView.swift': '97c8d0b2e7f67059ba46de76cc3242f95aa
  'Paywall/PaywallView.swift': '38d816bdbd86ae60b377e30e614633e815cd5742df6a85a1668a6b7faaffb98d',
  'Design/GameUI.swift': '77e11cf4b56f6c52fd96f254871244aa91f5e9bfb3bdf958fbc9ca22337ddb33',
  'Practice/PracticeView.swift': '1f8cfa4c5adfa47ee82c84c44c83ec07d5d3bf7b470a021b2730665219c6fcc2',
- 'Design/Kit.swift': 'ffc543d3079b3c3ca9f324e0429ab8f4427e7ecbb4db14d7fc13bbd3f913addf',
+ # Reviewed fraction HStack explicitly ignores child runs to retain the original single spoken label.
+ # test_fraction_direction_contract.py separately locks that grouping and unchanged label.
+ 'Design/Kit.swift': '422fc5d1c37921986deaffc0121206b78455eb4922181eaed947e812aa5cefc2',
  'Design/Components.swift': '86b9b3ad0288871603788d3a608bf6e9e7f1e713b3db67d0db0c96e6856a6f5a',
  'Journey/CoachCard.swift': '0d012a63fe9b9c35d6674781a9d1e03c8335965565845cc1f5f7d4a0d62130d9'}
 

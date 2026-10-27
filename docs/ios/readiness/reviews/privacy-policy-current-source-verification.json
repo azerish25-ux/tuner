@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scope": "published_policy_and_source_alignment_only",
-  "source_revision": "a8649b77a881eda9cb1959e50c3719ada13e6e0f",
+  "source_revision": "bf1698a586ae54acc7c43344dc5d61f1e071cd03",
   "verified_utc": "2026-10-27T08:20:41Z",
   "reviewer": "dot independent release-scope audit",
   "routes": [
@@ -108,7 +108,7 @@
     "ios/Timbre/Design/Glass.swift": "dc3a58a65510bd515a6b98b1e6e9f4b9178b8e912f07985d08797f878de3f3a6",
     "ios/Timbre/Design/Glyphs.swift": "1fde8661fae94cf465b7772c57a1acaf71b7c49fb783e5469854db950e4b358c",
     "ios/Timbre/Design/Haptics.swift": "5a05df14ec75788fdeda99586fb7670fbefd0b605627e8778473112f267325d9",
-    "ios/Timbre/Design/Kit.swift": "3db25e599c9c8105b45fc7c2e7d34877635627e586fc6ce19800b155116960f6",
+    "ios/Timbre/Design/Kit.swift": "499be160afccd08c8b95d2eb25ff037926752b9445bca356310b8808e7782bf9",
     "ios/Timbre/Design/RewardStar.swift": "af6647b42a2ae9515ec5f551cb7f5297d003287e0fb236d8000f00401c904278",
     "ios/Timbre/Design/Shaders.swift": "7e05d1b30b91ec61eadbfe89740a12df9610bb44a1e4fc36b96578e0cc88ce3e",
     "ios/Timbre/Design/SparkBurst.swift": "88dd57cb2d474f0f00eac2bfdf2f85687d15e48bfbd123bea585fc9f40c9e851",
@@ -405,21 +405,21 @@
   "mutations": "Only this receipt written. No listing verification/readiness flags, policy text, public website, signing, credentials or account settings changed.",
   "source_inventory_scope": "All shipped app/core/extension Swift, Objective-C/C/C++ sources and headers, app privacy manifests, xcconfig/plist/entitlement/permission configuration and package dependency inputs. Any edit/addition invalidates this source-review receipt; tests/docs outside named policy sources do not.",
   "source_review_refresh": {
-    "reviewed_utc": "2026-10-27T09:05:23Z",
-    "base_revision": "a8649b77a881eda9cb1959e50c3719ada13e6e0f",
+    "reviewed_utc": "2026-10-27T09:18:02Z",
+    "base_revision": "bf1698a586ae54acc7c43344dc5d61f1e071cd03",
     "source_state": "base_revision_plus_explicit_uncommitted_delta",
     "changes": [
       {
-        "path": "ios/Timbre/Songs/SongCover.swift",
-        "previous_reviewed_sha256": "7da468f3dbf3407712bc6f921c7d113f348853e504a45103a3cdd83429a74058",
-        "reviewed_sha256": "98177f2a9007ae00889969569150c41972b79f6c2102a2566e86122626b497bb",
-        "diff_sha256": "d07aa991f562e128c38dcf886bbaf6f3b8fbfb740716bfad8d728b60965bc933",
-        "privacy_assessment": "Presentation-only arithmetic and in-memory fit-cache identity. Title height now uses the remaining sleeve type area after credited text; TitleFit cache replaces a rounded string key with a structured key including exact geometry and both font-size bounds. The same existing title text/font remain in the process-local bounded cache. No new data collection, analytics/logging, network transmission, disk persistence, permissions or capabilities are introduced. Cache eviction remains the existing count-based clear. Layout math/native correctness is outside this privacy delta review."
+        "path": "ios/Timbre/Design/Kit.swift",
+        "previous_reviewed_sha256": "ba0cf8d396da1b084aea0f28300f7562f49a6cbc998bb0834703b53ffffbc975",
+        "reviewed_sha256": "499be160afccd08c8b95d2eb25ff037926752b9445bca356310b8808e7782bf9",
+        "diff_sha256": "a35e2ec53bc44c58efdec45a90a6d1bba316a34f4ce4c78bde46c2cd10953cc8",
+        "privacy_assessment": "Final fraction presentation refinement: separate localized done/total numeral runs and verbatim thin-space slash remain within an explicitly left-to-right HStack with the existing single localized spoken label. Individual fixedSize modifiers are removed and lineLimit(1) preserves narrow-counter scaling. No change to input data, collection, analytics/logging, persistence, networking, permissions or capabilities. Native RTL rendering, narrow-counter scaling and VoiceOver execution remain outside this privacy review."
       }
     ],
-    "source_inventory_delta": "Only SongCover.swift differs from the preceding 289-input inventory; all other bound source/configuration hashes unchanged.",
-    "publication_observation": "Original 08:20 UTC HTTP observations and policy/HTML bytes unchanged. No fresh HTTP fetch or deployment claimed.",
-    "limitations": "Bounded privacy source-diff assessment only, not complete source/legal certification, native layout validation, hardware testing, signed archive or Apple portal approval."
+    "source_inventory_delta": "Only Kit.swift differs from the preceding 289-input inventory; all other bound source/configuration hashes unchanged.",
+    "publication_observation": "Original 08:20 UTC public HTTP observations and policy/HTML bytes preserved. No new public fetch or deployment claimed.",
+    "limitations": "Bounded privacy source-diff assessment only; not native layout/RTL/VoiceOver or hardware verification, legal certification, signed archive or Apple portal approval."
   },
   "source_review_refresh_history": [
     {
@@ -469,6 +469,40 @@
       "source_inventory_delta": "Only these three files differ from the previous 289-input source inventory; all other bound source/configuration hashes unchanged.",
       "publication_observation": "Original 08:20 UTC HTTP observations and published policy/HTML bytes preserved unchanged. No new HTTP fetch or deployment claimed.",
       "limitations": "Bounded source-diff privacy and persistence-flow assessment only. No new full-source/legal certification, native/device validation, signed archive or Apple portal approval."
+    },
+    {
+      "reviewed_utc": "2026-10-27T09:05:23Z",
+      "base_revision": "a8649b77a881eda9cb1959e50c3719ada13e6e0f",
+      "source_state": "base_revision_plus_explicit_uncommitted_delta",
+      "changes": [
+        {
+          "path": "ios/Timbre/Songs/SongCover.swift",
+          "previous_reviewed_sha256": "7da468f3dbf3407712bc6f921c7d113f348853e504a45103a3cdd83429a74058",
+          "reviewed_sha256": "98177f2a9007ae00889969569150c41972b79f6c2102a2566e86122626b497bb",
+          "diff_sha256": "d07aa991f562e128c38dcf886bbaf6f3b8fbfb740716bfad8d728b60965bc933",
+          "privacy_assessment": "Presentation-only arithmetic and in-memory fit-cache identity. Title height now uses the remaining sleeve type area after credited text; TitleFit cache replaces a rounded string key with a structured key including exact geometry and both font-size bounds. The same existing title text/font remain in the process-local bounded cache. No new data collection, analytics/logging, network transmission, disk persistence, permissions or capabilities are introduced. Cache eviction remains the existing count-based clear. Layout math/native correctness is outside this privacy delta review."
+        }
+      ],
+      "source_inventory_delta": "Only SongCover.swift differs from the preceding 289-input inventory; all other bound source/configuration hashes unchanged.",
+      "publication_observation": "Original 08:20 UTC HTTP observations and policy/HTML bytes unchanged. No fresh HTTP fetch or deployment claimed.",
+      "limitations": "Bounded privacy source-diff assessment only, not complete source/legal certification, native layout validation, hardware testing, signed archive or Apple portal approval."
+    },
+    {
+      "reviewed_utc": "2026-10-27T09:14:18Z",
+      "base_revision": "bf1698a586ae54acc7c43344dc5d61f1e071cd03",
+      "source_state": "base_revision_plus_explicit_uncommitted_delta",
+      "changes": [
+        {
+          "path": "ios/Timbre/Design/Kit.swift",
+          "previous_reviewed_sha256": "3db25e599c9c8105b45fc7c2e7d34877635627e586fc6ce19800b155116960f6",
+          "reviewed_sha256": "ba0cf8d396da1b084aea0f28300f7562f49a6cbc998bb0834703b53ffffbc975",
+          "diff_sha256": "f101748a22e8e85b72f07aa0362a2fff5b9fba1cb3f8ce0f8b592b3afd602e4b",
+          "privacy_assessment": "Fraction presentation only: replaces one mixed-direction text string with an explicitly left-to-right HStack containing separate localized numeral Text runs and a verbatim thin-space slash. Adds fixed-size presentation and groups accessibility children under the same existing localized spoken label. The existing done/total inputs are unchanged. No new collection, analytics/logging, identifiers, storage, networking, permission or capability behavior. Native RTL rendering and VoiceOver execution remain unverified by this source review."
+        }
+      ],
+      "source_inventory_delta": "Only Kit.swift differs from the preceding 289-input inventory; all other bound source/configuration hashes unchanged.",
+      "publication_observation": "Original 08:20 UTC public HTTP observation timestamps and policy/HTML bytes preserved. No new public fetch or deployment claimed.",
+      "limitations": "Bounded privacy source-diff assessment only; not native RTL rendering, VoiceOver/device verification, legal certification, signed archive or Apple portal approval."
     }
   ]
 }
