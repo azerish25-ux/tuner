@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-27T01:25:43.991009+00:00",
+  "baseline_head": "be4c23496ef05dd80a1c6fdde7a8eee98fb15982",
+  "scope": "Independent review of the nine Carol window source/test/doc files named in implementation receipt, plus read-only tracing of canonical access consumers. Only this review JSON authored. No source/test edits, commits, pushes, deployments, accounts or event actions.",
+  "skill": "code-review-and-quality: correctness, readability, architecture, security and performance reviewed.",
+  "verdict": "request_changes_one_consumer_cache_gap; native compilation and runtime validation remain pending",
+  "sha256": {
+    "ios/Sources/TimbreCore/Commerce/Access.swift": "d7d68f592842084c5833588425386fe04ac953ccd1abb515be05feeb1bc24564",
+    "ios/Sources/TimbreCore/Commerce/FreeSongWindow.swift": "2bcd48cd0b3d7559206337fc3f5d46233aace37b10ba87f2486b28136fa0a2cc",
+    "ios/Timbre/Services/RemoteConfig.swift": "3a2bf85278ba6fbde781ab99b04988b7d8ce3ff2ddb972564b3deeaa7eb7fa36",
+    "ios/Timbre/Services/AppStore.swift": "48a9109dabdd161869139e9094c3e47876308886435fbb56207e453fae0cd223",
+    "ios/Tests/TimbreCoreTests/FreeSongWindowTests.swift": "43660e50ddd11a79395a814a937fb4a5ee361649099704f1ad4c6daaa22dc9b1",
+    "ios/TimbreAppTests/RemoteConfigWindowTests.swift": "5addfe1892ed6615d2ac7a2f72fb9ad4c9c0f91fbe51e9a4261a8089a10b6707",
+    "docs/ios/APPLE-DELIVERY.md": "3c320126822fbfc83b17fca103e9faf0940c4ac8f7bc6d5d94cb646e2868c5e4",
+    "docs/ios/RELEASE-CHECKLIST.md": "1f06a7c54fb7be17c175ed24a3d07728c9913f25cdbc0054984f8574a5d77d4c",
+    "docs/ios/readiness/reviews/carol-window-plan.md": "a4d55df49ae4b12351aef62ddbee3d1a37b3a314d0b32d75a8d8917f43fd4035"
+  },
+  "implementation_receipt_hashes_all_match": true,
+  "additional_consumer_sha256": {
+    "ios/Timbre/Songs/SongsView.swift": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520",
+    "ios/Timbre/Learn/LearnView.swift": "093b82e660247b15e1371450e060e7b1006d9bfb78a787bfbfa4799056e22bee",
+    "ios/Timbre/Paywall/PaywallView.swift": "aff644fcad9d59d7e9a6bec28d44ed69342cb9de1239ec100f57b62dc34a051b",
+    "ios/Timbre/Paywall/PaywallPlan.swift": "6e6ccaf832aba07a78b428b7250f6f6da1a249c178c295a2a18b5c86cd94d994",
+    "ios/Sources/TimbreCore/Commerce/PlanComparison.swift": "1f02b26a0b1b844b401f193fb50fb29cf2e12a68e6779bf128b393df77384882"
+  },
+  "findings": [
+    {
+      "id": "CAROL-01",
+      "priority": "P2",
+      "status": "required_source_change",
+      "title": "Include effective openings in SongsCatalog cache invalidation",
+      "references": [
+        "ios/Timbre/Services/AppStore.swift:128",
+        "ios/Timbre/Songs/SongsView.swift:1283",
+        "ios/Timbre/Songs/SongsView.swift:1393",
+        "ios/Timbre/Songs/SongsView.swift:1394",
+        "ios/Timbre/Songs/SongsView.swift:1515"
+      ],
+      "evidence": "AppStore forwards openingsChanged only as objectWillChange. SongsView retains its SongsCatalog in @State. SongsCatalog.refresh constructs a Key from learn, pro, level, local calendar day and home instrument; if those have not changed it returns before rebuilding cached standings and layouts. Neither effective lesson IDs nor unit2 participates in the key. The Carol shelf title is computed only when the cached layout is rebuilt.",
+      "reproduction": "During December 1-7, open Songs before the asynchronous initial fetch applies the Carol config (or keep Songs visible during a same-day force refresh that adds/removes campaign grants). The config emits openingsChanged and AppStore redraws, but the existing catalogue key remains equal. Lock badges and the Carol free-week title retain the pre-fetch state until another key input changes; tapping a song calls fresh LessonAccess and can disagree with the tile.",
+      "impact": "The new observable forwarding does not fully meet the requirement that visible locks and seasonal presentation follow current effective access. Ordinary midnight boundary redraw usually changes the day key, but same-day configuration application/revocation remains stale.",
+      "remedy": "Include a snapshot of current effective openings (effective lesson IDs and unit2), or an access revision that changes only with effective access, in SongsCatalog.Key. Rebuild standings and layouts when it changes. Keep the current tap guard and do not reset the whole SongsView or cancel existing previews/takes.",
+      "regression": "Build one SongsCatalog/layout, change effective openings while keeping learn/pro/level/day/home fixed, then reuse that same instance and assert standings and the Carol shelf title update for grant and revocation. Add an AppStore forwarding assertion if feasible."
+    }
+  ],
+  "accepted_source_findings": [
+    "Strict ten-byte ASCII YYYY-MM-DD validation, explicit Gregorian Calendar and supplied TimeZone provide local-day start-inclusive/end-exclusive semantics; December 1 to December 8 covers December 1-7. Roundtrip components reject impossible dates, and non-increasing bounds fail closed.",
+    "Values custom decoding checks key presence before attempting a window decode; null, wrong shape and wrong member types become a non-nil invalid sentinel. Partial/malformed/equal/reversed windows remain non-nil through sanitization. Core includes and nextBoundary reject them. Sanitizer preserves at least eleven characters for an oversized date, preventing truncation into a valid ten-character date.",
+    "Synthesized Encodable remains available with custom init(from:). An invalid non-nil sentinel encodes under freeSongsWindow as an object with absent date members; decoding that object preserves a non-nil invalid window. A nil legacy window omits the key. Actual fetch caching retains original bounded raw JSON, preserving explicit invalid presence as well.",
+    "The sanitizer raises the count limit to 256 while retaining valid 1-64 character ASCII identifiers and the existing 64000-byte fetched payload limit. Executed K4 generator yields 102 unique existing IDs and both new native fixtures exactly match them.",
+    "FreeOpenings stores listed IDs plus policy; lessons, opens, activeLessons and default current reads evaluate current eligibility. AccessPolicy defaults remain compatible and AppStore.canPlay supplies the current RemoteConfig policy. Independent unit2, Pro, base-free and placement behavior remains intact.",
+    "PaywallPlan.make and PlanComparison.freeLessons use canonical access on recomputation; PaywallView observes AppStore and recomputes plan/table on body evaluation. Learn, song entry, weak-spot and lesson continuation checks route through AppStore.canPlay. SongsCatalog display caching is the exception identified above.",
+    "RemoteConfig is MainActor isolated. Main runloop one-shot common-mode timers invalidate the previous timer, cap recheck delay at 24h, and re-enter MainActor through weak-self Tasks. Lifecycle subscriptions recheck on foreground, significant time, timezone and calendar day notifications, with fetch throttling independent of policy refresh. Last-effective state updates before subject emission, so straightforward synchronous reentry does not republish unchanged access.",
+    "AppStore stores the weak-self subscription in its existing cancellable set; foreground/timer callbacks likewise avoid retaining the config. The singleton owns its lifecycle, and a released non-singleton config can leave only one harmless weak-self one-shot timer until firing. No new take cancellation/stop calls or audio/privacy ordering changes were introduced in the six-line AppStore addition.",
+    "No definite Swift 5.10/Core Sendable compilation defect identified by source inspection: FreeSongWindow contains optional strings, FreeOpenings remains a Sendable value protected by its existing lock, and mutations/observable notifications are actor-bound. Native compilation is still required evidence."
+  ],
+  "test_review": {
+    "new_core_methods": 7,
+    "new_app_methods": 4,
+    "meaningful_coverage": "Inclusive/exclusive boundary instants; different local dates at one UTC instant; New York DST end-boundary duration; invalid bounds; cached/default/global policy expiry; permanent compatibility; all 102 curriculum IDs; unrelated paid lesson; unit2/Pro; decoder presence; 256 cap and ID validation; explicit clock/timezone effective-change publication.",
+    "limits": [
+      "The Gregorian preference test comment describes calendar independence but does not mutate preferred Calendar.current; independence is directly visible from explicit Calendar(identifier: .gregorian).",
+      "Cache roundtrip test currently covers a valid window, while invalid-sentinel roundtrip is source-reviewed only. Adding that assertion would strengthen regression protection.",
+      "refreshOpenings is called directly by tests: actual timer firing, lifecycle notification delivery and AppStore observer forwarding are unexecuted/untested here.",
+      "No SongsCatalog reuse/invalidation regression exists, permitting CAROL-01."
+    ],
+    "native_status": "UNRUN on this Windows host; no local Swift/Xcode executable detected. Eleven authored tests are not eleven passing tests."
+  },
+  "verification_performed": [
+    "Read nine scoped files, named audit/design/implementation receipts, and canonical Core/app/paywall/Songs consumers.",
+    "Independently computed SHA-256 of all nine files; each matches implementation receipt at review time.",
+    "Executed embedded K4 Python and compared generated IDs against bundled JSON resources and both Swift fixture arrays: 102 IDs, 102 unique, none missing, both fixtures exact match. Pretty-printed generator output is 3520 bytes (compact JSON reported by implementation may differ in whitespace).",
+    "Inspected git HEAD/status and separated concurrent audio/Watch/localization work from this reviewed package."
+  ],
+  "required_follow_up": [
+    "Resolve CAROL-01 and independently review changed hashes and meaningful cache-reuse regression.",
+    "On macOS run Core FreeSongWindowTests, app RemoteConfigWindowTests and appropriate access/app regressions; compile with Swift 5.10 complete concurrency checks.",
+    "Validate actual timer/foreground/day/significant-time/timezone UI refresh while offline and confirm already-started takes continue. Record native evidence without treating source review as a pass."
+  ],
+  "limitations": [
+    "No Swift compilation, XCTest execution, simulator, timer delivery or device/hardware run observed.",
+    "Review verdict is hash-bound to listed source bytes and baseline HEAD. Concurrent worker files not included in this package are not approved by this report.",
+    "No Apple account configuration, campaign publication, deployment or release approval is implied."
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-10-27T01:23:51.519050+00:00",
+  "reviewer": "Independent Watch capture review agent",
+  "baseline_head": "be4c23496ef05dd80a1c6fdde7a8eee98fb15982",
+  "verdict": "approve_source_change_with_native_execution_and_media_acceptance_pending",
+  "approval_scope": "The ten source/document files below at these hashes; source-review approval only. No native build, Swift typecheck, simulator capture or upload approval is asserted.",
+  "source_files_sha256": {
+    ".github/workflows/watch-captures.yml": "33e5ef5538bc513068301519eca28bde9b23c1746fba0c234095a97c561d0bdb",
+    "tools/ci/watch_captures.py": "a5101979c9803977715f1f0a79ab8b723ef6af92e35b3f2f18059134a41bebb2",
+    "tools/l10n/tests/test_watch_captures.py": "dd80503ade5ee42e1f7db5dea3d4f1a5cf1ab54583cf413c65226c3850ba30fc",
+    "ios/TimbreWatch/WatchCapture.swift": "d1090153bae3f58eb23d89e3aefc9f617bb4e76a04705b7f3682e740d555a3c9",
+    "ios/TimbreWatch/WatchSync.swift": "7c7720e74f35eadbd271b143c6aff2fc38d08f4d3e03eb163ae73fd845c4210d",
+    "ios/TimbreWatch/TimbreWatchApp.swift": "4fe93e9807e566c40c4888f211b498d3cbda922820ec0e5c68121767b21adaf4",
+    "ios/TimbreWatch/TodayScreen.swift": "db9c6a56c95acfc1b38ee7aeaaa4f94a47fb35ef6ff9bc9d35dfca53e35da68e",
+    "ios/TimbreWatch/MetronomeScreen.swift": "df7529f7bdd90e9861bcd7a2dacf4cf98079c1d33eacb86bdaa21a3c07e53173",
+    "docs/ios/readiness/reviews/watch-capture-plan.md": "14a0b1bdaf55b416bbfcc68aed9614bbcca77eb605c4dccbc855664c1ec48076",
+    "docs/ios/readiness/reviews/watch-face-remaining.md": "7adec781fe58d90bb8c41defc2f40ad284ab64b0aa867141f6cf0b0d427a7544"
+  },
+  "local_verification_receipt_sha256": "f22317c4480d6d051ff565ac7f97550aaa1e9df352417008d968cf3730894f45",
+  "input_hashes": {
+    "ios/project.yml": "bde414e495e2cad1451bed7fe8bdd085b8bfe6757b90d1e504320f87c440df11",
+    "ios/Timbre/Services/WatchSnapshot.swift": "4d8c7568d1bf0831287016ad1e369868eefd7933b78a462c5abdc103873b84d1",
+    "tools/l10n/store-locales.json": "05769c29a716b41458f24e3780260c0610064e82aa5cadb87beb53a7e5399646"
+  },
+  "findings": [],
+  "checks": [
+    "DEBUG hooks and new implementation are conditionally compiled; release view initialization remains Today and normal WatchSync activation remains the existing path.",
+    "Today and metronome remain existing native SwiftUI pages; capture seeds WatchSnapshot and starts the real WristMetronome timer. No image composition or fake system face added.",
+    "Exact per-launch UUID, requested language, revision, page, applied-label dictionary, native pixels and state checks reject stale prior-process probes; current foreground state is required while publishing. Before/after timestamps bracket capture and native decode.",
+    "All 49 language/page pairs and 50 distinct store locales are enforced. Unsupported store locales ms, or-IN and zh-Hant truthfully use English; paths retain capture-language provenance.",
+    "Native PNG uses public help-derived black-mask capability; original media bytes are retained. CRC, bounded decompression, unfiltering, decoded dimensions and actual opacity are checked; native ImageIO decode is required on capture and validation. Alpha-channel presence is independently recorded and flagged for upload review.",
+    "Fresh pair/device identifiers are used for build, install, launch and screenshot. Template selection requires available installed runtime/device, and no arbitrary booted simulator fallback exists. Pairing/build/launch failure prevents manifest creation.",
+    "Workflow is manual-only, read-only repository permission, no persisted checkout credential, no account/signing/upload action. Shell revision arguments are quoted and subprocess arguments use lists. Artifact patterns preserve partial logs, probes and untouched media.",
+    "Watch face remains genuine manual follow-up and is not included in captured-image counts or claimed as an Apple minimum-media blocker."
+  ],
+  "independently_executed_verification": [
+    {
+      "command": "python -m unittest discover -s tools/l10n/tests -p test_watch_captures.py",
+      "exit_code": 0,
+      "result": "14 tests passed in 3.515s; fixture/parser tests only"
+    },
+    {
+      "command": "SHA-256 verification of ten scoped files against local-verification receipt",
+      "exit_code": 0,
+      "result": "All ten hashes match"
+    }
+  ],
+  "remaining_runtime_gates": [
+    "Run on final committed revision using hosted macOS/Xcode. Confirm configured Xcode exists, installed public simctl options, 46mm Series 10/11/12 native size and compatible iPhone/watchOS runtimes pair successfully. Current independent review is Windows-only.",
+    "Build both Debug and Release Watch configurations with actual Apple SDK/compiler in Swift 5.10 mode; validate actor isolation and Task/SwiftUI lifecycle behavior. Source review cannot replace Swift typecheck.",
+    "Confirm unsigned dependent Watch app installs/launches on the selected fresh pair with current companion configuration, actual TabView page reaches foreground and all 98 probes/captures validate. Public tool failure is deliberately fail-closed; no runtime success claimed.",
+    "Inspect all 98 actual captures visually for native Watch chrome, correct page, desired running/Today state, translations, glyphs, clipping and RTL. Instrumented localization labels are evidence of bundle lookup, not screenshot OCR or UI-tree proof.",
+    "AppleLanguages uses app language and AppleLocale uses the language identifier with underscores; region-specific formatting/system chrome is not proven by this app-only locale contract. Normalization compares primary languages except Chinese; verify actual regional UI where relevant during visual review.",
+    "Preserve originals. Resolve any upload_alpha_channel_review_required flag before Apple upload; pixel opacity alone is not proof that an alpha-bearing PNG satisfies upload processing.",
+    "System face capture remains separate manual work with installed real complications, same native dimensions and its own provenance; it is not a prerequisite for source approval or the stated Apple minimum app screenshot requirement."
+  ],
+  "actions_not_taken": [
+    "No product, workflow or test file edited",
+    "No commit, push, workflow dispatch, native capture, Apple account operation or media upload"
+  ],
+  "review_skill": "C:/Users/shahr/.agents/skills/code-review-and-quality/SKILL.md"
+}

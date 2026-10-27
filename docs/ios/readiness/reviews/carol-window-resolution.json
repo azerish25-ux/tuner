@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-10-27T01:32:23.076158+00:00",
+  "baseline_head": "be4c23496ef05dd80a1c6fdde7a8eee98fb15982",
+  "finding": "CAROL-01",
+  "original_review": "docs/ios/readiness/reviews/carol-window-independent-review.json",
+  "status": "source_resolution_ready_for_original_reviewer_reread_native_pending",
+  "change": "SongsCatalog.Key includes the exact effective free lesson ID Set and independent unit2 flag. Same-day grant/revocation changes rebuild cached standings and layouts; Carol caption reads the same effective Set snapshot. Existing LessonAccess tap guards remain dynamic and unchanged. No view reset or playback/take cancellation.",
+  "minimal_test_seams": [
+    "Existing RemoteConfig.apply is now internal, not public, to exercise real config application and restore state in tests.",
+    "Existing SongsCatalog.layout accepts default now: Date = Date(); forwards the same date through day-key and seasonal shelf calculations. Production callers retain the current clock."
+  ],
+  "regressions": {
+    "file": "ios/TimbreAppTests/SongsCatalogAccessTests.swift",
+    "methods": 2,
+    "coverage": [
+      "Reuse one actual SongsCatalog across same-day permanent lesson grant and revoke; fixed AppStore/progress/Pro/day/home; assert Carol caption and access standing agree with dynamic entry policy and store.canPlay.",
+      "Reuse one actual SongsCatalog across same-day unit2Free grant and revoke; assert gtr-2-4 standing invalidates.",
+      "Restore shared RemoteConfig values and FreeOpenings.current using defer; no artificial product route or translated string change."
+    ],
+    "native_RED": "UNRUN locally: tests authored before fix; no Swift/Xcode available.",
+    "native_GREEN": "UNRUN locally: macOS XCTest/compilation still required."
+  },
+  "verification": [
+    {
+      "command": "git diff --check -- ios/Timbre/Songs/SongsView.swift ios/Timbre/Services/RemoteConfig.swift",
+      "exit_code": 0,
+      "result": "No whitespace errors; only autocrlf notices."
+    },
+    {
+      "command": "python tools/ci/lint_tells.py",
+      "exit_code": 0,
+      "result": "No new error-level occurrences; unrelated existing PaywallWinBack/WatchCapture warnings."
+    },
+    {
+      "command": "Inspect scoped diff",
+      "result": "SongsView diff confined to cache/date/caption computations; privacy request flow, translations and tap guards unchanged. All3resolution files LF-only."
+    }
+  ],
+  "sha256": {
+    "ios/Timbre/Songs/SongsView.swift": "8bc9d66086b76ea1745d27ac9c5852d9b9fea4e5319d79dd2c4e7a30ea670796",
+    "ios/Timbre/Services/RemoteConfig.swift": "117375f1b23d5417352f2c112b0ea3273ffa5d80022eddcc13dc1e0b0f6994f5",
+    "ios/TimbreAppTests/SongsCatalogAccessTests.swift": "d3e9d4f25adf54ab5721f84dfc1e03babf82f691fd41e2c1c1421b66a0b72a21"
+  },
+  "unchanged_initial_source_hashes": {
+    "ios/Sources/TimbreCore/Commerce/Access.swift": "d7d68f592842084c5833588425386fe04ac953ccd1abb515be05feeb1bc24564",
+    "ios/Sources/TimbreCore/Commerce/FreeSongWindow.swift": "2bcd48cd0b3d7559206337fc3f5d46233aace37b10ba87f2486b28136fa0a2cc",
+    "ios/Timbre/Services/AppStore.swift": "48a9109dabdd161869139e9094c3e47876308886435fbb56207e453fae0cd223",
+    "ios/Tests/TimbreCoreTests/FreeSongWindowTests.swift": "43660e50ddd11a79395a814a937fb4a5ee361649099704f1ad4c6daaa22dc9b1",
+    "ios/TimbreAppTests/RemoteConfigWindowTests.swift": "5addfe1892ed6615d2ac7a2f72fb9ad4c9c0f91fbe51e9a4261a8089a10b6707",
+    "docs/ios/APPLE-DELIVERY.md": "3c320126822fbfc83b17fca103e9faf0940c4ac8f7bc6d5d94cb646e2868c5e4",
+    "docs/ios/RELEASE-CHECKLIST.md": "1f06a7c54fb7be17c175ed24a3d07728c9913f25cdbc0054984f8574a5d77d4c",
+    "docs/ios/readiness/reviews/carol-window-plan.md": "a4d55df49ae4b12351aef62ddbee3d1a37b3a314d0b32d75a8d8917f43fd4035"
+  },
+  "preserved_receipts_sha256": {
+    "carol-window-plan.md": "a4d55df49ae4b12351aef62ddbee3d1a37b3a314d0b32d75a8d8917f43fd4035",
+    "carol-window-implementation.json": "1ad14211773fd3e15b2c45d3654bb56cf2af119725940f2d8c6a7c27072833c4",
+    "carol-window-independent-review.json": "87e5ccdc7872c23bd56d3ef9e6ac28a9ff13e20124b71cb3858539862e66de21",
+    "remaining-gap-audit.json": "0c80ca2a8383e67b3ee030e3204170a458b85b5c6a2ef3843ab687079115cf80"
+  },
+  "remaining_validation": [
+    "Original independent reviewer reread of frozen hashes.",
+    "Native SongsCatalogAccessTests plus existing Core/app regressions and complete-concurrency build.",
+    "Native visible same-day remote grant/revoke locks and caption refresh, boundary timing, notification delivery and in-progress take continuity."
+  ],
+  "modifications": "Only three resolution source/test files plus this new receipt; no commit/push/deployment/accounts. Initial implementation and review receipts preserved."
+}

@@ -1,0 +1,1167 @@
+{
+  "role": "author QA only",
+  "locale_count": 50,
+  "unexpected_error_count": 0,
+  "max_description_characters": 3471,
+  "embedded_gc_sentence_removals": 16,
+  "standalone_gc_bullet_removals": 34,
+  "validation_method": "Current store.validate on in-memory candidates using proposed en-US source and actual unchanged prior registry. Expected stale AI source/content review hashes retained in full output; not fabricated or suppressed as passing independent review. All other structural checks pass. No full strict-source snapshot pass claimed until source and source snapshot are atomically updated after independent review.",
+  "results": [
+    {
+      "locale": "ar-SA",
+      "description_characters": 2562,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "ar-SA: AI review source content hash is missing or stale",
+        "ar-SA: AI review current-content hash is missing or stale",
+        "ar-SA: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "bn-BD",
+      "description_characters": 2809,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "bn-BD: AI review source content hash is missing or stale",
+        "bn-BD: AI review current-content hash is missing or stale",
+        "bn-BD: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "ca",
+      "description_characters": 3028,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "ca: AI review source content hash is missing or stale",
+        "ca: AI review current-content hash is missing or stale",
+        "ca: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "cs",
+      "description_characters": 2714,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "cs: AI review source content hash is missing or stale",
+        "cs: AI review current-content hash is missing or stale",
+        "cs: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "da",
+      "description_characters": 2938,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "da: AI review source content hash is missing or stale",
+        "da: AI review current-content hash is missing or stale",
+        "da: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "de-DE",
+      "description_characters": 3272,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "de-DE: AI review source content hash is missing or stale",
+        "de-DE: AI review current-content hash is missing or stale",
+        "de-DE: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "el",
+      "description_characters": 3172,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "el: AI review source content hash is missing or stale",
+        "el: AI review current-content hash is missing or stale",
+        "el: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "en-AU",
+      "description_characters": 3101,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "en-AU: AI review source content hash is missing or stale",
+        "en-AU: AI review current-content hash is missing or stale",
+        "en-AU: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "en-CA",
+      "description_characters": 3101,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "en-CA: AI review source content hash is missing or stale",
+        "en-CA: AI review current-content hash is missing or stale",
+        "en-CA: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "en-GB",
+      "description_characters": 3101,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "en-GB: AI review source content hash is missing or stale",
+        "en-GB: AI review current-content hash is missing or stale",
+        "en-GB: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "en-US",
+      "description_characters": 3101,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "en-US: AI review source content hash is missing or stale",
+        "en-US: AI review current-content hash is missing or stale",
+        "en-US: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "es-ES",
+      "description_characters": 3283,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "es-ES: AI review source content hash is missing or stale",
+        "es-ES: AI review current-content hash is missing or stale",
+        "es-ES: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "es-MX",
+      "description_characters": 3287,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "es-MX: AI review source content hash is missing or stale",
+        "es-MX: AI review current-content hash is missing or stale",
+        "es-MX: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "fi",
+      "description_characters": 3065,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "fi: AI review source content hash is missing or stale",
+        "fi: AI review current-content hash is missing or stale",
+        "fi: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "fr-CA",
+      "description_characters": 3400,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "fr-CA: AI review source content hash is missing or stale",
+        "fr-CA: AI review current-content hash is missing or stale",
+        "fr-CA: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "fr-FR",
+      "description_characters": 3400,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "fr-FR: AI review source content hash is missing or stale",
+        "fr-FR: AI review current-content hash is missing or stale",
+        "fr-FR: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "gu-IN",
+      "description_characters": 2813,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "gu-IN: AI review source content hash is missing or stale",
+        "gu-IN: AI review current-content hash is missing or stale",
+        "gu-IN: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "he",
+      "description_characters": 2472,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "he: AI review source content hash is missing or stale",
+        "he: AI review current-content hash is missing or stale",
+        "he: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "hi",
+      "description_characters": 2842,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "hi: AI review source content hash is missing or stale",
+        "hi: AI review current-content hash is missing or stale",
+        "hi: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "hr",
+      "description_characters": 2846,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "hr: AI review source content hash is missing or stale",
+        "hr: AI review current-content hash is missing or stale",
+        "hr: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "hu",
+      "description_characters": 2975,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "hu: AI review source content hash is missing or stale",
+        "hu: AI review current-content hash is missing or stale",
+        "hu: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "id",
+      "description_characters": 3177,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "id: AI review source content hash is missing or stale",
+        "id: AI review current-content hash is missing or stale",
+        "id: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "it",
+      "description_characters": 3182,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "it: AI review source content hash is missing or stale",
+        "it: AI review current-content hash is missing or stale",
+        "it: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "ja",
+      "description_characters": 1606,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "ja: AI review source content hash is missing or stale",
+        "ja: AI review current-content hash is missing or stale",
+        "ja: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "kn-IN",
+      "description_characters": 3183,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "kn-IN: AI review source content hash is missing or stale",
+        "kn-IN: AI review current-content hash is missing or stale",
+        "kn-IN: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "ko",
+      "description_characters": 1706,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "ko: AI review source content hash is missing or stale",
+        "ko: AI review current-content hash is missing or stale",
+        "ko: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "ml-IN",
+      "description_characters": 3315,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "ml-IN: AI review source content hash is missing or stale",
+        "ml-IN: AI review current-content hash is missing or stale",
+        "ml-IN: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "mr-IN",
+      "description_characters": 2852,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "mr-IN: AI review source content hash is missing or stale",
+        "mr-IN: AI review current-content hash is missing or stale",
+        "mr-IN: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "ms",
+      "description_characters": 3267,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "ms: AI review source content hash is missing or stale",
+        "ms: AI review current-content hash is missing or stale",
+        "ms: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "nl-NL",
+      "description_characters": 3041,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "nl-NL: AI review source content hash is missing or stale",
+        "nl-NL: AI review current-content hash is missing or stale",
+        "nl-NL: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "no",
+      "description_characters": 2905,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "no: AI review source content hash is missing or stale",
+        "no: AI review current-content hash is missing or stale",
+        "no: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "or-IN",
+      "description_characters": 2832,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "or-IN: AI review source content hash is missing or stale",
+        "or-IN: AI review current-content hash is missing or stale",
+        "or-IN: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "pa-IN",
+      "description_characters": 2836,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "pa-IN: AI review source content hash is missing or stale",
+        "pa-IN: AI review current-content hash is missing or stale",
+        "pa-IN: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "pl",
+      "description_characters": 2978,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "pl: AI review source content hash is missing or stale",
+        "pl: AI review current-content hash is missing or stale",
+        "pl: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "pt-BR",
+      "description_characters": 3094,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "pt-BR: AI review source content hash is missing or stale",
+        "pt-BR: AI review current-content hash is missing or stale",
+        "pt-BR: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "pt-PT",
+      "description_characters": 3393,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "pt-PT: AI review source content hash is missing or stale",
+        "pt-PT: AI review current-content hash is missing or stale",
+        "pt-PT: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "ro",
+      "description_characters": 3092,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "ro: AI review source content hash is missing or stale",
+        "ro: AI review current-content hash is missing or stale",
+        "ro: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "ru",
+      "description_characters": 3071,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "ru: AI review source content hash is missing or stale",
+        "ru: AI review current-content hash is missing or stale",
+        "ru: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "sk",
+      "description_characters": 2729,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "sk: AI review source content hash is missing or stale",
+        "sk: AI review current-content hash is missing or stale",
+        "sk: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "sl-SI",
+      "description_characters": 2835,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "sl-SI: AI review source content hash is missing or stale",
+        "sl-SI: AI review current-content hash is missing or stale",
+        "sl-SI: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "sv",
+      "description_characters": 2869,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "sv: AI review source content hash is missing or stale",
+        "sv: AI review current-content hash is missing or stale",
+        "sv: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "ta-IN",
+      "description_characters": 3471,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "ta-IN: AI review source content hash is missing or stale",
+        "ta-IN: AI review current-content hash is missing or stale",
+        "ta-IN: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "te-IN",
+      "description_characters": 3119,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "te-IN: AI review source content hash is missing or stale",
+        "te-IN: AI review current-content hash is missing or stale",
+        "te-IN: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "th",
+      "description_characters": 2684,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "th: AI review source content hash is missing or stale",
+        "th: AI review current-content hash is missing or stale",
+        "th: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "tr",
+      "description_characters": 2842,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "tr: AI review source content hash is missing or stale",
+        "tr: AI review current-content hash is missing or stale",
+        "tr: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "uk",
+      "description_characters": 2907,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "uk: AI review source content hash is missing or stale",
+        "uk: AI review current-content hash is missing or stale",
+        "uk: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "ur-PK",
+      "description_characters": 2829,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "ur-PK: AI review source content hash is missing or stale",
+        "ur-PK: AI review current-content hash is missing or stale",
+        "ur-PK: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "vi",
+      "description_characters": 3082,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "vi: AI review source content hash is missing or stale",
+        "vi: AI review current-content hash is missing or stale",
+        "vi: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "zh-Hans",
+      "description_characters": 1202,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "zh-Hans: AI review source content hash is missing or stale",
+        "zh-Hans: AI review current-content hash is missing or stale",
+        "zh-Hans: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    },
+    {
+      "locale": "zh-Hant",
+      "description_characters": 1227,
+      "description_limit": 4000,
+      "unexpected_structural_errors": [],
+      "expected_stale_review_errors": [
+        "zh-Hant: AI review source content hash is missing or stale",
+        "zh-Hant: AI review current-content hash is missing or stale",
+        "zh-Hant: AI review locale source hash is missing or stale"
+      ],
+      "meaning_author_check": [
+        "live/current microphone scope explicit",
+        "analysis on user device, not iPhone-only",
+        "never recorded or uploaded scoped to that audio",
+        "no account/no ads retained",
+        "no new claim about imported recordings",
+        "only exact GC promise removed",
+        "placeholder replaced once with assigned HTTPS URL",
+        "production_privacy_url added without release verification"
+      ],
+      "other_fields_unchanged": true,
+      "release_ready_retained_false": true
+    }
+  ],
+  "limitations": [
+    "Author-only; independent changed-text review pending for all50 locales",
+    "No native, market, blinded legal, device, account, asset or release certification",
+    "Actual parent HTTP200 evidence read/hash-bound; own web fetch unavailable and urllib request403, consistent with recorded Cloudflare user-agent filtering.",
+    "Other consumer fields preserved, not newly semantically reviewed"
+  ]
+}

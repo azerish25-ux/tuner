@@ -20,7 +20,7 @@
     "game_center_account": "not_verified",
     "release_ready": false,
     "blockers": [
-      "Production privacy policy URL and verification not provided",
+      "Published privacy policy/source alignment for the current app candidate pending refresh and verification",
       "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
       "Localized App Preview recordings and audio/sync/render review pending",
       "App Store Connect product/locale limits and Game Center configuration/images unverified"
@@ -38,7 +38,16 @@
     },
     "ai_source_aware": "reviewed",
     "privacy_policy": "not_verified",
-    "review_policy": "ai_source_aware"
+    "review_policy": "ai_source_aware",
+    "privacy_source_update": {
+      "reviewer": "Codex /root/store_release_copy_review",
+      "scope": "Bounded privacy paragraph, disabled Game Center description claim, production URL addition only; unchanged full-review inheritance retained",
+      "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+      "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+      "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "new_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "policy_source_alignment": "pending"
+    }
   },
   "game_center_leaderboard_names": {
     "timbre.sniper.best": "U desetku",
@@ -218,7 +227,7 @@
   "subtitle": "Uči violinu, ukulele i bas",
   "keywords": "violina,violončelo,ukulele,mandolina,banjo,kromatski,stroboskop,sluh,metronom,akord",
   "promotional_text": "Besplatan štimer bez oglasa i računa. Osjeti kako se žice ugađaju, uči uz lekcije koje slušaju i sviraj više od 140 pjesama.",
-  "description": "Besplatan štimer. Bez oglasa i računa. Zatim lekcije koje slušaju tvoje sviranje.\n\nTimbre spaja precizan štimer i učitelja glazbe. Ugodi 60 instrumenata i uči svirajući.\n\nUGAĐAJ BESPLATNO\nStandardno ugađanje svakog instrumenta je besplatno: gitara, ukulele, violina, mandolina, banjo, oud, erhu i drugi. Kromatski i stroboskopski štimer s preciznošću u centima. 132 ugađanja, od Drop D i Open G do DADGAD, uz vlastita.\nAutomatsko prepoznavanje žica označava svaku ugođenu. Jedan potez očitava sve žice i pokazuje koju prvo ugoditi. Ugađaj dodirom: telefon pulsira s udarima između žice i ciljnog tona, usporava kad se približe i staje kad se poklope. Ne moraš gledati.\n3D gitare, basovi, violina, violončelo i mandolina sa studijskim svjetlom pokazuju ključ koji treba okrenuti. Kapodaster, podesivi referentni ton A4, solfège i sargam nazivi nota.\n\nUČI SVIRAJUĆI\n526 lekcija u 11 tečajeva: gitara, ukulele, bas, violina, violončelo, mandolina, banjo, pjevanje, sluh, glazbena teorija i ritam. I pjesmarice za ukulele, mandolinu, violinu, violončelo i bas.\nTimbre čuje svaki potez: pravi akord, vrijeme i žicu koja nije zazvučala. Svaku notu ocjenjuje u centima i milisekundama. „Pokaži mi” svira nove akorde na 3D gitari, postavljajući prste redom. Staza nota usporava za tebe pa ubrzava kako napreduješ.\n\nViše od 140 pjesama, svaka s cjelovitim aranžmanom: klasici od Jingle Bells do Amazing Grace, uključujući 50 Originals napisanih za Timbre u suvremenim stilovima. Sviraj s bendom u slušalicama dok se riječi osvjetljavaju. Zalijepi ili uvezi vlastiti zapis akorda, transponiraj, pomiči u ritmu i slušaj izvornik pokraj njega u Apple Musicu.\n\nNASTAVI\nZvjezdice, XP, dnevni zadaci, nizovi i značke. Game Center: tjedna liga „U desetku”, ljestvice pjesama i izazovi prijateljima. Apple Watch: metronom koji osjećaš na zapešću i pregled današnje vježbe. Widgeti početnog i zaključanog zaslona, aktivnost uživo i Siri prečaci.\nMetronom s naglascima, podjelama i vježbom brzine; bordun, vježba intonacije, zbirka akorda i ljestvica. Sluh: smjer visine tona, intervali i vrste akorda te tečaj s 40 lekcija.\n\nPOČNI BESPLATNO\nStandardna ugađanja svih instrumenata su besplatna. Gitara, bas, ukulele, violina i violončelo besplatni su u svim ugađanjima. Prva cjelina svakog tečaja i izbor pjesama također su besplatni. Timbre Pro otključava sve lekcije, pjesme, ugađanja i alate za vježbanje. Uz uključene obavijesti Timbre podsjeća dva dana prije isteka besplatnog probnog razdoblja.\nZvuk se analizira na iPhoneu, nikad se ne snima ni prenosi. Bez računa i oglasa.\nPretplate se automatski obnavljaju osim ako ih otkažeš najmanje 24 sata prije kraja razdoblja. Upravljaj ili otkaži u bilo kojem trenutku: Postavke → Apple račun → Pretplate.\nUvjeti: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\nPrivatnost: <privacy policy URL>",
+  "description": "Besplatan štimer. Bez oglasa i računa. Zatim lekcije koje slušaju tvoje sviranje.\n\nTimbre spaja precizan štimer i učitelja glazbe. Ugodi 60 instrumenata i uči svirajući.\n\nUGAĐAJ BESPLATNO\nStandardno ugađanje svakog instrumenta je besplatno: gitara, ukulele, violina, mandolina, banjo, oud, erhu i drugi. Kromatski i stroboskopski štimer s preciznošću u centima. 132 ugađanja, od Drop D i Open G do DADGAD, uz vlastita.\nAutomatsko prepoznavanje žica označava svaku ugođenu. Jedan potez očitava sve žice i pokazuje koju prvo ugoditi. Ugađaj dodirom: telefon pulsira s udarima između žice i ciljnog tona, usporava kad se približe i staje kad se poklope. Ne moraš gledati.\n3D gitare, basovi, violina, violončelo i mandolina sa studijskim svjetlom pokazuju ključ koji treba okrenuti. Kapodaster, podesivi referentni ton A4, solfège i sargam nazivi nota.\n\nUČI SVIRAJUĆI\n526 lekcija u 11 tečajeva: gitara, ukulele, bas, violina, violončelo, mandolina, banjo, pjevanje, sluh, glazbena teorija i ritam. I pjesmarice za ukulele, mandolinu, violinu, violončelo i bas.\nTimbre čuje svaki potez: pravi akord, vrijeme i žicu koja nije zazvučala. Svaku notu ocjenjuje u centima i milisekundama. „Pokaži mi” svira nove akorde na 3D gitari, postavljajući prste redom. Staza nota usporava za tebe pa ubrzava kako napreduješ.\n\nViše od 140 pjesama, svaka s cjelovitim aranžmanom: klasici od Jingle Bells do Amazing Grace, uključujući 50 Originals napisanih za Timbre u suvremenim stilovima. Sviraj s bendom u slušalicama dok se riječi osvjetljavaju. Zalijepi ili uvezi vlastiti zapis akorda, transponiraj, pomiči u ritmu i slušaj izvornik pokraj njega u Apple Musicu.\n\nNASTAVI\nZvjezdice, XP, dnevni zadaci, nizovi i značke. Apple Watch: metronom koji osjećaš na zapešću i pregled današnje vježbe. Widgeti početnog i zaključanog zaslona, aktivnost uživo i Siri prečaci.\nMetronom s naglascima, podjelama i vježbom brzine; bordun, vježba intonacije, zbirka akorda i ljestvica. Sluh: smjer visine tona, intervali i vrste akorda te tečaj s 40 lekcija.\n\nPOČNI BESPLATNO\nStandardna ugađanja svih instrumenata su besplatna. Gitara, bas, ukulele, violina i violončelo besplatni su u svim ugađanjima. Prva cjelina svakog tečaja i izbor pjesama također su besplatni. Timbre Pro otključava sve lekcije, pjesme, ugađanja i alate za vježbanje. Uz uključene obavijesti Timbre podsjeća dva dana prije isteka besplatnog probnog razdoblja.\nPrivatnost od samog početka: zvuk uživo iz mikrofona analizira se na tvom uređaju i nikad se ne snima ni prenosi. Bez računa i oglasa.\nPretplate se automatski obnavljaju osim ako ih otkažeš najmanje 24 sata prije kraja razdoblja. Upravljaj ili otkaži u bilo kojem trenutku: Postavke → Apple račun → Pretplate.\nUvjeti: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\nPrivatnost: https://timbre-support.timbre.workers.dev/privacy",
   "whats_new": "Dobro došao u Timbre: besplatan štimer za 60 instrumenata i 526 lekcija koje slušaju tvoje sviranje.",
   "iphone_screenshot_captions": [
     {
@@ -330,5 +339,6 @@
     "ukulele": [
       "ukulele"
     ]
-  }
+  },
+  "production_privacy_url": "https://timbre-support.timbre.workers.dev/privacy"
 }

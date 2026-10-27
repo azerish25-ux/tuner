@@ -20,7 +20,7 @@
     "game_center_account": "not_verified",
     "release_ready": false,
     "blockers": [
-      "Production privacy policy URL and verification not provided",
+      "Published privacy policy/source alignment for the current app candidate pending refresh and verification",
       "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
       "Localized App Preview recordings and audio/sync/render review pending",
       "App Store Connect product/locale limits and Game Center configuration/images unverified"
@@ -38,7 +38,16 @@
     },
     "ai_source_aware": "reviewed",
     "privacy_policy": "not_verified",
-    "review_policy": "ai_source_aware"
+    "review_policy": "ai_source_aware",
+    "privacy_source_update": {
+      "reviewer": "Codex /root/store_release_copy_review",
+      "scope": "Bounded privacy paragraph, disabled Game Center description claim, production URL addition only; unchanged full-review inheritance retained",
+      "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+      "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+      "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "new_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "policy_source_alignment": "pending"
+    }
   },
   "game_center_leaderboard_names": {
     "timbre.sniper.best": "Na mosca",
@@ -124,7 +133,7 @@
   "subtitle": "Aulas: ukulele, violino, baixo",
   "keywords": "violino,violoncelo,ukulele,bandolim,banjo,cromático,estroboscópio,ouvido,metrônomo,acorde",
   "promotional_text": "Afinador grátis, sem anúncios nem conta. Sinta cada corda se afinar e aprenda com aulas que ouvem você tocar e mais de 140 músicas.",
-  "description": "Afinador grátis, sem anúncios nem conta. Depois, aulas que ouvem você tocar.\n\nTimbre reúne um afinador preciso e um professor de música. Afine 60 instrumentos e saiba exatamente como foi sua execução.\n\nAFINE DE GRAÇA\n• A afinação padrão de cada instrumento é grátis: violão, ukulele, violino, bandolim, banjo, oud, erhu e mais.\n• Afinador cromático e estroboscópico com precisão em cents; 132 afinações, de Drop D e Open G a DADGAD, além das suas.\n• Detecção automática de cordas, com marcação ao afinar cada uma. Uma batida lê todas as cordas e indica qual afinar primeiro.\n• Afine pelo tato: o celular pulsa com o batimento entre a corda e a nota, desacelera quando se aproximam e para ao afinar. Assim, você afina sem olhar.\n• Violões, baixos, violino, violoncelo e bandolim em 3D com iluminação de estúdio e indicação da tarraxa a girar.\n• Capotraste, referência A4 ajustável e nomes de notas em solfejo e sargam.\n\nAPRENDA TOCANDO\n• 526 aulas em 11 cursos: violão, ukulele, baixo, violino, violoncelo, bandolim, banjo, canto, percepção musical, teoria e ritmo. Mais cancioneiros para ukulele, bandolim, violino, violoncelo e baixo.\n• Timbre ouve cada batida: o acorde certo, no tempo e qual corda não soou. Cada nota é avaliada em cents e milissegundos enquanto você toca.\n• “Mostre-me” toca cada novo acorde em um violão 3D, com os dedos pousando em ordem. A pista de notas desacelera para você e volta a acelerar conforme você melhora.\n\nTOQUE MÚSICAS\n• Mais de 140 músicas com arranjos completos: clássicos de Jingle Bells a Amazing Grace e 50 Originals escritos para Timbre em estilos atuais.\n• Toque com a banda nos fones enquanto a letra se ilumina.\n• Suas músicas: cole ou importe uma cifra, transponha, role no ritmo e ouça o original ao lado no Apple Music.\n\nMANTENHA O RITMO\n• Estrelas, XP, missões diárias, sequências e conquistas.\n• Game Center: liga semanal de Na mosca, classificações de músicas e desafios entre amigos.\n• Apple Watch: metrônomo que você sente no pulso e resumo da prática de hoje.\n• Widgets na Tela de Início e Bloqueada, Atividade ao Vivo e atalhos da Siri.\n• Metrônomo com acentos, subdivisões e treino de velocidade; nota pedal, treino de afinação e biblioteca de acordes e escalas.\n• Percepção musical: direção da altura, intervalos e tipos de acordes, além de um curso de 40 aulas.\n\nCOMECE GRÁTIS\nA afinação padrão de todo instrumento é grátis; violão, baixo, ukulele, violino e violoncelo são grátis em todas as afinações. A primeira unidade de cada curso e uma seleção de músicas também são grátis. Timbre Pro libera todas as aulas, músicas, afinações e ferramentas de prática. Com as notificações ativadas, Timbre avisa dois dias antes do fim de um teste grátis.\n\nPrivacidade desde o início: o áudio é analisado no iPhone, nunca gravado nem enviado. Sem conta nem anúncios.\n\nAssinaturas são renovadas automaticamente, a menos que sejam canceladas pelo menos 24 horas antes do fim do período. Gerencie ou cancele a qualquer momento em Ajustes → Conta Apple → Assinaturas.\nTermos: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\nPrivacidade: <privacy policy URL>",
+  "description": "Afinador grátis, sem anúncios nem conta. Depois, aulas que ouvem você tocar.\n\nTimbre reúne um afinador preciso e um professor de música. Afine 60 instrumentos e saiba exatamente como foi sua execução.\n\nAFINE DE GRAÇA\n• A afinação padrão de cada instrumento é grátis: violão, ukulele, violino, bandolim, banjo, oud, erhu e mais.\n• Afinador cromático e estroboscópico com precisão em cents; 132 afinações, de Drop D e Open G a DADGAD, além das suas.\n• Detecção automática de cordas, com marcação ao afinar cada uma. Uma batida lê todas as cordas e indica qual afinar primeiro.\n• Afine pelo tato: o celular pulsa com o batimento entre a corda e a nota, desacelera quando se aproximam e para ao afinar. Assim, você afina sem olhar.\n• Violões, baixos, violino, violoncelo e bandolim em 3D com iluminação de estúdio e indicação da tarraxa a girar.\n• Capotraste, referência A4 ajustável e nomes de notas em solfejo e sargam.\n\nAPRENDA TOCANDO\n• 526 aulas em 11 cursos: violão, ukulele, baixo, violino, violoncelo, bandolim, banjo, canto, percepção musical, teoria e ritmo. Mais cancioneiros para ukulele, bandolim, violino, violoncelo e baixo.\n• Timbre ouve cada batida: o acorde certo, no tempo e qual corda não soou. Cada nota é avaliada em cents e milissegundos enquanto você toca.\n• “Mostre-me” toca cada novo acorde em um violão 3D, com os dedos pousando em ordem. A pista de notas desacelera para você e volta a acelerar conforme você melhora.\n\nTOQUE MÚSICAS\n• Mais de 140 músicas com arranjos completos: clássicos de Jingle Bells a Amazing Grace e 50 Originals escritos para Timbre em estilos atuais.\n• Toque com a banda nos fones enquanto a letra se ilumina.\n• Suas músicas: cole ou importe uma cifra, transponha, role no ritmo e ouça o original ao lado no Apple Music.\n\nMANTENHA O RITMO\n• Estrelas, XP, missões diárias, sequências e conquistas.\n• Apple Watch: metrônomo que você sente no pulso e resumo da prática de hoje.\n• Widgets na Tela de Início e Bloqueada, Atividade ao Vivo e atalhos da Siri.\n• Metrônomo com acentos, subdivisões e treino de velocidade; nota pedal, treino de afinação e biblioteca de acordes e escalas.\n• Percepção musical: direção da altura, intervalos e tipos de acordes, além de um curso de 40 aulas.\n\nCOMECE GRÁTIS\nA afinação padrão de todo instrumento é grátis; violão, baixo, ukulele, violino e violoncelo são grátis em todas as afinações. A primeira unidade de cada curso e uma seleção de músicas também são grátis. Timbre Pro libera todas as aulas, músicas, afinações e ferramentas de prática. Com as notificações ativadas, Timbre avisa dois dias antes do fim de um teste grátis.\n\nPrivacidade desde o início: o áudio do microfone é analisado em tempo real no seu dispositivo, nunca gravado nem enviado. Sem conta nem anúncios.\n\nAssinaturas são renovadas automaticamente, a menos que sejam canceladas pelo menos 24 horas antes do fim do período. Gerencie ou cancele a qualquer momento em Ajustes → Conta Apple → Assinaturas.\nTermos: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\nPrivacidade: https://timbre-support.timbre.workers.dev/privacy",
   "whats_new": "Boas-vindas ao Timbre: afinador grátis para 60 instrumentos e 526 aulas que ouvem você tocar.",
   "iphone_screenshot_captions": [
     {
@@ -316,5 +325,6 @@
       ],
       "note": "Available app values reused exactly; missing app values retain authored store drafts. Does not certify native or device review."
     }
-  }
+  },
+  "production_privacy_url": "https://timbre-support.timbre.workers.dev/privacy"
 }

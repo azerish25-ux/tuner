@@ -751,7 +751,7 @@ Anonymous usage analytics (TelemetryDeck) are not linked to the user and not use
 | With 2.1 | **Game Center** (if left off), with its art | [§6.1](APPLE-DELIVERY.md#61-game-center) |
 
 ### K4. Carol week
-- [ ] **December 1:** set `freeSongs` in B5's file to the carols' lesson IDs. That is 17 carols, each in the guitar version and the ukulele, mandolin, violin, cello and bass songbooks: 102 IDs. Generate the list:
+- [ ] **Before December 1:** schedule `freeSongs` in B5's file with the carols' lesson IDs and `freeSongsWindow: {"startDate":"2026-12-01","endDate":"2026-12-08"}`. These are Gregorian local dates in each player's current time zone: start inclusive, end exclusive, so all of December 1–7 is covered. That is 17 carols, each in the guitar version and the ukulele, mandolin, violin, cello and bass songbooks: 102 IDs, below the bounded 256-ID limit. Generate the campaign fields and merge them into the existing settings without replacing unrelated keys:
 
 ```sh
 python3 - <<'EOF'
@@ -760,11 +760,13 @@ carols = ["song-silent-night", "song-jingle-bells", "song-joy-to-the-world", "so
           "song-good-king-wenceslas", "std-o-christmas-tree", "std-o-come-all-ye-faithful", "std-the-first-noel",
           "std-hark-the-herald", "std-away-in-a-manger", "std-o-little-town", "std-it-came-upon", "std-royal-davids-city",
           "std-bleak-midwinter", "std-holly-and-ivy", "std-angels-from-the-realms"]
-print(json.dumps([prefix + c for c in carols for prefix in ["", "uke-sb-", "man-sb-", "vln-sb-", "vc-sb-", "bass-sb-"]]))
+print(json.dumps({"freeSongs": [prefix + c for c in carols for prefix in ["", "uke-sb-", "man-sb-", "vln-sb-", "vc-sb-", "bass-sb-"]],
+                  "freeSongsWindow": {"startDate": "2026-12-01", "endDate": "2026-12-08"}}, indent=2))
 EOF
 ```
 
-- [ ] **December 8:** set `freeSongs` back to `[]`. The app has no end date of its own; the songs stay free for as long as the file lists them.
+- [ ] **Verify before publishing:** all 102 IDs exist, late-list cello and bass songs unlock during the window, unrelated paid lessons stay locked, and cached/offline access expires at local midnight starting December 8. A missing window intentionally preserves permanent `freeSongs`; a supplied invalid/partial/reversed window grants none. This window does not affect `flags.unit2Free`. See [the schema](APPLE-DELIVERY.md#5-analytics-links-and-remote-settings).
+- [ ] **December 8:** the app expires these grants automatically, including offline. Clean up both `freeSongs` and `freeSongsWindow` together when convenient; do not remove only the window while leaving song IDs, which would intentionally turn them into permanent grants. Already started takes are not interrupted.
 
 ### K5. More languages
 - When a translator delivers a locale, the developer imports it (`python3 tools/l10n/report.py --import tools/l10n/todo`).

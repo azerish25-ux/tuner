@@ -31,7 +31,7 @@ jobs:
           set -euo pipefail
           mkdir -p ci-out
           xcodebuild -exportLocalizations -project ios/Timbre.xcodeproj -localizationPath ci-out/l10n -exportLanguage en \
-            SWIFT_EMIT_LOC_STRINGS=YES CODE_SIGNING_ALLOWED=NO 2>&1 | tail -40 | tee ci-out/export.log
+            SWIFT_EMIT_LOC_STRINGS=YES CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/export.log
           XLIFF=ci-out/l10n/en.xcloc/Localized\ Contents/en.xliff
           test -s "$XLIFF"
           cp "$XLIFF" ci-out/en.xliff

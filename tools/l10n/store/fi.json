@@ -20,7 +20,7 @@
     "game_center_account": "not_verified",
     "release_ready": false,
     "blockers": [
-      "Production privacy policy URL and verification not provided",
+      "Published privacy policy/source alignment for the current app candidate pending refresh and verification",
       "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
       "Localized App Preview recordings and audio/sync/render review pending",
       "App Store Connect product/locale limits and Game Center configuration/images unverified"
@@ -38,7 +38,16 @@
     },
     "ai_source_aware": "reviewed",
     "privacy_policy": "not_verified",
-    "review_policy": "ai_source_aware"
+    "review_policy": "ai_source_aware",
+    "privacy_source_update": {
+      "reviewer": "Codex /root/store_release_copy_review",
+      "scope": "Bounded privacy paragraph, disabled Game Center description claim, production URL addition only; unchanged full-review inheritance retained",
+      "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+      "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+      "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "new_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "policy_source_alignment": "pending"
+    }
   },
   "game_center_leaderboard_names": {
     "timbre.sniper.best": "Napakymppi",
@@ -204,7 +213,7 @@
   "subtitle": "Opi viulua, ukulelea ja bassoa",
   "keywords": "viulu,sello,ukulele,mandoliini,banjo,kromaattinen,stroboskooppi,säveltapailu,metronomi,sointu",
   "promotional_text": "Ilmainen viritin ilman mainoksia tai tiliä. Tunne kielten virittyminen, opi soittoasi kuuntelevilla oppitunneilla ja soita yli 140 kappaletta.",
-  "description": "Ilmainen viritin. Ei mainoksia eikä tiliä. Sen jälkeen oppitunteja, jotka kuuntelevat soittoasi.\n\nTimbre yhdistää tarkan virittimen ja musiikinopettajan. Viritä 60 soitinta ja opi soittamalla.\n\nVIRITÄ ILMAISEKSI\nJokaisen soittimen perusviritys on ilmainen: kitara, ukulele, viulu, mandoliini, banjo, oud, erhu ja muut. Kromaattinen ja stroboskooppiviritin sentin tarkkuudella. 132 viritystä Drop D:stä ja Open G:stä DADGADiin sekä omat viritykset.\nAutomaattinen kielentunnistus merkitsee viritetyt kielet. Yksi pyyhkäisy lukee kaikki kielet ja näyttää, mikä viritetään ensin. Viritä tuntoaistilla: puhelin sykkii kielen ja tavoitesävelen huojunnan tahdissa, hidastuu niiden lähestyessä ja pysähtyy vireessä. Näyttöä ei tarvitse katsoa.\nStudiovalaistut 3D-kitarat, bassot, viulu, sello ja mandoliini näyttävät käännettävän viritystapin. Capo, säädettävä A4-viitesävel sekä solfege- ja sargam-sävelnimet.\n\nOPI SOITTAMALLA\n526 oppituntia 11 kurssilla: kitara, ukulele, basso, viulu, sello, mandoliini, banjo, laulu, säveltapailu, musiikinteoria ja rytmi. Myös laulukirjat ukulelelle, mandoliinille, viululle, sellolle ja bassolle.\nTimbre kuulee jokaisen pyyhkäisyn: oikean soinnun, ajoituksen ja mikä kieli ei soinut. Jokainen sävel arvioidaan sentin ja millisekunnin tarkkuudella. ”Näytä” soittaa uudet soinnut 3D-kitaralla ja asettaa sormet järjestyksessä. Nuottirata hidastuu tarvittaessa ja nopeutuu taitosi kehittyessä.\n\nYli 140 kappaletta, jokaisesta kokonainen sovitus: klassikoita Jingle Bellsistä Amazing Graceen sekä mukana 50 Timbrelle nykytyyleillä kirjoitettua Originals-kappaletta. Soita kuulokkeissa bändin mukana sanojen korostuessa. Liitä tai tuo oma sointukaavio, transponoi, vieritä tahdissa ja kuuntele vieressä alkuperäistä Apple Musicissa.\n\nJATKA HARJOITTELUA\nTähtiä, XP:tä, päivätehtäviä, putkia ja merkkejä. Game Centerin viikoittainen Napakymppi-liiga, kappaleiden tulostaulut ja ystävähaasteet. Apple Watchin ranteessa tuntuva metronomi ja päivän harjoittelu yhdellä silmäyksellä. Koti- ja lukitusnäytön widgetit, live-aktiviteetti ja Siri-pikakomennot.\nMetronomi, jossa aksentit, alijaot ja nopeusharjoittelu; borduna, intonaatioharjoittelu sekä sointu- ja asteikkokirjasto. Säveltapailu: sävelkorkeuden suunta, intervallit ja sointutyypit sekä 40 oppitunnin kurssi.\n\nALOITA ILMAISEKSI\nKaikki perusviritykset ovat ilmaisia. Kitara, basso, ukulele, viulu ja sello ovat ilmaisia kaikissa virityksissä. Myös jokaisen kurssin ensimmäinen jakso ja valikoima kappaleita ovat ilmaisia. Timbre Pro avaa kaikki oppitunnit, kappaleet, viritykset ja harjoittelutyökalut. Ilmoitusten ollessa käytössä Timbre muistuttaa kaksi päivää ennen ilmaisen kokeilun päättymistä.\nÄäni analysoidaan iPhonessa, eikä sitä tallenneta tai lähetetä palvelimelle. Ei tiliä tai mainoksia.\nTilaukset uusiutuvat automaattisesti, ellei niitä peruta vähintään 24 tuntia ennen jakson loppua. Hallitse tai peru milloin tahansa: Asetukset → Apple-tili → Tilaukset.\nEhdot: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\nTietosuoja: <privacy policy URL>",
+  "description": "Ilmainen viritin. Ei mainoksia eikä tiliä. Sen jälkeen oppitunteja, jotka kuuntelevat soittoasi.\n\nTimbre yhdistää tarkan virittimen ja musiikinopettajan. Viritä 60 soitinta ja opi soittamalla.\n\nVIRITÄ ILMAISEKSI\nJokaisen soittimen perusviritys on ilmainen: kitara, ukulele, viulu, mandoliini, banjo, oud, erhu ja muut. Kromaattinen ja stroboskooppiviritin sentin tarkkuudella. 132 viritystä Drop D:stä ja Open G:stä DADGADiin sekä omat viritykset.\nAutomaattinen kielentunnistus merkitsee viritetyt kielet. Yksi pyyhkäisy lukee kaikki kielet ja näyttää, mikä viritetään ensin. Viritä tuntoaistilla: puhelin sykkii kielen ja tavoitesävelen huojunnan tahdissa, hidastuu niiden lähestyessä ja pysähtyy vireessä. Näyttöä ei tarvitse katsoa.\nStudiovalaistut 3D-kitarat, bassot, viulu, sello ja mandoliini näyttävät käännettävän viritystapin. Capo, säädettävä A4-viitesävel sekä solfege- ja sargam-sävelnimet.\n\nOPI SOITTAMALLA\n526 oppituntia 11 kurssilla: kitara, ukulele, basso, viulu, sello, mandoliini, banjo, laulu, säveltapailu, musiikinteoria ja rytmi. Myös laulukirjat ukulelelle, mandoliinille, viululle, sellolle ja bassolle.\nTimbre kuulee jokaisen pyyhkäisyn: oikean soinnun, ajoituksen ja mikä kieli ei soinut. Jokainen sävel arvioidaan sentin ja millisekunnin tarkkuudella. ”Näytä” soittaa uudet soinnut 3D-kitaralla ja asettaa sormet järjestyksessä. Nuottirata hidastuu tarvittaessa ja nopeutuu taitosi kehittyessä.\n\nYli 140 kappaletta, jokaisesta kokonainen sovitus: klassikoita Jingle Bellsistä Amazing Graceen sekä mukana 50 Timbrelle nykytyyleillä kirjoitettua Originals-kappaletta. Soita kuulokkeissa bändin mukana sanojen korostuessa. Liitä tai tuo oma sointukaavio, transponoi, vieritä tahdissa ja kuuntele vieressä alkuperäistä Apple Musicissa.\n\nJATKA HARJOITTELUA\nTähtiä, XP:tä, päivätehtäviä, putkia ja merkkejä. Apple Watchin ranteessa tuntuva metronomi ja päivän harjoittelu yhdellä silmäyksellä. Koti- ja lukitusnäytön widgetit, live-aktiviteetti ja Siri-pikakomennot.\nMetronomi, jossa aksentit, alijaot ja nopeusharjoittelu; borduna, intonaatioharjoittelu sekä sointu- ja asteikkokirjasto. Säveltapailu: sävelkorkeuden suunta, intervallit ja sointutyypit sekä 40 oppitunnin kurssi.\n\nALOITA ILMAISEKSI\nKaikki perusviritykset ovat ilmaisia. Kitara, basso, ukulele, viulu ja sello ovat ilmaisia kaikissa virityksissä. Myös jokaisen kurssin ensimmäinen jakso ja valikoima kappaleita ovat ilmaisia. Timbre Pro avaa kaikki oppitunnit, kappaleet, viritykset ja harjoittelutyökalut. Ilmoitusten ollessa käytössä Timbre muistuttaa kaksi päivää ennen ilmaisen kokeilun päättymistä.\nYksityisyys suunnittelun lähtökohtana: mikrofonin ääni analysoidaan reaaliajassa laitteellasi, eikä sitä koskaan tallenneta tai ladata verkkoon. Ei tiliä eikä mainoksia.\nTilaukset uusiutuvat automaattisesti, ellei niitä peruta vähintään 24 tuntia ennen jakson loppua. Hallitse tai peru milloin tahansa: Asetukset → Apple-tili → Tilaukset.\nEhdot: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\nTietosuoja: https://timbre-support.timbre.workers.dev/privacy",
   "whats_new": "Tervetuloa Timbreen: ilmainen viritin 60 soittimelle ja 526 oppituntia, jotka kuuntelevat soittoasi.",
   "iphone_screenshot_captions": [
     {
@@ -316,5 +325,6 @@
     "ukulele": [
       "ukulele"
     ]
-  }
+  },
+  "production_privacy_url": "https://timbre-support.timbre.workers.dev/privacy"
 }

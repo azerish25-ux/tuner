@@ -487,6 +487,7 @@ final class AudioService: ObservableObject {
     }
 
     private func suspend() {
+        Earcons.shared.cancelPending()
         metronomeCommand += 1; droneCommand += 1; toneCommand += 1
         outputLifecycle += 1
         previewLeases.removeAll()
@@ -960,6 +961,7 @@ final class AudioService: ObservableObject {
 
     /// Stops the click; a lesson band under it fades out with it (a final chord already ringing finishes).
     func stopMetronome() {
+        Earcons.shared.cancelPending()
         if let saved = interrupted {
             interrupted = Interrupted(capture: saved.capture, metronome: nil, drone: saved.drone, demo: saved.demo)
         }

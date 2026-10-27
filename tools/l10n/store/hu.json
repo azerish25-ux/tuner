@@ -20,7 +20,7 @@
     "game_center_account": "not_verified",
     "release_ready": false,
     "blockers": [
-      "Production privacy policy URL and verification not provided",
+      "Published privacy policy/source alignment for the current app candidate pending refresh and verification",
       "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
       "Localized App Preview recordings and audio/sync/render review pending",
       "App Store Connect product/locale limits and Game Center configuration/images unverified"
@@ -38,7 +38,16 @@
     },
     "ai_source_aware": "reviewed",
     "privacy_policy": "not_verified",
-    "review_policy": "ai_source_aware"
+    "review_policy": "ai_source_aware",
+    "privacy_source_update": {
+      "reviewer": "Codex /root/store_release_copy_review",
+      "scope": "Bounded privacy paragraph, disabled Game Center description claim, production URL addition only; unchanged full-review inheritance retained",
+      "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+      "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+      "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "new_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "policy_source_alignment": "pending"
+    }
   },
   "game_center_leaderboard_names": {
     "timbre.sniper.best": "Telitalálat",
@@ -204,7 +213,7 @@
   "subtitle": "Hegedű, ukulele, basszusleckék",
   "keywords": "hegedű,cselló,ukulele,mandolin,bendzsó,kromatikus,stroboszkóp,hallás,metronóm,akkord",
   "promotional_text": "Ingyenes hangoló, reklám és fiók nélkül. Érezd a húrok hangolását, tanulj a játékodra figyelő leckékkel, és játssz több mint 140 dalt.",
-  "description": "Ingyenes hangoló. Reklám és fiók nélkül. Utána leckék, amelyek figyelnek a játékodra.\n\nA Timbre pontos hangolót és zenetanárt kínál. Hangolj 60 hangszert, és tanulj játék közben.\n\nHANGOLJ INGYEN\nMinden hangszer alap hangolása ingyenes: gitár, ukulele, hegedű, mandolin, bendzsó, oud, erhu és mások. Kromatikus és stroboszkópos hangoló centpontossággal. 132 hangolás Drop D-től és Open G-től DADGAD-ig, valamint saját hangolások.\nAz automatikus húrfelismerés kipipálja a behangolt húrokat. Egy pengetés minden húrt beolvas, és megmutatja, melyiket hangold először. Hangolj tapintással: a telefon a húr és a célhang közötti lebegés ritmusában rezeg, közeledésükkor lassul, egyezéskor megáll. Nem kell odanézned.\nStúdiófényű 3D gitárok, basszusgitárok, hegedű, cselló és mandolin mutatják a tekerendő hangolókulcsot. Kapodaszter, állítható A4 referencia, szolmizációs és szargam hangnevek.\n\nTANULJ JÁTÉK KÖZBEN\n526 lecke 11 kurzusban: gitár, ukulele, basszusgitár, hegedű, cselló, mandolin, bendzsó, ének, hallás, zeneelmélet és ritmus. Daloskönyvek ukuleléhez, mandolinhoz, hegedűhöz, csellóhoz és basszusgitárhoz is.\nA Timbre minden pengetést hall: a helyes akkordot, az időzítést és a néma húrt. Minden hangot centre és ezredmásodpercre pontosan értékel. A „Mutasd meg” új akkordokat játszik 3D gitáron, sorban elhelyezve az ujjakat. A hangjegypálya lelassul neked, majd fejlődéseddel gyorsul.\n\nTöbb mint 140 dal, mindegyik teljes feldolgozással: klasszikusok Jingle Bellstől Amazing Grace-ig, köztük 50 Originals, a Timbre számára mai stílusokban írva. Játssz a zenekarral a fejhallgatóban, miközben a szöveg felvillan. Illessz be vagy importálj saját akkordlapot, transzponáld, görgesd ütemre, és hallgasd mellette az eredetit az Apple Musicban.\n\nFOLYTASD\nCsillagok, XP, napi küldetések, sorozatok és jelvények. Game Center: heti Telitalálat-liga, dalranglisták és baráti kihívások. Apple Watch: csuklón érezhető metronóm és a mai gyakorlás áttekintése. Fő- és zárolt képernyős widgetek, élő tevékenység és Siri-parancsok.\nMetronóm hangsúlyokkal, felosztásokkal és tempógyakorlással; orgonapont, intonációgyakorló, akkord- és skálatár. Hallás: hangmagasság iránya, hangközök és akkordtípusok, továbbá 40 leckés kurzus.\n\nKEZDD INGYEN\nMinden hangszer alap hangolása ingyenes. Gitár, basszusgitár, ukulele, hegedű és cselló minden hangolásban ingyenes. Minden kurzus első egysége és néhány dal is ingyenes. A Timbre Pro minden leckét, dalt, hangolást és gyakorlóeszközt felold. Bekapcsolt értesítésekkel a Timbre két nappal az ingyenes próba vége előtt emlékeztet.\nA hang elemzése az iPhone-on történik, soha nincs rögzítve vagy feltöltve. Nincs fiók vagy reklám.\nAz előfizetések automatikusan megújulnak, ha nem mondod le őket legalább 24 órával az időszak vége előtt. Kezelés vagy lemondás bármikor: Beállítások → Apple-fiók → Előfizetések.\nFeltételek: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\nAdatvédelem: <privacy policy URL>",
+  "description": "Ingyenes hangoló. Reklám és fiók nélkül. Utána leckék, amelyek figyelnek a játékodra.\n\nA Timbre pontos hangolót és zenetanárt kínál. Hangolj 60 hangszert, és tanulj játék közben.\n\nHANGOLJ INGYEN\nMinden hangszer alap hangolása ingyenes: gitár, ukulele, hegedű, mandolin, bendzsó, oud, erhu és mások. Kromatikus és stroboszkópos hangoló centpontossággal. 132 hangolás Drop D-től és Open G-től DADGAD-ig, valamint saját hangolások.\nAz automatikus húrfelismerés kipipálja a behangolt húrokat. Egy pengetés minden húrt beolvas, és megmutatja, melyiket hangold először. Hangolj tapintással: a telefon a húr és a célhang közötti lebegés ritmusában rezeg, közeledésükkor lassul, egyezéskor megáll. Nem kell odanézned.\nStúdiófényű 3D gitárok, basszusgitárok, hegedű, cselló és mandolin mutatják a tekerendő hangolókulcsot. Kapodaszter, állítható A4 referencia, szolmizációs és szargam hangnevek.\n\nTANULJ JÁTÉK KÖZBEN\n526 lecke 11 kurzusban: gitár, ukulele, basszusgitár, hegedű, cselló, mandolin, bendzsó, ének, hallás, zeneelmélet és ritmus. Daloskönyvek ukuleléhez, mandolinhoz, hegedűhöz, csellóhoz és basszusgitárhoz is.\nA Timbre minden pengetést hall: a helyes akkordot, az időzítést és a néma húrt. Minden hangot centre és ezredmásodpercre pontosan értékel. A „Mutasd meg” új akkordokat játszik 3D gitáron, sorban elhelyezve az ujjakat. A hangjegypálya lelassul neked, majd fejlődéseddel gyorsul.\n\nTöbb mint 140 dal, mindegyik teljes feldolgozással: klasszikusok Jingle Bellstől Amazing Grace-ig, köztük 50 Originals, a Timbre számára mai stílusokban írva. Játssz a zenekarral a fejhallgatóban, miközben a szöveg felvillan. Illessz be vagy importálj saját akkordlapot, transzponáld, görgesd ütemre, és hallgasd mellette az eredetit az Apple Musicban.\n\nFOLYTASD\nCsillagok, XP, napi küldetések, sorozatok és jelvények. Apple Watch: csuklón érezhető metronóm és a mai gyakorlás áttekintése. Fő- és zárolt képernyős widgetek, élő tevékenység és Siri-parancsok.\nMetronóm hangsúlyokkal, felosztásokkal és tempógyakorlással; orgonapont, intonációgyakorló, akkord- és skálatár. Hallás: hangmagasság iránya, hangközök és akkordtípusok, továbbá 40 leckés kurzus.\n\nKEZDD INGYEN\nMinden hangszer alap hangolása ingyenes. Gitár, basszusgitár, ukulele, hegedű és cselló minden hangolásban ingyenes. Minden kurzus első egysége és néhány dal is ingyenes. A Timbre Pro minden leckét, dalt, hangolást és gyakorlóeszközt felold. Bekapcsolt értesítésekkel a Timbre két nappal az ingyenes próba vége előtt emlékeztet.\nAz adatvédelem a tervezés része: a mikrofon élő hangjának elemzése az eszközödön történik, a hangot soha nem rögzítjük és nem töltjük fel. Nincs fiók vagy reklám.\nAz előfizetések automatikusan megújulnak, ha nem mondod le őket legalább 24 órával az időszak vége előtt. Kezelés vagy lemondás bármikor: Beállítások → Apple-fiók → Előfizetések.\nFeltételek: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\nAdatvédelem: https://timbre-support.timbre.workers.dev/privacy",
   "whats_new": "Üdv a Timbre-ben: ingyenes hangoló 60 hangszerhez és 526 lecke, amely figyel a játékodra.",
   "iphone_screenshot_captions": [
     {
@@ -316,5 +325,6 @@
     "ukulele": [
       "ukulele"
     ]
-  }
+  },
+  "production_privacy_url": "https://timbre-support.timbre.workers.dev/privacy"
 }

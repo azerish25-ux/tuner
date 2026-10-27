@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-27T01:33:37.248364+00:00",
+  "baseline_head": "be4c23496ef05dd80a1c6fdde7a8eee98fb15982",
+  "scope": "Original independent reviewer reread of CAROL-01 resolution; three frozen source/test files plus unchanged original package hashes and preserved receipts verified. Only this new JSON written; no live source/test changes, commit, push, deployment, Apple account or event actions.",
+  "skill": "code-review-and-quality, previously loaded for initial independent review.",
+  "original_review": "docs/ios/readiness/reviews/carol-window-independent-review.json",
+  "resolution_receipt": "docs/ios/readiness/reviews/carol-window-resolution.json",
+  "resolution_receipt_sha256": "f6b2498eaf45f130b5fb6bf48d53d94efb880ae14ad8119176293f6af7279303",
+  "verdict": "approve_source_resolution_native_validation_pending",
+  "findings": [],
+  "resolved_findings": [
+    {
+      "id": "CAROL-01",
+      "status": "resolved_in_source",
+      "priority": "P2",
+      "evidence": [
+        "SongsCatalog.Key now includes the current effective free lesson Set and the independent unit2 flag. refresh recomputes that snapshot on every layout read, before the key comparison, so same-day grant or revocation invalidates cached standings and layouts despite unchanged progress/Pro/level/day/home.",
+        "The Carol caption reads key.freeLessons, the same grant snapshot that invalidated the layout, instead of consulting an unrelated later raw config read.",
+        "Existing LessonAccess.of and store.canPlay remain the canonical entry checks; no view identity reset, tap-guard change, preview stop or take cancellation is introduced.",
+        "RemoteConfig.apply visibility changes only from private to internal relative to the reviewed implementation, enabling real application in tests and restoration of shared values. Its body is unchanged.",
+        "The default now argument only supplies a consistent day/season date for the existing catalogue calculations. Production callers retain Date(); eligibility continues using the actual current canonical policy, preserving current-time enforcement. The new tests use permanent grants deliberately to isolate cache invalidation from policy-clock tests."
+      ],
+      "references": [
+        "ios/Timbre/Songs/SongsView.swift:1289",
+        "ios/Timbre/Songs/SongsView.swift:1396",
+        "ios/Timbre/Songs/SongsView.swift:1399",
+        "ios/Timbre/Songs/SongsView.swift:1520",
+        "ios/Timbre/Services/RemoteConfig.swift:230"
+      ]
+    }
+  ],
+  "test_review": {
+    "new_file": "ios/TimbreAppTests/SongsCatalogAccessTests.swift",
+    "new_methods": 2,
+    "assessment": "Meaningful regressions reuse a single actual SongsCatalog with unchanged store/progress/day/home, apply same-day grant then revocation, and inspect both standing and Carol caption against canonical access. The independent unit2 test catches omission of that flag from the key. Shared config values and FreeOpenings.current are restored in defer; each AppStore uses a temporary directory.",
+    "fixture_verification": "Independently parsed bundled curriculum confirming gtr-2-4 is an existing paid song (Ode to Joy). SongsView.all and Song/Pick are internal and accessible through @testable import. No definite test/source compile error identified by inspection.",
+    "execution": "UNRUN: Windows host has no local Swift/Xcode. Two new resolution tests plus eleven original authored window tests are pending native execution; source approval is not a test pass.",
+    "remaining_limits": [
+      "These tests call retained-catalog layout directly and do not execute actual SwiftUI redraw/AppStore publisher delivery.",
+      "Actual timer/notification boundaries, offline foreground/timezone behavior, Swift 5.10 complete-concurrency build and in-progress take continuity still require native evidence."
+    ]
+  },
+  "sha256": {
+    "ios/Timbre/Songs/SongsView.swift": "8bc9d66086b76ea1745d27ac9c5852d9b9fea4e5319d79dd2c4e7a30ea670796",
+    "ios/Timbre/Services/RemoteConfig.swift": "117375f1b23d5417352f2c112b0ea3273ffa5d80022eddcc13dc1e0b0f6994f5",
+    "ios/TimbreAppTests/SongsCatalogAccessTests.swift": "d3e9d4f25adf54ab5721f84dfc1e03babf82f691fd41e2c1c1421b66a0b72a21"
+  },
+  "unchanged_initial_source_sha256": {
+    "ios/Sources/TimbreCore/Commerce/Access.swift": "d7d68f592842084c5833588425386fe04ac953ccd1abb515be05feeb1bc24564",
+    "ios/Sources/TimbreCore/Commerce/FreeSongWindow.swift": "2bcd48cd0b3d7559206337fc3f5d46233aace37b10ba87f2486b28136fa0a2cc",
+    "ios/Timbre/Services/AppStore.swift": "48a9109dabdd161869139e9094c3e47876308886435fbb56207e453fae0cd223",
+    "ios/Tests/TimbreCoreTests/FreeSongWindowTests.swift": "43660e50ddd11a79395a814a937fb4a5ee361649099704f1ad4c6daaa22dc9b1",
+    "ios/TimbreAppTests/RemoteConfigWindowTests.swift": "5addfe1892ed6615d2ac7a2f72fb9ad4c9c0f91fbe51e9a4261a8089a10b6707",
+    "docs/ios/APPLE-DELIVERY.md": "3c320126822fbfc83b17fca103e9faf0940c4ac8f7bc6d5d94cb646e2868c5e4",
+    "docs/ios/RELEASE-CHECKLIST.md": "1f06a7c54fb7be17c175ed24a3d07728c9913f25cdbc0054984f8574a5d77d4c",
+    "docs/ios/readiness/reviews/carol-window-plan.md": "a4d55df49ae4b12351aef62ddbee3d1a37b3a314d0b32d75a8d8917f43fd4035"
+  },
+  "preserved_receipts_sha256": {
+    "carol-window-plan.md": "a4d55df49ae4b12351aef62ddbee3d1a37b3a314d0b32d75a8d8917f43fd4035",
+    "carol-window-implementation.json": "1ad14211773fd3e15b2c45d3654bb56cf2af119725940f2d8c6a7c27072833c4",
+    "carol-window-independent-review.json": "87e5ccdc7872c23bd56d3ef9e6ac28a9ff13e20124b71cb3858539862e66de21",
+    "remaining-gap-audit.json": "0c80ca2a8383e67b3ee030e3204170a458b85b5c6a2ef3843ab687079115cf80"
+  },
+  "hash_verification": "All three resolution hashes, all eight unchanged original package hashes and all four preserved receipt hashes match the resolution receipt at review time.",
+  "verification_performed": [
+    "Read the full three-file resolution and new tests; compared SongsView against baseline and RemoteConfig against prior reviewed content.",
+    "Independently SHA-256 verified every frozen hash listed above.",
+    "Read canonical catalogue flow and independently parsed the concrete unit2 fixture from bundled curriculum."
+  ],
+  "remaining_validation": [
+    "Run native SongsCatalogAccessTests, original Core/app window tests and appropriate access/app regressions.",
+    "Compile app/Core using Swift 5.10 with complete concurrency checking.",
+    "Record actual visible same-day config grant/revoke, scheduled/day/foreground/significant-time/timezone refresh and already-started take continuity."
+  ],
+  "limitations": [
+    "No compiler/XCTest/simulator/device/timer observation in this reread.",
+    "Approval covers the frozen Carol resolution bytes and previously reviewed unchanged package only; concurrent audio/Watch/localization changes are outside scope.",
+    "Original review retained unchanged as historical evidence. No release, deployment or Apple account approval implied."
+  ]
+}

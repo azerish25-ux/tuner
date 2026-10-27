@@ -1239,7 +1239,7 @@ enum SongPlayback {
                     try await wait(begin + .seconds(cycle))
                     guard !Task.isCancelled else { return }
                     guard lease.isCurrent else { failed(); return }
-                    begin = begin + .seconds(cycle)
+                    begin = begin.advanced(by: .seconds(cycle))
                 } while loop
                 if band != nil { audio.finishBand(celebrate: true) }
                 try await wait(begin + .seconds(0.5))

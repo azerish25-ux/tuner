@@ -37,13 +37,26 @@ public struct EntitlementEvidence: Equatable, Sendable {
 /// unit, a test of a longer free runway).
 public struct FreeOpenings: Equatable, Sendable {
     /// Lessons open to everyone for now, by lesson id.
-    public var lessons: Set<String>
+    private var listedLessons: Set<String>
+    /// Optional local-day restriction on listed songs; does not restrict the independent unit-2 experiment.
+    public var window: FreeSongWindow?
+    /// Effective access is evaluated when read, including from an offline cached policy or `current`.
+    public var lessons: Set<String> {
+        get { activeLessons() }
+        set { listedLessons = newValue }
+    }
     /// The second unit of every teaching course is free too. Song collections keep their own free songs.
     public var unit2: Bool
 
-    public init(lessons: Set<String> = [], unit2: Bool = false) {
-        self.lessons = lessons
+    public init(lessons: Set<String> = [], unit2: Bool = false, window: FreeSongWindow? = nil) {
+        listedLessons = lessons
         self.unit2 = unit2
+        self.window = window
+    }
+
+    public func activeLessons(at now: Date = Date(), timeZone: TimeZone = .current) -> Set<String> {
+        guard window?.includes(at: now, timeZone: timeZone) ?? true else { return [] }
+        return listedLessons
     }
 
     /// Nothing beyond the courses' own free lessons.
@@ -59,8 +72,8 @@ public struct FreeOpenings: Equatable, Sendable {
     }
 
     /// Whether these openings make `lesson` free: it is listed, or it is in the second unit of a teaching course.
-    public func opens(_ lesson: Lesson, courses: [LearnCourse]) -> Bool {
-        if lessons.contains(lesson.id) { return true }
+    public func opens(_ lesson: Lesson, courses: [LearnCourse], now: Date = Date(), timeZone: TimeZone = .current) -> Bool {
+        if activeLessons(at: now, timeZone: timeZone).contains(lesson.id) { return true }
         guard unit2 else { return false }
         return courses.contains { course in
             !course.isSongbook && course.units.count > 1 && course.units[1].lessons.contains { $0.id == lesson.id }
@@ -106,8 +119,8 @@ public enum AccessPolicy {
     /// placement adds one more, its placement pass (`placementPass`): only that lesson, only in the course the learner
     /// was placed in, so the first lesson onboarding's plan names is the one that opens.
     public static func canPlay(_ lesson: Lesson, pro: Bool, progress: LearnProgress, courses: [LearnCourse],
-                               openings: FreeOpenings = .current) -> Bool {
-        if pro || lesson.free || openings.opens(lesson, courses: courses) { return true }
+                               openings: FreeOpenings = .current, now: Date = Date(), timeZone: TimeZone = .current) -> Bool {
+        if pro || lesson.free || openings.opens(lesson, courses: courses, now: now, timeZone: timeZone) { return true }
         return progress.placedThrough.keys.contains { courseId in
             guard let course = courses.first(where: { $0.id == courseId }) else { return false }
             return placementPass(in: course, progress: progress)?.id == lesson.id

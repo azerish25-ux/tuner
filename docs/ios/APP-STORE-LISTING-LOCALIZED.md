@@ -2,7 +2,7 @@
 
 ## Authoritative content and scope
 
-The current store text is in [`tools/l10n/store/<Apple-locale>.json`](../../tools/l10n/store/). These per-locale files replace the old nine stale Markdown blocks and their `TRANSLATE:` caption cells. The English source remains [APP-STORE-LISTING.md](APP-STORE-LISTING.md), unchanged; `en-US.json` is its machine-readable text snapshot, not an alternative source.
+The current store text is in [`tools/l10n/store/<Apple-locale>.json`](../../tools/l10n/store/). These per-locale files replace the old nine stale Markdown blocks and their `TRANSLATE:` caption cells. The English source remains [APP-STORE-LISTING.md](APP-STORE-LISTING.md); `en-US.json` is its machine-readable text snapshot, not an alternative source.
 
 All **50 Apple-supported listing locales**, including `en-US`, are required. [store-locales.json](../../tools/l10n/store-locales.json) is the exact locale inventory and readiness manifest, verified against [Apple’s supported languages](https://developer.apple.com/help/app-store-connect/reference/app-information/app-store-localizations) and [API shortcodes](https://developer.apple.com/documentation/appstoreconnectapi/managing-metadata-in-your-app-by-using-locale-shortcodes) on 2026-10-26. Listing locales are independent of the **49 app UI/lesson languages**. Malay, Odia and Traditional Chinese listings do not add app UI support; their project app fallback is English, subject to device language preferences and verification. `fa`, `bg`, `et`, `is`, `lt`, `lv`, `sw`, `zu` remain app-only languages; no invented Apple locale codes are used.
 
@@ -10,12 +10,15 @@ Each JSON contains name, subtitle, keywords, promotional text, description, What
 
 Independent source-aware AI review covers all 50 complete listing payloads. The original 94 corrections, 2 later Slovenian morphology fixes and **157 independently reviewed song-title alignment corrections** (253 total) were applied only after exact-old checks. The title addendum across 38 locales matches the current in-app lesson names; exact source/old/new guards, reviewer decisions and per-locale parent-hash lineage preserve the prior full-payload review. See [title-alignment evidence](../l10n/reviews/store-title-alignment/). Every resulting consumer payload matches the reviewed proposal. [store-review.json](../../tools/l10n/store-review.json) records current content/source hashes, the owner-selected policy and resolved corrections. The original [review evidence](../../tools/l10n/store-review-independent.json) and [correction ledger](../../tools/l10n/store-corrections.json) are retained with artifact hashes. This is not blinded back-translation, native approval, legal certification or measured market research.
 
+
+The subsequent56 independently reviewed Game Center achievement-description deltas brought the retained correction history to309. The current source update adds100 guarded description/production-URL field records across all50 locales (409 total), reviewed by Codex /root/store_release_copy_review, with accepted Greek/Indonesian register refinements. This bounded review covers live microphone/on-device privacy wording, removal of the disabled Game Center availability promise and production URL resolution. Prior complete-payload review is inherited only for unchanged material; parent/new source hashes and exact review artifacts are retained in [update evidence](../l10n/reviews/store-release-privacy-update/). GC draft metadata and all captions/IAP names remain intact; current candidate integration is off. Published-policy/source alignment is still pending.
+
 ## Evidence, not release certification
 
 **Do not paste or upload these drafts as a finished release.** AI-authored text and automated structural checks are not native-speaker, market-search, legal, device, render or App Store Connect approval. Each JSON has independent review states; the manifest tracks actual draft validation separately from `release_ready`. English regional variants intentionally share source wording after regional drafting; they are not missing-language fallback. Nothing here claims keyword popularity has been measured.
 
 Remaining release gates include:
-- `<privacy policy URL>` is deliberately preserved in every description until the owner supplies the verified production policy URL. A draft with this placeholder is **not release-complete**.
+- The production privacy URL is resolved in all50 payloads. Actual public publication evidence is recorded, but published-policy alignment with the current live-microphone/imported-audio source must be refreshed and verified before release.
 - Text review under the explicitly recorded policy (see below). The owner selected source-aware AI review instead of mandatory human sign-off; native/instrument-player review, market-ASO research and independent blinded legal back-translation remain **unperformed**, optional additional review under this policy, not claimed certifications.
 - Actual localized iPhone/iPad UI captures, glyph coverage, RTL shaping, truncation/overlap and search-size render review. Text metadata does not create native screenshots.
 - Localized App Preview recordings and render/audio/sync review. Localized captions alone are not a finished video.
@@ -160,7 +163,6 @@ PLAY SONGS
 
 KEEP IT GOING
 • Stars, XP, daily quests, streaks and badges
-• Game Center: a weekly Bullseye league, song leaderboards and friend challenges
 • Apple Watch: a metronome you feel on your wrist, and today's practice at a glance
 • Home Screen and Lock Screen widgets, a Live Activity and Siri shortcuts
 
@@ -172,11 +174,11 @@ PRACTICE TOOLS
 FREE TO START
 Every instrument's standard tuning is free, and guitar, bass, ukulele, violin and cello tune free in every tuning. The first unit of every course and a shelf of songs are free too. Timbre Pro unlocks every lesson and song, every tuning and the full practice set. With notifications on, Timbre reminds you two days before a free trial ends.
 
-Private by design: audio is analysed on your iPhone and never recorded or uploaded. No account and no ads.
+Private by design: live microphone audio is analyzed on your device, never recorded or uploaded. No account and no ads.
 
 Subscriptions renew automatically unless cancelled at least 24 hours before the end of the period. Manage or cancel any time in Settings → Apple Account → Subscriptions.
 Terms: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
-Privacy: <privacy policy URL>
+Privacy: https://timbre-support.timbre.workers.dev/privacy
 ```
 
 ### What's New

@@ -20,7 +20,7 @@
     "game_center_account": "not_verified",
     "release_ready": false,
     "blockers": [
-      "Production privacy policy URL and verification not provided",
+      "Published privacy policy/source alignment for the current app candidate pending refresh and verification",
       "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
       "Localized App Preview recordings and audio/sync/render review pending",
       "App Store Connect product/locale limits and Game Center configuration/images unverified"
@@ -38,7 +38,16 @@
     },
     "ai_source_aware": "reviewed",
     "privacy_policy": "not_verified",
-    "review_policy": "ai_source_aware"
+    "review_policy": "ai_source_aware",
+    "privacy_source_update": {
+      "reviewer": "Codex /root/store_release_copy_review",
+      "scope": "Bounded privacy paragraph, disabled Game Center description claim, production URL addition only; unchanged full-review inheritance retained",
+      "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+      "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+      "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "new_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "policy_source_alignment": "pending"
+    }
   },
   "game_center_leaderboard_names": {
     "timbre.sniper.best": "불스아이",
@@ -124,7 +133,7 @@
   "subtitle": "바이올린, 우쿨렐레, 베이스 배우기",
   "keywords": "바이올린,첼로,우쿨렐레,만돌린,밴조,크로매틱,스트로브,청음,메트로놈,코드",
   "promotional_text": "무료 튜너. 광고도 계정도 필요 없어요. 줄이 맞춰지는 감각을 느낀 뒤, 연주를 듣는 레슨과 140곡 이상의 노래로 배워 보세요.",
-  "description": "무료 튜너. 광고도 계정도 없어요. 그다음은 연주를 듣는 레슨입니다.\n\nTimbre는 정밀한 튜너와 음악 선생님을 하나로 담았습니다. 60가지 악기를 조율하고 실제로 연주하며 결과를 자세히 확인하세요.\n\n무료로 조율하기\n• 기타, 우쿨렐레, 바이올린부터 만돌린, 밴조, 우드, 얼후까지 모든 악기의 표준 튜닝이 무료입니다.\n• 센트 단위로 정밀한 크로매틱 및 스트로브 튜너. Drop D, Open G, DADGAD 등 132가지 튜닝과 나만의 튜닝을 지원합니다.\n• 줄을 자동 감지하고 맞춰진 줄에 체크 표시를 합니다. 한 번의 스트럼으로 모든 줄을 읽고 먼저 조율할 줄을 알려 줍니다.\n• 감각으로 조율하기: 줄과 목표음 사이의 맥놀이에 맞춰 휴대폰이 진동합니다. 가까워질수록 느려지고 맞으면 멈춰 화면을 보지 않고 조율할 수 있습니다.\n• 스튜디오 조명의 3D 기타, 베이스, 바이올린, 첼로, 만돌린에서 돌릴 페그를 표시합니다.\n• 카포, 조절 가능한 A4 기준음, 솔페주 및 사르감 음이름.\n\n연주하며 배우기\n• 11개 코스의 526개 레슨: 기타, 우쿨렐레, 베이스, 바이올린, 첼로, 만돌린, 밴조, 보컬, 청음, 음악 이론, 리듬. 우쿨렐레, 만돌린, 바이올린, 첼로, 베이스 곡집도 있습니다.\n• Timbre는 스트럼마다 올바른 코드인지, 타이밍이 맞는지, 어느 줄이 울리지 않았는지 듣습니다. 연주하는 모든 음의 높이를 센트 단위, 타이밍을 밀리초 단위로 평가합니다.\n• ‘시범 보기’는 3D 기타에서 새 코드를 시범 보이며 손가락을 순서대로 놓습니다. 함께 연주하는 노트 레인은 속도를 낮춰 주고 실력이 늘면 다시 빨라집니다.\n\n노래 연주하기\n• 140곡 이상의 완곡 편곡: Jingle Bells부터 Amazing Grace까지의 명곡과, 현대적인 스타일로 Timbre를 위해 쓴 Originals 50곡을 포함합니다.\n• 헤드폰으로 밴드와 함께 연주하면 가사가 밝게 표시됩니다.\n• 내 노래: 코드 차트를 붙여 넣거나 가져와 조옮김하고 박자에 맞춰 스크롤하세요. 옆에서 Apple Music 원곡도 들을 수 있습니다.\n\n꾸준히 이어 가기\n• 별, XP, 일일 퀘스트, 연속 기록, 배지.\n• Game Center: 주간 불스아이 리그, 노래 순위표, 친구 도전.\n• Apple Watch: 손목으로 느끼는 메트로놈과 한눈에 보는 오늘의 연습.\n• 홈 화면과 잠금 화면 위젯, 실시간 현황, Siri 단축어.\n• 강세, 세분 박자, 속도 훈련 기능의 메트로놈. 드론, 음정 훈련, 코드 및 음계 라이브러리.\n• 청음: 음높이 방향, 음정, 코드 성질과 40개 레슨의 청음 코스.\n\n무료로 시작하기\n모든 악기의 표준 튜닝은 무료이며 기타, 베이스, 우쿨렐레, 바이올린, 첼로는 모든 튜닝이 무료입니다. 각 코스의 첫 유닛과 일부 노래도 무료입니다. Timbre Pro는 모든 레슨, 노래, 튜닝과 전체 연습 도구를 엽니다. 알림을 켜면 무료 체험이 끝나기 이틀 전에 Timbre가 알려 줍니다.\n\n개인정보를 생각한 설계: 오디오는 iPhone에서 분석되며 녹음하거나 업로드하지 않습니다. 계정도 광고도 없습니다.\n\n구독은 기간 종료 최소 24시간 전에 취소하지 않으면 자동 갱신됩니다. 설정 → Apple 계정 → 구독에서 언제든 관리하거나 취소하세요.\n이용 약관: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\n개인정보 처리방침: <privacy policy URL>",
+  "description": "무료 튜너. 광고도 계정도 없어요. 그다음은 연주를 듣는 레슨입니다.\n\nTimbre는 정밀한 튜너와 음악 선생님을 하나로 담았습니다. 60가지 악기를 조율하고 실제로 연주하며 결과를 자세히 확인하세요.\n\n무료로 조율하기\n• 기타, 우쿨렐레, 바이올린부터 만돌린, 밴조, 우드, 얼후까지 모든 악기의 표준 튜닝이 무료입니다.\n• 센트 단위로 정밀한 크로매틱 및 스트로브 튜너. Drop D, Open G, DADGAD 등 132가지 튜닝과 나만의 튜닝을 지원합니다.\n• 줄을 자동 감지하고 맞춰진 줄에 체크 표시를 합니다. 한 번의 스트럼으로 모든 줄을 읽고 먼저 조율할 줄을 알려 줍니다.\n• 감각으로 조율하기: 줄과 목표음 사이의 맥놀이에 맞춰 휴대폰이 진동합니다. 가까워질수록 느려지고 맞으면 멈춰 화면을 보지 않고 조율할 수 있습니다.\n• 스튜디오 조명의 3D 기타, 베이스, 바이올린, 첼로, 만돌린에서 돌릴 페그를 표시합니다.\n• 카포, 조절 가능한 A4 기준음, 솔페주 및 사르감 음이름.\n\n연주하며 배우기\n• 11개 코스의 526개 레슨: 기타, 우쿨렐레, 베이스, 바이올린, 첼로, 만돌린, 밴조, 보컬, 청음, 음악 이론, 리듬. 우쿨렐레, 만돌린, 바이올린, 첼로, 베이스 곡집도 있습니다.\n• Timbre는 스트럼마다 올바른 코드인지, 타이밍이 맞는지, 어느 줄이 울리지 않았는지 듣습니다. 연주하는 모든 음의 높이를 센트 단위, 타이밍을 밀리초 단위로 평가합니다.\n• ‘시범 보기’는 3D 기타에서 새 코드를 시범 보이며 손가락을 순서대로 놓습니다. 함께 연주하는 노트 레인은 속도를 낮춰 주고 실력이 늘면 다시 빨라집니다.\n\n노래 연주하기\n• 140곡 이상의 완곡 편곡: Jingle Bells부터 Amazing Grace까지의 명곡과, 현대적인 스타일로 Timbre를 위해 쓴 Originals 50곡을 포함합니다.\n• 헤드폰으로 밴드와 함께 연주하면 가사가 밝게 표시됩니다.\n• 내 노래: 코드 차트를 붙여 넣거나 가져와 조옮김하고 박자에 맞춰 스크롤하세요. 옆에서 Apple Music 원곡도 들을 수 있습니다.\n\n꾸준히 이어 가기\n• 별, XP, 일일 퀘스트, 연속 기록, 배지.\n• Apple Watch: 손목으로 느끼는 메트로놈과 한눈에 보는 오늘의 연습.\n• 홈 화면과 잠금 화면 위젯, 실시간 현황, Siri 단축어.\n• 강세, 세분 박자, 속도 훈련 기능의 메트로놈. 드론, 음정 훈련, 코드 및 음계 라이브러리.\n• 청음: 음높이 방향, 음정, 코드 성질과 40개 레슨의 청음 코스.\n\n무료로 시작하기\n모든 악기의 표준 튜닝은 무료이며 기타, 베이스, 우쿨렐레, 바이올린, 첼로는 모든 튜닝이 무료입니다. 각 코스의 첫 유닛과 일부 노래도 무료입니다. Timbre Pro는 모든 레슨, 노래, 튜닝과 전체 연습 도구를 엽니다. 알림을 켜면 무료 체험이 끝나기 이틀 전에 Timbre가 알려 줍니다.\n\n개인정보를 생각한 설계: 마이크의 실시간 오디오는 기기에서 분석되며 절대 녹음하거나 업로드하지 않아요. 계정도 광고도 없어요.\n\n구독은 기간 종료 최소 24시간 전에 취소하지 않으면 자동 갱신됩니다. 설정 → Apple 계정 → 구독에서 언제든 관리하거나 취소하세요.\n이용 약관: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\n개인정보 처리방침: https://timbre-support.timbre.workers.dev/privacy",
   "whats_new": "Timbre에 오신 것을 환영합니다. 60가지 악기의 무료 튜너와 연주를 듣는 526개 레슨을 만나 보세요.",
   "iphone_screenshot_captions": [
     {
@@ -316,5 +325,6 @@
       ],
       "note": "Available app values reused exactly; missing app values retain authored store drafts. Does not certify native or device review."
     }
-  }
+  },
+  "production_privacy_url": "https://timbre-support.timbre.workers.dev/privacy"
 }

@@ -16,6 +16,7 @@ import UIKit
 ///       "rating": { "show": true },
 ///       "referralCode": "FRIENDMONTH",
 ///       "freeSongs": ["song-silent-night", "uke-sb-song-silent-night"],
+///       "freeSongsWindow": { "startDate": "2026-12-01", "endDate": "2026-12-08" },
 ///       "flags": { "unit2Free": true }
 ///     }
 ///
@@ -63,16 +64,48 @@ final class RemoteConfig: ObservableObject {
         var referralCode: String?
         /// Song lessons opened to everyone for now (a seasonal shelf's first week), by lesson id.
         var freeSongs: [String]?
+        /// Gregorian local dates, start inclusive / end exclusive. Absent = permanent; supplied invalid = no songs.
+        var freeSongsWindow: FreeSongWindow?
         var flags: [String: Bool]?
+
+        init(paywall: [PaywallVariant]? = nil, rating: Rating? = nil, referralCode: String? = nil,
+             freeSongs: [String]? = nil, freeSongsWindow: FreeSongWindow? = nil, flags: [String: Bool]? = nil) {
+            self.paywall = paywall
+            self.rating = rating
+            self.referralCode = referralCode
+            self.freeSongs = freeSongs
+            self.freeSongsWindow = freeSongsWindow
+            self.flags = flags
+        }
+
+        enum CodingKeys: String, CodingKey { case paywall, rating, referralCode, freeSongs, freeSongsWindow, flags }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            paywall = try container.decodeIfPresent([PaywallVariant].self, forKey: .paywall)
+            rating = try container.decodeIfPresent(Rating.self, forKey: .rating)
+            referralCode = try container.decodeIfPresent(String.self, forKey: .referralCode)
+            freeSongs = try container.decodeIfPresent([String].self, forKey: .freeSongs)
+            flags = try container.decodeIfPresent([String: Bool].self, forKey: .flags)
+            // Presence is distinct from absence: null/wrong-shaped windows must never become a permanent grant.
+            freeSongsWindow = container.contains(.freeSongsWindow)
+                ? (try? container.decode(FreeSongWindow.self, forKey: .freeSongsWindow)) ?? FreeSongWindow(startDate: nil, endDate: nil)
+                : nil
+        }
     }
 
     @Published private(set) var values: Values
     /// This install's paywall arm (`PaywallVariant.control` without a test running).
     @Published private(set) var paywallVariant: PaywallVariant
+    /// AppStore forwards this to its screen observers; only access changes, never an instruction to stop a take.
+    let openingsChanged = PassthroughSubject<Void, Never>()
 
     private var started = false
     private var fetching = false
-    private var foreground: AnyCancellable?
+    private var lifecycle: Set<AnyCancellable> = []
+    private var boundaryTimer: Timer?
+    private var lastEffectiveLessons: Set<String> = []
+    private var lastUnit2 = false
 
     private enum Keys {
         static let cache = "remote.config"
@@ -89,12 +122,14 @@ final class RemoteConfig: ObservableObject {
     /// Automated runs and the demo modes keep the built-in defaults, so what they show never depends on the network.
     private static var quiet: Bool { TestSupport.isAutomated }
 
-    private init() {
+    init(initialValues: Values? = nil, now: Date = Date(), timeZone: TimeZone = .current) {
         let cached = Self.quiet ? nil : UserDefaults.standard.data(forKey: Keys.cache).flatMap { try? JSONDecoder().decode(Values.self, from: $0) }
-        let initial = Self.sanitized(cached ?? Values())
+        let initial = Self.sanitized(initialValues ?? cached ?? Values())
         values = initial
         paywallVariant = Self.assign(initial.paywall ?? [])
         FreeOpenings.current = Self.openings(initial)
+        lastEffectiveLessons = Self.openings(initial).activeLessons(at: now, timeZone: timeZone)
+        lastUnit2 = initial.flags?["unit2Free"] ?? false
     }
 
     // MARK: Reading
@@ -114,7 +149,10 @@ final class RemoteConfig: ObservableObject {
     }
 
     /// Song lessons the file opens to everyone, by lesson id (`freeSongs`); empty by default.
-    var freeSongs: [String] { values.freeSongs ?? [] }
+    var freeSongs: [String] {
+        let active = freeOpenings.lessons
+        return (values.freeSongs ?? []).filter { active.contains($0) }
+    }
 
     /// Unit 2 of every course is free (`flags.unit2Free`); off by default.
     var unit2Free: Bool { flag("unit2Free") }
@@ -122,8 +160,30 @@ final class RemoteConfig: ObservableObject {
     /// What the file opens to everyone: `freeSongs` and, with `unit2Free`, every course's second unit.
     var freeOpenings: FreeOpenings { Self.openings(values) }
 
-    private static func openings(_ values: Values) -> FreeOpenings {
-        FreeOpenings(lessons: Set(values.freeSongs ?? []), unit2: values.flags?["unit2Free"] ?? false)
+    static func openings(_ values: Values) -> FreeOpenings {
+        FreeOpenings(lessons: Set(values.freeSongs ?? []), unit2: values.flags?["unit2Free"] ?? false, window: values.freeSongsWindow)
+    }
+
+    /// Also runs while offline or fetch-throttled. Access itself rechecks the clock if a timer/notification was missed.
+    func refreshOpenings(now: Date = Date(), timeZone: TimeZone = .current) {
+        let policy = Self.openings(values)
+        FreeOpenings.current = policy
+        let effective = policy.activeLessons(at: now, timeZone: timeZone)
+        if effective != lastEffectiveLessons || policy.unit2 != lastUnit2 {
+            lastEffectiveLessons = effective
+            lastUnit2 = policy.unit2
+            openingsChanged.send()
+        }
+        boundaryTimer?.invalidate()
+        boundaryTimer = nil
+        guard started, let next = values.freeSongsWindow?.nextBoundary(after: now, timeZone: timeZone) else { return }
+        // Recheck at least daily even for a distant campaign. A time-zone/clock notification reschedules immediately.
+        let delay = max(0.01, min(24 * 3600, next.timeIntervalSince(now)))
+        let timer = Timer(timeInterval: delay, repeats: false) { [weak self] _ in
+            Task { @MainActor [weak self] in self?.refreshOpenings() }
+        }
+        boundaryTimer = timer
+        RunLoop.main.add(timer, forMode: .common)
     }
 
     // MARK: Fetching
@@ -132,13 +192,24 @@ final class RemoteConfig: ObservableObject {
     func start() {
         guard !started else { return }
         started = true
+        refreshOpenings()
         refresh()
-        foreground = NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)
-            .sink { _ in Task { @MainActor in RemoteConfig.shared.refresh() } }
+        for name in [UIApplication.didBecomeActiveNotification, UIApplication.significantTimeChangeNotification,
+                     NSNotification.Name.NSSystemTimeZoneDidChange, NSNotification.Name.NSCalendarDayChanged] {
+            NotificationCenter.default.publisher(for: name)
+                .sink { [weak self] _ in
+                    Task { @MainActor [weak self] in
+                        self?.refreshOpenings()
+                        if name == UIApplication.didBecomeActiveNotification { self?.refresh() }
+                    }
+                }
+                .store(in: &lifecycle)
+        }
     }
 
     /// Fetches the file when the build has its address and the last copy is older than the interval (or `force`).
     func refresh(force: Bool = false) {
+        refreshOpenings()
         guard !Self.quiet, !fetching, let url = AppLinks.remoteConfig else { return }
         let defaults = UserDefaults.standard
         if !force, let last = defaults.object(forKey: Keys.fetchedAt) as? Date, Date().timeIntervalSince(last) < Self.interval { return }
@@ -156,10 +227,10 @@ final class RemoteConfig: ObservableObject {
         }
     }
 
-    private func apply(_ next: Values) {
+    func apply(_ next: Values) {
         guard next != values else { return }
         values = next
-        FreeOpenings.current = Self.openings(next)
+        refreshOpenings()
         let variant = Self.assign(next.paywall ?? [])
         if variant != paywallVariant { paywallVariant = variant }
     }
@@ -167,8 +238,8 @@ final class RemoteConfig: ObservableObject {
     // MARK: Rules
 
     /// What a hand-edited file may hold: named variants with a positive weight (eight at most), the rating's switch,
-    /// a plain offer code, a few dozen free songs and a few dozen switches. Anything else is dropped rather than shown.
-    private static func sanitized(_ values: Values) -> Values {
+    /// a plain offer code, at most 256 free songs and a few dozen switches. Anything else is dropped rather than shown.
+    static func sanitized(_ values: Values) -> Values {
         var clean = Values()
         let variants = (values.paywall ?? []).filter { variant in
             !variant.id.isEmpty && variant.id.count <= 40 && variant.share.isFinite && variant.share > 0
@@ -181,11 +252,16 @@ final class RemoteConfig: ObservableObject {
         }
         if let flags = values.flags, flags.count <= 64 { clean.flags = flags }
         // Lesson ids as the curriculum writes them ("gtr-2-4"): letters, digits, dashes, dots and underscores; a
-        // few dozen at most.
+        // bounded at 256, enough for all 102 carol editions.
         let songs = (values.freeSongs ?? []).filter { id in
             (1...64).contains(id.count) && id.allSatisfy { $0.isASCII && ($0.isLetter || $0.isNumber || $0 == "-" || $0 == "_" || $0 == ".") }
         }
-        clean.freeSongs = songs.isEmpty ? nil : Array(songs.prefix(64))
+        clean.freeSongs = songs.isEmpty ? nil : Array(songs.prefix(256))
+        // Preserve invalid presence as an invalid policy; sanitization must not turn it into no window.
+        if let window = values.freeSongsWindow {
+            clean.freeSongsWindow = FreeSongWindow(startDate: window.startDate.map { String($0.prefix(11)) },
+                                                  endDate: window.endDate.map { String($0.prefix(11)) })
+        }
         return clean
     }
 

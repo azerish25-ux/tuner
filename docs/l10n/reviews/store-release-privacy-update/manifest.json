@@ -1,0 +1,33 @@
+{
+  "author": "Codex /root/review_is",
+  "role": "author",
+  "base_commit": "be4c23496ef05dd80a1c6fdde7a8eee98fb15982",
+  "assigned_base_commit": "be4c23496ef05dd80a1c6fdde7a8eee98fb15982",
+  "scope": "Bounded all50 store description privacy/GC availability/productionURL proposals only. No live docs,payloads,registries,ledger or source edited.",
+  "files": [
+    {
+      "path": "docs/l10n/reviews/store-release-privacy-update/proposals.json",
+      "sha256": "5f32dadc1b59232528f06adb3d6f47d7a5c70f16973936e34b892f93148d83a3"
+    },
+    {
+      "path": "docs/l10n/reviews/store-release-privacy-update/source-update-proposal.json",
+      "sha256": "b70df987ac6731c72dcc1b0b68491ed463dc48ad0ecedea77c0167b75b2c528d"
+    },
+    {
+      "path": "docs/l10n/reviews/store-release-privacy-update/context-and-lineage.json",
+      "sha256": "da73ec9ad0fb701c6e49eab488ce985fea57606d6c23700b70e48024b4216f59"
+    },
+    {
+      "path": "docs/l10n/reviews/store-release-privacy-update/proposal-qa.json",
+      "sha256": "29a7366869f578f6d815d472d1ac629d6b408bd27bc91021db30a95425c2f946"
+    }
+  ],
+  "independent_review": {
+    "status": "required-pending",
+    "coverage": 0,
+    "reviewer": null
+  },
+  "release_ready": false,
+  "release_evidence_status": "unchanged; unverified or unperformed states not promoted",
+  "source_and_registry_integration": "Root must apply only independently reviewed exact-old/source-bound changes and then update snapshot/review lineage atomically; no old review identity should be relabeled as approval of this author text."
+}

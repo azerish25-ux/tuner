@@ -20,7 +20,7 @@
     "game_center_account": "not_verified",
     "release_ready": false,
     "blockers": [
-      "Production privacy policy URL and verification not provided",
+      "Published privacy policy/source alignment for the current app candidate pending refresh and verification",
       "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
       "Localized App Preview recordings and audio/sync/render review pending",
       "App Store Connect product/locale limits and Game Center configuration/images unverified"
@@ -38,7 +38,16 @@
     },
     "ai_source_aware": "reviewed",
     "privacy_policy": "not_verified",
-    "review_policy": "ai_source_aware"
+    "review_policy": "ai_source_aware",
+    "privacy_source_update": {
+      "reviewer": "Codex /root/store_release_copy_review",
+      "scope": "Bounded privacy paragraph, disabled Game Center description claim, production URL addition only; unchanged full-review inheritance retained",
+      "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+      "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+      "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "new_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "policy_source_alignment": "pending"
+    }
   },
   "game_center_leaderboard_names": {
     "timbre.sniper.best": "Fullträff",
@@ -204,7 +213,7 @@
   "subtitle": "Lär dig fiol, ukulele och bas",
   "keywords": "fiol,cello,ukulele,mandolin,banjo,kromatisk,stroboskop,gehör,metronom,ackord",
   "promotional_text": "Gratis stämapparat utan reklam eller konto. Känn varje sträng bli stämd, lär med lektioner som lyssnar och spela över 140 låtar.",
-  "description": "Gratis stämapparat. Ingen reklam, inget konto. Sedan lektioner som lyssnar när du spelar.\n\nTimbre förenar en exakt stämapparat med en musiklärare. Stäm 60 instrument och lär genom att spela.\n\nSTÄM GRATIS\nAlla instruments standardstämning är gratis: gitarr, ukulele, fiol, mandolin, banjo, oud, erhu och fler. Kromatisk och stroboskopisk stämning med centprecision. 132 stämningar från Drop D och Open G till DADGAD, plus egna.\nAutomatisk strängidentifiering bockar av varje stämd sträng. Ett slag läser alla strängar och visar vilken du ska stämma först. Stäm med känseln: mobilen pulserar med svävningen mellan strängen och måltonen, allt långsammare tills den stannar när tonen stämmer. Du behöver inte titta.\nStudiobelysta 3D-gitarrer, basar, fiol, cello och mandolin visar stämskruven att vrida. Capo, justerbar A4-referens samt solfège- och sargam-tonnamn.\n\nLÄR GENOM ATT SPELA\n526 lektioner i 11 kurser: gitarr, ukulele, bas, fiol, cello, mandolin, banjo, sång, gehör, musikteori och rytm. Dessutom sångböcker för ukulele, mandolin, fiol, cello och bas.\nTimbre hör varje slag: rätt ackord, i tid och vilken sträng som inte klingade. Varje ton bedöms med cent- och millisekundprecision. ”Visa mig” spelar nya ackord på en 3D-gitarr, med fingrarna i ordning. Notbanan saktar ner för dig och ökar farten när du blir bättre.\n\nÖver 140 låtar, var och en med ett komplett arrangemang: klassiker från Jingle Bells till Amazing Grace, inklusive 50 Originals skrivna för Timbre i dagens stilar. Spela med bandet i hörlurarna medan texten lyser upp. Klistra in eller importera egna ackordblad, transponera, rulla i takt och lyssna på originalet i Apple Music bredvid.\n\nFORTSÄTT SPELA\nStjärnor, XP, dagliga uppdrag, sviter och märken. Game Center med veckoliga i Fullträff, låttopplistor och vänutmaningar. Apple Watch med metronom som känns på handleden och dagens övning i överblick. Widgetar på hem- och låsskärmen, liveaktivitet och Siri-genvägar.\nMetronom med accenter, underdelningar och tempoträning; bordun, intonationsträning samt ackord- och skalbibliotek. Gehör: tonhöjdsriktning, intervall och ackordtyper, plus en kurs med 40 lektioner.\n\nBÖRJA GRATIS\nAlla standardstämningar är gratis. Gitarr, bas, ukulele, fiol och cello är gratis i alla stämningar. Första enheten i varje kurs och ett urval låtar är också gratis. Timbre Pro låser upp alla lektioner, låtar, stämningar och övningsverktyg. Med notiser på påminner Timbre dig två dagar innan en gratis provperiod tar slut.\nLjud analyseras på din iPhone, spelas aldrig in eller laddas upp. Inget konto, ingen reklam.\nPrenumerationer förnyas automatiskt om de inte sägs upp minst 24 timmar före periodens slut. Hantera eller avsluta när som helst i Inställningar → Apple-konto → Prenumerationer.\nVillkor: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\nIntegritet: <privacy policy URL>",
+  "description": "Gratis stämapparat. Ingen reklam, inget konto. Sedan lektioner som lyssnar när du spelar.\n\nTimbre förenar en exakt stämapparat med en musiklärare. Stäm 60 instrument och lär genom att spela.\n\nSTÄM GRATIS\nAlla instruments standardstämning är gratis: gitarr, ukulele, fiol, mandolin, banjo, oud, erhu och fler. Kromatisk och stroboskopisk stämning med centprecision. 132 stämningar från Drop D och Open G till DADGAD, plus egna.\nAutomatisk strängidentifiering bockar av varje stämd sträng. Ett slag läser alla strängar och visar vilken du ska stämma först. Stäm med känseln: mobilen pulserar med svävningen mellan strängen och måltonen, allt långsammare tills den stannar när tonen stämmer. Du behöver inte titta.\nStudiobelysta 3D-gitarrer, basar, fiol, cello och mandolin visar stämskruven att vrida. Capo, justerbar A4-referens samt solfège- och sargam-tonnamn.\n\nLÄR GENOM ATT SPELA\n526 lektioner i 11 kurser: gitarr, ukulele, bas, fiol, cello, mandolin, banjo, sång, gehör, musikteori och rytm. Dessutom sångböcker för ukulele, mandolin, fiol, cello och bas.\nTimbre hör varje slag: rätt ackord, i tid och vilken sträng som inte klingade. Varje ton bedöms med cent- och millisekundprecision. ”Visa mig” spelar nya ackord på en 3D-gitarr, med fingrarna i ordning. Notbanan saktar ner för dig och ökar farten när du blir bättre.\n\nÖver 140 låtar, var och en med ett komplett arrangemang: klassiker från Jingle Bells till Amazing Grace, inklusive 50 Originals skrivna för Timbre i dagens stilar. Spela med bandet i hörlurarna medan texten lyser upp. Klistra in eller importera egna ackordblad, transponera, rulla i takt och lyssna på originalet i Apple Music bredvid.\n\nFORTSÄTT SPELA\nStjärnor, XP, dagliga uppdrag, sviter och märken. Apple Watch med metronom som känns på handleden och dagens övning i överblick. Widgetar på hem- och låsskärmen, liveaktivitet och Siri-genvägar.\nMetronom med accenter, underdelningar och tempoträning; bordun, intonationsträning samt ackord- och skalbibliotek. Gehör: tonhöjdsriktning, intervall och ackordtyper, plus en kurs med 40 lektioner.\n\nBÖRJA GRATIS\nAlla standardstämningar är gratis. Gitarr, bas, ukulele, fiol och cello är gratis i alla stämningar. Första enheten i varje kurs och ett urval låtar är också gratis. Timbre Pro låser upp alla lektioner, låtar, stämningar och övningsverktyg. Med notiser på påminner Timbre dig två dagar innan en gratis provperiod tar slut.\nIntegritet från början: ljud från mikrofonen analyseras i realtid på din enhet och spelas aldrig in eller laddas upp. Inget konto, ingen reklam.\nPrenumerationer förnyas automatiskt om de inte sägs upp minst 24 timmar före periodens slut. Hantera eller avsluta när som helst i Inställningar → Apple-konto → Prenumerationer.\nVillkor: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\nIntegritet: https://timbre-support.timbre.workers.dev/privacy",
   "whats_new": "Välkommen till Timbre: gratis stämning för 60 instrument och 526 lektioner som lyssnar när du spelar.",
   "iphone_screenshot_captions": [
     {
@@ -316,5 +325,6 @@
     "ukulele": [
       "ukulele"
     ]
-  }
+  },
+  "production_privacy_url": "https://timbre-support.timbre.workers.dev/privacy"
 }

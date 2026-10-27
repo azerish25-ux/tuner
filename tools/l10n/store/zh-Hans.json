@@ -20,7 +20,7 @@
     "game_center_account": "not_verified",
     "release_ready": false,
     "blockers": [
-      "Production privacy policy URL and verification not provided",
+      "Published privacy policy/source alignment for the current app candidate pending refresh and verification",
       "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
       "Localized App Preview recordings and audio/sync/render review pending",
       "App Store Connect product/locale limits and Game Center configuration/images unverified"
@@ -38,7 +38,16 @@
     },
     "ai_source_aware": "reviewed",
     "privacy_policy": "not_verified",
-    "review_policy": "ai_source_aware"
+    "review_policy": "ai_source_aware",
+    "privacy_source_update": {
+      "reviewer": "Codex /root/store_release_copy_review",
+      "scope": "Bounded privacy paragraph, disabled Game Center description claim, production URL addition only; unchanged full-review inheritance retained",
+      "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+      "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+      "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "new_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "policy_source_alignment": "pending"
+    }
   },
   "game_center_leaderboard_names": {
     "timbre.sniper.best": "靶心",
@@ -124,7 +133,7 @@
   "subtitle": "边演奏边学小提琴、尤克里里、贝斯",
   "keywords": "小提琴,大提琴,乌克丽丽,曼陀林,班卓琴,十二平均律,频闪,练耳,节拍器,和弦",
   "promotional_text": "免费调音器，无广告，无需账号。感受每根弦逐渐调准，再用会聆听的课程学习吉他、尤克里里、小提琴等乐器，演奏140多首歌曲。",
-  "description": "免费调音器，无广告，无需账号。接着，用会聆听你演奏的课程学习。\n\nTimbre将精准调音器与音乐老师融为一体。为60种乐器调音，再通过实际演奏了解自己的表现。\n\n免费调音\n• 每种乐器的标准调弦都免费，从吉他、尤克里里、小提琴到曼陀林、班卓琴、乌德琴和二胡。\n• 精确到音分的十二平均律和频闪调音器。132种调弦，包括Drop D、Open G、DADGAD，还可自定义。\n• 自动识别琴弦，每根弦调准后打勾。一次扫弦即可读取所有琴弦，并指出先调哪根。\n• 凭感觉调音：手机随琴弦与目标音之间的拍频振动，越接近越慢，调准便停止，让你不用看屏幕也能调音。\n• 采用影棚灯光的3D吉他、贝斯、小提琴、大提琴和曼陀林，指示需要转动的弦钮。\n• 变调夹、可调A4参考音，以及唱名和萨尔加姆音名。\n\n边弹边学\n• 11门课程、526节课：吉他、尤克里里、贝斯、小提琴、大提琴、曼陀林、班卓琴、声乐、练耳、乐理与节奏。另有尤克里里、曼陀林、小提琴、大提琴和贝斯曲集。\n• Timbre听取每次扫弦：和弦是否正确、节奏是否准确、哪根弦没有发声。演奏时逐音评估，音高精确到音分，时机精确到毫秒。\n• “看示范”在3D吉他上演奏每个新和弦，展示手指依次落位。跟弹音符轨道会为你减速，随着进步再加快。\n\n演奏歌曲\n• 140多首完整编曲，包括从Jingle Bells到Amazing Grace的经典，以及为Timbre创作、采用当代风格的50首Originals。\n• 戴上耳机与乐队合奏，歌词随进度点亮。\n• 你的歌曲：粘贴或导入和弦谱、移调、按节拍滚动，并在旁边通过Apple Music聆听原曲。\n\n坚持练习\n• 星星、XP、每日任务、连续记录和徽章。\n• Game Center：每周靶心联赛、歌曲排行榜和好友挑战。\n• Apple Watch：在手腕上感受节拍器，一眼查看今日练习。\n• 主屏幕与锁定屏幕小组件、实时活动和Siri快捷指令。\n• 带重音、细分节拍和速度训练的节拍器；持续音、音准训练器、和弦与音阶库。\n• 练耳：音高方向、音程、和弦性质，另有40节课的练耳课程。\n\n免费开始\n每种乐器的标准调弦都免费；吉他、贝斯、尤克里里、小提琴和大提琴的所有调弦均免费。每门课程的第一个单元和部分歌曲也免费。Timbre Pro解锁所有课程、歌曲、调弦及完整练习工具。开启通知后，Timbre会在免费试用结束前两天提醒你。\n\n隐私融入设计：音频在你的iPhone上分析，绝不录音或上传。无需账号，无广告。\n\n除非在当前周期结束至少24小时前取消，否则订阅将自动续订。可随时前往“设置”→“Apple账户”→“订阅”管理或取消。\n条款：https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\n隐私：<privacy policy URL>",
+  "description": "免费调音器，无广告，无需账号。接着，用会聆听你演奏的课程学习。\n\nTimbre将精准调音器与音乐老师融为一体。为60种乐器调音，再通过实际演奏了解自己的表现。\n\n免费调音\n• 每种乐器的标准调弦都免费，从吉他、尤克里里、小提琴到曼陀林、班卓琴、乌德琴和二胡。\n• 精确到音分的十二平均律和频闪调音器。132种调弦，包括Drop D、Open G、DADGAD，还可自定义。\n• 自动识别琴弦，每根弦调准后打勾。一次扫弦即可读取所有琴弦，并指出先调哪根。\n• 凭感觉调音：手机随琴弦与目标音之间的拍频振动，越接近越慢，调准便停止，让你不用看屏幕也能调音。\n• 采用影棚灯光的3D吉他、贝斯、小提琴、大提琴和曼陀林，指示需要转动的弦钮。\n• 变调夹、可调A4参考音，以及唱名和萨尔加姆音名。\n\n边弹边学\n• 11门课程、526节课：吉他、尤克里里、贝斯、小提琴、大提琴、曼陀林、班卓琴、声乐、练耳、乐理与节奏。另有尤克里里、曼陀林、小提琴、大提琴和贝斯曲集。\n• Timbre听取每次扫弦：和弦是否正确、节奏是否准确、哪根弦没有发声。演奏时逐音评估，音高精确到音分，时机精确到毫秒。\n• “看示范”在3D吉他上演奏每个新和弦，展示手指依次落位。跟弹音符轨道会为你减速，随着进步再加快。\n\n演奏歌曲\n• 140多首完整编曲，包括从Jingle Bells到Amazing Grace的经典，以及为Timbre创作、采用当代风格的50首Originals。\n• 戴上耳机与乐队合奏，歌词随进度点亮。\n• 你的歌曲：粘贴或导入和弦谱、移调、按节拍滚动，并在旁边通过Apple Music聆听原曲。\n\n坚持练习\n• 星星、XP、每日任务、连续记录和徽章。\n• Apple Watch：在手腕上感受节拍器，一眼查看今日练习。\n• 主屏幕与锁定屏幕小组件、实时活动和Siri快捷指令。\n• 带重音、细分节拍和速度训练的节拍器；持续音、音准训练器、和弦与音阶库。\n• 练耳：音高方向、音程、和弦性质，另有40节课的练耳课程。\n\n免费开始\n每种乐器的标准调弦都免费；吉他、贝斯、尤克里里、小提琴和大提琴的所有调弦均免费。每门课程的第一个单元和部分歌曲也免费。Timbre Pro解锁所有课程、歌曲、调弦及完整练习工具。开启通知后，Timbre会在免费试用结束前两天提醒你。\n\n隐私融入设计：麦克风的实时音频在你的设备上分析，绝不录音或上传。无需账号，无广告。\n\n除非在当前周期结束至少24小时前取消，否则订阅将自动续订。可随时前往“设置”→“Apple账户”→“订阅”管理或取消。\n条款：https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\n隐私：https://timbre-support.timbre.workers.dev/privacy",
   "whats_new": "欢迎使用Timbre：为60种乐器提供免费调音，还有526节会聆听你演奏的课程。",
   "iphone_screenshot_captions": [
     {
@@ -316,5 +325,6 @@
       ],
       "note": "Available app values reused exactly; missing app values retain authored store drafts. Does not certify native or device review."
     }
-  }
+  },
+  "production_privacy_url": "https://timbre-support.timbre.workers.dev/privacy"
 }

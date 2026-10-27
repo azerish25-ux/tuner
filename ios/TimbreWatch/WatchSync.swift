@@ -24,6 +24,14 @@ final class WatchSync: NSObject, ObservableObject, WCSessionDelegate {
     private override init() { super.init() }
 
     func activate() {
+        #if DEBUG
+        if WatchCapture.enabled {
+            let value = WatchCapture.snapshot()
+            snapshot = value
+            if let data = try? JSONEncoder().encode(value) { _ = SnapshotStore.accept(data) }
+            return
+        }
+        #endif
         guard !activated, WCSession.isSupported() else { return }
         activated = true
         WCSession.default.delegate = self

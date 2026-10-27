@@ -1,0 +1,4223 @@
+{
+  "checks": [
+    {
+      "check": "author artifact hash: docs/l10n/reviews/store-release-privacy-update/proposals.json",
+      "pass": true
+    },
+    {
+      "check": "author artifact hash: docs/l10n/reviews/store-release-privacy-update/source-update-proposal.json",
+      "pass": true
+    },
+    {
+      "check": "author artifact hash: docs/l10n/reviews/store-release-privacy-update/context-and-lineage.json",
+      "pass": true
+    },
+    {
+      "check": "author artifact hash: docs/l10n/reviews/store-release-privacy-update/proposal-qa.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store.py",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store-locales.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store-review.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store-review-independent.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store-corrections.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: docs/ios/APP-STORE-LISTING.md",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: ios/project.yml",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: ios/Timbre/Services/GameCenter.swift",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/ar-SA.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/bn-BD.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/ca.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/cs.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/da.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/de-DE.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/el.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/en-AU.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/en-CA.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/en-GB.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/en-US.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/es-ES.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/es-MX.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/fi.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/fr-CA.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/fr-FR.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/gu-IN.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/he.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/hi.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/hr.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/hu.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/id.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/it.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/ja.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/kn-IN.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/ko.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/ml-IN.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/mr-IN.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/ms.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/nl-NL.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/no.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/or-IN.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/pa-IN.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/pl.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/pt-BR.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/pt-PT.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/ro.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/ru.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/sk.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/sl-SI.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/sv.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/ta-IN.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/te-IN.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/th.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/tr.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/uk.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/ur-PK.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/vi.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/zh-Hans.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: tools/l10n/store/zh-Hant.json",
+      "pass": true
+    },
+    {
+      "check": "context current file hash: docs/ios/readiness/reviews/cloudflare-publication.json",
+      "pass": true
+    },
+    {
+      "check": "historical correction ledger contains 309 entries",
+      "pass": true
+    },
+    {
+      "check": "current English source content hash",
+      "pass": true
+    },
+    {
+      "check": "English source document file hash",
+      "pass": true
+    },
+    {
+      "check": "English prose old occurrence: Private by design: audio is analysed on your ",
+      "pass": true
+    },
+    {
+      "check": "English prose old occurrence: • Game Center: a weekly Bullseye league, song",
+      "pass": true
+    },
+    {
+      "check": "English prose old occurrence: <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "English source proposal exact bounded reconstruction",
+      "pass": true
+    },
+    {
+      "check": "English source old text hash",
+      "pass": true
+    },
+    {
+      "check": "English source new text hash",
+      "pass": true
+    },
+    {
+      "check": "English source old description equals current payload",
+      "pass": true
+    },
+    {
+      "check": "proposed English source content hash",
+      "pass": true
+    },
+    {
+      "check": "candidate Game Center default is NO",
+      "pass": true
+    },
+    {
+      "check": "ar-SA: current file hash",
+      "pass": true
+    },
+    {
+      "check": "ar-SA: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "ar-SA: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "ar-SA: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "ar-SA: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "ar-SA: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "ar-SA: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "ar-SA: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "ar-SA: unique exact operation الخصوصية أساس التصميم: يُحلَ",
+      "pass": true
+    },
+    {
+      "check": "ar-SA: unique exact operation • Game Center: دوري في الصمي",
+      "pass": true
+    },
+    {
+      "check": "ar-SA: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "ar-SA: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "ar-SA: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "ar-SA: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "ar-SA: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "ar-SA: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "ar-SA: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "ar-SA: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "ar-SA: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "bn-BD: current file hash",
+      "pass": true
+    },
+    {
+      "check": "bn-BD: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "bn-BD: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "bn-BD: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "bn-BD: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "bn-BD: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "bn-BD: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "bn-BD: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "bn-BD: unique exact operation গোপনীয়তা শুরু থেকেই: অডিও আ",
+      "pass": true
+    },
+    {
+      "check": "bn-BD: unique exact operation • Game Center: সাপ্তাহিক নিখ",
+      "pass": true
+    },
+    {
+      "check": "bn-BD: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "bn-BD: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "bn-BD: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "bn-BD: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "bn-BD: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "bn-BD: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "bn-BD: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "bn-BD: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "bn-BD: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "ca: current file hash",
+      "pass": true
+    },
+    {
+      "check": "ca: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "ca: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "ca: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "ca: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "ca: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "ca: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "ca: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "ca: unique exact operation L’àudio s’analitza a l’iPhon",
+      "pass": true
+    },
+    {
+      "check": "ca: unique exact operation Game Center: lliga setmanal ",
+      "pass": true
+    },
+    {
+      "check": "ca: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "ca: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "ca: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "ca: embedded GC leaves all adjacent sentences exact",
+      "pass": true
+    },
+    {
+      "check": "ca: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "ca: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "ca: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "ca: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "ca: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "ca: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "cs: current file hash",
+      "pass": true
+    },
+    {
+      "check": "cs: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "cs: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "cs: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "cs: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "cs: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "cs: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "cs: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "cs: unique exact operation Zvuk se analyzuje na iPhonu,",
+      "pass": true
+    },
+    {
+      "check": "cs: unique exact operation Game Center: týdenní liga „D",
+      "pass": true
+    },
+    {
+      "check": "cs: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "cs: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "cs: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "cs: embedded GC leaves all adjacent sentences exact",
+      "pass": true
+    },
+    {
+      "check": "cs: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "cs: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "cs: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "cs: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "cs: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "cs: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "da: current file hash",
+      "pass": true
+    },
+    {
+      "check": "da: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "da: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "da: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "da: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "da: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "da: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "da: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "da: unique exact operation Lyd analyseres på din iPhone",
+      "pass": true
+    },
+    {
+      "check": "da: unique exact operation Game Center med ugentlig Ple",
+      "pass": true
+    },
+    {
+      "check": "da: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "da: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "da: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "da: embedded GC leaves all adjacent sentences exact",
+      "pass": true
+    },
+    {
+      "check": "da: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "da: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "da: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "da: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "da: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "da: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "de-DE: current file hash",
+      "pass": true
+    },
+    {
+      "check": "de-DE: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "de-DE: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "de-DE: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "de-DE: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "de-DE: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "de-DE: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "de-DE: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "de-DE: unique exact operation Privat konzipiert: Audio wir",
+      "pass": true
+    },
+    {
+      "check": "de-DE: unique exact operation • Game Center: wöchentliche ",
+      "pass": true
+    },
+    {
+      "check": "de-DE: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "de-DE: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "de-DE: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "de-DE: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "de-DE: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "de-DE: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "de-DE: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "de-DE: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "de-DE: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "el: current file hash",
+      "pass": true
+    },
+    {
+      "check": "el: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "el: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "el: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "el: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "el: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "el: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "el: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "el: unique exact operation Ο ήχος αναλύεται στο iPhone ",
+      "pass": true
+    },
+    {
+      "check": "el: unique exact operation Game Center: εβδομαδιαία λίγ",
+      "pass": true
+    },
+    {
+      "check": "el: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "el: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "el: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "el: embedded GC leaves all adjacent sentences exact",
+      "pass": true
+    },
+    {
+      "check": "el: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "el: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "el: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "el: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "el: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "el: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "el: unique guarded register refinement",
+      "pass": true
+    },
+    {
+      "check": "en-AU: current file hash",
+      "pass": true
+    },
+    {
+      "check": "en-AU: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "en-AU: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "en-AU: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "en-AU: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "en-AU: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "en-AU: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "en-AU: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "en-AU: unique exact operation Private by design: audio is ",
+      "pass": true
+    },
+    {
+      "check": "en-AU: unique exact operation • Game Center: a weekly Bull",
+      "pass": true
+    },
+    {
+      "check": "en-AU: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "en-AU: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "en-AU: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "en-AU: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "en-AU: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "en-AU: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "en-AU: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "en-AU: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "en-AU: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "en-CA: current file hash",
+      "pass": true
+    },
+    {
+      "check": "en-CA: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "en-CA: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "en-CA: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "en-CA: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "en-CA: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "en-CA: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "en-CA: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "en-CA: unique exact operation Private by design: audio is ",
+      "pass": true
+    },
+    {
+      "check": "en-CA: unique exact operation • Game Center: a weekly Bull",
+      "pass": true
+    },
+    {
+      "check": "en-CA: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "en-CA: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "en-CA: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "en-CA: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "en-CA: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "en-CA: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "en-CA: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "en-CA: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "en-CA: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "en-GB: current file hash",
+      "pass": true
+    },
+    {
+      "check": "en-GB: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "en-GB: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "en-GB: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "en-GB: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "en-GB: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "en-GB: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "en-GB: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "en-GB: unique exact operation Private by design: audio is ",
+      "pass": true
+    },
+    {
+      "check": "en-GB: unique exact operation • Game Center: a weekly Bull",
+      "pass": true
+    },
+    {
+      "check": "en-GB: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "en-GB: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "en-GB: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "en-GB: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "en-GB: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "en-GB: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "en-GB: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "en-GB: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "en-GB: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "en-US: current file hash",
+      "pass": true
+    },
+    {
+      "check": "en-US: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "en-US: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "en-US: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "en-US: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "en-US: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "en-US: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "en-US: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "en-US: unique exact operation Private by design: audio is ",
+      "pass": true
+    },
+    {
+      "check": "en-US: unique exact operation • Game Center: a weekly Bull",
+      "pass": true
+    },
+    {
+      "check": "en-US: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "en-US: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "en-US: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "en-US: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "en-US: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "en-US: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "en-US: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "en-US: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "en-US: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "es-ES: current file hash",
+      "pass": true
+    },
+    {
+      "check": "es-ES: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "es-ES: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "es-ES: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "es-ES: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "es-ES: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "es-ES: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "es-ES: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "es-ES: unique exact operation Privacidad desde el diseño: ",
+      "pass": true
+    },
+    {
+      "check": "es-ES: unique exact operation • Game Center: liga semanal ",
+      "pass": true
+    },
+    {
+      "check": "es-ES: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "es-ES: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "es-ES: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "es-ES: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "es-ES: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "es-ES: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "es-ES: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "es-ES: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "es-ES: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "es-MX: current file hash",
+      "pass": true
+    },
+    {
+      "check": "es-MX: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "es-MX: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "es-MX: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "es-MX: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "es-MX: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "es-MX: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "es-MX: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "es-MX: unique exact operation Privacidad desde el diseño: ",
+      "pass": true
+    },
+    {
+      "check": "es-MX: unique exact operation • Game Center: liga semanal ",
+      "pass": true
+    },
+    {
+      "check": "es-MX: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "es-MX: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "es-MX: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "es-MX: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "es-MX: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "es-MX: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "es-MX: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "es-MX: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "es-MX: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "fi: current file hash",
+      "pass": true
+    },
+    {
+      "check": "fi: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "fi: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "fi: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "fi: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "fi: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "fi: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "fi: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "fi: unique exact operation Ääni analysoidaan iPhonessa,",
+      "pass": true
+    },
+    {
+      "check": "fi: unique exact operation Game Centerin viikoittainen ",
+      "pass": true
+    },
+    {
+      "check": "fi: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "fi: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "fi: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "fi: embedded GC leaves all adjacent sentences exact",
+      "pass": true
+    },
+    {
+      "check": "fi: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "fi: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "fi: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "fi: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "fi: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "fi: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "fr-CA: current file hash",
+      "pass": true
+    },
+    {
+      "check": "fr-CA: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "fr-CA: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "fr-CA: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "fr-CA: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "fr-CA: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "fr-CA: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "fr-CA: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "fr-CA: unique exact operation Confidentialité dès la conce",
+      "pass": true
+    },
+    {
+      "check": "fr-CA: unique exact operation • Game Center : ligue Tir pa",
+      "pass": true
+    },
+    {
+      "check": "fr-CA: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "fr-CA: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "fr-CA: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "fr-CA: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "fr-CA: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "fr-CA: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "fr-CA: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "fr-CA: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "fr-CA: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "fr-FR: current file hash",
+      "pass": true
+    },
+    {
+      "check": "fr-FR: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "fr-FR: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "fr-FR: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "fr-FR: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "fr-FR: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "fr-FR: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "fr-FR: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "fr-FR: unique exact operation Confidentialité dès la conce",
+      "pass": true
+    },
+    {
+      "check": "fr-FR: unique exact operation • Game Center : ligue Tir pa",
+      "pass": true
+    },
+    {
+      "check": "fr-FR: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "fr-FR: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "fr-FR: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "fr-FR: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "fr-FR: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "fr-FR: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "fr-FR: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "fr-FR: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "fr-FR: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "gu-IN: current file hash",
+      "pass": true
+    },
+    {
+      "check": "gu-IN: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "gu-IN: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "gu-IN: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "gu-IN: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "gu-IN: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "gu-IN: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "gu-IN: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "gu-IN: unique exact operation ગોપનીયતા સાથે રચાયેલ: ઑડિયો ",
+      "pass": true
+    },
+    {
+      "check": "gu-IN: unique exact operation • Game Center: સાપ્તાહિક સચો",
+      "pass": true
+    },
+    {
+      "check": "gu-IN: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "gu-IN: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "gu-IN: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "gu-IN: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "gu-IN: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "gu-IN: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "gu-IN: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "gu-IN: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "gu-IN: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "he: current file hash",
+      "pass": true
+    },
+    {
+      "check": "he: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "he: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "he: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "he: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "he: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "he: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "he: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "he: unique exact operation פרטיות מובנית: השמע מנותח ב־",
+      "pass": true
+    },
+    {
+      "check": "he: unique exact operation • Game Center: ליגת בול שבוע",
+      "pass": true
+    },
+    {
+      "check": "he: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "he: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "he: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "he: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "he: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "he: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "he: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "he: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "he: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "hi: current file hash",
+      "pass": true
+    },
+    {
+      "check": "hi: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "hi: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "hi: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "hi: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "hi: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "hi: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "hi: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "hi: unique exact operation निजता शुरू से: ऑडियो आपके iP",
+      "pass": true
+    },
+    {
+      "check": "hi: unique exact operation • Game Center: साप्ताहिक सटी",
+      "pass": true
+    },
+    {
+      "check": "hi: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "hi: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "hi: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "hi: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "hi: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "hi: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "hi: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "hi: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "hi: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "hr: current file hash",
+      "pass": true
+    },
+    {
+      "check": "hr: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "hr: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "hr: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "hr: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "hr: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "hr: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "hr: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "hr: unique exact operation Zvuk se analizira na iPhoneu",
+      "pass": true
+    },
+    {
+      "check": "hr: unique exact operation Game Center: tjedna liga „U ",
+      "pass": true
+    },
+    {
+      "check": "hr: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "hr: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "hr: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "hr: embedded GC leaves all adjacent sentences exact",
+      "pass": true
+    },
+    {
+      "check": "hr: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "hr: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "hr: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "hr: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "hr: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "hr: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "hu: current file hash",
+      "pass": true
+    },
+    {
+      "check": "hu: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "hu: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "hu: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "hu: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "hu: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "hu: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "hu: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "hu: unique exact operation A hang elemzése az iPhone-on",
+      "pass": true
+    },
+    {
+      "check": "hu: unique exact operation Game Center: heti Telitalála",
+      "pass": true
+    },
+    {
+      "check": "hu: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "hu: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "hu: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "hu: embedded GC leaves all adjacent sentences exact",
+      "pass": true
+    },
+    {
+      "check": "hu: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "hu: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "hu: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "hu: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "hu: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "hu: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "id: current file hash",
+      "pass": true
+    },
+    {
+      "check": "id: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "id: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "id: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "id: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "id: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "id: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "id: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "id: unique exact operation Dirancang untuk privasi: aud",
+      "pass": true
+    },
+    {
+      "check": "id: unique exact operation • Game Center: liga Tepat sa",
+      "pass": true
+    },
+    {
+      "check": "id: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "id: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "id: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "id: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "id: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "id: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "id: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "id: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "id: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "id: unique guarded register refinement",
+      "pass": true
+    },
+    {
+      "check": "it: current file hash",
+      "pass": true
+    },
+    {
+      "check": "it: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "it: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "it: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "it: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "it: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "it: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "it: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "it: unique exact operation Privacy fin dalla progettazi",
+      "pass": true
+    },
+    {
+      "check": "it: unique exact operation • Game Center: lega settiman",
+      "pass": true
+    },
+    {
+      "check": "it: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "it: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "it: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "it: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "it: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "it: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "it: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "it: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "it: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "ja: current file hash",
+      "pass": true
+    },
+    {
+      "check": "ja: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "ja: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "ja: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "ja: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "ja: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "ja: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "ja: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "ja: unique exact operation プライバシーを重視：音声はiPhone上で解析され、録音",
+      "pass": true
+    },
+    {
+      "check": "ja: unique exact operation • Game Center：ど真ん中の週間リーグ、曲別ラ",
+      "pass": true
+    },
+    {
+      "check": "ja: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "ja: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "ja: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "ja: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "ja: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "ja: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "ja: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "ja: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "ja: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "kn-IN: current file hash",
+      "pass": true
+    },
+    {
+      "check": "kn-IN: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "kn-IN: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "kn-IN: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "kn-IN: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "kn-IN: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "kn-IN: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "kn-IN: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "kn-IN: unique exact operation ಗೌಪ್ಯತೆಯ ವಿನ್ಯಾಸ: ಆಡಿಯೊ ನಿಮ್",
+      "pass": true
+    },
+    {
+      "check": "kn-IN: unique exact operation • Game Center: ವಾರದ ನಿಖರ ಗುರ",
+      "pass": true
+    },
+    {
+      "check": "kn-IN: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "kn-IN: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "kn-IN: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "kn-IN: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "kn-IN: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "kn-IN: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "kn-IN: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "kn-IN: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "kn-IN: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "ko: current file hash",
+      "pass": true
+    },
+    {
+      "check": "ko: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "ko: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "ko: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "ko: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "ko: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "ko: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "ko: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "ko: unique exact operation 개인정보를 생각한 설계: 오디오는 iPhone에서 ",
+      "pass": true
+    },
+    {
+      "check": "ko: unique exact operation • Game Center: 주간 불스아이 리그, 노",
+      "pass": true
+    },
+    {
+      "check": "ko: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "ko: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "ko: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "ko: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "ko: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "ko: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "ko: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "ko: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "ko: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "ml-IN: current file hash",
+      "pass": true
+    },
+    {
+      "check": "ml-IN: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "ml-IN: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "ml-IN: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "ml-IN: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "ml-IN: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "ml-IN: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "ml-IN: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "ml-IN: unique exact operation സ്വകാര്യത മുൻനിർത്തി: ഓഡിയോ ",
+      "pass": true
+    },
+    {
+      "check": "ml-IN: unique exact operation • Game Center: പ്രതിവാര ബുൾസ",
+      "pass": true
+    },
+    {
+      "check": "ml-IN: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "ml-IN: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "ml-IN: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "ml-IN: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "ml-IN: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "ml-IN: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "ml-IN: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "ml-IN: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "ml-IN: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "mr-IN: current file hash",
+      "pass": true
+    },
+    {
+      "check": "mr-IN: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "mr-IN: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "mr-IN: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "mr-IN: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "mr-IN: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "mr-IN: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "mr-IN: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "mr-IN: unique exact operation गोपनीयता जपणारी रचना: ऑडिओ त",
+      "pass": true
+    },
+    {
+      "check": "mr-IN: unique exact operation • Game Center: साप्ताहिक अचू",
+      "pass": true
+    },
+    {
+      "check": "mr-IN: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "mr-IN: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "mr-IN: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "mr-IN: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "mr-IN: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "mr-IN: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "mr-IN: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "mr-IN: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "mr-IN: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "ms: current file hash",
+      "pass": true
+    },
+    {
+      "check": "ms: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "ms: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "ms: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "ms: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "ms: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "ms: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "ms: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "ms: unique exact operation Privasi sejak awal: audio di",
+      "pass": true
+    },
+    {
+      "check": "ms: unique exact operation • Game Center: liga Bullseye",
+      "pass": true
+    },
+    {
+      "check": "ms: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "ms: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "ms: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "ms: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "ms: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "ms: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "ms: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "ms: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "ms: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "nl-NL: current file hash",
+      "pass": true
+    },
+    {
+      "check": "nl-NL: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "nl-NL: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "nl-NL: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "nl-NL: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "nl-NL: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "nl-NL: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "nl-NL: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "nl-NL: unique exact operation Audio wordt op je iPhone gea",
+      "pass": true
+    },
+    {
+      "check": "nl-NL: unique exact operation Game Center met een wekelijk",
+      "pass": true
+    },
+    {
+      "check": "nl-NL: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "nl-NL: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "nl-NL: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "nl-NL: embedded GC leaves all adjacent sentences exact",
+      "pass": true
+    },
+    {
+      "check": "nl-NL: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "nl-NL: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "nl-NL: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "nl-NL: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "nl-NL: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "nl-NL: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "no: current file hash",
+      "pass": true
+    },
+    {
+      "check": "no: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "no: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "no: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "no: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "no: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "no: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "no: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "no: unique exact operation Lyd analyseres på iPhone, bl",
+      "pass": true
+    },
+    {
+      "check": "no: unique exact operation Game Center med ukentlig Ful",
+      "pass": true
+    },
+    {
+      "check": "no: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "no: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "no: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "no: embedded GC leaves all adjacent sentences exact",
+      "pass": true
+    },
+    {
+      "check": "no: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "no: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "no: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "no: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "no: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "no: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "or-IN: current file hash",
+      "pass": true
+    },
+    {
+      "check": "or-IN: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "or-IN: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "or-IN: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "or-IN: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "or-IN: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "or-IN: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "or-IN: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "or-IN: unique exact operation ଗୋପନୀୟତା ମୂଳରେ: ଅଡିଓ ଆପଣଙ୍କ ",
+      "pass": true
+    },
+    {
+      "check": "or-IN: unique exact operation • Game Center: ସାପ୍ତାହିକ Bul",
+      "pass": true
+    },
+    {
+      "check": "or-IN: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "or-IN: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "or-IN: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "or-IN: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "or-IN: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "or-IN: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "or-IN: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "or-IN: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "or-IN: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "pa-IN: current file hash",
+      "pass": true
+    },
+    {
+      "check": "pa-IN: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "pa-IN: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "pa-IN: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "pa-IN: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "pa-IN: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "pa-IN: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "pa-IN: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "pa-IN: unique exact operation ਨਿੱਜਤਾ ਮੂਲ ਵਿੱਚ: ਆਡੀਓ ਤੁਹਾਡੇ",
+      "pass": true
+    },
+    {
+      "check": "pa-IN: unique exact operation • Game Center: ਹਫ਼ਤਾਵਾਰੀ ਸਟੀ",
+      "pass": true
+    },
+    {
+      "check": "pa-IN: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "pa-IN: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "pa-IN: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "pa-IN: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "pa-IN: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "pa-IN: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "pa-IN: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "pa-IN: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "pa-IN: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "pl: current file hash",
+      "pass": true
+    },
+    {
+      "check": "pl: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "pl: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "pl: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "pl: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "pl: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "pl: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "pl: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "pl: unique exact operation Dźwięk jest analizowany na i",
+      "pass": true
+    },
+    {
+      "check": "pl: unique exact operation Game Center: cotygodniowa li",
+      "pass": true
+    },
+    {
+      "check": "pl: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "pl: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "pl: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "pl: embedded GC leaves all adjacent sentences exact",
+      "pass": true
+    },
+    {
+      "check": "pl: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "pl: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "pl: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "pl: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "pl: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "pl: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "pt-BR: current file hash",
+      "pass": true
+    },
+    {
+      "check": "pt-BR: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "pt-BR: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "pt-BR: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "pt-BR: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "pt-BR: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "pt-BR: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "pt-BR: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "pt-BR: unique exact operation Privacidade desde o início: ",
+      "pass": true
+    },
+    {
+      "check": "pt-BR: unique exact operation • Game Center: liga semanal ",
+      "pass": true
+    },
+    {
+      "check": "pt-BR: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "pt-BR: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "pt-BR: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "pt-BR: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "pt-BR: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "pt-BR: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "pt-BR: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "pt-BR: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "pt-BR: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "pt-PT: current file hash",
+      "pass": true
+    },
+    {
+      "check": "pt-PT: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "pt-PT: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "pt-PT: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "pt-PT: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "pt-PT: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "pt-PT: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "pt-PT: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "pt-PT: unique exact operation Privacidade desde a conceção",
+      "pass": true
+    },
+    {
+      "check": "pt-PT: unique exact operation • Game Center: liga semanal ",
+      "pass": true
+    },
+    {
+      "check": "pt-PT: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "pt-PT: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "pt-PT: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "pt-PT: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "pt-PT: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "pt-PT: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "pt-PT: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "pt-PT: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "pt-PT: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "ro: current file hash",
+      "pass": true
+    },
+    {
+      "check": "ro: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "ro: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "ro: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "ro: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "ro: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "ro: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "ro: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "ro: unique exact operation Sunetul este analizat pe iPh",
+      "pass": true
+    },
+    {
+      "check": "ro: unique exact operation Game Center: ligă săptămânal",
+      "pass": true
+    },
+    {
+      "check": "ro: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "ro: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "ro: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "ro: embedded GC leaves all adjacent sentences exact",
+      "pass": true
+    },
+    {
+      "check": "ro: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "ro: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "ro: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "ro: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "ro: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "ro: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "ru: current file hash",
+      "pass": true
+    },
+    {
+      "check": "ru: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "ru: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "ru: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "ru: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "ru: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "ru: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "ru: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "ru: unique exact operation Конфиденциальность по замысл",
+      "pass": true
+    },
+    {
+      "check": "ru: unique exact operation • Game Center: еженедельная ",
+      "pass": true
+    },
+    {
+      "check": "ru: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "ru: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "ru: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "ru: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "ru: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "ru: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "ru: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "ru: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "ru: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "sk: current file hash",
+      "pass": true
+    },
+    {
+      "check": "sk: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "sk: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "sk: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "sk: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "sk: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "sk: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "sk: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "sk: unique exact operation Zvuk sa analyzuje na iPhone,",
+      "pass": true
+    },
+    {
+      "check": "sk: unique exact operation Game Center: týždenná liga „",
+      "pass": true
+    },
+    {
+      "check": "sk: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "sk: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "sk: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "sk: embedded GC leaves all adjacent sentences exact",
+      "pass": true
+    },
+    {
+      "check": "sk: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "sk: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "sk: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "sk: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "sk: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "sk: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "sl-SI: current file hash",
+      "pass": true
+    },
+    {
+      "check": "sl-SI: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "sl-SI: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "sl-SI: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "sl-SI: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "sl-SI: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "sl-SI: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "sl-SI: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "sl-SI: unique exact operation Zvok se analizira na iPhonu ",
+      "pass": true
+    },
+    {
+      "check": "sl-SI: unique exact operation Game Center: tedenska liga »",
+      "pass": true
+    },
+    {
+      "check": "sl-SI: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "sl-SI: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "sl-SI: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "sl-SI: embedded GC leaves all adjacent sentences exact",
+      "pass": true
+    },
+    {
+      "check": "sl-SI: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "sl-SI: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "sl-SI: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "sl-SI: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "sl-SI: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "sl-SI: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "sv: current file hash",
+      "pass": true
+    },
+    {
+      "check": "sv: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "sv: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "sv: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "sv: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "sv: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "sv: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "sv: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "sv: unique exact operation Ljud analyseras på din iPhon",
+      "pass": true
+    },
+    {
+      "check": "sv: unique exact operation Game Center med veckoliga i ",
+      "pass": true
+    },
+    {
+      "check": "sv: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "sv: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "sv: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "sv: embedded GC leaves all adjacent sentences exact",
+      "pass": true
+    },
+    {
+      "check": "sv: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "sv: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "sv: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "sv: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "sv: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "sv: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "ta-IN: current file hash",
+      "pass": true
+    },
+    {
+      "check": "ta-IN: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "ta-IN: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "ta-IN: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "ta-IN: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "ta-IN: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "ta-IN: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "ta-IN: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "ta-IN: unique exact operation தனியுரிமையுடன் வடிவமைப்பு: ஒ",
+      "pass": true
+    },
+    {
+      "check": "ta-IN: unique exact operation • Game Center: வாராந்திர துல",
+      "pass": true
+    },
+    {
+      "check": "ta-IN: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "ta-IN: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "ta-IN: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "ta-IN: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "ta-IN: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "ta-IN: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "ta-IN: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "ta-IN: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "ta-IN: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "te-IN: current file hash",
+      "pass": true
+    },
+    {
+      "check": "te-IN: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "te-IN: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "te-IN: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "te-IN: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "te-IN: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "te-IN: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "te-IN: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "te-IN: unique exact operation గోప్యతతో రూపకల్పన: ఆడియో మీ ",
+      "pass": true
+    },
+    {
+      "check": "te-IN: unique exact operation • Game Center: వారపు బుల్స్‌",
+      "pass": true
+    },
+    {
+      "check": "te-IN: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "te-IN: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "te-IN: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "te-IN: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "te-IN: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "te-IN: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "te-IN: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "te-IN: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "te-IN: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "th: current file hash",
+      "pass": true
+    },
+    {
+      "check": "th: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "th: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "th: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "th: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "th: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "th: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "th: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "th: unique exact operation ออกแบบเพื่อความเป็นส่วนตัว: ",
+      "pass": true
+    },
+    {
+      "check": "th: unique exact operation • Game Center: ลีก กลางเป้า ",
+      "pass": true
+    },
+    {
+      "check": "th: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "th: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "th: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "th: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "th: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "th: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "th: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "th: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "th: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "tr: current file hash",
+      "pass": true
+    },
+    {
+      "check": "tr: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "tr: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "tr: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "tr: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "tr: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "tr: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "tr: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "tr: unique exact operation Ses iPhone’unda analiz edili",
+      "pass": true
+    },
+    {
+      "check": "tr: unique exact operation Game Center: haftalık Tam is",
+      "pass": true
+    },
+    {
+      "check": "tr: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "tr: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "tr: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "tr: embedded GC leaves all adjacent sentences exact",
+      "pass": true
+    },
+    {
+      "check": "tr: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "tr: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "tr: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "tr: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "tr: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "tr: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "uk: current file hash",
+      "pass": true
+    },
+    {
+      "check": "uk: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "uk: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "uk: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "uk: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "uk: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "uk: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "uk: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "uk: unique exact operation Звук аналізується на iPhone,",
+      "pass": true
+    },
+    {
+      "check": "uk: unique exact operation Game Center: щотижнева ліга ",
+      "pass": true
+    },
+    {
+      "check": "uk: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "uk: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "uk: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "uk: embedded GC leaves all adjacent sentences exact",
+      "pass": true
+    },
+    {
+      "check": "uk: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "uk: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "uk: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "uk: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "uk: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "uk: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "ur-PK: current file hash",
+      "pass": true
+    },
+    {
+      "check": "ur-PK: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "ur-PK: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "ur-PK: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "ur-PK: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "ur-PK: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "ur-PK: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "ur-PK: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "ur-PK: unique exact operation رازداری بنیاد میں: آڈیو آپ ک",
+      "pass": true
+    },
+    {
+      "check": "ur-PK: unique exact operation • Game Center: ہفتہ وار عین ",
+      "pass": true
+    },
+    {
+      "check": "ur-PK: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "ur-PK: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "ur-PK: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "ur-PK: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "ur-PK: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "ur-PK: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "ur-PK: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "ur-PK: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "ur-PK: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "vi: current file hash",
+      "pass": true
+    },
+    {
+      "check": "vi: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "vi: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "vi: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "vi: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "vi: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "vi: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "vi: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "vi: unique exact operation Thiết kế vì riêng tư: âm tha",
+      "pass": true
+    },
+    {
+      "check": "vi: unique exact operation • Game Center: giải Hồng tâm",
+      "pass": true
+    },
+    {
+      "check": "vi: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "vi: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "vi: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "vi: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "vi: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "vi: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "vi: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "vi: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "vi: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "zh-Hans: current file hash",
+      "pass": true
+    },
+    {
+      "check": "zh-Hans: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "zh-Hans: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "zh-Hans: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "zh-Hans: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "zh-Hans: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "zh-Hans: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "zh-Hans: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "zh-Hans: unique exact operation 隐私融入设计：音频在你的iPhone上分析，绝不录音或上",
+      "pass": true
+    },
+    {
+      "check": "zh-Hans: unique exact operation • Game Center：每周靶心联赛、歌曲排行榜和好",
+      "pass": true
+    },
+    {
+      "check": "zh-Hans: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "zh-Hans: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "zh-Hans: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "zh-Hans: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "zh-Hans: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "zh-Hans: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "zh-Hans: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "zh-Hans: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "zh-Hans: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "zh-Hant: current file hash",
+      "pass": true
+    },
+    {
+      "check": "zh-Hant: current payload content hash",
+      "pass": true
+    },
+    {
+      "check": "zh-Hant: exact-old description current",
+      "pass": true
+    },
+    {
+      "check": "zh-Hant: old/new description hashes",
+      "pass": true
+    },
+    {
+      "check": "zh-Hant: source paragraph hash",
+      "pass": true
+    },
+    {
+      "check": "zh-Hant: proposed source binding",
+      "pass": true
+    },
+    {
+      "check": "zh-Hant: old/new privacy hashes",
+      "pass": true
+    },
+    {
+      "check": "zh-Hant: removed GC hash",
+      "pass": true
+    },
+    {
+      "check": "zh-Hant: unique exact operation 以隱私為本：音訊只在你的 iPhone 上分析，絕不錄音",
+      "pass": true
+    },
+    {
+      "check": "zh-Hant: unique exact operation • Game Center：每週 Bullseye 聯賽",
+      "pass": true
+    },
+    {
+      "check": "zh-Hant: unique exact operation <privacy policy URL>",
+      "pass": true
+    },
+    {
+      "check": "zh-Hant: full description contains only allowed delta",
+      "pass": true
+    },
+    {
+      "check": "zh-Hant: URL/newline/limit contract",
+      "pass": true
+    },
+    {
+      "check": "zh-Hant: unchanged-field guard including review metadata",
+      "pass": true
+    },
+    {
+      "check": "zh-Hant: only description and production URL fields differ",
+      "pass": true
+    },
+    {
+      "check": "zh-Hant: proposed payload content hash",
+      "pass": true
+    },
+    {
+      "check": "zh-Hant: prior full-review record preserved",
+      "pass": true
+    },
+    {
+      "check": "zh-Hant: prior independent-review evidence preserved",
+      "pass": true
+    },
+    {
+      "check": "zh-Hant: prior correction count preserved",
+      "pass": true
+    },
+    {
+      "check": "50 unique locale decisions",
+      "pass": true
+    },
+    {
+      "check": "16 embedded and 34 standalone removals",
+      "pass": true
+    },
+    {
+      "check": "parent publication route evidence",
+      "pass": true
+    },
+    {
+      "check": "parent identity evidence",
+      "pass": true
+    }
+  ],
+  "check_count": 1047,
+  "all_passed": true,
+  "removal_kinds": {
+    "standalone-bullet-with-following-newline": 34,
+    "embedded-sentence-with-following-single-space": 16
+  },
+  "source_decision": "Accept exact English description proposal; integrate App Information privacy row and obsolete owner TODO cleanup in same transaction.",
+  "required_integration": [
+    "Apply all50 accepted descriptions, with Greek/Indonesian register refinements, and production_privacy_url fields atomically with English source document.",
+    "Replace App Information Privacy Policy URL placeholder and remove obsolete owner TODO that demands a custom domain/URL replacement and conditional GC bullet deletion; use verified URL and current default-NO facts.",
+    "Rebind source snapshots and record new delta review identities/hashes; preserve every previous full-review object and all309 historical corrections without relabeling old approvals.",
+    "Do not mark privacy/native/device/legal/Apple-account/release gates passed based on this text review."
+  ],
+  "url_verification_attribution": {
+    "basis": "Read parent durable publication artifact; this reviewer made no HTTP request.",
+    "artifact": "docs/ios/readiness/reviews/cloudflare-publication.json",
+    "sha256": "0a4c5f7f2770d5e5bfd4f391676ed5055d7b6eb86a1f62d1444f8a6e232cbbcb",
+    "recorded_user_agent": "Mozilla/5.0",
+    "recorded_status": 200,
+    "hosting_observation": "Cloudflare rejects the default Python-urllib user agent with1010; browser and curl requests return200. No security bypass or account setting change made."
+  },
+  "optional_advisories": [
+    "French France téléversé is inherited and understandable; mis en ligne is an optional regional polish, excluded from guarded refinements.",
+    "Source document age-rating/social-messaging/contest answers mention GC separately; their truth is outside this bounded listing delta and should follow actual candidate functionality in the readiness review."
+  ],
+  "limitations": [
+    "Independent source-aware AI review, not native fluency certification or blinded legal back-translation.",
+    "No fresh full-payload semantic re-review claimed: unchanged descriptions/metadata are guarded exactly and inherit prior reviews.",
+    "No account/device/screenshot/Apple approval or release_ready certification."
+  ],
+  "release_ready": false
+}

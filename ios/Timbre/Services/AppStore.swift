@@ -124,6 +124,12 @@ final class AppStore: ObservableObject {
         audio.instrumentVoice = { [weak self] in self.map { InstrumentVoice(instrument: $0.instrument) } ?? .guitar }
         publishWidgets()
         LiveActivityController.shared.attach(self)  // Lock Screen / Dynamic Island while the metronome, drone, tuner or a lesson runs
+        // Seasonal access can change while this screen stays open, without a fetch or a change to saved progress.
+        RemoteConfig.shared.openingsChanged
+            .sink { [weak self] _ in
+                Task { @MainActor [weak self] in self?.objectWillChange.send() }
+            }
+            .store(in: &subscriptions)
         // The widgets' song access follows Pro, which is unknown until StoreKit answers: once it does (and whenever Pro
         // changes) they are published again, so a paying player's songs never stay marked PRO or locked.
         // Today's plan is pinned against Pro too (a Pro tool gives way once Pro has lapsed).

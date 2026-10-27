@@ -17,7 +17,7 @@ import UIKit
 /// several courses teach (Ode to Joy on guitar, violin, cello…), badges of its other versions to choose from; the
 /// picked shelves show each tune once, in the learner's instrument's version.
 /// What every song's standing is, and so each shelf, is worked out by `SongsCatalog` once per change of progress,
-/// Pro, level or day, not on every store change.
+/// Pro, level, day or effective free access, not on every store change.
 struct SongsView: View {
     @EnvironmentObject private var store: AppStore
     @Environment(\.openURL) private var openURL
@@ -1286,6 +1286,9 @@ struct SongsView: View {
         let pro: Bool
         let level: Int
         let day: Int
+        /// Effective grants, rather than raw config: expiry and same-day config edits both change this snapshot.
+        let freeLessons: Set<String>
+        let unit2Free: Bool
         /// The instrument the learner plays (`home`): a tune shows its version for it first.
         let home: String?
     }
@@ -1308,10 +1311,10 @@ struct SongsView: View {
     }
 
     /// `course` is the learner's Learn course (`learn.course`), which names the instrument they play.
-    func layout(filter: String, course: String, store: AppStore) -> Layout {
-        refresh(store, home: Self.home(course: course, store: store))
+    func layout(filter: String, course: String, store: AppStore, now: Date = Date()) -> Layout {
+        refresh(store, home: Self.home(course: course, store: store), now: now)
         if let known = layouts[filter] { return known }
-        let made = makeLayout(filter: filter, store: store)
+        let made = makeLayout(filter: filter, store: store, now: now)
         layouts[filter] = made
         return made
     }
@@ -1387,10 +1390,12 @@ struct SongsView: View {
         }
     }
 
-    private func refresh(_ store: AppStore, home: String?) {
+    private func refresh(_ store: AppStore, home: String?, now: Date) {
         build(store.curriculum)
-        let day = Calendar.current.ordinality(of: .day, in: .era, for: Date()) ?? 0
-        let next = Key(learn: store.learn, pro: store.isPro, level: store.level.number, day: day, home: home)
+        let day = Calendar.current.ordinality(of: .day, in: .era, for: now) ?? 0
+        let openings = RemoteConfig.shared.freeOpenings
+        let next = Key(learn: store.learn, pro: store.isPro, level: store.level.number, day: day,
+                       freeLessons: openings.lessons, unit2Free: openings.unit2, home: home)
         guard next != key else { return }
         key = next
         layouts = [:]
@@ -1411,12 +1416,12 @@ struct SongsView: View {
 
     // MARK: Layout
 
-    private func makeLayout(filter: String, store: AppStore) -> Layout {
+    private func makeLayout(filter: String, store: AppStore, now: Date) -> Layout {
         let pool = songs.filter { Self.matches($0, filter: filter) }
         let hero = featured(pool, store: store)
         // A tune shows on a picked shelf as one sleeve: the filter's instrument's version, else the learner's.
         let prefer = filter == SongsView.all ? key?.home : filter
-        let picks = self.picks(pool, hero: hero, prefer: prefer, store: store)
+        let picks = self.picks(pool, hero: hero, prefer: prefer, store: store, now: now)
         var rails: [Rail] = []
         // Every course shelf keeps all its songs, the featured one included: its sleeves are numbered in course order
         // (01, 02, 03…), and a song lifted out for the hero left a hole in the count (01, 02, 03, 04, 06).
@@ -1498,7 +1503,7 @@ struct SongsView: View {
     /// version where it has one (its other versions are a tap away on the sleeve). Songs that play now come first,
     /// the Originals and the Standards ahead of the other tunes, the easiest of each first (`adultFirst`); each motif
     /// shows once on a shelf, never the featured sleeve's nor one the shelf above opens on (`distinct`).
-    private func picks(_ songs: [SongsView.Song], hero: SongsView.Song?, prefer: String?, store: AppStore) -> [SongsView.Pick] {
+    private func picks(_ songs: [SongsView.Song], hero: SongsView.Song?, prefer: String?, store: AppStore, now: Date) -> [SongsView.Pick] {
         let progress = key?.learn ?? store.learn
         let heroTune = hero.map { Self.tuneKey($0.lesson) }
         let pool = songs.filter { Self.tuneKey($0.lesson) != heroTune && !Self.isKids($0) }
@@ -1511,8 +1516,8 @@ struct SongsView: View {
             out.append(SongsView.Pick(id: "known", symbol: "heart.fill", title: Text("Songs you know"), songs: known))
             above.formUnion(known.prefix(3).map { art($0).motif })
         }
-        if SongOfTheDay.isCarolSeason(Date()), let carols = ordered(songs, by: SongOfTheDay.carols, prefer: prefer, limit: 17) {
-            let free = Set(RemoteConfig.shared.freeSongs)
+        if SongOfTheDay.isCarolSeason(now), let carols = ordered(songs, by: SongOfTheDay.carols, prefer: prefer, limit: 17) {
+            let free = key?.freeLessons ?? []
             let title = carols.contains { free.contains($0.id) } ? Text("Carols, free this week") : Text("Carols")
             out.append(SongsView.Pick(id: "carols", symbol: "snowflake", title: title, songs: carols))
         }

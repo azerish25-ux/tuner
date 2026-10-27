@@ -153,45 +153,108 @@ enum SpokenCues {
 @MainActor
 final class Earcons {
     static let shared = Earcons()
+    enum Cue: Hashable { case tick, thud, rise, fall }
+    typealias Playback = @MainActor () -> Void
+    private enum Channel: Hashable { case judgment, multiplier }
     private static let rate = 44_100
-    private var tick: AVAudioPlayer?
-    private var thud: AVAudioPlayer?
-    private var rise: AVAudioPlayer?
-    private var fall: AVAudioPlayer?
+    /// Feedback belongs to the judgment just heard, never a later note after the hardware queue catches up.
+    private static let maximumDelay: TimeInterval = 0.15
+    private var players: [Cue: Playback] = [:]
+    private var generation = 0
+    private var nextRequest = 0
+    private var latest: [Channel: Int] = [:]
+    private let prepareSession: @MainActor () async -> Void
+    private let soundsEnabled: @MainActor () -> Bool
+    private let now: @MainActor () -> TimeInterval
+    private let makePlayback: @MainActor (Cue) -> Playback?
+    private let prepareVoice: @MainActor () -> Void
 
-    func play(hit: Bool) {
-        guard SoundFX.shared.enabled else { return }
+    init(prepareSession: @escaping @MainActor () async -> Void = {
+             await AudioSessionOwner.shared.prepareInterfaceSound()
+         }, soundsEnabled: @escaping @MainActor () -> Bool = { SoundFX.shared.enabled },
+         now: @escaping @MainActor () -> TimeInterval = { ProcessInfo.processInfo.systemUptime },
+         makePlayback: @escaping @MainActor (Cue) -> Playback? = { Earcons.playback(for: $0) },
+         prepareVoice: @escaping @MainActor () -> Void = { SpokenCues.prepare() }) {
+        self.prepareSession = prepareSession
+        self.soundsEnabled = soundsEnabled
+        self.now = now
+        self.makePlayback = makePlayback
+        self.prepareVoice = prepareVoice
+    }
+
+    @discardableResult
+    func play(hit: Bool) -> Task<Bool, Never> {
+        guard soundsEnabled() else { return Task { false } }
         prepare()
-        start(hit ? tick : thud)
+        return start(hit ? .tick : .thud)
     }
 
     /// The multiplier stepped up: a short rising swish.
-    func lift() {
-        guard SoundFX.shared.enabled else { return }
-        if rise == nil { rise = Self.player(Self.riseSound(), volume: 0.22) }
-        start(rise)
+    @discardableResult
+    func lift() -> Task<Bool, Never> {
+        guard soundsEnabled() else { return Task { false } }
+        cache(.rise)
+        return start(.rise)
     }
 
     /// A long run broke: a soft falling swish, a tape slowing to a stop.
-    func drop() {
-        guard SoundFX.shared.enabled else { return }
-        if fall == nil { fall = Self.player(Self.fallSound(), volume: 0.3) }
-        start(fall)
+    @discardableResult
+    func drop() -> Task<Bool, Never> {
+        guard soundsEnabled() else { return Task { false } }
+        cache(.fall)
+        return start(.fall)
     }
 
-    /// Renders the cue sounds (a few milliseconds) and finds the cue voice, ahead of the first note when called as a
-    /// take with spoken cues starts.
+    /// Cache unprepared players and find the cue voice before the take; preparing an AVAudioPlayer can activate
+    /// its session, so that work happens only at the eventual playback point after session preparation has finished.
     func prepare() {
-        if tick == nil { tick = Self.player(Self.tickSound(), volume: 0.3) }
-        if thud == nil { thud = Self.player(Self.thudSound(), volume: 0.45) }
-        SpokenCues.prepare()
+        cache(.tick)
+        cache(.thud)
+        prepareVoice()
     }
 
-    private func start(_ player: AVAudioPlayer?) {
-        guard let player else { return }
-        AudioSessionOwner.shared.prepareInterfaceSound()
-        player.currentTime = 0
-        player.play()
+    func cancelPending() {
+        generation += 1
+        latest.removeAll()
+    }
+
+    private func cache(_ cue: Cue) {
+        if players[cue] == nil { players[cue] = makePlayback(cue) }
+    }
+
+    private func start(_ cue: Cue) -> Task<Bool, Never> {
+        guard let playback = players[cue] else { return Task { false } }
+        let channel: Channel = cue == .tick || cue == .thud ? .judgment : .multiplier
+        nextRequest += 1
+        let request = nextRequest, token = generation, issued = now()
+        latest[channel] = request
+        return Task { @MainActor in
+            var played = false
+            await InterfaceSoundPlayback.play(ambientOnly: false, prepare: self.prepareSession, ambientAllowed: { true }) {
+                let age = self.now() - issued
+                guard !Task.isCancelled, self.soundsEnabled(), self.generation == token,
+                      self.latest[channel] == request, age >= 0, age <= Self.maximumDelay else { return }
+                playback()
+                played = true
+            }
+            return played
+        }
+    }
+
+    private static func playback(for cue: Cue) -> Playback? {
+        let samples: [Float], volume: Float
+        switch cue {
+        case .tick: samples = tickSound(); volume = 0.3
+        case .thud: samples = thudSound(); volume = 0.45
+        case .rise: samples = riseSound(); volume = 0.22
+        case .fall: samples = fallSound(); volume = 0.3
+        }
+        guard let player = player(samples, volume: volume) else { return nil }
+        return {
+            player.prepareToPlay()
+            player.currentTime = 0
+            player.play()
+        }
     }
 
     /// Noise through a low-pass whose corner glides from `from` to `to` hertz, with the rumble below 250 Hz taken out:
@@ -261,11 +324,8 @@ final class Earcons {
     }
 
     private static func player(_ samples: [Float], volume: Float) -> AVAudioPlayer? {
-        // Preparing a player can activate the session: it is ambient first unless an engine holds it.
-        AudioSessionOwner.shared.prepareInterfaceSound()
         guard let player = try? AVAudioPlayer(data: wav(samples)) else { return nil }
         player.volume = volume
-        player.prepareToPlay()
         return player
     }
 

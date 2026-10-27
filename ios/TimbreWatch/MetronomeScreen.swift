@@ -28,6 +28,11 @@ struct MetronomeScreen: View {
                               isContinuous: false, isHapticFeedbackEnabled: !metronome.running)
         .onAppear { crownFocused = selected }
         .onChange(of: selected) { _, now in crownFocused = now }
+        #if DEBUG
+        .onChange(of: selected, initial: true) { _, now in
+            if now && WatchCapture.enabled { WatchCapture.didAppear("metronome") }
+        }
+        #endif
         .containerBackground(Self.background, for: .tabView)
     }
 

@@ -1,0 +1,421 @@
+{
+  "schema_version": 1,
+  "audited_at_utc": "2026-10-27T00:40:17Z",
+  "baseline_head": "be4c23496ef05dd80a1c6fdde7a8eee98fb15982",
+  "scope": "Independent remaining-gap audit before Apple Developer account configuration. Read-only source/review audit; only this report authored. No source, test, workflow, deployment, account, commit or push action.",
+  "skill": "code-review-and-quality: correctness/readability/architecture/security/performance review applied to remaining readiness findings.",
+  "verdict": "Two actionable related Carol-config gaps remain in source; required unsigned native and release-media evidence remains pending. Pitch Sniper naming note is stale-comment debt, not a runtime naming bug. Account configuration and hardware evidence remain later release gates.",
+  "findings": [
+    {
+      "id": "REMAIN-01",
+      "priority": "P1",
+      "requirement": "Honor documented all-carol first-week access",
+      "status": "open_source_bug",
+      "references": [
+        "ios/Timbre/Services/RemoteConfig.swift:185",
+        "ios/Timbre/Services/RemoteConfig.swift:188",
+        "docs/ios/RELEASE-CHECKLIST.md:754",
+        "docs/ios/RELEASE-CHECKLIST.md:763"
+      ],
+      "evidence": "K 4 generates 102 unique existing lesson IDs (17 carols \u00d7 6 editions). Sanitizer retains only first 64, dropping 38 including vc-sb-std-away-in-a-manger and every later entry. Independent Python parsed K 4 and curriculum: planned 102, unique 102, missing 0, retained 64, dropped 38.",
+      "impact": "Owner following release instructions cannot deliver all advertised free carols. This remains actual developer work before the promised seasonal release configuration.",
+      "safe_action": "Raise the bounded supported lesson count enough for the complete documented campaign, or represent campaign access by an explicit finite campaign policy; preserve validation and size limits. Add a meaningful 102-ID acceptance/complete-access regression and invalid-input cases.",
+      "validation": "Pure policy/config tests plus native access checks for late-list cello/bass entries and normal noncampaign paid lessons."
+    },
+    {
+      "id": "REMAIN-02",
+      "priority": "P2",
+      "requirement": "Time-bound the documented December 1\u20137 campaign without manual cleanup dependence",
+      "status": "open_product_gap",
+      "references": [
+        "ios/Timbre/Services/RemoteConfig.swift:60",
+        "ios/Timbre/Services/RemoteConfig.swift:85",
+        "ios/Timbre/Services/RemoteConfig.swift:97",
+        "ios/Timbre/Services/RemoteConfig.swift:126",
+        "ios/Timbre/Services/RemoteConfig.swift:141",
+        "ios/Timbre/Services/RemoteConfig.swift:159",
+        "docs/ios/RELEASE-CHECKLIST.md:767"
+      ],
+      "evidence": "Values has freeSongs and flags but no start/end dates. Cached values apply on init; refresh failure keeps them. Cache can remain indefinitely offline. Even successful removal is fetched only on foreground and at most every 6 h. An app left foreground has no campaign-boundary reevaluation.",
+      "impact": "The promised time-bounded campaign is operationally manual; access can remain beyond its ending. This is an existing documented growth gap, not an Apple-wide requirement for a base tuner app. It is required to implement the requested time-bounded launch campaign if retained.",
+      "safe_action": "Add a bounded optional date window for campaign grants while retaining explicit permanent freeSongs compatibility. Define the promise as absolute UTC start-inclusive/end-exclusive instants (for example 2026-12-01T00:00:00Z through 2026-12-08T00:00:00Z), and update campaign copy to state UTC; alternatively implement explicitly documented local calendar-day semantics consistently rather than mixing the two. Reject malformed, missing-half, reversed or unbounded supplied windows with no campaign grants. Preserve intentional legacy permanent freeSongs only when no window is supplied. Enforce current-time eligibility on every access-policy read, including cached/offline values; a timer alone is insufficient. Publish changes on foreground, apply and boundary timers so locks, counts, paywall and already visible screens refresh. Keep input/count/bytes bounded; allow the full102-ID campaign.",
+      "validation": "Pure deterministic clock tests: before start, exact inclusive start, just before exclusive end, exact end, after end, cached offline expiration, malformed/partial/reversed window, permanent no-window backward compatibility, all102 valid IDs and invalid/oversized config. Verify both AppStore.canPlay and default FreeOpenings.current consumers recheck time rather than preserving an expired snapshot. Native checks: foreground/background/long-open-app boundary, song locks, lesson entry, continuation and paywall counts. No runtime outcome is claimed by this audit.",
+      "access_consumers": [
+        {
+          "reference": "ios/Sources/TimbreCore/Commerce/Access.swift:38",
+          "role": "FreeOpenings stores an unqualified lessons Set; current stores a static snapshot. opens at line62 has no time check; AccessPolicy.canPlay at line108 trusts supplied/default openings."
+        },
+        {
+          "reference": "ios/Timbre/Services/AppStore.swift:881",
+          "role": "App canPlay passes RemoteConfig.shared.freeOpenings explicitly; schedule must be enforced here through its canonical policy, not merely the global snapshot."
+        },
+        {
+          "reference": "ios/Timbre/Learn/LearnView.swift:78",
+          "role": "Lesson entry guard calls store.canPlay; LessonAccess.of at line573 drives locks and Songs access."
+        },
+        {
+          "reference": "ios/Timbre/Songs/SongsView.swift:216",
+          "role": "Song entry dispatches LessonAccess.of: play/paywall/order-locked; visible shelf lock values must refresh at boundaries."
+        },
+        {
+          "reference": "ios/Timbre/Learn/WeakSpotReview.swift:102",
+          "role": "Review lesson entry calls store.canPlay."
+        },
+        {
+          "reference": "ios/Timbre/Learn/LessonResults.swift:245",
+          "role": "Next-lesson availability reads store.canPlay, with flawless continuation also at line404."
+        },
+        {
+          "reference": "ios/Timbre/Services/AppStore.swift:557",
+          "role": "Next accessible lesson selection and today lesson at line1085 depend on canPlay."
+        },
+        {
+          "reference": "ios/Timbre/Paywall/PaywallPlan.swift:142",
+          "role": "Plan free-access summary reads RemoteConfig.freeOpenings."
+        },
+        {
+          "reference": "ios/Timbre/Paywall/PaywallView.swift:694",
+          "role": "Free/Pro comparison uses RemoteConfig.freeOpenings."
+        },
+        {
+          "reference": "ios/Sources/TimbreCore/Commerce/PlanComparison.swift:48",
+          "role": "rows/freeLessons use supplied or default.current openings; clock-dependent eligibility must remain current."
+        }
+      ]
+    }
+  ],
+  "requirement_table": [
+    {
+      "id": "R01",
+      "requirement": "Current audio lifecycle fixes",
+      "category": "required_before_account_unsigned_native_evidence",
+      "status": "source_review_resolved_native_pending",
+      "source_references": [
+        "docs/KNOWN-ISSUES.md \u00a71",
+        "docs/ios/readiness/reviews/audio-source-resolution-independent-review.json",
+        "ios/Timbre/Audio/AudioService.swift"
+      ],
+      "current_evidence": "Independent resolution approves source; race/cancellation/session ownership fixes are present. Do not reopen old synchronous-activation notes as unfixed code.",
+      "remaining_safe_action": "Collect queued current-head app/core tests and unsigned Release compilation; investigate actual failures.",
+      "validation_scope": "macOS compilation/XCTest; hardware timing separately."
+    },
+    {
+      "id": "R02",
+      "requirement": "Real microphone, speaker-band, interruption, Bluetooth and latency pass",
+      "category": "later_hardware_verification",
+      "status": "required_before_submission_not_proven",
+      "source_references": [
+        "docs/ios/AUDIO-DEVICE-TESTS.md",
+        "docs/KNOWN-ISSUES.md \u00a71",
+        "docs/ios/RELEASE-CHECKLIST.md Phase F"
+      ],
+      "current_evidence": "Source review is not device evidence; no new hardware pass was found.",
+      "remaining_safe_action": "Record real-device results after a runnable build is available; fix observed defects.",
+      "validation_scope": "2\u20133 iPhones/iPad, AirPods/wired routes, low power, denial, calls, background, first click \u2264300 ms per repository acceptance."
+    },
+    {
+      "id": "R03",
+      "requirement": "Privacy consent/request/manifest/Game Center gate",
+      "category": "required_before_account_source_and_native_evidence",
+      "status": "source_resolved_native_pending",
+      "source_references": [
+        "docs/ios/readiness/reviews/privacy-source-independent-resolution-review.json",
+        "ios/Timbre/Services/AnalyticsTransport.swift",
+        "ios/Timbre/Services/GameCenter.swift:146",
+        "ios/Timbre/Resources/PrivacyInfo.xcprivacy",
+        "ios/TimbreAppTests/AnalyticsPrivacyTests.swift"
+      ],
+      "current_evidence": "Reviewed cancellation/token-provider resolution and default-off Game Center exist; no new actionable source finding in reviewed resolution.",
+      "remaining_safe_action": "Run all 14 authored privacy tests and native request-state validation on current head.",
+      "validation_scope": "XCTest/concurrency build; controlled network observation where needed; archive manifest/privacy report later."
+    },
+    {
+      "id": "R04",
+      "requirement": "Public privacy/support URLs and matching policy",
+      "category": "required_before_account_public_artifacts",
+      "status": "published_baseline_current_copy_update_assigned_separately",
+      "source_references": [
+        "ios/Timbre/Services/ShareDestination.swift:12",
+        "ios/Timbre/Services/ShareDestination.swift:18",
+        "ios/project.yml:105",
+        "ios/project.yml:118",
+        "docs/ios/readiness/reviews/cloudflare-publication.json",
+        "docs/ios/PRIVACY.md:25",
+        "docs/ios/PRIVACY.md:27",
+        "docs/site/README.md"
+      ],
+      "current_evidence": "App canonical privacy/support point to Cloudflare; publication receipt proves earlier 200 HTML and headers. Current policy still mentions attribution country and retries after opt-out; current code/test omits country and rejects revoked HTTP. This synchronization is assigned separately, not another implementation task here.",
+      "remaining_safe_action": "Finish separate policy rebuild/publication/live equality verification and listing URL update. Record canonical URLs for later portal fields. Former github.io compatibility can be redirected/refreshed if retained as public entrypoint.",
+      "validation_scope": "Exact generated-source parity, liveHTTP 200/headers/mobile/desktop and links; ensure final published content matches implemented data flows."
+    },
+    {
+      "id": "R05",
+      "requirement": "Photo rights/provenance",
+      "category": "required_before_account_assets",
+      "status": "resolved_by_owner_statement_and_recorded_hashes",
+      "source_references": [
+        "ios/Sources/TimbreCore/Resources/photos.json:9",
+        "docs/ios/readiness/reviews/image-provenance-application.json",
+        "docs/ios/readiness/reviews/public-site-resolution.json"
+      ],
+      "current_evidence": "Former 68 provided entries now carry owner-created/generated confirmation. Derivative hashes for 68 bundled+68 thumbnails were independently recomputed by prior review.",
+      "remaining_safe_action": "Retain owner declaration and provenance receipt; do not demand paid replacements based on stale handoff.",
+      "validation_scope": "Resource verifier/current manifest checks; original-source bytes were not independently verified."
+    },
+    {
+      "id": "R06",
+      "requirement": "All 49 UI and 48 translated lesson locales",
+      "category": "required_before_account_source_and_native_evidence",
+      "status": "implemented_local_checks_passed_current_native_matrix_pending",
+      "source_references": [
+        "docs/OWNER-ACTIONS.md \u00a75 owner override",
+        "docs/ios/readiness/reviews/ci-final-local-verification.json",
+        "docs/ios/readiness/reviews/ci-r1-independent-rereview.json",
+        "docs/ios/readiness/reviews/matrix-request-independent-review.json",
+        ".github/workflows/apple-delivery.yml:115"
+      ],
+      "current_evidence": "Owner all-language override supersedes English-only handoff. CI critical metadata defect resolved; strict UI/lesson delivery guards exist; parent reports 164 Python tests. This audit did not rerun those suites.",
+      "remaining_safe_action": "Collect complete current-head native export/matrix and archived-resource evidence. Keep required coverage bar.",
+      "validation_scope": "Fresh Xcode authoritative export, all-language UI/lessons gates, native 48 locale matrix inclAX 5/request alert; native-language semantic review remains separate."
+    },
+    {
+      "id": "R07",
+      "requirement": "Store screenshots on iPhone/iPad for 50 listing locales",
+      "category": "required_before_account_release_assets",
+      "status": "pipeline_exists_current_assets_not_proven",
+      "source_references": [
+        ".github/workflows/listing-assets.yml:1",
+        "tools/marketing/listing_assets.py",
+        "docs/KNOWN-ISSUES.md \u00a72",
+        "docs/ios/APP-STORE-LISTING-LOCALIZED.md"
+      ],
+      "current_evidence": "Shared-build actual-app capture/render workflow exists with font audit and locale validation. Old test 11/14 failures do not prove current defects; current artifact success must be inspected.",
+      "remaining_safe_action": "Run/finish required actual-app capture/render jobs; inspect every required image set and captions; fix observed capture failures without weakening checks. Account upload can wait.",
+      "validation_scope": "Correct device dimensions, final-source hashes, no-wrong captures, localized text, honest app state, legibility/RTL and same-source manifest."
+    },
+    {
+      "id": "R08",
+      "requirement": "Apple Watch screenshots",
+      "category": "required_before_account_release_assets",
+      "status": "required_assigned_separately",
+      "source_references": [
+        "ios/project.yml:38",
+        "ios/TimbreWatch",
+        "docs/KNOWN-ISSUES.md \u00a72"
+      ],
+      "current_evidence": "Watch target is embedded; Apple requires Watch screenshots. Separate worker owns capture job.",
+      "remaining_safe_action": "Complete separate simulator job and verify resulting real-app Watch screenshots in supported size, consistently across localizations.",
+      "validation_scope": "Unsigned watch simulator boot/install/launch/screenshot, dimensions/content and artifact receipt. No signing required to prepare assets."
+    },
+    {
+      "id": "R09",
+      "requirement": "App Preview",
+      "category": "requested_release_asset_optional_for_apple",
+      "status": "old_cut_failed_new_pipeline_unproven",
+      "source_references": [
+        ".github/workflows/preview.yml:1",
+        "tools/marketing/preview.py",
+        "tools/marketing/gates.py",
+        "docs/KNOWN-ISSUES.md \u00a72"
+      ],
+      "current_evidence": "App Preview remains optional to Apple; existing renderer enforces band-under-caption, silence, lock timing and poster gates. No current successful cut evidenced in reviewed receipts.",
+      "remaining_safe_action": "If included in user's requested complete media package, produce passing localized cuts and inspect actual audiovisual content. Otherwise explicitly record omission for first submission; never claim old cut approved.",
+      "validation_scope": "Render gates plus human playback, truth of captions, music rights, timing/audio and frame specs."
+    },
+    {
+      "id": "R10",
+      "requirement": "Pitch Sniper/Bullseye activity naming",
+      "category": "nonblocking_documentation_debt",
+      "status": "runtime_bug_not_found",
+      "source_references": [
+        "ios/Timbre/Services/GameCenterIDs.swift:27",
+        "ios/Timbre/Services/GameCenterIDs.swift:90",
+        "ios/Timbre/Services/GameCenter.swift:38",
+        "ios/Timbre/Services/GameCenter.swift:496",
+        "docs/ios/APPLE-DELIVERY.md:200"
+      ],
+      "current_evidence": "Only activity setup comment still saysPitch Sniper. Runtime activity ID timbre.activity.sniper is deliberately stable and routes correctly. Owner App Store Connect activity title table says Bullseye; user-facing share text also Bullseye.",
+      "remaining_safe_action": "Update stale comments during documentation reconciliation; keep stable IDs unchanged. No new localization key required for comment fix.",
+      "validation_scope": "Read-only runtime/setup table consistency; later configured Game Center navigation test."
+    },
+    {
+      "id": "R11",
+      "requirement": "All 102 Carol grants",
+      "category": "required_before_account_campaign_source",
+      "status": "open_REMAIN_01",
+      "source_references": [
+        "ios/Timbre/Services/RemoteConfig.swift:188",
+        "docs/ios/RELEASE-CHECKLIST.md:754"
+      ],
+      "current_evidence": "Verified 102 existing IDs but current sanitizer drops 38.",
+      "remaining_safe_action": "Implement REMAIN-01 with regression.",
+      "validation_scope": "Config/policy tests plus representative late-list lesson access."
+    },
+    {
+      "id": "R12",
+      "requirement": "Time-bounded Carol campaign",
+      "category": "required_before_account_if_retaining_requested_campaign",
+      "status": "open_REMAIN_02",
+      "source_references": [
+        "ios/Timbre/Services/RemoteConfig.swift:60",
+        "ios/Timbre/Services/RemoteConfig.swift:97",
+        "docs/ios/RELEASE-CHECKLIST.md:767"
+      ],
+      "current_evidence": "No date policy; cached access indefinite offline and no active-app boundary trigger.",
+      "remaining_safe_action": "Implement REMAIN-02 using fail-closed bounded optional windows, current-time access checks and boundary UI refresh; campaign hosting/scheduling can be configured later.",
+      "validation_scope": "Clock/boundary/cache/foreground tests and native UI consistency."
+    },
+    {
+      "id": "R13",
+      "requirement": "SDK/toolchain submission eligibility",
+      "category": "required_before_account_build_evidence",
+      "status": "source_configuration_meets_documented_minimum_native_confirmation_pending",
+      "source_references": [
+        ".github/workflows/ios.yml:22",
+        ".github/workflows/ios.yml:132",
+        ".github/workflows/apple-delivery.yml:45",
+        ".github/workflows/apple-delivery.yml:86",
+        "ios/project.yml:6",
+        "ios/project.yml:5"
+      ],
+      "current_evidence": "Workflows pinXcode 26.3 and requireiphoneosSDKmajor\u226526; iOSdeployment 18 exceeds current minimum 13. Current official Apple page requiresXcode 26+/iOS 26 SDK sinceApril 28,2026. No obligation to upgrade to latestXcode 27 identified.",
+      "remaining_safe_action": "Confirm actual queued runner xcodebuild-version, iphoneos/watchos SDK versions, Release app/watch/widget compilation and warning gates. Treat a missing installed toolchain as an observed workflow failure to fix.",
+      "validation_scope": "Unsigned macOS build now; signed archivevalidation/upload only after account authorization."
+    },
+    {
+      "id": "R14",
+      "requirement": "Translation delivery filtering correctness",
+      "category": "required_before_account_source",
+      "status": "resolved_not_old_open_notes",
+      "source_references": [
+        ".github/workflows/apple-delivery.yml:115",
+        "docs/ios/readiness/reviews/ci-r1-independent-rereview.json",
+        "tools/l10n/report.py:583"
+      ],
+      "current_evidence": "Fresh XLIFF, complete UI, strict lessons and critical-aware selection are implemented; pending legal / VoiceOver metadata bug independently resolved.",
+      "remaining_safe_action": "Retain regressions and collect current-head authoritative native export.",
+      "validation_scope": "LocalPython suite plus real Xcode export; no delivery dispatch."
+    },
+    {
+      "id": "R15",
+      "requirement": "StoreKit serial cleanup and first-session/dead-string/accessibility checks",
+      "category": "required_before_account_native_evidence",
+      "status": "implemented_pending_native",
+      "source_references": [
+        "docs/ios/readiness/reviews/ci-independent-review.json",
+        "docs/ios/readiness/reviews/ci-r1-independent-rereview.json",
+        ".github/workflows/nightly.yml",
+        "ios/TimbreAppTests/StoreKitTestEnvironment.swift"
+      ],
+      "current_evidence": "Cleanup wait/serial semantics, FirstSession/dead-string selection and guards are in source. Old flakiness remains a risk to verify, not proved current source breakage.",
+      "remaining_safe_action": "Collect queued green native checks; fix actual recurring failures without retries masking assertions.",
+      "validation_scope": "StoreKit fixture XCTest fixture behavior and smoke/nightly/accessibility."
+    },
+    {
+      "id": "R16",
+      "requirement": "Updated honest store privacy/URLs/Game Center claims",
+      "category": "required_before_account_metadata",
+      "status": "assigned_separate_copy_update",
+      "source_references": [
+        "docs/ios/APP-STORE-LISTING.md",
+        "docs/ios/APP-STORE-LISTING-LOCALIZED.md",
+        "ios/project.yml:117",
+        "docs/ios/RELEASE-CHECKLIST.md:72"
+      ],
+      "current_evidence": "DefaultGame CenterNO makes unconditional Game Center promotion inaccurate; all 50 copy / URL / privacy updates owned separately.",
+      "remaining_safe_action": "Finish separate reviewed metadata package; keep no VoiceOver claim until real validation.",
+      "validation_scope": "All 50 exact fields/lengths/URLs/privacy descriptions and feature-match check."
+    },
+    {
+      "id": "R17",
+      "requirement": "Apple account/AppID/StoreKit/signing/portal privacy fields",
+      "category": "later_account_configuration",
+      "status": "owner_dependent",
+      "source_references": [
+        "docs/ios/RELEASE-CHECKLIST.md PhasesA,C,D,E,H",
+        "docs/ios/APPLE-DELIVERY.md",
+        ".github/workflows/apple-delivery.yml:1"
+      ],
+      "current_evidence": "BlankDEVELOPMENT_TEAM is intentional pre-account. ProductIDs and guarded manual delivery template exist. Accountless source review cannot prove products, MusicKit, paid agreements or provisioning.",
+      "remaining_safe_action": "After owner enrollment/configuration authorization, create exact records/products/capabilities, sandbox verify, sign/archive, validate and upload only with explicit delivery go.",
+      "validation_scope": "App Store Connect and Developer Portal, signed archive embedded entitlements, realStoreKit, MusicKit, privacy labels/export compliance/age rating."
+    },
+    {
+      "id": "R18",
+      "requirement": "Game Center launch art and configured gameplay",
+      "category": "later_optional_feature_setup",
+      "status": "not_required_while_default_off_and_claim_removed",
+      "source_references": [
+        "ios/project.yml:117",
+        "ios/Timbre/Services/GameCenter.swift:146",
+        "docs/ios/RELEASE-CHECKLIST.md:72",
+        "docs/ios/APPLE-DELIVERY.md:200"
+      ],
+      "current_evidence": "Explicit default-off implementation removes need to purchase 31 achievement and challenge/activity art for base release.",
+      "remaining_safe_action": "Retain off until account records, entitlement, art and device tests ready. If enabled, all become feature-release gates.",
+      "validation_scope": "Native gate tests now; configured Game Center authentication/report/challenge/activity/friends tests later."
+    },
+    {
+      "id": "R19",
+      "requirement": "Paid growth/quality programme",
+      "category": "optional_growth",
+      "status": "not_base_release_blocker",
+      "source_references": [
+        "docs/OWNER-ACTIONS.md \u00a7\u00a71,3,4,6,7,10",
+        "docs/KNOWN-ISSUES.md \u00a73"
+      ],
+      "current_evidence": "Commercial songs, teacher video, hand rig, new 3 D models, custom brand / icon hire, paid ads,200\u2013500 tester cohort and analytics price experiments are owner growth proposals; no Apple rule requiring these purchases established.",
+      "remaining_safe_action": "Keep separate optional roadmap; validate rights for any material actually included. Testers/hardware coverage remains required evidence without requiring a paid vendor.",
+      "validation_scope": "Feature-specific UX/legal/content review if adopted; genuine device quality gates independent of spend."
+    },
+    {
+      "id": "R20",
+      "requirement": "Technical debt and stale handoff reconciliation",
+      "category": "nonblocking_technical_debt",
+      "status": "present_not_release_defect_by_itself",
+      "source_references": [
+        "docs/KNOWN-ISSUES.md \u00a74",
+        "docs/KNOWN-ISSUES.md \u00a72",
+        "docs/HANDOVER.md",
+        "docs/ios/RELEASE-CHECKLIST.md:33",
+        "docs/OWNER-ACTIONS.md \u00a75"
+      ],
+      "current_evidence": "Node 20 actionversions, old results branches,50%coverage floor, Swift 5 mode, large AppStore, curriculum sharding, missing iCloud, icon renderer color and retired tools remain separate debt. Handoff also still asserts old unmerged main/English-only/no-support states contradicted by current receipts.",
+      "remaining_safe_action": "Reconcile canonical readiness status to final evidence; keep historical dated facts labeled. Resolve runtime-impacting observed debt only when identified.",
+      "validation_scope": "Current source + receipts; don't imply old 8.3 jury score or paid growth target is anApple approval requirement."
+    }
+  ],
+  "official_sources": [
+    {
+      "url": "https://developer.apple.com/news/upcoming-requirements/?id=02212025a",
+      "retrieved_date": "2026-10-27",
+      "supports": "Current SDK minimum Xcode 26+/iOS 26 etc since April 28,2026; iOS 13+deployment minimum since September 9,2026."
+    },
+    {
+      "url": "https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications",
+      "retrieved_date": "2026-10-27",
+      "supports": "Watch screenshots required, same Watch size across localizations; iPhone/iPad dimensions. Future iPhone Duo April 2027 requirement does not create a currentOctober 2026 blocker."
+    },
+    {
+      "url": "https://developer.apple.com/help/app-store-connect/manage-app-information/manage-your-app-store-assets",
+      "retrieved_date": "2026-10-27",
+      "supports": "Required screenshot upload/assetmanagement; review accurate product presentation."
+    },
+    {
+      "url": "https://developer.apple.com/help/app-store-connect/manage-app-information/upload-app-previews-and-screenshots/",
+      "retrieved_date": "2026-10-27",
+      "supports": "Search-indexed official excerpt says app preview optional; direct open currently 404, so do not rely on this as sole asset procedure."
+    }
+  ],
+  "validation_performed": [
+    "Read currentHEAD and namedsource/reviews; HEAD matches be4c23496ef05dd80a1c6fdde7a8eee98fb15982; initial working tree clean.",
+    "Independent Python parsed K4 ID generator and current curriculum proving 102 unique existing IDs / 64 kept / 38 dropped.",
+    "Browsed current official Apple SDK / screenshot requirements; did not run Swift / XCTest / hardware, captures, deployments or accounts."
+  ],
+  "limits": [
+    "Evidence bound to baseline HEAD; concurrent worker changes must be reviewed separately.",
+    "Native green runs and finished actual release assets remain required before declaring complete pre-account developer readiness.",
+    "This report does not certifyApp Store approval, policy legal sufficiency, native-language semantics, account configuration or real audio hardware."
+  ],
+  "modifications": "Only docs/ios/readiness/reviews/remaining-gap-audit.json authored."
+}

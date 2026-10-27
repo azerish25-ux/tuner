@@ -21,7 +21,7 @@ What the listing claims, and what it leaves out until the app makes it true:
 | Primary category | Music | |
 | Secondary category | Education | |
 | Age rating | 4+: see [Age rating](#age-rating) | |
-| Privacy Policy URL | `<privacy policy URL>` (**owner TODO**: the hosted policy, on a custom domain; the build reads the same address from `TIMBRE_PRIVACY_POLICY_URL`) | required |
+| Privacy Policy URL | `https://timbre-support.timbre.workers.dev/privacy` (the build reads the same address from `TIMBRE_PRIVACY_POLICY_URL`; current candidate policy/source alignment verification remains pending) | required |
 
 The name carries "guitar tuner", the category's highest-volume search; the subtitle carries the intent that pays ("learn songs") and the two instruments where Timbre can rank first (ukulele, violin). Bass moves to the keywords.
 
@@ -85,7 +85,7 @@ Free tuner, no ads, no account. Feel each string come into tune, then play lesso
 
 ## Description
 
-> **Owner TODO before pasting:** replace `<privacy policy URL>` on the last line with the hosted privacy policy, the same URL as App Information → Privacy Policy URL. If Game Center isn't set up for this version ([APPLE-DELIVERY.md §6.1](APPLE-DELIVERY.md#61-game-center)), delete the Game Center bullet. Everything else is ready to paste.
+> **Current candidate:** the production privacy URL is resolved and the unconditional Game Center description bullet is removed because integration defaults off. The live-microphone privacy wording is source-bound; published-policy alignment, device/assets and account release checks remain pending. Do not upload on text validation alone.
 
 ```
 Free tuner, no ads, no account. Then lessons that listen as you play.
@@ -116,7 +116,6 @@ PLAY SONGS
 
 KEEP IT GOING
 • Stars, XP, daily quests, streaks and badges
-• Game Center: a weekly Bullseye league, song leaderboards and friend challenges
 • Apple Watch: a metronome you feel on your wrist, and today's practice at a glance
 • Home Screen and Lock Screen widgets, a Live Activity and Siri shortcuts
 
@@ -128,11 +127,11 @@ PRACTICE TOOLS
 FREE TO START
 Every instrument's standard tuning is free, and guitar, bass, ukulele, violin and cello tune free in every tuning. The first unit of every course and a shelf of songs are free too. Timbre Pro unlocks every lesson and song, every tuning and the full practice set. With notifications on, Timbre reminds you two days before a free trial ends.
 
-Private by design: audio is analysed on your iPhone and never recorded or uploaded. No account and no ads.
+Private by design: live microphone audio is analyzed on your device, never recorded or uploaded. No account and no ads.
 
 Subscriptions renew automatically unless cancelled at least 24 hours before the end of the period. Manage or cancel any time in Settings → Apple Account → Subscriptions.
 Terms: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
-Privacy: <privacy policy URL>
+Privacy: https://timbre-support.timbre.workers.dev/privacy
 ```
 
 ## What's New (first release)

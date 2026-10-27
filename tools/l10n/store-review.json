@@ -18,7 +18,7 @@
   },
   "source": {
     "locale": "en-US",
-    "content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+    "content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
     "version": {
       "schema_version": 1,
       "counts": {
@@ -29,7 +29,8 @@
         "songs_floor": 140,
         "originals": 50
       }
-    }
+    },
+    "parent_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7"
   },
   "native_review": "not_verified",
   "device_review": "not_verified",
@@ -39,17 +40,17 @@
   "independent_review": {
     "reviewer": "Independent AI semantic review (2026-10-26)",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; source available, not blinded",
-    "identified_corrections": 309,
-    "applied_corrections": 309,
-    "application_method": "Original94 and2 Slovenian morphology corrections preserved;157 independently reviewed exact-source/old/new song-title alignment corrections added, with parent-hash lineage and unchanged full-payload review retained. Additional 56 independently source-aware reviewed Game Center achievement-description register/terminology deltas applied with exact source/current-old guards; original 253 ledger records and full-review inheritance retained.",
+    "identified_corrections": 409,
+    "applied_corrections": 409,
+    "application_method": "Original94 and2 Slovenian morphology corrections preserved;157 independently reviewed exact-source/old/new song-title alignment corrections added, with parent-hash lineage and unchanged full-payload review retained. Additional 56 independently source-aware reviewed Game Center achievement-description register/terminology deltas applied with exact source/current-old guards; original 253 ledger records and full-review inheritance retained. Additional100 exact description/productionURL field changes independently reviewed across all50 locales, preserving original309 ledger objects/raw prefix and bounded old/new source lineage.",
     "artifacts": {
       "evidence": {
         "file": "tools/l10n/store-review-independent.json",
-        "sha256": "692f5401a1fcba61af35b28a35c70d5a904359e9eedd37561163c167c82b99ac"
+        "sha256": "929acbfef67a2f991df1b3c252de114c046134c121eab3456475886c549d3cfb"
       },
       "corrections": {
         "file": "tools/l10n/store-corrections.json",
-        "sha256": "c6d5d69bc785d4dbfff929b9114cadb5aaf546cbcd11c90166afbdd40c4e0586"
+        "sha256": "6484311c408ce083490dfbcd5f7b05a50bf6beae110d12c217b86a01793b95b8"
       }
     },
     "policy_recommendation_sha256": "d69ee544571082357801fd0d03e2ab1514a908718f0345d4a55474fe331cff17",
@@ -73,11 +74,29 @@
         "native_review": "not_verified",
         "device_review": "not_verified",
         "account_changes": "none"
+      },
+      {
+        "reviewer": "Codex /root/store_release_copy_review",
+        "scope": "All50 bounded description/URL changes; no complete-payload rereview claim",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+        "refinements_evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/guarded-refinements.json",
+        "refinements_sha256": "18a3f54554f65f15edbb94217b13076b955bcec6ef5947b8b4c47e825e896a39",
+        "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+        "new_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "previous_registry_sha256": "a1f4fde1db16da5691e14f17a167695691d4abb1b833f9d678538fb881f4526e",
+        "previous_evidence_sha256": "692f5401a1fcba61af35b28a35c70d5a904359e9eedd37561163c167c82b99ac",
+        "previous_ledger_sha256": "c6d5d69bc785d4dbfff929b9114cadb5aaf546cbcd11c90166afbdd40c4e0586",
+        "previous_ledger_entries": 309,
+        "appended_corrections": 100,
+        "total_applied_corrections": 409,
+        "privacy_policy_source_alignment": "pending",
+        "release_ready": false
       }
     ]
   },
   "remaining_gates": [
-    "Production privacy policy URL and verification not provided",
+    "Published privacy policy/source alignment for the current app candidate pending refresh and verification",
     "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
     "Localized App Preview recordings and audio/sync/render review pending",
     "App Store Connect product/locale limits and Game Center configuration/images unverified"
@@ -92,10 +111,10 @@
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 0,
-      "resolved_corrections": 0,
+      "reviewed_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -112,16 +131,38 @@
         "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
         "Review detects identified issues, not a guarantee of idiomatic perfection"
       ],
-      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification.",
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "reviewed_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "en-AU": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "c03a0dfb62ab5aabc3432f3f9e24c841126150b8c5f49ceec873c689160730d8",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 0,
-      "resolved_corrections": 0,
+      "reviewed_content_sha256": "dbc0e92e11ee26e2cf0166f4ac54e3f0ef22237607cc387010bad75a543e9b47",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -138,16 +179,38 @@
         "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
         "Review detects identified issues, not a guarantee of idiomatic perfection"
       ],
-      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification.",
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "c03a0dfb62ab5aabc3432f3f9e24c841126150b8c5f49ceec873c689160730d8",
+          "reviewed_content_sha256": "dbc0e92e11ee26e2cf0166f4ac54e3f0ef22237607cc387010bad75a543e9b47",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "en-CA": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "9d6807d331608b52fd0d23e39c03b4da63102f19e0b7143303a39707f50737ac",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 0,
-      "resolved_corrections": 0,
+      "reviewed_content_sha256": "c343dfd94479a2d12bd6be4013ba56d7eebfc4a3dbe7b7930118fd3c56cf29d9",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -164,16 +227,38 @@
         "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
         "Review detects identified issues, not a guarantee of idiomatic perfection"
       ],
-      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification.",
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "9d6807d331608b52fd0d23e39c03b4da63102f19e0b7143303a39707f50737ac",
+          "reviewed_content_sha256": "c343dfd94479a2d12bd6be4013ba56d7eebfc4a3dbe7b7930118fd3c56cf29d9",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "en-GB": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "8adfab55c2e9d9ece12e14eb3441924269e9e6bd34fb676d4508eae319edf1c1",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 0,
-      "resolved_corrections": 0,
+      "reviewed_content_sha256": "d615ac6db3980d24fdd53cf02b5e9e2889b7e597670d29fd22d8ba425aa4a15d",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -190,16 +275,38 @@
         "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
         "Review detects identified issues, not a guarantee of idiomatic perfection"
       ],
-      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification.",
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "8adfab55c2e9d9ece12e14eb3441924269e9e6bd34fb676d4508eae319edf1c1",
+          "reviewed_content_sha256": "d615ac6db3980d24fdd53cf02b5e9e2889b7e597670d29fd22d8ba425aa4a15d",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "de-DE": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "3a20f7424cbe4ee8c926eb4e9b05bc6cb412c2bd1a2a2b4fb1d574d4667b8c3d",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 3,
-      "resolved_corrections": 3,
+      "reviewed_content_sha256": "ad5520d7e3081f88c69e42a3781a68851d15ad872733cc0c57a779c307c02b96",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 5,
+      "resolved_corrections": 5,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -233,16 +340,38 @@
             "game_center_leaderboard_names.timbre.song.twinkle"
           ]
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "3a20f7424cbe4ee8c926eb4e9b05bc6cb412c2bd1a2a2b4fb1d574d4667b8c3d",
+          "reviewed_content_sha256": "ad5520d7e3081f88c69e42a3781a68851d15ad872733cc0c57a779c307c02b96",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "fr-FR": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "f1d7875ec92843594ef5a943c3e550d753d1baa66bcb8a50553b258548773cb0",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 5,
-      "resolved_corrections": 5,
+      "reviewed_content_sha256": "46189b196346611e68c0de5f2147675d7f4044c809732c16856b62c73c7c114c",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 7,
+      "resolved_corrections": 7,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -276,16 +405,38 @@
             "game_center_leaderboard_names.timbre.song.jinglebells"
           ]
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "f1d7875ec92843594ef5a943c3e550d753d1baa66bcb8a50553b258548773cb0",
+          "reviewed_content_sha256": "46189b196346611e68c0de5f2147675d7f4044c809732c16856b62c73c7c114c",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "es-MX": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "3f5405980450a57992bd956a6ae7f7fe08626d48c450dfeec9ff71d2012f8bd8",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 3,
-      "resolved_corrections": 3,
+      "reviewed_content_sha256": "d5098d351f86862613da083c7af9e0f2c95ac34340a80d958d1d05e21e3bb433",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 5,
+      "resolved_corrections": 5,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -319,16 +470,38 @@
             "game_center_leaderboard_names.timbre.song.jinglebells"
           ]
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "3f5405980450a57992bd956a6ae7f7fe08626d48c450dfeec9ff71d2012f8bd8",
+          "reviewed_content_sha256": "d5098d351f86862613da083c7af9e0f2c95ac34340a80d958d1d05e21e3bb433",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "it": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "df71d01984a0ad722263e21b36fae832cedf1f779c48bed4aaa4eda15b0359ba",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 2,
-      "resolved_corrections": 2,
+      "reviewed_content_sha256": "ab983fc859bd400d34b28be0bf1c0c53eaa9cafb1848eeb760de5c68cd89d0ee",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 4,
+      "resolved_corrections": 4,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -345,16 +518,38 @@
         "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
         "Review detects identified issues, not a guarantee of idiomatic perfection"
       ],
-      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification.",
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "df71d01984a0ad722263e21b36fae832cedf1f779c48bed4aaa4eda15b0359ba",
+          "reviewed_content_sha256": "ab983fc859bd400d34b28be0bf1c0c53eaa9cafb1848eeb760de5c68cd89d0ee",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "pt-BR": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "aae4c0c130bbcfea11e34b6e50030df4c005f4b567e6269f67ee24c4c975f78b",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 3,
-      "resolved_corrections": 3,
+      "reviewed_content_sha256": "0c0b744dc7637b89697a1999e65de49884002832b52c6d2b63b9a6e3bcf55b89",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 5,
+      "resolved_corrections": 5,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -388,16 +583,38 @@
             "game_center_leaderboard_names.timbre.song.jinglebells"
           ]
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "aae4c0c130bbcfea11e34b6e50030df4c005f4b567e6269f67ee24c4c975f78b",
+          "reviewed_content_sha256": "0c0b744dc7637b89697a1999e65de49884002832b52c6d2b63b9a6e3bcf55b89",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "ru": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "9b51738c9042d2029202a95e1c8dffdf94447c76ae5652bdc6190056c27daba1",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 4,
-      "resolved_corrections": 4,
+      "reviewed_content_sha256": "50b4e853fd2ab38027ae4a82734973d7994410e7cc2256e41d709826263ba013",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 6,
+      "resolved_corrections": 6,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -432,16 +649,38 @@
             "game_center_leaderboard_names.timbre.song.jinglebells"
           ]
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "9b51738c9042d2029202a95e1c8dffdf94447c76ae5652bdc6190056c27daba1",
+          "reviewed_content_sha256": "50b4e853fd2ab38027ae4a82734973d7994410e7cc2256e41d709826263ba013",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "ja": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "e8acdd76c82248cef6724cbb85298217637f2baabc0129b600a88746bc07bae9",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 2,
-      "resolved_corrections": 2,
+      "reviewed_content_sha256": "485aeef5853ca9740b344f2bd463ea9d90aba3c36fc1f5f8dbccea0bd5625e1d",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 4,
+      "resolved_corrections": 4,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -458,16 +697,38 @@
         "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
         "Review detects identified issues, not a guarantee of idiomatic perfection"
       ],
-      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification.",
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "e8acdd76c82248cef6724cbb85298217637f2baabc0129b600a88746bc07bae9",
+          "reviewed_content_sha256": "485aeef5853ca9740b344f2bd463ea9d90aba3c36fc1f5f8dbccea0bd5625e1d",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "ko": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "4b75bff6bd0f75a4e404c4c97063d9948036b5cd8d5d42ec33480959c1b2056c",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 2,
-      "resolved_corrections": 2,
+      "reviewed_content_sha256": "89286fc4a28eda3940123705fd6507875dbe455bb57218454cff4b10b16335eb",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 4,
+      "resolved_corrections": 4,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -484,16 +745,38 @@
         "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
         "Review detects identified issues, not a guarantee of idiomatic perfection"
       ],
-      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification.",
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "4b75bff6bd0f75a4e404c4c97063d9948036b5cd8d5d42ec33480959c1b2056c",
+          "reviewed_content_sha256": "89286fc4a28eda3940123705fd6507875dbe455bb57218454cff4b10b16335eb",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "zh-Hans": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "7eafb29bc6043111a25ace16fd03d9b577725d2db3c8dbc5e88ee9227cdb5408",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 3,
-      "resolved_corrections": 3,
+      "reviewed_content_sha256": "680aed84e316776690babbf1699862522b0da01cae11925963223ea988734864",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 5,
+      "resolved_corrections": 5,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -510,16 +793,38 @@
         "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
         "Review detects identified issues, not a guarantee of idiomatic perfection"
       ],
-      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification.",
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "7eafb29bc6043111a25ace16fd03d9b577725d2db3c8dbc5e88ee9227cdb5408",
+          "reviewed_content_sha256": "680aed84e316776690babbf1699862522b0da01cae11925963223ea988734864",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "es-ES": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "2e3751be638e502932eb24bf504a01cd879b2e25f8acaa4dcfb59d89b136f90b",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 3,
-      "resolved_corrections": 3,
+      "reviewed_content_sha256": "673c756d1a2bc7a33d153ad6800098e04e2b1a4c1cc20d965aea5786f6d84ea1",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 5,
+      "resolved_corrections": 5,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -553,16 +858,38 @@
             "game_center_leaderboard_names.timbre.song.jinglebells"
           ]
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "2e3751be638e502932eb24bf504a01cd879b2e25f8acaa4dcfb59d89b136f90b",
+          "reviewed_content_sha256": "673c756d1a2bc7a33d153ad6800098e04e2b1a4c1cc20d965aea5786f6d84ea1",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "fr-CA": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "dee796727fee4f7ce89a1d43b8789b00671735fde9f54edc72c558d94a7e5943",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 5,
-      "resolved_corrections": 5,
+      "reviewed_content_sha256": "d40ea428a205fcc4ee7280a7ad1d90a34b151f40837a0e73821030eedc33cf1a",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 7,
+      "resolved_corrections": 7,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -596,16 +923,38 @@
             "game_center_leaderboard_names.timbre.song.jinglebells"
           ]
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "dee796727fee4f7ce89a1d43b8789b00671735fde9f54edc72c558d94a7e5943",
+          "reviewed_content_sha256": "d40ea428a205fcc4ee7280a7ad1d90a34b151f40837a0e73821030eedc33cf1a",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "pt-PT": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "fd5d141af0a50ccf1ad80b0fd593abee11df31f323fa87040c3d72123b1d51d7",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 3,
-      "resolved_corrections": 3,
+      "reviewed_content_sha256": "0899ecfdc13e08e055f9a4e697c8cc681aaba52069f6daa4ea892275fd92ae0c",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 5,
+      "resolved_corrections": 5,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -639,16 +988,38 @@
             "game_center_leaderboard_names.timbre.song.jinglebells"
           ]
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "fd5d141af0a50ccf1ad80b0fd593abee11df31f323fa87040c3d72123b1d51d7",
+          "reviewed_content_sha256": "0899ecfdc13e08e055f9a4e697c8cc681aaba52069f6daa4ea892275fd92ae0c",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "ar-SA": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "6595dad933834ea10ead3c4b0ea1ecc2be8aadc2b1cb280b7700f60860658ae5",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 8,
-      "resolved_corrections": 8,
+      "reviewed_content_sha256": "47b61b4eda7832433ce7ba0f7db5584729a4f6c55abefb395798dd9f2c6f02a7",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 10,
+      "resolved_corrections": 10,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -686,16 +1057,38 @@
             "game_center_leaderboard_names.timbre.song.jinglebells"
           ]
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "6595dad933834ea10ead3c4b0ea1ecc2be8aadc2b1cb280b7700f60860658ae5",
+          "reviewed_content_sha256": "47b61b4eda7832433ce7ba0f7db5584729a4f6c55abefb395798dd9f2c6f02a7",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "he": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "960ce608a363663e360d3c8a0aace5e5b16ce61cd9c78b0b1b399b5096fe634a",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 7,
-      "resolved_corrections": 7,
+      "reviewed_content_sha256": "7d0aebd50f8a607d1cd70dff2e53ccbd25b303f429dba7fcae3110b61f2726c4",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 9,
+      "resolved_corrections": 9,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -733,16 +1126,38 @@
             "game_center_leaderboard_names.timbre.song.jinglebells"
           ]
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "960ce608a363663e360d3c8a0aace5e5b16ce61cd9c78b0b1b399b5096fe634a",
+          "reviewed_content_sha256": "7d0aebd50f8a607d1cd70dff2e53ccbd25b303f429dba7fcae3110b61f2726c4",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "ca": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "8c8724352da29e888a6fb156775ba10350d127f92021311ee605e6fc750e59cb",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 5,
-      "resolved_corrections": 5,
+      "reviewed_content_sha256": "49822aeffa9c972e3a4bcc7902450517af57059dfe8c645eaf4cad689344b7b9",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 7,
+      "resolved_corrections": 7,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -778,16 +1193,38 @@
             "game_center_leaderboard_names.timbre.song.kiteweather"
           ]
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "8c8724352da29e888a6fb156775ba10350d127f92021311ee605e6fc750e59cb",
+          "reviewed_content_sha256": "49822aeffa9c972e3a4bcc7902450517af57059dfe8c645eaf4cad689344b7b9",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "cs": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "74b76f2d4978dcc69c6d5a97a152b2c21a8f0de50acd08a2e10e0560a74e312b",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 5,
-      "resolved_corrections": 5,
+      "reviewed_content_sha256": "2b9da64f55cbc40e681222f3848eab13b7cc8dc46f045b64ac843111d53140d6",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 7,
+      "resolved_corrections": 7,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -823,16 +1260,38 @@
             "game_center_leaderboard_names.timbre.song.kiteweather"
           ]
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "74b76f2d4978dcc69c6d5a97a152b2c21a8f0de50acd08a2e10e0560a74e312b",
+          "reviewed_content_sha256": "2b9da64f55cbc40e681222f3848eab13b7cc8dc46f045b64ac843111d53140d6",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "da": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "ab1cf3a3ca90c44e870a05da7c7b3dc441a87ca658f0a54a6ed6c1b696576e83",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 3,
-      "resolved_corrections": 3,
+      "reviewed_content_sha256": "7a166b21b92bea302a312f4144be920df569e5f6f153673f81cc3351e296cb7a",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 5,
+      "resolved_corrections": 5,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -866,16 +1325,38 @@
             "game_center_leaderboard_names.timbre.song.twinkle"
           ]
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "ab1cf3a3ca90c44e870a05da7c7b3dc441a87ca658f0a54a6ed6c1b696576e83",
+          "reviewed_content_sha256": "7a166b21b92bea302a312f4144be920df569e5f6f153673f81cc3351e296cb7a",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "nl-NL": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "ed5a655839962d604071198fe3a75a29b388e110c6be9b49034607c7bf5e8191",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 4,
-      "resolved_corrections": 4,
+      "reviewed_content_sha256": "7573e6db87db53a886f52102e7b526ecff86a67a618b972f4f29007db544e22b",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 6,
+      "resolved_corrections": 6,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -910,16 +1391,38 @@
             "game_center_leaderboard_names.timbre.song.kiteweather"
           ]
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "ed5a655839962d604071198fe3a75a29b388e110c6be9b49034607c7bf5e8191",
+          "reviewed_content_sha256": "7573e6db87db53a886f52102e7b526ecff86a67a618b972f4f29007db544e22b",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "no": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "764924b549d5b08abec8d4ea30cb67e2ebf462e7683f81c22fdc1692cfd57f79",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 5,
-      "resolved_corrections": 5,
+      "reviewed_content_sha256": "ef6faecfd1699068cda756b33ee2df3f8af975812e66a8d83b046b27e25f0918",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 7,
+      "resolved_corrections": 7,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -955,16 +1458,38 @@
             "game_center_leaderboard_names.timbre.song.odetojoy"
           ]
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "764924b549d5b08abec8d4ea30cb67e2ebf462e7683f81c22fdc1692cfd57f79",
+          "reviewed_content_sha256": "ef6faecfd1699068cda756b33ee2df3f8af975812e66a8d83b046b27e25f0918",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "sv": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "bad59314ce5ef6edf8b8ea37dc3dac097d43171c80d2ee07642497ce52838f01",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 2,
-      "resolved_corrections": 2,
+      "reviewed_content_sha256": "4b1e6e63265cd39cf14b4730e927fe8a44faee1ba790141bd319e3e9c0f2fb3b",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 4,
+      "resolved_corrections": 4,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -981,16 +1506,38 @@
         "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
         "Review detects identified issues, not a guarantee of idiomatic perfection"
       ],
-      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification.",
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "bad59314ce5ef6edf8b8ea37dc3dac097d43171c80d2ee07642497ce52838f01",
+          "reviewed_content_sha256": "4b1e6e63265cd39cf14b4730e927fe8a44faee1ba790141bd319e3e9c0f2fb3b",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "fi": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "1ebbc525f739b7bf7d14e495c5dda8e1b4ca5bc538e38bcec3cbade9509d1e85",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 5,
-      "resolved_corrections": 5,
+      "reviewed_content_sha256": "56ee8bd1a00f65e550257fb0374a25ea7b935c4946d76f6f94593388ac5564ce",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 7,
+      "resolved_corrections": 7,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -1026,16 +1573,38 @@
             "game_center_leaderboard_names.timbre.song.odetojoy"
           ]
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "1ebbc525f739b7bf7d14e495c5dda8e1b4ca5bc538e38bcec3cbade9509d1e85",
+          "reviewed_content_sha256": "56ee8bd1a00f65e550257fb0374a25ea7b935c4946d76f6f94593388ac5564ce",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "el": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "c4ccafbea98826cee59f8e52171a47d6734542234fbccd9e8f6e2e85a300bd2b",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 9,
-      "resolved_corrections": 9,
+      "reviewed_content_sha256": "b2b86d231a2e9b9ff5021a96c590dc43a12e978b70122f5c28ff29bdb9c5c851",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 11,
+      "resolved_corrections": 11,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -1075,16 +1644,38 @@
             "game_center_leaderboard_names.timbre.song.jinglebells"
           ]
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "c4ccafbea98826cee59f8e52171a47d6734542234fbccd9e8f6e2e85a300bd2b",
+          "reviewed_content_sha256": "b2b86d231a2e9b9ff5021a96c590dc43a12e978b70122f5c28ff29bdb9c5c851",
+          "decision": "accept-with-guarded-register-refinement",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "tr": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "a3383c074e793cca30b09d3cc3ef9e0364a629b3ed3190e8c6d9fac19beb47fb",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 3,
-      "resolved_corrections": 3,
+      "reviewed_content_sha256": "d9151c654720a317ac1f8dd3bec8ca52c6deb16d8e83cf735e2d909a8ba04d64",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 5,
+      "resolved_corrections": 5,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -1118,16 +1709,38 @@
             "game_center_leaderboard_names.timbre.song.twinkle"
           ]
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "a3383c074e793cca30b09d3cc3ef9e0364a629b3ed3190e8c6d9fac19beb47fb",
+          "reviewed_content_sha256": "d9151c654720a317ac1f8dd3bec8ca52c6deb16d8e83cf735e2d909a8ba04d64",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "hr": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "a45cd38b49cb1d082ba171ac6748f7e4882b8e6a43f02f9b16e7837135db8e7f",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 32,
-      "resolved_corrections": 32,
+      "reviewed_content_sha256": "8072450d2023b377a3a47853f3ddc49cb14813623e7c3384eaee7bdc7b57081f",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 34,
+      "resolved_corrections": 34,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -1216,16 +1829,38 @@
           "account_changes": "none",
           "release_ready": false
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "a45cd38b49cb1d082ba171ac6748f7e4882b8e6a43f02f9b16e7837135db8e7f",
+          "reviewed_content_sha256": "8072450d2023b377a3a47853f3ddc49cb14813623e7c3384eaee7bdc7b57081f",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "hu": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "712a05ef8f1bff250c0ebdae4b04f70c1927488eee803e74298d1e4f3deef83a",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 5,
-      "resolved_corrections": 5,
+      "reviewed_content_sha256": "087938efa4b13a10f56f3d7f8dc845fa041b54476f0b0bb2d4ad18b3537de638",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 7,
+      "resolved_corrections": 7,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -1261,16 +1896,38 @@
             "game_center_leaderboard_names.timbre.song.jinglebells"
           ]
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "712a05ef8f1bff250c0ebdae4b04f70c1927488eee803e74298d1e4f3deef83a",
+          "reviewed_content_sha256": "087938efa4b13a10f56f3d7f8dc845fa041b54476f0b0bb2d4ad18b3537de638",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "pl": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "185d3573f5a26e4af1e0198e1e61cb87be3e0e3a7e52cc44ad4d805118d76c3e",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 7,
-      "resolved_corrections": 7,
+      "reviewed_content_sha256": "60feaf414cbc2ab3ac1a9dde8aaf251b7387dbe48464f45f945b98f882381731",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 9,
+      "resolved_corrections": 9,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -1308,16 +1965,38 @@
             "game_center_leaderboard_names.timbre.song.jinglebells"
           ]
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "185d3573f5a26e4af1e0198e1e61cb87be3e0e3a7e52cc44ad4d805118d76c3e",
+          "reviewed_content_sha256": "60feaf414cbc2ab3ac1a9dde8aaf251b7387dbe48464f45f945b98f882381731",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "ro": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "0327883a3c3bb551376c3bbb45a53dbdef5c849fc21155fad0da7fed6386c2fb",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 5,
-      "resolved_corrections": 5,
+      "reviewed_content_sha256": "618c7644ee311708a06dd3594bcf58995770a9f919add9cc07e001e9fb9cfcf0",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 7,
+      "resolved_corrections": 7,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -1353,16 +2032,38 @@
             "game_center_leaderboard_names.timbre.song.kiteweather"
           ]
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "0327883a3c3bb551376c3bbb45a53dbdef5c849fc21155fad0da7fed6386c2fb",
+          "reviewed_content_sha256": "618c7644ee311708a06dd3594bcf58995770a9f919add9cc07e001e9fb9cfcf0",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "sk": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "ae08847bb89ffbcd9877fb906bf4643231f7c15ecc93b924dd1f1e1bdacd53d3",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 5,
-      "resolved_corrections": 5,
+      "reviewed_content_sha256": "e09f89a72d2664dd286c30630e3fb03e1bdf6ea82b421fe77e9a9aa2414019d3",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 7,
+      "resolved_corrections": 7,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -1398,16 +2099,38 @@
             "game_center_leaderboard_names.timbre.song.kiteweather"
           ]
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "ae08847bb89ffbcd9877fb906bf4643231f7c15ecc93b924dd1f1e1bdacd53d3",
+          "reviewed_content_sha256": "e09f89a72d2664dd286c30630e3fb03e1bdf6ea82b421fe77e9a9aa2414019d3",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "sl-SI": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "aaef1fcd332f51b214991ffe72d13b5a6cdcf3a770534ac5d35630a4e6b060a2",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 35,
-      "resolved_corrections": 35,
+      "reviewed_content_sha256": "5b6785d69e3f975302af16b281973b9f414f14fcd92ceff73aa02c782fb16d5b",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 37,
+      "resolved_corrections": 37,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -1519,16 +2242,38 @@
           "account_changes": "none",
           "release_ready": false
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "aaef1fcd332f51b214991ffe72d13b5a6cdcf3a770534ac5d35630a4e6b060a2",
+          "reviewed_content_sha256": "5b6785d69e3f975302af16b281973b9f414f14fcd92ceff73aa02c782fb16d5b",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "uk": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "8ef6ecb31fb75ed1207a66a1478735e67537ffff63160d0820921c722e7d5be4",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 6,
-      "resolved_corrections": 6,
+      "reviewed_content_sha256": "3cab47ed60acbc157e0ccb98e4db5a6d53f60f5a87fcfa8e21b8b1c957ca9f8d",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 8,
+      "resolved_corrections": 8,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -1565,16 +2310,38 @@
             "game_center_leaderboard_names.timbre.song.kiteweather"
           ]
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "8ef6ecb31fb75ed1207a66a1478735e67537ffff63160d0820921c722e7d5be4",
+          "reviewed_content_sha256": "3cab47ed60acbc157e0ccb98e4db5a6d53f60f5a87fcfa8e21b8b1c957ca9f8d",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "id": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "68d5b135f3200f4b515739ea6c0a08a7418036baa0e56a394d060affcff14fe6",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 5,
-      "resolved_corrections": 5,
+      "reviewed_content_sha256": "8b0d329369b1d17d8a9b6387693a67610ecbfebf6f9e045fbdb1d157484ca2fc",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 7,
+      "resolved_corrections": 7,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -1610,16 +2377,38 @@
             "game_center_leaderboard_names.timbre.song.odetojoy"
           ]
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "68d5b135f3200f4b515739ea6c0a08a7418036baa0e56a394d060affcff14fe6",
+          "reviewed_content_sha256": "8b0d329369b1d17d8a9b6387693a67610ecbfebf6f9e045fbdb1d157484ca2fc",
+          "decision": "accept-with-guarded-register-refinement",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "ms": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "0381867f6285d2978b276e59b1a67545e64205d8c47499f27e36f1c64f63bf66",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 0,
-      "resolved_corrections": 0,
+      "reviewed_content_sha256": "bf9101fce26db73e76c7ed8a8c541ebd53debe4f150204bb9dd53f62bb942280",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 2,
+      "resolved_corrections": 2,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -1636,16 +2425,38 @@
         "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
         "Review detects identified issues, not a guarantee of idiomatic perfection"
       ],
-      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification.",
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "0381867f6285d2978b276e59b1a67545e64205d8c47499f27e36f1c64f63bf66",
+          "reviewed_content_sha256": "bf9101fce26db73e76c7ed8a8c541ebd53debe4f150204bb9dd53f62bb942280",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "vi": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "33909e27d13472df08a2dd7a07f9996eafeb1d71f4875013f6d9e38b96ffd255",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 6,
-      "resolved_corrections": 6,
+      "reviewed_content_sha256": "647344eb1f35d3936ca7554eb53819ed46ce5693b157c8cf39d2004bd530e403",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 8,
+      "resolved_corrections": 8,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -1682,16 +2493,38 @@
             "game_center_leaderboard_names.timbre.song.jinglebells"
           ]
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "33909e27d13472df08a2dd7a07f9996eafeb1d71f4875013f6d9e38b96ffd255",
+          "reviewed_content_sha256": "647344eb1f35d3936ca7554eb53819ed46ce5693b157c8cf39d2004bd530e403",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "th": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "fa3867e6f552b7512d48b25003279376e09e59b94febe60b62045196ff0a4a6b",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 9,
-      "resolved_corrections": 9,
+      "reviewed_content_sha256": "50eeac37261a0a3b2a54eeedf3d49ec41312bb37e8fbd986ea979c8a0f3a8cef",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 11,
+      "resolved_corrections": 11,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -1731,16 +2564,38 @@
             "game_center_leaderboard_names.timbre.song.odetojoy"
           ]
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "fa3867e6f552b7512d48b25003279376e09e59b94febe60b62045196ff0a4a6b",
+          "reviewed_content_sha256": "50eeac37261a0a3b2a54eeedf3d49ec41312bb37e8fbd986ea979c8a0f3a8cef",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "zh-Hant": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "009c761551490879807a8c0fa0fdc429764359a4f084106143146c970de05d32",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 1,
-      "resolved_corrections": 1,
+      "reviewed_content_sha256": "34d1ba2696701f3db90b601d08a369c9c9c7ab08b6d0cf7b0c750e0604e71b03",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 3,
+      "resolved_corrections": 3,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -1757,16 +2612,38 @@
         "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
         "Review detects identified issues, not a guarantee of idiomatic perfection"
       ],
-      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification.",
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "009c761551490879807a8c0fa0fdc429764359a4f084106143146c970de05d32",
+          "reviewed_content_sha256": "34d1ba2696701f3db90b601d08a369c9c9c7ab08b6d0cf7b0c750e0604e71b03",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "hi": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "ad7f97ccdcbe2aa7cde27fe45562b5cd3905743dabc54de16fc3fbc8ca16a333",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 10,
-      "resolved_corrections": 10,
+      "reviewed_content_sha256": "635b160e470843c9435920b70202d76e647becb609d8ccff4d49a43eb31c041f",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 12,
+      "resolved_corrections": 12,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -1807,16 +2684,38 @@
             "game_center_leaderboard_names.timbre.song.odetojoy"
           ]
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "ad7f97ccdcbe2aa7cde27fe45562b5cd3905743dabc54de16fc3fbc8ca16a333",
+          "reviewed_content_sha256": "635b160e470843c9435920b70202d76e647becb609d8ccff4d49a43eb31c041f",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "ur-PK": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "5b80c1760a5d161be8bcae8ee62bc4a0980ef7c96d10b1a6f82a3e092bac0385",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 10,
-      "resolved_corrections": 10,
+      "reviewed_content_sha256": "070d2ec3a716ea0ecaf28346a562bbc813f70525280101076ce3ac364c9f0e1d",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 12,
+      "resolved_corrections": 12,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -1857,16 +2756,38 @@
             "game_center_leaderboard_names.timbre.song.odetojoy"
           ]
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "5b80c1760a5d161be8bcae8ee62bc4a0980ef7c96d10b1a6f82a3e092bac0385",
+          "reviewed_content_sha256": "070d2ec3a716ea0ecaf28346a562bbc813f70525280101076ce3ac364c9f0e1d",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "bn-BD": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "a46f5469d11059f9aea3c0a33744859a21bcf2fb6c7279f8de1fa2a1c08571ce",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 8,
-      "resolved_corrections": 8,
+      "reviewed_content_sha256": "e58cc7128ea3b828477401920fcd1d443b21eda76c3b8e4b3a257d5ddbe23525",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 10,
+      "resolved_corrections": 10,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -1905,16 +2826,38 @@
             "game_center_leaderboard_names.timbre.song.odetojoy"
           ]
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "a46f5469d11059f9aea3c0a33744859a21bcf2fb6c7279f8de1fa2a1c08571ce",
+          "reviewed_content_sha256": "e58cc7128ea3b828477401920fcd1d443b21eda76c3b8e4b3a257d5ddbe23525",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "gu-IN": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "63c4031d546d6d5fdc8422d7c98300e372616f5d5fa44d8ea9373903003e2c5e",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 10,
-      "resolved_corrections": 10,
+      "reviewed_content_sha256": "5f14fa4ff62a3ddedb1a21f06d0c83b2398ca1dcb49e879624d4efd5d67ee284",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 12,
+      "resolved_corrections": 12,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -1955,16 +2898,38 @@
             "game_center_leaderboard_names.timbre.song.odetojoy"
           ]
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "63c4031d546d6d5fdc8422d7c98300e372616f5d5fa44d8ea9373903003e2c5e",
+          "reviewed_content_sha256": "5f14fa4ff62a3ddedb1a21f06d0c83b2398ca1dcb49e879624d4efd5d67ee284",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "mr-IN": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "0c14c819e373a2c48577a3915c61da3ea4f72cae17a002466eda214032854705",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 10,
-      "resolved_corrections": 10,
+      "reviewed_content_sha256": "49a0061433d69aa46f12fecd771e7346bef27ec0dfb07a6d968ff49f18564dcb",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 12,
+      "resolved_corrections": 12,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -2005,16 +2970,38 @@
             "game_center_leaderboard_names.timbre.song.odetojoy"
           ]
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "0c14c819e373a2c48577a3915c61da3ea4f72cae17a002466eda214032854705",
+          "reviewed_content_sha256": "49a0061433d69aa46f12fecd771e7346bef27ec0dfb07a6d968ff49f18564dcb",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "pa-IN": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "e717df5871a743d7f1d136a3a7fcfa034b4373dc90519e722343913ec4a2ebef",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 10,
-      "resolved_corrections": 10,
+      "reviewed_content_sha256": "4ad3edb1c1f0a03eebe7fc7a0d4e3f19e6def55ed73f22ffae15e07a794551a9",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 12,
+      "resolved_corrections": 12,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -2055,16 +3042,38 @@
             "game_center_leaderboard_names.timbre.song.odetojoy"
           ]
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "e717df5871a743d7f1d136a3a7fcfa034b4373dc90519e722343913ec4a2ebef",
+          "reviewed_content_sha256": "4ad3edb1c1f0a03eebe7fc7a0d4e3f19e6def55ed73f22ffae15e07a794551a9",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "kn-IN": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "c55e7c34e42b03a8e1a239fd49f9d043e3dc804b49cb4a5770737f6b26ac922a",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 10,
-      "resolved_corrections": 10,
+      "reviewed_content_sha256": "f8ef55883a9d29eb787b589288d3f98d1e67cf27e9b17600cdcd2936bcfc5f67",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 12,
+      "resolved_corrections": 12,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -2105,16 +3114,38 @@
             "game_center_leaderboard_names.timbre.song.odetojoy"
           ]
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "c55e7c34e42b03a8e1a239fd49f9d043e3dc804b49cb4a5770737f6b26ac922a",
+          "reviewed_content_sha256": "f8ef55883a9d29eb787b589288d3f98d1e67cf27e9b17600cdcd2936bcfc5f67",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "ml-IN": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "946e1e2b8baf7fb0196759badb8ce11858d3c95723da9324b01d1853dba8270f",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 10,
-      "resolved_corrections": 10,
+      "reviewed_content_sha256": "4911d5742796b6d5ef11049d9d0c703f2d54012a2375871bef681908c8051d39",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 12,
+      "resolved_corrections": 12,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -2155,16 +3186,38 @@
             "game_center_leaderboard_names.timbre.song.odetojoy"
           ]
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "946e1e2b8baf7fb0196759badb8ce11858d3c95723da9324b01d1853dba8270f",
+          "reviewed_content_sha256": "4911d5742796b6d5ef11049d9d0c703f2d54012a2375871bef681908c8051d39",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "ta-IN": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "1ec3502a7e49b3a94103b39e9923a1ce9b71dd45fbc39ef019f2f55e4c3690bd",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 10,
-      "resolved_corrections": 10,
+      "reviewed_content_sha256": "77e5e344e1d5b39d373bacfed26ad58c7459086f7e5875cf12f7ec5c53d9cad4",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 12,
+      "resolved_corrections": 12,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -2205,16 +3258,38 @@
             "game_center_leaderboard_names.timbre.song.odetojoy"
           ]
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "1ec3502a7e49b3a94103b39e9923a1ce9b71dd45fbc39ef019f2f55e4c3690bd",
+          "reviewed_content_sha256": "77e5e344e1d5b39d373bacfed26ad58c7459086f7e5875cf12f7ec5c53d9cad4",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "te-IN": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "b508b0eb8d16547c1e2ab69ccfc712391d9ae12f3ec76cff5384d7d12ff19daf",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 10,
-      "resolved_corrections": 10,
+      "reviewed_content_sha256": "bb13f5c1886dd6f661e58d39edda1b4168fdf23315a6e082410f4d3da0947288",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 12,
+      "resolved_corrections": 12,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -2255,16 +3330,38 @@
             "game_center_leaderboard_names.timbre.song.odetojoy"
           ]
         }
-      ]
+      ],
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "b508b0eb8d16547c1e2ab69ccfc712391d9ae12f3ec76cff5384d7d12ff19daf",
+          "reviewed_content_sha256": "bb13f5c1886dd6f661e58d39edda1b4168fdf23315a6e082410f4d3da0947288",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     },
     "or-IN": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "b79fc25f6854143177f5e25bd9afe066feae3a9723227d4dfaa536ad50817c1d",
-      "source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
-      "identified_corrections": 1,
-      "resolved_corrections": 1,
+      "reviewed_content_sha256": "2d2304907c32e387034d7430e0b206be4b84fe0d868ead525656ebe6768df2dd",
+      "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "identified_corrections": 3,
+      "resolved_corrections": 3,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -2281,7 +3378,29 @@
         "Native app badge reuse can retain register/style differences; future app imports require reconciliation",
         "Review detects identified issues, not a guarantee of idiomatic perfection"
       ],
-      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification."
+      "critical_fact_findings": "Source-aware AI review found no additional critical fact reversal after the recorded corrections. This is not native, market or legal certification.",
+      "bounded_source_updates": [
+        {
+          "reviewer": "Codex /root/store_release_copy_review",
+          "method": "independent_source_aware_ai",
+          "scope": "Bounded description privacy/live-microphone, disabled Game Center availability claim and production URL addition; not a fresh complete-payload rereview",
+          "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+          "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+          "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+          "source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+          "parent_content_sha256": "b79fc25f6854143177f5e25bd9afe066feae3a9723227d4dfaa536ad50817c1d",
+          "reviewed_content_sha256": "2d2304907c32e387034d7430e0b206be4b84fe0d868ead525656ebe6768df2dd",
+          "decision": "accept-as-proposed",
+          "appended_field_corrections": 2,
+          "policy_source_alignment": "pending"
+        }
+      ],
+      "current_review_provenance": {
+        "full_review_inherited_for": "unchanged fields only",
+        "bounded_delta_reviewer": "Codex /root/store_release_copy_review",
+        "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+        "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa"
+      }
     }
   },
   "previous_critical_fact_review": {
@@ -2656,5 +3775,10 @@
       }
     }
   },
-  "historical_review_note": "previous_critical_fact_review is preserved as historical evidence only. Its human-only mandatory wording and partial hashes are superseded by the explicit current review_policy and all-50 current-content evidence."
+  "historical_review_note": "previous_critical_fact_review is preserved as historical evidence only. Its human-only mandatory wording and partial hashes are superseded by the explicit current review_policy and all-50 current-content evidence.",
+  "privacy_publication_evidence": {
+    "path": "docs/ios/readiness/reviews/cloudflare-publication.json",
+    "sha256": "0a4c5f7f2770d5e5bfd4f391676ed5055d7b6eb86a1f62d1444f8a6e232cbbcb",
+    "scope": "Actual prior publication HTTP200/HTML hashes only; current candidate policy/source alignment remains pending"
+  }
 }

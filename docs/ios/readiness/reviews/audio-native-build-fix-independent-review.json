@@ -1,0 +1,51 @@
+{
+  "review": "Independent source review of the separate native-build fix; earlier review receipts preserved",
+  "decision": "approved_source_review_pending_native_rerun",
+  "reviewed_base": "be4c234",
+  "scope": [
+    "ios/Timbre/Learn/PlayAlongCues.swift",
+    "ios/Timbre/Audio/AudioService.swift: suspend and stopMetronome cancellation additions",
+    "ios/Timbre/Learn/SongSheet.swift: ContinuousClock.Instant advancement",
+    "ios/TimbreAppTests/EarconsPlaybackTests.swift"
+  ],
+  "blocking_source_findings": [],
+  "assessment": [
+    "The prior source approval did not establish native compilation. The subsequently reported hosted errors show that two actual Earcons call sites were missed by that earlier review; this receipt does not rewrite that evidence or describe the prior build as passing.",
+    "Full repository rg search over *.swift found five actual prepareInterfaceSound calls, all awaited: SoundFX initialization and playback preparation, Earcons default preparation dependency, and two AudioStartupTests calls. The function declaration is the sixth search match. No remaining synchronous call was found.",
+    "Earcons caches a closure retaining an unprepared AVAudioPlayer. The real player factory does not prepare or play. The playback closure calls prepareToPlay/currentTime/play only after InterfaceSoundPlayback finishes awaited session preparation and enters its contiguous MainActor action.",
+    "Inside that action, Task cancellation, enabled state, take generation, newest request within the channel and monotonic age in 0...0.15 seconds are rechecked before touching the player. A delayed, disabled, superseded or cancelled cue is discarded. Judgment and multiplier channels are distinct, so same-update hit and tier feedback do not cancel one another.",
+    "AudioService.suspend covers global stop and interruption suspension; stopMetronome also invalidates queued Earcons feedback. Their cancellation calls execute on MainActor, so a pending cue action cannot interleave between generation invalidation and the surrounding synchronous stop operation. Already playing sounds are not stopped by cancelPending, consistent with its pending-feedback purpose.",
+    "The seven tests use controlled preparation continuations and a fake monotonic clock, exercising the actual Earcons request path rather than arithmetic-only state. They meaningfully cover preparation ordering, disable-after-wait, same-channel replacement, stale age, generation cancellation, task cancellation and independent note/tier channels.",
+    "The explicit MainActor function types, injected constructor dependencies, defaults and returned player closures are internally consistent by source inspection. No high-confidence Swift type/actor defect was identified, but these declarations and XCTest cases still require the real Swift 5.10 strict-concurrency compiler.",
+    "begin.advanced(by: .seconds(cycle)) preserves advancement from the prior absolute instant; it does not re-anchor the musical clock to the current wall time. It removes the exact newly reported shorthand_operator source form."
+  ],
+  "verification": {
+    "source_hashes": "All fourteen SHA256 values were independently recomputed with Get-FileHash and match the frozen audio-native-build-resolution.json receipt.",
+    "scoped_diff_whitespace": "PASS: git -c core.autocrlf=false diff --check on the four scoped Swift files.",
+    "native_typecheck_and_build": "RERUN REQUIRED. No local Swift/Xcode compile was executed. Source inspection and parser checks cannot establish that hosted compiler diagnostics are resolved.",
+    "native_tests": "UNRUN. Seven new Earcons tests and the prior twenty-six audio/recording tests need hosted app-host XCTest execution.",
+    "swiftlint": "RERUN REQUIRED. Source removal of the reported expression is not a full lint pass.",
+    "hardware": "UNRUN. No timing, audio-route, interruption hardware, responsiveness or App Store-ready claim follows."
+  },
+  "nonblocking_test_gaps": [
+    "The Earcons cancellation test calls cancelPending directly; an integration test injecting the feedback dependency into AudioService could additionally prove stop/interruption wiring at runtime. The real hook calls were verified directly in source.",
+    "The 150ms boundary, multiplier same-channel supersession and post-cancellation new-take feedback are not separately tested, although they use the same guarded path."
+  ],
+  "mutations": "Only this review receipt was created. No source/test edits, commit or Apple delivery.",
+  "owned_swift_sha256": {
+    "ios/Timbre/Audio/AudioService.swift": "6d86ffe45d45cb76a3fbedbcf789764450a86f80c5f660ad0b07c2d91c665f9e",
+    "ios/Timbre/Audio/SoundFX.swift": "d7ad3eb122a14d38a4e8902ef7ad8d6dabac8c536fcec739068858aaf67b331a",
+    "ios/Timbre/YourSongs/RecordingPlayer.swift": "f569142eb1c243d2e34d2699fe795c1c7bbdc5054213e253b667492b1ff7be73",
+    "ios/Timbre/YourSongs/ChartDock.swift": "104280feec3d71283813fdeb548baf87f5d415f4f0453b16a7b9b291905a9b65",
+    "ios/TimbreAppTests/AudioStartupTests.swift": "91c7802ed5737650fae687a6f2adbc7205f7bb61175975ba6dcf15f6adff39b2",
+    "ios/TimbreAppTests/RecordingStartupTests.swift": "c468c29fa3549b287c2fb477d858ed2c1e61f2497115b8559d55bf8e88480e7f",
+    "ios/Timbre/Learn/SongPerform.swift": "6bc72b992d209610a1a5a9f7ca834b9e6951253eb0efbd8f87b02537433f0633",
+    "ios/Timbre/Learn/Highway.swift": "fc4651397b538645e5b6ffbd5a50ab3c2d17c631c4cd16242ec7d290c736655c",
+    "ios/Timbre/Learn/RhythmStep.swift": "73bb896f349c5b633eeadb520505488628874f6dd924675c922adbe5964e9385",
+    "ios/Timbre/Learn/SongChords.swift": "c8117b7920185cce3f155e0fa3453863cda14f21eabc91b3119098dc375e044a",
+    "ios/Timbre/Learn/LatencyCalibration.swift": "3a5e019fa1cafb11dfbee8365384e0fee59334bb98c9fcd27f0f3efda2228c59",
+    "ios/Timbre/Learn/SongSheet.swift": "69c95fbe2e44c94dcb3f5ecfadbc800d75498a4809adb01854ff01a3dfd09ff5",
+    "ios/Timbre/Learn/PlayAlongCues.swift": "df7d493928a1d2e829554e9813e5f212d3535bf6344d6df0ba61f66b00811bad",
+    "ios/TimbreAppTests/EarconsPlaybackTests.swift": "daef82002b8a943ba99f9c690aedfe0c62815aa101f8acc5318d5859afe16c0e"
+  }
+}

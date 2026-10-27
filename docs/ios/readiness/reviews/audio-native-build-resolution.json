@@ -1,0 +1,71 @@
+{
+  "status": "Source fixes implemented; hosted native full typecheck and focused XCTest rerun required",
+  "reported_native_failures": {
+    "commit": "be4c234",
+    "release_job": "121934441433",
+    "app_job": "121934441715",
+    "diagnostics": [
+      "PlayAlongCues.swift:192 synchronous call to async prepareInterfaceSound",
+      "PlayAlongCues.swift:265 synchronous call to async prepareInterfaceSound"
+    ],
+    "core_artifact": "12700277424",
+    "lint": "SongSheet.swift:1242 shorthand_operator: begin = begin + .seconds(cycle)",
+    "source": "Root supplied hosted compiler diagnostics and baseline comparison; this worker did not rerun Xcode on Windows"
+  },
+  "fixes": [
+    "Full-tree audit found and migrated both remaining synchronous session-preparation calls in Earcons. All remaining actual Swift call sites now contain await.",
+    "Earcons caches unprepared AVAudioPlayer playback actions. AVAudioPlayer.prepareToPlay/currentTime/play now run only in the action after awaited InterfaceSoundPlayback session preparation.",
+    "Playback action rechecks enabled state, Task cancellation, latest feedback identity within its note/swish channel, take cancellation generation and a monotonic 150ms freshness bound immediately after preparation.",
+    "Note feedback and multiplier swishes use independent channels so a hit and a tier cue from the same update can both play. Newer same-channel feedback supersedes a queued older cue.",
+    "AudioService full suspension/interruption and metronome stop cancel pending Earcons feedback, preventing ended takes from emitting delayed sounds.",
+    "SongPlayback advances ContinuousClock.Instant with advanced(by:), preserving absolute timing and resolving the new shorthand_operator lint occurrence without modifying a baseline."
+  ],
+  "targeted_tests": [
+    "testCachingNeverPreparesOrPlaysBeforeSessionPreparationCompletes",
+    "testDisabledSoundIsRecheckedAfterSessionWait",
+    "testNewerJudgmentSupersedesPendingNoteFeedback",
+    "testLateFeedbackIsDiscardedInsteadOfSoundingAfterTheJudgment",
+    "testTakeCancellationInvalidatesPendingFeedback",
+    "testCancelledRequestDoesNotPrepareOrPlayItsPlayer",
+    "testNoteAndTierFeedbackRemainIndependent"
+  ],
+  "verification": {
+    "test_authoring": "Seven Earcons caller tests authored before implementation",
+    "native_red_green": "UNEXECUTED locally: Windows lacks swift/xcodebuild; prior hosted app compile was blocked before XCTest execution",
+    "syntax": "PASS: tree-sitter Swift grammar parsed all 14 owned Swift files without syntax errors; not Swift typechecking",
+    "async_call_audit": "PASS: all 5 actual prepareInterfaceSound call sites in full Swift tree contain await",
+    "static_player_ordering": "PASS: Earcons.player factory contains neither prepareInterfaceSound nor prepareToPlay; deferred playback action contains prepareToPlay",
+    "diff_whitespace": "PASS: scoped git -c core.autocrlf=false diff --check",
+    "hygiene": "PASS: no new error-level occurrences; unrelated PaywallWinBack inline-orb warning and WatchCapture test-coupling notice remain",
+    "swiftlint": "Native rerun REQUIRED; exact new shorthand_operator source form removed, no baseline edited",
+    "hardware": "UNRUN; no responsiveness/latency/speaker/route/call or App Store readiness claim"
+  },
+  "preserved_prior_evidence_sha256": {
+    "docs\\ios\\readiness\\reviews\\audio-implementation.json": "98d3f2c6f090271c2ea1cdd9b3dd46f8100b85d33e4430e4c2441fdc436ac8b8",
+    "docs\\ios\\readiness\\reviews\\audio-source-independent-review.json": "e139b73110eaf4305639240ed683d605cfb49289a12f6ce73d3146741b8f0b3d",
+    "docs\\ios\\readiness\\reviews\\audio-review-resolution.json": "f9aada343f8f090e5e72a947df80a45295e926c3d0164ae3818e23d2b6021fb2"
+  },
+  "changed_files_this_resolution": [
+    "ios/Timbre/Learn/PlayAlongCues.swift",
+    "ios/Timbre/Audio/AudioService.swift",
+    "ios/Timbre/Learn/SongSheet.swift",
+    "ios/TimbreAppTests/EarconsPlaybackTests.swift"
+  ],
+  "final_owned_swift_sha256": {
+    "ios/Timbre/Audio/AudioService.swift": "6d86ffe45d45cb76a3fbedbcf789764450a86f80c5f660ad0b07c2d91c665f9e",
+    "ios/Timbre/Audio/SoundFX.swift": "d7ad3eb122a14d38a4e8902ef7ad8d6dabac8c536fcec739068858aaf67b331a",
+    "ios/Timbre/YourSongs/RecordingPlayer.swift": "f569142eb1c243d2e34d2699fe795c1c7bbdc5054213e253b667492b1ff7be73",
+    "ios/Timbre/YourSongs/ChartDock.swift": "104280feec3d71283813fdeb548baf87f5d415f4f0453b16a7b9b291905a9b65",
+    "ios/TimbreAppTests/AudioStartupTests.swift": "91c7802ed5737650fae687a6f2adbc7205f7bb61175975ba6dcf15f6adff39b2",
+    "ios/TimbreAppTests/RecordingStartupTests.swift": "c468c29fa3549b287c2fb477d858ed2c1e61f2497115b8559d55bf8e88480e7f",
+    "ios/Timbre/Learn/SongPerform.swift": "6bc72b992d209610a1a5a9f7ca834b9e6951253eb0efbd8f87b02537433f0633",
+    "ios/Timbre/Learn/Highway.swift": "fc4651397b538645e5b6ffbd5a50ab3c2d17c631c4cd16242ec7d290c736655c",
+    "ios/Timbre/Learn/RhythmStep.swift": "73bb896f349c5b633eeadb520505488628874f6dd924675c922adbe5964e9385",
+    "ios/Timbre/Learn/SongChords.swift": "c8117b7920185cce3f155e0fa3453863cda14f21eabc91b3119098dc375e044a",
+    "ios/Timbre/Learn/LatencyCalibration.swift": "3a5e019fa1cafb11dfbee8365384e0fee59334bb98c9fcd27f0f3efda2228c59",
+    "ios/Timbre/Learn/SongSheet.swift": "69c95fbe2e44c94dcb3f5ecfadbc800d75498a4809adb01854ff01a3dfd09ff5",
+    "ios/Timbre/Learn/PlayAlongCues.swift": "df7d493928a1d2e829554e9813e5f212d3535bf6344d6df0ba61f66b00811bad",
+    "ios/TimbreAppTests/EarconsPlaybackTests.swift": "daef82002b8a943ba99f9c690aedfe0c62815aa101f8acc5318d5859afe16c0e"
+  },
+  "commit_push": "None by this worker"
+}

@@ -1,0 +1,28 @@
+{
+  "verified_utc": "2026-10-27T01:42:41.329267+00:00",
+  "provider": "Cloudflare Workers Static Assets",
+  "version_id": "e8b9f071-f226-44c7-831a-5eb9c6a11f66",
+  "routes": [
+    {
+      "url": "https://timbre-support.timbre.workers.dev/privacy",
+      "status": 200,
+      "sha256": "c6bcbbfce317946560e2d2c5def7d689cfa0a33bae729ea8d39fe4007ad9ecec",
+      "bytes_equal_build": true,
+      "content_type": "text/html",
+      "csp": "default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+      "nosniff": "nosniff"
+    },
+    {
+      "url": "https://timbre-support.timbre.workers.dev/support",
+      "status": 200,
+      "sha256": "cff806657a42a3238f9d878f800ff5057a02f211acbec93018dd3766721c1dba",
+      "bytes_equal_build": true,
+      "content_type": "text/html",
+      "csp": "default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+      "nosniff": "nosniff"
+    }
+  ],
+  "policy_source_sha256": "a15dd87df281032b7943e5bd296dca5edcc237eea6028ccf83bf919a7a7e8cb9",
+  "source_review": "docs/ios/readiness/reviews/final-integration-independent-review.json",
+  "scope": "Actual HTTP content/headers and source consistency; not legal, device, native app or Apple submission certification"
+}

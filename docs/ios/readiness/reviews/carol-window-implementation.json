@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-10-27T01:17:08.772150+00:00",
+  "baseline_head": "be4c23496ef05dd80a1c6fdde7a8eee98fb15982",
+  "scope": "Two confirmed Carol/free-song configuration gaps only; approved minimal AppStore subscription included. No audio/privacy/Watch/site/store/workflow edits by this worker. No commit, push, remote grants, deployment or account actions.",
+  "design": "docs/ios/readiness/reviews/carol-window-plan.md",
+  "status": "implementation_ready_for_independent_review_native_validation_pending",
+  "source_api": {
+    "FreeSongWindow": "Optional strict Gregorian local-day startDate inclusive/endDate exclusive, YYYY-MM-DD; includes(at:timeZone:) and nextBoundary(after:timeZone:). Each current user time zone defines midnight; Calendar(identifier:.gregorian) ignores preferred calendar.",
+    "FreeOpenings": "Retains raw listed lessons and optional policy. lessons and opens recheck current time on each read. Explicit clock/timeZone inputs support deterministic testing; no prefiltered global snapshot. Independent unit2 and existing Pro/base-free/placement rules preserved.",
+    "RemoteConfig.Values": "Optional freeSongsWindow absent means legacy permanent songs. Present null, wrong-shaped, malformed/partial/reversed/impossible window remains explicit invalid policy and grants no listed songs. Window decoding failures cannot collapse into absence.",
+    "capacity": "At most256 valid 1\u201364-character ASCII lesson IDs; fetched payload maximum64000 bytes unchanged.",
+    "refresh": "Dedicated openingsChanged publisher when effective access changes, forwarded to each observing AppStore on MainActor. One-shot common-runloop timer at next boundary (at most24h until a recheck), plus foreground/significant-time/calendar-day/time-zone notification rechecks. Access reads enforce expiry even if notifications are delayed/offline/suspended. No take stop/cancel calls introduced."
+  },
+  "tests_authored_before_product_changes": {
+    "core_file": "ios/Tests/TimbreCoreTests/FreeSongWindowTests.swift",
+    "app_file": "ios/TimbreAppTests/RemoteConfigWindowTests.swift",
+    "core_test_methods": 7,
+    "app_test_methods": 4,
+    "coverage": [
+      "before start / exact inclusive start / immediately before end / exact exclusive end / after end",
+      "Gregorian local dates across UTC, Los Angeles, Kiritimati and DST boundary",
+      "missing, partial, malformed, impossible, equal and reversed dates",
+      "cached policy reevaluated without refresh; default FreeOpenings.current and default current clock reject expired grants",
+      "intentional permanent no-window compatibility",
+      "all102 real curriculum Carol IDs, including late-list cello/bass, plus noncampaign paid lesson remaining locked",
+      "unit2 and Pro unaffected by invalid campaign",
+      "app decoder null/wrong-shape/type mismatch invalid-window distinction; encode/decode cache roundtrip",
+      "256-ID bound and invalid identifier rejection",
+      "effective-access publish at start/end/time-zone changes without network; no redundant publish for unchanged effective access"
+    ],
+    "native_RED": "UNRUN: Windows host has no local Swift/Xcode; first test authorship targets missing policy/API and cap regression, but no observed native failing run claimed.",
+    "native_GREEN": "UNRUN: macOS Core/app XCTest and complete-concurrency build required; source review is not proof of compile/runtime success."
+  },
+  "verification": [
+    {
+      "command": "python tools/ci/lint_tells.py",
+      "exit_code": 0,
+      "result": "No new error-level occurrences. Warnings/notices in unrelated PaywallWinBack and WatchCapture; these were not changed here."
+    },
+    {
+      "command": "python tools/ci/test_hygiene.py",
+      "exit_code": 0,
+      "result": "25 tests passed."
+    },
+    {
+      "command": "git diff --check -- scoped tracked changed files",
+      "exit_code": 0,
+      "result": "No whitespace errors; Git autocrlf conversion notices only. All9owned files verified LF-only."
+    },
+    {
+      "command": "Execute K4 embedded Python; compare with curriculum and both Swift test fixture ID arrays",
+      "exit_code": 0,
+      "result": "102 unique existing lesson IDs; both Swift lists exactly match; generated config3089bytes; local-day window2026-12-01 to2026-12-08."
+    }
+  ],
+  "review_required": [
+    "Independent code review of all source/test/doc hashes below",
+    "macOS swift test --package-path ios --filter FreeSongWindowTests",
+    "Native app RemoteConfigWindowTests plus app/Core regression suite and Swift5.10 complete concurrency build",
+    "Native foreground/long-open-app clock/day/time-zone boundary UI refresh and paywall/song-lock consistency; verify started takes continue",
+    "Final integration verification alongside concurrent work; do not attribute their modifications to this package"
+  ],
+  "sha256": {
+    "ios/Sources/TimbreCore/Commerce/Access.swift": "d7d68f592842084c5833588425386fe04ac953ccd1abb515be05feeb1bc24564",
+    "ios/Sources/TimbreCore/Commerce/FreeSongWindow.swift": "2bcd48cd0b3d7559206337fc3f5d46233aace37b10ba87f2486b28136fa0a2cc",
+    "ios/Timbre/Services/RemoteConfig.swift": "3a2bf85278ba6fbde781ab99b04988b7d8ce3ff2ddb972564b3deeaa7eb7fa36",
+    "ios/Timbre/Services/AppStore.swift": "48a9109dabdd161869139e9094c3e47876308886435fbb56207e453fae0cd223",
+    "ios/Tests/TimbreCoreTests/FreeSongWindowTests.swift": "43660e50ddd11a79395a814a937fb4a5ee361649099704f1ad4c6daaa22dc9b1",
+    "ios/TimbreAppTests/RemoteConfigWindowTests.swift": "5addfe1892ed6615d2ac7a2f72fb9ad4c9c0f91fbe51e9a4261a8089a10b6707",
+    "docs/ios/APPLE-DELIVERY.md": "3c320126822fbfc83b17fca103e9faf0940c4ac8f7bc6d5d94cb646e2868c5e4",
+    "docs/ios/RELEASE-CHECKLIST.md": "1f06a7c54fb7be17c175ed24a3d07728c9913f25cdbc0054984f8574a5d77d4c",
+    "docs/ios/readiness/reviews/carol-window-plan.md": "a4d55df49ae4b12351aef62ddbee3d1a37b3a314d0b32d75a8d8917f43fd4035"
+  },
+  "limits": [
+    "No timer firing, notification delivery, Swift compilation or XCTest execution observed locally.",
+    "Historical remaining-gap-audit.json and all prior review receipts preserved unchanged.",
+    "No UI strings/locales added or changed.",
+    "No entitlement/signing/account or campaign publication claimed."
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-10-27T00:53:59.970995+00:00",
+  "baseline_head": "be4c23496ef05dd80a1c6fdde7a8eee98fb15982",
+  "status": "implementation_locally_verified_independent_review_and_native_capture_pending",
+  "scope": "New opt-in Watch capture workflow and standard-library capture/manifest validator, guarded DEBUG-only hooks in the existing Watch application; no existing CI or project.yml edits",
+  "source_files_sha256": {
+    ".github/workflows/watch-captures.yml": "33e5ef5538bc513068301519eca28bde9b23c1746fba0c234095a97c561d0bdb",
+    "tools/ci/watch_captures.py": "a5101979c9803977715f1f0a79ab8b723ef6af92e35b3f2f18059134a41bebb2",
+    "tools/l10n/tests/test_watch_captures.py": "dd80503ade5ee42e1f7db5dea3d4f1a5cf1ab54583cf413c65226c3850ba30fc",
+    "ios/TimbreWatch/WatchCapture.swift": "d1090153bae3f58eb23d89e3aefc9f617bb4e76a04705b7f3682e740d555a3c9",
+    "ios/TimbreWatch/WatchSync.swift": "7c7720e74f35eadbd271b143c6aff2fc38d08f4d3e03eb163ae73fd845c4210d",
+    "ios/TimbreWatch/TimbreWatchApp.swift": "4fe93e9807e566c40c4888f211b498d3cbda922820ec0e5c68121767b21adaf4",
+    "ios/TimbreWatch/TodayScreen.swift": "db9c6a56c95acfc1b38ee7aeaaa4f94a47fb35ef6ff9bc9d35dfca53e35da68e",
+    "ios/TimbreWatch/MetronomeScreen.swift": "df7529f7bdd90e9861bcd7a2dacf4cf98079c1d33eacb86bdaa21a3c07e53173",
+    "docs/ios/readiness/reviews/watch-capture-plan.md": "14a0b1bdaf55b416bbfcc68aed9614bbcca77eb605c4dccbc855664c1ec48076",
+    "docs/ios/readiness/reviews/watch-face-remaining.md": "7adec781fe58d90bb8c41defc2f40ad284ab64b0aa867141f6cf0b0d427a7544"
+  },
+  "input_hashes": {
+    "ios/project.yml": "bde414e495e2cad1451bed7fe8bdd085b8bfe6757b90d1e504320f87c440df11",
+    "ios/Timbre/Services/WatchSnapshot.swift": "4d8c7568d1bf0831287016ad1e369868eefd7933b78a462c5abdc103873b84d1",
+    "tools/l10n/store-locales.json": "05769c29a716b41458f24e3780260c0610064e82aa5cadb87beb53a7e5399646"
+  },
+  "regression_history": [
+    {
+      "stage": "initial_RED",
+      "command": "python -m unittest discover -s tools/l10n/tests -p test_watch_captures.py",
+      "exit_code": 1,
+      "result": "Missing capture implementation import failed"
+    },
+    {
+      "stage": "stale_probe_RED",
+      "exit_code": 1,
+      "result": "Probe timestamp regression failed before time bracketing and nativePixels checks"
+    },
+    {
+      "stage": "native_png_RED",
+      "exit_code": 1,
+      "result": "3failures+2errors before nativePNG/publichelp preference support"
+    },
+    {
+      "stage": "format_evidence_RED",
+      "exit_code": 1,
+      "result": "Missing format-evidence validator failed before help-hash binding"
+    },
+    {
+      "stage": "focused_GREEN",
+      "exit_code": 0,
+      "result": "14tests passed in3.616s"
+    }
+  ],
+  "final_verification": [
+    {
+      "command": "python -m unittest discover -s tools/l10n/tests -p 'test_*.py'",
+      "exit_code": 0,
+      "result": "178tests passed in23.629s"
+    },
+    {
+      "command": "python tools/l10n/report.py --check --strict",
+      "exit_code": 0,
+      "result": "Handoff is fresh; no new untranslated fixture strings introduced"
+    },
+    {
+      "command": "ruby YAML.load_file(.github/workflows/watch-captures.yml)",
+      "exit_code": 0,
+      "result": "Workflow YAML parses"
+    },
+    {
+      "command": "git diff --check -- [scoped Watch files/tool/tests/workflow]",
+      "exit_code": 0,
+      "result": "No whitespace errors;CRLF notices only"
+    },
+    {
+      "command": "python tools/ci/comment_hygiene.py",
+      "exit_code": 0,
+      "result": "No new error-level findings;existing PaywallWinBack warning and new notice-level capture-hook comment only"
+    },
+    {
+      "command": "python tools/ci/watch_captures.py --help",
+      "exit_code": 0,
+      "result": "CLI loads without native tool dependencies for local validation/tests"
+    }
+  ],
+  "native_contract": {
+    "app_languages": 49,
+    "pages_per_language": [
+      "today",
+      "metronome"
+    ],
+    "expected_native_app_images": 98,
+    "store_locales_mapped": 50,
+    "store_fallbacks": {
+      "ms": "en",
+      "or-IN": "en",
+      "zh-Hant": "en"
+    },
+    "native_size": [
+      416,
+      496
+    ],
+    "device": "Available46mmAppleWatchSeries10/11/12 on installed watchOS runtime, freshly paired with compatible available iPhone template",
+    "format": "Prefer untouched nativePNG when recorded installed publicsimctl help advertisesPNG andblackmask; honestly labeled nativeJPEG fallback only when capability absent",
+    "pixel_validation": "PNGchunkCRC, boundeddecodedscanlines/unfiltering/opaquealpha; nativeImageIOdecode into temporaryBMP; deliverable bytes never rewritten; JPEGfallback dimensions+nativepixeldecode",
+    "probes": "DEBUGselected actualTabView page appearance plus realWatchSnapshot and realWristMetronome timer. Per-launchtoken/sourceSHA/requested+effective language/exactappliedlabels/nativepixels and liveobservedAt before/after screenshot, atomicappDocuments JSON.",
+    "states": "Todaystreak7,practisedtoday,1of3setstepsdone; metronome96BPM withrunning=true andactualpulse>0",
+    "manifest": "Only emitted after all49x2validatedpairs and50store mappings; exactnativehelp/tool/inventory/media hashes and sourceSHA; partialevidence preserved onfailure",
+    "alpha_channel": "Record actual channel presence separately from pixelopacity; if nativePNG has an alpha channel, flag upload-alpha-channel review without stripping/reencoding originalpixels",
+    "complication_face": "manual_remaining and explicitly never counted among app captures; optionalface work does not block the required app captures"
+  },
+  "primary_sources": [
+    "https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications",
+    "https://developer.apple.com/help/app-store-connect/create-an-app-record/add-watchos-app-information/",
+    "https://developer.apple.com/library/archive/documentation/IDEs/Conceptual/iOS_Simulator_Guide/InteractingwiththeiOSSimulator/InteractingwiththeiOSSimulator.html",
+    "https://developer.apple.com/documentation/clockkit/displaying-essential-information-on-a-watch-face",
+    "https://developer.apple.com/documentation/clockkit/sharing-an-apple-watch-face",
+    "https://developer.apple.com/documentation/clockkit/clkwatchfacelibrary/addwatchface(at:completionhandler:)",
+    "https://developer.apple.com/documentation/watchkit/wkinterfacedevice/screenbounds"
+  ],
+  "remaining": [
+    "Root independent source review before commit, then actual hosted macOS build/install/launch/capture validation on finalrevision.",
+    "Zero genuine native screenshots produced in this Windows session. Testfixtureimages prove parser behavior only and are not nativecapture evidence.",
+    "Validate all98actualframes visually for layout,glyphs,RTL andnativeWatchchrome; appstate/labelprobes do not replace visual inspection.",
+    "Genuine system face with installed circular/rectangular complications remains manualfollow-up, with exactprocedure inwatch-face-remaining.md; no fabricatedface,widgetpreview orfaceimport added.",
+    "Appleminimum is1\u201310screenshots perdevicesize,Watchscreenshotsrequired,sameWatchsizeacrosslocalizations; a separatecomplicationface is not specifiedasminimum.",
+    "Public faceimport API requiresvalidAppStoreIDs for complications, so cannot closepreaccountdevelopment capture by importing a constructedwatchface.",
+    "No signing/accounts/network setup, commits,pushes,Apple delivery dispatch,uploads orsubmission performed."
+  ]
+}

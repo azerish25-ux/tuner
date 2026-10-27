@@ -1,0 +1,25 @@
+{
+  "reviewer": "Codex /root/store_release_copy_review",
+  "role": "independent bounded semantic/delta reviewer; separate from author /root/review_is",
+  "reviewed_utc": "2026-10-27T01:11:21.869123+00:00",
+  "scope": "Actual all50 old/new privacy paragraphs and removed GC claims directly read; 16 mixed lines read before/after; full-description delta exhaustively reconstructed and guarded.",
+  "frozen_author_inputs": {
+    "docs/l10n/reviews/store-release-privacy-update/context-and-lineage.json": "da73ec9ad0fb701c6e49eab488ce985fea57606d6c23700b70e48024b4216f59",
+    "docs/l10n/reviews/store-release-privacy-update/manifest.json": "14405480781679b6753045d7fc1e6e1f63910b41b846033708eb6d13ed33090d",
+    "docs/l10n/reviews/store-release-privacy-update/proposal-qa.json": "29a7366869f578f6d815d472d1ac629d6b408bd27bc91021db30a95425c2f946",
+    "docs/l10n/reviews/store-release-privacy-update/proposals.json": "5f32dadc1b59232528f06adb3d6f47d7a5c70f16973936e34b892f93148d83a3",
+    "docs/l10n/reviews/store-release-privacy-update/source-update-proposal.json": "b70df987ac6731c72dcc1b0b68491ed463dc48ad0ecedea77c0167b75b2c528d"
+  },
+  "artifacts": {
+    "build-review.py": "996495502175f4204eea9a0736808591f1988de611d097ac8623a03e7dcca8d8",
+    "per-locale-decisions.json": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+    "guarded-refinements.json": "18a3f54554f65f15edbb94217b13076b955bcec6ef5947b8b4c47e825e896a39",
+    "checks-and-advisories.json": "fa753770a95799a21696a0452081c7b9074898e1226d53278963540285276394"
+  },
+  "decisions": {
+    "accept_as_proposed": 48,
+    "accept_with_guarded_register_refinement": 2
+  },
+  "integration_status": "proposed only; root integration and source/lineage rebinding pending",
+  "release_ready": false
+}

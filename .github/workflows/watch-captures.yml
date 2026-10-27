@@ -1,0 +1,49 @@
+name: Watch captures
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: watch-captures-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  capture:
+    runs-on: macos-15
+    timeout-minutes: 60
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+      HOMEBREW_NO_AUTO_UPDATE: "1"
+      HOMEBREW_NO_INSTALL_CLEANUP: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Generate existing Xcode project
+        run: |
+          set -euo pipefail
+          command -v xcodegen >/dev/null 2>&1 || brew install xcodegen
+          cd ios && xcodegen generate
+      - name: Verify capture validator and native tool capabilities
+        run: |
+          set -euo pipefail
+          python3 -m unittest discover -s tools/l10n/tests -p test_watch_captures.py
+          xcodebuild -version
+          mkdir -p ci-out/watch
+          xcrun simctl help io > ci-out/watch/simctl-io-help.txt
+      - name: Capture all 49 app languages and map all 50 store locales
+        run: |
+          set -euo pipefail
+          python3 tools/ci/watch_captures.py --out ci-out/watch --revision "$GITHUB_SHA"
+          python3 tools/ci/watch_captures.py --out ci-out/watch --revision "$GITHUB_SHA" --validate
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: watch-captures-${{ github.sha }}
+          path: |
+            ci-out/watch/**/*.jpg
+            ci-out/watch/**/*.png
+            ci-out/watch/*.json
+            ci-out/watch/*.log
+            ci-out/watch/*.txt
+          if-no-files-found: warn
+          retention-days: 14

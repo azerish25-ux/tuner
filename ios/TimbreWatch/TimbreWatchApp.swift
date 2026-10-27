@@ -35,6 +35,12 @@ struct WatchPages: View {
     @Environment(\.scenePhase) private var scenePhase
     @State private var page = Page.today
 
+    init() {
+        #if DEBUG
+        _page = State(initialValue: WatchCapture.page == "metronome" ? .metronome : .today)
+        #endif
+    }
+
     var body: some View {
         TabView(selection: $page) {
             TodayScreen()
@@ -43,6 +49,11 @@ struct WatchPages: View {
                 .tag(Page.metronome)
         }
         .tabViewStyle(.page)
+        #if DEBUG
+        .task {
+            await WatchCapture.observe(selected: page == .today ? "today" : "metronome", sync: sync, metronome: metronome)
+        }
+        #endif
         // Taps play only while Timbre is on screen and awake; leaving the app stops the beat.
         .onChange(of: scenePhase, initial: true) { _, phase in
             metronome.active = phase == .active

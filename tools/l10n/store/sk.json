@@ -20,7 +20,7 @@
     "game_center_account": "not_verified",
     "release_ready": false,
     "blockers": [
-      "Production privacy policy URL and verification not provided",
+      "Published privacy policy/source alignment for the current app candidate pending refresh and verification",
       "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
       "Localized App Preview recordings and audio/sync/render review pending",
       "App Store Connect product/locale limits and Game Center configuration/images unverified"
@@ -38,7 +38,16 @@
     },
     "ai_source_aware": "reviewed",
     "privacy_policy": "not_verified",
-    "review_policy": "ai_source_aware"
+    "review_policy": "ai_source_aware",
+    "privacy_source_update": {
+      "reviewer": "Codex /root/store_release_copy_review",
+      "scope": "Bounded privacy paragraph, disabled Game Center description claim, production URL addition only; unchanged full-review inheritance retained",
+      "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+      "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+      "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "new_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "policy_source_alignment": "pending"
+    }
   },
   "game_center_leaderboard_names": {
     "timbre.sniper.best": "Do čierneho",
@@ -204,7 +213,7 @@
   "subtitle": "Uč sa husle, ukulele a basu",
   "keywords": "husle,violončelo,ukulele,mandolína,banjo,chromatická,stroboskop,sluch,metronóm,akord",
   "promotional_text": "Ladička zadarmo, bez reklám a účtu. Cíť ladenie každej struny, uč sa s lekciami, ktoré počúvajú, a hraj vyše 140 piesní.",
-  "description": "Ladička zadarmo. Bez reklám a účtu. Potom lekcie, ktoré počúvajú tvoju hru.\n\nTimbre spája presnú ladičku s učiteľom hudby. Nalaď 60 nástrojov a uč sa hraním.\n\nLAĎ ZADARMO\nŠtandardné ladenie každého nástroja je zadarmo: gitara, ukulele, husle, mandolína, banjo, oud, erhu a ďalšie. Chromatická a stroboskopická ladička s presnosťou na cent. 132 ladení od Drop D a Open G po DADGAD aj vlastné ladenia.\nAutomatické rozpoznanie strún označí každú naladenú. Jeden úder prečíta všetky struny a ukáže, ktorú ladiť najskôr. Laď hmatom: telefón pulzuje so záznejmi medzi strunou a cieľovým tónom, pri približovaní spomaľuje a pri naladení zastane. Nemusíš sa pozerať.\nŠtúdiovo osvetlené 3D gitary, basy, husle, violončelo a mandolína ukazujú kolík na otočenie. Kapodaster, nastaviteľná referencia A4, názvy tónov solfège a sargam.\n\nUČ SA HRANÍM\n526 lekcií v 11 kurzoch: gitara, ukulele, basa, husle, violončelo, mandolína, banjo, spev, sluch, hudobná teória a rytmus. Aj spevníky pre ukulele, mandolínu, husle, violončelo a basu.\nTimbre počuje každý úder: správny akord, načasovanie aj strunu, ktorá nezaznela. Každý tón hodnotí na cent a milisekundu. „Ukážte mi“ hrá nové akordy na 3D gitare a kladie prsty postupne. Dráha nôt spomalí pre teba a zrýchli s tvojím zlepšením.\n\nVyše 140 piesní, každá s úplným aranžmánom: klasika od Jingle Bells po Amazing Grace, vrátane 50 Originals napísaných pre Timbre v dnešných štýloch. Hraj s kapelou v slúchadlách, kým sa rozsvietia slová. Vlož alebo importuj vlastný akordový zápis, transponuj, posúvaj v rytme a vedľa počúvaj originál v Apple Music.\n\nPOKRAČUJ\nHviezdy, XP, denné úlohy, série a odznaky. Game Center: týždenná liga „Do čierneho“, rebríčky piesní a výzvy priateľom. Apple Watch: metronóm na zápästí a prehľad dnešného cvičenia. Widgety plochy a zamknutej obrazovky, živá aktivita a skratky Siri.\nMetronóm s prízvukmi, delením a tréningom tempa; bordún, tréning intonácie, knižnica akordov a stupníc. Sluch: smer výšky tónu, intervaly a druhy akordov, plus kurz so 40 lekciami.\n\nZAČNI ZADARMO\nŠtandardné ladenia všetkých nástrojov sú zadarmo. Gitara, basa, ukulele, husle a violončelo sú zadarmo vo všetkých ladeniach. Zadarmo je aj prvá časť každého kurzu a výber piesní. Timbre Pro odomyká všetky lekcie, piesne, ladenia a cvičebné nástroje. So zapnutými hláseniami Timbre pripomenie koniec bezplatnej skúšobnej lehoty dva dni vopred.\nZvuk sa analyzuje na iPhone, nikdy sa nenahráva ani neodosiela. Bez účtu a reklám.\nPredplatné sa obnovuje automaticky, ak ho nezrušíš aspoň 24 hodín pred koncom obdobia. Správa a zrušenie kedykoľvek: Nastavenia → Apple účet → Predplatné.\nPodmienky: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\nSúkromie: <privacy policy URL>",
+  "description": "Ladička zadarmo. Bez reklám a účtu. Potom lekcie, ktoré počúvajú tvoju hru.\n\nTimbre spája presnú ladičku s učiteľom hudby. Nalaď 60 nástrojov a uč sa hraním.\n\nLAĎ ZADARMO\nŠtandardné ladenie každého nástroja je zadarmo: gitara, ukulele, husle, mandolína, banjo, oud, erhu a ďalšie. Chromatická a stroboskopická ladička s presnosťou na cent. 132 ladení od Drop D a Open G po DADGAD aj vlastné ladenia.\nAutomatické rozpoznanie strún označí každú naladenú. Jeden úder prečíta všetky struny a ukáže, ktorú ladiť najskôr. Laď hmatom: telefón pulzuje so záznejmi medzi strunou a cieľovým tónom, pri približovaní spomaľuje a pri naladení zastane. Nemusíš sa pozerať.\nŠtúdiovo osvetlené 3D gitary, basy, husle, violončelo a mandolína ukazujú kolík na otočenie. Kapodaster, nastaviteľná referencia A4, názvy tónov solfège a sargam.\n\nUČ SA HRANÍM\n526 lekcií v 11 kurzoch: gitara, ukulele, basa, husle, violončelo, mandolína, banjo, spev, sluch, hudobná teória a rytmus. Aj spevníky pre ukulele, mandolínu, husle, violončelo a basu.\nTimbre počuje každý úder: správny akord, načasovanie aj strunu, ktorá nezaznela. Každý tón hodnotí na cent a milisekundu. „Ukážte mi“ hrá nové akordy na 3D gitare a kladie prsty postupne. Dráha nôt spomalí pre teba a zrýchli s tvojím zlepšením.\n\nVyše 140 piesní, každá s úplným aranžmánom: klasika od Jingle Bells po Amazing Grace, vrátane 50 Originals napísaných pre Timbre v dnešných štýloch. Hraj s kapelou v slúchadlách, kým sa rozsvietia slová. Vlož alebo importuj vlastný akordový zápis, transponuj, posúvaj v rytme a vedľa počúvaj originál v Apple Music.\n\nPOKRAČUJ\nHviezdy, XP, denné úlohy, série a odznaky. Apple Watch: metronóm na zápästí a prehľad dnešného cvičenia. Widgety plochy a zamknutej obrazovky, živá aktivita a skratky Siri.\nMetronóm s prízvukmi, delením a tréningom tempa; bordún, tréning intonácie, knižnica akordov a stupníc. Sluch: smer výšky tónu, intervaly a druhy akordov, plus kurz so 40 lekciami.\n\nZAČNI ZADARMO\nŠtandardné ladenia všetkých nástrojov sú zadarmo. Gitara, basa, ukulele, husle a violončelo sú zadarmo vo všetkých ladeniach. Zadarmo je aj prvá časť každého kurzu a výber piesní. Timbre Pro odomyká všetky lekcie, piesne, ladenia a cvičebné nástroje. So zapnutými hláseniami Timbre pripomenie koniec bezplatnej skúšobnej lehoty dva dni vopred.\nSúkromie už od návrhu: živý zvuk z mikrofónu sa analyzuje vo vašom zariadení, nikdy sa nenahráva ani neodosiela. Bez účtu a reklám.\nPredplatné sa obnovuje automaticky, ak ho nezrušíš aspoň 24 hodín pred koncom obdobia. Správa a zrušenie kedykoľvek: Nastavenia → Apple účet → Predplatné.\nPodmienky: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\nSúkromie: https://timbre-support.timbre.workers.dev/privacy",
   "whats_new": "Vitaj v Timbre: ladička zadarmo pre 60 nástrojov a 526 lekcií, ktoré počúvajú tvoju hru.",
   "iphone_screenshot_captions": [
     {
@@ -316,5 +325,6 @@
     "ukulele": [
       "ukulele"
     ]
-  }
+  },
+  "production_privacy_url": "https://timbre-support.timbre.workers.dev/privacy"
 }

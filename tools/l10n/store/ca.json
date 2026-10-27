@@ -20,7 +20,7 @@
     "game_center_account": "not_verified",
     "release_ready": false,
     "blockers": [
-      "Production privacy policy URL and verification not provided",
+      "Published privacy policy/source alignment for the current app candidate pending refresh and verification",
       "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
       "Localized App Preview recordings and audio/sync/render review pending",
       "App Store Connect product/locale limits and Game Center configuration/images unverified"
@@ -38,7 +38,16 @@
     },
     "ai_source_aware": "reviewed",
     "privacy_policy": "not_verified",
-    "review_policy": "ai_source_aware"
+    "review_policy": "ai_source_aware",
+    "privacy_source_update": {
+      "reviewer": "Codex /root/store_release_copy_review",
+      "scope": "Bounded privacy paragraph, disabled Game Center description claim, production URL addition only; unchanged full-review inheritance retained",
+      "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+      "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+      "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "new_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "policy_source_alignment": "pending"
+    }
   },
   "game_center_leaderboard_names": {
     "timbre.sniper.best": "Diana",
@@ -204,7 +213,7 @@
   "subtitle": "Aprèn violí, ukelele i baix",
   "keywords": "violí,violoncel,ukelele,mandolina,banjo,cromàtic,estroboscopi,oïda,metrònom,acord",
   "promotional_text": "Afinador gratuït, sense anuncis ni compte. Sent com s’afina cada corda, aprèn amb lliçons que t’escolten i toca més de 140 cançons.",
-  "description": "Afinador gratuït. Sense anuncis ni compte. Després, lliçons que t’escolten tocar.\n\nTimbre uneix un afinador precís i un professor de música. Afina 60 instruments i aprèn tocant.\n\nAFINA GRATIS\nL’afinació estàndard de cada instrument és gratuïta: guitarra, ukelele, violí, mandolina, banjo, llaüt àrab, erhu i més. Afinador cromàtic i estroboscòpic amb precisió de cents. 132 afinacions, de Drop D i Open G a DADGAD, a més de les teves.\nLa detecció automàtica marca cada corda afinada. Un sol rasgueig llegeix totes les cordes i mostra quina afinar primer. Afina pel tacte: el telèfon pulsa amb els batecs entre la corda i la nota objectiu, més lentament quan s’acosten i s’atura quan coincideixen. No cal mirar.\nGuitarres, baixos, violí, violoncel i mandolina 3D amb llum d’estudi mostren la clavilla que cal girar. Celleta, referència A4 ajustable i noms de notes en solfeig i sargam.\n\nAPRÈN TOCANT\n526 lliçons en 11 cursos: guitarra, ukelele, baix, violí, violoncel, mandolina, banjo, cant, oïda, teoria musical i ritme. També cançoners per a ukelele, mandolina, violí, violoncel i baix.\nTimbre sent cada rasgueig: l’acord correcte, a temps, i quina corda no ha sonat. Avalua cada nota al cent i al mil·lisegon. «Mostra-m’ho» toca els acords nous en una guitarra 3D, posant els dits en ordre. La pista de notes s’alenteix per a tu i accelera quan millores.\n\nMés de 140 cançons, cadascuna amb un arranjament complet: clàssics de Jingle Bells a Amazing Grace, incloent-hi 50 Originals escrits per a Timbre en estils actuals. Toca amb el grup als auriculars mentre les paraules s’il·luminen. Enganxa o importa el teu full d’acords, transposa’l, desplaça’l al ritme i escolta l’original al costat a Apple Music.\n\nCONTINUA\nEstrelles, XP, missions diàries, ratxes i insígnies. Game Center: lliga setmanal de Diana, classificacions de cançons i reptes entre amics. Apple Watch: metrònom que sents al canell i la pràctica d’avui d’un cop d’ull. Ginys d’inici i bloqueig, activitat en directe i dreceres de Siri.\nMetrònom amb accents, subdivisions i entrenador de velocitat; bordó, entrenador d’entonació, biblioteca d’acords i escales. Oïda: direcció de l’altura, intervals i tipus d’acords, més un curs de 40 lliçons.\n\nCOMENÇA GRATIS\nL’afinació estàndard de tots els instruments és gratuïta. Guitarra, baix, ukelele, violí i violoncel són gratuïts en totes les afinacions. La primera unitat de cada curs i una selecció de cançons també són gratuïtes. Timbre Pro desbloqueja totes les lliçons, cançons, afinacions i eines de pràctica. Amb les notificacions activades, Timbre t’avisa dos dies abans que s’acabi una prova gratuïta.\nL’àudio s’analitza a l’iPhone, mai no es grava ni es puja. Sense compte ni anuncis.\nLes subscripcions es renoven automàticament tret que les cancel·lis com a mínim 24 hores abans del final del període. Gestiona o cancel·la en qualsevol moment: Configuració → Compte d’Apple → Subscripcions.\nCondicions: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\nPrivacitat: <privacy policy URL>",
+  "description": "Afinador gratuït. Sense anuncis ni compte. Després, lliçons que t’escolten tocar.\n\nTimbre uneix un afinador precís i un professor de música. Afina 60 instruments i aprèn tocant.\n\nAFINA GRATIS\nL’afinació estàndard de cada instrument és gratuïta: guitarra, ukelele, violí, mandolina, banjo, llaüt àrab, erhu i més. Afinador cromàtic i estroboscòpic amb precisió de cents. 132 afinacions, de Drop D i Open G a DADGAD, a més de les teves.\nLa detecció automàtica marca cada corda afinada. Un sol rasgueig llegeix totes les cordes i mostra quina afinar primer. Afina pel tacte: el telèfon pulsa amb els batecs entre la corda i la nota objectiu, més lentament quan s’acosten i s’atura quan coincideixen. No cal mirar.\nGuitarres, baixos, violí, violoncel i mandolina 3D amb llum d’estudi mostren la clavilla que cal girar. Celleta, referència A4 ajustable i noms de notes en solfeig i sargam.\n\nAPRÈN TOCANT\n526 lliçons en 11 cursos: guitarra, ukelele, baix, violí, violoncel, mandolina, banjo, cant, oïda, teoria musical i ritme. També cançoners per a ukelele, mandolina, violí, violoncel i baix.\nTimbre sent cada rasgueig: l’acord correcte, a temps, i quina corda no ha sonat. Avalua cada nota al cent i al mil·lisegon. «Mostra-m’ho» toca els acords nous en una guitarra 3D, posant els dits en ordre. La pista de notes s’alenteix per a tu i accelera quan millores.\n\nMés de 140 cançons, cadascuna amb un arranjament complet: clàssics de Jingle Bells a Amazing Grace, incloent-hi 50 Originals escrits per a Timbre en estils actuals. Toca amb el grup als auriculars mentre les paraules s’il·luminen. Enganxa o importa el teu full d’acords, transposa’l, desplaça’l al ritme i escolta l’original al costat a Apple Music.\n\nCONTINUA\nEstrelles, XP, missions diàries, ratxes i insígnies. Apple Watch: metrònom que sents al canell i la pràctica d’avui d’un cop d’ull. Ginys d’inici i bloqueig, activitat en directe i dreceres de Siri.\nMetrònom amb accents, subdivisions i entrenador de velocitat; bordó, entrenador d’entonació, biblioteca d’acords i escales. Oïda: direcció de l’altura, intervals i tipus d’acords, més un curs de 40 lliçons.\n\nCOMENÇA GRATIS\nL’afinació estàndard de tots els instruments és gratuïta. Guitarra, baix, ukelele, violí i violoncel són gratuïts en totes les afinacions. La primera unitat de cada curs i una selecció de cançons també són gratuïtes. Timbre Pro desbloqueja totes les lliçons, cançons, afinacions i eines de pràctica. Amb les notificacions activades, Timbre t’avisa dos dies abans que s’acabi una prova gratuïta.\nPrivacitat des del disseny: l’àudio del micròfon s’analitza en temps real al teu dispositiu, mai no es grava ni es puja. Sense compte ni anuncis.\nLes subscripcions es renoven automàticament tret que les cancel·lis com a mínim 24 hores abans del final del període. Gestiona o cancel·la en qualsevol moment: Configuració → Compte d’Apple → Subscripcions.\nCondicions: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\nPrivacitat: https://timbre-support.timbre.workers.dev/privacy",
   "whats_new": "Benvingut a Timbre: afinador gratuït per a 60 instruments i 526 lliçons que t’escolten tocar.",
   "iphone_screenshot_captions": [
     {
@@ -316,5 +325,6 @@
     "ukulele": [
       "ukelele"
     ]
-  }
+  },
+  "production_privacy_url": "https://timbre-support.timbre.workers.dev/privacy"
 }

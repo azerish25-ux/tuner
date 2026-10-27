@@ -15,6 +15,9 @@ struct TodayScreen: View {
             content(sync.snapshot.map { WatchDay($0, now: context.date) })
         }
         .containerBackground(Self.background, for: .tabView)
+        #if DEBUG
+        .onAppear { if WatchCapture.enabled { WatchCapture.didAppear("today") } }
+        #endif
         .userActivity(WatchLink.todayActivity, isActive: handoff) { activity in
             activity.title = String(localized: "Today's set")
             activity.isEligibleForHandoff = true

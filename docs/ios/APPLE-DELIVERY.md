@@ -96,6 +96,7 @@ Four addresses and one ID are build settings in `ios/project.yml`, carried into 
   "rating": { "show": true },
   "referralCode": "FRIENDMONTH",
   "freeSongs": ["song-silent-night", "uke-sb-song-silent-night"],
+  "freeSongsWindow": { "startDate": "2026-12-01", "endDate": "2026-12-08" },
   "flags": { "unit2Free": true }
 }
 ```
@@ -103,7 +104,8 @@ Four addresses and one ID are build settings in `ios/project.yml`, carried into 
 - `paywall`: the arms of a paywall test, each with a `weight` (its share, 1 when left out). An arm may sell another yearly product (`annualProductId`, which must exist in the same subscription group), show lifetime on onboarding's paywall (`onboardingLifetime`), or change onboarding's headline (`headline`: `song`, the default, or `plan`). A person keeps the arm first drawn for as long as it is listed; dropping an arm moves its people to the others. The analytics events carry the arm.
 - `rating`: only `show` is needed. The paywall's rating line is on unless `show` is false, and appears only where the app really has at least 4.6★ from 200 ratings in that storefront: its figures always come from the App Store itself, and any stars or count written in the file are ignored.
 - `referralCode`: the offer code "Give a friend a month" hands out (§6.3).
-- `freeSongs`: song lessons opened to everyone for now, by lesson id (a seasonal shelf's first week, such as carols in December). They stay open for as long as the file lists them: take them out when the week ends.
+- `freeSongs`: song lesson IDs opened to everyone, at most **256** valid IDs of 1–64 ASCII letters, digits, dashes, dots or underscores. This accommodates all 102 Carol editions. The fetched file remains limited to 64,000 bytes. Without `freeSongsWindow`, these are intentionally permanent grants until removed from the remote settings.
+- `freeSongsWindow` (optional): `{ "startDate": "2026-12-01", "endDate": "2026-12-08" }`. Strict **Gregorian local dates**, `YYYY-MM-DD`, evaluated in each player's current time zone, regardless of their preferred calendar. Start is inclusive and end exclusive: this example opens the songs on December 1–7, ending at local midnight starting December 8. A supplied null, wrong-shaped, partial, impossible or reversed window opens **no listed songs**; it never falls back to permanent access. Cached/offline access rechecks the window at every access read. Foreground, day/clock/time-zone changes and scheduled boundaries refresh visible access; an already started take continues. The window does not restrict the independent `unit2Free` flag.
 - `flags`: named switches for experiments. `unit2Free` opens the second unit of every teaching course to everyone (songbooks keep their own free songs).
 
 Before submitting with analytics on, update the App Privacy label (§4) and the "Analytics" section of PRIVACY.md.

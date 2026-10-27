@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-27T01:41:44Z",
+  "baseline_head": "be4c23496ef05dd80a1c6fdde7a8eee98fb15982",
+  "reviewer": "Independent integration review agent",
+  "skill": "C:/Users/shahr/.agents/skills/code-review-and-quality/SKILL.md",
+  "verdict": "no_new_release_blocking_source_defect_identified_native_validation_pending",
+  "scope": [
+    "Current uncommitted Earcons playback/stop hooks and regression tests, SongSheet clock-expression fix",
+    "FreeSongWindow, canonical access, RemoteConfig cache/lifecycle publication, AppStore redraw and retained SongsCatalog cache invalidation, associated tests/docs",
+    "Watch capture DEBUG hooks, Python capture/validation runner, workflow and tests",
+    "Store privacy/disabled-Game-Center integration and localization export full-log fix",
+    "Bounded PRIVACY.md and generated privacy.html synchronization against current Analytics.swift, AnalyticsTransport.swift, SongsView submission and GameCenter configuration"
+  ],
+  "findings": [],
+  "source_assessment": [
+    "Earcons awaits session preparation before actual player preparation/play and rechecks cancellation, current request/channel, enabled state, generation and monotonic age. Global suspension and metronome stop invalidate pending feedback; independent multiplier/judgment channels remain compatible.",
+    "Cached scheduled grants remain time-gated at canonical access reads, invalid supplied windows fail closed, unit2 remains independent, and effective grant snapshots invalidate retained song layouts. Access publication requests redraw without terminating a running take.",
+    "Watch capture instrumentation remains DEBUG-only; release initialization retains Today and ordinary WatchConnectivity activation. UUID/revision/language/page/state and image validation reject stale captures; actual simulator execution and visual media acceptance remain required.",
+    "The localization workflow change preserves pipefail while retaining full export diagnostics; it does not suppress a failing xcodebuild exit status.",
+    "Independent store checks pass and current metadata preserves release_ready=false. Listing descriptions distinguish live microphone privacy from deliberately imported recordings and omit the disabled Game Center promise.",
+    "Policy synchronization is approved for source consistency: song requests use the normal install/session identifiers, acknowledge only accepted HTTP delivery and allow retry on failure; attribution properties exclude country/region and arbitrary response fields; revocation cancels tracked HTTP tasks and invalidates retries/results while an already-running synchronous token provider remains uncancellable; default Game Center build setting is NO. Generated HTML contains the corrected policy. This approval does not establish legal certification or deployed-byte identity."
+  ],
+  "nonblocking_advisories": [
+    {
+      "path": "ios/Timbre/Services/AppStore.swift",
+      "line": 128,
+      "observation": "The openingsChanged sink redraws app observers but does not invoke republishWidgetsSoon. WidgetLibrary persists LessonAccess-derived standing, so widget song badges can remain stale after a same-day remote grant/revocation until the next normal publish. Canonical entry access still rechecks policy; no access bypass was identified.",
+      "suggestion": "Consider forwarding access changes to the existing widget republisher; retain this as an explicit limitation otherwise."
+    }
+  ],
+  "independently_executed_verification": [
+    { "command": "python -m unittest discover -s tools/l10n/tests -p test_watch_captures.py", "exit_code": 0, "tests": 14, "scope": "fixture/parser tests only" },
+    { "command": "python -m unittest discover -s tools/l10n/tests -p test_store*.py", "exit_code": 0, "tests": 45 },
+    { "command": "python tools/l10n/store.py", "exit_code": 0, "result": "50 listing locales checked, zero draft validation problems" },
+    { "command": "git -c core.autocrlf=false diff --check", "exit_code": 0 }
+  ],
+  "selected_reviewed_sha256": {
+    "docs/ios/PRIVACY.md": "a15dd87df281032b7943e5bd296dca5edcc237eea6028ccf83bf919a7a7e8cb9",
+    "docs/site/privacy.html": "c6bcbbfce317946560e2d2c5def7d689cfa0a33bae729ea8d39fe4007ad9ecec",
+    "ios/Timbre/Services/AppStore.swift": "48a9109dabdd161869139e9094c3e47876308886435fbb56207e453fae0cd223",
+    "ios/Timbre/Services/RemoteConfig.swift": "117375f1b23d5417352f2c112b0ea3273ffa5d80022eddcc13dc1e0b0f6994f5",
+    "ios/Timbre/Learn/PlayAlongCues.swift": "df7d493928a1d2e829554e9813e5f212d3535bf6344d6df0ba61f66b00811bad",
+    "ios/TimbreWatch/WatchCapture.swift": "d1090153bae3f58eb23d89e3aefc9f617bb4e76a04705b7f3682e740d555a3c9",
+    ".github/workflows/l10n.yml": "f44668909de0540e35ee7f6642409ac5fba4be6ecb610f5d560417959f209fa6",
+    ".github/workflows/watch-captures.yml": "33e5ef5538bc513068301519eca28bde9b23c1746fba0c234095a97c561d0bdb",
+    "tools/ci/watch_captures.py": "a5101979c9803977715f1f0a79ab8b723ef6af92e35b3f2f18059134a41bebb2",
+    "tools/l10n/store-locales.json": "9ae6f41ee6fa7f810eba9da16a6531d16a80ce30bed22767bf25abd9ce4a72bb"
+  },
+  "limitations": [
+    "Windows-only review: no Swift/Xcode typecheck, native build, XCTest, simulator, hardware, audio timing/interruption, Watch capture or visual media execution was performed.",
+    "Focused source/test review and prior per-area receipts do not establish full App Store readiness. Hosted native CI must run against final committed bytes, and device/media/account gates remain separate.",
+    "Policy approval covers local source consistency only. No policy deployment, public endpoint verification, Apple operation, commit or implementation mutation was performed by this reviewer."
+  ],
+  "mutations": "Only this new review receipt was written."
+}

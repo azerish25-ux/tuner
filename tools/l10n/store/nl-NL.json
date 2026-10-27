@@ -20,7 +20,7 @@
     "game_center_account": "not_verified",
     "release_ready": false,
     "blockers": [
-      "Production privacy policy URL and verification not provided",
+      "Published privacy policy/source alignment for the current app candidate pending refresh and verification",
       "Localized device, glyph/RTL/layout, screenshot captures and render review pending",
       "Localized App Preview recordings and audio/sync/render review pending",
       "App Store Connect product/locale limits and Game Center configuration/images unverified"
@@ -38,7 +38,16 @@
     },
     "ai_source_aware": "reviewed",
     "privacy_policy": "not_verified",
-    "review_policy": "ai_source_aware"
+    "review_policy": "ai_source_aware",
+    "privacy_source_update": {
+      "reviewer": "Codex /root/store_release_copy_review",
+      "scope": "Bounded privacy paragraph, disabled Game Center description claim, production URL addition only; unchanged full-review inheritance retained",
+      "evidence": "docs/l10n/reviews/store-release-privacy-update/independent-review/per-locale-decisions.json",
+      "evidence_sha256": "7a073a6bbc3367a96f3bc76da04b99b33a260ea56f197535416c142543ec9daa",
+      "parent_source_content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+      "new_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+      "policy_source_alignment": "pending"
+    }
   },
   "game_center_leaderboard_names": {
     "timbre.sniper.best": "Voltreffer",
@@ -204,7 +213,7 @@
   "subtitle": "Leer viool, ukelele en bas",
   "keywords": "viool,cello,ukelele,mandoline,banjo,chromatisch,stroboscoop,gehoor,metronoom,akkoord",
   "promotional_text": "Gratis stemmen, zonder reclame of account. Voel elke snaar op stemming komen en speel met lessen die luisteren en meer dan 140 nummers.",
-  "description": "Gratis stemapparaat, zonder reclame of account. Daarna lessen die naar je spel luisteren.\n\nTimbre combineert een nauwkeurig stemapparaat met een muziekleraar. Stem elk van 60 instrumenten en leer door te spelen.\n\nGRATIS STEMMEN\nDe standaardstemming van elk instrument is gratis: gitaar, ukelele, viool, mandoline, banjo, oed, erhu en meer. Chromatisch en stroboscopisch stemmen tot op de cent. 132 stemmingen, van Drop D en Open G tot DADGAD, plus je eigen stemmingen.\nAutomatische snaarherkenning vinkt elke gestemde snaar af. Eén aanslag leest alle snaren en laat zien welke eerst moet. Voel de stemming: je telefoon pulseert met de zweving tussen snaar en doeltoon, steeds trager tot hij bij de juiste toon stilvalt. Stem zonder te kijken.\n3D-gitaren, bassen, viool, cello en mandoline in studiobelichting tonen welke stemknop je draait. Met capo, instelbare A4-referentie, solfège en sargam-notennamen.\n\nLEREN DOOR TE SPELEN\n526 lessen in 11 cursussen: gitaar, ukelele, bas, viool, cello, mandoline, banjo, zang, gehoortraining, muziektheorie en ritme. Ook liedboeken voor ukelele, mandoline, viool, cello en bas.\nTimbre hoort elke aanslag: het juiste akkoord, op tijd, en welke snaar niet klonk. Elke noot wordt beoordeeld tot op de cent en milliseconde. ‘Laat zien’ speelt nieuwe akkoorden op een 3D-gitaar, met vingers die in volgorde landen. De meespeelbaan vertraagt voor jou en versnelt weer als je beter wordt.\n\nMeer dan 140 nummers, elk met een volledig arrangement: klassiekers van Jingle Bells tot Amazing Grace, waaronder ook 50 Originals in hedendaagse stijlen voor Timbre geschreven. Speel met de band in je koptelefoon terwijl de tekst oplicht. Plak of importeer je eigen akkoordenschema, transponeer het, laat het op tempo scrollen en luister ernaast naar het origineel op Apple Music.\n\nBLIJF SPELEN\nSterren, XP, dagelijkse opdrachten, reeksen en badges. Game Center met een wekelijkse Voltreffer-competitie, ranglijsten voor nummers en vriendenuitdagingen. Apple Watch met voelbare metronoom en je oefendag in één oogopslag. Widgets voor begin- en toegangsscherm, liveactiviteit en Siri-opdrachten.\nMetronoom met accenten, onderverdelingen en tempotrainer; bourdon, intonatietrainer en akkoord- en toonladderbibliotheek. Gehoortraining voor toonhoogterichting, intervallen en akkoordsoorten, plus een cursus van 40 lessen.\n\nGRATIS BEGINNEN\nElke standaardstemming is gratis. Gitaar, bas, ukelele, viool en cello zijn in alle stemmingen gratis. De eerste eenheid van elke cursus en een selectie nummers zijn ook gratis. Timbre Pro opent alle lessen, nummers, stemmingen en oefentools. Met meldingen aan herinnert Timbre je twee dagen voor een gratis proefperiode eindigt.\nAudio wordt op je iPhone geanalyseerd, nooit opgenomen of geüpload. Geen account, geen reclame.\nAbonnementen worden automatisch verlengd tenzij je minstens 24 uur voor het einde opzegt. Beheer of annuleer op elk moment in Instellingen → Apple Account → Abonnementen.\nVoorwaarden: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\nPrivacy: <privacy policy URL>",
+  "description": "Gratis stemapparaat, zonder reclame of account. Daarna lessen die naar je spel luisteren.\n\nTimbre combineert een nauwkeurig stemapparaat met een muziekleraar. Stem elk van 60 instrumenten en leer door te spelen.\n\nGRATIS STEMMEN\nDe standaardstemming van elk instrument is gratis: gitaar, ukelele, viool, mandoline, banjo, oed, erhu en meer. Chromatisch en stroboscopisch stemmen tot op de cent. 132 stemmingen, van Drop D en Open G tot DADGAD, plus je eigen stemmingen.\nAutomatische snaarherkenning vinkt elke gestemde snaar af. Eén aanslag leest alle snaren en laat zien welke eerst moet. Voel de stemming: je telefoon pulseert met de zweving tussen snaar en doeltoon, steeds trager tot hij bij de juiste toon stilvalt. Stem zonder te kijken.\n3D-gitaren, bassen, viool, cello en mandoline in studiobelichting tonen welke stemknop je draait. Met capo, instelbare A4-referentie, solfège en sargam-notennamen.\n\nLEREN DOOR TE SPELEN\n526 lessen in 11 cursussen: gitaar, ukelele, bas, viool, cello, mandoline, banjo, zang, gehoortraining, muziektheorie en ritme. Ook liedboeken voor ukelele, mandoline, viool, cello en bas.\nTimbre hoort elke aanslag: het juiste akkoord, op tijd, en welke snaar niet klonk. Elke noot wordt beoordeeld tot op de cent en milliseconde. ‘Laat zien’ speelt nieuwe akkoorden op een 3D-gitaar, met vingers die in volgorde landen. De meespeelbaan vertraagt voor jou en versnelt weer als je beter wordt.\n\nMeer dan 140 nummers, elk met een volledig arrangement: klassiekers van Jingle Bells tot Amazing Grace, waaronder ook 50 Originals in hedendaagse stijlen voor Timbre geschreven. Speel met de band in je koptelefoon terwijl de tekst oplicht. Plak of importeer je eigen akkoordenschema, transponeer het, laat het op tempo scrollen en luister ernaast naar het origineel op Apple Music.\n\nBLIJF SPELEN\nSterren, XP, dagelijkse opdrachten, reeksen en badges. Apple Watch met voelbare metronoom en je oefendag in één oogopslag. Widgets voor begin- en toegangsscherm, liveactiviteit en Siri-opdrachten.\nMetronoom met accenten, onderverdelingen en tempotrainer; bourdon, intonatietrainer en akkoord- en toonladderbibliotheek. Gehoortraining voor toonhoogterichting, intervallen en akkoordsoorten, plus een cursus van 40 lessen.\n\nGRATIS BEGINNEN\nElke standaardstemming is gratis. Gitaar, bas, ukelele, viool en cello zijn in alle stemmingen gratis. De eerste eenheid van elke cursus en een selectie nummers zijn ook gratis. Timbre Pro opent alle lessen, nummers, stemmingen en oefentools. Met meldingen aan herinnert Timbre je twee dagen voor een gratis proefperiode eindigt.\nPrivacy als uitgangspunt: live audio van de microfoon wordt op je apparaat geanalyseerd, nooit opgenomen of geüpload. Geen account, geen reclame.\nAbonnementen worden automatisch verlengd tenzij je minstens 24 uur voor het einde opzegt. Beheer of annuleer op elk moment in Instellingen → Apple Account → Abonnementen.\nVoorwaarden: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\nPrivacy: https://timbre-support.timbre.workers.dev/privacy",
   "whats_new": "Welkom bij Timbre: gratis stemmen voor 60 instrumenten en 526 lessen die naar je spel luisteren.",
   "iphone_screenshot_captions": [
     {
@@ -316,5 +325,6 @@
     "ukulele": [
       "ukelele"
     ]
-  }
+  },
+  "production_privacy_url": "https://timbre-support.timbre.workers.dev/privacy"
 }

@@ -1,0 +1,36 @@
+{
+  "tests": [
+    {
+      "command": "python -m unittest discover -s tools/l10n/tests -p 'test_store*.py'",
+      "tests": 45,
+      "result": "OK"
+    },
+    {
+      "command": "python tools/l10n/store.py",
+      "locales": 50,
+      "problems": 0
+    },
+    {
+      "command": "git diff --check -- <57 owned changed paths>",
+      "exit_code": 0
+    }
+  ],
+  "inventory_checks": {
+    "frozen_author_and_independent_review_hashes": "unchanged",
+    "original309_raw_records_prefix": "exact hash match",
+    "original309_objects": "exact ordered equality",
+    "ledger_total": 409,
+    "appended_records": 100,
+    "per_locale_field_changes": 2,
+    "new_source_snapshot_errors": 0,
+    "review_artifact_errors": 0,
+    "all50_current_review_hashes": "match independently reviewed final payload hashes",
+    "all57_changed_tracked_files_LF": true,
+    "all50_release_ready": false,
+    "all50_privacy_policy_release_state": "not_verified; published-policy/source alignment pending"
+  },
+  "changed_files_count": 57,
+  "no_unrelated_consumer_fields_changed": true,
+  "native_legal_device_account_certification": "not claimed",
+  "publication_scope": "Prior actual public endpoint publication evidence only; root will refresh policy for current source."
+}

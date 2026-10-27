@@ -36,7 +36,9 @@ class StoreContentTests(unittest.TestCase):
             self.assertFalse(d['review']['release_ready'])
             self.assertNotEqual(d['review']['native'], 'verified')
             self.assertNotEqual(d['review']['device'], 'verified')
-            self.assertIn('<privacy policy URL>', d['description'])
+            self.assertTrue(d['production_privacy_url'].startswith('https://'))
+            self.assertIn(d['production_privacy_url'], d['description'])
+            self.assertNotIn('<privacy policy URL>', d['description'])
             self.assertTrue(store.validate(d, self.source, release=True))
 
     def test_all_ai_review_hashes_are_current(self):
@@ -96,8 +98,9 @@ class StoreContentTests(unittest.TestCase):
     def release_fixture(self):
         """Synthetic evidence only for gate behavior; never written as real review."""
         d = copy.deepcopy(self.german)
+        prior_privacy_url = d['production_privacy_url']
         d['production_privacy_url'] = 'https://example.com/privacy'
-        d['description'] = d['description'].replace('<privacy policy URL>', d['production_privacy_url'])
+        d['description'] = d['description'].replace(prior_privacy_url, d['production_privacy_url'])
         digest = store.content_hash(d)
         registry = copy.deepcopy(self.registry)
         registry['locales']['de-DE']['reviewed_content_sha256'] = digest
