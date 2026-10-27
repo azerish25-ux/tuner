@@ -135,7 +135,7 @@ final class SongRailMeasurementTests: XCTestCase {
                         .environment(\.locale, Locale(identifier: language))
                         .environment(\.layoutDirection, signature.direction)
                         .environment(\.dynamicTypeSize, size))
-                    let actual = host.sizeThatFits(in: CGSize(width: 2000, height: .greatestFiniteMagnitude))
+                    let actual = host.sizeThatFits(in: CGSize(width: 2000, height: CGFloat.greatestFiniteMagnitude))
                     XCTAssertEqual(width + 10 + height, actual.height, accuracy: 1,
                                    "The lazy rail must retain eager production-caption height: \(language), \(size)")
                 }

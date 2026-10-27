@@ -12,6 +12,11 @@ MEASURE = (ROOT / 'ios/Timbre/Songs/SongRailMeasurement.swift').read_text()
 
 
 class SongRailContractTests(unittest.TestCase):
+    def test_native_oracle_uses_explicit_cgfloat_limit(self):
+        oracle = (ROOT / "ios/TimbreAppTests/SongRailMeasurementTests.swift").read_text()
+        self.assertIn("CGSize(width: 2000, height: CGFloat.greatestFiniteMagnitude)", oracle)
+        self.assertNotIn("height: .greatestFiniteMagnitude", oracle)
+
     def test_only_song_shelves_switch_to_complete_lazy_collections(self):
         self.assertIn('SongShelfRail(items: rail, selection: next?.id', SONGS)
         self.assertIn('SongShelfRail(items: pick.songs, selection: nil', SONGS)
