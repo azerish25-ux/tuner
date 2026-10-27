@@ -41,16 +41,16 @@
     "reviewer": "Independent AI semantic review (2026-10-26)",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; source available, not blinded",
     "identified_corrections": 953,
-    "applied_corrections": 953,
+    "applied_corrections": 956,
     "application_method": "Original94 and2 Slovenian morphology corrections preserved;157 independently reviewed exact-source/old/new song-title alignment corrections added, with parent-hash lineage and unchanged full-payload review retained. Additional 56 independently source-aware reviewed Game Center achievement-description register/terminology deltas applied with exact source/current-old guards; original 253 ledger records and full-review inheritance retained. Additional100 exact description/productionURL field changes independently reviewed across all50 locales, preserving original309 ledger objects/raw prefix and bounded old/new source lineage. Additional350 independently reviewed exact-old/new distinct-song-count corrections (300quantity-only strings and50floor metadata) preserve all prior ledger objects and full-review inheritance. Additional 194 exact-old/new owner-approved multi-instrument descriptor and keyword-continuity deltas independently reviewed across all50locales; five idiom/terminology/duplication refinements applied before payload hash verification. Historical ledger objects and unchanged full-review inheritance preserved.",
     "artifacts": {
       "evidence": {
         "file": "tools/l10n/store-review-independent.json",
-        "sha256": "b492124f3849e283843a864a8b4738bdb828b3d2262071fcb1b5ee94e96afe9f"
+        "sha256": "7a1020fa340c3452f3a4fc529ca93c12cec39e3b90cc105d11a79438bab646ef"
       },
       "corrections": {
         "file": "tools/l10n/store-corrections.json",
-        "sha256": "3d6bebcd1f89c4e66a48943646bcc7a350f3da23678e18920ec86d4aa0b43445"
+        "sha256": "540f922319beda35e33218a4a87e87550dac53f2142d0bb3dc4d05e94849d914"
       }
     },
     "policy_recommendation_sha256": "d69ee544571082357801fd0d03e2ab1514a908718f0345d4a55474fe331cff17",
@@ -122,6 +122,23 @@
         "appended_corrections": 194,
         "account_changes": "none",
         "release_flags_changed": false
+      },
+      {
+        "reviewer": "dot independent screenshot terminology review",
+        "method": "independent_source_aware_ai",
+        "scope": "Three screenshot-caption terminology deltas only; unchanged material inherits earlier evidence.",
+        "evidence": "docs/l10n/reviews/arabic-screenshot-terminology/independent-review.json",
+        "evidence_sha256": "0cb2e6662bf845bd319804975263725086aa61a66d1e259f0fc4c83419cc8957",
+        "parent_source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+        "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+        "parent_content_sha256": "4acd37c5f8461df5e23435926db8113917dfbcdb492baa3039243137a86f15b2",
+        "reviewed_content_sha256": "5799b5c388c864105cd6ee4f5bc35a2ce9de66b26e851cd2ca661fa99dc86f1b",
+        "decision": "approved_exact_deltas",
+        "appended_field_corrections": 3,
+        "previous_ledger_entries": 953,
+        "appended_corrections": 3,
+        "release_flags_changed": false,
+        "account_changes": "none"
       }
     ]
   },
@@ -1462,10 +1479,10 @@
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "4acd37c5f8461df5e23435926db8113917dfbcdb492baa3039243137a86f15b2",
+      "reviewed_content_sha256": "5799b5c388c864105cd6ee4f5bc35a2ce9de66b26e851cd2ca661fa99dc86f1b",
       "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
-      "identified_corrections": 21,
-      "resolved_corrections": 21,
+      "identified_corrections": 24,
+      "resolved_corrections": 24,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -1544,6 +1561,19 @@
           "reviewed_content_sha256": "4acd37c5f8461df5e23435926db8113917dfbcdb492baa3039243137a86f15b2",
           "decision": "approved_exact_deltas_with_recorded_refinements",
           "appended_field_corrections": 4
+        },
+        {
+          "reviewer": "dot independent screenshot terminology review",
+          "method": "independent_source_aware_ai",
+          "scope": "Three screenshot-caption terminology deltas only; unchanged material inherits earlier evidence.",
+          "evidence": "docs/l10n/reviews/arabic-screenshot-terminology/independent-review.json",
+          "evidence_sha256": "0cb2e6662bf845bd319804975263725086aa61a66d1e259f0fc4c83419cc8957",
+          "parent_source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "4acd37c5f8461df5e23435926db8113917dfbcdb492baa3039243137a86f15b2",
+          "reviewed_content_sha256": "5799b5c388c864105cd6ee4f5bc35a2ce9de66b26e851cd2ca661fa99dc86f1b",
+          "decision": "approved_exact_deltas",
+          "appended_field_corrections": 3
         }
       ],
       "current_review_provenance": {

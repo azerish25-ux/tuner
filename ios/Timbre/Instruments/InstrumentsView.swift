@@ -45,7 +45,7 @@ struct InstrumentsView: View {
                         let items = photos.filter { store.catalog.instrument(id: $0.instrumentId)?.familyId == group.id }
                             .sorted { rank($0) < rank($1) }
                         if !items.isEmpty {
-                            section(Text(verbatim: group.name.localized), count: items.count)
+                            section(Text(verbatim: group.name.localized), count: items.count, titleIdentifier: "instruments.section." + group.id)
                             LazyVGrid(columns: [GridItem(.adaptive(minimum: 156), spacing: 12)], spacing: 12) {
                                 ForEach(items, id: \.asset) { card($0) }
                             }
@@ -115,8 +115,8 @@ struct InstrumentsView: View {
     }
 
     /// A family's section between the grids: its name, and how many instruments it holds on the baseline.
-    private func section(_ title: Text, count: Int?) -> some View {
-        SectionHeader(title) {
+    private func section(_ title: Text, count: Int?, titleIdentifier: String? = nil) -> some View {
+        SectionHeader(title, titleIdentifier: titleIdentifier) {
             if let count { Text("\(count)").font(Typeface.number(.footnote)).foregroundStyle(Palette.inkFaint) }
         }
         .padding(.top, 6)

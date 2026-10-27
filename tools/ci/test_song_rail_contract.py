@@ -64,6 +64,18 @@ class SongRailContractTests(unittest.TestCase):
         self.assertIn('static let capacity = 24', MEASURE)
         self.assertIn('entries.removeFirst()', MEASURE)
 
+    def test_host_reuse_preserves_per_caption_identity_and_full_coverage(self):
+        for token in ['if count > 0', 'host.rootView = Self.root(caption(index), key: key, identity: index)',
+                      '.id(identity)', 'measurementCount += 1', 'height = autoreleasepool {']:
+            self.assertIn(token, MEASURE)
+        test = (ROOT / 'ios/TimbreAppTests/SongRailMeasurementTests.swift').read_text()
+        for token in ['testReusedHostingRootResetsStateAndMeasuresEveryCaptionOnce',
+                      'testEmptyShelfDoesNotCreateAHostOrEvaluateContent', '@State private var height',
+                      'testBatchDoesNotRetainCaptionTreesInTheHeightCache', 'weak var token:',
+                      'XCTAssertEqual(cache.hostCount, shelves.count)',
+                      'XCTAssertEqual(cache.measurementCount, captionCount)']:
+            self.assertIn(token, test)
+
     def test_cache_signature_covers_geometry_and_environment(self):
         height = SONGS.split('private func railHeight', 1)[1].split('/// `shelf` names', 1)[0]
         for dependency in ['song.lesson.title.localized', 'standing.access', 'standing.gate?.title.localized',
@@ -155,6 +167,50 @@ class SongRailContractTests(unittest.TestCase):
         self.assertIn('self.productionCaption(song, catalog: catalog, store: store).frame(width: 148)', eager)
         self.assertNotRegex(eager, r'(?m)^\s+productionCaption\(')
 
+    def test_caption_chords_wrap_and_versions_keep_separate_full_target(self):
+        layout = (ROOT / 'ios/Timbre/Songs/SongCaptionLayout.swift').read_text()
+        for token in ['ViewThatFits(in: .horizontal)', '.fixedSize(horizontal: true, vertical: false)',
+                      'VStack(alignment: .leading, spacing: 6)', 'minWidth: Metrics.minTarget, minHeight: Metrics.minTarget',
+                      'direction == .rightToLeft', 'width - x - size.width']:
+            self.assertIn(token, layout)
+        caption = SONGS.split('struct TileCaption: View {', 1)[1].split('struct TileMetadata:', 1)[0]
+        for token in ['SongCaptionHeader(hasVersions: !others.isEmpty)', 'wrapsAll: true', '.versions.placeholder']:
+            self.assertIn(token, caption)
+        self.assertNotIn('minimumScaleFactor', caption)
+        self.assertIn('.padding(.top, tileWidth + Self.captionGap)', SONGS)
+        self.assertIn('ForEach(chords, id:', SONGS)
+        test = (ROOT / 'ios/TimbreAppTests/SongCaptionLayoutTests.swift').read_text()
+        for token in ['import TimbreCore', '["en", "de", "ar"]', '[CGFloat(148), CGFloat(176)]',
+                      'XCTAssertEqual(pixels, expected', 'rect.intersects(versionRect)',
+                      'testEveryProductionChordFitsWithoutReducingGlyphSize', 'store.curriculum.courses.flatMap',
+                      'XCTAssertEqual(right[index].minX, width - left[index].maxX)']:
+            self.assertIn(token, test)
+
+    def test_chord_oracle_escaping_builder_uses_explicit_self(self):
+        source = (ROOT / 'ios/TimbreAppTests/SongCaptionLayoutTests.swift').read_text()
+        closure = source.split(r'ForEach(chords.indices, id: \.self) { index in', 1)[1].split('Color.orange', 1)[0]
+        self.assertIn('self.oracleChip(self.chords[index].name)', closure)
+        self.assertNotRegex(closure, r'(?m)^\s+oracleChip\(')
+
+    def test_metadata_adapts_without_truncating_or_shrinking_values(self):
+        metadata = SONGS.split('struct TileMetadata: View {', 1)[1].split('/// The part of a title', 1)[0]
+        for token in ['ViewThatFits(in: .horizontal)', 'HStack(spacing: 7) { fields }',
+                      '.fixedSize(horizontal: true, vertical: false)',
+                      'VStack(alignment: .leading, spacing: 7) { fields }',
+                      '.fixedSize(horizontal: false, vertical: true)', 'if stars > 0', 'else if !calm',
+                      'identity + ".duration"', 'identity + ".xp"']:
+            self.assertIn(token, metadata)
+        for forbidden in ['lineLimit', 'minimumScaleFactor', '.hidden()', '.accessibilityHidden']:
+            self.assertNotIn(forbidden, metadata)
+        caption = SONGS.split('struct TileCaption: View {', 1)[1].split('struct TileMetadata:', 1)[0]
+        self.assertIn('TileMetadata(difficulty:', caption)
+        native = (ROOT / 'ios/TimbreAppTests/SongCaptionMetadataTests.swift').read_text()
+        for token in ['import TimbreCore', '["en", "de", "ar"]', '[CGFloat(148), CGFloat(176)]', '.accessibility5',
+                      'XCTAssertEqual(pixels, oracle', 'XCTAssertNotEqual(pixels, truncated',
+                      'let old = HStack(spacing: 7) { oracleFields }.lineLimit(1)',
+                      'Text(verbatim: "2:29")', 'Text("+\\(30) XP")', 'XCTAttachment(image: image)']:
+            self.assertIn(token, native)
+
     def test_full_catalogue_oracle_has_no_sample_or_timing_exemption(self):
         test = (ROOT / 'ios/TimbreAppTests/SongRailMeasurementTests.swift').read_text()
         full = test.split('func testFullProductionCatalogueCaptionSizingAcrossDynamicType()', 1)[1]
@@ -162,7 +218,7 @@ class SongRailContractTests(unittest.TestCase):
         for token in ['DemoData.seed(store)', 'filter: SongsView.all', 'store.curriculum.courses.flatMap',
                       'Set(layout.rails.flatMap', 'for shelf in shelves', 'DynamicTypeSize.large, .accessibility5',
                       'catalog.versions(of: song)', 'catalog.standing(song)', 'ForEach(shelf.songs)',
-                      'XCTAssertEqual(height, eagerHeight', 'XCTAssertEqual(cache.hostCount, captionCount)',
+                      'XCTAssertEqual(height, eagerHeight', 'XCTAssertEqual(cache.measurementCount, captionCount)',
                       'eagerOracleSeconds=', 'sizingSeconds=', 'song-rail-full-production-catalogue-sizing']:
             self.assertIn(token, full)
         for token in ['.prefix(', 'XCTSkip', 'XCTAssertLessThan(sizingSeconds', 'measure(metrics:']:

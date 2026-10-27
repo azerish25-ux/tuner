@@ -1082,9 +1082,9 @@ struct SongsView: View {
         }
         .overlay(alignment: .topTrailing) {
             if !others.isEmpty {
-                // Over the room the caption keeps for it (`tileCaption`): its 44-point tap area centred on that row.
+                // The caption reserves this exact 44-point target at its top trailing edge.
                 versionsMenu(song, versions: versions, courses: others, source: source)
-                    .padding(.top, tileWidth + Self.captionGap - (Metrics.minTarget - VersionBadges.height) / 2)
+                    .padding(.top, tileWidth + Self.captionGap)
             }
         }
         .matchedTransitionSource(id: source, in: zoom)
@@ -1193,36 +1193,60 @@ struct SongsView: View {
 
         var body: some View {
             VStack(alignment: .leading, spacing: 7) {
-                HStack(alignment: .top, spacing: 6) {
+                SongCaptionHeader(hasVersions: !others.isEmpty) {
                     Group {
                         if standing.access == .locked {
                             LockReason(access: standing.access, gate: standing.gate)
                         } else if let subtitle = SongsView.subtitle(song.lesson.title.localized) {
                             Text(verbatim: subtitle).font(Typeface.label(.footnote)).foregroundStyle(Palette.ink)
-                                .lineLimit(1).minimumScaleFactor(0.8)
+                                .fixedSize(horizontal: false, vertical: true)
                         } else {
-                            ChordChips(chords: sheet.chords, key: sheet.keyName, tint: accent, identity: identity + ".chords")
+                            ChordChips(chords: sheet.chords, key: sheet.keyName, tint: accent,
+                                       identity: identity + ".chords", wrapsAll: true)
                         }
                     }
-                    // At least a plate's height, so captions line up; a two-line plate or larger text grows it.
-                    .frame(maxWidth: .infinity, minHeight: 24, alignment: .leading)
-                    if !others.isEmpty {
-                        // The versions menu's own pill, held in place here so the chords make room for it.
-                        VersionBadges(courses: others, limit: versionLimit, identity: identity + ".versions.placeholder").hidden()
-                    }
+                    .frame(minHeight: 24, alignment: .leading)
+                } versions: {
+                    VersionBadges(courses: others, limit: versionLimit,
+                                  identity: identity + ".versions.placeholder").hidden()
                 }
-                HStack(spacing: 7) {
-                    DifficultyDots(level: sheet.difficulty(unit: song.unitIndex, of: song.course.units.count), tint: accent)
-                    Text(verbatim: sheet.length).font(Typeface.number(.caption)).foregroundStyle(Palette.inkSoft)
-                        .accessibilityIdentifier(identity + ".duration")
-                    if stars > 0 {
-                        StarRow(stars: stars, size: 10)
-                    } else if !calm {
-                        Text("+\(song.lesson.xp) XP").font(.footnote).foregroundStyle(Palette.inkSoft)
-                            .accessibilityIdentifier(identity + ".xp")
-                    }
-                }
-                .lineLimit(1)
+                TileMetadata(difficulty: sheet.difficulty(unit: song.unitIndex, of: song.course.units.count),
+                             length: sheet.length, xp: song.lesson.xp, stars: stars, calm: calm, accent: accent, identity: identity)
+            }
+        }
+    }
+
+    /// Full-size metadata stays on one row when it fits; otherwise every value gets its natural height.
+    /// In particular, large Dynamic Type must not turn a duration and reward into two ellipses.
+    struct TileMetadata: View {
+        let difficulty: Int
+        let length: String
+        let xp: Int
+        let stars: Int
+        let calm: Bool
+        let accent: Color
+        let identity: String
+
+        var body: some View {
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 7) { fields }
+                    .fixedSize(horizontal: true, vertical: false)
+                VStack(alignment: .leading, spacing: 7) { fields }
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+
+        @ViewBuilder private var fields: some View {
+            DifficultyDots(level: difficulty, tint: accent)
+            Text(verbatim: length).font(Typeface.number(.caption)).foregroundStyle(Palette.inkSoft)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityIdentifier(identity + ".duration")
+            if stars > 0 {
+                StarRow(stars: stars, size: 10)
+            } else if !calm {
+                Text("+\(xp) XP").font(.footnote).foregroundStyle(Palette.inkSoft)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityIdentifier(identity + ".xp")
             }
         }
     }
@@ -1859,19 +1883,25 @@ private struct LockReason: View {
     }
 }
 
-/// A song's chords as small chips ("G" "D" "Em" "C"), as many as fit, "+2" for the rest; its key for a song
-/// without chords. VoiceOver reads them with the tile.
-private struct ChordChips: View {
+/// A song's chords as small chips ("G" "D" "Em" "C"); tile captions wrap every chord, while the wider
+/// hero retains its compact summary. A melody uses its key. VoiceOver reads them with the tile.
+struct ChordChips: View {
     let chords: [ChordSpec]
     let key: String?
     let tint: Color
     let identity: String
     var limit = 4
+    var wrapsAll = false
+    @Environment(\.layoutDirection) private var direction
 
     var body: some View {
         Group {
             if chords.isEmpty {
                 if let key { keyLabel(key) }
+            } else if wrapsAll {
+                SongCaptionFlow(direction: direction) {
+                    ForEach(chords, id: \.symbol) { chord in chip(chord.name, symbol: chord.symbol) }
+                }
             } else {
                 ViewThatFits(in: .horizontal) {
                     row(min(limit, chords.count))
@@ -1899,7 +1929,7 @@ private struct ChordChips: View {
             .padding(.horizontal, 7).frame(minHeight: 22)
             .background(Capsule().fill(tint.opacity(0.16)))
             .overlay(Capsule().strokeBorder(tint.opacity(0.4), lineWidth: 1))
-            .fixedSize()
+            .fixedSize(horizontal: !wrapsAll, vertical: true)
     }
 
     private func keyLabel(_ key: String) -> some View {
@@ -1907,7 +1937,8 @@ private struct ChordChips: View {
             Image(systemName: "music.note").font(.system(size: 10, weight: .bold)).foregroundStyle(tint)
             Text(verbatim: key).font(Typeface.label(.caption)).foregroundStyle(Palette.inkSoft)
         }
-        .lineLimit(1)
+        .lineLimit(wrapsAll ? nil : 1)
+        .fixedSize(horizontal: false, vertical: true)
     }
 }
 
@@ -1930,8 +1961,8 @@ private struct DifficultyDots: View {
 }
 
 /// A tune's other versions under its sleeve, beside its chords: their courses' art overlapping on a pill as quiet as
-/// a lock plate, "+2" past `limit`. The versions menu wraps it in a 44-point tap area; the caption holds its room
-/// with a hidden copy, so both are exactly this size.
+/// a lock plate, "+2" past `limit`. Both the real versions menu and the caption's hidden reservation wrap
+/// this pill in the same minimum 44-point target, so chords cannot occupy its tap area.
 private struct VersionBadges: View {
     /// The pill's height: a chord chip's row.
     static let height: CGFloat = 24

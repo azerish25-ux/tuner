@@ -89,11 +89,13 @@ struct HeaderControls: View {
 /// rotor, with an optional trailing control or count on its baseline (under it at the accessibility sizes).
 struct SectionHeader<Trailing: View>: View {
     private let title: Text
+    private let titleIdentifier: String?
     private let trailing: Trailing
     @Environment(\.dynamicTypeSize) private var typeSize
 
-    init(_ title: Text, @ViewBuilder trailing: () -> Trailing) {
+    init(_ title: Text, titleIdentifier: String? = nil, @ViewBuilder trailing: () -> Trailing) {
         self.title = title
+        self.titleIdentifier = titleIdentifier
         self.trailing = trailing()
     }
 
@@ -103,13 +105,17 @@ struct SectionHeader<Trailing: View>: View {
 
     @Environment(\.legibilityWeight) private var legibility
 
+    @ViewBuilder private var identifiedTitle: some View {
+        if let titleIdentifier { title.accessibilityIdentifier(titleIdentifier) } else { title }
+    }
+
     var body: some View {
         let _ = legibility
         let layout = typeSize.isAccessibilitySize
             ? AnyLayout(VStackLayout(alignment: .leading, spacing: 6))
             : AnyLayout(HStackLayout(alignment: .firstTextBaseline, spacing: 8))
         layout {
-            title.font(Typeface.sectionTitle).foregroundStyle(Palette.ink)
+            identifiedTitle.font(Typeface.sectionTitle).foregroundStyle(Palette.ink)
                 .fixedSize(horizontal: false, vertical: true)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .accessibilityAddTraits(.isHeader)

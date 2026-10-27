@@ -33,7 +33,8 @@ final class SongRailMeasurementTests: XCTestCase {
             }
             let maximum = examples.map { SongRailMeasurement.measure(caption($0), key: signature).height }.max() ?? 0
             XCTAssertEqual(measured, maximum, accuracy: 1 / signature.scale)
-            XCTAssertEqual(cache.hostCount, examples.count)
+            XCTAssertEqual(cache.hostCount, 1)
+            XCTAssertEqual(cache.measurementCount, examples.count)
             print("Caption sizing native observation: \(size), \(cache.lastDuration)s, \(cache.hostCount) hosts")
         }
     }
@@ -77,12 +78,75 @@ final class SongRailMeasurementTests: XCTestCase {
         var appeared = false
         var startedTask = false
         let cache = SongRailMeasurement()
-        _ = cache.maximum(key: key(), count: 1) { _ in
+        _ = cache.maximum(key: key(), count: 3) { _ in
             caption("Caption").onAppear { appeared = true }.task { startedTask = true }
         }
         await Task.yield()
         XCTAssertFalse(appeared, "Measurement must not run appearance side effects")
         XCTAssertFalse(startedTask, "Measurement must not start asynchronous work")
+    }
+
+    private struct StatefulSizingCaption: View {
+        @State private var height: CGFloat
+        init(height: CGFloat) { _height = State(initialValue: height) }
+        var body: some View { Color.clear.frame(height: height) }
+    }
+
+    func testReusedHostingRootResetsStateAndMeasuresEveryCaptionOnce() {
+        for size in [DynamicTypeSize.large, .accessibility5] {
+            for width in [CGFloat(148), CGFloat(176)] {
+                var signature = key(size); signature.width = width
+                let cache = SongRailMeasurement()
+                let heights: [CGFloat] = [10, 75, 20, 110, 12]
+                var built: [Int] = []
+                let maximum = cache.maximum(key: signature, count: heights.count) { index in
+                    built.append(index)
+                    return StatefulSizingCaption(height: heights[index])
+                }
+                XCTAssertEqual(maximum, 110, accuracy: 1 / signature.scale)
+                XCTAssertEqual(built, Array(heights.indices))
+                XCTAssertEqual(cache.hostCount, 1)
+                XCTAssertEqual(cache.measurementCount, heights.count)
+            }
+        }
+    }
+
+    private final class SizingLifetimeToken { let id = UUID().uuidString }
+    private final class WeakSizingToken {
+        weak var token: SizingLifetimeToken?
+        init(_ token: SizingLifetimeToken) { self.token = token }
+    }
+    private struct LifetimeSizingCaption: View {
+        let token: SizingLifetimeToken
+        var body: some View { Text("Caption").accessibilityIdentifier(token.id) }
+    }
+
+    func testBatchDoesNotRetainCaptionTreesInTheHeightCache() async {
+        let cache = SongRailMeasurement()
+        var references: [WeakSizingToken] = []
+        autoreleasepool {
+            _ = cache.maximum(key: key(), count: 12) { _ in
+                let token = SizingLifetimeToken()
+                references.append(WeakSizingToken(token))
+                return LifetimeSizingCaption(token: token)
+            }
+        }
+        await Task.yield()
+        XCTAssertEqual(references.count, 12)
+        XCTAssertTrue(references.allSatisfy { $0.token == nil },
+                      "Only value-type signatures and heights may survive a sizing batch")
+        XCTAssertEqual(cache.entryCount, 1)
+    }
+
+    func testEmptyShelfDoesNotCreateAHostOrEvaluateContent() {
+        let cache = SongRailMeasurement()
+        let height = cache.maximum(key: key(), count: 0) { _ in
+            XCTFail("An empty shelf has no caption")
+            return Text("Unexpected")
+        }
+        XCTAssertEqual(height, 0)
+        XCTAssertEqual(cache.hostCount, 0)
+        XCTAssertEqual(cache.measurementCount, 0)
     }
 
     func testAccessibleTypeGrowsRatherThanCapsTheNaturalRowHeight() {
@@ -168,18 +232,21 @@ final class SongRailMeasurementTests: XCTestCase {
             let started = ProcessInfo.processInfo.systemUptime
             var sizingSeconds = 0.0
             var oracleSeconds = 0.0
+            var freshHostSeconds = 0.0
             var captionCount = 0
             for shelf in shelves {
                 let result = measureProductionShelf(shelf, size: size, cache: cache, catalog: catalog, store: store)
                 sizingSeconds += result.sizingSeconds
                 oracleSeconds += result.oracleSeconds
+                freshHostSeconds += result.freshHostSeconds
                 captionCount += shelf.songs.count
                 observations.append("type=\(size) shelf=\(shelf.id) captions=\(shelf.songs.count) "
-                    + "sizingSeconds=\(result.sizingSeconds) eagerOracleSeconds=\(result.oracleSeconds)")
+                    + "sizingSeconds=\(result.sizingSeconds) eagerOracleSeconds=\(result.oracleSeconds) freshHostSeconds=\(result.freshHostSeconds)")
             }
-            XCTAssertEqual(cache.hostCount, captionCount)
+            XCTAssertEqual(cache.hostCount, shelves.count)
+            XCTAssertEqual(cache.measurementCount, captionCount)
             observations.append("TOTAL type=\(size) shelves=\(shelves.count) uniqueSongs=\(expected.count) "
-                + "captions=\(captionCount) sizingSeconds=\(sizingSeconds) eagerOracleSeconds=\(oracleSeconds) "
+                + "captions=\(captionCount) hosts=\(cache.hostCount) measurements=\(cache.measurementCount) sizingSeconds=\(sizingSeconds) eagerOracleSeconds=\(oracleSeconds) freshHostSeconds=\(freshHostSeconds) "
                 + "wallSeconds=\(ProcessInfo.processInfo.systemUptime - started)")
         }
         let report = observations.joined(separator: "\n")
@@ -211,17 +278,19 @@ final class SongRailMeasurementTests: XCTestCase {
 
     private func measureProductionShelf(_ shelf: (id: String, songs: [SongsView.Song]), size: DynamicTypeSize,
                                         cache: SongRailMeasurement, catalog: SongsCatalog, store: AppStore)
-        -> (sizingSeconds: Double, oracleSeconds: Double) {
+        -> (sizingSeconds: Double, oracleSeconds: Double, freshHostSeconds: Double) {
         var signature = key(size, locale: "en")
         // This fixture freezes progress, language, width and versions for both calls; production's full
         // mutable signature remains independently checked by the source contract and invalidation tests.
         signature.content = [shelf.id] + shelf.songs.map(\.id)
         let hostsBefore = cache.hostCount
+        let measurementsBefore = cache.measurementCount
         let height = cache.maximum(key: signature, count: shelf.songs.count) { index in
             productionCaption(shelf.songs[index], catalog: catalog, store: store)
         }
         let sizingSeconds = cache.lastDuration
-        XCTAssertEqual(cache.hostCount - hostsBefore, shelf.songs.count)
+        XCTAssertEqual(cache.hostCount - hostsBefore, 1)
+        XCTAssertEqual(cache.measurementCount - measurementsBefore, shelf.songs.count)
         XCTAssertTrue(height.isFinite)
         XCTAssertGreaterThan(height, 0)
         let warmHeight = cache.maximum(key: signature, count: shelf.songs.count) { _ in
@@ -229,7 +298,8 @@ final class SongRailMeasurementTests: XCTestCase {
             return Text("unexpected")
         }
         XCTAssertEqual(warmHeight, height)
-        XCTAssertEqual(cache.hostCount - hostsBefore, shelf.songs.count)
+        XCTAssertEqual(cache.hostCount - hostsBefore, 1)
+        XCTAssertEqual(cache.measurementCount - measurementsBefore, shelf.songs.count)
         let oracleStarted = ProcessInfo.processInfo.systemUptime
         let eagerHeight = autoreleasepool {
             let eager = HStack(alignment: .top, spacing: 14) {
@@ -244,7 +314,20 @@ final class SongRailMeasurementTests: XCTestCase {
             return host.sizeThatFits(in: CGSize(width: width, height: CGFloat.greatestFiniteMagnitude)).height
         }
         XCTAssertEqual(height, eagerHeight, accuracy: 1, "Full production shelf: \(shelf.id), \(size)")
-        return (sizingSeconds, ProcessInfo.processInfo.systemUptime - oracleStarted)
+        let oracleSeconds = ProcessInfo.processInfo.systemUptime - oracleStarted
+        // Compare the former per-caption host allocation using this SAME production layout and environment.
+        // Record timing only: no machine-dependent performance threshold can waive a correctness failure.
+        let freshStarted = ProcessInfo.processInfo.systemUptime
+        var freshMaximum: CGFloat = 0
+        for song in shelf.songs {
+            let measured = autoreleasepool {
+                SongRailMeasurement.measure(self.productionCaption(song, catalog: catalog, store: store), key: signature)
+            }
+            freshMaximum = max(freshMaximum, measured.height)
+        }
+        XCTAssertEqual(height, freshMaximum, accuracy: 1 / signature.scale,
+                       "Reusing a host must equal independently created hosts for every production shelf")
+        return (sizingSeconds, oracleSeconds, ProcessInfo.processInfo.systemUptime - freshStarted)
     }
 
     func testInitialMiddleSelectionIsRevealedWithoutBuildingEveryCard() async throws {

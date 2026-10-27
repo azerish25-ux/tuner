@@ -583,11 +583,16 @@ private struct RowLabel: View {
     let icon: Glyph
     let title: Text
     var titleColor: Color = Palette.ink
+    var titleIdentifier: String? = nil
+
+    @ViewBuilder private var identifiedTitle: some View {
+        if let titleIdentifier { title.accessibilityIdentifier(titleIdentifier) } else { title }
+    }
 
     var body: some View {
         HStack(spacing: 12) {
             icon
-            title.font(.body).foregroundStyle(titleColor).multilineTextAlignment(.leading)
+            identifiedTitle.font(.body).foregroundStyle(titleColor).multilineTextAlignment(.leading)
         }
     }
 }
@@ -651,7 +656,7 @@ private struct MenuRow<Selection: Hashable, Options: View>: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            RowLabel(icon: icon, title: Text(title))
+            RowLabel(icon: icon, title: Text(title), titleIdentifier: id + ".title")
             Spacer(minLength: 8)
             Picker(title, selection: $selection) { options }
                 .labelsHidden()

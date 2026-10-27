@@ -323,6 +323,8 @@ final class AccessibilityAuditUITests: XCTestCase {
         let previousOpaque = findings.opaqueCallbacks
         let request = findings.lines.count
         var incomplete = false
+        // Query outside the audit callback. Dynamic Type changes text, not the physical app viewport.
+        let viewport = app.frame
         defer {
             // Hierarchy queries are deliberately outside the issue handler: recursively querying the app
             // while XCTest is auditing can interfere with its traversal. Callback screenshots stay in place.
@@ -347,7 +349,23 @@ final class AccessibilityAuditUITests: XCTestCase {
                 if snapshot == nil { findings.opaqueCallbacks += 1 }
                 let id = snapshot?.identifier ?? ""
                 let label = snapshot?.label ?? ""
-                let reason = Self.knownReason(screen: screen, kind: kind, id: id, label: label)
+                var reason = Self.knownReason(screen: screen, kind: kind, id: id, label: label)
+                var callbackScreenshot: XCUIScreenshot?
+                if reason == nil, issue.auditType == .contrast, snapshot?.elementType == .staticText,
+                   (screen == "settings" && id == "settings.notation.title" && label == "Note names")
+                    || (screen == "paywall" && id == "paywall.plan.yearly.saving" && label == "SAVE 58%") {
+                    let capture = XCUIScreen.main.screenshot()
+                    callbackScreenshot = capture
+                    if let frame = snapshot?.frame,
+                       let proof = AuditContrastPixelProof.verify(screen: screen, identifier: id, label: label,
+                                                                 frame: frame, viewport: viewport, image: capture.image) {
+                        reason = proof.summary
+                        let evidence = XCTAttachment(screenshot: capture)
+                        evidence.name = "ax-pixel-proof-\(screen)-\(findings.callbacks)"
+                        evidence.lifetime = .keepAlways
+                        self.add(evidence)
+                    }
+                }
                 let fails = enforced.contains(issue.auditType) && reason == nil
                 let tag = fails ? ", enforced" : (reason.map { ", known: \($0)" } ?? "")
                 // Unidentified callbacks are separate evidence: the same compact description may describe
@@ -363,7 +381,7 @@ final class AccessibilityAuditUITests: XCTestCase {
                     findings.failing.append(line)
                     // The audit can scroll or resize the screen after the initial still. Preserve the state
                     // beside this finding so its reported bounds can be compared with the actual rendered pixels.
-                    let rendered = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+                    let rendered = XCTAttachment(screenshot: callbackScreenshot ?? XCUIScreen.main.screenshot())
                     rendered.name = "ax-failure-\(screen)-\(findings.failing.count)"
                     rendered.lifetime = .keepAlways
                     self.add(rendered)

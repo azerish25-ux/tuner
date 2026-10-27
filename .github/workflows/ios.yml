@@ -96,9 +96,13 @@ jobs:
           python3 tools/ci/test_apple_delivery_preflight.py
           python3 tools/ci/test_apple_archive_scope.py
           python3 tools/ci/test_accessibility_audit_contract.py
+          python3 tools/ci/test_audit_pixel_proof_contract.py
           python3 tools/ci/test_accessibility_identity_contract.py
           python3 tools/ci/test_lesson_accessibility_layout_contract.py
           python3 tools/ci/test_accessibility_partitions.py
+          python3 tools/ci/test_accessibility_log_checkpoints.py
+          python3 tools/ci/test_demo_course_seed.py
+          python3 tools/ci/test_tablet_heading_contract.py
           python3 tools/ci/test_capture_check.py
           python3 tools/ci/test_result_polish_contract.py
           python3 tools/ci/test_build_checkpoint_contract.py
@@ -193,6 +197,8 @@ jobs:
           xcodebuild test-without-building -project ios/Timbre.xcodeproj -scheme Timbre -parallel-testing-enabled NO \
             -only-testing:TimbreAppTests -only-testing:TimbreUITests/SmokeUITests \
             -only-testing:TimbreUITests/CaptureLockEvidenceTests \
+            -only-testing:TimbreUITests/AuditContrastPixelProofTests \
+            -only-testing:TimbreUITests/TabletShelfAlignmentTests \
             -only-testing:TimbreUITests/TimbreUITests/testInstrumentFamilyChipMustClearBothFades \
             -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd \
             -resultBundlePath ios/build/Gate.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/test.log
@@ -329,6 +335,18 @@ jobs:
           for log in ci-out/localization/test*.log; do
             [ ! -f "$log" ] || python3 tools/ci/summarize-log.py "$log" "${log%.log}.summary.txt"
           done
+      # Small diagnostics stay inspectable without downloading the full native result bundle.
+      - name: Upload compact localization audit logs
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        if: always()
+        with:
+          name: accessibility-logs-localization
+          path: |
+            ci-out/localization/test*.log
+            ci-out/localization/*.summary.txt
+            ci-out/localization/*.json
+          if-no-files-found: warn
+          retention-days: 7
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()
         with:
@@ -353,6 +371,18 @@ jobs:
           for log in ci-out/screens/test*.log; do
             [ ! -f "$log" ] || python3 tools/ci/summarize-log.py "$log" "${log%.log}.summary.txt"
           done
+      # Small diagnostics stay inspectable without downloading the full native result bundle.
+      - name: Upload compact screens audit logs
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        if: always()
+        with:
+          name: accessibility-logs-screens
+          path: |
+            ci-out/screens/test*.log
+            ci-out/screens/*.summary.txt
+            ci-out/screens/*.json
+          if-no-files-found: warn
+          retention-days: 7
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()
         with:
@@ -377,6 +407,18 @@ jobs:
           for log in ci-out/tabs/test*.log; do
             [ ! -f "$log" ] || python3 tools/ci/summarize-log.py "$log" "${log%.log}.summary.txt"
           done
+      # Small diagnostics stay inspectable without downloading the full native result bundle.
+      - name: Upload compact tabs audit logs
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        if: always()
+        with:
+          name: accessibility-logs-tabs
+          path: |
+            ci-out/tabs/test*.log
+            ci-out/tabs/*.summary.txt
+            ci-out/tabs/*.json
+          if-no-files-found: warn
+          retention-days: 7
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()
         with:

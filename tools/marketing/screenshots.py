@@ -791,8 +791,10 @@ def _light(layout, accent, shot, focus, title, line, size):
 
 
 def _offset(layout, accent, shot, focus, title, line, size):
-    """The caption set to one side, the screen shifted the other way, bleeding off that edge and the bottom."""
+    """Offset the screen without cutting native labels at either horizontal edge."""
     left = layout == "offset-left"
+    if art.text_layout()["direction"] == "rtl":
+        left = not left  # Reflect placement, never source pixels or glyphs.
     frame = Frame(size, accent, glow=(0.75 if left else 0.25, 0.12))
     m = frame.px(96)
     foot = frame.caption(title, line, frame.px(160), m, frame.w - m - frame.px(40), align="right" if left else "left")
@@ -802,9 +804,11 @@ def _offset(layout, accent, shot, focus, title, line, size):
     visible = (frame.h - top + frame.px(80)) / scale
     y0 = focus.get("y0", 0.0)
     screen = _scaled(shot, scale, (0, y0 * shot.height, shot.width, min(shot.height, y0 * shot.height + visible)))
-    # Left-aligned screens (a title, a column of cards) lose nothing on the right; keep their left edge on the frame.
-    x = frame.px(36) if left else frame.w - width + frame.px(70)
-    corners = (True, True, False, False) if left else (True, False, False, False)
+    # Even trailing edges can contain meaningful controls or right-aligned text.
+    # Retain both at the same native scale; only the intentional bottom bleed remains.
+    inset = frame.px(36)
+    x = inset if left else frame.w - screen.width - inset
+    corners = (True, True, False, False)
     frame.card(screen, x, top, _screen_radius(width), corners=corners)
     return frame
 

@@ -52,7 +52,7 @@ class AccessibilityIdentityContractTests(unittest.TestCase):
 
     def test_hidden_chords_and_placeholder_stay_hidden(self):
         songs = source('Songs/SongsView.swift')
-        chords = songs.split('private struct ChordChips:', 1)[1].split('private struct DifficultyDots:', 1)[0]
+        chords = songs.split('struct ChordChips:', 1)[1].split('private struct DifficultyDots:', 1)[0]
         self.assertIn('.accessibilityHidden(true)', chords)
         self.assertIn('identity: identity + ".versions.placeholder").hidden()', songs)
         self.assertNotIn('.accessibilityHidden(false)', chords)
