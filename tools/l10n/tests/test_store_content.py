@@ -118,8 +118,10 @@ class StoreContentTests(unittest.TestCase):
         for field in ('native', 'market_search', 'legal_back_translation'):
             self.assertTrue(any(f'release: {field} not verified' in e for e in human_errors))
 
-    def test_ai_policy_preserves_every_non_text_release_gate(self):
-        for field in store.RELEASE_EVIDENCE:
+    def test_ai_policy_preserves_every_applicable_non_text_release_gate(self):
+        dispositions, errors = store.release_applicability(self.source)
+        self.assertEqual(errors, [])
+        for field in (key for key, status in dispositions.items() if status == 'required'):
             with self.subTest(field=field):
                 d, registry = self.release_fixture()
                 d['review'][field] = 'not_verified'

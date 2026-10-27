@@ -1,4 +1,19 @@
-# App Store readiness — development handoff
+# App Store readiness — active continuation
+
+Resumed 27 October 2026 at the owner's request, using the assistant's cloud computer and GitHub Actions.
+
+## Current checkpoint
+
+- Existing application branch: `codex/app-store-readiness-gates`, draft PR #3. The branch name does not identify a separate running coding agent. Main's required gate remains mandatory.
+- Native [handoff run 40463664971](https://github.com/azerish25-ux/tuner/actions/runs/40463664971), source `50e2ce8`: core, app and Release passed; accessibility still running at this checkpoint. Do not extrapolate these results to newer source.
+- Local baseline: 193 localization tests, 50 marketing tests, 25 hygiene tests, four cover-contrast tests, strict localization/resource checks and all 50 listing drafts passed. After applicability regressions, the localization suite passed 204 tests.
+- Accessibility diagnostic changes retain all seven kinds and every existing failure rule, replay top-level screens in a fresh process for each audit attempt, and distinguish missing elements from thrown snapshots. Source-contract checks passed; native execution is pending.
+- Release preflight now requires exact current-main source, a successful required native gate and release evidence before signing. Signed-archive identity/feature-scope inspection is separate from fixture tests and must execute on a real signed archive before upload.
+- Submission scope: polished localized screenshots, no optional preview videos initially; Game Center remains disabled. Historical failed preview evidence and the unapplied preparation patch are preserved.
+- Physical-device QA: explicitly owner-waived and unverified, with limitations recorded in [the applicability policy](RELEASE-APPLICABILITY.md). This is not hardware certification or Apple approval.
+- All listing `release_ready` flags remain false. Remaining engineering work includes accessibility dispositions, complete native layout/tour/localization QA and final phone/tablet media. Owner account, agreements, products, signing secrets and delivery approval remain separate gates.
+
+## Historical handoff snapshot
 
 Updated 27 October 2026 when the owner requested development wind-down. The authoritative handoff is now the [repository README](../../../README.md#developer-handoff--27-october-2026): completed work, exact native results, unresolved issues, portable files and resume commands.
 

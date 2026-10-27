@@ -25,13 +25,9 @@ on:
         required: false
         default: false
         type: boolean
-      ship_min_coverage:
-        description: Ship only the languages with at least this percent of the interface translated (tools/l10n/shipping.py); empty ships the committed CFBundleLocalizations
-        required: false
-        default: ''
-        type: string
 permissions:
   contents: read
+  actions: read
 concurrency:
   group: apple-delivery
   cancel-in-progress: false
@@ -54,34 +50,24 @@ jobs:
       TIMBRE_REMOTE_CONFIG_URL: ${{ vars.TIMBRE_REMOTE_CONFIG_URL }}
       MARKETING_VERSION: ${{ inputs.marketing_version }}
       BUILD_NUMBER: ${{ inputs.build_number }}
-      SHIP_MIN_COVERAGE: ${{ inputs.ship_min_coverage }}
       # "internal" for a build that skipped the translation gate: exported for internal TestFlight testing only.
       BUILD_CHANNEL: ${{ inputs.internal_testflight_untranslated && 'internal' || '' }}
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
         with:
           persist-credentials: false
-      - name: Validate inputs and credentials without displaying values
+      - name: Prepare release evidence validator
+        run: |
+          python3 -m venv "$RUNNER_TEMP/apple-preflight-venv"
+          "$RUNNER_TEMP/apple-preflight-venv/bin/python" -m pip install -r tools/marketing/requirements.txt
+      - name: Verify exact main source, required native gate and release evidence before signing
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: '"$RUNNER_TEMP/apple-preflight-venv/bin/python" tools/ci/apple_delivery_preflight.py'
+      - name: Validate Apple SDK
         shell: bash
         run: |
           set -euo pipefail
-          python3 - <<'PY'
-          import os, re
-          required = ['APPLE_TEAM_ID', 'APP_STORE_CONNECT_KEY_ID', 'APP_STORE_CONNECT_ISSUER_ID', 'APP_STORE_CONNECT_API_KEY_P8']
-          missing = [name for name in required if not os.environ.get(name)]
-          if missing:
-              raise SystemExit('Missing apple-delivery environment secrets: ' + ', '.join(missing))
-          for name, pattern in [('APPLE_TEAM_ID', r'[A-Z0-9]{10}'),
-                                ('APP_STORE_CONNECT_KEY_ID', r'[A-Z0-9]{10}'),
-                                ('APP_STORE_CONNECT_ISSUER_ID', r'[A-Fa-f0-9-]{36}'),
-                                ('MARKETING_VERSION', r'[0-9]+\.[0-9]+(?:\.[0-9]+)?'),
-                                ('BUILD_NUMBER', r'[1-9][0-9]{0,8}'),
-                                ('SHIP_MIN_COVERAGE', r'(?:[0-9]{1,2}(?:\.[0-9]+)?|100)?')]:
-              if not re.fullmatch(pattern, os.environ[name]):
-                  raise SystemExit('Invalid format for ' + name)
-          if 'BEGIN PRIVATE KEY' not in os.environ['APP_STORE_CONNECT_API_KEY_P8']:
-              raise SystemExit('APP_STORE_CONNECT_API_KEY_P8 must be the raw .p8 contents including the BEGIN/END lines.')
-          PY
           xcodebuild -version
           SDK_VERSION=$(xcrun --sdk iphoneos --show-sdk-version)
           test "${SDK_VERSION%%.*}" -ge 26
@@ -109,14 +95,6 @@ jobs:
         if: ${{ !inputs.internal_testflight_untranslated }}
         run: python3 tools/l10n/shipping.py --xliff ci-out/en.xliff --require-complete
         # Selecting fewer shipped languages never waives the complete-interface requirement.
-      - name: Choose the shipped languages
-        # The owner's bar for this upload: CFBundleLocalizations and the build's .lproj folders keep only the locales
-        # with at least SHIP_MIN_COVERAGE percent of the interface translated (this checkout only; nothing is committed).
-        if: ${{ inputs.ship_min_coverage != '' }}
-        run: |
-          set -euo pipefail
-          python3 tools/l10n/shipping.py --xliff ci-out/en.xliff --min "$SHIP_MIN_COVERAGE" --critical --apply | tee shipping.txt
-          { echo "### Languages in this build"; echo; echo '```'; tail -3 shipping.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
       - name: Full lesson coverage in all 49 app languages
         if: ${{ !inputs.internal_testflight_untranslated }}
         run: python3 tools/l10n/lessons.py --strict
@@ -136,7 +114,7 @@ jobs:
             echo "The translation gate was skipped, so this build is exported with testFlightInternalTestingOnly: App Store Connect"
             echo "offers it to internal testers only and it can't be submitted for review or external testing. Its Info.plist"
             echo "says TimbreBuildChannel = internal."; } >> "$GITHUB_STEP_SUMMARY"
-      - name: Regenerate Xcode project with selected shipping languages
+      - name: Regenerate Xcode project with all committed shipping languages
         run: |
           set -euo pipefail
           cd ios && xcodegen generate
@@ -145,7 +123,7 @@ jobs:
         run: |
           set -euo pipefail
           umask 077
-          DELIVERY_DIRECTORY="$RUNNER_TEMP/apple-delivery"
+          export DELIVERY_DIRECTORY="$RUNNER_TEMP/apple-delivery"
           mkdir -p "$DELIVERY_DIRECTORY"
           printf '%s\n' "$APP_STORE_CONNECT_API_KEY_P8" > "$DELIVERY_DIRECTORY/AuthKey.p8"
           echo "DELIVERY_DIRECTORY=$DELIVERY_DIRECTORY" >> "$GITHUB_ENV"
@@ -176,6 +154,8 @@ jobs:
             TIMBRE_BUILD_CHANNEL="${BUILD_CHANNEL:-}" \
             TIMBRE_TELEMETRY_APP_ID="${TELEMETRYDECK_APP_ID:-}" TIMBRE_APP_STORE_ID="${TIMBRE_APP_STORE_ID:-}" \
             TIMBRE_SHARE_URL="${TIMBRE_SHARE_URL:-}" TIMBRE_REMOTE_CONFIG_URL="${TIMBRE_REMOTE_CONFIG_URL:-}" archive
+      - name: Verify signed archive feature scope before upload
+        run: '"$RUNNER_TEMP/apple-preflight-venv/bin/python" tools/ci/apple_archive_scope.py "$DELIVERY_DIRECTORY/Timbre.xcarchive"'
       - name: Export, sign and upload to App Store Connect
         shell: bash
         run: |

@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import unicodedata
 from pathlib import Path
@@ -26,6 +27,98 @@ RELEASE_EVIDENCE = ('privacy_policy', 'device', 'screenshots', 'app_preview',
 LIMITS = {'name': 30, 'subtitle': 30, 'keywords': 100, 'promotional_text': 170,
           'description': 4000, 'whats_new': 4000}
 EULA = 'https://www.apple.com/legal/internet-services/itunes/dev/stdeula/'
+
+APPLICABILITY = ROOT / 'docs/ios/readiness/release-applicability.json'
+APPLICABILITY_SOURCES = ('ios/project.yml', 'ios/Timbre/Services/GameCenter.swift',
+                         'docs/ios/APP-STORE-LISTING.md', 'docs/ios/AUDIO-DEVICE-TESTS.md')
+DEVICE_AUTHORIZATION = ('real device test is not possible depsite what the readme says , '
+                        'regardless you should start doing what it needs to be fully ready for app store submission')
+DEVICE_LIMITATIONS = ('microphone_start_stop', 'interruptions', 'speaker_leakage_grading',
+                     'latency', 'wired_bluetooth_routes', 'haptics', 'watch_hardware',
+                     'physical_voiceover_dynamic_type')
+
+
+def release_applicability(source, policy=None):
+    """Return evidence dispositions plus errors; invalid policy never exempts a gate.
+
+    This is repository scope evidence, not signed-build/portal verification. Delivery
+    must separately inspect effective build settings and signed entitlements.
+    """
+    required = {field: 'required' for field in RELEASE_EVIDENCE}
+    try:
+        if policy is None:
+            policy = json.loads(APPLICABILITY.read_text(encoding='utf-8'))
+        if not isinstance(policy, dict) or set(policy) != {
+                'schema_version', 'source_sha256', 'listing_source_sha256', 'evidence'}:
+            raise ValueError('malformed policy fields')
+        if type(policy['schema_version']) is not int or policy['schema_version'] != 1:
+            raise ValueError('unsupported schema')
+        hashes = policy['source_sha256']
+        if not isinstance(hashes, dict) or set(hashes) != set(APPLICABILITY_SOURCES):
+            raise ValueError('source inventory differs')
+        for name in APPLICABILITY_SOURCES:
+            if hashes[name] != hashlib.sha256((ROOT / name).read_bytes()).hexdigest():
+                raise ValueError(f'source hash missing or stale: {name}')
+        if policy['listing_source_sha256'] != content_hash(source):
+            raise ValueError('listing source hash missing or stale')
+        records = policy['evidence']
+        if not isinstance(records, dict) or set(records) != {'app_preview', 'game_center_account', 'device'}:
+            raise ValueError('evidence inventory differs')
+        for field, record in records.items():
+            if not isinstance(record, dict):
+                raise ValueError(f'{field}: malformed record')
+            status = record.get('status')
+            if status == 'required':
+                if set(record) != {'status'}:
+                    raise ValueError(f'{field}: unexpected required-record fields')
+                continue
+            if field == 'device':
+                if (set(record) != {'status', 'verification', 'scope', 'selected_by', 'authorization', 'limitations'}
+                        or status != 'owner_waived' or record['verification'] != 'unverified'
+                        or record['scope'] != 'repository_physical_device_qa_only'
+                        or record['selected_by'] != 'owner'
+                        or record['authorization'] != DEVICE_AUTHORIZATION
+                        or record['limitations'] != list(DEVICE_LIMITATIONS)):
+                    raise ValueError('device: invalid bounded owner waiver')
+            elif field == 'app_preview':
+                if (set(record) != {'status', 'selected_by', 'authorization', 'submission_scope'}
+                        or status != 'not_applicable' or record['selected_by'] != 'owner'
+                        or record['submission_scope'] != 'screenshots_only_no_preview_upload'
+                        or not isinstance(record['authorization'], str)
+                        or not record['authorization'].strip()):
+                    raise ValueError('app_preview: explicit owner omission authorization missing')
+            else:
+                if (record != {'status': 'not_applicable', 'reason': 'disabled_in_release_source'}):
+                    raise ValueError('game_center_account: invalid disabled-feature evidence')
+                project = (ROOT / 'ios/project.yml').read_text(encoding='utf-8')
+                # Deliberately accept only the canonical scalar source form. A
+                # substring is unsafe: an enabled value could retain the expected
+                # binding in a trailing comment. Quoted/flow/indirect forms and
+                # duplicates require explicit review, not a guessed exemption.
+                active_lines = [line for line in project.splitlines()
+                                if line.strip() and not line.lstrip().startswith('#')]
+                bindings = [line for line in active_lines if 'TimbreGameCenterEnabled' in line]
+                settings = [line for line in active_lines
+                            if re.search(r"TIMBRE_GAME_CENTER_ENABLED[\"']?\s*:", line)]
+                binding_pattern = r'\s*TimbreGameCenterEnabled: *\$\(TIMBRE_GAME_CENTER_ENABLED\) *(?:#.*)?'
+                setting_pattern = r'\s*TIMBRE_GAME_CENTER_ENABLED: *"NO" *(?:#.*)?'
+                if (len(bindings) != 1 or not re.fullmatch(binding_pattern, bindings[0])
+                        or len(settings) != 1 or not re.fullmatch(setting_pattern, settings[0])):
+                    raise ValueError('game_center_account: release source is not explicitly disabled')
+                if os.environ.get('TIMBRE_GAME_CENTER_ENABLED', 'NO') != 'NO':
+                    raise ValueError('game_center_account: build environment override is not disabled')
+                if 'com.apple.developer.game-center' in project or any(
+                        'com.apple.developer.game-center' in path.read_text(encoding='utf-8')
+                        for path in (ROOT / 'ios').rglob('*.entitlements')):
+                    raise ValueError('game_center_account: Game Center entitlement present')
+            required[field] = status
+    except (OSError, ValueError, TypeError, KeyError) as exc:
+        return {field: 'required' for field in RELEASE_EVIDENCE}, [f'release applicability: {exc}']
+    return required, []
+
+
+def release_applicability_errors(source, policy=None):
+    return release_applicability(source, policy)[1]
 
 def load(locale):
     return json.loads((DIRECTORY / f'{locale}.json').read_text(encoding='utf-8'))
@@ -113,7 +206,7 @@ def review_artifact_errors(registry):
     return errors
 
 
-def validate(data, source, release=False, registry=None, review_policy=None):
+def validate(data, source, release=False, registry=None, review_policy=None, applicability_policy=None):
     errors = []
     loc = data.get('locale', '?')
     def fail(message): errors.append(f'{loc}: {message}')
@@ -201,7 +294,10 @@ def validate(data, source, release=False, registry=None, review_policy=None):
         parsed = urlsplit(privacy_url)
         if parsed.scheme != 'https' or not parsed.hostname or privacy_url not in data.get('description', ''):
             fail('release: production privacy URL must be HTTPS and present in description')
-        required = RELEASE_EVIDENCE
+        dispositions, applicability_errors = release_applicability(source, applicability_policy)
+        for error in applicability_errors:
+            fail(error)
+        required = tuple(field for field in RELEASE_EVIDENCE if dispositions[field] == 'required')
         if policy == 'human':
             required += ('native', 'market_search', 'legal_back_translation')
         for field in required:
@@ -304,6 +400,12 @@ def main():
     if args.sync_game_center:sync_game_center()
     if args.sync_manifest:sync_manifest()
     errors=check_all(args.release,args.review_policy)
+    if args.release:
+        dispositions, scope_errors = release_applicability(load('en-US'))
+        if not scope_errors:
+            print('Release evidence scope: ' + ', '.join(
+                f'{field}={status}' + (' (physically unverified)' if status == 'owner_waived' else '')
+                for field, status in dispositions.items()))
     for error in errors:print(error)
     print(f'50 listing locales checked: {len(errors)} problems. '+('Release gate.' if args.release else 'Draft text/review gate only; native, legal, market, device, assets and account evidence remain separate.'))
     return bool(errors)

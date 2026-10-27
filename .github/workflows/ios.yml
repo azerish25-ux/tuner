@@ -15,9 +15,9 @@ permissions:
   contents: read
 concurrency:
   group: ios-native-${{ github.ref }}
-  # Frequent main checkpoints must not restart simulator builds before they can finish.
-  # PR updates, manual requests and explicit refreshes may supersede an obsolete run.
-  cancel-in-progress: ${{ github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[ci-refresh]') }}
+  # Preserve running native evidence across reviewed checkpoints; the newest pending
+  # revision runs next. Explicit manual requests/refreshes can supersede an obsolete run.
+  cancel-in-progress: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[ci-refresh]') }}
 env:
   DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
   HOMEBREW_NO_AUTO_UPDATE: "1"
@@ -91,6 +91,12 @@ jobs:
           python3 tools/ci/test_hygiene.py 2>&1 | tee ci-out/hygiene-tests.log
           python3 tools/ci/test_song_cover_contrast.py 2>&1 | tee ci-out/song-cover-contrast-tests.log
           python3 tools/ci/comment_hygiene.py --github 2>&1 | tee ci-out/hygiene.log
+      - name: Release safety and accessibility audit contracts
+        run: |
+          set -euo pipefail
+          python3 tools/ci/test_apple_delivery_preflight.py
+          python3 tools/ci/test_apple_archive_scope.py
+          python3 tools/ci/test_accessibility_audit_contract.py
       - name: SwiftLint (new error-severity violations fail)
         # .swiftlint.yml at the repository root, against the committed baseline (tools/ci/swiftlint-baseline.json):
         # a violation the baseline doesn't hold is reported, and fails the job at error severity. A fresh baseline
