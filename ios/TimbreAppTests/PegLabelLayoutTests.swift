@@ -15,7 +15,7 @@ final class PegLabelLayoutTests: XCTestCase {
                         .environment(\.dynamicTypeSize, typeSize)
                         .environment(\.layoutDirection, controlsOnLeft ? .rightToLeft : .leftToRight)
                     let host = UIHostingController(rootView: label)
-                    let measured = host.sizeThatFits(in: CGSize(width: 322, height: .greatestFiniteMagnitude))
+                    let measured = host.sizeThatFits(in: CGSize(width: 322, height: CGFloat.greatestFiniteMagnitude))
                     XCTAssertGreaterThan(measured.width, 0)
                     XCTAssertGreaterThan(measured.height, 0)
                     for point in [CGPoint(x: 157, y: 150), CGPoint(x: 30, y: 20), CGPoint(x: 370, y: 280)] {

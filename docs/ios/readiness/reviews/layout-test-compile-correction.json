@@ -1,0 +1,14 @@
+{
+  "status": "Source correction only; native recompilation and runtime tests pending",
+  "failed_revision": "c08924623796939b279be7bcfaf3636c1646f1e7",
+  "run_id": 40458830411,
+  "compiler_errors": {
+    "122038363123": "PegLabelLayoutTests.swift:18 ambiguous greatestFiniteMagnitude",
+    "122038363389": "TempoRungLayoutTests.swift:18 ambiguous greatestFiniteMagnitude"
+  },
+  "change": "Qualify three measurement heights as CGFloat.greatestFiniteMagnitude. Assertions and product source unchanged.",
+  "source_sha256": {
+    "ios/TimbreAppTests/PegLabelLayoutTests.swift": "8cb6a411e47c01cc5f7bf31a86f04d866e9fb5639552ad97d960ade8bed62781",
+    "ios/TimbreAppTests/TempoRungLayoutTests.swift": "f7a1afdeabc55d052aeaf5f151636d0c719de6dae01f996b01d45e839b4003a5"
+  }
+}
