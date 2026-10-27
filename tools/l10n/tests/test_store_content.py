@@ -3,6 +3,7 @@
 import copy
 import importlib.util
 import json
+import hashlib
 from pathlib import Path
 import sys
 import unittest
@@ -98,9 +99,6 @@ class StoreContentTests(unittest.TestCase):
     def release_fixture(self):
         """Synthetic evidence only for gate behavior; never written as real review."""
         d = copy.deepcopy(self.german)
-        prior_privacy_url = d['production_privacy_url']
-        d['production_privacy_url'] = 'https://example.com/privacy'
-        d['description'] = d['description'].replace(prior_privacy_url, d['production_privacy_url'])
         digest = store.content_hash(d)
         registry = copy.deepcopy(self.registry)
         registry['locales']['de-DE']['reviewed_content_sha256'] = digest
@@ -108,6 +106,10 @@ class StoreContentTests(unittest.TestCase):
         for field in store.RELEASE_EVIDENCE:
             d['review'][field] = 'verified'
             d['review']['evidence'][field] = {'reference': 'synthetic-test-fixture', 'content_sha256': digest}
+        reference = 'docs/ios/readiness/reviews/privacy-policy-current-source-verification.json'
+        d['review']['evidence']['privacy_policy'] = {
+            'reference': reference, 'reference_sha256': hashlib.sha256((ROOT / reference).read_bytes()).hexdigest(),
+            'content_sha256': digest}
         return d, registry
 
     def test_ai_text_policy_does_not_require_false_native_certification(self):
@@ -127,6 +129,13 @@ class StoreContentTests(unittest.TestCase):
                 d['review'][field] = 'not_verified'
                 errors = store.validate(d, self.source, release=True, registry=registry)
                 self.assertTrue(any(f'release: {field} not verified' in e for e in errors))
+
+    def test_malformed_release_evidence_mapping_fails_closed(self):
+        for value in (None, [], 'bad', 7):
+            d, registry = self.release_fixture()
+            d['review']['evidence'] = value
+            errors = store.validate(d, self.source, release=True, registry=registry)
+            self.assertTrue(any('privacy_policy needs' in error for error in errors))
 
     def test_status_alone_does_not_replace_release_evidence(self):
         d, registry = self.release_fixture()

@@ -38,6 +38,111 @@ DEVICE_LIMITATIONS = ('microphone_start_stop', 'interruptions', 'speaker_leakage
                      'physical_voiceover_dynamic_type')
 
 
+PRIVACY_RECEIPT_SCOPE = 'published_policy_and_source_alignment_only'
+PRIVACY_BASE_SOURCES = (
+    'docs/ios/PRIVACY.md', 'docs/site/privacy.html', 'docs/site/support.html',
+    'ios/project.yml', 'ios/Package.swift',
+)
+PRIVACY_SHIPPING_TREES = ('ios/Timbre', 'ios/Sources', 'ios/TimbreWidgets',
+                          'ios/TimbreWatch', 'ios/TimbreWatchWidgets')
+
+
+def privacy_source_inventory():
+    """Every shipped source producer/consumer plus app privacy/config/dependencies.
+
+    Detect new source/config files as well as edits. Tests and generated build
+    products are outside this evidence scope; app changes require a new review.
+    """
+    paths = set(PRIVACY_BASE_SOURCES)
+    for directory in PRIVACY_SHIPPING_TREES:
+        for path in (ROOT / directory).rglob('*'):
+            if path.is_file() and (path.suffix in ('.swift', '.m', '.mm', '.c', '.cc', '.cpp', '.cxx',
+                                                      '.h', '.hpp', '.xcconfig', '.plist', '.entitlements', '.xcprivacy')
+                                   or path.name in ('InfoPlist.strings', 'Package.resolved')):
+                paths.add(path.relative_to(ROOT).as_posix())
+    for name in ('Package.resolved', 'ios/Package.resolved', 'ios/.swiftpm/configuration/Package.resolved'):
+        if (ROOT / name).is_file():
+            paths.add(name)
+    return tuple(sorted(paths))
+
+
+def privacy_receipt_path(reference):
+    """Only ordinary files under the checkout; reject aliases and traversal."""
+    if not isinstance(reference, str) or not reference or '\\' in reference:
+        raise ValueError('invalid receipt path')
+    relative = Path(reference)
+    if relative.is_absolute() or any(part in ('.', '..') for part in reference.split('/')):
+        raise ValueError('receipt path must be repository relative without traversal')
+    trusted_root = ROOT.resolve()
+    path = trusted_root
+    for part in relative.parts:
+        path = path / part
+        if path.is_symlink():
+            raise ValueError('receipt/source symlinks are not allowed')
+    if not path.resolve().is_relative_to(trusted_root) or not path.is_file():
+        raise ValueError('receipt/source file is absent or outside repository')
+    return path
+
+
+def privacy_evidence_errors(data):
+    """Offline validation of bounded, timestamped publication/source evidence.
+
+    Not a legal attestation, live uptime probe, signed-archive or portal check.
+    """
+    try:
+        evidence = data['review']['evidence']['privacy_policy']
+        if not isinstance(evidence, dict) or evidence.get('content_sha256') != content_hash(data):
+            raise ValueError('malformed or stale listing evidence mapping')
+        path = privacy_receipt_path(evidence.get('reference'))
+        raw = path.read_bytes()
+        if evidence.get('reference_sha256') != hashlib.sha256(raw).hexdigest():
+            raise ValueError('receipt hash missing or stale')
+        receipt = json.loads(raw)
+        if not isinstance(receipt, dict) or type(receipt.get('schema_version')) is not int or receipt['schema_version'] != 1:
+            raise ValueError('unsupported receipt schema')
+        if receipt.get('scope') != PRIVACY_RECEIPT_SCOPE:
+            raise ValueError('receipt scope must be publication/source only')
+        from datetime import datetime
+        if not isinstance(receipt.get('verified_utc'), str) or not receipt['verified_utc'].endswith('Z'):
+            raise ValueError('missing UTC observation time')
+        datetime.fromisoformat(receipt['verified_utc'].replace('Z', '+00:00'))
+        if not re.fullmatch(r'[0-9a-f]{40}', receipt.get('source_revision', '')):
+            raise ValueError('missing observed source revision')
+        hashes = receipt.get('source_sha256')
+        if not isinstance(hashes, dict) or set(hashes) != set(privacy_source_inventory()):
+            raise ValueError('privacy source inventory differs')
+        for name, digest in hashes.items():
+            if hashlib.sha256(privacy_receipt_path(name).read_bytes()).hexdigest() != digest:
+                raise ValueError('privacy source hash missing or stale: ' + name)
+        if receipt.get('policy_source') != {'path': 'docs/ios/PRIVACY.md', 'sha256': hashes['docs/ios/PRIVACY.md']}:
+            raise ValueError('policy source binding differs')
+        listings = receipt.get('listing_content_sha256')
+        inventory = {row['locale'] for row in json.loads(MANIFEST.read_text())['locales']}
+        if not isinstance(listings, dict) or set(listings) != inventory or listings.get(data.get('locale')) != content_hash(data):
+            raise ValueError('listing content binding missing or stale')
+        routes = receipt.get('routes')
+        if not isinstance(routes, list) or len(routes) != 2 or not all(isinstance(r, dict) for r in routes):
+            raise ValueError('malformed publication routes')
+        matches = [r for r in routes if r.get('url') == data.get('production_privacy_url')]
+        if len(matches) != 1:
+            raise ValueError('privacy URL missing or ambiguous in receipt')
+        route = matches[0]
+        if (type(route.get('status')) is not int or route['status'] != 200
+                or route.get('bytes_equal_committed_html') is not True
+                or route.get('source_html') != 'docs/site/privacy.html'
+                or route.get('sha256') != hashes['docs/site/privacy.html']
+                or route.get('content_type') != 'text/html'):
+            raise ValueError('privacy publication bytes/status mismatch')
+        limits = receipt.get('limitations')
+        if not isinstance(limits, dict) or any(limits.get(key) != value for key, value in {
+                'signed_archive': 'unverified', 'app_store_connect_answers': 'unverified',
+                'legal_certification': 'not_performed'}.items()):
+            raise ValueError('receipt must preserve separate archive/portal/legal limits')
+    except (OSError, ValueError, TypeError, KeyError, AttributeError):
+        return ['privacy_policy needs a valid hash-bound publication/source receipt']
+    return []
+
+
 def release_applicability(source, policy=None):
     """Return evidence dispositions plus errors; invalid policy never exempts a gate.
 
@@ -288,6 +393,9 @@ def validate(data, source, release=False, registry=None, review_policy=None, app
     if policy == 'ai_source_aware' or review.get('ai_source_aware') == 'reviewed':
         for error in ai_review_errors(data, source, registry):
             fail(error)
+    if release or review.get('privacy_policy') == 'verified':
+        for error in privacy_evidence_errors(data):
+            fail(error)
     if release:
         if '<privacy policy URL>' in data.get('description',''):fail('release: unresolved production privacy URL')
         privacy_url = data.get('production_privacy_url', '')
@@ -302,7 +410,8 @@ def validate(data, source, release=False, registry=None, review_policy=None, app
             required += ('native', 'market_search', 'legal_back_translation')
         for field in required:
             if review.get(field)!='verified':fail(f'release: {field} not verified')
-            evidence = review.get('evidence', {}).get(field, {})
+            evidence_records = review.get('evidence', {})
+            evidence = evidence_records.get(field, {}) if isinstance(evidence_records, dict) else {}
             if not isinstance(evidence, dict) or not evidence.get('reference') or evidence.get('content_sha256') != content_hash(data):
                 fail(f'release: {field} needs a current-content evidence reference')
     return errors

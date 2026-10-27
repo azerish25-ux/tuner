@@ -157,6 +157,10 @@ class ReleaseApplicabilityTests(unittest.TestCase):
                 data['review'][field] = 'verified'
                 data['review']['evidence'][field] = {
                     'reference': 'SYNTHETIC TEST ONLY', 'content_sha256': store.content_hash(data)}
+        reference = 'docs/ios/readiness/reviews/privacy-policy-current-source-verification.json'
+        data['review']['evidence']['privacy_policy'] = {
+            'reference': reference, 'content_sha256': store.content_hash(data),
+            'reference_sha256': hashlib.sha256((store.ROOT/reference).read_bytes()).hexdigest()}
         self.assertEqual(store.validate(data, self.source, release=True), [])
         for field in ('privacy_policy', 'screenshots', 'iap_account_limits'):
             bad = copy.deepcopy(data)

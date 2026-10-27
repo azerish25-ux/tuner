@@ -221,7 +221,11 @@ class MatrixIntegrationTests(unittest.TestCase):
         workflow = (matrix_fixture.report.ROOT / '.github/workflows/localization-matrix.yml').read_text()
         condition = "github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[l10n-matrix]')"
         self.assertIn('cancel-in-progress: ${{ ' + condition + ' }}', workflow)
-        self.assertIn('if: ' + condition, workflow)
+        request = ("github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && "
+                   "(github.ref == 'refs/heads/main' || "
+                   "github.ref == 'refs/heads/codex/app-store-readiness-gates') && "
+                   "contains(github.event.head_commit.message, '[l10n-matrix]'))")
+        self.assertIn('if: ' + request, workflow)
 
     def test_checked_in_workflow_covers_every_translated_locale(self):
         matrix_fixture.check_workflow(matrix_fixture.report.ROOT / '.github/workflows/localization-matrix.yml')
