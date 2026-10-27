@@ -182,6 +182,7 @@ struct YourSongsShelf: View {
                     crate
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Your songs").font(Typeface.cardTitle).foregroundStyle(Palette.ink)
+                            .accessibilityIdentifier("songs.library.empty.title")
                         Text("Play the songs you love").font(.footnote).foregroundStyle(Palette.inkSoft)
                     }
                     .fixedSize(horizontal: false, vertical: true)

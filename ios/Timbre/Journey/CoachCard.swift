@@ -48,6 +48,7 @@ struct CoachNoteView: View {
             HStack(spacing: 6) {
                 Image(systemName: CoachVoice.symbol(action)).font(.system(size: 12, weight: .bold)).accessibilityHidden(true)
                 Text(verbatim: voice.actionTitle(action, for: note))
+                    .accessibilityIdentifier(actionId + "." + note.id + ".title")
                     .lineLimit(2).multilineTextAlignment(.leading)
                     .fixedSize(horizontal: false, vertical: true)
                 Image(systemName: "chevron.forward").font(.system(size: 10, weight: .heavy)).opacity(0.7).accessibilityHidden(true)

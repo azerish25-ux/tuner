@@ -2,7 +2,7 @@ name: Localization simulator matrix
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [main, codex/app-store-readiness-gates]
 permissions:
   contents: read
 concurrency:
@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[l10n-matrix]') }}
 jobs:
   localized-launch:
-    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[l10n-matrix]')
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/codex/app-store-readiness-gates') && contains(github.event.head_commit.message, '[l10n-matrix]'))
     runs-on: macos-15
     # Six real locale tours plus a cold build must finish before result-bundle export.
     timeout-minutes: 90

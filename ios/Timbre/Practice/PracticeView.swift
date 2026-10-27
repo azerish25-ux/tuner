@@ -166,7 +166,7 @@ struct PracticeView: View {
         let next = Progression.level(for: level.next)
         return VStack(alignment: .leading, spacing: 14) {
             HStack(alignment: .center, spacing: 16) {
-                LevelRing(size: 84)
+                LevelRing(size: 84, identity: "practice.level.tile")
                 VStack(alignment: .leading, spacing: 6) {
                     Text(LocalizedStringKey(level.name)).font(Typeface.display(20)).foregroundStyle(Palette.ink)
                         .lineLimit(2).minimumScaleFactor(0.8)
@@ -376,7 +376,7 @@ struct PracticeView: View {
         let level = store.level
         let next = Progression.level(for: level.next)
         return HStack(spacing: 14) {
-            LevelRing(size: 62)
+            LevelRing(size: 62, identity: "practice.level.card")
             VStack(alignment: .leading, spacing: 6) {
                 Text(LocalizedStringKey(level.name)).font(Typeface.cardTitle).foregroundStyle(Palette.ink)
                     .fixedSize(horizontal: false, vertical: true)

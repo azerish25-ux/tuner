@@ -28,6 +28,13 @@ CAPTURE_TESTS = {
     '11b-tune-strum': 'test13StoreStrum',
     '32-journey': 'test05OtherTabs',
 }
+ALLOWED_REFS = ('refs/heads/main', 'refs/heads/codex/app-store-readiness-gates')
+PUSH_MARKERS = {
+    '[listing-assets-pilot]': ('en-US,de-DE,ar-SA', 'all'),
+    '[listing-assets-all]': ('all', 'all'),
+    '[listing-screenshots-pilot]': ('en-US,de-DE,ar-SA', 'screenshots'),
+    '[listing-screenshots-all]': ('all', 'screenshots'),
+}
 KINDS = ('iphone', 'ipad', 'preview-main', 'preview-violin')
 # Explicit regional choices for Apple's language-only listing codes. They are
 # formatting locales, not a claim that every regional UI variant is translated.
@@ -147,21 +154,27 @@ def make_plan(locales: str, scope: str, violin: bool = False, shard_size: int = 
             include.append({'id': f'{kind}-{start // shard_size + 1:02d}', 'kind': kind,
                             'locales': ','.join(selected[start:start + shard_size])})
     return {'schema_version': 1, 'locales': selected, 'kinds': kinds,
+            'requested_scope': scope,
+            'full_screenshot_listing_scope': len(selected) == 50 and all(k in kinds for k in KINDS[:2]),
             'full_default_listing_scope': len(selected) == 50 and all(k in kinds for k in KINDS[:3]),
             'matrix': {'include': include}}
 
 
-def request_scope(event: str, message: str, locales: str, scope: str, violin: bool) -> dict:
-    """Only explicit main-push markers override manual inputs; never an ordinary push."""
+def request_scope(event: str, message: str, locales: str, scope: str, violin: bool,
+                  ref: str = 'refs/heads/main') -> dict:
+    """Exact approved refs only; push requires one unambiguous explicit marker."""
+    if ref not in ALLOWED_REFS:
+        raise ValueError('Listing assets require main or the exact reviewed handoff branch')
     if event == 'workflow_dispatch':
         return {'locales': locales, 'scope': scope, 'violin': violin, 'trigger': 'manual'}
     if event != 'push':
         raise ValueError('Unsupported listing-assets trigger')
-    pilot, full = '[listing-assets-pilot]' in message, '[listing-assets-all]' in message
-    if pilot == full:
-        raise ValueError('A push must contain exactly one listing-assets pilot/all marker')
-    return {'locales': 'all' if full else 'en-US,de-DE,ar-SA', 'scope': 'all', 'violin': False,
-            'trigger': 'main-push-all' if full else 'main-push-pilot'}
+    markers = [marker for marker in PUSH_MARKERS if marker in message]
+    if len(markers) != 1:
+        raise ValueError('A push must contain exactly one listing-assets/screenshots pilot/all marker')
+    selected, selected_scope = PUSH_MARKERS[markers[0]]
+    return {'locales': selected, 'scope': selected_scope, 'violin': False,
+            'trigger': ref.removeprefix('refs/heads/') + '-push-' + markers[0][1:-1]}
 
 
 def prepare_fixtures():
@@ -393,6 +406,7 @@ def main():
     plan.add_argument('--out', type=Path, required=True)
     plan.add_argument('--event', choices=['workflow_dispatch', 'push'], default='workflow_dispatch')
     plan.add_argument('--message', default='')
+    plan.add_argument('--ref', default='refs/heads/main')
     commands.add_parser('fixtures')
     combined = commands.add_parser('aggregate')
     combined.add_argument('--plan', type=Path, required=True)
@@ -401,7 +415,7 @@ def main():
     combined.add_argument('--out', type=Path, required=True)
     args = parser.parse_args()
     if args.command == 'plan':
-        request = request_scope(args.event, args.message, args.locales, args.scope, args.violin)
+        request = request_scope(args.event, args.message, args.locales, args.scope, args.violin, args.ref)
         result = make_plan(request['locales'], request['scope'], request['violin'], args.shard_size)
         result['trigger'] = request['trigger']
         write_json(args.out, result)

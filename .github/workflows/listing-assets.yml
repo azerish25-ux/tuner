@@ -2,7 +2,7 @@
 name: Localized listing assets
 on:
   push:
-    branches: [main]
+    branches: [main, codex/app-store-readiness-gates]
   workflow_dispatch:
     inputs:
       locales:
@@ -14,7 +14,7 @@ on:
         description: Assets to capture from the actual localized app
         type: choice
         options: [all, screenshots, previews]
-        default: all
+        default: screenshots
         required: true
       violin:
         description: Include supplemental violin CPP preview (not a complete localized CPP set)
@@ -28,10 +28,12 @@ concurrency:
 jobs:
   plan:
     if: >-
-      github.ref == 'refs/heads/main' &&
+      (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/codex/app-store-readiness-gates') &&
       (github.event_name == 'workflow_dispatch' ||
        contains(github.event.head_commit.message, '[listing-assets-pilot]') ||
-       contains(github.event.head_commit.message, '[listing-assets-all]'))
+       contains(github.event.head_commit.message, '[listing-assets-all]') ||
+       contains(github.event.head_commit.message, '[listing-screenshots-pilot]') ||
+       contains(github.event.head_commit.message, '[listing-screenshots-all]'))
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.plan.outputs.matrix }}
@@ -43,19 +45,21 @@ jobs:
         id: plan
         env:
           LOCALES: ${{ inputs.locales || 'all' }}
-          SCOPE: ${{ inputs.scope || 'all' }}
+          SCOPE: ${{ inputs.scope || 'screenshots' }}
           VIOLIN: ${{ inputs.violin || false }}
+          SOURCE_REF: ${{ github.ref }}
           EVENT_NAME: ${{ github.event_name }}
           COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
         run: |
           set -euo pipefail
           extra=()
           if [ "$VIOLIN" = true ]; then extra+=(--violin); fi
-          python3 tools/marketing/listing_assets.py plan --locales "$LOCALES" --scope "$SCOPE" "${extra[@]}" --event "$EVENT_NAME" --message="$COMMIT_MESSAGE" --out ci-out/plan.json > ci-out-matrix.json
+          python3 tools/marketing/listing_assets.py plan --locales "$LOCALES" --scope "$SCOPE" "${extra[@]}" --ref "$SOURCE_REF" --event "$EVENT_NAME" --message="$COMMIT_MESSAGE" --out ci-out/plan.json > ci-out-matrix.json
           echo "matrix=$(cat ci-out-matrix.json)" >> "$GITHUB_OUTPUT"
           python3 -m venv ci-out/test-venv
           ci-out/test-venv/bin/pip install --quiet pillow
           ci-out/test-venv/bin/python3 -m unittest discover -s tools/marketing/tests -p 'test_listing_assets.py'
+          ci-out/test-venv/bin/python3 -m unittest discover -s tools/marketing/tests -p 'test_artifact_qa_triggers.py'
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: listing-plan

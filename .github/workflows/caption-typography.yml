@@ -1,13 +1,7 @@
 name: Store caption typography
 on:
   push:
-    branches: [main]
-    paths:
-      - 'tools/marketing/**'
-      - 'tools/l10n/store/**'
-      - 'tools/l10n/store-locales.json'
-      - 'docs/ios/APP-STORE-LISTING*.md'
-      - '.github/workflows/caption-typography.yml'
+    branches: [main, codex/app-store-readiness-gates]
   workflow_dispatch:
 permissions:
   contents: read
@@ -16,6 +10,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   captions:
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && (github.ref == 'refs/heads/main' || (github.ref == 'refs/heads/codex/app-store-readiness-gates' && contains(github.event.head_commit.message, '[caption-typography]'))))
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:

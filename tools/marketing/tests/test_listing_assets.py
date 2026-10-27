@@ -372,10 +372,10 @@ class PreviewEvidenceTests(unittest.TestCase):
 
 
 class SourceContractTests(unittest.TestCase):
-    def test_workflow_is_explicit_opt_in_main_only_artifact_only_and_bounded(self):
+    def test_workflow_is_explicit_opt_in_approved_refs_artifact_only_and_bounded(self):
         source = (assets.ROOT / '.github/workflows/listing-assets.yml').read_text()
         self.assertIn('workflow_dispatch:', source)
-        self.assertIn('\n  push:\n    branches: [main]', source)
+        self.assertIn('\n  push:\n    branches: [main, codex/app-store-readiness-gates]', source)
         self.assertIn("contains(github.event.head_commit.message, '[listing-assets-pilot]')", source)
         self.assertIn("contains(github.event.head_commit.message, '[listing-assets-all]')", source)
         self.assertIn("github.ref == 'refs/heads/main'", source)

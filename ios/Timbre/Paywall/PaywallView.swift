@@ -964,7 +964,7 @@ struct PaywallView: View {
         let isSelected = selected?.id == product.id
         let shape = RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous)
         let face = PlanFace(title: title, detail: detail, price: product.displayPrice, saving: saving, anchor: anchor,
-                            selected: isSelected, quiet: quiet)
+                            selected: isSelected, quiet: quiet, identity: "paywall.plan.\(role)")
         let inset: CGFloat = quiet ? 7 : 9
         return Button { select(product) } label: {
             PaywallPlanCardContent(face: face, tag: tag, arrangement: arrangement)
@@ -1563,7 +1563,7 @@ struct PaywallPlanCardContent: View {
     var body: some View {
         VStack(alignment: .trailing, spacing: 6) {
             if let tag {
-                PaywallOfferBadge(text: tag, trial: true)
+                PaywallOfferBadge(text: tag, trial: true, identity: face.identity + ".trial")
                     // The card says this once, as its accessibility value.
                     .accessibilityHidden(true)
             }
@@ -1584,9 +1584,11 @@ struct PaywallPlanCardContent: View {
 struct PaywallOfferBadge: View {
     let text: String
     var trial = false
+    var identity = "paywall.offer"
 
     var body: some View {
         Text(verbatim: text)
+            .accessibilityIdentifier(identity)
             .font(Typeface.badge).tracking(1)
             .textCase(.uppercase)
             .multilineTextAlignment(.center)
@@ -1617,6 +1619,7 @@ struct PlanFace {
     let anchor: String?
     let selected: Bool
     let quiet: Bool
+    var identity = "paywall.plan"
 
     @ViewBuilder func arranged(_ arrangement: Arrangement) -> some View {
         switch arrangement {
@@ -1717,7 +1720,7 @@ struct PlanFace {
 
     /// "Save 58%", in Pro gold.
     private func savingChip(_ percent: Int) -> some View {
-        PaywallOfferBadge(text: String(localized: "Save \(percent)%"))
+        PaywallOfferBadge(text: String(localized: "Save \(percent)%"), identity: identity + ".saving")
     }
 }
 

@@ -2,7 +2,7 @@ name: Localized store capture checks
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [main, codex/app-store-readiness-gates]
 permissions:
   contents: read
 concurrency:
@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[capture-check]') }}
 jobs:
   lesson-frames:
-    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[capture-check]')
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/codex/app-store-readiness-gates') && contains(github.event.head_commit.message, '[capture-check]'))
     runs-on: macos-15
     timeout-minutes: 45
     strategy:
