@@ -1,3 +1,4 @@
+import StoreKitTest
 import XCTest
 
 /// The money screen and the first session: the paywall from Settings always shows its plan cards (its tag never
@@ -5,9 +6,14 @@ import XCTest
 /// its own, as a fresh install does.
 final class FirstSessionUITests: XCTestCase {
     private var app: XCUIApplication!
+    private var storeKit: SKTestSession!
 
     override func setUpWithError() throws {
         continueAfterFailure = false
+        storeKit = try SKTestSession(configurationFileNamed: "Timbre")
+        storeKit.resetToDefaultState()
+        storeKit.clearTransactions()
+        storeKit.disableDialogs = true
         app = XCUIApplication()
         app.launchEnvironment["TIMBRE_TEST_STORAGE_ID"] = UUID().uuidString
         app.launchArguments = ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
@@ -24,6 +30,35 @@ final class FirstSessionUITests: XCTestCase {
     }
 
     private func element(_ id: String) -> XCUIElement { app.descendants(matching: .any).matching(identifier: id).firstMatch }
+
+    func testDeferredQuestionsPersistOnlyForTheInstallationThatSkippedThem() {
+        app.launchEnvironment["TIMBRE_DEMO_PITCH"] = "1"
+        app.launch()
+        let justTune = element("onboarding.justTune")
+        XCTAssertTrue(justTune.waitForExistence(timeout: 25))
+        justTune.tap()
+        XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 15))
+
+        // The same installation keeps its promise to ask when Learn opens, even after relaunch.
+        app.terminate()
+        app.launch()
+        app.tabBars.buttons["Learn"].tap()
+        let question = element("onboarding.option.beginner")
+        XCTAssertTrue(question.waitForExistence(timeout: 10))
+
+        // A separate installation has its own completed onboarding and an unobstructed Learn screen.
+        app.terminate()
+        app.launchEnvironment["TIMBRE_TEST_STORAGE_ID"] = UUID().uuidString
+        app.launchEnvironment["TIMBRE_SKIP_ONBOARDING"] = "1"
+        app.launchEnvironment["TIMBRE_DEMO_DATA"] = "1"
+        app.launch()
+        XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 25))
+        app.tabBars.buttons["Learn"].tap()
+        let lesson = element("learn.continue")
+        XCTAssertTrue(lesson.waitForExistence(timeout: 10))
+        XCTAssertTrue(lesson.isHittable)
+        XCTAssertFalse(question.exists)
+    }
 
     /// A strum with a missing open G must mark string 3 silent and keep the chord unfinished.
     func testADeadStringIsNamedWithoutCompletingTheChord() {

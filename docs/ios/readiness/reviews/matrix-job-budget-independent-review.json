@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-27T05:10:12Z",
+  "reviewer": "Independent integration review agent",
+  "verdict": "approve_matrix_job_budget_only_native_completion_pending",
+  "scope": "localization-matrix.yml timeout60 to90minutes plus explanatory comment only.",
+  "findings": [],
+  "source_verification": [
+    "Independent parsed YAML comparison against HEAD differs only at localized-launch.timeout-minutes.",
+    "Eight groups still contain48 unique locales. Matrix strategy, max-parallel2, fail-fastfalse, exact fixture/coverage checks, assertions and launch-only retry classifier are unchanged.",
+    "Individual expectation/assertion deadlines are not increased.90minutes remains a finite outer job budget."
+  ],
+  "native_timing": {
+    "log": "C:/Users/shahr/Desktop/Translation/native-qa/matrix-western-0081d2a-final.log",
+    "log_sha256": "12ee6efc63653ba81e88684bf3858adce51a359723b9676db40a725d5593435f",
+    "run_from_artifact_url": 40445795060,
+    "first_log_timestamp": "2026-10-27T03:46:31.084474Z",
+    "complete_markers": {
+      "de": "2026-10-27T04:21:26.138595Z",
+      "es": "2026-10-27T04:28:30.547117Z",
+      "fr": "2026-10-27T04:34:54.017810Z",
+      "it": "2026-10-27T04:41:20.402960Z"
+    },
+    "pt_lesson_only": "2026-10-27T04:43:20.395619Z",
+    "cancellation": "2026-10-27T04:47:27.257393Z",
+    "observations": [
+      "Cancellation occurs after roughly60minutes56seconds of runner log time with pt incomplete and no complete nl marker; old shard is not passed.",
+      "Result export then fails because Localization.xcresult/Info.plist is absent; this is an incomplete result-bundle export, not evidence that the built app Info.plist is missing.",
+      "Log19416 reports only6 uploaded files. Extra job time permits tours and final export but does not certify future completion or reclassify old cancellation as success."
+    ]
+  },
+  "independent_checks": [
+    { "check": "Exact YAML semantic comparison and48-locale count", "result": "pass" },
+    { "command": "git -c core.autocrlf=false diff --check -- .github/workflows/localization-matrix.yml", "exit_code": 0 }
+  ],
+  "reviewed_sha256": { ".github/workflows/localization-matrix.yml": "897b3660b183a1ac21390c375b8084e733de5b7f31d9fb1edcc16032e073c0b2" },
+  "limits": "No new90-minute native matrix executed or passed by reviewer. Require all48 final-candidate completion markers, assertions and actual artifacts; preserve the incomplete old run.",
+  "mutations": "Only this review receipt written; no source/config edit, commit or push."
+}

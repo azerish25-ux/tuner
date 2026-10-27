@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-27T05:10:12Z",
+  "reviewer": "Independent integration review agent",
+  "skill": "code-review-and-quality",
+  "verdict": "approve_bounded_test_installation_isolation_and_fixture_setup_native_pending",
+  "scope": "OnboardingDeferral defaults/key injection, four unit tests, FirstSession same/new-install UI regression and existing-style StoreKit fixture initialization.",
+  "findings": [],
+  "source_assessment": [
+    "Normal launches preserve onboarding.questionsDeferred in standard defaults. Release TestSupport.value returns nil; only a valid supplied debug test-storage UUID adds a canonical UUID suffix. No production preference migration, global reset or user-flow change introduced.",
+    "Fresh automated LocalStore installations now own matching deferred-question state instead of inheriting the global pending flag from another UI test. Same UUID relaunch retains its own pending/resolve state; another UUID cannot resolve it.",
+    "Four tests use unique temporary UserDefaults suites and explicit storage IDs/nil, avoiding mutation of shared production state. They cover cross-install freshness, independent resolution, legacy normal-key persistence and automated/normal separation.",
+    "The UI regression reaches Tune through Just tune, relaunches the sameID and requires Learn questions, then changesUUID and requires hittable learn.continue with no questionnaire. It tests persistence as well as isolation rather than merely clearing state.",
+    "FirstSession now retains SKTestSession named Timbre and uses the same reset/clear/disableDialogs setup as existing tour/audit classes. Strong yearly-card/paywall assertions remain; no product entitlement or commerce shortcut added.",
+    "Initializer dependencies, UUID validation, MainActor unit class and existing StoreKitTest target usage are internally consistent by inspection. Actual Swift/Xcode and UI fixture execution remain required."
+  ],
+  "authored_native_coverage": { "new_unit_methods": 4, "new_UI_method": "testDeferredQuestionsPersistOnlyForTheInstallationThatSkippedThem", "execution": "UNRUN by reviewer" },
+  "independent_check": { "command": "git -c core.autocrlf=false diff --check -- ios/Timbre/Onboarding/OnboardingDeferral.swift ios/TimbreAppTests/OnboardingDeferralTests.swift ios/TimbreUITests/FirstSessionUITests.swift", "exit_code": 0 },
+  "reviewed_sha256": {
+    "ios/Timbre/Onboarding/OnboardingDeferral.swift": "5961fad59af5878701266ff351a90ec5121d0825734c27f291dd4810410c415e",
+    "ios/TimbreAppTests/OnboardingDeferralTests.swift": "38e31b568c17faf476e3541bfb6d075764b1597d2b4dbb43fe1db8ad3978c3e8",
+    "ios/TimbreUITests/FirstSessionUITests.swift": "262d875ec3fb02d585e83c1f9d54a6c7ad851234f84eaf74100a0a85fc40adc3"
+  },
+  "remaining_acceptance": [
+    "Run four unit tests and actual sameID/newID FirstSession regression on final native candidate.",
+    "Run full first-session/tour ordering and inspect real Learn/purchase states; retain hittability and yearly-card assertions.",
+    "StoreKit asynchronous cleanup/termination infrastructure still needs execution evidence. This fixture addition alone does not fix unrelated StoreKit, preview/audio or privacy failures."
+  ],
+  "limits": "Parent supplied the native tour overlay/Pro-unavailable observations. This bounded review corroborated their source mechanism, not independently inspected those failure images or executed new tests. Earlier queued e3 run excludes these uncommitted bytes.",
+  "mutations": "Only this review receipt written; no implementation, original evidence, commit or publication edited by reviewer."
+}

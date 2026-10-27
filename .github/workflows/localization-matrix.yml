@@ -13,7 +13,8 @@ jobs:
   localized-launch:
     if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[l10n-matrix]')
     runs-on: macos-15
-    timeout-minutes: 60
+    # Six real locale tours plus a cold build must finish before result-bundle export.
+    timeout-minutes: 90
     strategy:
       fail-fast: false
       max-parallel: 2
