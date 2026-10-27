@@ -1,5 +1,6 @@
 import CoreText
 import SwiftUI
+import TimbreCore
 import UIKit
 import XCTest
 @testable import Timbre
