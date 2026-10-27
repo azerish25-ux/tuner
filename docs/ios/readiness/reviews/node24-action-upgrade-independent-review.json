@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-27T02:14:18.616332+00:00",
+  "base_head": "b983379dc8bc5fd61f3a1d27f1d8a89c2e72305e",
+  "skills": [
+    "code-review-and-quality",
+    "github-actions-docs"
+  ],
+  "verdict": "request_changes_artifact_single_match_layout_regression",
+  "scope": "Initial54 official-action pin replacements in12 workflows, before any compatibility resolution.",
+  "findings": [
+    {
+      "id": "NODE24-01",
+      "priority": "P2",
+      "paths": [
+        {
+          "path": ".github/workflows/ios.yml",
+          "line": 374
+        },
+        {
+          "path": ".github/workflows/nightly.yml",
+          "line": 341
+        }
+      ],
+      "problem": "download-artifactv7 inherits v5 single-match pattern flattening. When results-* matches only one available artifact, files extract directly into results/, but both publication loops require results/results-$job. Partial-failure runs therefore skip publication of their sole available evidence artifact. merge-multiple:false does not prevent this because pinned action code explicitly checks artifacts.length===1.",
+      "evidence": [
+        "Pinned README lines35-47 explicitly documents single-pattern-match direct extraction.",
+        "Pinned src/download-artifact.ts lines177-181 chooses resolvedPath when artifacts.length===1.",
+        "ios.yml385/nightly.yml352 skip every job when the expected nested directory is absent."
+      ],
+      "remaining_action": "Download each known result artifact by explicit name into results/results-<name>, tolerating absent artifacts as before, or otherwise preserve per-artifact named destinations using verified API metadata. Preserve publication credentials and current original failure conditions."
+    }
+  ],
+  "positive_review": [
+    "Independently fetched all5 exact action.yml URLs and recomputed hashes: all match author receipt; all use node24.",
+    "Independently normalized action uses lines and proved all12 current workflow bodies equal HEAD except54 action reference lines. This proves source-scope containment, not unchanged dependency behavior.",
+    "Named listing-simulator-build/listing-plan downloads retain direct destination layout. Pattern listing-manifests aggregation uses rglob, so single-match flattening remains compatible there.",
+    "Pinned checkoutv5 README retains persisted local-git-config credentials by default and supports persist-credentials:false. Publisher script creates a separate temporary repository and uses explicit GH_TOKEN HTTPS credentials, so it does not depend on checkout auth persistence in that new repository. Existing flags/write-job permissions remain unchanged.",
+    "upload-artifactv6/download-artifactv7 explicitly default toNode24; previous uploadv5/downloadv6 only provided preliminary support. No new direct-file artifact mode is introduced."
+  ],
+  "verification": [
+    {
+      "check": "Exact5 action.yml byte-hash/runtime verification over official raw SHA URLs",
+      "result": "pass"
+    },
+    {
+      "check": "Independent line normalization and pinned-reference validation",
+      "files": 12,
+      "references": 54,
+      "result": "pass"
+    },
+    {
+      "command": "git -c core.autocrlf=false diff --check -- .github/workflows",
+      "exit_code": 0
+    }
+  ],
+  "primary_sources": [
+    "https://docs.github.com/en/actions/tutorials/store-and-share-data",
+    "https://github.com/actions/download-artifact/blob/37930b1c2abaa49bbe596cd826c3c89aef350131/README.md#v5---whats-new",
+    "https://github.com/actions/download-artifact/blob/37930b1c2abaa49bbe596cd826c3c89aef350131/src/download-artifact.ts#L177",
+    "https://github.com/actions/upload-artifact/releases/tag/v6.0.0",
+    "https://github.com/actions/download-artifact/releases/tag/v7.0.0",
+    "https://github.com/actions/checkout/blob/93cb6efe18208431cddfb8368fd83d5badbf9bfd/README.md"
+  ],
+  "workflow_sha256": {
+    ".github/workflows/apple-delivery.yml": "957188b5e7925184e66d404a37a7a26b184a629007d4051d0d8b8b5ba245b257",
+    ".github/workflows/assets.yml": "1e15c69edc3915771cc851f6740466a274265e5d5353b23a943e187f1bc018b0",
+    ".github/workflows/caption-typography.yml": "01ee4f6a59cf0076b7c8d22aa3bbab0200f80f964b4939283a4acfbac5156bfd",
+    ".github/workflows/cards.yml": "5103fc0cbf690562d421e94814578e6b5ff8412072b592c97a0cbcb008ec959a",
+    ".github/workflows/ios.yml": "01823b9978cc2112b009284d6f6de67e88741b16d1421da2e1fcb418c55f1ce5",
+    ".github/workflows/l10n.yml": "35399536534f74eb028155623ee18f09e4c5b60e402c4cbfa86059b5b70efff0",
+    ".github/workflows/listing-assets.yml": "971a8b00bf783087f2bcc04b83447e5959d5215bc97a675162a034fc747b00e6",
+    ".github/workflows/localization-matrix.yml": "dbc6257960fc492a8432ed43a816c552b7c304e19bc7bced8fc1b73a24334f8a",
+    ".github/workflows/localized-capture-check.yml": "9ad298d31f705af634fac30639a507686857cdab0d5b5f8011588ea484ae5ffd",
+    ".github/workflows/nightly.yml": "cd829719a277e9d3133613f45304c90a1be1ec33588ae56190568abd0b817707",
+    ".github/workflows/preview.yml": "ee4ce92f5ac1f0dfc6120cdae6f59df17dee6233be1cc8798c587aae75c6f52e",
+    ".github/workflows/watch-captures.yml": "707c02ebca9414204bf286f1dec6c1f433ce65f3c89957e4fe0423d7973348b6"
+  },
+  "author_receipt_sha256": "2b32b91cc01d5754beaa2e2b27253048812a8568777d40428369c77195611db9",
+  "limits": [
+    "Hosted runner2.338.0 evidence is recorded in author receipt; this reviewer did not independently retrieve that private job log. Official minimum2.327.1 is below recorded version.",
+    "No GitHub-hosted job/action execution, native build, cache restore, artifact roundtrip or Apple delivery was performed by reviewer.",
+    "No implementation edited. Original receipts preserved; only this review receipt written."
+  ]
+}

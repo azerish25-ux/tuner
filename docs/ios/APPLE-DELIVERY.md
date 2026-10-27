@@ -69,8 +69,8 @@ Never paste these into chat, issues, commits or logs. Revoke the key in App Stor
 ## 4. Listing
 
 - Category: Music. Secondary: Education.
-- Age rating: 4+ ([APP-STORE-LISTING.md](APP-STORE-LISTING.md#age-rating) has every answer).
-- App Privacy: **Data Not Collected** holds only while `TELEMETRYDECK_APP_ID` is unset. Once analytics are on (§5), declare "Product Interaction → Analytics, not linked to the user, not used for tracking" before submitting, matching the privacy manifest. Game Center (§6) doesn't change the label: scores go to Apple under the player's own Game Center account.
+- Age rating: complete Apple's current questionnaire using the content and capabilities of the release build. [APP-STORE-LISTING.md](APP-STORE-LISTING.md#age-rating) contains the proposed answers; the portal determines the rating.
+- App Privacy: with analytics configured (§5), review all seven declared types: Product Interaction, Performance Data, Crash Data, Advertising Data, Device ID, Purchase History and Other User Content. The source manifest marks these for Analytics, not linked to the user and not used for tracking; [release checklist H6](RELEASE-CHECKLIST.md#h6-app-privacy) explains their source. Compare the final archive and active services with [Apple's current questions](https://developer.apple.com/app-store/app-privacy-details/) before entering responses. An unset TelemetryDeck ID disables this app's analytics uploads; it does not by itself certify a Data Not Collected answer for every service or future configuration.
 - Encryption: the app uses only Apple's standard encryption (`ITSAppUsesNonExemptEncryption = false`).
 - Text, keywords, screenshots and the App Preview: [APP-STORE-LISTING.md](APP-STORE-LISTING.md) (English) and [APP-STORE-LISTING-LOCALIZED.md](APP-STORE-LISTING-LOCALIZED.md). The store frames are composed from the CI captures by `tools/marketing/screenshots.py` (6.9" iPhone 1320×2868, 13" iPad 2752×2064); the App Preview comes from the **App Preview** workflow (`ci-results/preview`: `preview.mp4`, and the poster frame's time in `PREVIEW.txt`). Upload both in App Store Connect → the version → Previews and Screenshots, iPhone 6.9" and iPad 13"; App Store Connect scales them down for the smaller displays.
 - Subscription disclosures are on the paywall (price, period, auto-renewal, cancel in Settings, Terms and Privacy links), as App Review Guideline 3.1.2 requires.
@@ -112,12 +112,12 @@ Before submitting with analytics on, update the App Privacy label (§4) and the 
 
 ## 6. Growth features: owner steps
 
-The app ships with all of these switched on in code, and each works as soon as its App Store Connect setup exists. Until then it stays out of sight: no Leaderboard chips, "Challenge a friend" shares a link instead of a Game Center challenge, no friend streak, no exit offer, and an offer-code sheet with nothing to redeem. Nothing crashes or prompts. The identifiers below are also in `ios/Timbre/Services/GameCenterIDs.swift`, and they must match exactly. Game Center IDs use only letters, digits and periods, because challenge IDs allow nothing else.
+Game Center is disabled by default through `TIMBRE_GAME_CENTER_ENABLED=NO`. Keep it off for the base release unless its account records, entitlement, assets and device checks are complete; enabling portal records alone does not enable the app feature. Other purchase-related features depend on actual Apple offers and product eligibility. The Game Center identifiers below are also in `ios/Timbre/Services/GameCenterIDs.swift` and must match configured records exactly.
 
 ### 6.1 Game Center
 
 1. **Capability.** Under Certificates, Identifiers & Profiles → Identifiers → `com.shahradazerisharghi.timbre`, check that **Game Center** is ticked. It is on by default for explicit App IDs.
-2. **Entitlement.** This is a one-line change to `ios/project.yml`. Under `targets → Timbre → entitlements → properties`, add `com.apple.developer.game-center: true` beside the App Group. The delivery workflow signs automatically, and its Admin API key can update the provisioning profile. The entitlement was left out of the repo on purpose, so CI never signs with a capability the App ID might not have yet. Without it, Game Center may refuse to sign in on TestFlight and App Store builds; the app then carries on without it. Do not add `gamekit` to `UIRequiredDeviceCapabilities`.
+2. **Entitlement and feature switch.** After the account records and assets are ready, add `com.apple.developer.game-center: true` under `targets → Timbre → entitlements → properties` in `ios/project.yml`, and set `TIMBRE_GAME_CENTER_ENABLED=YES` for the intended release configuration. Verify the signed profile, authentication and reporting on a device. The entitlement is omitted and the feature switch is off in the default release. Do not add `gamekit` to `UIRequiredDeviceCapabilities`.
 3. **Friends list reason (for the friend streak).** This is a one-line change to `ios/project.yml`. Under `targets → Timbre → info → properties`, beside `NSMicrophoneUsageDescription`, add:
    `NSGKFriendListUsageDescription: Timbre shows where your practice streak stands among your Game Center friends who also play Timbre. It never shows their names.`
    GameKit shows this sentence in its one-time prompt. Without the key the app never asks, and the friend streak stays off.
@@ -272,7 +272,7 @@ Handoff and WatchConnectivity need no capability. The watch app's version and bu
   - the metronome mid-bar;
   - Today with a lit flame and a part-done ring;
   - a face with the circular and rectangular complications.
-- **App Privacy** is unchanged (Data Not Collected). The watch gets the streak and today's set from the player's own iPhone over WatchConnectivity, and nothing leaves their devices.
+- **App Privacy:** the watch's streak/Today synchronization uses WatchConnectivity between the player's devices. It does not remove the iPhone app's configured analytics disclosures in §4; review the combined release's actual data flows.
 - **Review notes.** Add: "The Apple Watch app is a companion. Its metronome works on its own. The streak and Today come from the iPhone app, so open it once after installing."
 - **Icon.** The watch icon is a copy of the iPhone icon (`ios/TimbreWatch/Assets.xcassets/AppIcon.appiconset/icon.png`), which watchOS masks to a circle. Replace it along with the new layered icon. It must stay 1024 × 1024 with no transparency.
 
@@ -300,7 +300,7 @@ watchOS keeps an app running with the screen off only in a workout, an audio ses
 
 | | Free | Timbre Pro |
 |---|---|---|
-| Charts kept (`YourSongsPolicy.freeChartLimit`) | 3 (charts already saved always open, play and edit) | Unlimited |
+| Charts kept (`YourSongsPolicy.freeChartLimit`) | 10 (charts already saved always open, play and edit) | Unlimited |
 | Song sheet: transpose, capo (and the easiest capo on guitar), chord boxes, auto-scroll, Practice | Yes | Yes |
 | Your own recording: play along, tap-along sync, the chart following it | Yes | Yes |
 | Your own recording: slow down (pitch kept), A–B loop, detect the chords (draft chart) | — | Yes |
@@ -330,14 +330,14 @@ Get Apple's written answer before adding anything beyond this (playbook section 
 
 ### 8.4 App Store Connect
 
-- **App Privacy** stays "Data Not Collected". Charts and recordings never leave the device. Apple Music requests go to Apple under the player's own account, and Timbre stores only the catalog song's id with the chart.
+- **App Privacy:** imported audio and full chart text stay local. A user-initiated Apple Music search can send the selected title and artist, further queries, catalog lookups and playback requests to Apple through MusicKit. This feature does not remove the configured analytics disclosures in §4. The [privacy policy](PRIVACY.md) describes these separate flows.
 - **Review notes.** Add: "Your songs (Songs tab → Add a song) plays charts and recordings the user supplies; the app includes no copyrighted songs. Listen on Apple Music is a plain player for subscribers, started by the user, free, and not synchronised with anything. To try it, add a song (paste any chord chart), then tap Find this song on Apple Music."
 - **Terms.** Add a clause to the Terms that users import only charts and recordings they have the right to use (playbook, "Next 30 days"). The Add a song sheet says the same.
 
 ### 8.5 Check on a device (TestFlight)
 
 1. **Import.** Import `.cho` and `.txt` files from Files, including a chord sheet with the chords over the words, and paste one. Check the section names, the chords over the right syllables, and the title. AirDrop or share a `.cho` file to Timbre from another app: the Songs tab opens it.
-2. **Free limit.** On a free account, a fourth chart opens the paywall from the Songs tab, from the Add sheet and from "Open in Timbre". The first three still open, edit and play.
+2. **Free limit.** Without Pro, an eleventh chart opens the paywall from the Songs tab, from the Add sheet and from "Open in Timbre". The first ten still open, edit and play.
 3. **Song view.** Transpose up and down: the chord names and boxes follow, and flat keys use flats. Change the capo, and on guitar check the easiest-capo tip (try a chart in B♭). Tap the chord boxes to hear them. Change the text size from the menu.
 4. **Auto-scroll.** Check that the tempo buttons scroll at about a bar a chord, the chord lights a beat early, and dragging the sheet pauses the following.
 5. **Your recording.** Add an `.m4a` or `.mp3`. Check play, ±5 s and the scrubber. Tap Sync, tap through a verse and tap Done: replay it and the chart follows. With Pro, check Speed at 50% (the pitch stays the same), loop A–B (gapless), and transpose (the recording follows the key). A copy-protected file is refused with a message.

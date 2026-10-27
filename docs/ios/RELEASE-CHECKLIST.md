@@ -275,7 +275,7 @@ The delivery workflow's automatic signing registers the bundle IDs and the App G
 - **Enter:**
   - `TIMBRE_PRIVACY_POLICY_URL: "https://<domain>/privacy"` under `targets → Timbre → settings → base`. It feeds `TimbrePrivacyURL` and `TimbrePrivacyPolicyURL`, which the paywall and Settings link to. Also change the `publishedPrivacy` fallback in `ShareDestination.swift` to the same address.
   - **Only if Game Center ships in 2.0.0** (decision 0.6): `com.apple.developer.game-center: true` under the Timbre target's entitlements, and the `NSGKFriendListUsageDescription` line from [APPLE-DELIVERY.md §6.1](APPLE-DELIVERY.md#61-game-center).
-  - Recommended: complete the privacy manifest `ios/Timbre/Resources/PrivacyInfo.xcprivacy` to match H6. Today it lists Product Interaction, Performance Data, Crash Data and Advertising Data. H6 also declares Device ID, Purchase History and Other User Content.
+  - Verify the final archive's privacy report against H6. The source manifest now declares all seven listed types, including Device ID, Purchase History and Other User Content; source presence does not replace archive or portal verification.
 - **Verify:** `gate` is green on the PR. In the TestFlight build, the paywall's Privacy link opens the new address.
 
 ---
@@ -435,7 +435,7 @@ These aren't in AUDIO-DEVICE-TESTS.md yet; record them in its Results table as c
 
 ### F4. The rest of the app on hardware
 - [ ] **Apple Watch:** every step of [APPLE-DELIVERY.md §7.3](APPLE-DELIVERY.md#73-check-on-a-real-watch-testflight): install, feel at 60/120/200/240 BPM, wrist down, sync, Start today's practice, midnight.
-- [ ] **Your songs and Apple Music:** every step of [APPLE-DELIVERY.md §8.5](APPLE-DELIVERY.md#85-check-on-a-device-testflight). The free chart limit in this build is **10** (`YourSongsPolicy.freeChartLimit`), not the 3 that section still says. Test the 11th.
+- [ ] **Your songs and Apple Music:** every step of [APPLE-DELIVERY.md §8.5](APPLE-DELIVERY.md#85-check-on-a-device-testflight). The free chart limit is **10** (`YourSongsPolicy.freeChartLimit`). Test the 11th.
 - [ ] **Game Center**, only if decision 0.6 turned it on: [APPLE-DELIVERY.md §6.1 step 9](APPLE-DELIVERY.md#61-game-center).
 - [ ] **Widgets, Live Activity, Siri:**
   - add the Home Screen and Lock Screen widgets: the streak shows;
@@ -528,18 +528,18 @@ python3 tools/marketing/screenshots.py ~/timbre-store/captures/ipad/ipad-screens
 | Name / Subtitle | `Timbre: Guitar Tuner & Lessons` / `Learn Songs: Ukulele & Violin` |
 | Category | Primary **Music**, secondary **Education** |
 | Content Rights | **Yes**, it contains third-party content, and you have the rights: public-domain songs (`docs/content/PUBLIC-DOMAIN-CLEARANCE.md`), CC0 recordings and credited CC BY 3D models (`docs/content/AUDIO-SOURCES.md`, Settings → Acknowledgements), Apple Music through MusicKit |
-| Age Rating | Answer every question as the table in [APP-STORE-LISTING.md → Age rating](APP-STORE-LISTING.md#age-rating) says. Contests: "Infrequent" with Game Center, "None" without. Made for Kids: not applicable. |
+| Age Rating | Use [APP-STORE-LISTING.md → Age rating](APP-STORE-LISTING.md#age-rating) as proposed answers, then verify each against the final content and enabled features in Apple's current questionnaire. Game Center is off by default; this app is not submitted in the Made for Kids category. |
 | Privacy Policy URL | B2's address |
 | License Agreement | Apple's standard EULA (the default) |
 
-- **Verify:** the age rating summary shows **4+**. The newer questions (in-app controls, capabilities, medical or wellness, violent themes and, since September 2026, social media) are all answered.
+- **Verify:** every current question is answered and the portal's resulting age rating accurately reflects the final app, content and capabilities. Do not force a target rating by changing factual answers. See [Apple's current age-rating procedure](https://developer.apple.com/help/app-store-connect/manage-app-information/set-an-app-age-rating/).
 
 ### H5. The version page (English (U.S.))
 - [ ] **Who:** owner. **Where:** iOS App → **2.0.0** (rename "1.0" here).
 - **Enter:**
   - **Promotional text**, **Description** and **Keywords** (97/100) from [APP-STORE-LISTING.md](APP-STORE-LISTING.md#keywords-97100), pasted exactly. In the description:
-    - replace `<privacy policy URL>` with B2's address;
-    - delete the Game Center bullet if decision 0.6 left it off;
+    - use the already resolved canonical privacy URL and reviewed per-locale payloads;
+    - retain the current Game Center claim removal while the feature switch is off;
     - keep the band's line as "in your headphones" unless the listing has been updated since.
   - **Support URL:** B3's address. **Marketing URL:** optional.
   - **Version:** `2.0.0`. **Copyright:** `2026 Shahrad Azeri Sharghi`.
@@ -562,7 +562,7 @@ python3 tools/marketing/screenshots.py ~/timbre-store/captures/ipad/ipad-screens
 
   No ATT prompt, no tracking domains (the privacy manifest says `NSPrivacyTracking = false`).
 
-  **With analytics off** (no `TELEMETRYDECK_APP_ID`), the answer is "No, we do not collect data": no event leaves the device, and the remaining requests (the remote settings file, Apple's rating lookup and Apple Ads attribution) carry nothing about the person. In that case, publish a privacy page that says so.
+  **For a build without `TELEMETRYDECK_APP_ID`:** the telemetry transport is disabled, including analytics uploads, Apple Ads attribution HTTP and song-request submission. Remaining services such as remote settings, Apple's rating lookup, optional MusicKit searches and support email have their own request metadata and network information. Determine the portal answer from the final archive, enabled services and [Apple's current collection questions](https://developer.apple.com/app-store/app-privacy-details/), rather than inferring Data Not Collected from one missing ID. Keep the published policy aligned with these conditional behaviors.
 - **Verify:** the product page preview shows "Data Not Linked to You" with those categories, and **no** "Data Used to Track You". PRIVACY.md describes each one.
 
 ### H7. Accessibility Nutrition Labels (voluntary, and a free difference)
@@ -706,7 +706,7 @@ Anonymous usage analytics (TelemetryDeck) are not linked to the user and not use
   - a real purchase if you want one: refund it through reportaproblem.apple.com afterwards, and watch `refund` arrive.
 - [ ] The product page shows:
   - the three in-app purchases;
-  - age **4+**;
+  - age consistent with the app's current portal rating and the event's content;
   - **English** as the language;
   - the privacy label from H6;
   - the accessibility features from H7;

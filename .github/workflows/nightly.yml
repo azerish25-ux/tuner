@@ -25,7 +25,7 @@ jobs:
     timeout-minutes: 90
     runs-on: macos-15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
       - name: Generate Xcode project
         run: |
           command -v xcodegen >/dev/null 2>&1 || brew install xcodegen
@@ -73,13 +73,13 @@ jobs:
           fi
           for log in ci-out/build.log ci-out/test.log; do [ -f "$log" ] && python3 tools/ci/summarize-log.py "$log" "${log%.log}.summary.txt"; done
           gzip -f ci-out/build.log ci-out/test.log 2>/dev/null || true
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()
         with:
           name: results-tour
           path: ci-out
           retention-days: 14
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()
         with:
           name: ios-evidence
@@ -94,7 +94,7 @@ jobs:
     timeout-minutes: 45
     runs-on: macos-15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
       - name: Verify iPad SDK environment
         run: |
           xcodebuild -version
@@ -215,13 +215,13 @@ jobs:
           fi
           [ -f ci-out/ipad-test.log ] && python3 tools/ci/summarize-log.py ci-out/ipad-test.log ci-out/ipad-test.summary.txt
           gzip -f ci-out/ipad-test.log 2>/dev/null || true
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()
         with:
           name: results-ipad
           path: ci-out
           retention-days: 14
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()
         with:
           name: ipad-evidence
@@ -236,7 +236,7 @@ jobs:
     timeout-minutes: 75
     runs-on: macos-15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
       - name: Generate Xcode project
         run: |
           command -v xcodegen >/dev/null 2>&1 || brew install xcodegen
@@ -289,7 +289,7 @@ jobs:
             xcrun xcresulttool export attachments --path "$bundle" --output-path "ci-out/$name" || true
           done
           gzip -f ci-out/matrix-*.log 2>/dev/null || true
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()
         with:
           name: results-a11y-matrix
@@ -302,7 +302,7 @@ jobs:
     timeout-minutes: 30
     runs-on: macos-15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
       - name: Swift core tests with the thread sanitizer
         run: |
           set -o pipefail
@@ -313,7 +313,7 @@ jobs:
         run: |
           python3 tools/ci/summarize-log.py ci-out/tsan.log ci-out/tsan.summary.txt || true
           gzip -f ci-out/tsan.log 2>/dev/null || true
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()
         with:
           name: results-tsan
@@ -335,14 +335,30 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
         with:
           sparse-checkout: tools/ci
-      - uses: actions/download-artifact@v4
+      # Named destinations keep partial-run evidence under the directories the publisher consumes.
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         continue-on-error: true
         with:
-          pattern: results-*
-          path: results
+          name: results-tour
+          path: results/results-tour
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+        continue-on-error: true
+        with:
+          name: results-ipad
+          path: results/results-ipad
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+        continue-on-error: true
+        with:
+          name: results-a11y-matrix
+          path: results/results-a11y-matrix
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+        continue-on-error: true
+        with:
+          name: results-tsan
+          path: results/results-tsan
       - name: Publish
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -58,7 +58,7 @@ jobs:
       # "internal" for a build that skipped the translation gate: exported for internal TestFlight testing only.
       BUILD_CHANNEL: ${{ inputs.internal_testflight_untranslated && 'internal' || '' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
         with:
           persist-credentials: false
       - name: Validate inputs and credentials without displaying values

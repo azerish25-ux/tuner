@@ -36,7 +36,7 @@ jobs:
     outputs:
       matrix: ${{ steps.plan.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
         with:
           persist-credentials: false
       - name: Validate requested scope and exact locale coverage
@@ -56,7 +56,7 @@ jobs:
           python3 -m venv ci-out/test-venv
           ci-out/test-venv/bin/pip install --quiet pillow
           ci-out/test-venv/bin/python3 -m unittest discover -s tools/marketing/tests -p 'test_listing_assets.py'
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: listing-plan
           path: ci-out/plan.json
@@ -72,7 +72,7 @@ jobs:
       HOMEBREW_NO_AUTO_UPDATE: '1'
       HOMEBREW_NO_INSTALL_CLEANUP: '1'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
         with:
           persist-credentials: false
       - name: Generate complete capture fixtures and project once
@@ -117,7 +117,7 @@ jobs:
           }
           listing_assets.write_json(Path('ci-out/build/build-info.json'), info)
           PY
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()
         with:
           name: listing-simulator-build
@@ -139,10 +139,10 @@ jobs:
       HOMEBREW_NO_AUTO_UPDATE: '1'
       HOMEBREW_NO_INSTALL_CLEANUP: '1'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
         with:
           persist-credentials: false
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
           name: listing-simulator-build
           path: ci-build
@@ -183,7 +183,7 @@ jobs:
             --products ios/build/listing/Build/Products --build-archive ci-build/products.tgz \
             --build-info ci-build/build-info.json --source-sha "$GITHUB_SHA" \
             --out ci-out/assets --manifests ci-out/manifests
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()
         with:
           name: listing-assets-${{ matrix.id }}
@@ -193,7 +193,7 @@ jobs:
           if-no-files-found: error
           compression-level: 0
           retention-days: 7
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()
         with:
           name: listing-manifests-${{ matrix.id }}
@@ -206,14 +206,14 @@ jobs:
     needs: [plan, build, capture]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
         with:
           persist-credentials: false
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
           name: listing-plan
           path: ci-plan
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
           pattern: listing-manifests-*
           path: ci-manifests
@@ -222,7 +222,7 @@ jobs:
           python3 tools/marketing/listing_assets.py aggregate --plan ci-plan/plan.json \
             --manifests ci-manifests --source-sha "$GITHUB_SHA" --out ci-out/inventory.json
           echo 'Capture/render mechanical checks passed. Native-language, glyph/RTL/layout and visual/audio review remain pending; release_ready is false.' >> "$GITHUB_STEP_SUMMARY"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()
         with:
           name: listing-inventory

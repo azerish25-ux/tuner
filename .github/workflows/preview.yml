@@ -49,7 +49,7 @@ jobs:
       OUT: preview-out
       CUT: ${{ matrix.cut }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
       - name: Install XcodeGen, ffmpeg and the preview tool's Python
         run: |
           brew install xcodegen
@@ -177,7 +177,7 @@ jobs:
           bash tools/ci/publish-results.sh "$branch" ci-preview
       # The full-size recording and the app's sound, to re-cut locally:
       # tools/marketing/preview.py render --out <folder> --log <folder>/take.log --attachments <folder>/attachments --audio <folder>/app
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()
         with:
           name: preview-recording-${{ matrix.cut }}

@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-27T02:16:08.244505+00:00",
+  "base_head": "b983379dc8bc5fd61f3a1d27f1d8a89c2e72305e",
+  "skills": [
+    "code-review-and-quality",
+    "github-actions-docs"
+  ],
+  "verdict": "approve_source_migration_and_compatibility_resolution_hosted_execution_pending",
+  "scope": "Pinned official Node24 action migration across12 workflows plus required explicit-name publisher download adaptation in ios/nightly. Initial uses-only implementation was not behaviorally equivalent; this receipt reviews the final adaptation.",
+  "original_review": "docs/ios/readiness/reviews/node24-action-upgrade-independent-review.json",
+  "original_review_sha256": "c90863dc29950efb166a79e00c6ed2911e13db216e3ef0b2e88fac25d516e4e1",
+  "findings": [],
+  "resolved_findings": [
+    {
+      "id": "NODE24-01",
+      "status": "resolved_in_source",
+      "evidence": [
+        "ios publisher explicitly downloads results-core/app/release/accessibility into results/results-<job>.",
+        "Nightly publisher explicitly downloads results-tour/ipad/a11y-matrix/tsan into corresponding results/results-<job>.",
+        "All8 downloads retain continue-on-error:true, so absent producer artifacts do not prevent other named downloads or publication.",
+        "The exact pinned v7 action resolves a named artifact then extracts directly to supplied path; missing named artifact throws before download/extraction. Named destination is therefore stable for one or multiple available artifacts and matches the unchanged publisher loop."
+      ],
+      "runtime_acceptance": "On next hosted run, verify a normal multiple-result case and a partial-run/one-available-artifact case publish the expected evidence branch contents."
+    }
+  ],
+  "compatibility_assessment": [
+    "All5 exact official action.yml byte hashes and node24 runtime declarations were independently verified in the initial review; those pins remain unchanged.",
+    "Initial54 replaced references become60 final references because two pattern download steps were expanded to8 named downloads. Ten other workflow files remain byte-identical to initial reviewed upgrade hashes.",
+    "Named listing build/plan downloads preserve direct paths. Remaining listing-manifests pattern download is consumed using recursive rglob and accepts both direct single-artifact and named multiple-artifact folders.",
+    "checkoutv5 preserves declared persist-credentials:false opt-outs and default local-git authentication. Publisher script explicitly authenticates its separate temporary repository through GH_TOKEN; current credentials/permissions do not rely on the newer checkoutv6 separate-credential-file design.",
+    "Artifact uploads remain archive-based using existing paths, names, compression and retention settings; new direct-file features are not adopted.",
+    "Runner minimum2.327.1 is documented by official action sources. Author receipt records actual hosted2.338.0; private log retrieval is not independently repeated here."
+  ],
+  "independent_verification": [
+    {
+      "check": "Ruby YAML.load_file(...,aliases:true) on every workflow",
+      "parsed_files": 12,
+      "result": "pass"
+    },
+    {
+      "check": "Parsed exact8 publisher download names/destinations/continue-on-error flags and count",
+      "result": "pass"
+    },
+    {
+      "check": "Final official action uses count",
+      "references": 60
+    },
+    {
+      "check": "Ten unchanged workflows match original independent review byte hashes",
+      "result": "pass"
+    },
+    {
+      "command": "git -c core.autocrlf=false diff --check -- .github/workflows",
+      "exit_code": 0
+    }
+  ],
+  "primary_references": [
+    "https://docs.github.com/en/actions/tutorials/store-and-share-data",
+    "https://github.com/actions/download-artifact/blob/37930b1c2abaa49bbe596cd826c3c89aef350131/README.md#v5---whats-new",
+    "https://github.com/actions/download-artifact/blob/37930b1c2abaa49bbe596cd826c3c89aef350131/src/download-artifact.ts#L72",
+    "https://github.com/actions/checkout/blob/93cb6efe18208431cddfb8368fd83d5badbf9bfd/README.md",
+    "https://github.com/actions/upload-artifact/releases/tag/v6.0.0",
+    "https://github.com/actions/download-artifact/releases/tag/v7.0.0"
+  ],
+  "workflow_sha256": {
+    ".github/workflows/apple-delivery.yml": "957188b5e7925184e66d404a37a7a26b184a629007d4051d0d8b8b5ba245b257",
+    ".github/workflows/assets.yml": "1e15c69edc3915771cc851f6740466a274265e5d5353b23a943e187f1bc018b0",
+    ".github/workflows/caption-typography.yml": "01ee4f6a59cf0076b7c8d22aa3bbab0200f80f964b4939283a4acfbac5156bfd",
+    ".github/workflows/cards.yml": "5103fc0cbf690562d421e94814578e6b5ff8412072b592c97a0cbcb008ec959a",
+    ".github/workflows/ios.yml": "f810aaa92af975a82e441ba77c856a46d0e6962ec559872b09932eca68e2b849",
+    ".github/workflows/l10n.yml": "35399536534f74eb028155623ee18f09e4c5b60e402c4cbfa86059b5b70efff0",
+    ".github/workflows/listing-assets.yml": "971a8b00bf783087f2bcc04b83447e5959d5215bc97a675162a034fc747b00e6",
+    ".github/workflows/localization-matrix.yml": "dbc6257960fc492a8432ed43a816c552b7c304e19bc7bced8fc1b73a24334f8a",
+    ".github/workflows/localized-capture-check.yml": "9ad298d31f705af634fac30639a507686857cdab0d5b5f8011588ea484ae5ffd",
+    ".github/workflows/nightly.yml": "fe180c226933d295f30f836b042c8b8bdbf4045dee84530cb3e7b6e8b9f05514",
+    ".github/workflows/preview.yml": "ee4ce92f5ac1f0dfc6120cdae6f59df17dee6233be1cc8798c587aae75c6f52e",
+    ".github/workflows/watch-captures.yml": "707c02ebca9414204bf286f1dec6c1f433ce65f3c89957e4fe0423d7973348b6"
+  },
+  "limits": [
+    "Hosted action execution, artifact roundtrip/publication, cache restore and native checks await PR workflow results. Source/API review is not a hosted pass.",
+    "Root reports187 Python tests passed after original action pins; this reviewer independently ran YAML/structure/hash/diff checks appropriate to the dependency adaptation and did not rerun unaffected Python suite.",
+    "No Apple delivery was dispatched; no implementation, prior receipt, commit or push was modified by reviewer."
+  ],
+  "mutations": "Only new independent review receipts written; original request-changes and author upgrade receipts preserved."
+}

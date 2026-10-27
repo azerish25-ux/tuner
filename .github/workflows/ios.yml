@@ -28,7 +28,7 @@ jobs:
     timeout-minutes: 15
     runs-on: macos-15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
         with:
           # The commit history for the [skip ci] check, without the file contents of other commits (or of the
           # ci-results branches): a blobless clone fetches commits and trees only.
@@ -112,7 +112,7 @@ jobs:
       - name: Summarize
         if: always()
         run: python3 tools/ci/summarize-log.py ci-out/core.log ci-out/core.summary.txt || true
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()
         with:
           name: results-core
@@ -125,7 +125,7 @@ jobs:
     timeout-minutes: 25
     runs-on: macos-15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
       - name: Verify App Store SDK minimum
         run: |
           xcodebuild -version
@@ -148,7 +148,7 @@ jobs:
         id: modkey
         run: echo "key=$(cat ios/project.yml ios/Package.swift | shasum -a 256 | cut -c1-16)" >> "$GITHUB_OUTPUT"
       - name: Restore the compiled module cache
-        uses: actions/cache@v4
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
           path: ios/build/dd/ModuleCache.noindex
           key: modules-${{ runner.os }}-xcode26.3-${{ steps.modkey.outputs.key }}
@@ -181,13 +181,13 @@ jobs:
           fi
           for log in ci-out/build.log ci-out/test.log; do [ -f "$log" ] && python3 tools/ci/summarize-log.py "$log" "${log%.log}.summary.txt"; done
           gzip -f ci-out/build.log ci-out/test.log 2>/dev/null || true
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()
         with:
           name: results-app
           path: ci-out
           retention-days: 7
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: failure()
         with:
           name: gate-xcresult
@@ -200,7 +200,7 @@ jobs:
     timeout-minutes: 25
     runs-on: macos-15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
       - name: Generate Xcode project
         run: |
           command -v xcodegen >/dev/null 2>&1 || brew install xcodegen
@@ -221,7 +221,7 @@ jobs:
         run: |
           [ -f ci-out/release.log ] && python3 tools/ci/summarize-log.py ci-out/release.log ci-out/release.summary.txt
           gzip -f ci-out/release.log 2>/dev/null || true
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()
         with:
           name: results-release
@@ -235,7 +235,7 @@ jobs:
     timeout-minutes: 55
     runs-on: macos-15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
       - name: Generate Xcode project
         run: |
           command -v xcodegen >/dev/null 2>&1 || brew install xcodegen
@@ -252,7 +252,7 @@ jobs:
         id: modkey
         run: echo "key=$(cat ios/project.yml ios/Package.swift | shasum -a 256 | cut -c1-16)" >> "$GITHUB_OUTPUT"
       - name: Restore the compiled module cache
-        uses: actions/cache@v4
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
           path: ios/build/dd/ModuleCache.noindex
           key: modules-${{ runner.os }}-xcode26.3-${{ steps.modkey.outputs.key }}
@@ -325,7 +325,7 @@ jobs:
             if [ -f "$log" ]; then python3 tools/ci/summarize-log.py "$log" "${log%.log}.summary.txt"; fi
           done
           gzip -f ci-out/test.log ci-out/test-relaunch.log 2>/dev/null || true
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()
         with:
           name: results-accessibility
@@ -368,14 +368,30 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
         with:
           sparse-checkout: tools/ci
-      - uses: actions/download-artifact@v4
+      # Named destinations keep the publisher layout stable even when only one job uploaded evidence.
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         continue-on-error: true
         with:
-          pattern: results-*
-          path: results
+          name: results-core
+          path: results/results-core
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+        continue-on-error: true
+        with:
+          name: results-app
+          path: results/results-app
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+        continue-on-error: true
+        with:
+          name: results-release
+          path: results/results-release
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+        continue-on-error: true
+        with:
+          name: results-accessibility
+          path: results/results-accessibility
       - name: Publish
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -2,6 +2,7 @@
 
 Updated October 26, 2026 (America/Halifax). Native verification candidate:
 `b6efd36f5f72d7ec723229949f7c54c32972b72c`.
+Reviewed follow-up changes and their native checks are in [PR #3](https://github.com/azerish25-ux/tuner/pull/3).
 
 **Submission readiness is not yet established.** Native builds, current simulator runs and actual release media
 are in progress. Apple account configuration and physical audio tests remain required before submission.
@@ -17,6 +18,7 @@ are in progress. Apple account configuration and physical audio tests remain req
 | Privacy and support | [Privacy](https://timbre-support.timbre.workers.dev/privacy) and [support](https://timbre-support.timbre.workers.dev/support) return HTTP 200 and exactly match built HTML. Policy wording matches current consent, attribution and song-request source behavior. |
 | Independent review | Audio, privacy, CI, seasonal access, Watch tooling and listing deltas have source-review receipts. The integration review found no new blocking source defect; native execution remains separate. |
 | Branch protection | `main` now requires the aggregate `gate` check with up-to-date branches. Normal administrator bypass is retained. [Verified settings](reviews/main-protection.json). The reviewed workflow update also requires accessibility to pass. |
+| Action runtimes | The follow-up pins five official Node24 actions to exact commits. Explicit publisher destinations preserve single-artifact evidence; [migration review](reviews/node24-action-upgrade-resolution-independent-review.json). Hosted execution remains pending. |
 | Historical findings | [Claude handoff reconciliation](reviews/claude-handoff-reconciliation.json) accounts for every one of the 44 historical issue-table rows and the handover claims. Follow-up fixes and native results must be read alongside that frozen snapshot. |
 
 The public policy verification is recorded in [privacy-publication-refresh.json](reviews/privacy-publication-refresh.json).
@@ -32,17 +34,22 @@ statements are superseded where current receipts establish a change.
 
 | Run | Required evidence |
 |---|---|
-| [iOS](https://github.com/azerish25-ux/tuner/actions/runs/40434233016) | Unsigned Release build passed. Core tests/coverage/lint, hosted app tests/smoke flows and accessibility audit remain pending. |
+| [iOS](https://github.com/azerish25-ux/tuner/actions/runs/40434233016) | Core tests/coverage/lint and unsigned Release build passed. The app job failed six privacy tests and suffered a fixture expectation exception; after restart, 102 remaining app tests and three smoke flows passed. This is not a full app-test pass. Accessibility remains in progress. |
 | [Localization export](https://github.com/azerish25-ux/tuner/actions/runs/40434232913) | Passed: current English XLIFF and strict checks against Xcode's actual keys. |
 | [48-language simulator matrix](https://github.com/azerish25-ux/tuner/actions/runs/40434232959) | Real localized launches, requested screens, request-state UI and retained screenshots for visual review. |
 | [Caption typography](https://github.com/azerish25-ux/tuner/actions/runs/40434232930) | Passed for all 50 store locales. Caption layout/glyph checks do not establish finished native media. |
 | [Localized capture checks](https://github.com/azerish25-ux/tuner/actions/runs/40434233041) | Actual selected English, German and Arabic store scenes. |
 | [Listing asset pilot](https://github.com/azerish25-ux/tuner/actions/runs/40434233043) | Real iPhone/iPad screenshots and preview pipeline for English, German and Arabic before the complete 50-locale run. |
-| [Watch captures](https://github.com/azerish25-ux/tuner/actions/runs/40434259810) | 98 genuine Watch app images across 49 app languages, mapped to 50 listings; native size, provenance, labels and visual inspection. |
+| [Watch captures](https://github.com/azerish25-ux/tuner/actions/runs/40434259810) | Failed at the first app launch with a simulator scene-update error. No completed screenshot set or visual acceptance is claimed. Diagnose the launch before producing the 98 required app images. |
 | [Nightly tour](https://github.com/azerish25-ux/tuner/actions/runs/40434262338) | Full iPhone/iPad flows, first session, captures, accessibility matrix, thread sanitizer and unsigned archive. |
 
 Earlier failed or cancelled runs are retained. Their failures are not replaced by a source-review approval.
 The previously observed accessibility failures have not been waived. Capture/parser fixtures are not release screenshots.
+The [privacy failure triage](reviews/privacy-native-failure-triage.json) identifies a defective trailing-slash test matcher
+and shared fixture callbacks/session cleanup. The follow-up isolates sessions and adds lifecycle regressions without
+changing production transport or raising the original test timeouts. A native rerun must establish the result.
+The [fixture resolution review](reviews/privacy-fixture-resolution-independent-review.json) covers the corrected
+session lifecycle, route assertion and 18 authored tests; source approval does not close the native failures.
 
 ## Remaining release evidence
 
