@@ -81,7 +81,10 @@ class LocalizedCaptureChecksTests(unittest.TestCase):
         for identifier in ['performance.combo.', 'performance.lyrics', 'performance.score', 'instruments.family.folk_world_strings', 'strum.summary.tune']:
             self.assertIn(identifier, checks)
         self.assertIn('hud == nil || score == nil || lyrics == nil || regions.count != 4', checks)
-        self.assertIn('target.frame.midX > app.frame.midX', checks)
+        # Physical geometry works in either language direction; require the full chip, not its centre.
+        self.assertIn('startX + viewport.midX - frame.midX', checks)
+        self.assertIn('viewport.insetBy(dx: 52, dy: 8).contains(frame)', checks)
+        self.assertIn('selected && banjo.exists && banjo.isHittable', checks)
         hud = (ROOT / 'ios/Timbre/Learn/HighwayHUD.swift').read_text()
         lyrics = (ROOT / 'ios/Timbre/Learn/HighwayLyrics.swift').read_text()
         self.assertIn('.accessibilityLabel(Text("Combo"))', hud)
@@ -141,7 +144,14 @@ class LocalizedCaptureChecksTests(unittest.TestCase):
             self.assertIn('CaptureLocalization.inTune', code)
             self.assertNotIn('(node.value as? String) == "Tuned"', code)
             self.assertNotIn('status == "In tune"', code)
-        self.assertIn('return (false, "the probe has no lock field")', phone)
+        self.assertIn('return (false, "no lock evidence cue")', phone)
+        self.assertIn('return (false, "no fresh continuous', phone)
+        self.assertIn('map(CaptureLockEvidence.samples) ?? []', phone)
+        evidence = (ROOT / 'ios/TimbreUITests/CaptureLockEvidence.swift').read_text()
+        self.assertIn('let locked: Bool', evidence)
+        self.assertIn('JSONDecoder().decode(Sample.self, from: Data(line.utf8)) else { return [] }', evidence)
+        self.assertIn('sample.locked && sample.active && stages.contains(sample.stage)', evidence)
+        self.assertIn('guard let began, let previous, now - previous.time <= maximumGap else { return false }', evidence)
 
     def test_guitar_results_capture_wait_covers_the_actual_take(self):
         curriculum = json.loads((ROOT / 'ios/Sources/TimbreCore/Resources/curriculum.json').read_text())

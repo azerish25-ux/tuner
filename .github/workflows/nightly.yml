@@ -13,7 +13,8 @@ permissions:
   contents: read
 concurrency:
   group: nightly-${{ github.ref }}
-  cancel-in-progress: false
+  # Only superseded pull-request evidence is canceled; main, manual and scheduled runs finish.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 env:
   DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
   HOMEBREW_NO_AUTO_UPDATE: "1"
@@ -41,6 +42,20 @@ jobs:
           set -o pipefail
           mkdir -p ios/build ci-out
           xcodebuild build-for-testing -project ios/Timbre.xcodeproj -scheme Timbre -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/build.log
+      # Publish compiler diagnostics before tests or the independent Release archive can delay them.
+      - name: Summarize simulator build immediately
+        if: always() && hashFiles('ci-out/build.log') != ''
+        run: python3 tools/ci/summarize-log.py ci-out/build.log ci-out/build.summary.txt
+      - name: Upload simulator build checkpoint
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        if: always() && hashFiles('ci-out/build.log') != ''
+        with:
+          name: nightly-build-${{ github.job }}-${{ github.run_attempt }}
+          path: |
+            ci-out/build.log
+            ci-out/build.summary.txt
+          if-no-files-found: error
+          retention-days: 14
       - name: Boot simulator and allow the microphone
         run: |
           xcrun simctl boot "$DEVICE_ID" || true
@@ -254,7 +269,21 @@ jobs:
           set -o pipefail
           mkdir -p ios/build ci-out
           xcodebuild build-for-testing -project ios/Timbre.xcodeproj -scheme Timbre -destination "platform=iOS Simulator,id=$DEVICE_ID" \
-            -derivedDataPath ios/build/dd COMPILER_INDEX_STORE_ENABLE=NO CODE_SIGNING_ALLOWED=NO 2>&1 | tail -40 | tee ci-out/build-tail.log
+            -derivedDataPath ios/build/dd COMPILER_INDEX_STORE_ENABLE=NO CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/build.log | tail -40 | tee ci-out/build-tail.log
+      # Publish compiler diagnostics before tests or the independent Release archive can delay them.
+      - name: Summarize simulator build immediately
+        if: always() && hashFiles('ci-out/build.log') != ''
+        run: python3 tools/ci/summarize-log.py ci-out/build.log ci-out/build.summary.txt
+      - name: Upload simulator build checkpoint
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        if: always() && hashFiles('ci-out/build.log') != ''
+        with:
+          name: nightly-build-${{ github.job }}-${{ github.run_attempt }}
+          path: |
+            ci-out/build.log
+            ci-out/build.summary.txt
+          if-no-files-found: error
+          retention-days: 14
       - name: Every variant
         run: |
           xcrun simctl bootstatus "$DEVICE_ID" -b

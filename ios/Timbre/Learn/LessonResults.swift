@@ -60,6 +60,7 @@ struct LessonResults: View {
     private static let foldFadeHeight: CGFloat = 28
     #if DEBUG
     @State private var captureViewportBottom: CGFloat = 0
+    @State private var captureSettled = false
     #endif
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var typeSize
@@ -106,7 +107,21 @@ struct LessonResults: View {
         // Behind the content, as it was behind the stars: drawn here rather than in the scroll view, which would
         // clip the rings flat where they cross its top edge.
         .background(alignment: .topLeading) { burstLayer }
-        .task { await reveal() }
+        .task {
+            #if DEBUG
+            captureSettled = false
+            #endif
+            await reveal()
+            #if DEBUG
+            if TestSupport.isOn(.debugState) {
+                // Observe the real reveal, then let its final reward motion/burst expire naturally.
+                do { try await Task.sleep(for: .seconds(SparkBurst.duration + 0.1)) }
+                catch { return }
+                guard !Task.isCancelled else { return }
+                captureSettled = true
+            }
+            #endif
+        }
         #if DEBUG
         .overlay(alignment: .bottomLeading) {
             if TestSupport.isOn(.debugState) {
@@ -116,6 +131,13 @@ struct LessonResults: View {
                     .foregroundStyle(Color.clear)
                     .allowsHitTesting(false)
                     .accessibilityIdentifier("lesson.results.layout")
+                if captureSettled && celebrating == nil {
+                    Text(verbatim: "settled")
+                        .font(.system(size: 9, design: .monospaced))
+                        .foregroundStyle(Color.clear)
+                        .allowsHitTesting(false)
+                        .accessibilityIdentifier("lesson.results.settled")
+                }
             }
         }
         #endif

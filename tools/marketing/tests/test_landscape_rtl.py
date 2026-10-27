@@ -42,16 +42,17 @@ class LandscapeRTLTests(unittest.TestCase):
     def test_all_rtl_leading_edges_visible_and_bias_alternates(self):
         for locale in ('ar-SA', 'fa', 'he', 'ur'):
             a, b = self.render(locale, 'side'), self.render(locale, 'side-right')
-            self.assertLess(a.x, 0)
-            self.assertGreater(b.x, 0)
+            self.assertLess(a.x, b.x)
+            self.assertGreater(a.x, 0)
             for frame in (a, b):
-                self.assertLessEqual(frame.x + frame.screen.width, frame.w)
+                self.assertGreaterEqual(frame.x, frame.px(80))
+                self.assertLessEqual(frame.x + frame.screen.width, frame.w - frame.px(80))
             self.assertEqual((a.align, b.align), ('right', 'left'))
             self.assertEqual((a.glow[0], b.glow[0]), (.75, .25))
 
-    def test_ltr_original_geometry_and_pixels(self):
+    def test_ltr_contained_geometry_and_original_pixels(self):
         a, b = self.render('en-US', 'side'), self.render('en-US', 'side-right')
-        self.assertEqual((a.x, b.x), (511, -125))
+        self.assertEqual((a.x, b.x), (261, 125))
         self.assertEqual((a.align, b.align), ('left', 'right'))
 
     def test_center_layout_identical(self):

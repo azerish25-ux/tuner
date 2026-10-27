@@ -13,14 +13,14 @@ class CountryPricingPolicyTests(unittest.TestCase):
         self.assertEqual(validate(self.policy), [])
 
     def test_release_coverage_gate_stays_blocked(self):
-        self.assertIn('country inventory is incomplete', validate(self.policy, require_complete=True))
+        self.assertIn('pricing verification is incomplete', validate(self.policy, require_complete=True))
 
     def test_language_cannot_select_price(self):
         self.policy['language_selects_price'] = True
         self.assertTrue(validate(self.policy))
 
     def test_locale_key_rejected(self):
-        self.policy['territories'][0]['territory_code'] = 'en-US'
+        self.policy['territories'][0]['public_storefront_country_code'] = 'en-US'
         self.assertTrue(validate(self.policy))
 
     def test_duplicate_territory_rejected(self):
@@ -107,6 +107,65 @@ class CountryPricingPolicyTests(unittest.TestCase):
     def test_primary_source_url_required(self):
         self.policy['sources']['world_bank_fy2027']['url'] = 'https://example.com/classifications'
         self.assertTrue(validate(self.policy))
+
+    def test_enum_count_is_not_public_inventory(self):
+        self.policy['coverage']['expected_storefront_count'] = 233
+        self.assertTrue(validate(self.policy))
+
+    def test_matching_count_wrong_country_rejected(self):
+        self.policy['territories'][0]['public_storefront_country_code'] = 'ZZ'
+        self.assertTrue(validate(self.policy))
+
+    def test_evidence_hash_tampering_rejected(self):
+        self.policy['evidence']['sha256'] = '0' * 64
+        self.assertTrue(validate(self.policy))
+
+    def test_income_override_rejected(self):
+        row = next(r for r in self.policy['territories'] if r['public_storefront_country_code'] == 'IN')
+        row['income_group'] = 'high_income'
+        row['affordability_multiplier'] = '1.00'
+        self.assertTrue(validate(self.policy))
+
+    def test_kosovo_api_id_not_invented(self):
+        row = next(r for r in self.policy['territories'] if r['public_storefront_country_code'] == 'XK')
+        self.assertIsNone(row['territory_code'])
+        row['territory_code'] = 'XKX'
+        self.assertTrue(validate(self.policy))
+
+    def test_taiwan_uses_own_explicit_source(self):
+        row = next(r for r in self.policy['territories'] if r['public_storefront_country_code'] == 'TW')
+        self.assertEqual(row['income_group'], 'high_income')
+        self.assertEqual(row['income_group_source'], 'world_bank_fy2027_table')
+
+    def test_two_manual_exceptions_never_default_high(self):
+        rows = [r for r in self.policy['territories'] if r['status'] == 'manual_review']
+        self.assertEqual({r['public_storefront_country_code'] for r in rows}, {'AI', 'MS'})
+        self.assertTrue(all(r['income_group'] is None and r['affordability_multiplier'] is None for r in rows))
+
+    def test_unverified_coverage_claims_must_remain_false(self):
+        for field in ('authenticated_app_availability_verified', 'supported_price_points_verified'):
+            for value in (True, None, 0, 'false'):
+                with self.subTest(field=field, value=value):
+                    bad = copy.deepcopy(self.policy)
+                    bad['coverage'][field] = value
+                    self.assertIn('proposal coverage cannot claim verification: ' + field, validate(bad))
+
+    def test_unverified_country_claims_must_remain_false(self):
+        for field in ('apple_territory_verified', 'authenticated_app_availability_verified'):
+            for value in (True, None, 0, 'false'):
+                with self.subTest(field=field, value=value):
+                    bad = copy.deepcopy(self.policy)
+                    bad['territories'][0][field] = value
+                    self.assertIn('proposal country cannot claim verification: ' + field, validate(bad))
+
+    def test_unsupported_status_and_date_rejected(self):
+        for field, value in [('status', 'ready'), ('as_of', '2026-10-28'), ('as_of', None)]:
+            with self.subTest(field=field, value=value):
+                bad = copy.deepcopy(self.policy)
+                bad[field] = value
+                self.assertTrue(validate(bad))
+        self.policy['territories'][0]['status'] = 'verified'
+        self.assertIn('unsupported country proposal status', validate(self.policy))
 
     def test_local_anchors_are_explicit_currency(self):
         anchors = self.policy['proposed_anchor_prices']

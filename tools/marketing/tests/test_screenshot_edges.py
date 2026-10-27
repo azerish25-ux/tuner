@@ -2,6 +2,8 @@
 from pathlib import Path
 import sys
 import unittest
+import hashlib
+import json
 from unittest.mock import patch
 from PIL import Image, ImageDraw
 
@@ -38,10 +40,25 @@ class ScreenshotEdgeTests(unittest.TestCase):
     def test_dark_neutral_background_does_not_count_as_text(self):
         self.assertEqual(shots.sliced(Image.new('RGB', (100, 100), (90, 90, 90)), 50), 0)
 
-    def test_measured_medium_crop_does_not_change_unreviewed_large_role(self):
+    def test_measured_native_roles_keep_independent_crop_fractions(self):
         self.assertEqual(shots.focus_for('11b-tune-strum', 'iphone')['y0'], .140)
-        self.assertEqual(shots.focus_for('11b-tune-strum', 'iphone-large')['y0'], .118)
+        self.assertEqual(shots.focus_for('11b-tune-strum', 'iphone-large')['y0'], .128)
         self.assertEqual(shots.FOCUS['11b-tune-strum']['y0'], .118)
+
+    def test_real_native_large_edges_reject_old_cut_and_accept_measured_gap(self):
+        fixtures = Path(__file__).parent / 'fixtures/native-large-strum'
+        evidence = json.loads((fixtures / 'evidence.json').read_text())
+        self.assertEqual(evidence['native_size'], [1320, 2868])
+        for fixture in evidence['captures']:
+            path = fixtures / fixture['strip_file']
+            self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), fixture['strip_sha256'])
+            with Image.open(path) as strip:
+                self.assertEqual(strip.size, (1320, 120))
+                self.assertGreaterEqual(shots.sliced(strip, 338 - evidence['strip_top']), shots.SLICE_COLUMNS)
+                # Use actual production role geometry, then evaluate retained native pixels at its edge.
+                row = shots.top_row('flip', '11b-tune-strum', 'iphone-large', Image.new('RGB', (1320, 2868)))
+                self.assertEqual(row, 367)
+                self.assertEqual(shots.sliced(strip, row - evidence['strip_top']), 0)
 
     def test_strum_crop_is_below_measured_medium_toolbar(self):
         image = Image.new('RGB', (1206, 2622))

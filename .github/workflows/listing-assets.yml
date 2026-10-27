@@ -23,7 +23,14 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: listing-assets-${{ github.ref }}
+  # An unrequested push must not replace an explicitly requested pending capture.
+  group: >-
+    listing-assets-${{ github.ref }}-${{
+      (github.event_name == 'workflow_dispatch' ||
+       contains(github.event.head_commit.message, '[listing-assets-pilot]') ||
+       contains(github.event.head_commit.message, '[listing-assets-all]') ||
+       contains(github.event.head_commit.message, '[listing-screenshots-pilot]') ||
+       contains(github.event.head_commit.message, '[listing-screenshots-all]')) && 'requested' || 'noop' }}
   cancel-in-progress: false
 jobs:
   plan:

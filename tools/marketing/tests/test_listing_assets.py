@@ -437,7 +437,7 @@ class SourceContractTests(unittest.TestCase):
         self.assertNotIn('"Hold it…"', checks.split('let badge =', 1)[1].split('return ', 1)[0])
         locked = source.split('private func lockedTunerFrame(', 1)[1].split('private func readoutRegion()', 1)[0]
         self.assertIn('let lock = tunerLock(strings: strings)', locked)
-        self.assertIn('let hold = lockHolds()', locked)
+        self.assertIn('let hold = lockHolds(stages: stages)', locked)
         self.assertIn('XCTAssertTrue(hold.held', locked)
         self.assertIn('as: name + "-wrong"', source)
         # The violin CPP's optional shimmer and actual video tour are not changed by this still repair.

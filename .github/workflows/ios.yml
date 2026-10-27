@@ -15,9 +15,8 @@ permissions:
   contents: read
 concurrency:
   group: ios-native-${{ github.ref }}
-  # Preserve running native evidence across reviewed checkpoints; the newest pending
-  # revision runs next. Explicit manual requests/refreshes can supersede an obsolete run.
-  cancel-in-progress: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[ci-refresh]') }}
+  # Only superseded pull-request evidence is canceled; main, manual and scheduled runs finish.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 env:
   DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
   HOMEBREW_NO_AUTO_UPDATE: "1"
@@ -101,6 +100,10 @@ jobs:
           python3 tools/ci/test_lesson_accessibility_layout_contract.py
           python3 tools/ci/test_accessibility_partitions.py
           python3 tools/ci/test_capture_check.py
+          python3 tools/ci/test_result_polish_contract.py
+          python3 tools/ci/test_build_checkpoint_contract.py
+          python3 tools/ci/test_ci_concurrency_contract.py
+          python3 tools/ci/test_country_pricing_policy.py
           python3 tools/ci/test_simulator_warmup.py
           python3 tools/ci/test_fraction_direction_contract.py
           python3 tools/ci/test_practice_xp_direction_contract.py
@@ -189,6 +192,8 @@ jobs:
           set -o pipefail
           xcodebuild test-without-building -project ios/Timbre.xcodeproj -scheme Timbre -parallel-testing-enabled NO \
             -only-testing:TimbreAppTests -only-testing:TimbreUITests/SmokeUITests \
+            -only-testing:TimbreUITests/CaptureLockEvidenceTests \
+            -only-testing:TimbreUITests/TimbreUITests/testInstrumentFamilyChipMustClearBothFades \
             -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd \
             -resultBundlePath ios/build/Gate.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/test.log
       - name: Collect results

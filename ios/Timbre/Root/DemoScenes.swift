@@ -269,21 +269,76 @@ enum DemoScene: String {
     }
 
 
-    /// Learn opens the song (as a Siri or Spotlight link opens one), then goes back to the player's own course once
-    /// the song is on screen, so later runs in the same simulator still open Learn on guitar.
+    /// Restore the player's course only after this exact scene has left its presentation.
+    /// A fixed delay can change the matched zoom source while a slow presentation is still opening.
+    private struct CourseRestoration {
+        let lessonID: String
+        let previous: String
+        let presented: String
+        var appeared = false
+    }
+    @MainActor private static var courseRestoration: CourseRestoration?
+
+    @MainActor static func lessonAppeared(_ id: String) {
+        guard id == performSongId, current == .songPerform else { return }
+        performDiagnostic("lesson-appeared")
+        if courseRestoration?.lessonID == id { courseRestoration?.appeared = true }
+    }
+
+    @MainActor static func lessonDisappeared(_ id: String) {
+        guard id == performSongId, current == .songPerform else { return }
+        performDiagnostic("lesson-disappeared")
+        guard courseRestoration?.lessonID == id, courseRestoration?.appeared == true else { return }
+        restoreCourse(for: id)
+    }
+
+    @MainActor static func lessonPresentationCancelled(_ id: String) {
+        guard id == performSongId, current == .songPerform else { return }
+        performDiagnostic("lesson-presentation-cancelled")
+        guard courseRestoration?.appeared != true else { return }
+        restoreCourse(for: id)
+    }
+
+    @MainActor private static func restoreCourse(for id: String) {
+        guard let restoration = courseRestoration, restoration.lessonID == id else { return }
+        courseRestoration = nil
+        // Do not overwrite a course deliberately chosen in the meantime.
+        guard Preferences.savedLearnCourse == restoration.presented else { return }
+        Preferences.learnCourse = restoration.previous
+        performDiagnostic("course-restored")
+    }
+
+    /// Learn opens the song through the real pending-lesson path. Its lifecycle, not elapsed
+    /// wall time, owns restoration; cancellation restores only a course changed for this request.
     @MainActor private static func openSong(_ store: AppStore) {
         guard let found = store.curriculum.lesson(id: performSongId) else { return }
         let own = Preferences.learnCourse
+        courseRestoration = own == found.course.id ? nil : CourseRestoration(
+            lessonID: found.lesson.id, previous: own, presented: found.course.id)
         store.pendingLessonId = found.lesson.id
         store.selectedTab = .learn
-        guard own != found.course.id else { return }
-        Task { @MainActor in
-            for _ in 0..<50 where store.pendingLessonId != nil { try? await Task.sleep(for: .milliseconds(100)) }
-            // Past Learn's own wait for covering screens, so the switch happens behind the open song.
-            try? await Task.sleep(for: .milliseconds(2500))
-            guard Preferences.savedLearnCourse == found.course.id else { return }
-            Preferences.learnCourse = own
-        }
+    }
+
+    /// The actual readout supplies this state while a still-test cue file exists. Nothing is
+    /// inferred across a stalled render: gaps remain gaps in the evidence consumed by the UI test.
+    @MainActor private static var lastLockEvidenceTime = -Double.infinity
+    @MainActor static func recordLockEvidence(locked: Bool, active: Bool, target: Double, stage: String) {
+        guard current == .tuneLocked, let path = Option.cue else { return }
+        let now = ProcessInfo.processInfo.systemUptime
+        guard now - lastLockEvidenceTime >= 0.1, FileManager.default.fileExists(atPath: path) else { return }
+        lastLockEvidenceTime = now
+        let record: [String: Any] = ["time": now, "locked": locked, "active": active, "target": target, "stage": stage]
+        guard target.isFinite, var data = try? JSONSerialization.data(withJSONObject: record, options: [.sortedKeys]) else { return }
+        data.append(0x0A)
+        let url = URL(fileURLWithPath: path + ".lock")
+        if !FileManager.default.fileExists(atPath: url.path) { FileManager.default.createFile(atPath: url.path, contents: nil) }
+        guard let file = try? FileHandle(forWritingTo: url) else { return }
+        defer { try? file.close() }
+        do {
+            let size = try file.seekToEnd()
+            guard size < 256_000 else { return }
+            try file.write(contentsOf: data)
+        } catch { /* Missing evidence fails the test; it never changes tuner behavior. */ }
     }
 
     // MARK: Tuner

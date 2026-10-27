@@ -107,6 +107,10 @@ struct LessonPlayer: View {
         .animation(Motion.reveal, value: result != nil)
         .preferredColorScheme(.dark)
         // "Hear it", chords and listen steps sound like the course's instrument (theory, ear, rhythm: the selected one).
+        #if DEBUG
+        .onAppear { DemoScene.lessonAppeared(lesson.id) }
+        .onDisappear { DemoScene.lessonDisappeared(lesson.id) }
+        #endif
         .onAppear { store.audio.courseVoice = InstrumentVoice(instrumentId: course.instrument) }
         .onDisappear { store.audio.courseVoice = nil }
         .confirmationDialog("Leave this lesson?", isPresented: $confirmQuit, titleVisibility: .visible) {

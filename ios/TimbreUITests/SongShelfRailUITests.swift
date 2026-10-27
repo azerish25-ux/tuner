@@ -49,26 +49,78 @@ final class SongShelfRailUITests: XCTestCase {
 
     private func reveal(_ id: String, in rail: XCUIElement, forward: Bool, rtl: Bool) -> XCUIElement {
         let target = rail.buttons.matching(identifier: "songs.song." + id).firstMatch
-        for _ in 0..<85 {
-            if target.exists && target.isHittable {
-                let frame = target.frame
-                // Only the actual first/last terminal edge is exempt from the active 52-point fade.
+        // The visible target's geometry is physical in either language direction. Only discovery of an
+        // unrealized target uses logical forward/backward; otherwise correct overshoot in either direction.
+        for attempt in 0..<85 {
+            let viewport = rail.frame
+            guard usable(viewport) else {
+                XCTFail("The catalogue rail must have a finite, nonempty viewport")
+                return target
+            }
+            let limit = viewport.width * 0.6
+            var distance: CGFloat = (forward != rtl) ? -limit : limit
+            if target.exists {
+                guard let frame = stableFrame(target) else { continue }
+                // Asking isHittable for a realized but fully offscreen lazy child can itself throw an
+                // XCTest activation-point error. Check all geometry first; never suppress that error.
                 let atFirst = id == samples[0]
                 let atLast = id == samples[2]
                 let leading: CGFloat = (rtl ? atLast : atFirst) ? 19 : 52
                 let trailing: CGFloat = (rtl ? atFirst : atLast) ? 19 : 52
-                if frame.minX >= rail.frame.minX + leading && frame.maxX <= rail.frame.maxX - trailing { return target }
+                let fullyClear = frame.minX >= viewport.minX + leading && frame.maxX <= viewport.maxX - trailing
+                    && frame.minY >= viewport.minY - 1 && frame.maxY <= viewport.maxY + 1
+                if fullyClear {
+                    XCTAssertTrue(target.isHittable, "The fully visible catalogue record must actually be hittable: \(id)")
+                    return target
+                }
+                distance = max(-limit, min(limit, viewport.midX - frame.midX))
+                print("SONG-RAIL reveal: id=\(id) attempt=\(attempt) target=\(frame) viewport=\(viewport) drag=\(distance)")
+                if abs(distance) < 1 {
+                    capture("geometry-unreachable-" + id)
+                    XCTFail("The centered record does not fit the rail's unobscured bounds: \(id)")
+                    return target
+                }
             }
-            // Drag the sleeve area; do not accidentally tap preview or versions controls.
-            let fromX: CGFloat = (forward != rtl) ? 0.86 : 0.14
-            let toX: CGFloat = (forward != rtl) ? 0.14 : 0.86
-            let y = min(0.4, 70 / max(1, rail.frame.height))
-            rail.coordinate(withNormalizedOffset: CGVector(dx: fromX, dy: y))
-                .press(forDuration: 0.05, thenDragTo: rail.coordinate(withNormalizedOffset: CGVector(dx: toX, dy: y)))
+            dragRail(rail, distance: distance, viewport: viewport)
         }
         capture("horizontal-unreachable-" + id)
         XCTFail("First/middle/last catalogue record must remain fully reachable: \(id)")
         return target
+    }
+
+    private func usable(_ frame: CGRect) -> Bool {
+        !frame.isNull && !frame.isInfinite && frame.minX.isFinite && frame.minY.isFinite
+            && frame.width.isFinite && frame.height.isFinite && frame.width > 0 && frame.height > 0
+    }
+
+    /// Read back geometry after a gesture and its scroll transition, rather than testing a stale edge frame.
+    private func stableFrame(_ target: XCUIElement) -> CGRect? {
+        guard target.exists else { return nil }
+        var previous = target.frame
+        for _ in 0..<3 {
+            Thread.sleep(forTimeInterval: 0.15)
+            guard target.exists else { return nil }
+            let current = target.frame
+            if usable(current) && usable(previous)
+                && abs(current.minX - previous.minX) <= 1 && abs(current.minY - previous.minY) <= 1
+                && abs(current.width - previous.width) <= 1 && abs(current.height - previous.height) <= 1 {
+                return current
+            }
+            previous = current
+        }
+        return nil
+    }
+
+    private func dragRail(_ rail: XCUIElement, distance: CGFloat, viewport: CGRect) {
+        // Both endpoints stay within the visible sleeve band, away from preview/version controls.
+        // Hold after the slow drag to avoid inertial travel skipping a target's 150-point clear band.
+        let startX = viewport.width * 0.5 - distance / 2
+        let endX = viewport.width * 0.5 + distance / 2
+        let y = min(viewport.height * 0.4, 70)
+        let origin = rail.coordinate(withNormalizedOffset: .zero)
+        let start = origin.withOffset(CGVector(dx: startX, dy: y))
+        let end = origin.withOffset(CGVector(dx: endX, dy: y))
+        start.press(forDuration: 0.05, thenDragTo: end, withVelocity: .slow, thenHoldForDuration: 0.3)
     }
 
     private func verifyActions(_ id: String, tile: XCUIElement, rail: XCUIElement) {

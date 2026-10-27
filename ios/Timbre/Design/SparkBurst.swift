@@ -29,7 +29,11 @@ struct SparkBurst: View {
     var body: some View {
         TimelineView(.animation(paused: !live)) { timeline in
             let t = timeline.date.timeIntervalSince(started)
-            Canvas { context, size in draw(&context, size: size, t: t) }
+            Canvas { context, size in
+                // A paused timeline can retain its last pre-expiry date on a busy main thread.
+                // Clear the actual effect when its lifecycle ends, even without another animation tick.
+                if live { draw(&context, size: size, t: t) }
+            }
         }
         .allowsHitTesting(false)
         .onChange(of: trigger) { _, _ in

@@ -64,6 +64,11 @@ struct LearnView: View {
         .onChange(of: nextId) { _, _ in selectedId = nil }
         .onAppear(perform: openPendingLesson)
         .onChange(of: store.pendingLessonId) { _, _ in openPendingLesson() }
+        #if DEBUG
+        .onChange(of: playing?.id) { previous, current in
+            if let previous, current == nil { DemoScene.lessonPresentationCancelled(previous) }
+        }
+        #endif
         .fullScreenCover(item: $playing) { item in
             LessonPlayer(course: item.course, lesson: item.lesson) { next in
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) { open(item.course, next, from: Self.continueSource) }
@@ -91,6 +96,10 @@ struct LearnView: View {
         store.pendingLessonId = nil
         guard let found = store.curriculum.lesson(id: id) else { return }
         Task { @MainActor in
+            #if DEBUG
+            var opened = false
+            defer { if !opened { DemoScene.lessonPresentationCancelled(id) } }
+            #endif
             // A cover still going away (onboarding's, a lesson's) would refuse the presentation: wait for it (at most ~2 s).
             try? await Task.sleep(for: .milliseconds(300))
             for _ in 0..<12 where playing != nil || Self.coverShowing { try? await Task.sleep(for: .milliseconds(150)) }
@@ -104,6 +113,9 @@ struct LearnView: View {
             // iPad: the inspector, which the lesson zooms out of, shows it.
             selectedId = found.lesson.id
             open(found.course, found.lesson, from: Self.continueSource)
+            #if DEBUG
+            opened = playing?.id == id
+            #endif
         }
     }
 

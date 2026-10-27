@@ -1,6 +1,6 @@
 # Proposed country-based pricing
 
-**Status: research proposal; incomplete country coverage; no live prices configured or verified.**
+**Status: proposed prices; 175 public storefronts reconciled; two income-classification exceptions; no live prices configured or verified.**
 
 The owner requested lower monthly, annual and lifetime prices in less affluent countries, independent of app/listing language. The customer’s Apple Account storefront determines the applicable territory. The 50 metadata localizations are not a pricing-country list. [Apple availability](https://developer.apple.com/help/app-store-connect/manage-your-apps-availability/manage-availability-for-your-app-on-the-app-store).
 
@@ -40,7 +40,13 @@ Apple supports territory-specific subscription prices; subscription prices gener
 
 ## Machine-readable state and release gate
 
-`country-pricing-policy.json` currently contains **13 verified income-group examples**, not a complete Apple storefront inventory. All territory availability checks, local currency amounts and Apple price-point IDs remain unset. Proposed US/Canada anchors are kept separately to avoid treating them as verified schedules. Apple’s current public guidance describes 175 storefronts; a complete active inventory still needs reconciliation.
+`country-pricing-policy.json` maps **175 public App Store storefront countries**. Apple's public App Store country selector and the App Store service sections of its [Media Services availability page](https://support.apple.com/en-us/118205) independently reconcile to the same 175 countries. The selector has 177 rows because Armenia and Turkmenistan are repeated identically, not because there are 177 storefronts.
+
+Income classification is verified for 173 countries: 172 from the World Bank API and Taiwan from its explicit high-income classification in the official FY2027 table. **Anguilla and Montserrat remain unclassified/manual review**; do not inherit the UK's income group or default to high-income prices. Kosovo's public storefront is XK and its World Bank identifier is XKX; its actual App Store Connect territory ID remains unresolved.
+
+Public availability is distinct from this app's authenticated availability and purchase readiness. All actual currency amounts, supported Apple price-point IDs, app/product availability checks and live schedules remain unverified. The generic Apple TerritoryCode enum is not the active inventory (234 rows, 233 unique codes, including a duplicate ARE label); do not use that enum count as coverage.
+
+The compact source-data JSON contains country facts, source URLs and archived-byte hashes. Full source HTML is not redistributed. The validator binds every policy row to the reviewed evidence, rejects duplicate/missing/substituted countries, unsupported income overrides and invented API identifiers. US/Canada anchor proposals remain separate from verified schedules.
 
 Run:
 
@@ -52,6 +58,6 @@ python3 tools/ci/validate_country_pricing_policy.py --require-complete
 
 Structural validation is permitted for a clearly labelled proposal. `--require-complete` is deliberately blocked in this proposal schema: an independent active-territory importer and source-bound Apple price-point verifier are not implemented yet. Filling in counts, flags or arbitrary IDs cannot bypass that blocker. Implement and review that evidence verifier before certifying a complete mapping. Do not infer readiness from the structural test passing.
 
-Before configuration, import the complete official active territory inventory, map every territory or record an explicit unresolved exception, resolve supported prices for all three products, and review proceeds. After configuration, independently read back schedules and verify sandbox prices. Existing annual price-experiment products must not bypass the country policy if activated.
+Before configuration, verify the current authenticated Apple territory IDs, resolve both income-classification exceptions using country-specific evidence, resolve supported prices for all three products, and review proceeds. After configuration, independently read back schedules and verify sandbox prices. Existing annual price-experiment products must not bypass the country policy if activated.
 
 The paywall already uses StoreKit `displayPrice`, numeric prices and their currency formatting for comparisons. Test storefront changes separately from UI language; do not add location/IP/language-based price selection. [StoreKit displayPrice](https://developer.apple.com/documentation/storekit/product/displayprice).

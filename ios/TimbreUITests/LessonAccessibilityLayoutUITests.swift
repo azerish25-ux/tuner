@@ -61,11 +61,17 @@ final class LessonAccessibilityLayoutUITests: XCTestCase {
         for _ in 0..<12 {
             let viewport = contentViewport(scroll, above: bottom)
             if isClear(target, within: viewport) { return }
-            if target.exists && !viewport.isNull && target.frame.minY < viewport.minY {
-                scroll.swipeDown(velocity: .slow)
-            } else {
-                scroll.swipeUp(velocity: .slow)
-            }
+            guard target.exists, !viewport.isNull, !viewport.isEmpty else { break }
+            let frame = target.frame
+            // A full swipe overshoots a tall AX element and then oscillates back to the start.
+            // Move only the measured overflow, preserving the same complete-containment assertion.
+            let delta = frame.minY < viewport.minY ? viewport.minY - frame.minY : viewport.maxY - frame.maxY
+            let distance = min(viewport.height * 0.45, max(-viewport.height * 0.45, delta))
+            guard distance.isFinite, abs(distance) > 1 else { break }
+            let origin = app.coordinate(withNormalizedOffset: .zero)
+            let start = origin.withOffset(CGVector(dx: viewport.midX, dy: viewport.midY))
+            let end = origin.withOffset(CGVector(dx: viewport.midX, dy: viewport.midY + distance))
+            start.press(forDuration: 0.1, thenDragTo: end, withVelocity: .slow, thenHoldForDuration: 0.2)
         }
         capture("unreachable")
         XCTAssertTrue(isClear(target, within: contentViewport(scroll, above: bottom)),

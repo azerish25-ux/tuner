@@ -329,10 +329,12 @@ struct InstrumentsView: View {
             Button("All") { family = nil }.buttonStyle(ChipButtonStyle(selected: family == nil))
                 .id(Self.allFamilies)
                 .accessibilityIdentifier("instruments.family.all")
+                .accessibilityAddTraits(family == nil ? .isSelected : [])
             ForEach(store.catalog.families) { group in
                 Button(group.name.localized) { withAnimation(Motion.quick) { family = group.id } }.buttonStyle(ChipButtonStyle(selected: family == group.id))
                     .id(group.id)
                     .accessibilityIdentifier("instruments.family.\(group.id)")
+                    .accessibilityAddTraits(family == group.id ? .isSelected : [])
             }
         }
     }

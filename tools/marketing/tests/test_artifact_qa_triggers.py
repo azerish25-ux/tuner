@@ -95,14 +95,16 @@ class ArtifactQATriggerTests(unittest.TestCase):
                 self.assertEqual(len(set(locales)), count)
                 self.assertEqual(set(locales), set(assets.locale_rows()) if count == 50 else {'en-US', 'de-DE', 'ar-SA'})
 
-    def test_nightly_captures_includes_sanitizer_without_canceling_running_evidence(self):
+    def test_nightly_captures_keeps_sanitizer_and_cancels_only_superseded_prs(self):
         condition = job_condition('nightly.yml', 'tsan')
         self.assertFalse(enabled(condition, event='pull_request'))
         self.assertTrue(enabled(condition, event='pull_request', labels=['captures']))
         self.assertTrue(enabled(condition, event='schedule'))
         for filename in ['nightly.yml', 'listing-assets.yml', 'l10n.yml', 'caption-typography.yml']:
             source = (assets.ROOT / '.github/workflows' / filename).read_text()
-            self.assertIn('cancel-in-progress: false', source)
+            expected = ("cancel-in-progress: ${{ github.event_name == 'pull_request' }}"
+                        if filename == 'nightly.yml' else 'cancel-in-progress: false')
+            self.assertIn(expected, source)
 
     def test_export_handoff_has_no_write_job_and_listing_scope_is_sent_to_validator(self):
         source = (assets.ROOT / '.github/workflows/l10n.yml').read_text()

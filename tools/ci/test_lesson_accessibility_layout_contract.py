@@ -40,10 +40,40 @@ class LessonAccessibilityLayoutContract(unittest.TestCase):
 
     def test_scroll_geometry_excludes_header_and_moves_both_directions(self):
         for token in ["scroll.frame.intersection(app.frame)", "clearBottom - visible.minY",
-                      "target.frame.minY < viewport.minY", "scroll.swipeDown(velocity: .slow)",
-                      "scroll.swipeUp(velocity: .slow)", "for _ in 0..<12",
+                      "frame.minY < viewport.minY", "viewport.minY - frame.minY",
+                      "viewport.maxY - frame.maxY", "viewport.height * 0.45",
+                      "thenHoldForDuration: 0.2", "for _ in 0..<12",
                       'capture("unreachable")', "isClear(target, within: contentViewport(scroll, above: bottom))"]:
             self.assertIn(token, self.ui)
+
+    def test_oversized_decoration_is_not_the_semantic_note_target(self):
+        burst = self.notes.split("private var ringBurst:", 1)[1].split("private static func burstBand", 1)[0]
+        self.assertIn(".frame(width: size.width * 2, height: size.height * 2)", burst)
+        self.assertIn(".accessibilityHidden(true)", burst)
+        self.assertIn(".allowsHitTesting(false)", burst)
+        # The target and its live status remain visible to assistive technology.
+        ring = self.notes.split("private var noteRing:", 1)[1].split("private func spokenPhrase", 1)[0]
+        self.assertNotIn(".accessibilityHidden", ring)
+        self.assertIn('.accessibilityIdentifier("lesson.notes.target")', ring)
+        self.assertIn(".accessibilityValue(Text(status))", ring)
+
+    def test_instrument_capture_requires_clear_chip_and_real_selection(self):
+        instruments = (ROOT / "ios/Timbre/Instruments/InstrumentsView.swift").read_text()
+        filters = instruments.split("private var filters:", 1)[1].split("private static let allFamilies", 1)[0]
+        self.assertIn("family == nil ? .isSelected", filters)
+        self.assertIn("family == group.id ? .isSelected", filters)
+        source = (ROOT / "ios/TimbreUITests/TimbreUITests.swift").read_text()
+        capture = source.split("func test17StoreInstrumentWall()", 1)[1].split("// MARK: Show me", 1)[0]
+        for token in ["Self.instrumentFilterIsClear(frame, in: app.frame)",
+                      'NSPredicate(format: "selected == true")', "selected && banjo.exists && banjo.isHittable",
+                      '!element("instrument.01_guitar_acoustic_guitar").exists', 'storeFrame("31b-instruments-folk"']:
+            self.assertIn(token, capture)
+        self.assertNotIn("if onScreen(folk)", capture)
+        geometry = source.split("private static func instrumentFilterIsClear", 1)[1].split('/// App Store frame #4', 1)[0]
+        self.assertIn("viewport.insetBy(dx: 52, dy: 8).contains(frame)", geometry)
+        self.assertIn("CGRect(x: 10, y: 200, width: 160, height: 44)", geometry)
+        self.assertIn("XCTAssertFalse(Self.instrumentFilterIsClear(clippedLeft", geometry)
+        self.assertIn("XCTAssertTrue(Self.instrumentFilterIsClear(CGRect(x: 52", geometry)
 
     def test_controls_use_their_actual_layout_container(self):
         along = (ROOT / "ios/Timbre/Learn/Highway.swift").read_text()

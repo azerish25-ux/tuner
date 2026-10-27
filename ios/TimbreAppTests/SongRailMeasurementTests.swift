@@ -234,7 +234,7 @@ final class SongRailMeasurementTests: XCTestCase {
         let eagerHeight = autoreleasepool {
             let eager = HStack(alignment: .top, spacing: 14) {
                 ForEach(shelf.songs) { song in
-                    productionCaption(song, catalog: catalog, store: store).frame(width: 148)
+                    self.productionCaption(song, catalog: catalog, store: store).frame(width: 148)
                 }
             }.fixedSize()
             let host = UIHostingController(rootView: eager.environment(\.locale, Locale(identifier: "en"))

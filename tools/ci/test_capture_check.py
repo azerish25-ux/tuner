@@ -203,5 +203,57 @@ class PerformSceneContractTests(unittest.TestCase):
         self.assertIn('removeItem(at: events)', body)
 
 
+class CaptureLifecycleEvidenceContracts(unittest.TestCase):
+    def setUp(self):
+        root = Path(__file__).resolve().parents[2]
+        self.scene = (root / 'ios/Timbre/Root/DemoScenes.swift').read_text()
+        self.player = (root / 'ios/Timbre/Learn/LessonPlayer.swift').read_text()
+        self.learn = (root / 'ios/Timbre/Learn/LearnView.swift').read_text()
+        self.tune = (root / 'ios/Timbre/Tune/TuneView.swift').read_text()
+        self.ui = (root / 'ios/TimbreUITests/TimbreUITests.swift').read_text()
+        self.evidence = (root / 'ios/TimbreUITests/CaptureLockEvidence.swift').read_text()
+
+    def test_course_restore_is_matching_lifecycle_not_elapsed_time(self):
+        body = self.scene.split('private static func openSong(')[1].split('// MARK: Tuner')[0]
+        self.assertNotIn('milliseconds(2500)', body)
+        self.assertIn('CourseRestoration(', body)
+        self.assertIn('courseRestoration?.appeared == true', self.scene)
+        self.assertIn('restoration.lessonID == id', self.scene)
+        self.assertIn('Preferences.savedLearnCourse == restoration.presented', self.scene)
+        self.assertIn('.onAppear { DemoScene.lessonAppeared(lesson.id) }', self.player)
+        self.assertIn('.onDisappear { DemoScene.lessonDisappeared(lesson.id) }', self.player)
+        self.assertIn('defer { if !opened { DemoScene.lessonPresentationCancelled(id) } }', self.learn)
+        self.assertIn('current == nil { DemoScene.lessonPresentationCancelled(previous)', self.learn)
+
+    def test_trace_uses_actual_badge_and_active_visible_tuner(self):
+        self.assertIn('recordLockEvidence(locked: badgeSaysIt', self.tune)
+        self.assertIn('scenePhase == .active && store.selectedTab == .tune', self.tune)
+        self.assertIn('!store.showPaywall && !strumOpen && !creatingTuning', self.tune)
+        self.assertIn('guard current == .tuneLocked, let path = Option.cue', self.scene)
+        self.assertIn('size < 256_000', self.scene)
+
+    def test_seven_second_hold_has_no_ax_polling_or_threshold_relaxation(self):
+        body = self.ui.split('private func lockHolds(')[1].split('// MARK: Head clearance')[0]
+        self.assertIn('1.5, window: TimeInterval = 7', body)
+        for forbidden in ['tunerProbe()', '.snapshot()', '.exists', 'appNodes()']:
+            self.assertNotIn(forbidden, body)
+        self.assertIn('CaptureLockEvidence.held', body)
+        self.assertIn('tuner-lock-state-evidence', body)
+        self.assertIn('let ending = tunerLock(strings: strings)', self.ui)
+        self.assertIn('if !hold.held { problem =', self.ui)
+
+    def test_evidence_fails_on_stale_or_gapped_or_nonmonotonic_samples(self):
+        self.assertIn('maximumGap = 0.3', self.evidence)
+        self.assertIn('seconds.isFinite, window.isFinite', self.evidence)
+        workflow = (Path(__file__).resolve().parents[2] / '.github/workflows/ios.yml').read_text()
+        self.assertIn('-only-testing:TimbreUITests/CaptureLockEvidenceTests', workflow)
+        self.assertIn('now <= start + window', self.evidence)
+        self.assertIn('sample.time <= previous.time { return false }', self.evidence)
+        self.assertIn('now - previous.time <= maximumGap', self.evidence)
+        self.assertIn('sample.locked && sample.active && stages.contains(sample.stage)', self.evidence)
+        self.assertIn('abs(sample.target - $0.target) < 0.001', self.evidence)
+        self.assertIn('previous.time - began >= seconds', self.evidence)
+
+
 if __name__ == '__main__':
     unittest.main()

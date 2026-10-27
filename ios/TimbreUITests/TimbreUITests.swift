@@ -6,6 +6,7 @@ import XCTest
 final class TimbreUITests: XCTestCase {
     private var app: XCUIApplication!
     private var storeKit: SKTestSession!
+    private var tunerEvidenceCue: URL?
 
     override func setUpWithError() throws {
         continueAfterFailure = true
@@ -37,6 +38,11 @@ final class TimbreUITests: XCTestCase {
     private func launch(onboarded: Bool = true, demo: Bool = true, studio: Bool = false, pitch: Bool = false, stageDebug: Bool = false,
                         scene: String? = nil, instrument: String? = nil, comet: Bool = false) {
         if let scene { app.launchEnvironment["TIMBRE_SCENE"] = scene }
+        if scene == "tune-locked" {
+            let cue = FileManager.default.temporaryDirectory.appendingPathComponent("timbre-lock-\(UUID().uuidString)")
+            tunerEvidenceCue = cue
+            app.launchEnvironment["TIMBRE_SCENE_CUE"] = cue.path
+        }
         if let instrument { app.launchEnvironment["TIMBRE_SCENE_INSTRUMENT"] = instrument }
         if comet { app.launchEnvironment["TIMBRE_SCENE_COMET"] = "1" }
         if stageDebug { app.launchEnvironment["TIMBRE_STAGE_DEBUG"] = "1" }
@@ -303,31 +309,37 @@ final class TimbreUITests: XCTestCase {
         return (stage && tuned >= strings && selectedTuned && badge, summary)
     }
 
-    /// Whether a lock, once on screen, stays there for `seconds` at a stretch (the tuner's probe reads lock=1 at every
-    /// look), watched for up to `window` seconds: the `comet` scene plucks the held string again every 4 s, which earns
-    /// the lock afresh, so one stretch between plucks is enough. A look stalls the app's main thread for about a second
-    /// over the 3D stage, so the looks are about that far apart; the lock holds over such a pause (LockLatch). A probe
-    /// without a lock field cannot prove the lock and fails the check. `summary` says what was seen.
-    private func lockHolds(for seconds: TimeInterval = 1.5, window: TimeInterval = 7) -> (held: Bool, summary: String) {
-        let end = Date().addingTimeInterval(window)
-        var since: Date?
-        var longest = 0.0
-        var looks = 0
-        while Date() < end {
-            guard let lock = tunerProbe().lock else { return (false, "the probe has no lock field") }
-            let now = Date()
-            looks += 1
-            if lock {
-                let start = since ?? now
-                since = start
-                longest = max(longest, now.timeIntervalSince(start))
-                if longest >= seconds { return (true, String(format: "the lock held %.1f s", longest)) }
-            } else {
-                since = nil
+    /// Observe the actual rendered badge state without blocking its main actor with AX queries.
+    /// The same 1.5-second hold must occur inside seven seconds, with fresh samples and no gaps.
+    private func lockHolds(for seconds: TimeInterval = 1.5, window: TimeInterval = 7,
+                           stages: Set<String>) -> (held: Bool, summary: String) {
+        guard let cue = tunerEvidenceCue else { return (false, "no lock evidence cue") }
+        let trace = URL(fileURLWithPath: cue.path + ".lock")
+        defer {
+            if let text = try? String(contentsOf: trace, encoding: .utf8) {
+                let attachment = XCTAttachment(string: text)
+                attachment.name = "tuner-lock-state-evidence"
+                attachment.lifetime = .keepAlways
+                add(attachment)
             }
-            settle(0.25)
+            try? FileManager.default.removeItem(at: cue)
+            try? FileManager.default.removeItem(at: trace)
         }
-        return (false, String(format: "the lock held %.1f s at most (%ld looks over %.0f s)", longest, looks, window))
+        let start = ProcessInfo.processInfo.systemUptime
+        guard FileManager.default.createFile(atPath: cue.path, contents: Data()) else {
+            return (false, "could not request lock evidence")
+        }
+        var count = 0
+        while ProcessInfo.processInfo.systemUptime <= start + window {
+            let samples = (try? Data(contentsOf: trace)).map(CaptureLockEvidence.samples) ?? []
+            count = samples.count
+            let now = ProcessInfo.processInfo.systemUptime
+            if CaptureLockEvidence.held(samples, since: start, now: now, seconds: seconds, window: window, stages: stages) {
+                return (true, "fresh continuous readout lock for at least \(seconds) s (\(count) samples)")
+            }
+            settle(0.05)
+        }
+        return (false, "no fresh continuous \(seconds) s lock in \(window) s (\(count) samples)")
     }
 
     // MARK: Head clearance
@@ -803,12 +815,23 @@ final class TimbreUITests: XCTestCase {
             }
             if result.waitForExistence(timeout: 6) {
                 print("TIMBRE_RESULTS_OPENED attempt=\(attempt)")
-                return true
+                return waitForSettledResults()
             }
         }
         guard result.exists else {
             XCTFail("The completed take did not open lesson results after three Continue attempts")
             shot("lesson-results-navigation-wrong")
+            return false
+        }
+        return waitForSettledResults()
+    }
+
+    /// A level label appears before the reveal finishes. Wait for the real rewards and burst to settle,
+    /// without replacing the earned stars, timing, or the captured pixels.
+    private func waitForSettledResults() -> Bool {
+        guard waitSparingly(for: element("lesson.results.settled"), timeout: 20) else {
+            XCTFail("The real lesson result reveal did not finish before capture")
+            shot("lesson-results-unsettled-wrong")
             return false
         }
         return true
@@ -934,7 +957,12 @@ final class TimbreUITests: XCTestCase {
         }
         // A lock on screen stays there while the string stays in the band (the In tune badge doesn't flicker).
         if problem.isEmpty {
-            let hold = lockHolds()
+            let hold = lockHolds(stages: stages)
+            if !hold.held { problem = "the tuner's lock didn't stay on screen for 1.5 s: " + hold.summary }
+            // The saved frame must still show the lock after its continuous-state proof.
+            picture = XCUIScreen.main.screenshot()
+            let ending = tunerLock(strings: strings)
+            if !ending.shown { problem = "lock not visible after observation: " + ending.summary }
             XCTAssertTrue(hold.held, "the tuner's lock didn't stay on screen for 1.5 s: \(hold.summary)")
         }
         return (picture, problem)
@@ -1203,6 +1231,22 @@ final class TimbreUITests: XCTestCase {
         return regions
     }
 
+    /// Interior family chips must clear both active rail fades, not merely expose their centre.
+    private static func instrumentFilterIsClear(_ frame: CGRect, in viewport: CGRect) -> Bool {
+        !frame.isEmpty && viewport.insetBy(dx: 52, dy: 8).contains(frame)
+    }
+
+    func testInstrumentFamilyChipMustClearBothFades() {
+        let viewport = CGRect(x: 0, y: 0, width: 402, height: 874)
+        let clippedLeft = CGRect(x: 10, y: 200, width: 160, height: 44)
+        // The old centre-only rule accepted this partially faded chip.
+        XCTAssertTrue(viewport.insetBy(dx: 52, dy: 8).contains(
+            CGPoint(x: clippedLeft.midX, y: clippedLeft.midY)))
+        XCTAssertFalse(Self.instrumentFilterIsClear(clippedLeft, in: viewport))
+        XCTAssertFalse(Self.instrumentFilterIsClear(CGRect(x: 220, y: 200, width: 170, height: 44), in: viewport))
+        XCTAssertTrue(Self.instrumentFilterIsClear(CGRect(x: 52, y: 200, width: 298, height: 44), in: viewport))
+    }
+
     /// App Store frame #4 ("Tune whatever you play"), with the instrument wall around it: the `instrument-wall` scene opens
     /// the browser by itself; the Folk & world strings filter fills it with the instruments no other tuner has.
     func test17StoreInstrumentWall() throws {
@@ -1210,32 +1254,35 @@ final class TimbreUITests: XCTestCase {
         XCTAssertTrue(element("instruments.search").waitForExistence(timeout: 25), "The instrument browser never opened")
         settle(1)
         let folk = element("instruments.family.folk_world_strings")
-        let guitarChip = element("instruments.family.guitar")
-        // From one snapshot (`isHittable` throws while the chip is off the rail's edge): its centre is on screen.
-        func onScreen(_ target: XCUIElement) -> Bool {
-            guard let box = (try? target.snapshot())?.frame, !box.isEmpty, box.midX.isFinite else { return false }
-            return app.frame.insetBy(dx: 8, dy: 8).contains(CGPoint(x: box.midX, y: box.midY))
+        // A chip's centre can be visible while its title/target is clipped by the rail's fade.
+        // Bring the complete control clear before tapping; follow measured coordinates in either direction.
+        func clearFrame() -> CGRect? {
+            guard let frame = (try? folk.snapshot())?.frame, !frame.isEmpty,
+                  frame.minX.isFinite, frame.midY.isFinite else { return nil }
+            return frame
         }
-        let railY = (try? guitarChip.snapshot())?.frame.midY
-        for _ in 0..<5 where !onScreen(folk) {
-            guard let railY, railY.isFinite,
-                  let target = try? folk.snapshot(), !target.frame.isEmpty else { break }
-            // Follow the off-screen target's actual side, not an English/LTR-only swipe.
-            let towardLeft = target.frame.midX > app.frame.midX
-            let startX = app.frame.width * (towardLeft ? 0.85 : 0.15)
-            let endX = app.frame.width * (towardLeft ? 0.15 : 0.85)
+        for _ in 0..<5 {
+            guard let frame = clearFrame() else { break }
+            if Self.instrumentFilterIsClear(frame, in: app.frame) { break }
+            let viewport = app.frame
+            let startX = viewport.midX
+            let endX = min(viewport.maxX - 24, max(viewport.minX + 24, startX + viewport.midX - frame.midX))
             let origin = app.coordinate(withNormalizedOffset: .zero)
-            origin.withOffset(CGVector(dx: startX, dy: railY))
-                .press(forDuration: 0.1, thenDragTo: origin.withOffset(CGVector(dx: endX, dy: railY)))
+            origin.withOffset(CGVector(dx: startX, dy: frame.midY)).press(forDuration: 0.1,
+                thenDragTo: origin.withOffset(CGVector(dx: endX, dy: frame.midY)),
+                withVelocity: .slow, thenHoldForDuration: 0.2)
             settle(0.6)
         }
-        if onScreen(folk) { tapIfPresent(folk) }
+        if let frame = clearFrame(), Self.instrumentFilterIsClear(frame, in: app.frame) { tapIfPresent(folk) }
+        let selected = XCTWaiter.wait(for: [XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "selected == true"), object: folk)], timeout: 5) == .completed
         settle(1)
         let picture = stillScreenshot(timeout: 4)
         let banjo = element("instrument.22_folk_world_strings_banjo_5_string")
-        let filtered = banjo.exists && banjo.isHittable && !element("instrument.01_guitar_acoustic_guitar").exists
+        let filtered = selected && banjo.exists && banjo.isHittable && !element("instrument.01_guitar_acoustic_guitar").exists
         storeFrame("31b-instruments-folk", picture: picture, ok: filtered,
-                   "the browser isn't showing the Folk & world strings (banjo on screen: \(banjo.exists), filter chip found: \(folk.exists))")
+                   "the browser isn't showing the Folk & world strings (banjo on screen: \(banjo.exists), "
+                   + "filter chip found: \(folk.exists), selected: \(selected))")
     }
 
     // MARK: Show me

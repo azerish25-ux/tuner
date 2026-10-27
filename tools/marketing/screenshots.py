@@ -89,8 +89,8 @@ FOCUS = {
     "50-learn": {"y0": 0.0},
     # Below the complete toolbar (including its grey subtitle and pause button), above the lead instruction.
     # Measured medium EN/DE native captures: row367 is clear; old row309 sliced the subtitle.
-    # Do not transfer that fraction to the large role without its native capture evidence.
-    "11b-tune-strum": {"y0": 0.118, "y0_by_device": {"iphone": 0.140}},
+    # Native large EN/DE independently measured: row367 is also clear, using its own fraction.
+    "11b-tune-strum": {"y0": 0.118, "y0_by_device": {"iphone": 0.140, "iphone-large": 0.128}},
     "32-journey": {"y0": 0.0},
 }
 
@@ -833,9 +833,19 @@ def _flip(layout, accent, shot, focus, title, line, size):
     return frame
 
 
+LANDSCAPE_STATUS_ROWS = 60  # Verified native 2752x2064 EN/DE status/content whitespace.
+
+
+def _landscape_x(canvas_width: int, screen_width: int, inset: int, *, light: bool, left: bool) -> int:
+    """Keep actual UI labels inside the canvas; reflect placement, never source pixels."""
+    if light:
+        return (canvas_width - screen_width) // 2
+    return canvas_width - screen_width - inset if left else inset
+
+
 def _landscape(layout, accent, shot, title, line, size, out: Path) -> tuple:
     """iPad landscape: the caption across the top, set left (`side`) or right (`side-right`) with the screen shifted the
-    other way and bleeding off that edge and the bottom; or the light frame, caption centred."""
+    other way while retaining both native horizontal edges; or the light frame, caption centred."""
     light = layout == "light"
     left = layout != "side-right"
     rtl = art.text_layout()["direction"] == "rtl"
@@ -849,15 +859,10 @@ def _landscape(layout, accent, shot, title, line, size, out: Path) -> tuple:
     scale = width / shot.width
     top = foot + frame.px(64)
     visible = (frame.h - top + frame.px(60)) / scale
-    screen = _scaled(shot, scale, (0, 0, shot.width, min(shot.height, visible)))
-    if light:
-        x = (frame.w - width) // 2
-    else:
-        x = frame.w - width + frame.px(80) if left else -frame.px(80)
-        if rtl:
-            # The native leading edge is right: no decorative crop of its content.
-            x = min(x, frame.w - screen.width)
-    corners = (True, True, False, False) if light else ((True, False, False, False) if left else (False, True, False, False))
+    screen = _scaled(shot, scale, (0, LANDSCAPE_STATUS_ROWS, shot.width,
+                                   min(shot.height, LANDSCAPE_STATUS_ROWS + visible)))
+    x = _landscape_x(frame.w, screen.width, frame.px(80), light=light, left=left)
+    corners = (True, True, False, False)
     frame.card(screen, x, top, frame.px(40), corners=corners, rim=not light)
     return frame.save(out)
 
@@ -867,7 +872,7 @@ def top_row(look: str, capture: str, device: str, shot) -> int | None:
     capture's own top or fades its edge (a breakout's rising picture)."""
     size = frame_size(device, shot)
     if size[0] > size[1]:
-        return None
+        return LANDSCAPE_STATUS_ROWS
     parts = look.split()
     layout = parts[0] if parts else "zoom"
     if device == "ipad":

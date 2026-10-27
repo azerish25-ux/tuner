@@ -279,6 +279,10 @@ struct NotesStep: View {
                 .mask { Self.burstBand(ring: size.height) }
                 .position(x: size.width / 2, y: size.height / 2)
         }
+        // Hide the whole oversized geometry wrapper, not only SparkBurst's Canvas: otherwise its
+        // doubled frame can become the note's accessibility bounds even while the burst is invisible.
+        .accessibilityHidden(true)
+        .allowsHitTesting(false)
     }
 
     /// The burst's canvas (twice the ring's height `ring`) is opaque across the ring's own height and clear from

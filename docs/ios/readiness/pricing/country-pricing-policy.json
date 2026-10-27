@@ -1,6 +1,6 @@
 {
-  "schema_version": 1,
-  "status": "proposed_incomplete_not_configured",
+  "schema_version": 2,
+  "status": "proposed_public_inventory_complete_pricing_unverified",
   "as_of": "2026-10-27",
   "release_ready": false,
   "configured_in_app_store_connect": false,
@@ -10,9 +10,18 @@
   "coverage": {
     "expected_storefront_count": 175,
     "expected_count_source": "apple_availability",
-    "mapped_country_count": 13,
+    "mapped_country_count": 175,
+    "public_inventory_complete": true,
+    "classified_country_count": 173,
+    "manual_review_country_codes": [
+      "AI",
+      "MS"
+    ],
+    "classification_complete": false,
+    "authenticated_app_availability_verified": false,
+    "supported_price_points_verified": false,
     "complete": false,
-    "unresolved": "Full active Apple territory inventory and full FY2027 country mapping have not been imported. Listed rows are verified income-group examples, not a complete availability manifest."
+    "unresolved": "Public inventory is verified separately. Anguilla and Montserrat need classification review; authenticated app/product availability, actual Apple territory IDs, currencies, prices and price points are unverified."
   },
   "sources": {
     "apple_availability": {
@@ -53,6 +62,26 @@
     },
     "simply_tune_us": {
       "url": "https://apps.apple.com/us/app/guitar-tuner-simply-tune/id1573260863",
+      "checked_on": "2026-10-27"
+    },
+    "world_bank_country_api": {
+      "url": "https://api.worldbank.org/v2/country?format=json&per_page=400",
+      "checked_on": "2026-10-27"
+    },
+    "apple_app_store_selector": {
+      "url": "https://apps.apple.com/us/app/guitartuna-tune-play-guitar/id527588389",
+      "checked_on": "2026-10-27"
+    },
+    "apple_media_availability": {
+      "url": "https://support.apple.com/en-us/118205",
+      "checked_on": "2026-10-27"
+    },
+    "apple_territory_code_documentation": {
+      "url": "https://developer.apple.com/tutorials/data/documentation/appstoreconnectapi/territorycode.json",
+      "checked_on": "2026-10-27"
+    },
+    "world_bank_fy2027_table": {
+      "url": "https://datahelpdesk.worldbank.org/knowledgebase/articles/906519-world-bank%20country-and-lending-groups",
       "checked_on": "2026-10-27"
     }
   },
@@ -107,12 +136,498 @@
   },
   "territories": [
     {
+      "public_storefront_country_code": "AE",
+      "territory_code": "ARE",
+      "name": "United Arab Emirates",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "AF",
+      "territory_code": "AFG",
+      "name": "Afghanistan",
+      "income_group": "low_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.20",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "AG",
+      "territory_code": "ATG",
+      "name": "Antigua and Barbuda",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "AI",
+      "territory_code": "AIA",
+      "name": "Anguilla",
+      "income_group": null,
+      "income_group_source": null,
+      "affordability_multiplier": null,
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "manual_review"
+    },
+    {
+      "public_storefront_country_code": "AL",
+      "territory_code": "ALB",
+      "name": "Albania",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "AM",
+      "territory_code": "ARM",
+      "name": "Armenia",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "AO",
+      "territory_code": "AGO",
+      "name": "Angola",
+      "income_group": "lower_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.35",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "AR",
+      "territory_code": "ARG",
+      "name": "Argentina",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "AT",
+      "territory_code": "AUT",
+      "name": "Austria",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "AU",
+      "territory_code": "AUS",
+      "name": "Australia",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "AZ",
+      "territory_code": "AZE",
+      "name": "Azerbaijan",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "BA",
+      "territory_code": "BIH",
+      "name": "Bosnia and Herzegovina",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "BB",
+      "territory_code": "BRB",
+      "name": "Barbados",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "BE",
+      "territory_code": "BEL",
+      "name": "Belgium",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "BF",
+      "territory_code": "BFA",
+      "name": "Burkina Faso",
+      "income_group": "low_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.20",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "BG",
+      "territory_code": "BGR",
+      "name": "Bulgaria",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "BH",
+      "territory_code": "BHR",
+      "name": "Bahrain",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "BJ",
+      "territory_code": "BEN",
+      "name": "Benin",
+      "income_group": "lower_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.35",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "BM",
+      "territory_code": "BMU",
+      "name": "Bermuda",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "BN",
+      "territory_code": "BRN",
+      "name": "Brunei",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "BO",
+      "territory_code": "BOL",
+      "name": "Bolivia",
+      "income_group": "lower_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.35",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "BR",
       "territory_code": "BRA",
       "name": "Brazil",
       "income_group": "upper_middle_income",
-      "income_group_source": "world_bank_fy2027",
+      "income_group_source": "world_bank_country_api",
       "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
       "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
       "currency": null,
       "prices": {
         "monthly": null,
@@ -127,12 +642,130 @@
       "status": "proposed_requires_territory_and_price_point_verification"
     },
     {
+      "public_storefront_country_code": "BS",
+      "territory_code": "BHS",
+      "name": "Bahamas",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "BT",
+      "territory_code": "BTN",
+      "name": "Bhutan",
+      "income_group": "lower_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.35",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "BW",
+      "territory_code": "BWA",
+      "name": "Botswana",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "BY",
+      "territory_code": "BLR",
+      "name": "Belarus",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "BZ",
+      "territory_code": "BLZ",
+      "name": "Belize",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "CA",
       "territory_code": "CAN",
       "name": "Canada",
       "income_group": "high_income",
-      "income_group_source": "world_bank_fy2027",
+      "income_group_source": "world_bank_country_api",
       "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
       "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
       "currency": null,
       "prices": {
         "monthly": null,
@@ -147,12 +780,38 @@
       "status": "proposed_requires_territory_and_price_point_verification"
     },
     {
-      "territory_code": "EGY",
-      "name": "Egypt, Arab Rep.",
+      "public_storefront_country_code": "CD",
+      "territory_code": "COD",
+      "name": "Congo, Democratic Republic of the",
+      "income_group": "low_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.20",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "CG",
+      "territory_code": "COG",
+      "name": "Congo, Republic of the",
       "income_group": "lower_middle_income",
-      "income_group_source": "world_bank_fy2027",
+      "income_group_source": "world_bank_country_api",
       "affordability_multiplier": "0.35",
+      "public_app_store_availability_verified": true,
       "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
       "currency": null,
       "prices": {
         "monthly": null,
@@ -167,12 +826,866 @@
       "status": "proposed_requires_territory_and_price_point_verification"
     },
     {
+      "public_storefront_country_code": "CH",
+      "territory_code": "CHE",
+      "name": "Switzerland",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "CI",
+      "territory_code": "CIV",
+      "name": "Côte d'Ivoire",
+      "income_group": "lower_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.35",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "CL",
+      "territory_code": "CHL",
+      "name": "Chile",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "CM",
+      "territory_code": "CMR",
+      "name": "Cameroon",
+      "income_group": "lower_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.35",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "CN",
+      "territory_code": "CHN",
+      "name": "China mainland",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "CO",
+      "territory_code": "COL",
+      "name": "Colombia",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "CR",
+      "territory_code": "CRI",
+      "name": "Costa Rica",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "CV",
+      "territory_code": "CPV",
+      "name": "Cape Verde",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "CY",
+      "territory_code": "CYP",
+      "name": "Cyprus",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "CZ",
+      "territory_code": "CZE",
+      "name": "Czechia",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "DE",
+      "territory_code": "DEU",
+      "name": "Germany",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "DK",
+      "territory_code": "DNK",
+      "name": "Denmark",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "DM",
+      "territory_code": "DMA",
+      "name": "Dominica",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "DO",
+      "territory_code": "DOM",
+      "name": "Dominican Republic",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "DZ",
+      "territory_code": "DZA",
+      "name": "Algeria",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "EC",
+      "territory_code": "ECU",
+      "name": "Ecuador",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "EE",
+      "territory_code": "EST",
+      "name": "Estonia",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "EG",
+      "territory_code": "EGY",
+      "name": "Egypt",
+      "income_group": "lower_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.35",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "ES",
+      "territory_code": "ESP",
+      "name": "Spain",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "FI",
+      "territory_code": "FIN",
+      "name": "Finland",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "FJ",
+      "territory_code": "FJI",
+      "name": "Fiji",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "FM",
+      "territory_code": "FSM",
+      "name": "Micronesia",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "FR",
+      "territory_code": "FRA",
+      "name": "France",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "GA",
+      "territory_code": "GAB",
+      "name": "Gabon",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "GB",
+      "territory_code": "GBR",
+      "name": "United Kingdom",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "GD",
+      "territory_code": "GRD",
+      "name": "Grenada",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "GE",
+      "territory_code": "GEO",
+      "name": "Georgia",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "GH",
+      "territory_code": "GHA",
+      "name": "Ghana",
+      "income_group": "lower_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.35",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "GM",
+      "territory_code": "GMB",
+      "name": "The Gambia",
+      "income_group": "low_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.20",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "GR",
+      "territory_code": "GRC",
+      "name": "Greece",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "GT",
+      "territory_code": "GTM",
+      "name": "Guatemala",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "GW",
+      "territory_code": "GNB",
+      "name": "Guinea-Bissau",
+      "income_group": "low_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.20",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "GY",
+      "territory_code": "GUY",
+      "name": "Guyana",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "HK",
+      "territory_code": "HKG",
+      "name": "Hong Kong",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "HN",
+      "territory_code": "HND",
+      "name": "Honduras",
+      "income_group": "lower_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.35",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "HR",
+      "territory_code": "HRV",
+      "name": "Croatia",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "HU",
+      "territory_code": "HUN",
+      "name": "Hungary",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "ID",
       "territory_code": "IDN",
       "name": "Indonesia",
       "income_group": "upper_middle_income",
-      "income_group_source": "world_bank_fy2027",
+      "income_group_source": "world_bank_country_api",
       "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
       "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
       "currency": null,
       "prices": {
         "monthly": null,
@@ -187,12 +1700,61 @@
       "status": "proposed_requires_territory_and_price_point_verification"
     },
     {
+      "public_storefront_country_code": "IE",
+      "territory_code": "IRL",
+      "name": "Ireland",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "IL",
+      "territory_code": "ISR",
+      "name": "Israel",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "IN",
       "territory_code": "IND",
       "name": "India",
       "income_group": "lower_middle_income",
-      "income_group_source": "world_bank_fy2027",
+      "income_group_source": "world_bank_country_api",
       "affordability_multiplier": "0.35",
+      "public_app_store_availability_verified": true,
       "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
       "currency": null,
       "prices": {
         "monthly": null,
@@ -207,12 +1769,613 @@
       "status": "proposed_requires_territory_and_price_point_verification"
     },
     {
+      "public_storefront_country_code": "IQ",
+      "territory_code": "IRQ",
+      "name": "Iraq",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "IS",
+      "territory_code": "ISL",
+      "name": "Iceland",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "IT",
+      "territory_code": "ITA",
+      "name": "Italy",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "JM",
+      "territory_code": "JAM",
+      "name": "Jamaica",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "JO",
+      "territory_code": "JOR",
+      "name": "Jordan",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "JP",
+      "territory_code": "JPN",
+      "name": "Japan",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "KE",
+      "territory_code": "KEN",
+      "name": "Kenya",
+      "income_group": "lower_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.35",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "KG",
+      "territory_code": "KGZ",
+      "name": "Kyrgyzstan",
+      "income_group": "lower_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.35",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "KH",
+      "territory_code": "KHM",
+      "name": "Cambodia",
+      "income_group": "lower_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.35",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "KN",
+      "territory_code": "KNA",
+      "name": "St. Kitts and Nevis",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "KR",
+      "territory_code": "KOR",
+      "name": "South Korea",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "KW",
+      "territory_code": "KWT",
+      "name": "Kuwait",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "KY",
+      "territory_code": "CYM",
+      "name": "Cayman Islands",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "KZ",
+      "territory_code": "KAZ",
+      "name": "Kazakhstan",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "LA",
+      "territory_code": "LAO",
+      "name": "Laos",
+      "income_group": "lower_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.35",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "LB",
+      "territory_code": "LBN",
+      "name": "Lebanon",
+      "income_group": "lower_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.35",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "LC",
+      "territory_code": "LCA",
+      "name": "St. Lucia",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "LK",
+      "territory_code": "LKA",
+      "name": "Sri Lanka",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "LR",
+      "territory_code": "LBR",
+      "name": "Liberia",
+      "income_group": "low_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.20",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "LT",
+      "territory_code": "LTU",
+      "name": "Lithuania",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "LU",
+      "territory_code": "LUX",
+      "name": "Luxembourg",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "LV",
+      "territory_code": "LVA",
+      "name": "Latvia",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "LY",
+      "territory_code": "LBY",
+      "name": "Libya",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "MA",
+      "territory_code": "MAR",
+      "name": "Morocco",
+      "income_group": "lower_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.35",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "MD",
+      "territory_code": "MDA",
+      "name": "Moldova",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "ME",
+      "territory_code": "MNE",
+      "name": "Montenegro",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "MG",
       "territory_code": "MDG",
       "name": "Madagascar",
       "income_group": "low_income",
-      "income_group_source": "world_bank_fy2027",
+      "income_group_source": "world_bank_country_api",
       "affordability_multiplier": "0.20",
+      "public_app_store_availability_verified": true,
       "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
       "currency": null,
       "prices": {
         "monthly": null,
@@ -227,12 +2390,383 @@
       "status": "proposed_requires_territory_and_price_point_verification"
     },
     {
+      "public_storefront_country_code": "MK",
+      "territory_code": "MKD",
+      "name": "North Macedonia",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "ML",
+      "territory_code": "MLI",
+      "name": "Mali",
+      "income_group": "low_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.20",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "MM",
+      "territory_code": "MMR",
+      "name": "Myanmar",
+      "income_group": "lower_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.35",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "MN",
+      "territory_code": "MNG",
+      "name": "Mongolia",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "MO",
+      "territory_code": "MAC",
+      "name": "Macao",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "MR",
+      "territory_code": "MRT",
+      "name": "Mauritania",
+      "income_group": "lower_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.35",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "MS",
+      "territory_code": "MSR",
+      "name": "Montserrat",
+      "income_group": null,
+      "income_group_source": null,
+      "affordability_multiplier": null,
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "manual_review"
+    },
+    {
+      "public_storefront_country_code": "MT",
+      "territory_code": "MLT",
+      "name": "Malta",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "MU",
+      "territory_code": "MUS",
+      "name": "Mauritius",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "MV",
+      "territory_code": "MDV",
+      "name": "Maldives",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "MW",
+      "territory_code": "MWI",
+      "name": "Malawi",
+      "income_group": "low_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.20",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "MX",
+      "territory_code": "MEX",
+      "name": "Mexico",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "MY",
+      "territory_code": "MYS",
+      "name": "Malaysia",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "MZ",
+      "territory_code": "MOZ",
+      "name": "Mozambique",
+      "income_group": "low_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.20",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "NA",
+      "territory_code": "NAM",
+      "name": "Namibia",
+      "income_group": "lower_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.35",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "NE",
+      "territory_code": "NER",
+      "name": "Niger",
+      "income_group": "low_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.20",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "NG",
       "territory_code": "NGA",
       "name": "Nigeria",
       "income_group": "lower_middle_income",
-      "income_group_source": "world_bank_fy2027",
+      "income_group_source": "world_bank_country_api",
       "affordability_multiplier": "0.35",
+      "public_app_store_availability_verified": true,
       "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
       "currency": null,
       "prices": {
         "monthly": null,
@@ -247,12 +2781,15 @@
       "status": "proposed_requires_territory_and_price_point_verification"
     },
     {
-      "territory_code": "PAK",
-      "name": "Pakistan",
+      "public_storefront_country_code": "NI",
+      "territory_code": "NIC",
+      "name": "Nicaragua",
       "income_group": "lower_middle_income",
-      "income_group_source": "world_bank_fy2027",
+      "income_group_source": "world_bank_country_api",
       "affordability_multiplier": "0.35",
+      "public_app_store_availability_verified": true,
       "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
       "currency": null,
       "prices": {
         "monthly": null,
@@ -267,12 +2804,222 @@
       "status": "proposed_requires_territory_and_price_point_verification"
     },
     {
+      "public_storefront_country_code": "NL",
+      "territory_code": "NLD",
+      "name": "Netherlands",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "NO",
+      "territory_code": "NOR",
+      "name": "Norway",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "NP",
+      "territory_code": "NPL",
+      "name": "Nepal",
+      "income_group": "lower_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.35",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "NR",
+      "territory_code": "NRU",
+      "name": "Nauru",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "NZ",
+      "territory_code": "NZL",
+      "name": "New Zealand",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "OM",
+      "territory_code": "OMN",
+      "name": "Oman",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "PA",
+      "territory_code": "PAN",
+      "name": "Panama",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "PE",
+      "territory_code": "PER",
+      "name": "Peru",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "PG",
+      "territory_code": "PNG",
+      "name": "Papua New Guinea",
+      "income_group": "lower_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.35",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "PH",
       "territory_code": "PHL",
       "name": "Philippines",
       "income_group": "upper_middle_income",
-      "income_group_source": "world_bank_fy2027",
+      "income_group_source": "world_bank_country_api",
       "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
       "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
       "currency": null,
       "prices": {
         "monthly": null,
@@ -287,12 +3034,222 @@
       "status": "proposed_requires_territory_and_price_point_verification"
     },
     {
+      "public_storefront_country_code": "PK",
+      "territory_code": "PAK",
+      "name": "Pakistan",
+      "income_group": "lower_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.35",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "PL",
+      "territory_code": "POL",
+      "name": "Poland",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "PT",
+      "territory_code": "PRT",
+      "name": "Portugal",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "PW",
+      "territory_code": "PLW",
+      "name": "Palau",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "PY",
+      "territory_code": "PRY",
+      "name": "Paraguay",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "QA",
+      "territory_code": "QAT",
+      "name": "Qatar",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "RO",
+      "territory_code": "ROU",
+      "name": "Romania",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "RS",
+      "territory_code": "SRB",
+      "name": "Serbia",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "RU",
+      "territory_code": "RUS",
+      "name": "Russia",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "RW",
       "territory_code": "RWA",
       "name": "Rwanda",
       "income_group": "low_income",
-      "income_group_source": "world_bank_fy2027",
+      "income_group_source": "world_bank_country_api",
       "affordability_multiplier": "0.20",
+      "public_app_store_availability_verified": true,
       "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
       "currency": null,
       "prices": {
         "monthly": null,
@@ -307,12 +3264,590 @@
       "status": "proposed_requires_territory_and_price_point_verification"
     },
     {
+      "public_storefront_country_code": "SA",
+      "territory_code": "SAU",
+      "name": "Saudi Arabia",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "SB",
+      "territory_code": "SLB",
+      "name": "Solomon Islands",
+      "income_group": "lower_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.35",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "SC",
+      "territory_code": "SYC",
+      "name": "Seychelles",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "SE",
+      "territory_code": "SWE",
+      "name": "Sweden",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "SG",
+      "territory_code": "SGP",
+      "name": "Singapore",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "SI",
+      "territory_code": "SVN",
+      "name": "Slovenia",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "SK",
+      "territory_code": "SVK",
+      "name": "Slovakia",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "SL",
+      "territory_code": "SLE",
+      "name": "Sierra Leone",
+      "income_group": "low_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.20",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "SN",
+      "territory_code": "SEN",
+      "name": "Senegal",
+      "income_group": "lower_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.35",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "SR",
+      "territory_code": "SUR",
+      "name": "Suriname",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "ST",
+      "territory_code": "STP",
+      "name": "São Tomé and Príncipe",
+      "income_group": "lower_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.35",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "SV",
+      "territory_code": "SLV",
+      "name": "El Salvador",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "SZ",
+      "territory_code": "SWZ",
+      "name": "Eswatini",
+      "income_group": "lower_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.35",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "TC",
+      "territory_code": "TCA",
+      "name": "Turks and Caicos",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "TD",
+      "territory_code": "TCD",
+      "name": "Chad",
+      "income_group": "low_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.20",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "TH",
+      "territory_code": "THA",
+      "name": "Thailand",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "TJ",
+      "territory_code": "TJK",
+      "name": "Tajikistan",
+      "income_group": "lower_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.35",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "TM",
+      "territory_code": "TKM",
+      "name": "Turkmenistan",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "TN",
+      "territory_code": "TUN",
+      "name": "Tunisia",
+      "income_group": "lower_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.35",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "TO",
+      "territory_code": "TON",
+      "name": "Tonga",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "TR",
+      "territory_code": "TUR",
+      "name": "Türkiye",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "TT",
+      "territory_code": "TTO",
+      "name": "Trinidad and Tobago",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "TW",
+      "territory_code": "TWN",
+      "name": "Taiwan",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_fy2027_table",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "TZ",
+      "territory_code": "TZA",
+      "name": "Tanzania",
+      "income_group": "lower_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.35",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "UA",
+      "territory_code": "UKR",
+      "name": "Ukraine",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "UG",
       "territory_code": "UGA",
       "name": "Uganda",
       "income_group": "low_income",
-      "income_group_source": "world_bank_fy2027",
+      "income_group_source": "world_bank_country_api",
       "affordability_multiplier": "0.20",
+      "public_app_store_availability_verified": true,
       "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
       "currency": null,
       "prices": {
         "monthly": null,
@@ -327,12 +3862,15 @@
       "status": "proposed_requires_territory_and_price_point_verification"
     },
     {
+      "public_storefront_country_code": "US",
       "territory_code": "USA",
       "name": "United States",
       "income_group": "high_income",
-      "income_group_source": "world_bank_fy2027",
+      "income_group_source": "world_bank_country_api",
       "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
       "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
       "currency": null,
       "prices": {
         "monthly": null,
@@ -347,12 +3885,268 @@
       "status": "proposed_requires_territory_and_price_point_verification"
     },
     {
-      "territory_code": "VNM",
-      "name": "Viet Nam",
-      "income_group": "upper_middle_income",
-      "income_group_source": "world_bank_fy2027",
-      "affordability_multiplier": "0.65",
+      "public_storefront_country_code": "UY",
+      "territory_code": "URY",
+      "name": "Uruguay",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
       "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "UZ",
+      "territory_code": "UZB",
+      "name": "Uzbekistan",
+      "income_group": "lower_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.35",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "VC",
+      "territory_code": "VCT",
+      "name": "St. Vincent and the Grenadines",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "VE",
+      "territory_code": "VEN",
+      "name": "Venezuela",
+      "income_group": "lower_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.35",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "VG",
+      "territory_code": "VGB",
+      "name": "British Virgin Islands",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "1.00",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "VN",
+      "territory_code": "VNM",
+      "name": "Vietnam",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "VU",
+      "territory_code": "VUT",
+      "name": "Vanuatu",
+      "income_group": "lower_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.35",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "XK",
+      "territory_code": null,
+      "name": "Kosovo",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "YE",
+      "territory_code": "YEM",
+      "name": "Yemen",
+      "income_group": "low_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.20",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "ZA",
+      "territory_code": "ZAF",
+      "name": "South Africa",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.65",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "ZM",
+      "territory_code": "ZMB",
+      "name": "Zambia",
+      "income_group": "lower_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.35",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "public_storefront_country_code": "ZW",
+      "territory_code": "ZWE",
+      "name": "Zimbabwe",
+      "income_group": "lower_middle_income",
+      "income_group_source": "world_bank_country_api",
+      "affordability_multiplier": "0.35",
+      "public_app_store_availability_verified": true,
+      "apple_territory_verified": false,
+      "authenticated_app_availability_verified": false,
       "currency": null,
       "prices": {
         "monthly": null,
@@ -368,8 +4162,8 @@
     }
   ],
   "required_before_configuration": [
-    "Import and reconcile the complete active Apple territory inventory.",
-    "Map every intended storefront to current country income evidence or an explicit manual-review exception.",
+    "Independently verify current authenticated Apple territory IDs and app/product availability; the public 175-country inventory is already reconciled.",
+    "Resolve the Anguilla and Montserrat income-classification exceptions with country-specific evidence, not a UK or high-income default.",
     "Resolve actual local currency and supported Apple price-point IDs separately for all three products.",
     "Review actual proceeds, taxes, local competition, lifetime support costs and price ordering.",
     "Configure and independently read back the approved territory schedules.",
@@ -380,6 +4174,11 @@
     "No live App Store Connect product prices or price-point IDs have been obtained.",
     "No regional currency amounts beyond the proposed US and Canada anchors are invented.",
     "The 50 listing languages are independent of the country/storefront pricing inventory.",
-    "No revenue or conversion outcome is promised."
-  ]
+    "No revenue or conversion outcome is promised.",
+    "Public availability verification does not establish this app or its products are enabled or purchasable in those countries."
+  ],
+  "evidence": {
+    "path": "source-data/public-country-income-evidence-2026-10-27.json",
+    "sha256": "cc8eb65c44acf5caf1c1f864e6209634842ff7af9ed157eaa0d8bdedbc804ec9"
+  }
 }

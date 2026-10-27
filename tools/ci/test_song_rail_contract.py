@@ -114,6 +114,47 @@ class SongRailContractTests(unittest.TestCase):
         self.assertIn('-only-testing:TimbreUITests/SongShelfRailUITests',
                       (ROOT / '.github/workflows/nightly.yml').read_text())
 
+    def test_reveal_checks_stable_geometry_before_actual_hittability(self):
+        test = (ROOT / 'ios/TimbreUITests/SongShelfRailUITests.swift').read_text()
+        reveal = test.split('private func reveal(', 1)[1].split('private func verifyActions(', 1)[0]
+        self.assertLess(reveal.index('guard let frame = stableFrame(target)'), reveal.index('target.isHittable'))
+        self.assertLess(reveal.index('if fullyClear {'), reveal.index('target.isHittable'))
+        for token in ['for attempt in 0..<85', 'viewport.width * 0.6', 'viewport.midX - frame.midX',
+                      '(forward != rtl) ? -limit : limit', '(rtl ? atLast : atFirst) ? 19 : 52',
+                      '(rtl ? atFirst : atLast) ? 19 : 52', 'frame.minY >= viewport.minY - 1',
+                      'frame.maxY <= viewport.maxY + 1', 'guard let frame = stableFrame(target) else { continue }',
+                      'frame.minX.isFinite', 'frame.height > 0', 'for _ in 0..<3',
+                      'withVelocity: .slow, thenHoldForDuration: 0.3', 'XCTAssertTrue(target.isHittable']:
+            self.assertIn(token, reveal)
+        for forbidden in ['try?', 'catch', 'XCTSkip', 'target.exists && target.isHittable']:
+            self.assertNotIn(forbidden, reveal)
+
+    def test_adaptive_physical_drag_centers_both_failure_geometries(self):
+        # Independent geometry model using the two native failure frames. Physical centering must not
+        # invert again for RTL; both source endpoints stay in the viewport and reverse after overshoot.
+        width = 402.0
+        limit = width * 0.6
+        for x, card_width in [(511.3, 136.2), (-279.4, 136.2), (-20, 148), (260, 148)]:
+            origin = x
+            for _ in range(3):
+                distance = max(-limit, min(limit, width / 2 - (x + card_width / 2)))
+                start = width / 2 - distance / 2
+                end = width / 2 + distance / 2
+                self.assertGreaterEqual(start, width * 0.2)
+                self.assertLessEqual(start, width * 0.8)
+                self.assertGreaterEqual(end, width * 0.2)
+                self.assertLessEqual(end, width * 0.8)
+                x += end - start
+            self.assertGreaterEqual(x, 52, origin)
+            self.assertLessEqual(x + card_width, width - 52, origin)
+
+    def test_eager_oracle_escaping_caption_builder_uses_explicit_self(self):
+        source = (ROOT / 'ios/TimbreAppTests/SongRailMeasurementTests.swift').read_text()
+        eager = source.split('let eagerHeight = autoreleasepool {', 1)[1].split('}.fixedSize()', 1)[0]
+        self.assertIn('ForEach(shelf.songs) { song in', eager)
+        self.assertIn('self.productionCaption(song, catalog: catalog, store: store).frame(width: 148)', eager)
+        self.assertNotRegex(eager, r'(?m)^\s+productionCaption\(')
+
     def test_full_catalogue_oracle_has_no_sample_or_timing_exemption(self):
         test = (ROOT / 'ios/TimbreAppTests/SongRailMeasurementTests.swift').read_text()
         full = test.split('func testFullProductionCatalogueCaptionSizingAcrossDynamicType()', 1)[1]
