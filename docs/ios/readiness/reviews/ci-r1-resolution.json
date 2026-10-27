@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-10-26T23:43:34.340606+00:00",
+  "finding": "CI-R1",
+  "status": "independent_source_rereview_passed_integration_verification_pending",
+  "original_review": "docs/ios/readiness/reviews/ci-independent-review.json",
+  "original_review_sha256": "ba8d34470167e54f509a1dfaf99704b99234d31fabdccaf64f18629d8eacf4d6",
+  "resolution": "report.build awaiting_apply now preserves clean(item), including source and where from the authoritative UI model. Existing table/key consumers remain compatible. No downstream key guessing or permission-only shortcut.",
+  "regressions": [
+    "Real report.build fixture: 100 UI strings; German has 99 installed and one delivered/unapplied paywall legal string. At --min95 --critical, German must be excluded.",
+    "Real report.build fixture: 100 UI strings; German has 99 installed and one delivered/unapplied accessibilityLabel string. At --min95 --critical, German must be excluded."
+  ],
+  "red": {
+    "command": "python -m unittest discover -s tools/l10n/tests -p test_shipping.py",
+    "exit_code": 1,
+    "result": "9 tests, both new regressions failed: de99.0%,0critical gaps, de incorrectly selected"
+  },
+  "green": {
+    "command": "python -m unittest discover -s tools/l10n/tests -p test_shipping.py",
+    "exit_code": 0,
+    "result": "9 tests passed in9.350s"
+  },
+  "files_sha256": {
+    "tools/l10n/report.py": "515498d411d47407110d804815f38cbd347f441ab45ee78fe9ed00d81ce033de",
+    "tools/l10n/shipping.py": "c323569778f29531d18fac15f2647c9d7f9214c9dd60b9a704637fa7597ebf01",
+    "tools/l10n/tests/test_shipping.py": "9065a04c2b9607a52bc482c3a699879f27dca35f16b7e13e43e23a31eee4901e"
+  },
+  "preserved_evidence": [
+    "ci-independent-review.json unchanged",
+    "ci-implementation-plan.md unchanged from initial implementation receipt"
+  ],
+  "pending": [
+    "Full l10n suite and report freshness after six-key translation integration completes",
+    "Native macOS evidence"
+  ],
+  "independent_rereview": {
+    "path": "docs/ios/readiness/reviews/ci-r1-independent-rereview.json",
+    "sha256": "019f21b89c27dcbc36e893bf5bd6126c1506e7c6a69675ea7e6063b9482939d2",
+    "result": "CI-R1 resolved, no new source findings; independently verified9 focused tests passed in9.483s"
+  }
+}

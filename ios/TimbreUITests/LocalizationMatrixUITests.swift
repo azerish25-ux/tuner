@@ -59,6 +59,7 @@ final class LocalizationMatrixUITests: XCTestCase {
                 XCTAssertEqual(labels["lesson_status"], "pending", "Unknown lesson fixture status")
                 print("TIMBRE_L10N_LESSON_PENDING \(language)")
             }
+            try assertUnavailableSongRequest(application, language: language, labels: labels)
             application.terminate()
             if language == "bg" {
                 application.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
@@ -72,6 +73,62 @@ final class LocalizationMatrixUITests: XCTestCase {
             }
             print("TIMBRE_L10N_MATRIX_TESTED \(language)")
         }
+    }
+
+    /// Automated runs have no telemetry app ID, so this checks the real unavailable-build alert without sending.
+    private func assertUnavailableSongRequest(_ app: XCUIApplication, language: String, labels: [String: String]) throws {
+        let title = try XCTUnwrap(labels["request_title"])
+        let message = try XCTUnwrap(labels["request_unavailable"])
+        let support = try XCTUnwrap(labels["request_support"])
+        let cancel = try XCTUnwrap(labels["request_cancel"])
+        let tune = app.tabBars.firstMatch.buttons[try XCTUnwrap(labels["tune"])]
+        let alert = app.alerts.firstMatch
+        // Also restore Tune if a throwing assertion interrupts the route, before the caller terminates the app.
+        defer {
+            let dismiss = alert.buttons[cancel]
+            if alert.exists && dismiss.exists && dismiss.isHittable { dismiss.tap() }
+            XCTAssertTrue(tune.waitForExistence(timeout: 15), "\(language): Tune tab missing after request check")
+            XCTAssertTrue(tune.isHittable, "\(language): Tune tab is not reachable after request check")
+            tune.tap()
+            XCTAssertTrue(tune.isSelected, "\(language): Tune must remain selected for the next launch")
+            XCTAssertTrue(app.buttons["tune.instrument"].waitForExistence(timeout: 15), "\(language): tuner did not reopen")
+        }
+        let songs = app.tabBars.firstMatch.buttons[try XCTUnwrap(labels["songs"])]
+        XCTAssertTrue(songs.waitForExistence(timeout: 15))
+        XCTAssertTrue(songs.isHittable)
+        songs.tap()
+        XCTAssertTrue(songs.isSelected, "\(language): Songs tab did not open")
+        let request = app.buttons["songs.request"]
+        let tabBar = app.tabBars.firstMatch
+        for _ in 0..<24 {
+            if request.exists && request.isHittable && request.frame.minY >= app.frame.minY &&
+                request.frame.maxY <= tabBar.frame.minY { break }
+            app.swipeUp(velocity: .fast)
+        }
+        XCTAssertTrue(request.exists && request.isHittable, "\(language): request footer is not reachable")
+        XCTAssertEqual(request.label, title, "\(language): request footer label")
+        XCTAssertGreaterThanOrEqual(request.frame.minY, app.frame.minY)
+        XCTAssertLessThanOrEqual(request.frame.maxY, tabBar.frame.minY)
+        request.tap()
+        XCTAssertTrue(alert.waitForExistence(timeout: 15), "\(language): request alert did not open")
+        let heading = alert.staticTexts[title]
+        let body = alert.staticTexts[message]
+        let contact = alert.buttons[support]
+        let dismiss = alert.buttons[cancel]
+        for node in [alert, heading, body, contact, dismiss] {
+            XCTAssertTrue(node.exists, "\(language): missing request alert element")
+            XCTAssertTrue(node.isHittable, "\(language): request alert element is not visible")
+            XCTAssertFalse(node.frame.isEmpty, "\(language): request alert element has no visible bounds")
+            XCTAssertGreaterThanOrEqual(node.frame.minX, app.frame.minX)
+            XCTAssertGreaterThanOrEqual(node.frame.minY, app.frame.minY)
+            XCTAssertLessThanOrEqual(node.frame.maxX, app.frame.maxX)
+            XCTAssertLessThanOrEqual(node.frame.maxY, app.frame.maxY)
+        }
+        XCTAssertEqual(alert.textFields.count, 0, "\(language): unavailable requests must not show a submission field")
+        capture(app, name: "l10n-\(language)-song-request-unavailable")
+        dismiss.tap()
+        XCTAssertTrue(alert.waitForNonExistence(timeout: 10), "\(language): localized Cancel did not dismiss the request alert")
+        print("TIMBRE_L10N_REQUEST_UNAVAILABLE_TESTED \(language)")
     }
 
     /// Exercise the real Learn route using the phone-language launch arguments, not a manual language override.
@@ -125,7 +182,9 @@ final class LocalizationMatrixUITests: XCTestCase {
         }
         // A reachable rail container does not prove that its last horizontally scrolling control is usable.
         // Fresh storage opens the standard guitar: course 6 is its high E string, at the right-hand end.
-        let rail = app.descendants(matching: .any).matching(identifier: "tune.string.rail").firstMatch
+        let rail = app.scrollViews["tune.string.scroll"].firstMatch
+        XCTAssertTrue(rail.waitForExistence(timeout: 10), "The horizontal string scroll view must exist at AX5")
+        XCTAssertTrue(rail.isHittable, "Swipe the chip row, above its multiline end captions")
         let lastString = app.buttons["string.6"]
         XCTAssertTrue(lastString.waitForExistence(timeout: 10))
         for _ in 0..<6 {

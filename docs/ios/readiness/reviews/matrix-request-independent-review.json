@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-27T00:05:19.984421+00:00",
+  "baseline_head": "0c679011095f45eae2e28cd8593b23386a013b7d",
+  "reviewer": "Independent CI/source review agent",
+  "scope": "Separate request-alert localization matrix extension in matrix_fixture.py, test_matrix_fixture.py and LocalizationMatrixUITests.swift. Existing AX5 change treated as prior reviewed work; read product sources only to establish actual route semantics. No implementation changes, commits, pushes, delivery dispatch or native pass claim.",
+  "verdict": "No actionable source findings; native verification pending",
+  "findings": [],
+  "reviewed_files_sha256": {
+    "tools/l10n/matrix_fixture.py": "cba4140c96e671fafd19581723664c05c315639111176bc95c57b5ddd5a3efc7",
+    "tools/l10n/tests/test_matrix_fixture.py": "f88ae1bdff4b909861a8af84e0a07f1c76f6186666ea4168191816e51f42e8f3",
+    "ios/TimbreUITests/LocalizationMatrixUITests.swift": "8a9480d2e56abb4a768f64ea392295b5fa01f8b25ca84cae3f20da0d352213e2"
+  },
+  "frozen_receipt_matches": {
+    "tools/l10n/matrix_fixture.py": true,
+    "tools/l10n/tests/test_matrix_fixture.py": true,
+    "ios/TimbreUITests/LocalizationMatrixUITests.swift": true
+  },
+  "context_receipt_sha256": "e5a7d7f80b5c64b7ac008f293e39666125b56aaf6ea161a1f11f7d5da05d25c7",
+  "prior_receipts_preserved": {
+    "ci-independent-review.json": true,
+    "ci-implementation-plan.md": true,
+    "ci-r1-resolution.json": true,
+    "ci-r1-independent-rereview.json": true,
+    "ci-final-local-verification.json": true
+  },
+  "preserved_ax5_helper": {
+    "sha256": "3aed307955bde98ea97212510e5b98742af1a5e50232b615d1b8b9e31486755d",
+    "matches_required_hash": true,
+    "extraction": "LF-normalized text immediately after `    private func assertAccessibleTunerCanScroll` and before `    private func assertInstrumentFits`, including two trailing newlines."
+  },
+  "source_checks": [
+    "Fixture reads the four exact request labels from installed Localizable.strings. Missing/blank target values fail. Independent generation succeeds for all 48 language tables; workflow shard set matches all 48 locales.",
+    "Existing AppleLanguages/AppleLocale launch arguments and fresh test storage select the phone locale with system language settings. UI selectors use fixture values and stable songs.request identifier; fixture Songs label mirrors the actual translated course-title preference.",
+    "Existing fresh settings default sharesUsage on. TestSupport detects TIMBRE_TEST_STORAGE_ID/DEMO_PITCH and existing Telemetry.shared suppresses its app ID in automated DEBUG runs. SongsView therefore opens the genuine unavailable-build alert, without a new product/service override or request submission.",
+    "Footer search is bounded to 24 fast upward swipes and short-circuits exists/hittable before reading frames in the reachability condition. Post-loop assertions require the footer inside the content viewport above the tab bar before tapping.",
+    "Alert title, message, Contact support and Cancel use exact localized selectors. Every required node is checked for existence, hittability, nonempty bounds and containment in app frame; normal submission TextFields must be absent. Contact support is not activated.",
+    "One retained screenshot is captured per locale before localized Cancel dismissal; successful disappearance is required before the request execution marker. Missing per-locale marker fails fixture log validation, and native test failure remains a workflow failure.",
+    "Defer is installed before navigating to Songs. It attempts localized dismissal if needed, requires Tune reachable, taps it, and verifies selected tab plus tuner instrument. Successful route returns before caller termination and BG AX5 relaunch. No failure-catching or retry suppression was added; cleanup failures also record test failures.",
+    "Existing AX5 scroll/reachability/tap/selection function suffix matches the required preserved hash exactly."
+  ],
+  "verification": [
+    {
+      "command": "python -m unittest discover -s tools/l10n/tests -p test_matrix_fixture.py",
+      "exit_code": 0,
+      "result": "23 tests passed in 4.010s, independently executed"
+    },
+    {
+      "command": "python -m unittest discover -s tools/l10n/tests -p 'test_*.py'",
+      "exit_code": 0,
+      "result": "164 tests passed in 25.156s, independently executed"
+    },
+    {
+      "command": "matrix_fixture.fixture(all 48 report.LANGUAGE_NAMES); matrix_fixture.check_workflow(.github/workflows/localization-matrix.yml)",
+      "exit_code": 0,
+      "result": "All 48 actual language tables generated the four required exact labels; workflow coverage validation passed"
+    },
+    {
+      "command": "git diff --check -- [three scoped files]",
+      "exit_code": 0,
+      "result": "No whitespace errors; CRLF conversion notices only"
+    }
+  ],
+  "limits": [
+    "Swift compilation, real simulator navigation, alert layout/hittability, screenshot visual inspection and all-48 native matrix execution were not performed on Windows and remain required macOS evidence.",
+    "A source-bounded swipe loop is not runtime proof that every locale footer is reachable within that bound; native matrix assertions will establish this or fail.",
+    "Full-viewport standard-size assertions do not establish universal text-size/layout acceptance. Existing BG AX5 coverage remains the prior separate gate.",
+    "This review does not assert that failure cleanup can restore a crashed/unresponsive application; such failures remain failures and teardown terminates the test app.",
+    "This review covers only the frozen extension hashes and does not certify unrelated product, translation quality, privacy, audio, deployment or Apple readiness work."
+  ]
+}

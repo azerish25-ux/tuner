@@ -82,18 +82,18 @@ class MatrixFixtureTests(unittest.TestCase):
 
     def test_execution_requires_lesson_marker_when_imported(self):
         expected = {'de': {'lesson_status': 'available'}}
-        matrix_fixture.validate_log(expected, 'TIMBRE_L10N_MATRIX_TESTED de\nTIMBRE_L10N_LESSON_TESTED de\n')
+        matrix_fixture.validate_log(expected, 'TIMBRE_L10N_MATRIX_TESTED de\nTIMBRE_L10N_LESSON_TESTED de\nTIMBRE_L10N_REQUEST_UNAVAILABLE_TESTED de\n')
         for log in ['', 'TIMBRE_L10N_MATRIX_TESTED de\n',
                     'TIMBRE_L10N_MATRIX_TESTED de\nTIMBRE_L10N_LESSON_PENDING de\n',
                     'TIMBRE_L10N_MATRIX_TESTED de\nTIMBRE_L10N_LESSON_TESTED de\nTIMBRE_L10N_LESSON_PENDING de\n']:
             with self.assertRaises(ValueError):
-                matrix_fixture.validate_log(expected, log)
+                matrix_fixture.validate_log(expected, log + 'TIMBRE_L10N_REQUEST_UNAVAILABLE_TESTED de\n')
 
     def test_missing_lessons_are_explicitly_pending_not_tested(self):
         expected = {'bg': {'lesson_status': 'pending'}}
-        matrix_fixture.validate_log(expected, 'TIMBRE_L10N_MATRIX_TESTED bg\nTIMBRE_L10N_LESSON_PENDING bg\n')
+        matrix_fixture.validate_log(expected, 'TIMBRE_L10N_MATRIX_TESTED bg\nTIMBRE_L10N_LESSON_PENDING bg\nTIMBRE_L10N_REQUEST_UNAVAILABLE_TESTED bg\n')
         with self.assertRaises(ValueError):
-            matrix_fixture.validate_log(expected, 'TIMBRE_L10N_MATRIX_TESTED bg\nTIMBRE_L10N_LESSON_TESTED bg\n')
+            matrix_fixture.validate_log(expected, 'TIMBRE_L10N_MATRIX_TESTED bg\nTIMBRE_L10N_LESSON_TESTED bg\nTIMBRE_L10N_REQUEST_UNAVAILABLE_TESTED bg\n')
         with self.assertRaises(ValueError):
             matrix_fixture.validate_log({'bg': {'lesson_status': 'unknown'}}, '')
 
@@ -136,6 +136,52 @@ class MatrixFixtureTests(unittest.TestCase):
         self.write_table('de', values)
         with self.assertRaisesRegex(ValueError, 'start'):
             matrix_fixture.fixture(['de'])
+
+    def test_exact_request_alert_expectations_come_from_applied_table(self):
+        request = {
+            'request_title': 'Request a song',
+            'request_unavailable': 'Song requests are unavailable in this build.',
+            'request_support': 'Contact support',
+            'request_cancel': 'Cancel',
+        }
+        values = {key: 'Übersetzt: ' + key for key in matrix_fixture.KEYS.values()}
+        values.update({key: 'Exakt: ' + key for key in request.values()})
+        self.write_table('de', values)
+        labels = matrix_fixture.fixture(['de'])['de']
+        for field, key in request.items():
+            self.assertEqual(labels[field], values[key])
+
+    def test_missing_or_blank_request_alert_labels_fail_closed(self):
+        request = {
+            'request_title': 'Request a song',
+            'request_unavailable': 'Song requests are unavailable in this build.',
+            'request_support': 'Contact support',
+            'request_cancel': 'Cancel',
+        }
+        directory = self.root / 'de.lproj'
+        directory.mkdir()
+        for field, key in request.items():
+            for value in (None, ' \t '):
+                with self.subTest(field=field, value=value):
+                    entries = {entry: 'Übersetzt: ' + entry for entry in matrix_fixture.KEYS.values()}
+                    entries.update({entry: 'Exakt: ' + entry for entry in request.values()})
+                    if value is None:
+                        entries.pop(key)
+                    else:
+                        entries[key] = value
+                    (directory / 'Localizable.strings').write_text(''.join(
+                        f'{json.dumps(k)} = {json.dumps(v)};\n' for k, v in entries.items()), encoding='utf-8')
+                    with self.assertRaisesRegex(ValueError, field):
+                        matrix_fixture.fixture(['de'])
+
+    def test_request_execution_marker_is_required_per_locale(self):
+        expected = {'de': {'lesson_status': 'available'}}
+        old_log = 'TIMBRE_L10N_MATRIX_TESTED de\nTIMBRE_L10N_LESSON_TESTED de\n'
+        with self.assertRaises(ValueError):
+            matrix_fixture.validate_log(expected, old_log)
+        with self.assertRaises(ValueError):
+            matrix_fixture.validate_log(expected, old_log + 'TIMBRE_L10N_REQUEST_UNAVAILABLE_TESTED fr\n')
+        matrix_fixture.validate_log(expected, old_log + 'TIMBRE_L10N_REQUEST_UNAVAILABLE_TESTED de\n')
 
     def test_workflow_missing_and_duplicate_locales_rejected(self):
         locales = list(matrix_fixture.report.LANGUAGE_NAMES)

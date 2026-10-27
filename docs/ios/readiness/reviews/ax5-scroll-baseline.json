@@ -1,0 +1,59 @@
+{
+  "review_date": "2026-10-26",
+  "baseline_head": "0c679011095f45eae2e28cd8593b23386a013b7d",
+  "scope": "Read-only product/test source review; this report only was added; no commit",
+  "failure": {
+    "run": 40410695664,
+    "job": 121880353564,
+    "evidence": "Parent reports LocalizationMatrixUITests.swift:139: high E maxX427.3333435 exceeds app maxX402 after six left swipes. This reviewer directly inspected the replacement-run pre-swipe string-rail PNG; parent reports log confirms all six swipes target tune.string.rail Other."
+  },
+  "verdict": "Approve minimal scroll-view targeting repair for native verification. Fresh failed-run pixels and source strongly corroborate the gesture target issue; no source justification for an app layout redesign or relaxed bounds.",
+  "fresh_artifact_review": {
+    "directly_viewed": "C:/Users/shahr/Desktop/Translation/native-qa/rtl-0c67901/named/screenshots/l10n-bg-ax5-tune.string.png",
+    "dimensions": "1206x2622 pixels;402pt viewport implies3px/pt",
+    "observation": "The horizontal chip row sits around595-658pt while two-line endpoint captions sit around676-752pt. Approximate whole-rail midpoint673pt is below the horizontal chip row. Last high E remains partly outside the right edge. These are visual estimates, not AX frame measurements.",
+    "provenance_limit": "This captured rail image precedes the new horizontal swipe attempts; it establishes their initial visible geometry, not post-swipe offset or synthesized touch coordinates.",
+    "proposal_review": "Adding tune.string.scroll directly to the existing horizontal ScrollView and querying app.scrollViews[tune.string.scroll] makes the gesture use the scroll row rather than its combined-caption wrapper. Require waitForExistence and isHittable before swiping. Keep the existing outer rail for vertical checks. If the expected overflow branch is missing, fail explicitly rather than skip the interaction.",
+    "blocking_findings": [],
+    "native_acceptance": "Retain both strict minX/maxX bounds, isHittable, actual tap, bounded selected-state expectation and capture. Native success still required; target correction does not itself prove the app range works."
+  },
+  "findings": [
+    "StringRail does not use EdgeRail. Changing shared EdgeRail/RailBleed cannot fix this path.",
+    "TuneView.swift:537-540 puts tune.string.rail on the whole StringRail accessibility container, which contains both the chip row and endpoint captions.",
+    "StringRail.swift:27-46: VStack holds ViewThatFits(row+20pt margins, horizontal ScrollViewReader fallback) and then ends(...). The captions are outside the horizontal scroll view, grow with caption2 and wrap at AX5.",
+    "LocalizationMatrixUITests.swift:128-135 calls rail.swipeLeft on the entire container. Its gesture can start below the actual horizontal scroll view, on captions or the outer vertical scroll view. Repeating this six times does not prove six horizontal drags occurred.",
+    "Earlier screenshot C:/Users/shahr/Desktop/Translation/native-qa/localization-rtl/named/l10n-bg-ax5-tune.string.png visually shows a short chip row followed by much taller two-line Bulgarian endpoint captions. The combined vertical midpoint is plausibly below the horizontal row. This is visual support, not measured AX hit-frame proof.",
+    "CourseChip has minimum50x50, not fixed50x50: scalable Sora17 headline and caption cue can make intrinsic width larger at AX5. Six minima plus five10pt gaps and two20pt margins total390pt; AX5 intrinsic width exceeds that. Do not clamp text to force fit.",
+    "Fallback ScrollView has20pt horizontal scroll-content margins and scrollClipDisabled for shadows/badges. Source alone does not prove insufficient scroll range. Need viewport/content/inset/offset evidence if a correctly located drag still fails.",
+    "ViewThatFits chooses the first child whose ideal size fits the proposed constrained axes per Apple. Adding fixedSize to an already ideal-size measurement is not a proven fix without evidence of the wrong branch.",
+    "The last chip has visual scale1 when unselected,1.1 selected,1.16 ringing. Its normal selected expansion cannot explain this pre-tap failure unless runtime evidence shows it was already selected.",
+    "StringRail explicitly forces LTR independently of language and only reverses groups for left-handed settings. Group.id remains lead course index; CourseChip action chooses nextToTune; TunerSession.choose sets selectedCourse and disables automatic retargeting."
+  ],
+  "minimal_fix": {
+    "precondition": "Confirm direct drag within actual horizontal chip row changes content position and fully reveals high E.",
+    "candidate": "Keep tune.string.rail for vertical reachability. Add accessibilityIdentifier(tune.string.scroll) directly to the existing horizontal ScrollView. Query app.scrollViews[tune.string.scroll], require existence and hittability, and use this scroll view in the same six-attempt swipe loop. Preserve every original full-reveal assertion and tap/selection gate. This is the preferred concrete candidate over coordinate dragging.",
+    "if_disproved": "Measure actual scroll viewport, content width, offset, insets, branch and all chip frames at both endpoints. If viewport is oversized, constrain the StringRail/TuneView width proposal boundary; if wrong ViewThatFits branch is proven, correct that measurement. Do not change EdgeRail or add arbitrary trailing space without evidence.",
+    "preserve": ["Strict minX/maxX app bounds", "isHittable", "Six finite attempts", "Actual tap and bounded selected-state expectation", "All six courses and identifiers", "LTR musical order in RTL locales", "Intentional handedness reversal", "Existing grouping and tap behavior", "Scalable text"]
+  },
+  "required_evidence": [
+    "Replacement screenshot and xcresult synthesized gesture coordinates; container frame, real horizontal ScrollView frame, high E frame and selected trait.",
+    "Before/after chip positions for one drag inside the real row, then fully settled endpoint frames.",
+    "Same402pt viewport Bulgarian AX5 fresh-storage native rerun after confirmed minimal fix. No bounds weakening."
+  ],
+  "regression_scope": [
+    "Bulgarian AX5: all six buttons exist, high E completely fits then responds to tap and becomes selected; drag back to low E and select it.",
+    "RTL AX5 fresh right-handed guitar: physical low-to-high LTR order and both endpoints reachable/selectable.",
+    "Left-handed guitar: intentional reversed order and corresponding endpoint swipe directions.",
+    "Ordinary Dynamic Type and wide iPad: centered fitting rows, unchanged tap behavior, selected expansion remains usable.",
+    "Long-course and paired-course instruments: no dropped courses; stable IDs; next-unlocked-course action preserved."
+  ],
+  "limits": [
+    "No native execution on this Windows reviewer; no runtime pass claim.",
+    "Failure proves the current test did not fully reveal high E. It does not alone prove a broken app scroll endpoint.",
+    "Parent retrieves extensionless AX/gesture attachments and owns final native diagnosis. Fresh screenshot now inspected directly; synthesized gesture coordinates and post-swipe content offsets remain uninspected."
+  ],
+  "primary_sources": [
+    "https://developer.apple.com/documentation/swiftui/viewthatfits",
+    "https://developer.apple.com/documentation/swiftui/view/fixedsize(horizontal:vertical:)"
+  ]
+}

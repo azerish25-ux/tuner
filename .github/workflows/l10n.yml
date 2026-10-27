@@ -28,22 +28,26 @@ jobs:
         run: xcodegen generate
       - name: Export English strings from source
         run: |
-          set -o pipefail
+          set -euo pipefail
           mkdir -p ci-out
           xcodebuild -exportLocalizations -project ios/Timbre.xcodeproj -localizationPath ci-out/l10n -exportLanguage en \
-            SWIFT_EMIT_LOC_STRINGS=YES 2>&1 | tail -40 | tee ci-out/export.log
-          find ci-out/l10n -name "*.xliff" -exec cp {} ci-out/ \;
+            SWIFT_EMIT_LOC_STRINGS=YES CODE_SIGNING_ALLOWED=NO 2>&1 | tail -40 | tee ci-out/export.log
+          XLIFF=ci-out/l10n/en.xcloc/Localized\ Contents/en.xliff
+          test -s "$XLIFF"
+          cp "$XLIFF" ci-out/en.xliff
           ls -la ci-out
       - name: Handoff and release-critical strings with Xcode's own keys
         # The scanner infers each interpolation's specifier (%lld, %@ …); the export states it. Both reports here use
         # the export's keys, so what translators deliver matches what the app looks up.
         if: success()
-        continue-on-error: true
         run: |
-          set -o pipefail
-          XLIFF=$(ls ci-out/*.xliff | head -1)
+          set -euo pipefail
+          XLIFF=ci-out/en.xliff
+          python3 tools/l10n/shipping.py --xliff "$XLIFF" --require-complete 2>&1 | tee ci-out/shipping.log
           python3 tools/l10n/report.py --check --xliff "$XLIFF" --out ci-out/handoff 2>&1 | tee ci-out/report.log
-          python3 tools/l10n/critical.py --xliff "$XLIFF" --out ci-out 2>&1 | tee ci-out/critical.log
+          LOCALES=$(python3 -c 'import sys; sys.path.insert(0,"tools/l10n"); import shipping; print(",".join(loc for loc in shipping.available() if loc != "en"))')
+          python3 tools/l10n/critical.py --strict --locales "$LOCALES" --xliff "$XLIFF" --out ci-out 2>&1 | tee ci-out/critical.log
+          python3 tools/l10n/lessons.py --strict --out ci-out/lessons.json 2>&1 | tee ci-out/lessons.log
       - name: Publish
         if: always()
         env:

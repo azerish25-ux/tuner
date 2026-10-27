@@ -580,7 +580,7 @@ def build(xliff: Path | None = None, launch: bool = False) -> dict:
             if isinstance(given, str) and given.strip():
                 problems = check(table, key, item["source"], given, loc)
                 if not problems:
-                    awaiting.append({"table": table, "key": key})
+                    awaiting.append(clean(item))
                     continue
                 entry["status"] = "rejected"
                 entry["problem"] = ", ".join(problems)

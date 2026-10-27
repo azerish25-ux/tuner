@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "verified_at_utc": "2026-10-26T23:55:13.125007+00:00",
+  "baseline_head": "0c679011095f45eae2e28cd8593b23386a013b7d",
+  "state": "Uncommitted integrated six-key translation working tree; no source mutations by this final verification task",
+  "verdict": "local_python_and_scanner_checks_passed_native_verification_pending",
+  "checks": [
+    {
+      "command": "python -m unittest discover -s tools/l10n/tests -p 'test_*.py'",
+      "exit_code": 0,
+      "result": "161 tests passed in20.983s"
+    },
+    {
+      "command": "python tools/l10n/report.py --check --strict",
+      "exit_code": 0,
+      "result": "Committed handoff/pending files fresh; no output"
+    },
+    {
+      "command": "python tools/l10n/critical.py --strict --github",
+      "exit_code": 0,
+      "result": "48 targets checked; legal0,permission0,voiceover0"
+    },
+    {
+      "command": "In-process report.build() current scanner model -> shipping.complete_ui(model)",
+      "exit_code": 0,
+      "result": "1980UIkeys; complete UI in all49app languages",
+      "note": "CLI --require-complete correctly requires XLIFF; direct pure check validates current scanner independently of downloaded export"
+    },
+    {
+      "command": "python tools/l10n/shipping.py --xliff ../native-qa/localization-export-0c67901/en.xliff --require-complete",
+      "exit_code": 0,
+      "result": "All49app languages complete; all48targets100%UI/lessons,0critical gaps"
+    },
+    {
+      "command": "python tools/l10n/critical.py --xliff ../native-qa/localization-export-0c67901/en.xliff --strict --github",
+      "exit_code": 0,
+      "result": "48 targets checked; legal0,permission0,voiceover0"
+    },
+    {
+      "command": "In-process critical.main([--strict,--github]) with nativeWindows-equivalent LEGAL_FOLDERS prefixes",
+      "exit_code": 0,
+      "result": "48targets; legal0,permission0,voiceover0",
+      "note": "No file edit: compensates for Windows scan path separators so local legal classification tests the same source-folder semantics as native macOS CI"
+    },
+    {
+      "command": "git diff --check -- tools/l10n/report.py tools/l10n/shipping.py tools/l10n/tests/test_shipping.py",
+      "exit_code": 0,
+      "result": "No whitespace errors; CRLF conversion notices only"
+    }
+  ],
+  "downloaded_export": {
+    "path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\localization-export-0c67901\\en.xliff",
+    "baseline_commit": "0c679011095f45eae2e28cd8593b23386a013b7d",
+    "sha256": "e681fbbb81e6b98d61e7ab2b94ca241982ad415abc7494e9ea8d80f6c0338ac3",
+    "fresh_for_current_working_tree": false
+  },
+  "files_sha256": {
+    ".github/workflows/ios.yml": "a6b5d3f44f354290c70c8d23f1982e700db9cdf7ba7aeb65f844326dfa0d0756",
+    ".github/workflows/nightly.yml": "9d7da6b928900a6b955c023b72caf1b8bf17e3044ff6c0b72d7d4c3d9be3ef63",
+    ".github/workflows/l10n.yml": "47c5554a05c3fd6754cb985a7e1e148275243e0d5f3e09a6f525b7b029818ce0",
+    ".github/workflows/apple-delivery.yml": "15a4e977f4b50073a43b3e83cdd3703de19e750a278fa1690c46f8c042b12df6",
+    "tools/l10n/report.py": "515498d411d47407110d804815f38cbd347f441ab45ee78fe9ed00d81ce033de",
+    "tools/l10n/shipping.py": "c323569778f29531d18fac15f2647c9d7f9214c9dd60b9a704637fa7597ebf01",
+    "tools/l10n/critical.py": "4afc1a915df4d22ee1cc3554a72e64ce74b1b49df942a6318f6a5bc8169648b8",
+    "tools/l10n/tests/test_shipping.py": "9065a04c2b9607a52bc482c3a699879f27dca35f16b7e13e43e23a31eee4901e",
+    "docs/l10n/HANDOFF.md": "5f15384aa53660bcae7629849a18f6dff8a4ce94ff4066c2c695a14b3b82b874",
+    "tools/l10n/todo/index.json": "2637b4ec6772a0c1afc6ea625c4cc4481485106cfbdf00586d7c4c4c922a6616",
+    "docs/ios/readiness/reviews/ci-independent-review.json": "ba8d34470167e54f509a1dfaf99704b99234d31fabdccaf64f18629d8eacf4d6",
+    "docs/ios/readiness/reviews/ci-r1-resolution.json": "0b0f750af6c5e2b4f1f098c77567b2fe264c53b5356608a93fc4aa4c37440496",
+    "docs/ios/readiness/reviews/ci-r1-independent-rereview.json": "019f21b89c27dcbc36e893bf5bd6126c1506e7c6a69675ea7e6063b9482939d2"
+  },
+  "source_scan_tree": {
+    "file_count": 230,
+    "sha256": "5d49d6122f3982fb008cd4e36644a9f1bc52a2b8827dad9eeb56d23f8f265694",
+    "recipe": "SHA256 of UTF-8 compact JSON sorted list of [repository-relative POSIX path,SHA256 file bytes]"
+  },
+  "locale_resource_tree": {
+    "file_count": 243,
+    "sha256": "f9ee71fd3930f6546f55c8c9923e8ce7a654897a143ba67e8890f35b042eae59",
+    "recipe": "SHA256 of UTF-8 compact JSON sorted list of [repository-relative POSIX path,SHA256 file bytes]"
+  },
+  "limits": [
+    "Downloaded0c67901export predates integrated source changes. Combining it with the current scanner is a useful compatibility check, not a fresh final-revision Xcode export.",
+    "Fresh final native localization export, complete native CI, UI/StoreKit tests and final archive bundle verification remain required on macOS.",
+    "Local structural completeness and passing format checks do not establish native linguistic quality or device visual acceptance.",
+    "No commit, push, Apple delivery dispatch, signing, upload or submission performed."
+  ]
+}

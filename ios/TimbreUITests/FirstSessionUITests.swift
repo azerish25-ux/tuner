@@ -20,10 +20,25 @@ final class FirstSessionUITests: XCTestCase {
             attachment.lifetime = .keepAlways
             add(attachment)
         }
-        app.terminate()
+        if app.state != .notRunning { app.terminate() }
     }
 
     private func element(_ id: String) -> XCUIElement { app.descendants(matching: .any).matching(identifier: id).firstMatch }
+
+    /// A strum with a missing open G must mark string 3 silent and keep the chord unfinished.
+    func testADeadStringIsNamedWithoutCompletingTheChord() {
+        app.launchEnvironment["TIMBRE_SKIP_ONBOARDING"] = "1"
+        app.launchEnvironment["TIMBRE_DEMO_DATA"] = "1"
+        app.launchEnvironment["TIMBRE_DEMO_PITCH"] = "1"
+        app.launchEnvironment["TIMBRE_SCENE"] = "lesson-dead-string"
+        app.launch()
+        XCTAssertTrue(element("lesson.close").waitForExistence(timeout: 30))
+        let silent = element("lesson.chord.string.3.silent")
+        XCTAssertTrue(silent.waitForExistence(timeout: 30), "the silent open G is identified")
+        XCTAssertTrue(element("lesson.chord.pending").exists, "the chord still needs a clean strum")
+        XCTAssertFalse(element("lesson.chord.complete").exists, "a missing string cannot complete the chord")
+        XCTAssertTrue(element("lesson.chord.string.6.heard").exists, "the low E rang in the same strum")
+    }
 
     /// Settings › Try Timbre Pro opens the paywall over the settings sheet: the yearly card is there and can be
     /// tapped, and so is the month.

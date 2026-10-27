@@ -62,6 +62,7 @@ jobs:
         run: |
           set -o pipefail
           python3 -m unittest discover -s tools/l10n/tests -p 'test_*.py'
+          python3 tools/curriculum/build.py --check
           python3 tools/l10n/lessons.py --out ci-out/l10n/lessons.json | tee ci-out/lessons.log
         # Report-only in development: the external delivery gate below requires complete translations.
       - name: Translation handoff is current

@@ -90,13 +90,32 @@ jobs:
           set -euo pipefail
           swift test --package-path ios --parallel
           python3 tools/verify-ios-resources.py
+      - name: Generate Xcode project for English localization export
+        run: |
+          set -euo pipefail
+          command -v xcodegen >/dev/null 2>&1 || brew install xcodegen
+          cd ios && xcodegen generate
+      - name: Export authoritative English keys from this revision
+        run: |
+          set -euo pipefail
+          mkdir -p ci-out
+          xcodebuild -exportLocalizations -project ios/Timbre.xcodeproj -localizationPath ci-out/l10n -exportLanguage en \
+            SWIFT_EMIT_LOC_STRINGS=YES CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/export.log
+          XLIFF=ci-out/l10n/en.xcloc/Localized\ Contents/en.xliff
+          test -s "$XLIFF"
+          cp "$XLIFF" ci-out/en.xliff
+          python3 tools/l10n/shipping.py --xliff ci-out/en.xliff
+      - name: Complete interface in all 49 app languages
+        if: ${{ !inputs.internal_testflight_untranslated }}
+        run: python3 tools/l10n/shipping.py --xliff ci-out/en.xliff --require-complete
+        # Selecting fewer shipped languages never waives the complete-interface requirement.
       - name: Choose the shipped languages
         # The owner's bar for this upload: CFBundleLocalizations and the build's .lproj folders keep only the locales
         # with at least SHIP_MIN_COVERAGE percent of the interface translated (this checkout only; nothing is committed).
         if: ${{ inputs.ship_min_coverage != '' }}
         run: |
           set -euo pipefail
-          python3 tools/l10n/shipping.py --min "$SHIP_MIN_COVERAGE" --apply | tee shipping.txt
+          python3 tools/l10n/shipping.py --xliff ci-out/en.xliff --min "$SHIP_MIN_COVERAGE" --critical --apply | tee shipping.txt
           { echo "### Languages in this build"; echo; echo '```'; tail -3 shipping.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
       - name: Full lesson coverage in all 49 app languages
         if: ${{ !inputs.internal_testflight_untranslated }}
@@ -104,23 +123,22 @@ jobs:
         # A UI percentage or a reduced shipping set never waives the all-language lesson requirement.
       - name: Legal, permission and VoiceOver strings in every shipped language
         # The paywall's renewal terms, the permission prompts and VoiceOver's words must be translated in every
-        # language the app ships (tools/l10n/critical.py). Ship fewer languages (ship_min_coverage, or
-        # tools/l10n/shipping.py) or deliver the translations first. Only an internal TestFlight build skips this.
+        # language the app ships (tools/l10n/critical.py), in addition to the complete-interface check above.
+        # Deliver any missing translations first. Only an internal TestFlight build skips this.
         if: ${{ !inputs.internal_testflight_untranslated }}
-        run: python3 tools/l10n/critical.py --strict --github
+        run: python3 tools/l10n/critical.py --xliff ci-out/en.xliff --strict --github
       - name: Internal TestFlight build (not for App Store review)
         if: ${{ inputs.internal_testflight_untranslated }}
         run: |
-          python3 tools/l10n/critical.py --github || true
+          python3 tools/l10n/critical.py --xliff ci-out/en.xliff --github
           echo "::warning title=Internal TestFlight build::The translation gate was skipped. This build is exported for internal TestFlight testing only and can't be submitted for App Store review."
           { echo "## INTERNAL TESTFLIGHT BUILD"; echo
             echo "The translation gate was skipped, so this build is exported with testFlightInternalTestingOnly: App Store Connect"
             echo "offers it to internal testers only and it can't be submitted for review or external testing. Its Info.plist"
             echo "says TimbreBuildChannel = internal."; } >> "$GITHUB_STEP_SUMMARY"
-      - name: Generate Xcode project
+      - name: Regenerate Xcode project with selected shipping languages
         run: |
           set -euo pipefail
-          brew install xcodegen
           cd ios && xcodegen generate
       - name: Install the API key for this job only
         shell: bash

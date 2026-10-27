@@ -29,7 +29,7 @@ final class TimbreUITests: XCTestCase {
 
     override func tearDownWithError() throws {
         if (testRun?.totalFailureCount ?? 0) > 0 { shot("zz-failure-\(name)") }
-        app.terminate()
+        if app.state != .notRunning { app.terminate() }
     }
 
     /// `scene`: a store screenshot's hero moment (TIMBRE_SCENE, ios/Timbre/Root/DemoScenes.swift; it needs `pitch`).

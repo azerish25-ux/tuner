@@ -1,0 +1,61 @@
+{
+  "review_date": "2026-10-26",
+  "reviewer": "Independent ax5_scroll_review agent; systematic-debugging and code-review-and-quality source review",
+  "baseline_head": "0c679011095f45eae2e28cd8593b23386a013b7d",
+  "scope": "Review of exact on-disk targeting repair and independently decoded native gesture artifact; no product/test writes or commit by this reviewer",
+  "verdict": "Approve source change for native verification; no blocking review findings. Root cause of recorded failed attempt is a gesture below the horizontal chip row, targeting its combined-caption accessibility wrapper.",
+  "blocking_findings": [],
+  "reviewed_source_sha256": {
+    "ios/Timbre/Tune/StringRail.swift": "6ed163eccd05811064eeff4a5326584179240f819ad922f8e8575f4b74e8bc32",
+    "ios/TimbreUITests/LocalizationMatrixUITests.swift": "5a162542965b6fb0efe43e775cb98239841f22033a5d3b54a43e4b76fce24712"
+  },
+  "native_evidence": {
+    "run": 40410695664,
+    "job": 121880353564,
+    "artifact_id": 12694268141,
+    "artifact_id_source": "Parent-provided CRC-selected subset provenance; this reviewer verified the local extracted bytes below",
+    "event_path": "C:/Users/shahr/Desktop/Translation/native-qa/rtl-0c67901/screenshots/FBE723BC-D8FF-4C17-B02D-0617A3BF681D",
+    "event_sha256": "fd69cb1cbe1608df0775202e493ff0489c2901f1b45d36166f87731201016245",
+    "manifest_path": "C:/Users/shahr/Desktop/Translation/native-qa/rtl-0c67901/screenshots/manifest.json",
+    "manifest_sha256": "a37dcca9e27780263d1209dc076548ebb443bdcd3a06ae71802ba9ac698c02d3",
+    "manifest_verified": "iPhone17Pro; Synthesized Event2026-10-26 at10.34.57PM; exportedFileName matches event UUID; timestamp1793054097.79",
+    "decode_method": "Python plistlib.load of binary NSKeyedArchiver plist; followed UID references in $objects",
+    "decoded_class": "XCSynthesizedEventRecord",
+    "decoded_name": "press, hold, drag, and hold",
+    "parent_window_points": [402.0, 874.0],
+    "touch_start_points": [301.0, 673.7333374023438],
+    "touch_end_points": [101.0, 673.7333374023438],
+    "duration_seconds": 0.26666666666666666,
+    "png_path": "C:/Users/shahr/Desktop/Translation/native-qa/rtl-0c67901/named/screenshots/l10n-bg-ax5-tune.string.png",
+    "png_sha256": "92c741fbef492c30342354f38ce323a6cf019f3c36248ce298a13400d1bb1cda",
+    "png_review": "Directly inspected1206x2622 pixels. Approximate chip row595-658pt; endpoint captions676-752pt at3pixels/pt. Decoded gesture y673.7333 lies below the chip row, near the caption region.",
+    "causal_chain": "Outer tune.string.rail wraps horizontal row plus multiline captions. The failed test targets this Other container; the recorded gesture is horizontally directed but vertically outside its horizontal ScrollView. Therefore unchanged high-E maxX after those wrapper swipes is not evidence that the real horizontal content endpoint is defective.",
+    "limits": "One decoded final gesture; six wrapper-target attempts reported by parent log review. Screenshot gives visual row estimate rather than AX frame measurement. This evidence explains the recorded failure without proving the untested corrected app interaction will pass."
+  },
+  "exact_diff_review": {
+    "product": "StringRail.swift adds only accessibilityIdentifier(tune.string.scroll) directly to its existing horizontal ScrollView. No layout, spacing, margins, sizing, order, selected-state or gesture behavior changed.",
+    "test": "Replaces .any query for tune.string.rail with app.scrollViews[tune.string.scroll].firstMatch and adds bounded waitForExistence plus isHittable assertions before the existing interaction loop.",
+    "preserved": [
+      "Outer tune.string.rail identifier and vertical reachability checks",
+      "Six bounded left-swipe attempts",
+      "Both strict minX/maxX app-bound checks and high-E isHittable check",
+      "Actual high-E tap and selected-state predicate expectation with5second timeout",
+      "All six course buttons, identifiers and CourseGroup nextToTune action",
+      "Explicit physical LTR musical order in RTL locales and intentional left-handed reversal",
+      "Existing scalable text, ViewThatFits,20pt content margins, shadows and selected-chip scaling"
+    ]
+  },
+  "quality_axes": {
+    "correctness": "Targets the concrete horizontal scroll view containing the chips; missing overflow branch now fails explicitly. Native execution needed to confirm identifier exposure and endpoint selection.",
+    "readability": "Small local change; assertion explains chip-row versus multiline-caption targeting.",
+    "architecture": "Keeps existing StringRail layout; does not modify unrelated EdgeRail or introduce a parallel scroll implementation.",
+    "security": "No new inputs, network, persistence or permissions.",
+    "performance": "One static accessibility identifier and two bounded preconditions; no new app-state work or unbounded retries."
+  },
+  "required_native_acceptance": [
+    "Bulgarian AX5 on same402pt viewport: expected horizontal scroll view exists and is hittable, all6courses remain, high E fully fits app bounds, tap selects it and selected screenshot is captured.",
+    "Inspect corrected gesture artifact or screenshot to confirm touch path is within chip row and content moves.",
+    "Retain explicit scope: this Bulgarian run alone does not prove RTL AX5, left-handed or long/paired-course interaction. Follow regression scope in preserved ax5-scroll-baseline.json."
+  ],
+  "verification": "Independently reread exact source and git diff, SHA256-bound both source files and3artifact files, decoded plist directly. No Swift/native execution on Windows; no runtime pass or final App Store readiness claim."
+}

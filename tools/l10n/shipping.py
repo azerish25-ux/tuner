@@ -7,6 +7,7 @@
                                                          #     VoiceOver string translated (the App Store gate)
     python3 tools/l10n/shipping.py --min 95 --apply      # write that set into ios/project.yml
     python3 tools/l10n/shipping.py --all --apply         # ship every locale that has a .lproj again
+    python3 tools/l10n/shipping.py --xliff en.xliff --require-complete  # release: full UI in all 49 languages
 
 Which locales ship is the owner's decision. Nothing here deletes a translation: `--apply` changes two things in
 ios/project.yml, both on lines marked `# shipping.py`:
@@ -29,6 +30,7 @@ import argparse
 import os
 import re
 import sys
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -37,6 +39,7 @@ PROJECT = ROOT / "ios/project.yml"
 RESOURCES = ROOT / "ios/Timbre/Resources"
 SOURCE = "en"
 MARK = "# shipping.py"
+RELEASE_LANGUAGE_COUNT = 49
 DECLARED = re.compile(r"^(\s+CFBundleLocalizations:\s*)\[([^\]]*)\](.*)$", re.M)
 EXCLUDES = re.compile(r"^(\s+excludes:\s*)\[([^\]]*)\](\s*" + re.escape(MARK) + r".*)$", re.M)
 
@@ -76,6 +79,42 @@ def coverage(model: dict) -> dict:
     return out
 
 
+def validate_export(path: Path) -> None:
+    """Reject a missing or unusable English Xcode export before changing shipping configuration."""
+    try:
+        root = ET.parse(path).getroot()
+    except (OSError, ET.ParseError) as error:
+        raise SystemExit(f"Invalid English XLIFF export: {path}: {error}") from error
+    ns = {"x": "urn:oasis:names:tc:xliff:document:1.2"}
+    files = [entry for entry in root.findall("x:file", ns)
+             if entry.get("original", "").startswith("Timbre/")]
+    if not files or any(entry.get("source-language") != SOURCE for entry in files):
+        raise SystemExit("Invalid English XLIFF export: no English Timbre string tables")
+    if not any(unit.get("id") and unit.find("x:source", ns) is not None
+               for entry in files for unit in entry.findall(".//x:trans-unit", ns)):
+        raise SystemExit("Invalid English XLIFF export: no Timbre translation units")
+
+
+def complete_ui(model: dict) -> bool:
+    """Require every UI translation, regardless of which languages a build selects."""
+    folders = set(available())
+    locales = folders - {SOURCE}
+    if SOURCE not in folders or len(folders) != RELEASE_LANGUAGE_COUNT or set(model["locales"]) != locales:
+        print(f"FAILED: complete UI requires {RELEASE_LANGUAGE_COUNT} app languages including English; "
+              f"found {len(folders)} folders and {len(model['locales'])} translation reports.")
+        return False
+    gaps = {loc: [item for item in entry["todo"] + entry.get("awaiting_apply", [])
+                  if item["table"] != "Learn.strings"] for loc, entry in model["locales"].items()}
+    gaps = {loc: items for loc, items in gaps.items() if items}
+    for loc, items in sorted(gaps.items()):
+        print(f"FAILED: {loc} has {len(items)} missing or unapplied UI strings")
+        for item in items[:5]:
+            print(f"    [{item['table']}] {item['key']}")
+    if not gaps:
+        print(f"OK: complete UI in all {RELEASE_LANGUAGE_COUNT} app languages")
+    return not gaps
+
+
 def rewrite(text: str, keep: list[str]) -> str:
     """ios/project.yml shipping `keep` (English always first): CFBundleLocalizations and the marked excludes lines."""
     ordered = [SOURCE] + sorted(loc for loc in set(keep) if loc != SOURCE)
@@ -106,17 +145,31 @@ def main(argv: list[str] | None = None) -> int:
                         help="with --min: also require every legal, permission and VoiceOver string")
     parser.add_argument("--apply", action="store_true", help="write the set into ios/project.yml")
     parser.add_argument("--github-output", action="store_true", help="append locales=<comma list> to $GITHUB_OUTPUT")
+    parser.add_argument("--xliff", type=Path, help="English Xcode export used for authoritative interpolation keys")
+    parser.add_argument("--require-complete", action="store_true",
+                        help="require complete applied UI in all 49 app languages, independent of shipping selection")
     args = parser.parse_args(argv)
+    if args.require_complete and not args.xliff:
+        parser.error("--require-complete requires --xliff from this checkout's English Xcode export")
+    if args.xliff:
+        validate_export(args.xliff)
 
     sys.path.insert(0, str(HERE))
     import report  # noqa: E402
 
-    model = report.build()
+    model = report.build(args.xliff)
+    if args.require_complete and not complete_ui(model):
+        return 1
     shares = coverage(model)
     gaps: dict = {}
     if args.critical or args.min is None:
         import critical  # noqa: E402
-        found = critical.missing(model, sorted(shares), critical.Classifier())
+        # A delivered translation is still missing from the app until applied to its string table.
+        applied_model = {**model, "locales": {
+            loc: {**entry, "todo": entry["todo"] + entry.get("awaiting_apply", [])}
+            for loc, entry in model["locales"].items()
+        }}
+        found = critical.missing(applied_model, sorted(shares), critical.Classifier())
         gaps = {loc: sum(len(items) for items in per.values()) for loc, per in found.items()}
     now = set(shipped())
 

@@ -34,7 +34,7 @@ enum StoreKitTestEnvironment {
         throw Failure.verifiedPurchaseDidNotPropagate("entitlements=[\(snapshot.joined(separator: ","))]")
     }
 
-    static func waitUntilClean(_ session: SKTestSession, timeout: TimeInterval = 12) async throws {
+    static func waitUntilClean(_ session: SKTestSession, timeout: TimeInterval = 30) async throws {
         let deadline = Date().addingTimeInterval(timeout)
         var clean = 0
         while Date() < deadline {

@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-10-27T00:00:41.701126+00:00",
+  "scope": "Bounded real unavailable-build song-request alert coverage in existing48-locale native localization matrix",
+  "status": "implemented_python_verified_native_and_independent_review_pending",
+  "changes": [
+    "Fixture now binds exact applied request title, unavailable-build message, plain Contact support action and Cancel labels for every locale.",
+    "Missing or blank required labels fail fixture generation; verification log requires TIMBRE_L10N_REQUEST_UNAVAILABLE_TESTED for every expected locale.",
+    "Native helper selects translated Songs tab, finds stable songs.request footer identifier with maximum24fast vertical swipes, opens real automated no-telemetry-ID alert.",
+    "Checks exact localized heading/message/action/Cancel presence, hittability, nonempty bounds and containment in app viewport, including alert itself; submission text field must be absent.",
+    "Saves one l10n-<locale>-song-request-unavailable frame, dismisses with localized Cancel and waits for alert disappearance.",
+    "Deferred cleanup returns Tune, verifies selected tab and tuner instrument before caller terminates/relaunches. Existing Bulgarian AX5 flow remains unchanged."
+  ],
+  "regression_red": {
+    "command": "python -m unittest discover -s tools/l10n/tests -p test_matrix_fixture.py",
+    "exit_code": 1,
+    "result": "23 tests;9failures+1error before fixture implementation, including absent new field,missing/blank fields accepted and missing execution marker accepted"
+  },
+  "verification": [
+    {
+      "command": "python -m unittest discover -s tools/l10n/tests -p test_matrix_fixture.py",
+      "exit_code": 0,
+      "result": "23tests passed in3.654s"
+    },
+    {
+      "command": "python -m unittest discover -s tools/l10n/tests -p 'test_*.py'",
+      "exit_code": 0,
+      "result": "164tests passed in20.720s"
+    },
+    {
+      "command": "matrix_fixture.fixture(all48LANGUAGE_NAMES) and check_workflow(localization-matrix.yml)",
+      "exit_code": 0,
+      "result": "Exact applied request labels generated for all48locales; workflow shards cover all48"
+    },
+    {
+      "command": "git diff --check -- [three scoped files]",
+      "exit_code": 0,
+      "result": "No whitespace errors;CRLF conversion notices only"
+    },
+    {
+      "command": "python tools/ci/comment_hygiene.py",
+      "exit_code": 0,
+      "result": "No new error-level occurrences;existing PaywallWinBack inline-orb warning only"
+    }
+  ],
+  "files_sha256": {
+    "tools/l10n/matrix_fixture.py": "cba4140c96e671fafd19581723664c05c315639111176bc95c57b5ddd5a3efc7",
+    "tools/l10n/tests/test_matrix_fixture.py": "f88ae1bdff4b909861a8af84e0a07f1c76f6186666ea4168191816e51f42e8f3",
+    "ios/TimbreUITests/LocalizationMatrixUITests.swift": "8a9480d2e56abb4a768f64ea392295b5fa01f8b25ca84cae3f20da0d352213e2"
+  },
+  "preserved_horizontal_ax5_helper": {
+    "before_sha256": "3aed307955bde98ea97212510e5b98742af1a5e50232b615d1b8b9e31486755d",
+    "after_sha256": "3aed307955bde98ea97212510e5b98742af1a5e50232b615d1b8b9e31486755d",
+    "unchanged": true,
+    "includes": "tune.string.scroll existence/hittability, bounded horizontal swipes, bounds/tap/selection assertions"
+  },
+  "prior_receipts_untouched_sha256": {
+    "ci-independent-review.json": "ba8d34470167e54f509a1dfaf99704b99234d31fabdccaf64f18629d8eacf4d6",
+    "ci-implementation-plan.md": "678ac2a8a397a008b151d3b801d917c1123f1502a56183fdfbcb3cb069e5531c",
+    "ci-r1-resolution.json": "0b0f750af6c5e2b4f1f098c77567b2fe264c53b5356608a93fc4aa4c37440496",
+    "ci-r1-independent-rereview.json": "019f21b89c27dcbc36e893bf5bd6126c1506e7c6a69675ea7e6063b9482939d2",
+    "ci-final-local-verification.json": "9ee3d292d778056943e865ee2e034441c2cab3869763bd7ebd8140a64c604f49"
+  },
+  "limits": [
+    "Native execution and screenshot inspection pending final macOS48-locale matrix; no claim this new alert already passed on48devices/locales.",
+    "This extension covers real unavailable-build UI at standard matrix text size only. It does not establish universal layout acceptance.",
+    "Pending/failure/disclosure network semantics remain separate14native unit tests and AI text review; no network mocks or production service overrides were added.",
+    "Contact support is verified as a plain visible/hittable localized action; it is not tapped to open an external site.",
+    "Root will obtain independent review and final native run. No commits or pushes."
+  ]
+}

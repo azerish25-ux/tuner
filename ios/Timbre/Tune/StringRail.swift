@@ -30,6 +30,7 @@ struct StringRail: View {
                 row(ordered).padding(.horizontal, Metrics.gutter)
                 ScrollViewReader { proxy in
                     ScrollView(.horizontal, showsIndicators: false) { row(ordered) }
+                        .accessibilityIdentifier("tune.string.scroll")
                         .contentMargins(.horizontal, Metrics.gutter, for: .scrollContent)
                         // The raised chip's shadow and the ✓ badges reach past the row: let them show.
                         .scrollClipDisabled()

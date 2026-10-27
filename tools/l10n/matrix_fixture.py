@@ -20,6 +20,10 @@ KEYS = {
     'progress': 'Progress',
     'tuned': 'Tuned',
     'in_tune': 'In tune',
+    'request_title': 'Request a song',
+    'request_unavailable': 'Song requests are unavailable in this build.',
+    'request_support': 'Contact support',
+    'request_cancel': 'Cancel',
 }
 
 
@@ -99,6 +103,7 @@ def validate_log(expected, log):
         if status not in ('available', 'pending'):
             raise ValueError(f'{locale}: unknown lesson fixture status')
         required = ['TIMBRE_L10N_MATRIX_TESTED ' + locale,
+                    'TIMBRE_L10N_REQUEST_UNAVAILABLE_TESTED ' + locale,
                     ('TIMBRE_L10N_LESSON_TESTED ' if status == 'available' else 'TIMBRE_L10N_LESSON_PENDING ') + locale]
         forbidden = ('TIMBRE_L10N_LESSON_PENDING ' if status == 'available' else 'TIMBRE_L10N_LESSON_TESTED ') + locale
         if any(marker not in lines for marker in required) or forbidden in lines:

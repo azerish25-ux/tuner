@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-26T23:39:56.991184+00:00",
+  "baseline_head": "0c679011095f45eae2e28cd8593b23386a013b7d",
+  "reviewer": "Independent CI/source review agent",
+  "verdict": "request_changes",
+  "scope": "Uncommitted CI worker changes only; source-aware review on Windows; no implementation edits, delivery dispatch, commit, or push.",
+  "reviewed_files_sha256": {
+    ".github/workflows/ios.yml": "a6b5d3f44f354290c70c8d23f1982e700db9cdf7ba7aeb65f844326dfa0d0756",
+    ".github/workflows/nightly.yml": "9d7da6b928900a6b955c023b72caf1b8bf17e3044ff6c0b72d7d4c3d9be3ef63",
+    ".github/workflows/l10n.yml": "47c5554a05c3fd6754cb985a7e1e148275243e0d5f3e09a6f525b7b029818ce0",
+    ".github/workflows/apple-delivery.yml": "15a4e977f4b50073a43b3e83cdd3703de19e750a278fa1690c46f8c042b12df6",
+    "tools/l10n/shipping.py": "c323569778f29531d18fac15f2647c9d7f9214c9dd60b9a704637fa7597ebf01",
+    "tools/l10n/tests/test_shipping.py": "1eff7c8a870fc8df5368901290fa68c6d2220bd541bbbfc590051740eec2856a",
+    "ios/TimbreUITests/FirstSessionUITests.swift": "118047a1120d635473315ecbcf725000427a1dbfac94d8c9ec1f88371593b93d",
+    "ios/TimbreUITests/TimbreUITests.swift": "f2413be1c82d39099746f3dd5fcce4cb82f5a99378e50cfdfae39d29b37fb7c2",
+    "ios/TimbreAppTests/CommerceIntegrationTests.swift": "bc23c862a3f246dee71471d693262d9943f5e4298999ad0a6ef2c9ace77ec536",
+    "ios/TimbreAppTests/StoreKitTestEnvironment.swift": "84452044ced89919e63aa96c9368fcc244c7362abef76514c318d539e1ab13ec"
+  },
+  "context_files_sha256": {
+    "docs/ios/readiness/reviews/ci-baseline.json": "4b8ae251cf0be27fa76f201e97d7d0f7f4740ead42ffc5b29a6efe767baca586",
+    "docs/ios/readiness/reviews/ci-implementation-plan.md": "678ac2a8a397a008b151d3b801d917c1123f1502a56183fdfbcb3cb069e5531c"
+  },
+  "findings": [
+    {
+      "id": "CI-R1",
+      "priority": "P1",
+      "status": "open",
+      "title": "Restore source metadata before classifying unapplied legal and VoiceOver strings",
+      "file": "tools/l10n/shipping.py",
+      "line": 168,
+      "related_sources": [
+        "tools/l10n/report.py:583",
+        "tools/l10n/critical.py:109",
+        "tools/l10n/tests/test_shipping.py:69"
+      ],
+      "problem": "report.build() stores awaiting_apply entries as table/key only. Appending those records directly to todo loses the source and where fields that Classifier.categories needs for legal and VoiceOver classification. Permission keys work without those fields, so the new permission-only pending regression passes while legal and VoiceOver gaps remain selectable.",
+      "reproduction": "Using a valid English XLIFF and a report model with ui_total=100, de.todo=[], and de.awaiting_apply=[{table:Localizable.strings,key:Subscription renews for %@}], shipping.main([--min,95,--critical,--xliff,PATH]) prints de 99.0%, critical gaps 0, Would ship en + 1 locales: de; exit 0. The full item with source and a Paywall/PaywallView.swift where location classifies as legal; the real pending shape classifies as no category.",
+      "impact": "Coverage-based --critical selection can retain a locale whose critical translation is delivered but absent from the app. External delivery is still stopped by the separate all-language --require-complete check, so this is not an external delivery completeness bypass. It does violate the critical-aware selection requirement and affects internal selection too.",
+      "requested_change": "Build complete critical items for pending translations using the authoritative UI model/source metadata, or preserve metadata when report.build creates awaiting_apply. Add regressions for real-shaped pending legal and VoiceOver entries, including a real report.build fixture or equivalent metadata reconstruction, and verify both are excluded at high UI coverage."
+    }
+  ],
+  "verification": [
+    {
+      "command": "python -m unittest discover -s tools/l10n/tests -p 'test_*.py'",
+      "exit_code": 0,
+      "result": "159 tests passed in 19.257s"
+    },
+    {
+      "command": "python tools/curriculum/build.py --check",
+      "exit_code": 0,
+      "result": "19 courses, 1100 lessons, 6083 strings"
+    },
+    {
+      "command": "git diff --check -- [scoped tracked files]",
+      "exit_code": 0,
+      "result": "No whitespace errors; Git emitted CRLF conversion notices"
+    },
+    {
+      "command": "Read-only temporary-fixture pending-legal selection reproduction",
+      "exit_code": 0,
+      "result": "Confirmed incorrect retention at 99% coverage and 0 reported critical gaps"
+    }
+  ],
+  "confirmed_source_properties": [
+    "Apple delivery generates the Xcode project and exports/checks a nonempty English XLIFF before coverage selection. The same copied ci-out/en.xliff is passed to completion, selection, and strict critical checks; set -euo pipefail preserves xcodebuild and pipeline failures.",
+    "Complete UI checks all 49 resource folders and exact model locale set independently of CFBundleLocalizations; pending UI entries fail completion. lessons.py --strict remains independent of selection.",
+    "l10n workflow now fails on completion/strict critical/lesson failures and checks every available target locale. Shell quoting of the XLIFF path and LOCALES command is sound.",
+    "Internal delivery retains BUILD_CHANNEL=internal and testFlightInternalTestingOnly export options; translation incompleteness remains report-only there except critical-aware optional selection.",
+    "The nightly selector adds FirstSessionUITests; its dead-string test launches the existing lesson-dead-string scene and asserts silent string 3, heard string 6, pending state, and absence of completion.",
+    "UI teardown preserves failure attachments and existing test failures; app.state guard only avoids terminating an already stopped app. No retry or failure suppression was introduced.",
+    "Commerce teardown awaits cleanup before discarding its session and rethrows cleanup failure after super teardown; cleanup default is 30 seconds with two clean snapshots. Existing serial native test invocation remains unchanged.",
+    "Delivery regenerates the project after shipping.py rewrites CFBundleLocalizations and resource exclusions; export does not change Swift source selection. No stale generated-project path is used for the archive by source ordering."
+  ],
+  "limits": [
+    "Swift 5.10 complete-concurrency compilation, native UI/StoreKit tests, Xcode localization export, and final archive contents were not executed on Windows. All native checks remain pending macOS evidence.",
+    "A fresh export of the final changed revision is still required. This review does not certify Apple delivery or App Store readiness.",
+    "After any coverage-based exclusions rewrite, inspect the final archived bundle localizations on macOS to verify incremental Xcode outputs match the regenerated project; Windows source review cannot prove native cache/resource cleanup behavior.",
+    "Unrelated audio, privacy, translation, site, watch, and project changes were outside this review. Hashes bind this verdict to the reviewed files; subsequent edits require re-review."
+  ]
+}

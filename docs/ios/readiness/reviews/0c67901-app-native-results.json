@@ -1,0 +1,14 @@
+{
+  "source_commit": "0c679011095f45eae2e28cd8593b23386a013b7d",
+  "run_id": 40410695626,
+  "app_job": 121880353076,
+  "observed_native_results": {
+    "app_unit_tests": 61,
+    "app_unit_failures": 0,
+    "smoke_ui_tests": 3,
+    "smoke_failures": 0,
+    "LessonHeaderLayoutTests": 2,
+    "testTodayTimelineKeepsTheCompleteFirstLessonName": "passed"
+  },
+  "limits": "Logs prove intrinsic layout regressions and three smoke flows on this commit; screenshots separately establish visible content; broader new readiness fixes are not in that native build."
+}

@@ -23,9 +23,15 @@ final class CommerceIntegrationTests: XCTestCase {
 
     override func tearDown() async throws {
         commerce = nil
-        session?.clearTransactions()
+        var cleanupError: Error?
+        if let session {
+            session.clearTransactions()
+            do { try await StoreKitTestEnvironment.waitUntilClean(session) }
+            catch { cleanupError = error }
+        }
         session = nil
         try await super.tearDown()
+        if let cleanupError { throw cleanupError }
     }
 
     /// Waits for `condition` without touching StoreKit: what arrives by itself (a transaction update). The limit is
