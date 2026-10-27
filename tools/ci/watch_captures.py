@@ -256,10 +256,27 @@ def command(args, *, timeout=120, env=None, log=None, capture_stderr=False):
                                    stderr=subprocess.STDOUT if capture_stderr else None).strip()
 
 
+def stale_terminating_scene(diagnostic):
+    """Require the owned bundle/PID's termination and delayed exit, not a generic launch error."""
+    identity = r'\[app<' + re.escape(BUNDLE) + r'>:(\d+)\]'
+    terminating = set(re.findall(identity + r'.*(?:Terminating for new launch|Already terminating; ignoring additional termination request)', diagnostic))
+    waiting = set(re.findall(identity + r'.*Still waiting on exit context', diagnostic))
+    return bool(terminating & waiting) and 'Scene update failed. Client process exited.' in diagnostic
+
+
+def restart_capture_simulator(device, row, attempt, directory):
+    """Clear Carousel's stale scene on this capture-owned Watch; never erase or reset shared services."""
+    for action, timeout in [('shutdown', 120), ('boot', 120), ('bootstatus', 180)]:
+        args = ['xcrun', 'simctl', action, device] + (['-b'] if action == 'bootstatus' else [])
+        command(args, timeout=timeout,
+                log=directory / f"recovery-{row['language']}-{row['page']}-{attempt}-{action}.log")
+
+
 def launch_capture(device, row, revision, directory):
     """Retain every launch result; only the observed scene-transition refusal gets a bounded retry."""
     history = directory / 'launches.json'
     attempts = json.loads(history.read_text(encoding='utf-8')) if history.exists() else []
+    restarted = False
     for attempt in range(1, 4):
         row['token'] = str(uuid.uuid4())
         environment = {**os.environ, **{f'SIMCTL_CHILD_TIMBRE_WATCH_CAPTURE_{key}': value for key, value in {
@@ -297,6 +314,21 @@ def launch_capture(device, row, revision, directory):
             raise failure
         if 'FBSOpenApplicationServiceErrorDomain' not in output or 'Scene update failed' not in output or attempt == 3:
             raise subprocess.CalledProcessError(returncode, args, output=output)
+        if diagnostic.exists() and stale_terminating_scene(diagnostic.read_text(encoding='utf-8', errors='replace')):
+            if restarted:
+                raise subprocess.CalledProcessError(returncode, args, output=output)
+            attempts[-1]['recovery'] = {'action': 'restart-owned-watch', 'status': 'started'}
+            history.write_text(json.dumps(attempts, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+            try:
+                restart_capture_simulator(device, row, attempt, directory)
+            except (subprocess.SubprocessError, OSError) as error:
+                attempts[-1]['recovery'].update(status='failed', failure_type=type(error).__name__)
+                history.write_text(json.dumps(attempts, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+                raise
+            attempts[-1]['recovery']['status'] = 'completed'
+            history.write_text(json.dumps(attempts, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+            restarted = True
+            continue
         command(['xcrun', 'simctl', 'bootstatus', device, '-b'], timeout=120)
         time.sleep(2)
 

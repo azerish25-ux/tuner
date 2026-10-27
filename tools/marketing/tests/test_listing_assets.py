@@ -386,7 +386,11 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("github.ref == 'refs/heads/main'", source)
         self.assertIn('contents: read', source)
         self.assertIn('max-parallel: 2', source)
-        self.assertIn('cancel-in-progress: false', source)
+        cancel = source.split('  cancel-in-progress: >-', 1)[1].split('jobs:', 1)[0]
+        self.assertIn("github.event_name == 'push'", cancel)
+        self.assertIn("github.ref == 'refs/heads/codex/app-store-readiness-gates'", cancel)
+        self.assertIn("contains(github.event.head_commit.message, '[supersede-listing-pilot]')", cancel)
+        self.assertIn("contains(github.event.head_commit.message, '[listing-screenshots-pilot]')", cancel)
         for forbidden in ['contents: write', 'publish-results.sh', 'ci-results/', 'git push', 'secrets.', 'apple-delivery', 'archivePath']:
             self.assertNotIn(forbidden, source)
         self.assertEqual(source.count('xcodebuild build-for-testing'), 1)

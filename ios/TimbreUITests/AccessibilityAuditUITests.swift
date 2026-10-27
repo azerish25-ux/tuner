@@ -78,6 +78,8 @@ final class AccessibilityAuditUITests: XCTestCase {
         var failing: [String] = []
         var callbacks = 0
         var opaqueCallbacks = 0
+        var opaqueContrastCallbacks = 0
+        var isolatedContrastRequests = 0
     }
 
     private var app: XCUIApplication!
@@ -274,6 +276,19 @@ final class AccessibilityAuditUITests: XCTestCase {
             findings.lines.append("Completed all audit kinds.")
         }
 
+        // Diagnostic only: a completed combined audit can omit the contrast target's identity.
+        // Never retry to green: the same Findings retains every original failure. A timeout fallback
+        // already requested isolated contrast, so do not duplicate that request or its retry budget.
+        if screen == "lesson-tunecheck", findings.opaqueContrastCallbacks > 0,
+           findings.isolatedContrastRequests == 0 {
+            findings.lines.append("Anonymous TuneCheck contrast: one additional diagnostic request; original failures retained.")
+            attachAuditState("ax-before-lesson-tunecheck-contrast-diagnostic")
+            if let problem = run(screen, types: .contrast, into: findings, captureAllCallbacks: true) {
+                unfinished.append("TuneCheck diagnostic contrast (one request): \(problem)")
+            }
+            attachAuditState("ax-after-lesson-tunecheck-contrast-diagnostic")
+        }
+
         let header = "Accessibility audit, \(screen): \(findings.lines.count) lines, \(findings.failing.count) failing"
         print(header)
         let report = XCTAttachment(string: ([header, ""] + findings.lines).joined(separator: "\n"))
@@ -317,7 +332,9 @@ final class AccessibilityAuditUITests: XCTestCase {
     }
 
     /// One request for the screen in front; the reason it didn't complete, or nil.
-    private func run(_ screen: String, types: XCUIAccessibilityAuditType, into findings: Findings) -> String? {
+    private func run(_ screen: String, types: XCUIAccessibilityAuditType, into findings: Findings,
+                     captureAllCallbacks: Bool = false) -> String? {
+        if types == .contrast { findings.isolatedContrastRequests += 1 }
         let enforced = Self.enforced
         let kinds = Self.kinds
         let previousOpaque = findings.opaqueCallbacks
@@ -346,11 +363,22 @@ final class AccessibilityAuditUITests: XCTestCase {
                         unavailable = "snapshot threw: \(error)".replacingOccurrences(of: "\n", with: "\\n")
                     }
                 }
-                if snapshot == nil { findings.opaqueCallbacks += 1 }
+                if snapshot == nil {
+                    findings.opaqueCallbacks += 1
+                    if issue.auditType == .contrast { findings.opaqueContrastCallbacks += 1 }
+                }
                 let id = snapshot?.identifier ?? ""
                 let label = snapshot?.label ?? ""
                 var reason = Self.knownReason(screen: screen, kind: kind, id: id, label: label)
                 var callbackScreenshot: XCUIScreenshot?
+                if captureAllCallbacks {
+                    let capture = XCUIScreen.main.screenshot()
+                    callbackScreenshot = capture
+                    let evidence = XCTAttachment(screenshot: capture)
+                    evidence.name = "ax-diagnostic-callback-\(screen)-\(findings.callbacks)"
+                    evidence.lifetime = .keepAlways
+                    self.add(evidence)
+                }
                 if reason == nil, issue.auditType == .contrast, snapshot?.elementType == .staticText,
                    (screen == "settings" && id == "settings.notation.title" && label == "Note names")
                     || (screen == "paywall" && id == "paywall.plan.yearly.saving" && label == "SAVE 58%") {

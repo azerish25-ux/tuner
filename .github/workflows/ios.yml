@@ -97,11 +97,13 @@ jobs:
           python3 tools/ci/test_registered_app_store_id.py
           python3 tools/ci/test_apple_archive_scope.py
           python3 tools/ci/test_accessibility_audit_contract.py
+          python3 tools/ci/test_edge_fade_direction.py
           python3 tools/ci/test_audit_pixel_proof_contract.py
           python3 tools/ci/test_accessibility_identity_contract.py
           python3 tools/ci/test_lesson_accessibility_layout_contract.py
           python3 tools/ci/test_accessibility_partitions.py
           python3 tools/ci/test_accessibility_log_checkpoints.py
+          python3 tools/ci/test_accessibility_visual_checkpoints.py
           python3 tools/ci/test_demo_course_seed.py
           python3 tools/ci/test_tablet_heading_contract.py
           python3 tools/ci/test_capture_check.py
@@ -337,6 +339,31 @@ jobs:
           for log in ci-out/localization/test*.log; do
             [ ! -f "$log" ] || python3 tools/ci/summarize-log.py "$log" "${log%.log}.summary.txt"
           done
+      # Preserve original pixels and hierarchy before the potentially oversized native bundle upload.
+      - name: Upload compact localization audit visuals
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        if: always()
+        with:
+          name: accessibility-visuals-localization
+          path: |
+            ci-out/localization/screenshots/*.png
+            ci-out/localization/screenshots/*.jpg
+            ci-out/localization/screenshots/*.jpeg
+            ci-out/localization/screenshots/*.PNG
+            ci-out/localization/screenshots/*.JPG
+            ci-out/localization/screenshots/*.JPEG
+            ci-out/localization/screenshots/manifest.json
+            ci-out/localization/screenshots/*.txt
+            ci-out/localization/screenshots-relaunch/*.png
+            ci-out/localization/screenshots-relaunch/*.jpg
+            ci-out/localization/screenshots-relaunch/*.jpeg
+            ci-out/localization/screenshots-relaunch/*.PNG
+            ci-out/localization/screenshots-relaunch/*.JPG
+            ci-out/localization/screenshots-relaunch/*.JPEG
+            ci-out/localization/screenshots-relaunch/manifest.json
+            ci-out/localization/screenshots-relaunch/*.txt
+          if-no-files-found: warn
+          retention-days: 7
       # Small diagnostics stay inspectable without downloading the full native result bundle.
       - name: Upload compact localization audit logs
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
@@ -373,6 +400,31 @@ jobs:
           for log in ci-out/screens/test*.log; do
             [ ! -f "$log" ] || python3 tools/ci/summarize-log.py "$log" "${log%.log}.summary.txt"
           done
+      # Preserve original pixels and hierarchy before the potentially oversized native bundle upload.
+      - name: Upload compact screens audit visuals
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        if: always()
+        with:
+          name: accessibility-visuals-screens
+          path: |
+            ci-out/screens/screenshots/*.png
+            ci-out/screens/screenshots/*.jpg
+            ci-out/screens/screenshots/*.jpeg
+            ci-out/screens/screenshots/*.PNG
+            ci-out/screens/screenshots/*.JPG
+            ci-out/screens/screenshots/*.JPEG
+            ci-out/screens/screenshots/manifest.json
+            ci-out/screens/screenshots/*.txt
+            ci-out/screens/screenshots-relaunch/*.png
+            ci-out/screens/screenshots-relaunch/*.jpg
+            ci-out/screens/screenshots-relaunch/*.jpeg
+            ci-out/screens/screenshots-relaunch/*.PNG
+            ci-out/screens/screenshots-relaunch/*.JPG
+            ci-out/screens/screenshots-relaunch/*.JPEG
+            ci-out/screens/screenshots-relaunch/manifest.json
+            ci-out/screens/screenshots-relaunch/*.txt
+          if-no-files-found: warn
+          retention-days: 7
       # Small diagnostics stay inspectable without downloading the full native result bundle.
       - name: Upload compact screens audit logs
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
@@ -409,6 +461,31 @@ jobs:
           for log in ci-out/tabs/test*.log; do
             [ ! -f "$log" ] || python3 tools/ci/summarize-log.py "$log" "${log%.log}.summary.txt"
           done
+      # Preserve original pixels and hierarchy before the potentially oversized native bundle upload.
+      - name: Upload compact tabs audit visuals
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        if: always()
+        with:
+          name: accessibility-visuals-tabs
+          path: |
+            ci-out/tabs/screenshots/*.png
+            ci-out/tabs/screenshots/*.jpg
+            ci-out/tabs/screenshots/*.jpeg
+            ci-out/tabs/screenshots/*.PNG
+            ci-out/tabs/screenshots/*.JPG
+            ci-out/tabs/screenshots/*.JPEG
+            ci-out/tabs/screenshots/manifest.json
+            ci-out/tabs/screenshots/*.txt
+            ci-out/tabs/screenshots-relaunch/*.png
+            ci-out/tabs/screenshots-relaunch/*.jpg
+            ci-out/tabs/screenshots-relaunch/*.jpeg
+            ci-out/tabs/screenshots-relaunch/*.PNG
+            ci-out/tabs/screenshots-relaunch/*.JPG
+            ci-out/tabs/screenshots-relaunch/*.JPEG
+            ci-out/tabs/screenshots-relaunch/manifest.json
+            ci-out/tabs/screenshots-relaunch/*.txt
+          if-no-files-found: warn
+          retention-days: 7
       # Small diagnostics stay inspectable without downloading the full native result bundle.
       - name: Upload compact tabs audit logs
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0

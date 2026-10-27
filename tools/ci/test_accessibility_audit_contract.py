@@ -30,6 +30,26 @@ class AccessibilityAuditContractTests(unittest.TestCase):
         self.assertIn('unfinished.append', fresh)
         self.assertNotIn('types: .all', fresh)
 
+    def test_tunecheck_diagnostic_is_single_additive_and_not_retry_to_green(self):
+        audit = section('private func audit(_', '/// An isolated kind')
+        diagnostic = audit.split('// Diagnostic only:', 1)[1].split('let header', 1)[0]
+        self.assertIn('screen == "lesson-tunecheck"', diagnostic)
+        self.assertIn('findings.opaqueContrastCallbacks > 0', diagnostic)
+        self.assertIn('findings.isolatedContrastRequests == 0', diagnostic)
+        self.assertEqual(diagnostic.count('run(screen, types: .contrast'), 1)
+        self.assertIn('into: findings, captureAllCallbacks: true', diagnostic)
+        self.assertIn('unfinished.append', diagnostic)
+        self.assertEqual(diagnostic.count('attachAuditState('), 2)
+        for prohibited in ['Findings()', 'findings.failing =', 'removeAll', 'settle(', 'auditKind(', 'for ', 'while ']:
+            self.assertNotIn(prohibited, diagnostic)
+        self.assertLess(audit.index('Completed all audit kinds.'), audit.index('// Diagnostic only:'))
+        self.assertLess(audit.index('// Diagnostic only:'), audit.index('for line in findings.failing'))
+        run = section('private func run(', '/// Before/after evidence')
+        self.assertIn('if types == .contrast { findings.isolatedContrastRequests += 1 }', run)
+        self.assertIn('if issue.auditType == .contrast { findings.opaqueContrastCallbacks += 1 }', run)
+        self.assertIn('if captureAllCallbacks {', run)
+        self.assertIn('ax-diagnostic-callback-', run)
+
     def test_tab_discovery_and_fresh_navigation_are_verified(self):
         tabs = section('func testEveryTab()', 'func testSettingsAndPaywall()')
         for guard in ['XCTAssertGreaterThan(count, 0)', 'for index in 0..<count',

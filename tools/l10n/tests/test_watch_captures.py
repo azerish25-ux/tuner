@@ -180,6 +180,68 @@ class WatchCaptureTests(unittest.TestCase):
         records = json.loads((self.root / 'launches.json').read_text())
         self.assertEqual([item['returncode'] for item in records], [1, 0])
 
+    def stale_scene_log(self):
+        return (f'[app<{watch.BUNDLE}>:22319] Already terminating; ignoring additional termination request.\n'
+                f'[app<{watch.BUNDLE}>:22319]: Still waiting on exit context after 79.1 seconds\n'
+                'Scene update failed. Client process exited.')
+
+    def test_stale_scene_classifier_requires_owned_bundle_same_pid_and_exit(self):
+        evidence = self.stale_scene_log()
+        self.assertTrue(watch.stale_terminating_scene(evidence))
+        for bad in [evidence.replace(watch.BUNDLE, 'com.other.app'),
+                    evidence.replace(':22319]: Still', ':999]: Still'),
+                    evidence.replace('Client process exited.', 'unknown'),
+                    'FBSOpenApplicationServiceErrorDomain: Scene update failed']:
+            self.assertFalse(watch.stale_terminating_scene(bad))
+
+    def test_stale_scene_recovery_restarts_only_owned_watch_and_retains_failure(self):
+        calls = []
+        def command(args, **kwargs):
+            calls.append(args)
+            if args[2] == 'spawn':
+                kwargs['log'].write_text(self.stale_scene_log())
+        with patch.object(watch.subprocess, 'run', side_effect=[
+                subprocess.CompletedProcess([], 1, stdout='FBSOpenApplicationServiceErrorDomain: Scene update failed'),
+                subprocess.CompletedProcess([], 0, stdout='bundle: 42')]) as launch, \
+                patch.object(watch, 'command', side_effect=command):
+            watch.launch_capture('owned-watch', self.row, self.revision, self.root)
+        self.assertEqual(launch.call_count, 2)
+        self.assertEqual([c[2] for c in calls], ['spawn', 'shutdown', 'boot', 'bootstatus'])
+        self.assertTrue(all(c[3] == 'owned-watch' for c in calls))
+        records = json.loads((self.root / 'launches.json').read_text())
+        self.assertEqual([r['returncode'] for r in records], [1, 0])
+        self.assertEqual(records[0]['recovery']['status'], 'completed')
+        self.assertNotEqual(records[0]['token'], records[1]['token'])
+        self.assertFalse((self.root / 'manifest.json').exists())
+
+    def test_recovery_failure_is_terminal_and_preserves_original_launch(self):
+        def command(args, **kwargs):
+            if args[2] == 'spawn':
+                kwargs['log'].write_text(self.stale_scene_log())
+            elif args[2] == 'shutdown':
+                raise subprocess.TimeoutExpired(args, 120)
+        with patch.object(watch.subprocess, 'run', return_value=subprocess.CompletedProcess(
+                [], 1, stdout='FBSOpenApplicationServiceErrorDomain: Scene update failed')) as launch, \
+                patch.object(watch, 'command', side_effect=command), self.assertRaises(subprocess.TimeoutExpired):
+            watch.launch_capture('owned-watch', self.row, self.revision, self.root)
+        self.assertEqual(launch.call_count, 1)
+        records = json.loads((self.root / 'launches.json').read_text())
+        self.assertEqual(records[0]['returncode'], 1)
+        self.assertEqual(records[0]['recovery']['status'], 'failed')
+        self.assertFalse((self.root / 'manifest.json').exists())
+
+    def test_repeated_stale_scene_never_restarts_again_or_succeeds(self):
+        def command(args, **kwargs):
+            if args[2] == 'spawn':
+                kwargs['log'].write_text(self.stale_scene_log())
+        with patch.object(watch.subprocess, 'run', return_value=subprocess.CompletedProcess(
+                [], 1, stdout='FBSOpenApplicationServiceErrorDomain: Scene update failed')) as launch, \
+                patch.object(watch, 'command', side_effect=command) as recovery, self.assertRaises(subprocess.CalledProcessError):
+            watch.launch_capture('owned-watch', self.row, self.revision, self.root)
+        self.assertEqual(launch.call_count, 2)
+        self.assertEqual(sum(c.args[0][2] == 'shutdown' for c in recovery.call_args_list), 1)
+        self.assertFalse((self.root / 'manifest.json').exists())
+
     def test_other_launch_errors_fail_without_retry_or_success_evidence(self):
         with patch.object(watch.subprocess, 'run', return_value=subprocess.CompletedProcess([], 1, stdout='Bundle not installed')) as run, \
                 patch.object(watch, 'command'), patch.object(watch.time, 'sleep'), self.assertRaises(subprocess.CalledProcessError):

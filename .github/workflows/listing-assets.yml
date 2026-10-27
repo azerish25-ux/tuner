@@ -23,15 +23,24 @@ on:
 permissions:
   contents: read
 concurrency:
-  # An unrequested push must not replace an explicitly requested pending capture.
+  # Keep the existing PUSH requested group for explicit readiness-pilot supersession.
+  # Manual requests have per-run groups; ordinary/no-marker pushes remain isolated no-ops.
   group: >-
     listing-assets-${{ github.ref }}-${{
-      (github.event_name == 'workflow_dispatch' ||
-       contains(github.event.head_commit.message, '[listing-assets-pilot]') ||
+      github.event_name == 'workflow_dispatch' && format('manual-{0}', github.run_id) ||
+      (contains(github.event.head_commit.message, '[listing-assets-pilot]') ||
        contains(github.event.head_commit.message, '[listing-assets-all]') ||
        contains(github.event.head_commit.message, '[listing-screenshots-pilot]') ||
        contains(github.event.head_commit.message, '[listing-screenshots-all]')) && 'requested' || 'noop' }}
-  cancel-in-progress: false
+  # Opt-in only. Conflicting scope markers must not cancel evidence before plan validation.
+  cancel-in-progress: >-
+    ${{ github.event_name == 'push' &&
+        github.ref == 'refs/heads/codex/app-store-readiness-gates' &&
+        contains(github.event.head_commit.message, '[listing-screenshots-pilot]') &&
+        contains(github.event.head_commit.message, '[supersede-listing-pilot]') &&
+        !contains(github.event.head_commit.message, '[listing-assets-pilot]') &&
+        !contains(github.event.head_commit.message, '[listing-assets-all]') &&
+        !contains(github.event.head_commit.message, '[listing-screenshots-all]') }}
 jobs:
   plan:
     if: >-

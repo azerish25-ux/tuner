@@ -28,6 +28,7 @@ struct EdgeRail<ID: Hashable, Content: View>: View {
     @State private var browsed = false
     @Namespace private var glass
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.layoutDirection) private var direction
 
     var body: some View {
         ScrollViewReader { scroller in
@@ -36,7 +37,7 @@ struct EdgeRail<ID: Hashable, Content: View>: View {
                     HStack(spacing: spacing) { content }
                         .scrollTargetLayout()
                         .onGeometryChange(for: RailMeasure.self) { proxy in
-                            RailMeasure(overflow: EdgeOverflow(content: proxy), viewport: proxy.bounds(of: .scrollView)?.width.rounded() ?? 0)
+                            RailMeasure(overflow: EdgeOverflow(content: proxy, direction: direction), viewport: proxy.bounds(of: .scrollView)?.width.rounded() ?? 0)
                         } action: { value in
                             measured(value, scroller)
                         }
@@ -187,6 +188,7 @@ private struct RailBleed: ViewModifier {
     let trailing: CGFloat
     var measured: EdgeOverflow?
     @State private var scrolled = EdgeOverflow()
+    @Environment(\.layoutDirection) private var direction
 
     func body(content: Content) -> some View {
         let overflow = measured ?? scrolled
@@ -194,7 +196,7 @@ private struct RailBleed: ViewModifier {
             .contentMargins(.leading, leading, for: .scrollContent)
             .contentMargins(.trailing, trailing, for: .scrollContent)
             .onScrollGeometryChange(for: EdgeOverflow.self) { geometry in
-                EdgeOverflow(geometry)
+                EdgeOverflow(geometry, direction: direction)
             } action: { _, value in
                 scrolled = value
             }

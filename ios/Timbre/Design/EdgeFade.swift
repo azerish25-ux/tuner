@@ -12,22 +12,37 @@ struct EdgeOverflow: Equatable {
 }
 
 extension EdgeOverflow {
+    /// Scroll/CGRect coordinates describe physical left/right. The mask API describes semantic
+    /// leading/trailing, so convert exactly once rather than fading the resting RTL leading edge.
+    init(physicalLeft: Bool, physicalRight: Bool, direction: LayoutDirection) {
+        self.init(leading: direction == .rightToLeft ? physicalRight : physicalLeft,
+                  trailing: direction == .rightToLeft ? physicalLeft : physicalRight)
+    }
+
     /// Read from a horizontal scroll view (content margins included): an end counts once more than a point hides past it.
-    init(_ geometry: ScrollGeometry) {
-        let offset = geometry.contentOffset.x + geometry.contentInsets.leading
+    init(_ geometry: ScrollGeometry, direction: LayoutDirection) {
+        let leftInset = direction == .rightToLeft ? geometry.contentInsets.trailing : geometry.contentInsets.leading
+        let offset = geometry.contentOffset.x + leftInset
         let range = geometry.contentSize.width + geometry.contentInsets.leading + geometry.contentInsets.trailing - geometry.containerSize.width
-        self.init(leading: offset > 1, trailing: offset < range - 1)
+        guard range > 1 else { self.init(); return }
+        self.init(physicalLeft: offset > 1, physicalRight: offset < range - 1, direction: direction)
     }
 
     /// Read from the row's own content, inside the scroll view: an end counts once more than a point of the
     /// content lies past the scroll view's visible edge. Content margins are not content, so a row resting
     /// against either end (its last chip at the margin) is solid there.
-    init(content proxy: GeometryProxy) {
+    init(content proxy: GeometryProxy, direction: LayoutDirection) {
         guard let viewport = proxy.bounds(of: .scrollView) else {
             self.init()
             return
         }
-        self.init(leading: viewport.minX > 1, trailing: viewport.maxX < proxy.size.width - 1)
+        self.init(viewport: viewport, contentWidth: proxy.size.width, direction: direction)
+    }
+
+    /// Physical viewport bounds inside the content coordinate space (independent of its text direction).
+    init(viewport: CGRect, contentWidth: CGFloat, direction: LayoutDirection) {
+        self.init(physicalLeft: viewport.minX > 1, physicalRight: viewport.maxX < contentWidth - 1,
+                  direction: direction)
     }
 }
 
@@ -39,6 +54,7 @@ struct EdgeFadeMask: View {
     var overflow: EdgeOverflow
     var leading: CGFloat = 52
     var trailing: CGFloat = 52
+    @Environment(\.layoutDirection) private var direction
 
     /// How wide an end's fade is for a row drawn `bleed` points past its container: over the bleed (the
     /// gutter, or a card's inset) and a little way into the content, so a chip passing under the edge
@@ -46,18 +62,24 @@ struct EdgeFadeMask: View {
     static func width(bleed: CGFloat) -> CGFloat { max(36, bleed + 32) }
 
     var body: some View {
+        // Gradient UnitPoint coordinates are physical. Fix only this internal mask layout to
+        // LTR and explicitly map semantic widths/flags; never mirror a one-sided ramp twice.
+        let rtl = direction == .rightToLeft
         HStack(spacing: 0) {
-            ramp(fromLeading: true, faded: overflow.leading).frame(width: leading)
+            ramp(fromLeft: true, faded: rtl ? overflow.trailing : overflow.leading)
+                .frame(width: rtl ? trailing : leading)
             Rectangle().fill(.black)
-            ramp(fromLeading: false, faded: overflow.trailing).frame(width: trailing)
+            ramp(fromLeft: false, faded: rtl ? overflow.leading : overflow.trailing)
+                .frame(width: rtl ? leading : trailing)
         }
+        .environment(\.layoutDirection, .leftToRight)
     }
 
-    private func ramp(fromLeading: Bool, faded: Bool) -> some View {
+    private func ramp(fromLeft: Bool, faded: Bool) -> some View {
         ZStack {
             LinearGradient(stops: Self.stops,
-                           startPoint: fromLeading ? .leading : .trailing,
-                           endPoint: fromLeading ? .trailing : .leading)
+                           startPoint: UnitPoint(x: fromLeft ? 0 : 1, y: 0.5),
+                           endPoint: UnitPoint(x: fromLeft ? 1 : 0, y: 0.5))
             Rectangle().fill(.black).opacity(faded ? 0 : 1)
         }
     }
@@ -83,11 +105,12 @@ private struct EdgeFade: ViewModifier {
     let bleed: CGFloat
     let width: CGFloat
     @State private var overflow = EdgeOverflow()
+    @Environment(\.layoutDirection) private var direction
 
     func body(content: Content) -> some View {
         content
             .onScrollGeometryChange(for: EdgeOverflow.self) { geometry in
-                EdgeOverflow(geometry)
+                EdgeOverflow(geometry, direction: direction)
             } action: { _, value in
                 overflow = value
             }

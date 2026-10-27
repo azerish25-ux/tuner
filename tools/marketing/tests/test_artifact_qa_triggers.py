@@ -100,11 +100,22 @@ class ArtifactQATriggerTests(unittest.TestCase):
         self.assertFalse(enabled(condition, event='pull_request'))
         self.assertTrue(enabled(condition, event='pull_request', labels=['captures']))
         self.assertTrue(enabled(condition, event='schedule'))
-        for filename in ['nightly.yml', 'listing-assets.yml', 'l10n.yml', 'caption-typography.yml']:
+        for filename in ['nightly.yml', 'l10n.yml', 'caption-typography.yml']:
             source = (assets.ROOT / '.github/workflows' / filename).read_text()
             expected = ("cancel-in-progress: ${{ github.event_name == 'pull_request' }}"
                         if filename == 'nightly.yml' else 'cancel-in-progress: false')
             self.assertIn(expected, source)
+
+    def test_supersede_marker_alone_never_requests_captures_or_changes_pilot_scope(self):
+        opt = '[supersede-listing-pilot]'
+        condition = job_condition('listing-assets.yml', 'plan')
+        self.assertFalse(enabled(condition, message=opt))
+        with self.assertRaises(ValueError):
+            assets.request_scope('push', opt, 'all', 'all', False, HANDOFF)
+        paired = '[listing-screenshots-pilot] ' + opt
+        self.assertTrue(enabled(condition, message=paired))
+        self.assertEqual(assets.request_scope('push', paired, 'all', 'all', False, HANDOFF),
+                         assets.request_scope('push', '[listing-screenshots-pilot]', 'all', 'all', False, HANDOFF))
 
     def test_export_handoff_has_no_write_job_and_listing_scope_is_sent_to_validator(self):
         source = (assets.ROOT / '.github/workflows/l10n.yml').read_text()
