@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-27T03:54:42Z",
+  "reviewer": "Independent integration review agent",
+  "skill": "code-review-and-quality",
+  "branch": "codex/caption-font-portability",
+  "base_head": "0081d2af7d29b88fd2b075334f76b4e483ad07fb",
+  "verdict": "approve_bounded_font_configuration_native_fitting_pending",
+  "scope": "One managed Noto Sans entry and three documentation lines only. No caption text, dimensions, fit limits, app resources or shaping/glyph gate changes.",
+  "findings": [],
+  "native_failure_evidence": {
+    "log": "C:/Users/shahr/Desktop/Translation/native-qa/preview-e67d4e6-font-layout.log",
+    "sha256": "845b3406b39df5a62f01d0f15fa03bafc5d150b576d1f05528eaff025e95e861",
+    "observed": "Native macOS setup RAQM assertion and subsequent audit execute; line278 reports2050 caption strings across50 listings with zero glyph/shaping failures, then seven caption-width failures: six Russian and one Ukrainian. SFNS.ttf is among116 selected fallback strings. This is fitting failure after shaping became available, not recurrence of missing libraqm.",
+    "remaining_failed_capture_keys": {
+      "ru": ["10b-tune-locked", "52b-lesson-chord", "31b-instruments-folk", "63-songs", "62-lesson-results", "32-journey"],
+      "uk": ["10b-tune-locked"]
+    }
+  },
+  "source_and_provenance_assessment": [
+    "Manifest JSON comparison against HEAD confirms exactly one added notosans family entry; repository pin, manifest metadata and every prior font entry remain unchanged.",
+    "Both URLs use the existing exact Google Fonts commit. Font and license were independently fetched from those upstream URLs and byte-compared with the supplied local files; all declared hashes and font size match.",
+    "OFL.txt preserves The Noto Project Authors copyright and SIL Open Font License1.1. Existing installer verifies and saves each family's license alongside prepared fonts; no font binary is added to the app/repository by this delta.",
+    "caption_font still returns Sora when its exact face covers the whole string. Otherwise managed fonts are considered before operating-system fallbacks; adding a pinned covering family reduces dependence on private macOS system-font metrics without weakening the fit gate.",
+    "The new variable font declares wght100..900 with default400 and wdth62.5..100 with default100. Existing fallback selection changes requested weight while retaining the width default; this delta does not narrow fonts or reduce minimum type sizes to force success.",
+    "Independent cmap analysis finds no missing glyphs in all123 ru/uk/el caption/preview strings,41 per locale. This is coverage evidence only. It does not prove shaped widths, fallback winner for every font inventory or final typography acceptance."
+  ],
+  "verified_upstream_assets": {
+    "commit": "e7db6ca603fd4862010383ff17ffd6cc4ffac1c0",
+    "font_url": "https://raw.githubusercontent.com/google/fonts/e7db6ca603fd4862010383ff17ffd6cc4ffac1c0/ofl/notosans/NotoSans%5Bwdth%2Cwght%5D.ttf",
+    "font_bytes": 2049096,
+    "font_sha256": "bfb7bb691513f12e734dc346c03a03f784912432d7e3fa8e56efcf906fe86b3d",
+    "license_url": "https://raw.githubusercontent.com/google/fonts/e7db6ca603fd4862010383ff17ffd6cc4ffac1c0/ofl/notosans/OFL.txt",
+    "license_bytes": 4396,
+    "license_sha256": "cee9892f9f0cc8fe882c9e9537ee6a89621d86ee7ceaf70b02e2b2b1c25c061a"
+  },
+  "independent_verification": [
+    { "check": "Exact pinned upstream/local font and OFL bytes/hash comparisons", "result": "pass" },
+    { "check": "Manifest structural delta and unchanged prior entries/pin", "result": "pass" },
+    { "check": "fontTools cmap analysis under Python UTF8 mode", "strings": 123, "missing_glyphs": 0 },
+    { "command": "../.venv-marketing/Scripts/python.exe -m unittest discover -s tools/marketing/tests", "tests": 46, "exit_code": 0 },
+    { "command": "git -c core.autocrlf=false diff --check -- tools/marketing/caption-fonts.json tools/marketing/CAPTION-FONTS.md", "exit_code": 0 }
+  ],
+  "reviewed_sha256": {
+    "tools/marketing/caption-fonts.json": "5a7d34db3be409bf453b61e8936b215268cf6d5a372fffeebd909ed423858594",
+    "tools/marketing/CAPTION-FONTS.md": "d4ad3d623a8226d7b8c5dda5fbba3bd4d57f125896aa8dde36ba8bc5471da8db",
+    "tools/marketing/art.py": "6de0e0a809d3db9b47f75d1d730be3e8cb2a19017a68bd5f23b2f61edd4cdbe2",
+    "tools/marketing/font_assets.py": "cc347bd727c6f6dfda82832e85ea645468223e0d24a6717e4b5e2a292f8cab9c"
+  },
+  "remaining_acceptance": [
+    "Run a real preview/audit from this isolated branch on macOS and confirm all2050 layout strings, including the seven recorded failures, pass with the actual selected font faces and preserved limits.",
+    "Inspect composed Russian/Ukrainian/Greek captions for weight, shaping, line breaks, glyphs and contrast; then complete the actual media pipeline. Font coverage alone is insufficient.",
+    "Retain existing failure logs and scope isolation. A successful font audit does not certify native app UI, privacy/accessibility, audio/sync gates or complete listing assets."
+  ],
+  "limits": "No local RAQM shaping/fitting or macOS native run performed by reviewer. Windows analysis used cmap/hash/source checks only; source approval is not a fitting pass or legal certification.",
+  "mutations": "Only this review receipt written. No implementation, original assets/log, prior receipt, commit or publication changed by reviewer."
+}
