@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-27T06:09:19.956211+00:00",
+  "reviewer": "Independent integration review agent",
+  "verdict": "approve_bounded_explicit_cue_source_fix_native_pending",
+  "scope": "Only PreviewTune explicit cue predicate/cancellation wait guards and three new PreviewCueTests. Band readiness, UI clip anchors and all delivery gates remain separate open work.",
+  "comparison_head": "c08924623796939b279be7bcfaf3636c1646f1e7",
+  "source_sha256": {
+    "ios/Timbre/Root/DemoScenes.swift": "1b3615f2f5226b64f3bee64d4c22eff1c7801f2206a46533ce4c9d5aedbce47c",
+    "ios/TimbreAppTests/PreviewCueTests.swift": "be888af9d314eff051a7c7c26553ba208851f64d9f7dc92dd13ad6937cfdfa63"
+  },
+  "resolves_source_finding": "PREVIEW-CUE-01 in preview-c887-timing-triage.json",
+  "findings": [],
+  "assessment": [
+    "run passes Option.cue explicitly. A nonnil path only returns fileExists; elapsed time cannot bypass an explicit camera handshake. With nil path, the same waited>12 fallback remains. No implicit default parameter can accidentally drop the path at the production call site.",
+    "The pre-cue loop checks Task.isCancelled before listening/reselection, and checks once more after the loop before the fresh session/listen event. A canceled sleep swallowed by try? now exits on the next guard instead of spinning indefinitely waiting for the file. A cue appearing simultaneously with cancellation also reaches the post-loop guard.",
+    "The internal predicate is stateless except Date and file existence, and remains inside the existing DEBUG-only DemoScenes file. Tests create fresh UUID paths, write an empty cue file with deferred cleanup and use broad0/13/120second boundaries rather than sleeping near a timer edge.",
+    "Three authored native methods/four assertions cover missing explicit cue after120seconds, immediate existing cue, and nil-path false-now/true-after13seconds. The old90second OR would contradict the first assertion by inspection; no native red/green execution is claimed.",
+    "ios/project.yml includes TimbreAppTests directory as a source root, so the new file is picked up by generated native test project. No test registration or app source-list edit required.",
+    "No .keep behavior, frame dimensions, individual deadline, lock lead/tail, sound synthesis, gate threshold or normal release-app behavior changed."
+  ],
+  "verification": {
+    "diff_check": "Pass for two scoped files and review receipt",
+    "native_compile_and_execution": "Unavailable on Windows; all three tests and fresh preview pending",
+    "cancellation_regression": "No executable async cancellation test authored in this bounded delta; guards reviewed by source only."
+  },
+  "remaining_proof": [
+    "Run three PreviewCueTests natively, then a complete real delayed-stage preview with event ordering: explicit cue precedes listen and first lock.",
+    "Confirm canceled pre-cue task produces no fresh-session/listen/lock work after cancellation; current unit methods directly test predicate only.",
+    "Preserve and satisfy existing lock/poster/audio/band/silence gates; this source fix does not resolve other c887 preview findings."
+  ]
+}

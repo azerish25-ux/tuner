@@ -323,7 +323,8 @@ enum PreviewTune {
         // 3D model must stay up), but the lowest string is chosen again every 0.4 s, so its 0.65 s hold never completes
         // and nothing locks before the camera rolls.
         var chosen = Date.distantPast
-        while !cued(since: launched) {
+        while !cued(since: launched, cuePath: Option.cue) {
+            guard !Task.isCancelled else { return }
             if !store.audio.running { store.startListening() }
             if Date().timeIntervalSince(chosen) > 0.4 {
                 DemoScene.select(first, store)
@@ -331,6 +332,7 @@ enum PreviewTune {
             }
             try? await Task.sleep(for: .milliseconds(50))
         }
+        guard !Task.isCancelled else { return }
         // A fresh session (the demo pitch's drift starts over, 14 cents flat), with no pause long enough to rest.
         store.pauseListening()
         DemoScene.select(first, store)
@@ -351,10 +353,11 @@ enum PreviewTune {
         PreviewRecorder.shared.endStrings(store)
     }
 
-    private static func cued(since launched: Date) -> Bool {
+    static func cued(since launched: Date, cuePath: String?) -> Bool {
         let waited = Date().timeIntervalSince(launched)
-        guard let path = Option.cue else { return waited > fallbackStart }
-        return FileManager.default.fileExists(atPath: path) || waited > 90
+        guard let path = cuePath else { return waited > fallbackStart }
+        // An explicit camera handshake must never start the scene before the camera is ready.
+        return FileManager.default.fileExists(atPath: path)
     }
 
     private typealias Option = DemoScene.Option
