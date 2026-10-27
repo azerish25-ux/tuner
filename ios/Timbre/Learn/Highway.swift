@@ -61,8 +61,9 @@ struct AlongStep: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.accessibilityVoiceOverEnabled) private var voiceOver
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.dynamicTypeSize) private var typeSize
 
-    enum Phase { case ready, playing, done }
+    enum Phase: Equatable { case ready, playing, done }
 
     /// One bar of the tune on repeat: its notes `passes` times back to back (each held no longer than the bar), at `bpm`.
     struct BarLoop: Equatable {
@@ -151,19 +152,17 @@ struct AlongStep: View {
     private var band: BandArrangement { arrangement(under: chart) }
 
     var body: some View {
-        VStack(spacing: 14) {
-            header
-            stage
-            if !lyrics.isEmpty { lyricRow }
-            // Its whole height, always: the stage gives up the room instead, so "Next" never sits over its edge.
-            upcoming
-                .frame(minHeight: 44)
-                .fixedSize(horizontal: false, vertical: true)
-                .opacity(phase == .done ? 0 : 1)
-                .accessibilityHidden(phase == .done)
-            Spacer(minLength: 0)
-            MicrophoneHint()
-            controls
+        VStack(spacing: 0) {
+            if typeSize.isAccessibilitySize {
+                ScrollViewReader { scroll in
+                    ScrollView { stepContent }
+                        .onChange(of: phase) { _, phase in
+                            if phase != .ready { scroll.scrollTo("along.runway", anchor: .top) }
+                        }
+                }
+            } else {
+                stepContent
+            }
         }
         .onAppear {
             let found = LeadChart.bars(underStep: notes, meter: beatsPerBar, in: course)
@@ -193,6 +192,24 @@ struct AlongStep: View {
 
     // MARK: Pieces
 
+    private var stepContent: some View {
+        VStack(spacing: 14) {
+            header
+            stage
+                .id("along.runway")
+            if !lyrics.isEmpty { lyricRow }
+            // Its whole height, always: the stage gives up the room instead, so "Next" never sits over its edge.
+            upcoming
+                .frame(minHeight: 44)
+                .fixedSize(horizontal: false, vertical: true)
+                .opacity(phase == .done ? 0 : 1)
+                .accessibilityHidden(phase == .done)
+            Spacer(minLength: 0)
+            MicrophoneHint()
+            controls
+        }
+    }
+
     private var header: some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack(alignment: .top, spacing: 8) {
@@ -208,15 +225,24 @@ struct AlongStep: View {
             }
             // The combo lives in the stage's HUD; the row keeps its height so the stage never shifts.
             .frame(minHeight: 36)
-            HStack(spacing: 8) {
-                Text("\(Int(tempo)) BPM · \(take.count) notes").font(.subheadline).foregroundStyle(Palette.inkSoft)
-                    .lineLimit(1).minimumScaleFactor(0.8)
-                if let loop { loopBadge(loop) } else { tempoBadge }
-                Spacer(minLength: 8)
-                CalibrateButton(audio: store.audio, accent: accent) { calibrating = true }
-                    .disabled(phase == .playing)
-                    .opacity(phase == .playing ? 0.4 : 1)
-                BandControls(audio: store.audio, accent: accent)
+            let detailsLayout = typeSize.isAccessibilitySize
+                ? AnyLayout(VStackLayout(alignment: .leading, spacing: 8))
+                : AnyLayout(HStackLayout(spacing: 8))
+            detailsLayout {
+                HStack(alignment: .firstTextBaseline, spacing: 8) {
+                    Text("\(Int(tempo)) BPM · \(take.count) notes").font(.subheadline).foregroundStyle(Palette.inkSoft)
+                        .lineLimit(typeSize.isAccessibilitySize ? nil : 1)
+                        .minimumScaleFactor(typeSize.isAccessibilitySize ? 1 : 0.8)
+                    if let loop { loopBadge(loop) } else { tempoBadge }
+                    Spacer(minLength: 8)
+                }
+                HStack(spacing: 8) {
+                    CalibrateButton(audio: store.audio, accent: accent) { calibrating = true }
+                        .disabled(phase == .playing)
+                        .opacity(phase == .playing ? 0.4 : 1)
+                    BandControls(audio: store.audio, accent: accent)
+                }
+                .frame(maxWidth: typeSize.isAccessibilitySize ? .infinity : nil, alignment: .trailing)
             }
         }
         .padding(.horizontal, Metrics.gutter).padding(.top, 8)
@@ -248,7 +274,8 @@ struct AlongStep: View {
                                       canSpeak: voiceOver) { spokenChoice = !spoken })
         // Shrinks on short phones rather than pushing the header off the top; the controls keep one height
         // through ready, playing and done, so the stage never changes size when a take starts or ends.
-        .frame(minHeight: 220, maxHeight: fretted ? 420 : 300)
+        .frame(minHeight: typeSize.isAccessibilitySize ? 420 : 220,
+               maxHeight: typeSize.isAccessibilitySize ? 420 : (fretted ? 420 : 300))
         // The combo and multiplier over the stage's top corners while a take plays.
         .overlay(alignment: .top) {
             if phase == .playing {
@@ -283,6 +310,7 @@ struct AlongStep: View {
     private var tempoBadge: some View {
         Text("\(ladder.percent)%")
             .font(Typeface.number(.caption))
+            .fixedSize()
             .foregroundStyle(rungTint(ladder.rung))
             .contentTransition(.numericText(value: Double(ladder.percent)))
             .padding(.horizontal, 8).padding(.vertical, 3)
@@ -647,8 +675,14 @@ struct AlongStep: View {
     /// The four tempo rungs, the current one filled; below the lesson tempo a note that full tempo earns three stars.
     private var ladderPicker: some View {
         VStack(spacing: 6) {
-            HStack(spacing: 8) {
-                ForEach(TempoLadder.rungs.indices, id: \.self) { rung in rungButton(rung) }
+            if typeSize.isAccessibilitySize {
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 160), spacing: 8)], spacing: 8) {
+                    ForEach(TempoLadder.rungs.indices, id: \.self) { rung in rungButton(rung) }
+                }
+            } else {
+                HStack(spacing: 8) {
+                    ForEach(TempoLadder.rungs.indices, id: \.self) { rung in rungButton(rung) }
+                }
             }
             Label("Full tempo for 3 stars", systemImage: "star.fill")
                 .font(.caption.weight(.semibold))
@@ -670,12 +704,8 @@ struct AlongStep: View {
             steppedUp = false
             Haptics.shared.selection()
         } label: {
-            VStack(spacing: 1) {
-                Text("\(Int((TempoLadder.rungs[rung] * 100).rounded()))%").font(Typeface.label(15))
-                Text(Int(ladder.tempo(at: rung)), format: .number).font(Typeface.number(.caption)).opacity(0.75)
-            }
+            TempoRungFace(percent: Int((TempoLadder.rungs[rung] * 100).rounded()), bpm: Int(ladder.tempo(at: rung)))
             .foregroundStyle(selected ? Palette.onAccent : Palette.ink)
-            .frame(maxWidth: .infinity, minHeight: 48)
             .background(shape.fill(selected ? AnyShapeStyle(tint) : AnyShapeStyle(Palette.stageRaised)))
             .overlay(shape.strokeBorder(selected ? Color.clear : Palette.controlLine, lineWidth: 1))
             .overlay(alignment: .topTrailing) {
@@ -895,6 +925,21 @@ struct AlongStep: View {
             onItem(course.practiceItem(for: note), PlayAlongJudge.credit(countedGrades[index] ?? .miss))
         }
         done(outcome?.score ?? session.accuracy)
+    }
+}
+
+/// A complete tempo choice: percentage and BPM each keep their own line as text grows.
+struct TempoRungFace: View {
+    let percent: Int
+    let bpm: Int
+
+    var body: some View {
+        VStack(spacing: 1) {
+            Text("\(percent)%").font(Typeface.label(15))
+            Text(bpm, format: .number).font(Typeface.number(.caption)).opacity(0.75)
+        }
+        .padding(.horizontal, 8).padding(.vertical, 6)
+        .frame(maxWidth: .infinity, minHeight: 48)
     }
 }
 

@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-27T05:53:20.319596+00:00",
+  "reviewer": "Independent Highway accessible layout source reviewer",
+  "base_head": "11b594e7b247e4f851016d5fb59dc5e1e457afa5",
+  "scope": "Only uncommitted Highway.swift and TempoRungLayoutTests.swift. Before-change AX5 ready-screen screenshot inspected for context.",
+  "verdict": "approve_source_change_only_native_tests_and_visual_flow_acceptance_pending",
+  "findings": [],
+  "source_verification": [
+    "Lifecycle onAppear/onDisappear, audio preparation/cancellation and phase observers remain on stable outer VStack. AX-only ScrollView branch changes content layout while AlongStep state remains owned by the same view.",
+    "The runway target ID exists in ready/playing/done; AX branch scrolls to it on playing/done so Start below fold can return the runway into view. Scroll change does not alter audio/scoring flow.",
+    "Exact textual comparison confirms implementation from MARK Flow through AlongStep end remains unchanged.",
+    "Normal branch retains previous stage height bounds and four-rung HStack. Shared TempoRungFace adds padding to normal rungs too; normal screenshot acceptance is still needed.",
+    "AX header moves control cluster into a second row, allows BPM/note summary wrapping and makes percent badge fixed size. AX stage is420 points and AX rungs use adaptive160-point minimum grid.",
+    "TempoRungFace uses same percent/BPM content and font roles as old button, adds padding and minimum48-point height. Existing selected styling, identifiers, disabled behavior and accessibility traits stay on rungButton.",
+    "Authored MainActor XCTest covers four locales, four percentages and three Dynamic Type sizes. Comparing160-point versus1200-point ideal heights detects additional vertical wrapping in actual TempoRungFace. It does not assert actual text/glyph content, truncation absence, rendered grid geometry or explicit RTL layout."
+  ],
+  "independent_checks": [
+    {
+      "command": "git -c core.autocrlf=false diff --check -- ios/Timbre/Learn/Highway.swift ios/TimbreAppTests/TempoRungLayoutTests.swift",
+      "exit_code": 0
+    },
+    {
+      "check": "Static assertions for unchanged flow source, stable scroll target and single content definition",
+      "exit_code": 0
+    },
+    {
+      "check": "Viewed original AX5 ready-screen PNG",
+      "result": "Header percent visually splits100% across lines, BPM summary truncates, tempo rung labels clip/overflow. Before-change evidence only.",
+      "path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\a11y-matrix-b6efd36\\named\\Matrix-ax5\\matrix-ax5-lesson-along-ready.png",
+      "sha256": "9dfac6ebc911aeab13daaa2fe3d57b88b52911a53b1e75fbc6185a499fbe4723"
+    }
+  ],
+  "reviewed_sha256": {
+    "ios/Timbre/Learn/Highway.swift": "8d5f3f174e4f456665ae918d104aac160bab1f17b7139a6de35c793fa2919aa9",
+    "ios/TimbreAppTests/TempoRungLayoutTests.swift": "ab24eacfd9a1c889a5cce00dcd2e3d70aae49dd0864309cb6c590161b1f5f300"
+  },
+  "limits": [
+    "Windows source review only; no Swift build or authored native XCTest executed. No RED/GREEN or final visual fix claim.",
+    "Require actual ready/playing/done captures and interactions at AX5 and normal size, including narrow widths, selected rung changes, Start below fold, auto-scroll, reset/retry, bar loop, VoiceOver and RTL.",
+    "Existing resultsPanel remains clipped inside a fixed stage and ViewThatFits compact fallback. The ready-screen changes do not establish AX5 result-card acceptance or cover every existing large-text element.",
+    "Test height equality is an anti-wrapping regression check, not pixel/glyph correctness or final full-screen acceptance. It uses locale only and does not explicitly set RTL environment.",
+    "Dynamic Type changes while playing rebuild the content branch; native acceptance should confirm continuity even though audio state/cleanup ownership remains on outer view.",
+    "Native jobs on previously published sources exclude this draft."
+  ],
+  "mutations": "Only this receipt written. No implementation edit, commit or push."
+}
