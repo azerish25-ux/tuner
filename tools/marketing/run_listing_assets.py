@@ -137,10 +137,15 @@ def tested_selectors(log: Path, selected: list[str]):
 
 
 def test_attempts(xctestrun, device, kind, tests, out, env):
+    sys.path.insert(0, str(ROOT / 'tools/ci'))
+    from simulator_warmup import warmup
     for attempt in (1, 2):
         folder = out / f'attempt-{attempt}'
         folder.mkdir(parents=True, exist_ok=False)
         bundle, log = folder / 'Tests.xcresult', folder / 'test.log'
+        warmup(Path(xctestrun).parent / 'Debug-iphonesimulator/Timbre.app', device['id'],
+               env['TEST_RUNNER_TIMBRE_UI_APPLE_LANGUAGES'].split(','),
+               env['TEST_RUNNER_TIMBRE_UI_LOCALE'], folder / 'warmup')
         code = run(test_command(xctestrun, device, tests, bundle), log=log, env=env, check=False)
         if bundle.exists():
             export_attachments(bundle, folder / 'attachments')

@@ -14,6 +14,7 @@ import subprocess
 import sys
 
 from launch_retry import CASE, classify
+from simulator_warmup import warmup
 
 ROOT = Path(__file__).resolve().parents[2]
 METHODS = (
@@ -91,11 +92,18 @@ def run(out: Path) -> int:
                'locale': os.environ.get('TEST_RUNNER_TIMBRE_UI_LOCALE'),
                'attempts': [], 'selected_attempt': None, 'passed': False}
     try:
+        build_code = invoke('build-for-testing', out / 'Build.xcresult', out / 'build.log')
+        receipt['build_exit'] = build_code
+        if build_code:
+            return 1
         for attempt in (1, 2):
             folder = out / f'attempt-{attempt}'
             folder.mkdir(exist_ok=False)
             bundle, log = folder / 'CaptureCheck.xcresult', folder / 'test.log'
-            code = invoke('test' if attempt == 1 else 'test-without-building', bundle, log)
+            warmup(ROOT / 'ios/build/capture-check/Build/Products/Debug-iphonesimulator/Timbre.app',
+                   os.environ['DEVICE_ID'], [os.environ['TEST_RUNNER_TIMBRE_UI_LANGUAGE']],
+                   os.environ['TEST_RUNNER_TIMBRE_UI_LOCALE'], folder / 'warmup')
+            code = invoke('test-without-building', bundle, log)
             passed, retryable = evaluate(code, log.read_text(errors='replace'))
             receipt['attempts'].append({'attempt': attempt, 'exit': code,
                                         'tests_passed': passed, 'launch_retry_eligible': retryable})
@@ -113,7 +121,7 @@ def run(out: Path) -> int:
             subprocess.run(['xcrun', 'simctl', 'boot', os.environ['DEVICE_ID']], check=True)
             subprocess.run(['xcrun', 'simctl', 'bootstatus', os.environ['DEVICE_ID'], '-b'], check=True)
         return 1
-    except (OSError, ValueError, subprocess.CalledProcessError) as error:
+    except (OSError, ValueError, RuntimeError, subprocess.CalledProcessError) as error:
         receipt['error'] = str(error)
         print(str(error), file=sys.stderr)
         return 1

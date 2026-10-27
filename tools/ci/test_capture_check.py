@@ -53,6 +53,10 @@ class ExecutionTests(unittest.TestCase):
             out = Path(directory)
             invocations = []
             def invoke(mode, bundle, log):
+                if mode == 'build-for-testing':
+                    log.write_text('native build log fixture')
+                    bundle.mkdir()
+                    return 0
                 index = len(invocations)
                 invocations.append((mode, str(bundle)))
                 bundle.mkdir()
@@ -60,6 +64,7 @@ class ExecutionTests(unittest.TestCase):
                 log.write_text(text)
                 return code
             with patch.object(capture, 'invoke', side_effect=invoke), \
+                 patch.object(capture, 'warmup') as warm, \
                  patch.object(capture.subprocess, 'run') as native, \
                  patch.object(capture, 'validate_captures', side_effect=None if valid else ValueError('missing frame')) as validate, \
                  patch.dict(os.environ, {'DEVICE_ID': 'same-device', 'GITHUB_SHA': 'revision',
@@ -80,7 +85,7 @@ class ExecutionTests(unittest.TestCase):
         code, receipt, invocations, calls, selected = self.run_case([(65, transcript(failed)), (0, transcript())])
         self.assertEqual(code, 0)
         self.assertEqual(receipt['selected_attempt'], 2)
-        self.assertEqual([x[0] for x in invocations], ['test', 'test-without-building'])
+        self.assertEqual([x[0] for x in invocations], ['test-without-building', 'test-without-building'])
         self.assertEqual(selected, ['attempt-2/screenshots'])
         self.assertEqual([x[2] for x in calls if x[1] == 'simctl'], ['shutdown', 'boot', 'bootstatus'])
         self.assertEqual(len([x for x in calls if x[1] == 'xcresulttool']), 2)
@@ -109,6 +114,19 @@ class ExecutionTests(unittest.TestCase):
         code, receipt, _, _, _ = self.run_case([(0, transcript())], valid=False)
         self.assertEqual(code, 1)
         self.assertFalse(receipt['passed'])
+
+    def test_build_failure_does_not_warm_or_test(self):
+        with tempfile.TemporaryDirectory() as directory, patch.object(capture, 'invoke', return_value=65) as invoke, patch.object(capture, 'warmup') as warm, contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(capture.run(Path(directory)), 1)
+            self.assertEqual(invoke.call_count, 1)
+            self.assertEqual(invoke.call_args.args[0], 'build-for-testing')
+            warm.assert_not_called()
+
+    def test_warmup_failure_never_falls_back_to_unwarmed_native_test(self):
+        with tempfile.TemporaryDirectory() as directory, patch.object(capture, 'invoke', return_value=0) as invoke, patch.object(capture, 'warmup', side_effect=RuntimeError('warmup failed')), patch.dict(os.environ, {'DEVICE_ID': 'same', 'TEST_RUNNER_TIMBRE_UI_LANGUAGE': 'ar', 'TEST_RUNNER_TIMBRE_UI_LOCALE': 'ar_SA'}), contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+            self.assertEqual(capture.run(Path(directory)), 1)
+            self.assertEqual(invoke.call_count, 1)
+            self.assertFalse(json.loads((Path(directory) / 'status.json').read_text())['passed'])
 
     def test_capture_validation_requires_distinct_originals_and_rejects_wrong_marker(self):
         import sys
