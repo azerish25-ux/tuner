@@ -1,0 +1,255 @@
+{
+  "schema": 1,
+  "status": "reviewed text checkpoint; NOT integrated or submission-ready",
+  "scope": "5940 UI keys only; all Learn.strings excluded",
+  "source_snapshot_commit": "91986374f8ca758b506bcba8160a563223361c75",
+  "native_validation": "not performed for these new resources",
+  "locales": {
+    "zh-Hant": {
+      "keys": 1980,
+      "table_counts": {
+        "Localizable.strings": 1952,
+        "InfoPlist.strings": 3,
+        "AppShortcuts.strings": 18,
+        "Localizable.stringsdict": 7
+      },
+      "plural_leaf_count": 7,
+      "source_contract_sha256": "4235a6aefcb9b456f2a977ee2705813f606b083b4f90fdb59c23ef502b80de1d",
+      "upstream_review_input_sha256": "2c349f0263095d7de9637be7a247aec22ea61e92a0c3a4473df9987913fee4e8",
+      "upstream_parent_pack_sha256": null,
+      "upstream_lineage": {
+        "base": {
+          "path": "zh-Hant-ui-draft-review.json",
+          "sha256": "5168d6ada42b1ab85f7b69c205d3de9843b29d4c77a70741e6b237c3eaa9b9ed"
+        },
+        "accepted_addenda": [
+          {
+            "path": "blind-review/zh-Hant-adopted-corrections001.json",
+            "sha256": "ba7a7ceca35b2fe4311d2da16dc0b0e09b355f44feaa65c397d4d7e20849c067",
+            "independent_review": "blind-review/independent/zh-Hant-correction-review001.json",
+            "independent_review_sha256": "d60d15a41c618be135b792b8410c64e2ac88726c07503aa98a1dba6626f3b47e"
+          }
+        ],
+        "composition_check": "PASS: exact source/key/old-target guarded overlay equals every field of all1980effective current UI rows",
+        "effective_items_sha256": "ac941bc2d944e1d6da792a7a35df74168148b71a56eb0ee882d03619126c9c40",
+        "ui_correction_addendum": {
+          "path": "zh-Hant-ui-correction-addendum002.json",
+          "sha256": "784aad669ffc1db39e2040b06507e408cefd92df88f70b692774ec37bbd19215"
+        }
+      },
+      "review_receipts": [
+        {
+          "file": "zh-Hant/review-coverage.json",
+          "original_sha256": "9b6e298bd1e5a7f6e8c2a3782b4a34a29d84846a933cdb29e1022dd934cf7ed8"
+        },
+        {
+          "file": "zh-Hant/review-lineage.json",
+          "original_sha256": "694e9ea00a78fd0175248d936cf8b95a27391e799627ef4fa1aed4b81a727882"
+        }
+      ],
+      "glossary_upstream_sha256": "d76e9479c86716290caea3c381aa17409c7759bd19016d8fd40f8df04f5727b8",
+      "glossary_note": "Companion draft snapshot; not itself a native or legal certification. Review-bound original glossary hashes remain in lineage where supplied."
+    },
+    "ms": {
+      "keys": 1980,
+      "table_counts": {
+        "Localizable.strings": 1952,
+        "InfoPlist.strings": 3,
+        "AppShortcuts.strings": 18,
+        "Localizable.stringsdict": 7
+      },
+      "plural_leaf_count": 7,
+      "source_contract_sha256": "4235a6aefcb9b456f2a977ee2705813f606b083b4f90fdb59c23ef502b80de1d",
+      "upstream_review_input_sha256": "dfdb0b900cbba9c95cd0f539c9fb9dbadfe0e007805eb173f31a6bfae9448cb7",
+      "upstream_parent_pack_sha256": "f28fa26f7b11dc4255c8e8d8ff976a829b19d38a329b6fba7a89caf9662837fc",
+      "upstream_lineage": {},
+      "review_receipts": [
+        {
+          "file": "ms/review-coverage.json",
+          "original_sha256": "861cb121dcd851f8c1f9240c3935a69cb33e8819bb23e1173a85bba5c29e74c9"
+        },
+        {
+          "file": "ms/review-lineage.json",
+          "original_sha256": "021403d6c957518010edf5cca05b19f2cb42a3acfee8bf2bf9aaaf0972d91fff"
+        }
+      ],
+      "glossary_upstream_sha256": "62e5c08b71d27ab47ca6f715bf7d5f968d7dfade9ad8b2e46d36a55389759d09",
+      "glossary_note": "Companion draft snapshot; not itself a native or legal certification. Review-bound original glossary hashes remain in lineage where supplied."
+    },
+    "or": {
+      "keys": 1980,
+      "table_counts": {
+        "Localizable.strings": 1952,
+        "InfoPlist.strings": 3,
+        "AppShortcuts.strings": 18,
+        "Localizable.stringsdict": 7
+      },
+      "plural_leaf_count": 14,
+      "source_contract_sha256": "4235a6aefcb9b456f2a977ee2705813f606b083b4f90fdb59c23ef502b80de1d",
+      "upstream_review_input_sha256": "fa7fa44cec33ffd2d1573fcf60aa1760281b8c45485b41422e126609a445a749",
+      "upstream_parent_pack_sha256": "3ec198c2696a83759dbfe725eb4b571d304c67f5655a2bb49656400a047f3cfd",
+      "upstream_lineage": {
+        "draft_batches": [
+          {
+            "path": "or-drafts/batch000.source-bound.json",
+            "sha256": "4a9004f2852331244be0854ebd0d2f2e747ee221d2278c7eaf6c045106351d16"
+          },
+          {
+            "path": "or-drafts/batch001.source-bound.json",
+            "sha256": "8870502db74ad9e541b09d360f879c0624f3f323eb6ab04d5d297564268f9106"
+          },
+          {
+            "path": "or-drafts/batch002.source-bound.json",
+            "sha256": "cf95967f0c94afc27fbd5557e4d2c58cec249503aa06d5c5e90a9d32cb5379e0"
+          },
+          {
+            "path": "or-drafts/batch003.source-bound.json",
+            "sha256": "30180090c71550460fbedf5955434a4ef2d1b45a48d8c396c65d4271512f0e19"
+          },
+          {
+            "path": "or-drafts/batch004.source-bound.json",
+            "sha256": "cb1aaebc85a02dedd7cfc7800caf2f8fb9ae32c33e93db40d7c05d0418e1cee5"
+          },
+          {
+            "path": "or-drafts/batch005.source-bound.json",
+            "sha256": "a7873f19e327f8fb8e732c9024a874b4600481caf88279ba8b9ca63925a1dcc7"
+          },
+          {
+            "path": "or-drafts/batch006.source-bound.json",
+            "sha256": "ff824156cfe510a2f595b041a62ae13a1b7d588c39a077bbdb6a2d8623378df6"
+          },
+          {
+            "path": "or-drafts/batch007.source-bound.json",
+            "sha256": "e25a9b6fb5a4035b981c707a6558bf01699d7e7dba068128d14acc03818706f2"
+          },
+          {
+            "path": "or-drafts/batch008.source-bound.json",
+            "sha256": "fa98b512c5b6b5a001a0460d957d5d17e72477b8af9993e8954efbd5fcea85e4"
+          },
+          {
+            "path": "or-drafts/batch009.source-bound.json",
+            "sha256": "781809bfcddf9a0e3a85809a370d683a0b58190d388159a0ded5f228cb2f5a0c"
+          },
+          {
+            "path": "or-drafts/batch010.source-bound.json",
+            "sha256": "3abbf313cc618c2b838bd2ce5aeb9f1ce104ec68816722da69c0bf4110f55bcd"
+          },
+          {
+            "path": "or-drafts/batch011.source-bound.json",
+            "sha256": "d51419cf1655a04a426106e52f5702d61ba969a3ec5181a060feed4110b12e6d"
+          },
+          {
+            "path": "or-drafts/batch012.source-bound.json",
+            "sha256": "36ad1b2e89ef93cc5cd765db26dfedfd466961f49a17ac38b24b0e380eaf4dcd"
+          },
+          {
+            "path": "or-drafts/batch013.source-bound.json",
+            "sha256": "a8f19cb332d25feb5eaf87a34d0577a06abf9dfb9da8cf47138c8b753b01a3ee"
+          },
+          {
+            "path": "or-drafts/batch014.source-bound.json",
+            "sha256": "9aefec343034f3c19e305862c82faaa804ca2565b426eb5df6d9da41eca6e662"
+          }
+        ],
+        "legal_review": "blind-review/independent/source-aware-comparison-69.json",
+        "legal_exact_old_corrections": "or-drafts/legal-corrections-addendum.json",
+        "r009_day_boundary_correction": "or-drafts/batch002.source-bound.json",
+        "note": "First complete effective UI freeze. Batches preserve superseded targets; current strings supersede them only via documented author corrections and legal review addendum."
+      },
+      "review_receipts": [
+        {
+          "file": "or/review-coverage.json",
+          "original_sha256": "8c899561c2c9105d9b39dfb5df412aea04ee337c797fe459ca463f76ba751f93"
+        },
+        {
+          "file": "or/review-lineage.json",
+          "original_sha256": "4663a54d0a05bebd92c9d7884c2be46a2d206d6eff30bd3023cdf117f88e3e3b"
+        }
+      ],
+      "glossary_upstream_sha256": "d0a42b430891f622037ee6bb643d8ee3aad02ce400a18c62c05b2291f5842203",
+      "glossary_note": "Companion draft snapshot; not itself a native or legal certification. Review-bound original glossary hashes remain in lineage where supplied."
+    }
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 2035,
+      "sha256": "a8d04e624513a813ec1891b5c285a91448bc5101edf13e1cc33ad48c67acf782"
+    },
+    {
+      "path": "ms/glossary-draft.md",
+      "bytes": 6788,
+      "sha256": "62e5c08b71d27ab47ca6f715bf7d5f968d7dfade9ad8b2e46d36a55389759d09"
+    },
+    {
+      "path": "ms/review-coverage.json",
+      "bytes": 500157,
+      "sha256": "1baca8eb9181beb9d552f79ce374272791e1049a3f72371ba29a0faf00a1b003"
+    },
+    {
+      "path": "ms/review-lineage.json",
+      "bytes": 526369,
+      "sha256": "01bdfbfbc8e2f3368a2bd002a9d078f2cae983f18824e687dbfba160b1026267"
+    },
+    {
+      "path": "ms/source-target-bindings.json",
+      "bytes": 545171,
+      "sha256": "496fe269f5348780011fd979066d4019739fe1410f02dcf518056da90f4aab50"
+    },
+    {
+      "path": "ms/ui-reviewed.json",
+      "bytes": 584403,
+      "sha256": "bc1c6d0c3ed3717f7e4f51b10e3d08bf561a78f9383984851d3898e7be566d08"
+    },
+    {
+      "path": "or/glossary-draft.md",
+      "bytes": 10775,
+      "sha256": "9c121bec4029279739061768b095895058ff17aafb2bdc324e6e29e9e36c6fa3"
+    },
+    {
+      "path": "or/review-coverage.json",
+      "bytes": 1241861,
+      "sha256": "55abdca086025ff468f88773b4178fe564094dfc2c5670cd32bef14e39814515"
+    },
+    {
+      "path": "or/review-lineage.json",
+      "bytes": 3463,
+      "sha256": "7c916be3577367b270f77b338ee95a14b5cbde93161b6ad01e2241db2eb702ab"
+    },
+    {
+      "path": "or/source-target-bindings.json",
+      "bytes": 545171,
+      "sha256": "8640b6d4871ca20474c8341ccb62e16a8b8f40f06ce0edd32ef63cbd780902fd"
+    },
+    {
+      "path": "or/ui-reviewed.json",
+      "bytes": 662351,
+      "sha256": "6c7758b44c0fc503e5f013627ca1a6f60d9f125382d3a572d57e64f7eb90f87e"
+    },
+    {
+      "path": "zh-Hant/glossary-draft.md",
+      "bytes": 6963,
+      "sha256": "3184e939b61d3fc3bf0126db3bb4201bfeb1311e0693bee9b649dda189101ae1"
+    },
+    {
+      "path": "zh-Hant/review-coverage.json",
+      "bytes": 949320,
+      "sha256": "04577e99a150112ed042119bd72eed72b139f2cc4ca744efc4ff9f7a8f6f7364"
+    },
+    {
+      "path": "zh-Hant/review-lineage.json",
+      "bytes": 10475,
+      "sha256": "63b7978552d885dc0dac34bc8db6f4441b0c18b113f92657b47b96277ad62a69"
+    },
+    {
+      "path": "zh-Hant/source-target-bindings.json",
+      "bytes": 545171,
+      "sha256": "855c4c14da4d1f9cba2824a33ce592a8d075d445960439cd2485a623b4d559d6"
+    },
+    {
+      "path": "zh-Hant/ui-reviewed.json",
+      "bytes": 580197,
+      "sha256": "2f316163ed52c953cf469927b83b54006265b8b99beafab850e9af8e77a227f6"
+    }
+  ]
+}
