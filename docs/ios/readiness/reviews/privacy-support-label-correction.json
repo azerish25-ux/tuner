@@ -1,0 +1,21 @@
+{
+  "date": "2026-10-26",
+  "change": "Correct song-request Support action label",
+  "reason": "Existing timbre_about_support is a formatted string (Support: %1$@), not a plain label; raw use would expose a format token.",
+  "source": "ios/Timbre/Songs/SongsView.swift",
+  "new_localization_key": "Contact support",
+  "context": "Plain alert action opening https://timbre-support.timbre.workers.dev/support; available for disabled/unconfigured requests and failures.",
+  "translation_handoff": "Root notified: six new English keys total, 48 non-English locales, 288 translation pairs. No other functional edits in this correction.",
+  "initial_implementation_receipt_preserved": "docs/ios/readiness/reviews/privacy-source-fixes.json",
+  "native_validation": "Pending; no Xcode/Swift toolchain available on Windows.",
+  "file_sha256_after_support_label_correction": {
+    "ios/Timbre/Services/Analytics.swift": "0ef72ddad0382dacb1f300e98dbcf0e5a7cd324ae5d65ad686f816ea3419a72e",
+    "ios/Timbre/Services/AnalyticsTransport.swift": "dad51fd7184feeb0570f1d4db8580baba9f9f9332e1627178ba5453aa9ac46ed",
+    "ios/Timbre/Services/GameCenter.swift": "0bbeca933eef5c29f19734f1ba787d5df1d877886aafd20390ae5fb3d6f86e30",
+    "ios/Timbre/Services/ShareDestination.swift": "7302a8c79ea141527a512ef27dda4e2b59be7d1535b58c846288af6fe8d94124",
+    "ios/Timbre/Songs/SongsView.swift": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520",
+    "ios/Timbre/Resources/PrivacyInfo.xcprivacy": "d4e4831610ee58867050a93634d177fa28cd4659affc68233c9cfc0f2ba2a27f",
+    "ios/project.yml": "bde414e495e2cad1451bed7fe8bdd085b8bfe6757b90d1e504320f87c440df11",
+    "ios/TimbreAppTests/AnalyticsPrivacyTests.swift": "bb62d5ee5f7e08df1001004e58b9b865ac91748e208aa5423649b6c39f99175f"
+  }
+}

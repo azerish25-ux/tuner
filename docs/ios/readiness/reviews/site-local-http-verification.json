@@ -1,0 +1,45 @@
+{
+  "scope": "Local Wrangler static routes and headers; not public deployment",
+  "routes": [
+    {
+      "path": "/",
+      "final_url": "http://127.0.0.1:8787/support",
+      "status": 200,
+      "sha256": "93073dc9e946b0651c245eb1905b0be9db514119ee4888f64c84c3742e9cd0e3",
+      "csp": "default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+      "nosniff": "nosniff"
+    },
+    {
+      "path": "/support",
+      "final_url": "http://127.0.0.1:8787/support",
+      "status": 200,
+      "sha256": "93073dc9e946b0651c245eb1905b0be9db514119ee4888f64c84c3742e9cd0e3",
+      "csp": "default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+      "nosniff": "nosniff"
+    },
+    {
+      "path": "/privacy",
+      "final_url": "http://127.0.0.1:8787/privacy",
+      "status": 200,
+      "sha256": "c5f884865173a7ac094492d3677f5fd6e85faa5d3ec53db42c014d3464eb4cac",
+      "csp": "default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+      "nosniff": "nosniff"
+    },
+    {
+      "path": "/support.html",
+      "final_url": "http://127.0.0.1:8787/support",
+      "status": 200,
+      "sha256": "93073dc9e946b0651c245eb1905b0be9db514119ee4888f64c84c3742e9cd0e3",
+      "csp": "default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+      "nosniff": "nosniff"
+    },
+    {
+      "path": "/privacy.html",
+      "final_url": "http://127.0.0.1:8787/privacy",
+      "status": 200,
+      "sha256": "c5f884865173a7ac094492d3677f5fd6e85faa5d3ec53db42c014d3464eb4cac",
+      "csp": "default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+      "nosniff": "nosniff"
+    }
+  ]
+}

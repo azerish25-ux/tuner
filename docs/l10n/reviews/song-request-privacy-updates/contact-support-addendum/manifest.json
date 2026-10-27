@@ -1,0 +1,59 @@
+{
+  "author": "Codex /root/review_is",
+  "role": "author",
+  "base_commit": "0c679011095f45eae2e28cd8593b23386a013b7d",
+  "scope": "Separate Contact support addendum:48 drafts. Combined scope with preserved five-key artifact:288 pairs across48 existing non-English app locales.",
+  "original_frozen_artifacts": [
+    {
+      "path": "docs/l10n/reviews/song-request-privacy-updates/proposals.json",
+      "sha256": "e7b548a79bdded210b452bdd5687175014d2a9afe36436aafdbe3ff137e036e3",
+      "preserved_byte_identically": true
+    },
+    {
+      "path": "docs/l10n/reviews/song-request-privacy-updates/context-glossary-refs.json",
+      "sha256": "51846e05e6267cf423c5a5cd3a6a11e4b8dc239f39117b97981de621a2af5318",
+      "preserved_byte_identically": true
+    },
+    {
+      "path": "docs/l10n/reviews/song-request-privacy-updates/proposal-qa.json",
+      "sha256": "de0d07a8f2fcc75955f419a178fff42078dd2ab286554e475c713517d79691e7",
+      "preserved_byte_identically": true
+    },
+    {
+      "path": "docs/l10n/reviews/song-request-privacy-updates/manifest.json",
+      "sha256": "857789427cf077b5985ef0e972aeae163d31e6e8bddfeeb3ed026eea84c8eef7",
+      "preserved_byte_identically": true
+    }
+  ],
+  "files": [
+    {
+      "path": "docs/l10n/reviews/song-request-privacy-updates/contact-support-addendum/proposals.json",
+      "sha256": "b7e350e9d873f7b985d29fd2fa0a6b4a5bed8c706bcc90288a81e7d4c4373e0e"
+    },
+    {
+      "path": "docs/l10n/reviews/song-request-privacy-updates/contact-support-addendum/context-glossary-refs.json",
+      "sha256": "4a14140b2d8d039968176a566e12207628b886c932802aab091c3a54c1e131d9"
+    },
+    {
+      "path": "docs/l10n/reviews/song-request-privacy-updates/contact-support-addendum/proposal-qa.json",
+      "sha256": "652b618bbc7d298454bdf648d2f95fb6348b5b0ed775db7315b81dab19130207"
+    }
+  ],
+  "independent_review": {
+    "status": "required-pending-for-all-288",
+    "coverage": 0,
+    "reviewed_by": null
+  },
+  "native_verification": "not performed",
+  "legacy_formatted_support_strings": "unchanged",
+  "guide_ref": {
+    "path": "docs/l10n/TRANSLATING-WITH-GPT.md",
+    "sha256": "ff0abd2fae5e3960d299b265487542a59681993eb4a19d58a20434dc56de7336",
+    "actual_sections_read": [
+      "2.1 surfaces and 2.2 locale scope",
+      "4.1–4.2 format and tokens",
+      "4.4–4.15 typography, layout, brands, RTL, scripts, register, privacy-sensitive fact preservation",
+      "Review and QA constraints previously read; no native/human claims"
+    ]
+  }
+}

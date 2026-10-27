@@ -1,0 +1,83 @@
+{
+  "review": "Independent source review of privacy consent, song request, and Game Center release gate",
+  "date": "2026-10-26",
+  "baseline_commit": "0c679011095f45eae2e28cd8593b23386a013b7d",
+  "verdict": "request_changes",
+  "reviewer": "privacy_source_review independent agent",
+  "skill": "C:/Users/shahr/.agents/skills/code-review-and-quality/SKILL.md",
+  "scope": [
+    "ios/Timbre/Services/Analytics.swift",
+    "ios/Timbre/Services/AnalyticsTransport.swift",
+    "ios/Timbre/Services/GameCenter.swift",
+    "ios/Timbre/Services/ShareDestination.swift",
+    "ios/Timbre/Songs/SongsView.swift",
+    "ios/Timbre/Resources/PrivacyInfo.xcprivacy",
+    "ios/project.yml",
+    "ios/TimbreAppTests/AnalyticsPrivacyTests.swift"
+  ],
+  "source_note": "AppleAdsReporter is declared in AnalyticsTransport.swift; no separate AppleAdsReporter.swift exists.",
+  "reviewed_inputs": [
+    "docs/ios/readiness/reviews/privacy-baseline.json",
+    "docs/ios/readiness/reviews/privacy-source-fixes.json",
+    "docs/ios/readiness/reviews/privacy-support-label-correction.json",
+    "docs/superpowers/plans/2026-10-26-privacy-consent-source-fixes.md"
+  ],
+  "source_sha256": {
+    "ios/Timbre/Services/Analytics.swift": "0ef72ddad0382dacb1f300e98dbcf0e5a7cd324ae5d65ad686f816ea3419a72e",
+    "ios/Timbre/Services/AnalyticsTransport.swift": "dad51fd7184feeb0570f1d4db8580baba9f9f9332e1627178ba5453aa9ac46ed",
+    "ios/Timbre/Services/GameCenter.swift": "0bbeca933eef5c29f19734f1ba787d5df1d877886aafd20390ae5fb3d6f86e30",
+    "ios/Timbre/Services/ShareDestination.swift": "7302a8c79ea141527a512ef27dda4e2b59be7d1535b58c846288af6fe8d94124",
+    "ios/Timbre/Songs/SongsView.swift": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520",
+    "ios/Timbre/Resources/PrivacyInfo.xcprivacy": "d4e4831610ee58867050a93634d177fa28cd4659affc68233c9cfc0f2ba2a27f",
+    "ios/project.yml": "bde414e495e2cad1451bed7fe8bdd085b8bfe6757b90d1e504320f87c440df11",
+    "ios/TimbreAppTests/AnalyticsPrivacyTests.swift": "bb62d5ee5f7e08df1001004e58b9b865ac91748e208aa5423649b6c39f99175f"
+  },
+  "findings": [
+    {
+      "id": "PRIV-REV-01",
+      "priority": "P2",
+      "title": "Keep synchronous attribution token work off the UI and out of the consent lock",
+      "file": "ios/Timbre/Services/AnalyticsTransport.swift",
+      "start_line": 100,
+      "end_line": 106,
+      "confidence": "high",
+      "evidence": [
+        "AppleAdsReporter.start synchronously calls token() inside transport.withLease, which holds the shared NSRecursiveLock for the whole closure.",
+        "Production token provider is AAAttribution.attributionToken() in Analytics.swift:282.",
+        "Analytics.setSharing(true) calls sendOnce synchronously at Analytics.swift:55. AppStore is MainActor and invokes this during init (AppStore.swift:114), before Analytics.start, and when the setting changes (AppStore.swift:433). AnalyticsLifecycle.start is also MainActor.",
+        "The baseline explicitly performed attributionToken in Task.detached; this patch removes that background boundary.",
+        "setSharing(false) synchronously waits for the telemetry queue, which needs the same transport lock; lease/isSending also acquires that lock."
+      ],
+      "impact": "In any configured analytics build with attribution not yet acknowledged, launch and enabling sharing run the synchronous platform token provider on the UI thread. Provider latency also holds up consent revocation and availability reads. This is a concrete synchronous dependency introduced by the patch; no measured latency or proven deadlock is claimed.",
+      "minimal_fix": "Start attribution on a utility execution context and avoid holding the global consent/request lock throughout potentially blocking token generation. Preserve generation checks before starting token work and after it returns, before any request/retry/record/marker. Define an already-started uncancellable token operation as discarded on revoke so revoke does not wait for provider completion. Merely dispatching the existing locked block to a background queue still lets the off switch wait on that lock.",
+      "regression_test": "Use the injectable token provider with a deliberately held semaphore: start must not block its UI caller; revoke must invalidate consent without waiting for provider release; releasing an old provider after off/on must create no old-generation request/record/marker; only the new generation may proceed."
+    }
+  ],
+  "confirmed_source_properties": [
+    "Saved sharing is applied synchronously before measurement startup; shared transport begins disabled, and unconfigured analytics cannot acquire a lease.",
+    "Revocation invalidates the generation, removes tracked requests and cancels their tasks before returning; old leases cannot start requests, scheduled retries or acknowledgment work. Cancellation cannot recall bytes already delivered.",
+    "The current production callbacks enqueue telemetry work without synchronously waiting on its queue. No definite queue/transport deadlock was found. NSRecursiveLock permits nested lease/request calls.",
+    "Telemetry sends batches at 20 pending signals and a 30-second timer, clearing pending signals/timer on opt-out; explicit submissions use independent uploads and require HTTP 200. Active uploads are tracked for cancellation. This does not establish a global cap on concurrent requests.",
+    "Submission failure and unavailable paths return a false result; input is retained on failure, pending submission disables repeated footer submits, and only accepted submission clears input and presents success. Native SwiftUI alert presentation remains unverified.",
+    "The six new song-request literal keys match the corrected handoff. Contact support is a plain literal; the formatted timbre_about_support key is not used in this flow. All-locale translation integration is separately owned and not approved by this review.",
+    "Support uses the public Cloudflare support URL and remains present in unavailable and failed request alerts; privacy build setting and fallback use the public Cloudflare policy URL.",
+    "Game Center defaults NO and rejects unresolved/false values. Activation, pending activity checks, authentication callback, listener registration, and activity entry are gated; remaining network calls are private downstream of active authentication. Local score/challenge state remains outside the gate.",
+    "Manifest adds DeviceID, PurchaseHistory and OtherUserContent matching reviewed transmitted fields; country is omitted from the attribution whitelist. Existing tracking=false and required-reason entries remain. Not-linked declarations still depend on real processing/no-relinking practices and final distributed configuration."
+  ],
+  "verification": {
+    "kind": "Read-only source, diff, call-path and authored-test inspection",
+    "native_tests": "UNRUN: Windows host has no swift or xcodebuild command. The 12 AnalyticsPrivacyTests were inspected, not executed.",
+    "swift_5_10_complete_concurrency": "UNVERIFIED: project declares Swift 5.10 and complete strict concurrency; no native compilation result is available. No concrete compiler error identified by source inspection.",
+    "test_gap": "No held-token-provider responsiveness/revocation test currently exists.",
+    "web_reference": "https://developer.apple.com/documentation/AdServices/AAAttribution/attributionToken%28%29",
+    "web_use": "Verified synchronous API signature and documented three-attempt/five-second attribution retry contract; did not infer an undocumented token latency limit."
+  },
+  "remaining_gates": [
+    "Resolve PRIV-REV-01 and obtain focused independent rereview bound to resulting hashes.",
+    "Run native AnalyticsPrivacyTests and app compilation with configured Swift 5.10 complete concurrency on macOS; static parsing is not a substitute.",
+    "Run native SwiftUI song-request success/failure/availability flow and opt-out/off-on timing checks with stubbed network.",
+    "Complete the separate 288 non-English translation pairs and localization review before release claims.",
+    "Final account/capability/privacy-form/service verification remains owner/account-dependent. No Apple account, upload, signing or external write was performed."
+  ],
+  "modifications": "Only this review JSON created; product source, tests, policy/site, audio, CI and localization files were not modified."
+}

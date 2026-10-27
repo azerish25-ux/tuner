@@ -1,0 +1,1535 @@
+{
+  "source_file": {
+    "path": "ios/Timbre/Songs/SongsView.swift",
+    "sha256": "7c910ac51bf17a89501774b91454699715380434d9cc310d08e06d5235a860e0"
+  },
+  "source_contexts": [
+    {
+      "source": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "sha256": "3936cf83723780cce6f187a66999a297e996a06ddaff22d6dbfb51a6bd3a9007",
+      "context": "Privacy disclosure in Request a song alert before an explicit Send. Song-title text and current instrument filter are sent to named TelemetryDeck service. Instruct not to enter personal information. No audio recording/transmission, anonymity guarantee, consent status or additional data category may be invented."
+    },
+    {
+      "source": "Song requests are unavailable in this build.",
+      "sha256": "a30cb21f2c57c89ac49b86acd03b2c3976d397067fdcc6a2845a8cdaf79685ed",
+      "context": "Unavailable because this app build has no configured telemetry app ID. Scope is this build, not a claim that all song requests or the entire app are globally unavailable. A Support alternative exists."
+    },
+    {
+      "source": "Song requests are unavailable while usage sharing is off.",
+      "sha256": "803ccf034973dcde126914dbc4c66d6603a8389272fc68e4172b1a920e38016a",
+      "context": "Unavailable while saved usage-data-sharing preference is off. State the condition without directing or pressuring the user to enable it; Support remains an alternative. No claim requests are sent despite opt-out."
+    },
+    {
+      "source": "Your request could not be sent. Try again later.",
+      "sha256": "baea94e52eaf43191c027dfadd4125cea168df09803eb932c583d22468c6559f",
+      "context": "A request send failed (network/server/revocation or unavailable at send-time). Input is retained in code. Say send did not succeed and invite retry later; do not claim acknowledgement, delivery or automatic retry."
+    },
+    {
+      "source": "Sending your request…",
+      "sha256": "dfea9fbbbde6af3967cacb261e37975ddc2ff949155f41b6507ec8f19a4462cb",
+      "context": "Footer status while the asynchronous send is pending. No completed-success or failure claim. Preserve the single ellipsis character."
+    }
+  ],
+  "actual_source_fragments_read": [
+    {
+      "start_line": 169,
+      "end_line": 191,
+      "text": "        .onChange(of: filter) { _, _ in stopPreview() }\n        .onDisappear { stopPreview() }\n        .alert(\"Request a song\", isPresented: $requesting) {\n            if requestAvailable && !requestFailed {\n                TextField(\"Song and artist\", text: $request)\n                Button(\"Send\") { sendRequest() }\n            }\n            Button { openURL(AppLinks.support) } label: { Text(\"timbre_about_support\") }\n            Button(\"Cancel\", role: .cancel) { }\n        } message: {\n            if requestFailed {\n                Text(\"Your request could not be sent. Try again later.\")\n            } else if !store.settings.sharesUsage {\n                Text(\"Song requests are unavailable while usage sharing is off.\")\n            } else if !Analytics.isSending {\n                Text(\"Song requests are unavailable in this build.\")\n            } else {\n                Text(\"Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.\")\n            }\n        }\n        .fullScreenCover(item: $playing) { item in\n            LessonPlayer(course: item.course, lesson: item.lesson) { next in\n                // The featured song has no tile: it zooms from the hero."
+    },
+    {
+      "start_line": 336,
+      "end_line": 381,
+      "text": "    // MARK: Requests\n\n    /// The foot of the page: a song that isn't here yet can be asked for.\n    private var requestFooter: some View {\n        VStack(spacing: 10) {\n            (sendingRequest ? Text(\"Sending your request…\") :\n                (requested ? Text(\"Thanks. Your request is in.\") : Text(\"Missing a song you love?\")))\n                .font(.footnote).foregroundStyle(Palette.inkSoft)\n                .contentTransition(.opacity)\n            Button { requestFailed = false; requesting = true } label: {\n                Label(\"Request a song\", systemImage: \"text.bubble\")\n            }\n            .buttonStyle(SecondaryButtonStyle())\n            .accessibilityIdentifier(\"songs.request\")\n            .disabled(sendingRequest)\n        }\n        .frame(maxWidth: .infinity).padding(.vertical, 24)\n    }\n\n    private var requestAvailable: Bool { store.settings.sharesUsage && Analytics.isSending }\n\n    /// Send independently of the normal event batch; success means the ingest service acknowledged the request.\n    private func sendRequest() {\n        let title = String(request.trimmingCharacters(in: .whitespacesAndNewlines).prefix(80))\n        guard !title.isEmpty, !sendingRequest else { return }\n        guard requestAvailable else { requestFailed = true; requesting = true; return }\n        sendingRequest = true\n        requested = false\n        Analytics.requestSong(title: title, filter: filter) { accepted in\n            Task { @MainActor in\n                sendingRequest = false\n                guard accepted else {\n                    requestFailed = true\n                    requesting = true\n                    return\n                }\n                request = \"\"\n                Haptics.shared.done()\n                withAnimation(Motion.settle) { requested = true }\n                AccessibilityNotification.Announcement(String(localized: \"Thanks. Your request is in.\", bundle: TimbreLocalization.bundle)).post()\n            }\n        }\n    }\n\n    // MARK: Header and filters\n"
+    }
+  ],
+  "locales": [
+    {
+      "locale": "ar",
+      "glossary": {
+        "path": "docs/l10n/glossary/ar.md",
+        "sha256": "7a854703673afe1f0110ace426ba1dbb35f255ad16b2b7ee134fdb2e9c45d391",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: direct neutral masculine singular imperatives, avoiding gendered adjectives about the reader where possible. Warm teacher voice; no added marketing or celebration."
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/ar.lproj/Localizable.strings",
+        "sha256": "7af681993f17ec6f14418754b9d2d03206f750f5376068628835cf2dd2a45b47"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/ar.json",
+        "sha256": "36f4349f4f4cd1e16ffc1019db3b66836be939002fe75b4480b39d782023d552"
+      },
+      "current_anchors": {
+        "Request a song": "طلب أغنية",
+        "Share anonymous usage data": "مشاركة بيانات استخدام مجهولة",
+        "Thanks. Your request is in.": "شكرًا. وصل طلبك.",
+        "Send": "إرسال",
+        "Instrument": "الآلة",
+        "Support": null,
+        "timbre_about_support": "الدعم: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "bg",
+      "glossary": {
+        "path": "docs/l10n/glossary/bg.md",
+        "sha256": "f90198c8012266e1828dce873d66e29fadae8fd13856ed2f16dd30d138326189",
+        "actual_register_excerpts_read": [
+          {
+            "line": 13,
+            "text": "| Register (you) | Formal/plural вие; plural imperatives |"
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/bg.lproj/Localizable.strings",
+        "sha256": "c68d35c5e5b9ed6e9b96d579e4930a2713ffa5ed3311ed923e1fcc0ca7409930"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/bg.json",
+        "sha256": "eded8f1c3b47e566dc8d4afe4fde304fb1a9ca05228b8bf259672f9e2e38111d"
+      },
+      "current_anchors": {
+        "Request a song": "Заявете песен",
+        "Share anonymous usage data": "Споделяне на анонимни данни за употреба",
+        "Thanks. Your request is in.": "Благодарим. Заявката ви е приета.",
+        "Send": "Изпращане",
+        "Instrument": "Инструмент",
+        "Support": null,
+        "timbre_about_support": "Поддръжка: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "bn",
+      "glossary": {
+        "path": "docs/l10n/glossary/bn.md",
+        "sha256": "6b67c6147f8edc3c56996938aa06bf7b21d5c987899f1080b6262c1dd730735d",
+        "actual_register_excerpts_read": [
+          {
+            "line": 15,
+            "text": "| Register (\"you\") | Polite আপনি; warm and direct |  |"
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/bn.lproj/Localizable.strings",
+        "sha256": "1578bcc485bab6146c5e36a0da56b8b365384750ca1d49fac6a2d3aaee1c1200"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/bn.json",
+        "sha256": "f47bcde4b8b1a456605697b184bc4b5356702a58e79139de9223c8b742130c77"
+      },
+      "current_anchors": {
+        "Request a song": "গানের অনুরোধ করুন",
+        "Share anonymous usage data": "পরিচয়বিহীন ব্যবহারের তথ্য শেয়ার করুন",
+        "Thanks. Your request is in.": "ধন্যবাদ। আপনার অনুরোধ পৌঁছেছে।",
+        "Send": "পাঠান",
+        "Instrument": "বাদ্যযন্ত্র",
+        "Support": null,
+        "timbre_about_support": "সাপোর্ট: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "ca",
+      "glossary": {
+        "path": "docs/l10n/glossary/ca.md",
+        "sha256": "0705d86767ddf4e7f0b72b52a25788781f39a5a45320200712c9fb8f214c9b41",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Address: tu; warm, direct teacher voice. Gender-neutral phrasing for an unknown reader. Buttons match existing table; instructions use natural imperatives. VoiceOver hints describe outcomes in the third person."
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/ca.lproj/Localizable.strings",
+        "sha256": "17ba0d8a6907cfa07c52de22b247108ba258f7256970b60cc638a1780947ca9b"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/ca.json",
+        "sha256": "ec2fa415d168c7d13b1b35024fa7329695829e3d50633c133e6523066e1cf074"
+      },
+      "current_anchors": {
+        "Request a song": "Demana una cançó",
+        "Share anonymous usage data": "Comparteix dades d’ús anònimes",
+        "Thanks. Your request is in.": "Gràcies. Hem rebut la teva petició.",
+        "Send": "Envia",
+        "Instrument": "Instrument",
+        "Support": null,
+        "timbre_about_support": "Suport: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "cs",
+      "glossary": {
+        "path": "docs/l10n/glossary/cs.md",
+        "sha256": "3788e1297ba49bee6d92fa4058b86b397dea34ab65259c8b98e9775deca5d0c2",
+        "actual_register_excerpts_read": [
+          {
+            "line": 13,
+            "text": "| Register (you) | Formal/plural vy; plural imperatives |"
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/cs.lproj/Localizable.strings",
+        "sha256": "715e461363019b3d43a9a77511ef2ce29d94cf6a83df25770332188cdded7b7b"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/cs.json",
+        "sha256": "f8766e1916f34ad89cdf726e7e9771140246d0c30b0bd633ed7e8ccbb060d933"
+      },
+      "current_anchors": {
+        "Request a song": "Navrhnout píseň",
+        "Share anonymous usage data": "Sdílet anonymní údaje o používání",
+        "Thanks. Your request is in.": "Děkujeme. Váš požadavek jsme přijali.",
+        "Send": "Odeslat",
+        "Instrument": "Nástroj",
+        "Support": null,
+        "timbre_about_support": "Podpora: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "da",
+      "glossary": {
+        "path": "docs/l10n/glossary/da.md",
+        "sha256": "a1815f27ab10b26efc444beb6810a2bab865a0e1bf37d6f3b912cf84b4717899",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: Informal singular, warm direct second person; avoid gender assumptions. Short imperative actions; noun labels; third-person VoiceOver hints. Avoid reader-gender marking."
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/da.lproj/Localizable.strings",
+        "sha256": "d9e32f453fb6415573cddd2965f2715e88ff4b95b50397bd768cc09695ecaaed"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/da.json",
+        "sha256": "e6926588b43ac75c40f51e78ca6611a68286252d04304f72a78119f202cdad3c"
+      },
+      "current_anchors": {
+        "Request a song": "Ønsk en sang",
+        "Share anonymous usage data": "Del anonyme brugsdata",
+        "Thanks. Your request is in.": "Tak. Din anmodning er modtaget.",
+        "Send": "Send",
+        "Instrument": "Instrument",
+        "Support": null,
+        "timbre_about_support": "Support: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "de",
+      "glossary": {
+        "path": "docs/l10n/glossary/de.md",
+        "sha256": "7af0807d95357a42df1009c6855a876b8a0f83696255263b19052d472d8f6a12",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Address: du; warm, direct teacher voice. Gender-neutral phrasing for an unknown reader. Buttons match existing table; instructions use natural imperatives. VoiceOver hints describe outcomes in the third person."
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/de.lproj/Localizable.strings",
+        "sha256": "6baa1538051ac5df34f4d852dc25e80c8aa5981dfd7099fcd4ef95ab8dca1562"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/de.json",
+        "sha256": "d518d256d51ac16fcd44fbe73e74971151d9bd4a3f6f052f415c903c6d8731e0"
+      },
+      "current_anchors": {
+        "Request a song": "Lied wünschen",
+        "Share anonymous usage data": "Anonyme Nutzungsdaten teilen",
+        "Thanks. Your request is in.": "Danke. Deine Anfrage ist eingegangen.",
+        "Send": "Senden",
+        "Instrument": "Instrument",
+        "Support": null,
+        "timbre_about_support": "Support: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "el",
+      "glossary": {
+        "path": "docs/l10n/glossary/el.md",
+        "sha256": "5fceb92ed4899d93a4865ec91038b2efb7e1ea896a7db19a95330673650206b3",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: formal/plural εσείς. Existing mixed formal/informal instructions must follow this decision in new translations."
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/el.lproj/Localizable.strings",
+        "sha256": "b6a840d1a9d941355123e846b296eae1ba7652aa31947313b67654ae7ffbcc9f"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/el.json",
+        "sha256": "817af0f804b5c53e1964448ea9cc0f00f715b4e3251ff725528b6a8dd656f9a6"
+      },
+      "current_anchors": {
+        "Request a song": "Ζητήστε τραγούδι",
+        "Share anonymous usage data": "Κοινοποίηση ανώνυμων δεδομένων χρήσης",
+        "Thanks. Your request is in.": "Ευχαριστούμε. Το αίτημά σας παραλήφθηκε.",
+        "Send": "Αποστολή",
+        "Instrument": "Όργανο",
+        "Support": null,
+        "timbre_about_support": "Υποστήριξη: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "es",
+      "glossary": {
+        "path": "docs/l10n/glossary/es.md",
+        "sha256": "5dc54645f82dc536e527ed066852ab33b813a62977f145a5c23aa10d606c165c",
+        "actual_register_excerpts_read": [
+          {
+            "line": 7,
+            "text": "- Address: tú; warm, direct teacher voice. Gender-neutral phrasing for an unknown reader. Buttons match existing table; instructions use natural imperatives. VoiceOver hints describe outcomes in the third person."
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/es.lproj/Localizable.strings",
+        "sha256": "8f54d8682a6af7554aea3e9a20074e2a2389dd61af3074fdfe7665444c9e45f0"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/es.json",
+        "sha256": "247455822e61764a05961194d420226eaa5de5a3ca29c81f4dbd765f63193217"
+      },
+      "current_anchors": {
+        "Request a song": "Pedir una canción",
+        "Share anonymous usage data": "Compartir datos de uso anónimos",
+        "Thanks. Your request is in.": "Gracias. Hemos recibido tu solicitud.",
+        "Send": "Enviar",
+        "Instrument": "Instrumento",
+        "Support": null,
+        "timbre_about_support": "Soporte: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "et",
+      "glossary": {
+        "path": "docs/l10n/glossary/et.md",
+        "sha256": "3acd5b1efacf12d49c7e9f62815f9e0d4422015255efdf8c805a8b3897a64496",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: Informal singular, warm direct second person; avoid gender assumptions. Short imperative actions; noun labels; third-person VoiceOver hints. Avoid reader-gender marking."
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/et.lproj/Localizable.strings",
+        "sha256": "7f43a33f9dbfaa552ea1cddbfe571117e469e35657fc849c3a28c09c8e08f04e"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/et.json",
+        "sha256": "320ed6d8b3ea6307dcb27de1bea97d40473788217ee330771d856955b33399f1"
+      },
+      "current_anchors": {
+        "Request a song": "Soovi laulu",
+        "Share anonymous usage data": "Jaga anonüümseid kasutusandmeid",
+        "Thanks. Your request is in.": "Aitäh. Sinu soov on vastu võetud.",
+        "Send": "Saada",
+        "Instrument": "Instrument",
+        "Support": null,
+        "timbre_about_support": "Tugi: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "fa",
+      "glossary": {
+        "path": "docs/l10n/glossary/fa.md",
+        "sha256": "056cc8e1c7d1bc24c74c6c216235e5cfb99fa87563111e1806cbf5af18400b74",
+        "actual_register_excerpts_read": [
+          {
+            "line": 13,
+            "text": "| Register (\"you\") | Polite شما; plural imperatives ending ـید. | Formal or informal, and the exact form: German du, French vous, Spanish tú, Russian вы, Japanese です/ます, Korean 해요체, Chinese 你 (not 您), Hindi आप … One register for the whole app, lessons included. The current tables of he, hr, ro, sl and tr mix both registers: decide, and add the clean-up to the review. |"
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/fa.lproj/Localizable.strings",
+        "sha256": "6b9c9a306adf7ea9c0036f0c99a34ff76c2c930b689cef8578af335a9deca01f"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/fa.json",
+        "sha256": "5f718d1ec4327a14bd8ecc2d82d49cd7fce325c76c1e4a6c8fcde78840c30cad"
+      },
+      "current_anchors": {
+        "Request a song": "درخواست آهنگ",
+        "Share anonymous usage data": "هم‌رسانی داده‌های استفادهٔ ناشناس",
+        "Thanks. Your request is in.": "سپاس. درخواست شما ثبت شد.",
+        "Send": "ارسال",
+        "Instrument": "ساز",
+        "Support": null,
+        "timbre_about_support": "پشتیبانی: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "fi",
+      "glossary": {
+        "path": "docs/l10n/glossary/fi.md",
+        "sha256": "76fdab0f321e3e187e6c89561ac9b7e50936633acc746462ec0a0bc759216ec1",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: Informal singular, warm direct second person; avoid gender assumptions. Short imperative actions; noun labels; third-person VoiceOver hints. Avoid reader-gender marking."
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/fi.lproj/Localizable.strings",
+        "sha256": "4931356c8c4ea5249edc5cb106fb2b6251c89d0623a3d6e57fcd5a076549efd6"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/fi.json",
+        "sha256": "9bfe1fea633676d6977fc0b6ac6f77c22815054e005c241028d639aa0165cd26"
+      },
+      "current_anchors": {
+        "Request a song": "Toivo kappaletta",
+        "Share anonymous usage data": "Jaa nimettömiä käyttötietoja",
+        "Thanks. Your request is in.": "Kiitos. Pyyntösi on vastaanotettu.",
+        "Send": "Lähetä",
+        "Instrument": "Soitin",
+        "Support": null,
+        "timbre_about_support": "Tuki: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "fr",
+      "glossary": {
+        "path": "docs/l10n/glossary/fr.md",
+        "sha256": "ef9613e242a7caf0d4c760ac4b82b863a23c19df96755d7c3e0fd6f39cf28a35",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Address: vous; warm, direct teacher voice. Gender-neutral phrasing for an unknown reader. Buttons match existing table; instructions use natural imperatives. VoiceOver hints describe outcomes in the third person."
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/fr.lproj/Localizable.strings",
+        "sha256": "6c80c2975b1f5922a77403f7723cd1e431f0cf8a6137a988cc580566eaa83c2a"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/fr.json",
+        "sha256": "ec09fa0229c4184c78d8a4bc42d72916d1442d9d02e569627376f94b8b8155f1"
+      },
+      "current_anchors": {
+        "Request a song": "Demander une chanson",
+        "Share anonymous usage data": "Partager des données d’usage anonymes",
+        "Thanks. Your request is in.": "Merci. Votre demande a été reçue.",
+        "Send": "Envoyer",
+        "Instrument": "Instrument",
+        "Support": null,
+        "timbre_about_support": "Support : %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "gu",
+      "glossary": {
+        "path": "docs/l10n/glossary/gu.md",
+        "sha256": "2f4c1e4525460ea3ef1bd0e77030aa20519ceca7c2b2f4de445ff9dfe121a809",
+        "actual_register_excerpts_read": [
+          {
+            "line": 15,
+            "text": "| Register (\"you\") | Polite તમે; warm direct voice |  |"
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/gu.lproj/Localizable.strings",
+        "sha256": "1cbfecc0e16abc1cd2abfdb8d38d7e44effddfdf9f1f6e12c18d777ef5174673"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/gu.json",
+        "sha256": "a987ddd4d9a3c87370a62e885f7a95553fd9cc42cdde111d938aad6fd7c67295"
+      },
+      "current_anchors": {
+        "Request a song": "ગીતની વિનંતી કરો",
+        "Share anonymous usage data": "ઓળખ વગરનો વપરાશ ડેટા શેર કરો",
+        "Thanks. Your request is in.": "આભાર. તમારી વિનંતી મળી ગઈ છે.",
+        "Send": "મોકલો",
+        "Instrument": "વાદ્ય",
+        "Support": null,
+        "timbre_about_support": "સપોર્ટ: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "he",
+      "glossary": {
+        "path": "docs/l10n/glossary/he.md",
+        "sha256": "f30d2e760e70df1b020c50d40b34d834cf5df439e195e94f24fae7225add6a1c",
+        "actual_register_excerpts_read": [
+          {
+            "line": 13,
+            "text": "| Register (you) | Plural address אתם with plural imperatives; gender-neutral labels; overrides mixed shipped singular/plural register |"
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/he.lproj/Localizable.strings",
+        "sha256": "58120e0daeb8057cfa74c961decab072e9dc05c14c1a6316adceeb883467f2d5"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/he.json",
+        "sha256": "a58883998c6b4a91f79df80d0ba56eec929cafcb853ccd83f2f242289c348392"
+      },
+      "current_anchors": {
+        "Request a song": "בקשת שיר",
+        "Share anonymous usage data": "שיתוף נתוני שימוש אנונימיים",
+        "Thanks. Your request is in.": "תודה. הבקשה שלכם התקבלה.",
+        "Send": "שליחה",
+        "Instrument": "כלי נגינה",
+        "Support": null,
+        "timbre_about_support": "תמיכה: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "hi",
+      "glossary": {
+        "path": "docs/l10n/glossary/hi.md",
+        "sha256": "4a4504d0fa1a62f7e0c0d4f6d302761bd2017c3726196de76d526b6c5a324989",
+        "actual_register_excerpts_read": [
+          {
+            "line": 15,
+            "text": "| Register (\"you\") | Polite आप; warm, direct teacher voice |  |"
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/hi.lproj/Localizable.strings",
+        "sha256": "264cbc62bbed554a7d35eb7b57092b856b9d8e5fac8b913df4fd131c88831713"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/hi.json",
+        "sha256": "2f2e9c873f484ba796cb9068fdceaec84d19c03a5d110e8d30a7d8de9a8a915c"
+      },
+      "current_anchors": {
+        "Request a song": "गाने का अनुरोध करें",
+        "Share anonymous usage data": "इस्तेमाल का अनाम डेटा साझा करें",
+        "Thanks. Your request is in.": "धन्यवाद। आपका अनुरोध मिल गया है।",
+        "Send": "भेजें",
+        "Instrument": "वाद्ययंत्र",
+        "Support": null,
+        "timbre_about_support": "सपोर्ट: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "hr",
+      "glossary": {
+        "path": "docs/l10n/glossary/hr.md",
+        "sha256": "776252de88cdf961d28b3915f9540fae82d3b2408b81a8f3e6b282c34d239bb8",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: informal singular ti. Existing mixed formal/informal instructions must follow this decision in new translations."
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/hr.lproj/Localizable.strings",
+        "sha256": "aed222d1d48c36b7159d3b7b0bb80e6588dce9b25c52c0f9f26eb9dbb0a264a2"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/hr.json",
+        "sha256": "56c52fbd53c61f066208bd48065738e48cc3c908a5ade22856226b6bcbfc3eb3"
+      },
+      "current_anchors": {
+        "Request a song": "Predloži pjesmu",
+        "Share anonymous usage data": "Dijeli anonimne podatke o uporabi",
+        "Thanks. Your request is in.": "Hvala. Tvoj je zahtjev zaprimljen.",
+        "Send": "Pošalji",
+        "Instrument": "Instrument",
+        "Support": null,
+        "timbre_about_support": "Podrška: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "hu",
+      "glossary": {
+        "path": "docs/l10n/glossary/hu.md",
+        "sha256": "195f00460cc43447d66b4d421cc2de925a7dabf460ffc7dc50912a667d42e27e",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: informal singular te. Existing mixed formal/informal instructions must follow this decision in new translations."
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/hu.lproj/Localizable.strings",
+        "sha256": "69fdeccdbdc78033e8f7e48864677159ebb85842f6942d392317edec97c483a0"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/hu.json",
+        "sha256": "62d55ca1b506dcd4fc92ecd03afb87b1bae6aff5490bd44abebb18523f738eac"
+      },
+      "current_anchors": {
+        "Request a song": "Kérj egy dalt",
+        "Share anonymous usage data": "Névtelen használati adatok megosztása",
+        "Thanks. Your request is in.": "Köszönjük. Megkaptuk a kérésedet.",
+        "Send": "Küldés",
+        "Instrument": "Hangszer",
+        "Support": null,
+        "timbre_about_support": "Támogatás: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "id",
+      "glossary": {
+        "path": "docs/l10n/glossary/id.md",
+        "sha256": "d123145da438f8c4e2a4b512e0b12e47650b21730bd9b24963e8d89ea109316a",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: Anda, polite and direct. Warm teacher voice, no embellishments."
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/id.lproj/Localizable.strings",
+        "sha256": "e32183771fc5fe89f5fb8be40dd91ea6d4be33a86f58b9dbfe9edccf6820846d"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/id.json",
+        "sha256": "a514097684dcc3688290786f62d2a24b746c23c452bd298681ba564574e730c8"
+      },
+      "current_anchors": {
+        "Request a song": "Minta lagu",
+        "Share anonymous usage data": "Bagikan data penggunaan anonim",
+        "Thanks. Your request is in.": "Terima kasih. Permintaan Anda sudah diterima.",
+        "Send": "Kirim",
+        "Instrument": "Instrumen",
+        "Support": null,
+        "timbre_about_support": "Dukungan: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "is",
+      "glossary": {
+        "path": "docs/l10n/glossary/is.md",
+        "sha256": "64ba936e9457a5b5e3d75b193e04c1ebce3713f781bb81c8387102eb42a21aac",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: Informal singular, warm direct second person; avoid gender assumptions. Short imperative actions; noun labels; third-person VoiceOver hints. Avoid reader-gender marking."
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/is.lproj/Localizable.strings",
+        "sha256": "b9a1e379b073027ddda0a12849437ffce80287525d4eb0451eda93c3052ecd73"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/is.json",
+        "sha256": "e932b73eb52ec285634ac68942b998f14bb307b51df95b91211d72329742007a"
+      },
+      "current_anchors": {
+        "Request a song": "Óska eftir lagi",
+        "Share anonymous usage data": "Deila nafnlausum notkunargögnum",
+        "Thanks. Your request is in.": "Takk. Beiðnin þín er móttekin.",
+        "Send": "Senda",
+        "Instrument": "Hljóðfæri",
+        "Support": null,
+        "timbre_about_support": "Stuðningur: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "it",
+      "glossary": {
+        "path": "docs/l10n/glossary/it.md",
+        "sha256": "5719ba42622ba1f38f72194006ccbbede8cda52cd9dec24adab912f72af9b9dd",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Address: tu; warm, direct teacher voice. Gender-neutral phrasing for an unknown reader. Buttons match existing table; instructions use natural imperatives. VoiceOver hints describe outcomes in the third person."
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/it.lproj/Localizable.strings",
+        "sha256": "2d8affa708315f0ffbdb79b47c53e7cd148c637dd23fcc9b522c0667ab3866e8"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/it.json",
+        "sha256": "6edf90dfea540811016fdbeb4e6e714a231075891c1fe1500506a7deb5638ba8"
+      },
+      "current_anchors": {
+        "Request a song": "Richiedi un brano",
+        "Share anonymous usage data": "Condividi dati d’uso anonimi",
+        "Thanks. Your request is in.": "Grazie. Abbiamo ricevuto la tua richiesta.",
+        "Send": "Invia",
+        "Instrument": "Strumento",
+        "Support": null,
+        "timbre_about_support": "Supporto: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "ja",
+      "glossary": {
+        "path": "docs/l10n/glossary/ja.md",
+        "sha256": "829e5fee8a475dc887cf05ba288432cef52e432fccd6bfba5ed008dfcad95570",
+        "actual_register_excerpts_read": [
+          {
+            "line": 7,
+            "text": "- Register: です/ます; omit needless pronouns. Warm teacher voice, no embellishments."
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/ja.lproj/Localizable.strings",
+        "sha256": "611aa953a8b6ec41f3bd9a91cdce303cb064bd77382cf95b942f63a854c0411a"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/ja.json",
+        "sha256": "5b4532354a8fab169ccba305e7211e40ea4ff61e4a6b943dcecc4b3d053983ab"
+      },
+      "current_anchors": {
+        "Request a song": "曲をリクエスト",
+        "Share anonymous usage data": "匿名の利用データを共有",
+        "Thanks. Your request is in.": "ありがとうございます。リクエストを受け付けました。",
+        "Send": "送信",
+        "Instrument": "楽器",
+        "Support": null,
+        "timbre_about_support": "サポート: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "kn",
+      "glossary": {
+        "path": "docs/l10n/glossary/kn.md",
+        "sha256": "07010a6e4582ab359ed98757fafd1d26de7eb596d40221e0c890ae0c65773e69",
+        "actual_register_excerpts_read": [
+          {
+            "line": 15,
+            "text": "| Register (\"you\") | Polite ನೀವು; warm and direct |  |"
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/kn.lproj/Localizable.strings",
+        "sha256": "c8f4064c26769ebf632ecb25c921b35fd07b2b6ef004142f671efb589f36e133"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/kn.json",
+        "sha256": "46213c35fd898cb22630a1d16a22e15dd12859be01afaf871a3cc28c49433958"
+      },
+      "current_anchors": {
+        "Request a song": "ಹಾಡು ವಿನಂತಿಸಿ",
+        "Share anonymous usage data": "ಅನಾಮಧೇಯ ಬಳಕೆ ಮಾಹಿತಿ ಹಂಚಿಕೊಳ್ಳಿ",
+        "Thanks. Your request is in.": "ಧನ್ಯವಾದಗಳು. ನಿಮ್ಮ ವಿನಂತಿ ತಲುಪಿದೆ.",
+        "Send": "ಕಳುಹಿಸಿ",
+        "Instrument": "ವಾದ್ಯ",
+        "Support": null,
+        "timbre_about_support": "ಬೆಂಬಲ: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "ko",
+      "glossary": {
+        "path": "docs/l10n/glossary/ko.md",
+        "sha256": "45f752759ccb3a436f1b59498e38b8b88a1421246ec39d3ae775cf2ca6d47091",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: 해요체; omit pronouns; rephrase unknown placeholder particles. Warm teacher voice, no embellishments."
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/ko.lproj/Localizable.strings",
+        "sha256": "41145537c3baa7839c81c1c1660e1ebb1f945fc6010713f925beb6d53a46941b"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/ko.json",
+        "sha256": "5acc345e6417c84da4405976204dac94d9553477b047ed3956b19037fcdd4919"
+      },
+      "current_anchors": {
+        "Request a song": "노래 요청",
+        "Share anonymous usage data": "익명 사용 데이터 공유",
+        "Thanks. Your request is in.": "감사해요. 요청이 접수됐어요.",
+        "Send": "보내기",
+        "Instrument": "악기",
+        "Support": null,
+        "timbre_about_support": "지원: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "lt",
+      "glossary": {
+        "path": "docs/l10n/glossary/lt.md",
+        "sha256": "60bb26916bba852fdf1a8fae79f5f64a5d9909920fa2442c3297dc898b399a52",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: Formal plural jūs; polite plural imperatives. Short imperative actions; noun labels; third-person VoiceOver hints. Avoid reader-gender marking."
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/lt.lproj/Localizable.strings",
+        "sha256": "59602c30ade92592b03e07b75140ae8c63a2b8846b3eb1b7653e79a492bb8b1a"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/lt.json",
+        "sha256": "3000d09e0dcc35f85ac16386e3e2104b46f94b2ae2dc17e2e26d2d101731df4f"
+      },
+      "current_anchors": {
+        "Request a song": "Pasiūlyti dainą",
+        "Share anonymous usage data": "Dalytis anoniminiais naudojimo duomenimis",
+        "Thanks. Your request is in.": "Ačiū. Jūsų prašymas gautas.",
+        "Send": "Siųsti",
+        "Instrument": "Instrumentas",
+        "Support": null,
+        "timbre_about_support": "Pagalba: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "lv",
+      "glossary": {
+        "path": "docs/l10n/glossary/lv.md",
+        "sha256": "c9c99da6117158edbd3312deee34e5171141192bdbe117dce1ffc5191a0af08e",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: Formal plural jūs; polite plural imperatives. Short imperative actions; noun labels; third-person VoiceOver hints. Avoid reader-gender marking."
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/lv.lproj/Localizable.strings",
+        "sha256": "99d171896cc7d108714f057f4b6e3fdbd391c56d22af953128e774158c1bea5e"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/lv.json",
+        "sha256": "c0ced42a8dc27f1cc23414bfe93b17f8afe49e5017d9b678da66b1b1d044bfa9"
+      },
+      "current_anchors": {
+        "Request a song": "Ieteikt dziesmu",
+        "Share anonymous usage data": "Kopīgot anonīmus lietojuma datus",
+        "Thanks. Your request is in.": "Paldies. Jūsu pieprasījums ir saņemts.",
+        "Send": "Sūtīt",
+        "Instrument": "Instruments",
+        "Support": null,
+        "timbre_about_support": "Atbalsts: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "ml",
+      "glossary": {
+        "path": "docs/l10n/glossary/ml.md",
+        "sha256": "5e28e255d3102c0700ea1116e9c1ebf8a476a673c39ecbc60ee20f14d2757d3c",
+        "actual_register_excerpts_read": [
+          {
+            "line": 15,
+            "text": "| Register (\"you\") | Neutral respectful voice; നിങ്ങൾ where needed |  |"
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/ml.lproj/Localizable.strings",
+        "sha256": "b94f6a800ba1857db1848887c810b776aee43b06fbce29bbd84afc07c34c531f"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/ml.json",
+        "sha256": "ac53a4112a9a6bda9324b3b64f3ccfc0b08856c34df8dafaa27005cfb297cef8"
+      },
+      "current_anchors": {
+        "Request a song": "പാട്ട് അഭ്യർത്ഥിക്കുക",
+        "Share anonymous usage data": "അജ്ഞാത ഉപയോഗ ഡാറ്റ പങ്കിടുക",
+        "Thanks. Your request is in.": "നന്ദി. നിങ്ങളുടെ അഭ്യർത്ഥന ലഭിച്ചു.",
+        "Send": "അയയ്ക്കുക",
+        "Instrument": "സംഗീതോപകരണം",
+        "Support": null,
+        "timbre_about_support": "പിന്തുണ: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "mr",
+      "glossary": {
+        "path": "docs/l10n/glossary/mr.md",
+        "sha256": "784bde2c17a6b33c33165d0a8ce3e93d4bd8708fad53b2763434556be8707e1c",
+        "actual_register_excerpts_read": [
+          {
+            "line": 15,
+            "text": "| Register (\"you\") | Polite तुम्ही; warm direct voice |  |"
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/mr.lproj/Localizable.strings",
+        "sha256": "9092421b9790c7ddafab7a2599a1ac5bec477222380b73d0c9eb573d848ff777"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/mr.json",
+        "sha256": "7c0c80fbe8e64d9ab037591460c372f986e2435e486bdac99e1be8697017d3dc"
+      },
+      "current_anchors": {
+        "Request a song": "गाण्याची विनंती करा",
+        "Share anonymous usage data": "निनावी वापराचा डेटा शेअर करा",
+        "Thanks. Your request is in.": "धन्यवाद. तुमची विनंती मिळाली आहे.",
+        "Send": "पाठवा",
+        "Instrument": "वाद्य",
+        "Support": null,
+        "timbre_about_support": "सपोर्ट: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "nl",
+      "glossary": {
+        "path": "docs/l10n/glossary/nl.md",
+        "sha256": "8a72824dd363b702a70ac63ae5519e2671fe9ce9ce32db07e3de2890f6d20a20",
+        "actual_register_excerpts_read": [
+          {
+            "line": 7,
+            "text": "- Address: je; warm, direct teacher voice. Gender-neutral phrasing for an unknown reader. Buttons match existing table; instructions use natural imperatives. VoiceOver hints describe outcomes in the third person."
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/nl.lproj/Localizable.strings",
+        "sha256": "16dccec3dbf824bdedaaa57878793e5b53a0320caa48b28dae159f6773641f73"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/nl.json",
+        "sha256": "66d208d91c1e57ebb766e21833a29564990bdb827afd3f394f04af8d4c64d9e8"
+      },
+      "current_anchors": {
+        "Request a song": "Vraag een nummer aan",
+        "Share anonymous usage data": "Anonieme gebruiksgegevens delen",
+        "Thanks. Your request is in.": "Bedankt. Je verzoek is ontvangen.",
+        "Send": "Versturen",
+        "Instrument": "Instrument",
+        "Support": null,
+        "timbre_about_support": "Ondersteuning: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "no",
+      "glossary": {
+        "path": "docs/l10n/glossary/no.md",
+        "sha256": "491954e86aa71b66eade3c1e9f29203f51ceec8b440b6ed4e502a9e2d4dcce52",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: Informal singular, warm direct second person; avoid gender assumptions. Short imperative actions; noun labels; third-person VoiceOver hints. Avoid reader-gender marking."
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/no.lproj/Localizable.strings",
+        "sha256": "dd7a53014b54fd509681c1c3fa81e7e81f313f4a6d1e699a8b003593633575c9"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/no.json",
+        "sha256": "227f8a58af8a7c6fb096641fc525fa53f841719e19bda23e53b5564dede71b31"
+      },
+      "current_anchors": {
+        "Request a song": "Ønsk en sang",
+        "Share anonymous usage data": "Del anonyme bruksdata",
+        "Thanks. Your request is in.": "Takk. Forespørselen er mottatt.",
+        "Send": "Send",
+        "Instrument": "Instrument",
+        "Support": null,
+        "timbre_about_support": "Støtte: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "pa",
+      "glossary": {
+        "path": "docs/l10n/glossary/pa.md",
+        "sha256": "a3670ba8a9e0f81cd842dd47c93cc19800013c64703348e9fb9e639e2e2c2a68",
+        "actual_register_excerpts_read": [
+          {
+            "line": 15,
+            "text": "| Register (\"you\") | Polite ਤੁਸੀਂ; warm direct voice |  |"
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/pa.lproj/Localizable.strings",
+        "sha256": "620721f0181055376443af8a6fc3530b016880f13b00d1820698d45097abf6dc"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/pa.json",
+        "sha256": "dd1997427dae71833920d876e430a0881155f962fdddc63863039cf5ae481fe1"
+      },
+      "current_anchors": {
+        "Request a song": "ਗੀਤ ਦੀ ਬੇਨਤੀ ਕਰੋ",
+        "Share anonymous usage data": "ਬੇਨਾਮ ਵਰਤੋਂ ਦਾ ਡਾਟਾ ਸਾਂਝਾ ਕਰੋ",
+        "Thanks. Your request is in.": "ਧੰਨਵਾਦ। ਤੁਹਾਡੀ ਬੇਨਤੀ ਮਿਲ ਗਈ ਹੈ।",
+        "Send": "ਭੇਜੋ",
+        "Instrument": "ਸਾਜ਼",
+        "Support": null,
+        "timbre_about_support": "ਸਹਾਇਤਾ: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "pl",
+      "glossary": {
+        "path": "docs/l10n/glossary/pl.md",
+        "sha256": "e61e810de3e6be65fbeabcc2296bdffee6480c5a05674af3c6ece1544d34d1df",
+        "actual_register_excerpts_read": [
+          {
+            "line": 11,
+            "text": "| Register (you) | Informal ty; singular imperatives; avoid gendered past forms |"
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/pl.lproj/Localizable.strings",
+        "sha256": "d817a441f2c485994123d549b8a866ff57109d95e69fa7006d369ac75f9ec418"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/pl.json",
+        "sha256": "0e4fcb5f60204dcf6a4702f06bf09b3223d96f2b096a0fd6b4997b4921e1fa1b"
+      },
+      "current_anchors": {
+        "Request a song": "Zaproponuj piosenkę",
+        "Share anonymous usage data": "Udostępniaj anonimowe dane użycia",
+        "Thanks. Your request is in.": "Dziękujemy. Prośba została przyjęta.",
+        "Send": "Wyślij",
+        "Instrument": "Instrument",
+        "Support": null,
+        "timbre_about_support": "Wsparcie: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "pt",
+      "glossary": {
+        "path": "docs/l10n/glossary/pt.md",
+        "sha256": "8287edb0a57195413d7436b26a4b207b9d4fb7ed5329f36dcf6ef5fa887f5356",
+        "actual_register_excerpts_read": [
+          {
+            "line": 7,
+            "text": "- Address: você; warm, direct teacher voice. Gender-neutral phrasing for an unknown reader. Buttons match existing table; instructions use natural imperatives. VoiceOver hints describe outcomes in the third person."
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/pt.lproj/Localizable.strings",
+        "sha256": "42c9b9defa395f58ed38bb1fc7c4318f19d1a78f89747523f2adc5b20e5e7b61"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/pt.json",
+        "sha256": "1f28239e73a54fb699a248d31ef33a765fbc19980f7fc785977078ca01c07a46"
+      },
+      "current_anchors": {
+        "Request a song": "Pedir uma música",
+        "Share anonymous usage data": "Compartilhar dados de uso anônimos",
+        "Thanks. Your request is in.": "Agradecemos. Recebemos seu pedido.",
+        "Send": "Enviar",
+        "Instrument": "Instrumento",
+        "Support": null,
+        "timbre_about_support": "Suporte: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "ro",
+      "glossary": {
+        "path": "docs/l10n/glossary/ro.md",
+        "sha256": "f271f34522b493d08ed37c7f7e78dfcf8818ffd8e1dbbc3e6c0283317f837e25",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: informal singular tu. Existing mixed formal/informal instructions must follow this decision in new translations."
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/ro.lproj/Localizable.strings",
+        "sha256": "62c7ad97e8b040e7d2267b0b708b2437f294103cdc9d867a9eb3c07f5371e859"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/ro.json",
+        "sha256": "af31b015daa69c386cff3ee7d4fd8f5febc945369683dad815b982e2affea3da"
+      },
+      "current_anchors": {
+        "Request a song": "Propune un cântec",
+        "Share anonymous usage data": "Partajează date anonime de utilizare",
+        "Thanks. Your request is in.": "Mulțumim. Cererea ta a fost primită.",
+        "Send": "Trimite",
+        "Instrument": "Instrument",
+        "Support": null,
+        "timbre_about_support": "Asistență: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "ru",
+      "glossary": {
+        "path": "docs/l10n/glossary/ru.md",
+        "sha256": "d8af19ab8c8dbc6ccb802e81d243cf278ba14e2b5db4f8d53b5605f8d928422d",
+        "actual_register_excerpts_read": [
+          {
+            "line": 13,
+            "text": "| Register (\"you\") | Formal/plural вы, lower case | Formal or informal, and the exact form: German du, French vous, Spanish tú, Russian вы, Japanese です/ます, Korean 해요체, Chinese 你 (not 您), Hindi आप … One register for the whole app, lessons included. The current tables of he, hr, ro, sl and tr mix both registers: decide, and add the clean-up to the review. |"
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/ru.lproj/Localizable.strings",
+        "sha256": "881305f067254182c1e63aef67fb09c95997b251ff8a819d6d22db89cdae50b5"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/ru.json",
+        "sha256": "6e51edfef2b6457fd498d85069983b4bee4a7db1ad2104510050728cce9fe95d"
+      },
+      "current_anchors": {
+        "Request a song": "Запросить песню",
+        "Share anonymous usage data": "Отправлять анонимные данные использования",
+        "Thanks. Your request is in.": "Спасибо. Ваш запрос принят.",
+        "Send": "Отправить",
+        "Instrument": "Инструмент",
+        "Support": null,
+        "timbre_about_support": "Поддержка: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "sk",
+      "glossary": {
+        "path": "docs/l10n/glossary/sk.md",
+        "sha256": "80cbbf6659d5ed1f3a99a384786b6913473e07b890c37e90da8d00d9cfb5a9ca",
+        "actual_register_excerpts_read": [
+          {
+            "line": 13,
+            "text": "| Register (you) | Formal/plural vy; plural imperatives |"
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/sk.lproj/Localizable.strings",
+        "sha256": "a0edb905011cfb133ffa204dd85c798acf124d04c0b308622a68bd731d7cf049"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/sk.json",
+        "sha256": "126ab01e32e77ec3c0014b4c814533727b31430c142253aa2c5bd73532e670a7"
+      },
+      "current_anchors": {
+        "Request a song": "Navrhnúť pieseň",
+        "Share anonymous usage data": "Zdieľať anonymné údaje o používaní",
+        "Thanks. Your request is in.": "Ďakujeme. Vašu požiadavku sme prijali.",
+        "Send": "Odoslať",
+        "Instrument": "Nástroj",
+        "Support": null,
+        "timbre_about_support": "Podpora: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "sl",
+      "glossary": {
+        "path": "docs/l10n/glossary/sl.md",
+        "sha256": "5ec7971e1465f6d97c9983f1f0f3f7a308740524fff578048246ebf1c1a7681c",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: informal singular ti. Existing mixed formal/informal instructions must follow this decision in new translations."
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/sl.lproj/Localizable.strings",
+        "sha256": "6f0293dc3925f4d7447b684221ecc49c34c8bb579f1c9e0fb1ae97ffaad705d5"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/sl.json",
+        "sha256": "4cb1bd9cdf67a9832d6d089107089efdd2f9b0abc9917b14f31d5c78cb519f54"
+      },
+      "current_anchors": {
+        "Request a song": "Predlagaj pesem",
+        "Share anonymous usage data": "Deli anonimne podatke o uporabi",
+        "Thanks. Your request is in.": "Hvala. Tvoja želja je sprejeta.",
+        "Send": "Pošlji",
+        "Instrument": "Inštrument",
+        "Support": null,
+        "timbre_about_support": "Podpora: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "sv",
+      "glossary": {
+        "path": "docs/l10n/glossary/sv.md",
+        "sha256": "b3a90fcb4402f35df562c8434d904c1059782a08d99abd8c7c6a201db122dd94",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: Informal singular, warm direct second person; avoid gender assumptions. Short imperative actions; noun labels; third-person VoiceOver hints. Avoid reader-gender marking."
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/sv.lproj/Localizable.strings",
+        "sha256": "48658609c499aae5776f4e11b9a19b0415ce799ede01b44cbe2838b3cbb6c472"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/sv.json",
+        "sha256": "2d9f52c0f199e03e0e81b54f939c455376c6e1b8538a4a84e007c01131d76159"
+      },
+      "current_anchors": {
+        "Request a song": "Önska en låt",
+        "Share anonymous usage data": "Dela anonyma användningsdata",
+        "Thanks. Your request is in.": "Tack. Din förfrågan är mottagen.",
+        "Send": "Skicka",
+        "Instrument": "Instrument",
+        "Support": null,
+        "timbre_about_support": "Support: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "sw",
+      "glossary": {
+        "path": "docs/l10n/glossary/sw.md",
+        "sha256": "f21b91af5d196839d71b657107699eaa96677d6878f07c86f068c1b1637e10af",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: Informal singular, warm direct second person; avoid gender assumptions. Short imperative actions; noun labels; third-person VoiceOver hints. Avoid reader-gender marking."
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/sw.lproj/Localizable.strings",
+        "sha256": "9081e322e1fe570e38cd1c2ced5a4ad1b8edd35f98d247a56df0fd85fb0042f7"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/sw.json",
+        "sha256": "6f39b58625ecee1097ab03d5b7e73f654b6571839b23de37d81e565be6a481d3"
+      },
+      "current_anchors": {
+        "Request a song": "Omba wimbo",
+        "Share anonymous usage data": "Shiriki data ya matumizi bila jina",
+        "Thanks. Your request is in.": "Asante. Ombi lako limepokelewa.",
+        "Send": "Tuma",
+        "Instrument": "Ala",
+        "Support": null,
+        "timbre_about_support": "Usaidizi: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "ta",
+      "glossary": {
+        "path": "docs/l10n/glossary/ta.md",
+        "sha256": "d8e1eedb45801ca16020c6d0b07ba5bd26d5e32479a077b11456d6e37a271e8c",
+        "actual_register_excerpts_read": [
+          {
+            "line": 15,
+            "text": "| Register (\"you\") | Polite நீங்கள்; warm direct voice |  |"
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/ta.lproj/Localizable.strings",
+        "sha256": "ea7b3705651a2e2fc15817a1489f1584ed9892a27f729f34ec1a7048daaee07c"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/ta.json",
+        "sha256": "89986a31cee145cc05e60d7bbf53ebe119be881ed4c34adf0eecf8f0b0578e22"
+      },
+      "current_anchors": {
+        "Request a song": "பாடல் கோரவும்",
+        "Share anonymous usage data": "பெயரற்ற பயன்பாட்டுத் தரவைப் பகிரவும்",
+        "Thanks. Your request is in.": "நன்றி. உங்கள் கோரிக்கை கிடைத்தது.",
+        "Send": "அனுப்பவும்",
+        "Instrument": "இசைக்கருவி",
+        "Support": null,
+        "timbre_about_support": "ஆதரவு: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "te",
+      "glossary": {
+        "path": "docs/l10n/glossary/te.md",
+        "sha256": "265cd30759d02c7c18c4b80fa23c84a7812964cc706a07ba86bc6141562ca022",
+        "actual_register_excerpts_read": [
+          {
+            "line": 15,
+            "text": "| Register (\"you\") | Polite మీరు; warm and direct. Existing informal Learn label retained only as exact control reference |  |"
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/te.lproj/Localizable.strings",
+        "sha256": "9644b7ff280b36a2e9dd1d4ef0f2a01f909a0b52eb911ab727db5cec0ba46f77"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/te.json",
+        "sha256": "50a1dbc5a859415c36e020df5617bc75c1f6a91e7de630127aad03dbe955ff57"
+      },
+      "current_anchors": {
+        "Request a song": "పాట అభ్యర్థించండి",
+        "Share anonymous usage data": "అనామక వినియోగ డేటా పంచుకోండి",
+        "Thanks. Your request is in.": "ధన్యవాదాలు. మీ అభ్యర్థన అందింది.",
+        "Send": "పంపండి",
+        "Instrument": "వాయిద్యం",
+        "Support": null,
+        "timbre_about_support": "సపోర్ట్: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "th",
+      "glossary": {
+        "path": "docs/l10n/glossary/th.md",
+        "sha256": "a66b0bba11548a37654e4c175bb20badfd045d7aac2881b80ff6187f815d3b3f",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: neutral, no gendered polite particles. Warm teacher voice, no embellishments."
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/th.lproj/Localizable.strings",
+        "sha256": "1495054c45e36cf7ace23320d3a98f4fb9d8305b549b02029fda39f003a3fdc0"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/th.json",
+        "sha256": "12968e6f2d8a7039e7588c386d398ca292492d320ca8c96847a7b462e50ebc5c"
+      },
+      "current_anchors": {
+        "Request a song": "ขอเพลง",
+        "Share anonymous usage data": "แชร์ข้อมูลการใช้งานแบบไม่ระบุตัวตน",
+        "Thanks. Your request is in.": "ขอบคุณ ได้รับคำขอของคุณแล้ว",
+        "Send": "ส่ง",
+        "Instrument": "เครื่องดนตรี",
+        "Support": null,
+        "timbre_about_support": "ฝ่ายสนับสนุน: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "tr",
+      "glossary": {
+        "path": "docs/l10n/glossary/tr.md",
+        "sha256": "8461c04e9a543a52b465cc7e4898b38efbfebbe3bd9a8d7d5bebfdeb7f4b45d4",
+        "actual_register_excerpts_read": [
+          {
+            "line": 6,
+            "text": "- Standard Turkish (Türkiye). Consistent informal singular sen address; short singular imperatives, matching pinned tab/control names. This explicitly resolves mixed formal/informal shipped anchors. No grammatical gender; avoid unnecessary pronouns."
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/tr.lproj/Localizable.strings",
+        "sha256": "9e7df3b2c6447945368a7803e9cd44febb7aa9db66d31d195935f8f3636577b2"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/tr.json",
+        "sha256": "69da7bf288d80a7c9ade7e4fcd816dbdc0c798736508a37fbc1bc0b0068897f4"
+      },
+      "current_anchors": {
+        "Request a song": "Şarkı iste",
+        "Share anonymous usage data": "Anonim kullanım verilerini paylaş",
+        "Thanks. Your request is in.": "Teşekkürler. İsteğin alındı.",
+        "Send": "Gönder",
+        "Instrument": "Enstrüman",
+        "Support": null,
+        "timbre_about_support": "Destek: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "uk",
+      "glossary": {
+        "path": "docs/l10n/glossary/uk.md",
+        "sha256": "814ade63c839bf3960f8e8316b107ddc9fbf6204f1d605155e7a39c578016b9d",
+        "actual_register_excerpts_read": [
+          {
+            "line": 13,
+            "text": "| Register (you) | Formal/plural ви, lower case |"
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/uk.lproj/Localizable.strings",
+        "sha256": "e9107dfa8b309c3254eb25efe3c4160a27a1e0e8f2ab6752d8b2e9c9d3de935e"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/uk.json",
+        "sha256": "d42d18b0bf78327f48a1b4ff497f139f823c4fdb31a9313a9ac3eb6041e5dd34"
+      },
+      "current_anchors": {
+        "Request a song": "Запросити пісню",
+        "Share anonymous usage data": "Надсилати анонімні дані використання",
+        "Thanks. Your request is in.": "Дякуємо. Ваш запит прийнято.",
+        "Send": "Надіслати",
+        "Instrument": "Інструмент",
+        "Support": null,
+        "timbre_about_support": "Підтримка: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "ur",
+      "glossary": {
+        "path": "docs/l10n/glossary/ur.md",
+        "sha256": "9564c4e24b875813d35fb28bc61519cf1f2e3b378af1438c9b3a5b09166df0e5",
+        "actual_register_excerpts_read": [
+          {
+            "line": 15,
+            "text": "| Register (\"you\") | Polite آپ; warm direct teacher voice |  |"
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/ur.lproj/Localizable.strings",
+        "sha256": "e09c55b218de0467318750381852233aea9a573b5a0572483f9c40d20bdad24d"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/ur.json",
+        "sha256": "82a5c70470a71a34885eadb0172a818bf2c7f582e6e39826d4a495ae298c1cfd"
+      },
+      "current_anchors": {
+        "Request a song": "گانے کی درخواست کریں",
+        "Share anonymous usage data": "گمنام استعمال کا ڈیٹا شیئر کریں",
+        "Thanks. Your request is in.": "شکریہ۔ آپ کی درخواست موصول ہو گئی ہے۔",
+        "Send": "بھیجیں",
+        "Instrument": "ساز",
+        "Support": null,
+        "timbre_about_support": "سپورٹ: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "vi",
+      "glossary": {
+        "path": "docs/l10n/glossary/vi.md",
+        "sha256": "db177f5cd147e69d2ae9f714edf14a68606bd78f96bffbec9f7a55595a91a150",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: bạn, warm neutral. Warm teacher voice, no embellishments."
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/vi.lproj/Localizable.strings",
+        "sha256": "565cf04898b3710c5053eca8242874e7811c8c3db1a9820af4e811009eb3e369"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/vi.json",
+        "sha256": "60d0993e324fa02d621d1af518076b7aa2b01499a722bc35810ac3cd2b21c3e0"
+      },
+      "current_anchors": {
+        "Request a song": "Yêu cầu bài hát",
+        "Share anonymous usage data": "Chia sẻ dữ liệu dùng ẩn danh",
+        "Thanks. Your request is in.": "Cảm ơn. Đã nhận yêu cầu của bạn.",
+        "Send": "Gửi",
+        "Instrument": "Nhạc cụ",
+        "Support": null,
+        "timbre_about_support": "Hỗ trợ: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "zh-CN",
+      "glossary": {
+        "path": "docs/l10n/glossary/zh-CN.md",
+        "sha256": "1ee83180b03e6514ad191c3ad53d8aa51fb03bd81fb6bd27234a6e9eec368706",
+        "actual_register_excerpts_read": [
+          {
+            "line": 7,
+            "text": "- Register: 你, never 您. Warm teacher voice, no embellishments."
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/zh-CN.lproj/Localizable.strings",
+        "sha256": "ef2004b25a884ac487f7a5fc83c5c849c1ad49eb9c01783048434f0cd97a7db7"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/zh-CN.json",
+        "sha256": "c7c8b9a13905c8c1ddc005ddc4d51903e0089199827bc95320f673d7bd11138d"
+      },
+      "current_anchors": {
+        "Request a song": "点歌",
+        "Share anonymous usage data": "共享匿名使用数据",
+        "Thanks. Your request is in.": "谢谢，已收到你的请求。",
+        "Send": "发送",
+        "Instrument": "乐器",
+        "Support": null,
+        "timbre_about_support": "支持：%1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    },
+    {
+      "locale": "zu",
+      "glossary": {
+        "path": "docs/l10n/glossary/zu.md",
+        "sha256": "446c8511c701d01b93b93306272496fac47b1666b6f9dc3ebe3b00e8c30b1122",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: Informal singular, warm direct second person; avoid gender assumptions. Short imperative actions; noun labels; third-person VoiceOver hints. Avoid reader-gender marking."
+          }
+        ]
+      },
+      "resource": {
+        "path": "ios/Timbre/Resources/zu.lproj/Localizable.strings",
+        "sha256": "af8183e6677551a2c83c9575a0aae03935351d0b4463d469a67ca9be272692cb"
+      },
+      "translation_map": {
+        "path": "tools/l10n/translations/zu.json",
+        "sha256": "509f27d72f32473bd5eb08872482b2254af38abe740b7e4702e77d07945b41ff"
+      },
+      "current_anchors": {
+        "Request a song": "Cela ingoma",
+        "Share anonymous usage data": "Yabelana ngedatha yokusetshenziswa engaziwa",
+        "Thanks. Your request is in.": "Siyabonga. Isicelo sakho sesifikile.",
+        "Send": "Thumela",
+        "Instrument": "Insimbi",
+        "Support": null,
+        "timbre_about_support": "Ukusekelwa: %1$@"
+      },
+      "support_anchor_note": "Plain Support absent at author read. Root replaced literal with existing timbre_about_support key during drafting; that legacy value contains an email placeholder. Parent was notified to verify formatted use. No sixth key is authored here."
+    }
+  ]
+}

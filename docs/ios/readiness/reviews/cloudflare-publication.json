@@ -1,0 +1,30 @@
+{
+  "verified_utc": "2026-10-26T23:10:53.113499+00:00",
+  "provider": "Cloudflare Workers Static Assets",
+  "worker": "timbre-support",
+  "base_url": "https://timbre-support.timbre.workers.dev",
+  "routes": [
+    {
+      "url": "https://timbre-support.timbre.workers.dev/privacy",
+      "status": 200,
+      "sha256": "ead2502bfd6fe8a662e5776e097dee8c12ff50c2e72052a555d5dc7f5d3937a7",
+      "content_type": "text/html",
+      "csp": "default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+      "nosniff": "nosniff"
+    },
+    {
+      "url": "https://timbre-support.timbre.workers.dev/support",
+      "status": 200,
+      "sha256": "cff806657a42a3238f9d878f800ff5057a02f211acbec93018dd3766721c1dba",
+      "content_type": "text/html",
+      "csp": "default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+      "nosniff": "nosniff"
+    }
+  ],
+  "public_contact_email": "shahroodazerov@gmail.com",
+  "publisher_name": "Shahrad Azeri Sharghi",
+  "no_repository_references": true,
+  "verification_user_agent": "Mozilla/5.0",
+  "hosting_observation": "Cloudflare rejects the default Python-urllib user agent with1010; browser and curl requests return200. No security bypass or account setting change made.",
+  "scope": "Actual public HTTPS responses equal built HTML; site deployment only; app readiness pending"
+}

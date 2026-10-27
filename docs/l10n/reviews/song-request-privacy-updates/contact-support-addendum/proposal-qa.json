@@ -1,0 +1,492 @@
+{
+  "role": "author QA only",
+  "pair_count": 48,
+  "error_count": 0,
+  "warning_count": 15,
+  "helper": "Current gpt_l10n.problems + report.check",
+  "helper_sha256": "b74452e7165145c82449bf7fc70a0a114282a69ed875a18a7ba46e7ff0c70731",
+  "checks": [
+    "Same48 non-English app locales as original five-key artifact",
+    "Exact source/key/sourcehash; no English-copy targets",
+    "No placeholders or added contact address/phone/URL; NFC; no edge/double spaces",
+    "No bidi controls; one justified Telugu ZWNJ script joiner",
+    "Formatting/newline/numeric helper contracts",
+    "No live map/resource or original five-key artifact modified"
+  ],
+  "results": [
+    {
+      "locale": "ar",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 22,
+      "measured_width": 16
+    },
+    {
+      "locale": "bg",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [
+        {
+          "warning": "longer than max_length 22 (25)",
+          "author_disposition": "retain-for-independent-review",
+          "reason": "Natural localized contact-support action is longer than the heuristic English-derived soft target. No meaning removed to game length; native alert-button layout remains unverified."
+        }
+      ],
+      "soft_max_length": 22,
+      "measured_width": 25
+    },
+    {
+      "locale": "bn",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [
+        {
+          "warning": "longer than max_length 22 (28)",
+          "author_disposition": "retain-for-independent-review",
+          "reason": "Natural localized contact-support action is longer than the heuristic English-derived soft target. No meaning removed to game length; native alert-button layout remains unverified."
+        }
+      ],
+      "soft_max_length": 22,
+      "measured_width": 28
+    },
+    {
+      "locale": "ca",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 22,
+      "measured_width": 22
+    },
+    {
+      "locale": "cs",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 22,
+      "measured_width": 19
+    },
+    {
+      "locale": "da",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 22,
+      "measured_width": 15
+    },
+    {
+      "locale": "de",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 22,
+      "measured_width": 20
+    },
+    {
+      "locale": "el",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [
+        {
+          "warning": "longer than max_length 22 (29)",
+          "author_disposition": "retain-for-independent-review",
+          "reason": "Natural localized contact-support action is longer than the heuristic English-derived soft target. No meaning removed to game length; native alert-button layout remains unverified."
+        }
+      ],
+      "soft_max_length": 22,
+      "measured_width": 29
+    },
+    {
+      "locale": "es",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 22,
+      "measured_width": 21
+    },
+    {
+      "locale": "et",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 22,
+      "measured_width": 19
+    },
+    {
+      "locale": "fa",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 22,
+      "measured_width": 18
+    },
+    {
+      "locale": "fi",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 22,
+      "measured_width": 19
+    },
+    {
+      "locale": "fr",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 22,
+      "measured_width": 20
+    },
+    {
+      "locale": "gu",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 22,
+      "measured_width": 19
+    },
+    {
+      "locale": "he",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 22,
+      "measured_width": 12
+    },
+    {
+      "locale": "hi",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 22,
+      "measured_width": 21
+    },
+    {
+      "locale": "hr",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 22,
+      "measured_width": 17
+    },
+    {
+      "locale": "hu",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [
+        {
+          "warning": "longer than max_length 22 (32)",
+          "author_disposition": "retain-for-independent-review",
+          "reason": "Natural localized contact-support action is longer than the heuristic English-derived soft target. No meaning removed to game length; native alert-button layout remains unverified."
+        }
+      ],
+      "soft_max_length": 22,
+      "measured_width": 32
+    },
+    {
+      "locale": "id",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 22,
+      "measured_width": 16
+    },
+    {
+      "locale": "is",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [
+        {
+          "warning": "longer than max_length 22 (28)",
+          "author_disposition": "retain-for-independent-review",
+          "reason": "Natural localized contact-support action is longer than the heuristic English-derived soft target. No meaning removed to game length; native alert-button layout remains unverified."
+        }
+      ],
+      "soft_max_length": 22,
+      "measured_width": 28
+    },
+    {
+      "locale": "it",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 22,
+      "measured_width": 20
+    },
+    {
+      "locale": "ja",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 22,
+      "measured_width": 22
+    },
+    {
+      "locale": "kn",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [
+        {
+          "warning": "longer than max_length 22 (26)",
+          "author_disposition": "retain-for-independent-review",
+          "reason": "Natural localized contact-support action is longer than the heuristic English-derived soft target. No meaning removed to game length; native alert-button layout remains unverified."
+        }
+      ],
+      "soft_max_length": 22,
+      "measured_width": 26
+    },
+    {
+      "locale": "ko",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 22,
+      "measured_width": 17
+    },
+    {
+      "locale": "lt",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 22,
+      "measured_width": 21
+    },
+    {
+      "locale": "lv",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [
+        {
+          "warning": "longer than max_length 22 (31)",
+          "author_disposition": "retain-for-independent-review",
+          "reason": "Natural localized contact-support action is longer than the heuristic English-derived soft target. No meaning removed to game length; native alert-button layout remains unverified."
+        }
+      ],
+      "soft_max_length": 22,
+      "measured_width": 31
+    },
+    {
+      "locale": "ml",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [
+        {
+          "warning": "longer than max_length 22 (32)",
+          "author_disposition": "retain-for-independent-review",
+          "reason": "Natural localized contact-support action is longer than the heuristic English-derived soft target. No meaning removed to game length; native alert-button layout remains unverified."
+        }
+      ],
+      "soft_max_length": 22,
+      "measured_width": 32
+    },
+    {
+      "locale": "mr",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 22,
+      "measured_width": 20
+    },
+    {
+      "locale": "nl",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [
+        {
+          "warning": "longer than max_length 22 (33)",
+          "author_disposition": "retain-for-independent-review",
+          "reason": "Natural localized contact-support action is longer than the heuristic English-derived soft target. No meaning removed to game length; native alert-button layout remains unverified."
+        }
+      ],
+      "soft_max_length": 22,
+      "measured_width": 33
+    },
+    {
+      "locale": "no",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 22,
+      "measured_width": 20
+    },
+    {
+      "locale": "pa",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 22,
+      "measured_width": 20
+    },
+    {
+      "locale": "pl",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [
+        {
+          "warning": "longer than max_length 22 (27)",
+          "author_disposition": "retain-for-independent-review",
+          "reason": "Natural localized contact-support action is longer than the heuristic English-derived soft target. No meaning removed to game length; native alert-button layout remains unverified."
+        }
+      ],
+      "soft_max_length": 22,
+      "measured_width": 27
+    },
+    {
+      "locale": "pt",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [
+        {
+          "warning": "longer than max_length 22 (31)",
+          "author_disposition": "retain-for-independent-review",
+          "reason": "Natural localized contact-support action is longer than the heuristic English-derived soft target. No meaning removed to game length; native alert-button layout remains unverified."
+        }
+      ],
+      "soft_max_length": 22,
+      "measured_width": 31
+    },
+    {
+      "locale": "ro",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 22,
+      "measured_width": 21
+    },
+    {
+      "locale": "ru",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 22,
+      "measured_width": 22
+    },
+    {
+      "locale": "sk",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 22,
+      "measured_width": 19
+    },
+    {
+      "locale": "sl",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 22,
+      "measured_width": 19
+    },
+    {
+      "locale": "sv",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 22,
+      "measured_width": 16
+    },
+    {
+      "locale": "sw",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [
+        {
+          "warning": "longer than max_length 22 (31)",
+          "author_disposition": "retain-for-independent-review",
+          "reason": "Natural localized contact-support action is longer than the heuristic English-derived soft target. No meaning removed to game length; native alert-button layout remains unverified."
+        }
+      ],
+      "soft_max_length": 22,
+      "measured_width": 31
+    },
+    {
+      "locale": "ta",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [
+        {
+          "warning": "longer than max_length 22 (24)",
+          "author_disposition": "retain-for-independent-review",
+          "reason": "Natural localized contact-support action is longer than the heuristic English-derived soft target. No meaning removed to game length; native alert-button layout remains unverified."
+        }
+      ],
+      "soft_max_length": 22,
+      "measured_width": 24
+    },
+    {
+      "locale": "te",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [
+        {
+          "warning": "longer than max_length 22 (23)",
+          "author_disposition": "retain-for-independent-review",
+          "reason": "Natural localized contact-support action is longer than the heuristic English-derived soft target. No meaning removed to game length; native alert-button layout remains unverified."
+        }
+      ],
+      "soft_max_length": 22,
+      "measured_width": 23
+    },
+    {
+      "locale": "th",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 22,
+      "measured_width": 18
+    },
+    {
+      "locale": "tr",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 22,
+      "measured_width": 22
+    },
+    {
+      "locale": "uk",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [
+        {
+          "warning": "longer than max_length 22 (23)",
+          "author_disposition": "retain-for-independent-review",
+          "reason": "Natural localized contact-support action is longer than the heuristic English-derived soft target. No meaning removed to game length; native alert-button layout remains unverified."
+        }
+      ],
+      "soft_max_length": 22,
+      "measured_width": 23
+    },
+    {
+      "locale": "ur",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 22,
+      "measured_width": 19
+    },
+    {
+      "locale": "vi",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 22,
+      "measured_width": 14
+    },
+    {
+      "locale": "zh-CN",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 22,
+      "measured_width": 8
+    },
+    {
+      "locale": "zu",
+      "key": "Contact support",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 22,
+      "measured_width": 20
+    }
+  ]
+}

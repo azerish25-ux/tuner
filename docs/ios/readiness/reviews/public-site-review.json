@@ -1,0 +1,80 @@
+{
+  "review": "Independent public-site and image-provenance source review before publication",
+  "date": "2026-10-26",
+  "baseline_commit": "0c679011095f45eae2e28cd8593b23386a013b7d",
+  "decision": "changes_requested_before_publication",
+  "scope": "Reviewed current on-disk policy/support Markdown, generator, generated HTML, static headers/config, event-only Analytics.log change, provenance document and application receipt. No product/source changes, deployment, account changes or commits performed by this reviewer.",
+  "findings": [
+    {
+      "id": "SITE-01",
+      "severity": "publication_blocker_until_gate_or_wording_fix",
+      "source": ["docs/ios/PRIVACY.md:50", "ios/Timbre/Services/GameCenter.swift:138"],
+      "fact": "Policy says Game Center is available only in builds explicitly enabling it. Current enabled is !TestSupport.isAutomated; there is no release gate yet.",
+      "minimal_fix": "Land and verify the intended default-off gate before publishing this sentence, or describe existing behavior accurately. Do not call the gate fixed based on policy text alone."
+    },
+    {
+      "id": "SITE-02",
+      "severity": "publication_blocker_content_accuracy",
+      "source": ["docs/ios/PRIVACY.md:15", "docs/ios/PRIVACY.md:35", "docs/site/SUPPORT.md:27", "ios/Timbre/YourSongs/AppleMusicListen.swift:181", "ios/Timbre/YourSongs/AppleMusicListen.swift:333"],
+      "fact": "The broad 'chart contents are not uploaded' guarantee conflicts with the optional picker automatically using chartTitle plus chartArtist as its initial search term. Full chart text/audio are not sent through this path, but chart metadata is transmitted to Apple after the user opens the picker.",
+      "minimal_fix": "Say imported audio and full chart text are kept local; choosing the Apple Music finder can send the chart title/artist as a search query, along with any search terms the user enters. Qualify both policy and support storage guarantees consistently."
+    },
+    {
+      "id": "SITE-03",
+      "severity": "publication_blocker_content_accuracy",
+      "source": ["docs/ios/PRIVACY.md:43", "ios/Timbre/Onboarding/ReminderAskStep.swift:111"],
+      "fact": "Notifications are locally scheduled, but 'nothing about them is sent anywhere' is false: reminder_ask analytics carries the result and chosen minutes.",
+      "minimal_fix": "State that reminder delivery is local and does not use a developer push-notification server; when analytics is enabled, a reminder setup event can include the choice/time. Alternatively remove the telemetry property/event in a separately reviewed product change."
+    },
+    {
+      "id": "SITE-04",
+      "severity": "publication_blocker_content_accuracy",
+      "source": ["docs/ios/PRIVACY.md:31", "ios/Timbre/Services/StoreRating.swift:54"],
+      "fact": "'At most once a day' overstates the fetch throttle. fetchedAt is set only after a successful status/parse; failures can be retried on later refresh calls. A different storefront bypasses the interval too.",
+      "minimal_fix": "Use 'normally refreshed once a day for a storefront; failed requests or a storefront change may cause another request' or simply omit the claimed strict frequency."
+    },
+    {
+      "id": "SITE-05",
+      "severity": "publication_blocker_until_ads_optout_fix_or_disclosure",
+      "source": ["docs/ios/PRIVACY.md:25", "docs/site/SUPPORT.md:31", "ios/Timbre/Services/Analytics.swift:232", "ios/Timbre/Services/Analytics.swift:236"],
+      "fact": "Policy acknowledges already-started network operations may finish, which accurately limits in-flight telemetry behavior. However Apple Ads attribution can initiate additional retry HTTP requests after opt-out because sharing is checked only before detached work starts. That differs from merely finishing a request already started.",
+      "minimal_fix": "Apply the separately planned retry cancellation/recheck fix before publishing a broad stop-new-uploads guarantee. No additional promise to erase already-received events should be introduced."
+    },
+    {
+      "id": "PROV-01",
+      "severity": "provenance_documentation_correction",
+      "source": ["docs/content/INSTRUMENT-IMAGE-PROVENANCE.md:3", "docs/ios/readiness/reviews/image-provenance-application.json", "ios/Sources/TimbreCore/Resources/photos.json"],
+      "fact": "Receipt preserves the owner's supplied statement and exactly identifies all 68 previously provided entries. Before and after manifest hashes match raw bytes. But the per-image sha256 fields are inherited manifest source hashes: 66 of 68 bundled PNGs have different actual byte hashes; all 68 bundled files exist. 'Existing image hashes bind this record to the supplied files' must not be read as verification of all shipped image bytes.",
+      "minimal_fix": "Label existing sha256 as original manifest/source hashes and record separate computed bundled-file hashes/paths if binding the receipt to shipped images. Preserve source hashes rather than replacing them with derivative hashes. State source-original bytes were not independently matched in this review. Asset IDs plus the owner attestation remain useful provenance evidence; no fabrication of generation service or third-party license is needed."
+    },
+    {
+      "id": "SITE-06",
+      "severity": "nonblocking_specificity_improvement",
+      "source": ["docs/ios/PRIVACY.md:23", "ios/Timbre/Services/Analytics.swift:254"],
+      "fact": "The revised no-precise-location statement is technically compatible with the current countryOrRegion forwarding. The enumerated attribution fields still omit country/region.",
+      "minimal_fix": "Explicitly name campaign country/region if it remains transmitted, or remove that property as planned. Avoid saying the property has already been removed."
+    },
+    {
+      "id": "SITE-07",
+      "severity": "nonblocking_precision",
+      "source": ["docs/ios/PRIVACY.md:15", "ios/Sources/TimbreCore/YourSongs/UserSongLibrary.swift:149", "docs/site/README.md"],
+      "fact": "Imported audio copies are deliberately marked excluded from backup, while the policy gives only a general device-backups sentence. The site README still describes manual GitHub Pages publishing and does not explain the new Cloudflare static build/deploy workflow.",
+      "minimal_fix": "Mention imported audio copies are excluded from device/iCloud backup and keep originals. Update publication instructions to the actual static build, deploy and verification flow; document GitHub Pages as legacy if retained."
+    }
+  ],
+  "passed_checks": {
+    "markdown_html_parity": "Both public/privacy.html and public/support.html main elements exactly contain current marked.parse output from their respective source Markdown. Both legacy docs/site HTML files byte-match public outputs.",
+    "static_content": "No script tag, external asset request, form, analytics embed or user-input rendering found in generated pages. Markdown inputs are trusted repository files, so marked raw HTML support is not an exposed remote-input path here.",
+    "headers": "Generated _headers includes restrictive default-src none, inline styles only, base-uri none, form-action none, frame-ancestors none, nosniff, no-referrer and camera/microphone/geolocation disabled. Headers need live response verification after deployment; legacy HTML copies do not themselves carry these HTTP headers.",
+    "deployment_configuration": "wrangler.jsonc points only to public static assets with no Worker main script or paid bindings. No deployment was performed or claimed. Cloudflare hosting statement becomes true on that deployment; it should not be presented as the current old GitHub host's provider.",
+    "analytics_log": "Analytics.log now writes only the event name to public OS logging, eliminating property-value logging at that call site. Queued events still include properties for telemetry; the change is not an opt-out/cancellation fix.",
+    "microphone": "Microphone-specific local/in-memory/no-recording wording remains supported by reviewed audio paths. Distinguishing deliberate audio imports avoids an incorrect global no-stored-recordings guarantee.",
+    "provenance_scope": "68 receipt records exactly match the baseline entries having origin provided; asset/source/sha256 other than origin are unchanged for all manifest entries. Five other existing origin records remain outside the owner's 68-entry attestation.",
+    "manifest_hash_before": "c1f1e7ccf1d9c8088f220e253091a355809da0b8758caee97f9ac4854b4a3803",
+    "manifest_hash_after": "4238817036c00289078c0c9196f61b3bbee51b0e71d14351102975e8e0a67fda",
+    "bundled_image_hash_comparison": {"files_present": 68, "matching_inherited_source_hash": 2, "different_from_inherited_source_hash": 66}
+  },
+  "not_claimed_fixed": ["Analytics in-flight cancellation", "Apple Ads opt-out retry checks", "Missing privacy manifest data categories", "Game Center default-off gating", "Song-request truthfulness when analytics is unavailable", "Native build/runtime verification", "Apple account setup", "Cloudflare deployment/live HTTP header validation"],
+  "primary_references": ["https://developer.apple.com/app-store/app-privacy-details/", "https://telemetrydeck.com/docs/articles/apple-app-privacy/", "https://developer.apple.com/documentation/AdServices/AAAttribution/attributionToken%28%29", "https://www.cloudflare.com/privacypolicy/"],
+  "limits": "This is a source/content and static artifact review. Parent-supplied browser/axe results were not independently rerun. This report does not certify legal compliance, native assistive-technology behavior or live service configuration. Findings reflect files read during this review; recheck after other agents land pending fixes."
+}

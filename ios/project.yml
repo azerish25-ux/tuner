@@ -96,6 +96,8 @@ targets:
             CFBundleURLSchemes: [timbre]
         # Empty = analytics stay on the device. Set the TELEMETRYDECK_APP_ID repository variable to switch it on in delivery builds.
         TimbreTelemetryAppID: $(TIMBRE_TELEMETRY_APP_ID)
+        # Enable only after Game Center capability, records and release assets are configured.
+        TimbreGameCenterEnabled: $(TIMBRE_GAME_CENTER_ENABLED)
         # Addresses the build carries (read by `AppLinks`, Services/ShareDestination.swift). Each comes from the build
         # setting of the same name below; an empty value means "not set yet", and the app falls back or hides the link.
         # The privacy policy the paywall and Settings link to: move it to the owner's domain by changing
@@ -112,7 +114,8 @@ targets:
       base:
         TIMBRE_BUILD_CHANNEL: ""
         TIMBRE_TELEMETRY_APP_ID: ""
-        TIMBRE_PRIVACY_POLICY_URL: "https://azerish25-ux.github.io/tuner/privacy.html"
+        TIMBRE_GAME_CENTER_ENABLED: "NO"
+        TIMBRE_PRIVACY_POLICY_URL: "https://timbre-support.timbre.workers.dev/privacy"
         TIMBRE_APP_STORE_ID: ""
         TIMBRE_SHARE_URL: ""
         TIMBRE_REMOTE_CONFIG_URL: ""

@@ -20,6 +20,7 @@ import UIKit
 /// Pro, level or day, not on every store change.
 struct SongsView: View {
     @EnvironmentObject private var store: AppStore
+    @Environment(\.openURL) private var openURL
     /// Instrument filter: a catalogue instrument id, or "all".
     @AppStorage("songs.instrument") private var filter = "all"
     @AppStorage(BandArrangement.preferenceKey) private var bandOn = true
@@ -49,6 +50,8 @@ struct SongsView: View {
     @State private var requesting = false
     @State private var request = ""
     @State private var requested = false
+    @State private var sendingRequest = false
+    @State private var requestFailed = false
 
     /// A song, its course and unit, and its place among the course's songs (1-based).
     struct Song: Identifiable {
@@ -166,11 +169,22 @@ struct SongsView: View {
         .onChange(of: filter) { _, _ in stopPreview() }
         .onDisappear { stopPreview() }
         .alert("Request a song", isPresented: $requesting) {
-            TextField("Song and artist", text: $request)
-            Button("Send") { sendRequest() }
-            Button("Cancel", role: .cancel) { request = "" }
+            if requestAvailable && !requestFailed {
+                TextField("Song and artist", text: $request)
+                Button("Send") { sendRequest() }
+            }
+            Button("Contact support") { openURL(AppLinks.support) }
+            Button("Cancel", role: .cancel) { }
         } message: {
-            Text("Tell us a song you'd like to play. Requests decide what we add next.")
+            if requestFailed {
+                Text("Your request could not be sent. Try again later.")
+            } else if !store.settings.sharesUsage {
+                Text("Song requests are unavailable while usage sharing is off.")
+            } else if !Analytics.isSending {
+                Text("Song requests are unavailable in this build.")
+            } else {
+                Text("Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.")
+            }
         }
         .fullScreenCover(item: $playing) { item in
             LessonPlayer(course: item.course, lesson: item.lesson) { next in
@@ -324,28 +338,43 @@ struct SongsView: View {
     /// The foot of the page: a song that isn't here yet can be asked for.
     private var requestFooter: some View {
         VStack(spacing: 10) {
-            (requested ? Text("Thanks. Your request is in.") : Text("Missing a song you love?"))
+            (sendingRequest ? Text("Sending your request…") :
+                (requested ? Text("Thanks. Your request is in.") : Text("Missing a song you love?")))
                 .font(.footnote).foregroundStyle(Palette.inkSoft)
                 .contentTransition(.opacity)
-            Button { requesting = true } label: {
+            Button { requestFailed = false; requesting = true } label: {
                 Label("Request a song", systemImage: "text.bubble")
             }
             .buttonStyle(SecondaryButtonStyle())
             .accessibilityIdentifier("songs.request")
+            .disabled(sendingRequest)
         }
         .frame(maxWidth: .infinity).padding(.vertical, 24)
     }
 
-    /// Sends the request as an event (the title as typed, trimmed and cut at 80 characters, and the instrument
-    /// filter), so the songs asked for most can be counted.
+    private var requestAvailable: Bool { store.settings.sharesUsage && Analytics.isSending }
+
+    /// Send independently of the normal event batch; success means the ingest service acknowledged the request.
     private func sendRequest() {
         let title = String(request.trimmingCharacters(in: .whitespacesAndNewlines).prefix(80))
-        request = ""
-        guard !title.isEmpty else { return }
-        Analytics.log("song_request", ["title": title, "filter": filter])
-        Haptics.shared.done()
-        withAnimation(Motion.settle) { requested = true }
-        AccessibilityNotification.Announcement(String(localized: "Thanks. Your request is in.", bundle: TimbreLocalization.bundle)).post()
+        guard !title.isEmpty, !sendingRequest else { return }
+        guard requestAvailable else { requestFailed = true; requesting = true; return }
+        sendingRequest = true
+        requested = false
+        Analytics.requestSong(title: title, filter: filter) { accepted in
+            Task { @MainActor in
+                sendingRequest = false
+                guard accepted else {
+                    requestFailed = true
+                    requesting = true
+                    return
+                }
+                request = ""
+                Haptics.shared.done()
+                withAnimation(Motion.settle) { requested = true }
+                AccessibilityNotification.Announcement(String(localized: "Thanks. Your request is in.", bundle: TimbreLocalization.bundle)).post()
+            }
+        }
     }
 
     // MARK: Header and filters

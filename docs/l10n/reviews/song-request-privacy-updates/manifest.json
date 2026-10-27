@@ -1,0 +1,38 @@
+{
+  "author": "Codex /root/review_is",
+  "role": "author",
+  "base_commit": "0c679011095f45eae2e28cd8593b23386a013b7d",
+  "scope": "Five NEW app UI privacy/song-request messages across all 48 existing non-English app locales; 240 actual authored drafts. No live imports/resources/maps modified.",
+  "guide": {
+    "path": "docs/l10n/TRANSLATING-WITH-GPT.md",
+    "sha256": "ff0abd2fae5e3960d299b265487542a59681993eb4a19d58a20434dc56de7336",
+    "actual_sections_read": [
+      "2.1 surfaces and 2.2 locale scope",
+      "4.1–4.2 format and tokens",
+      "4.4–4.15 typography, layout, brands, RTL, scripts, register, privacy-sensitive fact preservation",
+      "Review and QA constraints previously read; no native/human claims"
+    ]
+  },
+  "files": [
+    {
+      "path": "docs/l10n/reviews/song-request-privacy-updates/proposals.json",
+      "sha256": "e7b548a79bdded210b452bdd5687175014d2a9afe36436aafdbe3ff137e036e3"
+    },
+    {
+      "path": "docs/l10n/reviews/song-request-privacy-updates/context-glossary-refs.json",
+      "sha256": "51846e05e6267cf423c5a5cd3a6a11e4b8dc239f39117b97981de621a2af5318"
+    },
+    {
+      "path": "docs/l10n/reviews/song-request-privacy-updates/proposal-qa.json",
+      "sha256": "de0d07a8f2fcc75955f419a178fff42078dd2ab286554e475c713517d79691e7"
+    }
+  ],
+  "independent_review": {
+    "status": "required-pending",
+    "coverage": 0,
+    "reviewed_by": null
+  },
+  "native_layout_verification": "not performed",
+  "human_native_certification": "not performed",
+  "support_note": "Source Support label reuse is outside five-key drafting scope. Parent notified that legacy timbre_about_support is formatted with %1$@ and requires correct formatting."
+}

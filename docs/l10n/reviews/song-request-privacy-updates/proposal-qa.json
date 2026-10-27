@@ -1,0 +1,2057 @@
+{
+  "author": "Codex /root/review_is",
+  "review_state": "author QA only; independent review not performed",
+  "pair_count": 240,
+  "error_count": 0,
+  "warning_count": 19,
+  "bidi_isolate_pair_count": 3,
+  "helper": "tools/l10n/gpt_l10n.py problems + tools/l10n/report.py check",
+  "helper_sha256": "b74452e7165145c82449bf7fc70a0a114282a69ed875a18a7ba46e7ff0c70731",
+  "report_checker_sha256": "3b8bd499ef8c8f1f3d55a64919e2d54b67e60d9c70730ccae29708e4b2512274",
+  "checks": [
+    "Exact 48 existing non-English app locales; no en/ms/or or added app locales",
+    "Exactly five exact frozen English key/source values per locale",
+    "No missing/empty/English-copy targets",
+    "Format arguments, named tokens, numeric and newline source contracts through current helper",
+    "TelemetryDeck spelling/count unchanged",
+    "Single source ellipsis retained; no added ellipsis",
+    "NFC, no double/edge spaces or forbidden legacy bidi controls",
+    "All three FSI/PDI brand spans balanced, individually justified; no blanket direction prefix"
+  ],
+  "results": [
+    {
+      "locale": "ar",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [
+        {
+          "warning": "invisible direction marks: U+2068, U+2069",
+          "author_disposition": "retain-for-independent-review",
+          "reason": "Explicitly bounded brand isolate explained in this proposal; balanced FSI/PDI, no override or blanket prefix."
+        }
+      ],
+      "soft_max_length": null,
+      "measured_width": 88
+    },
+    {
+      "locale": "ar",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 39
+    },
+    {
+      "locale": "ar",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 60
+    },
+    {
+      "locale": "ar",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 37
+    },
+    {
+      "locale": "ar",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 16
+    },
+    {
+      "locale": "bg",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 108
+    },
+    {
+      "locale": "bg",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 50
+    },
+    {
+      "locale": "bg",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 85
+    },
+    {
+      "locale": "bg",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 64
+    },
+    {
+      "locale": "bg",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 23
+    },
+    {
+      "locale": "bn",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 99
+    },
+    {
+      "locale": "bn",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 35
+    },
+    {
+      "locale": "bn",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 62
+    },
+    {
+      "locale": "bn",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 49
+    },
+    {
+      "locale": "bn",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 26
+    },
+    {
+      "locale": "ca",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 108
+    },
+    {
+      "locale": "ca",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [
+        {
+          "warning": "longer than max_length 66 (68)",
+          "author_disposition": "retain-for-independent-review",
+          "reason": "Author retains complete natural privacy/status meaning. This is a heuristic source-derived soft limit, not a fixed line cap; body text/alert or footer may wrap. Independent semantic and native layout review remain pending."
+        }
+      ],
+      "soft_max_length": 66,
+      "measured_width": 68
+    },
+    {
+      "locale": "ca",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [
+        {
+          "warning": "longer than max_length 85 (102)",
+          "author_disposition": "retain-for-independent-review",
+          "reason": "Author retains complete natural privacy/status meaning. This is a heuristic source-derived soft limit, not a fixed line cap; body text/alert or footer may wrap. Independent semantic and native layout review remain pending."
+        }
+      ],
+      "soft_max_length": 85,
+      "measured_width": 102
+    },
+    {
+      "locale": "ca",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 65
+    },
+    {
+      "locale": "ca",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 31
+    },
+    {
+      "locale": "cs",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 97
+    },
+    {
+      "locale": "cs",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 53
+    },
+    {
+      "locale": "cs",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 78
+    },
+    {
+      "locale": "cs",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 61
+    },
+    {
+      "locale": "cs",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 25
+    },
+    {
+      "locale": "da",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 99
+    },
+    {
+      "locale": "da",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 48
+    },
+    {
+      "locale": "da",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 71
+    },
+    {
+      "locale": "da",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 50
+    },
+    {
+      "locale": "da",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 21
+    },
+    {
+      "locale": "de",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 117
+    },
+    {
+      "locale": "de",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 55
+    },
+    {
+      "locale": "de",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [
+        {
+          "warning": "longer than max_length 85 (89)",
+          "author_disposition": "retain-for-independent-review",
+          "reason": "Author retains complete natural privacy/status meaning. This is a heuristic source-derived soft limit, not a fixed line cap; body text/alert or footer may wrap. Independent semantic and native layout review remain pending."
+        }
+      ],
+      "soft_max_length": 85,
+      "measured_width": 89
+    },
+    {
+      "locale": "de",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 70
+    },
+    {
+      "locale": "de",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 28
+    },
+    {
+      "locale": "el",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 124
+    },
+    {
+      "locale": "el",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 62
+    },
+    {
+      "locale": "el",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [
+        {
+          "warning": "longer than max_length 85 (101)",
+          "author_disposition": "retain-for-independent-review",
+          "reason": "Author retains complete natural privacy/status meaning. This is a heuristic source-derived soft limit, not a fixed line cap; body text/alert or footer may wrap. Independent semantic and native layout review remain pending."
+        }
+      ],
+      "soft_max_length": 85,
+      "measured_width": 101
+    },
+    {
+      "locale": "el",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 61
+    },
+    {
+      "locale": "el",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 27
+    },
+    {
+      "locale": "es",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 111
+    },
+    {
+      "locale": "es",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [
+        {
+          "warning": "longer than max_length 66 (70)",
+          "author_disposition": "retain-for-independent-review",
+          "reason": "Author retains complete natural privacy/status meaning. This is a heuristic source-derived soft limit, not a fixed line cap; body text/alert or footer may wrap. Independent semantic and native layout review remain pending."
+        }
+      ],
+      "soft_max_length": 66,
+      "measured_width": 70
+    },
+    {
+      "locale": "es",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [
+        {
+          "warning": "longer than max_length 85 (112)",
+          "author_disposition": "retain-for-independent-review",
+          "reason": "Author retains complete natural privacy/status meaning. This is a heuristic source-derived soft limit, not a fixed line cap; body text/alert or footer may wrap. Independent semantic and native layout review remain pending."
+        }
+      ],
+      "soft_max_length": 85,
+      "measured_width": 112
+    },
+    {
+      "locale": "es",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 66
+    },
+    {
+      "locale": "es",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 22
+    },
+    {
+      "locale": "et",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 93
+    },
+    {
+      "locale": "et",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 49
+    },
+    {
+      "locale": "et",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 69
+    },
+    {
+      "locale": "et",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 53
+    },
+    {
+      "locale": "et",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 22
+    },
+    {
+      "locale": "fa",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [
+        {
+          "warning": "invisible direction marks: U+2068, U+2069",
+          "author_disposition": "retain-for-independent-review",
+          "reason": "Explicitly bounded brand isolate explained in this proposal; balanced FSI/PDI, no override or blanket prefix."
+        }
+      ],
+      "soft_max_length": null,
+      "measured_width": 92
+    },
+    {
+      "locale": "fa",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 39
+    },
+    {
+      "locale": "fa",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 76
+    },
+    {
+      "locale": "fa",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 48
+    },
+    {
+      "locale": "fa",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 27
+    },
+    {
+      "locale": "fi",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 94
+    },
+    {
+      "locale": "fi",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 54
+    },
+    {
+      "locale": "fi",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 77
+    },
+    {
+      "locale": "fi",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 55
+    },
+    {
+      "locale": "fi",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 21
+    },
+    {
+      "locale": "fr",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 121
+    },
+    {
+      "locale": "fr",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [
+        {
+          "warning": "longer than max_length 66 (68)",
+          "author_disposition": "retain-for-independent-review",
+          "reason": "Author retains complete natural privacy/status meaning. This is a heuristic source-derived soft limit, not a fixed line cap; body text/alert or footer may wrap. Independent semantic and native layout review remain pending."
+        }
+      ],
+      "soft_max_length": 66,
+      "measured_width": 68
+    },
+    {
+      "locale": "fr",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [
+        {
+          "warning": "longer than max_length 85 (102)",
+          "author_disposition": "retain-for-independent-review",
+          "reason": "Author retains complete natural privacy/status meaning. This is a heuristic source-derived soft limit, not a fixed line cap; body text/alert or footer may wrap. Independent semantic and native layout review remain pending."
+        }
+      ],
+      "soft_max_length": 85,
+      "measured_width": 102
+    },
+    {
+      "locale": "fr",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 59
+    },
+    {
+      "locale": "fr",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 23
+    },
+    {
+      "locale": "gu",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 102
+    },
+    {
+      "locale": "gu",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 49
+    },
+    {
+      "locale": "gu",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 78
+    },
+    {
+      "locale": "gu",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 48
+    },
+    {
+      "locale": "gu",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 27
+    },
+    {
+      "locale": "he",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [
+        {
+          "warning": "invisible direction marks: U+2068, U+2069",
+          "author_disposition": "retain-for-independent-review",
+          "reason": "Explicitly bounded brand isolate explained in this proposal; balanced FSI/PDI, no override or blanket prefix."
+        }
+      ],
+      "soft_max_length": null,
+      "measured_width": 76
+    },
+    {
+      "locale": "he",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 41
+    },
+    {
+      "locale": "he",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 50
+    },
+    {
+      "locale": "he",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 52
+    },
+    {
+      "locale": "he",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 17
+    },
+    {
+      "locale": "hi",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 105
+    },
+    {
+      "locale": "hi",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 58
+    },
+    {
+      "locale": "hi",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 84
+    },
+    {
+      "locale": "hi",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 53
+    },
+    {
+      "locale": "hi",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 27
+    },
+    {
+      "locale": "hr",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 106
+    },
+    {
+      "locale": "hr",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 59
+    },
+    {
+      "locale": "hr",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 81
+    },
+    {
+      "locale": "hr",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 63
+    },
+    {
+      "locale": "hr",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 22
+    },
+    {
+      "locale": "hu",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 107
+    },
+    {
+      "locale": "hu",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 38
+    },
+    {
+      "locale": "hu",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 75
+    },
+    {
+      "locale": "hu",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 56
+    },
+    {
+      "locale": "hu",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 30
+    },
+    {
+      "locale": "id",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 97
+    },
+    {
+      "locale": "id",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 47
+    },
+    {
+      "locale": "id",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 74
+    },
+    {
+      "locale": "id",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 53
+    },
+    {
+      "locale": "id",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 25
+    },
+    {
+      "locale": "is",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 101
+    },
+    {
+      "locale": "is",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 50
+    },
+    {
+      "locale": "is",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 76
+    },
+    {
+      "locale": "is",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 54
+    },
+    {
+      "locale": "is",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [
+        {
+          "warning": "longer than max_length 31 (32)",
+          "author_disposition": "retain-for-independent-review",
+          "reason": "Author retains complete natural privacy/status meaning. This is a heuristic source-derived soft limit, not a fixed line cap; body text/alert or footer may wrap. Independent semantic and native layout review remain pending."
+        }
+      ],
+      "soft_max_length": 31,
+      "measured_width": 32
+    },
+    {
+      "locale": "it",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 116
+    },
+    {
+      "locale": "it",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 59
+    },
+    {
+      "locale": "it",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [
+        {
+          "warning": "longer than max_length 85 (95)",
+          "author_disposition": "retain-for-independent-review",
+          "reason": "Author retains complete natural privacy/status meaning. This is a heuristic source-derived soft limit, not a fixed line cap; body text/alert or footer may wrap. Independent semantic and native layout review remain pending."
+        }
+      ],
+      "soft_max_length": 85,
+      "measured_width": 95
+    },
+    {
+      "locale": "it",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 66
+    },
+    {
+      "locale": "it",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 26
+    },
+    {
+      "locale": "ja",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 89
+    },
+    {
+      "locale": "ja",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 46
+    },
+    {
+      "locale": "ja",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 62
+    },
+    {
+      "locale": "ja",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [
+        {
+          "warning": "longer than max_length 72 (74)",
+          "author_disposition": "retain-for-independent-review",
+          "reason": "Author retains complete natural privacy/status meaning. This is a heuristic source-derived soft limit, not a fixed line cap; body text/alert or footer may wrap. Independent semantic and native layout review remain pending."
+        }
+      ],
+      "soft_max_length": 72,
+      "measured_width": 74
+    },
+    {
+      "locale": "ja",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 19
+    },
+    {
+      "locale": "kn",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 112
+    },
+    {
+      "locale": "kn",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 41
+    },
+    {
+      "locale": "kn",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 70
+    },
+    {
+      "locale": "kn",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 64
+    },
+    {
+      "locale": "kn",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [
+        {
+          "warning": "longer than max_length 31 (35)",
+          "author_disposition": "retain-for-independent-review",
+          "reason": "Author retains complete natural privacy/status meaning. This is a heuristic source-derived soft limit, not a fixed line cap; body text/alert or footer may wrap. Independent semantic and native layout review remain pending."
+        }
+      ],
+      "soft_max_length": 31,
+      "measured_width": 35
+    },
+    {
+      "locale": "ko",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 78
+    },
+    {
+      "locale": "ko",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 38
+    },
+    {
+      "locale": "ko",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 62
+    },
+    {
+      "locale": "ko",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 50
+    },
+    {
+      "locale": "ko",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 23
+    },
+    {
+      "locale": "lt",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 111
+    },
+    {
+      "locale": "lt",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 42
+    },
+    {
+      "locale": "lt",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 74
+    },
+    {
+      "locale": "lt",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 59
+    },
+    {
+      "locale": "lt",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 25
+    },
+    {
+      "locale": "lv",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 124
+    },
+    {
+      "locale": "lv",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 48
+    },
+    {
+      "locale": "lv",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 79
+    },
+    {
+      "locale": "lv",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 60
+    },
+    {
+      "locale": "lv",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 30
+    },
+    {
+      "locale": "ml",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 123
+    },
+    {
+      "locale": "ml",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 52
+    },
+    {
+      "locale": "ml",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 80
+    },
+    {
+      "locale": "ml",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 65
+    },
+    {
+      "locale": "ml",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [
+        {
+          "warning": "longer than max_length 31 (33)",
+          "author_disposition": "retain-for-independent-review",
+          "reason": "Author retains complete natural privacy/status meaning. This is a heuristic source-derived soft limit, not a fixed line cap; body text/alert or footer may wrap. Independent semantic and native layout review remain pending."
+        }
+      ],
+      "soft_max_length": 31,
+      "measured_width": 33
+    },
+    {
+      "locale": "mr",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 100
+    },
+    {
+      "locale": "mr",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 58
+    },
+    {
+      "locale": "mr",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 78
+    },
+    {
+      "locale": "mr",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 54
+    },
+    {
+      "locale": "mr",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 28
+    },
+    {
+      "locale": "nl",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 107
+    },
+    {
+      "locale": "nl",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 44
+    },
+    {
+      "locale": "nl",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 78
+    },
+    {
+      "locale": "nl",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 64
+    },
+    {
+      "locale": "nl",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 27
+    },
+    {
+      "locale": "no",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 97
+    },
+    {
+      "locale": "no",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 51
+    },
+    {
+      "locale": "no",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 70
+    },
+    {
+      "locale": "no",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 55
+    },
+    {
+      "locale": "no",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 25
+    },
+    {
+      "locale": "pa",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 99
+    },
+    {
+      "locale": "pa",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 53
+    },
+    {
+      "locale": "pa",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 78
+    },
+    {
+      "locale": "pa",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 60
+    },
+    {
+      "locale": "pa",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 28
+    },
+    {
+      "locale": "pl",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 94
+    },
+    {
+      "locale": "pl",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 50
+    },
+    {
+      "locale": "pl",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 81
+    },
+    {
+      "locale": "pl",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 61
+    },
+    {
+      "locale": "pl",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 24
+    },
+    {
+      "locale": "pt",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 108
+    },
+    {
+      "locale": "pt",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 61
+    },
+    {
+      "locale": "pt",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [
+        {
+          "warning": "longer than max_length 85 (107)",
+          "author_disposition": "retain-for-independent-review",
+          "reason": "Author retains complete natural privacy/status meaning. This is a heuristic source-derived soft limit, not a fixed line cap; body text/alert or footer may wrap. Independent semantic and native layout review remain pending."
+        }
+      ],
+      "soft_max_length": 85,
+      "measured_width": 107
+    },
+    {
+      "locale": "pt",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 63
+    },
+    {
+      "locale": "pt",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 20
+    },
+    {
+      "locale": "ro",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 109
+    },
+    {
+      "locale": "ro",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 61
+    },
+    {
+      "locale": "ro",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [
+        {
+          "warning": "longer than max_length 85 (98)",
+          "author_disposition": "retain-for-independent-review",
+          "reason": "Author retains complete natural privacy/status meaning. This is a heuristic source-derived soft limit, not a fixed line cap; body text/alert or footer may wrap. Independent semantic and native layout review remain pending."
+        }
+      ],
+      "soft_max_length": 85,
+      "measured_width": 98
+    },
+    {
+      "locale": "ro",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 62
+    },
+    {
+      "locale": "ro",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 22
+    },
+    {
+      "locale": "ru",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 101
+    },
+    {
+      "locale": "ru",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 39
+    },
+    {
+      "locale": "ru",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 71
+    },
+    {
+      "locale": "ru",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 57
+    },
+    {
+      "locale": "ru",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 22
+    },
+    {
+      "locale": "sk",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 101
+    },
+    {
+      "locale": "sk",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 55
+    },
+    {
+      "locale": "sk",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 82
+    },
+    {
+      "locale": "sk",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 62
+    },
+    {
+      "locale": "sk",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 28
+    },
+    {
+      "locale": "sl",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 106
+    },
+    {
+      "locale": "sl",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 58
+    },
+    {
+      "locale": "sl",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 82
+    },
+    {
+      "locale": "sl",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 60
+    },
+    {
+      "locale": "sl",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 25
+    },
+    {
+      "locale": "sv",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 95
+    },
+    {
+      "locale": "sv",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 53
+    },
+    {
+      "locale": "sv",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 76
+    },
+    {
+      "locale": "sv",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 53
+    },
+    {
+      "locale": "sv",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 22
+    },
+    {
+      "locale": "sw",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 94
+    },
+    {
+      "locale": "sw",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 48
+    },
+    {
+      "locale": "sw",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 74
+    },
+    {
+      "locale": "sw",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 50
+    },
+    {
+      "locale": "sw",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 20
+    },
+    {
+      "locale": "ta",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 121
+    },
+    {
+      "locale": "ta",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 45
+    },
+    {
+      "locale": "ta",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 84
+    },
+    {
+      "locale": "ta",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 68
+    },
+    {
+      "locale": "ta",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [
+        {
+          "warning": "longer than max_length 31 (33)",
+          "author_disposition": "retain-for-independent-review",
+          "reason": "Author retains complete natural privacy/status meaning. This is a heuristic source-derived soft limit, not a fixed line cap; body text/alert or footer may wrap. Independent semantic and native layout review remain pending."
+        }
+      ],
+      "soft_max_length": 31,
+      "measured_width": 33
+    },
+    {
+      "locale": "te",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 95
+    },
+    {
+      "locale": "te",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 55
+    },
+    {
+      "locale": "te",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 84
+    },
+    {
+      "locale": "te",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 55
+    },
+    {
+      "locale": "te",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 27
+    },
+    {
+      "locale": "th",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 86
+    },
+    {
+      "locale": "th",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 28
+    },
+    {
+      "locale": "th",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 46
+    },
+    {
+      "locale": "th",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 48
+    },
+    {
+      "locale": "th",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 19
+    },
+    {
+      "locale": "tr",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 85
+    },
+    {
+      "locale": "tr",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 44
+    },
+    {
+      "locale": "tr",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 71
+    },
+    {
+      "locale": "tr",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 46
+    },
+    {
+      "locale": "tr",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 21
+    },
+    {
+      "locale": "uk",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 102
+    },
+    {
+      "locale": "uk",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 38
+    },
+    {
+      "locale": "uk",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 70
+    },
+    {
+      "locale": "uk",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 57
+    },
+    {
+      "locale": "uk",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 21
+    },
+    {
+      "locale": "ur",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 95
+    },
+    {
+      "locale": "ur",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 45
+    },
+    {
+      "locale": "ur",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 72
+    },
+    {
+      "locale": "ur",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 58
+    },
+    {
+      "locale": "ur",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 30
+    },
+    {
+      "locale": "vi",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 97
+    },
+    {
+      "locale": "vi",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 45
+    },
+    {
+      "locale": "vi",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 70
+    },
+    {
+      "locale": "vi",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 48
+    },
+    {
+      "locale": "vi",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 25
+    },
+    {
+      "locale": "zh-CN",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 72
+    },
+    {
+      "locale": "zh-CN",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 20
+    },
+    {
+      "locale": "zh-CN",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 28
+    },
+    {
+      "locale": "zh-CN",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 30
+    },
+    {
+      "locale": "zh-CN",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 17
+    },
+    {
+      "locale": "zu",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": null,
+      "measured_width": 109
+    },
+    {
+      "locale": "zu",
+      "key": "Song requests are unavailable in this build.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 66,
+      "measured_width": 44
+    },
+    {
+      "locale": "zu",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 85,
+      "measured_width": 83
+    },
+    {
+      "locale": "zu",
+      "key": "Your request could not be sent. Try again later.",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 72,
+      "measured_width": 49
+    },
+    {
+      "locale": "zu",
+      "key": "Sending your request…",
+      "helper_errors": [],
+      "helper_warnings": [],
+      "soft_max_length": 31,
+      "measured_width": 26
+    }
+  ]
+}

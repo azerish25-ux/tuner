@@ -1,0 +1,44 @@
+{
+  "date": "2026-10-26",
+  "review": "Independent rereview of privacy token-provider resolution",
+  "baseline_commit": "0c679011095f45eae2e28cd8593b23386a013b7d",
+  "original_review": "docs/ios/readiness/reviews/privacy-source-independent-review.json",
+  "original_review_preserved": true,
+  "author_resolution": "docs/ios/readiness/reviews/privacy-token-provider-resolution.json",
+  "verdict": "approve_source_resolution_native_validation_pending",
+  "resolved_findings": [
+    "PRIV-REV-01"
+  ],
+  "new_actionable_findings": [],
+  "source_sha256": {
+    "ios/Timbre/Services/Analytics.swift": "0ef72ddad0382dacb1f300e98dbcf0e5a7cd324ae5d65ad686f816ea3419a72e",
+    "ios/Timbre/Services/AnalyticsTransport.swift": "7e89d80808af137b1491f3a73157e1743431f716e3e3aaf3e2ad2d39e1752113",
+    "ios/Timbre/Services/GameCenter.swift": "0bbeca933eef5c29f19734f1ba787d5df1d877886aafd20390ae5fb3d6f86e30",
+    "ios/Timbre/Services/ShareDestination.swift": "7302a8c79ea141527a512ef27dda4e2b59be7d1535b58c846288af6fe8d94124",
+    "ios/Timbre/Songs/SongsView.swift": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520",
+    "ios/Timbre/Resources/PrivacyInfo.xcprivacy": "d4e4831610ee58867050a93634d177fa28cd4659affc68233c9cfc0f2ba2a27f",
+    "ios/project.yml": "bde414e495e2cad1451bed7fe8bdd085b8bfe6757b90d1e504320f87c440df11",
+    "ios/TimbreAppTests/AnalyticsPrivacyTests.swift": "62ecd0755787c769729a93e07db6eb514a6ac2f327d378dcd7e435cdbb58f42a"
+  },
+  "resolution_evidence": [
+    "AppleAdsReporter.start reserves activeLease and enqueues acquireToken on the utility global queue while holding only the short lease/state critical section. It no longer directly calls the token provider on its caller.",
+    "acquireToken checks transport generation immediately before token invocation, releases the consent lock before the synchronous provider call, and reacquires the lease gate after it returns. setEnabled(false) does not acquire a provider-owned lock or wait for token completion.",
+    "Post-provider withLease rejects a revoked generation, and activeLease equality prevents an obsolete provider result from modifying a newer active run. HTTP task creation/resume remains inside the consent gate.",
+    "Repeated start calls within the current generation are coalesced by activeLease reservation before dispatch. Off/on creates a new generation, so a new run may proceed while the previous uncancellable provider finishes locally.",
+    "The two held-provider tests exercise start/revocation returning before provider release and a new generation completing while an old provider result is discarded. All 14 authored native test methods were inspected; none were run.",
+    "Other six privacy-scope product/configuration files retain the hashes from the initial independent review."
+  ],
+  "consent_boundary": "The generation is checked immediately before entering the uncancellable platform provider. Revocation can happen after that authorization or while the call is running; the already-authorized local call may finish, but its result cannot create old-generation HTTP, retries, events or sent-marker writes. The implementation does not promise atomic prevention of every underlying platform instruction racing that boundary.",
+  "verification": {
+    "author_receipt_hashes": "Both changed file SHA256 hashes match the author resolution receipt.",
+    "source_scope": "Read-only rereview of AnalyticsTransport.swift, the two added held-provider tests, unchanged surrounding callback paths, and resolution receipt.",
+    "native_tests": "UNRUN on Windows: no XCTest execution or timing measurement claimed.",
+    "swift_5_10_complete_concurrency": "UNVERIFIED: native app compilation remains required; no concrete new compiler issue identified by inspection."
+  },
+  "remaining_gates": [
+    "Run all 14 AnalyticsPrivacyTests and Swift 5.10 complete-concurrency app compilation on macOS.",
+    "Run native song-request alert/state and network timing validation described in the original review.",
+    "Complete separate localization integration/review and owner/account-dependent release verification."
+  ],
+  "modifications": "Only this separate resolution review JSON created; initial review and source/tests were not edited."
+}

@@ -3,6 +3,16 @@ import GameKit
 import SwiftUI
 import TimbreCore
 
+enum GameCenterConfiguration {
+    /// Deliberately accept only an explicit true value; unset/unexpanded build settings remain off.
+    static func enabled(value: Any?, automated: Bool) -> Bool {
+        guard !automated else { return false }
+        if let value = value as? Bool { return value }
+        guard let value = value as? String else { return false }
+        return ["YES", "TRUE", "1"].contains(value.trimmingCharacters(in: .whitespacesAndNewlines).uppercased())
+    }
+}
+
 /// The ear games with a Game Center leaderboard.
 enum PlayGame: String {
     case sniper, ear
@@ -133,8 +143,12 @@ final class GameCenter: ObservableObject {
     /// The streak last sent and on which day ("2026-10-24:12").
     private static let streakSentKey = "gamecenter.streak.sent"
 
-    /// Off in an automated run (as coach marks are): no sign-in banner over what the run records.
-    static let enabled = !TestSupport.isAutomated
+    /// Default off until the owner configures the capability, App Store Connect records and release assets.
+    /// Local games and ordinary local challenge links remain available without Game Center.
+    static let enabled = GameCenterConfiguration.enabled(
+        value: Bundle.main.object(forInfoDictionaryKey: "TimbreGameCenterEnabled"),
+        automated: TestSupport.isAutomated
+    )
 
     private init() {}
 
@@ -173,6 +187,7 @@ final class GameCenter: ObservableObject {
     }
 
     private func authenticationChanged() {
+        guard Self.enabled else { return }
         let signedIn = GKLocalPlayer.local.isAuthenticated
         guard signedIn != active else { return }
         active = signedIn
@@ -211,7 +226,7 @@ final class GameCenter: ObservableObject {
 
     /// Hears Game Center's activities for this player (iOS 26) from now on.
     private func listen() {
-        guard listener == nil else { return }
+        guard Self.enabled, listener == nil else { return }
         let listener = GameCenterListener()
         self.listener = listener
         GKLocalPlayer.local.register(listener)
@@ -471,7 +486,7 @@ final class GameCenter: ObservableObject {
     /// an activity Timbre doesn't know.
     @discardableResult
     func play(activity id: String, lesson: String?) -> Bool {
-        guard let store else { return false }
+        guard Self.enabled, let store else { return false }
         Analytics.log("game_activity", ["activity": id])
         let song = lesson ?? GameCenterIDs.songs.first(where: { $0.activityID == id })?.lesson
         if let song, store.curriculum.lesson(id: song) != nil {

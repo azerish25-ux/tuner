@@ -1,0 +1,974 @@
+{
+  "author": "Codex /root/review_is",
+  "role": "first-draft author, not independent reviewer",
+  "locale_count": 48,
+  "keys_per_locale": 1,
+  "pair_count": 48,
+  "proposals": [
+    {
+      "locale": "ar",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "التواصل مع الدعم",
+      "new_sha256": "b51a984f910407d610abb978ad54514e8024061623e2bfd7183df3faa0a3bc9c",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/ar.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "bg",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "Свържете се с поддръжката",
+      "new_sha256": "5b3a01a56547d22ffcba87864002009e1ff083bd1830e386a14b4e2b25697821",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/bg.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "bn",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "সাপোর্টের সঙ্গে যোগাযোগ করুন",
+      "new_sha256": "dcb5b035ea51895fb42d4aea5ca0f25a318e8867615140c8f1e26d6b32f7ea21",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/bn.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "ca",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "Contacta amb el suport",
+      "new_sha256": "e9f0e9d1bf6581a16c35c9de21d28aabda46576a970cb8db611b2a13360b79a0",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/ca.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "cs",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "Kontaktovat podporu",
+      "new_sha256": "dc04c4be9da2bd698002e1b4cee7d9e7acf77699a29d0c909a3b975dd5c49efb",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/cs.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "da",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "Kontakt support",
+      "new_sha256": "42ad5b2b5d7d7b6719ec3e00621d47df700569ed0d6788d91435a450a9f2ac95",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/da.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "de",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "Support kontaktieren",
+      "new_sha256": "82adadbc9d0ab1cfaceab090490dca0f6401466ebe7c8391fdf8ff9cff1c16ee",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/de.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "el",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "Επικοινωνία με την υποστήριξη",
+      "new_sha256": "465b7ee78151f13884b29e7df99df8565c1bf05d7463e6de4803284dcba1b9dc",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/el.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "es",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "Contactar con soporte",
+      "new_sha256": "8b6a005bb6039bf81efcebf340d3f4c6778dbbf34d44dbe5db0049f0d45e422b",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/es.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "et",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "Võta toega ühendust",
+      "new_sha256": "ee24cc3ca7f9f4a71605fae2449e8b04b1d40baedbc85e16fd9ccb49477c8886",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/et.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "fa",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "ارتباط با پشتیبانی",
+      "new_sha256": "02adb77cc50475e0e629c0c5c46e67bc6a2aee85259925ad54f2578293c9b8f7",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/fa.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "fi",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "Ota yhteyttä tukeen",
+      "new_sha256": "9d2564bbcaef0060198c9a33450e49d69a6aa74e4555f7be292844d3d091a148",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/fi.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "fr",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "Contacter le support",
+      "new_sha256": "97e36ccf7c1c207ecf130dfc9b7bb54b95f08fd39a4cddde85e2a21776be6396",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/fr.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "gu",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "સપોર્ટનો સંપર્ક કરો",
+      "new_sha256": "b61a3c1d3842d03b9a0abcdb8635a55a8f753e64389f8f729e760de8c77cd3ab",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/gu.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "he",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "פנייה לתמיכה",
+      "new_sha256": "70cdff45d9aad3b57260101dd584f4311a091bda28c4ce6128ac6e380392a2cf",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/he.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "hi",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "सपोर्ट से संपर्क करें",
+      "new_sha256": "3a9e5f9cfc0f1177077adb8138796b6c816d4565830908665b2e2431a8a41580",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/hi.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "hr",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "Obrati se podršci",
+      "new_sha256": "2f40271b8d7ce8a887235213936d7c5e74f9a17a9b9b46c360618c215aa80c69",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/hr.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "hu",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "Kapcsolatfelvétel a támogatással",
+      "new_sha256": "c08c5e2523ba240d2b50843bfe631673cb555c08c450dbe889c65015d1e811fe",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/hu.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "id",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "Hubungi dukungan",
+      "new_sha256": "bd20a1f7378354dd9034bf2cc052f74181e8595f5602b1d424e754bebceb34d6",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/id.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "is",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "Hafa samband við þjónustuver",
+      "new_sha256": "b276d1c7123aeec656a6249e2b0911c121228b31d218b5899985443576d715c1",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email. þjónustuver is a natural contactable support-service term here; the abstract legacy Stuðningur alone does not form a natural contact action.",
+      "glossary_reference": "docs/l10n/glossary/is.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "it",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "Contatta il supporto",
+      "new_sha256": "f61992433267871c0c21332a1e7eb6506d3a2109d27d179dcc9e406f463f34ee",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/it.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "ja",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "サポートに問い合わせる",
+      "new_sha256": "7e378678cc64f90a0581dc073a76ce4230d597eec78fb04048e7918e98044132",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/ja.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "kn",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "ಬೆಂಬಲ ವಿಭಾಗವನ್ನು ಸಂಪರ್ಕಿಸಿ",
+      "new_sha256": "83f356a9702aa760c98bb20b40b2026e464a755a4f412510e25cd3f73578b3d3",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/kn.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "ko",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "지원팀에 문의하기",
+      "new_sha256": "86cb6ed27b7a2afef2b142158aaecafaa9f4bece36f749210d38bd3effc4bc99",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/ko.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "lt",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "Susisiekti su pagalba",
+      "new_sha256": "c3ae7bcf53d25763261e9455dc4118eb6ebd19ab69477835fd971eef6e5fe0ea",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/lt.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "lv",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "Sazināties ar atbalsta dienestu",
+      "new_sha256": "5f4b5fbb7d58347fd1e12a28b080a4464145014e8009deb545f013f54e604f35",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/lv.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "ml",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "പിന്തുണാ വിഭാഗവുമായി ബന്ധപ്പെടുക",
+      "new_sha256": "e227cda32ee148ca741a471113afc992fbc3f7b2cad966c16126ef919bf8b9e9",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/ml.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "mr",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "सपोर्टशी संपर्क साधा",
+      "new_sha256": "6bf9d48c3dcf4ac5932329798347652a1b82dea8720ec5ca443d02da087db7d5",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/mr.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "nl",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "Contact opnemen met ondersteuning",
+      "new_sha256": "6d1f87833058395f4ba14fe466001cab8ac418eaf3407efe1709b7eb8661fe7e",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/nl.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "no",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "Kontakt brukerstøtte",
+      "new_sha256": "b562d06157628e3c834cd5a5e60820e97fcc3f4e28a40c62a533cda9d081f997",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/no.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "pa",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "ਸਹਾਇਤਾ ਨਾਲ ਸੰਪਰਕ ਕਰੋ",
+      "new_sha256": "bbe36839840d4b805f022be3539af32043f51f58d036f48a341ce9cc9f2d35a6",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/pa.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "pl",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "Skontaktuj się ze wsparciem",
+      "new_sha256": "5c5d861dd6eea91f6e11baa4c31b48cc9c5ecf6b7ec2929a3cf701578b2182e5",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/pl.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "pt",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "Entrar em contato com o suporte",
+      "new_sha256": "be10398c88710af781bad3f8f7194617ce0ba58998e139b7b89fedf5d027ca1f",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/pt.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "ro",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "Contactează asistența",
+      "new_sha256": "23212cc20f9358ee48bb237279f096bc742bc8bb5a1cdb603f9ee313ff9a87e6",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/ro.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "ru",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "Связаться с поддержкой",
+      "new_sha256": "1162749e334c89666c30df862de4cd7e9e1fbb3d3bcee16509a79fb2f256e74d",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/ru.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "sk",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "Kontaktovať podporu",
+      "new_sha256": "efc278faa995e42fa4ac3c756cfe73e1e71c42205be3f9f26344175cfe8e66ed",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/sk.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "sl",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "Obrni se na podporo",
+      "new_sha256": "4ae48e75535e8fb04d14ebda6c3835cb65b81557247ce1d26c5851164ed45ad3",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/sl.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "sv",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "Kontakta support",
+      "new_sha256": "85ad151f1b771e7702fcf5a9ad162ae1d0c408844f0e398bea5369805f2180e5",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/sv.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "sw",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "Wasiliana na huduma ya usaidizi",
+      "new_sha256": "df9e9f88bf2276635e80651cd5305e0ef5abae9378a96adc7b397a10ce5090a5",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/sw.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "ta",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "ஆதரவைத் தொடர்புகொள்ளவும்",
+      "new_sha256": "f46616f25ef575f62a0266743a9ccd935eed5758a85e6064e16488faf965d628",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/ta.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "te",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "సపోర్ట్‌ను సంప్రదించండి",
+      "new_sha256": "7ddeb15c60194438ebe58b6ec36e7537f3174afb3e2d28048c6ee8965ace08d2",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/te.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [
+        {
+          "codepoint": "U+200C",
+          "reason": "Telugu consonant-ending loanword సపోర్ట్ followed by accusative ను; ZWNJ preserves the intended boundary without a conjunct."
+        }
+      ],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "th",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "ติดต่อฝ่ายสนับสนุน",
+      "new_sha256": "4101a40429d59dc0f752d0f121d0c46e88cd532593e77cf9e04759d177cd962f",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/th.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "tr",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "Destekle iletişime geç",
+      "new_sha256": "95755ad40feb6733a1f7734a63d6cdb9d18bc95ff6a17d03943bc69e51a82713",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/tr.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "uk",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "Зв’язатися з підтримкою",
+      "new_sha256": "b18940fdbefef1e687b7bfa9e5e75689b5b95206841dd8b75ed70019cb01e43e",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/uk.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "ur",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "سپورٹ سے رابطہ کریں",
+      "new_sha256": "a4e1eee89cc276d5acae2ff277ca921ef058831599f08fecb8ec54527cd14ccb",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/ur.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "vi",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "Liên hệ hỗ trợ",
+      "new_sha256": "8277c3cc63ddc1b58b0a91ec3732af0a49636d978bf5c2bff84d83550abc25b1",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/vi.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "zh-CN",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "联系支持",
+      "new_sha256": "4cac90c8056a616df4d2e27aa0fbe8886fa8d05cb3c327acaf553550b20e6124",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/zh-CN.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    },
+    {
+      "locale": "zu",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "new": "Xhumana nabezosekelo",
+      "new_sha256": "7d0e20aab247a400dbebeb5a563d106af72fe5c3f3575e5832418958cf6b6c74",
+      "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+      "reason": "New natural action wording, authored rather than mechanically stripping the formatted legacy support label. Uses the glossary register for an action label; opens support without specifying a phone call or automatic email.",
+      "glossary_reference": "docs/l10n/glossary/zu.md",
+      "source_reference": {
+        "path": "ios/Timbre/Songs/SongsView.swift",
+        "line": 176,
+        "file_sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+      },
+      "bidi_marks": [],
+      "script_joiners": [],
+      "status": "author-draft-awaiting-independent-review"
+    }
+  ]
+}

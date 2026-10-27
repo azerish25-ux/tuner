@@ -1,9 +1,23 @@
-# Website pages (to publish)
+# Public privacy and support pages
 
-`privacy.html` (generated from [docs/ios/PRIVACY.md](../ios/PRIVACY.md)) and `support.html` are the pages the App Store
-listing and the app link to. They are **not published automatically**: the live copies are on the `gh-pages` branch
-(https://azerish25-ux.github.io/tuner/privacy.html), which on 2026-10-25 still carries the 23 October policy that says
-analytics stay on the device — out of date, because the app now sends anonymous analytics (with an opt-out).
+Published on Cloudflare Workers Static Assets:
 
-To publish (owner): copy these two files onto the `gh-pages` branch (or your own domain) and push; then set the App
-Store Connect **Privacy Policy URL** and **Support URL** to them. Regenerate `privacy.html` whenever PRIVACY.md changes.
+- Privacy: https://timbre-support.timbre.workers.dev/privacy
+- Support: https://timbre-support.timbre.workers.dev/support
+
+The public contact is **shahroodazerov@gmail.com**. The publisher is **Shahrad Azeri Sharghi**.
+Public pages contain no repository references. The site uses static assets and a free workers.dev hostname,
+with no Worker script, database, site analytics or paid binding.
+
+Canonical sources are [PRIVACY.md](../ios/PRIVACY.md) and [SUPPORT.md](SUPPORT.md). Run `npm ci`, then
+`npm run build` to generate `public/` and the legacy publication inputs `privacy.html`/`support.html`.
+`npm run preview` starts Wrangler locally. `npm run check:deploy` validates deployment without publishing;
+`npm run deploy` publishes the current build to the authenticated owner's account.
+
+Use Wrangler OAuth for authentication. Windows credentials are stored encrypted with their key in
+Windows Credential Manager. Do not commit credentials, `.wrangler/` or generated `public/` output.
+The actual HTTPS content/header verification is recorded under `docs/ios/readiness/reviews/`.
+
+The former GitHub Pages policy address is a compatibility concern for older builds; it must be refreshed or
+redirected to the canonical Cloudflare policy. The Apple account's Privacy Policy URL and Support URL
+are configured later, when the owner sets up App Store Connect.

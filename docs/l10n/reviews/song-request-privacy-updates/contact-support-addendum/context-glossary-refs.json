@@ -1,0 +1,780 @@
+{
+  "source": "Contact support",
+  "context": "Action in the Request a song alert. Opens AppLinks.support, the public support web page. It does not place a telephone call, send an email automatically or submit the pending song request. It remains an alternative when song requests are unavailable.",
+  "source_line": "            Button(\"Contact support\") { openURL(AppLinks.support) }",
+  "source_file": {
+    "path": "ios/Timbre/Songs/SongsView.swift",
+    "sha256": "db2abd9e1e923e2baffc387a946353592ecceafae640dac6e87e671f1997e520"
+  },
+  "actual_context_read": "Current request alert source/public-support action, initial five source contexts, all48 glossary register rows and all48 legacy support strings.",
+  "locales": [
+    {
+      "locale": "ar",
+      "glossary": {
+        "path": "docs/l10n/glossary/ar.md",
+        "sha256": "7a854703673afe1f0110ace426ba1dbb35f255ad16b2b7ee134fdb2e9c45d391",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: direct neutral masculine singular imperatives, avoiding gendered adjectives about the reader where possible. Warm teacher voice; no added marketing or celebration."
+          }
+        ]
+      },
+      "current_legacy_support_label": "الدعم: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "bg",
+      "glossary": {
+        "path": "docs/l10n/glossary/bg.md",
+        "sha256": "f90198c8012266e1828dce873d66e29fadae8fd13856ed2f16dd30d138326189",
+        "actual_register_excerpts_read": [
+          {
+            "line": 13,
+            "text": "| Register (you) | Formal/plural вие; plural imperatives |"
+          }
+        ]
+      },
+      "current_legacy_support_label": "Поддръжка: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "bn",
+      "glossary": {
+        "path": "docs/l10n/glossary/bn.md",
+        "sha256": "6b67c6147f8edc3c56996938aa06bf7b21d5c987899f1080b6262c1dd730735d",
+        "actual_register_excerpts_read": [
+          {
+            "line": 15,
+            "text": "| Register (\"you\") | Polite আপনি; warm and direct |  |"
+          }
+        ]
+      },
+      "current_legacy_support_label": "সাপোর্ট: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "ca",
+      "glossary": {
+        "path": "docs/l10n/glossary/ca.md",
+        "sha256": "0705d86767ddf4e7f0b72b52a25788781f39a5a45320200712c9fb8f214c9b41",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Address: tu; warm, direct teacher voice. Gender-neutral phrasing for an unknown reader. Buttons match existing table; instructions use natural imperatives. VoiceOver hints describe outcomes in the third person."
+          }
+        ]
+      },
+      "current_legacy_support_label": "Suport: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "cs",
+      "glossary": {
+        "path": "docs/l10n/glossary/cs.md",
+        "sha256": "3788e1297ba49bee6d92fa4058b86b397dea34ab65259c8b98e9775deca5d0c2",
+        "actual_register_excerpts_read": [
+          {
+            "line": 13,
+            "text": "| Register (you) | Formal/plural vy; plural imperatives |"
+          }
+        ]
+      },
+      "current_legacy_support_label": "Podpora: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "da",
+      "glossary": {
+        "path": "docs/l10n/glossary/da.md",
+        "sha256": "a1815f27ab10b26efc444beb6810a2bab865a0e1bf37d6f3b912cf84b4717899",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: Informal singular, warm direct second person; avoid gender assumptions. Short imperative actions; noun labels; third-person VoiceOver hints. Avoid reader-gender marking."
+          }
+        ]
+      },
+      "current_legacy_support_label": "Support: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "de",
+      "glossary": {
+        "path": "docs/l10n/glossary/de.md",
+        "sha256": "7af0807d95357a42df1009c6855a876b8a0f83696255263b19052d472d8f6a12",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Address: du; warm, direct teacher voice. Gender-neutral phrasing for an unknown reader. Buttons match existing table; instructions use natural imperatives. VoiceOver hints describe outcomes in the third person."
+          }
+        ]
+      },
+      "current_legacy_support_label": "Support: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "el",
+      "glossary": {
+        "path": "docs/l10n/glossary/el.md",
+        "sha256": "5fceb92ed4899d93a4865ec91038b2efb7e1ea896a7db19a95330673650206b3",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: formal/plural εσείς. Existing mixed formal/informal instructions must follow this decision in new translations."
+          }
+        ]
+      },
+      "current_legacy_support_label": "Υποστήριξη: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "es",
+      "glossary": {
+        "path": "docs/l10n/glossary/es.md",
+        "sha256": "5dc54645f82dc536e527ed066852ab33b813a62977f145a5c23aa10d606c165c",
+        "actual_register_excerpts_read": [
+          {
+            "line": 7,
+            "text": "- Address: tú; warm, direct teacher voice. Gender-neutral phrasing for an unknown reader. Buttons match existing table; instructions use natural imperatives. VoiceOver hints describe outcomes in the third person."
+          }
+        ]
+      },
+      "current_legacy_support_label": "Soporte: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "et",
+      "glossary": {
+        "path": "docs/l10n/glossary/et.md",
+        "sha256": "3acd5b1efacf12d49c7e9f62815f9e0d4422015255efdf8c805a8b3897a64496",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: Informal singular, warm direct second person; avoid gender assumptions. Short imperative actions; noun labels; third-person VoiceOver hints. Avoid reader-gender marking."
+          }
+        ]
+      },
+      "current_legacy_support_label": "Tugi: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "fa",
+      "glossary": {
+        "path": "docs/l10n/glossary/fa.md",
+        "sha256": "056cc8e1c7d1bc24c74c6c216235e5cfb99fa87563111e1806cbf5af18400b74",
+        "actual_register_excerpts_read": [
+          {
+            "line": 13,
+            "text": "| Register (\"you\") | Polite شما; plural imperatives ending ـید. | Formal or informal, and the exact form: German du, French vous, Spanish tú, Russian вы, Japanese です/ます, Korean 해요체, Chinese 你 (not 您), Hindi आप … One register for the whole app, lessons included. The current tables of he, hr, ro, sl and tr mix both registers: decide, and add the clean-up to the review. |"
+          }
+        ]
+      },
+      "current_legacy_support_label": "پشتیبانی: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "fi",
+      "glossary": {
+        "path": "docs/l10n/glossary/fi.md",
+        "sha256": "76fdab0f321e3e187e6c89561ac9b7e50936633acc746462ec0a0bc759216ec1",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: Informal singular, warm direct second person; avoid gender assumptions. Short imperative actions; noun labels; third-person VoiceOver hints. Avoid reader-gender marking."
+          }
+        ]
+      },
+      "current_legacy_support_label": "Tuki: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "fr",
+      "glossary": {
+        "path": "docs/l10n/glossary/fr.md",
+        "sha256": "ef9613e242a7caf0d4c760ac4b82b863a23c19df96755d7c3e0fd6f39cf28a35",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Address: vous; warm, direct teacher voice. Gender-neutral phrasing for an unknown reader. Buttons match existing table; instructions use natural imperatives. VoiceOver hints describe outcomes in the third person."
+          }
+        ]
+      },
+      "current_legacy_support_label": "Support : %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "gu",
+      "glossary": {
+        "path": "docs/l10n/glossary/gu.md",
+        "sha256": "2f4c1e4525460ea3ef1bd0e77030aa20519ceca7c2b2f4de445ff9dfe121a809",
+        "actual_register_excerpts_read": [
+          {
+            "line": 15,
+            "text": "| Register (\"you\") | Polite તમે; warm direct voice |  |"
+          }
+        ]
+      },
+      "current_legacy_support_label": "સપોર્ટ: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "he",
+      "glossary": {
+        "path": "docs/l10n/glossary/he.md",
+        "sha256": "f30d2e760e70df1b020c50d40b34d834cf5df439e195e94f24fae7225add6a1c",
+        "actual_register_excerpts_read": [
+          {
+            "line": 13,
+            "text": "| Register (you) | Plural address אתם with plural imperatives; gender-neutral labels; overrides mixed shipped singular/plural register |"
+          }
+        ]
+      },
+      "current_legacy_support_label": "תמיכה: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "hi",
+      "glossary": {
+        "path": "docs/l10n/glossary/hi.md",
+        "sha256": "4a4504d0fa1a62f7e0c0d4f6d302761bd2017c3726196de76d526b6c5a324989",
+        "actual_register_excerpts_read": [
+          {
+            "line": 15,
+            "text": "| Register (\"you\") | Polite आप; warm, direct teacher voice |  |"
+          }
+        ]
+      },
+      "current_legacy_support_label": "सपोर्ट: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "hr",
+      "glossary": {
+        "path": "docs/l10n/glossary/hr.md",
+        "sha256": "776252de88cdf961d28b3915f9540fae82d3b2408b81a8f3e6b282c34d239bb8",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: informal singular ti. Existing mixed formal/informal instructions must follow this decision in new translations."
+          }
+        ]
+      },
+      "current_legacy_support_label": "Podrška: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "hu",
+      "glossary": {
+        "path": "docs/l10n/glossary/hu.md",
+        "sha256": "195f00460cc43447d66b4d421cc2de925a7dabf460ffc7dc50912a667d42e27e",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: informal singular te. Existing mixed formal/informal instructions must follow this decision in new translations."
+          }
+        ]
+      },
+      "current_legacy_support_label": "Támogatás: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "id",
+      "glossary": {
+        "path": "docs/l10n/glossary/id.md",
+        "sha256": "d123145da438f8c4e2a4b512e0b12e47650b21730bd9b24963e8d89ea109316a",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: Anda, polite and direct. Warm teacher voice, no embellishments."
+          }
+        ]
+      },
+      "current_legacy_support_label": "Dukungan: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "is",
+      "glossary": {
+        "path": "docs/l10n/glossary/is.md",
+        "sha256": "64ba936e9457a5b5e3d75b193e04c1ebce3713f781bb81c8387102eb42a21aac",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: Informal singular, warm direct second person; avoid gender assumptions. Short imperative actions; noun labels; third-person VoiceOver hints. Avoid reader-gender marking."
+          }
+        ]
+      },
+      "current_legacy_support_label": "Stuðningur: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "it",
+      "glossary": {
+        "path": "docs/l10n/glossary/it.md",
+        "sha256": "5719ba42622ba1f38f72194006ccbbede8cda52cd9dec24adab912f72af9b9dd",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Address: tu; warm, direct teacher voice. Gender-neutral phrasing for an unknown reader. Buttons match existing table; instructions use natural imperatives. VoiceOver hints describe outcomes in the third person."
+          }
+        ]
+      },
+      "current_legacy_support_label": "Supporto: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "ja",
+      "glossary": {
+        "path": "docs/l10n/glossary/ja.md",
+        "sha256": "829e5fee8a475dc887cf05ba288432cef52e432fccd6bfba5ed008dfcad95570",
+        "actual_register_excerpts_read": [
+          {
+            "line": 7,
+            "text": "- Register: です/ます; omit needless pronouns. Warm teacher voice, no embellishments."
+          }
+        ]
+      },
+      "current_legacy_support_label": "サポート: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "kn",
+      "glossary": {
+        "path": "docs/l10n/glossary/kn.md",
+        "sha256": "07010a6e4582ab359ed98757fafd1d26de7eb596d40221e0c890ae0c65773e69",
+        "actual_register_excerpts_read": [
+          {
+            "line": 15,
+            "text": "| Register (\"you\") | Polite ನೀವು; warm and direct |  |"
+          }
+        ]
+      },
+      "current_legacy_support_label": "ಬೆಂಬಲ: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "ko",
+      "glossary": {
+        "path": "docs/l10n/glossary/ko.md",
+        "sha256": "45f752759ccb3a436f1b59498e38b8b88a1421246ec39d3ae775cf2ca6d47091",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: 해요체; omit pronouns; rephrase unknown placeholder particles. Warm teacher voice, no embellishments."
+          }
+        ]
+      },
+      "current_legacy_support_label": "지원: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "lt",
+      "glossary": {
+        "path": "docs/l10n/glossary/lt.md",
+        "sha256": "60bb26916bba852fdf1a8fae79f5f64a5d9909920fa2442c3297dc898b399a52",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: Formal plural jūs; polite plural imperatives. Short imperative actions; noun labels; third-person VoiceOver hints. Avoid reader-gender marking."
+          }
+        ]
+      },
+      "current_legacy_support_label": "Pagalba: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "lv",
+      "glossary": {
+        "path": "docs/l10n/glossary/lv.md",
+        "sha256": "c9c99da6117158edbd3312deee34e5171141192bdbe117dce1ffc5191a0af08e",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: Formal plural jūs; polite plural imperatives. Short imperative actions; noun labels; third-person VoiceOver hints. Avoid reader-gender marking."
+          }
+        ]
+      },
+      "current_legacy_support_label": "Atbalsts: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "ml",
+      "glossary": {
+        "path": "docs/l10n/glossary/ml.md",
+        "sha256": "5e28e255d3102c0700ea1116e9c1ebf8a476a673c39ecbc60ee20f14d2757d3c",
+        "actual_register_excerpts_read": [
+          {
+            "line": 15,
+            "text": "| Register (\"you\") | Neutral respectful voice; നിങ്ങൾ where needed |  |"
+          }
+        ]
+      },
+      "current_legacy_support_label": "പിന്തുണ: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "mr",
+      "glossary": {
+        "path": "docs/l10n/glossary/mr.md",
+        "sha256": "784bde2c17a6b33c33165d0a8ce3e93d4bd8708fad53b2763434556be8707e1c",
+        "actual_register_excerpts_read": [
+          {
+            "line": 15,
+            "text": "| Register (\"you\") | Polite तुम्ही; warm direct voice |  |"
+          }
+        ]
+      },
+      "current_legacy_support_label": "सपोर्ट: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "nl",
+      "glossary": {
+        "path": "docs/l10n/glossary/nl.md",
+        "sha256": "8a72824dd363b702a70ac63ae5519e2671fe9ce9ce32db07e3de2890f6d20a20",
+        "actual_register_excerpts_read": [
+          {
+            "line": 7,
+            "text": "- Address: je; warm, direct teacher voice. Gender-neutral phrasing for an unknown reader. Buttons match existing table; instructions use natural imperatives. VoiceOver hints describe outcomes in the third person."
+          }
+        ]
+      },
+      "current_legacy_support_label": "Ondersteuning: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "no",
+      "glossary": {
+        "path": "docs/l10n/glossary/no.md",
+        "sha256": "491954e86aa71b66eade3c1e9f29203f51ceec8b440b6ed4e502a9e2d4dcce52",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: Informal singular, warm direct second person; avoid gender assumptions. Short imperative actions; noun labels; third-person VoiceOver hints. Avoid reader-gender marking."
+          }
+        ]
+      },
+      "current_legacy_support_label": "Støtte: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "pa",
+      "glossary": {
+        "path": "docs/l10n/glossary/pa.md",
+        "sha256": "a3670ba8a9e0f81cd842dd47c93cc19800013c64703348e9fb9e639e2e2c2a68",
+        "actual_register_excerpts_read": [
+          {
+            "line": 15,
+            "text": "| Register (\"you\") | Polite ਤੁਸੀਂ; warm direct voice |  |"
+          }
+        ]
+      },
+      "current_legacy_support_label": "ਸਹਾਇਤਾ: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "pl",
+      "glossary": {
+        "path": "docs/l10n/glossary/pl.md",
+        "sha256": "e61e810de3e6be65fbeabcc2296bdffee6480c5a05674af3c6ece1544d34d1df",
+        "actual_register_excerpts_read": [
+          {
+            "line": 11,
+            "text": "| Register (you) | Informal ty; singular imperatives; avoid gendered past forms |"
+          }
+        ]
+      },
+      "current_legacy_support_label": "Wsparcie: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "pt",
+      "glossary": {
+        "path": "docs/l10n/glossary/pt.md",
+        "sha256": "8287edb0a57195413d7436b26a4b207b9d4fb7ed5329f36dcf6ef5fa887f5356",
+        "actual_register_excerpts_read": [
+          {
+            "line": 7,
+            "text": "- Address: você; warm, direct teacher voice. Gender-neutral phrasing for an unknown reader. Buttons match existing table; instructions use natural imperatives. VoiceOver hints describe outcomes in the third person."
+          }
+        ]
+      },
+      "current_legacy_support_label": "Suporte: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "ro",
+      "glossary": {
+        "path": "docs/l10n/glossary/ro.md",
+        "sha256": "f271f34522b493d08ed37c7f7e78dfcf8818ffd8e1dbbc3e6c0283317f837e25",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: informal singular tu. Existing mixed formal/informal instructions must follow this decision in new translations."
+          }
+        ]
+      },
+      "current_legacy_support_label": "Asistență: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "ru",
+      "glossary": {
+        "path": "docs/l10n/glossary/ru.md",
+        "sha256": "d8af19ab8c8dbc6ccb802e81d243cf278ba14e2b5db4f8d53b5605f8d928422d",
+        "actual_register_excerpts_read": [
+          {
+            "line": 13,
+            "text": "| Register (\"you\") | Formal/plural вы, lower case | Formal or informal, and the exact form: German du, French vous, Spanish tú, Russian вы, Japanese です/ます, Korean 해요체, Chinese 你 (not 您), Hindi आप … One register for the whole app, lessons included. The current tables of he, hr, ro, sl and tr mix both registers: decide, and add the clean-up to the review. |"
+          }
+        ]
+      },
+      "current_legacy_support_label": "Поддержка: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "sk",
+      "glossary": {
+        "path": "docs/l10n/glossary/sk.md",
+        "sha256": "80cbbf6659d5ed1f3a99a384786b6913473e07b890c37e90da8d00d9cfb5a9ca",
+        "actual_register_excerpts_read": [
+          {
+            "line": 13,
+            "text": "| Register (you) | Formal/plural vy; plural imperatives |"
+          }
+        ]
+      },
+      "current_legacy_support_label": "Podpora: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "sl",
+      "glossary": {
+        "path": "docs/l10n/glossary/sl.md",
+        "sha256": "5ec7971e1465f6d97c9983f1f0f3f7a308740524fff578048246ebf1c1a7681c",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: informal singular ti. Existing mixed formal/informal instructions must follow this decision in new translations."
+          }
+        ]
+      },
+      "current_legacy_support_label": "Podpora: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "sv",
+      "glossary": {
+        "path": "docs/l10n/glossary/sv.md",
+        "sha256": "b3a90fcb4402f35df562c8434d904c1059782a08d99abd8c7c6a201db122dd94",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: Informal singular, warm direct second person; avoid gender assumptions. Short imperative actions; noun labels; third-person VoiceOver hints. Avoid reader-gender marking."
+          }
+        ]
+      },
+      "current_legacy_support_label": "Support: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "sw",
+      "glossary": {
+        "path": "docs/l10n/glossary/sw.md",
+        "sha256": "f21b91af5d196839d71b657107699eaa96677d6878f07c86f068c1b1637e10af",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: Informal singular, warm direct second person; avoid gender assumptions. Short imperative actions; noun labels; third-person VoiceOver hints. Avoid reader-gender marking."
+          }
+        ]
+      },
+      "current_legacy_support_label": "Usaidizi: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "ta",
+      "glossary": {
+        "path": "docs/l10n/glossary/ta.md",
+        "sha256": "d8e1eedb45801ca16020c6d0b07ba5bd26d5e32479a077b11456d6e37a271e8c",
+        "actual_register_excerpts_read": [
+          {
+            "line": 15,
+            "text": "| Register (\"you\") | Polite நீங்கள்; warm direct voice |  |"
+          }
+        ]
+      },
+      "current_legacy_support_label": "ஆதரவு: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "te",
+      "glossary": {
+        "path": "docs/l10n/glossary/te.md",
+        "sha256": "265cd30759d02c7c18c4b80fa23c84a7812964cc706a07ba86bc6141562ca022",
+        "actual_register_excerpts_read": [
+          {
+            "line": 15,
+            "text": "| Register (\"you\") | Polite మీరు; warm and direct. Existing informal Learn label retained only as exact control reference |  |"
+          }
+        ]
+      },
+      "current_legacy_support_label": "సపోర్ట్: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "th",
+      "glossary": {
+        "path": "docs/l10n/glossary/th.md",
+        "sha256": "a66b0bba11548a37654e4c175bb20badfd045d7aac2881b80ff6187f815d3b3f",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: neutral, no gendered polite particles. Warm teacher voice, no embellishments."
+          }
+        ]
+      },
+      "current_legacy_support_label": "ฝ่ายสนับสนุน: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "tr",
+      "glossary": {
+        "path": "docs/l10n/glossary/tr.md",
+        "sha256": "8461c04e9a543a52b465cc7e4898b38efbfebbe3bd9a8d7d5bebfdeb7f4b45d4",
+        "actual_register_excerpts_read": [
+          {
+            "line": 6,
+            "text": "- Standard Turkish (Türkiye). Consistent informal singular sen address; short singular imperatives, matching pinned tab/control names. This explicitly resolves mixed formal/informal shipped anchors. No grammatical gender; avoid unnecessary pronouns."
+          }
+        ]
+      },
+      "current_legacy_support_label": "Destek: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "uk",
+      "glossary": {
+        "path": "docs/l10n/glossary/uk.md",
+        "sha256": "814ade63c839bf3960f8e8316b107ddc9fbf6204f1d605155e7a39c578016b9d",
+        "actual_register_excerpts_read": [
+          {
+            "line": 13,
+            "text": "| Register (you) | Formal/plural ви, lower case |"
+          }
+        ]
+      },
+      "current_legacy_support_label": "Підтримка: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "ur",
+      "glossary": {
+        "path": "docs/l10n/glossary/ur.md",
+        "sha256": "9564c4e24b875813d35fb28bc61519cf1f2e3b378af1438c9b3a5b09166df0e5",
+        "actual_register_excerpts_read": [
+          {
+            "line": 15,
+            "text": "| Register (\"you\") | Polite آپ; warm direct teacher voice |  |"
+          }
+        ]
+      },
+      "current_legacy_support_label": "سپورٹ: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "vi",
+      "glossary": {
+        "path": "docs/l10n/glossary/vi.md",
+        "sha256": "db177f5cd147e69d2ae9f714edf14a68606bd78f96bffbec9f7a55595a91a150",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: bạn, warm neutral. Warm teacher voice, no embellishments."
+          }
+        ]
+      },
+      "current_legacy_support_label": "Hỗ trợ: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "zh-CN",
+      "glossary": {
+        "path": "docs/l10n/glossary/zh-CN.md",
+        "sha256": "1ee83180b03e6514ad191c3ad53d8aa51fb03bd81fb6bd27234a6e9eec368706",
+        "actual_register_excerpts_read": [
+          {
+            "line": 7,
+            "text": "- Register: 你, never 您. Warm teacher voice, no embellishments."
+          }
+        ]
+      },
+      "current_legacy_support_label": "支持：%1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    },
+    {
+      "locale": "zu",
+      "glossary": {
+        "path": "docs/l10n/glossary/zu.md",
+        "sha256": "446c8511c701d01b93b93306272496fac47b1666b6f9dc3ebe3b00e8c30b1122",
+        "actual_register_excerpts_read": [
+          {
+            "line": 9,
+            "text": "- Register: Informal singular, warm direct second person; avoid gender assumptions. Short imperative actions; noun labels; third-person VoiceOver hints. Avoid reader-gender marking."
+          }
+        ]
+      },
+      "current_legacy_support_label": "Ukusekelwa: %1$@",
+      "legacy_support_label_unchanged": true,
+      "note": "Read as vocabulary anchor only; formatted legacy text remains untouched, not mechanically stripped."
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "reviewer": "Codex /root/request_copy_review",
+  "guard_policy": "Apply only if exact English source and old proposal strings and hashes match; do not modify frozen drafts. All accepted target values are in pair-decisions.json.",
+  "refinements": [
+    {
+      "locale": "hu",
+      "table": "Localizable.strings",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "source": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "source_sha256": "3936cf83723780cce6f187a66999a297e996a06ddaff22d6dbfb51a6bd3a9007",
+      "old_proposal": "A dal címe és a hangszerszűrő a TelemetryDeck szolgáltatásnak lesz elküldve. Ne adj meg személyes adatokat.",
+      "old_proposal_sha256": "f5a0f9867b6f42506cecccab5e6758d9b2828cdca86399ca96b090d0c7535885",
+      "target": "A dal címét és a hangszerszűrőt a TelemetryDeck szolgáltatásnak küldjük el. Ne adj meg személyes adatokat.",
+      "target_sha256": "899eed563722d457921b236c8cf066f1121dd7e11027140a2b7704f92b750719",
+      "refinement_reason": "Replace heavy future passive with idiomatic active app voice; still sends exactly title and instrument filter to the named service, without claiming prior delivery."
+    },
+    {
+      "locale": "nl",
+      "table": "Localizable.strings",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "source": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "source_sha256": "3936cf83723780cce6f187a66999a297e996a06ddaff22d6dbfb51a6bd3a9007",
+      "old_proposal": "Je songtitel en instrumentfilter worden naar TelemetryDeck verstuurd. Vermeld geen persoonlijke informatie.",
+      "old_proposal_sha256": "b98b45afb74df501c8829be1c67b482adacfccd6c706a10e86b3f8a90a6aca98",
+      "target": "De titel van je nummer en je instrumentfilter worden naar TelemetryDeck verstuurd. Vermeld geen persoonlijke informatie.",
+      "target_sha256": "bf7147947c0ab3d3088f9da457cad5ae5c4cb3a7e6dafd3b34a0ac0587e8abaa",
+      "refinement_reason": "Use nummer from the Request a song anchor instead of the unnecessary English loan songtitel; preserve both sent fields and personal-information prohibition."
+    },
+    {
+      "locale": "ro",
+      "table": "Localizable.strings",
+      "key": "Song requests are unavailable in this build.",
+      "source": "Song requests are unavailable in this build.",
+      "source_sha256": "a30cb21f2c57c89ac49b86acd03b2c3976d397067fdcc6a2845a8cdaf79685ed",
+      "old_proposal": "Cererile de cântece nu sunt disponibile în această compilare.",
+      "old_proposal_sha256": "f2ad1a3e0c86d8f68e4b70bdba09e26ecb9e47d0bf363a277d419a802b1057e4",
+      "target": "Cererile de cântece nu sunt disponibile în această versiune a aplicației.",
+      "target_sha256": "e0badc59b175753021705dbd7462a95e1828c9f180833a9c0d5dac6c4b38881d",
+      "refinement_reason": "Compilare names the compilation operation awkwardly here. Versiune a aplicației naturally identifies this particular app build, consistent with accepted version wording in other locales."
+    },
+    {
+      "locale": "vi",
+      "table": "Localizable.strings",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "source": "Song requests are unavailable while usage sharing is off.",
+      "source_sha256": "803ccf034973dcde126914dbc4c66d6603a8389272fc68e4172b1a920e38016a",
+      "old_proposal": "Không thể yêu cầu bài hát khi tính năng chia sẻ dữ liệu dùng đang tắt.",
+      "old_proposal_sha256": "367cadd84f267cef0fcc00a339aeee1084831f69d1f288d933e28070c38004a7",
+      "target": "Không thể yêu cầu bài hát khi tính năng chia sẻ dữ liệu sử dụng đang tắt.",
+      "target_sha256": "b13e532b20180de37b750b083d4fb5cc90bd2e4ef1fa291953978e1ae16f87ab",
+      "refinement_reason": "Use natural dữ liệu sử dụng for usage data; dữ liệu dùng is a clipped literal rendering. This is a descriptive condition, not a quoted renamed control."
+    },
+    {
+      "locale": "lt",
+      "table": "Localizable.strings",
+      "key": "Contact support",
+      "source": "Contact support",
+      "source_sha256": "814f4ed2d5bd33e3a1b93f0d555b2224913e418a41390c90368d856c08c87d42",
+      "old_proposal": "Susisiekti su pagalba",
+      "old_proposal_sha256": "c3ae7bcf53d25763261e9455dc4118eb6ebd19ab69477835fd971eef6e5fe0ea",
+      "target": "Susisiekti su pagalbos tarnyba",
+      "target_sha256": "587e5a3d75f4b82531a1701bea523ec1af054a67ca6df2da09be32a690a4d092",
+      "refinement_reason": "Contact takes a person/service rather than the abstract pagalba (help). Pagalbos tarnyba naturally identifies the support service without specifying telephone or email."
+    }
+  ]
+}

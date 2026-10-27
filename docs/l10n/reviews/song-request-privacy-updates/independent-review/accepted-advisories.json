@@ -1,0 +1,300 @@
+{
+  "reviewer": "Codex /root/request_copy_review",
+  "advisories": [
+    {
+      "locale": "ar",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "target_sha256": "21b5653f1368b4017773eac9f2590c8823941a09d6621afc4dd8141123748b87",
+      "warning": "invisible direction marks: U+2068, U+2069",
+      "decision": "accepted-text-advisory",
+      "reason": "Accepted balanced FSI/PDI around the exact Latin brand. Arabic/Persian/Hebrew paragraph begins in local script and the brand run borders punctuation or has an explicitly documented bounded isolate. No blanket prefix/override. Actual RTL rendering remains unverified."
+    },
+    {
+      "locale": "ca",
+      "key": "Song requests are unavailable in this build.",
+      "target_sha256": "09de61a6b976e4ece34fe9589b242158752e99d7da359d979217262c7dba049f",
+      "warning": "longer than max_length 66 (68)",
+      "decision": "accepted-text-advisory",
+      "reason": "Accepted soft length advisory: retain the complete natural meaning and contact action; heuristic width does not establish actual alert/footer layout. Native layout and truncation remain unverified."
+    },
+    {
+      "locale": "ca",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "target_sha256": "89ddbca5367178cac2c7f334324faa545305e206236230f3cfb13f39d53d6aae",
+      "warning": "longer than max_length 85 (102)",
+      "decision": "accepted-text-advisory",
+      "reason": "Accepted soft length advisory: retain the complete natural meaning and contact action; heuristic width does not establish actual alert/footer layout. Native layout and truncation remain unverified."
+    },
+    {
+      "locale": "de",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "target_sha256": "e1d9ffc11bb7aa2e1e9faed93cd774913d90a4491f80cd1badb62c25585e279e",
+      "warning": "longer than max_length 85 (89)",
+      "decision": "accepted-text-advisory",
+      "reason": "Accepted soft length advisory: retain the complete natural meaning and contact action; heuristic width does not establish actual alert/footer layout. Native layout and truncation remain unverified."
+    },
+    {
+      "locale": "el",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "target_sha256": "a6409e30c6757c200f1f92dcc07d7208eb40c8ea960330983fcee3503220c868",
+      "warning": "longer than max_length 85 (101)",
+      "decision": "accepted-text-advisory",
+      "reason": "Accepted soft length advisory: retain the complete natural meaning and contact action; heuristic width does not establish actual alert/footer layout. Native layout and truncation remain unverified."
+    },
+    {
+      "locale": "es",
+      "key": "Song requests are unavailable in this build.",
+      "target_sha256": "9e17f46b745ade262c8b3881facf0cca4223b42ef327f4bd2b8dca61e7a1a9dc",
+      "warning": "longer than max_length 66 (70)",
+      "decision": "accepted-text-advisory",
+      "reason": "Accepted soft length advisory: retain the complete natural meaning and contact action; heuristic width does not establish actual alert/footer layout. Native layout and truncation remain unverified."
+    },
+    {
+      "locale": "es",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "target_sha256": "c4840822e46aa3f5e523a29814a621cbf1097124755d780dbc4d4ff28000366e",
+      "warning": "longer than max_length 85 (112)",
+      "decision": "accepted-text-advisory",
+      "reason": "Accepted soft length advisory: retain the complete natural meaning and contact action; heuristic width does not establish actual alert/footer layout. Native layout and truncation remain unverified."
+    },
+    {
+      "locale": "fa",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "target_sha256": "8d93d2cfc3ac912389fcc87dec5ff409149e5774e690c69e5d07c7b06d7d9cf5",
+      "warning": "invisible direction marks: U+2068, U+2069",
+      "decision": "accepted-text-advisory",
+      "reason": "Accepted balanced FSI/PDI around the exact Latin brand. Arabic/Persian/Hebrew paragraph begins in local script and the brand run borders punctuation or has an explicitly documented bounded isolate. No blanket prefix/override. Actual RTL rendering remains unverified."
+    },
+    {
+      "locale": "fr",
+      "key": "Song requests are unavailable in this build.",
+      "target_sha256": "8e24c68fc58650a63283063cd9673cbb39dccb7cc307f7b27c4b0094288a578e",
+      "warning": "longer than max_length 66 (68)",
+      "decision": "accepted-text-advisory",
+      "reason": "Accepted soft length advisory: retain the complete natural meaning and contact action; heuristic width does not establish actual alert/footer layout. Native layout and truncation remain unverified."
+    },
+    {
+      "locale": "fr",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "target_sha256": "8b5f8cec6e6ed82c74c1344d04d0d837753376d938225675e1bc1ee82e64ade5",
+      "warning": "longer than max_length 85 (102)",
+      "decision": "accepted-text-advisory",
+      "reason": "Accepted soft length advisory: retain the complete natural meaning and contact action; heuristic width does not establish actual alert/footer layout. Native layout and truncation remain unverified."
+    },
+    {
+      "locale": "he",
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "target_sha256": "ea5794a3ab43d5a2ff691bdf48f01d4c4d822c1e0f32fc671101ba768829f0d5",
+      "warning": "invisible direction marks: U+2068, U+2069",
+      "decision": "accepted-text-advisory",
+      "reason": "Accepted balanced FSI/PDI around the exact Latin brand. Arabic/Persian/Hebrew paragraph begins in local script and the brand run borders punctuation or has an explicitly documented bounded isolate. No blanket prefix/override. Actual RTL rendering remains unverified."
+    },
+    {
+      "locale": "is",
+      "key": "Sending your request…",
+      "target_sha256": "ea2f9318f04e29b1ed2b152bcf7f009c0f6d5152f24e48f1d1c2ec29274c2061",
+      "warning": "longer than max_length 31 (32)",
+      "decision": "accepted-text-advisory",
+      "reason": "Accepted soft length advisory: retain the complete natural meaning and contact action; heuristic width does not establish actual alert/footer layout. Native layout and truncation remain unverified."
+    },
+    {
+      "locale": "it",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "target_sha256": "8a6ed421a3256c265e78e04c82e8c31dcb0f8892e1af77d7f99f519825585c01",
+      "warning": "longer than max_length 85 (95)",
+      "decision": "accepted-text-advisory",
+      "reason": "Accepted soft length advisory: retain the complete natural meaning and contact action; heuristic width does not establish actual alert/footer layout. Native layout and truncation remain unverified."
+    },
+    {
+      "locale": "ja",
+      "key": "Your request could not be sent. Try again later.",
+      "target_sha256": "d2e7eac5239b0ba22020786be85aafe8054799d61b00ca01b0a0dcc2d2322c85",
+      "warning": "longer than max_length 72 (74)",
+      "decision": "accepted-text-advisory",
+      "reason": "Accepted soft length advisory: retain the complete natural meaning and contact action; heuristic width does not establish actual alert/footer layout. Native layout and truncation remain unverified."
+    },
+    {
+      "locale": "kn",
+      "key": "Sending your request…",
+      "target_sha256": "c57544aab988c69e7f71f738fa343f7addc508dfde8a0b3752e31d860d0d9419",
+      "warning": "longer than max_length 31 (35)",
+      "decision": "accepted-text-advisory",
+      "reason": "Accepted soft length advisory: retain the complete natural meaning and contact action; heuristic width does not establish actual alert/footer layout. Native layout and truncation remain unverified."
+    },
+    {
+      "locale": "ml",
+      "key": "Sending your request…",
+      "target_sha256": "16de111fcb9c8c8adeac642751e3f953e7215ee886e0f93079ce7e8385d6c9d7",
+      "warning": "longer than max_length 31 (33)",
+      "decision": "accepted-text-advisory",
+      "reason": "Accepted soft length advisory: retain the complete natural meaning and contact action; heuristic width does not establish actual alert/footer layout. Native layout and truncation remain unverified."
+    },
+    {
+      "locale": "pt",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "target_sha256": "113f1533f8b8f1bdcf1bf228b5ddca2ecf0bf9126f2e803c21d3603e4486c840",
+      "warning": "longer than max_length 85 (107)",
+      "decision": "accepted-text-advisory",
+      "reason": "Accepted soft length advisory: retain the complete natural meaning and contact action; heuristic width does not establish actual alert/footer layout. Native layout and truncation remain unverified."
+    },
+    {
+      "locale": "ro",
+      "key": "Song requests are unavailable in this build.",
+      "target_sha256": "e0badc59b175753021705dbd7462a95e1828c9f180833a9c0d5dac6c4b38881d",
+      "warning": "longer than max_length 66 (73)",
+      "decision": "accepted-text-advisory",
+      "reason": "Accepted soft length advisory: retain the complete natural meaning and contact action; heuristic width does not establish actual alert/footer layout. Native layout and truncation remain unverified."
+    },
+    {
+      "locale": "ro",
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "target_sha256": "baf854efdfedcd11494b4c12bcc4663189b05180492b40236665f40e10120dbd",
+      "warning": "longer than max_length 85 (98)",
+      "decision": "accepted-text-advisory",
+      "reason": "Accepted soft length advisory: retain the complete natural meaning and contact action; heuristic width does not establish actual alert/footer layout. Native layout and truncation remain unverified."
+    },
+    {
+      "locale": "ta",
+      "key": "Sending your request…",
+      "target_sha256": "2976b1f0786f50fe0d74141cdf5b934e0ab3ce02957819fc2fa9bddb0f2867d5",
+      "warning": "longer than max_length 31 (33)",
+      "decision": "accepted-text-advisory",
+      "reason": "Accepted soft length advisory: retain the complete natural meaning and contact action; heuristic width does not establish actual alert/footer layout. Native layout and truncation remain unverified."
+    },
+    {
+      "locale": "bg",
+      "key": "Contact support",
+      "target_sha256": "5b3a01a56547d22ffcba87864002009e1ff083bd1830e386a14b4e2b25697821",
+      "warning": "longer than max_length 22 (25)",
+      "decision": "accepted-text-advisory",
+      "reason": "Accepted soft length advisory: retain the complete natural meaning and contact action; heuristic width does not establish actual alert/footer layout. Native layout and truncation remain unverified."
+    },
+    {
+      "locale": "bn",
+      "key": "Contact support",
+      "target_sha256": "dcb5b035ea51895fb42d4aea5ca0f25a318e8867615140c8f1e26d6b32f7ea21",
+      "warning": "longer than max_length 22 (28)",
+      "decision": "accepted-text-advisory",
+      "reason": "Accepted soft length advisory: retain the complete natural meaning and contact action; heuristic width does not establish actual alert/footer layout. Native layout and truncation remain unverified."
+    },
+    {
+      "locale": "el",
+      "key": "Contact support",
+      "target_sha256": "465b7ee78151f13884b29e7df99df8565c1bf05d7463e6de4803284dcba1b9dc",
+      "warning": "longer than max_length 22 (29)",
+      "decision": "accepted-text-advisory",
+      "reason": "Accepted soft length advisory: retain the complete natural meaning and contact action; heuristic width does not establish actual alert/footer layout. Native layout and truncation remain unverified."
+    },
+    {
+      "locale": "hu",
+      "key": "Contact support",
+      "target_sha256": "c08c5e2523ba240d2b50843bfe631673cb555c08c450dbe889c65015d1e811fe",
+      "warning": "longer than max_length 22 (32)",
+      "decision": "accepted-text-advisory",
+      "reason": "Accepted soft length advisory: retain the complete natural meaning and contact action; heuristic width does not establish actual alert/footer layout. Native layout and truncation remain unverified."
+    },
+    {
+      "locale": "is",
+      "key": "Contact support",
+      "target_sha256": "b276d1c7123aeec656a6249e2b0911c121228b31d218b5899985443576d715c1",
+      "warning": "longer than max_length 22 (28)",
+      "decision": "accepted-text-advisory",
+      "reason": "Accepted soft length advisory: retain the complete natural meaning and contact action; heuristic width does not establish actual alert/footer layout. Native layout and truncation remain unverified."
+    },
+    {
+      "locale": "kn",
+      "key": "Contact support",
+      "target_sha256": "83f356a9702aa760c98bb20b40b2026e464a755a4f412510e25cd3f73578b3d3",
+      "warning": "longer than max_length 22 (26)",
+      "decision": "accepted-text-advisory",
+      "reason": "Accepted soft length advisory: retain the complete natural meaning and contact action; heuristic width does not establish actual alert/footer layout. Native layout and truncation remain unverified."
+    },
+    {
+      "locale": "lt",
+      "key": "Contact support",
+      "target_sha256": "587e5a3d75f4b82531a1701bea523ec1af054a67ca6df2da09be32a690a4d092",
+      "warning": "longer than max_length 22 (30)",
+      "decision": "accepted-text-advisory",
+      "reason": "Accepted soft length advisory: retain the complete natural meaning and contact action; heuristic width does not establish actual alert/footer layout. Native layout and truncation remain unverified."
+    },
+    {
+      "locale": "lv",
+      "key": "Contact support",
+      "target_sha256": "5f4b5fbb7d58347fd1e12a28b080a4464145014e8009deb545f013f54e604f35",
+      "warning": "longer than max_length 22 (31)",
+      "decision": "accepted-text-advisory",
+      "reason": "Accepted soft length advisory: retain the complete natural meaning and contact action; heuristic width does not establish actual alert/footer layout. Native layout and truncation remain unverified."
+    },
+    {
+      "locale": "ml",
+      "key": "Contact support",
+      "target_sha256": "e227cda32ee148ca741a471113afc992fbc3f7b2cad966c16126ef919bf8b9e9",
+      "warning": "longer than max_length 22 (32)",
+      "decision": "accepted-text-advisory",
+      "reason": "Accepted soft length advisory: retain the complete natural meaning and contact action; heuristic width does not establish actual alert/footer layout. Native layout and truncation remain unverified."
+    },
+    {
+      "locale": "nl",
+      "key": "Contact support",
+      "target_sha256": "6d1f87833058395f4ba14fe466001cab8ac418eaf3407efe1709b7eb8661fe7e",
+      "warning": "longer than max_length 22 (33)",
+      "decision": "accepted-text-advisory",
+      "reason": "Accepted soft length advisory: retain the complete natural meaning and contact action; heuristic width does not establish actual alert/footer layout. Native layout and truncation remain unverified."
+    },
+    {
+      "locale": "pl",
+      "key": "Contact support",
+      "target_sha256": "5c5d861dd6eea91f6e11baa4c31b48cc9c5ecf6b7ec2929a3cf701578b2182e5",
+      "warning": "longer than max_length 22 (27)",
+      "decision": "accepted-text-advisory",
+      "reason": "Accepted soft length advisory: retain the complete natural meaning and contact action; heuristic width does not establish actual alert/footer layout. Native layout and truncation remain unverified."
+    },
+    {
+      "locale": "pt",
+      "key": "Contact support",
+      "target_sha256": "be10398c88710af781bad3f8f7194617ce0ba58998e139b7b89fedf5d027ca1f",
+      "warning": "longer than max_length 22 (31)",
+      "decision": "accepted-text-advisory",
+      "reason": "Accepted soft length advisory: retain the complete natural meaning and contact action; heuristic width does not establish actual alert/footer layout. Native layout and truncation remain unverified."
+    },
+    {
+      "locale": "sw",
+      "key": "Contact support",
+      "target_sha256": "df9e9f88bf2276635e80651cd5305e0ef5abae9378a96adc7b397a10ce5090a5",
+      "warning": "longer than max_length 22 (31)",
+      "decision": "accepted-text-advisory",
+      "reason": "Accepted soft length advisory: retain the complete natural meaning and contact action; heuristic width does not establish actual alert/footer layout. Native layout and truncation remain unverified."
+    },
+    {
+      "locale": "ta",
+      "key": "Contact support",
+      "target_sha256": "f46616f25ef575f62a0266743a9ccd935eed5758a85e6064e16488faf965d628",
+      "warning": "longer than max_length 22 (24)",
+      "decision": "accepted-text-advisory",
+      "reason": "Accepted soft length advisory: retain the complete natural meaning and contact action; heuristic width does not establish actual alert/footer layout. Native layout and truncation remain unverified."
+    },
+    {
+      "locale": "te",
+      "key": "Contact support",
+      "target_sha256": "7ddeb15c60194438ebe58b6ec36e7537f3174afb3e2d28048c6ee8965ace08d2",
+      "warning": "longer than max_length 22 (23)",
+      "decision": "accepted-text-advisory",
+      "reason": "Accepted soft length advisory: retain the complete natural meaning and contact action; heuristic width does not establish actual alert/footer layout. Native layout and truncation remain unverified."
+    },
+    {
+      "locale": "uk",
+      "key": "Contact support",
+      "target_sha256": "b18940fdbefef1e687b7bfa9e5e75689b5b95206841dd8b75ed70019cb01e43e",
+      "warning": "longer than max_length 22 (23)",
+      "decision": "accepted-text-advisory",
+      "reason": "Accepted soft length advisory: retain the complete natural meaning and contact action; heuristic width does not establish actual alert/footer layout. Native layout and truncation remain unverified."
+    }
+  ],
+  "additional_script_advisory": {
+    "locale": "te",
+    "key": "Contact support",
+    "codepoint": "U+200C",
+    "decision": "retain",
+    "reason": "సపోర్ట్‌ను separates the virama-ending loanword stem from accusative ను; allowed Indic shaping boundary, not bidi. Native rendering unverified."
+  }
+}

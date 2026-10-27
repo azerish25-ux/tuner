@@ -1,0 +1,96 @@
+{
+  "review": "Independent privacy, security and release-content baseline",
+  "baseline_commit": "0c679011095f45eae2e28cd8593b23386a013b7d",
+  "review_date": "2026-10-26",
+  "scope": "Read-only source review; only this report created. No Apple account, product, site, privacy manifest or deployment changed.",
+  "findings": [
+    {
+      "id": "PRIV-01",
+      "priority": "release-blocker-when-analytics-enabled",
+      "source": ["ios/Timbre/Resources/PrivacyInfo.xcprivacy", "docs/ios/RELEASE-CHECKLIST.md:549", "ios/Timbre/Services/Analytics.swift:166", "ios/Timbre/Songs/SongsView.swift:345"],
+      "fact": "The app manifest declares ProductInteraction, PerformanceData, CrashData and AdvertisingData, all Analytics/not linked/not tracking. H6 additionally declares Device ID, Purchase History and Other User Content; the actual client sends a stable hashed random install UUID, purchase/subscription outcomes, and submitted song-request text.",
+      "minimal_fix": "Add NSPrivacyCollectedDataTypeDeviceID, NSPrivacyCollectedDataTypePurchaseHistory and NSPrivacyCollectedDataTypeOtherUserContent with Analytics purpose, tracking false. Not-linked is appropriate only while no identity is deliberately attached and no relinking occurs; do not treat hashing arbitrary personal input as automatically anonymous.",
+      "primary_sources": ["https://developer.apple.com/documentation/bundleresources/app-privacy-configuration/nsprivacycollecteddatatypes/nsprivacycollecteddatatype", "https://developer.apple.com/app-store/app-privacy-details/", "https://telemetrydeck.com/docs/articles/apple-app-privacy/"]
+    },
+    {
+      "id": "PRIV-02",
+      "priority": "high",
+      "source": ["ios/Timbre/Services/Analytics.swift:152", "ios/Timbre/Services/Analytics.swift:210", "ios/Timbre/Services/Analytics.swift:232", "ios/Timbre/Services/Analytics.swift:236", "docs/ios/PRIVACY.md:25"],
+      "fact": "Opt-out clears the queue and cancels its flush timer. Already-started URLSession uploads are untracked and cannot be canceled by setSharing(false). Apple Ads checks Analytics.isSending only before spawning its detached task, then may send additional attribution retries after opt-out. The initial saved preference is applied before Analytics.start, using serial queue ordering, so saved opt-out is respected at ordinary startup.",
+      "minimal_fix": "Track/cancel active analytics requests on opt-out; recheck sharing before token creation, before each attribution request/retry and before reporting completion. Cancel attribution work on opt-out if feasible. Explain that opting out prevents future collection and discards unsent events; requests already delivered cannot be recalled. Add meaningful opt-out/queue/cancellation tests on a network stub.",
+      "primary_sources": ["https://developer.apple.com/documentation/AdServices/AAAttribution/attributionToken%28%29"]
+    },
+    {
+      "id": "PRIV-03",
+      "priority": "high",
+      "source": ["docs/ios/PRIVACY.md:11", "docs/site/privacy.html:27", "ios/Timbre/YourSongs/YourSongsStore.swift:208", "ios/Sources/TimbreCore/YourSongs/UserSongLibrary.swift:134", "ios/Sources/TimbreCore/YourSongs/UserSongLibrary.swift:149", "ios/Timbre/YourSongs/AppleMusicListen.swift:67"],
+      "fact": "The policy lists settings/tunings/practice history but omits imported chart text, local copies of audio recordings, synchronization data and Apple Music catalog links. It also omits the optional MusicKit service: search terms, catalog lookups and playback requests go to Apple after authorization. No microphone recording writer or chart/audio upload was found in these paths. The microphone-specific on-device/in-memory statement is supported; an unqualified claim that Timbre never stores recordings would not be.",
+      "minimal_fix": "Add local Your songs storage and deletion/backups explanation; distinguish live microphone processing from audio files users deliberately import. Add optional Apple Music search/playback and Apple's service/privacy context, without claiming MusicKit operates offline or that the analytics toggle disables it. Keep Markdown and hosted HTML synchronized.",
+      "primary_sources": ["https://developer.apple.com/app-store/app-privacy-details/"]
+    },
+    {
+      "id": "PRIV-04",
+      "priority": "medium",
+      "source": ["docs/ios/PRIVACY.md:19", "docs/ios/PRIVACY.md:29", "docs/ios/PRIVACY.md:31", "ios/Timbre/Services/Analytics.swift:254", "ios/Timbre/Services/RemoteConfig.swift:145"],
+      "fact": "Policy says events contain no location, but attribution properties explicitly include countryOrRegion as Timbre.country. It also says HTTP remote-settings/rating requests carry nothing about the person; HTTPS endpoints necessarily receive network metadata such as IP address. The code adds no install/account identifier to remote config, but that does not prove host logging practices.",
+      "minimal_fix": "Either remove country forwarding (smallest data-minimizing fix) or disclose attribution country/region and reassess location classification. Replace absolute network guarantees with 'the app does not add an install/account identifier to this request'; accurately describe hosting operational logs once hosting is chosen. Do not add CoarseLocation automatically solely because Locale.current includes a region; distinguish actual transmitted geographic attribution from language/locale metadata.",
+      "primary_sources": ["https://developer.apple.com/app-store/app-privacy-details/", "https://developer.apple.com/documentation/AdServices/AAAttribution/attributionToken%28%29"]
+    },
+    {
+      "id": "PRIV-05",
+      "priority": "medium",
+      "source": ["ios/Timbre/Songs/SongsView.swift:333", "ios/Timbre/Songs/SongsView.swift:340", "ios/Timbre/Services/Analytics.swift:34", "docs/ios/PRIVACY.md:21", "docs/ios/PRIVACY.md:54"],
+      "fact": "Song requests are user-entered text trimmed to 80 characters, sent as telemetry only when enabled. UI unconditionally says 'Your request is in' even with no app ID or opt-out, when nothing is delivered. Analytics also logs the full properties as public OS log text, including user-entered song titles, even when telemetry is off. A user can type personal information despite policy caution; absolute anonymity/no-personal-information statements are stronger than this feature can ensure.",
+      "minimal_fix": "Show a truthful unavailable/offline/sharing-off state or disable this submission while telemetry is unavailable; disclose the title transmission at the request UI. Avoid public logging of user input (redact property values or at least song titles). Replace categorical untraceable/no-personal-information guarantees with precise implementation facts and no-identity/no-relinking intent.",
+      "primary_sources": ["https://developer.apple.com/app-store/app-privacy-details/", "https://telemetrydeck.com/docs/articles/apple-app-privacy/"]
+    },
+    {
+      "id": "REL-01",
+      "priority": "high",
+      "source": ["docs/ios/RELEASE-CHECKLIST.md:72", "ios/Timbre/Services/GameCenter.swift:138", "ios/Timbre/Services/GameCenter.swift:145", "ios/project.yml:43", "docs/ios/PRIVACY.md:44"],
+      "fact": "Release decision says Game Center off for 2.0 unless assets/setup are ready. Actual enabled flag is only !TestSupport.isAutomated, so every ordinary build can activate GameKit. App Store Connect not recognizing the app is an error fallback, not an explicit release feature gate. Source project entitlements declare App Groups but no game-center entitlement.",
+      "minimal_fix": "Add a build-configured Game Center enable gate defaulting false, and make every entry path respect it. Keep release listing/age-rating claims consistent with the disabled feature. Retain clearly conditional privacy disclosure for future enabled builds or explicitly say this release does not enable Game Center. Do not assert production GameKit, achievements/challenges or friend authorization are verified without account/device setup.",
+      "primary_sources": []
+    },
+    {
+      "id": "REL-02",
+      "priority": "release-blocker",
+      "source": ["docs/KNOWN-ISSUES.md:81", "docs/site/README.md", "ios/project.yml:115", "ios/Timbre/Services/ShareDestination.swift:14"],
+      "fact": "Repository documents that the previously hosted policy is stale; generated docs/site pages are publication inputs only. Build and fallback still use GitHub Pages. Analytics, remote-config, share URL and App Store ID defaults are empty. Privacy fallback is a real HTTPS URL, but is not evidence the live policy matches collection.",
+      "minimal_fix": "Publish synchronized privacy/support pages to the owner's chosen free Cloudflare HTTPS host, verify the actual responses, and update both build privacy URL and fallback. Keep share/remote-config unset unless their endpoints are really implemented. Remote config and ratings have no deliberate install ID but remain network features. Do not fabricate an App Store numeric ID before the record exists.",
+      "primary_sources": []
+    },
+    {
+      "id": "REL-03",
+      "priority": "documentation-correction",
+      "source": ["docs/KNOWN-ISSUES.md:80", "ios/Sources/TimbreCore/Resources/photos.json"],
+      "fact": "Owner has explicitly attested that the 68 provided images were created/generated by them. Existing issue is absence of recorded provenance, not evidence of unlicensed third-party reuse.",
+      "minimal_fix": "Record the owner's attestation with scope/date and normalize provenance metadata/credits to owner-created or owner-generated. Preserve actual external photo/audio/font license records. Do not invent third-party licenses, generation vendor, or nonexistent source URLs.",
+      "primary_sources": []
+    }
+  ],
+  "confirmed_behaviors": {
+    "telemetry_defaults": "UserSettings.sharesUsage defaults true, but network telemetry requires nonempty resolved TimbreTelemetryAppID; automated runs force appID nil. Current project default ID is empty.",
+    "identifier": "A random UUID persisted in UserDefaults under telemetry.installID is SHA256 hashed before clientUser is sent. This is stable per stored installation, not IDFA or Apple Account ID. TelemetryDeck v2 documents a second server-side salted hash. No SDK is used; this is a custom HTTP client.",
+    "telemetry_payload": "App version, OS version, locale, event name and properties, hashed install identifier, session UUID. Purchases include plan/price/currency/status/outcomes. MetricKit exports scalar summaries/counts, not complete crash reports or stacks. AdServices forwards campaign/adgroup/keyword/country/conversion metadata, not the full Apple response or token to TelemetryDeck.",
+    "microphone": "Live pitch/lesson processing is local. Imported user recordings are separate deliberate file imports, stored locally and analyzed locally. No upload of imported chart/audio content found.",
+    "tracking": "No IDFA/ATT request or cross-company tracking integration was found in reviewed paths. No tracking domain is needed merely because an analytics endpoint exists; NSPrivacyTracking false is consistent with current stated use.",
+    "api_reasons": "App manifest already declares UserDefaults CA92.1/1C8F.1 and SystemBootTime 35F9.1. Reviewed source uses uptime for elapsed durations and app-group preferences; no missing required-reason API category was confirmed from targeted search. This is not a compiled archive privacy report.",
+    "ingest_validity": "Current v2 endpoint and JSON-array body with nonempty appID/clientUser/type match TelemetryDeck official v2 API. No evidence migration to v3 is required. Existing custom TelemetryDeck-prefixed metadata keys are reserved/recommended-against for general custom fields but match familiar SDK keys; no proven ingest defect identified."
+  },
+  "account_dependent_limits": [
+    "Apple Developer enrollment, App Store Connect app record/numeric ID, MusicKit service, Game Center entitlement/capability and production service behavior cannot be completed or verified without the owner's account.",
+    "App Privacy answers must describe the final distributed build and partner practices, and must be entered/published by the owner in App Store Connect; the manifest does not replace those answers.",
+    "H6's no-analytics 'Data Not Collected' shortcut must be reassessed if Game Center is enabled, user content is sent through any additional channel, or hosting/support practices change. Apple Ads does not run without analytics ID in current code, contrary to H6's implication that it remains active.",
+    "Production analytics dashboard/app ID, data retention/access/deletion arrangements and configured hosting logs were not inspected. No live collection or dashboard delivery claim is made.",
+    "Network cancellation cannot retract bytes or events already received. Runtime network tests and a signed/archive privacy report remain required on macOS/device."
+  ],
+  "primary_reference_urls": [
+    "https://developer.apple.com/app-store/app-privacy-details/",
+    "https://developer.apple.com/documentation/bundleresources/app-privacy-configuration/nsprivacycollecteddatatypes/nsprivacycollecteddatatype",
+    "https://developer.apple.com/documentation/AdServices/AAAttribution/attributionToken%28%29",
+    "https://telemetrydeck.com/docs/articles/apple-app-privacy/",
+    "https://telemetrydeck.com/docs/ingest/v2/",
+    "https://telemetrydeck.com/docs/articles/anonymization-how-it-works/"
+  ]
+}

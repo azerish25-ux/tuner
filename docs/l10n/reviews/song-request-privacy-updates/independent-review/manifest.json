@@ -1,0 +1,370 @@
+{
+  "reviewer": "Codex /root/request_copy_review",
+  "role": "independent AI semantic review",
+  "author": "Codex /root/review_is",
+  "reviewed_pairs": 288,
+  "accepted": 283,
+  "refined": 5,
+  "rejected": 0,
+  "locale_count": 48,
+  "keys_per_locale": 6,
+  "locales": [
+    "ar",
+    "bg",
+    "bn",
+    "ca",
+    "cs",
+    "da",
+    "de",
+    "el",
+    "es",
+    "et",
+    "fa",
+    "fi",
+    "fr",
+    "gu",
+    "he",
+    "hi",
+    "hr",
+    "hu",
+    "id",
+    "is",
+    "it",
+    "ja",
+    "kn",
+    "ko",
+    "lt",
+    "lv",
+    "ml",
+    "mr",
+    "nl",
+    "no",
+    "pa",
+    "pl",
+    "pt",
+    "ro",
+    "ru",
+    "sk",
+    "sl",
+    "sv",
+    "sw",
+    "ta",
+    "te",
+    "th",
+    "tr",
+    "uk",
+    "ur",
+    "vi",
+    "zh-CN",
+    "zu"
+  ],
+  "method": "Read every source/target pair directly; compared six meanings, actual locale glossary register/punctuation/song vocabulary and supplied shipped request/sharing/instrument/support anchors. Reviewed every author QA warning and reran current helper on final targets. This is source-aware AI review, not blinded back-translation.",
+  "guide_sections_read": [
+    "2.1–2.2 scope",
+    "4 hard rules including 4.4–4.15",
+    "8.5 review policy"
+  ],
+  "limitations": [
+    "No native-human certification",
+    "No native runtime, device, screenshot, VoiceOver or RTL layout verification",
+    "No market or legal certification",
+    "Source-aware multilingual AI judgments can miss idiomatic or regional problems"
+  ],
+  "frozen_inputs": [
+    {
+      "path": "docs/l10n/reviews/song-request-privacy-updates/manifest.json",
+      "sha256": "857789427cf077b5985ef0e972aeae163d31e6e8bddfeeb3ed026eea84c8eef7"
+    },
+    {
+      "path": "docs/l10n/reviews/song-request-privacy-updates/proposals.json",
+      "sha256": "e7b548a79bdded210b452bdd5687175014d2a9afe36436aafdbe3ff137e036e3"
+    },
+    {
+      "path": "docs/l10n/reviews/song-request-privacy-updates/context-glossary-refs.json",
+      "sha256": "51846e05e6267cf423c5a5cd3a6a11e4b8dc239f39117b97981de621a2af5318"
+    },
+    {
+      "path": "docs/l10n/reviews/song-request-privacy-updates/proposal-qa.json",
+      "sha256": "de0d07a8f2fcc75955f419a178fff42078dd2ab286554e475c713517d79691e7"
+    },
+    {
+      "path": "docs/l10n/reviews/song-request-privacy-updates/contact-support-addendum/manifest.json",
+      "sha256": "51a9548eec19c740b764b88cb7e234caf984d69276d4721ea50538e8f62b8d9c"
+    },
+    {
+      "path": "docs/l10n/reviews/song-request-privacy-updates/contact-support-addendum/proposals.json",
+      "sha256": "b7e350e9d873f7b985d29fd2fa0a6b4a5bed8c706bcc90288a81e7d4c4373e0e"
+    },
+    {
+      "path": "docs/l10n/reviews/song-request-privacy-updates/contact-support-addendum/context-glossary-refs.json",
+      "sha256": "4a14140b2d8d039968176a566e12207628b886c932802aab091c3a54c1e131d9"
+    },
+    {
+      "path": "docs/l10n/reviews/song-request-privacy-updates/contact-support-addendum/proposal-qa.json",
+      "sha256": "652b618bbc7d298454bdf648d2f95fb6348b5b0ed775db7315b81dab19130207"
+    },
+    {
+      "path": "docs/l10n/TRANSLATING-WITH-GPT.md",
+      "sha256": "ff0abd2fae5e3960d299b265487542a59681993eb4a19d58a20434dc56de7336"
+    }
+  ],
+  "glossaries": [
+    {
+      "locale": "ar",
+      "path": "docs/l10n/glossary/ar.md",
+      "sha256": "7a854703673afe1f0110ace426ba1dbb35f255ad16b2b7ee134fdb2e9c45d391"
+    },
+    {
+      "locale": "bg",
+      "path": "docs/l10n/glossary/bg.md",
+      "sha256": "f90198c8012266e1828dce873d66e29fadae8fd13856ed2f16dd30d138326189"
+    },
+    {
+      "locale": "bn",
+      "path": "docs/l10n/glossary/bn.md",
+      "sha256": "6b67c6147f8edc3c56996938aa06bf7b21d5c987899f1080b6262c1dd730735d"
+    },
+    {
+      "locale": "ca",
+      "path": "docs/l10n/glossary/ca.md",
+      "sha256": "0705d86767ddf4e7f0b72b52a25788781f39a5a45320200712c9fb8f214c9b41"
+    },
+    {
+      "locale": "cs",
+      "path": "docs/l10n/glossary/cs.md",
+      "sha256": "3788e1297ba49bee6d92fa4058b86b397dea34ab65259c8b98e9775deca5d0c2"
+    },
+    {
+      "locale": "da",
+      "path": "docs/l10n/glossary/da.md",
+      "sha256": "a1815f27ab10b26efc444beb6810a2bab865a0e1bf37d6f3b912cf84b4717899"
+    },
+    {
+      "locale": "de",
+      "path": "docs/l10n/glossary/de.md",
+      "sha256": "7af0807d95357a42df1009c6855a876b8a0f83696255263b19052d472d8f6a12"
+    },
+    {
+      "locale": "el",
+      "path": "docs/l10n/glossary/el.md",
+      "sha256": "5fceb92ed4899d93a4865ec91038b2efb7e1ea896a7db19a95330673650206b3"
+    },
+    {
+      "locale": "es",
+      "path": "docs/l10n/glossary/es.md",
+      "sha256": "5dc54645f82dc536e527ed066852ab33b813a62977f145a5c23aa10d606c165c"
+    },
+    {
+      "locale": "et",
+      "path": "docs/l10n/glossary/et.md",
+      "sha256": "3acd5b1efacf12d49c7e9f62815f9e0d4422015255efdf8c805a8b3897a64496"
+    },
+    {
+      "locale": "fa",
+      "path": "docs/l10n/glossary/fa.md",
+      "sha256": "056cc8e1c7d1bc24c74c6c216235e5cfb99fa87563111e1806cbf5af18400b74"
+    },
+    {
+      "locale": "fi",
+      "path": "docs/l10n/glossary/fi.md",
+      "sha256": "76fdab0f321e3e187e6c89561ac9b7e50936633acc746462ec0a0bc759216ec1"
+    },
+    {
+      "locale": "fr",
+      "path": "docs/l10n/glossary/fr.md",
+      "sha256": "ef9613e242a7caf0d4c760ac4b82b863a23c19df96755d7c3e0fd6f39cf28a35"
+    },
+    {
+      "locale": "gu",
+      "path": "docs/l10n/glossary/gu.md",
+      "sha256": "2f4c1e4525460ea3ef1bd0e77030aa20519ceca7c2b2f4de445ff9dfe121a809"
+    },
+    {
+      "locale": "he",
+      "path": "docs/l10n/glossary/he.md",
+      "sha256": "f30d2e760e70df1b020c50d40b34d834cf5df439e195e94f24fae7225add6a1c"
+    },
+    {
+      "locale": "hi",
+      "path": "docs/l10n/glossary/hi.md",
+      "sha256": "4a4504d0fa1a62f7e0c0d4f6d302761bd2017c3726196de76d526b6c5a324989"
+    },
+    {
+      "locale": "hr",
+      "path": "docs/l10n/glossary/hr.md",
+      "sha256": "776252de88cdf961d28b3915f9540fae82d3b2408b81a8f3e6b282c34d239bb8"
+    },
+    {
+      "locale": "hu",
+      "path": "docs/l10n/glossary/hu.md",
+      "sha256": "195f00460cc43447d66b4d421cc2de925a7dabf460ffc7dc50912a667d42e27e"
+    },
+    {
+      "locale": "id",
+      "path": "docs/l10n/glossary/id.md",
+      "sha256": "d123145da438f8c4e2a4b512e0b12e47650b21730bd9b24963e8d89ea109316a"
+    },
+    {
+      "locale": "is",
+      "path": "docs/l10n/glossary/is.md",
+      "sha256": "64ba936e9457a5b5e3d75b193e04c1ebce3713f781bb81c8387102eb42a21aac"
+    },
+    {
+      "locale": "it",
+      "path": "docs/l10n/glossary/it.md",
+      "sha256": "5719ba42622ba1f38f72194006ccbbede8cda52cd9dec24adab912f72af9b9dd"
+    },
+    {
+      "locale": "ja",
+      "path": "docs/l10n/glossary/ja.md",
+      "sha256": "829e5fee8a475dc887cf05ba288432cef52e432fccd6bfba5ed008dfcad95570"
+    },
+    {
+      "locale": "kn",
+      "path": "docs/l10n/glossary/kn.md",
+      "sha256": "07010a6e4582ab359ed98757fafd1d26de7eb596d40221e0c890ae0c65773e69"
+    },
+    {
+      "locale": "ko",
+      "path": "docs/l10n/glossary/ko.md",
+      "sha256": "45f752759ccb3a436f1b59498e38b8b88a1421246ec39d3ae775cf2ca6d47091"
+    },
+    {
+      "locale": "lt",
+      "path": "docs/l10n/glossary/lt.md",
+      "sha256": "60bb26916bba852fdf1a8fae79f5f64a5d9909920fa2442c3297dc898b399a52"
+    },
+    {
+      "locale": "lv",
+      "path": "docs/l10n/glossary/lv.md",
+      "sha256": "c9c99da6117158edbd3312deee34e5171141192bdbe117dce1ffc5191a0af08e"
+    },
+    {
+      "locale": "ml",
+      "path": "docs/l10n/glossary/ml.md",
+      "sha256": "5e28e255d3102c0700ea1116e9c1ebf8a476a673c39ecbc60ee20f14d2757d3c"
+    },
+    {
+      "locale": "mr",
+      "path": "docs/l10n/glossary/mr.md",
+      "sha256": "784bde2c17a6b33c33165d0a8ce3e93d4bd8708fad53b2763434556be8707e1c"
+    },
+    {
+      "locale": "nl",
+      "path": "docs/l10n/glossary/nl.md",
+      "sha256": "8a72824dd363b702a70ac63ae5519e2671fe9ce9ce32db07e3de2890f6d20a20"
+    },
+    {
+      "locale": "no",
+      "path": "docs/l10n/glossary/no.md",
+      "sha256": "491954e86aa71b66eade3c1e9f29203f51ceec8b440b6ed4e502a9e2d4dcce52"
+    },
+    {
+      "locale": "pa",
+      "path": "docs/l10n/glossary/pa.md",
+      "sha256": "a3670ba8a9e0f81cd842dd47c93cc19800013c64703348e9fb9e639e2e2c2a68"
+    },
+    {
+      "locale": "pl",
+      "path": "docs/l10n/glossary/pl.md",
+      "sha256": "e61e810de3e6be65fbeabcc2296bdffee6480c5a05674af3c6ece1544d34d1df"
+    },
+    {
+      "locale": "pt",
+      "path": "docs/l10n/glossary/pt.md",
+      "sha256": "8287edb0a57195413d7436b26a4b207b9d4fb7ed5329f36dcf6ef5fa887f5356"
+    },
+    {
+      "locale": "ro",
+      "path": "docs/l10n/glossary/ro.md",
+      "sha256": "f271f34522b493d08ed37c7f7e78dfcf8818ffd8e1dbbc3e6c0283317f837e25"
+    },
+    {
+      "locale": "ru",
+      "path": "docs/l10n/glossary/ru.md",
+      "sha256": "d8af19ab8c8dbc6ccb802e81d243cf278ba14e2b5db4f8d53b5605f8d928422d"
+    },
+    {
+      "locale": "sk",
+      "path": "docs/l10n/glossary/sk.md",
+      "sha256": "80cbbf6659d5ed1f3a99a384786b6913473e07b890c37e90da8d00d9cfb5a9ca"
+    },
+    {
+      "locale": "sl",
+      "path": "docs/l10n/glossary/sl.md",
+      "sha256": "5ec7971e1465f6d97c9983f1f0f3f7a308740524fff578048246ebf1c1a7681c"
+    },
+    {
+      "locale": "sv",
+      "path": "docs/l10n/glossary/sv.md",
+      "sha256": "b3a90fcb4402f35df562c8434d904c1059782a08d99abd8c7c6a201db122dd94"
+    },
+    {
+      "locale": "sw",
+      "path": "docs/l10n/glossary/sw.md",
+      "sha256": "f21b91af5d196839d71b657107699eaa96677d6878f07c86f068c1b1637e10af"
+    },
+    {
+      "locale": "ta",
+      "path": "docs/l10n/glossary/ta.md",
+      "sha256": "d8e1eedb45801ca16020c6d0b07ba5bd26d5e32479a077b11456d6e37a271e8c"
+    },
+    {
+      "locale": "te",
+      "path": "docs/l10n/glossary/te.md",
+      "sha256": "265cd30759d02c7c18c4b80fa23c84a7812964cc706a07ba86bc6141562ca022"
+    },
+    {
+      "locale": "th",
+      "path": "docs/l10n/glossary/th.md",
+      "sha256": "a66b0bba11548a37654e4c175bb20badfd045d7aac2881b80ff6187f815d3b3f"
+    },
+    {
+      "locale": "tr",
+      "path": "docs/l10n/glossary/tr.md",
+      "sha256": "8461c04e9a543a52b465cc7e4898b38efbfebbe3bd9a8d7d5bebfdeb7f4b45d4"
+    },
+    {
+      "locale": "uk",
+      "path": "docs/l10n/glossary/uk.md",
+      "sha256": "814ade63c839bf3960f8e8316b107ddc9fbf6204f1d605155e7a39c578016b9d"
+    },
+    {
+      "locale": "ur",
+      "path": "docs/l10n/glossary/ur.md",
+      "sha256": "9564c4e24b875813d35fb28bc61519cf1f2e3b378af1438c9b3a5b09166df0e5"
+    },
+    {
+      "locale": "vi",
+      "path": "docs/l10n/glossary/vi.md",
+      "sha256": "db177f5cd147e69d2ae9f714edf14a68606bd78f96bffbec9f7a55595a91a150"
+    },
+    {
+      "locale": "zh-CN",
+      "path": "docs/l10n/glossary/zh-CN.md",
+      "sha256": "1ee83180b03e6514ad191c3ad53d8aa51fb03bd81fb6bd27234a6e9eec368706"
+    },
+    {
+      "locale": "zu",
+      "path": "docs/l10n/glossary/zu.md",
+      "sha256": "446c8511c701d01b93b93306272496fac47b1666b6f9dc3ebe3b00e8c30b1122"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "docs/l10n/reviews/song-request-privacy-updates/independent-review/pair-decisions.json",
+      "sha256": "0bad68be1dd650cc94dd7eea1c5066cc3e95f9f119ba35b9dfd650f33623c8f2"
+    },
+    {
+      "path": "docs/l10n/reviews/song-request-privacy-updates/independent-review/guarded-refinements.json",
+      "sha256": "72eb206102d7464650242f3d3d63db3e0698e21a88bbd6a327dbeffcde56c790"
+    },
+    {
+      "path": "docs/l10n/reviews/song-request-privacy-updates/independent-review/accepted-advisories.json",
+      "sha256": "a85a5119b3cdd081a69cdd53e896d8e5a04fa297ba54716bbba9253fba9febf3"
+    }
+  ],
+  "immutability": "New frozen review artifact. Preserve these bytes; source or target changes require a source-bound addendum, not regenerated approval hashes. No author drafts or live maps/resources were modified by reviewer.",
+  "mechanical_errors": 0,
+  "accepted_warning_count": 36
+}

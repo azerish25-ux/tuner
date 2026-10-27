@@ -22,7 +22,7 @@ import UIKit
 /// - After the purchase (`SubscriptionOutcomes`): `subscription_state {state, will_renew, offer, product}` when the
 ///   subscription's status changes, `renewal {product, offer}`, `refund {product, reason}`.
 /// - `referral_share {screen}` when "Give a friend a month" is tapped.
-/// - `attribution {attributed, campaign, ad_group, keyword, country}`, once per install (Apple Ads).
+/// - `attribution {attributed, campaign, ad_group, keyword, conversion}`, once per install (Apple Ads).
 /// - `metrics_daily` and `diagnostics`, MetricKit's daily summaries.
 enum Analytics {
     private static let logger = Logger(subsystem: "com.shahradazerisharghi.timbre", category: "events")
@@ -30,8 +30,7 @@ enum Analytics {
     private static let startRequested = OSAllocatedUnfairLock(initialState: false)
 
     static func log(_ event: String, _ properties: [String: String] = [:]) {
-        let detail = properties.sorted { $0.key < $1.key }.map { "\($0.key)=\($0.value)" }.joined(separator: " ")
-        logger.info("\(event, privacy: .public) \(detail, privacy: .public)")
+        logger.info("\(event, privacy: .public)")
         Telemetry.shared.send(event, properties)
         // An event before the launch call still starts measurement, so app opens and sessions are never missed.
         let first = startRequested.withLock { (started: inout Bool) -> Bool in
@@ -49,9 +48,17 @@ enum Analytics {
     }
 
     /// The player's switch (Settings › Share anonymous usage data, `UserSettings.sharesUsage`), applied by `AppStore`
-    /// as the saved settings open and whenever it changes. Off, nothing more leaves the device and what was waiting is
-    /// dropped; the device's own log carries on. On until it is set.
-    static func setSharing(_ on: Bool) { Telemetry.shared.setSharing(on) }
+    /// as the saved settings open and whenever it changes. Off discards queued events and cancels current requests;
+    /// already delivered requests cannot be recalled. On until it is set.
+    static func setSharing(_ on: Bool) {
+        Telemetry.shared.setSharing(on)
+        if on { AppleAdsAttribution.sendOnce() }
+    }
+
+    /// Explicit submission is acknowledged only when ingest accepts it, never merely when it is queued.
+    static func requestSong(title: String, filter: String, completion: @escaping @Sendable (Bool) -> Void) {
+        Telemetry.shared.submit("song_request", ["title": title, "filter": filter], completion: completion)
+    }
 
     /// Events are leaving the device: the build has an app ID and sharing is on.
     static var isSending: Bool { Telemetry.shared.isSending }
@@ -131,9 +138,15 @@ private final class AnalyticsLifecycle {
 
 /// A small TelemetryDeck client (ingest API v2): signals are batched and posted every 30 s, at 20 queued, and when
 /// the app goes to the background. A failed post is dropped: analytics never retry-storm or grow without bound.
-private final class Telemetry: @unchecked Sendable {
-    static let shared = Telemetry()
+final class Telemetry: @unchecked Sendable {
+    static let shared: Telemetry = {
+        let appID = TestSupport.isAutomated ? nil : AppLinks.string("TimbreTelemetryAppID")
+        // AppStore applies the persisted preference before enabling delivery, including the default-on choice.
+        // An unusually early event must not escape before a saved opt-out has been read.
+        return Telemetry(appID: appID, transport: AnalyticsTransport(enabled: false))
+    }()
 
+    let transport: AnalyticsTransport
     private let appID: String?
     private let queue = DispatchQueue(label: "timbre.telemetry")
     private var pending: [[String: Any]] = []
@@ -142,16 +155,19 @@ private final class Telemetry: @unchecked Sendable {
     private var sharing = true
     private let endpoint = URL(string: "https://nom.telemetrydeck.com/v2/")!
 
-    private init() {
-        // Automated runs (tests, demo modes, capture scenes; never a release build) send nothing.
-        appID = TestSupport.isAutomated ? nil : AppLinks.string("TimbreTelemetryAppID")
+    init(appID: String?, transport: AnalyticsTransport) {
+        self.appID = appID
+        self.transport = transport
+        if appID == nil { transport.setEnabled(false) }
     }
 
-    var isSending: Bool { queue.sync { appID != nil && sharing } }
+    var isSending: Bool { appID != nil && transport.lease != nil }
 
     func setSharing(_ on: Bool) {
-        queue.async { [self] in
+        // No transport callback synchronously waits on this queue. Callbacks always re-enqueue below.
+        queue.sync { [self] in
             sharing = on
+            transport.setEnabled(on && appID != nil)
             guard !on else { return }
             pending.removeAll()
             timer?.cancel(); timer = nil
@@ -162,7 +178,7 @@ private final class Telemetry: @unchecked Sendable {
         queue.async { [self] in session = UUID().uuidString }
     }
 
-    /// A stable, anonymous per-install identifier (random, hashed; not linked to the Apple Account).
+    /// A random installation identifier, hashed before transmission; unrelated to the Apple Account or IDFA.
     private lazy var clientUser: String = {
         let key = "telemetry.installID"
         let id = UserDefaults.standard.string(forKey: key) ?? {
@@ -173,26 +189,56 @@ private final class Telemetry: @unchecked Sendable {
         return SHA256.hash(data: Data(id.utf8)).map { String(format: "%02x", $0) }.joined()
     }()
 
+    private func signal(_ event: String, _ properties: [String: String]) -> [String: Any] {
+        var payload: [String: Any] = [
+            "TelemetryDeck.AppInfo.version": Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "",
+            "TelemetryDeck.RunContext.locale": Locale.current.identifier,
+            "TelemetryDeck.Device.systemVersion": ProcessInfo.processInfo.operatingSystemVersionString,
+        ]
+        for (key, value) in properties { payload["Timbre.\(key)"] = value }
+        var signal: [String: Any] = ["appID": appID ?? "", "clientUser": clientUser, "sessionID": session, "type": event, "payload": payload]
+        #if DEBUG
+        signal["isTestMode"] = true
+        #endif
+        return signal
+    }
+
     func send(_ event: String, _ properties: [String: String]) {
-        guard let appID else { return }
+        guard let lease = transport.lease, appID != nil else { return }
         queue.async { [self] in
             guard sharing else { return }
-            var payload: [String: Any] = [
-                "TelemetryDeck.AppInfo.version": Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "",
-                "TelemetryDeck.RunContext.locale": Locale.current.identifier,
-                "TelemetryDeck.Device.systemVersion": ProcessInfo.processInfo.operatingSystemVersionString,
-            ]
-            for (key, value) in properties { payload["Timbre.\(key)"] = value }
-            var signal: [String: Any] = ["appID": appID, "clientUser": clientUser, "sessionID": session, "type": event, "payload": payload]
-            #if DEBUG
-            signal["isTestMode"] = true
-            #endif
-            pending.append(signal)
-            if pending.count >= 20 { post(nil) } else { scheduleFlush() }
+            transport.withLease(lease) {
+                pending.append(signal(event, properties))
+                if pending.count >= 20 { post(nil) } else { scheduleFlush() }
+            }
         }
     }
 
-    /// Posts what is queued now; `done` runs once the post has finished (at once with nothing to send).
+    /// A user request or attribution outcome is sent immediately and independently of the normal event batch.
+    /// Ingest v2 documents HTTP 200 as accepted; other statuses (including arbitrary 2xx) do not confirm delivery.
+    func submit(_ event: String, _ properties: [String: String], lease supplied: AnalyticsTransport.Lease? = nil,
+                completion: @escaping @Sendable (Bool) -> Void) {
+        guard let lease = supplied ?? transport.lease, appID != nil else { completion(false); return }
+        queue.async { [self] in
+            guard sharing else { completeSubmission(false, lease: lease, completion: completion); return }
+            let allowed = transport.withLease(lease) {
+                upload([signal(event, properties)], lease: lease) { [self] accepted in
+                    completeSubmission(accepted, lease: lease, completion: completion)
+                }
+            }
+            if !allowed { completeSubmission(false, lease: lease, completion: completion) }
+        }
+    }
+
+    private func completeSubmission(_ accepted: Bool, lease: AnalyticsTransport.Lease,
+                                    completion: @escaping @Sendable (Bool) -> Void) {
+        DispatchQueue.global(qos: .utility).async { [transport] in
+            // Recheck immediately before delivery; user callbacks never run on the telemetry queue or under a lock.
+            completion(accepted && transport.lease == lease)
+        }
+    }
+
+    /// Posts what is queued now; done runs when its request finishes, or immediately if nothing remains.
     func flush(_ done: @escaping @Sendable () -> Void) {
         queue.async { [self] in post(done) }
     }
@@ -206,60 +252,40 @@ private final class Telemetry: @unchecked Sendable {
         next.resume()
     }
 
-    /// On the queue: sends the batch and empties it.
     private func post(_ done: (@Sendable () -> Void)?) {
         timer?.cancel(); timer = nil
-        guard !pending.isEmpty, let body = try? JSONSerialization.data(withJSONObject: pending) else { done?(); return }
+        guard sharing, let lease = transport.lease, !pending.isEmpty else { done?(); return }
+        let batch = pending
         pending.removeAll()
-        var request = URLRequest(url: endpoint)
+        upload(batch, lease: lease) { _ in done?() }
+    }
+
+    private func upload(_ signals: [[String: Any]], lease: AnalyticsTransport.Lease,
+                        completion: @escaping @Sendable (Bool) -> Void) {
+        guard let body = try? JSONSerialization.data(withJSONObject: signals) else { completion(false); return }
+        var request = URLRequest(url: endpoint, timeoutInterval: 15)
         request.httpMethod = "POST"
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         request.httpBody = body
-        URLSession.shared.dataTask(with: request) { _, _, _ in done?() }.resume()
+        transport.request(request, lease: lease) { result in
+            guard case .success(let response) = result else { completion(false); return }
+            completion(response.status == 200)
+        }
     }
 }
 
 // MARK: - Apple Ads
 
-/// Which Apple Ads campaign, ad group and keyword brought this install, if any: the AdServices token is resolved with
-/// Apple's attribution API once per install, and the answer is logged as `attribution`. The token says nothing about
-/// the person and needs no tracking permission. Only while events are leaving the device.
 private enum AppleAdsAttribution {
-    private static let doneKey = "telemetry.attributionSent"
-    private static let endpoint = URL(string: "https://api-adservices.apple.com/api/v1/")!
-
-    static func sendOnce() {
-        guard Analytics.isSending, !UserDefaults.standard.bool(forKey: doneKey) else { return }
-        Task.detached(priority: .utility) {
-            guard let token = try? AAAttribution.attributionToken() else { return }
-            // The answer can take a little while to be ready (404 until then): three tries, five seconds apart.
-            for attempt in 0..<3 {
-                if attempt > 0 { try? await Task.sleep(for: .seconds(5)) }
-                var request = URLRequest(url: endpoint, timeoutInterval: 15)
-                request.httpMethod = "POST"
-                request.setValue("text/plain", forHTTPHeaderField: "Content-Type")
-                request.httpBody = Data(token.utf8)
-                guard let (data, response) = try? await URLSession.shared.data(for: request) else { continue }
-                let status = (response as? HTTPURLResponse)?.statusCode ?? 0
-                if status == 404 { continue }
-                guard status == 200, let json = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any] else { return }
-                Analytics.log("attribution", properties(json))
-                UserDefaults.standard.set(true, forKey: doneKey)
-                return
-            }
+    private static let reporter = AppleAdsReporter(
+        transport: Telemetry.shared.transport,
+        token: { try? AAAttribution.attributionToken() },
+        record: { properties, lease, done in
+            Telemetry.shared.submit("attribution", properties, lease: lease, completion: done)
         }
-    }
+    )
 
-    /// The campaign's numbers only (never a click date or anything about the person).
-    private static func properties(_ json: [String: Any]) -> [String: String] {
-        var result = ["attributed": (json["attribution"] as? Bool) == true ? "1" : "0"]
-        let fields = [("campaignId", "campaign"), ("adGroupId", "ad_group"), ("keywordId", "keyword"),
-                      ("countryOrRegion", "country"), ("conversionType", "conversion")]
-        for (key, name) in fields {
-            if let value = json[key] { result[name] = "\(value)" }
-        }
-        return result
-    }
+    static func sendOnce() { reporter.start() }
 }
 
 // MARK: - MetricKit

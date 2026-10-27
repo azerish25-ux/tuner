@@ -9,10 +9,13 @@ import SwiftUI
 ///     TimbrePrivacyURL        the privacy policy
 ///     TimbreRemoteConfigURL   the remote settings file (`RemoteConfig`)
 enum AppLinks {
-    private static let publishedPrivacy = URL(string: "https://azerish25-ux.github.io/tuner/privacy.html")!
+    private static let publishedPrivacy = URL(string: "https://timbre-support.timbre.workers.dev/privacy")!
 
     /// The privacy policy the paywall and Settings link to.
     static var privacy: URL { url("TimbrePrivacyURL") ?? publishedPrivacy }
+
+    /// Public help remains available when analytics or song requests are disabled.
+    static let support = URL(string: "https://timbre-support.timbre.workers.dev/support")!
 
     /// Apple's standard licence agreement, which serves as Timbre's terms of use.
     static let terms = URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!

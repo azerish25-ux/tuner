@@ -1,0 +1,87 @@
+{
+  "date": "2026-10-26",
+  "task": "Privacy consent, truthful song requests and release Game Center gating",
+  "baseline_commit": "0c679011095f45eae2e28cd8593b23386a013b7d",
+  "status": "implemented_source_pending_independent_review_and_native_tests",
+  "plan": "docs/superpowers/plans/2026-10-26-privacy-consent-source-fixes.md",
+  "owned_files": [
+    "ios/Timbre/Services/Analytics.swift",
+    "ios/Timbre/Services/AnalyticsTransport.swift",
+    "ios/Timbre/Services/GameCenter.swift",
+    "ios/Timbre/Services/ShareDestination.swift",
+    "ios/Timbre/Songs/SongsView.swift",
+    "ios/Timbre/Resources/PrivacyInfo.xcprivacy",
+    "ios/project.yml",
+    "ios/TimbreAppTests/AnalyticsPrivacyTests.swift"
+  ],
+  "changes": {
+    "transport": "Foundation-only AnalyticsTransport serializes generation validity, token creation and URLSession task creation with NSRecursiveLock. Revocation invalidates the lease, removes tracked tasks and calls cancel synchronously. Completed old requests cannot acknowledge a newer consent generation. Delayed retry blocks check their captured lease and become no-ops after revocation. URLSession callbacks leave the lock before completion; explicit-submission callbacks are dispatched outside the telemetry queue and locks.",
+    "batching": "Telemetry retains existing 20-event / 30-second / background flush behavior. Saved sharing is synchronously applied, pending events and timer discarded on opt-out, active requests canceled. A signal captures its consent generation before queueing, preventing old work from silently becoming valid after off/on. Shared transport starts disabled until AppStore applies the saved/default preference, so an unexpectedly early event cannot bypass saved opt-out.",
+    "attribution": "AppleAdsReporter replaces detached untracked task. Token creation, initial POST, retry scheduling, response processing, resulting analytics upload and sent-marker persistence all use the same lease. At most three lookup attempts, five seconds apart. A revoked run cannot clear a newer active lease. Country/region removed from output whitelist; only attribution flag, campaign/ad-group/keyword and conversion information remain. The sent marker requires accepted telemetry delivery rather than merely logging or queueing.",
+    "song_request": "Explicit request sends immediately, independent of routine event batching. Only documented HTTP 200 ingestion acceptance produces success and clears input. HTTP errors, unconfigured analytics and revoked consent return failure. UI retains input on failure, displays pending state, rechecks availability at send time and provides disclosure plus always-available Cloudflare Support. No automatic setting change, opt-in shortcut or repository link was added.",
+    "logging": "Preserved parent's event-name-only OS logging; no public event property values or song titles written by Analytics.log.",
+    "game_center": "TimbreGameCenterEnabled reads TIMBRE_GAME_CENTER_ENABLED, default NO. Explicit true and nonautomated run required; activation, pending GameKit activity check, authentication callback, listener registration and activity entry respect the gate. Other GameKit operations remain unreachable without active authentication. Local games, local score/challenge state and ordinary challenge links remain available. Enabling later still requires Apple capability/entitlement, App Store Connect configuration and assets.",
+    "manifest": "Added DeviceID, PurchaseHistory and OtherUserContent with Analytics purpose, linked false, tracking false. Existing ProductInteraction/AdvertisingData/CrashData/PerformanceData retained. Global tracking false and existing required-reason API entries preserved.",
+    "configuration": "Preserved root's https://timbre-support.timbre.workers.dev/privacy build setting; AppLinks.support adds https://timbre-support.timbre.workers.dev/support. No site, policy, store copy or provenance artifact changed by this implementation."
+  },
+  "new_localization_keys": [
+    {
+      "key": "Your song title and instrument filter are sent to TelemetryDeck. Do not include personal information.",
+      "context": "Alert disclosure before explicit song request; transmitted title, maximum 80 characters, and current instrument filter."
+    },
+    {
+      "key": "Song requests are unavailable in this build.",
+      "context": "Analytics app ID is not configured; there is a Support alternative."
+    },
+    {
+      "key": "Song requests are unavailable while usage sharing is off.",
+      "context": "Saved analytics opt-out respected; there is a Support alternative, no forced consent."
+    },
+    {
+      "key": "Your request could not be sent. Try again later.",
+      "context": "Request was not confirmed by ingestion; title retained; Support alternative available."
+    },
+    {
+      "key": "Sending your request…",
+      "context": "Footer status while awaiting ingestion acknowledgment; repeated submit button disabled."
+    }
+  ],
+  "localization_handoff": "Exact five new keys sent to root for all 48 non-English locales and review. Support reuses existing localized key timbre_about_support via an explicit Text button label; the English literal Support is absent from this new flow. Existing Request a song, Song and artist, Send, Cancel and success strings reused. No Something went wrong key added. This receipt does not claim translation integration has completed.",
+  "verification": {
+    "tests_authored_first": true,
+    "native_tests_authored": 12,
+    "native_network_testing": "URLProtocol stubs cover cancellation of in-flight requests, revoked generation work, new-generation delivery, discarded pending signals, explicit ingestion acknowledgment vs HTTP 202/422/500, unconfigured/opt-out rejection, token prevention, attribution retries, new active run after off/on, whitelist filtering, sent-marker acknowledgment and explicit Game Center configuration.",
+    "native_tests_executed": false,
+    "native_command_attempted": "xcodebuild test -project ios/Timbre.xcodeproj -scheme Timbre -only-testing:TimbreAppTests/AnalyticsPrivacyTests",
+    "native_result": "Environment unavailable: xcodebuild not recognized on Windows. Swift not installed; configured WSL distro fails to mount its missing disk. No red/green or native compile result is claimed.",
+    "manifest_xml_parse": "PASS: seven collected-data categories and required purposes/linked/tracking values asserted with plistlib.",
+    "project_yaml_parse": "PASS: parsed with temporary PyYAML; Info expansion, default NO and preserved Cloudflare privacy URL asserted.",
+    "source_contract_checks": "PASS: source contains no detached attribution Task or country forwarding; request UI uses explicit acknowledged API and retains support alternative; consent generation invalidation and cancellation present.",
+    "git_diff_check": "PASS for owned source/config/test files; only repository line-ending normalization warnings.",
+    "independent_review": "Requested from root; pending."
+  },
+  "primary_sources": [
+    "https://telemetrydeck.com/docs/ingest/v2/",
+    "https://developer.apple.com/documentation/AdServices/AAAttribution/attributionToken%28%29",
+    "https://developer.apple.com/documentation/bundleresources/app-privacy-configuration/nsprivacycollecteddatatypes/nsprivacycollecteddatatype",
+    "https://telemetrydeck.com/docs/articles/apple-app-privacy/"
+  ],
+  "limits_and_next_steps": [
+    "Run the 11 focused XCTest cases plus TimbreAppTests, strict-concurrency compilation and relevant native/UI flows on macOS before claiming these fixes passing.",
+    "Root must integrate all 48 non-English translations and localization verification for the five new keys; verify actual alert/progress/error/disabled states on devices or simulators.",
+    "Cancellation cannot retract requests or bytes already delivered to Apple/TelemetryDeck. A response can be lost after the server accepts a request; failure messaging intentionally does not promise non-receipt or exactly-once submission.",
+    "Root owns subsequent policy republishing to describe removed attribution country and canceled retries once source review is complete.",
+    "Default-off Game Center is not a substitute for the capability/entitlement, records, images, friends authorization and device validation required before a future enabled release.",
+    "App Store privacy answers and other Apple account configuration remain account-dependent; no Apple account changes, commits or pushes were performed."
+  ],
+  "file_sha256_at_handoff": {
+    "ios/Timbre/Services/Analytics.swift": "0ef72ddad0382dacb1f300e98dbcf0e5a7cd324ae5d65ad686f816ea3419a72e",
+    "ios/Timbre/Services/AnalyticsTransport.swift": "dad51fd7184feeb0570f1d4db8580baba9f9f9332e1627178ba5453aa9ac46ed",
+    "ios/Timbre/Services/GameCenter.swift": "0bbeca933eef5c29f19734f1ba787d5df1d877886aafd20390ae5fb3d6f86e30",
+    "ios/Timbre/Services/ShareDestination.swift": "7302a8c79ea141527a512ef27dda4e2b59be7d1535b58c846288af6fe8d94124",
+    "ios/Timbre/Songs/SongsView.swift": "7c910ac51bf17a89501774b91454699715380434d9cc310d08e06d5235a860e0",
+    "ios/Timbre/Resources/PrivacyInfo.xcprivacy": "d4e4831610ee58867050a93634d177fa28cd4659affc68233c9cfc0f2ba2a27f",
+    "ios/project.yml": "bde414e495e2cad1451bed7fe8bdd085b8bfe6757b90d1e504320f87c440df11",
+    "ios/TimbreAppTests/AnalyticsPrivacyTests.swift": "bb62d5ee5f7e08df1001004e58b9b865ac91748e208aa5423649b6c39f99175f"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "review": "Publication-only follow-up to public-site-review.json",
+  "date": "2026-10-26",
+  "decision": "approved_for_static_publication_only",
+  "scope": "Static privacy/support publication and provenance record only; not App Store or app readiness approval. Initial review preserved unchanged.",
+  "remaining_content_corrections": [],
+  "resolved": {
+    "SITE-01": "Conditional Game Center availability wording now accurately describes current code without falsely claiming an explicit feature gate.",
+    "SITE-02": "Both local-storage and optional MusicKit paragraphs now distinguish imported audio/full chart text from title/artist metadata seeded into Apple search.",
+    "SITE-03": "Notifications paragraph now discloses reminder acceptance/decline and selected reminder time accurately.",
+    "SITE-04": "Successful-result caching and additional failure/storefront lookups accurately disclosed.",
+    "SITE-05": "Current limited Apple attribution retries after opt-out explicitly disclosed; no assumption upcoming cancellation fix has landed.",
+    "SITE-06": "Attribution country/region now explicitly disclosed.",
+    "PROV-01": "Provenance explicitly distinguishes inherited original-source hashes from optimized bundled derivatives, preserves owner's statement and adds paths and hashes for all 68 bundled and 68 thumbnail files. All 136 derivative hashes independently recomputed and match. Original source bytes were not independently verified."
+  },
+  "independently_checked": {
+    "derivative_hashes": {
+      "bundled": 68,
+      "thumbnail": 68,
+      "mismatches": 0
+    },
+    "generated_html_markdown_parity": {
+      "privacy": true,
+      "support": true
+    },
+    "generated_html_legacy_parity": {
+      "privacy": true,
+      "support": true
+    },
+    "policy_source_sha256": "90d6df287409c65d1269965a08677825739ae71a234d0ac77ecbf065c8b17147",
+    "privacy_html_sha256": "78ead655c4f4e76eb4a6b2e4fbaa7d966c429832d32a7877fc6e7a40a44e3bdb",
+    "support_html_sha256": "93073dc9e946b0651c245eb1905b0be9db514119ee4888f64c84c3742e9cd0e3",
+    "provenance_receipt_sha256": "a9d105ea1fe14d0a6a884468a2f72f07ae06752a0ce56289c191fdbb72ce1b5b"
+  },
+  "publication_limits": [
+    "Cloudflare hosting language is appropriate for deployment of these pages to Cloudflare; no deployment or live URL/header verification was performed by this reviewer.",
+    "Parent-reported local route/header, dry-run, mobile/desktop dark/light and axe results were not independently rerun in this follow-up.",
+    "Transport cancellation, Ads retry cancellation, Game Center gate, manifest completion and truthful song-request UI remain separate app changes. This publication review does not approve those implementations.",
+    "Any pending code change that removes attribution country or changes opt-out retry behavior requires synchronizing policy wording again."
+  ],
+  "next": "Publish these reviewed static artifacts to Cloudflare and verify live HTTP responses and headers. This approval does not certify native app readiness or remaining product fixes."
+}

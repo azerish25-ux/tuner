@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-26",
+  "finding": "PRIV-REV-01",
+  "status": "implemented_source_resolution_pending_independent_rereview_and_native_execution",
+  "review_preserved": "docs/ios/readiness/reviews/privacy-source-independent-review.json",
+  "initial_receipt_preserved": "docs/ios/readiness/reviews/privacy-source-fixes.json",
+  "support_correction_receipt_preserved": "docs/ios/readiness/reviews/privacy-support-label-correction.json",
+  "modified_files": [
+    "ios/Timbre/Services/AnalyticsTransport.swift",
+    "ios/TimbreAppTests/AnalyticsPrivacyTests.swift"
+  ],
+  "implementation": "start reserves activeLease and schedules utility work under a brief lease/state lock; acquireToken checks the generation then calls the synchronous token provider outside the transport lock. It rechecks generation and activeLease after the provider returns, before HTTP creation. Existing HTTP/retry/record/marker generation checks remain. A started uncancellable platform call can finish locally after revoke, but its result is discarded and cannot clear a newer run. Consent revocation never waits on token provider execution.",
+  "regression_tests_added": [
+    "testHeldTokenProviderDoesNotBlockStartOrRevocationAndItsResultIsDiscarded",
+    "testOldHeldTokenCannotSendOrClearTheNewRunAfterOffOn"
+  ],
+  "test_contract": "A semaphore holds the injected provider. First test requires start caller and revocation caller to return before releasing the provider; released revoked work cannot HTTP/record/set marker. Second test revokes and reenables while old provider is held, permits one new generation request, releases old provider while new request remains held, verifies no third provider/start is admitted and only the new response records/marks delivery.",
+  "verification": {
+    "test_first": true,
+    "native_tests_authored_total": 14,
+    "native_tests_executed": false,
+    "native_attempt": "Focused xcodebuild test for both held-provider regressions failed to start: command unavailable on Windows. No red/green/native compiler result claimed.",
+    "source_checks": "PASS: utility dispatch before acquisition; token call lexically outside withLease; generation and activeLease checks after return.",
+    "git_diff_check": "PASS for two changed files."
+  },
+  "file_sha256": {
+    "ios/Timbre/Services/AnalyticsTransport.swift": "7e89d80808af137b1491f3a73157e1743431f716e3e3aaf3e2ad2d39e1752113",
+    "ios/TimbreAppTests/AnalyticsPrivacyTests.swift": "62ecd0755787c769729a93e07db6eb514a6ac2f327d378dcd7e435cdbb58f42a"
+  },
+  "limits": [
+    "Uncancellable provider authorization is checked immediately before entering the provider; a concurrent revoke can discard the eventual result, not interrupt the platform call. No lock is held across that call.",
+    "Native tests and strict-concurrency app compilation remain required on macOS. Source inspection is not an execution result.",
+    "No site, policy, translations, CI, Apple account, commit or push changes performed in this correction."
+  ],
+  "rereview": "Requested via root, which owns the fresh independent source review."
+}

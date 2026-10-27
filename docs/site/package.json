@@ -1,0 +1,15 @@
+{
+  "name": "timbre-public-pages",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "preview": "npm run build && wrangler dev",
+    "deploy": "npm run build && wrangler deploy",
+    "check:deploy": "npm run build && wrangler deploy --dry-run"
+  },
+  "devDependencies": {
+    "marked": "18.1.2",
+    "wrangler": "4.153.0"
+  }
+}
