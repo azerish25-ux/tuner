@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-27T05:31:29.367053+00:00",
+  "reviewer": "Independent fraction View source review agent",
+  "base_head": "bded8d4b75c0086f1e44e1b14b84b03746ae8faf",
+  "scope": "Only uncommitted Text.fraction return type/environment in Kit.swift and lessonCount composition in LearnView.swift. Analytics, privacy and accessibility diagnostics excluded.",
+  "verdict": "approve_source_change_only_native_build_and_exact_render_proof_pending",
+  "findings": [],
+  "source_verification": [
+    "Reviewed both complete scoped diffs and all 17 product Text.fraction call sites plus FractionDirectionTests call site. No remaining Text concatenation or Text-specific typed boundary consumes fraction.",
+    "Other callers use View-compatible modifiers, generic trailing View builders or Label title builders. heroNumeral is defined on View. SectionHeader and JourneyCardHeading trailing content are generic View.",
+    "Text.fraction keeps Int interpolation and inherited locale, gives only numeric Text an explicit leftToRight environment and retains original localized done-of-total accessibility label. Parent rows do not receive the LTR override.",
+    "The sole concatenation helper lessonCount now uses a firstTextBaseline HStack with fraction and localized lessons. Parent HStack direction remains inherited. Two helper callers accept View-compatible modifiers. Single accessibility element ignores children and keeps the exact prior spoken label expression.",
+    "FractionDirectionTests source is unchanged: exact canonical RGBA equality across ar_SA/fa_IR/he_IL/en_US for 3/6 and 12/34 plus swapped-value inequality remain required. No tolerance, crop or comparison weakening."
+  ],
+  "independent_checks": [
+    {
+      "command": "git -c core.autocrlf=false diff --check -- ios/Timbre/Design/Kit.swift ios/Timbre/Learn/LearnView.swift",
+      "exit_code": 0
+    },
+    {
+      "check": "Source inventory/static assertions for scoped signature, LTR modifier, absent concatenation and unchanged fraction test",
+      "exit_code": 0,
+      "product_fraction_calls": 17
+    },
+    {
+      "command": "C:/Users/shahr/Desktop/Translation/.venv-marketing/Scripts/python.exe C:/Users/shahr/Desktop/Translation/inspect_fraction_pixels.py",
+      "result": "Independent script executed and reproduced all eight prior unequal PNG pairs; en/he bboxes differ by one pixel in maxX; ar/fa bboxes equal but tight RGB bytes unequal. The enclosing exploratory shell command exit1 came from an unrelated rg lookup with no matching strict/hygiene text, not script failure."
+    },
+    {
+      "check": "Visual inspection of old en_US3/6 LTR and RTL PNG pair",
+      "result": "Both show numerator3 and denominator6. This does not prove all old pairs show intended values and does not pass the unchanged exact RGBA test."
+    }
+  ],
+  "prior_native_failure": {
+    "run_id": "40452937669",
+    "job_id": "122019602835",
+    "status": "Root-reported native failure, not independently reclassified as pass. Independent PNG inspection corroborates raster differences.",
+    "artifacts_directory": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\app-e3a99fb\\named\\screenshots",
+    "fraction_png_count": 17,
+    "fraction_png_sha256": {
+      "fraction-ar_SA-12-34-ltr.png": "b3f3878b2801311702bfa6df389c979cd1a8db7ee0c0319e7aa72dd1395d5810",
+      "fraction-ar_SA-12-34-rtl.png": "e9fde1e4b6ec371a35bec78c13a5e1de097006d74cf6e1cf5d87b05f76973ece",
+      "fraction-ar_SA-3-6-ltr.png": "38c1d59bfc196a3c59e02650f18bf151683e57fac450c6b576fc42996948a2d3",
+      "fraction-ar_SA-3-6-rtl.png": "79a87511f3d40e1ee19686f38ef3af283c22fcbaa27c91940db1424a05d11ef3",
+      "fraction-ar_SA-6-3-rtl.png": "993f5db75e6839e1c2f48477f7b47154355733a0e1c1f9b9e8f14847b1bb95d8",
+      "fraction-en_US-12-34-ltr.png": "9a0c38867c8fc7072c713bfa9e87bdd598601c087de3a6cca813e487094f74ba",
+      "fraction-en_US-12-34-rtl.png": "a4f49f2467b8e92e1610c9de98abecc8b13bbfead4d222ed2b87c7ee4a3c5d10",
+      "fraction-en_US-3-6-ltr.png": "1fdf795b4e2b7f9e10e6e94f1a675aa979f216addfe496d8ca8a13e35265f6a9",
+      "fraction-en_US-3-6-rtl.png": "ea84b53d06e45bd233390c4e02472f963a39f50725f15559467e313691b4f355",
+      "fraction-fa_IR-12-34-ltr.png": "fc0b83a9b8dca1c2fdc92fdcde5900a496c92a36dca37711040209ef7b9132da",
+      "fraction-fa_IR-12-34-rtl.png": "e41992c2c4b1e84474c10ea6f57acb879eb5b38b007b331850c352e7fc6b5678",
+      "fraction-fa_IR-3-6-ltr.png": "b18a0fec5c948fcdc354ed128ba4ee557aa0926b16ae1a1b14e9a73294d31f51",
+      "fraction-fa_IR-3-6-rtl.png": "7f82861816c03a07fc27e9fa7741fa7c84580bf1f3f9ba97e1f59a39a3621da4",
+      "fraction-he_IL-12-34-ltr.png": "9a0c38867c8fc7072c713bfa9e87bdd598601c087de3a6cca813e487094f74ba",
+      "fraction-he_IL-12-34-rtl.png": "a4f49f2467b8e92e1610c9de98abecc8b13bbfead4d222ed2b87c7ee4a3c5d10",
+      "fraction-he_IL-3-6-ltr.png": "1fdf795b4e2b7f9e10e6e94f1a675aa979f216addfe496d8ca8a13e35265f6a9",
+      "fraction-he_IL-3-6-rtl.png": "ea84b53d06e45bd233390c4e02472f963a39f50725f15559467e313691b4f355"
+    }
+  },
+  "reviewed_sha256": {
+    "ios/Timbre/Design/Kit.swift": "6a115669d5e5f5d7811005047456da08933ebe151758d333b107a4e9099cff3d",
+    "ios/Timbre/Learn/LearnView.swift": "a0531086842a14dd507a98f53f6277270cd683030e776fcdcc273511f8fea7d6"
+  },
+  "unchanged_test_sha256": {
+    "ios/TimbreAppTests/FractionDirectionTests.swift": "3f73d34ed8251d3930e6e656f79321dbbcd719eb62ee667ca402263e99bde81b"
+  },
+  "limits": [
+    "Windows source review only; no Swift compiler or native Xcode/simulator run performed.",
+    "Explicit numeric layout direction is a plausible source fix; prior raster differences cannot prove exact RGBA equality for the new implementation.",
+    "Require fresh final-source native build and both unchanged FractionDirectionTests before marking this defect fixed.",
+    "Require actual RTL/LTR lessonCount visual layout and accessibility review, including constrained widths and Dynamic Type; baseline HStack changes layout behavior from a single Text.",
+    "Root strict localization report and hygiene pass were not independently rerun in this bounded review.",
+    "No claims about other uncommitted changes or release readiness."
+  ],
+  "mutations": "Only this receipt written. No implementation edits, commits or pushes."
+}

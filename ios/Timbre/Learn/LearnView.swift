@@ -558,9 +558,13 @@ struct UnitSection: View {
 
 extension Text {
     /// A course's or a unit's lessons finished, "3 / 5 lessons", read "3 of 5 lessons".
-    fileprivate static func lessonCount(_ done: Int, _ total: Int) -> Text {
-        (Text.fraction(done, total) + Text(verbatim: " ") + Text("lessons"))
-            .accessibilityLabel(Text("\(done) of \(total)") + Text(verbatim: " ") + Text("lessons"))
+    fileprivate static func lessonCount(_ done: Int, _ total: Int) -> some View {
+        HStack(alignment: .firstTextBaseline, spacing: 4) {
+            Text.fraction(done, total)
+            Text("lessons")
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text("\(done) of \(total)") + Text(verbatim: " ") + Text("lessons"))
     }
 }
 
