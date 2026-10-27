@@ -35,11 +35,20 @@ class FractionDirectionContract(unittest.TestCase):
         test = source.split("func testTuningQuestIsOneStaticTextElementNotAnInteractiveTarget()", 1)[1].split("func testTheTunerLocksAString()", 1)[0]
         for token in ["XCTAssertEqual(quests.count, 1", "XCTAssertEqual(quest.elementType, .staticText",
                       'XCTAssertEqual(quest.label, "Quest · tune every string, 0 of 6, +20 XP")',
-                      "XCTAssertEqual(quest.descendants(matching: .any).count, 0",
+                      "XCTAssertEqual(quest.staticTexts.matching",
+                      'NSPredicate(format: "label == %@", "Quest · tune every string, 0 of 6, +20 XP")',
                       "try app.performAccessibilityAudit(for: .hitRegion)",
                       'hierarchy.lifetime = .keepAlways', 'screenshot.lifetime = .keepAlways']:
             self.assertIn(token, test)
         self.assertNotIn("try?", test)
+
+    def test_enclosing_button_regression_uses_compact_available_production_fraction(self):
+        source = (ROOT / "ios/TimbreUITests/SmokeUITests.swift").read_text()
+        test = source.split('func testFractionInsideAnUnearnedBadgePreservesItsButtonRole()', 1)[1].split('func testTheTunerLocksAString()', 1)[0]
+        for token in ['"Progress"', '"badge."', '" of "', 'XCTAssertEqual(badge.elementType, .button',
+                      'XCTAssertTrue(counter.exists', 'scrollTo(badge)']:
+            self.assertIn(token, test)
+        self.assertNotIn('practice.nextBadge', source)
 
     def test_oracle_is_independent_and_exact(self):
         source = (ROOT / "ios/TimbreAppTests/FractionDirectionTests.swift").read_text()

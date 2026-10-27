@@ -147,23 +147,47 @@ final class SongRailMeasurementTests: XCTestCase {
         struct Item: Identifiable { let id: Int }
         let items = (0..<120).map { Item(id: $0) }
         var constructed = Set<Int>()
+        var appeared = false
         let host = UIHostingController(rootView:
             SongShelfRail(items: items, selection: 59, itemWidth: 148, height: 100, identity: "rail.selection-test") { item in
                 let _ = constructed.insert(item.id)
                 Text("Song \(item.id)").frame(height: 80)
-            }.frame(width: 402, height: 100))
-        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 402, height: 874))
+            }.frame(width: 402, height: 100).onAppear { appeared = true })
+        // A scene-less UIWindow can lay out offscreen views without a displayed SwiftUI scroll lifecycle.
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
+            .first { $0.activationState == .foregroundActive })
+        let previousKeyWindow = scene.windows.first { $0.isKeyWindow }
+        let window = UIWindow(windowScene: scene)
         window.rootViewController = host
-        window.isHidden = false
-        defer { window.isHidden = true; window.rootViewController = nil }
+        window.makeKeyAndVisible()
+        defer {
+            window.isHidden = true
+            window.rootViewController = nil
+            previousKeyWindow?.makeKey()
+        }
         host.view.layoutIfNeeded()
-        try await Task.sleep(for: .milliseconds(500))
         func scrolls(_ view: UIView) -> [UIScrollView] {
             (view as? UIScrollView).map { [$0] } ?? view.subviews.flatMap { scrolls($0) }
         }
-        let scroll = try XCTUnwrap(scrolls(host.view).first { $0.contentSize.width > 1000 })
-        // Item 60's center must be inside the viewport; allow content margins, not a whole missing card.
+        // Observe the actual async completion condition, not a fixed delay after an unattached layout.
         let itemCenter = CGFloat(59) * (148 + 14) + 20 + 74
+        let revealed = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            guard appeared, host.view.window === window,
+                  let scroll = scrolls(host.view).first(where: { $0.contentSize.width > 1000 }) else { return false }
+            let center = scroll.contentOffset.x + scroll.bounds.width / 2
+            return abs(center - itemCenter) <= 24
+        }, object: nil)
+        await fulfillment(of: [revealed], timeout: 3)
+        let scroll = try XCTUnwrap(scrolls(host.view).first { $0.contentSize.width > 1000 })
+        let diagnostic = XCTAttachment(string: "appeared=\(appeared) scene=\(scene.activationState.rawValue) key=\(window.isKeyWindow) "
+            + "window=\(window.frame) scroll=\(scroll.frame) content=\(scroll.contentSize) offset=\(scroll.contentOffset) "
+            + "constructed=\(constructed.count) expectedCenter=\(itemCenter)")
+        diagnostic.name = "song-rail-initial-selection-layout"
+        diagnostic.lifetime = .keepAlways
+        add(diagnostic)
+        XCTAssertTrue(appeared)
+        XCTAssertTrue(host.view.window === window)
+        // Item 60's center must be inside the viewport; allow content margins, not a whole missing card.
         let center = scroll.contentOffset.x + scroll.bounds.width / 2
         XCTAssertEqual(center, itemCenter, accuracy: 24)
         XCTAssertGreaterThan(scroll.contentSize.width, CGFloat(119) * 162)

@@ -103,6 +103,7 @@ jobs:
           python3 tools/ci/test_capture_check.py
           python3 tools/ci/test_simulator_warmup.py
           python3 tools/ci/test_fraction_direction_contract.py
+          python3 tools/ci/test_practice_xp_direction_contract.py
           python3 tools/ci/test_song_rail_contract.py
           python3 tools/ci/test_listing_artifact_review.py
           python3 tools/ci/test_lesson_turn_cue_contract.py
@@ -136,7 +137,7 @@ jobs:
           retention-days: 7
 
   app:
-    # Unit tests (TimbreAppTests) and four smoke flows (SmokeUITests: a fresh launch, a string locked, Pro bought).
+    # Unit tests (TimbreAppTests) and five smoke flows: welcome, Quest text, badge button, string lock and Pro purchase.
     name: app
     # A cold build plus the complete serial suite needs room to finish and export its result bundle.
     timeout-minutes: 40

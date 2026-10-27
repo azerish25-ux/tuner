@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scope": "published_policy_and_source_alignment_only",
-  "source_revision": "f97713eb7a8ceef3f94e0399f7fcb5ad8023dc29",
+  "source_revision": "17091417a12d68841bde5176319d34e795e39565",
   "verified_utc": "2026-10-27T08:20:41Z",
   "reviewer": "dot independent release-scope audit",
   "routes": [
@@ -193,7 +193,8 @@
     "ios/Timbre/Practice/PlayHubGames.swift": "ce3eecadf7688ccca47c4f66ac245e438d1e3b630ee817daaaa8cda581d80533",
     "ios/Timbre/Practice/PlayHubTools.swift": "844ed0b2b4dc11311ca119ce966e1a4512f54f4939b1e64d8b2b11212aee8474",
     "ios/Timbre/Practice/PracticeChrome.swift": "2d21c1504905c0565849dc22f96cc5ff54ba1842621ffa824ecc8ac57adf69c7",
-    "ios/Timbre/Practice/PracticeView.swift": "58b9c518a54e13f3685aa4ee65f989a4607e4d14e7399d12c91f7411049ad38c",
+    "ios/Timbre/Practice/PracticeView.swift": "11fa623267c15c98b42801068ac887bc4c988997113bc71645593b0de6953584",
+    "ios/Timbre/Practice/PracticeXPProgress.swift": "1134f8110f094110e9f4da44795ee67b83769bdae66c96b77a5d1f26fae51e8c",
     "ios/Timbre/Practice/ScalesView.swift": "cedcf70bfe0e5603a2de541fe9cc567070e72c0f72d926b19659cf1a94f8d3d9",
     "ios/Timbre/Practice/VoiceKeyboard.swift": "36f33c4e5f977e461b16105a602d4373a67ad90c4eacfe67cf316c2d86556ccf",
     "ios/Timbre/Practice/VoiceView.swift": "3dd0712493b6f56040712bcf606f04176c3b79ba7fca9ee2ca9cafa576746e7c",
@@ -407,36 +408,29 @@
   "mutations": "Only this receipt written. No listing verification/readiness flags, policy text, public website, signing, credentials or account settings changed.",
   "source_inventory_scope": "All shipped app/core/extension Swift, Objective-C/C/C++ sources and headers, app privacy manifests, xcconfig/plist/entitlement/permission configuration and package dependency inputs. Any edit/addition invalidates this source-review receipt; tests/docs outside named policy sources do not.",
   "source_review_refresh": {
-    "reviewed_utc": "2026-10-27T16:36:55Z",
-    "base_revision": "f97713eb7a8ceef3f94e0399f7fcb5ad8023dc29",
+    "reviewed_utc": "2026-10-27T18:05:36Z",
+    "base_revision": "17091417a12d68841bde5176319d34e795e39565",
     "source_state": "base_revision_plus_explicit_uncommitted_deltas",
     "changes": [
       {
-        "path": "ios/Timbre/Design/Theme.swift",
-        "previous_reviewed_sha256": "caf1d87434c49d1af6bfb0f42e0bdbba92d77e07b8671a7f087b87b759debbc4",
-        "reviewed_sha256": "a381a42bbfc2e732b3d6122df05a5ca75024a64bc5c5b2116e0feddf2fd3f816",
-        "diff_sha256": "23543a4d6fe21be7a6ecfc4bd9f61a5721fcd54c13d0522a1dbdbae1749d4fd1",
-        "privacy_assessment": "Adds only an opaque light-gold offer palette token; no collection, permissions, storage, networking or capabilities."
+        "path": "ios/Timbre/Practice/PracticeView.swift",
+        "previous_reviewed_sha256": "58b9c518a54e13f3685aa4ee65f989a4607e4d14e7399d12c91f7411049ad38c",
+        "reviewed_sha256": "11fa623267c15c98b42801068ac887bc4c988997113bc71645593b0de6953584",
+        "diff_sha256": "fd889a3320b13b69a01e0eb505d0b9ee4183c61732466f0dd74cc37eeaa9f13a",
+        "privacy_assessment": "Replaces two existing XP sentence presentations with the helper using the same done/total/next values. No changed XP calculation, storage, logging, permissions or collection."
       },
       {
-        "path": "ios/Timbre/Paywall/PaywallView.swift",
-        "previous_reviewed_sha256": "62fe12d1881645529693586c8bb9434bda064e5bb9b68022fbae9fe155833c63",
-        "reviewed_sha256": "9fea1dd7bf2a18fc90f325376cdabd7c2dd2a168af753856c487077e1107a5c5",
-        "diff_sha256": "13069cdf3064e452068e7b64545684d59ae7226120ede0265067268f8542f780",
-        "privacy_assessment": "Changes only the non-trial offer badge backing from a gold gradient to the opaque light-gold token. Dark ink, trial mint, labels, prices and geometry unchanged. No analytics, purchase or data-flow changes; native audit outcome not asserted."
-      },
-      {
-        "path": "ios/Timbre/Songs/SongsView.swift",
-        "previous_reviewed_sha256": "ad2ed64d1ade08898ce2663ef923b399d7a101ef266524f27e897e05ca0e4698",
-        "reviewed_sha256": "1c0afc72307e755f40b175d3e86b06896323529b85fb40e0d122ca7adac356c0",
-        "diff_sha256": "690533c20383f5aeae0e630969fc637139dc2aea1f89870a81e2ad078b479a90",
-        "privacy_assessment": "Compiler/lint-only refactoring: expands the existing in-memory rail cache signature into individually typed appends with the same field order, and turns the existing caption function into a View value with explicit identical inputs. Existing metadata/settings/stars are neither newly persisted nor transmitted; no new collection, logging, permissions or networking."
+        "path": "ios/Timbre/Practice/PracticeXPProgress.swift",
+        "previous_reviewed_sha256": null,
+        "reviewed_sha256": "1134f8110f094110e9f4da44795ee67b83769bdae66c96b77a5d1f26fae51e8c",
+        "diff_sha256": null,
+        "privacy_assessment": "New presentation-only helper reads existing locale and localization resources, isolates numeric operands left-to-right while retaining the existing translation key, localized suffix and spoken sentence. Unknown future format shapes fall back to the original spoken Text. No networking, persistence, analytics or new permission/capability behavior. New-file bytes are identified by reviewed_sha256 rather than an empty untracked Git diff."
       }
     ],
-    "source_inventory_delta": "291 bound inputs unchanged in membership; only Theme.swift, PaywallView.swift and SongsView.swift differ from the preceding reviewed snapshot. Test sources are not shipped inventory inputs.",
-    "listing_delta": "All 50 listing content hashes remain unchanged from the independently reviewed 130+ count correction.",
-    "publication_observation": "Original 08:20 UTC public HTTP observations and policy/HTML bytes preserved. No fresh fetch or publication asserted.",
-    "limitations": "Bounded source-diff review only, not native accessibility execution, physical-device verification, signed archive validation, legal certification or Apple portal verification."
+    "source_inventory_delta": "292 shipped inputs: adds PracticeXPProgress.swift; only existing PracticeView.swift hash changes. Smoke, rail and XP regression tests are not production inventory inputs; no production rail change.",
+    "listing_delta": "All 50 listing content hashes unchanged.",
+    "publication_observation": "Original 08:20 UTC HTTP observation times and policy/support bytes preserved. No fresh public fetch or deployment asserted.",
+    "limitations": "Bounded source-diff privacy review only. Does not establish native RTL/VoiceOver rendering, physical-device behavior, signed archive, legal or Apple account verification."
   },
   "source_review_refresh_history": [
     {
@@ -601,6 +595,38 @@
       "listing_delta": "All50 listing content hashes unchanged from the independently reviewed130+ count correction.",
       "publication_observation": "Original08:20UTC public HTTP observations and privacy/support policy/HTML bytes preserved. No fresh public fetch, deployment or uptime certification claimed.",
       "limitations": "Bounded source-diff privacy review only. Static trait/layout source approval does not establish native RTL/VoiceOver, microphone lifecycle, physical-device, signed archive, legal or Apple portal verification."
+    },
+    {
+      "reviewed_utc": "2026-10-27T16:36:55Z",
+      "base_revision": "f97713eb7a8ceef3f94e0399f7fcb5ad8023dc29",
+      "source_state": "base_revision_plus_explicit_uncommitted_deltas",
+      "changes": [
+        {
+          "path": "ios/Timbre/Design/Theme.swift",
+          "previous_reviewed_sha256": "caf1d87434c49d1af6bfb0f42e0bdbba92d77e07b8671a7f087b87b759debbc4",
+          "reviewed_sha256": "a381a42bbfc2e732b3d6122df05a5ca75024a64bc5c5b2116e0feddf2fd3f816",
+          "diff_sha256": "23543a4d6fe21be7a6ecfc4bd9f61a5721fcd54c13d0522a1dbdbae1749d4fd1",
+          "privacy_assessment": "Adds only an opaque light-gold offer palette token; no collection, permissions, storage, networking or capabilities."
+        },
+        {
+          "path": "ios/Timbre/Paywall/PaywallView.swift",
+          "previous_reviewed_sha256": "62fe12d1881645529693586c8bb9434bda064e5bb9b68022fbae9fe155833c63",
+          "reviewed_sha256": "9fea1dd7bf2a18fc90f325376cdabd7c2dd2a168af753856c487077e1107a5c5",
+          "diff_sha256": "13069cdf3064e452068e7b64545684d59ae7226120ede0265067268f8542f780",
+          "privacy_assessment": "Changes only the non-trial offer badge backing from a gold gradient to the opaque light-gold token. Dark ink, trial mint, labels, prices and geometry unchanged. No analytics, purchase or data-flow changes; native audit outcome not asserted."
+        },
+        {
+          "path": "ios/Timbre/Songs/SongsView.swift",
+          "previous_reviewed_sha256": "ad2ed64d1ade08898ce2663ef923b399d7a101ef266524f27e897e05ca0e4698",
+          "reviewed_sha256": "1c0afc72307e755f40b175d3e86b06896323529b85fb40e0d122ca7adac356c0",
+          "diff_sha256": "690533c20383f5aeae0e630969fc637139dc2aea1f89870a81e2ad078b479a90",
+          "privacy_assessment": "Compiler/lint-only refactoring: expands the existing in-memory rail cache signature into individually typed appends with the same field order, and turns the existing caption function into a View value with explicit identical inputs. Existing metadata/settings/stars are neither newly persisted nor transmitted; no new collection, logging, permissions or networking."
+        }
+      ],
+      "source_inventory_delta": "291 bound inputs unchanged in membership; only Theme.swift, PaywallView.swift and SongsView.swift differ from the preceding reviewed snapshot. Test sources are not shipped inventory inputs.",
+      "listing_delta": "All 50 listing content hashes remain unchanged from the independently reviewed 130+ count correction.",
+      "publication_observation": "Original 08:20 UTC public HTTP observations and policy/HTML bytes preserved. No fresh fetch or publication asserted.",
+      "limitations": "Bounded source-diff review only, not native accessibility execution, physical-device verification, signed archive validation, legal certification or Apple portal verification."
     }
   ]
 }

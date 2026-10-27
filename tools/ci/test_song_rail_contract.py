@@ -114,6 +114,15 @@ class SongRailContractTests(unittest.TestCase):
         self.assertIn('-only-testing:TimbreUITests/SongShelfRailUITests',
                       (ROOT / '.github/workflows/nightly.yml').read_text())
 
+    def test_initial_reveal_fixture_uses_live_scene_and_observes_completion(self):
+        test = (ROOT / 'ios/TimbreAppTests/SongRailMeasurementTests.swift').read_text().split('func testInitialMiddleSelectionIsRevealedWithoutBuildingEveryCard()', 1)[1]
+        for token in ['UIWindow(windowScene: scene)', 'window.makeKeyAndVisible()',
+                      'host.view.window === window', '.onAppear { appeared = true }',
+                      'XCTNSPredicateExpectation', 'await fulfillment(of: [revealed], timeout: 3)',
+                      'XCTAssertEqual(center, itemCenter, accuracy: 24)', 'XCTAssertLessThan(constructed.count, 120']:
+            self.assertIn(token, test)
+        self.assertNotIn('Task.sleep', test)
+
     def test_caption_subtree_has_no_lifecycle_or_playback_work(self):
         caption = SONGS.split('struct TileCaption: View {', 1)[1].split('/// The part of a title', 1)[0]
         pieces = SONGS.split('private struct LockReason:', 1)[1]

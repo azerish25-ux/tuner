@@ -48,7 +48,7 @@ final class SmokeUITests: XCTestCase {
         app.launch()
         XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 40))
         let quests = app.descendants(matching: .any)
-            .matching(NSPredicate(format: "label BEGINSWITH %@", "Quest · tune every string"))
+            .matching(NSPredicate(format: "label == %@", "Quest · tune every string, 0 of 6, +20 XP"))
         XCTAssertTrue(quests.firstMatch.waitForExistence(timeout: 10))
         let hierarchy = XCTAttachment(string: app.debugDescription)
         hierarchy.name = "quest-static-text-hierarchy"
@@ -62,8 +62,34 @@ final class SmokeUITests: XCTestCase {
         let quest = quests.firstMatch
         XCTAssertEqual(quest.elementType, .staticText, "A counter is text, not an interactive container")
         XCTAssertEqual(quest.label, "Quest · tune every string, 0 of 6, +20 XP")
-        XCTAssertEqual(quest.descendants(matching: .any).count, 0, "Do not expose separate numeral runs")
+        // XCTest preserves raw descendants even for SwiftUI .combine/.ignore. The native tree
+        // contains one combined StaticText with its title and fraction beneath it, not sibling utterances.
+        let heading = "Quest · tune every string"
+        XCTAssertEqual(app.staticTexts.matching(NSPredicate(format: "label == %@", heading)).count, 1)
+        XCTAssertEqual(quest.staticTexts.matching(NSPredicate(format: "label == %@", heading)).count, 1)
+        XCTAssertEqual(app.staticTexts.matching(NSPredicate(format: "label == %@", "0 of 6")).count, 1)
+        XCTAssertEqual(quest.staticTexts.matching(NSPredicate(format: "label == %@", "0 of 6")).count, 1)
         try app.performAccessibilityAudit(for: .hitRegion)
+    }
+
+    /// Progress has unearned badge buttons at compact and regular widths; Practice's next-badge card is iPad-only.
+    func testFractionInsideAnUnearnedBadgePreservesItsButtonRole() {
+        app.launchEnvironment["TIMBRE_SKIP_ONBOARDING"] = "1"
+        app.launch()
+        let progress = app.tabBars.buttons["Progress"].firstMatch
+        XCTAssertTrue(progress.waitForExistence(timeout: 40))
+        progress.tap()
+        let badge = app.descendants(matching: .any).matching(NSPredicate(
+            format: "identifier BEGINSWITH %@ AND value CONTAINS %@", "badge.", " of ")).firstMatch
+        scrollTo(badge)
+        XCTAssertTrue(badge.exists && badge.isHittable, "Require a real unearned badge, not an absent conditional card")
+        XCTAssertEqual(badge.elementType, .button, "A fraction inside a real action must not replace its Button role")
+        let counter = badge.staticTexts.matching(NSPredicate(format: "label MATCHES %@", "[0-9]+ of [0-9]+")).firstMatch
+        XCTAssertTrue(counter.exists, "The tested Button must actually contain the production fraction")
+        let tree = XCTAttachment(string: app.debugDescription)
+        tree.name = "fraction-enclosing-button-hierarchy"
+        tree.lifetime = .keepAlways
+        add(tree)
     }
 
     /// The demo pitch (TIMBRE_DEMO_PITCH, debug builds) plays the selected string drifting into tune every six seconds;
@@ -103,9 +129,6 @@ final class SmokeUITests: XCTestCase {
         XCTAssertTrue(practice.waitForExistence(timeout: 40), "no Practice tab")
         practice.tap()
         settle(1.5)
-        let badge = element("practice.nextBadge")
-        XCTAssertTrue(badge.waitForExistence(timeout: 10))
-        XCTAssertEqual(badge.elementType, .button, "A fraction inside a real action must not replace its Button role")
         let drone = element("practice.drone")
         scrollTo(drone)
         drone.tap()
