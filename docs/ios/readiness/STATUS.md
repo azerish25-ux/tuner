@@ -54,9 +54,16 @@ failing. Accessibility also failed. The [native triage](reviews/app-008-native-f
 owns and drains callback queues, keeps callback assertions in their owning tests, and compares canonical RGBA
 render bytes. All 21 privacy tests and both render tests need a new native run. Individual test deadlines are
 unchanged; the app job now permits 40 minutes for a cold build, the serial suite and result export.
-The [e3a99fb run](https://github.com/azerish25-ux/tuner/actions/runs/40452937669) is testing that response. A later
-reviewed change isolates deferred questionnaire state by automated installation UUID and initializes the missing
-first-session StoreKit fixture. Four new unit regressions and a same-install/new-install relaunch UI regression
+The [e3a99fb run](https://github.com/azerish25-ux/tuner/actions/runs/40452937669) passed core, Release and all three
+smoke flows. Its 123 app tests still reported 27 failures: 19 assertions in five attribution-reporter tests and eight
+exact RGBA comparisons in one fraction test. Commerce and the direct transport/telemetry tests passed; no prior
+unwaited-expectation exception recurred. This is not a full app-test pass. The next source response owns and drains
+the reporter's token queue while preserving its production global-utility default, and gives the fraction its own
+LTR view environment while preserving localized digits, surrounding direction and the full spoken label. The exact
+RGBA assertions remain unchanged. See the [reporter review](reviews/app-e3-reporter-queue-independent-review.json)
+and [fraction review](reviews/fraction-view-independent-review.json); native confirmation is pending.
+A further reviewed change isolates deferred questionnaire state by automated installation UUID and initializes the
+missing first-session StoreKit fixture. Four new unit regressions and a same-install/new-install relaunch UI regression
 still need native execution; they are not part of the e3a99fb run.
 The previously observed accessibility failures have not been waived. Capture/parser fixtures are not release screenshots.
 The [privacy failure triage](reviews/privacy-native-failure-triage.json) identifies a defective trailing-slash test matcher
@@ -81,6 +88,11 @@ native-device selection and raw/output/manifest dimension checks. The standalone
 capture as a medium-size source. The [independent resolution review](reviews/medium-screenshot-resolution-independent-review.json)
 records 50 passing marketing tests and closure of the documented standalone-render bypass. New-size native captures,
 all-language caption fitting and actual-frame acceptance remain pending; prior large-size proof is not reused for them.
+The [callback-image review](reviews/accessibility-008-callback-review.json) accounts for all 54 unique contrast reports
+from the 0081d2a run: 28 visible targets have measured high-contrast callback pixels; 25 are obscured or edge-faded;
+one unidentified target represents six collapsed callbacks. The two unfinished Songs audits remain open. New
+diagnostics preserve detailed descriptions and distinct unidentified callback ordinals. No new exception or broad
+contrast waiver has been added.
 
 ## Remaining release evidence
 
