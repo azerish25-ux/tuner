@@ -41,7 +41,7 @@ final class PracticeXPProgressTests: XCTestCase {
         let original = TimbreLocalization.language
         defer { TimbreLocalization.language = original }
         TimbreLocalization.language = "zh-Hant"
-        XCTAssertEqual(NSLocalizedString(PracticeXPProgress.key, comment: ""), template)
+        XCTAssertEqual(Timbre.NSLocalizedString(PracticeXPProgress.key, comment: ""), template)
         let view = PracticeXPProgress(done: 255, total: 500, next: "XP")
         let spoken = try pixels(view.spoken, locale: Locale(identifier: "zh_TW"), name: "practice-xp-zh-Hant-spoken-label")
         let expected = try pixels(Text(verbatim: "255／500 XP · 下一個：XP"), locale: Locale(identifier: "zh_TW"))

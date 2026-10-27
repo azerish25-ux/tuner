@@ -43,8 +43,17 @@ class PracticeXPDirectionContract(unittest.TestCase):
         for token in ['testTraditionalChineseFullwidthFractionPreservesTranslationAndSpokenText',
                       '255／500 XP · 下一個：XP', 'pixels(view.spoken', 'XCTAssertEqual(spoken, expected',
                       '%lld／%lld XP %@ %lld', '%lld／%lld XP %@ %@', '%lld ∕ %lld XP %@',
-                      '"zh-Hant"', 'NSLocalizedString(PracticeXPProgress.key']:
+                      '"zh-Hant"', 'Timbre.NSLocalizedString(PracticeXPProgress.key']:
             self.assertIn(token, native)
+
+    def test_native_translation_lookup_uses_app_language_override(self):
+        native = (ROOT / 'ios/TimbreAppTests/PracticeXPProgressTests.swift').read_text()
+        # Foundation would ignore the app's selected language; an unqualified call
+        # is ambiguous between Foundation and the app's same-signature shim.
+        self.assertIn('TimbreLocalization.language = "zh-Hant"', native)
+        self.assertIn('XCTAssertEqual(Timbre.NSLocalizedString(PracticeXPProgress.key, comment: ""), template)', native)
+        self.assertNotIn('XCTAssertEqual(NSLocalizedString(PracticeXPProgress.key', native)
+        self.assertNotIn('Foundation.NSLocalizedString(PracticeXPProgress.key', native)
 
     def test_native_oracle_uses_physical_offsets_and_old_negative_control(self):
         native = (ROOT / 'ios/TimbreAppTests/PracticeXPProgressTests.swift').read_text()
