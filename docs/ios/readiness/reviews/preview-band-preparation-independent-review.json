@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-27T06:21:45.741902+00:00",
+  "reviewer": "Independent integration review agent",
+  "verdict": "request_changes",
+  "scope": "Three-file uncommitted preview preparation draft against HEAD0bab4ed; no implementation edits.",
+  "source_sha256": {
+    "ios/Timbre/Audio/AudioService.swift": "748150d6066fc42614babf47dddceeb522bb99d5f4ec02c49d3e974d4c2e7fcf",
+    "ios/Timbre/Learn/SongPerform.swift": "1ae63e435dff68b0e870dc07a3fae551ec1dba9d70b29b34349f2a57c0146558",
+    "ios/TimbreUITests/AppPreviewUITests.swift": "9d7c00538995326a4d172d31390ed7df2e5b1cabf1903d733a6d5404653fecbd"
+  },
+  "findings": [
+    {
+      "id": "PREVIEW-PREP-01",
+      "priority": 1,
+      "path": "ios/Timbre/Learn/SongPerform.swift",
+      "line": 813,
+      "title": "Conditional binding applied to a nonoptional arrangement",
+      "evidence": "band is declared private var band: BandArrangement at line132. guard let arrangement=band requires an Optional and cannot typecheck.",
+      "requested_change": "Capture with plain let arrangement=band; remove impossible nil branch."
+    },
+    {
+      "id": "PREVIEW-PREP-02",
+      "priority": 2,
+      "path": "ios/Timbre/Learn/SongPerform.swift",
+      "line": 829,
+      "title": "Prepared arrangement/output revision is not revalidated at the actual clock start",
+      "evidence": "startMelody creates AudioStartGate asynchronous readiness work and returns before its callback. startScene then returns and defer releases the preparation lease. Callback later invokes startMelodyReady using current live band, starts the session clock and requests playback; only afterward afterReady runs. setMetronome readiness.current checks command/running/output, not the captured output revision. An arrangement/rate/revision change during this suspension can therefore start the clock without the exact prepared track.",
+      "requested_change": "Retain preparation ownership through final audio startup and guard cancellation,current lease/output revision,phase,same captured arrangement and exact current-rate cache immediately before startMelodyReady starts the session. Reject stale startup before side effects. afterReady is too late for this validation."
+    }
+  ],
+  "positive_assessment": [
+    "Debug cache probe correctly uses the same BandRenderKey(arrangement,renderer.rate) as renderer lookup; it does not infer readiness from global pending state.",
+    "Initial output activation lease ensures rendering is requested at an actual output rate, and polling checks cancellation,lease,phase,arrangement with a monotonic45second deadline.",
+    "UI test requires actual take event acknowledgment within60seconds and removes predicted clock fallback. Original musical intervals and downstream gates remain unchanged."
+  ],
+  "required_regression_seam": "A focused controllable final-start guard is warranted: hold final output readiness after band preparation, invalidate revision/change arrangement or cancel, release readiness, and assert no session-clock/playing transition. Existing AudioStartGate and injected activateSession/prepareOutputOverride provide most of the mechanism; keep final validation shared with the actual debug startup rather than testing a separate mirror predicate. Also prove different arrangement/rate cache entries cannot satisfy preparation.",
+  "limits": [
+    "No Swift/Xcode compiler or native run on Windows. Compile issue is diagnosed from concrete Swift types, not an executed compiler result.",
+    "Existing failed native preview is integration red evidence for missing readiness; it does not exercise every new cancellation/rate-change transition.",
+    "No waiver of lock/audio/silence/band gates; readiness change must pass real native preview."
+  ]
+}

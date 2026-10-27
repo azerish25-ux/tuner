@@ -1,0 +1,22 @@
+{
+  "release_ready": false,
+  "scope": "Portable handoff copies of previously prepared Watch files, reviewed store text and Linux caption preflight. Not a complete submission package.",
+  "files": [
+    {
+      "file": "caption-typography-5167d34.json",
+      "bytes": 1210,
+      "sha256": "8903b2ca0ee16b1f138f132a2fe8d2c55e4dc3965e1a35c7021ac91b3a440d38"
+    },
+    {
+      "file": "listing-text-reviewed-0081d2a.zip",
+      "bytes": 246639,
+      "sha256": "e8fbf0bb510aaec1a028c63c3ea718dcb88d69550977003c28d326394ecb9cf9"
+    },
+    {
+      "file": "watch-store-assets-d292f88.zip",
+      "bytes": 5255212,
+      "sha256": "5e28b00368c476db9ee6893dff20f10af2dcb9406a0f7897389c3373b60992b5"
+    }
+  ],
+  "checks": "Watch archive CRC and all100 file hashes verified; all50 text payload hashes still match repository source and every exported field hash verified."
+}
