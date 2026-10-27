@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-27T04:59:40Z",
+  "reviewer": "Independent integration review agent",
+  "verdict": "approve_bounded_job_budget_change_new_native_run_pending",
+  "scope": "Only iOS workflow app job timeout25 to40 minutes and explanatory comment. Individual test limits and previously approved primary source remain unchanged.",
+  "findings": [],
+  "timing_evidence": {
+    "run_id": 40445768823,
+    "job_id": 121997637660,
+    "parent_reported_job_start": "2026-10-27T03:54:18Z",
+    "first_log_timestamp": "2026-10-27T03:54:19.158828Z",
+    "cancellation_log_timestamp": "2026-10-27T04:20:10.954463Z",
+    "parent_reported_job_end": "2026-10-27T04:20:48Z",
+    "observed_elapsed_start_to_cancel_seconds": 1552.954463,
+    "observed_elapsed_start_to_reported_end_seconds": 1590,
+    "log": "C:/Users/shahr/Desktop/Translation/native-qa/app-0081d2a-final.log",
+    "log_sha256": "ffb4e968ee69b6def43df4ef921b1dba1ddc9e61d8a27daa5f9d11114cc641a5",
+    "observations": [
+      "Cold build and serial testing consumed the former budget; cancellation is logged while third smoke test testTheTunerLocksAString is running.",
+      "First welcome smoke passes20.305seconds and purchase smoke passes123.562seconds before cancellation. The third smoke is incomplete, so no full smoke pass is inferred.",
+      "Earlier120 app tests had already reported45 failures. More job time does not fix or waive those failures. The log shows cancellation; precise scheduler cancellation causality is not independently established beyond recorded timing/budget pressure."
+    ]
+  },
+  "source_assessment": [
+    "Independent YAML comparison against HEAD confirms jobs.app.timeout-minutes is the sole parsed field change. Other jobs, triggers, commands, artifacts, permissions, failure rules and gate dependencies are identical.",
+    "40 minutes remains a finite job bound and permits cold build, full serial suite and result export. No assertion, per-test expectation timeout or retry classifier is relaxed.",
+    "All five primary input hashes in app-008-resolution-independent-review.json still match; unchanged privacy/fraction source was not unnecessarily rereviewed. Coverage-floor94 remains separately approved."
+  ],
+  "independent_verification": [
+    { "check": "Ruby YAML exact semantic comparison, normalizing only app timeout40 back to25", "result": "pass" },
+    { "check": "Previously approved primary source hash comparison", "mismatches": 0 },
+    { "command": "git -c core.autocrlf=false diff --check -- .github/workflows/ios.yml", "exit_code": 0 }
+  ],
+  "reviewed_sha256": { ".github/workflows/ios.yml": "dda5a63dec4284425a548fa2e1075623f6c1a8402d13ebe2aadcf72ce508ca86" },
+  "limits": "No new native run under40-minute budget performed or claimed. Next final-candidate job must complete and preserve all genuine test failures; a larger job budget is not a passing result.",
+  "mutations": "Only this review receipt written; no implementation/config edit, commit or push."
+}
