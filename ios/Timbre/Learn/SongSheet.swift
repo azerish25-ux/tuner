@@ -1190,36 +1190,69 @@ enum SongPlayback {
 
     @MainActor static func start(_ hits: [Hit], bpm: Double, meter: Int, length: Double, band: BandArrangement?, loop: Bool,
                                  audio: AudioService, voice: InstrumentVoice?, reference: Double,
+                                 waitUntil: (@MainActor (ContinuousClock.Instant) async throws -> Void)? = nil,
                                  finished: @escaping @MainActor () -> Void) -> Task<Void, Never> {
         let spb = 60 / max(20, bpm)
         let cycle = max(0.5, length)
-        if let band {
-            audio.setMetronome(bpm: Int(bpm.rounded()), beats: max(1, meter), subdivision: 1, accents: true)
-            audio.playBand(band, firstBar: 0)
-        }
+        let lease = audio.reservePreviewOutput()
+        let click = band.map { _ in audio.setMetronome(bpm: Int(bpm.rounded()), beats: max(1, meter), subdivision: 1, accents: true) }
         return Task { @MainActor in
+            var activeNote: AudioReadiness?
+            defer {
+                if activeNote?.isCurrent == true { audio.stopTone() }
+                activeNote?.cancel()
+                if click?.isCurrent == true { audio.stopMetronome() }
+                click?.cancel()
+                lease.release()
+            }
+            @MainActor func failed() { if !Task.isCancelled { finished() } }
+            let ready = await lease.readiness.value
+            guard ready, !Task.isCancelled, lease.isCurrent else { failed(); return }
+            if let click {
+                let clicked = await click.value
+                guard clicked, !Task.isCancelled, click.isCurrent, lease.isCurrent else { failed(); return }
+            }
+            // Current ownership and clock/band installation are contiguous on MainActor after the last await.
+            if let band { audio.playBand(band, firstBar: 0) }
             let clock = ContinuousClock()
             var begin = clock.now
-            repeat {
-                for hit in hits where hit.beat * spb < cycle {
-                    try? await clock.sleep(until: begin + .seconds(hit.beat * spb))
+            @MainActor func wait(_ deadline: ContinuousClock.Instant) async throws {
+                if let waitUntil { try await waitUntil(deadline) }
+                else { try await clock.sleep(until: deadline) }
+            }
+            do {
+                repeat {
+                    for hit in hits where hit.beat * spb < cycle {
+                        try await wait(begin + .seconds(hit.beat * spb))
+                        guard !Task.isCancelled else { return }
+                        guard lease.isCurrent else { failed(); return }
+                        let ms = Int(min(1600, max(160, hit.beats * spb * 950)))
+                        let note = audio.playTones(hit.midis.map { PitchMath.frequency(midi: Double($0), reference: reference) },
+                                                   together: hit.midis.count > 1, noteMs: ms, gapMs: 0, voice: voice)
+                        activeNote = note
+                        let sounded = await note.value
+                        guard !Task.isCancelled else { return }
+                        // A hardware restart invalidates the lease's revision. End this preview instead of letting
+                        // musical time run ahead of a new activation or accumulating a delay on each later note.
+                        guard sounded, note.isCurrent, lease.isCurrent else { failed(); return }
+                    }
+                    try await wait(begin + .seconds(cycle))
                     guard !Task.isCancelled else { return }
-                    let ms = Int(min(1600, max(160, hit.beats * spb * 950)))
-                    audio.playTones(hit.midis.map { PitchMath.frequency(midi: Double($0), reference: reference) },
-                                    together: hit.midis.count > 1, noteMs: ms, gapMs: 0, voice: voice)
-                }
-                try? await clock.sleep(until: begin + .seconds(cycle))
-                guard !Task.isCancelled else { return }
-                begin = begin + .seconds(cycle)
-            } while loop
-            if band != nil { audio.finishBand(celebrate: true) }
-            try? await clock.sleep(until: begin + .seconds(0.5))
-            guard !Task.isCancelled else { return }
-            finished()
+                    guard lease.isCurrent else { failed(); return }
+                    begin = begin + .seconds(cycle)
+                } while loop
+                if band != nil { audio.finishBand(celebrate: true) }
+                try await wait(begin + .seconds(0.5))
+                guard !Task.isCancelled, lease.isCurrent else { failed(); return }
+                finished()
+            } catch {
+                failed()
+            }
         }
     }
 
     @MainActor static func stop(_ audio: AudioService) {
+        audio.cancelPreviewOutputs()
         audio.stopTone()
         if audio.metronomeRunning { audio.stopMetronome() }
     }

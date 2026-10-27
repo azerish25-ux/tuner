@@ -21,6 +21,7 @@ struct ChartDock: View {
     let removeRecording: () -> Void
     @ObservedObject private var library = YourSongsStore.shared
     @State private var loopStart: Double?
+    @State private var recordingStart = AudioStartGate()
 
     private var recording: SongRecording? { song.recording(.file) }
     private var count: Int { chart.chordSequence.count }
@@ -44,6 +45,7 @@ struct ChartDock: View {
         }
         .onChange(of: recording?.reference) { _, _ in loadRecording() }
         .onChange(of: mode) { _, _ in modeChanged() }
+        .onDisappear { recordingStart.cancel() }
         .onChange(of: follower.tap?.isFinished) { _, finished in if finished == true { finishSync() } }
     }
 
@@ -122,9 +124,9 @@ struct ChartDock: View {
         VStack(spacing: 8) {
             HStack(spacing: 6) {
                 IconButton(symbol: "gobackward.5", size: .compact, label: "Back 5 seconds") { player.skip(by: -5) }
-                Button { togglePlay() } label: { RoundPlayFace(playing: player.isPlaying) }
+                Button { togglePlay() } label: { RoundPlayFace(playing: player.playbackRequested) }
                     .buttonStyle(PressScaleStyle())
-                    .accessibilityLabel(player.isPlaying ? Text("Pause") : Text("Play"))
+                    .accessibilityLabel(player.playbackRequested ? Text("Pause") : Text("Play"))
                     .accessibilityIdentifier("yoursongs.recording.play")
                 IconButton(symbol: "goforward.5", size: .compact, label: "Ahead 5 seconds") { player.skip(by: 5) }
                 RecordingScrubber(player: player).padding(.leading, 6)
@@ -221,13 +223,22 @@ struct ChartDock: View {
     }
 
     private func togglePlay() {
+        recordingStart.cancel()
         Haptics.shared.selection()
-        if player.isPlaying {
+        Self.toggleRecordingPlayback(player, beforePlay: { AppleMusicListener.shared.pause() }) {
+            if follower.mode != .recording { follow(recording?.timings ?? []) }
+        }
+    }
+
+    /// The actual dock button and its regression test use the same action: pending playback is a pauseable intent,
+    /// while isPlaying remains reserved for the real transport clock.
+    static func toggleRecordingPlayback(_ player: RecordingPlayer, beforePlay: () -> Void, follow: () -> Void) {
+        if player.playbackRequested {
             player.pause()
         } else {
-            AppleMusicListener.shared.pause()
+            beforePlay()
             player.play()
-            if follower.mode != .recording { follow(recording?.timings ?? []) }
+            follow()
         }
     }
 
@@ -275,9 +286,10 @@ struct ChartDock: View {
         player.setLoop(nil)
         loopStart = nil
         let player = self.player
-        follower.sync(count: count, clock: { player.currentTime() })
-        player.play(from: 0)
-        Analytics.log("yoursongs_sync_start")
+        recordingStart.begin(player.play(from: 0)) {
+            follower.sync(count: count, clock: { player.currentTime() })
+            Analytics.log("yoursongs_sync_start")
+        }
     }
 
     private func finishSync() {
@@ -305,6 +317,7 @@ struct ChartDock: View {
     }
 
     private func modeChanged() {
+        recordingStart.cancel()
         loopStart = nil
         follower.stop()
         if mode == .scroll {

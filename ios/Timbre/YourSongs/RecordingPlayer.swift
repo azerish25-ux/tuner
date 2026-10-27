@@ -9,7 +9,8 @@ import TimbreCore
 ///
 /// Its own engine, so the lessons' audio (`AudioService`) is never disturbed; the session is shared through
 /// `AudioSessionOwner`. When the lessons' engine changes the session (a lesson's microphone, a chord sounded), this
-/// one pauses where it was and plays on from there; after a call it plays on by itself when iOS says it should.
+/// one pauses at its last reported position and waits for the next play request; after a call it plays on by itself
+/// when iOS says it should and the user has not paused or stopped it.
 @MainActor
 final class RecordingPlayer: ObservableObject {
     @Published private(set) var isPlaying = false
@@ -46,8 +47,25 @@ final class RecordingPlayer: ObservableObject {
     private var resumeAfterInterruption = false
     /// This player activated the session and hasn't turned it off since (a pause leaves it active).
     private var sessionActive = false
+    private var activationsPending = 0
+    /// Desired transport state drives Play/Pause even while the hardware is still starting. isPlaying drives clocks.
+    @Published private(set) var playbackRequested = false
+    private var deactivateWhenIdle = true
+    private let reserveSession: @MainActor () -> Void
+    private let activateSession: @MainActor () async throws -> Void
+    private let releaseOwnedSession: @MainActor (Bool) -> Void
+    private let preparePlaybackOverride: (() throws -> Void)?
 
-    init() {
+    init(activateSession: @escaping @MainActor () async throws -> Void = {
+             try await AudioSessionOwner.shared.activateInBackground(.recording)
+         }, releaseSession: @escaping @MainActor (Bool) -> Void = {
+             AudioSessionOwner.shared.release(.recording, deactivate: $0)
+         }, preparePlayback: (() throws -> Void)? = nil,
+         reserveSession: @escaping @MainActor () -> Void = { AudioSessionOwner.shared.reserveIntent(.recording) }) {
+        self.reserveSession = reserveSession
+        self.activateSession = activateSession
+        self.releaseOwnedSession = releaseSession
+        self.preparePlaybackOverride = preparePlayback
         engine.attach(node)
         engine.attach(timePitch)
         observers.add(NotificationCenter.default.addObserver(forName: .AVAudioEngineConfigurationChange, object: engine, queue: .main) { [weak self] _ in
@@ -61,8 +79,8 @@ final class RecordingPlayer: ObservableObject {
                 guard let self else { return }
                 switch interruption {
                 case .began:
-                    self.resumeAfterInterruption = self.isPlaying
-                    self.pause()
+                    self.resumeAfterInterruption = self.isPlaying || self.playbackRequested
+                    self.pauseTransport()
                 case .ended(let shouldResume):
                     let resume = self.resumeAfterInterruption && shouldResume
                     self.resumeAfterInterruption = false
@@ -105,49 +123,92 @@ final class RecordingPlayer: ObservableObject {
     // MARK: Transport
 
     /// Plays from `time` (seconds), or from where it paused.
-    func play(from time: Double? = nil) {
-        guard let file, duration > 0 else { return }
-        var start = max(0, min(duration - 0.05, time ?? resumeAt))
-        if start >= duration - 0.1 { start = 0 }
-        do {
-            try activateSession()
-            if !engine.isRunning {
-                engine.disconnectNodeOutput(node)
-                engine.disconnectNodeOutput(timePitch)
-                engine.connect(node, to: timePitch, format: file.processingFormat)
-                engine.connect(timePitch, to: engine.mainMixerNode, format: file.processingFormat)
-                engine.prepare()
-                try engine.start()
+    @discardableResult
+    func play(from time: Double? = nil) -> AudioReadiness {
+        guard let file, duration > 0 else { return .failed() }
+        let requested = max(0, min(duration - 0.05, time ?? resumeAt))
+        let start = requested >= duration - 0.1 ? 0 : requested
+        resumeAfterInterruption = false
+        generation += 1
+        let token = generation
+        playbackRequested = true
+        reserveSession()
+        sessionActive = true
+        resumeAt = start
+        deactivateWhenIdle = true
+        activationsPending += 1
+        return AudioReadiness(task: Task { @MainActor in
+            defer {
+                self.activationsPending -= 1
+                if self.activationsPending == 0 && !self.playbackRequested {
+                    self.releaseSession(deactivate: self.deactivateWhenIdle)
+                }
             }
-        } catch {
-            // The session is busy (a call, another app): nothing plays, and the next tap tries again.
-            return
-        }
-        schedule(file, from: start)
-        node.play()
-        isPlaying = true
-        lastTime = start
+            guard self.generation == token, self.playbackRequested else { return false }
+            guard !Task.isCancelled else { self.playbackRequested = false; return false }
+            do {
+                // A failed activation can still have changed the category; its reservation needs cleanup too.
+                self.sessionActive = true
+                try await self.activateSession()
+                guard self.generation == token, self.playbackRequested else { return false }
+                guard !Task.isCancelled else { self.pause(); return false }
+                if let prepare = self.preparePlaybackOverride {
+                    try prepare()
+                } else {
+                    if !self.engine.isRunning {
+                        self.engine.disconnectNodeOutput(self.node)
+                        self.engine.disconnectNodeOutput(self.timePitch)
+                        self.engine.connect(self.node, to: self.timePitch, format: file.processingFormat)
+                        self.engine.connect(self.timePitch, to: self.engine.mainMixerNode, format: file.processingFormat)
+                        self.engine.prepare()
+                        try self.engine.start()
+                    }
+                    self.schedule(file, from: start)
+                    self.node.play()
+                }
+                self.isPlaying = true
+                self.lastTime = start
+                return true
+            } catch {
+                guard self.generation == token else { return false }
+                self.playbackRequested = self.isPlaying
+                // Hardware can be temporarily unavailable; the next explicit play request may try again.
+                return false
+            }
+        }, current: { [weak self] in
+            guard let self else { return false }
+            return self.generation == token && self.playbackRequested && self.isPlaying
+        })
     }
 
     func pause() {
-        guard isPlaying else { return }
-        resumeAt = currentTime()
+        resumeAfterInterruption = false
+        pauseTransport()
+    }
+
+    private func pauseTransport() {
+        guard isPlaying || playbackRequested else { return }
+        // A seek/play request already records its target before activation. Pausing during that activation keeps
+        // the requested target rather than overwriting it with the old node's still-playing position.
+        if activationsPending == 0 { resumeAt = currentTime() }
         generation += 1
+        playbackRequested = false
+        deactivateWhenIdle = false
         node.stop()
         // The engine lets the session go while paused, so the lessons' microphone can take it (it stays active).
         engine.stop()
-        releaseSession(deactivate: false)
+        if activationsPending == 0 { releaseSession(deactivate: false) }
         isPlaying = false
     }
 
     func toggle() {
         resumeAfterInterruption = false
-        isPlaying ? pause() : play()
+        if isPlaying || playbackRequested { pause() } else { play() }
     }
 
     func seek(to time: Double) {
         let target = max(0, min(duration, time))
-        if isPlaying {
+        if isPlaying || playbackRequested {
             play(from: target)
         } else {
             resumeAt = target
@@ -162,13 +223,15 @@ final class RecordingPlayer: ObservableObject {
     /// Stops and lets the audio session go (deactivated off the main thread when nothing else in the app holds it).
     func stop() {
         generation += 1
+        playbackRequested = false
+        deactivateWhenIdle = true
         resumeAfterInterruption = false
         node.stop()
         if engine.isRunning { engine.stop() }
         isPlaying = false
         resumeAt = 0
         lastTime = 0
-        releaseSession(deactivate: true)
+        if activationsPending == 0 { releaseSession(deactivate: true) }
     }
 
     /// Where playback is, in seconds.
@@ -209,7 +272,6 @@ final class RecordingPlayer: ObservableObject {
     // MARK: Scheduling
 
     private func schedule(_ file: AVAudioFile, from time: Double) {
-        generation += 1
         let token = generation
         node.stop()
         var frame = max(0, min(length - 1, AVAudioFramePosition(time * sampleRate)))
@@ -252,6 +314,7 @@ final class RecordingPlayer: ObservableObject {
         // A stop or a new schedule also ends the segment: only the one still playing counts.
         guard token == generation, isPlaying else { return }
         isPlaying = false
+        playbackRequested = false
         resumeAt = 0
         lastTime = duration
         node.stop()
@@ -265,21 +328,15 @@ final class RecordingPlayer: ObservableObject {
         resumeAt = lastTime
         generation += 1
         isPlaying = false
-        releaseSession(deactivate: false)
-    }
-
-    /// The app's own playback session, through the one owner (`AudioSessionOwner`); the lessons' play-and-record
-    /// session is left as it is.
-    private func activateSession() throws {
-        try AudioSessionOwner.shared.activate(.recording)
-        sessionActive = true
+        playbackRequested = false
+        if activationsPending == 0 { releaseSession(deactivate: false) }
     }
 
     /// This player's engine no longer needs the session. `deactivate`: it is turned off too (off the main thread, once
     /// nothing else in the app holds it); otherwise it stays active for whoever plays next.
     private func releaseSession(deactivate: Bool) {
         guard sessionActive else { return }
-        AudioSessionOwner.shared.release(.recording, deactivate: deactivate)
+        releaseOwnedSession(deactivate)
         if deactivate { sessionActive = false }
     }
 }

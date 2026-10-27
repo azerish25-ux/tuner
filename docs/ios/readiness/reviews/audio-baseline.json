@@ -1,0 +1,62 @@
+{
+  "review": "Independent source baseline; no code changes, simulator execution, or physical-device validation",
+  "baseline": "0c679011095f45eae2e28cd8593b23386a013b7d",
+  "scope": ["docs/KNOWN-ISSUES.md section 1", "docs/ios/AUDIO-DEVICE-TESTS.md", "docs/ARCHITECTURE.md section 8", "AudioService.swift", "RecordingPlayer.swift", "audio callers and existing tests"],
+  "confirmed_findings": [
+    {
+      "id": "audio-main-thread-activation",
+      "priority": "P1",
+      "evidence": "AudioService is @MainActor. ensureOutput (495-497) and restartOutput (550-562) call configureSession (469-472), which calls AudioSessionOwner.activate (1224-1227). activate synchronously waits on the serial session queue across category, sample-rate, buffer and setActive calls (1257-1289). An in-flight deactivation on that queue adds to the wait. This is a real synchronous UI-blocking path, although historical 9.4s and 2.2s measurements were not reproduced in this review.",
+      "callers": ["playTone:631", "playTones:649", "setMetronome:746", "setDrone:968", "resetForRetry:329", "restartOutput:550", "restore:593", "RecordingPlayer.play:107 -> activateSession:273 -> synchronous owner activation"],
+      "proposal": "Use the existing serial session queue through activateInBackground, keeping AVAudioEngine graph changes on its existing main actor. Add a cancellable, generation-checked output-start coordinator with explicit starting/ready/failed completion; reserve output intent before awaiting. Coalesce simultaneous engine starts. Preserve live renderer state when capture and output share an engine. Never merely wrap ensureOutput in a fire-and-forget Task: stop/newer settings/interruption must invalidate pending work and take clocks must wait for readiness.",
+      "timing_dependency": "SongPerform.startMelody:525 starts click before session.begin, while Highway.start:747 begins session before click at 755. SongChords, RhythmStep, SongSheet and LatencyCalibration also need startup-order review. A delayed async click must not let count-in, judging, cue or band clocks advance before engine startup completes; readiness must be awaited or delivered to a guarded callback before clock initialization. Keep observed render-origin correction afterward."
+    },
+    {
+      "id": "interruption-user-stop-resumes",
+      "priority": "P2",
+      "evidence": "interruptionBegan:615 snapshots and calls suspend. stop:437 also only calls suspend, which does not clear interrupted. interruptionEnded:621 restores that saved snapshot unconditionally when shouldResume. Thus user stop/navigation during a call can be undone when the call ends; microphone/drone/tool click can restart after explicit stop.",
+      "proposal": "Separate transient interruption suspension from explicit intent cancellation. An explicit stop clears saved restore intent or advances a lifecycle token that restore must match. A stopCapture should independently remove microphone intent from any pending interruption snapshot without cancelling a desired background tool click."
+    },
+    {
+      "id": "pending-capture-interruption-intent",
+      "priority": "P2",
+      "evidence": "snapshot:586 only captures running && tapInstalled. An interruption while start awaits permission/session activation has captureWanted=true but running=false, so suspend cancels generation and discards requested capture without preserving it for shouldResume. Tuner scene activation may incidentally retry but that is not a reliable lifecycle guarantee for lesson capture.",
+      "proposal": "Represent desired capture settings as explicit state before asynchronous startup; snapshot valid desired capture, not only the installed tap. Gate automatic restore on current owner/lifecycle intent and application foreground state. Avoid snapshotting unfinished user settings from the previous capture."
+    },
+    {
+      "id": "queued-capture-restart-after-stop",
+      "priority": "P2",
+      "evidence": "rebuild:546 and restore:603 enqueue Task { await listen(capture) } without checking an intent token inside the new task. A stop between task creation and execution increments generation but listen/start begins a new generation anyway. stopTone:739 already demonstrates the needed token check.",
+      "proposal": "Capture and revalidate an intent/lifecycle token inside every delayed restore/rebuild task before calling start, and revalidate after each await."
+    }
+  ],
+  "historical_notes_already_addressed_in_baseline": [
+    "Microphone session activation already runs off-main via activateInBackground.",
+    "activationsPending:59, 259-276 and shutdown:464 prevent a stale microphone completion from releasing the single .lessons holder while a newer activation is pending. If a newer capture already runs, running prevents release. The older stale-release note is not evidence that this exact defect remains.",
+    "MicStartRetry already retries selected transient failures once with 300ms delay; tests cover classification, not async ownership behavior.",
+    "Band rendering already uses userInitiated; attack-graded speaker-band exclusion and hardware-rate rerender are present according to current code/docs. Their actual acoustic behavior remains unvalidated.",
+    "Route/config notifications already coalesce over 180ms, compare input signature, preserve renderer state, and filter other engines' configuration changes. Do not replace these with unconditional independent restarts.",
+    "TuneView scenePhase active calls autoListen, so plain tuner background/foreground is not solely dependent on AudioService.resumeWhenActive."
+  ],
+  "other_review_observations": [
+    "AudioSessionOwner still tracks one holder per user, not a per-request lease. An async output migration must include all new pending output activations in shutdown ownership protection or replace holder tracking with generation-specific leases; otherwise it reintroduces the stale release race that activationsPending currently prevents for microphone only.",
+    "prepareInterfaceSound also queue.sync waits at 1322 even though its comment says never waits on deactivation. Holders are inserted only after configure succeeds, so a pending first background activation leaves a window where interface-sound preparation can wait on that queue. Include in nonblocking-session audit.",
+    "RecordingPlayer.engineStopped sets isPlaying=false and releases the session but does not restart. Its class comment claims it plays on after a route/session configuration change. This discrepancy merits a targeted playback route test; source alone does not establish notification order or a safe unconditional restart during interruptions.",
+    "An interruption shouldResume snapshot is only a hint to restore still-desired playback. Never use it to bypass explicit user stop."
+  ],
+  "meaningful_regression_tests": [
+    "Inject a session activator with a manually suspended continuation; verify a main-actor heartbeat advances while output startup is suspended, then engine startup occurs only after activation succeeds.",
+    "Delay activation A, issue stop and start B, finish A/B in both orders; no stale renderer/tap restart, no stale error, no session release while B is pending or running. Finish a cancelled-only activation and require exactly one cleanup release.",
+    "Start metronome then stop while activation is pending; completion must not produce a click. Update tempo/voice while pending; newest settings win and only one engine startup occurs.",
+    "Keep drone/tool click active while capture is cancelled or fails; capture cleanup must not release active output. Keep capture active while output stop/start occurs; input tap remains valid and output does not duplicate graph nodes.",
+    "Suspend activation then send interruption began/end; resume still-requested capture on shouldResume only. Explicit stop/navigation during interruption suppresses restore. No shouldResume leaves stopped. A scheduled rebuild task cannot restart after explicit stop.",
+    "Inject an engine-ready gate into lesson startup. Take/session/cue clocks remain unstarted until click readiness, including delayed and failed activation; band firstBar is scheduled after the same ready point.",
+    "Existing MicStartRetryTests exercise only retry policy. TunerSessionTests exercise tuner state; neither tests AudioService/AudioSessionOwner lifecycle. No direct AudioService/AudioSessionOwner/SessionInterruption test references were found in TimbreAppTests at baseline.",
+    "Use an injected AVAudioSession facade and controllable serial executor/grace clock to test pending release cancellation and startup ordering rather than assertions that mirror arithmetic counters. Keep a smaller app-host integration test for graph lifecycle; a pure core policy test alone cannot prove actual callers use it."
+  ],
+  "physical_device_release_gate": {
+    "status": "UNRUN",
+    "required": "Run all 12 AUDIO-DEVICE-TESTS cases on real devices; include 2-3 iPhones and one iPad as KNOWN-ISSUES requests, speaker/AirPods/wired routes, Low Power Mode, permission denied, quick stop/restart and drone+mic. Record hardware, iOS, build, timing, heard behavior and logs.",
+    "specific_limits": ["Off-main activation removes a known synchronous UI wait but does not prove AVAudioEngine.start cannot itself block.", "Speaker drum bleed/strum grading, silent switch, haptics while recording, Bluetooth latency/rate changes and call/Siri recovery need real hardware.", "Measure Perform-to-first-click and main-thread responsiveness; any freeze above the documented 300ms threshold remains a release failure.", "No hardware pass or App Store readiness claim follows from static review or simulator tests."]
+  }
+}

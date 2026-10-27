@@ -41,6 +41,7 @@ struct AlongStep: View {
     @State private var parked: PlayAlongSession?
     /// A take started the click: closing or leaving the app stops it (never the Metronome tool's own click).
     @State private var ownsClick = false
+    @State private var audioStart = AudioStartGate()
     /// The song's chords under the tune, bar by bar (each change inside a bar too), when it is a stretch of a song
     /// with a chart.
     @State private var chart: [ChordBar]?
@@ -176,6 +177,7 @@ struct AlongStep: View {
         // Leaving the app mid-take drops the take: no click left sounding in a pocket, nothing half-heard graded.
         .onChange(of: scenePhase) { _, now in if now == .background { abandonTake() } }
         .onDisappear {
+            audioStart.cancel()
             if ownsClick && store.audio.metronomeRunning && !store.audio.metronomeOwnedByTool { store.audio.stopMetronome() }
             ownsClick = false
             store.audio.stopBand(); store.stopLessonListening(owner: owner)
@@ -742,7 +744,17 @@ struct AlongStep: View {
     }
 
     private func start() {
-        clearTake()
+        guard !audioStart.isPending else { return }
+        let requestedTempo = tempo
+        ownsClick = true
+        audioStart.begin(store.audio.setMetronome(bpm: Int(tempo), beats: beatsPerBar, subdivision: 1, accents: true)) {
+            startReady(tempo: requestedTempo)
+        }
+    }
+
+    private func startReady(tempo: Double) {
+        session = PlayAlongSession(notes: take, bpm: tempo, beatsPerBar: beatsPerBar, anyOctave: course.anyOctave, keepsTrail: !fretted)
+        steppedUp = false
         if loop == nil { takeTempo = tempo }
         session.begin(at: CACurrentMediaTime())
         cueTiming = SpokenCues.Timing(session)
@@ -752,8 +764,6 @@ struct AlongStep: View {
         if spoken { Earcons.shared.prepare() }
         // A lesson's click always starts a fresh count (even over the Metronome tool's), so the count-in, runway and
         // judging start with the click they assume.
-        store.audio.setMetronome(bpm: Int(tempo), beats: beatsPerBar, subdivision: 1, accents: true)
-        ownsClick = true
         // The band rides the metronome from the bar after the count-in (in full in headphones, its drums on the speaker).
         store.audio.playBand(band, firstBar: 1)
         store.gameTargetHz = take.first.map { PitchMath.frequency(midi: Double($0.midi), reference: store.settings.referencePitchHz) }
@@ -785,7 +795,7 @@ struct AlongStep: View {
         armedOnset = 0
         let analyzer = LessonAnalyzer(chords: false, onOnset: { time in armedOnset = time })
         store.startLessonListening(owner: owner, analyzer: analyzer) { hz, level in
-            guard armed, level > -50, CACurrentMediaTime() - armedOnset < 0.3,
+            guard armed, phase == .ready, !audioStart.isPending, level > -50, CACurrentMediaTime() - armedOnset < 0.3,
                   let heard = HeardNote(hz: hz, reference: store.settings.referencePitchHz),
                   wanted.contains(PitchMath.pitchClass(midi: heard.midi)) else { return }
             Haptics.shared.selection()
@@ -862,7 +872,9 @@ struct AlongStep: View {
     /// The app went to the background mid-take: the click, the band and the microphone stop and the take is dropped
     /// (nothing graded, nothing for the coach). The step is back at Start.
     private func abandonTake() {
-        guard phase == .playing else { return }
+        let starting = audioStart.isPending
+        audioStart.cancel()
+        guard phase == .playing || starting else { return }
         if ownsClick && store.audio.metronomeRunning && !store.audio.metronomeOwnedByTool { store.audio.stopMetronome() }
         ownsClick = false
         store.audio.stopBand()

@@ -75,6 +75,7 @@ struct RhythmStep: View {
     /// This step started the click that's running, so it stops it when it goes. A click it didn't start (the
     /// Metronome tool's) is left alone until a take restarts the click fresh.
     @State private var ownsClick = false
+    @State private var audioStart = AudioStartGate()
     /// "Show me", before Start: the course instrument's 3D model in place of the strings, its pick sweeping the pattern
     /// on the preview's clock (`ShowMeStage`) while two bars of it sound. Start brings the strings back for the take, so
     /// the demonstration never sounds while the step listens.
@@ -222,6 +223,7 @@ struct RhythmStep: View {
             if now == .background { stopShowMeSound(); disarm(); abandonTake() } else if now == .active { arm() }
         }
         .onDisappear {
+            audioStart.cancel()
             showMeTask?.cancel()
             if ownsClick && store.audio.metronomeRunning && !store.audio.metronomeOwnedByTool { store.audio.stopMetronome() }
             store.audio.stopBand()
@@ -736,6 +738,14 @@ struct RhythmStep: View {
     // MARK: The take
 
     private func start() {
+        guard !audioStart.isPending else { return }
+        ownsClick = true
+        audioStart.begin(store.audio.setMetronome(bpm: Int(bpm), beats: beatsPerBar, subdivision: 1, accents: true)) {
+            startReady()
+        }
+    }
+
+    private func startReady() {
         // The demonstration never sounds over the take: it stops before the click and the microphone start.
         closeShowMe()
         armed = false
@@ -745,8 +755,6 @@ struct RhythmStep: View {
         withAnimation(Motion.quick) { phase = .playing; counting = true }
         // A fresh count from its first click (`setMetronome` restarts any click already running, the Metronome
         // tool's included), so the count-in, the band and the judging all count from a click that starts now.
-        store.audio.setMetronome(bpm: Int(bpm), beats: beatsPerBar, subdivision: 1, accents: true)
-        ownsClick = true
         // From the bar after the count-in, on headphones; the speaker keeps the click alone, so its drum hits are never
         // heard as strokes.
         store.audio.playBand(band, firstBar: 1, onSpeaker: false)
@@ -836,7 +844,9 @@ struct RhythmStep: View {
     /// The app went to the background mid-take: the click, the band and the microphone stop and the take is
     /// dropped (nothing graded, nothing for the coach). The step is back at Start.
     private func abandonTake() {
-        guard phase == .playing else { return }
+        let starting = audioStart.isPending
+        audioStart.cancel()
+        guard phase == .playing || starting else { return }
         if ownsClick && store.audio.metronomeRunning && !store.audio.metronomeOwnedByTool { store.audio.stopMetronome() }
         ownsClick = false
         store.audio.stopBand()

@@ -73,6 +73,7 @@ struct SongPerformStep: View {
     @State private var calibrating = false
     /// The take started the click (so leaving stops it, unless the Metronome tool has taken it over since).
     @State private var ownsClick = false
+    @State private var audioStart = AudioStartGate()
     /// The count-in beat last felt.
     @State private var countInBeat: Int?
     /// When the take's spoken cues are said.
@@ -176,6 +177,7 @@ struct SongPerformStep: View {
         // A take can't go on in the pocket: the app going to the background ends it, nothing counted.
         .onChange(of: scenePhase) { _, now in if now == .background { stopTake() } }
         .onDisappear {
+            audioStart.cancel()
             if ownsClick && store.audio.metronomeRunning && !store.audio.metronomeOwnedByTool { store.audio.stopMetronome() }
             ownsClick = false
             store.audio.stopBand(); store.stopLessonListening(owner: owner)
@@ -513,17 +515,22 @@ struct SongPerformStep: View {
         Haptics.shared.selection()
     }
 
-    private func startMelody() {
+    private func startMelody(afterReady: (() -> Void)? = nil) {
+        guard !audioStart.isPending else { return }
+        let requestedTempo = tempo
+        playingChords = false
+        ownsClick = true
+        audioStart.begin(store.audio.setMetronome(bpm: Int(tempo), beats: beatsPerBar, subdivision: 1, accents: true)) {
+            startMelodyReady(tempo: requestedTempo)
+            afterReady?()
+        }
+    }
+
+    private func startMelodyReady(tempo: Double) {
         #if DEBUG
         captureTime = nil
         #endif
         playingChords = false
-        // A fresh count from the first click (a lesson's click restarts even over the Metronome tool's), so the
-        // count-in, the runway and the judging start together; this take owns it until it ends. The click comes first:
-        // starting the audio output can hold the main thread for seconds, and a take whose clock started before it
-        // would run that far ahead of the click, past what following the heard click corrects (`heardStart`).
-        store.audio.setMetronome(bpm: Int(tempo), beats: beatsPerBar, subdivision: 1, accents: true)
-        ownsClick = true
         session = PlayAlongSession(notes: notes, bpm: tempo, beatsPerBar: beatsPerBar, anyOctave: course.anyOctave, keepsTrail: !fretted)
         session.begin(at: CACurrentMediaTime())
         cueTiming = SpokenCues.Timing(session)
@@ -567,7 +574,7 @@ struct SongPerformStep: View {
         armedOnset = 0
         let analyzer = LessonAnalyzer(chords: false, onOnset: { time in armedOnset = time })
         store.startLessonListening(owner: owner, analyzer: analyzer) { hz, level in
-            guard armed, level > -50, CACurrentMediaTime() - armedOnset < 0.3,
+            guard armed, phase == .stage, !audioStart.isPending, level > -50, CACurrentMediaTime() - armedOnset < 0.3,
                   let heard = HeardNote(hz: hz, reference: store.settings.referencePitchHz),
                   wanted.contains(PitchMath.pitchClass(midi: heard.midi)) else { return }
             start()
@@ -711,8 +718,10 @@ struct SongPerformStep: View {
     /// Game Center challenge on the song that is going on (its points so far). The click stops if the take started it
     /// and the Metronome tool hasn't taken it over.
     private func stopTake() {
+        let starting = audioStart.isPending
+        audioStart.cancel()
         // A strummed take stops itself (`SongChordsTake`).
-        guard phase == .playing, !playingChords else { return }
+        guard phase == .playing || starting, !playingChords else { return }
         if ladder.isFullTempo { GameCenter.shared.performStopped(lesson: lesson.id, points: session.points, notes: notes.count) }
         if ownsClick && store.audio.metronomeRunning && !store.audio.metronomeOwnedByTool { store.audio.stopMetronome() }
         ownsClick = false
@@ -794,10 +803,13 @@ extension SongPerformStep {
     /// and the band joins at the song's own bar.
     fileprivate func startScene(atBeat beat: Double) {
         guard phase == .stage else { return }
-        startMelody()
+        startMelody { startSceneReady(atBeat: beat) }
+    }
+
+    private func startSceneReady(atBeat beat: Double) {
         // The clock starts a bar before `beat`: the first frames after a jump this size (the runway's first draw of the
         // whole song, the band starting) can hold the main thread for a second, and a note due then would be a miss.
-        // Starting the audio output, which can hold it for several seconds, comes before the take's clock starts.
+        // The readiness callback runs after output is ready and the take's clock has started.
         let lead = Double(max(1, beatsPerBar))
         let from = max(0, beat - lead)
         session.skip(session.countIn + from * spb)

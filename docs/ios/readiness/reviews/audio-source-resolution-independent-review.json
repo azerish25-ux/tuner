@@ -1,0 +1,62 @@
+{
+  "review": "Independent resolution source review; preserves the initial source review",
+  "baseline": "0c679011095f45eae2e28cd8593b23386a013b7d",
+  "decision": "approved_source_review_pending_native_and_devices",
+  "scope": "All twelve files in audio-review-resolution.json; five unchanged Learn gate callers retained their previously reviewed bytes. Reviewed new AudioReadiness, AudioPreviewLease, InterfaceSoundPlayback, session intent reservations, transport target preservation and all twenty-six authored test methods.",
+  "blocking_source_findings": [],
+  "resolution_assessment": [
+    {
+      "id": "AUDIO-R1-preview-later-note-readiness",
+      "status": "resolved_in_source",
+      "evidence": "SongPlayback reserves a separate preview lease across phrases and rests, awaits initial lease/click and each note, checks current lease and note after suspension, and releases in defer. Phrase completion cannot shut down output while that lease remains. outputRevision advances in both output startup and microphone graph startup; lease currentness checks revision and running output so a later graph change ends the preview at its next scheduling checkpoint. Cancellation cleanup stops only still-current note/click requests and releases its own lease."
+    },
+    {
+      "id": "AUDIO-R2-stale-success-starts-ui",
+      "status": "resolved_in_source",
+      "evidence": "AudioReadiness.value checks current intent after awaited completion and consume rechecks synchronously immediately before callback execution. AudioStartGate uses consume on MainActor. Command generations reject replaced/stopped/interrupted output; RecordingPlayer readiness uses transport generation plus playbackRequested/isPlaying, with schedule preserving that generation. Preview performs synchronous currentness checks after each await before installing band, clock or next note."
+    },
+    {
+      "id": "AUDIO-R3-welcome-ambient-toctou",
+      "status": "resolved_in_source",
+      "evidence": "InterfaceSoundPlayback awaits preparation then performs its ambient predicate and player action contiguously on MainActor. AudioService/RecordingPlayer reserve foreground intent synchronously before their async activation task is created. Owner metadata includes foreground intent, pending activation, holders and deactivation state; active or pending engine work prevents ambient-only playback. No synchronous session-queue hardware wait was restored."
+    },
+    {
+      "id": "AUDIO-R4-recording-pending-toggle",
+      "status": "resolved_in_source",
+      "evidence": "ChartDock action, button face and accessibility label use playbackRequested. Its shared real action pauses pending playback on the second tap. RecordingPlayer records the requested target synchronously, retains it when pausing pending activation, and stale completion checks transport generation before schedule/play."
+    }
+  ],
+  "additional_assessment": [
+    "Denied microphone permission releases its newly reserved foreground intent when otherwise idle. Explicit stop and pending-activation completion preserve deferred release accounting; recording sets sessionActive synchronously so cancellation before its task begins still releases its reservation.",
+    "RecordingPlayer's class comment now truthfully states configuration changes pause until another play request. Automatic route continuation is no longer promised.",
+    "No new high-confidence compile/type/actor defect was identified by source inspection. This is not evidence of a successful Swift typecheck."
+  ],
+  "checks_performed": {
+    "hashes": "Independently recomputed all twelve SHA256 values with Get-FileHash; every value matched audio-review-resolution.json final_owned_swift_sha256.",
+    "scoped_diff_check": "PASS: git -c core.autocrlf=false diff --check on the seven resolution-modified Swift files.",
+    "stale_symbols": "Repository search found no remaining prepareToneOutput, interfaceSoundIsAmbient or wantsPlayback references. Task<Bool> is encapsulated by AudioReadiness.",
+    "native_tests": "UNRUN: 21 AudioStartupTests plus 5 RecordingStartupTests are authored, not executed.",
+    "native_typecheck": "UNRUN: Windows review produced no Swift/Xcode build or concurrency-diagnostic result.",
+    "physical_devices": "UNRUN: no hardware behavior or responsiveness measured."
+  },
+  "remaining_validation_dependencies": [
+    "Compile app and app-host XCTest with Swift 5.10 and complete strict concurrency, then execute all twenty-six tests. Parser acceptance cannot verify actor isolation, XCTest inheritance/callback diagnostics or Apple-framework overloads.",
+    "Useful additional coverage remains: later graph-revision invalidation in the actual preview caller, reverse-order old/new activations, activation failures while another output or capture is desired, real tap/renderer sharing, recording interruption notification order and ordinary-cue playback policy. Their absence is not asserted to prove a current source defect.",
+    "Run all AUDIO-DEVICE-TESTS cases on real devices and record route/iOS/build/timing/results. AVAudioEngine.prepare/start remain on MainActor; no sub-300ms freeze or App Store-ready claim follows from source approval.",
+    "Bluetooth sample-rate changes, engine notification order, speaker bleed, silent-switch behavior, haptics and call/Siri recovery remain device-dependent."
+  ],
+  "owned_swift_sha256": {
+    "ios/Timbre/Audio/AudioService.swift": "4b92717aed3c140b426f8c3b6b2517e681ca2675e19dc631a3f9be0427ca72a3",
+    "ios/Timbre/Audio/SoundFX.swift": "d7ad3eb122a14d38a4e8902ef7ad8d6dabac8c536fcec739068858aaf67b331a",
+    "ios/Timbre/YourSongs/RecordingPlayer.swift": "f569142eb1c243d2e34d2699fe795c1c7bbdc5054213e253b667492b1ff7be73",
+    "ios/Timbre/YourSongs/ChartDock.swift": "104280feec3d71283813fdeb548baf87f5d415f4f0453b16a7b9b291905a9b65",
+    "ios/TimbreAppTests/AudioStartupTests.swift": "91c7802ed5737650fae687a6f2adbc7205f7bb61175975ba6dcf15f6adff39b2",
+    "ios/TimbreAppTests/RecordingStartupTests.swift": "c468c29fa3549b287c2fb477d858ed2c1e61f2497115b8559d55bf8e88480e7f",
+    "ios/Timbre/Learn/SongPerform.swift": "6bc72b992d209610a1a5a9f7ca834b9e6951253eb0efbd8f87b02537433f0633",
+    "ios/Timbre/Learn/Highway.swift": "fc4651397b538645e5b6ffbd5a50ab3c2d17c631c4cd16242ec7d290c736655c",
+    "ios/Timbre/Learn/RhythmStep.swift": "73bb896f349c5b633eeadb520505488628874f6dd924675c922adbe5964e9385",
+    "ios/Timbre/Learn/SongChords.swift": "c8117b7920185cce3f155e0fa3453863cda14f21eabc91b3119098dc375e044a",
+    "ios/Timbre/Learn/LatencyCalibration.swift": "3a5e019fa1cafb11dfbee8365384e0fee59334bb98c9fcd27f0f3efda2228c59",
+    "ios/Timbre/Learn/SongSheet.swift": "3dd1f7b64b667ec0f8531dc499318874e5028c6e13b837bd5decc66d4c78e0b5"
+  }
+}

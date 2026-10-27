@@ -122,6 +122,7 @@ struct SongChordsTake: View {
     @State private var startTime: CFTimeInterval = 0
     @State private var running = false
     @State private var ownsClick = false
+    @State private var audioStart = AudioStartGate()
     /// Each stroke's time (host clock) and the chord it timed, until its sound comes in.
     @State private var strokes: [CFTimeInterval: Int] = [:]
     @State private var countInBeat: Int?
@@ -281,14 +282,20 @@ struct SongChordsTake: View {
     // MARK: Flow
 
     private func begin() {
+        guard !audioStart.isPending else { return }
+        ownsClick = true
+        audioStart.begin(store.audio.setMetronome(bpm: Int(tempo), beats: beatsPerBar, subdivision: 1, accents: true)) {
+            beginReady()
+        }
+    }
+
+    private func beginReady() {
         guard !running else { return }
         startTime = CACurrentMediaTime()
         running = true
         BandFeel.shared.reset(duck: spoken)
         if spoken { Earcons.shared.prepare() }
         Analytics.log(sheet.event, sheet.properties)
-        store.audio.setMetronome(bpm: Int(tempo), beats: beatsPerBar, subdivision: 1, accents: true)
-        ownsClick = true
         // Headphones only: on the speaker the click plays alone, so no drum hit is judged as a stroke.
         store.audio.playBand(band, firstBar: 1, onSpeaker: false)
         // Each stroke is timed as it is heard; its chord follows a quarter second later, from the same stroke.
@@ -367,7 +374,9 @@ struct SongChordsTake: View {
 
     /// Stop (or the app went to the background): the click, the band and the microphone stop; nothing counts.
     private func stop() {
-        guard running else { return }
+        let starting = audioStart.isPending
+        audioStart.cancel()
+        guard running || starting else { return }
         running = false
         tearDown()
         stopped()
@@ -376,7 +385,9 @@ struct SongChordsTake: View {
     /// Leaving mid-take (the lesson closed): as Stop, without going back to the stage. After a take the final chord
     /// rings on.
     private func leave() {
-        guard running else { return }
+        let starting = audioStart.isPending
+        audioStart.cancel()
+        guard running || starting else { return }
         running = false
         tearDown()
     }

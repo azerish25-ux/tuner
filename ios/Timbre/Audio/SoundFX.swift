@@ -1,6 +1,18 @@
 import AVFoundation
 import TimbreCore
 
+/// Preparation may suspend; the ambient-only decision and actual player work must then execute contiguously on
+/// MainActor. A competing engine's intent is visible synchronously, before it begins asynchronous session work.
+@MainActor
+enum InterfaceSoundPlayback {
+    static func play(ambientOnly: Bool, prepare: @MainActor () async -> Void,
+                     ambientAllowed: @MainActor () -> Bool, action: @MainActor () -> Void) async {
+        await prepare()
+        guard !ambientOnly || ambientAllowed() else { return }
+        action()
+    }
+}
+
 /// Short interface sounds (right answer, wrong answer, star, count-in click, lock), synthesized once on
 /// device: Karplus–Strong plucks for notes, soft harmonic bells for rewards, a two-mode woodblock for clicks,
 /// the musical ones in a light baked-in room (`RoomReverb`). They play through AVAudioPlayer so they never
@@ -29,7 +41,7 @@ final class SoundFX {
     private init() {
         // Before any player is prepared (preparing one can activate the session): ambient, so the app's first sound
         // (the welcome motif) mixes with whatever the user is listening to.
-        AudioSessionOwner.shared.prepareInterfaceSound()
+        Task { await AudioSessionOwner.shared.prepareInterfaceSound() }
         // Render every cue off the main thread; a cue asked for before then renders on the spot.
         Task.detached(priority: .utility) { [weak self] in
             let rendered = Cue.allCases.map { ($0, SoundSynth.wav(SoundSynth.render($0), rate: SoundSynth.rate)) }
@@ -41,18 +53,19 @@ final class SoundFX {
         for (cue, data) in rendered where players[cue] == nil { players[cue] = Self.player(data, volume: Self.volume(cue)) }
     }
 
-    func play(_ cue: Cue) {
+    func play(_ cue: Cue) { play(cue, ambientOnly: false) }
+
+    private func play(_ cue: Cue, ambientOnly: Bool) {
         guard enabled else { return }
         if players[cue] == nil { players[cue] = Self.player(SoundSynth.wav(SoundSynth.render(cue), rate: SoundSynth.rate), volume: Self.volume(cue)) }
-        start(players[cue])
+        start(players[cue], ambientOnly: ambientOnly)
     }
 
-    /// The welcome: Timbre's motif, played only in the ambient session (`AudioSessionOwner.interfaceSoundIsAmbient`), so
+    /// The welcome: Timbre's motif, played only in the ambient session (`AudioSessionOwner.interfaceSoundMayPlayNow`), so
     /// it mixes with whatever the user is listening to and keeps to the Ring/Silent switch. While an engine holds the
     /// session (the microphone, a lesson's sound) it stays silent rather than sound through it.
     func playWelcome() {
-        guard enabled, AudioSessionOwner.shared.interfaceSoundIsAmbient() else { return }
-        play(.motif)
+        play(.motif, ambientOnly: true)
     }
 
     /// A miss near `frequency`: the wobble (two soft bells a few hertz apart, beating like a string just off its note)
@@ -69,11 +82,18 @@ final class SoundFX {
     }
 
     /// Plays from the top, in the session the app's own sounds share.
-    private func start(_ player: AVAudioPlayer?) {
+    private func start(_ player: AVAudioPlayer?, ambientOnly: Bool = false) {
         guard let player else { return }
-        AudioSessionOwner.shared.prepareInterfaceSound()
-        player.currentTime = 0
-        player.play()
+        Task { @MainActor in
+            await InterfaceSoundPlayback.play(ambientOnly: ambientOnly,
+                prepare: { await AudioSessionOwner.shared.prepareInterfaceSound() },
+                ambientAllowed: { AudioSessionOwner.shared.interfaceSoundMayPlayNow() }) {
+                    guard self.enabled else { return }
+                    player.prepareToPlay()
+                    player.currentTime = 0
+                    player.play()
+                }
+        }
     }
 
     /// The lock "ding": a plucked harmonic at the pitch of the string just tuned, raised an octave at a time
@@ -175,10 +195,8 @@ final class SoundFX {
     }
 
     private static func player(_ data: Data, volume: Float) -> AVAudioPlayer? {
-        AudioSessionOwner.shared.prepareInterfaceSound()
         guard let player = try? AVAudioPlayer(data: data) else { return nil }
         player.volume = volume
-        player.prepareToPlay()
         return player
     }
 

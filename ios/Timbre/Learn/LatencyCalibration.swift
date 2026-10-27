@@ -19,6 +19,7 @@ struct LatencyCalibrationSheet: View {
     @State private var result: Double?
     @State private var pulse = 0
     @State private var run: Task<Void, Never>?
+    @State private var audioStart = AudioStartGate()
 
     enum Phase { case ready, running, done, failed }
     /// Slow enough that a quarter-second Bluetooth lag still pairs each tap with its own click.
@@ -174,7 +175,12 @@ struct LatencyCalibrationSheet: View {
         taps = []; result = nil
         store.audio.refreshRoute()
         route = store.audio.route
-        store.audio.setMetronome(bpm: Self.bpm, beats: 4, subdivision: 1, accents: true)
+        audioStart.begin(store.audio.setMetronome(bpm: Self.bpm, beats: 4, subdivision: 1, accents: true)) {
+            startReady()
+        }
+    }
+
+    private func startReady() {
         startedAt = CACurrentMediaTime()
         withAnimation(Motion.quick) { phase = .running }
         run = Task { @MainActor in
@@ -208,8 +214,10 @@ struct LatencyCalibrationSheet: View {
     }
 
     private func stop() {
+        let starting = audioStart.isPending
+        audioStart.cancel()
         run?.cancel()
-        if phase == .running { store.audio.stopMetronome() }
+        if phase == .running || starting { store.audio.stopMetronome() }
     }
 }
 

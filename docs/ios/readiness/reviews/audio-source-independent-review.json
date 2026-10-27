@@ -1,0 +1,80 @@
+{
+  "review": "Fresh independent source/diff review; no product edits, native execution, commit or delivery",
+  "baseline": "0c679011095f45eae2e28cd8593b23386a013b7d",
+  "decision": "changes_requested",
+  "scope": "All twelve owned Swift files in audio-implementation.json, including the embedded AudioSessionOwner, all six Learn callers, ChartDock and both authored test files",
+  "source_hashes": "The owned_swift_sha256 map in audio-implementation.json was independently recomputed with Get-FileHash SHA256 and all twelve values matched exactly at review time. This review applies only to those hashes.",
+  "findings": [
+    {
+      "id": "AUDIO-R1-preview-later-note-readiness",
+      "priority": "P1",
+      "file": "ios/Timbre/Learn/SongSheet.swift",
+      "line": 1212,
+      "problem": "SongPlayback still discards every scheduled playTones readiness handle. For a preview without a band, prepareToneOutput reserves the engine only until the first phrase replaces that reservation. AudioService.begin's completion timer (854-861) clears tonePlaying and shuts down during a sufficiently long rest. The next hit therefore needs async activation again, while the ContinuousClock and visual preview continue advancing. Failure is ignored as well. This contradicts the receipt's assertion that scheduled tones await readiness.",
+      "requested_change": "Keep a distinct preview output lease alive across all notes/rests until preview teardown, and handle note readiness/failure explicitly. Merely awaiting each note without preserving the timeline can still accumulate phase error; define and test the preview timing behavior across restart and failure.",
+      "validation": "Preview two short notes separated by a long rest with a controllable activator. Verify the second hit needs no fresh activation under a held preview lease, failure does not silently advance a supposedly playing preview, and cancellation releases the lease. Test the actual SongPlayback caller."
+    },
+    {
+      "id": "AUDIO-R2-stale-success-starts-ui",
+      "priority": "P1",
+      "file": "ios/Timbre/Audio/AudioService.swift",
+      "line": 1200,
+      "problem": "AudioStartGate validates only its own cancellation generation after awaiting a permanently completed Bool. AudioService stop/interruption invalidates audio command generations but cannot revoke an already successful Task<Bool>. If interruptionBegan/suspend or another audio command runs after the command returns true but before the gate's continuation executes, the gate still initializes lesson clocks/band/cues with stopped or replaced audio. SongPlayback and ChartDock use the same stale Bool pattern. Existing tests cover cancellation while activation is pending, not completed-success invalidation.",
+      "requested_change": "Tie readiness consumption to current audio/transport lifecycle and command identity, and revalidate immediately before installing caller clocks. Return a revocable readiness token or supply a synchronous ownership predicate; caller gate cancellation alone does not observe AudioService interruptions or global stops.",
+      "validation": "Complete an audio command, invalidate it with stop/interruption/new command, then consume its completed readiness handle in AudioStartGate; callback must not run. Also exercise invalidation between command completion and a waiting gate continuation. Cover recording sync and preview consumers."
+    },
+    {
+      "id": "AUDIO-R3-welcome-ambient-toctou",
+      "priority": "P2",
+      "file": "ios/Timbre/Audio/SoundFX.swift",
+      "line": 77,
+      "problem": "The ambientOnly decision is computed in the nonisolated async interfaceSoundIsAmbient method, then execution hops back to MainActor before prepareToPlay/play. A lessons/recording claim can occur during that hop and change category before the welcome executes. Only enabled is checked at playback execution. Thus the welcome can still play through an engine-owned category despite its ambient-only policy.",
+      "requested_change": "Revalidate ambient ownership at the playback execution point without another suspension, coordinated with session claims/category changes. Preserve off-main session setters; do not restore queue.sync. Make the policy testable with a suspended ambient preparation and a competing engine claim.",
+      "validation": "Suspend ambient preparation, request welcome, claim lessons/recording before playback resumes, and assert neither player preparation nor play occurs for the ambient-only cue. Ordinary cues should retain their documented behavior."
+    },
+    {
+      "id": "AUDIO-R4-recording-pending-toggle",
+      "priority": "P2",
+      "file": "ios/Timbre/YourSongs/ChartDock.swift",
+      "line": 228,
+      "problem": "ChartDock's actual play/pause handler branches only on isPlaying, which remains false during the newly asynchronous activation. A second tap during delayed startup issues another play instead of cancelling pending playback. RecordingPlayer.toggle already accounts for wantsPlayback, but this caller bypasses it. The user can no longer stop a pending play via the transport button.",
+      "requested_change": "Expose pending desired transport state to the view or use RecordingPlayer's intent-aware toggle while preserving AppleMusic/follower setup. Ensure the displayed control communicates pending playback and a second tap cancels it.",
+      "validation": "Hold activation pending, tap the real ChartDock transport twice, then finish activation. No schedule/play should occur and the session reservation should be released."
+    }
+  ],
+  "observations": [
+    "No queue.sync, semaphore wait or explicit blocking wait remains in the reviewed AudioService/AudioSessionOwner/SoundFX/RecordingPlayer source. AVAudioEngine.prepare/start still execute on MainActor, so a sub-300ms UI-freeze result cannot be inferred.",
+    "Pending microphone/output activation accounting, token checks inside queued capture restore/rebuild, and explicit stop clearing interruption snapshots improve the baseline. Output graph reuse preserves renderer state with rendererPrepared, but fake preparation tests bypass actual graph/tap sharing.",
+    "RecordingPlayer.engineStopped (314-321) still pauses and does not resume after configuration changes, while its class comment promises continuation. This is retained baseline behavior rather than a new regression. Correct the promise or separately design and validate route recovery before claiming that behavior.",
+    "A play(from:) target is local until activation succeeds; pause/interruption while startup is pending records currentTime's prior resumeAt. Add coverage for pending seeks interrupted before completion if preserving the requested seek is the intended transport behavior."
+  ],
+  "verification_limits": {
+    "native_tests": "All fifteen authored tests remain UNRUN. No Swift compiler/Xcode test result was produced by this review.",
+    "typecheck": "Parser success is not typecheck success. Swift 5.10 with SWIFT_STRICT_CONCURRENCY=complete must compile the app and app-host XCTest target, including MainActor test subclasses, @State AudioStartGate initialization, captured closure isolation and default dependency closures. No definitive compiler error is asserted from source inspection alone.",
+    "missing_meaningful_tests": [
+      "Completed-success readiness invalidation before clock callback",
+      "Actual SongPlayback later-note/rest and failure behavior",
+      "Actual ChartDock pending-play cancellation and stale sync callback",
+      "SoundFX ambient-only playback against a competing activation claim",
+      "Activation failures, including output failure with capture or another output still desired",
+      "Reverse-order old/new activation completion after full stop and restart",
+      "Real graph sharing: capture start/cancel/failure while drone/click remains active, output restart while a microphone tap is installed",
+      "Recording seek, explicit pause during interruption, configuration-change and pending-play transport cases"
+    ],
+    "hardware": "All documented physical-device audio cases remain UNRUN and are release dependencies. Source review and fake graph tests do not establish speaker bleed, Bluetooth rates/latency, silent-switch behavior, haptics, call/Siri recovery, real engine notification order or App Store readiness."
+  },
+  "owned_swift_sha256": {
+    "ios/Timbre/Audio/AudioService.swift": "a3e9c5c174c61775d732320e2d8dacf62bf900efdf11dade9be8d26014812535",
+    "ios/Timbre/Audio/SoundFX.swift": "efe705a4f19e6ccdd1997e73380db4702f8f007047cee964859174b768e92e3a",
+    "ios/Timbre/YourSongs/RecordingPlayer.swift": "69505356e8ce34f8f601b87109de6d31d46e125ba6d593dac31278a2040fcd07",
+    "ios/Timbre/YourSongs/ChartDock.swift": "3f9ba96e0badf67a7608aec54ae09450b48e267bd5617a22e7c68a5534558bda",
+    "ios/TimbreAppTests/AudioStartupTests.swift": "caf3bbd04a352bc127263195e9a17ff6f171602b2ac17e30e17ed675b920b384",
+    "ios/TimbreAppTests/RecordingStartupTests.swift": "aa3901303c6d13322cdfcfa6c52aefc364e83c878dc1a4ba34774740795433bc",
+    "ios/Timbre/Learn/SongPerform.swift": "6bc72b992d209610a1a5a9f7ca834b9e6951253eb0efbd8f87b02537433f0633",
+    "ios/Timbre/Learn/Highway.swift": "fc4651397b538645e5b6ffbd5a50ab3c2d17c631c4cd16242ec7d290c736655c",
+    "ios/Timbre/Learn/RhythmStep.swift": "73bb896f349c5b633eeadb520505488628874f6dd924675c922adbe5964e9385",
+    "ios/Timbre/Learn/SongChords.swift": "c8117b7920185cce3f155e0fa3453863cda14f21eabc91b3119098dc375e044a",
+    "ios/Timbre/Learn/LatencyCalibration.swift": "3a5e019fa1cafb11dfbee8365384e0fee59334bb98c9fcd27f0f3efda2228c59",
+    "ios/Timbre/Learn/SongSheet.swift": "70ba025a75ae693c15c6ee46587ae43bd46875ad4c40b27a8191b3bb8f4e414a"
+  }
+}

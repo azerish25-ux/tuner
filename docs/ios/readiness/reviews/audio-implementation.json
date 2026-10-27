@@ -1,0 +1,70 @@
+{
+  "baseline": "0c679011095f45eae2e28cd8593b23386a013b7d",
+  "scope": "Audio startup and lifecycle fixes only; no commit/push by this worker",
+  "plan": "docs/superpowers/plans/2026-10-26-audio-readiness.md",
+  "implementation": [
+    "Output commands reserve desired state synchronously and return Task<Bool,Never> readiness; session activation suspends on the existing serial hardware queue, engine startup coalesces, command/lifecycle tokens suppress stale renderer work",
+    "Pending-session ownership now covers both microphone and output; shutdown does not release the shared lessons holder until all underlying activations finish",
+    "Explicit stop clears saved interruption restore intent; individual capture/click/drone stops remove only their saved intent; pending capture settings survive an interruption; queued capture restore/rebuild checks generation",
+    "Five lesson/calibration callers gate clocks/cues/band behind audio readiness and cancel the gate on existing teardown paths; song preview preflights tone output as well as optional click, and the debug song scene waits before applying its skip",
+    "Recording playback awaits off-main session activation, guards transport generation before schedule/play, preserves reservations across stale activation completions, and records explicit pause separately from interruption pause; recording sync starts after readiness",
+    "Interface sound ambient setup now suspends instead of queue.sync; AVAudioPlayer preparation and play occur only after ambient setup completes, retaining welcome-motif category policy"
+  ],
+  "test_files": {
+    "ios/TimbreAppTests/AudioStartupTests.swift": 13,
+    "ios/TimbreAppTests/RecordingStartupTests.swift": 2
+  },
+  "checks": {
+    "swift_syntax_parser": {
+      "status": "passed",
+      "detail": "tree-sitter Swift grammar parsed all 12 touched Swift files without ERROR/missing nodes; this is not Apple Swift typechecking"
+    },
+    "diff_whitespace": {
+      "status": "passed",
+      "command": "git -c core.autocrlf=false diff --check -- <owned Swift files>"
+    },
+    "hygiene": {
+      "status": "passed",
+      "command": "python tools/ci/comment_hygiene.py",
+      "detail": "No new error-level occurrences; unrelated existing PaywallWinBack.swift inline-orb warning remains"
+    },
+    "readiness_wiring": {
+      "status": "passed",
+      "detail": "Static assertions: no queue.sync in AudioService/AudioSessionOwner; five lesson/calibration callers use AudioStartGate and cancel it; SongPlayback awaits readiness before its ContinuousClock; ChartDock sync callback awaits recording readiness"
+    },
+    "native_red": {
+      "status": "unexecuted",
+      "reason": "Get-Command swift,xcodebuild returned neither tool on this Windows host; tests were written before implementation but no native failing run was possible"
+    },
+    "native_green": {
+      "status": "unexecuted",
+      "reason": "Requires hosted macOS with Xcode and generated Timbre.xcodeproj"
+    },
+    "physical_devices": {
+      "status": "unrun",
+      "reason": "No iPhone/iPad/Bluetooth/silent-switch/call/Siri hardware validation performed"
+    }
+  },
+  "required_native_command": "xcodebuild test -project ios/Timbre.xcodeproj -scheme Timbre -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -only-testing:TimbreAppTests/AudioStartupTests -only-testing:TimbreAppTests/RecordingStartupTests CODE_SIGNING_ALLOWED=NO",
+  "remaining_release_gates": [
+    "Fresh independent diff review before root commits; Swift typecheck/build plus app-host XCTest must pass hosted CI",
+    "Run all AUDIO-DEVICE-TESTS cases on real devices and record results; verify startup responsiveness against documented 300ms freeze threshold",
+    "AVAudioEngine.prepare/start remain on the established main actor: removing the session queue wait does not prove those hardware calls cannot stall",
+    "RecordingPlayer configuration-change behavior (engineStopped pauses) is retained; its historical class comment promising seamless route continuation still requires device evidence and a dedicated route lifecycle decision if observed failures persist",
+    "No App Store-ready or hardware-pass claim is made from this implementation receipt"
+  ],
+  "owned_swift_sha256": {
+    "ios/Timbre/Audio/AudioService.swift": "a3e9c5c174c61775d732320e2d8dacf62bf900efdf11dade9be8d26014812535",
+    "ios/Timbre/Audio/SoundFX.swift": "efe705a4f19e6ccdd1997e73380db4702f8f007047cee964859174b768e92e3a",
+    "ios/Timbre/YourSongs/RecordingPlayer.swift": "69505356e8ce34f8f601b87109de6d31d46e125ba6d593dac31278a2040fcd07",
+    "ios/Timbre/YourSongs/ChartDock.swift": "3f9ba96e0badf67a7608aec54ae09450b48e267bd5617a22e7c68a5534558bda",
+    "ios/TimbreAppTests/AudioStartupTests.swift": "caf3bbd04a352bc127263195e9a17ff6f171602b2ac17e30e17ed675b920b384",
+    "ios/TimbreAppTests/RecordingStartupTests.swift": "aa3901303c6d13322cdfcfa6c52aefc364e83c878dc1a4ba34774740795433bc",
+    "ios/Timbre/Learn/SongPerform.swift": "6bc72b992d209610a1a5a9f7ca834b9e6951253eb0efbd8f87b02537433f0633",
+    "ios/Timbre/Learn/Highway.swift": "fc4651397b538645e5b6ffbd5a50ab3c2d17c631c4cd16242ec7d290c736655c",
+    "ios/Timbre/Learn/RhythmStep.swift": "73bb896f349c5b633eeadb520505488628874f6dd924675c922adbe5964e9385",
+    "ios/Timbre/Learn/SongChords.swift": "c8117b7920185cce3f155e0fa3453863cda14f21eabc91b3119098dc375e044a",
+    "ios/Timbre/Learn/LatencyCalibration.swift": "3a5e019fa1cafb11dfbee8365384e0fee59334bb98c9fcd27f0f3efda2228c59",
+    "ios/Timbre/Learn/SongSheet.swift": "70ba025a75ae693c15c6ee46587ae43bd46875ad4c40b27a8191b3bb8f4e414a"
+  }
+}
