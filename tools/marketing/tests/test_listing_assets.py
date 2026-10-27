@@ -355,7 +355,7 @@ class SourceContractTests(unittest.TestCase):
         for forbidden in ['contents: write', 'publish-results.sh', 'ci-results/', 'git push', 'secrets.', 'apple-delivery', 'archivePath']:
             self.assertNotIn(forbidden, source)
         self.assertEqual(source.count('xcodebuild build-for-testing'), 1)
-        self.assertIn('actions/upload-artifact@v4', source)
+        self.assertRegex(source, r'actions/upload-artifact@[a-f0-9]{40}\b')
         self.assertIn('persist-credentials: false', source)
         self.assertNotIn('-allowProvisioningUpdates', source)
 

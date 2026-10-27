@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-27T03:14:39Z",
+  "reviewer": "Independent integration review agent",
+  "skills": ["systematic-debugging", "code-review-and-quality", "github-actions-docs"],
+  "verdict": "request_changes_cross_step_dynamic_loader_environment",
+  "scope": "Initial caption RAQM/FriBiDi guard, two regressions, pinned-action assertion update, listing/preview workflow dependency setup and CAPTION-FONTS.md. No source edits by reviewer.",
+  "native_failure": {
+    "revision": "b6efd36f5f72d7ec723229949f7c54c32972b72c",
+    "job": 121959123239,
+    "log": "C:/Users/shahr/Desktop/Translation/native-qa/listing-build-b6efd36-final.log",
+    "log_sha256": "36f4ec0964de0b7c56892a3c420823e4a5219bcd39dca2292c4245a9b82b388c",
+    "observed": "Lines208-221: font_assets.audit calls font.getlength with direction/language; Pillow raises KeyError because libraqm shaping is unavailable. This is a real rendering dependency failure, not a native app-test failure."
+  },
+  "findings": [
+    {
+      "id": "CAPTION-01",
+      "priority": "P2",
+      "paths": [
+        { "path": ".github/workflows/listing-assets.yml", "line": 164 },
+        { "path": ".github/workflows/preview.yml", "line": 61 }
+      ],
+      "problem": "Setup exports the loader path before its Python assertion, but later audit/render steps depend on a DYLD_* value persisted through GITHUB_ENV. Apple documents that protected process launches purge DYLD_* environment variables; a protected default shell can remove it before later Python starts. The within-setup check therefore does not establish the environment required by the subsequent steps.",
+      "evidence": [
+        "Listing capture installs/checks RAQM inside setup, then invokes later Python rendering in a separate run step without re-exporting the loader path.",
+        "Preview capability assertion is in setup; its following font audit and later preview renderer are separate steps relying on the persisted DYLD value.",
+        "Apple SIP runtime documentation explicitly describes dynamic-linker environment variable purging. This review has no evidence establishing the current runner SIP/shell protection state."
+      ],
+      "minimal_fix": "Persist the Homebrew FriBiDi directory in an ordinary environment variable and explicitly assign/export DYLD_FALLBACK_LIBRARY_PATH inside each audit/render step immediately before Python, or use a common launcher that sets it before exec. Preserve strict RAQM checks. Verify a fresh later-step Python process can load RAQM on the actual runner."
+    }
+  ],
+  "positive_assessment": [
+    "Official Pillow installation documentation requires a separate FriBiDi install for macOS wheels. Homebrew installation plus a loader search path before Python starts is consistent with this requirement; the remaining issue is cross-step persistence.",
+    "Every caption measurement passes direction/language, including Latin. Making caption_font reject missing RAQM before font selection correctly closes the old Latin-only gap and turns it into a clear caught audit failure.",
+    "Two new tests meaningfully check that missing shaping prevents Latin font selection and appears in the audit failure report. They do not claim macOS dynamic-library loading has executed.",
+    "The stale upload-artifact@v4 test becomes a40-hex pinned official-action check while preserving surrounding credential/artifact/native/permission contract assertions. Current workflow pins remain separately reviewed.",
+    "No shaping fallback, glyph/font/hash gate, native capture validation, complete asset coverage requirement, privacy/source gate or release_ready status is relaxed. ffmpeg version output uses sed instead of head under pipefail, avoiding an avoidable producer SIGPIPE."
+  ],
+  "independent_verification": [
+    { "command": "../.venv-marketing/Scripts/python.exe -m unittest discover -s tools/marketing/tests", "tests": 46, "exit_code": 0 },
+    { "check": "Ruby YAML parsing of all workflow files", "result": "pass" },
+    { "command": "git -c core.autocrlf=false diff --check -- tools/marketing/art.py tools/marketing/tests/test_caption_fonts.py tools/marketing/tests/test_listing_assets.py .github/workflows/listing-assets.yml .github/workflows/preview.yml tools/marketing/CAPTION-FONTS.md", "exit_code": 0 }
+  ],
+  "reviewed_sha256": {
+    "tools/marketing/art.py": "6de0e0a809d3db9b47f75d1d730be3e8cb2a19017a68bd5f23b2f61edd4cdbe2",
+    "tools/marketing/tests/test_caption_fonts.py": "e0cdc9d59b17dcb0ec4ce58a18adcc3747daa64fe84b1f6d174017f0b925ac31",
+    "tools/marketing/tests/test_listing_assets.py": "c2a3cc42dd77e5b7d305f5016ed8f75789ab0455fb6e689ee165b6b6357d747d",
+    ".github/workflows/listing-assets.yml": "e27ba982d5f5b0d2e984f1cf3a5ae6bf3058c905372a96f2fa5eadbafb0b04f5",
+    ".github/workflows/preview.yml": "a0a1e01c87f63451f99699834308f6772c777a630015a8be86b1f905f9dcbafd",
+    "tools/marketing/CAPTION-FONTS.md": "e660e5047f72be6b850fe54ee311118e4062ea6e0c62d732ddf5d8e65f78ce71"
+  },
+  "primary_references": [
+    "https://pillow.readthedocs.io/en/stable/installation/basic-installation.html",
+    "https://github.com/python-pillow/Pillow/issues/5997",
+    "https://developer.apple.com/library/archive/documentation/Security/Conceptual/System_Integrity_Protection_Guide/RuntimeProtections/RuntimeProtections.html"
+  ],
+  "limits": [
+    "No macOS Homebrew/Pillow dynamic-library loading or actual final asset render was executed on this Windows reviewer. Current runner SIP state is not assumed either enabled or disabled.",
+    "46 Windows tests and parsed YAML do not replace hosted capability checks and actual all-locale caption/image/preview execution.",
+    "Native app/accessibility/privacy failures and full media acceptance remain separate; no blanket waiver or release approval implied."
+  ],
+  "mutations": "Only this new independent review receipt written. Original implementation, native log and prior receipts preserved."
+}

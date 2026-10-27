@@ -14,6 +14,8 @@ import font_assets
 
 class FakeFont:
     size = 10
+    path = 'fixture.ttf'
+    index = 0
     def getlength(self, text, **kwargs):
         return len(text)
     def getbbox(self, text, **kwargs):
@@ -21,6 +23,22 @@ class FakeFont:
 
 
 class CaptionFontTests(unittest.TestCase):
+    def test_even_latin_captions_fail_before_font_selection_without_shaping(self):
+        with patch('PIL.features.check', return_value=False), patch.object(art, 'covers', return_value=True), \
+                patch.object(art, 'sora') as select:
+            with self.assertRaises(SystemExit):
+                art.caption_font('Free tuner. No ads.', 'SemiBold', 48)
+        select.assert_not_called()
+
+    def test_missing_shaping_is_recorded_in_the_caption_audit(self):
+        with tempfile.TemporaryDirectory() as folder, \
+                patch.object(font_assets, 'caption_rows', return_value=iter([('en-US', 'iphone/0/caption', 'Free tuner.')])), \
+                patch('PIL.features.check', return_value=False), patch.object(art, 'covers', return_value=True), \
+                patch.object(art, 'sora', return_value=FakeFont()):
+            result = font_assets.audit(Path(folder))
+        self.assertEqual(len(result['failures']), 1)
+        self.assertIn('libraqm', result['failures'][0]['error'])
+
     def test_unknown_glyph_coverage_fails_closed(self):
         with patch.object(art, '_cmap', return_value=None), patch.object(art, 'collection_face', return_value=0):
             self.assertFalse(art.covers('bad.ttf', 'Timbre'))

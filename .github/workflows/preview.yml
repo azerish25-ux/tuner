@@ -52,15 +52,23 @@ jobs:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
       - name: Install XcodeGen, ffmpeg and the preview tool's Python
         run: |
+          set -euo pipefail
           brew install xcodegen
           command -v ffmpeg >/dev/null || brew install ffmpeg
-          ffmpeg -version | head -1
+          ffmpeg -version | sed -n '1p'
+          brew list fribidi >/dev/null 2>&1 || brew install fribidi
+          export TIMBRE_FRIBIDI_LIBRARY_DIR="$(brew --prefix fribidi)/lib"
+          echo "TIMBRE_FRIBIDI_LIBRARY_DIR=$TIMBRE_FRIBIDI_LIBRARY_DIR" >> "$GITHUB_ENV"
+          export DYLD_FALLBACK_LIBRARY_PATH="$TIMBRE_FRIBIDI_LIBRARY_DIR${DYLD_FALLBACK_LIBRARY_PATH:+:$DYLD_FALLBACK_LIBRARY_PATH}"
           # Pillow draws the captions and the end card; fontTools checks a caption's glyphs.
           python3 -m venv build/preview-venv
           build/preview-venv/bin/pip install --quiet -r tools/marketing/requirements.txt
+          build/preview-venv/bin/python3 -c 'from PIL import features; assert features.check("raqm"), "Pillow must load libraqm/FriBiDi before caption rendering"'
           echo "PREVIEW_PY=$PWD/build/preview-venv/bin/python3" >> "$GITHUB_ENV"
       - name: Prepare pinned licensed fonts and verify localized caption typography
-        run: "$PREVIEW_PY tools/marketing/font_assets.py --audit --out $OUT/caption-typography.json"
+        run: |
+          export DYLD_FALLBACK_LIBRARY_PATH="$TIMBRE_FRIBIDI_LIBRARY_DIR${DYLD_FALLBACK_LIBRARY_PATH:+:$DYLD_FALLBACK_LIBRARY_PATH}"
+          "$PREVIEW_PY" tools/marketing/font_assets.py --audit --out "$OUT/caption-typography.json"
       - name: Generate Xcode project
         working-directory: ios
         run: xcodegen generate
@@ -84,6 +92,7 @@ jobs:
           SYNC_OFFSET: ${{ inputs.sync_offset }}
           REANCHOR: ${{ inputs.reanchor && '--reanchor' || '' }}
         run: |
+          export DYLD_FALLBACK_LIBRARY_PATH="$TIMBRE_FRIBIDI_LIBRARY_DIR${DYLD_FALLBACK_LIBRARY_PATH:+:$DYLD_FALLBACK_LIBRARY_PATH}"
           set -o pipefail
           # Apple's marketing status bar: 9:41, full battery, full signal.
           status_bar() {

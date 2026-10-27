@@ -2,6 +2,13 @@
 
 Use a Pillow build with libraqm, plus the declared dependencies:
 
+On macOS, install `fribidi` with Homebrew and expose `$(brew --prefix fribidi)/lib` through
+`DYLD_FALLBACK_LIBRARY_PATH` before starting Python. Pillow's macOS wheels load FriBiDi at runtime.
+The listing and preview workflows install and check this dependency on every rendering runner.
+They retain its path in `TIMBRE_FRIBIDI_LIBRARY_DIR` and re-export the `DYLD_` value inside each rendering step;
+macOS protected shell launches can discard inherited `DYLD_` variables.
+Do not disable shaping or text-direction options to make an audit pass.
+
 ```sh
 python3 -m pip install -r tools/marketing/requirements.txt
 python3 tools/marketing/font_assets.py --audit --out ci-out/caption-typography.json

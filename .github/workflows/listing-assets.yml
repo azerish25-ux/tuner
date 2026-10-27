@@ -85,8 +85,14 @@ jobs:
       - name: Prepare and audit pinned caption fonts once
         run: |
           set -euo pipefail
+          brew list fribidi >/dev/null 2>&1 || brew install fribidi
+          export TIMBRE_FRIBIDI_LIBRARY_DIR="$(brew --prefix fribidi)/lib"
+          echo "TIMBRE_FRIBIDI_LIBRARY_DIR=$TIMBRE_FRIBIDI_LIBRARY_DIR" >> "$GITHUB_ENV"
+          export DYLD_FALLBACK_LIBRARY_PATH="$TIMBRE_FRIBIDI_LIBRARY_DIR${DYLD_FALLBACK_LIBRARY_PATH:+:$DYLD_FALLBACK_LIBRARY_PATH}"
+          mkdir -p ci-out/build
           python3 -m venv ios/build/listing-venv
           ios/build/listing-venv/bin/pip install --quiet -r tools/marketing/requirements.txt
+          ios/build/listing-venv/bin/python3 -c 'from PIL import features; assert features.check("raqm"), "Pillow must load libraqm/FriBiDi before caption rendering"'
           ios/build/listing-venv/bin/python3 tools/marketing/font_assets.py --audit --out ci-out/build/caption-typography.json
           tar -C build -czf ci-out/build/caption-fonts.tgz marketing-fonts
       - name: Ensure Metal toolchain
@@ -154,12 +160,18 @@ jobs:
           mkdir -p build ci-out
           tar -xzf ci-build/caption-fonts.tgz -C build
           cp ci-build/caption-typography.json ci-out/caption-typography.json
+          brew list fribidi >/dev/null 2>&1 || brew install fribidi
+          export TIMBRE_FRIBIDI_LIBRARY_DIR="$(brew --prefix fribidi)/lib"
+          echo "TIMBRE_FRIBIDI_LIBRARY_DIR=$TIMBRE_FRIBIDI_LIBRARY_DIR" >> "$GITHUB_ENV"
+          export DYLD_FALLBACK_LIBRARY_PATH="$TIMBRE_FRIBIDI_LIBRARY_DIR${DYLD_FALLBACK_LIBRARY_PATH:+:$DYLD_FALLBACK_LIBRARY_PATH}"
           python3 -m venv ios/build/listing/venv
           ios/build/listing/venv/bin/pip install --quiet -r tools/marketing/requirements.txt
+          ios/build/listing/venv/bin/python3 -c 'from PIL import features; assert features.check("raqm"), "Pillow must load libraqm/FriBiDi before caption rendering"'
           echo "LISTING_PY=$PWD/ios/build/listing/venv/bin/python3" >> "$GITHUB_ENV"
           command -v ffmpeg >/dev/null 2>&1 || brew install ffmpeg
       - name: Verify restored font hashes without downloading or repeating the audit
         run: |
+          export DYLD_FALLBACK_LIBRARY_PATH="$TIMBRE_FRIBIDI_LIBRARY_DIR${DYLD_FALLBACK_LIBRARY_PATH:+:$DYLD_FALLBACK_LIBRARY_PATH}"
           "$LISTING_PY" - <<'PY'
           import sys
           from pathlib import Path
@@ -179,6 +191,7 @@ jobs:
           LOCALES: ${{ matrix.locales }}
           KIND: ${{ matrix.kind }}
         run: |
+          export DYLD_FALLBACK_LIBRARY_PATH="$TIMBRE_FRIBIDI_LIBRARY_DIR${DYLD_FALLBACK_LIBRARY_PATH:+:$DYLD_FALLBACK_LIBRARY_PATH}"
           "$LISTING_PY" tools/marketing/run_listing_assets.py --locales "$LOCALES" --kind "$KIND" \
             --products ios/build/listing/Build/Products --build-archive ci-build/products.tgz \
             --build-info ci-build/build-info.json --source-sha "$GITHUB_SHA" \

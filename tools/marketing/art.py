@@ -161,8 +161,8 @@ def caption_font(text: str, weight: str, size: int):
         import fontTools  # noqa: F401
     except ImportError:
         raise SystemExit("Caption glyph verification requires fontTools: python3 -m pip install fonttools")
-    if any(ord(ch) > 0x02FF and not ch.isspace() for ch in text) and not features.check("raqm"):
-        raise SystemExit("Unicode captions require Pillow with libraqm shaping; do not render unshaped text.")
+    if not features.check("raqm"):
+        raise SystemExit("Caption rendering requires Pillow with libraqm shaping and FriBiDi; do not render unshaped text.")
     sora_path = str(FONTS / f"Sora-{weight}.ttf")
     if covers(sora_path, text):
         return sora(weight, size)
