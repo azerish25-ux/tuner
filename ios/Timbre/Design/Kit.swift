@@ -655,7 +655,9 @@ extension Text {
     /// A compact counter, "3 / 10" (thin spaces, the numbers in the reader's locale); VoiceOver reads "3 of 10".
     /// Every compact count uses it; running prose keeps "of".
     static func fraction(_ done: Int, _ total: Int) -> Text {
-        (Text("\(done)") + Text(verbatim: "\u{2009}/\u{2009}") + Text("\(total)"))
+        // Keep numerator/denominator order as one numeric run inside an otherwise right-to-left sentence.
+        (Text(verbatim: "\u{2066}") + Text("\(done)") + Text(verbatim: "\u{2009}/\u{2009}")
+            + Text("\(total)") + Text(verbatim: "\u{2069}"))
             .accessibilityLabel(Text("\(done) of \(total)"))
     }
 }
