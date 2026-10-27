@@ -1,0 +1,273 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-10-27T04:17:32.143887+00:00",
+  "reviewer": "Independent integration review agent",
+  "native_revision": "b6efd36f5f72d7ec723229949f7c54c32972b72c",
+  "parent_reported_job": 121959062144,
+  "parent_reported_run": 40434262338,
+  "scope": "12 actual English iPad PNGs:5 portrait and7 landscape, normal-size baseline. Visual/media review only.",
+  "verdict": "no_observed_visual_blocker_in_reviewed_English_iPad_baseline",
+  "findings": [],
+  "frames": [
+    {
+      "frame": "ipad-landscape-instruments.png",
+      "path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\ipad-b6efd36\\named\\ipad-screenshots\\ipad-landscape-instruments.png",
+      "sha256": "caa522674edcba31c19ef2ba3b3badf1b9f3cec74a0d0b2fb56a4fabc3dd3af0",
+      "raw_pixel_dimensions": [
+        2064,
+        2752
+      ],
+      "exif_orientation": 8,
+      "display_dimensions": [
+        2752,
+        2064
+      ],
+      "original_attachment_id": "C777E36E-E46F-417E-90A4-729ED63841F0.png",
+      "device": "iPad Pro 13-inch (M5)",
+      "timestamp": 1793069251.628,
+      "is_associated_with_failure": false,
+      "visual_result": "bounded_English_baseline_acceptance",
+      "observations": "Native instrument grid uses width effectively; full Folk/world cards and names visible. Upper Bowed heading and bottom row are at normal scroll boundaries, not an empty/failed pane."
+    },
+    {
+      "frame": "ipad-landscape-learn-picked.png",
+      "path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\ipad-b6efd36\\named\\ipad-screenshots\\ipad-landscape-learn-picked.png",
+      "sha256": "470c200d24212a48af84a922fb61e8530fc851f76fec16350e9618532d5ffe31",
+      "raw_pixel_dimensions": [
+        2064,
+        2752
+      ],
+      "exif_orientation": 8,
+      "display_dimensions": [
+        2752,
+        2064
+      ],
+      "original_attachment_id": "F9DAEAAB-0D4B-48BB-A31F-E7409B66D4B6.png",
+      "device": "iPad Pro 13-inch (M5)",
+      "timestamp": 1793069361.924,
+      "is_associated_with_failure": false,
+      "visual_result": "bounded_English_baseline_acceptance",
+      "observations": "Picked open-string lesson title, two-star history, step list and open-string preview agree; path/main/detail columns populated without overlap."
+    },
+    {
+      "frame": "ipad-landscape-learn.png",
+      "path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\ipad-b6efd36\\named\\ipad-screenshots\\ipad-landscape-learn.png",
+      "sha256": "2e52033efabe5a9debf984b8789e721cbcf31316be4eb92191e8c36b3140d41c",
+      "raw_pixel_dimensions": [
+        2064,
+        2752
+      ],
+      "exif_orientation": 8,
+      "display_dimensions": [
+        2752,
+        2064
+      ],
+      "original_attachment_id": "BF57541E-0671-435D-9D50-FF7789821F1F.png",
+      "device": "iPad Pro 13-inch (M5)",
+      "timestamp": 1793069347.248,
+      "is_associated_with_failure": false,
+      "visual_result": "bounded_English_baseline_acceptance",
+      "observations": "Three-column path/lesson/Em-preview hierarchy; full first-chord title, Continue action and Today card visible."
+    },
+    {
+      "frame": "ipad-landscape-practice.png",
+      "path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\ipad-b6efd36\\named\\ipad-screenshots\\ipad-landscape-practice.png",
+      "sha256": "7c86138685d576dfc427fd8630c911280b92b3a4b987bdab577363f328cb7cb0",
+      "raw_pixel_dimensions": [
+        2064,
+        2752
+      ],
+      "exif_orientation": 8,
+      "display_dimensions": [
+        2752,
+        2064
+      ],
+      "original_attachment_id": "7A697867-BA6C-4D18-A632-E16DC6928946.png",
+      "device": "iPad Pro 13-inch (M5)",
+      "timestamp": 1793069278.613,
+      "is_associated_with_failure": false,
+      "visual_result": "bounded_English_baseline_acceptance",
+      "observations": "Today/level/quests above populated game and tools columns; cards, challenge actions and six tools fit without collision."
+    },
+    {
+      "frame": "ipad-landscape-progress.png",
+      "path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\ipad-b6efd36\\named\\ipad-screenshots\\ipad-landscape-progress.png",
+      "sha256": "2e7f7dc26c357f7b8ac9b62f59db728caae795d65a3477182414404f83b1e7aa",
+      "raw_pixel_dimensions": [
+        2064,
+        2752
+      ],
+      "exif_orientation": 8,
+      "display_dimensions": [
+        2752,
+        2064
+      ],
+      "original_attachment_id": "315D4A35-0941-461C-BA16-03F021C95E2B.png",
+      "device": "iPad Pro 13-inch (M5)",
+      "timestamp": 1793069447.625,
+      "is_associated_with_failure": false,
+      "visual_result": "bounded_English_baseline_acceptance",
+      "observations": "Three-column coach/week, calendar/string-health and recent-history arrangement; wide achievements continue below viewport normally."
+    },
+    {
+      "frame": "ipad-landscape-songs.png",
+      "path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\ipad-b6efd36\\named\\ipad-screenshots\\ipad-landscape-songs.png",
+      "sha256": "4608b350c101d1bee58de87e3a52ef461b36957d26ad5679dbf18ad5b033baf7",
+      "raw_pixel_dimensions": [
+        2064,
+        2752
+      ],
+      "exif_orientation": 8,
+      "display_dimensions": [
+        2752,
+        2064
+      ],
+      "original_attachment_id": "D2A15ABB-DE88-4FB7-9ACC-2A5A505A990D.png",
+      "device": "iPad Pro 13-inch (M5)",
+      "timestamp": 1793069311.94,
+      "is_associated_with_failure": false,
+      "visual_result": "bounded_English_baseline_acceptance",
+      "observations": "Wide featured song plus Up next pane, full-width Your songs row and readable horizontal cover rail; no empty split pane."
+    },
+    {
+      "frame": "ipad-landscape-tune.png",
+      "path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\ipad-b6efd36\\named\\ipad-screenshots\\ipad-landscape-tune.png",
+      "sha256": "177e32d03ca966ec9040b7257681dde8b42e7796d958fbc9bbcf8d18c8a32baa",
+      "raw_pixel_dimensions": [
+        2064,
+        2752
+      ],
+      "exif_orientation": 8,
+      "display_dimensions": [
+        2752,
+        2064
+      ],
+      "original_attachment_id": "3BDC7222-28EE-48C2-82B5-7F807CA8EB8B.png",
+      "device": "iPad Pro 13-inch (M5)",
+      "timestamp": 1793069146.742,
+      "is_associated_with_failure": false,
+      "visual_result": "bounded_English_baseline_acceptance",
+      "observations": "Headstock, centered D3 zero-cent lock, right-side pitch/string-health panes and control rail visible without collision."
+    },
+    {
+      "frame": "ipad-portrait-learn.png",
+      "path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\ipad-b6efd36\\named\\ipad-screenshots\\ipad-portrait-learn.png",
+      "sha256": "d07eeb7772c76a12725db3652db19ab1278571fbaf2bbd7ce3ba0ec6ba95fe95",
+      "raw_pixel_dimensions": [
+        2064,
+        2752
+      ],
+      "exif_orientation": 1,
+      "display_dimensions": [
+        2064,
+        2752
+      ],
+      "original_attachment_id": "2C4E71FC-356F-4F30-AD20-01E9BB1B53CA.png",
+      "device": "iPad Pro 13-inch (M5)",
+      "timestamp": 1793069529.099,
+      "is_associated_with_failure": false,
+      "visual_result": "bounded_English_baseline_acceptance",
+      "observations": "Two-column course/path and lesson/detail layout; Em preview, step list, Today and Continue action populated and readable."
+    },
+    {
+      "frame": "ipad-portrait-practice.png",
+      "path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\ipad-b6efd36\\named\\ipad-screenshots\\ipad-portrait-practice.png",
+      "sha256": "eb146100c4d90733ee212f66ca93dcb6de27d369a72fefc5c600a2afca3784bd",
+      "raw_pixel_dimensions": [
+        2064,
+        2752
+      ],
+      "exif_orientation": 1,
+      "display_dimensions": [
+        2064,
+        2752
+      ],
+      "original_attachment_id": "AAB56C1C-F4CD-46F7-BED2-03D39BD25136.png",
+      "device": "iPad Pro 13-inch (M5)",
+      "timestamp": 1793069487.592,
+      "is_associated_with_failure": false,
+      "visual_result": "bounded_English_baseline_acceptance",
+      "observations": "Today/level top pair, quest/badge row, two game cards and tools grid retain hierarchy and fit at normal text size."
+    },
+    {
+      "frame": "ipad-portrait-progress.png",
+      "path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\ipad-b6efd36\\named\\ipad-screenshots\\ipad-portrait-progress.png",
+      "sha256": "f23ef5c91005b32599dea8dd45c76fe7e231f001833468446a3780984f8685f1",
+      "raw_pixel_dimensions": [
+        2064,
+        2752
+      ],
+      "exif_orientation": 1,
+      "display_dimensions": [
+        2064,
+        2752
+      ],
+      "original_attachment_id": "FF7B43B3-B667-4D42-8348-4460B1112681.png",
+      "device": "iPad Pro 13-inch (M5)",
+      "timestamp": 1793069454.618,
+      "is_associated_with_failure": false,
+      "visual_result": "bounded_English_baseline_acceptance",
+      "observations": "Stats and two-column coach/week/calendar versus string health/recent history; complete visible captions and achievement labels."
+    },
+    {
+      "frame": "ipad-portrait-songs.png",
+      "path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\ipad-b6efd36\\named\\ipad-screenshots\\ipad-portrait-songs.png",
+      "sha256": "27ca638fc85572ef3df8bc4967e76ec7e89a95b0b87b2b5e3b199cca99d8a506",
+      "raw_pixel_dimensions": [
+        2064,
+        2752
+      ],
+      "exif_orientation": 1,
+      "display_dimensions": [
+        2064,
+        2752
+      ],
+      "original_attachment_id": "998AFA10-5A4E-4A9C-82D1-A84D76786066.png",
+      "device": "iPad Pro 13-inch (M5)",
+      "timestamp": 1793069574.545,
+      "is_associated_with_failure": false,
+      "visual_result": "bounded_English_baseline_acceptance",
+      "observations": "Featured song and Up next remain side by side; Your songs and multiple rails visible. Trailing partial cards are horizontal scroll affordances."
+    },
+    {
+      "frame": "ipad-portrait-tune.png",
+      "path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\ipad-b6efd36\\named\\ipad-screenshots\\ipad-portrait-tune.png",
+      "sha256": "c394cdab1132ef2e6e96a866447f46786fae35b2e4007709a514cc1033296323",
+      "raw_pixel_dimensions": [
+        2064,
+        2752
+      ],
+      "exif_orientation": 1,
+      "display_dimensions": [
+        2064,
+        2752
+      ],
+      "original_attachment_id": "2F683798-1E42-4FC4-9C54-05E9C87D35BA.png",
+      "device": "iPad Pro 13-inch (M5)",
+      "timestamp": 1793069132.237,
+      "is_associated_with_failure": false,
+      "visual_result": "bounded_English_baseline_acceptance",
+      "observations": "Centered headstock and D3 lock, full control/chip rail and lower pitch/string-health charts fit within portrait viewport."
+    }
+  ],
+  "provenance_verification": "All12 named PNGs independently byte-match original exported attachment IDs in the retained index; each source SHA256 recorded above. Originals unchanged.",
+  "inspection_method": "Viewed all12 original native files directly, honoring orientation metadata. No contact-sheet-only judgement or synthetic replacement media used.",
+  "orientation_observation": "Stored PNG dimensions are2064x2752 for every file. Five portrait files have EXIF1; seven landscape files have EXIF8 and display2752x2064. These are correctly oriented native originals, not a wrong-size/orientation defect.",
+  "responsive_observations": [
+    "Portrait and landscape intentionally use different column counts; Tune, Learn, Practice, Progress and Songs panes are populated with coherent controls/content. No unexplained empty pane was found.",
+    "No convincing visible text clipping, control overlap or missing-glyph box was identified in these English frames. Partial vertical content and trailing horizontal rail cards correspond to scroll boundaries.",
+    "Displayed locked/tuned state, three-of-six tuner count, selected lesson preview and partial Today progress agree within each image. Differences in XP/minutes across captures are consistent with sequential demo interaction and do not demonstrate misleading state.",
+    "App screenshots are raw native captures without final store framing/caption composition. Their visual acceptance is distinct from approval of complete listing assets."
+  ],
+  "input_sha256": {
+    "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\ipad-b6efd36\\named\\index.json": "9f0965b6de6f316c6a22b0aee81a15a482b1c6bc0a7f041fd3dd5fbf0cc10b86",
+    "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\ipad-b6efd36\\ipad-screenshots\\manifest.json": "db1a375eb6a99ffda970cdb367f00d76b7ec1360919aaef64a168a22e413551c"
+  },
+  "limits": [
+    "This is only the historical b6 English13-inch-iPad baseline, not all50 localized iPad listing sets or the final candidate revision.",
+    "Hosted job success is parent-provided context; this reviewer verified downloaded PNG/index bytes and visual content without independently querying GitHub job state.",
+    "Static frames do not prove interaction, rotation transitions, Split View/Stage Manager, all device sizes, audio/sync, physical hardware, quantitative contrast/hit targets, VoiceOver, AX5 or linguistic correctness.",
+    "Accessibility failures and the separate44-frame accessibility-matrix review remain independent. No exception, threshold or certification is changed by this visual acceptance."
+  ],
+  "mutations": "Only this review receipt written. No original image/index, source, prior receipt, commit or publication changed by reviewer."
+}

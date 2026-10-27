@@ -10,8 +10,9 @@ final class FractionDirectionTests: XCTestCase {
             for counts in [(3, 6), (12, 34)] {
                 let leftToRight = try render(counts.0, counts.1, locale: locale, direction: .leftToRight)
                 let rightToLeft = try render(counts.0, counts.1, locale: locale, direction: .rightToLeft)
+                let changed = zip(leftToRight, rightToLeft).filter { $0 != $1 }.count
                 XCTAssertEqual(leftToRight, rightToLeft,
-                               "The completed/total order must stay intact in \(locale): \(counts.0)/\(counts.1)")
+                               "The completed/total order must stay intact in \(locale): \(counts.0)/\(counts.1); \(changed) canonical RGBA channel bytes differ")
             }
         }
     }
@@ -34,6 +35,24 @@ final class FractionDirectionTests: XCTestCase {
         let renderer = ImageRenderer(content: content)
         renderer.scale = 1
         renderer.isOpaque = true
-        return try XCTUnwrap(renderer.uiImage?.pngData())
+        let image = try XCTUnwrap(renderer.uiImage)
+        let attachment = XCTAttachment(image: image)
+        attachment.name = "fraction-\(locale)-\(done)-\(total)-\(direction == .leftToRight ? "ltr" : "rtl")"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+        let cgImage = try XCTUnwrap(image.cgImage)
+        let width = cgImage.width, height = cgImage.height
+        XCTAssertEqual(width, 240)
+        XCTAssertEqual(height, 64)
+        let colorSpace = try XCTUnwrap(CGColorSpace(name: CGColorSpace.sRGB))
+        var pixels = Data(count: width * height * 4)
+        try pixels.withUnsafeMutableBytes { bytes in
+            let context = try XCTUnwrap(CGContext(data: bytes.baseAddress, width: width, height: height,
+                                                 bitsPerComponent: 8, bytesPerRow: width * 4, space: colorSpace,
+                                                 bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue | CGBitmapInfo.byteOrder32Big.rawValue))
+            context.interpolationQuality = .none
+            context.draw(cgImage, in: CGRect(x: 0, y: 0, width: CGFloat(width), height: CGFloat(height)))
+        }
+        return pixels
     }
 }

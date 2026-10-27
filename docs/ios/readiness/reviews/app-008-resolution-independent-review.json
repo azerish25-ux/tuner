@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-27T04:50:01Z",
+  "reviewer": "Independent integration review agent",
+  "skills": ["systematic-debugging", "code-review-and-quality"],
+  "verdict": "approve_bounded_source_response_native_resolution_pending",
+  "scope": "Final AnalyticsPrivacyTests fixture/quiescence changes, Telemetry callback-queue seam, contiguous Text fraction and strict canonical render tests. No native execution or source edits by reviewer.",
+  "original_triage": "docs/ios/readiness/reviews/app-008-native-failure-triage.json",
+  "original_triage_sha256": "02b527343ee79dee62278816f3c02e9ec928b554f06fc3e2fd1083418d948737",
+  "findings": [],
+  "source_resolution_assessment": [
+    "Cleanup invalidation signals are standalone XCTestExpectation objects rather than test-body registrations. The no-task session regression exercises that lifecycle directly. Explicit session invalidation waits remain bounded at two seconds; native proof is still required.",
+    "Protocol start handlers, unknown-scope failure notifications and response client calls now execute outside a plain state mutex. responding state permits cancellation during delivery; subsequent data/finish phases are guarded. The bounded cross-thread-stop mock-client regression checks that cancellation can return during didReceive and suppresses completion.",
+    "Retired/unknown scopes still fail closed. Diagnostics reveal only scope-present status and host for unbound requests, without attribution token, payload or user content. Existing one-shot cancellation and overfulfill checks remain.",
+    "Telemetry callbackQueue defaults to the same global utility queue as before, and its lease recheck remains immediately before callback delivery. Production consent, request creation and AnalyticsTransport bytes are unchanged. Tests can own a serial acknowledgement queue without changing production defaults.",
+    "Normal teardown ordering is coherent: synchronously disable/flush each client's serial work, revoke transports, invalidate/drain sessions, then barrier the acknowledgement queue before unregistering scopes. The cancel-and-drain regression requires exactly one rejected pending acknowledgement before returning.",
+    "A failed session drain is not a quiescence guarantee. Review identified that direct XCTest assertions in asynchronous callbacks could still be attributed to a later suite after a timeout. Final code moves transport, telemetry, attribution and endpoint assertions into their owning test bodies after explicit waits, using locked Sendable result boxes. Timeout failures and original assertions are retained.",
+    "The remaining callback assertion is the deliberately synchronous mock-client liveness regression called directly from respond inside the owning test; its cross-thread wait is bounded at0.3seconds and it creates no URLSession.",
+    "The fraction is one contiguous localized Text interpolation containing balanced LRI/PDI around done/slash/total. It preserves numeric interpolation, surrounding RTL layout and the original localized done-of-total accessibility label. Actual shaped order must be demonstrated natively.",
+    "Render tests retain all four locales and both numeric values, plus swapped-value noncollapse guard. Original UIImage attachments are retained. Fixed-size output is drawn into a canonical sRGB premultiplied RGBA buffer and compared exactly, eliminating PNG-encoding metadata as the assertion target without adding tolerance.",
+    "Core Graphics buffer lifetime,32-bit RGBA flags, ImageRenderer MainActor isolation and throwing unwraps are internally consistent by source inspection. No high-confidence API/type/actor blocker identified; actual Xcode compilation is unperformed."
+  ],
+  "authored_native_tests": { "privacy_methods": 21, "fraction_methods": 2, "execution": "UNRUN by reviewer" },
+  "independent_checks": [
+    { "command": "git -c core.autocrlf=false diff --check -- ios/TimbreAppTests/AnalyticsPrivacyTests.swift ios/Timbre/Services/Analytics.swift ios/Timbre/Design/Kit.swift ios/TimbreAppTests/FractionDirectionTests.swift", "exit_code": 0 },
+    { "check": "Full four-file diff, final post-wait result assertions and cleanup ordering reviewed", "result": "No remaining source blocker" },
+    { "check": "AnalyticsTransport hash matches frozen008 triage", "result": "unchanged" }
+  ],
+  "reviewed_sha256": {
+    "ios/TimbreAppTests/AnalyticsPrivacyTests.swift": "c4cb78ab412799e568bd13bdd1854ce34d9784ca3ff1050619d9863d8021f75b",
+    "ios/Timbre/Services/Analytics.swift": "6c7f75c6610355dde2607121e17d9fee43d97b429d9e7bd4c625b7a53ac791f1",
+    "ios/Timbre/Design/Kit.swift": "1cacdbeac3aaf6ac1dff78238ec3ec537efd0f4ca0a806533dfbe19aef8fef6d",
+    "ios/TimbreAppTests/FractionDirectionTests.swift": "3f73d34ed8251d3930e6e656f79321dbbcd719eb62ee667ca402263e99bde81b",
+    "ios/Timbre/Services/AnalyticsTransport.swift": "7e89d80808af137b1491f3a73157e1743431f716e3e3aaf3e2ad2d39e1752113"
+  },
+  "remaining_acceptance": [
+    "Compile/run no-task invalidation, cross-thread cancellation and cancel/drain regressions on exact native candidate; verify actual scope-header visibility and invalidation/completion ordering.",
+    "Run all21 privacy tests repeatedly serially, then commerce tests. Confirm no late assertion is attributed to the next suite. Independent StoreKit cleanup failure remains open until its actual rerun succeeds.",
+    "Run both strict fraction tests and inspect attached actual renders. If canonical bytes differ, use exact mismatch counts and raw images to distinguish ordering from alignment/rasterization; no tolerance or waiver is approved.",
+    "Recapture actual Arabic compact progress state and validate final authoritative localization export for the contiguous numeric format. Preserve digit locale and spoken-label semantics.",
+    "Require full final-candidate app/smoke gate success. Old120-test/45-failure run remains failed; source approval cannot replace execution evidence."
+  ],
+  "limits": [
+    "No local Swift/Xcode/Darwin test execution. Root-reported hygiene/strict-report checks are context, not independently claimed native results.",
+    "A queue barrier following successful invalidation is not proof of quiescence if that wait times out; late callbacks now only collect results/fulfill rather than issue asynchronous XCTest assertions. Cleanup failures must remain visible.",
+    "Reporter retry-wait coverage still does not deterministically establish that its retry was already queued before revocation; separate transport queued-before-revoke coverage is retained.",
+    "Initial native timeout mechanisms were not all proved identical. This review approves the bounded response without declaring production privacy, accessibility or release readiness certified."
+  ],
+  "mutations": "Only this new review receipt written. Original triage, native log and prior receipts preserved; no implementation edit, commit, push or publication by reviewer."
+}

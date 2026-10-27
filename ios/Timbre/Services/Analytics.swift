@@ -149,15 +149,17 @@ final class Telemetry: @unchecked Sendable {
     let transport: AnalyticsTransport
     private let appID: String?
     private let queue = DispatchQueue(label: "timbre.telemetry")
+    private let callbackQueue: DispatchQueue
     private var pending: [[String: Any]] = []
     private var timer: DispatchSourceTimer?
     private var session = UUID().uuidString
     private var sharing = true
     private let endpoint = URL(string: "https://nom.telemetrydeck.com/v2/")!
 
-    init(appID: String?, transport: AnalyticsTransport) {
+    init(appID: String?, transport: AnalyticsTransport, callbackQueue: DispatchQueue = .global(qos: .utility)) {
         self.appID = appID
         self.transport = transport
+        self.callbackQueue = callbackQueue
         if appID == nil { transport.setEnabled(false) }
     }
 
@@ -232,7 +234,7 @@ final class Telemetry: @unchecked Sendable {
 
     private func completeSubmission(_ accepted: Bool, lease: AnalyticsTransport.Lease,
                                     completion: @escaping @Sendable (Bool) -> Void) {
-        DispatchQueue.global(qos: .utility).async { [transport] in
+        callbackQueue.async { [transport] in
             // Recheck immediately before delivery; user callbacks never run on the telemetry queue or under a lock.
             completion(accepted && transport.lease == lease)
         }

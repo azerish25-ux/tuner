@@ -656,8 +656,7 @@ extension Text {
     /// Every compact count uses it; running prose keeps "of".
     static func fraction(_ done: Int, _ total: Int) -> Text {
         // Keep numerator/denominator order as one numeric run inside an otherwise right-to-left sentence.
-        (Text(verbatim: "\u{2066}") + Text("\(done)") + Text(verbatim: "\u{2009}/\u{2009}")
-            + Text("\(total)") + Text(verbatim: "\u{2069}"))
+        Text("\u{2066}\(done)\u{2009}/\u{2009}\(total)\u{2069}")
             .accessibilityLabel(Text("\(done) of \(total)"))
     }
 }

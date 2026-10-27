@@ -6,13 +6,15 @@ import XCTest
 final class AnalyticsPrivacyTests: XCTestCase {
     private var sessions: [(id: String, session: URLSession, invalidated: XCTestExpectation)] = []
     private var transports: [AnalyticsTransport] = []
+    private var telemetryClients: [Telemetry] = []
+    private let callbackQueue = DispatchQueue(label: "privacy-tests.callbacks", qos: .userInitiated)
 
     private func session() -> URLSession {
         let id = UUID().uuidString
         let configuration = URLSessionConfiguration.ephemeral
         configuration.protocolClasses = [PrivacyURLProtocol.self]
         configuration.httpAdditionalHeaders = [PrivacyURLProtocol.scopeHeader: id]
-        let invalidated = expectation(description: "session \(id) invalidated")
+        let invalidated = XCTestExpectation(description: "session \(id) invalidated")
         let delegate = PrivacySessionDelegate(invalidated: invalidated)
         let session = URLSession(configuration: configuration, delegate: delegate, delegateQueue: nil)
         sessions.append((id, session, invalidated))
@@ -25,19 +27,52 @@ final class AnalyticsPrivacyTests: XCTestCase {
         return transport
     }
 
+    private func makeTelemetry(appID: String?, transport: AnalyticsTransport) -> Telemetry {
+        let client = Telemetry(appID: appID, transport: transport, callbackQueue: callbackQueue)
+        telemetryClients.append(client)
+        return client
+    }
+
     private func configureProtocol(start: @escaping (PrivacyURLProtocol) -> Void, stop: (() -> Void)? = nil) {
         guard let id = sessions.last?.id else { XCTFail("Create the scoped session before its handler"); return }
         PrivacyURLProtocol.configure(id: id, start: start, stop: stop)
     }
 
     override func tearDown() {
+        stopAndDrain()
+        super.tearDown()
+    }
+
+    private func stopAndDrain() {
+        for client in telemetryClients { client.setSharing(false) }
         for transport in transports { transport.setEnabled(false) }
         for entry in sessions { entry.session.invalidateAndCancel() }
         if !sessions.isEmpty { wait(for: sessions.map { $0.invalidated }, timeout: 2) }
+        callbackQueue.sync {}
         for entry in sessions { PrivacyURLProtocol.reset(id: entry.id) }
         sessions.removeAll()
         transports.removeAll()
-        super.tearDown()
+        telemetryClients.removeAll()
+    }
+
+    func testSessionWithNoTasksCanBeInvalidatedAndDrained() {
+        _ = session()
+    }
+
+    func testCancelAndDrainDeliversThePendingAcknowledgmentBeforeReturning() {
+        let transport = makeTransport(enabled: true)
+        let telemetry = makeTelemetry(appID: "privacy-test", transport: transport)
+        let started = expectation(description: "submission held")
+        let callbacks = PrivacyCounter(), accepted = PrivacyCounter()
+        configureProtocol(start: { _ in started.fulfill() })
+        telemetry.submit("song_request", ["title": "Example"]) { delivered in
+            if delivered { _ = accepted.increment() }
+            _ = callbacks.increment()
+        }
+        wait(for: [started], timeout: 2)
+        stopAndDrain()
+        XCTAssertEqual(callbacks.value, 1)
+        XCTAssertEqual(accepted.value, 0)
     }
 
     func testRevocationCancelsAnInflightRequestAndRejectsItsResult() throws {
@@ -45,15 +80,17 @@ final class AnalyticsPrivacyTests: XCTestCase {
         let started = expectation(description: "request started")
         let stopped = expectation(description: "request canceled")
         let completed = expectation(description: "completion rejected")
+        let accepted = PrivacyValue<Bool>()
         configureProtocol(start: { _ in started.fulfill() }, stop: { stopped.fulfill() })
         let lease = try XCTUnwrap(transport.lease)
         transport.request(URLRequest(url: URL(string: "https://privacy.test/events")!), lease: lease) { result in
-            if case .success = result { XCTFail("revoked request must not acknowledge delivery") }
+            if case .success = result { accepted.value = true } else { accepted.value = false }
             completed.fulfill()
         }
         wait(for: [started], timeout: 2)
         transport.setEnabled(false)
         wait(for: [stopped, completed], timeout: 2)
+        XCTAssertEqual(accepted.value, false)
         XCTAssertNil(transport.lease)
     }
 
@@ -63,13 +100,15 @@ final class AnalyticsPrivacyTests: XCTestCase {
         transport.setEnabled(false)
         transport.setEnabled(true)
         let forbidden = expectation(description: "old generation work")
+        let accepted = PrivacyValue<Bool>()
         forbidden.isInverted = true
         XCTAssertFalse(transport.withLease(old) { forbidden.fulfill() })
         transport.schedule(after: 0, lease: old) { forbidden.fulfill() }
         transport.request(URLRequest(url: URL(string: "https://privacy.test/old")!), lease: old) { result in
-            if case .success = result { XCTFail("old request accepted") }
+            if case .success = result { accepted.value = true } else { accepted.value = false }
         }
         wait(for: [forbidden], timeout: 0.1)
+        XCTAssertEqual(accepted.value, false)
         XCTAssertNotEqual(transport.lease, old)
     }
 
@@ -92,18 +131,19 @@ final class AnalyticsPrivacyTests: XCTestCase {
         transport.setEnabled(false)
         transport.setEnabled(true)
         let delivered = expectation(description: "new request accepted")
+        let status = PrivacyValue<Int>()
         configureProtocol(start: { $0.respond(status: 200) })
         transport.request(URLRequest(url: URL(string: "https://privacy.test/new")!), lease: try XCTUnwrap(transport.lease)) { result in
-            guard case .success(let response) = result else { XCTFail("new generation was rejected"); delivered.fulfill(); return }
-            XCTAssertEqual(response.status, 200)
+            if case .success(let response) = result { status.value = response.status } else { status.value = -1 }
             delivered.fulfill()
         }
         wait(for: [delivered], timeout: 2)
+        XCTAssertEqual(status.value, 200)
     }
 
     func testOptOutDropsQueuedSignalsAndPreventsFurtherUploads() {
         let transport = makeTransport(enabled: true)
-        let telemetry = Telemetry(appID: "privacy-test", transport: transport)
+        let telemetry = makeTelemetry(appID: "privacy-test", transport: transport)
         telemetry.send("queued", [:])
         telemetry.setSharing(false)
         let flushed = expectation(description: "empty queue flush")
@@ -118,47 +158,55 @@ final class AnalyticsPrivacyTests: XCTestCase {
     func testExplicitRequestAcknowledgesOnlyIngestHTTP200AndNeverJustQueueing() {
         for status in [200, 202, 422, 500] {
             let transport = makeTransport(enabled: true)
-            let telemetry = Telemetry(appID: "privacy-test", transport: transport)
+            let telemetry = makeTelemetry(appID: "privacy-test", transport: transport)
             let completed = expectation(description: "HTTP \(status) result")
+            let result = PrivacyValue<Bool>()
             configureProtocol(start: { $0.respond(status: status) })
             telemetry.submit("song_request", ["title": "Example"]) { accepted in
-                XCTAssertEqual(accepted, status == 200)
+                result.value = accepted
                 completed.fulfill()
             }
             wait(for: [completed], timeout: 2)
+            XCTAssertEqual(result.value, status == 200)
         }
     }
 
     func testExplicitRequestDoesNotSucceedWithoutConfigurationOrConsent() {
         for appID in [nil, "privacy-test"] as [String?] {
             let transport = makeTransport(enabled: appID != nil)
-            let telemetry = Telemetry(appID: appID, transport: transport)
+            let telemetry = makeTelemetry(appID: appID, transport: transport)
             telemetry.setSharing(false)
             let completed = expectation(description: "request unavailable")
+            let result = PrivacyValue<Bool>()
             telemetry.submit("song_request", ["title": "Example"]) { accepted in
-                XCTAssertFalse(accepted)
+                result.value = accepted
                 completed.fulfill()
             }
             wait(for: [completed], timeout: 2)
+            XCTAssertEqual(result.value, false)
         }
     }
 
     func testDeliveryRemainsOffUntilSavedPreferenceIsApplied() {
         let transport = makeTransport(enabled: false)
-        let telemetry = Telemetry(appID: "privacy-test", transport: transport)
+        let telemetry = makeTelemetry(appID: "privacy-test", transport: transport)
         XCTAssertFalse(telemetry.isSending)
         let denied = expectation(description: "not yet enabled")
+        let deniedResult = PrivacyValue<Bool>()
         telemetry.submit("song_request", ["title": "Example"]) { accepted in
-            XCTAssertFalse(accepted); denied.fulfill()
+            deniedResult.value = accepted; denied.fulfill()
         }
         wait(for: [denied], timeout: 2)
+        XCTAssertEqual(deniedResult.value, false)
         telemetry.setSharing(true)
         let accepted = expectation(description: "saved default-on preference applied")
+        let acceptedResult = PrivacyValue<Bool>()
         configureProtocol(start: { $0.respond(status: 200) })
         telemetry.submit("song_request", ["title": "Example"]) { success in
-            XCTAssertTrue(success); accepted.fulfill()
+            acceptedResult.value = success; accepted.fulfill()
         }
         wait(for: [accepted], timeout: 2)
+        XCTAssertEqual(acceptedResult.value, true)
     }
 
     func testAttributionRevocationBeforeStartDoesNotCreateToken() {
@@ -255,10 +303,11 @@ final class AnalyticsPrivacyTests: XCTestCase {
     func testAttributionRevocationDuringRetryWaitPreventsMoreRequestsAndEvents() {
         let transport = makeTransport(enabled: true)
         let first = expectation(description: "attribution first attempt")
+        let requestedURL = PrivacyValue<URL>()
         let later = expectation(description: "no later attribution")
         later.isInverted = true
         configureProtocol(start: { request in
-            XCTAssertEqual(request.request.url, URL(string: "https://api-adservices.apple.com/api/v1/"))
+            requestedURL.value = request.request.url
             first.fulfill()
             request.respond(status: 404)
         })
@@ -266,6 +315,7 @@ final class AnalyticsPrivacyTests: XCTestCase {
                                        token: { "token" }, record: { _, _, _ in later.fulfill() })
         reporter.start()
         wait(for: [first], timeout: 2)
+        XCTAssertEqual(requestedURL.value, URL(string: "https://api-adservices.apple.com/api/v1/"))
         transport.setEnabled(false)
         configureProtocol(start: { _ in later.fulfill() })
         wait(for: [later], timeout: 0.3)
@@ -304,17 +354,21 @@ final class AnalyticsPrivacyTests: XCTestCase {
         let transport = makeTransport(enabled: true)
         let defaults = PrivacyDefaults()
         let recorded = expectation(description: "attribution upload")
+        let capturedValues = PrivacyValue<[String: String]>()
+        let markedBeforeAcknowledgment = PrivacyValue<Bool>()
         configureProtocol(start: { $0.respond(status: 200, body: #"{"attribution":true,"countryOrRegion":"US","campaignId":42,"clickDate":"private"}"#) })
         let reporter = AppleAdsReporter(transport: transport, defaults: defaults.value, token: { "token" }, record: { values, _, done in
-            XCTAssertEqual(values["campaign"], "42")
-            XCTAssertNil(values["country"])
-            XCTAssertNil(values["clickDate"])
-            XCTAssertFalse(defaults.value.bool(forKey: "telemetry.attributionSent"))
+            capturedValues.value = values
+            markedBeforeAcknowledgment.value = defaults.value.bool(forKey: "telemetry.attributionSent")
             done(false)
             recorded.fulfill()
         })
         reporter.start()
         wait(for: [recorded], timeout: 2)
+        XCTAssertEqual(capturedValues.value?["campaign"], "42")
+        XCTAssertNil(capturedValues.value?["country"])
+        XCTAssertNil(capturedValues.value?["clickDate"])
+        XCTAssertEqual(markedBeforeAcknowledgment.value, false)
         XCTAssertFalse(defaults.value.bool(forKey: "telemetry.attributionSent"))
     }
 
@@ -372,6 +426,28 @@ final class AnalyticsPrivacyTests: XCTestCase {
         XCTAssertEqual(client.completions, 0)
     }
 
+    func testProtocolClientCanStopFromAnotherThreadDuringResponseDelivery() {
+        let id = UUID().uuidString
+        defer { PrivacyURLProtocol.reset(id: id) }
+        let stops = PrivacyCounter()
+        let stopped = expectation(description: "client cancellation returned")
+        let client = PrivacyProtocolClient(received: { loadingProtocol in
+            DispatchQueue.global(qos: .userInitiated).async {
+                loadingProtocol.stopLoading()
+                stopped.fulfill()
+            }
+            XCTAssertEqual(XCTWaiter.wait(for: [stopped], timeout: 0.3), .completed,
+                           "Protocol callbacks must not hold a lock needed by client cancellation")
+        })
+        PrivacyURLProtocol.configure(id: id, start: { _ in }, stop: { _ = stops.increment() })
+        let request = protocolRequest(id: id, client: client)
+        request.startLoading()
+        request.respond(status: 200)
+        XCTAssertEqual(stops.value, 1)
+        XCTAssertEqual(client.responses, 1)
+        XCTAssertEqual(client.completions, 0)
+    }
+
     private func protocolRequest(id: String, client: URLProtocolClient? = nil) -> PrivacyURLProtocol {
         var request = URLRequest(url: URL(string: "https://privacy.test/held")!)
         request.setValue(id, forHTTPHeaderField: PrivacyURLProtocol.scopeHeader)
@@ -393,6 +469,8 @@ private final class PrivacyProtocolClient: NSObject, URLProtocolClient, @uncheck
     private let lock = NSLock()
     private var storedFailures: [Int] = []
     private var storedResponses = 0, storedCompletions = 0
+    private let received: ((URLProtocol) -> Void)?
+    init(received: ((URLProtocol) -> Void)? = nil) { self.received = received; super.init() }
     var failures: [Int] { lock.withLock { storedFailures } }
     var responses: Int { lock.withLock { storedResponses } }
     var completions: Int { lock.withLock { storedCompletions } }
@@ -400,6 +478,7 @@ private final class PrivacyProtocolClient: NSObject, URLProtocolClient, @uncheck
     func urlProtocol(_ loadingProtocol: URLProtocol, cachedResponseIsValid cachedResponse: CachedURLResponse) {}
     func urlProtocol(_ loadingProtocol: URLProtocol, didReceive response: URLResponse, cacheStoragePolicy policy: URLCache.StoragePolicy) {
         lock.withLock { storedResponses += 1 }
+        received?(loadingProtocol)
     }
     func urlProtocol(_ loadingProtocol: URLProtocol, didLoad data: Data) {}
     func urlProtocolDidFinishLoading(_ loadingProtocol: URLProtocol) { lock.withLock { storedCompletions += 1 } }
@@ -421,6 +500,15 @@ private final class PrivacyCounter: @unchecked Sendable {
     func increment() -> Int { lock.withLock { count += 1; return count } }
 }
 
+private final class PrivacyValue<Value: Sendable>: @unchecked Sendable {
+    private let lock = NSLock()
+    private var stored: Value?
+    var value: Value? {
+        get { lock.withLock { stored } }
+        set { lock.withLock { stored = newValue } }
+    }
+}
+
 private final class PrivacyHeldRequest: @unchecked Sendable {
     private let lock = NSLock()
     private var stored: PrivacyURLProtocol?
@@ -438,8 +526,8 @@ private final class PrivacyURLProtocol: URLProtocol, @unchecked Sendable {
     }
     private static let lock = NSLock()
     private nonisolated(unsafe) static var handlers: [String: Handlers] = [:]
-    private let stateLock = NSRecursiveLock()
-    private enum State { case waiting, loading, stopped, finished }
+    private let stateLock = NSLock()
+    private enum State { case waiting, loading, responding, stopped, finished }
     private var state = State.waiting
     private var onStop: (() -> Void)?
 
@@ -452,21 +540,28 @@ private final class PrivacyURLProtocol: URLProtocol, @unchecked Sendable {
     override func startLoading() {
         let id = request.value(forHTTPHeaderField: Self.scopeHeader) ?? ""
         let handler = Self.lock.withLock { Self.handlers[id] }
-        stateLock.withLock {
-            guard state == .waiting else { return }
+        var unbound = false
+        let start: ((PrivacyURLProtocol) -> Void)? = stateLock.withLock {
+            guard state == .waiting else { return nil }
             guard let handler else {
                 state = .finished
-                client?.urlProtocol(self, didFailWithError: URLError(.cancelled))
-                return
+                unbound = true
+                return nil
             }
             state = .loading
             onStop = handler.stop
-            handler.start(self)
+            return handler.start
+        }
+        if unbound {
+            print("PRIVACY_PROTOCOL_UNBOUND scopePresent=\(!id.isEmpty) host=\(request.url?.host ?? "-")")
+            client?.urlProtocol(self, didFailWithError: URLError(.cancelled))
+        } else if let start, stateLock.withLock({ state == .loading }) {
+            start(self)
         }
     }
     override func stopLoading() {
         let stopped: (() -> Void)? = stateLock.withLock {
-            guard state == .waiting || state == .loading else { return nil }
+            guard state == .waiting || state == .loading || state == .responding else { return nil }
             state = .stopped
             let callback = onStop
             onStop = nil
@@ -475,14 +570,22 @@ private final class PrivacyURLProtocol: URLProtocol, @unchecked Sendable {
         stopped?()
     }
     func respond(status: Int, body: String = "OK") {
-        stateLock.withLock {
-            guard state == .loading else { return }
+        let allowed = stateLock.withLock {
+            guard state == .loading else { return false }
+            state = .responding
+            return true
+        }
+        guard allowed else { return }
+        let response = HTTPURLResponse(url: request.url!, statusCode: status, httpVersion: "HTTP/1.1", headerFields: nil)!
+        client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+        guard stateLock.withLock({ state == .responding }) else { return }
+        client?.urlProtocol(self, didLoad: Data(body.utf8))
+        let finish = stateLock.withLock {
+            guard state == .responding else { return false }
             state = .finished
             onStop = nil
-            let response = HTTPURLResponse(url: request.url!, statusCode: status, httpVersion: "HTTP/1.1", headerFields: nil)!
-            client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
-            client?.urlProtocol(self, didLoad: Data(body.utf8))
-            client?.urlProtocolDidFinishLoading(self)
+            return true
         }
+        if finish { client?.urlProtocolDidFinishLoading(self) }
     }
 }
