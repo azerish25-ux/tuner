@@ -1,6 +1,6 @@
 # Timbre for iOS
 
-A Swift/SwiftUI tuner and music-learning app for iPhone, iPad and Apple Watch: 60 instruments, 132 tunings, 526 lessons in 11 courses and 146 songs. Pitch analysis runs on the device. Requires iOS 18 or later; native CI uses macOS 15 and Xcode 26.3.
+A Swift/SwiftUI tuner and music-learning app for iPhone, iPad and Apple Watch: 60 instruments, 132 tunings, 526 lessons in 11 courses and 135 distinct songs. Pitch analysis runs on the device. Requires iOS 18 or later; native CI uses macOS 15 and Xcode 26.3.
 
 ## Active continuation — 27 October 2026
 

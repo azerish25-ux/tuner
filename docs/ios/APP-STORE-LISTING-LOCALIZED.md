@@ -123,7 +123,7 @@ The English text, every count the build can change written as a variable. `scree
 | `{tunings}` | 132 | preset tunings |
 | `{courses}` | 11 | courses in Learn (the songbooks are counted as songs) |
 | `{lessons}` | 526 | lessons in those courses |
-| `{songs_floor}` | 140 | distinct song titles, rounded down to ten (146 now): written "{songs_floor}+" |
+| `{songs_floor}` | 130 | distinct tunes after treatment/punctuation normalization and exercise exclusion, rounded down to ten (135 now): written "{songs_floor}+" |
 | `{originals}` | 50 | Timbre Originals |
 
 ### Promotional text (170 max)

@@ -1,7 +1,7 @@
 {
   "en-US": {
-    "file_sha256": "76b0126d3d4acac1f1cc4b6d06f876b3cb7f54d5775379bf671b23df2b02c834",
-    "content_sha256": "f82bfc24d75df4224dab6ccfcd4bfc86513bcb51d57df5b1def448bebffd65b7",
+    "file_sha256": "40b0ad96644b1c9d88d61fdbc1c05de50597d4d54045c6d88e33688809ebb469",
+    "content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "no_new_semantic_issue_identified",
     "checked": [
@@ -14,7 +14,7 @@
       "12 GC board names and 31 achievement name/description pairs"
     ],
     "notes": "English regionals confirmed consumer-facing fields identical to unchanged en-US source.",
-    "proposed_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+    "proposed_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -36,13 +36,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "reviewed_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "en-AU": {
-    "file_sha256": "8abc2d452e21ccca2dc28754e2923bda4c36ce8dc7c083f0db1f265e04a08c88",
-    "content_sha256": "c03a0dfb62ab5aabc3432f3f9e24c841126150b8c5f49ceec873c689160730d8",
+    "file_sha256": "39d3c6dadd596a4f86f3714265d6460735f33f93a442f622061fd3895fd2e87c",
+    "content_sha256": "3187abc0b5fd332b6957ef920444f9ba5e177679042756feae44d11180651d4a",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "no_new_semantic_issue_identified",
     "checked": [
@@ -55,7 +68,7 @@
       "12 GC board names and 31 achievement name/description pairs"
     ],
     "notes": "English regionals confirmed consumer-facing fields identical to unchanged en-US source.",
-    "proposed_content_sha256": "dbc0e92e11ee26e2cf0166f4ac54e3f0ef22237607cc387010bad75a543e9b47",
+    "proposed_content_sha256": "3187abc0b5fd332b6957ef920444f9ba5e177679042756feae44d11180651d4a",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -77,13 +90,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "dbc0e92e11ee26e2cf0166f4ac54e3f0ef22237607cc387010bad75a543e9b47",
+        "reviewed_content_sha256": "3187abc0b5fd332b6957ef920444f9ba5e177679042756feae44d11180651d4a",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "en-CA": {
-    "file_sha256": "3b054a1f1a3889bae813b6f19a858b2e1129d9f5dc212e78258d0704d998483f",
-    "content_sha256": "9d6807d331608b52fd0d23e39c03b4da63102f19e0b7143303a39707f50737ac",
+    "file_sha256": "7e9b6e85973589236bb8ac0eb3a12e4b0dc53ca835680b1a7fd43d61be43e6b1",
+    "content_sha256": "fc6c87b3b22927eaf93611cd1d6ed4de1e597eec354e90f96cbb0279a91d7f45",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "no_new_semantic_issue_identified",
     "checked": [
@@ -96,7 +122,7 @@
       "12 GC board names and 31 achievement name/description pairs"
     ],
     "notes": "English regionals confirmed consumer-facing fields identical to unchanged en-US source.",
-    "proposed_content_sha256": "c343dfd94479a2d12bd6be4013ba56d7eebfc4a3dbe7b7930118fd3c56cf29d9",
+    "proposed_content_sha256": "fc6c87b3b22927eaf93611cd1d6ed4de1e597eec354e90f96cbb0279a91d7f45",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -118,13 +144,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "c343dfd94479a2d12bd6be4013ba56d7eebfc4a3dbe7b7930118fd3c56cf29d9",
+        "reviewed_content_sha256": "fc6c87b3b22927eaf93611cd1d6ed4de1e597eec354e90f96cbb0279a91d7f45",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "en-GB": {
-    "file_sha256": "f5e544783560016c3a30523078b2c166010ac6cdeb426182657d992a6465e664",
-    "content_sha256": "8adfab55c2e9d9ece12e14eb3441924269e9e6bd34fb676d4508eae319edf1c1",
+    "file_sha256": "d82b8371967b3f302db1d5d1708728b78a3c08645b830c93a08766ae1314ccd5",
+    "content_sha256": "c334e9d94cb4725a9b1820430fca459beea76540fa1bcc80df29035c575ca98d",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "no_new_semantic_issue_identified",
     "checked": [
@@ -137,7 +176,7 @@
       "12 GC board names and 31 achievement name/description pairs"
     ],
     "notes": "English regionals confirmed consumer-facing fields identical to unchanged en-US source.",
-    "proposed_content_sha256": "d615ac6db3980d24fdd53cf02b5e9e2889b7e597670d29fd22d8ba425aa4a15d",
+    "proposed_content_sha256": "c334e9d94cb4725a9b1820430fca459beea76540fa1bcc80df29035c575ca98d",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -159,13 +198,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "d615ac6db3980d24fdd53cf02b5e9e2889b7e597670d29fd22d8ba425aa4a15d",
+        "reviewed_content_sha256": "c334e9d94cb4725a9b1820430fca459beea76540fa1bcc80df29035c575ca98d",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "de-DE": {
-    "file_sha256": "e2ac810417238af06978c78d2634c7631dcd4dcfdcc435b67cbc8703859fb158",
-    "content_sha256": "4d0091a338d1687b4f9e431f7e5eda5590d4e12b2f7b5c94258170fa1832f54c",
+    "file_sha256": "4b3e98b5ee785dbd09b08e508fc3d84cfe6b72b2b2c0f21afbc2220c0feb0a70",
+    "content_sha256": "bfbd2ac2da3a156c84a5b5485248586e86fc225dcd5a5676520a320d323d18bd",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -178,7 +230,7 @@
       "12 GC board names and 31 achievement name/description pairs"
     ],
     "notes": "",
-    "proposed_content_sha256": "ad5520d7e3081f88c69e42a3781a68851d15ad872733cc0c57a779c307c02b96",
+    "proposed_content_sha256": "bfbd2ac2da3a156c84a5b5485248586e86fc225dcd5a5676520a320d323d18bd",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -217,13 +269,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "ad5520d7e3081f88c69e42a3781a68851d15ad872733cc0c57a779c307c02b96",
+        "reviewed_content_sha256": "bfbd2ac2da3a156c84a5b5485248586e86fc225dcd5a5676520a320d323d18bd",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "fr-FR": {
-    "file_sha256": "cd1669cc9e8bbb865d84f1b9ec4ea87530d1fba4f57fa7dff317b97e4d6e2595",
-    "content_sha256": "5256a3eafabaf1d7f9c99acc6aabff4f05be858490642d44a0f264f0fba646b8",
+    "file_sha256": "81df93f53000bcc881f5e03ddfea2b25b1b5e1d696061d336e57caa1d4918fda",
+    "content_sha256": "773c74130658028c79968bd36029313e489bdd16c3dca8caf8ee350dd4681303",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -236,7 +301,7 @@
       "12 GC board names and 31 achievement name/description pairs"
     ],
     "notes": "",
-    "proposed_content_sha256": "46189b196346611e68c0de5f2147675d7f4044c809732c16856b62c73c7c114c",
+    "proposed_content_sha256": "773c74130658028c79968bd36029313e489bdd16c3dca8caf8ee350dd4681303",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -275,13 +340,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "46189b196346611e68c0de5f2147675d7f4044c809732c16856b62c73c7c114c",
+        "reviewed_content_sha256": "773c74130658028c79968bd36029313e489bdd16c3dca8caf8ee350dd4681303",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "es-MX": {
-    "file_sha256": "9c6c0ff1cf40f08254b4bf8784bafc718e06dcdc7c5d7a3aa0b82bf952a78cd7",
-    "content_sha256": "30c150b86d93dab9f6ab13951e8bc005b39490123bc0ec82b210dd023c5cf6c1",
+    "file_sha256": "39435bf2c7a4ff5891ba83d282140a0b99a041b6a88515b706299dfe94cd4d81",
+    "content_sha256": "21c68052edadd638ab5de96467ae9ad2bb1406ff04cabc5e459617b330e0bc66",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -294,7 +372,7 @@
       "12 GC board names and 31 achievement name/description pairs"
     ],
     "notes": "",
-    "proposed_content_sha256": "d5098d351f86862613da083c7af9e0f2c95ac34340a80d958d1d05e21e3bb433",
+    "proposed_content_sha256": "21c68052edadd638ab5de96467ae9ad2bb1406ff04cabc5e459617b330e0bc66",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -333,13 +411,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "d5098d351f86862613da083c7af9e0f2c95ac34340a80d958d1d05e21e3bb433",
+        "reviewed_content_sha256": "21c68052edadd638ab5de96467ae9ad2bb1406ff04cabc5e459617b330e0bc66",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "it": {
-    "file_sha256": "ba6ee618fba34061b59dec71636f08d98075ba3ffe4ac630e907b59e81efe810",
-    "content_sha256": "c02638c6c159f78dd6d86bcd254c354cd9c8715c1eb2652a344f2b15c1986871",
+    "file_sha256": "3d341c33fce01aaaee9c6945b95ee353b45682141cf70bb4638aeb0d76076cbf",
+    "content_sha256": "3599673ad97c82b9284ccd9e57d32c986e82d5b547bb9382794f958bd7c867fe",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -352,7 +443,7 @@
       "12 GC board names and 31 achievement name/description pairs"
     ],
     "notes": "",
-    "proposed_content_sha256": "ab983fc859bd400d34b28be0bf1c0c53eaa9cafb1848eeb760de5c68cd89d0ee",
+    "proposed_content_sha256": "3599673ad97c82b9284ccd9e57d32c986e82d5b547bb9382794f958bd7c867fe",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -374,13 +465,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "ab983fc859bd400d34b28be0bf1c0c53eaa9cafb1848eeb760de5c68cd89d0ee",
+        "reviewed_content_sha256": "3599673ad97c82b9284ccd9e57d32c986e82d5b547bb9382794f958bd7c867fe",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "pt-BR": {
-    "file_sha256": "c8249c03ef28e96e73a59c709ad446613037248707efdcb992aba389218db61c",
-    "content_sha256": "8281121a9eaf3f87d208f4dce55db49f297e29ba15780d86283a68024108910e",
+    "file_sha256": "7a01358c27ec5e36e261cb465cc08ffeef89c2fe80c6b4f5c49533fb953e6bd6",
+    "content_sha256": "1109510b2cb7cb33db130746d961f6230add358190ad30455dba583c2f0697cb",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -393,7 +497,7 @@
       "12 GC board names and 31 achievement name/description pairs"
     ],
     "notes": "",
-    "proposed_content_sha256": "0c0b744dc7637b89697a1999e65de49884002832b52c6d2b63b9a6e3bcf55b89",
+    "proposed_content_sha256": "1109510b2cb7cb33db130746d961f6230add358190ad30455dba583c2f0697cb",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -432,13 +536,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "0c0b744dc7637b89697a1999e65de49884002832b52c6d2b63b9a6e3bcf55b89",
+        "reviewed_content_sha256": "1109510b2cb7cb33db130746d961f6230add358190ad30455dba583c2f0697cb",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "ru": {
-    "file_sha256": "ef56535f3d6bca6b2b500faa4affe691f8248723618e4f64df2b3c93816d8f46",
-    "content_sha256": "f4db342127a8545f5935803ebc435c66dd8c17f76bbfa79cac5e376e44efc2cf",
+    "file_sha256": "44207179f8501ad06f0df4c65b119f6a04122b8ced9efd2abf4248eea9c5d7ec",
+    "content_sha256": "6c11c01ad03c3d5d7f99eabaaaa505d926c5c535411c53b1ad49e3947e3ebc2b",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -451,7 +568,7 @@
       "12 GC board names and 31 achievement name/description pairs"
     ],
     "notes": "",
-    "proposed_content_sha256": "50b4e853fd2ab38027ae4a82734973d7994410e7cc2256e41d709826263ba013",
+    "proposed_content_sha256": "6c11c01ad03c3d5d7f99eabaaaa505d926c5c535411c53b1ad49e3947e3ebc2b",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -491,13 +608,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "50b4e853fd2ab38027ae4a82734973d7994410e7cc2256e41d709826263ba013",
+        "reviewed_content_sha256": "6c11c01ad03c3d5d7f99eabaaaa505d926c5c535411c53b1ad49e3947e3ebc2b",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "ja": {
-    "file_sha256": "9926f25483cef4f3cab7d916d6b2886a7736e1c2feab47351ff43f6e5892e25d",
-    "content_sha256": "8a98d82e258f7cdb4fa1b99d6d5871c97f03ed4c3cfec9991c491fd34ee7943e",
+    "file_sha256": "6a0885be0a9fdbbc57c91f0dc0d14cc4b8aadd513170ab5ab45d46ffc2dcdc23",
+    "content_sha256": "1300e0cf9935d7d52b75957f0ef5c1199da591ccdefd88a5bb8740c2afe101a6",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -510,7 +640,7 @@
       "12 GC board names and 31 achievement name/description pairs"
     ],
     "notes": "",
-    "proposed_content_sha256": "485aeef5853ca9740b344f2bd463ea9d90aba3c36fc1f5f8dbccea0bd5625e1d",
+    "proposed_content_sha256": "1300e0cf9935d7d52b75957f0ef5c1199da591ccdefd88a5bb8740c2afe101a6",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -532,13 +662,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "485aeef5853ca9740b344f2bd463ea9d90aba3c36fc1f5f8dbccea0bd5625e1d",
+        "reviewed_content_sha256": "1300e0cf9935d7d52b75957f0ef5c1199da591ccdefd88a5bb8740c2afe101a6",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "ko": {
-    "file_sha256": "b94d19c9b1a8a3d387695b4f9fe4949872b4feb8ee8b5d467606f0da1399f678",
-    "content_sha256": "09ec6b19fb0dd645cc00d18b90ffab867390db325505cb994655507b42e72a8a",
+    "file_sha256": "c387ab14ec6c93b74d3c6de56a845c8df1a830dbce8f190445d641628a18c793",
+    "content_sha256": "eb7c166cc302b84968c861754e9c3a1c76cb30db82b5c7cca1a3d9b52f251559",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -551,7 +694,7 @@
       "12 GC board names and 31 achievement name/description pairs"
     ],
     "notes": "",
-    "proposed_content_sha256": "89286fc4a28eda3940123705fd6507875dbe455bb57218454cff4b10b16335eb",
+    "proposed_content_sha256": "eb7c166cc302b84968c861754e9c3a1c76cb30db82b5c7cca1a3d9b52f251559",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -573,13 +716,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "89286fc4a28eda3940123705fd6507875dbe455bb57218454cff4b10b16335eb",
+        "reviewed_content_sha256": "eb7c166cc302b84968c861754e9c3a1c76cb30db82b5c7cca1a3d9b52f251559",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "zh-Hans": {
-    "file_sha256": "3534757ab06ee7f6038982bade9eb8d3ff3c13443b32c28246f9e3548f8522b9",
-    "content_sha256": "01c31d8e9360a250145ca671051a37433bd99420f92f41bd3459c37a1f2c8407",
+    "file_sha256": "fdfe7974b2a64d9b7f0414e1dec303991b915b3cfac23b0798fde7eec58773d1",
+    "content_sha256": "2ea61d5e316933245b1d65ecbcc7eee482857bbc286d7984c78334e70eb6cbad",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -592,7 +748,7 @@
       "12 GC board names and 31 achievement name/description pairs"
     ],
     "notes": "",
-    "proposed_content_sha256": "680aed84e316776690babbf1699862522b0da01cae11925963223ea988734864",
+    "proposed_content_sha256": "2ea61d5e316933245b1d65ecbcc7eee482857bbc286d7984c78334e70eb6cbad",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -614,13 +770,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "680aed84e316776690babbf1699862522b0da01cae11925963223ea988734864",
+        "reviewed_content_sha256": "2ea61d5e316933245b1d65ecbcc7eee482857bbc286d7984c78334e70eb6cbad",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "es-ES": {
-    "file_sha256": "eee073e0f89b1838d0d3a776e090e7f44dad4ca2f4f98defe37453439d898fb7",
-    "content_sha256": "9bdaecd40c0dbfd6e053a58f5475f0ac4fd27fc5a3c9c8bb65fd019967c30a1d",
+    "file_sha256": "58e5629d6abceef0125d6be920f71b19c03a75cf90afdd77cb0dc2112994f412",
+    "content_sha256": "c6168300baf484397e31c9bd1a682d94ec65ec69a80bdac74a8c0b0393048818",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -632,7 +801,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "673c756d1a2bc7a33d153ad6800098e04e2b1a4c1cc20d965aea5786f6d84ea1",
+    "proposed_content_sha256": "c6168300baf484397e31c9bd1a682d94ec65ec69a80bdac74a8c0b0393048818",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -671,13 +840,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "673c756d1a2bc7a33d153ad6800098e04e2b1a4c1cc20d965aea5786f6d84ea1",
+        "reviewed_content_sha256": "c6168300baf484397e31c9bd1a682d94ec65ec69a80bdac74a8c0b0393048818",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "fr-CA": {
-    "file_sha256": "348b9acc5c1dd99c276c8806f4e1fe4890f07a007c6dc712d8e1f447581c959b",
-    "content_sha256": "f596729fd592e67a8aacf2eadf7b6d37bcdd6c4b335b76f4cf6a08bb6ca842b1",
+    "file_sha256": "db510ad350ce506adffe503cb0dcdbde2bb80bbd28ff18914c868700fd93ada6",
+    "content_sha256": "770c7a63be4626efc7b4faf4cd96ad93ebb8c04c3607064b9201ccef839432f2",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -689,7 +871,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "d40ea428a205fcc4ee7280a7ad1d90a34b151f40837a0e73821030eedc33cf1a",
+    "proposed_content_sha256": "770c7a63be4626efc7b4faf4cd96ad93ebb8c04c3607064b9201ccef839432f2",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -728,13 +910,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "d40ea428a205fcc4ee7280a7ad1d90a34b151f40837a0e73821030eedc33cf1a",
+        "reviewed_content_sha256": "770c7a63be4626efc7b4faf4cd96ad93ebb8c04c3607064b9201ccef839432f2",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "pt-PT": {
-    "file_sha256": "7234d1afb9e1967fe65981ddf6dcf13070443afa3fa71406a602e0d57565a6bc",
-    "content_sha256": "77e63d09696e3930178e587f4eee21881c249c32613b1c7ce785e0f7e489bc2d",
+    "file_sha256": "8da0ae869e882580da043a1c4a8c0080a2f4f86a53866ba44076691b939dcab1",
+    "content_sha256": "1181ff6b396b4d4f922a096a9390e6320c3d694d929f38efb847d2a330c610b1",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -746,7 +941,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "0899ecfdc13e08e055f9a4e697c8cc681aaba52069f6daa4ea892275fd92ae0c",
+    "proposed_content_sha256": "1181ff6b396b4d4f922a096a9390e6320c3d694d929f38efb847d2a330c610b1",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -785,13 +980,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "0899ecfdc13e08e055f9a4e697c8cc681aaba52069f6daa4ea892275fd92ae0c",
+        "reviewed_content_sha256": "1181ff6b396b4d4f922a096a9390e6320c3d694d929f38efb847d2a330c610b1",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "ar-SA": {
-    "file_sha256": "4c165e29e22fd1b7bd1424602199541865a446e232e414108b45317b8604fa67",
-    "content_sha256": "8476d252a494ec22aed77ce9c5783eb6c7996aac4bb8ebdf291334b281a0a9c6",
+    "file_sha256": "92d9cca4fb25393b9cf33ae50ce15ee60f0ccc258e584c09e4717cdbe88f09dc",
+    "content_sha256": "5184cf32fa21f2a5f9740b5450ed3a4930cefaf4c601165b6dbc0bb9104df8be",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -803,7 +1011,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "47b61b4eda7832433ce7ba0f7db5584729a4f6c55abefb395798dd9f2c6f02a7",
+    "proposed_content_sha256": "5184cf32fa21f2a5f9740b5450ed3a4930cefaf4c601165b6dbc0bb9104df8be",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -846,13 +1054,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "47b61b4eda7832433ce7ba0f7db5584729a4f6c55abefb395798dd9f2c6f02a7",
+        "reviewed_content_sha256": "5184cf32fa21f2a5f9740b5450ed3a4930cefaf4c601165b6dbc0bb9104df8be",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "he": {
-    "file_sha256": "b0a083066d2c12979e372cc9098a4481996104243201176bba0a49034a781389",
-    "content_sha256": "b8922ae0bc28d3e264307d863e073962af88c7138cc6b00b7e54c875cca03a0e",
+    "file_sha256": "7bea6c59de1e92b524ddbbe076665908ffd06249b1022dc566c7c225b308e92c",
+    "content_sha256": "0d0233f073ffc302bdfa7a1ac148bd329cbee54e51da46d9b685a2c7b518686c",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -864,7 +1085,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "7d0aebd50f8a607d1cd70dff2e53ccbd25b303f429dba7fcae3110b61f2726c4",
+    "proposed_content_sha256": "0d0233f073ffc302bdfa7a1ac148bd329cbee54e51da46d9b685a2c7b518686c",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -907,13 +1128,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "7d0aebd50f8a607d1cd70dff2e53ccbd25b303f429dba7fcae3110b61f2726c4",
+        "reviewed_content_sha256": "0d0233f073ffc302bdfa7a1ac148bd329cbee54e51da46d9b685a2c7b518686c",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "ca": {
-    "file_sha256": "facef07f21c39a909c3f902b389b7309ab291d8cbec9574349b3330347303886",
-    "content_sha256": "903605645fa24870e9478f101561b33c46e61d68b4180496df71ac80683cbf5e",
+    "file_sha256": "9ca4e8cd672a4326a3d48442de9fa54b6c575acb624832cdbfc145f9a299191e",
+    "content_sha256": "77194888c97fe4b4c0bc725542b6fdc668e88dd96b3fe60eb9b0eeacfa82c8c3",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -925,7 +1159,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "49822aeffa9c972e3a4bcc7902450517af57059dfe8c645eaf4cad689344b7b9",
+    "proposed_content_sha256": "77194888c97fe4b4c0bc725542b6fdc668e88dd96b3fe60eb9b0eeacfa82c8c3",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -966,13 +1200,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "49822aeffa9c972e3a4bcc7902450517af57059dfe8c645eaf4cad689344b7b9",
+        "reviewed_content_sha256": "77194888c97fe4b4c0bc725542b6fdc668e88dd96b3fe60eb9b0eeacfa82c8c3",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "cs": {
-    "file_sha256": "4e8f9244f016ad103a983d7581e790cb0c9f7e275c0914e7950a16b25dd3b807",
-    "content_sha256": "00537c185c3f7e9cd02fc05bb7b23d2e2d55fcad9443795b6e249f08b23ea64e",
+    "file_sha256": "087d854ad09b5e189b582d099605ae5d02e96ff0066f5e6b6aab6c61b7046b98",
+    "content_sha256": "ee9dc993277c98cb570e5816a621f671e42cc4ed98fa82b8398f2157a8bd0b2a",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -984,7 +1231,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "2b9da64f55cbc40e681222f3848eab13b7cc8dc46f045b64ac843111d53140d6",
+    "proposed_content_sha256": "ee9dc993277c98cb570e5816a621f671e42cc4ed98fa82b8398f2157a8bd0b2a",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -1025,13 +1272,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "2b9da64f55cbc40e681222f3848eab13b7cc8dc46f045b64ac843111d53140d6",
+        "reviewed_content_sha256": "ee9dc993277c98cb570e5816a621f671e42cc4ed98fa82b8398f2157a8bd0b2a",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "da": {
-    "file_sha256": "29c56b303a999b75783ac8d90092a718a8164f393493e94fb5a79cc0a86459c2",
-    "content_sha256": "43d3e659c276a90920567b3e74bd14d8596e0c8f785a15abb877b3286feda5e7",
+    "file_sha256": "6eaf2994bc749d06012bc902fbcc8857f376508cd8a02071810bf9aab9eacc92",
+    "content_sha256": "230a8330dc684f63be93e336c749dd4d25584d9a077966e8514306f2a1b9a5db",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -1043,7 +1303,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "7a166b21b92bea302a312f4144be920df569e5f6f153673f81cc3351e296cb7a",
+    "proposed_content_sha256": "230a8330dc684f63be93e336c749dd4d25584d9a077966e8514306f2a1b9a5db",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -1082,13 +1342,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "7a166b21b92bea302a312f4144be920df569e5f6f153673f81cc3351e296cb7a",
+        "reviewed_content_sha256": "230a8330dc684f63be93e336c749dd4d25584d9a077966e8514306f2a1b9a5db",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "nl-NL": {
-    "file_sha256": "346330e19b063f17ed4fb61fbd7b03ed81769ad71b950bdd4b64a7a6fd3496cb",
-    "content_sha256": "af8eeed87088114af0d7cc22aff01371530cb962e0d138f581bf3a28069c4968",
+    "file_sha256": "bed2d8bb24f9e13620f3de708c2b46ec58c0984a46cf07f8eef5b449d4213ee9",
+    "content_sha256": "fc2cbeb195fd8887b8d6773c36a339163d3eff36cded7ad17ed61beb72f6bb5b",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -1100,7 +1373,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "7573e6db87db53a886f52102e7b526ecff86a67a618b972f4f29007db544e22b",
+    "proposed_content_sha256": "fc2cbeb195fd8887b8d6773c36a339163d3eff36cded7ad17ed61beb72f6bb5b",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -1140,13 +1413,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "7573e6db87db53a886f52102e7b526ecff86a67a618b972f4f29007db544e22b",
+        "reviewed_content_sha256": "fc2cbeb195fd8887b8d6773c36a339163d3eff36cded7ad17ed61beb72f6bb5b",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "no": {
-    "file_sha256": "2ec313d38660e107a24abeb1a8717291cbc3e9aa279585317fb4050fbe066be2",
-    "content_sha256": "c1a3a29158348aa843cb50e05a82c9725315b6b08cb519fcf8d6bad9a2940c77",
+    "file_sha256": "b7c956454f51c0510f82957df971cd3dd7cb5816b3d9e1ff58fd41f9e2b3c20e",
+    "content_sha256": "2f91398a0edcd1bae720bf1432c16266263af5a24c48ae762c19cf52650aeccf",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -1158,7 +1444,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "ef6faecfd1699068cda756b33ee2df3f8af975812e66a8d83b046b27e25f0918",
+    "proposed_content_sha256": "2f91398a0edcd1bae720bf1432c16266263af5a24c48ae762c19cf52650aeccf",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -1199,13 +1485,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "ef6faecfd1699068cda756b33ee2df3f8af975812e66a8d83b046b27e25f0918",
+        "reviewed_content_sha256": "2f91398a0edcd1bae720bf1432c16266263af5a24c48ae762c19cf52650aeccf",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "sv": {
-    "file_sha256": "b8d03bf72c1a8a5ffdc14486d1f52fc7afba67c3ec5413f3eae07c92bcee079a",
-    "content_sha256": "4af1973e764775de4b83a531cea5a0e0c5d5ede2d91cd655c1b9d822608e7052",
+    "file_sha256": "4a29c498ac2d733a1a4fc808fda2186741ccbde39ef6b8d89f3102abd810be7f",
+    "content_sha256": "3510243c90a4bdde50d53331af3e6a7c989dba4e01c3a1330c70f34bc76f111f",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -1217,7 +1516,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "4b1e6e63265cd39cf14b4730e927fe8a44faee1ba790141bd319e3e9c0f2fb3b",
+    "proposed_content_sha256": "3510243c90a4bdde50d53331af3e6a7c989dba4e01c3a1330c70f34bc76f111f",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -1239,13 +1538,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "4b1e6e63265cd39cf14b4730e927fe8a44faee1ba790141bd319e3e9c0f2fb3b",
+        "reviewed_content_sha256": "3510243c90a4bdde50d53331af3e6a7c989dba4e01c3a1330c70f34bc76f111f",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "fi": {
-    "file_sha256": "b9eace9449bdf3c650c37c7adf704b573e2553440ec1df95077ec2692314da42",
-    "content_sha256": "9c4777a04d0c18b1d6ed69f7aa75d48ca976d5a9a9df784e2418faa67508bb55",
+    "file_sha256": "82ab2d0ff204be7384d308e93300ddeee4dab4f23f1672111fceb748e3e34bba",
+    "content_sha256": "a5db9aa83c85b4c4ab4786ed86d4192e2e434662be4d96f48d8ac0dfaa5cd3ea",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -1257,7 +1569,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "56ee8bd1a00f65e550257fb0374a25ea7b935c4946d76f6f94593388ac5564ce",
+    "proposed_content_sha256": "a5db9aa83c85b4c4ab4786ed86d4192e2e434662be4d96f48d8ac0dfaa5cd3ea",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -1298,13 +1610,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "56ee8bd1a00f65e550257fb0374a25ea7b935c4946d76f6f94593388ac5564ce",
+        "reviewed_content_sha256": "a5db9aa83c85b4c4ab4786ed86d4192e2e434662be4d96f48d8ac0dfaa5cd3ea",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "el": {
-    "file_sha256": "22cec7455b4aec55bc119cbac71677fed9baced20e3f7cc3d261a5d1666bc699",
-    "content_sha256": "f02d6b10d292496f00dea38822431014132261abcd480b06db4fefbd8a3b2747",
+    "file_sha256": "096d2458f1d9f06860b515e87f79e5ae1ea43397cb5f10ad29f87a5a719b0512",
+    "content_sha256": "627d4b76b9fa12a9680961880f44ee61093e19df8f6e02a3b341faaf35284cff",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -1316,7 +1641,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "b2b86d231a2e9b9ff5021a96c590dc43a12e978b70122f5c28ff29bdb9c5c851",
+    "proposed_content_sha256": "627d4b76b9fa12a9680961880f44ee61093e19df8f6e02a3b341faaf35284cff",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -1361,13 +1686,26 @@
         "decision": "accept-with-guarded-register-refinement",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "b2b86d231a2e9b9ff5021a96c590dc43a12e978b70122f5c28ff29bdb9c5c851",
+        "reviewed_content_sha256": "627d4b76b9fa12a9680961880f44ee61093e19df8f6e02a3b341faaf35284cff",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "tr": {
-    "file_sha256": "f6c4100081c5d1055eb7221dc72b76581e1d7723d3e2e2897709e8babc3d1daa",
-    "content_sha256": "23da59cc285723141b63b0683c03be2090a4670d521c5480ceb652e7f1b2975f",
+    "file_sha256": "e8a80d40aca2e25ccc05837e8355d951db133d2eac100ac840a31df062b9722e",
+    "content_sha256": "522d36695bfa89e53b0789fd38330b161f4d3e84d7408a603d6e2677b7b969ae",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -1379,7 +1717,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "d9151c654720a317ac1f8dd3bec8ca52c6deb16d8e83cf735e2d909a8ba04d64",
+    "proposed_content_sha256": "522d36695bfa89e53b0789fd38330b161f4d3e84d7408a603d6e2677b7b969ae",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -1418,13 +1756,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "d9151c654720a317ac1f8dd3bec8ca52c6deb16d8e83cf735e2d909a8ba04d64",
+        "reviewed_content_sha256": "522d36695bfa89e53b0789fd38330b161f4d3e84d7408a603d6e2677b7b969ae",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "hr": {
-    "file_sha256": "81cf38d4e96539485684b89a8962da1f96cfc83fdb090d923e8a8fe5b2a12220",
-    "content_sha256": "55df839643610b0d60f951b1d23e7e00c46c009079a3e20c81c3c81d24baa476",
+    "file_sha256": "2cc2ea08d71af8e232a9dd37dd6cebd5e9b0515ff8858e149468a8a2619e4925",
+    "content_sha256": "4c52aac5b927d150739dc5a29944193f09da7d05600b1a2228cda6934851e71c",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -1436,7 +1787,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "8072450d2023b377a3a47853f3ddc49cb14813623e7c3384eaee7bdc7b57081f",
+    "proposed_content_sha256": "4c52aac5b927d150739dc5a29944193f09da7d05600b1a2228cda6934851e71c",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -1530,13 +1881,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "8072450d2023b377a3a47853f3ddc49cb14813623e7c3384eaee7bdc7b57081f",
+        "reviewed_content_sha256": "4c52aac5b927d150739dc5a29944193f09da7d05600b1a2228cda6934851e71c",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "hu": {
-    "file_sha256": "02ba39d386de732ff3370fb8d25a3b7c8e0ff3ca527034e36997939864aef269",
-    "content_sha256": "91bfc4178fa27d31318fb7f0ce81575657c31538f8a29150168753175e297f25",
+    "file_sha256": "5455958677cde1b7490490fcf73262312c6aefa34adb556afdaad1ad75d04e68",
+    "content_sha256": "c1ca63762220fb60fb0773af281a42a5a650d5d2ace68a5deb62588bc326c291",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -1548,7 +1912,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "087938efa4b13a10f56f3d7f8dc845fa041b54476f0b0bb2d4ad18b3537de638",
+    "proposed_content_sha256": "c1ca63762220fb60fb0773af281a42a5a650d5d2ace68a5deb62588bc326c291",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -1589,13 +1953,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "087938efa4b13a10f56f3d7f8dc845fa041b54476f0b0bb2d4ad18b3537de638",
+        "reviewed_content_sha256": "c1ca63762220fb60fb0773af281a42a5a650d5d2ace68a5deb62588bc326c291",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "pl": {
-    "file_sha256": "a488e4023eeb6222e6dd925478c0f06982326ea716fc4a4efcf81cd549f2d7ff",
-    "content_sha256": "a38278b5691a123646ba022b3e32181362d2b93174784ab9b0b7888eb6c18e68",
+    "file_sha256": "9e315c69e74e2b1dc637f54340f2fff604b241eb8c5e8d75379d4cb1f7ad6bca",
+    "content_sha256": "375395b5e1083bf0732f51bac0080edac0603fccbcfa20d5a9168f00b5542cee",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -1607,7 +1984,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "60feaf414cbc2ab3ac1a9dde8aaf251b7387dbe48464f45f945b98f882381731",
+    "proposed_content_sha256": "375395b5e1083bf0732f51bac0080edac0603fccbcfa20d5a9168f00b5542cee",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -1650,13 +2027,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "60feaf414cbc2ab3ac1a9dde8aaf251b7387dbe48464f45f945b98f882381731",
+        "reviewed_content_sha256": "375395b5e1083bf0732f51bac0080edac0603fccbcfa20d5a9168f00b5542cee",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "ro": {
-    "file_sha256": "93d2b887b1869610d89597ebff16988944ab9911e9eabd7cba4636cf56cc3f1a",
-    "content_sha256": "a5eb6d5db133a88f21a5a68c48cdb6cc549485aa0c1257524c960cdc24fb185d",
+    "file_sha256": "215898a208d35a9fcdaf60699394c17d77f80d576c9a5072719bb04f20fffad1",
+    "content_sha256": "5b5e563bad970e232398797737f2afd30cf256b92df3287d0cf19c3063e3df11",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -1668,7 +2058,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "618c7644ee311708a06dd3594bcf58995770a9f919add9cc07e001e9fb9cfcf0",
+    "proposed_content_sha256": "5b5e563bad970e232398797737f2afd30cf256b92df3287d0cf19c3063e3df11",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -1709,13 +2099,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "618c7644ee311708a06dd3594bcf58995770a9f919add9cc07e001e9fb9cfcf0",
+        "reviewed_content_sha256": "5b5e563bad970e232398797737f2afd30cf256b92df3287d0cf19c3063e3df11",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "sk": {
-    "file_sha256": "9fdddd164b6cd1ef12d4aae8b0ce4603859504cf4eaa687fbb716c7f6f40622b",
-    "content_sha256": "e57368e03efcabb847f672105a76a052ac610569f9224f4b0f9c74af93234a47",
+    "file_sha256": "b45fe9cd1438ea849790594df36063c11e8ea80159d74c4ce66474fb8d0c0f0f",
+    "content_sha256": "fcdd439a9a604ce0ea4e11456c061e4d9e561a6a3d4be5189b1fb9a793b6de21",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -1727,7 +2130,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "e09f89a72d2664dd286c30630e3fb03e1bdf6ea82b421fe77e9a9aa2414019d3",
+    "proposed_content_sha256": "fcdd439a9a604ce0ea4e11456c061e4d9e561a6a3d4be5189b1fb9a793b6de21",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -1768,13 +2171,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "e09f89a72d2664dd286c30630e3fb03e1bdf6ea82b421fe77e9a9aa2414019d3",
+        "reviewed_content_sha256": "fcdd439a9a604ce0ea4e11456c061e4d9e561a6a3d4be5189b1fb9a793b6de21",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "sl-SI": {
-    "file_sha256": "9b25a7725d3e74b526e1626d82caa9528c0cbc5f18e4629c60c116feab20aaa1",
-    "content_sha256": "6cc94aa7994384f1453ca576f654f9184177d6a5c05f2d20be4f8302c74b9bea",
+    "file_sha256": "fc96e2775532de57e57c00da45cec9f40a917d2a808b9be0addf6381c07ecf1e",
+    "content_sha256": "bb5b4d52d85f2d241d284484a100c45f33df9b2c7b9ed93c3e468271d67a32e9",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -1786,7 +2202,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "5b6785d69e3f975302af16b281973b9f414f14fcd92ceff73aa02c782fb16d5b",
+    "proposed_content_sha256": "bb5b4d52d85f2d241d284484a100c45f33df9b2c7b9ed93c3e468271d67a32e9",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -1903,13 +2319,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "5b6785d69e3f975302af16b281973b9f414f14fcd92ceff73aa02c782fb16d5b",
+        "reviewed_content_sha256": "bb5b4d52d85f2d241d284484a100c45f33df9b2c7b9ed93c3e468271d67a32e9",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "uk": {
-    "file_sha256": "73c033dd2a2856d99acf92f22b85bc736f34cb12b6c14108d382b23ea93d391c",
-    "content_sha256": "663dfae734d7fe3afb7f738026436f4d274d854583da7286420d944dde9d5707",
+    "file_sha256": "082b9f638c338a9ce2cee8251262a2324dbc157b9894f898515af6cf1e3dfa0c",
+    "content_sha256": "302c014d369826b196dd21cbbe8a22b4a667cd2cdecdf0995b864a45fd90f88a",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -1921,7 +2350,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "3cab47ed60acbc157e0ccb98e4db5a6d53f60f5a87fcfa8e21b8b1c957ca9f8d",
+    "proposed_content_sha256": "302c014d369826b196dd21cbbe8a22b4a667cd2cdecdf0995b864a45fd90f88a",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -1963,13 +2392,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "3cab47ed60acbc157e0ccb98e4db5a6d53f60f5a87fcfa8e21b8b1c957ca9f8d",
+        "reviewed_content_sha256": "302c014d369826b196dd21cbbe8a22b4a667cd2cdecdf0995b864a45fd90f88a",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "id": {
-    "file_sha256": "cb6bc877bf060254c10dab7ebedb422860fababfd3a1935e9ef20a8d8b52358a",
-    "content_sha256": "d54322833eaf330792f4d6dccc36fda4848ad2d1030a405e8d63d59672451cba",
+    "file_sha256": "4796b5f258ee03c3c7a0c29871106b312e5be2922ce2330c392cae9ceea235c1",
+    "content_sha256": "c315c88ad2ff411d151a6dd15c2dbad6f72d246b19d420af1acd3775f3a22751",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -1981,7 +2423,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "8b0d329369b1d17d8a9b6387693a67610ecbfebf6f9e045fbdb1d157484ca2fc",
+    "proposed_content_sha256": "c315c88ad2ff411d151a6dd15c2dbad6f72d246b19d420af1acd3775f3a22751",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -2022,13 +2464,26 @@
         "decision": "accept-with-guarded-register-refinement",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "8b0d329369b1d17d8a9b6387693a67610ecbfebf6f9e045fbdb1d157484ca2fc",
+        "reviewed_content_sha256": "c315c88ad2ff411d151a6dd15c2dbad6f72d246b19d420af1acd3775f3a22751",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "ms": {
-    "file_sha256": "06219c702ae668077a57512bd90422e650dffc5cfe78e1fbcbb498fd575c16b5",
-    "content_sha256": "0381867f6285d2978b276e59b1a67545e64205d8c47499f27e36f1c64f63bf66",
+    "file_sha256": "7c9606a73e5250b548d2922e6ceeafa6d4fd16404cfaf3c31d6a56a570823009",
+    "content_sha256": "72721ac3562c809b0481ed31e54bd891dd52c17dbfefff74387f3ec4dbd5d51a",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "no_new_semantic_issue_identified",
     "checked": [
@@ -2040,7 +2495,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "bf9101fce26db73e76c7ed8a8c541ebd53debe4f150204bb9dd53f62bb942280",
+    "proposed_content_sha256": "72721ac3562c809b0481ed31e54bd891dd52c17dbfefff74387f3ec4dbd5d51a",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -2062,13 +2517,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "bf9101fce26db73e76c7ed8a8c541ebd53debe4f150204bb9dd53f62bb942280",
+        "reviewed_content_sha256": "72721ac3562c809b0481ed31e54bd891dd52c17dbfefff74387f3ec4dbd5d51a",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "vi": {
-    "file_sha256": "6965358268e9e965f53fe1b559262718c4dee59dd2e08a128ab1af81bcccd947",
-    "content_sha256": "04a892cd086ff6c69876ec8c9c02ce5679d3ca67d13a2e297df2534674dd6652",
+    "file_sha256": "595b46a36170c601d176178bb83584aa62300369db33fb980de888fbc9e512e7",
+    "content_sha256": "7aca92e957d43299997b62763f9d7dfd8a0da19e1b3957e6408349a7812682aa",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -2080,7 +2548,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "647344eb1f35d3936ca7554eb53819ed46ce5693b157c8cf39d2004bd530e403",
+    "proposed_content_sha256": "7aca92e957d43299997b62763f9d7dfd8a0da19e1b3957e6408349a7812682aa",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -2122,13 +2590,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "647344eb1f35d3936ca7554eb53819ed46ce5693b157c8cf39d2004bd530e403",
+        "reviewed_content_sha256": "7aca92e957d43299997b62763f9d7dfd8a0da19e1b3957e6408349a7812682aa",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "th": {
-    "file_sha256": "e8ab996335cf1fbde8fa6af856e7fdca60377be69dce3fcfccf9c12c3d99271d",
-    "content_sha256": "2197ac1e958c2789d86c7fddf6b97ea69181492549ba21aa8f7a57387b50bf7c",
+    "file_sha256": "c11716d2b33dfc27429d050b6fcfe7b2d994e82805cd7415ec621131f7bb372d",
+    "content_sha256": "0ea4c9d07accfcc4c5903260fdfaa22ded9917548f89fc178d00fdfebf484488",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -2140,7 +2621,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "50eeac37261a0a3b2a54eeedf3d49ec41312bb37e8fbd986ea979c8a0f3a8cef",
+    "proposed_content_sha256": "0ea4c9d07accfcc4c5903260fdfaa22ded9917548f89fc178d00fdfebf484488",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -2185,13 +2666,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "50eeac37261a0a3b2a54eeedf3d49ec41312bb37e8fbd986ea979c8a0f3a8cef",
+        "reviewed_content_sha256": "0ea4c9d07accfcc4c5903260fdfaa22ded9917548f89fc178d00fdfebf484488",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "zh-Hant": {
-    "file_sha256": "4cefe3bbe77d3e6e781533629a13ecae4efd1f119dbfda030b15eee49b3104de",
-    "content_sha256": "6f552f25922d4e3f78403ee525dc71198c781b6c49e0aa6e2bb70c16b7ba093e",
+    "file_sha256": "7c641a57945ea7f8b77712cd2f6a7b1ede55a23dcc2a84d6773ca9b0b1acec4a",
+    "content_sha256": "86bc20da106343c5e99cc11894737036690c6d254ac5ed235cbd7128e7fad16d",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -2203,7 +2697,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "34d1ba2696701f3db90b601d08a369c9c9c7ab08b6d0cf7b0c750e0604e71b03",
+    "proposed_content_sha256": "86bc20da106343c5e99cc11894737036690c6d254ac5ed235cbd7128e7fad16d",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -2225,13 +2719,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "34d1ba2696701f3db90b601d08a369c9c9c7ab08b6d0cf7b0c750e0604e71b03",
+        "reviewed_content_sha256": "86bc20da106343c5e99cc11894737036690c6d254ac5ed235cbd7128e7fad16d",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "hi": {
-    "file_sha256": "d78a0a58badd54c2e0b36797ff17024ec4b28b1532ea2b0f8d81230c92c8b660",
-    "content_sha256": "7e8ae3176005f6633aa91b4b4c7b4527d83a4a8c953048be1c234636e2bd6ee5",
+    "file_sha256": "ab36038d3e59f1014be349464755398b7b9629833d7cdad571ede091866abfca",
+    "content_sha256": "61087a65d1dacc6fe4737ae98199ca6029d642886699b22d76d37d8fcd04a2b0",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -2243,7 +2750,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "635b160e470843c9435920b70202d76e647becb609d8ccff4d49a43eb31c041f",
+    "proposed_content_sha256": "61087a65d1dacc6fe4737ae98199ca6029d642886699b22d76d37d8fcd04a2b0",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -2289,13 +2796,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "635b160e470843c9435920b70202d76e647becb609d8ccff4d49a43eb31c041f",
+        "reviewed_content_sha256": "61087a65d1dacc6fe4737ae98199ca6029d642886699b22d76d37d8fcd04a2b0",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "ur-PK": {
-    "file_sha256": "23dde5f1e8fa11e4b7b49c3314deebd26b410e9c43dfb7ad81678eb911be3a3b",
-    "content_sha256": "280b9b36eb95f0d5f6fede0378dc543c38cce323950706d51dfa4a0dfad2dbd5",
+    "file_sha256": "a9356f19295d7adfa878a457b070f75f1877f33c42431d72c49c37b260aa173b",
+    "content_sha256": "a8dd2c92c6ddf34e31ca1ab95deb68af37daa65436682b2f048397b93b89862c",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -2307,7 +2827,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "070d2ec3a716ea0ecaf28346a562bbc813f70525280101076ce3ac364c9f0e1d",
+    "proposed_content_sha256": "a8dd2c92c6ddf34e31ca1ab95deb68af37daa65436682b2f048397b93b89862c",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -2353,13 +2873,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "070d2ec3a716ea0ecaf28346a562bbc813f70525280101076ce3ac364c9f0e1d",
+        "reviewed_content_sha256": "a8dd2c92c6ddf34e31ca1ab95deb68af37daa65436682b2f048397b93b89862c",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "bn-BD": {
-    "file_sha256": "cf726a595223bd248452627f1b9a0cf020f98ceeab24a0584ed4337c269858d5",
-    "content_sha256": "84417f12cc6e078d17b8b299506fc3f0d070090366a4111d3b9e38a0b4b8979f",
+    "file_sha256": "b728ec0f7fb4803bff71fcdf936a0d4a7b9bd9da7877ada904648aa1cbc75098",
+    "content_sha256": "f1eb473935e6371e6c66b8c6fcae5b9bfad685ee6c662a8111fcd274577ddd1f",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -2371,7 +2904,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "e58cc7128ea3b828477401920fcd1d443b21eda76c3b8e4b3a257d5ddbe23525",
+    "proposed_content_sha256": "f1eb473935e6371e6c66b8c6fcae5b9bfad685ee6c662a8111fcd274577ddd1f",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -2415,13 +2948,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "e58cc7128ea3b828477401920fcd1d443b21eda76c3b8e4b3a257d5ddbe23525",
+        "reviewed_content_sha256": "f1eb473935e6371e6c66b8c6fcae5b9bfad685ee6c662a8111fcd274577ddd1f",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "gu-IN": {
-    "file_sha256": "65eae7ad552b8ab486ccbc1defbf24cfed161e59bee716d8b8fb1f8adbbb596b",
-    "content_sha256": "c4c070a5b935a639412794435e8bf5c05c975c4e7507f0d7e5485d7d452dec2e",
+    "file_sha256": "60390115a32d71e673dc96731b8b287b474c7a36d66829fba7a5555ed5a43f01",
+    "content_sha256": "4e3c825e3e959951391b3cb73f0afd38fd634be70fe256987ef4a317a3023ffd",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -2433,7 +2979,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "5f14fa4ff62a3ddedb1a21f06d0c83b2398ca1dcb49e879624d4efd5d67ee284",
+    "proposed_content_sha256": "4e3c825e3e959951391b3cb73f0afd38fd634be70fe256987ef4a317a3023ffd",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -2479,13 +3025,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "5f14fa4ff62a3ddedb1a21f06d0c83b2398ca1dcb49e879624d4efd5d67ee284",
+        "reviewed_content_sha256": "4e3c825e3e959951391b3cb73f0afd38fd634be70fe256987ef4a317a3023ffd",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "mr-IN": {
-    "file_sha256": "be6cab08a536a5353ca53211acf4abc363ec7c7111a2c639f97c776b0b11218e",
-    "content_sha256": "bfc3f8b3f46f0ceef6c2c6319c5416a53ac97112a4b4d61434b0f36600f74bbf",
+    "file_sha256": "fc92f3d08a1da1d9cf113969f13dc2fa05df9bcc07a1e2315aef2fef84262b74",
+    "content_sha256": "5b5fb0aef6aa2f16233e0cf2f88521bcf214e6fa7fca449d7d6d9040e6b0d924",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -2497,7 +3056,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "49a0061433d69aa46f12fecd771e7346bef27ec0dfb07a6d968ff49f18564dcb",
+    "proposed_content_sha256": "5b5fb0aef6aa2f16233e0cf2f88521bcf214e6fa7fca449d7d6d9040e6b0d924",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -2543,13 +3102,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "49a0061433d69aa46f12fecd771e7346bef27ec0dfb07a6d968ff49f18564dcb",
+        "reviewed_content_sha256": "5b5fb0aef6aa2f16233e0cf2f88521bcf214e6fa7fca449d7d6d9040e6b0d924",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "pa-IN": {
-    "file_sha256": "b71d744d14fe34ce4978232aa412a7be229029ec9417e6148091c3445446042a",
-    "content_sha256": "be5f59efca02f81decef90560b6aee26f9a0205a80257f1c4f5cbd5fca85bb03",
+    "file_sha256": "6704d669c16bb8d62e56ba4e452ebe715a7524750a38e8c157f2eeec5d16c924",
+    "content_sha256": "1dbf954947481ca9c49dfb1ba383ef269c47f8b91be27917c166af8e8b4d3ab0",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -2561,7 +3133,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "4ad3edb1c1f0a03eebe7fc7a0d4e3f19e6def55ed73f22ffae15e07a794551a9",
+    "proposed_content_sha256": "1dbf954947481ca9c49dfb1ba383ef269c47f8b91be27917c166af8e8b4d3ab0",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -2607,13 +3179,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "4ad3edb1c1f0a03eebe7fc7a0d4e3f19e6def55ed73f22ffae15e07a794551a9",
+        "reviewed_content_sha256": "1dbf954947481ca9c49dfb1ba383ef269c47f8b91be27917c166af8e8b4d3ab0",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "kn-IN": {
-    "file_sha256": "9dbf198a7f81ed09c3dffa976919b1408628a9c05fda65f429437c99f4cdaf7e",
-    "content_sha256": "71dec0f93617f7f810d3b574fa9020ba0cf9abf89bd9a98a74740b4e2960d40e",
+    "file_sha256": "c232de4509ff1696bfcde7815a3ad504113b0a5a642e1172e28b54217918e4a2",
+    "content_sha256": "b0b017ddd01596181465eec889e4f22160418baa91283e0fd4571d6846a9f949",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -2625,7 +3210,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "f8ef55883a9d29eb787b589288d3f98d1e67cf27e9b17600cdcd2936bcfc5f67",
+    "proposed_content_sha256": "b0b017ddd01596181465eec889e4f22160418baa91283e0fd4571d6846a9f949",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -2671,13 +3256,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "f8ef55883a9d29eb787b589288d3f98d1e67cf27e9b17600cdcd2936bcfc5f67",
+        "reviewed_content_sha256": "b0b017ddd01596181465eec889e4f22160418baa91283e0fd4571d6846a9f949",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "ml-IN": {
-    "file_sha256": "7eb62a611386c15d289a68575b6e07fff097a9898a204e2a1eebd138ae26ebf7",
-    "content_sha256": "73ceaa743f58c23064e3a7d7bd981a673294c9bef49841088c0898c76803f364",
+    "file_sha256": "f153f464eaf3d2f7515d16f0f8201285802ba0d9cd94c5b945e90a4db822383c",
+    "content_sha256": "564f9d20f560ec9dd28f2833969cc0a59ff7b186a27c0654da6381dc34c58fc2",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -2689,7 +3287,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "4911d5742796b6d5ef11049d9d0c703f2d54012a2375871bef681908c8051d39",
+    "proposed_content_sha256": "564f9d20f560ec9dd28f2833969cc0a59ff7b186a27c0654da6381dc34c58fc2",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -2735,13 +3333,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "4911d5742796b6d5ef11049d9d0c703f2d54012a2375871bef681908c8051d39",
+        "reviewed_content_sha256": "564f9d20f560ec9dd28f2833969cc0a59ff7b186a27c0654da6381dc34c58fc2",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "ta-IN": {
-    "file_sha256": "59823f861ad666d2bf35e22876388daa0192684369cbfcba730fdfcd4c9de5b0",
-    "content_sha256": "f38b22f58158f4f558a178eed31cd96c80ddd95d68e526b11725f23ffe101c42",
+    "file_sha256": "86ec2a6703e02547cb88a49e0c29d8b4f104210c1d153ce6c17589cf5a0d506b",
+    "content_sha256": "80961b75c2e346a98bd303a488fa7e7fe48b785500461f7bb0840fb2597b876a",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -2753,7 +3364,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "77e5e344e1d5b39d373bacfed26ad58c7459086f7e5875cf12f7ec5c53d9cad4",
+    "proposed_content_sha256": "80961b75c2e346a98bd303a488fa7e7fe48b785500461f7bb0840fb2597b876a",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -2799,13 +3410,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "77e5e344e1d5b39d373bacfed26ad58c7459086f7e5875cf12f7ec5c53d9cad4",
+        "reviewed_content_sha256": "80961b75c2e346a98bd303a488fa7e7fe48b785500461f7bb0840fb2597b876a",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "te-IN": {
-    "file_sha256": "d07dfc1dd9acf55bde89965286bec95f3c9805dd3c9b78a4785e588c94bbd3af",
-    "content_sha256": "9c89bae04148bc135a6ace33503fffcaecdd7c849687b5b6d54fa06e4b14f70e",
+    "file_sha256": "dc67e5ed9ace617c48787bccd76a7f0ed360e7e9d80a560d609fc15e4895d926",
+    "content_sha256": "737b2f691564cd87e68294adddbb4887a171c1a2fde94ef282f580027a184f66",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -2817,7 +3441,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "bb13f5c1886dd6f661e58d39edda1b4168fdf23315a6e082410f4d3da0947288",
+    "proposed_content_sha256": "737b2f691564cd87e68294adddbb4887a171c1a2fde94ef282f580027a184f66",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -2863,13 +3487,26 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "bb13f5c1886dd6f661e58d39edda1b4168fdf23315a6e082410f4d3da0947288",
+        "reviewed_content_sha256": "737b2f691564cd87e68294adddbb4887a171c1a2fde94ef282f580027a184f66",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   },
   "or-IN": {
-    "file_sha256": "0c39a5d49373d95c7f46fb72cee307873cbe74f6cdeec7310ace654d59601d3f",
-    "content_sha256": "d2fcbb8fc2e46eec010c25b1f4db89d9dc7673a0387a71bd231a75c696d27b84",
+    "file_sha256": "3c514bf68e497ecbdff3a470e946662324b2c93d9c61ed0ff5b0abaf78652ba0",
+    "content_sha256": "7dbb3818df09627092306028b3b956f38f80b97e403eff865f18876a0b29d480",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; not native, blinded legal, market or visual certification",
     "status": "corrections_proposed",
     "checked": [
@@ -2881,7 +3518,7 @@
       "three IAP names/descriptions",
       "12 GC board names and 31 achievement name/description pairs"
     ],
-    "proposed_content_sha256": "2d2304907c32e387034d7430e0b206be4b84fe0d868ead525656ebe6768df2dd",
+    "proposed_content_sha256": "7dbb3818df09627092306028b3b956f38f80b97e403eff865f18876a0b29d480",
     "draft_structural_validation": "pass",
     "limitations": [
       "Not blinded back-translation, native/legal certification, or market search",
@@ -2903,8 +3540,21 @@
         "decision": "accept-as-proposed",
         "appended_field_corrections": 2,
         "policy_source_alignment": "pending"
+      },
+      {
+        "reviewer": "/root/review_timbre_release_guards",
+        "method": "independent_source_aware_ai",
+        "scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification.",
+        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20",
+        "parent_source_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c",
+        "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "parent_content_sha256": "2d2304907c32e387034d7430e0b206be4b84fe0d868ead525656ebe6768df2dd",
+        "reviewed_content_sha256": "7dbb3818df09627092306028b3b956f38f80b97e403eff865f18876a0b29d480",
+        "decision": "approved_exact_proposed_deltas",
+        "appended_field_corrections": 7
       }
     ],
-    "current_scope": "Prior complete review inherited for unchanged material; bounded current source update reviewed by Codex /root/store_release_copy_review"
+    "current_scope": "350 exact changes: 300 song-count consumer strings and50song-floor metadata values. Historical full-review inheritance retained for all unchanged material. No native-language, device, media, legal or release certification."
   }
 }

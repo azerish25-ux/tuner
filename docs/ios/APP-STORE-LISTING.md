@@ -1,11 +1,11 @@
 # App Store listing (English, U.S.)
 
-Paste into App Store Connect → the app → the version's page and App Information. Every length below is within Apple's limits, and every count is the build's own: 60 instruments, 132 tunings, 11 courses, 526 lessons, 140+ songs (146 distinct titles; the songbooks' arrangements per instrument are more and count once) and 50 Originals. `python3 tools/marketing/screenshots.py --check` re-checks the counts in this file's paste blocks and tables against `curriculum.json` and `catalog.json`, and the lengths against Apple's limits, so a stale number fails before it reaches the store.
+Paste into App Store Connect → the app → the version's page and App Information. Every length below is within Apple's limits, and every count is the build's own: 60 instruments, 132 tunings, 11 courses, 526 lessons, 130+ songs (135 distinct tunes; the songbooks' arrangements per instrument are more and count once) and 50 Originals. The 616 song lessons include instrument versions and exercises; 615 have arrangement data, not 616 different tunes. `python3 tools/marketing/screenshots.py --check` re-checks the counts in this file's paste blocks and tables against `curriculum.json` and `catalog.json`, and the lengths against Apple's limits, so a stale number fails before it reaches the store.
 
 What the listing claims, and what it leaves out until the app makes it true:
 
 - **Free tuner, no ads, no account** leads, because those decide a tuner install and no funded competitor can say all three.
-- **"140+ songs"**, not the arrangement count: the same song on two instruments is one song to a buyer.
+- **"130+ songs"**, not the arrangement count: the same song on two instruments is one song to a buyer.
 - **"Timbre hears every strum: the right chord, on time, and which string didn't ring."** Strum steps judge each stroke's chord as well as its timing, a muted stroke (a ukulele chunk, a mandolin or reggae chop) passes as muted, and a chord step names the string that didn't ring with the finger that stopped it. No competitor does the last. The line goes if a release grades a correct muted stroke as a miss.
 - **Tune by feel** is a feature, not a default: the phone pulses with the beat between the string and its note and goes still at the lock. It is on under VoiceOver and a tap away on the tuner for everyone else.
 - **No VoiceOver claim** (here or in the [Accessibility Nutrition Labels](#accessibility-nutrition-labels)) until the lessons' notes step speaks the next note, the play-along's cues land on time, and blind testers have finished Unit 1.
@@ -80,7 +80,7 @@ The rest of each query comes from the name and subtitle (guitar, tuner, lessons,
 ## Promotional text (170/170; can change without a review)
 
 ```
-Free tuner, no ads, no account. Feel each string come into tune, then play lessons that listen on guitar, ukulele, violin, cello, bass, mandolin or banjo, and 140+ songs.
+Free tuner, no ads, no account. Feel each string come into tune, then play lessons that listen on guitar, ukulele, violin, cello, bass, mandolin or banjo, and 130+ songs.
 ```
 
 ## Description
@@ -110,7 +110,7 @@ LEARN BY PLAYING
 • A play-along note highway that slows down for you, then speeds back up as you improve
 
 PLAY SONGS
-• 140+ songs, each a full arrangement: classics from Jingle Bells to Amazing Grace, and 50 Originals written for Timbre in today's styles
+• 130+ songs, each a full arrangement: classics from Jingle Bells to Amazing Grace, and 50 Originals written for Timbre in today's styles
 • Play along with the band in your headphones while the words light up
 • Your songs: paste or import any chord chart, transpose it, scroll it in time, and listen to the original on Apple Music beside it
 
@@ -185,7 +185,7 @@ No two frames show the same lesson, and the first three answer the three questio
 | 2 | **Hear exactly how you played** | Pitch and timing on every note | *Kite Weather* on the highway mid-chorus at ×4, the words lighting up under the runway (`65-song-perform`) | `zoom sky` |
 | 3 | **Play your first chord today** | Timbre hears every string | E minor's chord step with every string lit, the six ticked strings enlarged (`52b-lesson-chord`) | `callout lime` |
 | 4 | **Tune whatever you play** | 60 instruments, 132 tunings | the instrument browser on the Folk & world strings, the wall of instruments around it (`31b-instruments-folk`) | `wall spotlight` |
-| 5 | **Play songs you know** | 140+ songs, classics to Originals | the Songs tab, the songs people know on its first shelf (`63-songs`) | `light orchid` |
+| 5 | **Play songs you know** | 130+ songs, classics to Originals | the Songs tab, the songs people know on its first shelf (`63-songs`) | `light orchid` |
 | 6 | **Learn at your own pace** | 526 lessons in 11 courses | Learn, with the next lesson up (`50-learn`) | `offset violet` |
 | 7 | **Five minutes a day adds up** | Stars, streaks and daily quests | lesson results with three stars after a clean play-along (`62-lesson-results`) | `zoom gold` |
 | 8 | **One strum checks every string** | See which string to tune first | Strum to tune: six strings read from one strum, A2 the one to tune first (`11b-tune-strum`) | `flip mint` |
@@ -197,7 +197,7 @@ No two frames show the same lesson, and the first three answer the three questio
 |---|---|---|---|---|
 | 1 | **Free tuner. No ads.** | 60 instruments, to the cent | the tuner in landscape, a string locked (`ipad-landscape-tune`) | `side mint` |
 | 2 | **Tune whatever you play** | Violin to oud, sitar to erhu | the instrument browser, a full page of its own, on the bowed strings and the Folk & world strings (`ipad-landscape-instruments`) | `side-right spotlight` |
-| 3 | **Play songs you know** | 140+ songs, classics to Originals | the Songs tab (`ipad-landscape-songs`) | `light orchid` |
+| 3 | **Play songs you know** | 130+ songs, classics to Originals | the Songs tab (`ipad-landscape-songs`) | `light orchid` |
 | 4 | **Five minutes a day adds up** | A daily set, quests and ear games | the Practice tab (`ipad-landscape-practice`) | `side violet` |
 
 ### iPhone (medium Dynamic Island): violin page
@@ -209,7 +209,7 @@ The violin Custom Product Page's set ([below](#custom-product-pages)). Its first
 | 1 | **Tune your violin, free** | G, D, A and E, to the cent | the 3D violin, G, D and A locked, the lock's comet on the A string (`49d-tune-violin-locked`) | `breakout orchid` |
 | 2 | **Play songs on your violin** | From Jingle Bells to Ode to Joy | *Jingle Bells* from the violin songbook on the runway, finger numbers on the gems, its last chorus lighting up (`65b-song-perform-violin`) | `zoom sky` |
 | 3 | **Hear exactly how you played** | Pitch and timing on every note | the violin's "Open-string checkup" results with three stars (`62b-lesson-results-violin`) | `zoom gold` |
-| 4 | **Play songs you know** | 140+ songs, classics to Originals | the Songs tab (`63-songs`) | `light orchid` |
+| 4 | **Play songs you know** | 130+ songs, classics to Originals | the Songs tab (`63-songs`) | `light orchid` |
 | 5 | **Learn at your own pace** | 526 lessons in 11 courses | Learn (`50-learn`) | `offset violet` |
 
 ### iPhone (medium Dynamic Island): cello page
@@ -220,7 +220,7 @@ The cello Custom Product Page's set. Its first frame is the cello's own; the res
 |---|---|---|---|---|
 | 1 | **Tune your cello, free** | C, G, D and A, to the cent | the 3D cello, C, G and D locked, the lock's comet on the D string (`49e-tune-cello-locked`) | `breakout orchid` |
 | 2 | **Tune whatever you play** | 60 instruments, 132 tunings | the instrument browser on the Folk & world strings (`31b-instruments-folk`) | `wall spotlight` |
-| 3 | **Play songs you know** | 140+ songs, classics to Originals | the Songs tab (`63-songs`) | `light orchid` |
+| 3 | **Play songs you know** | 130+ songs, classics to Originals | the Songs tab (`63-songs`) | `light orchid` |
 | 4 | **See yourself get better** | Accuracy, string health, badges | the Progress screen (`32-journey`) | `offset-left flame` |
 
 ### iPhone (medium Dynamic Island): ukulele page
@@ -230,7 +230,7 @@ The ukulele Custom Product Page's set. Its first frame is the ukulele's own; the
 | # | Caption | Supporting line | Capture | Look |
 |---|---|---|---|---|
 | 1 | **Tune your ukulele, free** | G, C, E and A, to the cent | the soprano ukulele, G, C and E locked (`17b-tune-ukulele-locked`) | `breakout mint` |
-| 2 | **Play songs you know** | 140+ songs, classics to Originals | the Songs tab (`63-songs`) | `light orchid` |
+| 2 | **Play songs you know** | 130+ songs, classics to Originals | the Songs tab (`63-songs`) | `light orchid` |
 | 3 | **Tune whatever you play** | 60 instruments, 132 tunings | the instrument browser on the Folk & world strings (`31b-instruments-folk`) | `wall spotlight` |
 | 4 | **See yourself get better** | Accuracy, string health, badges | the Progress screen (`32-journey`) | `offset-left flame` |
 
@@ -256,7 +256,7 @@ The cut, in order, with hard cuts on the band's beat: a string drifting into tun
 | `showme` | See it played in 3D | mint |
 | `highway` | Play songs with the band | sky |
 | `results` | Hear how you did | gold |
-| `songs` | 140+ songs to learn | spotlight |
+| `songs` | 130+ songs to learn | spotlight |
 | `end` | Tune. Learn. Play songs. | mint |
 | `end-note` | Free tuner · No ads · No account | |
 
@@ -270,7 +270,7 @@ The same tour on the 3D violin, then *Jingle Bells* from the violin songbook (fr
 | `tuned` | G, D, A, E: all in tune | orchid |
 | `highway` | Play songs on your violin | sky |
 | `results` | Hear how you did | gold |
-| `songs` | 140+ songs to learn | spotlight |
+| `songs` | 130+ songs to learn | spotlight |
 | `end` | Violin tuner and lessons | orchid |
 | `end-note` | Free tuner · No ads · No account | |
 
@@ -296,7 +296,7 @@ Apple's rules, from [App Store Connect Help](https://developer.apple.com/help/ap
 | Chromatic and strobe | chromatic, strobe | `15-tune-chromatic`, then the main set | A precise chromatic and strobe tuner for anything you play or sing. Free, no ads. | `timbre://tune?instrument=guitar.acoustic.6` (then the chromatic chip) | main |
 | Ear training | ear training | `23-ear-training`, then the main set | Train your ear: intervals, chord qualities and a 40-lesson ear course. | `timbre://ear` | main |
 | Voice | — (link and Apple Ads only) | `24-voice-range`, then the main set | Find your range and sing in tune, with a voice course that listens. | `timbre://tune?instrument=guitar.acoustic.6` | main |
-| Songs | — (link and Apple Ads only; "chord" and "metronome" stay with the default page) | `65-song-perform`, `63-songs`, then the main set | 140+ songs to play along to, and any chord chart you paste. | `timbre://songs` | main |
+| Songs | — (link and Apple Ads only; "chord" and "metronome" stay with the default page) | `65-song-perform`, `63-songs`, then the main set | 130+ songs to play along to, and any chord chart you paste. | `timbre://songs` | main |
 
 Start with violin, cello and ukulele: those queries have the weakest competition and the highest prices paid elsewhere (Trala charges $119.99 a year for violin alone), and their first frames are store frames already. A page whose first frame is still a plain capture (`19-tune-bass-3d`, `49-tune-mandolin-3d`, …) needs it promoted first: a `storeFrame` check in its UI test and a table here.
 

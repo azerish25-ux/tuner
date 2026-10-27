@@ -199,6 +199,16 @@ def _localized_rows(locale: str, device: str) -> list[tuple]:
     return _rows(lines)
 
 
+def counted_tune(title: str) -> str | None:
+    """Match SongOfTheDay.countedTune: treatments share a tune; exercises do not count."""
+    main = next((part for part in re.split(r'[:(（：]', title) if part), title)
+    for treatment in (', fingerpicked', ' on bass'):
+        if main.lower().endswith(treatment):
+            main = main[:-len(treatment)]
+    key = ''.join(character for character in main.lower() if character.isalpha() or character.isnumeric())
+    return key if key and key not in {'yourarrangement', 'walkingthebluesina'} else None
+
+
 def build_counts() -> dict:
     courses = json.loads(CURRICULUM.read_text(encoding="utf-8"))["courses"]
     catalog = json.loads(CATALOG.read_text(encoding="utf-8"))
@@ -225,8 +235,8 @@ def build_counts() -> dict:
         "courses": len(teaching),
         "instruments": len(catalog["instruments"]),
         "tunings": len(catalog["tunings"]),
-        # A song is a title: the same song arranged for two instruments is one song to a buyer.
-        "songs": len({title(lesson).strip().lower() for lesson in songs}),
+        # Match the app's distinctTuneCount, including treatment/punctuation aliases and exercises.
+        "songs": len({key for lesson in songs if (key := counted_tune(title(lesson))) is not None}),
         "originals": len({title(lesson).strip().lower() for lesson in originals}),
     }
     # The translators' source writes the song count as a round floor ("{songs_floor}+").

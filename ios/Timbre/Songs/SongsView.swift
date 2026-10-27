@@ -27,6 +27,7 @@ struct SongsView: View {
     /// The learner's Learn course: its instrument's version of a tune leads on the picked shelves.
     @AppStorage(Preferences.Key.learnCourse) private var learnCourseId = Preferences.defaultLearnCourse
     @State private var catalog = SongsCatalog()
+    @State private var railMeasurement = SongRailMeasurement()
     @State private var playing: LearnView.PlayingLesson?
     /// Shake counters for order-locked tiles, by lesson id.
     @State private var shakes: [String: Int] = [:]
@@ -44,6 +45,10 @@ struct SongsView: View {
     @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
     @Environment(\.horizontalSizeClass) private var sizeClass
     @Environment(\.dynamicTypeSize) private var typeSize
+    @Environment(\.locale) private var locale
+    @Environment(\.layoutDirection) private var direction
+    @Environment(\.legibilityWeight) private var legibility
+    @Environment(\.displayScale) private var displayScale
     /// The page's width, for the iPad's card columns (`CardColumns`) under the featured song.
     @State private var pageWidth: CGFloat = 0
     /// "Request a song": the field is up, what it holds, and a thank-you once one is sent.
@@ -973,8 +978,9 @@ struct SongsView: View {
                         .font(Typeface.number(.caption)).foregroundStyle(Palette.starGold)
                 }
             }
-            EdgeRail(spacing: 14, selection: next?.id) {
-                ForEach(rail) { song in tile(song).id(song.id) }
+            SongShelfRail(items: rail, selection: next?.id, itemWidth: tileWidth,
+                          height: railHeight(rail), identity: "songs.rail." + shelf.id) { song in
+                tile(song)
             }
         }
     }
@@ -987,10 +993,39 @@ struct SongsView: View {
                 // Wraps rather than shrinking a long reason ("Because you learned E minor").
                 SectionHeader(pick.title)
             }
-            EdgeRail(spacing: 14, selection: nil as String?) {
-                ForEach(pick.songs) { song in tile(song, shelf: pick.id).id(song.id) }
+            SongShelfRail(items: pick.songs, selection: nil, itemWidth: tileWidth,
+                          height: railHeight(pick.songs), identity: "songs.rail." + pick.id) { song in
+                tile(song, shelf: pick.id)
             }
         }
+    }
+
+    /// Preserve the eager row's maximum natural caption height without keeping offscreen card trees alive.
+    /// Every geometry-affecting caption input is in the signature, including localized fallback text and versions.
+    private func railHeight(_ songs: [Song]) -> CGFloat {
+        let content = songs.flatMap { song -> [String] in
+            let sheet = SongSheet.of(song.lesson)
+            let standing = catalog.standing(song)
+            let versions = Self.otherCourses(catalog.versions(of: song))
+            return [song.id, song.lesson.title.localized, String(describing: standing.access),
+                    standing.gate?.id ?? "", standing.gate?.title.localized ?? "",
+                    String(store.learn.stars[song.id] ?? 0), String(song.lesson.xp), sheet.length,
+                    sheet.keyName ?? "", String(versionLimit), String(store.settings.calmMode),
+                    String(sheet.chords.count), String(versions.count)]
+                + sheet.chords.map(\.name) + versions.map(\.id)
+        }
+        let key = SongRailMeasurement.Key(content: content, width: tileWidth, locale: locale.identifier,
+                                         language: TimbreLocalization.language, typeSize: typeSize, direction: direction,
+                                         legibility: legibility, bold: Typeface.boldText, scale: displayScale)
+        let captionHeight = railMeasurement.maximum(key: key, count: songs.count) { index in
+            let song = songs[index]
+            Self.tileCaption(song, sheet: SongSheet.of(song.lesson), accent: Palette.accent(song.course.accent),
+                        standing: catalog.standing(song), stars: store.learn.stars[song.id] ?? 0,
+                        calm: store.settings.calmMode, versionLimit: versionLimit,
+                        others: Self.otherCourses(catalog.versions(of: song)), identity: Self.tileSource(song.lesson))
+                .environmentObject(store)
+        }
+        return tileWidth + Self.captionGap + captionHeight
     }
 
     /// `shelf` names a picked shelf; nil is the song's own course shelf. Every tile has the same grid, its controls
@@ -1010,7 +1045,8 @@ struct SongsView: View {
         return Button { open(song.course, song.lesson, from: source) } label: {
             VStack(alignment: .leading, spacing: Self.captionGap) {
                 tileCover(song, art: art, access: access)
-                tileCaption(song, sheet: sheet, accent: accent, standing: standing, stars: stars, others: others, identity: source)
+                Self.tileCaption(song, sheet: sheet, accent: accent, standing: standing, stars: stars,
+                                 calm: store.settings.calmMode, versionLimit: versionLimit, others: others, identity: source)
             }
             .frame(width: tileWidth, alignment: .leading)
             .contentShape(Rectangle())
@@ -1068,6 +1104,7 @@ struct SongsView: View {
             Section {
                 ForEach(versions) { version in
                     Button { open(version.course, version.lesson, from: source) } label: { versionLabel(version) }
+                        .accessibilityIdentifier(source + ".version." + version.id)
                 }
             } header: {
                 Text(verbatim: CoverArt.mainTitle(song.lesson.title.localized))
@@ -1131,8 +1168,8 @@ struct SongsView: View {
     /// title it leaves off ("The chords"), else the song's chords ("G D Em C"; its key for a melody), with room at the
     /// end for the tune's other versions (`others`, drawn over it by `tile`); then how hard it is, how long it runs and
     /// its XP (its stars, once it has some).
-    private func tileCaption(_ song: Song, sheet: SongSheet, accent: Color, standing: SongsCatalog.Standing, stars: Int,
-                             others: [LearnCourse], identity: String) -> some View {
+    static func tileCaption(_ song: Song, sheet: SongSheet, accent: Color, standing: SongsCatalog.Standing, stars: Int,
+                            calm: Bool, versionLimit: Int, others: [LearnCourse], identity: String) -> some View {
         VStack(alignment: .leading, spacing: 7) {
             HStack(alignment: .top, spacing: 6) {
                 Group {
@@ -1158,7 +1195,7 @@ struct SongsView: View {
                     .accessibilityIdentifier(identity + ".duration")
                 if stars > 0 {
                     StarRow(stars: stars, size: 10)
-                } else if !store.settings.calmMode {
+                } else if !calm {
                     Text("+\(song.lesson.xp) XP").font(.footnote).foregroundStyle(Palette.inkSoft)
                         .accessibilityIdentifier(identity + ".xp")
                 }
