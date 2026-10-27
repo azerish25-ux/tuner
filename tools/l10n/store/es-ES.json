@@ -129,9 +129,9 @@
     "timbre.badge.songs_1": "Toca tu primera canción",
     "timbre.badge.songs_25": "Toca 25 canciones"
   },
-  "name": "Timbre: Afinador de Guitarra",
-  "subtitle": "Aprende violín, ukelele y bajo",
-  "keywords": "violín,violonchelo,ukulele,mandolina,banjo,cromático,estroboscopio,oído,metrónomo,acorde",
+  "name": "Timbre: Afinador y lecciones",
+  "subtitle": "Guitarra, violín, chelo y más",
+  "keywords": "violín,violonchelo,ukulele,mandolina,banjo,cromático,estroboscopio,oído,metrónomo,acorde,bajo",
   "promotional_text": "Afinador gratis, sin anuncios ni cuenta. Siente cómo se afina cada cuerda y aprende con lecciones que te escuchan y más de 130 canciones.",
   "description": "Afinador gratis, sin anuncios ni cuenta. Después, lecciones que te escuchan tocar.\n\nTimbre reúne un afinador preciso y un profesor de música. Afina 60 instrumentos y recibe comentarios sobre cómo tocaste.\n\nAFINA GRATIS\n• La afinación estándar de cada instrumento es gratis: guitarra, ukelele, violín, mandolina, banjo, laúd árabe, erhu y más.\n• Afinador cromático y estroboscópico con precisión de centésimas de semitono. 132 afinaciones, desde Drop D y Open G hasta DADGAD, además de las tuyas.\n• Detecta las cuerdas automáticamente y marca cada una al afinarla. Un rasgueo lee todas las cuerdas e indica cuál afinar primero.\n• Afina por el tacto: el teléfono pulsa con el batimiento entre la cuerda y su nota; se ralentiza al acercarse y se detiene al afinarse, para que no tengas que mirar.\n• Guitarras, bajos, violín, violonchelo y mandolina en 3D con iluminación de estudio y la clavija que debes girar señalada.\n• Capotraste, referencia A4 ajustable y nombres de notas en solfeo y sargam.\n\nAPRENDE TOCANDO\n• 526 lecciones en 11 cursos: guitarra, ukelele, bajo, violín, violonchelo, mandolina, banjo, canto, oído, teoría y ritmo. Además, cancioneros para ukelele, mandolina, violín, violonchelo y bajo.\n• Timbre oye cada rasgueo: el acorde correcto, a tiempo y qué cuerda no sonó. Evalúa cada nota al tocarla, su altura en centésimas de semitono y su tiempo en milisegundos.\n• «Muéstrame» toca cada acorde nuevo en una guitarra 3D, colocando los dedos en orden. La pista de notas baja la velocidad para ti y la recupera conforme mejoras.\n\nTOCA CANCIONES\n• Más de 130 canciones con arreglos completos: clásicos de Jingle Bells a Amazing Grace y 50 Originals escritos para Timbre en estilos actuales.\n• Toca con la banda en tus auriculares mientras se ilumina la letra.\n• Tus canciones: pega o importa una hoja de acordes, transpónla, desplázala al ritmo y escucha el original en Apple Music al lado.\n\nSIGUE ADELANTE\n• Estrellas, XP, misiones diarias, rachas e insignias.\n• Apple Watch: siente el metrónomo en la muñeca y consulta tu práctica del día.\n• Widgets de inicio y bloqueo, actividad en vivo y atajos de Siri.\n• Metrónomo con acentos, subdivisiones y entrenador de velocidad; nota pedal, entrenamiento de afinación y biblioteca de acordes y escalas.\n• Entrenamiento auditivo: dirección de altura, intervalos y tipos de acordes, más un curso de 40 lecciones.\n\nEMPIEZA GRATIS\nLa afinación estándar de todos los instrumentos es gratis; guitarra, bajo, ukelele, violín y violonchelo son gratis en todas sus afinaciones. También lo son la primera unidad de cada curso y una selección de canciones. Timbre Pro desbloquea todas las lecciones, canciones, afinaciones y herramientas de práctica. Con las notificaciones activadas, Timbre te recuerda dos días antes de que termine una prueba gratis.\n\nPrivacidad desde el diseño: el audio del micrófono se analiza en tiempo real en tu dispositivo, nunca se graba ni se sube. Sin cuenta ni anuncios.\n\nLas suscripciones se renuevan automáticamente salvo que canceles al menos 24 horas antes de finalizar el período. Administra o cancela cuando quieras en Ajustes → Cuenta de Apple → Suscripciones.\nTérminos: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\nPrivacidad: https://timbre-support.timbre.workers.dev/privacy",
   "whats_new": "Te damos la bienvenida a Timbre: afinador gratis para 60 instrumentos y 526 lecciones que te escuchan tocar.",
@@ -142,19 +142,14 @@
       "supporting_line": "60 instrumentos, precisión en cents"
     },
     {
-      "capture": "65-song-perform",
-      "caption": "Escucha cómo tocaste",
-      "supporting_line": "Altura y tiempo de cada nota"
-    },
-    {
-      "capture": "52b-lesson-chord",
-      "caption": "Tu primer acorde, hoy",
-      "supporting_line": "Timbre escucha cada cuerda"
-    },
-    {
       "capture": "31b-instruments-folk",
       "caption": "Afina lo que toques",
       "supporting_line": "60 instrumentos, 132 afinaciones"
+    },
+    {
+      "capture": "65-song-perform",
+      "caption": "Escucha cómo tocaste",
+      "supporting_line": "Altura y tiempo de cada nota"
     },
     {
       "capture": "63-songs",
@@ -165,6 +160,11 @@
       "capture": "50-learn",
       "caption": "Aprende a tu ritmo",
       "supporting_line": "526 lecciones en 11 cursos"
+    },
+    {
+      "capture": "52b-lesson-chord",
+      "caption": "Tu primer acorde, hoy",
+      "supporting_line": "Timbre escucha cada cuerda"
     },
     {
       "capture": "62-lesson-results",

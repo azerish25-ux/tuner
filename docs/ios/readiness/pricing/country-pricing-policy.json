@@ -1,0 +1,385 @@
+{
+  "schema_version": 1,
+  "status": "proposed_incomplete_not_configured",
+  "as_of": "2026-10-27",
+  "release_ready": false,
+  "configured_in_app_store_connect": false,
+  "price_selection_basis": "app_store_storefront",
+  "language_selects_price": false,
+  "currency_conversion_is_affordability_policy": false,
+  "coverage": {
+    "expected_storefront_count": 175,
+    "expected_count_source": "apple_availability",
+    "mapped_country_count": 13,
+    "complete": false,
+    "unresolved": "Full active Apple territory inventory and full FY2027 country mapping have not been imported. Listed rows are verified income-group examples, not a complete availability manifest."
+  },
+  "sources": {
+    "apple_availability": {
+      "url": "https://developer.apple.com/help/app-store-connect/manage-your-apps-availability/manage-availability-for-your-app-on-the-app-store",
+      "checked_on": "2026-10-27"
+    },
+    "apple_subscriptions": {
+      "url": "https://developer.apple.com/app-store/subscriptions/",
+      "checked_on": "2026-10-27"
+    },
+    "apple_iap_pricing": {
+      "url": "https://developer.apple.com/help/app-store-connect/manage-in-app-purchases/set-a-price-for-an-in-app-purchase",
+      "checked_on": "2026-10-27"
+    },
+    "apple_display_price": {
+      "url": "https://developer.apple.com/documentation/storekit/product/displayprice",
+      "checked_on": "2026-10-27"
+    },
+    "world_bank_fy2027": {
+      "url": "https://datahelpdesk.worldbank.org/knowledgebase/articles/906519-world-bank%20country-and-lending-groups",
+      "checked_on": "2026-10-27"
+    },
+    "guitartuna_us": {
+      "url": "https://apps.apple.com/us/app/guitartuna-tune-play-guitar/id527588389",
+      "checked_on": "2026-10-27"
+    },
+    "guitartuna_ca": {
+      "url": "https://apps.apple.com/ca/app/guitartuna-tune-play-guitar/id527588389",
+      "checked_on": "2026-10-27"
+    },
+    "yousician_us": {
+      "url": "https://apps.apple.com/us/app/yousician-learn-play-guitar/id959883039",
+      "checked_on": "2026-10-27"
+    },
+    "yousician_ca": {
+      "url": "https://apps.apple.com/ca/app/yousician-learn-play-guitar/id959883039",
+      "checked_on": "2026-10-27"
+    },
+    "simply_tune_us": {
+      "url": "https://apps.apple.com/us/app/guitar-tuner-simply-tune/id1573260863",
+      "checked_on": "2026-10-27"
+    }
+  },
+  "products": {
+    "monthly": {
+      "id": "timbre_pro_monthly",
+      "type": "auto_renewable_subscription",
+      "entitlement": "Pro"
+    },
+    "annual": {
+      "id": "timbre_pro_annual",
+      "type": "auto_renewable_subscription",
+      "entitlement": "Pro"
+    },
+    "lifetime": {
+      "id": "timbre_plus_lifetime",
+      "type": "non_consumable",
+      "entitlement": "Pro"
+    }
+  },
+  "proposed_anchor_prices": {
+    "USA": {
+      "currency": "USD",
+      "monthly": "3.99",
+      "annual": "19.99",
+      "lifetime": "59.99",
+      "apple_price_points_verified": false
+    },
+    "CAN": {
+      "currency": "CAD",
+      "monthly": "4.99",
+      "annual": "24.99",
+      "lifetime": "74.99",
+      "apple_price_points_verified": false
+    }
+  },
+  "income_group_policy": {
+    "classification": "World Bank FY2027, based on 2025 Atlas GNI per capita",
+    "thresholds_usd": {
+      "low_income_max": 1175,
+      "lower_middle_income_max": 4635,
+      "upper_middle_income_max": 14375
+    },
+    "multipliers": {
+      "high_income": "1.00",
+      "upper_middle_income": "0.65",
+      "lower_middle_income": "0.35",
+      "low_income": "0.20"
+    },
+    "multipliers_are_editorial_proposals_not_world_bank_recommendations": true,
+    "unclassified_policy": "manual_review_no_price_assigned"
+  },
+  "territories": [
+    {
+      "territory_code": "BRA",
+      "name": "Brazil",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_fy2027",
+      "affordability_multiplier": "0.65",
+      "apple_territory_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "territory_code": "CAN",
+      "name": "Canada",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_fy2027",
+      "affordability_multiplier": "1.00",
+      "apple_territory_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "territory_code": "EGY",
+      "name": "Egypt, Arab Rep.",
+      "income_group": "lower_middle_income",
+      "income_group_source": "world_bank_fy2027",
+      "affordability_multiplier": "0.35",
+      "apple_territory_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "territory_code": "IDN",
+      "name": "Indonesia",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_fy2027",
+      "affordability_multiplier": "0.65",
+      "apple_territory_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "territory_code": "IND",
+      "name": "India",
+      "income_group": "lower_middle_income",
+      "income_group_source": "world_bank_fy2027",
+      "affordability_multiplier": "0.35",
+      "apple_territory_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "territory_code": "MDG",
+      "name": "Madagascar",
+      "income_group": "low_income",
+      "income_group_source": "world_bank_fy2027",
+      "affordability_multiplier": "0.20",
+      "apple_territory_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "territory_code": "NGA",
+      "name": "Nigeria",
+      "income_group": "lower_middle_income",
+      "income_group_source": "world_bank_fy2027",
+      "affordability_multiplier": "0.35",
+      "apple_territory_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "territory_code": "PAK",
+      "name": "Pakistan",
+      "income_group": "lower_middle_income",
+      "income_group_source": "world_bank_fy2027",
+      "affordability_multiplier": "0.35",
+      "apple_territory_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "territory_code": "PHL",
+      "name": "Philippines",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_fy2027",
+      "affordability_multiplier": "0.65",
+      "apple_territory_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "territory_code": "RWA",
+      "name": "Rwanda",
+      "income_group": "low_income",
+      "income_group_source": "world_bank_fy2027",
+      "affordability_multiplier": "0.20",
+      "apple_territory_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "territory_code": "UGA",
+      "name": "Uganda",
+      "income_group": "low_income",
+      "income_group_source": "world_bank_fy2027",
+      "affordability_multiplier": "0.20",
+      "apple_territory_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "territory_code": "USA",
+      "name": "United States",
+      "income_group": "high_income",
+      "income_group_source": "world_bank_fy2027",
+      "affordability_multiplier": "1.00",
+      "apple_territory_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    },
+    {
+      "territory_code": "VNM",
+      "name": "Viet Nam",
+      "income_group": "upper_middle_income",
+      "income_group_source": "world_bank_fy2027",
+      "affordability_multiplier": "0.65",
+      "apple_territory_verified": false,
+      "currency": null,
+      "prices": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "apple_price_point_ids": {
+        "monthly": null,
+        "annual": null,
+        "lifetime": null
+      },
+      "status": "proposed_requires_territory_and_price_point_verification"
+    }
+  ],
+  "required_before_configuration": [
+    "Import and reconcile the complete active Apple territory inventory.",
+    "Map every intended storefront to current country income evidence or an explicit manual-review exception.",
+    "Resolve actual local currency and supported Apple price-point IDs separately for all three products.",
+    "Review actual proceeds, taxes, local competition, lifetime support costs and price ordering.",
+    "Configure and independently read back the approved territory schedules.",
+    "Test StoreKit prices independently from UI language and verify storefront changes."
+  ],
+  "comparison_scope": "Proposed monthly and annual anchors are below the named GuitarTuna Tools and Play listed IAP options checked on the source date. Public IAP lists may include legacy or account-specific offers. No claim of undercutting free apps, all competitors, or verified comparable lifetime offers.",
+  "research_limits": [
+    "No live App Store Connect product prices or price-point IDs have been obtained.",
+    "No regional currency amounts beyond the proposed US and Canada anchors are invented.",
+    "The 50 listing languages are independent of the country/storefront pricing inventory.",
+    "No revenue or conversion outcome is promised."
+  ]
+}

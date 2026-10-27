@@ -143,6 +143,110 @@ final class SongRailMeasurementTests: XCTestCase {
         }
     }
 
+    /// Exercise every production shelf, not three representative captions. Timings are observations, not
+    /// an invented performance threshold or proof that the on-screen accessibility traversal completes.
+    func testFullProductionCatalogueCaptionSizingAcrossDynamicType() throws {
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let store = try AppStore(directory: directory)
+        DemoData.seed(store)
+        let originalLanguage = TimbreLocalization.language
+        TimbreLocalization.language = "en"
+        defer { TimbreLocalization.language = originalLanguage }
+        let catalog = SongsCatalog()
+        let layout = catalog.layout(filter: SongsView.all, course: "guitar", store: store)
+        let expected = Set(store.curriculum.courses.flatMap { course in
+            course.lessons.filter { $0.kind == .song }.map(\.id)
+        })
+        XCTAssertFalse(expected.isEmpty)
+        XCTAssertEqual(Set(layout.rails.flatMap { $0.songs.map(\.id) }), expected,
+                       "The performance fixture must cover the entire shipped catalogue")
+        let shelves = catalogueShelves(layout)
+        var observations = ["Off-window caption sizing only; no covers, scene layout or AX traversal."]
+        for size in [DynamicTypeSize.large, .accessibility5] {
+            let cache = SongRailMeasurement()
+            let started = ProcessInfo.processInfo.systemUptime
+            var sizingSeconds = 0.0
+            var oracleSeconds = 0.0
+            var captionCount = 0
+            for shelf in shelves {
+                let result = measureProductionShelf(shelf, size: size, cache: cache, catalog: catalog, store: store)
+                sizingSeconds += result.sizingSeconds
+                oracleSeconds += result.oracleSeconds
+                captionCount += shelf.songs.count
+                observations.append("type=\(size) shelf=\(shelf.id) captions=\(shelf.songs.count) "
+                    + "sizingSeconds=\(result.sizingSeconds) eagerOracleSeconds=\(result.oracleSeconds)")
+            }
+            XCTAssertEqual(cache.hostCount, captionCount)
+            observations.append("TOTAL type=\(size) shelves=\(shelves.count) uniqueSongs=\(expected.count) "
+                + "captions=\(captionCount) sizingSeconds=\(sizingSeconds) eagerOracleSeconds=\(oracleSeconds) "
+                + "wallSeconds=\(ProcessInfo.processInfo.systemUptime - started)")
+        }
+        let report = observations.joined(separator: "\n")
+        print("SONG-RAIL full catalogue:\n" + report)
+        let attachment = XCTAttachment(string: report)
+        attachment.name = "song-rail-full-production-catalogue-sizing"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
+    private func catalogueShelves(_ layout: SongsCatalog.Layout) -> [(id: String, songs: [SongsView.Song])] {
+        var shelves = layout.picks.map { (id: "pick." + $0.id, songs: $0.songs) }
+        let split = min(max(0, layout.lowerAfter), layout.rails.count)
+        shelves += layout.rails[..<split].map { (id: "rail." + $0.id, songs: $0.songs) }
+        if let lower = layout.lower { shelves.append((id: "pick." + lower.id, songs: lower.songs)) }
+        shelves += layout.rails[split...].map { (id: "rail." + $0.id, songs: $0.songs) }
+        return shelves
+    }
+
+    private func productionCaption(_ song: SongsView.Song, catalog: SongsCatalog, store: AppStore) -> AnyView {
+        var versions: [LearnCourse] = []
+        for version in catalog.versions(of: song).dropFirst() where !versions.contains(where: { $0.id == version.course.id }) {
+            versions.append(version.course)
+        }
+        return AnyView(SongsView.TileCaption(song: song, sheet: SongSheet.of(song.lesson), accent: Palette.accent(song.course.accent),
+            standing: catalog.standing(song), stars: store.learn.stars[song.id] ?? 0, calm: store.settings.calmMode,
+            versionLimit: 2, others: versions, identity: "catalogue-caption." + song.id).environmentObject(store))
+    }
+
+    private func measureProductionShelf(_ shelf: (id: String, songs: [SongsView.Song]), size: DynamicTypeSize,
+                                        cache: SongRailMeasurement, catalog: SongsCatalog, store: AppStore)
+        -> (sizingSeconds: Double, oracleSeconds: Double) {
+        var signature = key(size, locale: "en")
+        // This fixture freezes progress, language, width and versions for both calls; production's full
+        // mutable signature remains independently checked by the source contract and invalidation tests.
+        signature.content = [shelf.id] + shelf.songs.map(\.id)
+        let hostsBefore = cache.hostCount
+        let height = cache.maximum(key: signature, count: shelf.songs.count) { index in
+            productionCaption(shelf.songs[index], catalog: catalog, store: store)
+        }
+        let sizingSeconds = cache.lastDuration
+        XCTAssertEqual(cache.hostCount - hostsBefore, shelf.songs.count)
+        XCTAssertTrue(height.isFinite)
+        XCTAssertGreaterThan(height, 0)
+        let warmHeight = cache.maximum(key: signature, count: shelf.songs.count) { _ in
+            XCTFail("A complete production shelf's cache hit must not build captions")
+            return Text("unexpected")
+        }
+        XCTAssertEqual(warmHeight, height)
+        XCTAssertEqual(cache.hostCount - hostsBefore, shelf.songs.count)
+        let oracleStarted = ProcessInfo.processInfo.systemUptime
+        let eagerHeight = autoreleasepool {
+            let eager = HStack(alignment: .top, spacing: 14) {
+                ForEach(shelf.songs) { song in
+                    productionCaption(song, catalog: catalog, store: store).frame(width: 148)
+                }
+            }.fixedSize()
+            let host = UIHostingController(rootView: eager.environment(\.locale, Locale(identifier: "en"))
+                .environment(\.layoutDirection, LayoutDirection.leftToRight).environment(\.dynamicTypeSize, size)
+                .environment(\.displayScale, signature.scale))
+            let width = CGFloat(shelf.songs.count) * 162
+            return host.sizeThatFits(in: CGSize(width: width, height: CGFloat.greatestFiniteMagnitude)).height
+        }
+        XCTAssertEqual(height, eagerHeight, accuracy: 1, "Full production shelf: \(shelf.id), \(size)")
+        return (sizingSeconds, ProcessInfo.processInfo.systemUptime - oracleStarted)
+    }
+
     func testInitialMiddleSelectionIsRevealedWithoutBuildingEveryCard() async throws {
         struct Item: Identifiable { let id: Int }
         let items = (0..<120).map { Item(id: $0) }

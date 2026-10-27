@@ -68,7 +68,11 @@ class ListingPlanTests(unittest.TestCase):
             body = phone.split('func ' + method + '()', 1)[1].split('\n    func ', 1)[0]
             self.assertIn('"' + name + '"', body)
         self.assertEqual(len(assets.selectors('iphone')), 8)
-        self.assertIn('test10PlayAlongLesson', assets.selectors('iphone')[4])
+        self.assertEqual([selector.rsplit('/', 1)[1] for selector in assets.selectors('iphone')], [
+            'test11StoreTunerLock', 'test17StoreInstrumentWall', 'test14StoreSongPerform',
+            'test10PlayAlongLesson', 'test09LearnChordLesson', 'test12StoreChord',
+            'test13StoreStrum', 'test05OtherTabs',
+        ])
         self.assertNotIn('test19StoreViolinResults', ','.join(assets.selectors('iphone')))
         for kind in assets.KINDS:
             for selector in assets.selectors(kind):

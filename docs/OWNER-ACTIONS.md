@@ -59,7 +59,7 @@ Each one is a step in [RELEASE-CHECKLIST.md](ios/RELEASE-CHECKLIST.md). Tick the
   - App Groups on the four bundle IDs;
   - **MusicKit** on the app ID: the description advertises "listen to the original on Apple Music", and without the service the card says "isn't available";
   - Game Center only if 2.0.0 uses it (A5).
-- [ ] **App Store Connect app record** "Timbre: Guitar Tuner & Lessons"; note its Apple ID (A6).
+- [ ] **App Store Connect app record** "Timbre: Tuner & Music Lessons"; note its Apple ID (A6).
 - [ ] **Admin API key** (`.p8`, Key ID, Issuer ID) and the **Team ID** in the GitHub `apple-delivery` environment, with **you as its required reviewer** and `main` as its only branch (A7, C3).
   - Standing rule: **nobody dispatches Apple delivery without you**, and no automated agent ever does.
 - [ ] **Language decision for 2.0.0.** Every non-English locale lacks 106 legal, permission or VoiceOver strings today. Either ship English only (`ship_min_coverage: 95`), or pay for those strings first (§5). Never submit an `internal_testflight_untranslated` build.
@@ -204,6 +204,8 @@ Each one is a step in [RELEASE-CHECKLIST.md](ios/RELEASE-CHECKLIST.md). Tick the
 ---
 
 ## 8. Pricing and offers (Release decisions)
+
+**Historical recommendations, not current configuration:** the high-price figures and revenue/install projections below and elsewhere in this document are superseded as launch guidance by the owner’s country-based affordability direction. Use the [current proposal and evidence gates](ios/readiness/pricing/country-pricing-policy.md); its prices are not yet configured or verified in App Store Connect. Do not apply the historical price-test amounts from this checklist. Trial, entitlement and account decisions still require their separate approval and verification.
 
 | Decision | Panel recommendation | Expected impact |
 |---|---|---|

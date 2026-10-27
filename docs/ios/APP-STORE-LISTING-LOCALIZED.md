@@ -13,6 +13,10 @@ Independent source-aware AI review covers all 50 complete listing payloads. The 
 
 The subsequent56 independently reviewed Game Center achievement-description deltas brought the retained correction history to309. The current source update adds100 guarded description/production-URL field records across all50 locales (409 total), reviewed by Codex /root/store_release_copy_review, with accepted Greek/Indonesian register refinements. This bounded review covers live microphone/on-device privacy wording, removal of the disabled Game Center availability promise and production URL resolution. Prior complete-payload review is inherited only for unchanged material; parent/new source hashes and exact review artifacts are retained in [update evidence](../l10n/reviews/store-release-privacy-update/). GC draft metadata and all captions/IAP names remain intact; current candidate integration is off. Published-policy/source alignment is still pending.
 
+## Multi-instrument positioning update
+
+Bounded source-aware independent AI review of owner-approved multi-instrument title/subtitle positioning and keyword continuity across all 50 locales. Unchanged consumer fields inherit prior full-payload review. Exact-old/new deltas and source/payload hash lineage retained. Native-speaker, legal, market, rendered-device and Apple acceptance are not certified. All release flags remain false. The approved English name is **Timbre: Tuner & Music Lessons** and subtitle **Guitar, Violin, Cello & More**. All 50 locales retain the Timbre brand and use compact, reviewed local equivalents. This adds 194 guarded field deltas (49 names, 50 subtitles, 45 keyword fields and 50 whole-array phone-caption permutations) to the retained 759 records, for 953 total. The phone story now introduces instrument breadth before guitar-specific examples; all caption text and capture associations remain unchanged. See [proposal and independent review](../l10n/reviews/multi-instrument-positioning/).
+
 ## Evidence, not release certification
 
 **Do not paste or upload these drafts as a finished release.** AI-authored text and automated structural checks are not native-speaker, market-search, legal, device, render or App Store Connect approval. Each JSON has independent review states; the manifest tracks actual draft validation separately from `release_ready`. English regional variants intentionally share source wording after regional drafting; they are not missing-language fallback. Nothing here claims keyword popularity has been measured.
@@ -192,11 +196,11 @@ Welcome to Timbre: a free tuner for {instruments} instruments, and {lessons} les
 | # | Caption | Supporting line |
 |---|---|---|
 | 1 | Free tuner. No ads. | {instruments} instruments, to the cent |
-| 2 | Hear exactly how you played | Pitch and timing on every note |
-| 3 | Play your first chord today | Timbre hears every string |
-| 4 | Tune whatever you play | {instruments} instruments, {tunings} tunings |
-| 5 | Play songs you know | {songs_floor}+ songs, classics to Originals |
-| 6 | Learn at your own pace | {lessons} lessons in {courses} courses |
+| 2 | Tune whatever you play | {instruments} instruments, {tunings} tunings |
+| 3 | Hear exactly how you played | Pitch and timing on every note |
+| 4 | Play songs you know | {songs_floor}+ songs, classics to Originals |
+| 5 | Learn at your own pace | {lessons} lessons in {courses} courses |
+| 6 | Play your first chord today | Timbre hears every string |
 | 7 | Five minutes a day adds up | Stars, streaks and daily quests |
 | 8 | One strum checks every string | See which string to tune first |
 | 9 | See yourself get better | Accuracy, string health, badges |

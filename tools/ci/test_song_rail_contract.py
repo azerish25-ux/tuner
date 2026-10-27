@@ -114,6 +114,19 @@ class SongRailContractTests(unittest.TestCase):
         self.assertIn('-only-testing:TimbreUITests/SongShelfRailUITests',
                       (ROOT / '.github/workflows/nightly.yml').read_text())
 
+    def test_full_catalogue_oracle_has_no_sample_or_timing_exemption(self):
+        test = (ROOT / 'ios/TimbreAppTests/SongRailMeasurementTests.swift').read_text()
+        full = test.split('func testFullProductionCatalogueCaptionSizingAcrossDynamicType()', 1)[1]
+        full = full.split('func testInitialMiddleSelectionIsRevealedWithoutBuildingEveryCard()', 1)[0]
+        for token in ['DemoData.seed(store)', 'filter: SongsView.all', 'store.curriculum.courses.flatMap',
+                      'Set(layout.rails.flatMap', 'for shelf in shelves', 'DynamicTypeSize.large, .accessibility5',
+                      'catalog.versions(of: song)', 'catalog.standing(song)', 'ForEach(shelf.songs)',
+                      'XCTAssertEqual(height, eagerHeight', 'XCTAssertEqual(cache.hostCount, captionCount)',
+                      'eagerOracleSeconds=', 'sizingSeconds=', 'song-rail-full-production-catalogue-sizing']:
+            self.assertIn(token, full)
+        for token in ['.prefix(', 'XCTSkip', 'XCTAssertLessThan(sizingSeconds', 'measure(metrics:']:
+            self.assertNotIn(token, full)
+
     def test_initial_reveal_fixture_uses_live_scene_and_observes_completion(self):
         test = (ROOT / 'ios/TimbreAppTests/SongRailMeasurementTests.swift').read_text().split('func testInitialMiddleSelectionIsRevealedWithoutBuildingEveryCard()', 1)[1]
         for token in ['UIWindow(windowScene: scene)', 'window.makeKeyAndVisible()',

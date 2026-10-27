@@ -18,7 +18,7 @@
   },
   "source": {
     "locale": "en-US",
-    "content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+    "content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
     "version": {
       "schema_version": 1,
       "counts": {
@@ -30,7 +30,7 @@
         "originals": 50
       }
     },
-    "parent_content_sha256": "9e877baaf5f1c733cba25bbe0b0cfbfea64d92e165bef3dd66945c58f5c4cb7c"
+    "parent_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740"
   },
   "native_review": "not_verified",
   "device_review": "not_verified",
@@ -40,17 +40,17 @@
   "independent_review": {
     "reviewer": "Independent AI semantic review (2026-10-26)",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; source available, not blinded",
-    "identified_corrections": 759,
-    "applied_corrections": 759,
-    "application_method": "Original94 and2 Slovenian morphology corrections preserved;157 independently reviewed exact-source/old/new song-title alignment corrections added, with parent-hash lineage and unchanged full-payload review retained. Additional 56 independently source-aware reviewed Game Center achievement-description register/terminology deltas applied with exact source/current-old guards; original 253 ledger records and full-review inheritance retained. Additional100 exact description/productionURL field changes independently reviewed across all50 locales, preserving original309 ledger objects/raw prefix and bounded old/new source lineage. Additional350 independently reviewed exact-old/new distinct-song-count corrections (300quantity-only strings and50floor metadata) preserve all prior ledger objects and full-review inheritance.",
+    "identified_corrections": 953,
+    "applied_corrections": 953,
+    "application_method": "Original94 and2 Slovenian morphology corrections preserved;157 independently reviewed exact-source/old/new song-title alignment corrections added, with parent-hash lineage and unchanged full-payload review retained. Additional 56 independently source-aware reviewed Game Center achievement-description register/terminology deltas applied with exact source/current-old guards; original 253 ledger records and full-review inheritance retained. Additional100 exact description/productionURL field changes independently reviewed across all50 locales, preserving original309 ledger objects/raw prefix and bounded old/new source lineage. Additional350 independently reviewed exact-old/new distinct-song-count corrections (300quantity-only strings and50floor metadata) preserve all prior ledger objects and full-review inheritance. Additional 194 exact-old/new owner-approved multi-instrument descriptor and keyword-continuity deltas independently reviewed across all50locales; five idiom/terminology/duplication refinements applied before payload hash verification. Historical ledger objects and unchanged full-review inheritance preserved.",
     "artifacts": {
       "evidence": {
         "file": "tools/l10n/store-review-independent.json",
-        "sha256": "801793ed86672a5b642162af43810eccdf6967d0e695b2939fa7710ff82cdbdc"
+        "sha256": "b492124f3849e283843a864a8b4738bdb828b3d2262071fcb1b5ee94e96afe9f"
       },
       "corrections": {
         "file": "tools/l10n/store-corrections.json",
-        "sha256": "c37b63833abd2f53905182510ae1fb6918737fb9fd8b139f1ab4452e5c5f89c4"
+        "sha256": "3d6bebcd1f89c4e66a48943646bcc7a350f3da23678e18920ec86d4aa0b43445"
       }
     },
     "policy_recommendation_sha256": "d69ee544571082357801fd0d03e2ab1514a908718f0345d4a55474fe331cff17",
@@ -107,6 +107,21 @@
         "appended_corrections": 350,
         "account_changes": "none",
         "release_flags_changed": false
+      },
+      {
+        "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+        "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+        "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+        "previous_registry_sha256": "b443c9a8354e5e03b75db760704ededd82abd473d21263ee5079da1deffa09a3",
+        "previous_evidence_sha256": "801793ed86672a5b642162af43810eccdf6967d0e695b2939fa7710ff82cdbdc",
+        "previous_ledger_sha256": "c37b63833abd2f53905182510ae1fb6918737fb9fd8b139f1ab4452e5c5f89c4",
+        "previous_ledger_entries": 759,
+        "appended_corrections": 194,
+        "account_changes": "none",
+        "release_flags_changed": false
       }
     ]
   },
@@ -126,10 +141,10 @@
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 9,
-      "resolved_corrections": 9,
+      "reviewed_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 12,
+      "resolved_corrections": 12,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -174,23 +189,36 @@
           "reviewed_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "reviewed_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 3
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "en-AU": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "3187abc0b5fd332b6957ef920444f9ba5e177679042756feae44d11180651d4a",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 9,
-      "resolved_corrections": 9,
+      "reviewed_content_sha256": "6f33dd798fa4e80b2bff10e6dfc7b815dcf84414dad438e9112bd13fc15a01b7",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 12,
+      "resolved_corrections": 12,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -235,23 +263,36 @@
           "reviewed_content_sha256": "3187abc0b5fd332b6957ef920444f9ba5e177679042756feae44d11180651d4a",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "3187abc0b5fd332b6957ef920444f9ba5e177679042756feae44d11180651d4a",
+          "reviewed_content_sha256": "6f33dd798fa4e80b2bff10e6dfc7b815dcf84414dad438e9112bd13fc15a01b7",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 3
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "en-CA": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "fc6c87b3b22927eaf93611cd1d6ed4de1e597eec354e90f96cbb0279a91d7f45",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 9,
-      "resolved_corrections": 9,
+      "reviewed_content_sha256": "db983810a46752e6615ce6fb8245018177b26f2dfde4f902d5a74d9bfc9d7cbe",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 12,
+      "resolved_corrections": 12,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -296,23 +337,36 @@
           "reviewed_content_sha256": "fc6c87b3b22927eaf93611cd1d6ed4de1e597eec354e90f96cbb0279a91d7f45",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "fc6c87b3b22927eaf93611cd1d6ed4de1e597eec354e90f96cbb0279a91d7f45",
+          "reviewed_content_sha256": "db983810a46752e6615ce6fb8245018177b26f2dfde4f902d5a74d9bfc9d7cbe",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 3
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "en-GB": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "c334e9d94cb4725a9b1820430fca459beea76540fa1bcc80df29035c575ca98d",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 9,
-      "resolved_corrections": 9,
+      "reviewed_content_sha256": "d1e0bbae6927985be4bfaffa0fdd33a74f7c38ffe0fa763f8ad8907f0f1b05fe",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 12,
+      "resolved_corrections": 12,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -357,23 +411,36 @@
           "reviewed_content_sha256": "c334e9d94cb4725a9b1820430fca459beea76540fa1bcc80df29035c575ca98d",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "c334e9d94cb4725a9b1820430fca459beea76540fa1bcc80df29035c575ca98d",
+          "reviewed_content_sha256": "d1e0bbae6927985be4bfaffa0fdd33a74f7c38ffe0fa763f8ad8907f0f1b05fe",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 3
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "de-DE": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "bfbd2ac2da3a156c84a5b5485248586e86fc225dcd5a5676520a320d323d18bd",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 12,
-      "resolved_corrections": 12,
+      "reviewed_content_sha256": "a771b095b141b39d24172a196f4486888326c67004ce8d0fe8e7bbc6706b27f8",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 14,
+      "resolved_corrections": 14,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -435,23 +502,36 @@
           "reviewed_content_sha256": "bfbd2ac2da3a156c84a5b5485248586e86fc225dcd5a5676520a320d323d18bd",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "bfbd2ac2da3a156c84a5b5485248586e86fc225dcd5a5676520a320d323d18bd",
+          "reviewed_content_sha256": "a771b095b141b39d24172a196f4486888326c67004ce8d0fe8e7bbc6706b27f8",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 2
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "fr-FR": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "773c74130658028c79968bd36029313e489bdd16c3dca8caf8ee350dd4681303",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 14,
-      "resolved_corrections": 14,
+      "reviewed_content_sha256": "04f06d809fff19320e7b19aee825cf8e03b5518cff28f39f8d44527d08335d63",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 18,
+      "resolved_corrections": 18,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -513,23 +593,36 @@
           "reviewed_content_sha256": "773c74130658028c79968bd36029313e489bdd16c3dca8caf8ee350dd4681303",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "773c74130658028c79968bd36029313e489bdd16c3dca8caf8ee350dd4681303",
+          "reviewed_content_sha256": "04f06d809fff19320e7b19aee825cf8e03b5518cff28f39f8d44527d08335d63",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "es-MX": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "21c68052edadd638ab5de96467ae9ad2bb1406ff04cabc5e459617b330e0bc66",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 12,
-      "resolved_corrections": 12,
+      "reviewed_content_sha256": "34110dc231ade5561a0786b531616f39d96e22ea0e33e3c05f6c9f84c27b78f1",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 16,
+      "resolved_corrections": 16,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -591,23 +684,36 @@
           "reviewed_content_sha256": "21c68052edadd638ab5de96467ae9ad2bb1406ff04cabc5e459617b330e0bc66",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "21c68052edadd638ab5de96467ae9ad2bb1406ff04cabc5e459617b330e0bc66",
+          "reviewed_content_sha256": "34110dc231ade5561a0786b531616f39d96e22ea0e33e3c05f6c9f84c27b78f1",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "it": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "3599673ad97c82b9284ccd9e57d32c986e82d5b547bb9382794f958bd7c867fe",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 11,
-      "resolved_corrections": 11,
+      "reviewed_content_sha256": "6f6bace36ea31795201b7a71e8c44cceedb64e9ef5eda9de4b44bc9e35747f16",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 15,
+      "resolved_corrections": 15,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -652,23 +758,36 @@
           "reviewed_content_sha256": "3599673ad97c82b9284ccd9e57d32c986e82d5b547bb9382794f958bd7c867fe",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "3599673ad97c82b9284ccd9e57d32c986e82d5b547bb9382794f958bd7c867fe",
+          "reviewed_content_sha256": "6f6bace36ea31795201b7a71e8c44cceedb64e9ef5eda9de4b44bc9e35747f16",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "pt-BR": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "1109510b2cb7cb33db130746d961f6230add358190ad30455dba583c2f0697cb",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 12,
-      "resolved_corrections": 12,
+      "reviewed_content_sha256": "bb66f3fde455c850d8b59015453404209ac7a7615a23e282c4ae6005fcf7197f",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 16,
+      "resolved_corrections": 16,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -730,23 +849,36 @@
           "reviewed_content_sha256": "1109510b2cb7cb33db130746d961f6230add358190ad30455dba583c2f0697cb",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "1109510b2cb7cb33db130746d961f6230add358190ad30455dba583c2f0697cb",
+          "reviewed_content_sha256": "bb66f3fde455c850d8b59015453404209ac7a7615a23e282c4ae6005fcf7197f",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "ru": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "6c11c01ad03c3d5d7f99eabaaaa505d926c5c535411c53b1ad49e3947e3ebc2b",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 13,
-      "resolved_corrections": 13,
+      "reviewed_content_sha256": "22123f4658fa274e4b1423f0c6a9a81c504da9350db20518efbe23fa805d8519",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 17,
+      "resolved_corrections": 17,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -809,23 +941,36 @@
           "reviewed_content_sha256": "6c11c01ad03c3d5d7f99eabaaaa505d926c5c535411c53b1ad49e3947e3ebc2b",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "6c11c01ad03c3d5d7f99eabaaaa505d926c5c535411c53b1ad49e3947e3ebc2b",
+          "reviewed_content_sha256": "22123f4658fa274e4b1423f0c6a9a81c504da9350db20518efbe23fa805d8519",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "ja": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "1300e0cf9935d7d52b75957f0ef5c1199da591ccdefd88a5bb8740c2afe101a6",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 11,
-      "resolved_corrections": 11,
+      "reviewed_content_sha256": "8cab636f1336a27d2fe31471be2761fb5f1327115e2cb7859785ab72a5d756a9",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 15,
+      "resolved_corrections": 15,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -870,23 +1015,36 @@
           "reviewed_content_sha256": "1300e0cf9935d7d52b75957f0ef5c1199da591ccdefd88a5bb8740c2afe101a6",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "1300e0cf9935d7d52b75957f0ef5c1199da591ccdefd88a5bb8740c2afe101a6",
+          "reviewed_content_sha256": "8cab636f1336a27d2fe31471be2761fb5f1327115e2cb7859785ab72a5d756a9",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "ko": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "eb7c166cc302b84968c861754e9c3a1c76cb30db82b5c7cca1a3d9b52f251559",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 11,
-      "resolved_corrections": 11,
+      "reviewed_content_sha256": "40476a3a4101dd1f162b266a4fc209967161b066fe6bbe8704bc09a389199668",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 15,
+      "resolved_corrections": 15,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -931,23 +1089,36 @@
           "reviewed_content_sha256": "eb7c166cc302b84968c861754e9c3a1c76cb30db82b5c7cca1a3d9b52f251559",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "eb7c166cc302b84968c861754e9c3a1c76cb30db82b5c7cca1a3d9b52f251559",
+          "reviewed_content_sha256": "40476a3a4101dd1f162b266a4fc209967161b066fe6bbe8704bc09a389199668",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "zh-Hans": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "2ea61d5e316933245b1d65ecbcc7eee482857bbc286d7984c78334e70eb6cbad",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 12,
-      "resolved_corrections": 12,
+      "reviewed_content_sha256": "2ff0db135169902c1ee3e9f7909966056c685fa3224ba3e0c28dfb4b668c43df",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 16,
+      "resolved_corrections": 16,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -992,23 +1163,36 @@
           "reviewed_content_sha256": "2ea61d5e316933245b1d65ecbcc7eee482857bbc286d7984c78334e70eb6cbad",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "2ea61d5e316933245b1d65ecbcc7eee482857bbc286d7984c78334e70eb6cbad",
+          "reviewed_content_sha256": "2ff0db135169902c1ee3e9f7909966056c685fa3224ba3e0c28dfb4b668c43df",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "es-ES": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "c6168300baf484397e31c9bd1a682d94ec65ec69a80bdac74a8c0b0393048818",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 12,
-      "resolved_corrections": 12,
+      "reviewed_content_sha256": "3628f81e7210482eb80c2e30968d4e3e0122d2ffcb7d5e00a1a435f762f8f1c5",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 16,
+      "resolved_corrections": 16,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -1070,23 +1254,36 @@
           "reviewed_content_sha256": "c6168300baf484397e31c9bd1a682d94ec65ec69a80bdac74a8c0b0393048818",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "c6168300baf484397e31c9bd1a682d94ec65ec69a80bdac74a8c0b0393048818",
+          "reviewed_content_sha256": "3628f81e7210482eb80c2e30968d4e3e0122d2ffcb7d5e00a1a435f762f8f1c5",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "fr-CA": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "770c7a63be4626efc7b4faf4cd96ad93ebb8c04c3607064b9201ccef839432f2",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 14,
-      "resolved_corrections": 14,
+      "reviewed_content_sha256": "288baa90ccb3dbf76f90536b669e5b071b34df3131bd392e454d19e2b6498269",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 18,
+      "resolved_corrections": 18,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -1148,23 +1345,36 @@
           "reviewed_content_sha256": "770c7a63be4626efc7b4faf4cd96ad93ebb8c04c3607064b9201ccef839432f2",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "770c7a63be4626efc7b4faf4cd96ad93ebb8c04c3607064b9201ccef839432f2",
+          "reviewed_content_sha256": "288baa90ccb3dbf76f90536b669e5b071b34df3131bd392e454d19e2b6498269",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "pt-PT": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "1181ff6b396b4d4f922a096a9390e6320c3d694d929f38efb847d2a330c610b1",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 12,
-      "resolved_corrections": 12,
+      "reviewed_content_sha256": "1689e775c10d50533b7b7312d774bd1c8614eaec524c8cb391351c30b11e2eea",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 16,
+      "resolved_corrections": 16,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -1226,23 +1436,36 @@
           "reviewed_content_sha256": "1181ff6b396b4d4f922a096a9390e6320c3d694d929f38efb847d2a330c610b1",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "1181ff6b396b4d4f922a096a9390e6320c3d694d929f38efb847d2a330c610b1",
+          "reviewed_content_sha256": "1689e775c10d50533b7b7312d774bd1c8614eaec524c8cb391351c30b11e2eea",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "ar-SA": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "5184cf32fa21f2a5f9740b5450ed3a4930cefaf4c601165b6dbc0bb9104df8be",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 17,
-      "resolved_corrections": 17,
+      "reviewed_content_sha256": "4acd37c5f8461df5e23435926db8113917dfbcdb492baa3039243137a86f15b2",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 21,
+      "resolved_corrections": 21,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -1308,23 +1531,36 @@
           "reviewed_content_sha256": "5184cf32fa21f2a5f9740b5450ed3a4930cefaf4c601165b6dbc0bb9104df8be",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "5184cf32fa21f2a5f9740b5450ed3a4930cefaf4c601165b6dbc0bb9104df8be",
+          "reviewed_content_sha256": "4acd37c5f8461df5e23435926db8113917dfbcdb492baa3039243137a86f15b2",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "he": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "0d0233f073ffc302bdfa7a1ac148bd329cbee54e51da46d9b685a2c7b518686c",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 16,
-      "resolved_corrections": 16,
+      "reviewed_content_sha256": "0b15373d420da263399794f81f20c2c558b91fdd17ef058bcc3cda1a150fa49c",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 20,
+      "resolved_corrections": 20,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -1390,23 +1626,36 @@
           "reviewed_content_sha256": "0d0233f073ffc302bdfa7a1ac148bd329cbee54e51da46d9b685a2c7b518686c",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "0d0233f073ffc302bdfa7a1ac148bd329cbee54e51da46d9b685a2c7b518686c",
+          "reviewed_content_sha256": "0b15373d420da263399794f81f20c2c558b91fdd17ef058bcc3cda1a150fa49c",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "ca": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "77194888c97fe4b4c0bc725542b6fdc668e88dd96b3fe60eb9b0eeacfa82c8c3",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 14,
-      "resolved_corrections": 14,
+      "reviewed_content_sha256": "3573b1e4397296f87911d9ef1428829778b49a01ff81923666897ed6735b5e74",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 18,
+      "resolved_corrections": 18,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -1470,23 +1719,36 @@
           "reviewed_content_sha256": "77194888c97fe4b4c0bc725542b6fdc668e88dd96b3fe60eb9b0eeacfa82c8c3",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "77194888c97fe4b4c0bc725542b6fdc668e88dd96b3fe60eb9b0eeacfa82c8c3",
+          "reviewed_content_sha256": "3573b1e4397296f87911d9ef1428829778b49a01ff81923666897ed6735b5e74",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "cs": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "ee9dc993277c98cb570e5816a621f671e42cc4ed98fa82b8398f2157a8bd0b2a",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 14,
-      "resolved_corrections": 14,
+      "reviewed_content_sha256": "105ae497761ba0e7901e973d5b9aecbe657b610c9005290436233f8431622e4e",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 18,
+      "resolved_corrections": 18,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -1550,23 +1812,36 @@
           "reviewed_content_sha256": "ee9dc993277c98cb570e5816a621f671e42cc4ed98fa82b8398f2157a8bd0b2a",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "ee9dc993277c98cb570e5816a621f671e42cc4ed98fa82b8398f2157a8bd0b2a",
+          "reviewed_content_sha256": "105ae497761ba0e7901e973d5b9aecbe657b610c9005290436233f8431622e4e",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "da": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "230a8330dc684f63be93e336c749dd4d25584d9a077966e8514306f2a1b9a5db",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 12,
-      "resolved_corrections": 12,
+      "reviewed_content_sha256": "07ff756332e45923bdd2d95c32955a28cb3abebac36292a0bf6aa76d329871f6",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 16,
+      "resolved_corrections": 16,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -1628,23 +1903,36 @@
           "reviewed_content_sha256": "230a8330dc684f63be93e336c749dd4d25584d9a077966e8514306f2a1b9a5db",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "230a8330dc684f63be93e336c749dd4d25584d9a077966e8514306f2a1b9a5db",
+          "reviewed_content_sha256": "07ff756332e45923bdd2d95c32955a28cb3abebac36292a0bf6aa76d329871f6",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "nl-NL": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "fc2cbeb195fd8887b8d6773c36a339163d3eff36cded7ad17ed61beb72f6bb5b",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 13,
-      "resolved_corrections": 13,
+      "reviewed_content_sha256": "46f4f28dd2dbff0fcfeb761b27859218c86aef84b196a57b88157031f37e21b5",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 17,
+      "resolved_corrections": 17,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -1707,23 +1995,36 @@
           "reviewed_content_sha256": "fc2cbeb195fd8887b8d6773c36a339163d3eff36cded7ad17ed61beb72f6bb5b",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "fc2cbeb195fd8887b8d6773c36a339163d3eff36cded7ad17ed61beb72f6bb5b",
+          "reviewed_content_sha256": "46f4f28dd2dbff0fcfeb761b27859218c86aef84b196a57b88157031f37e21b5",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "no": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "2f91398a0edcd1bae720bf1432c16266263af5a24c48ae762c19cf52650aeccf",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 14,
-      "resolved_corrections": 14,
+      "reviewed_content_sha256": "c701a627553e2e1e7714e8c892da476d0e2e8c6bfef6d3ab9082b61f6c877c92",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 18,
+      "resolved_corrections": 18,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -1787,23 +2088,36 @@
           "reviewed_content_sha256": "2f91398a0edcd1bae720bf1432c16266263af5a24c48ae762c19cf52650aeccf",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "2f91398a0edcd1bae720bf1432c16266263af5a24c48ae762c19cf52650aeccf",
+          "reviewed_content_sha256": "c701a627553e2e1e7714e8c892da476d0e2e8c6bfef6d3ab9082b61f6c877c92",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "sv": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "3510243c90a4bdde50d53331af3e6a7c989dba4e01c3a1330c70f34bc76f111f",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 11,
-      "resolved_corrections": 11,
+      "reviewed_content_sha256": "c0ac707ccdbb9186b2d03acbf6129c29aaa42e2f58809fea3298ef48b8fb531d",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 15,
+      "resolved_corrections": 15,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -1848,23 +2162,36 @@
           "reviewed_content_sha256": "3510243c90a4bdde50d53331af3e6a7c989dba4e01c3a1330c70f34bc76f111f",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "3510243c90a4bdde50d53331af3e6a7c989dba4e01c3a1330c70f34bc76f111f",
+          "reviewed_content_sha256": "c0ac707ccdbb9186b2d03acbf6129c29aaa42e2f58809fea3298ef48b8fb531d",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "fi": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "a5db9aa83c85b4c4ab4786ed86d4192e2e434662be4d96f48d8ac0dfaa5cd3ea",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 14,
-      "resolved_corrections": 14,
+      "reviewed_content_sha256": "9a43e8ccf1ae053cc34c8a16a26abb14abb7d1b79bbf19738a5da6c542ad7454",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 18,
+      "resolved_corrections": 18,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -1928,23 +2255,36 @@
           "reviewed_content_sha256": "a5db9aa83c85b4c4ab4786ed86d4192e2e434662be4d96f48d8ac0dfaa5cd3ea",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "a5db9aa83c85b4c4ab4786ed86d4192e2e434662be4d96f48d8ac0dfaa5cd3ea",
+          "reviewed_content_sha256": "9a43e8ccf1ae053cc34c8a16a26abb14abb7d1b79bbf19738a5da6c542ad7454",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "el": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "627d4b76b9fa12a9680961880f44ee61093e19df8f6e02a3b341faaf35284cff",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 18,
-      "resolved_corrections": 18,
+      "reviewed_content_sha256": "210c79ebd1501c6da0f29140e4ad9000aef451f5ccd68bc7743ba3d7ea75d355",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 22,
+      "resolved_corrections": 22,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -2012,23 +2352,36 @@
           "reviewed_content_sha256": "627d4b76b9fa12a9680961880f44ee61093e19df8f6e02a3b341faaf35284cff",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "627d4b76b9fa12a9680961880f44ee61093e19df8f6e02a3b341faaf35284cff",
+          "reviewed_content_sha256": "210c79ebd1501c6da0f29140e4ad9000aef451f5ccd68bc7743ba3d7ea75d355",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "tr": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "522d36695bfa89e53b0789fd38330b161f4d3e84d7408a603d6e2677b7b969ae",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 12,
-      "resolved_corrections": 12,
+      "reviewed_content_sha256": "b6f23abaef9540d495d008f6b61baf532c922ed05afee3b4cb85d713ca434e18",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 16,
+      "resolved_corrections": 16,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -2090,23 +2443,36 @@
           "reviewed_content_sha256": "522d36695bfa89e53b0789fd38330b161f4d3e84d7408a603d6e2677b7b969ae",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "522d36695bfa89e53b0789fd38330b161f4d3e84d7408a603d6e2677b7b969ae",
+          "reviewed_content_sha256": "b6f23abaef9540d495d008f6b61baf532c922ed05afee3b4cb85d713ca434e18",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "hr": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "4c52aac5b927d150739dc5a29944193f09da7d05600b1a2228cda6934851e71c",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 41,
-      "resolved_corrections": 41,
+      "reviewed_content_sha256": "76ab0425fceb1a96e689132d8a58f3eb044adda41a8667c5803a912a88ee5da3",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 45,
+      "resolved_corrections": 45,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -2223,23 +2589,36 @@
           "reviewed_content_sha256": "4c52aac5b927d150739dc5a29944193f09da7d05600b1a2228cda6934851e71c",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "4c52aac5b927d150739dc5a29944193f09da7d05600b1a2228cda6934851e71c",
+          "reviewed_content_sha256": "76ab0425fceb1a96e689132d8a58f3eb044adda41a8667c5803a912a88ee5da3",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "hu": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "c1ca63762220fb60fb0773af281a42a5a650d5d2ace68a5deb62588bc326c291",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 14,
-      "resolved_corrections": 14,
+      "reviewed_content_sha256": "efaeb83c7dd7b06e94964c71e2122f0eb7b66a0f2bee4a04b6e4e9d7456b7d13",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 18,
+      "resolved_corrections": 18,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -2303,23 +2682,36 @@
           "reviewed_content_sha256": "c1ca63762220fb60fb0773af281a42a5a650d5d2ace68a5deb62588bc326c291",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "c1ca63762220fb60fb0773af281a42a5a650d5d2ace68a5deb62588bc326c291",
+          "reviewed_content_sha256": "efaeb83c7dd7b06e94964c71e2122f0eb7b66a0f2bee4a04b6e4e9d7456b7d13",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "pl": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "375395b5e1083bf0732f51bac0080edac0603fccbcfa20d5a9168f00b5542cee",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 16,
-      "resolved_corrections": 16,
+      "reviewed_content_sha256": "f6257361695d15ad21ae2eea0e5852ae083de04308425b14cdda3ab1565b4636",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 20,
+      "resolved_corrections": 20,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -2385,23 +2777,36 @@
           "reviewed_content_sha256": "375395b5e1083bf0732f51bac0080edac0603fccbcfa20d5a9168f00b5542cee",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "375395b5e1083bf0732f51bac0080edac0603fccbcfa20d5a9168f00b5542cee",
+          "reviewed_content_sha256": "f6257361695d15ad21ae2eea0e5852ae083de04308425b14cdda3ab1565b4636",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "ro": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "5b5e563bad970e232398797737f2afd30cf256b92df3287d0cf19c3063e3df11",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 14,
-      "resolved_corrections": 14,
+      "reviewed_content_sha256": "faf6fabb91d98be0ed0572d47126b2fd3685893b4456c6a59c77cc357d539940",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 18,
+      "resolved_corrections": 18,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -2465,23 +2870,36 @@
           "reviewed_content_sha256": "5b5e563bad970e232398797737f2afd30cf256b92df3287d0cf19c3063e3df11",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "5b5e563bad970e232398797737f2afd30cf256b92df3287d0cf19c3063e3df11",
+          "reviewed_content_sha256": "faf6fabb91d98be0ed0572d47126b2fd3685893b4456c6a59c77cc357d539940",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "sk": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "fcdd439a9a604ce0ea4e11456c061e4d9e561a6a3d4be5189b1fb9a793b6de21",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 14,
-      "resolved_corrections": 14,
+      "reviewed_content_sha256": "64127d3d5e0bfd82c847d7a9b845f0437ed323df54bcf40ec30ba3e392da9062",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 18,
+      "resolved_corrections": 18,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -2545,23 +2963,36 @@
           "reviewed_content_sha256": "fcdd439a9a604ce0ea4e11456c061e4d9e561a6a3d4be5189b1fb9a793b6de21",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "fcdd439a9a604ce0ea4e11456c061e4d9e561a6a3d4be5189b1fb9a793b6de21",
+          "reviewed_content_sha256": "64127d3d5e0bfd82c847d7a9b845f0437ed323df54bcf40ec30ba3e392da9062",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "sl-SI": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "bb5b4d52d85f2d241d284484a100c45f33df9b2c7b9ed93c3e468271d67a32e9",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 44,
-      "resolved_corrections": 44,
+      "reviewed_content_sha256": "0288bb6f7f840e826a93fdce84c39fc1d933a3dadc4df72bc48eb4091cd6cf8b",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 48,
+      "resolved_corrections": 48,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -2701,23 +3132,36 @@
           "reviewed_content_sha256": "bb5b4d52d85f2d241d284484a100c45f33df9b2c7b9ed93c3e468271d67a32e9",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "bb5b4d52d85f2d241d284484a100c45f33df9b2c7b9ed93c3e468271d67a32e9",
+          "reviewed_content_sha256": "0288bb6f7f840e826a93fdce84c39fc1d933a3dadc4df72bc48eb4091cd6cf8b",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "uk": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "302c014d369826b196dd21cbbe8a22b4a667cd2cdecdf0995b864a45fd90f88a",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 15,
-      "resolved_corrections": 15,
+      "reviewed_content_sha256": "4be5d07a009ea1b3a717277ba213a0ce5f6f3894005b2f7fc525a97759088f05",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 19,
+      "resolved_corrections": 19,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -2782,23 +3226,36 @@
           "reviewed_content_sha256": "302c014d369826b196dd21cbbe8a22b4a667cd2cdecdf0995b864a45fd90f88a",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "302c014d369826b196dd21cbbe8a22b4a667cd2cdecdf0995b864a45fd90f88a",
+          "reviewed_content_sha256": "4be5d07a009ea1b3a717277ba213a0ce5f6f3894005b2f7fc525a97759088f05",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "id": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "c315c88ad2ff411d151a6dd15c2dbad6f72d246b19d420af1acd3775f3a22751",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 14,
-      "resolved_corrections": 14,
+      "reviewed_content_sha256": "48ddbc20033893b4e37f1e7303f8b2a7dfcdaaae636bc0bd2b83077e3db6ca2c",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 18,
+      "resolved_corrections": 18,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -2862,23 +3319,36 @@
           "reviewed_content_sha256": "c315c88ad2ff411d151a6dd15c2dbad6f72d246b19d420af1acd3775f3a22751",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "c315c88ad2ff411d151a6dd15c2dbad6f72d246b19d420af1acd3775f3a22751",
+          "reviewed_content_sha256": "48ddbc20033893b4e37f1e7303f8b2a7dfcdaaae636bc0bd2b83077e3db6ca2c",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "ms": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "72721ac3562c809b0481ed31e54bd891dd52c17dbfefff74387f3ec4dbd5d51a",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 9,
-      "resolved_corrections": 9,
+      "reviewed_content_sha256": "647586b88bdd5973d15969193e8cae47608ebb1af06db4117f0a303083cee477",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 13,
+      "resolved_corrections": 13,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -2923,23 +3393,36 @@
           "reviewed_content_sha256": "72721ac3562c809b0481ed31e54bd891dd52c17dbfefff74387f3ec4dbd5d51a",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "72721ac3562c809b0481ed31e54bd891dd52c17dbfefff74387f3ec4dbd5d51a",
+          "reviewed_content_sha256": "647586b88bdd5973d15969193e8cae47608ebb1af06db4117f0a303083cee477",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "vi": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "7aca92e957d43299997b62763f9d7dfd8a0da19e1b3957e6408349a7812682aa",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 15,
-      "resolved_corrections": 15,
+      "reviewed_content_sha256": "92e95f2fa32e4bf76b721546ed328b37ff132a07b83ed05ac5538b0eddd6bc0f",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 19,
+      "resolved_corrections": 19,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -3004,23 +3487,36 @@
           "reviewed_content_sha256": "7aca92e957d43299997b62763f9d7dfd8a0da19e1b3957e6408349a7812682aa",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "7aca92e957d43299997b62763f9d7dfd8a0da19e1b3957e6408349a7812682aa",
+          "reviewed_content_sha256": "92e95f2fa32e4bf76b721546ed328b37ff132a07b83ed05ac5538b0eddd6bc0f",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "th": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "0ea4c9d07accfcc4c5903260fdfaa22ded9917548f89fc178d00fdfebf484488",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 18,
-      "resolved_corrections": 18,
+      "reviewed_content_sha256": "dd04d34bb6a450803d52ef57c24bc3b282a1b877b26f1bf53aa67824c9198ea1",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 22,
+      "resolved_corrections": 22,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -3088,23 +3584,36 @@
           "reviewed_content_sha256": "0ea4c9d07accfcc4c5903260fdfaa22ded9917548f89fc178d00fdfebf484488",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "0ea4c9d07accfcc4c5903260fdfaa22ded9917548f89fc178d00fdfebf484488",
+          "reviewed_content_sha256": "dd04d34bb6a450803d52ef57c24bc3b282a1b877b26f1bf53aa67824c9198ea1",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "zh-Hant": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "86bc20da106343c5e99cc11894737036690c6d254ac5ed235cbd7128e7fad16d",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 10,
-      "resolved_corrections": 10,
+      "reviewed_content_sha256": "cefabcf3c0757c3079c31459ef12d589e9e0c6a2441d3e033de866932d2c2254",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 14,
+      "resolved_corrections": 14,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -3149,23 +3658,36 @@
           "reviewed_content_sha256": "86bc20da106343c5e99cc11894737036690c6d254ac5ed235cbd7128e7fad16d",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "86bc20da106343c5e99cc11894737036690c6d254ac5ed235cbd7128e7fad16d",
+          "reviewed_content_sha256": "cefabcf3c0757c3079c31459ef12d589e9e0c6a2441d3e033de866932d2c2254",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "hi": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "61087a65d1dacc6fe4737ae98199ca6029d642886699b22d76d37d8fcd04a2b0",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 19,
-      "resolved_corrections": 19,
+      "reviewed_content_sha256": "f9493c00db222939c07aed5337f7402785f8ed26c62dd1d5a01710c14b5f4986",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 23,
+      "resolved_corrections": 23,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -3234,23 +3756,36 @@
           "reviewed_content_sha256": "61087a65d1dacc6fe4737ae98199ca6029d642886699b22d76d37d8fcd04a2b0",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "61087a65d1dacc6fe4737ae98199ca6029d642886699b22d76d37d8fcd04a2b0",
+          "reviewed_content_sha256": "f9493c00db222939c07aed5337f7402785f8ed26c62dd1d5a01710c14b5f4986",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "ur-PK": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "a8dd2c92c6ddf34e31ca1ab95deb68af37daa65436682b2f048397b93b89862c",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 19,
-      "resolved_corrections": 19,
+      "reviewed_content_sha256": "49ea1c960bac9f2023eb552c4f9f15a0ae3542e857924ce0f3095c8a98826096",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 23,
+      "resolved_corrections": 23,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -3319,23 +3854,36 @@
           "reviewed_content_sha256": "a8dd2c92c6ddf34e31ca1ab95deb68af37daa65436682b2f048397b93b89862c",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "a8dd2c92c6ddf34e31ca1ab95deb68af37daa65436682b2f048397b93b89862c",
+          "reviewed_content_sha256": "49ea1c960bac9f2023eb552c4f9f15a0ae3542e857924ce0f3095c8a98826096",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "bn-BD": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "f1eb473935e6371e6c66b8c6fcae5b9bfad685ee6c662a8111fcd274577ddd1f",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 17,
-      "resolved_corrections": 17,
+      "reviewed_content_sha256": "24c95295dc5a94f520aa4a31e9b79081d8f69fb9910282c392f036b7bc36eeaf",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 21,
+      "resolved_corrections": 21,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -3402,23 +3950,36 @@
           "reviewed_content_sha256": "f1eb473935e6371e6c66b8c6fcae5b9bfad685ee6c662a8111fcd274577ddd1f",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "f1eb473935e6371e6c66b8c6fcae5b9bfad685ee6c662a8111fcd274577ddd1f",
+          "reviewed_content_sha256": "24c95295dc5a94f520aa4a31e9b79081d8f69fb9910282c392f036b7bc36eeaf",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "gu-IN": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "4e3c825e3e959951391b3cb73f0afd38fd634be70fe256987ef4a317a3023ffd",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 19,
-      "resolved_corrections": 19,
+      "reviewed_content_sha256": "ae47420cc27b77463897d352a3a11df5b7d492857cfb41a273e36985f65319ee",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 23,
+      "resolved_corrections": 23,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -3487,23 +4048,36 @@
           "reviewed_content_sha256": "4e3c825e3e959951391b3cb73f0afd38fd634be70fe256987ef4a317a3023ffd",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "4e3c825e3e959951391b3cb73f0afd38fd634be70fe256987ef4a317a3023ffd",
+          "reviewed_content_sha256": "ae47420cc27b77463897d352a3a11df5b7d492857cfb41a273e36985f65319ee",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "mr-IN": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "5b5fb0aef6aa2f16233e0cf2f88521bcf214e6fa7fca449d7d6d9040e6b0d924",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 19,
-      "resolved_corrections": 19,
+      "reviewed_content_sha256": "8b3f9851fc47959dfd58798d16aa382d874bf092cc8838239515afa8be5ccccd",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 23,
+      "resolved_corrections": 23,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -3572,23 +4146,36 @@
           "reviewed_content_sha256": "5b5fb0aef6aa2f16233e0cf2f88521bcf214e6fa7fca449d7d6d9040e6b0d924",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "5b5fb0aef6aa2f16233e0cf2f88521bcf214e6fa7fca449d7d6d9040e6b0d924",
+          "reviewed_content_sha256": "8b3f9851fc47959dfd58798d16aa382d874bf092cc8838239515afa8be5ccccd",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "pa-IN": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "1dbf954947481ca9c49dfb1ba383ef269c47f8b91be27917c166af8e8b4d3ab0",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 19,
-      "resolved_corrections": 19,
+      "reviewed_content_sha256": "1a5094e3bb2fdd7939b93c1f7da64f8b0558bde0d1e1bc01bdc349a994c87c7d",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 23,
+      "resolved_corrections": 23,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -3657,23 +4244,36 @@
           "reviewed_content_sha256": "1dbf954947481ca9c49dfb1ba383ef269c47f8b91be27917c166af8e8b4d3ab0",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "1dbf954947481ca9c49dfb1ba383ef269c47f8b91be27917c166af8e8b4d3ab0",
+          "reviewed_content_sha256": "1a5094e3bb2fdd7939b93c1f7da64f8b0558bde0d1e1bc01bdc349a994c87c7d",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "kn-IN": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "b0b017ddd01596181465eec889e4f22160418baa91283e0fd4571d6846a9f949",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 19,
-      "resolved_corrections": 19,
+      "reviewed_content_sha256": "da4ed7186091f0f76dcef7274f1d241bb85f29b87f1ac617eef25121b8f3502c",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 23,
+      "resolved_corrections": 23,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -3742,23 +4342,36 @@
           "reviewed_content_sha256": "b0b017ddd01596181465eec889e4f22160418baa91283e0fd4571d6846a9f949",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "b0b017ddd01596181465eec889e4f22160418baa91283e0fd4571d6846a9f949",
+          "reviewed_content_sha256": "da4ed7186091f0f76dcef7274f1d241bb85f29b87f1ac617eef25121b8f3502c",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "ml-IN": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "564f9d20f560ec9dd28f2833969cc0a59ff7b186a27c0654da6381dc34c58fc2",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 19,
-      "resolved_corrections": 19,
+      "reviewed_content_sha256": "c92e9cce171285715e1fab141ccf6db256596350cdd7b704e11b3255f62dbc17",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 23,
+      "resolved_corrections": 23,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -3827,23 +4440,36 @@
           "reviewed_content_sha256": "564f9d20f560ec9dd28f2833969cc0a59ff7b186a27c0654da6381dc34c58fc2",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "564f9d20f560ec9dd28f2833969cc0a59ff7b186a27c0654da6381dc34c58fc2",
+          "reviewed_content_sha256": "c92e9cce171285715e1fab141ccf6db256596350cdd7b704e11b3255f62dbc17",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "ta-IN": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "80961b75c2e346a98bd303a488fa7e7fe48b785500461f7bb0840fb2597b876a",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 19,
-      "resolved_corrections": 19,
+      "reviewed_content_sha256": "805262501e7c07856c20c39ac038372a76703789a3cb00d2f78a56216f6db019",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 23,
+      "resolved_corrections": 23,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -3912,23 +4538,36 @@
           "reviewed_content_sha256": "80961b75c2e346a98bd303a488fa7e7fe48b785500461f7bb0840fb2597b876a",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "80961b75c2e346a98bd303a488fa7e7fe48b785500461f7bb0840fb2597b876a",
+          "reviewed_content_sha256": "805262501e7c07856c20c39ac038372a76703789a3cb00d2f78a56216f6db019",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "te-IN": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "737b2f691564cd87e68294adddbb4887a171c1a2fde94ef282f580027a184f66",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 19,
-      "resolved_corrections": 19,
+      "reviewed_content_sha256": "294118e2a9357ba0e11185c4c208ce5296fc419e013a0a7150e0b08dee4e46eb",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 23,
+      "resolved_corrections": 23,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -3997,23 +4636,36 @@
           "reviewed_content_sha256": "737b2f691564cd87e68294adddbb4887a171c1a2fde94ef282f580027a184f66",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "737b2f691564cd87e68294adddbb4887a171c1a2fde94ef282f580027a184f66",
+          "reviewed_content_sha256": "294118e2a9357ba0e11185c4c208ce5296fc419e013a0a7150e0b08dee4e46eb",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     },
     "or-IN": {
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "7dbb3818df09627092306028b3b956f38f80b97e403eff865f18876a0b29d480",
-      "source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
-      "identified_corrections": 10,
-      "resolved_corrections": 10,
+      "reviewed_content_sha256": "f2ff3f16170472d793086a6e26ebff6e9a592712e163c18a553490a32a6253ea",
+      "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "identified_corrections": 14,
+      "resolved_corrections": 14,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -4058,13 +4710,26 @@
           "reviewed_content_sha256": "7dbb3818df09627092306028b3b956f38f80b97e403eff865f18876a0b29d480",
           "decision": "approved_exact_proposed_deltas",
           "appended_field_corrections": 7
+        },
+        {
+          "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+          "method": "independent_source_aware_ai",
+          "scope": "All 50 locales, bounded proposed name/subtitle/keyword changes only; unchanged listing material is not newly reviewed. Exact owner-approved English descriptor retained. Additional50exact whole-object phone screenshot permutations; caption text unchanged.",
+          "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+          "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467",
+          "parent_source_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+          "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+          "parent_content_sha256": "7dbb3818df09627092306028b3b956f38f80b97e403eff865f18876a0b29d480",
+          "reviewed_content_sha256": "f2ff3f16170472d793086a6e26ebff6e9a592712e163c18a553490a32a6253ea",
+          "decision": "approved_exact_deltas_with_recorded_refinements",
+          "appended_field_corrections": 4
         }
       ],
       "current_review_provenance": {
         "full_review_inherited_for": "unchanged fields only",
-        "bounded_delta_reviewer": "/root/review_timbre_release_guards",
-        "evidence": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-        "evidence_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+        "bounded_delta_reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+        "evidence": "docs/l10n/reviews/multi-instrument-positioning/review-chain.json",
+        "evidence_sha256": "2e56a50ecff2534cdd65a004a4985ad14ac0ce6bc6e5c76e0bd191e88e29e467"
       }
     }
   },

@@ -209,9 +209,9 @@
       "note": "Available app values reused exactly; missing app values retain authored store drafts. Does not certify native or device review."
     }
   },
-  "name": "Timbre: Kitaraviritin",
-  "subtitle": "Opi viulua, ukulelea ja bassoa",
-  "keywords": "viulu,sello,ukulele,mandoliini,banjo,kromaattinen,stroboskooppi,säveltapailu,metronomi,sointu",
+  "name": "Timbre: Viritin ja oppitunnit",
+  "subtitle": "Kitara, viulu, sello ja muut",
+  "keywords": "viulu,sello,ukulele,mandoliini,banjo,kromaattinen,stroboskooppi,säveltapailu,metronomi,sointu,basso",
   "promotional_text": "Ilmainen viritin ilman mainoksia tai tiliä. Tunne kielten virittyminen, opi soittoasi kuuntelevilla oppitunneilla ja soita yli 130 kappaletta.",
   "description": "Ilmainen viritin. Ei mainoksia eikä tiliä. Sen jälkeen oppitunteja, jotka kuuntelevat soittoasi.\n\nTimbre yhdistää tarkan virittimen ja musiikinopettajan. Viritä 60 soitinta ja opi soittamalla.\n\nVIRITÄ ILMAISEKSI\nJokaisen soittimen perusviritys on ilmainen: kitara, ukulele, viulu, mandoliini, banjo, oud, erhu ja muut. Kromaattinen ja stroboskooppiviritin sentin tarkkuudella. 132 viritystä Drop D:stä ja Open G:stä DADGADiin sekä omat viritykset.\nAutomaattinen kielentunnistus merkitsee viritetyt kielet. Yksi pyyhkäisy lukee kaikki kielet ja näyttää, mikä viritetään ensin. Viritä tuntoaistilla: puhelin sykkii kielen ja tavoitesävelen huojunnan tahdissa, hidastuu niiden lähestyessä ja pysähtyy vireessä. Näyttöä ei tarvitse katsoa.\nStudiovalaistut 3D-kitarat, bassot, viulu, sello ja mandoliini näyttävät käännettävän viritystapin. Capo, säädettävä A4-viitesävel sekä solfege- ja sargam-sävelnimet.\n\nOPI SOITTAMALLA\n526 oppituntia 11 kurssilla: kitara, ukulele, basso, viulu, sello, mandoliini, banjo, laulu, säveltapailu, musiikinteoria ja rytmi. Myös laulukirjat ukulelelle, mandoliinille, viululle, sellolle ja bassolle.\nTimbre kuulee jokaisen pyyhkäisyn: oikean soinnun, ajoituksen ja mikä kieli ei soinut. Jokainen sävel arvioidaan sentin ja millisekunnin tarkkuudella. ”Näytä” soittaa uudet soinnut 3D-kitaralla ja asettaa sormet järjestyksessä. Nuottirata hidastuu tarvittaessa ja nopeutuu taitosi kehittyessä.\n\nYli 130 kappaletta, jokaisesta kokonainen sovitus: klassikoita Jingle Bellsistä Amazing Graceen sekä mukana 50 Timbrelle nykytyyleillä kirjoitettua Originals-kappaletta. Soita kuulokkeissa bändin mukana sanojen korostuessa. Liitä tai tuo oma sointukaavio, transponoi, vieritä tahdissa ja kuuntele vieressä alkuperäistä Apple Musicissa.\n\nJATKA HARJOITTELUA\nTähtiä, XP:tä, päivätehtäviä, putkia ja merkkejä. Apple Watchin ranteessa tuntuva metronomi ja päivän harjoittelu yhdellä silmäyksellä. Koti- ja lukitusnäytön widgetit, live-aktiviteetti ja Siri-pikakomennot.\nMetronomi, jossa aksentit, alijaot ja nopeusharjoittelu; borduna, intonaatioharjoittelu sekä sointu- ja asteikkokirjasto. Säveltapailu: sävelkorkeuden suunta, intervallit ja sointutyypit sekä 40 oppitunnin kurssi.\n\nALOITA ILMAISEKSI\nKaikki perusviritykset ovat ilmaisia. Kitara, basso, ukulele, viulu ja sello ovat ilmaisia kaikissa virityksissä. Myös jokaisen kurssin ensimmäinen jakso ja valikoima kappaleita ovat ilmaisia. Timbre Pro avaa kaikki oppitunnit, kappaleet, viritykset ja harjoittelutyökalut. Ilmoitusten ollessa käytössä Timbre muistuttaa kaksi päivää ennen ilmaisen kokeilun päättymistä.\nYksityisyys suunnittelun lähtökohtana: mikrofonin ääni analysoidaan reaaliajassa laitteellasi, eikä sitä koskaan tallenneta tai ladata verkkoon. Ei tiliä eikä mainoksia.\nTilaukset uusiutuvat automaattisesti, ellei niitä peruta vähintään 24 tuntia ennen jakson loppua. Hallitse tai peru milloin tahansa: Asetukset → Apple-tili → Tilaukset.\nEhdot: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\nTietosuoja: https://timbre-support.timbre.workers.dev/privacy",
   "whats_new": "Tervetuloa Timbreen: ilmainen viritin 60 soittimelle ja 526 oppituntia, jotka kuuntelevat soittoasi.",
@@ -222,19 +222,14 @@
       "supporting_line": "60 soitinta, sentin tarkkuus"
     },
     {
-      "capture": "65-song-perform",
-      "caption": "Kuule, miten soitit",
-      "supporting_line": "Jokaisen sävelen korkeus ja ajoitus"
-    },
-    {
-      "capture": "52b-lesson-chord",
-      "caption": "Ensimmäinen sointusi tänään",
-      "supporting_line": "Timbre kuulee jokaisen kielen"
-    },
-    {
       "capture": "31b-instruments-folk",
       "caption": "Viritä oma soittimesi",
       "supporting_line": "60 soitinta, 132 viritystä"
+    },
+    {
+      "capture": "65-song-perform",
+      "caption": "Kuule, miten soitit",
+      "supporting_line": "Jokaisen sävelen korkeus ja ajoitus"
     },
     {
       "capture": "63-songs",
@@ -245,6 +240,11 @@
       "capture": "50-learn",
       "caption": "Opi omaan tahtiisi",
       "supporting_line": "526 oppituntia 11 kurssilla"
+    },
+    {
+      "capture": "52b-lesson-chord",
+      "caption": "Ensimmäinen sointusi tänään",
+      "supporting_line": "Timbre kuulee jokaisen kielen"
     },
     {
       "capture": "62-lesson-results",
