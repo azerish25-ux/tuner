@@ -88,8 +88,12 @@ def jpeg_size(path):
 
 
 def screenshot_format(help_text):
+    if '--type' not in help_text or not any(kind in help_text for kind in ('png', 'jpeg')):
+        raise ValueError('Missing recorded native screenshot format capabilities')
     black = '--mask' in help_text and 'black' in help_text
     png = '--type' in help_text and 'png' in help_text and black
+    if not png and 'jpeg' not in help_text:
+        raise ValueError('Native opaque PNG or JPEG capability is not established')
     return {'type': 'png' if png else 'jpeg', 'black_mask': black,
             'reason': 'public native PNG and black mask supported' if png else 'public PNG/black-mask capability not found; native JPEG fallback'}
 
@@ -233,12 +237,58 @@ def validate_coverage(rows, languages):
         raise ValueError('Missing, extra or duplicate Watch language/page captures')
 
 
-def command(args, *, timeout=120, env=None, log=None):
+def command(args, *, timeout=120, env=None, log=None, capture_stderr=False):
     if log:
         with log.open('w', encoding='utf-8') as output:
             subprocess.run(args, cwd=ROOT, check=True, timeout=timeout, env=env, stdout=output, stderr=subprocess.STDOUT)
         return ''
-    return subprocess.check_output(args, cwd=ROOT, timeout=timeout, env=env, text=True).strip()
+    return subprocess.check_output(args, cwd=ROOT, timeout=timeout, env=env, text=True,
+                                   stderr=subprocess.STDOUT if capture_stderr else None).strip()
+
+
+def launch_capture(device, row, revision, directory):
+    """Retain every launch result; only the observed scene-transition refusal gets a bounded retry."""
+    history = directory / 'launches.json'
+    attempts = json.loads(history.read_text(encoding='utf-8')) if history.exists() else []
+    for attempt in range(1, 4):
+        row['token'] = str(uuid.uuid4())
+        environment = {**os.environ, **{f'SIMCTL_CHILD_TIMBRE_WATCH_CAPTURE_{key}': value for key, value in {
+            'PAGE': row['page'], 'LOCALE': row['language'], 'REVISION': revision, 'TOKEN': row['token']}.items()}}
+        args = ['xcrun', 'simctl', 'launch', '--terminate-running-process', device, BUNDLE,
+                '-AppleLanguages', f"({row['language']})", '-AppleLocale', row['language'].replace('-', '_')]
+        failure = None
+        try:
+            result = subprocess.run(args, cwd=ROOT, timeout=120, env=environment, text=True,
+                                    stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            returncode, output = result.returncode, result.stdout or ''
+        except (subprocess.TimeoutExpired, OSError) as error:
+            failure = error
+            partial = getattr(error, 'output', '') or ''
+            output = partial.decode('utf-8', errors='replace') if isinstance(partial, bytes) else str(partial)
+            output += f'\n{type(error).__name__}: {error}'
+            returncode = None
+        attempts.append({'language': row['language'], 'page': row['page'], 'attempt': attempt,
+                         'revision': revision, 'device': device, 'token': row['token'],
+                         'returncode': returncode, 'output': output,
+                         'failure_type': type(failure).__name__ if failure else None,
+                         'observedAt': time.time()})
+        history.write_text(json.dumps(attempts, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+        if returncode == 0:
+            return
+        diagnostic = directory / f"launch-{row['language']}-{row['page']}-{attempt}.log"
+        try:
+            command(['xcrun', 'simctl', 'spawn', device, 'log', 'show', '--last', '2m', '--style', 'compact',
+                     '--predicate', f'process == "SpringBoard" OR eventMessage CONTAINS[c] "{BUNDLE}"'],
+                    timeout=30, log=diagnostic)
+        except (subprocess.SubprocessError, OSError) as error:
+            with diagnostic.open('a', encoding='utf-8') as handle:
+                handle.write(f'\nLaunch diagnostics unavailable: {error}\n')
+        if failure is not None:
+            raise failure
+        if 'FBSOpenApplicationServiceErrorDomain' not in output or 'Scene update failed' not in output or attempt == 3:
+            raise subprocess.CalledProcessError(returncode, args, output=output)
+        command(['xcrun', 'simctl', 'bootstatus', device, '-b'], timeout=120)
+        time.sleep(2)
 
 
 def simulator_pair():
@@ -294,7 +344,7 @@ def capture(directory, revision):
     if (directory / 'manifest.json').exists():
         raise ValueError('Refuse to replace a completed capture manifest')
     expected = expectations()
-    help_text = command(['xcrun', 'simctl', 'help', 'io'])
+    help_text = command(['xcrun', 'simctl', 'help', 'io'], capture_stderr=True)
     (directory / 'simctl-io-help.txt').write_text(help_text + '\n', encoding='utf-8')
     mode = screenshot_format(help_text)
     suffix = 'png' if mode['type'] == 'png' else 'jpg'
@@ -314,10 +364,7 @@ def capture(directory, revision):
             row = {'language': language, 'page': page, 'token': str(uuid.uuid4()), 'file': f'{language}/{page}.{suffix}'}
             destination = directory / row['file']
             destination.parent.mkdir(exist_ok=True)
-            environment = {**os.environ, **{f'SIMCTL_CHILD_TIMBRE_WATCH_CAPTURE_{key}': value for key, value in {
-                'PAGE': page, 'LOCALE': language, 'REVISION': revision, 'TOKEN': row['token']}.items()}}
-            command(['xcrun', 'simctl', 'launch', '--terminate-running-process', watch, BUNDLE,
-                     '-AppleLanguages', f'({language})', '-AppleLocale', language.replace('-', '_')], env=environment)
+            launch_capture(watch, row, revision, directory)
             container = Path(command(['xcrun', 'simctl', 'get_app_container', watch, BUNDLE, 'data']))
             probe_path = container / 'Documents/watch-capture.json'
             row['before'] = wait_probe(probe_path, row, expected, revision)

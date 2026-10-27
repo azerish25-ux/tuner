@@ -7,6 +7,8 @@ from pathlib import Path
 import struct
 import tempfile
 import unittest
+from unittest.mock import patch
+import subprocess
 import zlib
 
 SPEC = importlib.util.spec_from_file_location('watch_captures', Path(__file__).resolve().parents[2] / 'ci/watch_captures.py')
@@ -151,6 +153,56 @@ class WatchCaptureTests(unittest.TestCase):
         fallback = watch.screenshot_format('screenshot --type jpeg')
         self.assertEqual(fallback['type'], 'jpeg')
         self.assertFalse(fallback['black_mask'])
+
+    def test_missing_native_help_cannot_be_treated_as_a_jpeg_capability(self):
+        for help_text in ['', '\n', 'simctl help unavailable', '--type png']:
+            with self.subTest(help_text=help_text), self.assertRaises(ValueError):
+                watch.screenshot_format(help_text)
+
+    def test_help_can_be_captured_from_stderr_without_changing_json_commands(self):
+        with patch.object(watch.subprocess, 'check_output', return_value='--type png,jpeg --mask black') as run:
+            watch.command(['xcrun', 'simctl', 'help', 'io'], capture_stderr=True)
+        self.assertEqual(run.call_args.kwargs['stderr'], subprocess.STDOUT)
+
+    def test_scene_update_relaunch_is_bounded_and_every_attempt_uses_a_fresh_token(self):
+        calls = []
+        def launch(args, **kwargs):
+            calls.append(kwargs['env']['SIMCTL_CHILD_TIMBRE_WATCH_CAPTURE_TOKEN'])
+            return subprocess.CompletedProcess(args, 1 if len(calls) == 1 else 0,
+                stdout='FBSOpenApplicationServiceErrorDomain: Scene update failed' if len(calls) == 1 else 'bundle: 42')
+        with patch.object(watch.subprocess, 'run', side_effect=launch), \
+                patch.object(watch, 'command'), patch.object(watch.time, 'sleep'):
+            watch.launch_capture('watch-device', self.row, self.revision, self.root)
+        self.assertEqual(len(calls), 2)
+        self.assertNotEqual(calls[0], calls[1])
+        self.assertEqual(self.row['token'], calls[1])
+        records = json.loads((self.root / 'launches.json').read_text())
+        self.assertEqual([item['returncode'] for item in records], [1, 0])
+
+    def test_other_launch_errors_fail_without_retry_or_success_evidence(self):
+        with patch.object(watch.subprocess, 'run', return_value=subprocess.CompletedProcess([], 1, stdout='Bundle not installed')) as run, \
+                patch.object(watch, 'command'), patch.object(watch.time, 'sleep'), self.assertRaises(subprocess.CalledProcessError):
+            watch.launch_capture('watch-device', self.row, self.revision, self.root)
+        self.assertEqual(run.call_count, 1)
+        self.assertFalse((self.root / 'manifest.json').exists())
+
+    def test_repeated_scene_update_failure_never_becomes_a_capture(self):
+        with patch.object(watch.subprocess, 'run', return_value=subprocess.CompletedProcess([], 1, stdout='FBSOpenApplicationServiceErrorDomain: Scene update failed')) as run, \
+                patch.object(watch, 'command'), patch.object(watch.time, 'sleep'), self.assertRaises(subprocess.CalledProcessError):
+            watch.launch_capture('watch-device', self.row, self.revision, self.root)
+        self.assertEqual(run.call_count, 3)
+        self.assertFalse((self.root / 'manifest.json').exists())
+
+    def test_launch_timeout_keeps_partial_output_and_never_retries(self):
+        error = subprocess.TimeoutExpired(['xcrun', 'simctl', 'launch'], 120, output=b'partial native output')
+        with patch.object(watch.subprocess, 'run', side_effect=error) as run, \
+                patch.object(watch, 'command'), patch.object(watch.time, 'sleep'), self.assertRaises(subprocess.TimeoutExpired):
+            watch.launch_capture('watch-device', self.row, self.revision, self.root)
+        self.assertEqual(run.call_count, 1)
+        records = json.loads((self.root / 'launches.json').read_text())
+        self.assertEqual(records[0]['failure_type'], 'TimeoutExpired')
+        self.assertIn('partial native output', records[0]['output'])
+        self.assertFalse((self.root / 'manifest.json').exists())
 
     def test_manifest_format_is_bound_to_recorded_native_help(self):
         help_text = '--type png,jpeg --mask black,alpha\n'

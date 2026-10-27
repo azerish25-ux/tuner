@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-27T02:40:36Z",
+  "reviewer": "Independent integration review agent",
+  "skills": ["systematic-debugging", "code-review-and-quality"],
+  "verdict": "approve_bounded_tooling_source_resolution_full_native_capture_pending",
+  "scope": "Watch screenshot capability recording, bounded scene-update relaunch and failure diagnostics; current Python tests/workflow delta. No Watch product/companion configuration changes.",
+  "findings": [],
+  "actual_native_evidence": {
+    "revision": "b6efd36f5f72d7ec723229949f7c54c32972b72c",
+    "artifact_directory": "C:/Users/shahr/Desktop/Translation/native-qa/watch-b6efd36",
+    "job_log": "C:/Users/shahr/Desktop/Translation/native-qa/watch-b6efd36-final.log",
+    "observations": [
+      "Artifact build.log line2259 reports BUILD SUCCEEDED.",
+      "partial.json contains exactly one en/today row with native416x496 pixels, matching revision/token and before/after capture timestamps. Independent current validate_capture run and JPEG hash check passed.",
+      "Actual en/today.jpg viewed: native Watch Today screen, lit7-day flame/streak, Practised today and part-done1-of3 set. This is one genuine partial capture, not full media acceptance.",
+      "Complete job log288 writes en/today.jpg before289-294 report FBSOpenApplicationServiceErrorDomain code1 / Scene update failed on the following launch. Calling this a first-launch failure is inaccurate; missing companion configuration is not an established cause.",
+      "Help artifact contains one newline byte. Job log269-281 actually prints native screenshot png/jpeg and black-mask options. Original stdout-only help recording lost stderr and incorrectly selected an unproven JPEG fallback."
+    ],
+    "sha256": {
+      "build.log": "e5cb797a24d484d29b3009b594f6d50e0a9c897fac68bf0628e8ec82669473ad",
+      "partial.json": "305db5e70bb2c061702fad3dcaff9cac56d2d687304a396fc9d25dc35451211b",
+      "simctl-io-help.txt": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "en/today.jpg": "0344cd9104b7d89ce8354ec3cbc0741574c1dd5c00aef921b836e3bc90b0feed",
+      "../watch-b6efd36-final.log": "dcc2072a8c7d0cd1803ebcd4b6823a2a0fbbb29c78c940a930c8925bafba4221"
+    }
+  },
+  "source_assessment": [
+    "Both workflow preflight and capture runner record help stderr with stdout. Other command calls retain pure stdout by default, preserving simulator JSON parsing. Empty/missing or unsupported capability evidence now fails instead of assuming JPEG support.",
+    "Only nonzero launch output containing both observed domain and Scene update failed is retried, at most3 attempts. Unknown errors and persistent third failure raise. Timeout/OSError are logged with available partial output and rethrown without retry.",
+    "Every attempt has a fresh probe token and records language/page/revision/device/token/return code/output/failure class/time. Diagnostics are retained for unsuccessful launches; diagnostic failure is recorded without turning the launch into success. Recovery bootstatus and delay remain bounded.",
+    "Launch success alone does not certify capture: existing matching-token/revision/language/page/state probes, native decode, dimension/opacity checks, capture bracketing and complete98-pair coverage still gate manifest creation. Old process probes cannot certify a retried launch.",
+    "Argument lists and fixed bundle/locale inputs avoid shell injection. No arbitrary booted simulator fallback, image fabrication, product flag change, manifest bypass or Apple upload added.",
+    "Workflow artifact paths retain launches.json and native diagnostic logs. Failure history remains available even when no final manifest exists."
+  ],
+  "independent_verification": [
+    { "command": "python -m unittest discover -s tools/l10n/tests -p test_watch_captures.py", "tests": 20, "exit_code": 0 },
+    { "command": "git -c core.autocrlf=false diff --check -- tools/ci/watch_captures.py tools/l10n/tests/test_watch_captures.py .github/workflows/watch-captures.yml", "exit_code": 0 },
+    { "check": "Ruby YAML parse and exact merged-help redirection assertion", "result": "pass" },
+    { "check": "Current validate_capture on actual partial Today row, JPEG dimensions and stored hash", "result": "pass" },
+    { "check": "Actual Today JPEG viewed and complete failure log inspected", "result": "one genuine capture precedes observed relaunch refusal" }
+  ],
+  "reviewed_sha256": {
+    "tools/ci/watch_captures.py": "3b1f9e1ba54ea6e65c9234e53b5875473488bb1d97621d50b849722de0aba329",
+    "tools/l10n/tests/test_watch_captures.py": "2a6e03bc9e403fddd728e5b55cdedddf2f39b49b1ba6c418c99554d8f7f11e40",
+    ".github/workflows/watch-captures.yml": "396280417f9f50cbee518d5270805e7ee880c7904f26c3c12cd6c96792175548"
+  },
+  "remaining_native_acceptance": [
+    "Run the final tooling revision on hosted macOS. Confirm help capability recording, actual PNG/black-mask behavior, successful en/metronome relaunch and all98 language/page captures.",
+    "A narrow retry is a bounded recovery attempt, not proof the FBS failure is transient or its cause fixed. If it repeats, inspect retained per-attempt SpringBoard/bundle logs and simulator identity before changing product/companion configuration.",
+    "Inspect every actual Watch image for required native state, translations, glyphs, clipping and RTL. Confirm media format/alpha upload acceptance separately; real complication-face capture remains separate work.",
+    "No final manifest or full98-image success is established by the existing partial artifact or Python fixture tests."
+  ],
+  "limitations": [
+    "No new simulator/native capture executed on this Windows reviewer. Existing Debug Watch build success and one image are historical evidence at b6efd36, not proof of final tooling execution.",
+    "No additional mandatory diagnostic was identified after timeout/OSError recording and device/revision binding were added. Recovery effectiveness remains a runtime question.",
+    "Prior receipts preserved. No implementation edited, commit/push or Apple operation performed by reviewer."
+  ],
+  "mutations": "Only this new independent review receipt written."
+}

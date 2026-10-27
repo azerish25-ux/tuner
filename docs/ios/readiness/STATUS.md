@@ -13,7 +13,7 @@ are in progress. Apple account configuration and physical audio tests remain req
 |---|---|
 | App languages | All 49 app languages present; all 48 translated lesson languages have zero missing keys. Strict critical-string checks report zero legal, permission or VoiceOver gaps. This establishes coverage, not universal linguistic perfection. |
 | Store text | All 50 supported listing payloads pass source, length, structure and recorded independent AI review checks. The 100 privacy/Game Center field updates retain the previous review lineage. All `release_ready` flags remain false until release evidence is complete. |
-| Local tests | 187 localization/tool tests, 44 marketing tests, 25 hygiene tests and four cover-contrast tests pass. Marketing tests use an isolated environment with the repository requirements. Swift/XCTest execution requires the hosted macOS jobs. |
+| Local tests | 193 localization/tool tests, 44 marketing tests, 25 hygiene tests and four cover-contrast tests pass. Marketing tests use an isolated environment with the repository requirements. Swift/XCTest execution requires the hosted macOS jobs. |
 | Bundled content | Curriculum validation and iOS resource verification pass. Image provenance includes the owner's declaration and hashes of all 68 bundled images and thumbnails. |
 | Privacy and support | [Privacy](https://timbre-support.timbre.workers.dev/privacy) and [support](https://timbre-support.timbre.workers.dev/support) return HTTP 200 and exactly match built HTML. Policy wording matches current consent, attribution and song-request source behavior. |
 | Independent review | Audio, privacy, CI, seasonal access, Watch tooling and listing deltas have source-review receipts. The integration review found no new blocking source defect; native execution remains separate. |
@@ -40,7 +40,7 @@ statements are superseded where current receipts establish a change.
 | [Caption typography](https://github.com/azerish25-ux/tuner/actions/runs/40434232930) | Passed for all 50 store locales. Caption layout/glyph checks do not establish finished native media. |
 | [Localized capture checks](https://github.com/azerish25-ux/tuner/actions/runs/40434233041) | Actual selected English, German and Arabic store scenes. |
 | [Listing asset pilot](https://github.com/azerish25-ux/tuner/actions/runs/40434233043) | Real iPhone/iPad screenshots and preview pipeline for English, German and Arabic before the complete 50-locale run. |
-| [Watch captures](https://github.com/azerish25-ux/tuner/actions/runs/40434259810) | Failed at the first app launch with a simulator scene-update error. No completed screenshot set or visual acceptance is claimed. Diagnose the launch before producing the 98 required app images. |
+| [Watch captures](https://github.com/azerish25-ux/tuner/actions/runs/40434259810) | Watch build and one genuine English Today capture passed, then the metronome relaunch failed with a simulator scene-update error. One frame is not a completed 98-image set. Native retry effectiveness and full visual acceptance remain pending. |
 | [Nightly tour](https://github.com/azerish25-ux/tuner/actions/runs/40434262338) | Full iPhone/iPad flows, first session, captures, accessibility matrix, thread sanitizer and unsigned archive. |
 
 Earlier failed or cancelled runs are retained. Their failures are not replaced by a source-review approval.
@@ -50,6 +50,9 @@ and shared fixture callbacks/session cleanup. The follow-up isolates sessions an
 changing production transport or raising the original test timeouts. A native rerun must establish the result.
 The [fixture resolution review](reviews/privacy-fixture-resolution-independent-review.json) covers the corrected
 session lifecycle, route assertion and 18 authored tests; source approval does not close the native failures.
+The [Watch resolution review](reviews/watch-native-resolution-independent-review.json) records the actual first
+frame and later relaunch failure, stderr-based native help correction, and narrowly bounded recovery with fresh
+probe tokens and retained diagnostics. Unknown errors, timeouts and persistent failures still fail the job.
 
 ## Remaining release evidence
 
