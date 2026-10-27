@@ -108,7 +108,7 @@
     "ios/Timbre/Design/Glass.swift": "dc3a58a65510bd515a6b98b1e6e9f4b9178b8e912f07985d08797f878de3f3a6",
     "ios/Timbre/Design/Glyphs.swift": "1fde8661fae94cf465b7772c57a1acaf71b7c49fb783e5469854db950e4b358c",
     "ios/Timbre/Design/Haptics.swift": "5a05df14ec75788fdeda99586fb7670fbefd0b605627e8778473112f267325d9",
-    "ios/Timbre/Design/Kit.swift": "499be160afccd08c8b95d2eb25ff037926752b9445bca356310b8808e7782bf9",
+    "ios/Timbre/Design/Kit.swift": "306a5160617640eac0fdcb5b898afd4535ab8ffbd4b519d8adb5a21832bfdef6",
     "ios/Timbre/Design/RewardStar.swift": "af6647b42a2ae9515ec5f551cb7f5297d003287e0fb236d8000f00401c904278",
     "ios/Timbre/Design/Shaders.swift": "7e05d1b30b91ec61eadbfe89740a12df9610bb44a1e4fc36b96578e0cc88ce3e",
     "ios/Timbre/Design/SparkBurst.swift": "88dd57cb2d474f0f00eac2bfdf2f85687d15e48bfbd123bea585fc9f40c9e851",
@@ -150,7 +150,7 @@
     "ios/Timbre/Learn/LessonMotion.swift": "ab46a5a3ff36f1a52f15231dbdf6a9f3cf940cc6bb590116afb47a93d61fa3ec",
     "ios/Timbre/Learn/LessonPlayer.swift": "1f375133631a2ba523f9f3a8c099ec54332999dfbaffa1d52cadd76c353b4bf5",
     "ios/Timbre/Learn/LessonResults.swift": "0035a340eb2b40dc7846e0cd4868de9141eaec9b4542c7d987f950738486ad7d",
-    "ios/Timbre/Learn/LessonSteps.swift": "729625456ae3b4a7005d37726a78476dd358a27e87a557efe87f8c6be679eb1a",
+    "ios/Timbre/Learn/LessonSteps.swift": "0d9d76c5dc0e019b2365314b3b832e48994b765c065adf727f2b1a3f82d3532d",
     "ios/Timbre/Learn/NotationEngraver.swift": "2892405016e4ab558e7a60de4ba0f7f885f561b509cece6a4842475e3965b3eb",
     "ios/Timbre/Learn/NotationGlyphs.swift": "9d9de08791dbb04271ed62f558182932b23c6aaff0219f292afe76d42de1e735",
     "ios/Timbre/Learn/NotationView.swift": "68be94dbae0fe07110db525b7106016da477f361f3e56ae69c89f4ba095a4e55",
@@ -407,43 +407,29 @@
   "mutations": "Only this receipt written. No listing verification/readiness flags, policy text, public website, signing, credentials or account settings changed.",
   "source_inventory_scope": "All shipped app/core/extension Swift, Objective-C/C/C++ sources and headers, app privacy manifests, xcconfig/plist/entitlement/permission configuration and package dependency inputs. Any edit/addition invalidates this source-review receipt; tests/docs outside named policy sources do not.",
   "source_review_refresh": {
-    "reviewed_utc": "2026-10-27T09:58:23Z",
+    "reviewed_utc": "2026-10-27T16:07:13Z",
     "base_revision": "6a9329aa0d2bc6cdf77e1d050adea1a4e11234f3",
-    "source_state": "base_revision_plus_explicit_uncommitted_deltas",
+    "source_state": "base_revision_plus_cumulative_explicit_uncommitted_deltas",
     "changes": [
       {
-        "path": "ios/Timbre/Songs/SongRailMeasurement.swift",
-        "previous_reviewed_sha256": null,
-        "reviewed_sha256": "9ad0659e862b3dc6cf2a6e69b75191e316ea741acc99622562f17c69f750d2b8",
-        "change_kind": "new_file",
-        "diff_or_new_file_sha256": "9ad0659e862b3dc6cf2a6e69b75191e316ea741acc99622562f17c69f750d2b8",
-        "privacy_assessment": "New bounded process-local caption measurement cache (24 entries), transient UIHostingControllers not attached to a window, input signatures and computed height only. DEBUG-only diagnostic output contains caption/host counts, elapsed time, height/width and type size, not titles, song IDs, user content or telemetry submission. Release builds omit that print. No disk persistence/networking/analytics/permission calls."
+        "path": "ios/Timbre/Design/Kit.swift",
+        "previous_reviewed_sha256": "499be160afccd08c8b95d2eb25ff037926752b9445bca356310b8808e7782bf9",
+        "reviewed_sha256": "306a5160617640eac0fdcb5b898afd4535ab8ffbd4b519d8adb5a21832bfdef6",
+        "diff_sha256": "35948e78b3b9c359821f51a9eea1c99136bba1ee7f0d10a4b68302751102f36e",
+        "privacy_assessment": "Adds only the static-text accessibility trait to the existing fraction layout container, retaining its existing numeric inputs and spoken label. No new collection, logging, persistence, network requests, permissions or capabilities."
       },
       {
-        "path": "ios/Timbre/Songs/SongShelfRail.swift",
-        "previous_reviewed_sha256": null,
-        "reviewed_sha256": "eb90f4f77f824d30b5f4141643c42d4e79046a55fe6dbb40afb4437e65eb0938",
-        "change_kind": "new_file",
-        "diff_or_new_file_sha256": "eb90f4f77f824d30b5f4141643c42d4e79046a55fe6dbb40afb4437e65eb0938",
-        "privacy_assessment": "New LazyHStack presentation retains existing item content with in-memory viewport/scroll/browsed-anchor state and accessibility identity. No additional persistence, collection, analytics or networking. Native execution, complete item reachability and accessibility behavior remain separate validation."
-      },
-      {
-        "path": "ios/Timbre/Songs/SongsView.swift",
-        "previous_reviewed_sha256": "f7a47ade7949532df499d4efde9a52a47780ece1bc30d7f91d8603d3582538e4",
-        "reviewed_sha256": "ad2ed64d1ade08898ce2663ef923b399d7a101ef266524f27e897e05ca0e4698",
-        "change_kind": "modified",
-        "diff_or_new_file_sha256": "8920cdec0e40b6a033e71b7ddb11491016f045ca947b313547ec49b1016a7273",
-        "privacy_assessment": "Replaces eager song rails with virtualized rails and adds measurement signatures using existing song metadata, stars/access state, locale/language, display scale and accessibility preferences. These values stay in process-local sizing state. Existing open/play/version controls and analytics call sites remain unchanged; version menu gains an accessibility identifier. No new request endpoint, storage field, consent choice, permission or capability."
+        "path": "ios/Timbre/Learn/LessonSteps.swift",
+        "previous_reviewed_sha256": "729625456ae3b4a7005d37726a78476dd358a27e87a557efe87f8c6be679eb1a",
+        "reviewed_sha256": "0d9d76c5dc0e019b2365314b3b832e48994b765c065adf727f2b1a3f82d3532d",
+        "diff_sha256": "0f3d4116901a15fd467ec078723f44c4db2586f72e3aad21d63c40cf3ca230eb",
+        "privacy_assessment": "TuneCheckStep presentation changes only: reads existing Dynamic Type size to choose a scrollable teaching-content layout at accessibility sizes with pinned skip action; preserves normal content ordering, adds accessibility identifiers, and permits multiline hint height. The onAppear/onDisappear, lock cancellation, listening callbacks and scene-phase restart logic remain unchanged in this diff. No new collection, analytics payloads, persistence, network endpoints, permission or capability behavior. Native layout/audio lifecycle validation remains separate."
       }
     ],
-    "source_inventory_delta": "291 bound inputs after two new shipped Songs Swift files; existing non-Songs source/configuration hashes unchanged.",
-    "listing_delta": {
-      "scope": "All50listing hashes refreshed after independently approved six140→130song-count strings and song-floor metadata changes perlocale. No privacy/permission/legal/free-tier text changed.",
-      "independent_review": "docs/l10n/reviews/distinct-song-count/independent-review.json",
-      "independent_review_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
-    },
-    "publication_observation": "Original 08:20 UTC public HTTP timestamps and privacy/support HTML/policy bytes remain unchanged. No new publication or fetch claimed.",
-    "limitations": "Bounded source-diff and quantity-only listing assessment; independent source approval is not native execution, hardware verification, legal certification, archive or Apple portal approval."
+    "source_inventory_delta": "291 bound inputs; only Kit.swift and LessonSteps.swift differ from the immediately preceding reviewed snapshot. Previously reviewed Songs additions/changes remain recorded in source_review_refresh_history and bound by current source_sha256.",
+    "listing_delta": "All50 listing content hashes unchanged from the independently reviewed130+ count correction.",
+    "publication_observation": "Original08:20UTC public HTTP observations and privacy/support policy/HTML bytes preserved. No fresh public fetch, deployment or uptime certification claimed.",
+    "limitations": "Bounded source-diff privacy review only. Static trait/layout source approval does not establish native RTL/VoiceOver, microphone lifecycle, physical-device, signed archive, legal or Apple portal verification."
   },
   "source_review_refresh_history": [
     {
@@ -544,6 +530,45 @@
       "source_inventory_delta": "Only Kit.swift differs from the preceding 289-input inventory; all other bound source/configuration hashes unchanged.",
       "publication_observation": "Original 08:20 UTC public HTTP observations and policy/HTML bytes preserved. No new public fetch or deployment claimed.",
       "limitations": "Bounded privacy source-diff assessment only; not native layout/RTL/VoiceOver or hardware verification, legal certification, signed archive or Apple portal approval."
+    },
+    {
+      "reviewed_utc": "2026-10-27T09:58:23Z",
+      "base_revision": "6a9329aa0d2bc6cdf77e1d050adea1a4e11234f3",
+      "source_state": "base_revision_plus_explicit_uncommitted_deltas",
+      "changes": [
+        {
+          "path": "ios/Timbre/Songs/SongRailMeasurement.swift",
+          "previous_reviewed_sha256": null,
+          "reviewed_sha256": "9ad0659e862b3dc6cf2a6e69b75191e316ea741acc99622562f17c69f750d2b8",
+          "change_kind": "new_file",
+          "diff_or_new_file_sha256": "9ad0659e862b3dc6cf2a6e69b75191e316ea741acc99622562f17c69f750d2b8",
+          "privacy_assessment": "New bounded process-local caption measurement cache (24 entries), transient UIHostingControllers not attached to a window, input signatures and computed height only. DEBUG-only diagnostic output contains caption/host counts, elapsed time, height/width and type size, not titles, song IDs, user content or telemetry submission. Release builds omit that print. No disk persistence/networking/analytics/permission calls."
+        },
+        {
+          "path": "ios/Timbre/Songs/SongShelfRail.swift",
+          "previous_reviewed_sha256": null,
+          "reviewed_sha256": "eb90f4f77f824d30b5f4141643c42d4e79046a55fe6dbb40afb4437e65eb0938",
+          "change_kind": "new_file",
+          "diff_or_new_file_sha256": "eb90f4f77f824d30b5f4141643c42d4e79046a55fe6dbb40afb4437e65eb0938",
+          "privacy_assessment": "New LazyHStack presentation retains existing item content with in-memory viewport/scroll/browsed-anchor state and accessibility identity. No additional persistence, collection, analytics or networking. Native execution, complete item reachability and accessibility behavior remain separate validation."
+        },
+        {
+          "path": "ios/Timbre/Songs/SongsView.swift",
+          "previous_reviewed_sha256": "f7a47ade7949532df499d4efde9a52a47780ece1bc30d7f91d8603d3582538e4",
+          "reviewed_sha256": "ad2ed64d1ade08898ce2663ef923b399d7a101ef266524f27e897e05ca0e4698",
+          "change_kind": "modified",
+          "diff_or_new_file_sha256": "8920cdec0e40b6a033e71b7ddb11491016f045ca947b313547ec49b1016a7273",
+          "privacy_assessment": "Replaces eager song rails with virtualized rails and adds measurement signatures using existing song metadata, stars/access state, locale/language, display scale and accessibility preferences. These values stay in process-local sizing state. Existing open/play/version controls and analytics call sites remain unchanged; version menu gains an accessibility identifier. No new request endpoint, storage field, consent choice, permission or capability."
+        }
+      ],
+      "source_inventory_delta": "291 bound inputs after two new shipped Songs Swift files; existing non-Songs source/configuration hashes unchanged.",
+      "listing_delta": {
+        "scope": "All50listing hashes refreshed after independently approved six140→130song-count strings and song-floor metadata changes perlocale. No privacy/permission/legal/free-tier text changed.",
+        "independent_review": "docs/l10n/reviews/distinct-song-count/independent-review.json",
+        "independent_review_sha256": "24665fb2daf543b1ca183ce00476fea6a8697b05c5967ea2b6cd3f6a6495ce20"
+      },
+      "publication_observation": "Original 08:20 UTC public HTTP timestamps and privacy/support HTML/policy bytes remain unchanged. No new publication or fetch claimed.",
+      "limitations": "Bounded source-diff and quantity-only listing assessment; independent source approval is not native execution, hardware verification, legal certification, archive or Apple portal approval."
     }
   ]
 }

@@ -89,10 +89,20 @@ final class LessonAccessibilityLayoutUITests: XCTestCase {
         capture("explanation-scroll-clear")
         next.tap()
         let skip = element("lesson.tunecheck.skip")
-        if skip.waitForExistence(timeout: 5) {
-            XCTAssertTrue(isClear(skip), "Tune-check skip must be fully on screen")
-            skip.tap()
+        XCTAssertTrue(skip.waitForExistence(timeout: 10), "Fresh guitar fixture must present its tune check")
+        capture("tunecheck-arrival")
+        XCTAssertTrue(isClear(skip), "Tune-check skip must be fully on screen")
+        XCTAssertEqual(skip.label, "My strings are tuned — skip")
+        let tuneInstructions = element("lesson.tunecheck.instructions")
+        XCTAssertEqual(tuneInstructions.label, "Pluck each open string. In-tune strings help Timbre hear you right.")
+        for id in ["lesson.tunecheck.title", "lesson.tunecheck.instructions", "lesson.tunecheck.hint"] {
+            scrollClear(element(id), above: skip.frame.minY)
+            XCTAssertTrue(isClear(skip), "Skip must remain pinned while teaching content scrolls")
+            XCTAssertTrue(isClear(element("lesson.close")))
+            capture("tunecheck-scroll-clear-" + id)
         }
+        XCTAssertEqual(element("lesson.tunecheck.hint").label, "Pluck the string")
+        skip.tap()
         let override = element("lesson.override")
         XCTAssertTrue(override.waitForExistence(timeout: 20))
         let hear = element("lesson.hear")

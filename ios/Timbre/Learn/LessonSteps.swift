@@ -1136,6 +1136,7 @@ struct TuneCheckStep: View {
     /// The beat after a lock (the string showing done, then the hand-over); it ends with the step, so it never
     /// points the demo pitch or the tuner at a lesson string after the lesson has closed.
     @State private var lockTask: Task<Void, Never>?
+    @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(\.scenePhase) private var scenePhase
     /// Spoken guidance for VoiceOver: the string, the cents and which way to turn.
     @State private var voice = TuneCheckVoice()
@@ -1179,39 +1180,63 @@ struct TuneCheckStep: View {
     }
 
     var body: some View {
-        VStack(spacing: 14) {
-            VStack(alignment: .leading, spacing: 6) {
-                StepTitle("Quick tune check")
-                Text("Pluck each open string. In-tune strings help Timbre hear you right.").font(.subheadline).foregroundStyle(Palette.inkSoft)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            .padding(.horizontal, Metrics.gutter)
-            .padding(.top, 14)
-            // Words and the note stay above the chips' sparks.
-            .zIndex(1)
-            stringChips
-            Spacer(minLength: 0)
-            listeningCluster
-                .zIndex(1)
-            Spacer(minLength: 0)
-            if let number = stringNumber {
-                // The string to pluck, lit on a strip of the neck.
-                FretboardDiagram(strings: course.stringCount, dots: [Fretting(string: number, fret: 0)], frets: 4, accent: accent,
-                                 activeString: number, fretless: course.fretless, rowHeight: 15, pulsing: true, edges: StringEdges.of(course),
-                                 fingerboard: Fingerboard(instrument: course.instrument))
-                    .padding(.horizontal, Metrics.gutter)
-                    .transition(.opacity)
-            }
-            MicrophoneHint()
-            LessonActionBar {
-                // The screen's one action: a pedal or the space bar moves past it too.
-                LessonBarButton(title: "My strings are tuned — skip", role: .primary, identifier: "lesson.tunecheck.skip") { finish() }
+        Group {
+            if typeSize.isAccessibilitySize {
+                VStack(spacing: 0) {
+                    ScrollView {
+                        VStack(spacing: 14) { teachingContent }
+                            .padding(.bottom, 14)
+                    }
+                    .scrollBounceBehavior(.basedOnSize)
+                    skipBar
+                }
+            } else {
+                VStack(spacing: 14) {
+                    teachingContent
+                    skipBar
+                }
             }
         }
         .onAppear { listen(); introduce(after: 1.4) }
         .onDisappear { lockTask?.cancel(); store.stopLessonListening(owner: owner) }
         // The microphone stops in the background; listen for the string again on return.
         .onChange(of: scenePhase) { _, phase in if phase == .active && !finished && !settling { listen() } }
+    }
+
+    // Keep the normal stack's order and spacing; accessibility text scrolls independently of its action.
+    @ViewBuilder private var teachingContent: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            StepTitle("Quick tune check")
+                .accessibilityIdentifier("lesson.tunecheck.title")
+            Text("Pluck each open string. In-tune strings help Timbre hear you right.").font(.subheadline).foregroundStyle(Palette.inkSoft)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityIdentifier("lesson.tunecheck.instructions")
+        }
+        .padding(.horizontal, Metrics.gutter)
+        .padding(.top, 14)
+        // Words and the note stay above the chips' sparks.
+        .zIndex(1)
+        stringChips
+        Spacer(minLength: 0)
+        listeningCluster
+            .zIndex(1)
+        Spacer(minLength: 0)
+        if let number = stringNumber {
+            // The string to pluck, lit on a strip of the neck.
+            FretboardDiagram(strings: course.stringCount, dots: [Fretting(string: number, fret: 0)], frets: 4, accent: accent,
+                             activeString: number, fretless: course.fretless, rowHeight: 15, pulsing: true, edges: StringEdges.of(course),
+                             fingerboard: Fingerboard(instrument: course.instrument))
+                .padding(.horizontal, Metrics.gutter)
+                .transition(.opacity)
+        }
+        MicrophoneHint()
+    }
+
+    private var skipBar: some View {
+        LessonActionBar {
+            // The screen's one action: a pedal or the space bar moves past it too.
+            LessonBarButton(title: "My strings are tuned — skip", role: .primary, identifier: "lesson.tunecheck.skip") { finish() }
+        }
     }
 
     /// VoiceOver names the string to pluck: after the step's title has been read as it arrives, then as each string
@@ -1253,6 +1278,8 @@ struct TuneCheckStep: View {
                 }
             centsMeter
             Text(hint).font(.headline).foregroundStyle(meterColor)
+                .fixedSize(horizontal: false, vertical: typeSize.isAccessibilitySize)
+                .accessibilityIdentifier("lesson.tunecheck.hint")
         }
         .layoutPriority(1)
     }

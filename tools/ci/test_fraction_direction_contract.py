@@ -18,6 +18,29 @@ class FractionDirectionContract(unittest.TestCase):
         self.assertIn(".accessibilityElement(children: .ignore)", fraction)
         self.assertEqual(fraction.count('.accessibilityLabel(Text("\\(done) of \\(total)"))'), 1)
 
+    def test_counter_retains_noninteractive_text_semantics_without_layout_workarounds(self):
+        source = (ROOT / "ios/Timbre/Design/Kit.swift").read_text()
+        fraction = source.split("static func fraction(", 1)[1].split("// MARK:", 1)[0]
+        self.assertIn(".accessibilityAddTraits(.isStaticText)", fraction)
+        for workaround in [".accessibilityHidden", ".allowsHitTesting", ".tapTarget", ".frame(",
+                           ".onTapGesture", "Button(", ".isButton"]:
+            self.assertNotIn(workaround, fraction)
+        tune = (ROOT / "ios/Timbre/Tune/TuneView.swift").read_text()
+        quest = tune.split("private var questLine:", 1)[1].split("private var sideControls:", 1)[0]
+        self.assertIn(".accessibilityElement(children: .combine)", quest)
+        self.assertNotIn(".tapTarget", quest)
+
+    def test_native_quest_regression_requires_single_static_text_and_unfiltered_hit_audit(self):
+        source = (ROOT / "ios/TimbreUITests/SmokeUITests.swift").read_text()
+        test = source.split("func testTuningQuestIsOneStaticTextElementNotAnInteractiveTarget()", 1)[1].split("func testTheTunerLocksAString()", 1)[0]
+        for token in ["XCTAssertEqual(quests.count, 1", "XCTAssertEqual(quest.elementType, .staticText",
+                      'XCTAssertEqual(quest.label, "Quest · tune every string, 0 of 6, +20 XP")',
+                      "XCTAssertEqual(quest.descendants(matching: .any).count, 0",
+                      "try app.performAccessibilityAudit(for: .hitRegion)",
+                      'hierarchy.lifetime = .keepAlways', 'screenshot.lifetime = .keepAlways']:
+            self.assertIn(token, test)
+        self.assertNotIn("try?", test)
+
     def test_oracle_is_independent_and_exact(self):
         source = (ROOT / "ios/TimbreAppTests/FractionDirectionTests.swift").read_text()
         oracle = source.split("func testRenderedOperandsMatchIndependentPhysicalOrderOracle()", 1)[1].split("func testCompactRingCounterStaysInsideItsInteriorAtNormalAndAXSizes", 1)[0]

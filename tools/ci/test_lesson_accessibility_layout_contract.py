@@ -53,9 +53,29 @@ class LessonAccessibilityLayoutContract(unittest.TestCase):
         self.assertIn("controls", content)
         self.assertIn("scrollClear(start)", self.ui)
         self.assertIn("scrollClear(again)", self.ui)
-        # TuneCheckStep uses a fixed VStack/action bar, not the AlongStep scrolling body.
+        # TuneCheckStep pins its action outside AX scrolling content, unlike AlongStep.
         self.assertIn('XCTAssertTrue(isClear(skip), "Tune-check skip must be fully on screen")', self.ui)
         self.assertNotIn("scrollClear(skip)", self.ui)
+
+    def test_tunecheck_scrolls_teaching_content_not_skip_or_audio_lifecycle(self):
+        tune = SOURCE.read_text().split("struct TuneCheckStep: View {", 1)[1]
+        body = tune.split("var body: some View {", 1)[1].split("// Keep the normal stack", 1)[0]
+        self.assertIn("if typeSize.isAccessibilitySize", body)
+        self.assertIn("VStack(spacing: 14) { teachingContent }", body)
+        self.assertIn(".scrollBounceBehavior(.basedOnSize)\n                    skipBar", body)
+        self.assertIn("VStack(spacing: 14) {\n                    teachingContent\n                    skipBar", body)
+        for token in [".onAppear { listen(); introduce(after: 1.4) }",
+                      "lockTask?.cancel(); store.stopLessonListening(owner: owner)",
+                      "phase == .active && !finished && !settling"]:
+            self.assertIn(token, body)
+        bar = tune.split("private var skipBar:", 1)[1].split("/// VoiceOver names", 1)[0]
+        self.assertIn('role: .primary, identifier: "lesson.tunecheck.skip") { finish() }', bar)
+        for role in ["title", "instructions", "hint"]:
+            self.assertIn('lesson.tunecheck.' + role, tune)
+            self.assertIn('lesson.tunecheck.' + role, self.ui)
+        self.assertIn('scrollClear(element(id), above: skip.frame.minY)', self.ui)
+        self.assertIn('capture("tunecheck-arrival")', self.ui)
+        self.assertNotIn('if skip.waitForExistence', self.ui)
 
     def test_real_playback_not_forced_result(self):
         for token in ['["TIMBRE_DEMO_PITCH"] = "1"', '["TIMBRE_SCENE_SONG"] = "gtr-1-2"',

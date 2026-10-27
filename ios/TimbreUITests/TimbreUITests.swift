@@ -673,7 +673,18 @@ final class TimbreUITests: XCTestCase {
         // strings, then "Your turn" (or, when the demo pitch plays it back, "Nice") shows under the neck. The picture
         // waits for that line: every fingertip is down and the strings have stopped shimmering.
         element("learn.continue").tap()
-        XCTAssertTrue(element("lesson.explain.turnCue").waitForExistence(timeout: 12))
+        // Do not snapshot accessibility while the main-actor demonstration is running: native tour
+        // evidence showed individual exists queries stalling it for 11–16 seconds. Allow the actual
+        // two-finger Em sequence to run hands-off first. The slowest first-model path is
+        // settle(0.7) + patience(5) + lead(0.85) + two fingers(0.9) + ring tail(1.8) = 9.25 s.
+        // This does not force completion; the same unique cue and its real state must still appear.
+        settle(10)
+        let turnCue = element("lesson.explain.turnCue")
+        XCTAssertTrue(turnCue.waitForExistence(timeout: 12))
+        if Self.language.hasPrefix("en") {
+            XCTAssertTrue(["Your turn — play it back", "Nice — that’s right."].contains(turnCue.label),
+                          "The identified cue must expose the completed demonstration's real teaching state")
+        }
         stillShot("51-lesson-explain", timeout: 2.5)
         // The lesson zooms open: a tap during the transition can be dropped, so tap until the tune check shows.
         let skip = element("lesson.tunecheck.skip")

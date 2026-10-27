@@ -669,6 +669,9 @@ extension Text {
         .environment(\.layoutDirection, .leftToRight)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("\(done) of \(total)"))
+        // This replaces Text with a layout container only to control numeral order. Retain Text's
+        // noninteractive semantic role, including when a parent combines this counter with other text.
+        .accessibilityAddTraits(.isStaticText)
     }
 }
 

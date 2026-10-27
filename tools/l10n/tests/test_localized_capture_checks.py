@@ -128,7 +128,10 @@ class LocalizedCaptureChecksTests(unittest.TestCase):
             self.assertIn(identifier, phone)
         explain = (ROOT / 'ios/Timbre/Learn/LessonExplain.swift').read_text()
         self.assertIn('if cueShown {\n                turnCue(compact: false)\n                    .accessibilityIdentifier("lesson.explain.turnCue")', explain)
-        self.assertIn('XCTAssertTrue(element("lesson.explain.turnCue").waitForExistence', phone)
+        self.assertIn('let turnCue = element("lesson.explain.turnCue")', phone)
+        self.assertIn('XCTAssertTrue(turnCue.waitForExistence(timeout: 12))', phone)
+        self.assertLess(phone.index('XCTAssertTrue(turnCue.waitForExistence(timeout: 12))'),
+                        phone.index('if Self.language.hasPrefix("en")', phone.index('let turnCue = element("lesson.explain.turnCue")')))
 
     def test_tuner_capture_values_use_current_locale_and_missing_probe_fails(self):
         phone = (ROOT / 'ios/TimbreUITests/TimbreUITests.swift').read_text()

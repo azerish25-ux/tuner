@@ -815,6 +815,9 @@ def _landscape(layout, accent, shot, title, line, size, out: Path) -> tuple:
     other way and bleeding off that edge and the bottom; or the light frame, caption centred."""
     light = layout == "light"
     left = layout != "side-right"
+    rtl = art.text_layout()["direction"] == "rtl"
+    if rtl and not light:
+        left = not left  # Reflect placement, never native pixels or glyphs.
     frame = Frame(size, accent, light=light, glow=(0.5 if light else (0.25 if left else 0.75), 0.10))
     m = frame.px(120)
     align = "centre" if light else ("left" if left else "right")
@@ -828,6 +831,9 @@ def _landscape(layout, accent, shot, title, line, size, out: Path) -> tuple:
         x = (frame.w - width) // 2
     else:
         x = frame.w - width + frame.px(80) if left else -frame.px(80)
+        if rtl:
+            # The native leading edge is right: no decorative crop of its content.
+            x = min(x, frame.w - screen.width)
     corners = (True, True, False, False) if light else ((True, False, False, False) if left else (False, True, False, False))
     frame.card(screen, x, top, frame.px(40), corners=corners, rim=not light)
     return frame.save(out)

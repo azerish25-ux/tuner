@@ -18,8 +18,9 @@ SEMANTIC_HASHES = {'Songs/SongsView.swift': '97c8d0b2e7f67059ba46de76cc3242f95aa
  'Design/GameUI.swift': '77e11cf4b56f6c52fd96f254871244aa91f5e9bfb3bdf958fbc9ca22337ddb33',
  'Practice/PracticeView.swift': '1f8cfa4c5adfa47ee82c84c44c83ec07d5d3bf7b470a021b2730665219c6fcc2',
  # Reviewed fraction HStack explicitly ignores child runs to retain the original single spoken label.
- # test_fraction_direction_contract.py separately locks that grouping and unchanged label.
- 'Design/Kit.swift': '422fc5d1c37921986deaffc0121206b78455eb4922181eaed947e812aa5cefc2',
+ # cb38/6a exposed the noninteractive Quest as Other and failed hit-region: explicitly restore Text's
+ # static-text role. test_fraction_direction_contract.py locks this trait, grouping and unchanged label.
+ 'Design/Kit.swift': '12aa8ddf613caf8be278d6d1c9ccad7221a942fb33f2d5cdbf09bac1ae7ad9e1',
  'Design/Components.swift': '86b9b3ad0288871603788d3a608bf6e9e7f1e713b3db67d0db0c96e6856a6f5a',
  'Journey/CoachCard.swift': '0d012a63fe9b9c35d6674781a9d1e03c8335965565845cc1f5f7d4a0d62130d9'}
 

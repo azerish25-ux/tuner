@@ -1,9 +1,9 @@
 import StoreKitTest
 import XCTest
 
-/// The pull-request gate's three flows (.github/workflows/ios.yml, job `app`): a fresh install opens on the welcome,
-/// the tuner hears a string and locks it, and buying Timbre Pro unlocks a Pro tool. Each runs on storage of its own
-/// and touches only what it proves, so the three fit the gate's budget; the full tour with its captures runs nightly
+/// The pull-request gate's focused flows (.github/workflows/ios.yml, job `app`): a fresh install opens on the welcome,
+/// the tuner hears a string and locks it, its Quest remains noninteractive text, and buying Timbre Pro unlocks a Pro tool.
+/// Each runs on storage of its own and touches only what it proves; the full tour with its captures runs nightly
 /// (TimbreUITests, nightly.yml).
 final class SmokeUITests: XCTestCase {
     private var app: XCUIApplication!
@@ -40,6 +40,30 @@ final class SmokeUITests: XCTestCase {
         let start = element("onboarding.start")
         XCTAssertTrue(start.waitForExistence(timeout: 40), "the welcome screen didn't appear")
         XCTAssertTrue(start.isHittable)
+    }
+
+    /// The fraction's RTL layout container must not turn a plain progress sentence into a tap target.
+    func testTuningQuestIsOneStaticTextElementNotAnInteractiveTarget() throws {
+        app.launchEnvironment["TIMBRE_SKIP_ONBOARDING"] = "1"
+        app.launch()
+        XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 40))
+        let quests = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "label BEGINSWITH %@", "Quest · tune every string"))
+        XCTAssertTrue(quests.firstMatch.waitForExistence(timeout: 10))
+        let hierarchy = XCTAttachment(string: app.debugDescription)
+        hierarchy.name = "quest-static-text-hierarchy"
+        hierarchy.lifetime = .keepAlways
+        add(hierarchy)
+        let screenshot = XCTAttachment(screenshot: app.screenshot())
+        screenshot.name = "quest-static-text"
+        screenshot.lifetime = .keepAlways
+        add(screenshot)
+        XCTAssertEqual(quests.count, 1, "The entire Quest sentence must be spoken once")
+        let quest = quests.firstMatch
+        XCTAssertEqual(quest.elementType, .staticText, "A counter is text, not an interactive container")
+        XCTAssertEqual(quest.label, "Quest · tune every string, 0 of 6, +20 XP")
+        XCTAssertEqual(quest.descendants(matching: .any).count, 0, "Do not expose separate numeral runs")
+        try app.performAccessibilityAudit(for: .hitRegion)
     }
 
     /// The demo pitch (TIMBRE_DEMO_PITCH, debug builds) plays the selected string drifting into tune every six seconds;
@@ -79,6 +103,9 @@ final class SmokeUITests: XCTestCase {
         XCTAssertTrue(practice.waitForExistence(timeout: 40), "no Practice tab")
         practice.tap()
         settle(1.5)
+        let badge = element("practice.nextBadge")
+        XCTAssertTrue(badge.waitForExistence(timeout: 10))
+        XCTAssertEqual(badge.elementType, .button, "A fraction inside a real action must not replace its Button role")
         let drone = element("practice.drone")
         scrollTo(drone)
         drone.tap()

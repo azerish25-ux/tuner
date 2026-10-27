@@ -14,7 +14,7 @@ import simulator_warmup as warm
 
 
 class WarmupTests(unittest.TestCase):
-    def execute(self, failure=None):
+    def execute(self, failure=None, fail_once=False):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             app = root / 'Timbre.app'
@@ -24,7 +24,7 @@ class WarmupTests(unittest.TestCase):
             calls = []
             def native(command, **kwargs):
                 calls.append((command, kwargs))
-                if command[2] == failure:
+                if command[2] == failure and (not fail_once or sum(c[0][2] == failure for c in calls) == 1):
                     raise subprocess.TimeoutExpired(command, kwargs['timeout'])
                 return SimpleNamespace(returncode=0, stdout=warm.BUNDLE + ': 123\n')
             out = root / 'diagnostics'
@@ -49,6 +49,33 @@ class WarmupTests(unittest.TestCase):
         self.assertRegex(args['env']['SIMCTL_CHILD_TIMBRE_TEST_STORAGE_ID'], r'^[a-f0-9-]{36}$')
         self.assertEqual(args['env']['SIMCTL_CHILD_TIMBRE_TEST_STORAGE_ID'], status['automation_storage_id'])
         self.assertTrue(all(0 < kwargs['timeout'] <= 120 for _, kwargs in calls))
+
+    def test_resting_warmup_retains_demo_pitch_and_records_command_timestamps(self):
+        status, calls = self.execute()
+        env = calls[1][1]['env']
+        self.assertEqual(env['SIMCTL_CHILD_TIMBRE_STAGE_REST'], '1')
+        self.assertEqual(env['SIMCTL_CHILD_TIMBRE_DEMO_PITCH'], '1')
+        self.assertIsNone(calls[0][1]['env'])
+        for command in status['commands']:
+            self.assertLessEqual(command['started_at'], command['finished_at'])
+            self.assertEqual(command['returncode'], 0)
+
+    def test_terminate_timeout_stays_failed_and_records_owned_pid(self):
+        status, calls = self.execute('terminate')
+        self.assertFalse(status['passed'])
+        self.assertTrue(status['owned_pid_present'])
+        self.assertIn('owned_pid_observed_at', status)
+        self.assertEqual(status['launch_attempts'], 1)
+        self.assertEqual(sum(c[0][2] == 'launch' for c in calls), 1)
+        self.assertTrue(all(c[1]['timeout'] <= 30 for c in calls if c[0][2] == 'terminate'))
+        self.assertTrue(any(c[0][:3] == ['/bin/ps', '-p', '123'] for c in calls))
+
+    def test_successful_cleanup_does_not_hide_original_terminate_timeout(self):
+        status, calls = self.execute('terminate', fail_once=True)
+        self.assertFalse(status['passed'])
+        self.assertNotIn('cleanup_error', status)
+        self.assertTrue(any(c.get('timed_out') for c in status['commands']))
+        self.assertEqual(status['commands'][-1]['returncode'], 0)
 
     def test_launch_timeout_stays_failed_collects_separate_diagnostics_and_terminates(self):
         status, calls = self.execute('launch')

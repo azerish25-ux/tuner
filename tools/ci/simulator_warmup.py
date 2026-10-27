@@ -2,6 +2,7 @@
 """Bounded, diagnostic-only simulator app priming before unchanged XCTest checks."""
 from __future__ import annotations
 
+from datetime import datetime, timezone
 import hashlib
 import json
 import os
@@ -36,12 +37,18 @@ def warmup(app: Path, device: str, languages: list[str], locale: str, out: Path)
     storage = str(uuid.uuid4())
     child_env.update(SIMCTL_CHILD_TIMBRE_TEST_STORAGE_ID=storage,
                      SIMCTL_CHILD_TIMBRE_SKIP_ONBOARDING='1',
-                     SIMCTL_CHILD_TIMBRE_DEMO_DATA='1', SIMCTL_CHILD_TIMBRE_DEMO_PITCH='1')
+                     SIMCTL_CHILD_TIMBRE_DEMO_DATA='1', SIMCTL_CHILD_TIMBRE_DEMO_PITCH='1',
+                     SIMCTL_CHILD_TIMBRE_STAGE_REST='1')
     receipt['automation_storage_id'] = storage
+
+    def stamp():
+        return datetime.now(timezone.utc).isoformat()
 
     def invoke(args, timeout=120, env=None):
         with log.open('a') as output:
-            output.write('+ ' + ' '.join(map(str, args)) + '\n')
+            event = {'command': list(map(str, args)), 'started_at': stamp()}
+            receipt.setdefault('commands', []).append(event)
+            output.write(event['started_at'] + ' + ' + ' '.join(map(str, args)) + '\n')
             output.flush()
             try:
                 result = subprocess.run(list(map(str, args)), env=env, stdout=subprocess.PIPE,
@@ -49,8 +56,12 @@ def warmup(app: Path, device: str, languages: list[str], locale: str, out: Path)
             except subprocess.TimeoutExpired as error:
                 partial = error.stdout or ''
                 output.write(partial.decode(errors='replace') if isinstance(partial, bytes) else partial)
+                event['timed_out'] = True
                 output.write('\nWarmup command deadline expired\n')
                 raise
+            finally:
+                event['finished_at'] = stamp()
+            event['returncode'] = result.returncode
             output.write(result.stdout or '')
         if result.returncode:
             raise RuntimeError(f'Warmup command failed ({result.returncode}): {args[2]}')
@@ -89,12 +100,23 @@ def warmup(app: Path, device: str, languages: list[str], locale: str, out: Path)
         receipt['passed'] = True
     except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as error:
         receipt['error'] = str(error)
+        if 'pid' in receipt:
+            # Probe only the PID returned by this scoped launch; never send a signal.
+            receipt['owned_pid_observed_at'] = stamp()
+            try:
+                os.kill(receipt['pid'], 0)
+                receipt['owned_pid_present'] = True
+            except OSError as pid_error:
+                receipt['owned_pid_present'] = False
+                receipt['owned_pid_error'] = str(pid_error)
         # Best-effort diagnosis must never turn a failed warmup into success.
         diagnostics = [
             (['xcrun', 'simctl', 'spawn', device, 'log', 'show', '--last', '3m', '--style', 'compact',
               '--predicate', 'process == "Timbre" OR process == "SpringBoard" OR process == "testmanagerd"'], 'simulator.log'),
             (['xcrun', 'simctl', 'io', device, 'screenshot', str(out / 'diagnostic-only.png')], 'screenshot.log'),
         ]
+        if 'pid' in receipt:
+            diagnostics.append((['/bin/ps', '-p', str(receipt['pid']), '-o', 'pid=,ppid=,stat=,etime=,command='], 'owned-pid.log'))
         for command, filename in diagnostics:
             try:
                 with (out / filename).open('w') as output:
