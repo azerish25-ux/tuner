@@ -70,6 +70,7 @@ final class AccessibilityAuditUITests: XCTestCase {
     private final class Findings {
         var lines: [String] = []
         var failing: [String] = []
+        var callbacks = 0
     }
 
     private var app: XCUIApplication!
@@ -286,7 +287,9 @@ final class AccessibilityAuditUITests: XCTestCase {
         let enforced = Self.enforced
         let kinds = Self.kinds
         do {
+            findings.lines.append("Starting audit mask \(types.rawValue).")
             try app.performAccessibilityAudit(for: types) { issue in
+                findings.callbacks += 1
                 let kind = kinds.first { issue.auditType.contains($0.type) }?.name ?? "other"
                 let snapshot = try? issue.element?.snapshot()
                 let id = snapshot?.identifier ?? ""
@@ -294,10 +297,14 @@ final class AccessibilityAuditUITests: XCTestCase {
                 let reason = Self.knownReason(screen: screen, kind: kind, id: id, label: label)
                 let fails = enforced.contains(issue.auditType) && reason == nil
                 let tag = fails ? ", enforced" : (reason.map { ", known: \($0)" } ?? "")
-                let geometry = snapshot.map { " | frame \($0.frame) | type \($0.elementType.rawValue)" } ?? " | snapshot unavailable"
+                // Unidentified callbacks are separate evidence: the same compact description may describe
+                // several different elements whose snapshots the audit cannot return.
+                let geometry = snapshot.map { " | frame \($0.frame) | type \($0.elementType.rawValue)" }
+                    ?? " | snapshot unavailable | callback \(findings.callbacks)"
+                let detail = issue.detailedDescription.replacingOccurrences(of: "\n", with: "\\n")
                 let line = "[\(kind)\(tag)] \(issue.compactDescription) | id \(id.isEmpty ? "-" : id) | label "
                     + (label.isEmpty ? "-" : "\"\(label)\"")
-                    + geometry
+                    + geometry + " | detail \(detail)"
                 findings.lines.append(line)
                 if fails, !findings.failing.contains(line) {
                     findings.failing.append(line)
