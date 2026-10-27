@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-27T05:31:39.442416+00:00",
+  "reviewer": "Independent integration review agent",
+  "verdict": "approve_bounded_queue_injection_source_change_native_confirmation_pending",
+  "scope": "Two-file AppleAdsReporter tokenQueue injection, six privacy-test constructor migrations and teardown barrier. Fraction changes separately reviewed; no implementation edited.",
+  "failure_revision": "e3a99fb0e2673524a1b2bfb7933c7a8d490469d8",
+  "comparison_base": "1f4c3f43cb54b7257706440663514c1d9169e1f6",
+  "same_two_files_at_failure_revision_and_comparison_base": true,
+  "source_sha256": {
+    "ios/Timbre/Services/AnalyticsTransport.swift": "63fcdb0f8de22a76dafe47d4219ad7c53096a24e81bced7bc3e75b9216cb877e",
+    "ios/TimbreAppTests/AnalyticsPrivacyTests.swift": "f092e788e4874b42ad14b4f3742fa0f6339f9a5a4e6e4b93df299d37966c6651"
+  },
+  "native_evidence": {
+    "log_path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\app-e3a99fb-final.log",
+    "log_sha256": "6db6fac737a4c13297ed64981533ba7fa6eb360f1a487732536b0f137bd52a85",
+    "run_id": 40452937669,
+    "job_id": 122019602835,
+    "app_cases": 123,
+    "app_assertion_failures": 27,
+    "unexpected_failures": 0,
+    "privacy_cases": 21,
+    "privacy_assertion_failures": 19,
+    "privacy_failure_assertions_by_method": {
+      "testAttributionRevocationDuringRetryWaitPreventsMoreRequestsAndEvents": 2,
+      "testAttributionWhitelistOmitsCountryAndDoesNotMarkSentBeforeAcknowledgment": 3,
+      "testHeldTokenProviderDoesNotBlockStartOrRevocationAndItsResultIsDiscarded": 2,
+      "testInflightAttributionIsCanceledAndAnOffOnCycleCanStartExactlyOneNewRun": 5,
+      "testOldHeldTokenCannotSendOrClearTheNewRunAfterOffOn": 7
+    },
+    "fraction_comparisons_failed": 8,
+    "smoke_cases_passed": 3,
+    "observations": [
+      "Both held-provider entry expectations timed out before their synthetic token closures fulfilled. In the off/on test tokens and requests both remain zero. Missing HTTP callbacks alone therefore cannot explain every failure.",
+      "All19 privacy assertions occur in five positive AppleAdsReporter cases; direct Telemetry, transport, session invalidation and protocol lifecycle tests pass. The reporter opt-out-before-start case also passes, but does not require queued provider execution.",
+      "The sole PRIVACY_PROTOCOL_UNBOUND line has scopePresent=true host=privacy.test and occurs inside the intentionally retired-scope regression, which passes. It is not evidence that Apple Ads requests lost their scope header.",
+      "No unexpected exceptions, test cancellation or old unwaited-cleanup failure pattern is reported in this completed run. Total app suite still failed; this is not native approval."
+    ]
+  },
+  "findings": [],
+  "source_assessment": [
+    "AppleAdsReporter adds an immutable DispatchQueue initializer parameter defaulting to the same global utility queue previously selected at dispatch. Production call sites omit it. Provider body, consent leases/generation, activeLease locking, endpoint, request bytes, whitelist and acknowledgment persistence are unchanged.",
+    "All six test reporter instances use makeReporter and the test-owned userInitiated concurrent queue. Concurrency is necessary: a newer generation must acquire its token while an old provider is intentionally held. A serial queue would weaken that scenario and is not used.",
+    "Cleanup revokes Telemetry/transport consent before URLSession cancellation/invalidation, then barrier-drains token work, then drains acknowledgments and finally removes protocol scopes. A token finishing during that interval must revalidate the revoked lease before request creation; no new task can pass the current lease.",
+    "The barrier is executed from test cleanup, not from tokenQueue. Current held providers have three-second semaphore bounds and release defers; their completion can therefore be drained. The synchronous barrier itself has no explicit deadline and is not a proof that arbitrary real AdServices provider code is cancellable. Tests inject bounded synthetic providers only.",
+    "Retry scheduling still uses the unchanged global utility queue and is guarded by the revoked lease. Token drain does not claim to drain every global retry block. Existing reporter retry test still does not synchronize the instant retry scheduling is committed; separate queued-before-revoke transport test remains the stronger queued-work guard.",
+    "Original2second expectations,0.3second waits, assertions and overfulfill behavior remain unchanged. No fixture exception, threshold increase or passing-result substitution was introduced."
+  ],
+  "causality_limits": [
+    "Utility-queue starvation is plausible and localized by provider-entry failures, but no queue entry/signpost proves it. Dedicated queue injection is an appropriate controllable test seam, not an established production root-cause fix.",
+    "A passing owned-queue rerun would validate reporter invariants under controlled scheduling, not prove the unchanged production utility queue starts within2seconds under simulator load.",
+    "Windows cannot compile or run Swift/XCTest. Native focused21 methods and then the full app gate must execute these exact source bytes before marking these failures resolved."
+  ],
+  "required_native_proof": [
+    "Run all21 AnalyticsPrivacyTests with no retries/timeout changes; require all five formerly failing positive reporter cases and cleanup to pass.",
+    "Run full app target and smoke tests; keep separately diagnosed fraction failures open until their own strict proof.",
+    "If provider-entry failure persists, capture non-sensitive phase markers (reporter start, token-block entry, lease-authorized provider entry) and actual test timings before broadening any production change."
+  ],
+  "verification": {
+    "diff_review": "Only tokenQueue property/default/dispatch substitution, test-owned queue/helper migrations and one teardown barrier in the two reviewed files.",
+    "git_diff_check": "Pass",
+    "native_execution_of_delta": "Pending"
+  }
+}

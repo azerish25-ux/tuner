@@ -8,6 +8,7 @@ final class AnalyticsPrivacyTests: XCTestCase {
     private var transports: [AnalyticsTransport] = []
     private var telemetryClients: [Telemetry] = []
     private let callbackQueue = DispatchQueue(label: "privacy-tests.callbacks", qos: .userInitiated)
+    private let tokenQueue = DispatchQueue(label: "privacy-tests.tokens", qos: .userInitiated, attributes: .concurrent)
 
     private func session() -> URLSession {
         let id = UUID().uuidString
@@ -33,6 +34,12 @@ final class AnalyticsPrivacyTests: XCTestCase {
         return client
     }
 
+    private func makeReporter(transport: AnalyticsTransport, defaults: UserDefaults, retryDelay: TimeInterval = 5,
+                              token: @escaping @Sendable () -> String?, record: @escaping AppleAdsReporter.Record) -> AppleAdsReporter {
+        AppleAdsReporter(transport: transport, defaults: defaults, retryDelay: retryDelay,
+                         tokenQueue: tokenQueue, token: token, record: record)
+    }
+
     private func configureProtocol(start: @escaping (PrivacyURLProtocol) -> Void, stop: (() -> Void)? = nil) {
         guard let id = sessions.last?.id else { XCTFail("Create the scoped session before its handler"); return }
         PrivacyURLProtocol.configure(id: id, start: start, stop: stop)
@@ -48,6 +55,7 @@ final class AnalyticsPrivacyTests: XCTestCase {
         for transport in transports { transport.setEnabled(false) }
         for entry in sessions { entry.session.invalidateAndCancel() }
         if !sessions.isEmpty { wait(for: sessions.map { $0.invalidated }, timeout: 2) }
+        tokenQueue.sync(flags: .barrier) {}
         callbackQueue.sync {}
         for entry in sessions { PrivacyURLProtocol.reset(id: entry.id) }
         sessions.removeAll()
@@ -213,7 +221,7 @@ final class AnalyticsPrivacyTests: XCTestCase {
         let transport = makeTransport(enabled: false)
         let called = expectation(description: "token or event")
         called.isInverted = true
-        let reporter = AppleAdsReporter(transport: transport, defaults: freshDefaults(), token: {
+        let reporter = makeReporter(transport: transport, defaults: freshDefaults(), token: {
             called.fulfill(); return "token"
         }, record: { _, _, _ in called.fulfill() })
         reporter.start()
@@ -232,7 +240,7 @@ final class AnalyticsPrivacyTests: XCTestCase {
         let release = DispatchSemaphore(value: 0)
         defer { release.signal() }
         configureProtocol(start: { _ in escaped.fulfill() })
-        let reporter = AppleAdsReporter(transport: transport, defaults: defaults.value, token: {
+        let reporter = makeReporter(transport: transport, defaults: defaults.value, token: {
             providerEntered.fulfill()
             _ = release.wait(timeout: .now() + 3)
             providerReturned.fulfill()
@@ -273,7 +281,7 @@ final class AnalyticsPrivacyTests: XCTestCase {
             heldRequest.value = request
             newRequest.fulfill()
         })
-        let reporter = AppleAdsReporter(transport: transport, defaults: defaults.value, token: {
+        let reporter = makeReporter(transport: transport, defaults: defaults.value, token: {
             if tokens.increment() == 1 {
                 oldEntered.fulfill()
                 _ = oldRelease.wait(timeout: .now() + 3)
@@ -311,7 +319,7 @@ final class AnalyticsPrivacyTests: XCTestCase {
             first.fulfill()
             request.respond(status: 404)
         })
-        let reporter = AppleAdsReporter(transport: transport, defaults: freshDefaults(), retryDelay: 0.1,
+        let reporter = makeReporter(transport: transport, defaults: freshDefaults(), retryDelay: 0.1,
                                        token: { "token" }, record: { _, _, _ in later.fulfill() })
         reporter.start()
         wait(for: [first], timeout: 2)
@@ -335,7 +343,7 @@ final class AnalyticsPrivacyTests: XCTestCase {
                 request.respond(status: 200, body: #"{"attribution":false}"#)
             }
         }, stop: { canceled.fulfill() })
-        let reporter = AppleAdsReporter(transport: transport, defaults: freshDefaults(), token: {
+        let reporter = makeReporter(transport: transport, defaults: freshDefaults(), token: {
             _ = tokens.increment(); return "token"
         }, record: { _, _, done in done(true); recorded.fulfill() })
         reporter.start()
@@ -357,7 +365,7 @@ final class AnalyticsPrivacyTests: XCTestCase {
         let capturedValues = PrivacyValue<[String: String]>()
         let markedBeforeAcknowledgment = PrivacyValue<Bool>()
         configureProtocol(start: { $0.respond(status: 200, body: #"{"attribution":true,"countryOrRegion":"US","campaignId":42,"clickDate":"private"}"#) })
-        let reporter = AppleAdsReporter(transport: transport, defaults: defaults.value, token: { "token" }, record: { values, _, done in
+        let reporter = makeReporter(transport: transport, defaults: defaults.value, token: { "token" }, record: { values, _, done in
             capturedValues.value = values
             markedBeforeAcknowledgment.value = defaults.value.bool(forKey: "telemetry.attributionSent")
             done(false)
