@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scope": "published_policy_and_source_alignment_only",
-  "source_revision": "fa5a28aa77abb63fd84ba68c70fb150e84cedc47",
+  "source_revision": "59380e3f2e892bcfb43578dbc0b769b8bfef78f8",
   "verified_utc": "2026-10-27T08:20:41Z",
   "reviewer": "dot independent release-scope audit",
   "routes": [
@@ -150,7 +150,7 @@
     "ios/Timbre/Learn/LessonMotion.swift": "ab46a5a3ff36f1a52f15231dbdf6a9f3cf940cc6bb590116afb47a93d61fa3ec",
     "ios/Timbre/Learn/LessonPlayer.swift": "1f375133631a2ba523f9f3a8c099ec54332999dfbaffa1d52cadd76c353b4bf5",
     "ios/Timbre/Learn/LessonResults.swift": "0035a340eb2b40dc7846e0cd4868de9141eaec9b4542c7d987f950738486ad7d",
-    "ios/Timbre/Learn/LessonSteps.swift": "1156e9b665451e3deba645bb5ef9e901b3a529698136f68292c15b3efbafa2b8",
+    "ios/Timbre/Learn/LessonSteps.swift": "729625456ae3b4a7005d37726a78476dd358a27e87a557efe87f8c6be679eb1a",
     "ios/Timbre/Learn/NotationEngraver.swift": "2892405016e4ab558e7a60de4ba0f7f885f561b509cece6a4842475e3965b3eb",
     "ios/Timbre/Learn/NotationGlyphs.swift": "9d9de08791dbb04271ed62f558182932b23c6aaff0219f292afe76d42de1e735",
     "ios/Timbre/Learn/NotationView.swift": "68be94dbae0fe07110db525b7106016da477f361f3e56ae69c89f4ba095a4e55",
@@ -403,5 +403,22 @@
   "verification_method": "Read-only curl HTTPS responses and byte comparison with committed HTML; policy/source review. Python urllib received 403 and web fetch was inaccessible, so neither was used as availability evidence.",
   "official_reference": "https://developer.apple.com/app-store/app-privacy-details/",
   "mutations": "Only this receipt written. No listing verification/readiness flags, policy text, public website, signing, credentials or account settings changed.",
-  "source_inventory_scope": "All shipped app/core/extension Swift, Objective-C/C/C++ sources and headers, app privacy manifests, xcconfig/plist/entitlement/permission configuration and package dependency inputs. Any edit/addition invalidates this source-review receipt; tests/docs outside named policy sources do not."
+  "source_inventory_scope": "All shipped app/core/extension Swift, Objective-C/C/C++ sources and headers, app privacy manifests, xcconfig/plist/entitlement/permission configuration and package dependency inputs. Any edit/addition invalidates this source-review receipt; tests/docs outside named policy sources do not.",
+  "source_review_refresh": {
+    "reviewed_utc": "2026-10-27T08:37:49Z",
+    "base_revision": "59380e3f2e892bcfb43578dbc0b769b8bfef78f8",
+    "source_state": "base_revision_plus_explicit_uncommitted_delta",
+    "changes": [
+      {
+        "path": "ios/Timbre/Learn/LessonSteps.swift",
+        "previous_reviewed_sha256": "1156e9b665451e3deba645bb5ef9e901b3a529698136f68292c15b3efbafa2b8",
+        "reviewed_sha256": "729625456ae3b4a7005d37726a78476dd358a27e87a557efe87f8c6be679eb1a",
+        "diff_sha256": "c6b1395a7df1d0f8afe3054b2da0e60207a9bcec7dd150bb1da45c1fddbd3bd8",
+        "privacy_assessment": "Dynamic Type presentation only: accessibility-size scroll container and pinned actions, external multiline status text, normal-size layout preservation and an accessibility identifier. No new analytics/logging/payload producers, network endpoints, persistence, permissions or capability changes. Existing onAppear/onDisappear/listening/cancellation/scene-phase callbacks and audio behavior are unchanged in the diff."
+      }
+    ],
+    "source_inventory_delta": "Only the named file differs from the previous 289-input source inventory; all other bound source/configuration hashes unchanged.",
+    "publication_observation": "Original 08:20 UTC HTTP observations, policy/HTML bytes and source findings remain unchanged. No new HTTP fetch or publication claimed.",
+    "limitations": "Source-diff privacy assessment only; not native layout/lifecycle verification, hardware validation, legal certification, signed-archive or Apple portal approval."
+  }
 }

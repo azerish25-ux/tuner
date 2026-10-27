@@ -68,7 +68,13 @@ final class AccessibilityAuditUITests: XCTestCase {
 
     /// What one audit found, filled in by the issue handler.
     private final class Findings {
-        var lines: [String] = []
+        // Mirror report events immediately: a runner cancellation can leave its xcresult unfinalized.
+        // Attachments remain the visual evidence; console lines never substitute for a completed audit.
+        var lines: [String] = [] {
+            didSet {
+                for line in lines.dropFirst(oldValue.count) { print("AX-AUDIT: \(line)") }
+            }
+        }
         var failing: [String] = []
         var callbacks = 0
         var opaqueCallbacks = 0
@@ -248,6 +254,7 @@ final class AccessibilityAuditUITests: XCTestCase {
             add(screenshot)
         }
 
+        print("AX-AUDIT: Begin screen \(screen)")
         let findings = Findings()
         var unfinished: [String] = []
         if let replay {
@@ -364,8 +371,10 @@ final class AccessibilityAuditUITests: XCTestCase {
                 // true: recorded here (and failed below when it must); false would make XCTest fail it without context.
                 return true
             }
+            findings.lines.append("Completed audit mask \(types.rawValue) on \(screen).")
             return nil
         } catch {
+            findings.lines.append("Audit mask \(types.rawValue) on \(screen) threw: \(error.localizedDescription)")
             incomplete = true
             return error.localizedDescription
         }

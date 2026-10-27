@@ -98,6 +98,8 @@ jobs:
           python3 tools/ci/test_apple_archive_scope.py
           python3 tools/ci/test_accessibility_audit_contract.py
           python3 tools/ci/test_accessibility_identity_contract.py
+          python3 tools/ci/test_lesson_accessibility_layout_contract.py
+          python3 tools/ci/test_accessibility_partitions.py
       - name: SwiftLint (new error-severity violations fail)
         # .swiftlint.yml at the repository root, against the committed baseline (tools/ci/swiftlint-baseline.json):
         # a violation the baseline doesn't hold is reported, and fails the job at error severity. A fresh baseline
@@ -240,7 +242,7 @@ jobs:
     # The accessibility audit (enforced kinds fail, and so does an audit that can't run) and the localization
     # launches (German, Arabic right to left with note names left to right, pseudo-localization).
     name: accessibility
-    timeout-minutes: 55
+    timeout-minutes: 75
     runs-on: macos-15
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
@@ -266,6 +268,7 @@ jobs:
           key: modules-${{ runner.os }}-xcode26.3-${{ steps.modkey.outputs.key }}
           restore-keys: modules-${{ runner.os }}-xcode26.3-
       - name: Build app and tests
+        id: ax-build
         run: |
           set -o pipefail
           mkdir -p ios/build ci-out
@@ -297,42 +300,99 @@ jobs:
             xcrun simctl terminate "$DEVICE_ID" "$BUNDLE" || true
             sleep 15
           done
-      - name: Accessibility audit and localization launches
-        run: |
-          set -o pipefail
-          tests() {  # a result bundle, a log, then the -only-testing arguments
-            local bundle="$1" log="$2"
-            shift 2
-            xcodebuild test-without-building -project ios/Timbre.xcodeproj -scheme Timbre -parallel-testing-enabled NO "$@" \
-              -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd \
-              -resultBundlePath "$bundle" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$log"
-          }
-          tests ios/build/Accessibility.xcresult ci-out/test.log \
-            -only-testing:TimbreUITests/AccessibilityAuditUITests -only-testing:TimbreUITests/LocalizationLaunchUITests && exit 0
-          # One more try for the tests that failed only because the app never launched (tools/ci/launch_retry.py);
-          # every other failure stands, whatever the second try does.
-          status=0
-          python3 tools/ci/launch_retry.py ci-out/test.log ci-out/relaunch.txt || status=1
-          if [ -s ci-out/relaunch.txt ]; then
-            # One argument a line, no spaces in them.
-            # shellcheck disable=SC2046
-            tests ios/build/Accessibility-relaunch.xcresult ci-out/test-relaunch.log $(cat ci-out/relaunch.txt) || status=1
-          fi
-          exit $status
-      - name: Collect results
+      - name: Localization launches
+        if: ${{ !cancelled() && steps.ax-build.outcome == 'success' }}
+        run: python3 tools/ci/accessibility_partitions.py localization
+      - name: Finalize localization evidence before the next partition
         if: always()
         run: |
-          if [ -d ios/build/Accessibility.xcresult ]; then
-            xcrun xcresulttool export attachments --path ios/build/Accessibility.xcresult --output-path ci-out/screenshots || true
-          fi
-          if [ -d ios/build/Accessibility-relaunch.xcresult ]; then
-            xcrun xcresulttool export attachments --path ios/build/Accessibility-relaunch.xcresult \
-              --output-path ci-out/screenshots-relaunch || true
-          fi
-          for log in ci-out/test.log ci-out/test-relaunch.log; do
-            if [ -f "$log" ]; then python3 tools/ci/summarize-log.py "$log" "${log%.log}.summary.txt"; fi
+          mkdir -p ci-out/localization
+          for suffix in "" -relaunch; do
+            bundle="ios/build/Accessibility-localization${suffix}.xcresult"
+            if [ -d "$bundle" ]; then
+              xcrun xcresulttool export attachments --path "$bundle" --output-path "ci-out/localization/screenshots${suffix}" || true
+            fi
           done
-          gzip -f ci-out/test.log ci-out/test-relaunch.log 2>/dev/null || true
+          for log in ci-out/localization/test*.log; do
+            [ ! -f "$log" ] || python3 tools/ci/summarize-log.py "$log" "${log%.log}.summary.txt"
+          done
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        if: always()
+        with:
+          name: accessibility-checkpoint-localization
+          path: |
+            ci-out/localization
+            ios/build/Accessibility-localization*.xcresult
+          retention-days: 7
+      - name: Welcome, lesson, metronome, Settings and paywall audits
+        if: ${{ !cancelled() && steps.ax-build.outcome == 'success' }}
+        run: python3 tools/ci/accessibility_partitions.py screens
+      - name: Finalize screens evidence before the next partition
+        if: always()
+        run: |
+          mkdir -p ci-out/screens
+          for suffix in "" -relaunch; do
+            bundle="ios/build/Accessibility-screens${suffix}.xcresult"
+            if [ -d "$bundle" ]; then
+              xcrun xcresulttool export attachments --path "$bundle" --output-path "ci-out/screens/screenshots${suffix}" || true
+            fi
+          done
+          for log in ci-out/screens/test*.log; do
+            [ ! -f "$log" ] || python3 tools/ci/summarize-log.py "$log" "${log%.log}.summary.txt"
+          done
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        if: always()
+        with:
+          name: accessibility-checkpoint-screens
+          path: |
+            ci-out/screens
+            ios/build/Accessibility-screens*.xcresult
+          retention-days: 7
+      - name: Every tab and every audit kind
+        if: ${{ !cancelled() && steps.ax-build.outcome == 'success' }}
+        run: python3 tools/ci/accessibility_partitions.py tabs
+      - name: Finalize tabs evidence before the next partition
+        if: always()
+        run: |
+          mkdir -p ci-out/tabs
+          for suffix in "" -relaunch; do
+            bundle="ios/build/Accessibility-tabs${suffix}.xcresult"
+            if [ -d "$bundle" ]; then
+              xcrun xcresulttool export attachments --path "$bundle" --output-path "ci-out/tabs/screenshots${suffix}" || true
+            fi
+          done
+          for log in ci-out/tabs/test*.log; do
+            [ ! -f "$log" ] || python3 tools/ci/summarize-log.py "$log" "${log%.log}.summary.txt"
+          done
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        if: always()
+        with:
+          name: accessibility-checkpoint-tabs
+          path: |
+            ci-out/tabs
+            ios/build/Accessibility-tabs*.xcresult
+          retention-days: 7
+      - name: Require every accessibility partition and expected test
+        if: always()
+        run: python3 tools/ci/accessibility_partitions.py aggregate
+      - name: Collect accessibility logs
+        if: always()
+        run: |
+          mkdir -p ci-out
+          # Preserve root-level log names for existing readers and the publisher's text-only fallback.
+          for stem in test test-relaunch; do
+            : > "ci-out/${stem}.log"
+            for partition in localization screens tabs; do
+              log="ci-out/${partition}/${stem}.log"
+              if [ -f "$log" ]; then
+                printf '\n=== %s ===\n' "$partition" >> "ci-out/${stem}.log"
+                cat "$log" >> "ci-out/${stem}.log"
+              fi
+            done
+            python3 tools/ci/summarize-log.py "ci-out/${stem}.log" "ci-out/${stem}.summary.txt"
+          done
+          find ci-out -name '*.log' -type f -exec gzip -f {} +
+      # Keep the historical aggregate name for ci-results/accessibility and downstream readers.
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()
         with:

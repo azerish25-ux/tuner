@@ -70,6 +70,7 @@ struct NotesStep: View {
     var onItem: (PracticeItem, Double) -> Void = { _, _ in }
     let done: (Double?) -> Void
     @EnvironmentObject private var store: AppStore
+    @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(\.scenePhase) private var scenePhase
     @State private var owner = UUID()
     @State private var judge: NoteSequenceJudge
@@ -110,21 +111,53 @@ struct NotesStep: View {
     }
 
     var body: some View {
-        VStack(spacing: 16) {
-            header
-            if readsStaff { stepStaff } else if isSequence { sequenceChips }
-            Spacer(minLength: 0)
-            if isSequence { prompt }
-            noteRing
-            Spacer(minLength: 0)
-            targetPicture
-            MicrophoneHint()
-            LessonStepBar(canSkip: canSkip, accent: accent, sounding: sounding, skip: { finish(score: 0.6) }, hear: { hear() })
+        Group {
+            if typeSize.isAccessibilitySize {
+                VStack(spacing: 0) {
+                    ScrollView {
+                        noteContent
+                            .padding(.bottom, 16)
+                    }
+                    .scrollBounceBehavior(.basedOnSize)
+                    stepBar
+                }
+            } else {
+                VStack(spacing: 16) {
+                    noteContent
+                    stepBar
+                }
+            }
         }
         .onAppear { listen(); Task { try? await Task.sleep(for: .seconds(6)); withAnimation(Motion.settle) { canSkip = true } } }
         .onDisappear { hearTask?.cancel(); finishTask?.cancel(); store.stopLessonListening(owner: owner) }
         // The microphone stops in the background; pick the note up again on return.
         .onChange(of: scenePhase) { _, phase in if phase == .active && !finished && !sounding { listen() } }
+    }
+
+    /// At accessibility sizes the teaching content can scroll without pushing the lesson header or actions
+    /// outside the viewport. The normal-size stack keeps its existing spacing and flexible spacers.
+    @ViewBuilder private var noteContent: some View {
+        if typeSize.isAccessibilitySize {
+            VStack(spacing: 16) { teachingContent }
+        } else {
+            teachingContent
+        }
+    }
+
+    @ViewBuilder private var teachingContent: some View {
+        header
+        if readsStaff { stepStaff } else if isSequence { sequenceChips }
+        Spacer(minLength: 0)
+        if isSequence { prompt }
+        noteRing
+        Spacer(minLength: 0)
+        targetPicture
+        MicrophoneHint()
+    }
+
+    private var stepBar: some View {
+        LessonStepBar(canSkip: canSkip, accent: accent, sounding: sounding,
+                      skip: { finish(score: 0.6) }, hear: { hear() })
     }
 
     private var isSequence: Bool { notes.count > 1 }
@@ -167,25 +200,43 @@ struct NotesStep: View {
     }
 
     private var noteRing: some View {
-        ZStack {
-            HoldRing(progress: finished ? 1 : hold, tint: ringTint)
-            VStack(spacing: 4) {
-                noteLetter
-                Text(status).font(.subheadline.weight(.semibold)).foregroundStyle(ringTint).contentTransition(.opacity)
+        Group {
+            if typeSize.isAccessibilitySize {
+                VStack(spacing: 8) {
+                    ZStack {
+                        HoldRing(progress: finished ? 1 : hold, tint: ringTint)
+                        noteLetter
+                    }
+                    .frame(width: 290, height: 290)
+                    .background { ringBurst }
+                    Text(status).font(.subheadline.weight(.semibold)).foregroundStyle(ringTint)
+                        .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(.horizontal, Metrics.gutter)
+                        .contentTransition(.opacity)
+                }
+                .frame(maxWidth: .infinity)
+            } else {
+                ZStack {
+                    HoldRing(progress: finished ? 1 : hold, tint: ringTint)
+                    VStack(spacing: 4) {
+                        noteLetter
+                        Text(status).font(.subheadline.weight(.semibold)).foregroundStyle(ringTint).contentTransition(.opacity)
+                    }
+                }
+                .aspectRatio(1, contentMode: .fit)
+                .frame(minWidth: 150, maxWidth: 290, minHeight: 150, maxHeight: 290)
+                .background { ringBurst }
+                .layoutPriority(1)
             }
         }
-        // As big as the room between the words and the neck allows (up to 290 pt on the tallest phones, so no band of
-        // empty stage is left around it), smaller on short phones so the neck and the bar below still fit.
-        .aspectRatio(1, contentMode: .fit)
-        .frame(minWidth: 150, maxWidth: 290, minHeight: 150, maxHeight: 290)
-        .background { ringBurst }
-        .layoutPriority(1)
         // Below its neighbours, so the sparks pass behind the prompt and the chips, never over words.
         .zIndex(-1)
         // The note to play, as said ("D, string 4, open"), and how the pitch heard stands.
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(verbatim: shown.map { spokenPhrase($0) } ?? ""))
         .accessibilityValue(Text(status))
+        .accessibilityIdentifier("lesson.notes.target")
         // The note to play is what this step is about: VoiceOver reads the step from here.
         .lessonStepArrival()
     }
