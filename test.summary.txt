@@ -1,0 +1,65 @@
+# Errors
+
+# Matches
+
+# Tail
+    t =   383.66s Tap "Songs" Button
+    t =   383.66s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   383.82s     Find the "Songs" Button
+    t =   384.28s     Check for interrupting elements affecting "Songs" Button
+    t =   385.10s     Synthesize event
+    t =   385.59s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   411.08s Find the "Songs" Button
+    t =   411.72s Waiting 15.0s for "songs.hero" Any to exist
+    t =   412.73s     Checking `Expect predicate `existsNoRetry == 1` for object "songs.hero" Any`
+    t =   412.73s         Checking existence of `"songs.hero" Any`
+    t =   417.91s Added attachment named 'sync-songs-ready'
+PREVIEW-SYNC songs-ready 1793075684.315 1793075685.296
+    t =   417.91s Find the "songs.hero.preview" Any
+    t =   418.65s Tap Target Application 'com.shahradazerisharghi.timbre'[0.00, 0.00] -> (380.0, 363.3)
+    t =   418.66s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   418.77s     Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   420.64s     Check for interrupting elements affecting "Timbre" Application
+    t =   423.90s     Synthesize event
+    t =   423.98s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   428.01s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   433.17s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   437.22s     Wait for com.shahradazerisharghi.timbre to idle
+PREVIEW-MISSED the song of the day's preview was never heard
+    t =   443.42s Press Target Application 'com.shahradazerisharghi.timbre'[0.50, 0.70] for 0.1 seconds, then drag to Target Application 'com.shahradazerisharghi.timbre'[0.50, 0.70] -> (0.0, -160.0) with velocity of 250.00 pixels per second, and then hold for 0.1 seconds 
+    t =   443.42s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   443.58s     Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   452.04s     Check for interrupting elements affecting "Timbre" Application
+    t =   470.00s     Synthesize event
+    t =   474.03s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   480.65s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   487.63s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   492.80s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   499.24s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   506.03s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   506.99s Added attachment named 'sync-songs'
+PREVIEW-SYNC songs 1793075773.438 1793075774.281
+PREVIEW-CLIP songs 1793075686.052 1793075688.752 head
+PREVIEW-CARD 1793075775.127 1793075777.747
+    t =   510.88s Tear Down
+PREVIEW-END passed
+    t =   510.88s     Added attachment named 'preview-clips'
+    t =   510.88s     Terminate com.shahradazerisharghi.timbre:42652
+Test Case '-[TimbreUITests.AppPreviewUITests testAppPreview]' passed (516.343 seconds).
+Test Suite 'AppPreviewUITests' passed at 2026-10-27 04:36:23.736.
+	 Executed 1 test, with 0 failures (0 unexpected) in 516.343 (516.346) seconds
+Test Suite 'TimbreUITests.xctest' passed at 2026-10-27 04:36:23.745.
+	 Executed 1 test, with 0 failures (0 unexpected) in 516.343 (516.355) seconds
+Test Suite 'Selected tests' passed at 2026-10-27 04:36:23.747.
+	 Executed 1 test, with 0 failures (0 unexpected) in 516.343 (516.358) seconds
+Resolve Package Graph
+2026-10-27 04:36:25.994 xcodebuild[23348:67959] [MT] IDETestOperationsObserverDebug: 790.377 elapsed -- Testing started completed.
+2026-10-27 04:36:25.995 xcodebuild[23348:67959] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-27 04:36:25.995 xcodebuild[23348:67959] [MT] IDETestOperationsObserverDebug: 790.377 sec, +790.377 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/runner/work/tuner/tuner/ios/build/AppPreview.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started
