@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-27T05:39:29.615566+00:00",
+  "reviewer": "Independent peg-label layout source review agent",
+  "base_head": "5167d34e9e8d72c441ac76456099d2f5950f5ab5",
+  "scope": "Only uncommitted PegCue.swift, StudioStage.swift and new PegLabelLayoutTests.swift. No implementation mutation, commit or push.",
+  "verdict": "request_changes_exact_side_bounds",
+  "findings": [
+    {
+      "id": "peg-label-right-margin-selection",
+      "priority": "P2",
+      "file": "ios/Timbre/Stage/PegCue.swift",
+      "start_line": 111,
+      "end_line": 116,
+      "title": "Check the opposite valid side before falling back vertically",
+      "body": "The new frame bounds reserve an 8-point right margin, but reused PegLabel.side counts right-side room without that margin. In a 402x300 stage with point(200,150), preferred+1, gap34 and measured label100x30, side returns right because it sees104 points; actual room is96. fitsBeside fails and frame falls above at(150,86,100,30), even though left placement(66,135,100,30) fits fully. This violates the intended above/below-only-when-neither-side-fits policy and unnecessarily moves the cue onto another part of the instrument. Use the same exact clear bounds for both side candidates, then fall back only after neither fits. Add this preferred-right boundary regression and its direction counterpart."
+    }
+  ],
+  "source_verification": [
+    "Actual measured subview width replaces fixed96-point prompt estimate in both 3D and studio stages.",
+    "PegLabel horizontal fixedSize is removed while vertical fixedSize remains, allowing proposed-width wrapping. Actual locale/Dynamic Type propagate into child measurement.",
+    "Full stage frames provide finite dimensions for custom Layout measurement. Placement converts local frame positions into bounds coordinates.",
+    "Both overlay hosts preserve allowsHitTesting(false) and accessibilityHidden(true); pegTargets remain above studio label in existing order.",
+    "New tests measure actual PegLabel using UIHostingController at four locales, large and AX5, both directions, then assert bounds and unchanged size at three edge points; two deterministic geometry tests cover above fallback and compact preferred side.",
+    "Tests do not render actual PegLabelPlacement or compare native screenshots; they cannot establish final subview placement/wrapping visually. SwiftUI Layout protocol uses Void cache and standard signatures; native compiler confirmation remains pending."
+  ],
+  "independent_checks": [
+    {
+      "command": "git -c core.autocrlf=false diff --check -- ios/Timbre/Stage/PegCue.swift ios/Timbre/Stage/StudioStage.swift ios/TimbreAppTests/PegLabelLayoutTests.swift",
+      "exit_code": 0
+    },
+    {
+      "check": "Python exact arithmetic reproduction of current Swift side selection/frame",
+      "exit_code": 0,
+      "result": {
+        "old_right_room": 104,
+        "exact_right_room": 96,
+        "left_room": 158,
+        "selected_side": 1,
+        "selected_side_fits": false,
+        "actual_vertical_fallback": [
+          150,
+          86,
+          100,
+          30
+        ],
+        "available_left_placement": [
+          66,
+          135,
+          100,
+          30
+        ]
+      }
+    },
+    {
+      "check": "Viewed original AX5 tuner PNG",
+      "result": "Play E2 prompt runs beyond left image edge. This is before-change evidence only.",
+      "path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\a11y-matrix-b6efd36\\named\\Matrix-ax5\\matrix-ax5-tuner.png",
+      "sha256": "fa50225c998c9c0436a8748f2bb246a9261b1133749c50b5142918f6783654cb"
+    }
+  ],
+  "reviewed_sha256": {
+    "ios/Timbre/Stage/PegCue.swift": "e8cc94b9c3ddf7904d96f92438b064f651eedffbaf64d42e85ee3654e13b45d1",
+    "ios/Timbre/Stage/StudioStage.swift": "62cbbf17df5c849ac591a6aaa71271817957883e9f2b676a2d73c907707db8eb",
+    "ios/TimbreAppTests/PegLabelLayoutTests.swift": "c06d2c899b1a5ae6dc2f88f74bbebc8ff38278a4c649704684583f12b596580a"
+  },
+  "limits": [
+    "Windows source review only; no Swift compiler, Xcode build or authored native tests executed.",
+    "No red/green test claim. Geometry reproduction is arithmetic of inspected source, not Swift execution.",
+    "Require fresh native tests and actual final AX5 tuner screenshot in relevant locales, directions, narrow stages, studio and 3D hosts before accepting visual fix.",
+    "Height clamping retains measured height; stages smaller than label height plus margins cannot contain the full cue. Authored300-point stage tests do not prove every actual host size.",
+    "Current published native jobs exclude this draft and cannot validate it."
+  ],
+  "mutations": "Only this review receipt written."
+}

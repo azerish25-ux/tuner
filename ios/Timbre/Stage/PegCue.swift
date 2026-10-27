@@ -45,8 +45,6 @@ struct PegLabel: View {
     let color: Color
     var prompt = false
     var nudge: Double = 0
-    /// About how wide the prompt reads, for `side(for:…)`.
-    static let callWidth: CGFloat = 96
 
     var body: some View {
         let parts = NoteReadout.split(note)
@@ -67,27 +65,50 @@ struct PegLabel: View {
         .padding(.horizontal, 10).padding(.vertical, 6)
         .background(Capsule().fill(Palette.stage.opacity(0.82)))
         .overlay(Capsule().strokeBorder(color.opacity(0.55), lineWidth: 1))
-        .fixedSize()
+        .fixedSize(horizontal: false, vertical: true)
     }
 
-    /// Which side of the peg the label goes: `preferred` (away from the headstock), unless the label
-    /// (about `width` wide) would run into the screen edge or the side controls and the other side has more room.
-    /// The controls take `controlsReserve` points on the right, or on the left (`controlsOnLeft`, a right-to-left
-    /// language).
-    static func side(for point: CGPoint, preferred: CGFloat, gap: CGFloat, in size: CGSize,
-                     width: CGFloat = 60, controlsReserve: CGFloat = 64, controlsOnLeft: Bool = false) -> CGFloat {
-        let right = size.width - (controlsOnLeft ? 0 : controlsReserve) - (point.x + gap)
-        let left = point.x - (controlsOnLeft ? controlsReserve : 0) - gap - 8
-        if preferred > 0 { return right >= width || right >= left ? 1 : -1 }
-        return left >= width || left >= right ? -1 : 1
-    }
 }
 
-extension View {
-    /// Places the view `gap` points left (side < 0) or right of `point`, vertically centred on it.
-    func placedBeside(_ point: CGPoint, side: CGFloat, gap: CGFloat) -> some View {
-        frame(width: 0, height: 0, alignment: side < 0 ? .trailing : .leading)
-            .position(x: point.x + side * gap, y: point.y)
+/// Measures the cue in its actual language and text size before choosing a side of the peg.
+/// When neither side has room, it sits above or below the peg inside the stage's clear area.
+struct PegLabelPlacement: Layout {
+    let point: CGPoint
+    let preferred: CGFloat
+    let gap: CGFloat
+    var controlsOnLeft = false
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        proposal.replacingUnspecifiedDimensions()
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        guard let label = subviews.first else { return }
+        let available = max(1, bounds.width - 64 - 16)
+        let measured = label.sizeThatFits(ProposedViewSize(width: available, height: nil))
+        let frame = Self.frame(label: measured, point: point, preferred: preferred, gap: gap,
+                               size: bounds.size, controlsOnLeft: controlsOnLeft)
+        label.place(at: CGPoint(x: bounds.minX + frame.minX, y: bounds.minY + frame.minY), anchor: .topLeading,
+                    proposal: ProposedViewSize(width: frame.width, height: frame.height))
+    }
+
+    static func frame(label: CGSize, point: CGPoint, preferred: CGFloat, gap: CGFloat,
+                      size: CGSize, controlsOnLeft: Bool) -> CGRect {
+        let left: CGFloat = 8 + (controlsOnLeft ? 64 : 0)
+        let right = max(left, size.width - 8 - (controlsOnLeft ? 0 : 64))
+        let width = min(label.width, max(0, right - left))
+        let leftX = point.x - gap - width
+        let rightX = point.x + gap
+        let preferredX = preferred > 0 ? rightX : leftX
+        let oppositeX = preferred > 0 ? leftX : rightX
+        let besideX = preferredX >= left && preferredX + width <= right ? preferredX : oppositeX
+        let fitsBeside = besideX >= left && besideX + width <= right
+        let proposedX = fitsBeside ? besideX : point.x - width / 2
+        let above = point.y - gap - label.height
+        let proposedY = fitsBeside ? point.y - label.height / 2 : (above >= 8 ? above : point.y + gap)
+        return CGRect(x: min(max(left, proposedX), max(left, right - width)),
+                      y: min(max(8, proposedY), max(8, size.height - 8 - label.height)),
+                      width: width, height: label.height)
     }
 }
 
@@ -140,8 +161,6 @@ struct StagePegCue: View {
             let pulse = reduceMotion || idle || state.locked ? 0 : 2.5 * sin(now * 3)
             let radius = CGFloat(12 + 10 * close + pulse)
             let gap = radius + 10
-            let side = PegLabel.side(for: lead, preferred: marker.side, gap: gap, in: size, width: calling ? PegLabel.callWidth : 60,
-                                     controlsOnLeft: state.rightToLeft)
             let shimmer = flash.step(locked: state.listening && state.locked, key: "\(state.activeAnchor ?? "-")|\(state.pegIndex ?? -1)",
                                      now: now, duration: LockShimmer.duration)
             ZStack {
@@ -156,10 +175,12 @@ struct StagePegCue: View {
                     }
                 }
                 .opacity(0.55 + 0.45 * close)
-                PegLabel(note: state.note, turn: turn, color: color, prompt: calling, nudge: turn.nudge(at: now, reduceMotion: reduceMotion))
-                    .environment(\.layoutDirection, state.rightToLeft ? .rightToLeft : .leftToRight)
-                    .placedBeside(lead, side: side, gap: gap)
-                    .opacity(close)
+                PegLabelPlacement(point: lead, preferred: marker.side, gap: gap, controlsOnLeft: state.rightToLeft) {
+                    PegLabel(note: state.note, turn: turn, color: color, prompt: calling, nudge: turn.nudge(at: now, reduceMotion: reduceMotion))
+                        .environment(\.layoutDirection, state.rightToLeft ? .rightToLeft : .leftToRight)
+                }
+                .frame(width: size.width, height: size.height)
+                .opacity(close)
             }
         }
     }
