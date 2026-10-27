@@ -60,6 +60,7 @@ jobs:
           ci-out/test-venv/bin/pip install --quiet pillow
           ci-out/test-venv/bin/python3 -m unittest discover -s tools/marketing/tests -p 'test_listing_assets.py'
           ci-out/test-venv/bin/python3 -m unittest discover -s tools/marketing/tests -p 'test_artifact_qa_triggers.py'
+          ci-out/test-venv/bin/python3 -m unittest discover -s tools/marketing/tests -p 'test_screenshot_roles.py'
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: listing-plan

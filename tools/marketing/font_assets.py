@@ -8,6 +8,8 @@ import os
 from pathlib import Path
 import urllib.request
 
+from screenshot_roles import SCREENSHOT_KINDS, screenshot_role
+
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = Path(__file__).with_name('caption-fonts.json')
 
@@ -81,9 +83,10 @@ def audit_layouts() -> dict:
     import preview
     failures = []
     checked = 0
+    role_strings = {kind: 0 for kind in SCREENSHOT_KINDS}
     for locale in ["en-US"] + screenshots.LOCALES:
         os.environ["TIMBRE_CAPTION_LOCALE"] = locale
-        for device in ["iphone", "ipad"]:
+        for device in SCREENSHOT_KINDS:
             for capture, title, line, look in screenshots.plan(device, locale=locale):
                 layout = look.split()[0]
                 landscape = device == "ipad" and "landscape" in capture
@@ -95,10 +98,11 @@ def audit_layouts() -> dict:
                 width = size[0] - 2 * margin - (round(40 * unit) if layout.startswith("offset") and not landscape else 0)
                 for text, weight, start, minimum in [(title, "SemiBold", 136, 96), (line, "Medium", 56, 52)]:
                     checked += 1
+                    role_strings[device] += 1
                     try:
                         art.fit_lines(text, weight, round(start * unit), round(minimum * unit), width)
                     except (SystemExit, ValueError, OSError) as error:
-                        failures.append({"locale": locale, "capture": capture, "error": str(error)})
+                        failures.append({"locale": locale, "device_role": device, "capture": capture, "error": str(error)})
     for locale, field, text in caption_rows():
         if not field.startswith("app_preview"):
             continue
@@ -117,7 +121,9 @@ def audit_layouts() -> dict:
         except (SystemExit, ValueError, OSError) as error:
             failures.append({"locale": locale, "field": field, "error": str(error)})
     return {"layout_strings": checked, "layout_failures": failures,
-            "layout_scope": "Existing screenshot caption widths and preview caption widths/band heights; not underlying app layout or final composed image review."}
+            "layout_strings_by_role": role_strings,
+            "native_screenshot_roles": {kind: list(screenshot_role(kind).native_size) for kind in SCREENSHOT_KINDS},
+            "layout_scope": "All explicit native screenshot-role caption widths/rounding and preview caption widths/band heights; not underlying app layout or final composed image review."}
 
 
 def main():

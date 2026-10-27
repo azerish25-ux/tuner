@@ -12,8 +12,8 @@ implied. Existing main/manual behavior remains available.
 | `[capture-check]` | Six actual store-frame checks in English, German and Arabic |
 | `[l10n-export]` | Xcode localization export and strict completeness reports |
 | `[caption-typography]` | All 50 listing locales, pinned-font glyph/layout audit |
-| `[listing-screenshots-pilot]` | Phone and tablet screenshots for en-US, de-DE, ar-SA |
-| `[listing-screenshots-all]` | Phone and tablet screenshots for all 50 listing locales |
+| `[listing-screenshots-pilot]` | Medium phone, large phone and tablet screenshots for en-US, de-DE, ar-SA |
+| `[listing-screenshots-all]` | Medium phone, large phone and tablet screenshots for all 50 listing locales |
 
 Use the screenshots pilot before the full run. The owner selected screenshots
 without optional preview videos for the initial submission. Manual listing runs
@@ -22,19 +22,25 @@ therefore default to `screenshots`. Legacy `[listing-assets-pilot]` and
 videos. Do not combine listing markers: conflicting requests fail closed before
 native build/capture. Different workflow markers may share a reviewed commit.
 
-The full screenshot plan has 100 locale/device sets (50 two-locale shards), nine
-phone frames and four tablet frames per locale: 650 rendered screenshots plus
-contact sheets and original capture evidence. `full_screenshot_listing_scope`
-records the complete selected scope; historical `full_default_listing_scope`
-continues to require previews and stays false for screenshots-only plans. These
-are **plan coverage**, not evidence that captures have passed.
+The full screenshot plan has **150 locale/device sets (75 two-locale shards)**:
+nine medium-phone, nine large-phone and four tablet frames per locale, totaling
+**1,100 JPEGs** across 50 listings. The three-locale pilot has **9 sets / 6 shards /
+66 images**. Both phone roles share captions, not captures. Contact sheets, original
+capture evidence and Watch assets are separate. Historical 100-set / 650-image
+plans remain historical, not complete current submission coverage.
+`full_screenshot_listing_scope` records selected plan coverage, not accepted captures;
+`full_default_listing_scope` still includes previews and stays false for screenshots-only plans.
 
-Native validators are unchanged: exact 50-locale registry, actual medium phone
-1206×2622 and landscape iPad 2752×2064 captures, executed language assertions,
-original pixel hashes, source/build provenance, and complete manifests remain
-required. Never substitute generated images, parser fixtures, or a large phone
-capture for native evidence. Failed/missing shards stay incomplete. Mechanical
-success still requires visual review and never changes `release_ready: false`.
+Native validators require separate `iphone` **1206×2622**, `iphone-large`
+**1320×2868**, and landscape `ipad` **2752×2064** originals, executed language
+assertions, original pixel hashes, source/build provenance and complete manifests.
+Standalone large-phone composition uses `screenshots.py ... --iphone-large`.
+No generated images, parser fixtures, stretching or cross-role substitution count
+as native evidence. Large-role capture and visual acceptance remain pending.
+Failed/missing shards stay incomplete; mechanical success never changes
+`release_ready: false`. The selected large Dynamic Island role addresses the
+[conditional large-phone requirement](https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications/)
+without replacing the required medium/iPad roles. Optional previews remain omitted.
 
 Listing, typography, matrix and localized-capture jobs retain read-only tokens.
 Handoff localization export is now artifact-only with a read-only token; the

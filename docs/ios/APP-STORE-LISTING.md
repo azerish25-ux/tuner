@@ -140,18 +140,28 @@ Privacy: https://timbre-support.timbre.workers.dev/privacy
 Welcome to Timbre: a free tuner for 60 instruments, and 526 lessons that listen as you play.
 ```
 
-## Screenshots (medium Dynamic Island iPhone and 13" iPad)
+## Screenshots (medium and large Dynamic Island iPhone and 13" iPad)
 
 Apple's [current screenshot specifications](https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications/)
-require the medium Dynamic Island iPhone set and the 13-inch iPad set for this universal app. The localized pipeline
-captures iPhone 17 Pro or 16 Pro natively at 1206×2622 and rejects a large-phone capture as a substitute. Preview
-recording retains its separate Pro Max source and delivery format. Earlier 1320×2868 screenshot sets do not close
-the required medium-size inventory.
+list medium Dynamic Island iPhone and 13-inch iPad as required sizes. The large Face ID iPhone requirement is
+conditional: it applies when large Dynamic Island screenshots are not provided. This release selects native
+large Dynamic Island captures as that large-phone coverage, in addition to its medium set; it does not claim
+that Apple universally requires every phone size.
+
+The selected roles are `iphone` at **1206×2622**, `iphone-large` at **1320×2868**, and `ipad` at
+**2752×2064** landscape. Each role requires its own native originals and matching manifest: no substitution,
+stretching or enlargement from another role. Both phone roles share the existing nine caption rows, not image
+files; the tablet has four. This is **22 images per locale**, **150 locale/device sets**, **75 two-locale shards**
+and **1,100 JPEGs** across 50 listings. The en-US/de-DE/ar-SA pilot plans **9 sets / 6 shards / 66 images**.
+Contact sheets and Watch screenshots are separate. These are planned inventories, not accepted native captures;
+large-phone capture and final visual acceptance remain pending. Earlier sets do not automatically satisfy the
+new source-bound inventory. Optional preview videos remain omitted from the initial submission.
 
 The tables below are the only place the store frames are described: `tools/marketing/screenshots.py` reads them and composes each capture under its caption, in the look the last column names. To change a caption or a look, edit it here and render again:
 
 ```
 python3 tools/marketing/screenshots.py <ci-out/screenshots> <out folder>                  # iPhone, 1206x2622
+python3 tools/marketing/screenshots.py <ci-out/iphone-large-screenshots> <out folder> --iphone-large # large iPhone, 1320x2868
 python3 tools/marketing/screenshots.py <ci-out/ipad-screenshots> <out folder> --ipad      # iPad, 2752x2064 landscape / 2064x2752 portrait
 python3 tools/marketing/screenshots.py <ci-out/screenshots> <out folder> --page violin    # a Custom Product Page's set
 python3 tools/marketing/screenshots.py <de captures> <out folder> --locale de-DE          # a localized set (APP-STORE-LISTING-LOCALIZED.md)

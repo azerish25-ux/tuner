@@ -15,9 +15,9 @@ class ListingPlanTests(unittest.TestCase):
     def test_all_fifty_exactly_once_per_default_asset_kind(self):
         plan = assets.make_plan('all', 'all')
         self.assertTrue(plan['full_default_listing_scope'])
-        self.assertEqual(len(plan['matrix']['include']), 75)
-        self.assertEqual(len(set(x['id'] for x in plan['matrix']['include'])), 75)
-        for kind in assets.KINDS[:3]:
+        self.assertEqual(len(plan['matrix']['include']), 100)
+        self.assertEqual(len(set(x['id'] for x in plan['matrix']['include'])), 100)
+        for kind in assets.DEFAULT_KINDS:
             locales = [locale for row in plan['matrix']['include'] if row['kind'] == kind for locale in row['locales'].split(',')]
             self.assertEqual(len(locales), 50)
             self.assertEqual(set(locales), set(assets.locale_rows()))
@@ -34,7 +34,7 @@ class ListingPlanTests(unittest.TestCase):
             request = assets.request_scope('push', message, 'ja', 'screenshots', True)
             plan = assets.make_plan(request['locales'], request['scope'], request['violin'])
             self.assertEqual(plan['locales'], wanted)
-            self.assertEqual(plan['kinds'], ['iphone', 'ipad', 'preview-main'])
+            self.assertEqual(plan['kinds'], ['iphone', 'iphone-large', 'ipad', 'preview-main'])
         for message in ['Ordinary translation commit', '[capture-check]', '[listing-assets-pilot] [listing-assets-all]']:
             with self.subTest(message=message), self.assertRaises(ValueError):
                 assets.request_scope('push', message, 'all', 'all', False)
@@ -250,7 +250,7 @@ class AggregationTests(unittest.TestCase):
         return {**spec, 'kind': 'iphone', 'source_sha': 'revision', 'build_sha256': 'c' * 64,
                 'status': 'mechanically_verified', 'release_ready': False, 'visual_review': 'pending', 'native_review': 'pending',
                 'language_evidence': [verified], 'launch_evidence': [runtime] * 8, 'assets': files,
-                'captures': [{'capture': n, 'pixel_sha256': hashlib.sha256((locale + n).encode()).hexdigest()} for n in needed]}
+                'captures': [{'capture': n, 'size': [1206, 2622], 'pixel_sha256': hashlib.sha256((locale + n).encode()).hexdigest()} for n in needed]}
 
     def test_missing_failed_stale_duplicate_and_wrong_build_never_become_green(self):
         plan = {'locales': ['de-DE'], 'kinds': ['iphone']}

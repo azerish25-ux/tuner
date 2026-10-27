@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """App Store screenshots from the CI screenshot tour, art-directed.
 
-python3 tools/marketing/screenshots.py <captures> <out folder> [--ipad] [--page NAME] [--locale CODE] [--font PATH]
+python3 tools/marketing/screenshots.py <captures> <out folder> [--ipad | --iphone-large] [--page NAME] [--locale CODE] [--font PATH]
 python3 tools/marketing/screenshots.py --check
 
 The frames live in one place only: the tables under "## Screenshots" in docs/ios/APP-STORE-LISTING.md ("### iPhone
@@ -23,7 +23,7 @@ missing or untranslated content fails. Legacy Markdown rendering remains a fallb
 
 Rendering picks the captures a table names and composes each one (a capture is turned upright from its EXIF orientation
 first: XCUIScreen stores a landscape iPad capture as a portrait bitmap tagged orientation 8). iPhone output is
-1206x2622 (medium Dynamic Island iPhone); --ipad output is 2752x2064 for a landscape capture, 2064x2752 for a portrait one. Every written
+1206x2622 (medium Dynamic Island iPhone), or --iphone-large 1320x2868 (large Dynamic Island, requiring a separate native capture); --ipad output is 2752x2064 for a landscape capture, 2064x2752 for a portrait one. Every written
 frame is read back and checked against those sizes. It renders what it can, writes sheet.png (the set side by side at
 search-result size) and warns when two frames look alike there, then exits non-zero if any frame is missing, was
 flagged wrong by its test, was captured more than once, or came out at a size App Store Connect would refuse.
@@ -42,6 +42,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import art  # noqa: E402
+from screenshot_roles import ROLES, screenshot_role
 
 ROOT = Path(__file__).resolve().parents[2]
 LISTING = ROOT / "docs/ios/APP-STORE-LISTING.md"
@@ -52,7 +53,7 @@ UI_TESTS = ROOT / "ios/TimbreUITests"
 CAPTION_LIMIT = 30
 FRAME_LIMIT = 10          # App Store Connect takes at most 10 screenshots per device size
 LIMITS = {"name": 30, "subtitle": 30, "keywords": 100, "promotional": 170, "description": 4000, "whats new": 4000}
-SIZES = {"iphone": (1206, 2622), "ipad": (2064, 2752)}  # portrait (width, height); landscape swaps them
+SIZES = {kind: tuple(sorted(role.native_size)) for kind, role in ROLES.items()}  # portrait (width, height); landscape swaps them
 # Counts a caption or a paste block may quote, checked against the build. A hyphenated "40-lesson" is a description,
 # not a count, and is left alone.
 COUNT = re.compile(r"(?<![\d\-])(\d[\d,]*)(\+?)\s+(lessons|courses|instruments|tunings|songs|originals)\b", re.IGNORECASE)
@@ -161,6 +162,7 @@ def pages() -> list[str]:
 
 def plan(device: str, page: str | None = None, locale: str | None = None) -> list[tuple]:
     """The rows of a set. A locale's rows take their captions from its table and their looks from the English rows."""
+    device = screenshot_role(device).caption_device
     table = _english_table(device, page)
     english = _rows(table[1]) if table else []
     if not locale or locale.lower() in ("en", "en-us"):
@@ -606,6 +608,9 @@ def _screen_radius(width: int) -> int:
 
 def compose(look: str, shot_path: Path, capture: str, title: str, line: str, device: str, out: Path) -> tuple:
     shot = upright(shot_path)
+    role = screenshot_role(device)
+    if role.caption_device == "iphone" and shot.size != role.native_size:
+        raise ValueError(f"{device}: need actual native {role.native_size} capture, got {shot.size}")
     size = frame_size(device, shot)
     parts = look.split()
     layout = parts[0] if parts else "zoom"
@@ -995,7 +1000,9 @@ def main():
         import PIL  # noqa: F401
     except ImportError:
         sys.exit("Pillow is missing: python3 -m pip install pillow")
-    device = "ipad" if "--ipad" in flags else "iphone"
+    if "--ipad" in flags and "--iphone-large" in flags:
+        sys.exit("Choose one explicit screenshot role, not both --ipad and --iphone-large")
+    device = "ipad" if "--ipad" in flags else "iphone-large" if "--iphone-large" in flags else "iphone"
     sys.exit(render(Path(positional[0]), Path(positional[1]), device, page, locale, "--allow-english" in flags))
 
 

@@ -45,6 +45,8 @@ def output(command):
 
 
 def choose_device(kind):
+    if kind not in assets.KINDS:
+        raise ValueError(f'Unknown asset role: {kind}')
     listing = json.loads(output(['xcrun', 'simctl', 'list', 'devices', 'available', '-j']))['devices']
     version = lambda x: tuple(map(int, re.findall(r'\d+', x)))
     for runtime, devices in sorted(listing.items(), key=lambda pair: version(pair[0]), reverse=True):
@@ -52,9 +54,9 @@ def choose_device(kind):
             continue
         if kind == 'ipad':
             candidates = [d for d in devices if 'iPad Pro' in d['name'] and re.search(r'\b13[- ]inch\b', d['name'])]
-        elif kind == 'iphone':
-            # The required medium Dynamic Island set is captured natively at 1206x2622.
-            candidates = [d for d in devices if d['name'] in ('iPhone 17 Pro', 'iPhone 16 Pro')]
+        elif kind in ('iphone', 'iphone-large'):
+            # Each required phone role has its own native simulator and strict raw-size gate.
+            candidates = [d for d in devices if d['name'] in assets.screenshot_role(kind).simulator_names]
         else:
             # Preview recording retains its separate 1320x2868 source and 886x1920 delivery format.
             candidates = [d for d in devices if d['name'] in ('iPhone 17 Pro Max', 'iPhone 16 Pro Max')]
@@ -336,7 +338,7 @@ def run_locale(locale, args, device, xctestrun, build_hash):
             raise RuntimeError(f'{spec["app_language"]}: localized Learn.strings is not shipped; do not frame English lesson fallback as localized assets')
         verified = test_attempts(xctestrun, device, args.kind, [assets.EVIDENCE_TEST], base / 'language-check', env)
         manifest['language_evidence'] = assets.validate_language_evidence(spec, (verified / 'test.log').read_text(errors='replace'), 'VERIFIED')
-        if args.kind in ('iphone', 'ipad'):
+        if args.kind in assets.SCREENSHOT_KINDS:
             selected = assets.selectors(args.kind)
             result = test_attempts(xctestrun, device, args.kind, selected, base / 'capture', env)
             manifest['launch_evidence'] = assets.validate_language_evidence(spec, (result / 'test.log').read_text(errors='replace'), 'LAUNCH', minimum=len(selected))
@@ -345,6 +347,8 @@ def run_locale(locale, args, device, xctestrun, build_hash):
             command = [PYTHON, 'tools/marketing/screenshots.py', result / 'attachments', rendered, '--locale', locale]
             if args.kind == 'ipad':
                 command.append('--ipad')
+            elif args.kind == 'iphone-large':
+                command.append('--iphone-large')
             run(command, log=base / 'render.log', env=env)
             manifest['assets'] = assets.screenshot_records(rendered, locale, args.kind, base)
         else:

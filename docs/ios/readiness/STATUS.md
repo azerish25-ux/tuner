@@ -2,9 +2,9 @@
 
 Resumed 27 October 2026 at the owner's request, using the assistant's cloud computer and GitHub Actions.
 
-## Corrective checkpoint — 27 October 2026, 16:39 UTC
+## Corrective checkpoint — 27 October 2026
 
-Branch: `codex/app-store-readiness-gates`, [draft PR #3](https://github.com/azerish25-ux/tuner/pull/3). Remote head `f97713eb7a8ceef3f94e0399f7fcb5ad8023dc29`; both `b89893fa` and `f97713eb` pushes were verified at 16:18. **This checkpoint prepares later corrections, not a verified native release.** All listing `release_ready` flags remain false. Main's required gate is preserved; no application merge, signing/upload or submission. The owner Apple-account question remains unanswered.
+Branch: `codex/app-store-readiness-gates`, [draft PR #3](https://github.com/azerish25-ux/tuner/pull/3). Published corrective source `89705bd3144ac3b7ceefe84d6fcf65d83eb9045e` includes Songs compiler/lint and flat-gold offer corrections. The large-phone role integration and inventory documentation are the next reviewed checkpoint. **Native execution and final media acceptance remain pending, not passed.** All listing `release_ready` flags remain false. Main's required gate is preserved; no application merge, signing/upload or submission. The owner Apple-account question remains unanswered.
 
 ### Evidence and corrections
 
@@ -20,13 +20,13 @@ Source changes needing verification include accessibility TuneCheck/Quest-trait 
 
 ### Media inventory correction
 
-Apple's [official locale inventory](https://developer.apple.com/help/app-store-connect/reference/app-information/app-store-localizations) confirms the 50 listing locales; this remains distinct from 49 in-app languages and their documented fallbacks. The [current screenshot specifications](https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications) identify the missing large-phone submission coverage. Keep the selected native medium-phone set and add an explicit large-phone capture/validation role; implementation is in progress, not completed or natively accepted. **Do not label medium-only captures a complete submission set.** iPad and Watch remain separate required inventory portions. Typography passes and historical Watch acceptance cannot fill missing phone/iPad evidence.
+Apple's [official locale inventory](https://developer.apple.com/help/app-store-connect/reference/app-information/app-store-localizations) confirms the 50 listing locales; this remains distinct from 49 in-app languages and their documented fallbacks. The [current screenshot specifications](https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications) identify the missing large-phone submission coverage. The explicit large-phone capture/validation role is implemented and locally tested, not natively accepted. Selected roles are medium `iphone` 1206×2622, `iphone-large` 1320×2868 and landscape `ipad` 2752×2064, without substitution or stretching. Shared phone captions produce separate native images: 9+9+4 per locale. Planned full inventory is 150 sets / 75 two-locale shards / 1,100 JPEGs; pilot is 9 sets / 6 shards / 66 images. Large Dynamic Island captures address Apple’s conditional large-phone requirement; this is not a claim that every phone size is universally mandatory. **Do not label medium-only captures a complete submission set.** iPad and Watch remain separate required inventory portions. Typography passes and historical Watch acceptance cannot fill missing phone/iPad evidence.
 
 ## Remaining gates
 
 1. Execute this corrective source natively: compile/export, core lint, app/smoke/Release, sanitizer and complete required accessibility audits. Preserve full artifacts; do not convert cancelled, diagnostic-only or incomplete results into passes.
 2. Recheck actual TuneCheck/Quest/RTL/demo behavior, tour failures and iPad layouts using the current source. Keep narrow identity/paint evidence for audit diagnoses; no blanket exemptions.
-3. Finish and test explicit medium/large-phone roles, then reproduce/review the pilot and all 50 localized phone/iPad sets with originals, manifests and matching source/build hashes. No final complete inventory exists yet.
+3. Execute the locally tested explicit medium/large-phone roles, then reproduce/review the pilot and all 50 localized phone/iPad sets with originals, manifests and matching source/build hashes. No final complete inventory exists yet.
 4. Require a green exact-current-main gate and applicable release evidence before any signing. Keep every release flag false until real criteria pass. Later source must not inherit older test or privacy evidence automatically.
 5. Resolve the owner account question, then verify actual agreements, tax/banking, products/prices and permissions. Credential generation, signing/upload, submission and release require the separate authorizations in [Apple handoff](../APPLE-DELIVERY.md) / [release checklist](../RELEASE-CHECKLIST.md). No account state or Apple approval is assumed.
 

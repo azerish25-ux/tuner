@@ -84,11 +84,11 @@ class ArtifactQATriggerTests(unittest.TestCase):
         for marker, count in [('[listing-screenshots-all]', 50), ('[listing-screenshots-pilot]', 3)]:
             request = assets.request_scope('push', marker, 'all', 'all', True, HANDOFF)
             plan = assets.make_plan(request['locales'], request['scope'], request['violin'])
-            self.assertEqual(plan['kinds'], ['iphone', 'ipad'])
+            self.assertEqual(plan['kinds'], ['iphone', 'iphone-large', 'ipad'])
             self.assertEqual(plan['requested_scope'], 'screenshots')
             self.assertFalse(plan['full_default_listing_scope'])
             self.assertEqual(plan['full_screenshot_listing_scope'], count == 50)
-            for kind in ['iphone', 'ipad']:
+            for kind in ['iphone', 'iphone-large', 'ipad']:
                 locales = [loc for row in plan['matrix']['include'] if row['kind'] == kind
                            for loc in row['locales'].split(',')]
                 self.assertEqual(len(locales), count)
