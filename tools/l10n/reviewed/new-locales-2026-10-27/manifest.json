@@ -1,0 +1,115 @@
+{
+  "method": "Sanitized exact review/source-target evidence export; original hashes retained; no new review claims",
+  "files": [
+    {
+      "file": "ms-drafts/full-current-v8.json",
+      "upstream_sha256": "7a19745972ee67320d53631ce35bd426d9f1fd035bf979aa4046748ad0bc6aa3",
+      "export_sha256": "7a19745972ee67320d53631ce35bd426d9f1fd035bf979aa4046748ad0bc6aa3"
+    },
+    {
+      "file": "zh-Hant-full-current-v1.json",
+      "upstream_sha256": "08f36e5ae631dd6c891d585da1b70b2d7d5d3dbf610ae5f4478e5cb0e0effd01",
+      "export_sha256": "08f36e5ae631dd6c891d585da1b70b2d7d5d3dbf610ae5f4478e5cb0e0effd01"
+    },
+    {
+      "file": "or-drafts/full-current-8063-v1.json",
+      "upstream_sha256": "c7cabdadcf05f2d4c1b3d4ae24f951f3dc3ee67b5ff3c931549c4d8f008371be",
+      "export_sha256": "c7cabdadcf05f2d4c1b3d4ae24f951f3dc3ee67b5ff3c931549c4d8f008371be"
+    },
+    {
+      "file": "review-ms-ui/rereview-v7.json",
+      "upstream_sha256": "15f0563cead93ce8edb6e37ed03499e67ca267c4cb29ecd437a182807ead969a",
+      "export_sha256": "a5604693938c22a330782ac957ff8c71264c87fcd06afdf11f872dc6892401ff"
+    },
+    {
+      "file": "review-ms-ui/rereview-v4.json",
+      "upstream_sha256": "861cb121dcd851f8c1f9240c3935a69cb33e8819bb23e1173a85bba5c29e74c9",
+      "export_sha256": "011fb35bfbd635956ab011589d07ca3411c2113c421a31f00d0853a2f5d7b6d9"
+    },
+    {
+      "file": "review-ms-ui/coverage001.json",
+      "upstream_sha256": "021403d6c957518010edf5cca05b19f2cb42a3acfee8bf2bf9aaaf0972d91fff",
+      "export_sha256": "60f2221d361e7648e7ef1d2c5f00dd2f49923203bc7bc3bf83c2c01a2bbcafc0"
+    },
+    {
+      "file": "review-zh-Hant-ui/coverage-v4.json",
+      "upstream_sha256": "9b6e298bd1e5a7f6e8c2a3782b4a34a29d84846a933cdb29e1022dd934cf7ed8",
+      "export_sha256": "9b6e298bd1e5a7f6e8c2a3782b4a34a29d84846a933cdb29e1022dd934cf7ed8"
+    },
+    {
+      "file": "review-zh-Hant-ui/correction-rereview-v4.json",
+      "upstream_sha256": "694e9ea00a78fd0175248d936cf8b95a27391e799627ef4fa1aed4b81a727882",
+      "export_sha256": "558a186f15e197a9fc9716ab75c4325d608dbd845d20dd28136880f03e7e2274"
+    },
+    {
+      "file": "review-or-ui/coverage-1980-v2.json",
+      "upstream_sha256": "8c899561c2c9105d9b39dfb5df412aea04ee337c797fe459ca463f76ba751f93",
+      "export_sha256": "ea8020ca150b2a70284acb318c4f034a37efe9efd933eef128c41a32f32ea65e"
+    },
+    {
+      "file": "review-or-ui/correction-acceptance-v2.json",
+      "upstream_sha256": "4663a54d0a05bebd92c9d7884c2be46a2d206d6eff30bd3023cdf117f88e3e3b",
+      "export_sha256": "d657630e4baaec1e286b7a24584aae2a48000b5ee8acad7d7ca84d69366193d3"
+    },
+    {
+      "file": "review-ms-lessons/final-lesson-coverage.json",
+      "upstream_sha256": "e8bbe756ba968dbd7fb1c36ffcc88700476cd3dd121432b601125a720fa0141d",
+      "export_sha256": "fb565f4d86c975b75beba24cd30ce418e77801f487a8aca67b2e5c90d09f32c7"
+    },
+    {
+      "file": "review-ms-lessons/final-identity-decisions.json",
+      "upstream_sha256": "c340f5cc14576c7b848b5958ac954d9ffc3cbd0b4e91144e895e8a6a8d761fc3",
+      "export_sha256": "c340f5cc14576c7b848b5958ac954d9ffc3cbd0b4e91144e895e8a6a8d761fc3"
+    },
+    {
+      "file": "review-zh-Hant-lessons/full-current-v1-coverage.json",
+      "upstream_sha256": "0d1c752801b09c58cbbca8f25a01b0fa4f2b4f5ca99e12999f7e08d803c065ba",
+      "export_sha256": "1f051c43b3b569f9373abf34036b3db2061f8358a07d802f80fc27f5d1460e60"
+    },
+    {
+      "file": "review-zh-Hant-lessons/full-current-v1-identities.json",
+      "upstream_sha256": "2bad0e6a343171daf2dcb735a79d26d9ce08f2fb8147270de42dc54d17c5ce25",
+      "export_sha256": "b51fb27a091feace6786eb7e69343a577b897cfd380be1597d25ef681fef29d1"
+    },
+    {
+      "file": "review-or-lessons/final6083-accepted-bindings.json",
+      "upstream_sha256": "a35c5e1f4e82de225e0b8c21311f53b7609246bacadefa53a371b0cc15d45b15",
+      "export_sha256": "35b326c0f45af1f65443be97cfb0687cca5951044622ffb92df6e758d49ac6c9"
+    },
+    {
+      "file": "review-or-lessons/final6083-identity-decisions.json",
+      "upstream_sha256": "6d0fd6ef93a514aea2d6154f33219dee349c0e678df09d8db9a5b03bdcc64914",
+      "export_sha256": "350fe24a5a6fb71a751d3f9d0a53781ab4baa78c848cb36bbaaeab649c9b6fbb"
+    },
+    {
+      "file": "review-or-lessons/final6090-integration-reconciliation.json",
+      "upstream_sha256": "815f200d870ea2c36a0be102760f3266196757803d19854664905c3ee838aa13",
+      "export_sha256": "bcc3d1cd51fbea63f9ed0b86c528468e78112a233494d727d8faf54616294b6c"
+    },
+    {
+      "file": "review-or-lessons/wave032-correction-hash-clarification.json",
+      "upstream_sha256": "ef4271656784cb342dd55fe81de404c311393ed9c78a04eac00681e8583f446a",
+      "export_sha256": "cffd63eed755660e599a22814603f5b9850442ac570e5f0197f1bd1e9bb32768"
+    },
+    {
+      "file": "source-context/candidate-800-v1.json",
+      "upstream_sha256": "99666d05f2a87f9038b52337406673e9f7a6e48ceb963d05f7e5d67624895d8f",
+      "export_sha256": "99666d05f2a87f9038b52337406673e9f7a6e48ceb963d05f7e5d67624895d8f"
+    },
+    {
+      "file": "source-context/independent-review-800-v1.json",
+      "upstream_sha256": "fc8e29ff157bc537ecf16b3bf0479095b787c116d40bedcb54fcdaad23ed1a7c",
+      "export_sha256": "fc8e29ff157bc537ecf16b3bf0479095b787c116d40bedcb54fcdaad23ed1a7c"
+    },
+    {
+      "file": "source-context/zh-Hant-draft-addendum.json",
+      "upstream_sha256": "105d4874b9db05dc8b6f3616455dac15b1b188f8c26c4ed89ee68ef095b2bbbc",
+      "export_sha256": "105d4874b9db05dc8b6f3616455dac15b1b188f8c26c4ed89ee68ef095b2bbbc"
+    },
+    {
+      "file": "source-context/zh-Hant-independent-addendum-review.json",
+      "upstream_sha256": "9cce9f287b1992ff59b7c1c5edf8d1831d1d639661f4e54b2397295d2ea817b8",
+      "export_sha256": "9cce9f287b1992ff59b7c1c5edf8d1831d1d639661f4e54b2397295d2ea817b8"
+    }
+  ]
+}

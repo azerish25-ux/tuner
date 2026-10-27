@@ -111,6 +111,32 @@ class WarmupTests(unittest.TestCase):
             self.assertFalse(status['passed'])
             self.assertIn('300-second budget', status['error'])
 
+    def test_first_session_still_owns_fresh_onboarding_storage(self):
+        root = Path(__file__).resolve().parents[2]
+        first = (root / 'ios/TimbreUITests/FirstSessionUITests.swift').read_text()
+        setup = first.split('override func setUpWithError()', 1)[1].split('override func tearDown', 1)[0]
+        self.assertIn('app.launchEnvironment["TIMBRE_TEST_STORAGE_ID"] = UUID().uuidString', setup)
+        self.assertNotIn('TIMBRE_SKIP_ONBOARDING', setup)
+        self.assertIn('storeKit.resetToDefaultState()', setup)
+        self.assertIn('storeKit.clearTransactions()', setup)
+        self.assertIn('testDeferredQuestionsPersistOnlyForTheInstallationThatSkippedThem', first)
+        self.assertIn('testJustTuneReachesAListeningTuner', first)
+        storage = (root / 'ios/Timbre/Support/TestSupport.swift').read_text()
+        self.assertIn('.appendingPathComponent("TimbreUITests", isDirectory: true).appendingPathComponent(identifier', storage)
+        deferral = (root / 'ios/Timbre/Onboarding/OnboardingDeferral.swift').read_text()
+        self.assertIn('storageKey = Self.key + "." + identifier.uuidString', deferral)
+        app = (root / 'ios/Timbre/TimbreApp.swift').read_text()
+        self.assertIn('TestSupport.storageRoot ?? LocalStore.defaultDirectory', app)
+
+    def test_priming_child_flags_do_not_leak_into_runner_environment(self):
+        with patch.dict(os.environ, {}, clear=True):
+            _, calls = self.execute()
+            self.assertNotIn('SIMCTL_CHILD_TIMBRE_SKIP_ONBOARDING', os.environ)
+            self.assertNotIn('SIMCTL_CHILD_TIMBRE_TEST_STORAGE_ID', os.environ)
+            child = calls[1][1]['env']
+            self.assertEqual(child['SIMCTL_CHILD_TIMBRE_SKIP_ONBOARDING'], '1')
+            self.assertIn('SIMCTL_CHILD_TIMBRE_TEST_STORAGE_ID', child)
+
     def test_source_contracts_preserve_two_test_attempts_and_unmodified_language_proof(self):
         root = Path(__file__).resolve().parents[2]
         source = (root / 'tools/marketing/run_listing_assets.py').read_text()

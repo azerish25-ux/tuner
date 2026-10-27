@@ -7,6 +7,21 @@ final class NoteNamesTests: XCTestCase {
         super.tearDown()
     }
 
+    func testNewLanguagesUseMusicalAccidentalsWithoutChangingNotation() {
+        XCTAssertEqual(NoteNames.spoken("F#3", language: "ms-MY", system: "english"), "F syap 3")
+        XCTAssertEqual(NoteNames.spoken("Eb3", language: "ms", system: "english"), "E flet 3")
+        XCTAssertEqual(NoteNames.spoken("F##3", language: "ms", system: "english"), "F syap berganda 3")
+        XCTAssertEqual(NoteNames.spoken("Ebb3", language: "ms", system: "english"), "E flet berganda 3")
+        XCTAssertEqual(NoteNames.spoken("F#3", language: "or-IN", system: "english"), "F ଶାର୍ପ 3")
+        XCTAssertEqual(NoteNames.spoken("Eb3", language: "or", system: "english"), "E ଫ୍ଲାଟ୍ 3")
+        XCTAssertEqual(NoteNames.spoken("F##3", language: "or", system: "english"), "F ଡବଲ୍ ଶାର୍ପ 3")
+        XCTAssertEqual(NoteNames.spoken("Ebb3", language: "or", system: "english"), "E ଡବଲ୍ ଫ୍ଲାଟ୍ 3")
+        XCTAssertEqual(NoteNames.spoken("Eb3", language: "zh-Hant", system: "english"), "降E 3")
+        XCTAssertEqual(NoteNames.defaultSystem(language: "ms"), "english")
+        XCTAssertEqual(NoteNames.defaultSystem(language: "or"), "english")
+        XCTAssertEqual(NoteNames.spoken("Dha#3", language: "or", system: "sargam"), "Dha ଶାର୍ପ 3")
+    }
+
     func testGermanSpellsBNaturalAsHAndBFlatAsB() {
         XCTAssertEqual(NoteNames.spell("B", system: "german"), "H")
         XCTAssertEqual(NoteNames.spell("Bb", system: "german"), "B")

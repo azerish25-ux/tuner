@@ -8,9 +8,12 @@ struct PracticeXPProgress: View {
     @Environment(\.locale) private var locale
 
     static let key = "%lld / %lld XP · next: %@"
-    private static let prefix = "%lld / %lld"
+    // Exact accepted prefixes only: preserve the translator's slash and surrounding spacing.
+    private static let fractionPrefixes = [(prefix: "%lld / %lld", separator: " / "),
+                                           (prefix: "%lld／%lld", separator: "／")]
 
-    private var spoken: Text {
+    // Internal so native tests can independently render the exact accessibility-label Text.
+    var spoken: Text {
         Text("\(done) / \(total) XP · next: \(Text(LocalizedStringKey(next)))")
     }
 
@@ -27,14 +30,14 @@ struct PracticeXPProgress: View {
     }
 
     static func sentence(template: String, counts: (Int, Int), next: String, locale: Locale) -> String? {
-        guard template.hasPrefix(prefix) else { return nil }
-        let suffix = String(template.dropFirst(prefix.count))
+        guard let fraction = fractionPrefixes.first(where: { template.hasPrefix($0.prefix) }) else { return nil }
+        let suffix = String(template.dropFirst(fraction.prefix.count))
         // String(format:) must never receive unknown future conversion specifiers or missing arguments.
         guard suffix.components(separatedBy: "%@").count == 2,
               !suffix.replacingOccurrences(of: "%@", with: "").contains("%") else { return nil }
         // The outer isolate orders the two isolated operands physically left-to-right. An outer LRI alone
         // does not stop Arabic-number runs around a neutral slash from reversing inside that isolate.
-        let isolated = "\u{2066}\u{2066}%lld\u{2069} / \u{2066}%lld\u{2069}\u{2069}"
+        let isolated = "\u{2066}\u{2066}%lld\u{2069}\(fraction.separator)\u{2066}%lld\u{2069}\u{2069}"
         let format = isolated + suffix
         return String(format: format, locale: locale, arguments: [Int64(counts.0), Int64(counts.1), next])
     }

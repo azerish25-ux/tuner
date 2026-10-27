@@ -1,0 +1,205 @@
+{
+  "phase": "independent source-aware correction re-review",
+  "input": "new-locales-work/zh-Hant-ui-corrected-review-v4.json",
+  "input_sha256": "2c349f0263095d7de9637be7a247aec22ea61e92a0c3a4473df9987913fee4e8",
+  "base_sha256": "229070836984730793c82278420575bc918e5f9a44afe97eccfc3df9fbbf4348",
+  "addendum_sha256": "784aad669ffc1db39e2040b06507e408cefd92df88f70b692774ec37bbd19215",
+  "changed_rows_rereviewed": 21,
+  "unchanged_rows_carried_by_exact_identity": 1959,
+  "effective_reviewed_coverage": 1980,
+  "legal_permission_lineage_verified": 23,
+  "new_nonlegal_rows_reviewed": 1957,
+  "drafted_count": 0,
+  "verdict": "All 21 exact adopted corrections accepted linguistically. Exact base/source/key/old guards and unchanged-row identity verified. No unresolved linguistic correction from this complete pass. Rendered/device VoiceOver QA remains outside this text review; row572 raw length flag retained. No native-speaker or legal certification.",
+  "rows": [
+    {
+      "index": 281,
+      "table": "Localizable.strings",
+      "key": "The changes and the strum need a little more time, so your plan starts a few units earlier.",
+      "source": "The changes and the strum need a little more time, so your plan starts a few units earlier.",
+      "reviewed_target": "換和弦和掃弦還需要多練一下，因此練習計畫的起點會往前移幾個單元。",
+      "verdict": "accepted",
+      "reason": "Relative earlier starting point mistranslated as first few units; PlacementCheckView.swift:251–257 confirms moved<0."
+    },
+    {
+      "index": 312,
+      "table": "AppShortcuts.strings",
+      "key": "${command} in ${applicationName}",
+      "source": "${command} in ${applicationName}",
+      "reviewed_target": "在 ${applicationName} 裡 ${command}",
+      "verdict": "accepted",
+      "reason": "Apply embedded glossary spacing around interpolated values; preserves dynamic placeholder contract."
+    },
+    {
+      "index": 313,
+      "table": "AppShortcuts.strings",
+      "key": "${command} in my ${applicationName} lesson",
+      "source": "${command} in my ${applicationName} lesson",
+      "reviewed_target": "在我的 ${applicationName} 課堂裡 ${command}",
+      "verdict": "accepted",
+      "reason": "Apply embedded glossary spacing around interpolated values; preserves dynamic placeholder contract."
+    },
+    {
+      "index": 348,
+      "table": "Localizable.strings",
+      "key": "%@ lessons that listen as you play",
+      "source": "%@ lessons that listen as you play",
+      "reviewed_target": "能聆聽你演奏的 %@ 課堂",
+      "verdict": "accepted",
+      "reason": "Original target suggests a learner simultaneously playing and listening; source assigns listening to lessons. PaywallPlan.swift:490–498 establishes placeholder is instrument-course title, not number."
+    },
+    {
+      "index": 362,
+      "table": "Localizable.strings",
+      "key": "Tune your %@, and %lld more instruments",
+      "source": "Tune your %@, and %lld more instruments",
+      "reviewed_target": "為你的 %@ 與另外 %lld 種樂器調音",
+      "verdict": "accepted",
+      "reason": "Apply embedded glossary spacing around interpolated values; preserves dynamic placeholder contract."
+    },
+    {
+      "index": 374,
+      "table": "Localizable.strings",
+      "key": "Free on %@",
+      "source": "Free on %@",
+      "reviewed_target": "%@ 免費使用",
+      "verdict": "accepted",
+      "reason": "Apply embedded glossary spacing around interpolated values; preserves dynamic placeholder contract."
+    },
+    {
+      "index": 654,
+      "table": "Localizable.strings",
+      "key": "Major",
+      "source": "Major",
+      "reviewed_target": "大和弦",
+      "verdict": "accepted",
+      "reason": "Chord quality, not major key: ChordsView.swift:98–105 and ChartEditorView.swift:236–243."
+    },
+    {
+      "index": 808,
+      "table": "Localizable.strings",
+      "key": "Play a lesson or tune up on a few days: notes on your timing, chords and strings show up here.",
+      "source": "Play a lesson or tune up on a few days: notes on your timing, chords and strings show up here.",
+      "reviewed_target": "進行課堂練習或在幾個不同日子調音後，這裡就會顯示節奏、和弦與琴弦的建議。",
+      "verdict": "accepted",
+      "reason": "Removes invented consecutive-days/completion requirements. CoachCard.swift:150–156."
+    },
+    {
+      "index": 835,
+      "table": "Localizable.strings",
+      "key": "You nail %@ (%lld%%), but chords are your weak spot (%lld%%).",
+      "source": "You nail %@ (%lld%%), but chords are your weak spot (%lld%%).",
+      "reviewed_target": "你很擅長 %@（%lld%%），但和弦還需要加強（%lld%%）。",
+      "verdict": "accepted",
+      "reason": "Apply embedded glossary spacing around interpolated values; preserves dynamic placeholder contract."
+    },
+    {
+      "index": 836,
+      "table": "Localizable.strings",
+      "key": "You nail %@ (%lld%%), but single notes are your weak spot (%lld%%).",
+      "source": "You nail %@ (%lld%%), but single notes are your weak spot (%lld%%).",
+      "reviewed_target": "你很擅長 %@（%lld%%），但單音還需要加強（%lld%%）。",
+      "verdict": "accepted",
+      "reason": "Apply embedded glossary spacing around interpolated values; preserves dynamic placeholder contract."
+    },
+    {
+      "index": 837,
+      "table": "Localizable.strings",
+      "key": "You nail %@ (%lld%%), but rhythm is your weak spot (%lld%%).",
+      "source": "You nail %@ (%lld%%), but rhythm is your weak spot (%lld%%).",
+      "reviewed_target": "你很擅長 %@（%lld%%），但節奏還需要加強（%lld%%）。",
+      "verdict": "accepted",
+      "reason": "Apply embedded glossary spacing around interpolated values; preserves dynamic placeholder contract."
+    },
+    {
+      "index": 838,
+      "table": "Localizable.strings",
+      "key": "You nail %@ (%lld%%), but ear questions are your weak spot (%lld%%).",
+      "source": "You nail %@ (%lld%%), but ear questions are your weak spot (%lld%%).",
+      "reviewed_target": "你很擅長 %@（%lld%%），但聽力題還需要加強（%lld%%）。",
+      "verdict": "accepted",
+      "reason": "Apply embedded glossary spacing around interpolated values; preserves dynamic placeholder contract."
+    },
+    {
+      "index": 839,
+      "table": "Localizable.strings",
+      "key": "%@ drill · %lld min",
+      "source": "%@ drill · %lld min",
+      "reviewed_target": "%@ 專項練習 · %lld 分鐘",
+      "verdict": "accepted",
+      "reason": "Apply embedded glossary spacing around interpolated values; preserves dynamic placeholder contract."
+    },
+    {
+      "index": 866,
+      "table": "Localizable.strings",
+      "key": "Your %@ string drifts %@ about %lld¢ a day.",
+      "source": "Your %@ string drifts %@ about %lld¢ a day.",
+      "reviewed_target": "你的 %@ 弦每天約 %@ %lld¢。",
+      "verdict": "accepted",
+      "reason": "Apply embedded glossary spacing around interpolated values; preserves dynamic placeholder contract."
+    },
+    {
+      "index": 956,
+      "table": "Localizable.strings",
+      "key": "Tap Sync, then tap along once: from then on the chart follows this recording.",
+      "source": "Tap Sync, then tap along once: from then on the chart follows this recording.",
+      "reviewed_target": "點選同步，再跟著錄音逐次點按一遍。之後，譜面就會跟著這段錄音播放。",
+      "verdict": "accepted",
+      "reason": "一次 can be read as a single tap. ChartFollower.swift:80–98 confirms tap per next chord across a sync pass."
+    },
+    {
+      "index": 1152,
+      "table": "Localizable.strings",
+      "key": "timbre_bench_dial_up",
+      "source": "Tune up",
+      "reviewed_target": "調高",
+      "verdict": "accepted",
+      "reason": "Legacy key timbre_bench_dial_up is directional Tune up paired with dial-down/flat/sharp. Unlike row178 general tune-up. Legacy callsite absent from iOS-only snapshot; inference from key/source pair, not invented behavior."
+    },
+    {
+      "index": 1726,
+      "table": "Localizable.strings",
+      "key": "timbre_catalog_tuning_guitar_acoustic_6_drop_d",
+      "source": "Drop D",
+      "reviewed_target": "低音弦降至 D",
+      "verdict": "accepted",
+      "reason": "Drop D is not D-flat. Catalog preset guitar.acoustic.6.drop_d; distinguishes lowering lowest string to D from 降 D accidental."
+    },
+    {
+      "index": 1732,
+      "table": "Localizable.strings",
+      "key": "timbre_catalog_tuning_guitar_electric_7_drop_a",
+      "source": "Drop A",
+      "reviewed_target": "低音弦降至 A",
+      "verdict": "accepted",
+      "reason": "Drop A is not A-flat. Catalog preset guitar.electric.7.drop_a."
+    },
+    {
+      "index": 1738,
+      "table": "Localizable.strings",
+      "key": "timbre_catalog_tuning_bass_electric_4_drop_d",
+      "source": "Drop D",
+      "reviewed_target": "低音弦降至 D",
+      "verdict": "accepted",
+      "reason": "Drop D is not D-flat. Catalog preset bass.electric.4.drop_d."
+    },
+    {
+      "index": 1850,
+      "table": "Localizable.strings",
+      "key": "${command} in my lesson",
+      "source": "${command} in my lesson",
+      "reviewed_target": "在我的課堂裡 ${command}",
+      "verdict": "accepted",
+      "reason": "Apply embedded glossary spacing around interpolated values; preserves dynamic placeholder contract."
+    },
+    {
+      "index": 1884,
+      "table": "Localizable.strings",
+      "key": "day streak",
+      "source": "day streak",
+      "reviewed_target": "連續練習天數",
+      "verdict": "accepted",
+      "reason": "Standalone label below day count, not an appended suffix; StreakSnippet.swift:58–61, JourneyView.swift:231. Natural Chinese metric label."
+    }
+  ]
+}

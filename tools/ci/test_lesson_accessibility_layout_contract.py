@@ -40,11 +40,22 @@ class LessonAccessibilityLayoutContract(unittest.TestCase):
 
     def test_scroll_geometry_excludes_header_and_moves_both_directions(self):
         for token in ["scroll.frame.intersection(app.frame)", "clearBottom - visible.minY",
-                      "frame.minY < viewport.minY", "viewport.minY - frame.minY",
-                      "viewport.maxY - frame.maxY", "viewport.height * 0.45",
-                      "thenHoldForDuration: 0.2", "for _ in 0..<12",
+                      "viewport.midY - frame.midY", "frame.height <= viewport.height", "viewport.height * 0.45",
+                      "thenHoldForDuration: 0.2", "for attempt in 0..<12",
                       'capture("unreachable")', "isClear(target, within: contentViewport(scroll, above: bottom))"]:
             self.assertIn(token, self.ui)
+
+    def test_scroll_evidence_fails_closed_without_hiding_layout_errors(self):
+        for token in ["TIMBRE_SCROLL_GEOMETRY", "layout-ax5-scroll-geometry-", "stalled < 2",
+                      "if contained && hittable { return }", "contained ? target.isHittable : false",
+                      "testReachabilityPlanRequiresCompleteGeometry", "XCTAssertFalse(Self.contains(bottomClipped",
+                      "XCTAssertFalse(Self.contains(topClipped", "height: 700", "x: -1",
+                      "Self.scrollDistance(.infinite", "in: .null", "XCTAssertFalse(Self.contains(farBelow"]:
+            self.assertIn(token, self.ui)
+        plan = self.ui.split("private static func scrollDistance", 1)[1].split("private func isClear", 1)[0]
+        self.assertIn("!contains(frame, in: viewport)", plan)
+        self.assertIn("frame.minX >= viewport.minX, frame.maxX <= viewport.maxX", plan)
+        self.assertNotIn("sleep", plan)
 
     def test_oversized_decoration_is_not_the_semantic_note_target(self):
         burst = self.notes.split("private var ringBurst:", 1)[1].split("private static func burstBand", 1)[0]

@@ -49,7 +49,7 @@ REGIONS = {
     'th': 'th_TH', 'tr': 'tr_TR', 'uk': 'uk_UA', 'vi': 'vi_VN',
     'zh-Hans': 'zh_CN', 'zh-Hant': 'zh_TW',
 }
-FALLBACK_LANGUAGES = {'ms': 'ms', 'or-IN': 'or', 'zh-Hant': 'zh-Hant'}
+APP_LANGUAGE_ALIASES = {'ms': 'ms', 'or-IN': 'or', 'zh-Hant': 'zh-Hant', 'zh-Hans': 'zh-CN'}
 
 
 def read_json(path: Path):
@@ -75,14 +75,14 @@ def locale_rows() -> dict:
     found = {row['locale']: row for row in rows}
     if len(rows) != 50 or len(found) != 50:
         raise ValueError('Registry must contain exactly 50 distinct listing locales')
-    fallback = {row['locale'] for row in rows if row['app_locale'] is None}
-    if fallback != set(FALLBACK_LANGUAGES):
-        raise ValueError(f'Unreviewed listing-only fallback set: {fallback}')
+    if registry['app_language_count'] != 52:
+        raise ValueError('Listing capture requires the 52-language app inventory')
     for locale, row in found.items():
         if not re.fullmatch(r'[A-Za-z]+(?:-[A-Za-z0-9]+)*', locale):
             raise ValueError(f'Unsafe locale: {locale}')
-        if row['app_locale'] is None and row['app_fallback'] != 'en':
-            raise ValueError(f'{locale}: unsupported fallback')
+        expected = APP_LANGUAGE_ALIASES.get(locale, locale.split('-')[0])
+        if row['app_locale'] != expected or row['app_fallback'] is not None:
+            raise ValueError(f'{locale}: listing requires its supported app language, not fallback')
     return found
 
 
@@ -94,16 +94,15 @@ def lesson_provenance(language: str) -> dict:
 
 def locale_spec(locale: str) -> dict:
     row = locale_rows()[locale]
-    fallback = row['app_locale'] is None
-    language = row['app_locale'] or row['app_fallback']
-    apple_languages = [FALLBACK_LANGUAGES[locale], 'en'] if fallback else [language]
+    language = row['app_locale']
+    apple_languages = [language]
     return {
         'listing_locale': locale,
         'app_language': language,
         'apple_languages': apple_languages,
         'apple_locale': REGIONS.get(locale, locale.replace('-', '_')),
-        'listing_only_fallback': fallback,
-        'ui_support_claim': not fallback,
+        'listing_only_fallback': False,
+        'ui_support_claim': True,
         'payload_sha256': digest(ROOT / row['content_file']),
         **lesson_provenance(language),
     }

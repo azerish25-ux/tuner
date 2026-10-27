@@ -81,11 +81,42 @@ final class SongShelfRailUITests: XCTestCase {
                     return target
                 }
             }
+            // Keep evidence even when the desired lazy child has not been realized. A fixed
+            // gesture count alone cannot distinguish exhausted travel from a stalled/wrong-way rail.
+            if attempt % 10 == 0 { logProgress(rail, viewport: viewport, attempt: attempt, target: id) }
             dragRail(rail, distance: distance, viewport: viewport)
         }
         capture("horizontal-unreachable-" + id)
         XCTFail("First/middle/last catalogue record must remain fully reachable: \(id)")
         return target
+    }
+
+    private func logProgress(_ rail: XCUIElement, viewport: CGRect, attempt: Int, target: String) {
+        let cards = rail.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "songs.song."))
+        let visible = cards.allElementsBoundByIndex.compactMap { card -> String? in
+            let frame = card.frame
+            guard usable(frame), frame.intersects(viewport) else { return nil }
+            return "\(card.identifier)=\(frame)"
+        }
+        print("SONG-RAIL progress: target=\(target) attempt=\(attempt) viewport=\(viewport) visible=\(visible)")
+    }
+
+    private func assertRotationVisible(_ card: XCUIElement, rail: XCUIElement, stage: String) {
+        // Geometry first: isHittable on an entirely offscreen lazy child may throw before
+        // XCTest saves the diagnostic evidence. Do not waive containment or hittability.
+        capture(stage)
+        XCTAssertTrue(card.exists, "The browsed terminal record must survive \(stage)")
+        guard card.exists, let frame = stableFrame(card) else {
+            XCTFail("The terminal record must have stable geometry after \(stage)")
+            return
+        }
+        let viewport = rail.frame
+        logProgress(rail, viewport: viewport, attempt: 0, target: stage)
+        XCTAssertGreaterThanOrEqual(frame.minX, viewport.minX - 1)
+        XCTAssertLessThanOrEqual(frame.maxX, viewport.maxX + 1)
+        XCTAssertGreaterThanOrEqual(frame.minY, viewport.minY - 1)
+        XCTAssertLessThanOrEqual(frame.maxY, viewport.maxY + 1)
+        XCTAssertTrue(card.isHittable, "Rotation must preserve the browsed end: \(stage)")
     }
 
     private func usable(_ frame: CGRect) -> Bool {
@@ -184,14 +215,12 @@ final class SongShelfRailUITests: XCTestCase {
         XCUIDevice.shared.orientation = .landscapeLeft
         Thread.sleep(forTimeInterval: 2)
         let landscapeLast = rail.buttons.matching(identifier: "songs.song." + samples[2]).firstMatch
-        XCTAssertTrue(landscapeLast.exists && landscapeLast.isHittable,
-                      "The browsed terminal record must remain visible in landscape before returning")
+        assertRotationVisible(landscapeLast, rail: rail, stage: "landscape-\(accessible)-\(rtl)")
         XCTAssertLessThanOrEqual(landscapeLast.frame.height, rail.frame.height + 1)
-        capture("landscape-\(accessible)-\(rtl)")
         XCUIDevice.shared.orientation = .portrait
         Thread.sleep(forTimeInterval: 2)
         let last = rail.buttons.matching(identifier: "songs.song." + samples[2]).firstMatch
-        XCTAssertTrue(last.exists && last.isHittable, "Rotation must preserve the browsed end, not reselect the first item")
+        assertRotationVisible(last, rail: rail, stage: "portrait-return-\(accessible)-\(rtl)")
         _ = reveal(samples[0], in: rail, forward: false, rtl: rtl)
         XCTAssertEqual(rail.frame.height, height, accuracy: 1)
     }

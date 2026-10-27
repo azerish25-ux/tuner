@@ -1,15 +1,15 @@
 import Foundation
 
 /// Capture navigation uses exact current shipped strings. A requested translation
-/// without its fixture fails the caller; listing-only fallbacks remain explicit.
+/// without its fixture fails the caller; no listing-only fallback is accepted.
 enum CaptureLocalization {
     static let language = ProcessInfo.processInfo.environment["TIMBRE_UI_LANGUAGE"].flatMap { $0.isEmpty ? nil : $0 } ?? "en"
     static let locale = ProcessInfo.processInfo.environment["TIMBRE_UI_LOCALE"].flatMap { $0.isEmpty ? nil : $0 } ?? "en_US"
     static let listingLocale = ProcessInfo.processInfo.environment["TIMBRE_LISTING_LOCALE"] ?? ""
 
     /// The requested device preference list is separate from the expected app
-    /// language. Malay/Odia/Traditional Chinese are tested with English second,
-    /// not by pretending they are shipped UI languages or silently forcing English.
+    /// language. Every listing now requires its actual supported UI language;
+    /// fixture checks must not silently force English.
     static let appleLanguages: [String] = {
         let requested = ProcessInfo.processInfo.environment["TIMBRE_UI_APPLE_LANGUAGES"] ?? language
         let values = requested.split(separator: ",", omittingEmptySubsequences: false).map(String.init)

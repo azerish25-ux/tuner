@@ -54,7 +54,11 @@ struct SongCaptionFlow: Layout {
 
     func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
         for (subview, frame) in zip(subviews, frames(subviews, width: bounds.width)) {
-            subview.place(at: CGPoint(x: bounds.minX + frame.minX, y: bounds.minY + frame.minY),
+            // pack returns physical rectangles for geometry checks. LayoutSubview.place uses
+            // logical coordinates: SwiftUI mirrors them once in RTL. Convert back here rather
+            // than mirroring the already-physical rectangle a second time.
+            let logicalX = direction == .rightToLeft ? bounds.width - frame.maxX : frame.minX
+            subview.place(at: CGPoint(x: bounds.minX + logicalX, y: bounds.minY + frame.minY),
                           anchor: UnitPoint(x: 0, y: 0), proposal: ProposedViewSize(frame.size))
         }
     }

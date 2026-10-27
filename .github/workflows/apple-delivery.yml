@@ -44,8 +44,10 @@ jobs:
       APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
       APP_STORE_CONNECT_API_KEY_P8: ${{ secrets.APP_STORE_CONNECT_API_KEY_P8 }}
       TELEMETRYDECK_APP_ID: ${{ vars.TELEMETRYDECK_APP_ID }}
-      # Optional repository variables for the addresses in Info.plist (ios/project.yml); unset keeps the project's value.
-      TIMBRE_APP_STORE_ID: ${{ vars.TIMBRE_APP_STORE_ID }}
+      # The registered draft ID is a nonsecret default; an owner repository variable overrides it.
+      # This does not assert that its public App Store page is live.
+      TIMBRE_APP_STORE_ID: ${{ vars.TIMBRE_APP_STORE_ID || '6827721551' }}
+      # Other optional addresses stay unset unless the owner configures them.
       TIMBRE_SHARE_URL: ${{ vars.TIMBRE_SHARE_URL }}
       TIMBRE_REMOTE_CONFIG_URL: ${{ vars.TIMBRE_REMOTE_CONFIG_URL }}
       MARKETING_VERSION: ${{ inputs.marketing_version }}
@@ -91,11 +93,11 @@ jobs:
           test -s "$XLIFF"
           cp "$XLIFF" ci-out/en.xliff
           python3 tools/l10n/shipping.py --xliff ci-out/en.xliff
-      - name: Complete interface in all 49 app languages
+      - name: Complete interface in all 52 app languages
         if: ${{ !inputs.internal_testflight_untranslated }}
         run: python3 tools/l10n/shipping.py --xliff ci-out/en.xliff --require-complete
         # Selecting fewer shipped languages never waives the complete-interface requirement.
-      - name: Full lesson coverage in all 49 app languages
+      - name: Full lesson coverage in all 52 app languages
         if: ${{ !inputs.internal_testflight_untranslated }}
         run: python3 tools/l10n/lessons.py --strict
         # A UI percentage or a reduced shipping set never waives the all-language lesson requirement.

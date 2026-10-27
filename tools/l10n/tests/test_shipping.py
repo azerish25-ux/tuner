@@ -80,7 +80,7 @@ class ShippingReleaseTests(unittest.TestCase):
         self.assertIn('Would ship en + 1 locales: fr', output)
 
     def test_complete_gate_checks_locales_left_out_by_coverage(self):
-        locales = [f'locale{i}' for i in range(48)]
+        locales = sorted(report.LANGUAGE_NAMES)
         self.model['locales'] = {loc: {'todo': [], 'awaiting_apply': []} for loc in locales}
         self.model['locales'][locales[-1]]['todo'] = [{'table': 'Localizable.strings', 'key': 'Missing'}]
         with patch.object(report, 'build', return_value=self.model), \
@@ -91,9 +91,9 @@ class ShippingReleaseTests(unittest.TestCase):
         self.assertIn(locales[-1], output)
 
     def test_complete_gate_requires_full_inventory_and_applied_ui(self):
-        for count, pending in [(47, False), (48, True), (48, False)]:
+        for count, pending in [(50, False), (51, True), (51, False)]:
             with self.subTest(count=count, pending=pending):
-                locales = [f'locale{i}' for i in range(count)]
+                locales = sorted(report.LANGUAGE_NAMES)[:count]
                 self.model['locales'] = {loc: {'todo': [], 'awaiting_apply': []} for loc in locales}
                 if pending:
                     self.model['locales'][locales[0]]['awaiting_apply'] = [{'table': 'Localizable.strings', 'key': 'Pending'}]
@@ -101,14 +101,23 @@ class ShippingReleaseTests(unittest.TestCase):
                         patch.object(shipping, 'available', return_value=['en'] + locales), \
                         patch.object(shipping, 'shipped', return_value=[]):
                     status, _ = self.run_selection('--require-complete', '--xliff', str(self.xliff))
-                self.assertEqual(status, 1 if count != 48 or pending else 0)
+                self.assertEqual(status, 1 if count != 51 or pending else 0)
+
+    def test_same_count_alias_substitution_cannot_pass_complete_inventory(self):
+        locales = sorted(report.LANGUAGE_NAMES)
+        locales[locales.index('or')] = 'or-IN'
+        self.model['locales'] = {loc: {'todo': [], 'awaiting_apply': []} for loc in locales}
+        with patch.object(report, 'build', return_value=self.model), \
+                patch.object(shipping, 'available', return_value=['en'] + locales):
+            status, _ = self.run_selection('--require-complete', '--xliff', str(self.xliff))
+        self.assertEqual(status, 1)
 
     def test_complete_gate_requires_authoritative_export(self):
         with self.assertRaises(SystemExit), contextlib.redirect_stderr(io.StringIO()):
             self.run_selection('--require-complete')
 
     def test_complete_gate_cannot_count_a_missing_english_folder(self):
-        locales = [f'locale{i}' for i in range(48)]
+        locales = sorted(report.LANGUAGE_NAMES)
         self.model['locales'] = {loc: {'todo': [], 'awaiting_apply': []} for loc in locales}
         with patch.object(report, 'build', return_value=self.model), \
                 patch.object(shipping, 'available', return_value=locales), \

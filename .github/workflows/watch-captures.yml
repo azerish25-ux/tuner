@@ -1,13 +1,23 @@
 name: Watch captures
 on:
+  push:
+    branches: [main, codex/app-store-readiness-gates]
   workflow_dispatch:
 permissions:
   contents: read
 concurrency:
-  group: watch-captures-${{ github.ref }}
-  cancel-in-progress: true
+  # An ordinary push must not replace explicitly requested full capture evidence.
+  group: >-
+    watch-captures-${{ github.ref }}-${{
+      (github.event_name == 'workflow_dispatch' ||
+       contains(github.event.head_commit.message, '[watch-captures-all]')) && 'requested' || 'noop' }}
+  cancel-in-progress: false
 jobs:
   capture:
+    if: >-
+      (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/codex/app-store-readiness-gates') &&
+      (github.event_name == 'workflow_dispatch' ||
+       contains(github.event.head_commit.message, '[watch-captures-all]'))
     runs-on: macos-15
     timeout-minutes: 60
     env:
@@ -30,7 +40,7 @@ jobs:
           xcodebuild -version
           mkdir -p ci-out/watch
           xcrun simctl help io > ci-out/watch/simctl-io-help.txt 2>&1
-      - name: Capture all 49 app languages and map all 50 store locales
+      - name: Capture all 52 app languages (104 images) and map all 50 store locales
         run: |
           set -euo pipefail
           python3 tools/ci/watch_captures.py --out ci-out/watch --revision "$GITHUB_SHA"

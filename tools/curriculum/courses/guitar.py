@@ -432,7 +432,7 @@ UNIT_3 = unit("gtr-3", "First chords", "E minor, E, A minor and A, played cleanl
         with_fingers(along(G, "A2@5:1 E3@4:1 A3@3:1 C4@2:1 E4@1:4", bpm=60, title="A minor, string by string"), [2, 3, 1]),
         strum(Am, QUARTERS, bpm=66, bars=2),
     ], minutes=4, xp=20),
-    lesson("gtr-3-4", "A major", [
+    lesson("gtr-3-4", "A major chord", [
         explain("Three fingers in a row", "A packs fingers 1, 2 and 3 side by side on fret 2, on strings 4, 3 and 2. "
                 "Strum from string 5.", shape(A)),
         play_chord(A),
@@ -586,7 +586,7 @@ UNIT_4 = unit("gtr-4", "Strumming", "Downstrokes, down-up eighths, accents and a
 KITE_LOOP = [(G_MAJ, 1), (D, 1), (Em, 1), (C, 1)]   # Kite Weather's verse and chorus, one chord a bar
 
 UNIT_5 = unit("gtr-5", "More open chords", "C, G, D and D minor, two classic progressions, and the one-minute change.", [
-    lesson("gtr-5-1", "C major", [
+    lesson("gtr-5-1", "C major chord", [
         explain("A three-step staircase", "C climbs like a staircase: finger 3 on string 5, fret 3; finger 2 on string 4, fret 2; "
                 "finger 1 on string 2, fret 1.", shape(C)),
         play_chord(C),
@@ -597,7 +597,7 @@ UNIT_5 = unit("gtr-5", "More open chords", "C, G, D and D minor, two classic pro
                 "from string 3 to string 5, fret 3.", shape(C)),
         progression([(Am, 1), (C, 1), (Am, 1), (C, 1)], HALVES, bpm=60),
     ], minutes=4, xp=20),
-    lesson("gtr-5-2", "G major", [
+    lesson("gtr-5-2", "G major chord", [
         explain("Wide and bright", "G spreads out: finger 2 on string 6, fret 3; finger 1 on string 5, fret 2; "
                 "finger 3 on string 1, fret 3. All six strings ring.", shape(G_MAJ)),
         play_chord(G_MAJ),

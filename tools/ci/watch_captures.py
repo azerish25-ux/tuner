@@ -20,6 +20,8 @@ import report
 BUNDLE = 'com.shahradazerisharghi.timbre.watchkitapp'
 SIZE = [416, 496]
 PAGES = ('today', 'metronome')
+# Explicit shipping contract: count alone must not accept a missing language replaced by an alias.
+SHIPPED_LANGUAGES = frozenset(('ar', 'bg', 'bn', 'ca', 'cs', 'da', 'de', 'el', 'en', 'es', 'et', 'fa', 'fi', 'fr', 'gu', 'he', 'hi', 'hr', 'hu', 'id', 'is', 'it', 'ja', 'kn', 'ko', 'lt', 'lv', 'ml', 'mr', 'ms', 'nl', 'no', 'or', 'pa', 'pl', 'pt', 'ro', 'ru', 'sk', 'sl', 'sv', 'sw', 'ta', 'te', 'th', 'tr', 'uk', 'ur', 'vi', 'zh-CN', 'zh-Hant', 'zu'))
 LABEL_KEYS = {
     'today': {'streak': 'day streak', 'practiced': 'Practised today', 'today': 'Today'},
     'metronome': {'title': 'Metronome', 'tempo': 'Andante', 'tap': 'Tap', 'stop': 'Stop', 'meter': 'Meter'},
@@ -28,7 +30,10 @@ LABEL_KEYS = {
 
 def expectations():
     result = {}
-    for language in ['en'] + report.locales():
+    languages = ['en'] + report.locales()
+    if len(languages) != 52 or set(languages) != SHIPPED_LANGUAGES:
+        raise ValueError('Watch capture scope must contain exactly the 52 canonical app languages')
+    for language in languages:
         table = report.read_strings(report.RES / f'{language}.lproj/Localizable.strings')
         pages = {}
         for page, keys in LABEL_KEYS.items():
@@ -39,8 +44,6 @@ def expectations():
                     raise ValueError(f'{language}: missing applied Watch label {key}')
                 pages[page][field] = value
         result[language] = pages
-    if len(result) != 49:
-        raise ValueError('Watch capture scope must contain all49app languages')
     return result
 
 
@@ -49,14 +52,16 @@ def store_mappings(languages, image_format='png'):
     inventory = json.loads((ROOT / 'tools/l10n/store-locales.json').read_text(encoding='utf-8'))
     rows = []
     for row in inventory['locales']:
-        language = row['app_locale'] or row['app_fallback']
+        language = row['app_locale']
+        if not language or row['app_fallback'] is not None:
+            raise ValueError(f"Watch store locale requires supported app UI, not fallback: {row['locale']}")
         if language not in languages:
             raise ValueError(f"No Watch captures for store locale {row['locale']}: {language}")
         rows.append({'store_locale': row['locale'], 'app_locale': row['app_locale'],
                      'capture_language': language,
-                     'mapping': 'supported_app_language' if row['app_locale'] else 'explicit_english_fallback',
+                     'mapping': 'supported_app_language',
                      'screenshots': [f'{language}/{page}.{suffix}' for page in PAGES],
-                     'translated_app_ui': row['app_locale'] is not None})
+                     'translated_app_ui': True})
     if len(rows) != 50 or len({row['store_locale'] for row in rows}) != 50:
         raise ValueError('Store inventory must contain50distinct locales')
     return rows
@@ -173,9 +178,14 @@ def png_info(path):
 
 
 def normalized_language(value):
-    if value in ('zh-CN', 'zh-Hans', 'zh-Hans-CN'):
-        return 'zh-CN'
-    return value.replace('_', '-').split('-')[0]
+    parts = value.replace('_', '-').lower().split('-')
+    if parts[0] == 'zh':
+        if 'hant' in parts:
+            return 'zh-Hant'
+        if 'hans' in parts:
+            return 'zh-CN'
+        return 'zh-Hant' if set(parts) & {'tw', 'hk', 'mo'} else 'zh-CN'
+    return 'no' if parts[0] in ('nb', 'nn') else parts[0]
 
 
 def validate_probe(probe, row, expected, revision):

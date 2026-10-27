@@ -3,7 +3,7 @@
   "verified_on": "2026-10-26",
   "scope": "every_apple_supported_listing_locale",
   "listing_locale_count": 50,
-  "app_language_count": 49,
+  "app_language_count": 52,
   "primary_locale": "en-US",
   "sources": {
     "supported_locales": "https://developer.apple.com/help/app-store-connect/reference/app-information/app-store-localizations",
@@ -40,12 +40,8 @@
       "sw",
       "zu"
     ],
-    "listing_without_app_language": [
-      "ms",
-      "or-IN",
-      "zh-Hant"
-    ],
-    "app_note": "Listing-only locales do not add app UI languages. English is the documented project fallback for these locales, subject to device language preferences; device behavior must be verified."
+    "listing_without_app_language": [],
+    "app_note": "Every listing locale maps to a supported app language. Regional listing variants share the mapped UI localization; native behavior and capture evidence must be verified separately."
   },
   "existing_localized_blocks": [
     "de-DE",
@@ -155,8 +151,8 @@
       "locale": "zh-Hant",
       "language": "Chinese (Traditional)",
       "apple_api_language": "Chinese (Traditional)",
-      "app_locale": null,
-      "app_fallback": "en",
+      "app_locale": "zh-Hant",
+      "app_fallback": null,
       "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
       "device_review": "not_verified",
@@ -684,8 +680,8 @@
       "locale": "ms",
       "language": "Malay",
       "apple_api_language": "Malay",
-      "app_locale": null,
-      "app_fallback": "en",
+      "app_locale": "ms",
+      "app_fallback": null,
       "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
       "device_review": "not_verified",
@@ -776,8 +772,8 @@
       "locale": "or-IN",
       "language": "Odia",
       "apple_api_language": "Oriya",
-      "app_locale": null,
-      "app_fallback": "en",
+      "app_locale": "or",
+      "app_fallback": null,
       "state": "ai_draft_structurally_valid",
       "native_review": "not_verified",
       "device_review": "not_verified",

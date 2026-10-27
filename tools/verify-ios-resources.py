@@ -86,7 +86,9 @@ for source in (root / 'ios/Timbre').rglob('*.swift'):
             missing.append(f'{source.relative_to(root)}: {key}')
 assert not missing, '\n'.join(missing)
 locales = list(resources.glob('*.lproj'))
-assert len(locales) == 49
+sys.path.insert(0, str(root / "tools/l10n"))
+from report import LANGUAGE_NAMES  # noqa: E402
+assert len(locales) == 52 and {p.stem for p in locales} == set(LANGUAGE_NAMES) | {"en"}
 # Recorded instruments (tools/build-ios-samples.py): every manifest file present and nothing unlisted, licences that
 # allow redistribution in a commercial app (CC0, or CC-BY with a credit), sources pinned on GitHub, pitches measured,
 # the band's kit, bass and piano there, every file traced in docs/content/AUDIO-SOURCES.md, the total within budget.
@@ -145,4 +147,4 @@ for band_only in ('eguitar', 'chops'):
         assert not sample_sets[band_only]['voices'] and sample_sets[band_only]['kind'] == 'plucked', band_only
 assert {'guitar', 'piano', 'bass'} <= played_voices
 assert sample_bytes <= 35_000_000, f'samples {sample_bytes / 1e6:.1f} MB over the 35 MB budget'
-print(f'OK: 60 instruments, 132 tunings, {len(photos)} photos/{2 * len(photos)} images, 49 locales, 1 licensed font family, {len(manifest['photos'])} 3D models; all literal localization keys exist; {len(listed)} instrument samples ({sample_bytes / 1e6:.1f} MB, {len(sample_sets)} sets, {", ".join(sorted(sample_sources))}).')
+print(f'OK: 60 instruments, 132 tunings, {len(photos)} photos/{2 * len(photos)} images, 52 locales, 1 licensed font family, {len(manifest['photos'])} 3D models; all literal localization keys exist; {len(listed)} instrument samples ({sample_bytes / 1e6:.1f} MB, {len(sample_sets)} sets, {", ".join(sorted(sample_sources))}).')

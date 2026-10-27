@@ -15,58 +15,16 @@ final class SongCaptionLayoutTests: XCTestCase {
         defer { TimbreLocalization.language = originalLanguage }
         for language in ["en", "de", "ar"] {
             TimbreLocalization.language = language
-            let direction: LayoutDirection = language == "ar" ? .rightToLeft : .leftToRight
             for size in [DynamicTypeSize.large, .accessibility5] {
                 for width in [CGFloat(148), CGFloat(176)] {
-                    // Independently measure each full glyph, not the production flow's bounding box.
-                    let sizes = chords.map { measure(oracleChip($0.name), width: width, size: size,
-                                                     language: language, direction: direction) }
-                    let intrinsic = sizes.reduce(CGFloat(0)) { $0 + $1.width } + CGFloat(sizes.count - 1) * 4
-                    let horizontal = intrinsic + 6 + 44 <= width
-                    var row = 0
-                    var rows: [[Int]] = [[]]
-                    var remaining = horizontal ? intrinsic : width
-                    for index in sizes.indices {
-                        let needed = sizes[index].width + (rows[row].isEmpty ? 0 : 4)
-                        if needed > remaining && !rows[row].isEmpty {
-                            rows.append([]); row += 1; remaining = width
-                        }
-                        if !rows[row].isEmpty { remaining -= 4 }
-                        rows[row].append(index); remaining -= sizes[index].width
-                    }
-                    var rects = Array(repeating: CGRect.zero, count: sizes.count)
-                    var top: CGFloat = horizontal ? 0 : 50
-                    for indices in rows {
-                        var leading: CGFloat = 0
-                        for index in indices {
-                            let x = direction == .rightToLeft ? width - leading - sizes[index].width : leading
-                            rects[index] = CGRect(origin: CGPoint(x: x, y: top), size: sizes[index])
-                            leading += sizes[index].width + 4
-                        }
-                        top += (indices.map { sizes[$0].height }.max() ?? 0) + 4
-                    }
-                    let versionX = direction == .rightToLeft
-                        ? (horizontal ? width - intrinsic - 50 : 0)
-                        : (horizontal ? intrinsic + 6 : width - 44)
-                    let versionRect = CGRect(x: versionX, y: 0, width: 44, height: 44)
-                    for (index, rect) in rects.enumerated() {
-                        XCTAssertGreaterThanOrEqual(rect.minX, 0)
-                        XCTAssertLessThanOrEqual(rect.maxX, width + 0.5)
-                        XCTAssertFalse(rect.intersects(versionRect), "Chord \(index) must not overlap the 44pt action")
-                        for other in rects.indices where other != index {
-                            XCTAssertFalse(rect.intersects(rects[other]))
-                        }
-                    }
-                    let height = max(versionRect.maxY, rects.map(\.maxY).max() ?? 0)
-                    let oracle = ZStack {
+                    // Measure inside SwiftUI's layout pass, not through UIKit's hosting-size
+                    // rounding. Fractional chip widths must accumulate before rasterization.
+                    let oracle = IndependentHeaderLayout(width: width) {
                         ForEach(chords.indices, id: \.self) { index in
                             self.oracleChip(self.chords[index].name)
-                                .frame(width: rects[index].width, height: rects[index].height)
-                                .position(x: rects[index].midX, y: rects[index].midY)
                         }
                         Color.orange.frame(width: 44, height: 44)
-                            .position(x: versionRect.midX, y: versionRect.midY)
-                    }.frame(width: width, height: height)
+                    }
                     let actual = SongCaptionHeader(hasVersions: true) {
                         ChordChips(chords: self.chords, key: nil, tint: Palette.mint,
                                    identity: "oracle", wrapsAll: true)
@@ -75,6 +33,17 @@ final class SongCaptionLayoutTests: XCTestCase {
                     let pixels = try render(actual, width: width, language: language, size: size, name: "header-actual-" + suffix)
                     let expected = try render(oracle, width: width, language: language, size: size, name: "header-independent-" + suffix)
                     XCTAssertEqual(pixels, expected, "Full glyphs and separate action, not merely full AX labels: " + suffix)
+                    if language == "ar" {
+                        let doubleMirrored = IndependentHeaderLayout(width: width, doubleMirrorChips: true) {
+                            ForEach(chords.indices, id: \.self) { index in
+                                self.oracleChip(self.chords[index].name)
+                            }
+                            Color.orange.frame(width: 44, height: 44)
+                        }
+                        let wrongOrder = try render(doubleMirrored, width: width, language: language, size: size,
+                                                    name: "header-double-mirror-control-" + suffix)
+                        XCTAssertNotEqual(pixels, wrongOrder, "A second RTL mirror must fail the reading-order oracle")
+                    }
                     if size == .accessibility5 {
                         let former = HStack(alignment: .top, spacing: 6) {
                             ChordChips(chords: self.chords, key: nil, tint: Palette.mint, identity: "old")
@@ -129,6 +98,67 @@ final class SongCaptionLayoutTests: XCTestCase {
                         XCTAssertGreaterThanOrEqual(bounded.height + 0.5, natural.height, symbol)
                     }
                 }
+            }
+        }
+    }
+
+    /// Independent partition-by-rows oracle. It never calls SongCaptionFlow, its pack helper,
+    /// or SongCaptionHeader. Layout coordinates are logical; SwiftUI supplies the single RTL
+    /// transform. The versions action is at logical trailing, not a pre-mirrored .position.
+    private struct IndependentHeaderLayout: Layout {
+        let width: CGFloat
+        var doubleMirrorChips = false
+
+        private func rectangles(_ subviews: Subviews) -> [CGRect] {
+            precondition(subviews.count >= 2)
+            let chips = subviews.dropLast().map { view in
+                let ideal = view.sizeThatFits(.unspecified)
+                return view.sizeThatFits(ProposedViewSize(width: min(width, ideal.width), height: nil))
+            }
+            let intrinsic = chips.reduce(CGFloat.zero) { $0 + $1.width } + CGFloat(chips.count - 1) * 4
+            let horizontal = intrinsic + 6 + 44 <= width
+            var rows: [[Int]] = [[]]
+            for index in chips.indices {
+                let occupied = rows[rows.count - 1].reduce(CGFloat.zero) { $0 + chips[$1].width + 4 }
+                if !rows[rows.count - 1].isEmpty && occupied + chips[index].width > width {
+                    rows.append([])
+                }
+                rows[rows.count - 1].append(index)
+            }
+            var result = Array(repeating: CGRect.zero, count: chips.count)
+            var top: CGFloat = horizontal ? 0 : 50
+            for row in rows {
+                for (column, index) in row.enumerated() {
+                    let preceding = row.prefix(column).reduce(CGFloat.zero) { $0 + chips[$1].width + 4 }
+                    result[index] = CGRect(origin: CGPoint(x: preceding, y: top), size: chips[index])
+                }
+                top += (row.map { chips[$0].height }.max() ?? 0) + 4
+            }
+            let versionRect = CGRect(x: horizontal ? intrinsic + 6 : width - 44, y: 0, width: 44, height: 44)
+            for (index, rect) in result.enumerated() {
+                XCTAssertGreaterThanOrEqual(rect.minX, 0)
+                XCTAssertLessThanOrEqual(rect.maxX, width + 0.5)
+                XCTAssertFalse(rect.intersects(versionRect), "Chord \(index) must not overlap the 44pt action")
+                for other in result.indices where other != index {
+                    XCTAssertFalse(rect.intersects(result[other]))
+                }
+            }
+            return result + [versionRect]
+        }
+
+        func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+            CGSize(width: width, height: rectangles(subviews).map(\.maxY).max() ?? 0)
+        }
+
+        func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+            let rects = rectangles(subviews)
+            // These are logical positions, including the action. No manual RTL mirror here.
+            print("CHORD-ORACLE width=\(width) direction=\(subviews.layoutDirection) rectangles=\(rects)")
+            for index in rects.indices {
+                let rect = rects[index]
+                let x = doubleMirrorChips && index < rects.count - 1 ? width - rect.maxX : rect.minX
+                subviews[index].place(at: CGPoint(x: bounds.minX + x, y: bounds.minY + rect.minY),
+                           anchor: UnitPoint(x: 0, y: 0), proposal: ProposedViewSize(rect.size))
             }
         }
     }

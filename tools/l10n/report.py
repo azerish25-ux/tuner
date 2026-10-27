@@ -72,7 +72,8 @@ LANGUAGE_NAMES = {
     "lt": "Lithuanian", "lv": "Latvian", "ml": "Malayalam", "mr": "Marathi", "nl": "Dutch", "no": "Norwegian",
     "pa": "Punjabi", "pl": "Polish", "pt": "Portuguese", "ro": "Romanian", "ru": "Russian", "sk": "Slovak",
     "sl": "Slovenian", "sv": "Swedish", "sw": "Swahili", "ta": "Tamil", "te": "Telugu", "th": "Thai",
-    "tr": "Turkish", "uk": "Ukrainian", "ur": "Urdu", "vi": "Vietnamese", "zh-CN": "Chinese (Simplified)",
+    "tr": "Turkish", "uk": "Ukrainian", "ur": "Urdu", "vi": "Vietnamese", "zh-CN": "Chinese (Simplified)", "zh-Hant": "Chinese (Traditional)",
+    "ms": "Malay", "or": "Odia",
     "zu": "Zulu",
 }
 
@@ -112,6 +113,11 @@ def plural_source(entry: dict) -> str:
             return value["other"]
     return entry.get("NSStringLocalizedFormatKey", "")
 
+
+# Cardinal categories, not ordinal categories. Pinned to CLDR 49:
+# https://www.unicode.org/cldr/charts/49/supplemental/language_plural_rules.html
+# These new locales must not inherit English defaults before resources exist.
+NEW_LOCALE_CARDINAL_FORMS = {"zh-Hant": ("other",), "ms": ("other",), "or": ("one", "other")}
 
 PLURAL_FORMS = frozenset(("zero", "one", "two", "few", "many", "other"))
 
@@ -498,6 +504,9 @@ def check(table: str, key: str, source: str, value, loc: str) -> list:
         if source != rule["other"]:
             return ["plural source differs from the current English other form"]
         problems = []
+        required = NEW_LOCALE_CARDINAL_FORMS.get(loc)
+        if required is not None and set(value) != set(required):
+            problems.append(f"cardinal categories for {loc} must be {', '.join(required)}")
         for form, text in value.items():
             if form not in PLURAL_FORMS:
                 problems.append(f"{form}: unknown plural category")
@@ -522,8 +531,13 @@ def check(table: str, key: str, source: str, value, loc: str) -> list:
         return [("the numbers differ from the English" if p == "numbers" else
                  "the line breaks differ from the English" if p == "\n" else
                  f"the count of {p} differs from the English") for p in apply_learn.problems(source, value, loc)]
-    if ui_apply.specs(key if table != "InfoPlist.strings" else source) != ui_apply.specs(value):
-        return ["format arguments or ${…} tokens differ from the English"]
+    reference = source if table == "InfoPlist.strings" else ui_apply.format_source(table, key, RES)
+    if reference is None:
+        return ["semantic key has no current English source"]
+    if table == "Localizable.strings" and key.startswith("timbre_") and source != reference:
+        return ["semantic source differs from the current English value"]
+    if not ui_apply.formats_match(reference, value):
+        return ["format arguments or ${…} tokens differ from English, or mixed/gapped/conflicting slots are unsupported"]
     return []
 
 
@@ -890,7 +904,7 @@ def render_handoff(report: dict) -> str:
         for course, number, units in breakdown:
             w(f"| {course} | {number} | {units} |")
         w("")
-    w("Lessons and interface are required in all 49 app languages (English source + 48 translations). "
+    w("Lessons and interface are required in all 52 app languages (English source + 51 translations). "
       "English fallback is temporary missing content, never completed localization.")
     w("English-identical lesson strings need explicit source-bound independent semantic review in "
       "`tools/l10n/lesson-invariants.json` (locale/key, exact `source`, `reason`, actual `reviewed_by`). "
@@ -966,7 +980,7 @@ def render_handoff(report: dict) -> str:
     w("python3 tools/l10n/report.py --check --strict     # what CI runs: fails when this page is out of date")
     w("python3 tools/l10n/critical.py --baseline         # what CI runs: fails on a new untranslated critical string")
     w("python3 tools/l10n/shipping.py                    # coverage per locale, and the languages that ship")
-    w("python3 tools/l10n/lessons.py --strict             # full applied lesson coverage in all 48 targets")
+    w("python3 tools/l10n/lessons.py --strict             # full applied lesson coverage in all 51 targets")
     w("```")
     w("")
     w("`--import DIR` reads every `<locale>.json` in DIR (the TODO format), checks each translation, merges the good "

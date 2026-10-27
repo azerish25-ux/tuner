@@ -559,16 +559,16 @@ UNIT_7 = unit("thy-7", "Chords", "Stack thirds into triads, build major and mino
     lesson("thy-7-3", "The chords of a key", [
         explain("Chords from a scale", "Build a triad on each note of a scale, using only that scale's notes, and you get the "
                 "key's family of chords. C major has seven, one per note.", keyboard(C_SCALE[:7])),
-        quiz("Using only C major notes, what triad is built on D?", ["D major", "D minor", "D diminished"], 1,
+        quiz("Using only C major notes, what triad is built on D?", ["D major chord", "D minor", "D diminished"], 1,
              "D F A: a minor third, then a major third."),
-        quiz("Using only C major notes, what triad is built on G?", ["G major", "G minor", "G diminished"], 0,
+        quiz("Using only C major notes, what triad is built on G?", ["G major chord", "G minor", "G diminished"], 0,
              "G B D: a major third, then a minor third."),
         explain("The diminished chord", "The triad on B is different: B D F. Both thirds are minor, so it's a diminished "
                 "triad. It sounds tense and wants to move.", keyboard(["B3", "D4", "F4"])),
         listen("Which kind of chord is this?", [["B3", "D4", "F4"]], ["Major", "Minor", "Diminished"], 2),
         quiz("In C major, which chords are major?", ["C, D and E", "D, E and A", "C, F and G"], 2,
              "C E G, F A C and G B D each have a major third on the bottom."),
-        quiz("Using only C major notes, what triad is built on A?", ["A major", "A diminished", "A minor"], 2,
+        quiz("Using only C major notes, what triad is built on A?", ["A major chord", "A diminished", "A minor"], 2,
              "A C E: a minor third, then a major third."),
         notes(None, ["B3", "D4", "F4"], hint="Play or sing the diminished triad on B: B, D, F."),
     ]),
@@ -577,13 +577,13 @@ UNIT_7 = unit("thy-7", "Chords", "Stack thirds into triads, build major and mino
                 "for note 7. Uppercase means major, lowercase minor, and ° diminished."),
         explain("The major key pattern", "Every major key follows one pattern: I, ii, iii, IV, V, vi, vii°. In C major that's "
                 "C, D minor, E minor, F, G, A minor and B diminished.", keyboard(C_SCALE[:7])),
-        quiz("In C major, which chord is IV?", ["F major", "E minor", "G major"], 0, "The fourth note of C major is F."),
-        quiz("In C major, which chord is vi?", ["A major", "A minor", "F major"], 1,
+        quiz("In C major, which chord is IV?", ["F major chord", "E minor", "G major chord"], 0, "The fourth note of C major is F."),
+        quiz("In C major, which chord is vi?", ["A major chord", "A minor", "F major chord"], 1,
              "The sixth note is A, and lowercase vi means minor."),
-        quiz("In G major, which chord is V?", ["C major", "D minor", "D major"], 2,
+        quiz("In G major, which chord is V?", ["C major chord", "D minor", "D major chord"], 2,
              "Count up from G: G, A, B, C, D. The fifth note is D, and V is major."),
         quiz("Why is ii written in lowercase?", ["It's a quiet chord", "It's played higher", "It's a minor chord"], 2),
-        quiz("In G major, which chord is IV?", ["C major", "C minor", "D major"], 0, "G, A, B, C: the fourth note is C."),
+        quiz("In G major, which chord is IV?", ["C major chord", "C minor", "D major chord"], 0, "G, A, B, C: the fourth note is C."),
         listen("Which kind of chord is this?", [["D4", "F4", "A4"]], ["Major", "Minor", "Diminished"], 1),
     ], minutes=5, xp=25),
     lesson("thy-7-5", "Chords challenge", [
@@ -592,9 +592,9 @@ UNIT_7 = unit("thy-7", "Chords", "Stack thirds into triads, build major and mino
         quiz("Which notes spell G major?", ["G B D", "G B♭ D", "G C E"], 0),
         quiz("Which notes spell A minor?", ["A C♯ E", "A C E", "A D F"], 1),
         listen("Major or minor?", [["D4", "F#4", "A4"]], ["Major", "Minor"], 0),
-        quiz("In C major, which chord is ii?", ["D minor", "D major", "E minor"], 0),
+        quiz("In C major, which chord is ii?", ["D minor", "D major chord", "E minor"], 0),
         listen("Which kind of chord is this?", [["E4", "G4", "Bb4"]], ["Major", "Minor", "Diminished"], 2),
-        quiz("In F major, which chord is V?", ["B♭ major", "C major", "C minor"], 1, "F, G, A, B♭, C: the fifth note is C."),
+        quiz("In F major, which chord is V?", ["B♭ major chord", "C major chord", "C minor"], 1, "F, G, A, B♭, C: the fifth note is C."),
         quiz("Which triad is diminished?", ["B D F", "D F A", "G B D"], 0, "B to D and D to F are both minor thirds."),
         notes(None, ["G3", "B3", "D4"], hint="Play or sing the G major triad: G, B, D."),
     ], minutes=6, xp=35, kind="challenge"),
@@ -613,7 +613,7 @@ UNIT_8 = unit("thy-8", "Progressions", "How chords move in songs: I–IV–V, th
         explain("Home, away, and back", "I feels like home. IV moves away. V builds tension that pulls back to I. That trip, "
                 "out and back again, shapes a huge number of songs."),
         quiz("Which chord pulls most strongly back to I?", ["IV", "vi", "V"], 2, "V builds tension that resolves to I."),
-        quiz("In D major, which chord is IV?", ["G major", "A major", "E minor"], 0, "D, E, F♯, G: the fourth note is G."),
+        quiz("In D major, which chord is IV?", ["G major chord", "A major chord", "E minor"], 0, "D, E, F♯, G: the fourth note is G."),
         notes(None, ["C4", "F4", "G4", "C4"], hint="Play or sing the roots of I, IV, V, I in C: C, F, G, C."),
     ]),
     lesson("thy-8-2", "The pop progression", [
@@ -626,7 +626,7 @@ UNIT_8 = unit("thy-8", "Progressions", "How chords move in songs: I–IV–V, th
         explain("Same chords, new start", "Start the same loop on vi and you get vi–IV–I–V: A minor, F, C, G. The chords are "
                 "identical, but beginning on minor makes it sound more serious."),
         listen("Which progression do you hear?", chords("Am F C G"), ["I–V–vi–IV", "vi–IV–I–V"], 1),
-        quiz("In F major, which chord is vi?", ["D minor", "D major", "A minor"], 0,
+        quiz("In F major, which chord is vi?", ["D minor", "D major chord", "A minor"], 0,
              "F, G, A, B♭, C, D: the sixth note is D, and vi is minor."),
         notes(None, ["C4", "G4", "A4", "F4"], hint="Play or sing the roots of I–V–vi–IV in C: C, G, A, F."),
     ]),

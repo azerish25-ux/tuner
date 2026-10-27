@@ -37,12 +37,31 @@ final class LessonAccessibilityLayoutUITests: XCTestCase {
         isClear(target, within: app.frame)
     }
 
-    private func isClear(_ target: XCUIElement, within viewport: CGRect) -> Bool {
-        guard !viewport.isNull, !viewport.isEmpty, target.exists, target.isHittable else { return false }
-        let frame = target.frame
-        return frame.width > 0 && frame.height > 0
+    private static func valid(_ frame: CGRect) -> Bool {
+        [frame.minX, frame.maxX, frame.minY, frame.maxY, frame.width, frame.height].allSatisfy { $0.isFinite }
+            && !frame.isNull && !frame.isEmpty && frame.width > 0 && frame.height > 0
+    }
+
+    private static func contains(_ frame: CGRect, in viewport: CGRect) -> Bool {
+        valid(frame) && valid(viewport)
             && frame.minX >= viewport.minX && frame.maxX <= viewport.maxX
             && frame.minY >= viewport.minY && frame.maxY <= viewport.maxY
+    }
+
+    /// A fitting but clipped target is moved toward the centre, not merely to an edge.
+    /// Edge-only corrections can fall below gesture recognition distance and repeat without progress.
+    private static func scrollDistance(_ frame: CGRect, in viewport: CGRect) -> CGFloat? {
+        guard valid(frame), valid(viewport), frame.height <= viewport.height,
+              frame.minX >= viewport.minX, frame.maxX <= viewport.maxX,
+              !contains(frame, in: viewport) else { return nil }
+        let delta = viewport.midY - frame.midY
+        return min(viewport.height * 0.45, max(-viewport.height * 0.45, delta))
+    }
+
+    private func isClear(_ target: XCUIElement, within viewport: CGRect) -> Bool {
+        guard target.exists else { return false }
+        // Query geometry first; a hittable point is not evidence that the entire target is visible.
+        return Self.contains(target.frame, in: viewport) && target.isHittable
     }
 
     private func contentViewport(_ scroll: XCUIElement, above bottom: CGFloat?) -> CGRect {
@@ -58,24 +77,73 @@ final class LessonAccessibilityLayoutUITests: XCTestCase {
     private func scrollClear(_ target: XCUIElement, above bottom: CGFloat? = nil) {
         let scroll = app.scrollViews.firstMatch
         XCTAssertTrue(scroll.exists, "The overflowing lesson content must scroll")
-        for _ in 0..<12 {
+        var observations: [String] = []
+        defer {
+            let trace = XCTAttachment(string: observations.joined(separator: "\n"))
+            trace.name = "layout-ax5-scroll-geometry-" + target.identifier
+            trace.lifetime = .keepAlways
+            add(trace)
+        }
+        var previousFrame: CGRect?
+        var previousViewport: CGRect?
+        var stalled = 0
+        for attempt in 0..<12 {
             let viewport = contentViewport(scroll, above: bottom)
-            if isClear(target, within: viewport) { return }
-            guard target.exists, !viewport.isNull, !viewport.isEmpty else { break }
+            guard target.exists else { observations.append("target missing"); break }
             let frame = target.frame
-            // A full swipe overshoots a tall AX element and then oscillates back to the start.
-            // Move only the measured overflow, preserving the same complete-containment assertion.
-            let delta = frame.minY < viewport.minY ? viewport.minY - frame.minY : viewport.maxY - frame.maxY
-            let distance = min(viewport.height * 0.45, max(-viewport.height * 0.45, delta))
-            guard distance.isFinite, abs(distance) > 1 else { break }
+            let contained = Self.contains(frame, in: viewport)
+            let hittable = contained ? target.isHittable : false
+            let row = "attempt=\(attempt) viewport=\(viewport) target=\(frame) contained=\(contained) hittableWhenContained=\(hittable)"
+            observations.append(row)
+            print("TIMBRE_SCROLL_GEOMETRY " + row)
+            if contained && hittable { return }
+            // Scrolling must not turn an oversized, horizontally clipped, or genuinely occluded
+            // element into a passing result. An already contained but non-hittable target fails.
+            guard let distance = Self.scrollDistance(frame, in: viewport), abs(distance) > 1 else {
+                observations.append("no valid scroll plan; visibility/hittability still required")
+                break
+            }
+            if let previousFrame, let previousViewport, previousViewport == viewport,
+               abs(previousFrame.minY - frame.minY) < 1, abs(previousFrame.height - frame.height) < 1 {
+                stalled += 1
+            } else { stalled = 0 }
+            guard stalled < 2 else { observations.append("two consecutive gestures made no measured progress"); break }
+            previousFrame = frame
+            previousViewport = viewport
             let origin = app.coordinate(withNormalizedOffset: .zero)
-            let start = origin.withOffset(CGVector(dx: viewport.midX, dy: viewport.midY))
-            let end = origin.withOffset(CGVector(dx: viewport.midX, dy: viewport.midY + distance))
+            // Stay inside the scroll view, away from the central note/teaching content and screen edge.
+            let x = viewport.minX + min(24, viewport.width * 0.1)
+            let start = origin.withOffset(CGVector(dx: x, dy: viewport.midY))
+            let end = origin.withOffset(CGVector(dx: x, dy: viewport.midY + distance))
+            observations.append("dragDelta=\(distance) gutterX=\(x)")
             start.press(forDuration: 0.1, thenDragTo: end, withVelocity: .slow, thenHoldForDuration: 0.2)
         }
         capture("unreachable")
         XCTAssertTrue(isClear(target, within: contentViewport(scroll, above: bottom)),
                       "Target is not fully visible and hittable inside its scroll viewport: \(target)")
+    }
+
+    func testReachabilityPlanRequiresCompleteGeometry() {
+        let viewport = CGRect(x: 0, y: 116, width: 402, height: 580.7)
+        let bottomClipped = CGRect(x: 0, y: 371.7, width: 402, height: 350)
+        let topClipped = CGRect(x: 0, y: 106, width: 402, height: 350)
+        let up = Self.scrollDistance(bottomClipped, in: viewport)!
+        let down = Self.scrollDistance(topClipped, in: viewport)!
+        XCTAssertLessThan(up, -25.3)
+        XCTAssertGreaterThan(down, 10)
+        XCTAssertTrue(Self.contains(bottomClipped.offsetBy(dx: 0, dy: up), in: viewport))
+        XCTAssertTrue(Self.contains(topClipped.offsetBy(dx: 0, dy: down), in: viewport))
+        XCTAssertFalse(Self.contains(bottomClipped, in: viewport))
+        XCTAssertFalse(Self.contains(topClipped, in: viewport))
+        XCTAssertNil(Self.scrollDistance(CGRect(x: 0, y: 130, width: 402, height: 350), in: viewport))
+        XCTAssertNil(Self.scrollDistance(CGRect(x: 0, y: 100, width: 402, height: 700), in: viewport))
+        XCTAssertNil(Self.scrollDistance(CGRect(x: -1, y: 100, width: 402, height: 350), in: viewport))
+        XCTAssertNil(Self.scrollDistance(.zero, in: viewport))
+        XCTAssertNil(Self.scrollDistance(.infinite, in: viewport))
+        XCTAssertNil(Self.scrollDistance(topClipped, in: .null))
+        let farBelow = CGRect(x: 0, y: 1400, width: 402, height: 350)
+        XCTAssertEqual(Self.scrollDistance(farBelow, in: viewport)!, -viewport.height * 0.45, accuracy: 0.001)
+        XCTAssertFalse(Self.contains(farBelow.offsetBy(dx: 0, dy: -viewport.height * 0.45), in: viewport))
     }
 
     func testNotesAndTeachingContentRemainReachableAtAX5() throws {

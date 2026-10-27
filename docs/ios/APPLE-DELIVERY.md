@@ -99,7 +99,7 @@ The job writes the private key to a restricted temporary directory and removes i
 | Repository variable | Build setting | Effect / decision |
 |---|---|---|
 | `TELEMETRYDECK_APP_ID` | `TIMBRE_TELEMETRY_APP_ID` | Optional TelemetryDeck transport when usage sharing is enabled; absent disables this transport, attribution HTTP and song-request submission |
-| `TIMBRE_APP_STORE_ID` | Same | Real numeric Apple ID for store/share/offer links; verify after app record creation |
+| `TIMBRE_APP_STORE_ID` | Optional repository variable | Defaults to registered draft record `6827721551` in both the project and delivery workflow; an owner variable overrides it. Registration is not evidence of a live public listing, upload, review, or approval. |
 | `TIMBRE_SHARE_URL` | Same | Optional HTTPS share landing page; absent falls back to App Store link when its ID is configured |
 | `TIMBRE_REMOTE_CONFIG_URL` | Same | Optional HTTPS remote settings; absent uses built-in defaults |
 | Not a workflow variable | `TIMBRE_PRIVACY_POLICY_URL` | Committed published privacy URL in `ios/project.yml`; changing it needs source review |

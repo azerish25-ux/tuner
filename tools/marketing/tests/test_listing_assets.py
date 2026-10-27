@@ -48,17 +48,18 @@ class ListingPlanTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             assets.make_plan('all', 'all', shard_size=50)
 
-    def test_listing_only_languages_are_requested_then_english_not_claimed_supported(self):
-        for locale, first in assets.FALLBACK_LANGUAGES.items():
+    def test_new_app_languages_are_requested_without_english_fallback(self):
+        for locale, language in [('ms', 'ms'), ('or-IN', 'or'), ('zh-Hant', 'zh-Hant')]:
             spec = assets.locale_spec(locale)
-            self.assertEqual(spec['apple_languages'], [first, 'en'])
-            self.assertEqual(spec['app_language'], 'en')
-            self.assertFalse(spec['ui_support_claim'])
-            self.assertTrue(spec['listing_only_fallback'])
+            self.assertEqual(spec['app_language'], language)
+            self.assertEqual(spec['apple_languages'], [language])
+            self.assertFalse(spec['listing_only_fallback'])
+            self.assertTrue(spec['ui_support_claim'])
         self.assertEqual(assets.locale_spec('de-DE')['apple_languages'], ['de'])
         self.assertEqual(assets.locale_spec('zh-Hans')['app_language'], 'zh-CN')
         self.assertEqual(assets.locale_spec('pt-PT')['apple_locale'], 'pt_PT')
         self.assertEqual(assets.locale_spec('pt-BR')['apple_locale'], 'pt_BR')
+
 
     def test_real_test_selectors_cover_nine_phone_and_four_tablet_frames(self):
         phone = (assets.ROOT / 'ios/TimbreUITests/TimbreUITests.swift').read_text()
@@ -132,8 +133,8 @@ class EvidenceTests(unittest.TestCase):
     def test_launch_environment_keeps_expected_and_requested_languages_separate(self):
         spec = assets.locale_spec('zh-Hant')
         env = runner.environment(spec)
-        self.assertEqual(env['TEST_RUNNER_TIMBRE_UI_LANGUAGE'], 'en')
-        self.assertEqual(env['TEST_RUNNER_TIMBRE_UI_APPLE_LANGUAGES'], 'zh-Hant,en')
+        self.assertEqual(env['TEST_RUNNER_TIMBRE_UI_LANGUAGE'], 'zh-Hant')
+        self.assertEqual(env['TEST_RUNNER_TIMBRE_UI_APPLE_LANGUAGES'], 'zh-Hant')
         self.assertEqual(env['TEST_RUNNER_TIMBRE_LISTING_LOCALE'], 'zh-Hant')
 
     def test_zero_tests_or_skipped_test_cannot_pass(self):
@@ -306,7 +307,7 @@ class AggregationTests(unittest.TestCase):
                 self.assertTrue(any('Malformed plan' in message for message in result['errors']))
                 self.assertTrue(any('unreadable manifest JSON' in message for message in result['errors']))
 
-    def test_complete_all_fifty_phone_inventory_and_fallback_remain_unapproved(self):
+    def test_complete_all_fifty_phone_inventory_remains_unapproved(self):
         with tempfile.TemporaryDirectory() as folder, patch.object(assets, 'lesson_provenance', return_value={'lesson_resource_status': 'shipped', 'lesson_resource_sha256': 'd' * 64}):
             locales = list(assets.locale_rows())
             for locale in locales:
@@ -317,8 +318,8 @@ class AggregationTests(unittest.TestCase):
             self.assertFalse(result['release_ready'])
             self.assertEqual(result['visual_review'], 'pending')
             fallback = [row for row in result['manifests'] if row['listing_only_fallback']]
-            self.assertEqual({row['listing_locale'] for row in fallback}, {'ms', 'or-IN', 'zh-Hant'})
-            self.assertTrue(all(not row['ui_support_claim'] for row in fallback))
+            self.assertEqual({row['listing_locale'] for row in fallback}, set())
+            self.assertTrue(all(row['ui_support_claim'] for row in result['manifests']))
 
     def test_complete_identical_pixels_in_different_app_languages_are_rejected(self):
         with tempfile.TemporaryDirectory() as folder:

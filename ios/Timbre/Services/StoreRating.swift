@@ -18,6 +18,9 @@ final class StoreRating: ObservableObject {
         let count: Int
         /// The storefront it was read for (ISO 3166-1 alpha-3, as StoreKit names it).
         let storefront: String
+        /// Identity binding also applies to persisted ratings; old unbound caches fail decoding.
+        let appID: String
+        let bundleID: String
     }
 
     static let minimumStars = 4.6
@@ -31,42 +34,46 @@ final class StoreRating: ObservableObject {
 
     /// The last rating read, whether or not it clears the bar.
     @Published private(set) var fetched: Line?
+    /// Unknown at launch: a cached rating cannot establish the person’s current storefront.
+    @Published private var currentStorefront: String?
     private var fetching = false
 
     private init() {
-        fetched = UserDefaults.standard.data(forKey: Self.cacheKey).flatMap { try? JSONDecoder().decode(Line.self, from: $0) }
+        let cached = UserDefaults.standard.data(forKey: Self.cacheKey).flatMap { try? JSONDecoder().decode(Line.self, from: $0) }
+        fetched = cached.flatMap { Self.matchesCurrentApp($0) ? $0 : nil }
     }
 
     /// The line to show: this storefront's rating when it clears the bar and the remote settings allow it.
     var line: Line? {
-        guard RemoteConfig.shared.ratingAllowed, let fetched,
+        guard RemoteConfig.shared.ratingAllowed,
+              let fetched = Self.matchingStorefront(fetched, currentStorefront: currentStorefront),
+              Self.matchesCurrentApp(fetched),
               fetched.stars >= Self.minimumStars, fetched.count >= Self.minimumRatings else { return nil }
         return fetched
     }
 
     /// Reads the rating again when the last reading is a day old or was for another storefront.
     func refresh() async {
-        guard !TestSupport.isAutomated, !fetching, let id = AppLinks.appStoreID,
-              let storefront = await Storefront.current?.countryCode else { return }
+        guard !TestSupport.isAutomated, !fetching else { return }
+        fetching = true
+        defer { fetching = false }
+        // Resolve and publish before any cache shortcut or network attempt. A changed or
+        // unavailable storefront must hide the old-country line even when fetching fails.
+        let resolvedStorefront = await Storefront.current?.countryCode
+        currentStorefront = resolvedStorefront
+        guard let id = AppLinks.appStoreID, let storefront = resolvedStorefront else { return }
         let defaults = UserDefaults.standard
         if let last = defaults.object(forKey: Self.fetchedKey) as? Date, Date().timeIntervalSince(last) < Self.interval,
            fetched?.storefront == storefront { return }
-        fetching = true
-        defer { fetching = false }
         var components = URLComponents(string: "https://itunes.apple.com/lookup")
         components?.queryItems = [URLQueryItem(name: "id", value: id), URLQueryItem(name: "country", value: Self.lookupCountry(storefront))]
         guard let url = components?.url else { return }
         var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 8)
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         guard let (data, response) = try? await Self.session.data(for: request),
-              (response as? HTTPURLResponse)?.statusCode == 200, data.count <= Self.maxBytes,
-              let lookup = try? JSONDecoder().decode(Lookup.self, from: data) else { return }
+              (response as? HTTPURLResponse)?.statusCode == 200, data.count <= Self.maxBytes else { return }
         defaults.set(Date(), forKey: Self.fetchedKey)
-        var next: Line?
-        if let result = lookup.results.first, let stars = result.averageUserRating, let count = result.userRatingCount,
-           stars.isFinite, (0...5).contains(stars), count >= 0 {
-            next = Line(stars: stars, count: count, storefront: storefront)
-        }
+        let next = Self.validatedLookup(data, appID: id, bundleID: Bundle.main.bundleIdentifier, storefront: storefront)
         if let next, let data = try? JSONEncoder().encode(next) {
             defaults.set(data, forKey: Self.cacheKey)
         } else {
@@ -75,12 +82,44 @@ final class StoreRating: ObservableObject {
         if next != fetched { fetched = next }
     }
 
-    /// The lookup's answer, reduced to the rating (every other field is ignored).
+    /// Accept only the configured numeric Apple ID and this app's actual bundle identity.
+    /// An unpublished draft, empty lookup, malformed payload or other app is never social proof.
+    static func validatedLookup(_ data: Data, appID: String, bundleID: String?, storefront: String) -> Line? {
+        guard data.count <= maxBytes, let number = Int64(appID), number > 0, String(number) == appID,
+              let bundleID, !bundleID.isEmpty,
+              let lookup = try? JSONDecoder().decode(Lookup.self, from: data),
+              lookup.resultCount == 1, lookup.results.count == 1, let result = lookup.results.first,
+              result.trackId == number, result.bundleId == bundleID,
+              let stars = result.averageUserRating, let count = result.userRatingCount,
+              stars.isFinite, (0...5).contains(stars), count >= 0 else { return nil }
+        return Line(stars: stars, count: count, storefront: storefront, appID: appID, bundleID: bundleID)
+    }
+
+    /// A stored country is provenance, not evidence of the current StoreKit storefront.
+    static func matchingStorefront(_ line: Line?, currentStorefront: String?) -> Line? {
+        guard let currentStorefront, !currentStorefront.isEmpty,
+              let line, line.storefront == currentStorefront else { return nil }
+        return line
+    }
+
+    private static func matchesCurrentApp(_ line: Line) -> Bool {
+        validCachedLine(line, appID: AppLinks.appStoreID, bundleID: Bundle.main.bundleIdentifier)
+    }
+
+    static func validCachedLine(_ line: Line, appID: String?, bundleID: String?) -> Bool {
+        line.appID == appID && line.bundleID == bundleID
+            && line.stars.isFinite && (0...5).contains(line.stars) && line.count >= 0
+    }
+
+    /// Apple's ID-based lookup includes the record and bundle identities, not just rating totals.
     private struct Lookup: Decodable {
         struct Result: Decodable {
+            let trackId: Int64?
+            let bundleId: String?
             let averageUserRating: Double?
             let userRatingCount: Int?
         }
+        let resultCount: Int
         let results: [Result]
     }
 

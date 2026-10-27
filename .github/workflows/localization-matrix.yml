@@ -6,7 +6,12 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: localization-matrix-${{ github.ref }}
+  # Isolate no-marker pushes so they cannot replace a queued requested matrix.
+  group: >-
+    localization-matrix-${{ github.ref }}-${{
+      (github.event_name == 'workflow_dispatch' ||
+       contains(github.event.head_commit.message, '[l10n-matrix]')) && 'requested' || 'noop'
+    }}
   # A newer explicit matrix request supersedes stale queued/running tests; ordinary checkpoints do not.
   cancel-in-progress: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[l10n-matrix]') }}
 jobs:
@@ -28,6 +33,7 @@ jobs:
           - 'et,lt,lv,hu,ro,sl'
           - 'hi,gu,kn,ml,mr,pa'
           - 'ta,te,tr,el,sw,zu'
+          - 'zh-Hant,ms,or'
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
       HOMEBREW_NO_AUTO_UPDATE: '1'

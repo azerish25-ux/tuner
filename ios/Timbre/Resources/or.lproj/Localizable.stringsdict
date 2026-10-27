@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>%lld cents flat</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld ସେଣ୍ଟ ନିମ୍ନ</string>
+			<key>other</key>
+			<string>%lld ସେଣ୍ଟ ନିମ୍ନ</string>
+		</dict>
+	</dict>
+	<key>%lld cents sharp</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld ସେଣ୍ଟ ଉଚ୍ଚ</string>
+			<key>other</key>
+			<string>%lld ସେଣ୍ଟ ଉଚ୍ଚ</string>
+		</dict>
+	</dict>
+	<key>Every %lld bars</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>ପ୍ରତି %lld ଆବର୍ତ୍ତରେ</string>
+			<key>other</key>
+			<string>ପ୍ରତି %lld ଆବର୍ତ୍ତରେ</string>
+		</dict>
+	</dict>
+	<key>%lld sessions</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld ଅଭ୍ୟାସ</string>
+			<key>other</key>
+			<string>%lld ଅଭ୍ୟାସ</string>
+		</dict>
+	</dict>
+	<key>%lld minutes</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld ମିନିଟ୍</string>
+			<key>other</key>
+			<string>%lld ମିନିଟ୍</string>
+		</dict>
+	</dict>
+	<key>Practised on %lld days in the last twelve weeks</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>ଗତ ବାର ସପ୍ତାହରେ %lld ଦିନ ଅଭ୍ୟାସ କରିଛନ୍ତି</string>
+			<key>other</key>
+			<string>ଗତ ବାର ସପ୍ତାହରେ %lld ଦିନ ଅଭ୍ୟାସ କରିଛନ୍ତି</string>
+		</dict>
+	</dict>
+	<key>Practised today. Best run %lld days.</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>ଆଜି ଅଭ୍ୟାସ କରିଛନ୍ତି। ଦୀର୍ଘତମ ଧାରା %lld ଦିନ।</string>
+			<key>other</key>
+			<string>ଆଜି ଅଭ୍ୟାସ କରିଛନ୍ତି। ଦୀର୍ଘତମ ଧାରା %lld ଦିନ।</string>
+		</dict>
+	</dict>
+</dict>
+</plist>

@@ -1,0 +1,28 @@
+{
+  "correction_file": "new-locales-work/review-or-lessons/wave032-corrections.json",
+  "correction_file_sha256": "8b5c38fa08b3d80d27537f7eacaefdb71e6151425ec9bc4d53a545501c178068",
+  "reason": "Correction rows inherited target_sha256 from original frozen rows. That field refers to OLD target; corrected_target_sha256 below binds exact proposed translation. No translation or review scope changed.",
+  "rows": [
+    {
+      "key": "Lda591e9132",
+      "index": 5368,
+      "old_target_sha256": "6f711abcb0ad414a49cb72a72488d690de5a2b3cad145c3dbd8db9e8e901cd57",
+      "corrected_target_sha256": "3350d777eea362e0599198de1d4ed1b894a0d325e682a884d0bf670cd5bcebc3",
+      "translation": "ବଡ଼ ସ୍ୱରାନ୍ତରର ଡିଆଁ, ଛୋଟ ସ୍ୱରାନ୍ତର ଓ ଅର୍ଦ୍ଧ ସ୍ୱରାନ୍ତର, ଉଚ୍ଚ ଓ ନିମ୍ନ, ସବୁ ମିଶିଛି। ପ୍ରତ୍ୟେକଟି ପୂର୍ବରୁ ଥରେ ଶ୍ୱାସ ନିଅନ୍ତୁ।"
+    },
+    {
+      "key": "L937007d20f",
+      "index": 5397,
+      "old_target_sha256": "2babe338be9a60ae019cbccf311b05f2760ae3ac725718208b4bd7971e4d0c33",
+      "corrected_target_sha256": "69bf8bbda1b0c3f4dd45462562c7c5512f0002b15effa27d378480261f92182a",
+      "translation": "କ୍ରମିକ ଗତି ଓ ଡିଆଁ"
+    },
+    {
+      "key": "Lbd83f6cdd0",
+      "index": 5398,
+      "old_target_sha256": "c13897267549e46f2ff33e9371849a09411debe75a043540d11e8853deb3a345",
+      "corrected_target_sha256": "addae43c530fff543ee9804df8a336f8927c34bbbc5ea43b5f550c31bd8435d0",
+      "translation": "ଅର୍ଦ୍ଧ ଓ ପୂର୍ଣ୍ଣ ସ୍ୱରାନ୍ତର ଶୁଣନ୍ତୁ, ତାପରେ ତୃତୀୟ ସ୍ୱରାନ୍ତରର ବଡ଼ ଡିଆଁ ଶୁଣନ୍ତୁ।"
+    }
+  ]
+}

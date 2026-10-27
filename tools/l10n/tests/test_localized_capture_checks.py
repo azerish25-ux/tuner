@@ -117,7 +117,7 @@ class LocalizedCaptureChecksTests(unittest.TestCase):
         import report
         locales = sorted(p.stem for p in report.RES.glob('*.lproj'))
         expected = matrix_fixture.fixture(locales)
-        self.assertEqual(len(expected), 49)
+        self.assertEqual(len(expected), 52)
         self.assertEqual(expected['en']['headline'], matrix_fixture.KEYS['headline'])
         for labels in expected.values():
             for key in ['tune', 'learn', 'songs', 'practice', 'progress', 'tuned', 'in_tune']:

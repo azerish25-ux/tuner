@@ -64,8 +64,8 @@ def check_workflow(path):
     locales = ','.join(rows).split(',')
     validate_locales(locales)
     shipped = {p.name.removesuffix('.lproj') for p in report.RES.glob('*.lproj') if p.name != 'en.lproj'}
-    if len(locales) != 48 or set(locales) != shipped:
-        raise ValueError(f'Matrix must cover all 48 translated locales exactly: missing={shipped - set(locales)}, extra={set(locales) - shipped}')
+    if len(locales) != 51 or set(locales) != shipped or shipped != set(report.LANGUAGE_NAMES):
+        raise ValueError(f'Matrix must cover all 51 translated locales exactly: missing={shipped - set(locales)}, extra={set(locales) - shipped}')
 
 
 def fixture(locales):
@@ -114,7 +114,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--locales', required=True, help='Comma-separated locale codes')
     parser.add_argument('--out', type=Path, required=True)
-    parser.add_argument('--check-workflow', type=Path, help='Require exactly all 48 translated locales in workflow shards')
+    parser.add_argument('--check-workflow', type=Path, help='Require exactly all 51 translated locales in workflow shards')
     parser.add_argument('--verify-log', type=Path, help='Require executed UI and imported-lesson markers')
     args = parser.parse_args()
     locales = args.locales.split(',')

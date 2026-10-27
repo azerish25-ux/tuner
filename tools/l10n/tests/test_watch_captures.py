@@ -39,8 +39,9 @@ class WatchCaptureTests(unittest.TestCase):
     def tearDown(self):
         self.temp.cleanup()
 
-    def test_real_applied_labels_and_exact_49_language_coverage(self):
-        self.assertEqual(len(self.expected), 49)
+    def test_real_applied_labels_and_exact_52_language_coverage(self):
+        self.assertEqual(set(self.expected), watch.SHIPPED_LANGUAGES)
+        self.assertEqual(len(self.expected), 52)
         self.assertIn('en', self.expected)
         self.assertEqual(self.expected['de']['today']['practiced'], 'Heute geübt')
         self.assertEqual(set(self.expected['ar']), {'today', 'metronome'})
@@ -222,17 +223,68 @@ class WatchCaptureTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 watch.validate_coverage(bad, set(self.expected))
 
-    def test_all_50_store_locales_bind_supported_or_explicit_fallback_media(self):
+    def test_all_50_store_locales_bind_supported_app_language_media(self):
         mapping = watch.store_mappings(set(self.expected))
         self.assertEqual(len(mapping), 50)
         rows = {row['store_locale']: row for row in mapping}
-        for locale in ['ms', 'or-IN', 'zh-Hant']:
-            self.assertEqual(rows[locale]['capture_language'], 'en')
-            self.assertEqual(rows[locale]['mapping'], 'explicit_english_fallback')
+        for locale, language in [('ms', 'ms'), ('or-IN', 'or'), ('zh-Hant', 'zh-Hant')]:
+            self.assertEqual(rows[locale]['capture_language'], language)
+        self.assertTrue(all(row['mapping'] == 'supported_app_language' and row['translated_app_ui'] for row in mapping))
         self.assertEqual(rows['zh-Hans']['capture_language'], 'zh-CN')
         self.assertEqual(rows['en-CA']['capture_language'], 'en')
         with self.assertRaises(ValueError):
             watch.store_mappings({'en'})
+
+
+class WatchExpandedScopeContractTests(unittest.TestCase):
+    def test_full_workflow_is_opt_in_and_noop_concurrency_is_isolated(self):
+        workflow = (Path(__file__).resolve().parents[3] / '.github/workflows/watch-captures.yml').read_text()
+        self.assertIn("contains(github.event.head_commit.message, '[watch-captures-all]')", workflow)
+        self.assertIn("&& 'requested' || 'noop'", workflow)
+        self.assertIn('cancel-in-progress: false', workflow)
+        self.assertNotIn('cancel-in-progress: true', workflow)
+        self.assertIn("github.event_name == 'workflow_dispatch'", workflow)
+        self.assertIn("github.ref == 'refs/heads/main'", workflow)
+        self.assertIn("github.ref == 'refs/heads/codex/app-store-readiness-gates'", workflow)
+        self.assertIn('104 images', workflow)
+        self.assertNotIn('watch-captures-pilot', workflow)
+
+    def test_probe_language_normalization_preserves_chinese_scripts(self):
+        aliases = {'zh-Hant': 'zh-Hant', 'zh-TW': 'zh-Hant', 'zh_HK': 'zh-Hant',
+                   'zh-MO': 'zh-Hant', 'zh-Hant-CN': 'zh-Hant', 'zh-Hans-TW': 'zh-CN',
+                   'zh-CN': 'zh-CN', 'zh-SG': 'zh-CN', 'ms-MY': 'ms', 'or-IN': 'or'}
+        for alias, wanted in aliases.items():
+            self.assertEqual(watch.normalized_language(alias), wanted)
+        self.assertNotEqual(watch.normalized_language('zh-Hant'), watch.normalized_language('zh-Hans'))
+
+    def test_canonical_set_has_52_languages_and_requires_new_three(self):
+        self.assertEqual(len(watch.SHIPPED_LANGUAGES), 52)
+        self.assertTrue({'zh-Hant', 'ms', 'or'} <= watch.SHIPPED_LANGUAGES)
+        self.assertNotIn('or-IN', watch.SHIPPED_LANGUAGES)
+
+    def test_previous49_scope_and_same_count_alias_replacement_are_rejected(self):
+        wanted = sorted(watch.SHIPPED_LANGUAGES - {'en'})
+        for bad in ([x for x in wanted if x not in {'zh-Hant', 'ms', 'or'}],
+                    ['or-IN' if x == 'or' else x for x in wanted], wanted + ['ms']):
+            with patch.object(watch.report, 'locales', return_value=bad):
+                with self.assertRaisesRegex(ValueError, '52 canonical'):
+                    watch.expectations()
+
+    def test_historical98_rows_cannot_certify_expanded104_coverage(self):
+        old = watch.SHIPPED_LANGUAGES - {'zh-Hant', 'ms', 'or'}
+        rows = [{'language': lang, 'page': page} for lang in old for page in watch.PAGES]
+        self.assertEqual(len(rows), 98)
+        with self.assertRaises(ValueError):
+            watch.validate_coverage(rows, watch.SHIPPED_LANGUAGES)
+        rows = [{'language': lang, 'page': page} for lang in watch.SHIPPED_LANGUAGES for page in watch.PAGES]
+        self.assertEqual(len(rows), 104)
+        watch.validate_coverage(rows, watch.SHIPPED_LANGUAGES)
+
+    def test_english_fallback_mapping_is_rejected_even_when_images_exist(self):
+        inventory = {'locales': [{'locale': 'ms', 'app_locale': None, 'app_fallback': 'en'}]}
+        with patch.object(Path, 'read_text', return_value=json.dumps(inventory)):
+            with self.assertRaisesRegex(ValueError, 'not fallback'):
+                watch.store_mappings(watch.SHIPPED_LANGUAGES)
 
 
 if __name__ == '__main__':

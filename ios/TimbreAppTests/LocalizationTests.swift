@@ -48,17 +48,30 @@ final class LocalizationTests: XCTestCase {
                      ("hi-IN", "hi"), ("hr-HR", "hr"), ("hu-HU", "hu"), ("id-ID", "id"),
                      ("is-IS", "is"), ("it-IT", "it"), ("ja-JP", "ja"), ("kn-IN", "kn"),
                      ("ko-KR", "ko"), ("lt-LT", "lt"), ("lv-LV", "lv"), ("ml-IN", "ml"),
-                     ("mr-IN", "mr"), ("nl-NL", "nl"), ("nb-NO", "no"), ("pa-Guru-IN", "pa"),
+                     ("mr-IN", "mr"), ("ms-MY", "ms"), ("or-IN", "or"), ("nl-NL", "nl"), ("nb-NO", "no"), ("pa-Guru-IN", "pa"),
                      ("pl-PL", "pl"), ("pt-BR", "pt"), ("ro-RO", "ro"), ("ru-RU", "ru"),
                      ("sk-SK", "sk"), ("sl-SI", "sl"), ("sv-SE", "sv"), ("sw-KE", "sw"),
                      ("ta-IN", "ta"), ("te-IN", "te"), ("th-TH", "th"), ("tr-TR", "tr"),
                      ("uk-UA", "uk"), ("ur-PK", "ur"), ("vi-VN", "vi"), ("zh-Hans-CN", "zh-CN"),
-                     ("zu-ZA", "zu")]
-        XCTAssertEqual(cases.count, 49)
+                     ("zh-Hant-TW", "zh-Hant"), ("zu-ZA", "zu")]
+        XCTAssertEqual(cases.count, 52)
         XCTAssertEqual(Set(cases.map { $0.1 }), Set(available.filter { $0 != "Base" }))
         for (phone, expected) in cases {
             XCTAssertEqual(Bundle.preferredLocalizations(from: available, forPreferences: [phone]).first,
                            expected, "phone language \(phone)")
+        }
+    }
+
+    func testExplicitRegionalAliasesResolveToTheCorrectScript() throws {
+        let aliases = ["zh-Hant": "zh-Hant", "zh-TW": "zh-Hant", "zh-HK": "zh-Hant", "zh-MO": "zh-Hant",
+                       "zh-Hans": "zh-CN", "zh-CN": "zh-CN", "zh-SG": "zh-CN", "ms-MY": "ms", "or-IN": "or"]
+        for (alias, canonical) in aliases {
+            XCTAssertEqual(TimbreLocalization.resolvedLanguage(for: alias), canonical)
+            XCTAssertEqual(Bundle.preferredLocalizations(from: Bundle.main.localizations, forPreferences: [alias]).first, canonical)
+            TimbreLocalization.language = alias
+            let path = try XCTUnwrap(Bundle.main.path(forResource: canonical, ofType: "lproj"))
+            let expected = try XCTUnwrap(Bundle(path: path))
+            XCTAssertEqual(TimbreLocalization.bundle.bundleURL, expected.bundleURL)
         }
     }
 

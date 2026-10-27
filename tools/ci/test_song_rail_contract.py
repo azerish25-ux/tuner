@@ -105,9 +105,14 @@ class SongRailContractTests(unittest.TestCase):
 
     def test_selection_browsing_fades_and_unclipped_height_remain(self):
         self.assertIn('.railBleed(leading: Metrics.gutter, trailing: Metrics.gutter)', RAIL)
-        self.assertIn('if phase == .interacting { browsed = true }', RAIL)
-        self.assertIn('if resized && !browsed { revealed = false }', RAIL)
-        self.assertIn('scroller.scrollTo(selection, anchor: .center)', RAIL)
+        self.assertIn('ScrollPosition(idType: Item.ID.self)', RAIL)
+        self.assertIn('.scrollPosition($position, anchor: .trailing)', RAIL)
+        self.assertIn('position.scrollTo(id: selection, anchor: .center)', RAIL)
+        self.assertIn('position.scrollTo(id: value, anchor: .center)', RAIL)
+        self.assertIn('guard !initialized else { return }', RAIL)
+        self.assertNotIn('DispatchQueue.main.async', RAIL)
+        self.assertNotIn('onGeometryChange', RAIL)
+        self.assertNotIn('onScrollTargetVisibilityChange', RAIL)
         self.assertNotIn('.clipped()', RAIL)
         self.assertNotIn('.dynamicTypeSize(', RAIL)
 
@@ -123,8 +128,9 @@ class SongRailContractTests(unittest.TestCase):
         self.assertIn('testFullCatalogueRemainsReachableRightToLeft', test)
         self.assertIn('verifyActions', test)
         self.assertIn('rail.frame.height, height, accuracy: 1', test)
-        self.assertIn('-only-testing:TimbreUITests/SongShelfRailUITests',
-                      (ROOT / '.github/workflows/nightly.yml').read_text())
+        workflow = (ROOT / '.github/workflows/nightly.yml').read_text()
+        self.assertIn('test_class: SongShelfRailUITests', workflow)
+        self.assertIn('-only-testing:TimbreUITests/${{ matrix.test_class }}', workflow)
 
     def test_reveal_checks_stable_geometry_before_actual_hittability(self):
         test = (ROOT / 'ios/TimbreUITests/SongShelfRailUITests.swift').read_text()
@@ -140,6 +146,18 @@ class SongRailContractTests(unittest.TestCase):
             self.assertIn(token, reveal)
         for forbidden in ['try?', 'catch', 'XCTSkip', 'target.exists && target.isHittable']:
             self.assertNotIn(forbidden, reveal)
+
+    def test_rotation_and_unrealized_target_preserve_diagnostics_and_containment(self):
+        test = (ROOT / 'ios/TimbreUITests/SongShelfRailUITests.swift').read_text()
+        rotation = test.split('private func assertRotationVisible(', 1)[1].split('private func usable(', 1)[0]
+        self.assertLess(rotation.index('capture(stage)'), rotation.index('card.isHittable'))
+        for token in ['stableFrame(card)', 'frame.minX, viewport.minX - 1',
+                      'frame.maxX, viewport.maxX + 1', 'frame.minY, viewport.minY - 1',
+                      'frame.maxY, viewport.maxY + 1', 'XCTAssertTrue(card.isHittable']:
+            self.assertIn(token, rotation)
+        self.assertIn('SONG-RAIL progress:', test)
+        self.assertIn('if attempt % 10 == 0 { logProgress', test)
+        self.assertIn('for attempt in 0..<85', test)
 
     def test_adaptive_physical_drag_centers_both_failure_geometries(self):
         # Independent geometry model using the two native failure frames. Physical centering must not
@@ -194,6 +212,21 @@ class SongRailContractTests(unittest.TestCase):
         header = source.split('let actual = SongCaptionHeader(hasVersions: true) {', 1)[1].split('} versions:', 1)[0]
         self.assertIn('ChordChips(chords: self.chords,', header)
         self.assertNotIn('ChordChips(chords: chords,', header)
+
+    def test_chord_oracle_keeps_fractional_layout_and_single_rtl_transform(self):
+        production = (ROOT / 'ios/Timbre/Songs/SongCaptionLayout.swift').read_text()
+        native = (ROOT / 'ios/TimbreAppTests/SongCaptionLayoutTests.swift').read_text()
+        self.assertIn('let logicalX = direction == .rightToLeft ? bounds.width - frame.maxX : frame.minX', production)
+        self.assertIn('bounds.minX + logicalX', production)
+        oracle = native.split('private struct IndependentHeaderLayout: Layout {', 1)[1].split('private func oracleChip', 1)[0]
+        for forbidden in ['SongCaptionFlow.pack', 'UIHostingController', '.position(', 'rounded()', 'ceil(']:
+            self.assertNotIn(forbidden, oracle)
+        for token in ['view.sizeThatFits(.unspecified)', 'row.prefix(column)',
+                      'XCTAssertFalse(rect.intersects(versionRect)', 'CHORD-ORACLE width=']:
+            self.assertIn(token, oracle)
+        self.assertIn('XCTAssertEqual(pixels, expected', native)
+        self.assertIn('XCTAssertNotEqual(pixels, wrongOrder', native)
+        self.assertIn('XCTAssertNotEqual(pixels, oldPixels', native)
 
     def test_metadata_adapts_without_truncating_or_shrinking_values(self):
         metadata = SONGS.split('struct TileMetadata: View {', 1)[1].split('/// The part of a title', 1)[0]

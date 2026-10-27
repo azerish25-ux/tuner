@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "locale": "zh-Hant",
+  "review_type": "independent AI source-context semantic review",
+  "reviewed_utc": "2026-10-27T21:20:12Z",
+  "input_sha256": "105d4874b9db05dc8b6f3616455dac15b1b188f8c26c4ed89ee68ef095b2bbbc",
+  "contexts_sha256": "549dd2be182afafb5ea7271fa888b0217cf924b23e5fcebe9a4c98bb67e8dbf7",
+  "accepted_count": 16,
+  "corrections": [],
+  "limitations": "Conditional on exact source split; not native-speaker certification or native rendering validation. Does not accept any other locale or the complete shipping inventory.",
+  "rows": [
+    {
+      "key": "L2369e9b812",
+      "source": "E minor scale",
+      "accepted_target": "E 小調音階",
+      "after_context_sha256": "c2afaa2a3a2e05022e5a5f3a71cfc0f900938676895b7ffa3fb6dedef4837844",
+      "occurrences_reviewed": 1,
+      "decision": "accept",
+      "rationale": "Explicit chord contexts use 大和弦 or 小和弦; key and scale contexts use 大調 or 小調音階. Musical letter and accidental preserved; quiz options retain correct and distractor meanings."
+    },
+    {
+      "key": "L2449e81b73",
+      "source": "G major",
+      "accepted_target": "G 大調",
+      "after_context_sha256": "e6e814c9c337331dd7555472f523d1357324b1db9efdb7451d6bb3e11bcd83ca",
+      "occurrences_reviewed": 10,
+      "decision": "accept",
+      "rationale": "Explicit chord contexts use 大和弦 or 小和弦; key and scale contexts use 大調 or 小調音階. Musical letter and accidental preserved; quiz options retain correct and distractor meanings."
+    },
+    {
+      "key": "L3c6bc13182",
+      "source": "A major",
+      "accepted_target": "A 大調",
+      "after_context_sha256": "5b13f4ec0543ae9e77162a0c73574401f58e170cb728ba59035db5c497c02d10",
+      "occurrences_reviewed": 3,
+      "decision": "accept",
+      "rationale": "Explicit chord contexts use 大和弦 or 小和弦; key and scale contexts use 大調 or 小調音階. Musical letter and accidental preserved; quiz options retain correct and distractor meanings."
+    },
+    {
+      "key": "L42626aabd8",
+      "source": "D major",
+      "accepted_target": "D 大調",
+      "after_context_sha256": "20aac0efc34afe0389a08b60c32cabc841a341df5335c6aa94a0c70112e5d18c",
+      "occurrences_reviewed": 6,
+      "decision": "accept",
+      "rationale": "Explicit chord contexts use 大和弦 or 小和弦; key and scale contexts use 大調 or 小調音階. Musical letter and accidental preserved; quiz options retain correct and distractor meanings."
+    },
+    {
+      "key": "L4b65fb9aa1",
+      "source": "B♭ major",
+      "accepted_target": "B♭ 大調",
+      "after_context_sha256": "31c2e710e6490780f6444f93f2859a479ac8eafc8483ba2f3fec912290f77ba2",
+      "occurrences_reviewed": 1,
+      "decision": "accept",
+      "rationale": "Explicit chord contexts use 大和弦 or 小和弦; key and scale contexts use 大調 or 小調音階. Musical letter and accidental preserved; quiz options retain correct and distractor meanings."
+    },
+    {
+      "key": "L728cd633f1",
+      "source": "A minor",
+      "accepted_target": "A 小和弦",
+      "after_context_sha256": "ff060b9ed0cf6f8bea7a126fbf09a57503db245e4ea9843f1bd620542f4732ce",
+      "occurrences_reviewed": 10,
+      "decision": "accept",
+      "rationale": "Explicit chord contexts use 大和弦 or 小和弦; key and scale contexts use 大調 or 小調音階. Musical letter and accidental preserved; quiz options retain correct and distractor meanings."
+    },
+    {
+      "key": "L9cf6021835",
+      "source": "F major chord",
+      "accepted_target": "F 大和弦",
+      "after_context_sha256": "1118491e79896072014fcf76987b0baaa85653a54f07fce70fc30895227da3e7",
+      "occurrences_reviewed": 2,
+      "decision": "accept",
+      "rationale": "Explicit chord contexts use 大和弦 or 小和弦; key and scale contexts use 大調 or 小調音階. Musical letter and accidental preserved; quiz options retain correct and distractor meanings."
+    },
+    {
+      "key": "La1c8d3bc39",
+      "source": "C major chord",
+      "accepted_target": "C 大和弦",
+      "after_context_sha256": "de65c220b26a9772b124cd3433752d2633a9458faec420493edcfd8c1f660ec9",
+      "occurrences_reviewed": 4,
+      "decision": "accept",
+      "rationale": "Explicit chord contexts use 大和弦 or 小和弦; key and scale contexts use 大調 or 小調音階. Musical letter and accidental preserved; quiz options retain correct and distractor meanings."
+    },
+    {
+      "key": "Laa87302d09",
+      "source": "C major",
+      "accepted_target": "C 大調",
+      "after_context_sha256": "562f69d395380ebb525da151cd13e9519aaa4833637a930e8bea3a33e3296ef3",
+      "occurrences_reviewed": 5,
+      "decision": "accept",
+      "rationale": "Explicit chord contexts use 大和弦 or 小和弦; key and scale contexts use 大調 or 小調音階. Musical letter and accidental preserved; quiz options retain correct and distractor meanings."
+    },
+    {
+      "key": "Lab958557bf",
+      "source": "D major chord",
+      "accepted_target": "D 大和弦",
+      "after_context_sha256": "f1ace838ac7788284401fd90c82970ee75796dfc0ad7aa950df61fc1770de580",
+      "occurrences_reviewed": 6,
+      "decision": "accept",
+      "rationale": "Explicit chord contexts use 大和弦 or 小和弦; key and scale contexts use 大調 or 小調音階. Musical letter and accidental preserved; quiz options retain correct and distractor meanings."
+    },
+    {
+      "key": "Lbdeb73715c",
+      "source": "B♭ major chord",
+      "accepted_target": "B♭ 大和弦",
+      "after_context_sha256": "36862af2a1cca776bf9884eb6b1ac80ddc36cbeb28165cc8622a74c56e5c3acc",
+      "occurrences_reviewed": 1,
+      "decision": "accept",
+      "rationale": "Explicit chord contexts use 大和弦 or 小和弦; key and scale contexts use 大調 or 小調音階. Musical letter and accidental preserved; quiz options retain correct and distractor meanings."
+    },
+    {
+      "key": "Lc1965ac98d",
+      "source": "A major chord",
+      "accepted_target": "A 大和弦",
+      "after_context_sha256": "1cc60c11c6bbf29c356cd02b7583973139f911ad8e86404a15d9ca3a78244fc8",
+      "occurrences_reviewed": 5,
+      "decision": "accept",
+      "rationale": "Explicit chord contexts use 大和弦 or 小和弦; key and scale contexts use 大調 or 小調音階. Musical letter and accidental preserved; quiz options retain correct and distractor meanings."
+    },
+    {
+      "key": "Lc3e1440b37",
+      "source": "E minor",
+      "accepted_target": "E 小和弦",
+      "after_context_sha256": "11e00ef719f3e5cc2807bc15c4a2f59c8322a55e72c672c8e3b808aa125ca917",
+      "occurrences_reviewed": 15,
+      "decision": "accept",
+      "rationale": "Explicit chord contexts use 大和弦 or 小和弦; key and scale contexts use 大調 or 小調音階. Musical letter and accidental preserved; quiz options retain correct and distractor meanings."
+    },
+    {
+      "key": "Lc819139d43",
+      "source": "A minor scale",
+      "accepted_target": "A 小調音階",
+      "after_context_sha256": "b830389d09f1855315f54fce7f905587d6e9f489bc2ab724a7b1a9e608fc859f",
+      "occurrences_reviewed": 2,
+      "decision": "accept",
+      "rationale": "Explicit chord contexts use 大和弦 or 小和弦; key and scale contexts use 大調 or 小調音階. Musical letter and accidental preserved; quiz options retain correct and distractor meanings."
+    },
+    {
+      "key": "Ld975a19a54",
+      "source": "G major chord",
+      "accepted_target": "G 大和弦",
+      "after_context_sha256": "f03bd01e489d710b1eadb7113188e07e5230f77f2306dd1a3dee8f47df453e5f",
+      "occurrences_reviewed": 6,
+      "decision": "accept",
+      "rationale": "Explicit chord contexts use 大和弦 or 小和弦; key and scale contexts use 大調 or 小調音階. Musical letter and accidental preserved; quiz options retain correct and distractor meanings."
+    },
+    {
+      "key": "Lea785300c4",
+      "source": "F major",
+      "accepted_target": "F 大調",
+      "after_context_sha256": "b367f3f31d9fc189b33d00ffb729b106e0e66eac8040f36b43047afc53083635",
+      "occurrences_reviewed": 4,
+      "decision": "accept",
+      "rationale": "Explicit chord contexts use 大和弦 or 小和弦; key and scale contexts use 大調 or 小調音階. Musical letter and accidental preserved; quiz options retain correct and distractor meanings."
+    }
+  ]
+}

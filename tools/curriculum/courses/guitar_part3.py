@@ -514,7 +514,7 @@ UNIT_20 = unit("gtr-20", "The major scale in position", "G major in two octaves 
                 "D Mixolydian. Keep one finger per fret."),
         quiz("Whole, whole, half, whole, whole, whole, half spells…", ["The major scale", "The minor pentatonic", "The blues"], 0),
         along(G, TWO_OCTAVES, bpm=72, title="Two octaves, G to G", **POS_2),
-        quiz("Which mode starts on the second note of G major?", ["D Mixolydian", "A Dorian", "E minor"], 1),
+        quiz("Which mode starts on the second note of G major?", ["D Mixolydian", "A Dorian", "E minor scale"], 1),
         along(G, THIRDS, bpm=69, title="The scale in thirds", **POS_2),
         along(G, JOY, bpm=72, beats_per_bar=2, title="Joy to the World, in position", **POS_2),
         along(G, DORIAN, bpm=72, title="A Dorian melody", **POS_2),

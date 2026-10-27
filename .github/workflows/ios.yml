@@ -94,6 +94,7 @@ jobs:
         run: |
           set -euo pipefail
           python3 tools/ci/test_apple_delivery_preflight.py
+          python3 tools/ci/test_registered_app_store_id.py
           python3 tools/ci/test_apple_archive_scope.py
           python3 tools/ci/test_accessibility_audit_contract.py
           python3 tools/ci/test_audit_pixel_proof_contract.py
@@ -106,6 +107,7 @@ jobs:
           python3 tools/ci/test_capture_check.py
           python3 tools/ci/test_result_polish_contract.py
           python3 tools/ci/test_build_checkpoint_contract.py
+          python3 tools/ci/test_tour_shards.py
           python3 tools/ci/test_ci_concurrency_contract.py
           python3 tools/ci/test_country_pricing_policy.py
           python3 tools/ci/test_simulator_warmup.py

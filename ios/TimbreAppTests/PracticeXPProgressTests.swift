@@ -28,6 +28,26 @@ final class PracticeXPProgressTests: XCTestCase {
                              try position(of: "٥٠٠", in: old, direction: .rightToLeft))
     }
 
+    func testTraditionalChineseFullwidthFractionPreservesTranslationAndSpokenText() throws {
+        let template = "%lld／%lld XP · 下一個：%@"
+        let actual = try XCTUnwrap(PracticeXPProgress.sentence(template: template, counts: (255, 500),
+                                                               next: "XP", locale: Locale(identifier: "zh_TW")))
+        let visible = actual.unicodeScalars.filter { ![0x2066, 0x2069].contains($0.value) }.map { String($0) }.joined()
+        XCTAssertEqual(visible, "255／500 XP · 下一個：XP")
+        for direction in [NSWritingDirection.leftToRight, .rightToLeft] {
+            XCTAssertLessThan(try position(of: "255", in: actual, direction: direction),
+                              try position(of: "500", in: actual, direction: direction))
+        }
+        let original = TimbreLocalization.language
+        defer { TimbreLocalization.language = original }
+        TimbreLocalization.language = "zh-Hant"
+        XCTAssertEqual(NSLocalizedString(PracticeXPProgress.key, comment: ""), template)
+        let view = PracticeXPProgress(done: 255, total: 500, next: "XP")
+        let spoken = try pixels(view.spoken, locale: Locale(identifier: "zh_TW"), name: "practice-xp-zh-Hant-spoken-label")
+        let expected = try pixels(Text(verbatim: "255／500 XP · 下一個：XP"), locale: Locale(identifier: "zh_TW"))
+        XCTAssertEqual(spoken, expected, "VoiceOver label Text retains the accepted sentence without directional isolates")
+    }
+
     private func position(of operand: String, in sentence: String, direction: NSWritingDirection) throws -> CGFloat {
         let range = (sentence as NSString).range(of: operand)
         XCTAssertNotEqual(range.location, NSNotFound, "Expected independently specified localized digits")
@@ -57,6 +77,11 @@ final class PracticeXPProgressTests: XCTestCase {
     }
 
     func testUnexpectedTemplateFallsBackWithoutRewritingTranslations() {
+        for unsupported in ["%lld／%lld XP %@ %lld", "%lld／%lld XP %@ %@", "%lld／%lld XP %u",
+                            "%lld／%lld XP", "%lld／%@ XP %lld", "%lld ∕ %lld XP %@"] {
+            XCTAssertNil(PracticeXPProgress.sentence(template: unsupported, counts: (255, 500),
+                                                     next: "Next", locale: Locale(identifier: "zh_TW")))
+        }
         XCTAssertNil(PracticeXPProgress.sentence(template: "%lld / %lld XP %@ %lld", counts: (255, 500),
                                                  next: "Next", locale: Locale(identifier: "ar_SA")))
         XCTAssertNil(PracticeXPProgress.sentence(template: "XP %lld of %lld: %@", counts: (255, 500),
@@ -66,13 +91,13 @@ final class PracticeXPProgressTests: XCTestCase {
     func testActualSwiftUIViewsAttachNormalAndAccessibilityRenders() throws {
         let original = TimbreLocalization.language
         defer { TimbreLocalization.language = original }
-        for language in ["en", "ar", "fa", "he"] {
+        for language in ["en", "ar", "fa", "he", "zh-Hant"] {
             TimbreLocalization.language = language
             for size in [DynamicTypeSize.large, .accessibility5] {
                 let view = PracticeXPProgress(done: 255, total: 500, next: "Tuned Ear")
                     .font(.subheadline).fixedSize(horizontal: false, vertical: true)
                     .environment(\.dynamicTypeSize, size)
-                    .environment(\.layoutDirection, language == "en" ? .leftToRight : .rightToLeft)
+                    .environment(\.layoutDirection, ["en", "zh-Hant"].contains(language) ? .leftToRight : .rightToLeft)
                 _ = try pixels(view, locale: Locale(identifier: language), name: "practice-xp-\(language)-\(size)")
             }
         }

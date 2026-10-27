@@ -15,23 +15,36 @@ class PracticeXPDirectionContract(unittest.TestCase):
             content = json.loads(path.read_text()).get('Localizable.strings', {})
             if KEY in content:
                 found += 1
-                self.assertTrue(content[KEY].startswith('%lld / %lld'), path.name)
+                self.assertTrue(content[KEY].startswith(('%lld / %lld', '%lld／%lld')), path.name)
+                if content[KEY].startswith('%lld／%lld'):
+                    self.assertEqual(path.stem, 'zh-Hant', 'New separator use needs explicit review')
                 self.assertEqual(content[KEY].count('%@'), 1, path.name)
                 self.assertEqual(content[KEY].count('%lld'), 2, path.name)
-        self.assertEqual(found, 48)
-        # English is the unchanged source key: 48 translated locales plus source = 49.
+        self.assertEqual(found, 51)
+        # English is the unchanged source key: 51 translated locales plus source = 52.
         self.assertTrue(KEY.startswith("%lld / %lld"))
-        self.assertEqual(found + 1, 49)
+        self.assertEqual(found + 1, 52)
 
     def test_both_call_sites_share_helper_without_direction_override(self):
         source = (ROOT / 'ios/Timbre/Practice/PracticeView.swift').read_text()
         self.assertEqual(source.count('PracticeXPProgress(done: xp - level.floor,'), 2)
         helper = (ROOT / 'ios/Timbre/Practice/PracticeXPProgress.swift').read_text()
-        self.assertIn('guard template.hasPrefix(prefix) else { return nil }', helper)
+        self.assertIn('guard let fraction = fractionPrefixes.first(where: { template.hasPrefix($0.prefix) }) else { return nil }', helper)
+        self.assertIn('(prefix: \"%lld／%lld\", separator: \"／\")', helper)
+        self.assertIn('String(template.dropFirst(fraction.prefix.count))', helper)
+        self.assertIn('fraction.separator', helper)
         self.assertIn('.accessibilityLabel(spoken)', helper)
         self.assertIn('Text("\\(done) / \\(total) XP · next: \\(Text(LocalizedStringKey(next)))")', helper)
         self.assertNotIn('.layoutDirection', helper)
         self.assertIn('arguments: [Int64(counts.0), Int64(counts.1), next]', helper)
+
+    def test_fullwidth_native_controls_and_spoken_label_are_selected(self):
+        native = (ROOT / 'ios/TimbreAppTests/PracticeXPProgressTests.swift').read_text()
+        for token in ['testTraditionalChineseFullwidthFractionPreservesTranslationAndSpokenText',
+                      '255／500 XP · 下一個：XP', 'pixels(view.spoken', 'XCTAssertEqual(spoken, expected',
+                      '%lld／%lld XP %@ %lld', '%lld／%lld XP %@ %@', '%lld ∕ %lld XP %@',
+                      '"zh-Hant"', 'NSLocalizedString(PracticeXPProgress.key']:
+            self.assertIn(token, native)
 
     def test_native_oracle_uses_physical_offsets_and_old_negative_control(self):
         native = (ROOT / 'ios/TimbreAppTests/PracticeXPProgressTests.swift').read_text()

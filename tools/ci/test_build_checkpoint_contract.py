@@ -13,7 +13,7 @@ class BuildCheckpointContract(unittest.TestCase):
         workflow = (ROOT / '.github/workflows/nightly.yml').read_text()
         builds = workflow.split('      - name: Build app and tests\n')[1:]
         self.assertEqual(len(builds), 2)
-        for build in builds:
+        for index, build in enumerate(builds):
             checkpoint = build.split('          retention-days: 14', 1)[0]
             self.assertIn('set -o pipefail', checkpoint)
             self.assertIn('tee ci-out/build.log', checkpoint)
@@ -22,7 +22,8 @@ class BuildCheckpointContract(unittest.TestCase):
             self.assertLess(checkpoint.index('Summarize simulator build immediately'),
                             checkpoint.index('Upload simulator build checkpoint'))
             self.assertEqual(checkpoint.count("if: always() && hashFiles('ci-out/build.log') != ''"), 2)
-            self.assertIn('nightly-build-${{ github.job }}-${{ github.run_attempt }}', checkpoint)
+            suffix = '${{ matrix.shard }}-' if index == 0 else ''
+            self.assertIn('nightly-build-${{ github.job }}-' + suffix + '${{ github.run_attempt }}', checkpoint)
             self.assertIn('if-no-files-found: error', checkpoint)
             for forbidden in ['continue-on-error', '|| true', 'printenv', 'test-without-building', 'xcodebuild archive']:
                 self.assertNotIn(forbidden, checkpoint)
@@ -31,7 +32,9 @@ class BuildCheckpointContract(unittest.TestCase):
     def test_independent_release_archive_and_final_evidence_remain(self):
         workflow = (ROOT / '.github/workflows/nightly.yml').read_text()
         archive = workflow.split('      - name: Archive unsigned iOS app\n', 1)[1].split('      - name:', 1)[0]
-        self.assertIn('if: success() || failure()', archive)
+        self.assertNotIn('continue-on-error', archive)
+        self.assertEqual(workflow.count('xcodebuild archive '), 1)
+        self.assertNotIn('xcodebuild archive', workflow.split('  tour:\n')[1].split('  archive:')[0])
         self.assertIn('set -o pipefail', archive)
         self.assertIn('xcodebuild archive', archive)
         self.assertIn("-destination 'generic/platform=iOS'", archive)

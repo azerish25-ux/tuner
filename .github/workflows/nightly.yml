@@ -21,7 +21,27 @@ env:
   HOMEBREW_NO_INSTALL_CLEANUP: "1"
 jobs:
   tour:
-    # Every UI flow (TimbreUITests), the launch-time metric and the unsigned archive.
+    # Independent class shards retain every selected case; failures never cancel sibling evidence.
+    name: tour (${{ matrix.shard }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - shard: captures
+            test_class: TimbreUITests
+            artifact: results-tour
+          - shard: launch
+            test_class: LaunchPerformanceUITests
+            artifact: results-tour-launch
+          - shard: first-session
+            test_class: FirstSessionUITests
+            artifact: results-tour-first-session
+          - shard: lesson-layout
+            test_class: LessonAccessibilityLayoutUITests
+            artifact: results-tour-lesson-layout
+          - shard: song-rails
+            test_class: SongShelfRailUITests
+            artifact: results-tour-song-rails
     if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'captures')
     timeout-minutes: 90
     runs-on: macos-15
@@ -38,6 +58,7 @@ jobs:
       - name: Ensure Metal toolchain
         run: bash tools/ci/ensure-metal.sh
       - name: Build app and tests
+        id: build
         run: |
           set -o pipefail
           mkdir -p ios/build ci-out
@@ -50,7 +71,7 @@ jobs:
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always() && hashFiles('ci-out/build.log') != ''
         with:
-          name: nightly-build-${{ github.job }}-${{ github.run_attempt }}
+          name: nightly-build-${{ github.job }}-${{ matrix.shard }}-${{ github.run_attempt }}
           path: |
             ci-out/build.log
             ci-out/build.summary.txt
@@ -67,41 +88,130 @@ jobs:
           xcrun simctl status_bar "$DEVICE_ID" override --time 9:41 --batteryState charged --batteryLevel 100 --cellularBars 4 --wifiBars 3 \
             || xcrun simctl status_bar "$DEVICE_ID" override --time 9:41 \
             || echo "::warning::Could not override the simulator status bar; the captures show the real time"
-      - name: UI tour, store captures and launch time
+      - name: Diagnostic simulator priming (not cold-install evidence)
+        id: warmup
+        if: success() && matrix.shard != 'launch'
+        timeout-minutes: 6
+        run: |
+          PYTHONPATH=tools/ci python3 - <<'PYWARM'
+          import os
+          from pathlib import Path
+          from simulator_warmup import warmup
+          warmup(Path('ios/build/dd/Build/Products/Debug-iphonesimulator/Timbre.app'),
+                 os.environ['DEVICE_ID'], ['en'], 'en_US', Path('ci-out/warmup'))
+          PYWARM
+      - name: Upload diagnostic priming receipt before XCTest
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        if: always() && matrix.shard != 'launch'
+        with:
+          name: tour-warmup-${{ matrix.shard }}
+          path: |
+            ci-out/warmup/status.json
+            ci-out/warmup/*.log
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Selected UI class
+        id: tests
+        # Priming is diagnostic: still run every unchanged test if it fails, while its failure
+        # remains a failed job. The launch-performance shard never primes the application.
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        # Leave time for compact evidence if this shard hangs; do not retry failed assertions.
+        timeout-minutes: 60
         run: |
           set -o pipefail
           xcodebuild test-without-building -project ios/Timbre.xcodeproj -scheme Timbre -parallel-testing-enabled NO \
-            -only-testing:TimbreUITests/TimbreUITests -only-testing:TimbreUITests/LaunchPerformanceUITests \
-            -only-testing:TimbreUITests/FirstSessionUITests -only-testing:TimbreUITests/LessonAccessibilityLayoutUITests \
-            -only-testing:TimbreUITests/SongShelfRailUITests \
+            -only-testing:TimbreUITests/${{ matrix.test_class }} \
             -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd \
             -resultBundlePath ios/build/UITests.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/test.log
-      - name: Archive unsigned iOS app
-        if: success() || failure()
+      - name: Finalize compact shard diagnostics immediately
+        if: always()
+        env:
+          TOUR_SHARD: ${{ matrix.shard }}
+          TOUR_BUILD_OUTCOME: ${{ steps.build.outcome }}
+          TOUR_TEST_OUTCOME: ${{ steps.tests.outcome }}
         run: |
-          set -o pipefail
-          xcodebuild archive -project ios/Timbre.xcodeproj -scheme Timbre -destination 'generic/platform=iOS' -archivePath ios/build/Timbre.xcarchive CODE_SIGNING_ALLOWED=NO 2>&1 | tail -40 | tee ci-out/archive.log
+          mkdir -p ci-out
+          python3 tools/ci/tour_evidence.py record ci-out
+          for log in ci-out/build.log ci-out/test.log; do
+            [ ! -f "$log" ] || python3 tools/ci/summarize-log.py "$log" "${log%.log}.summary.txt"
+          done
+      - name: Upload compact shard diagnostics before attachments
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        if: always()
+        with:
+          name: tour-logs-${{ matrix.shard }}
+          path: |
+            ci-out/*.log
+            ci-out/*.summary.txt
+            ci-out/outcome.json
+            ci-out/warmup/status.json
+            ci-out/warmup/*.log
+          if-no-files-found: error
+          retention-days: 14
       - name: Export simulator screenshots
         if: always()
+        timeout-minutes: 5
         run: |
           if [ -d ios/build/UITests.xcresult ]; then
-            xcrun xcresulttool export attachments --path ios/build/UITests.xcresult --output-path ci-out/screenshots || true
+            xcrun xcresulttool export attachments --path ios/build/UITests.xcresult --output-path ci-out/screenshots
+          else
+            echo "::error::Missing UI result bundle; compact logs are diagnostic only"
+            exit 1
           fi
           for log in ci-out/build.log ci-out/test.log; do [ -f "$log" ] && python3 tools/ci/summarize-log.py "$log" "${log%.log}.summary.txt"; done
           gzip -f ci-out/build.log ci-out/test.log 2>/dev/null || true
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()
         with:
-          name: results-tour
+          name: ${{ matrix.artifact }}
           path: ci-out
           retention-days: 14
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()
         with:
-          name: ios-evidence
+          name: ios-tour-evidence-${{ matrix.shard }}
           path: |
             ios/build/*.xcresult
-            ios/build/Timbre.xcarchive
+          retention-days: 14
+
+  archive:
+    # Exactly one unsigned Release archive, independent of every simulator shard.
+    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'captures')
+    timeout-minutes: 30
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+      - name: Generate Xcode project
+        run: |
+          command -v xcodegen >/dev/null 2>&1 || brew install xcodegen
+          cd ios && xcodegen generate
+      - name: Ensure Metal toolchain
+        run: bash tools/ci/ensure-metal.sh
+      - name: Archive unsigned iOS app
+        run: |
+          set -o pipefail
+          mkdir -p ci-out
+          xcodebuild archive -project ios/Timbre.xcodeproj -scheme Timbre -destination 'generic/platform=iOS' -archivePath ios/build/Timbre.xcarchive CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/archive.log
+      - name: Summarize archive before uploading its bundle
+        if: always()
+        run: |
+          if [ -f ci-out/archive.log ]; then
+            python3 tools/ci/summarize-log.py ci-out/archive.log ci-out/archive.summary.txt
+            gzip -f ci-out/archive.log
+          fi
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        if: always()
+        with:
+          name: results-archive
+          path: ci-out
+          if-no-files-found: error
+          retention-days: 14
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        if: always()
+        with:
+          name: ios-evidence
+          path: ios/build/Timbre.xcarchive
+          if-no-files-found: error
           retention-days: 14
 
   ipad:
@@ -357,9 +467,9 @@ jobs:
     if: >-
       always()
       && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
-      && (needs.tour.result != 'skipped' || needs.ipad.result != 'skipped'
+      && (needs.tour.result != 'skipped' || needs.archive.result != 'skipped' || needs.ipad.result != 'skipped'
           || needs['a11y-matrix'].result != 'skipped' || needs.tsan.result != 'skipped')
-    needs: [tour, ipad, a11y-matrix, tsan]
+    needs: [tour, archive, ipad, a11y-matrix, tsan]
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -374,6 +484,25 @@ jobs:
         with:
           name: results-tour
           path: results/results-tour
+      # Preserve capture screenshot paths; other shards have isolated logs/manifests underneath.
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+        continue-on-error: true
+        with:
+          pattern: results-tour-*
+          path: results/results-tour/shards
+          merge-multiple: false
+      # Compact checkpoints survive even when expensive attachment export/upload cannot finish.
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+        continue-on-error: true
+        with:
+          pattern: tour-logs-*
+          path: results/results-tour/checkpoints
+          merge-multiple: false
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+        continue-on-error: true
+        with:
+          name: results-archive
+          path: results/results-tour/archive
       - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         continue-on-error: true
         with:
@@ -389,7 +518,14 @@ jobs:
         with:
           name: results-tsan
           path: results/results-tsan
+      - name: Require every shard outcome without hiding partial evidence
+        if: always() && needs.tour.result != 'skipped'
+        env:
+          TOUR_JOB_OUTCOME: ${{ needs.tour.result }}
+          TOUR_ARCHIVE_OUTCOME: ${{ needs.archive.result }}
+        run: python3 tools/ci/tour_evidence.py aggregate results/results-tour
       - name: Publish
+        if: always()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |

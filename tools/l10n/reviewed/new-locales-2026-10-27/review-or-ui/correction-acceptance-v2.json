@@ -1,0 +1,62 @@
+{
+  "reviewer": "independent AI review worker",
+  "status": "accepted_after_full_review_and_exact_delta_rereview",
+  "input_sha256": "fa7fa44cec33ffd2d1573fcf60aa1760281b8c45485b41422e126609a445a749",
+  "parent_pack_sha256": "3ec198c2696a83759dbfe725eb4b571d304c67f5655a2bb49656400a047f3cfd",
+  "adoption_addendum_sha256": "613c83373b8a2a4dfc2f304ff859b147e8bac5fa7d3d1cafe57eba343c93ba50",
+  "glossary_sha256": "d0a42b430891f622037ee6bb643d8ee3aad02ce400a18c62c05b2291f5842203",
+  "coverage_count": 1980,
+  "unchanged_rows_carried_forward": 1974,
+  "corrected_rows_rereviewed": 6,
+  "unexpected_differences": 0,
+  "source_context_and_current_author_todo": "exact match all 1980",
+  "original_frozen_pack": "unchanged",
+  "all_15_batch_hashes": "verified unchanged",
+  "legal_23": "unchanged from accepted full-review lineage",
+  "plurals_and_format": "unchanged; all prior checks pass; six changed rows have no numeric or interpolation tokens",
+  "rows": [
+    {
+      "index": 490,
+      "key": "In",
+      "target": "ପ୍ରାରମ୍ଭ",
+      "verdict": "accepted; exact correction adopted, source-context error resolved",
+      "row_sha256": "d2262e40fe65b3d3fb243354e7d0bd68f8f80083e75de60b2dca097fcf47519e"
+    },
+    {
+      "index": 491,
+      "key": "Out",
+      "target": "ସମାପ୍ତି",
+      "verdict": "accepted; exact correction adopted, source-context error resolved",
+      "row_sha256": "0cc72b4ebc6f22c3f65af5a16c1848dfa44bee664ffa48a29db4d597a9a31d91"
+    },
+    {
+      "index": 692,
+      "key": "best run",
+      "target": "ସର୍ବଶ୍ରେଷ୍ଠ କମ୍ବୋ",
+      "verdict": "accepted; exact correction adopted, source-context error resolved",
+      "row_sha256": "76e3a0f501a52c4c06afb2a973e5ea67406e44a66eafebfe0f6034f71e85c5e7"
+    },
+    {
+      "index": 1225,
+      "key": "timbre_commerce_payment_pending",
+      "target": "ଦେୟ ନିଶ୍ଚିତ ହେବା ଅପେକ୍ଷାରେ। Google Play ନିଶ୍ଚିତ କଲେ ସୁବିଧା ଆରମ୍ଭ ହେବ।",
+      "verdict": "accepted; exact correction adopted, source-context error resolved",
+      "row_sha256": "19819b06c98525e4887343c6665eba57752148c573550c1de85ed92c1a8fc526"
+    },
+    {
+      "index": 1264,
+      "key": "timbre_payment_pending",
+      "target": "ଦେୟ ନିଶ୍ଚିତ ହେବା ଅପେକ୍ଷାରେ",
+      "verdict": "accepted; exact correction adopted, source-context error resolved",
+      "row_sha256": "114750975d83bed6b7afba397f5b040b33536f39cbbe300a79852c5d5e771979"
+    },
+    {
+      "index": 1522,
+      "key": "timbre_voice_message_payment_pending",
+      "target": "ଦେୟ ନିଶ୍ଚିତ ହେବା ଅପେକ୍ଷାରେ। Google Play ନିଶ୍ଚିତ କଲେ ଅଭ୍ୟାସ ଖୋଲିବ।",
+      "verdict": "accepted; exact correction adopted, source-context error resolved",
+      "row_sha256": "4d2c0686e84257172a229f593ee40701a4b4a600ac68983d6e27633c9c5cced5"
+    }
+  ],
+  "limitations": "Model linguistic review only, not native/legal/device typography/VoiceOver pronunciation/shipping certification."
+}
