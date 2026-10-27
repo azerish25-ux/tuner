@@ -1,0 +1,87 @@
+# Errors
+/Users/runner/work/tuner/tuner/ios/TimbreAppTests/PegLabelLayoutTests.swift:18:86: error: ambiguous use of 'greatestFiniteMagnitude'
+
+# Matches
+--- line 17251
+    cd /Users/runner/work/tuner/tuner/ios
+    
+/Users/runner/work/tuner/tuner/ios/TimbreAppTests/PegLabelLayoutTests.swift:18:86: error: ambiguous use of 'greatestFiniteMagnitude'
+                    let measured = host.sizeThatFits(in: CGSize(width: 322, height: .greatestFiniteMagnitude))
+                                                                                     ^
+CoreFoundation.CGFloat.greatestFiniteMagnitude:2:19: note: found this candidate in module 'CoreFoundation'
+--- line 17275
+	/Users/runner/work/tuner/tuner/ios/build/TabletScreenshots.xcresult
+
+Testing failed:
+	Ambiguous use of 'greatestFiniteMagnitude'
+	Testing cancelled because the build failed.
+
+--- line 17279
+	Testing cancelled because the build failed.
+
+** TEST FAILED **
+
+
+The following build commands failed:
+
+# Tail
+
+SwiftCompile normal arm64 /Users/runner/work/tuner/tuner/ios/TimbreAppTests/LessonHeaderLayoutTests.swift (in target 'TimbreAppTests' from project 'Timbre')
+    cd /Users/runner/work/tuner/tuner/ios
+    
+
+SwiftCompile normal arm64 /Users/runner/work/tuner/tuner/ios/TimbreAppTests/LocalizationTests.swift (in target 'TimbreAppTests' from project 'Timbre')
+    cd /Users/runner/work/tuner/tuner/ios
+    
+
+SwiftCompile normal arm64 /Users/runner/work/tuner/tuner/ios/TimbreAppTests/MicStartRetryTests.swift (in target 'TimbreAppTests' from project 'Timbre')
+    cd /Users/runner/work/tuner/tuner/ios
+    
+
+SwiftCompile normal arm64 /Users/runner/work/tuner/tuner/ios/TimbreAppTests/OnboardingDeferralTests.swift (in target 'TimbreAppTests' from project 'Timbre')
+    cd /Users/runner/work/tuner/tuner/ios
+    
+
+SwiftCompile normal arm64 /Users/runner/work/tuner/tuner/ios/TimbreAppTests/PaywallLayoutTests.swift (in target 'TimbreAppTests' from project 'Timbre')
+    cd /Users/runner/work/tuner/tuner/ios
+    
+
+SwiftCompile normal arm64 /Users/runner/work/tuner/tuner/ios/TimbreAppTests/PegLabelLayoutTests.swift (in target 'TimbreAppTests' from project 'Timbre')
+    cd /Users/runner/work/tuner/tuner/ios
+    
+/Users/runner/work/tuner/tuner/ios/TimbreAppTests/PegLabelLayoutTests.swift:18:86: error: ambiguous use of 'greatestFiniteMagnitude'
+                    let measured = host.sizeThatFits(in: CGSize(width: 322, height: .greatestFiniteMagnitude))
+                                                                                     ^
+CoreFoundation.CGFloat.greatestFiniteMagnitude:2:19: note: found this candidate in module 'CoreFoundation'
+public static var greatestFiniteMagnitude: CGFloat { get }}
+                  ^
+Swift.Double.greatestFiniteMagnitude:2:30: note: found this candidate in module 'Swift'
+@inlinable public static var greatestFiniteMagnitude: Double { get }}
+                             ^
+
+SwiftCompile normal arm64 /Users/runner/work/tuner/tuner/ios/TimbreAppTests/RecordingStartupTests.swift (in target 'TimbreAppTests' from project 'Timbre')
+    cd /Users/runner/work/tuner/tuner/ios
+    
+
+SwiftDriverJobDiscovery normal arm64 Compiling SmokeUITests.swift, StillScreen.swift, TabletScreenshotsUITests.swift, TimbreUITests.swift (in target 'TimbreUITests' from project 'Timbre')
+
+SwiftDriver\ Compilation TimbreUITests normal arm64 com.apple.xcode.tools.swift.compiler (in target 'TimbreUITests' from project 'Timbre')
+    cd /Users/runner/work/tuner/tuner/ios
+    builtin-Swift-Compilation -- /Applications/Xcode_26.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name TimbreUITests -Onone -enforce-exclusivity\=checked @/Users/runner/Library/Developer/Xcode/DerivedData/Timbre-cknyeiepldxacbcnkmthbuqlkdpv/Build/Intermediates.noindex/Timbre.build/Debug-iphonesimulator/TimbreUITests.build/Objects-normal/arm64/TimbreUITests.SwiftFileList -DDEBUG -module-alias Testing\=_Testing_Unavailable -plugin-path /Applications/Xcode_26.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-upcoming-feature StrictConcurrency -enable-bare-slash-regex -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk -target arm64-apple-ios18.0-simulator -g -module-cache-path /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /Users/runner/Library/Developer/Xcode/DerivedData/Timbre-cknyeiepldxacbcnkmthbuqlkdpv/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 5 -I /Users/runner/Library/Developer/Xcode/DerivedData/Timbre-cknyeiepldxacbcnkmthbuqlkdpv/Build/Products/Debug-iphonesimulator -Isystem /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib -F /Users/runner/Library/Developer/Xcode/DerivedData/Timbre-cknyeiepldxacbcnkmthbuqlkdpv/Build/Products/Debug-iphonesimulator -F /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks -F /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk/Developer/Library/Frameworks -c -j3 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/runner/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/iphonesimulator26.2-23C57-dc75598d0054f22ec865fa860f139d72e244bd9a5feaf902f95f61bf06266e52.sdkstatcache -output-file-map /Users/runner/Library/Developer/Xcode/DerivedData/Timbre-cknyeiepldxacbcnkmthbuqlkdpv/Build/Intermediates.noindex/Timbre.build/Debug-iphonesimulator/TimbreUITests.build/Objects-normal/arm64/TimbreUITests-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/runner/Library/Developer/Xcode/DerivedData/Timbre-cknyeiepldxacbcnkmthbuqlkdpv/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -sdk-module-cache-path /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/runner/Library/Developer/Xcode/DerivedData/Timbre-cknyeiepldxacbcnkmthbuqlkdpv/Build/Intermediates.noindex/Timbre.build/Debug-iphonesimulator/TimbreUITests.build/Objects-normal/arm64/TimbreUITests.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/runner/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/runner/Library/Developer/Xcode/DerivedData/Timbre-cknyeiepldxacbcnkmthbuqlkdpv/Build/Intermediates.noindex/Timbre.build/Debug-iphonesimulator/TimbreUITests.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/runner/Library/Developer/Xcode/DerivedData/Timbre-cknyeiepldxacbcnkmthbuqlkdpv/Build/Intermediates.noindex/Timbre.build/Debug-iphonesimulator/TimbreUITests.build/Objects-normal/arm64/TimbreUITests_const_extract_protocols.json -Xcc -iquote -Xcc /Users/runner/Library/Developer/Xcode/DerivedData/Timbre-cknyeiepldxacbcnkmthbuqlkdpv/Build/Intermediates.noindex/Timbre.build/Debug-iphonesimulator/TimbreUITests.build/TimbreUITests-generated-files.hmap -Xcc -I/Users/runner/Library/Developer/Xcode/DerivedData/Timbre-cknyeiepldxacbcnkmthbuqlkdpv/Build/Intermediates.noindex/Timbre.build/Debug-iphonesimulator/TimbreUITests.build/TimbreUITests-own-target-headers.hmap -Xcc -I/Users/runner/Library/Developer/Xcode/DerivedData/Timbre-cknyeiepldxacbcnkmthbuqlkdpv/Build/Intermediates.noindex/Timbre.build/Debug-iphonesimulator/TimbreUITests.build/TimbreUITests-all-non-framework-target-headers.hmap -Xcc -ivfsoverlay -Xcc /Users/runner/Library/Developer/Xcode/DerivedData/Timbre-cknyeiepldxacbcnkmthbuqlkdpv/Build/Intermediates.noindex/Timbre.build/Debug-iphonesimulator/Timbre-9da7556ed393561a404acec2e53f29e4-VFS-iphonesimulator/all-product-headers.yaml -Xcc -iquote -Xcc /Users/runner/Library/Developer/Xcode/DerivedData/Timbre-cknyeiepldxacbcnkmthbuqlkdpv/Build/Intermediates.noindex/Timbre.build/Debug-iphonesimulator/TimbreUITests.build/TimbreUITests-project-headers.hmap -Xcc -I/Users/runner/Library/Developer/Xcode/DerivedData/Timbre-cknyeiepldxacbcnkmthbuqlkdpv/Build/Products/Debug-iphonesimulator/include -Xcc -I/Users/runner/Library/Developer/Xcode/DerivedData/Timbre-cknyeiepldxacbcnkmthbuqlkdpv/Build/Intermediates.noindex/Timbre.build/Debug-iphonesimulator/TimbreUITests.build/DerivedSources-normal/arm64 -Xcc -I/Users/runner/Library/Developer/Xcode/DerivedData/Timbre-cknyeiepldxacbcnkmthbuqlkdpv/Build/Intermediates.noindex/Timbre.build/Debug-iphonesimulator/TimbreUITests.build/DerivedSources/arm64 -Xcc -I/Users/runner/Library/Developer/Xcode/DerivedData/Timbre-cknyeiepldxacbcnkmthbuqlkdpv/Build/Intermediates.noindex/Timbre.build/Debug-iphonesimulator/TimbreUITests.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/runner/Library/Developer/Xcode/DerivedData/Timbre-cknyeiepldxacbcnkmthbuqlkdpv/Build/Intermediates.noindex/Timbre.build/Debug-iphonesimulator/TimbreUITests.build/Objects-normal/arm64/TimbreUITests-Swift.h -working-directory /Users/runner/work/tuner/tuner/ios -experimental-emit-module-separately -disable-cmo
+
+
+Test session results, code coverage, and logs:
+	/Users/runner/work/tuner/tuner/ios/build/TabletScreenshots.xcresult
+
+Testing failed:
+	Ambiguous use of 'greatestFiniteMagnitude'
+	Testing cancelled because the build failed.
+
+** TEST FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal arm64 Compiling\ LessonHeaderLayoutTests.swift,\ LocalizationTests.swift,\ MicStartRetryTests.swift,\ OnboardingDeferralTests.swift,\ PaywallLayoutTests.swift,\ PegLabelLayoutTests.swift,\ RecordingStartupTests.swift /Users/runner/work/tuner/tuner/ios/TimbreAppTests/LessonHeaderLayoutTests.swift /Users/runner/work/tuner/tuner/ios/TimbreAppTests/LocalizationTests.swift /Users/runner/work/tuner/tuner/ios/TimbreAppTests/MicStartRetryTests.swift /Users/runner/work/tuner/tuner/ios/TimbreAppTests/OnboardingDeferralTests.swift /Users/runner/work/tuner/tuner/ios/TimbreAppTests/PaywallLayoutTests.swift /Users/runner/work/tuner/tuner/ios/TimbreAppTests/PegLabelLayoutTests.swift /Users/runner/work/tuner/tuner/ios/TimbreAppTests/RecordingStartupTests.swift (in target 'TimbreAppTests' from project 'Timbre')
+	SwiftCompile normal arm64 /Users/runner/work/tuner/tuner/ios/TimbreAppTests/PegLabelLayoutTests.swift (in target 'TimbreAppTests' from project 'Timbre')
+	Testing project Timbre with scheme Timbre
+(3 failures)
