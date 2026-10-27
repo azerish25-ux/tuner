@@ -5,7 +5,7 @@ python3 tools/marketing/screenshots.py <captures> <out folder> [--ipad] [--page 
 python3 tools/marketing/screenshots.py --check
 
 The frames live in one place only: the tables under "## Screenshots" in docs/ios/APP-STORE-LISTING.md ("### iPhone
-6.9"", "### iPad 13"", and one "### iPhone 6.9": <page>" per Custom Product Page), each row a caption, a supporting
+(medium Dynamic Island)", "### iPad 13"", and one "### iPhone ...: <page>" per Custom Product Page), each row a caption, a supporting
 line, the capture it frames and its look (`layout accent`). Localized captions live in tools/l10n/store/<locale>.json,
 with the same captures in the same order; the look always comes from the English row.
 
@@ -23,7 +23,7 @@ missing or untranslated content fails. Legacy Markdown rendering remains a fallb
 
 Rendering picks the captures a table names and composes each one (a capture is turned upright from its EXIF orientation
 first: XCUIScreen stores a landscape iPad capture as a portrait bitmap tagged orientation 8). iPhone output is
-1320x2868 (6.9-inch); --ipad output is 2752x2064 for a landscape capture, 2064x2752 for a portrait one. Every written
+1206x2622 (medium Dynamic Island iPhone); --ipad output is 2752x2064 for a landscape capture, 2064x2752 for a portrait one. Every written
 frame is read back and checked against those sizes. It renders what it can, writes sheet.png (the set side by side at
 search-result size) and warns when two frames look alike there, then exits non-zero if any frame is missing, was
 flagged wrong by its test, was captured more than once, or came out at a size App Store Connect would refuse.
@@ -52,7 +52,7 @@ UI_TESTS = ROOT / "ios/TimbreUITests"
 CAPTION_LIMIT = 30
 FRAME_LIMIT = 10          # App Store Connect takes at most 10 screenshots per device size
 LIMITS = {"name": 30, "subtitle": 30, "keywords": 100, "promotional": 170, "description": 4000, "whats new": 4000}
-SIZES = {"iphone": (1320, 2868), "ipad": (2064, 2752)}  # portrait (width, height); landscape swaps them
+SIZES = {"iphone": (1206, 2622), "ipad": (2064, 2752)}  # portrait (width, height); landscape swaps them
 # Counts a caption or a paste block may quote, checked against the build. A hyphenated "40-lesson" is a description,
 # not a count, and is left alone.
 COUNT = re.compile(r"(?<![\d\-])(\d[\d,]*)(\+?)\s+(lessons|courses|instruments|tunings|songs|originals)\b", re.IGNORECASE)
@@ -148,7 +148,7 @@ def _english_table(device: str, page: str | None) -> tuple[str, list[str]] | Non
 
 
 def pages() -> list[str]:
-    """The Custom Product Pages with a table of their own ("### iPhone 6.9": violin page" -> "violin")."""
+    """The Custom Product Pages with a table of their own ("### iPhone ...: violin page" -> "violin")."""
     found = []
     section = False
     for line in LISTING.read_text(encoding="utf-8").splitlines():
@@ -863,6 +863,8 @@ def size_problem(device: str, path: Path, shot_path: Path):
     if size not in ((w, h), (h, w)):
         return f"{path.name} is {size[0]}x{size[1]}; App Store Connect takes {w}x{h} or {h}x{w}"
     shot = upright(shot_path)
+    if shot.size not in ((w, h), (h, w)):
+        return f"{shot_path.name} is {shot.width}x{shot.height} upright; need a native {w}x{h} or {h}x{w} capture"
     if (size[0] > size[1]) != (shot.width > shot.height):
         return f"{path.name} is {size[0]}x{size[1]} but its capture is {shot.width}x{shot.height} upright"
     return None

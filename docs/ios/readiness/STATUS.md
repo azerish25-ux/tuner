@@ -13,7 +13,7 @@ are in progress. Apple account configuration and physical audio tests remain req
 |---|---|
 | App languages | All 49 app languages present; all 48 translated lesson languages have zero missing keys. Strict critical-string checks report zero legal, permission or VoiceOver gaps. This establishes coverage, not universal linguistic perfection. |
 | Store text | All 50 supported listing payloads pass source, length, structure and recorded independent AI review checks. The 100 privacy/Game Center field updates retain the previous review lineage. All `release_ready` flags remain false until release evidence is complete. |
-| Local tests | 193 localization/tool tests, 46 marketing tests, 25 hygiene tests and four cover-contrast tests pass. Marketing tests use an isolated environment with the repository requirements. Swift/XCTest execution requires the hosted macOS jobs. |
+| Local tests | 193 localization/tool tests, 50 marketing tests, 25 hygiene tests and four cover-contrast tests pass. Marketing tests use an isolated environment with the repository requirements. Swift/XCTest execution requires the hosted macOS jobs. |
 | Bundled content | Curriculum validation and iOS resource verification pass. Image provenance includes the owner's declaration and hashes of all 68 bundled images and thumbnails. |
 | Privacy and support | [Privacy](https://timbre-support.timbre.workers.dev/privacy) and [support](https://timbre-support.timbre.workers.dev/support) return HTTP 200 and exactly match built HTML. Policy wording matches current consent, attribution and song-request source behavior. |
 | Independent review | Audio, privacy, CI, seasonal access, Watch tooling and listing deltas have source-review receipts. The integration review found no new blocking source defect; native execution remains separate. |
@@ -37,7 +37,7 @@ statements are superseded where current receipts establish a change.
 | [Baseline iOS](https://github.com/azerish25-ux/tuner/actions/runs/40434233016) | Core tests/coverage/lint and unsigned Release build passed. The app job failed six privacy tests and suffered a fixture expectation exception; after restart, 102 remaining app tests and three smoke flows passed. This is not a full app-test pass. Accessibility failed contrast checks; the findings remain open. |
 | [Follow-up iOS checks](https://github.com/azerish25-ux/tuner/pull/3/checks) | Corrected privacy fixtures, RTL fraction rendering and the four-job required gate still need hosted verification. |
 | [Localization export](https://github.com/azerish25-ux/tuner/actions/runs/40434232913) | Passed: current English XLIFF and strict checks against Xcode's actual keys. |
-| [48-language simulator matrix](https://github.com/azerish25-ux/tuner/actions/runs/40445795060) | Full replacement dispatched on PR revision 0081d2a. The older b6 matrix was cancelled as superseded after a genuine RTL fraction defect was found; its completed groups remain evidence, not a full pass. |
+| [48-language simulator matrix](https://github.com/azerish25-ux/tuner/actions/runs/40445795060) | Superseded 0081d2a run cancelled after its Western job exceeded the former 60-minute budget and later source fixes were prepared. RTL six-language group passed; de/es/fr/it had completion markers before cancellation, without an exportable final result bundle. A complete 48-language rerun under the reviewed 90-minute job budget remains required. |
 | [Caption typography](https://github.com/azerish25-ux/tuner/actions/runs/40434232930) | Passed for all 50 store locales. Caption layout/glyph checks do not establish finished native media. |
 | [Localized capture checks](https://github.com/azerish25-ux/tuner/actions/runs/40434233041) | Actual selected English, German and Arabic store scenes. |
 | [Listing asset pilot](https://github.com/azerish25-ux/tuner/actions/runs/40434233043) | Real iPhone/iPad screenshots and preview pipeline for English, German and Arabic before the complete 50-locale run. |
@@ -54,6 +54,10 @@ failing. Accessibility also failed. The [native triage](reviews/app-008-native-f
 owns and drains callback queues, keeps callback assertions in their owning tests, and compares canonical RGBA
 render bytes. All 21 privacy tests and both render tests need a new native run. Individual test deadlines are
 unchanged; the app job now permits 40 minutes for a cold build, the serial suite and result export.
+The [e3a99fb run](https://github.com/azerish25-ux/tuner/actions/runs/40452937669) is testing that response. A later
+reviewed change isolates deferred questionnaire state by automated installation UUID and initializes the missing
+first-session StoreKit fixture. Four new unit regressions and a same-install/new-install relaunch UI regression
+still need native execution; they are not part of the e3a99fb run.
 The previously observed accessibility failures have not been waived. Capture/parser fixtures are not release screenshots.
 The [privacy failure triage](reviews/privacy-native-failure-triage.json) identifies a defective trailing-slash test matcher
 and shared fixture callbacks/session cleanup. The follow-up isolates sessions and adds lifecycle regressions without
@@ -72,6 +76,11 @@ macOS in [the preview run](https://github.com/azerish25-ux/tuner/actions/runs/40
 video/audio acceptance: scene coverage, lock synchronization and backing-audio continuity remain unresolved.
 No preview acceptance threshold has been relaxed. The nightly AX5 images also expose compact percentage labels
 wrapping and the tuner's peg cue extending beyond the viewport; those visual defects remain open.
+The screenshot pipeline now targets Apple's required medium Dynamic Island iPhone set at 1206×2622, with exact
+native-device selection and raw/output/manifest dimension checks. The standalone renderer also rejects an old large
+capture as a medium-size source. The [independent resolution review](reviews/medium-screenshot-resolution-independent-review.json)
+records 50 passing marketing tests and closure of the documented standalone-render bypass. New-size native captures,
+all-language caption fitting and actual-frame acceptance remain pending; prior large-size proof is not reused for them.
 
 ## Remaining release evidence
 

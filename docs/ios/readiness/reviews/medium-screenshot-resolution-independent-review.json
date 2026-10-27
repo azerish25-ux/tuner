@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-27T05:21:37.313937+00:00",
+  "reviewer": "Independent medium screenshot review agent",
+  "base_head": "a6fe7af5bf646e887a8037599310563a795198fd",
+  "scope": "Final uncommitted seven-file medium Dynamic Island screenshot change and resolution of medium-native-gate-documentation only.",
+  "verdict": "approve_source_change_only_native_and_visual_acceptance_pending",
+  "findings": [],
+  "prior_review": {
+    "path": "docs/ios/readiness/reviews/medium-screenshot-independent-review.json",
+    "sha256": "d0d72b1740bf863679b0a71520f4de92de040d9ef4f6753b47a1382049c1740c",
+    "finding_id": "medium-native-gate-documentation",
+    "resolution": "Closed. H1 uses the all-50-locale screenshots workflow, verified release source SHA and complete per-kind inventory with actual visual review pending. Standalone size_problem also rejects raw native dimensions outside the required device size in either orientation."
+  },
+  "primary_source": {
+    "url": "https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications/",
+    "verified_in_original_review": "2026-10-27",
+    "observations": [
+      "Current required sizes are medium Dynamic Island iPhone and 13-inch iPad for this universal app.",
+      "1206x2622 is accepted for medium iPhone; selected 17 Pro and 16 Pro models belong to that display class."
+    ]
+  },
+  "source_verification": [
+    "Reviewed final seven-file diff against HEAD, including new native-source validation and its regression test.",
+    "Default native runner selects iPhone 17 Pro or 16 Pro. Preview kinds retain Pro Max sources and existing media behavior. iPad and Watch capture paths remain unchanged.",
+    "Raw capture, composed output, aggregate rendered inventory, default compositor size and document headings consistently target 1206x2622 iPhone output.",
+    "New size_problem source check runs after EXIF transpose, accepts portrait and landscape required dimensions, preserves orientation-consistency check, and routes a mismatch into render unusable list and nonzero exit. It is used by screenshot renderer, not preview validation.",
+    "H1 no longer directs submission through unvalidated nightly sources/direct commands. Workflow name, locales=all and scope=screenshots match actual workflow inputs; source and all-50-locale both-kind checks and actual frame review are explicit."
+  ],
+  "independent_checks": [
+    {
+      "command": "C:/Users/shahr/Desktop/Translation/.venv-marketing/Scripts/python.exe -m unittest discover -s tools/marketing/tests -v",
+      "exit_code": 0,
+      "result": "50 tests passed in 6.337 seconds"
+    },
+    {
+      "command": "git -c core.autocrlf=false diff --check -- [seven scoped paths]",
+      "exit_code": 0
+    },
+    {
+      "check": "Synthetic size_problem and upright orientation probes",
+      "exit_code": 0,
+      "accepted": [
+        "1206x2622 phone source/output",
+        "iPad raw 2064x2752 with EXIF orientation 8 transposed to 2752x2064 landscape",
+        "2064x2752 iPad portrait"
+      ],
+      "rejected": [
+        "1320x2868 raw source against 1206x2622 phone output",
+        "1280x2560 raw source against medium phone output",
+        "1536x2048 raw source against required iPad output",
+        "2622x1206 phone landscape source against portrait output"
+      ],
+      "raqm": false
+    }
+  ],
+  "regression_evidence": {
+    "before": "Original independent review reproduced 1320x2868 source accepted by size_problem against 1206x2622 output (None).",
+    "after": "Fresh new test and independent probes reject that exact dimension pairing while accepting valid medium source.",
+    "limits": "Synthetic dimension evidence only; not actual app captures."
+  },
+  "reviewed_sha256": {
+    "tools/marketing/screenshots.py": "c2bdf6e307ed7173316b4966cbdc774e5ce5c9b0be7df14854e8c386b7bbc8eb",
+    "tools/marketing/listing_assets.py": "362dfdddc5c707fed2e475c83490bb08706c934d21605801d04b6a82459bc903",
+    "tools/marketing/run_listing_assets.py": "4eb2630aa68468ca6fb349350ad1bd7ab9af163276ffc9b1e367a43db633d49e",
+    "tools/marketing/tests/test_listing_assets.py": "f41ac2c0c5df927ddc9525d93e6705fccb955aef9842a9e696884ed613a90829",
+    "docs/ios/APP-STORE-LISTING.md": "3611fe4adb65fdc226ea0e628f06879be94cf94020850b5e65a5e2d4aa8728bf",
+    "docs/ios/APPLE-DELIVERY.md": "b0146b7191e79b60939d1bca7141eb2058323a3d47b36bead8b0342a22ba49db",
+    "docs/ios/RELEASE-CHECKLIST.md": "0bad65097d8cf8985347400251e1ff4c866c8402dab357ea6f11823463169f51"
+  },
+  "limits": [
+    "Windows source/unit review only; no native Xcode, simulator or physical device run performed.",
+    "RAQM is false locally; no caption shaping, actual composed-frame acceptance, native capture acceptance, upload readiness or full 50-locale native completion inferred.",
+    "A new caption-layout audit using actual 1206x2622 screenshots.SIZES is still required; prior large-size audit is not accepted as new-size evidence.",
+    "Native visual crops/status bars and localized captions require actual required-size frame review.",
+    "Other localization/store checks reported by root were not repeated in this resolution review.",
+    "No claims about onboarding/matrix fixes or accessibility callbacks outside scope."
+  ],
+  "mutations": "Only this new review receipt written. Original receipt preserved. No implementation edit, commit or push."
+}

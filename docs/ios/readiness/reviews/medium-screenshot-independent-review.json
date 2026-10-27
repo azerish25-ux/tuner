@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-27T05:20:17.156739+00:00",
+  "reviewer": "Independent medium screenshot review agent",
+  "base_head": "a6fe7af5bf646e887a8037599310563a795198fd",
+  "scope": "Uncommitted seven-file medium Dynamic Island screenshot change only. Onboarding, matrix, accessibility callbacks, native rendering and release acceptance excluded.",
+  "verdict": "request_changes_documented_screenshot_path_bypasses_native_size_validation",
+  "findings": [
+    {
+      "id": "medium-native-gate-documentation",
+      "priority": "P2",
+      "file": "docs/ios/RELEASE-CHECKLIST.md",
+      "start_line": 499,
+      "end_line": 502,
+      "title": "Route screenshot delivery through the native dimension validator",
+      "body": "H1 still directs the owner to fetch nightly ci-results/app screenshots and invoke screenshots.py directly. Nightly chooses the first arbitrary iPhone simulator (nightly.yml:36); screenshots.render does not invoke listing_assets.capture_records. After this change its frame_size composes a large 1320x2868 raw source into 1206x2622 and size_problem accepts that pair. Therefore following the documented upload path bypasses the new native medium requirement despite the claim old large captures cannot substitute. Point H1 at the listing-assets workflow and mechanically verified medium screenshot manifest inventory, or explicitly validate native source dimensions before this standalone route."
+    }
+  ],
+  "primary_source": {
+    "url": "https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications/",
+    "verified": "2026-10-27",
+    "observations": [
+      "Required device sizes specify at least one medium Dynamic Island iPhone screenshot and one 13-inch iPad screenshot for iPadOS apps.",
+      "Medium dimensions include 1206x2622; device list includes iPhone 17 Pro and 16 Pro.",
+      "iPad dimensions include 2752x2064 landscape."
+    ]
+  },
+  "source_verification": [
+    "Tests reviewed before implementation. Three regressions cover rejecting large raw captures, required default frame dimensions, and rejection of a large rendered manifest. Device fixture distinguishes medium vs Pro Max.",
+    "Native runner selects 17 Pro/16 Pro for iphone, keeps 17 Pro Max/16 Pro Max for both preview kinds, and keeps iPad Pro 13-inch path unchanged.",
+    "Raw capture_records, rendered screenshot_records and aggregate rendered-size validation consistently use 1206x2622 for iphone. Preview dimensions and Watch source files unchanged.",
+    "English heading parser accepts renamed main/CPP headings; fresh probe finds 9 main frames and violin/cello/ukulele CPP pages.",
+    "Compositor sizes and margins scale using short-side unit. Actual caption-layout audit at new size remains necessary; older large-size audit does not prove new-size fit."
+  ],
+  "independent_checks": [
+    {
+      "command": "C:/Users/shahr/Desktop/Translation/.venv-marketing/Scripts/python.exe -m unittest discover -s tools/marketing/tests -v",
+      "exit_code": 0,
+      "result": "49 tests passed; 6.213 seconds"
+    },
+    {
+      "command": "git -c core.autocrlf=false diff --check -- [seven scoped paths]",
+      "exit_code": 0
+    },
+    {
+      "check": "Synthetic large native source versus medium output frame_size/size_problem",
+      "result": {
+        "large_capture": [
+          1320,
+          2868
+        ],
+        "default_output": [
+          1206,
+          2622
+        ],
+        "size_problem": null,
+        "raqm": false,
+        "main_plan_frames": 9,
+        "cpp_pages": [
+          "violin",
+          "cello",
+          "ukulele"
+        ]
+      }
+    }
+  ],
+  "reviewed_sha256": {
+    "tools/marketing/screenshots.py": "77e852350dc1a8399b2fa4d7a886507457dffcea5ba551504812c05a3407cea9",
+    "tools/marketing/listing_assets.py": "362dfdddc5c707fed2e475c83490bb08706c934d21605801d04b6a82459bc903",
+    "tools/marketing/run_listing_assets.py": "4eb2630aa68468ca6fb349350ad1bd7ab9af163276ffc9b1e367a43db633d49e",
+    "tools/marketing/tests/test_listing_assets.py": "f5af6153cb53f5df21c5643399a72b1088b8cf2493c28ea2476055df2a58e171",
+    "docs/ios/APP-STORE-LISTING.md": "3611fe4adb65fdc226ea0e628f06879be94cf94020850b5e65a5e2d4aa8728bf",
+    "docs/ios/APPLE-DELIVERY.md": "b0146b7191e79b60939d1bca7141eb2058323a3d47b36bead8b0342a22ba49db",
+    "docs/ios/RELEASE-CHECKLIST.md": "4d18c557480b4675215c4f719c8e85bd90ac2eb0385bf76704496b3fa388f6ee"
+  },
+  "limits": [
+    "Windows-only independent verification; no native Xcode/simulator/device run performed.",
+    "Local Pillow RAQM is false; no shaping, composed caption visual acceptance, native capture acceptance, full 50-locale acceptance or upload readiness inferred.",
+    "Author-reported RED 32 tests, 8 failures, 1 error and other localization/store gates not independently repeated.",
+    "No new source-sized caption-layout audit performed by reviewer.",
+    "Synthetic image check validates control behavior only, not actual app pixels or App Store suitability."
+  ],
+  "mutations": "Only this review receipt written; no implementation edit, commit or push."
+}

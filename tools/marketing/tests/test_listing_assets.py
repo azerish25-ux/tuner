@@ -145,11 +145,11 @@ class EvidenceTests(unittest.TestCase):
 
     def test_simulator_selection_requires_correct_dimensions_and_latest_runtime(self):
         listing = {'devices': {'com.apple.CoreSimulator.SimRuntime.iOS-26-0': [
-            {'name': 'iPhone 17', 'udid': 'small'}, {'name': 'iPhone 17 Pro Max', 'udid': 'phone'},
+            {'name': 'iPhone 17 Pro', 'udid': 'medium'}, {'name': 'iPhone 17 Pro Max', 'udid': 'phone'},
             {'name': 'iPad Air 13-inch (M3)', 'udid': 'air'}, {'name': 'iPad Pro 13-inch (M4)', 'udid': 'pad'},
         ]}}
         with patch.object(runner, 'output', return_value=json.dumps(listing)):
-            self.assertEqual(runner.choose_device('iphone')['id'], 'phone')
+            self.assertEqual(runner.choose_device('iphone')['id'], 'medium')
             self.assertEqual(runner.choose_device('preview-main')['id'], 'phone')
             self.assertEqual(runner.choose_device('ipad')['id'], 'pad')
         with patch.object(runner, 'output', return_value=json.dumps({'devices': {}})), self.assertRaises(RuntimeError):
@@ -163,7 +163,7 @@ class CaptureInventoryTests(unittest.TestCase):
         self.names = ['first', 'second']
         from PIL import Image
         for i, name in enumerate(self.names):
-            Image.new('RGB', (1320, 2868), (i * 50, 0, 0)).save(self.base / (name + '.png'))
+            Image.new('RGB', (1206, 2622), (i * 50, 0, 0)).save(self.base / (name + '.png'))
         self.expected = patch.object(assets, 'expected_captures', return_value=self.names)
         self.expected.start()
 
@@ -197,8 +197,29 @@ class CaptureInventoryTests(unittest.TestCase):
     def test_wrong_device_size_fails_not_rescaled_into_fake_evidence(self):
         from PIL import Image
         Image.new('RGB', (100, 200)).save(self.base / 'first.png')
-        with self.assertRaisesRegex(ValueError, 'actual 6.9-inch'):
+        with self.assertRaisesRegex(ValueError, 'actual medium Dynamic Island'):
             self.captures()
+
+    def test_large_phone_cannot_replace_required_medium_capture(self):
+        from PIL import Image
+        Image.new('RGB', (1320, 2868)).save(self.base / 'first.png')
+        with self.assertRaisesRegex(ValueError, 'actual medium Dynamic Island'):
+            self.captures()
+
+    def test_default_phone_frame_matches_the_required_native_capture(self):
+        from PIL import Image
+        import screenshots
+        self.assertEqual(screenshots.frame_size('iphone', Image.new('RGB', (1206, 2622))), (1206, 2622))
+
+    def test_standalone_renderer_rejects_large_source_even_with_medium_output(self):
+        from PIL import Image
+        import screenshots
+        output = self.base / 'rendered.jpg'
+        Image.new('RGB', (1206, 2622)).save(output)
+        raw = self.base / 'first.png'
+        self.assertIsNone(screenshots.size_problem('iphone', output, raw))
+        Image.new('RGB', (1320, 2868)).save(raw)
+        self.assertIn('need a native 1206x2622', screenshots.size_problem('iphone', output, raw))
 
     def test_attachments_cannot_escape_evidence_folder(self):
         import screenshots
@@ -207,6 +228,15 @@ class CaptureInventoryTests(unittest.TestCase):
 
 
 class AggregationTests(unittest.TestCase):
+    def test_large_phone_manifest_cannot_replace_required_medium_set(self):
+        record = self.fixture()
+        assets.validate_manifest_assets(record)
+        for image in record['assets']:
+            if image['path'].endswith('.jpg'):
+                image['size'] = [1320, 2868]
+        with self.assertRaisesRegex(ValueError, 'Wrong screenshot dimensions'):
+            assets.validate_manifest_assets(record)
+
     def fixture(self, locale='de-DE'):
         import hashlib
         spec = assets.locale_spec(locale)
@@ -214,7 +244,7 @@ class AggregationTests(unittest.TestCase):
         verified = {**runtime, 'checked_fields': ['tune', 'learn', 'songs', 'practice', 'progress'],
                     'observed_labels': assets.expected_tab_labels(spec['app_language'])}
         needed = assets.expected_captures(locale, 'iphone')
-        files = [{'path': f'rendered/iphone-{locale}-{i:02d}.jpg', 'sha256': 'a' * 64, 'size': [1320, 2868]}
+        files = [{'path': f'rendered/iphone-{locale}-{i:02d}.jpg', 'sha256': 'a' * 64, 'size': [1206, 2622]}
                  for i in range(1, len(needed) + 1)]
         files.append({'path': f'rendered/iphone-{locale}-sheet.png', 'sha256': 'b' * 64})
         return {**spec, 'kind': 'iphone', 'source_sha': 'revision', 'build_sha256': 'c' * 64,

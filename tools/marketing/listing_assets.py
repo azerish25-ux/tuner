@@ -237,8 +237,8 @@ def capture_records(folder: Path, locale: str, device: str, base: Path) -> list[
             raise ValueError(f'{name}: attachment file reused for another capture')
         record = image_record(path, base.resolve())
         width, height = record['size']
-        if device == 'iphone' and (width, height) != (1320, 2868):
-            raise ValueError(f'{name}: need actual 6.9-inch iPhone capture, got {width}x{height}')
+        if device == 'iphone' and (width, height) != (1206, 2622):
+            raise ValueError(f'{name}: need actual medium Dynamic Island iPhone capture, got {width}x{height}')
         if device == 'ipad' and (width, height) != (2752, 2064):
             raise ValueError(f'{name}: need actual landscape 13-inch iPad capture, got {width}x{height}')
         if record['pixel_sha256'] in used_pixels:
@@ -256,7 +256,7 @@ def screenshot_records(out: Path, locale: str, device: str, base: Path) -> list[
     if actual != wanted:
         raise ValueError(f'{locale}/{device}: missing or extra rendered frames: {actual ^ wanted}')
     records = [image_record(out / name, base) for name in sorted(wanted)]
-    size = [1320, 2868] if device == 'iphone' else [2752, 2064]
+    size = [1206, 2622] if device == 'iphone' else [2752, 2064]
     if any(r['size'] != size for r in records):
         raise ValueError('Rendered screenshot has wrong size')
     if len({r['pixel_sha256'] for r in records}) != len(records):
@@ -304,7 +304,7 @@ def validate_manifest_assets(record: dict):
         wanted.add(f'{kind}-{locale}-sheet.png')
         if {Path(path).name for path in paths} != wanted or len(paths) != len(wanted):
             raise ValueError('Missing or extra screenshot asset inventory')
-        size = [1320, 2868] if kind == 'iphone' else [2752, 2064]
+        size = [1206, 2622] if kind == 'iphone' else [2752, 2064]
         if any(row.get('size') != size for row in files if row['path'].endswith('.jpg')):
             raise ValueError('Wrong screenshot dimensions in manifest')
     else:

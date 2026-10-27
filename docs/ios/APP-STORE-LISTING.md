@@ -140,12 +140,18 @@ Privacy: https://timbre-support.timbre.workers.dev/privacy
 Welcome to Timbre: a free tuner for 60 instruments, and 526 lessons that listen as you play.
 ```
 
-## Screenshots (6.9" iPhone and 13" iPad)
+## Screenshots (medium Dynamic Island iPhone and 13" iPad)
+
+Apple's [current screenshot specifications](https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications/)
+require the medium Dynamic Island iPhone set and the 13-inch iPad set for this universal app. The localized pipeline
+captures iPhone 17 Pro or 16 Pro natively at 1206×2622 and rejects a large-phone capture as a substitute. Preview
+recording retains its separate Pro Max source and delivery format. Earlier 1320×2868 screenshot sets do not close
+the required medium-size inventory.
 
 The tables below are the only place the store frames are described: `tools/marketing/screenshots.py` reads them and composes each capture under its caption, in the look the last column names. To change a caption or a look, edit it here and render again:
 
 ```
-python3 tools/marketing/screenshots.py <ci-out/screenshots> <out folder>                  # iPhone, 1320x2868
+python3 tools/marketing/screenshots.py <ci-out/screenshots> <out folder>                  # iPhone, 1206x2622
 python3 tools/marketing/screenshots.py <ci-out/ipad-screenshots> <out folder> --ipad      # iPad, 2752x2064 landscape / 2064x2752 portrait
 python3 tools/marketing/screenshots.py <ci-out/screenshots> <out folder> --page violin    # a Custom Product Page's set
 python3 tools/marketing/screenshots.py <de captures> <out folder> --locale de-DE          # a localized set (APP-STORE-LISTING-LOCALIZED.md)
@@ -171,7 +177,7 @@ python3 tools/marketing/screenshots.py --check                                  
 
 No two frames show the same lesson, and the first three answer the three questions a searcher has: is it free (#1), does it really listen (#2), can I play something today (#3).
 
-### iPhone 6.9"
+### iPhone (medium Dynamic Island)
 
 | # | Caption | Supporting line | Capture | Look |
 |---|---|---|---|---|
@@ -194,7 +200,7 @@ No two frames show the same lesson, and the first three answer the three questio
 | 3 | **Play songs you know** | 140+ songs, classics to Originals | the Songs tab (`ipad-landscape-songs`) | `light orchid` |
 | 4 | **Five minutes a day adds up** | A daily set, quests and ear games | the Practice tab (`ipad-landscape-practice`) | `side violet` |
 
-### iPhone 6.9": violin page
+### iPhone (medium Dynamic Island): violin page
 
 The violin Custom Product Page's set ([below](#custom-product-pages)). Its first three frames are the violin's own (its lock, its song with finger numbers on the gems, its results); the rest are the main set's that show no other instrument.
 
@@ -206,7 +212,7 @@ The violin Custom Product Page's set ([below](#custom-product-pages)). Its first
 | 4 | **Play songs you know** | 140+ songs, classics to Originals | the Songs tab (`63-songs`) | `light orchid` |
 | 5 | **Learn at your own pace** | 526 lessons in 11 courses | Learn (`50-learn`) | `offset violet` |
 
-### iPhone 6.9": cello page
+### iPhone (medium Dynamic Island): cello page
 
 The cello Custom Product Page's set. Its first frame is the cello's own; the rest show no other instrument.
 
@@ -217,7 +223,7 @@ The cello Custom Product Page's set. Its first frame is the cello's own; the res
 | 3 | **Play songs you know** | 140+ songs, classics to Originals | the Songs tab (`63-songs`) | `light orchid` |
 | 4 | **See yourself get better** | Accuracy, string health, badges | the Progress screen (`32-journey`) | `offset-left flame` |
 
-### iPhone 6.9": ukulele page
+### iPhone (medium Dynamic Island): ukulele page
 
 The ukulele Custom Product Page's set. Its first frame is the ukulele's own; the rest show no other instrument.
 

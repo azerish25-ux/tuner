@@ -52,8 +52,11 @@ def choose_device(kind):
             continue
         if kind == 'ipad':
             candidates = [d for d in devices if 'iPad Pro' in d['name'] and re.search(r'\b13[- ]inch\b', d['name'])]
+        elif kind == 'iphone':
+            # The required medium Dynamic Island set is captured natively at 1206x2622.
+            candidates = [d for d in devices if d['name'] in ('iPhone 17 Pro', 'iPhone 16 Pro')]
         else:
-            # These are the 1320x2868 capture devices used by the existing renderer.
+            # Preview recording retains its separate 1320x2868 source and 886x1920 delivery format.
             candidates = [d for d in devices if d['name'] in ('iPhone 17 Pro Max', 'iPhone 16 Pro Max')]
         if candidates:
             best = max(candidates, key=lambda d: version(d['name']))

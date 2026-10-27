@@ -481,29 +481,17 @@ These aren't in AUDIO-DEVICE-TESTS.md yet; record them in its Results table as c
 
 ## Phase H: the store page (owner, with the developer for assets)
 
-### H1. Screenshots: iPhone 6.9" and iPad 13" (from CI)
+### H1. Screenshots: medium Dynamic Island iPhone and iPad 13" (from CI)
 - [ ] **Who:** developer renders; owner approves and uploads.
-- **Where:** the nightly tour's captures are on the `ci-results/app` branch (folder `screenshots/`, with `manifest.json`); the iPad's are on `ci-results/ipad` (folder `ipad-screenshots/`).
-  - First check `RUN.txt` on each branch: `ref` and `date` must be the release run's.
-  - A run on any branch other than `main` or `v2/foundations` publishes to `ci-results/app--<branch>` instead.
-- **Enter (commands):**
+- **Where:** run **Localized listing assets** (`listing-assets.yml`) on the verified release revision of `main`, with `locales=all` and `scope=screenshots`. It captures the exact required devices from one unsigned simulator build and retains per-locale captures, composed frames, source/build hashes and manifests. Nightly tour images remain QA evidence; its first available iPhone is not a guarantee of the required display size.
+- **Check before upload:** the workflow must finish successfully, its aggregate inventory must cover all 50 listing locales and both screenshot kinds, and its source SHA must match the release candidate. Review every actual frame; mechanical verification leaves `visual_review` pending and `release_ready=false`. Use the `rendered/` assets and manifests from that run, preserving locale and frame order. The standalone renderer also rejects source images whose native dimensions do not match its output device.
 
-```sh
-git fetch origin ci-results/app ci-results/ipad
-mkdir -p ~/timbre-store/captures/app ~/timbre-store/captures/ipad
-git archive origin/ci-results/app screenshots | tar -x -C ~/timbre-store/captures/app
-git archive origin/ci-results/ipad ipad-screenshots | tar -x -C ~/timbre-store/captures/ipad
-python3 -m pip install pillow fonttools          # once
-python3 tools/marketing/screenshots.py ~/timbre-store/captures/app/screenshots ~/timbre-store/iphone
-python3 tools/marketing/screenshots.py ~/timbre-store/captures/ipad/ipad-screenshots ~/timbre-store/ipad --ipad
-```
-
-  The renderer reads the frame tables in [APP-STORE-LISTING.md](APP-STORE-LISTING.md#screenshots-69-iphone-and-13-ipad): 9 iPhone frames at 1320 × 2868, and 4 iPad frames at 2752 × 2064. It refuses a capture its test marked `-wrong`, and exits non-zero when a frame is missing.
-- **Upload:** App Store Connect → the version → Previews and Screenshots → **iPhone 6.9"** (the 9 frames, in order) and **iPad 13"** (the 4 frames). App Store Connect scales them down for smaller displays. If it still asks for the 6.3" iPhone size, ask the developer to render that size too.
+  The renderer reads the frame tables in [APP-STORE-LISTING.md](APP-STORE-LISTING.md#screenshots-medium-dynamic-island-iphone-and-13-ipad): 9 iPhone frames at 1206 × 2622, and 4 iPad frames at 2752 × 2064. It refuses a capture its test marked `-wrong`, and exits non-zero when a frame is missing. The listing pipeline also verifies native capture dimensions before composing; old large-phone captures cannot replace the required medium set.
+- **Upload:** App Store Connect → the version → Previews and Screenshots → **iPhone with Dynamic Island (medium display)** (the 9 frames, in order) and **iPad 13"** (the 4 frames). Check these slots against [Apple's current requirements](https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications/) before submission.
 - **Verify:**
-  - look at `~/timbre-store/iphone/sheet.png` at search-result size;
+  - look at each locale's `iphone-<locale>-sheet.png` and `ipad-<locale>-sheet.png` at search-result size, then inspect the original frames;
   - frame #1 shows "✓ In tune", and no frame shows a sliced status bar or a reward pill over the clock;
-  - if frame #2 (`65-song-perform`) still fails its test, upload the other 8 rather than an unchecked capture.
+  - a missing or `-wrong` frame requires a fix and a new verified run; never upload an unchecked capture.
 
 ### H2. App Preview (optional for 2.0.0)
 - [ ] **Who:** developer runs; owner approves the sound.
