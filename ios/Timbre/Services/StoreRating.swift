@@ -107,8 +107,9 @@ final class StoreRating: ObservableObject {
     }
 
     static func validCachedLine(_ line: Line, appID: String?, bundleID: String?) -> Bool {
-        line.appID == appID && line.bundleID == bundleID
-            && line.stars.isFinite && (0...5).contains(line.stars) && line.count >= 0
+        let ratingCount = line.count
+        return line.appID == appID && line.bundleID == bundleID
+            && line.stars.isFinite && (0...5).contains(line.stars) && ratingCount >= 0
     }
 
     /// Apple's ID-based lookup includes the record and bundle identities, not just rating totals.

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scope": "published_policy_and_source_alignment_only",
-  "source_revision": "dfe5334613b07c8a55c5c059b6811517a0a71fb7",
+  "source_revision": "9e1e3c41ec24c1a2c78c22ea7a90726dc4ae6599",
   "verified_utc": "2026-10-27T08:20:41Z",
   "reviewer": "dot independent release-scope audit",
   "routes": [
@@ -267,12 +267,12 @@
     "ios/Timbre/Services/PracticeReminder.swift": "8257f7e60e9b6bfa10cd86d6cf8d7e703b7a31a85b705008567e4dde1d9ca6fc",
     "ios/Timbre/Services/RemoteConfig.swift": "117375f1b23d5417352f2c112b0ea3273ffa5d80022eddcc13dc1e0b0f6994f5",
     "ios/Timbre/Services/ShareDestination.swift": "7302a8c79ea141527a512ef27dda4e2b59be7d1535b58c846288af6fe8d94124",
-    "ios/Timbre/Services/StoreRating.swift": "45058d3241324bfd9890b36ce9a7f9d71b328e28840beda40db9b85e456492a8",
+    "ios/Timbre/Services/StoreRating.swift": "a1b5dac3474b4d8effaf54fdf1fc5051446b2a3b571f38b749601085d97e7984",
     "ios/Timbre/Services/TunerSession.swift": "8495a000d259855876cedee1711c21bf4467c711c0eea3913d834c3d61f70001",
     "ios/Timbre/Services/WatchBridge.swift": "17c629a7ffba286fd853ac115898d6a1db10a4964ccac7f893bd01753e65428e",
     "ios/Timbre/Services/WatchSnapshot.swift": "4d8c7568d1bf0831287016ad1e369868eefd7933b78a462c5abdc103873b84d1",
     "ios/Timbre/Services/WidgetBridge.swift": "608a2d25ba9c9f1918238258647575de4a50da188d46dd2ffaba679e0ef95783",
-    "ios/Timbre/Settings/SettingsView.swift": "604c58d05ff10048050f5dc4609f11fe3f3a6a4dcc8b8e469a9c78182121968e",
+    "ios/Timbre/Settings/SettingsView.swift": "bb9e7e7744d69bb7f4cbec0a8cb9264619038dc548603e48ca091942588aeb38",
     "ios/Timbre/Songs/SongCaptionLayout.swift": "09021c799680c0e815ca0134e0ae55a019b05ee2384f86ded58b796907acf19f",
     "ios/Timbre/Songs/SongCover.swift": "98177f2a9007ae00889969569150c41972b79f6c2102a2566e86122626b497bb",
     "ios/Timbre/Songs/SongRailMeasurement.swift": "74607dabc16d90803aaf1578037bf93db689b35100412199cb8bc425cb4e50f4",
@@ -412,29 +412,29 @@
   "mutations": "Only this receipt written. No listing verification/readiness flags, policy text, public website, signing, credentials or account settings changed.",
   "source_inventory_scope": "All shipped app/core/extension Swift, Objective-C/C/C++ sources and headers, app privacy manifests, xcconfig/plist/entitlement/permission configuration and package dependency inputs. Any edit/addition invalidates this source-review receipt; tests/docs outside named policy sources do not.",
   "source_review_refresh": {
-    "reviewed_utc": "2026-10-27T23:02:58.005776+00:00",
-    "base_revision": "dfe5334613b07c8a55c5c059b6811517a0a71fb7",
-    "source_state": "base_revision_plus_explicit_reviewed_rtl_presentation_deltas",
+    "reviewed_utc": "2026-10-27T23:26:56.972176+00:00",
+    "base_revision": "9e1e3c41ec24c1a2c78c22ea7a90726dc4ae6599",
+    "source_state": "base_revision_plus_explicit_reviewed_behavior_preserving_lint_deltas",
     "changes": [
       {
-        "path": "ios/Timbre/Design/EdgeFade.swift",
-        "previous_reviewed_sha256": "27d3c89df0e85a36e01a498b349c770766feed2fad241bccf1251c66c90a162a",
-        "reviewed_sha256": "513f974afe85e43195eb54ed13d9214704d5fa8af5ca70f70623de6cdaa55707",
-        "diff_sha256": "e9b69ccd779e34d96fecd0110d4d1ba2bce185759e6a5b8e032e70f707e51e14",
-        "privacy_assessment": "Maps physical scroll bounds and mask ramps to semantic RTL/LTR ends using transient layout direction. No new permissions, persisted state, audio access, network requests, identifiers, telemetry or data collection. Native geometry/raster verification remains required."
+        "path": "ios/Timbre/Services/StoreRating.swift",
+        "previous_reviewed_sha256": "45058d3241324bfd9890b36ce9a7f9d71b328e28840beda40db9b85e456492a8",
+        "reviewed_sha256": "a1b5dac3474b4d8effaf54fdf1fc5051446b2a3b571f38b749601085d97e7984",
+        "diff_sha256": "f3da304ac88e30eaf19f2a4737cb942a4b1e0e270d9dad24a442bbb193904665",
+        "privacy_assessment": "Introduces a local numeric alias for the existing rating count to avoid an inapplicable collection-count lint rule. Same identity, finite/range and nonnegative numeric checks; zero remains accepted. Codable cache schema, network request, storage and data flow unchanged."
       },
       {
-        "path": "ios/Timbre/Practice/PracticeChrome.swift",
-        "previous_reviewed_sha256": "2d21c1504905c0565849dc22f96cc5ff54ba1842621ffa824ecc8ac57adf69c7",
-        "reviewed_sha256": "51aa21ef73e9890f25c28cb632f453eea455387efb07b493d59ea04c7f011915",
-        "diff_sha256": "04e34cf1ed34675573987c77cb0aed34af874f56f5f6d1d8a0c8ab776cca67d7",
-        "privacy_assessment": "Maps physical scroll bounds and mask ramps to semantic RTL/LTR ends using transient layout direction. No new permissions, persisted state, audio access, network requests, identifiers, telemetry or data collection. Native geometry/raster verification remains required."
+        "path": "ios/Timbre/Settings/SettingsView.swift",
+        "previous_reviewed_sha256": "604c58d05ff10048050f5dc4609f11fe3f3a6a4dcc8b8e469a9c78182121968e",
+        "reviewed_sha256": "bb9e7e7744d69bb7f4cbec0a8cb9264619038dc548603e48ca091942588aeb38",
+        "diff_sha256": "0b9593e4f4f4ee087f13d1b3fe29c72553bebaa4c6b3a2b11b61b85081be9855",
+        "privacy_assessment": "Wraps the existing 52-language array across lines. Verified exact original values and order; no behavior, storage, permission or data-flow change."
       }
     ],
-    "source_inventory_delta": "296 bound inputs unchanged in membership; only EdgeFade.swift and PracticeChrome.swift differ from the immediately preceding reviewed snapshot. Prior locale/presentation changes remain recorded in source_review_refresh_history.",
+    "source_inventory_delta": "296 bound inputs unchanged in membership; only StoreRating.swift and SettingsView.swift differ from the immediately preceding reviewed snapshot. Prior reviews remain unchanged in source_review_refresh_history.",
     "listing_delta": "All 50 listing payload content hashes unchanged; no new privacy/legal consumer claims.",
     "publication_observation": "Original 08:20 UTC public HTTP observations and policy/support bytes preserved. No fresh public fetch or deployment asserted.",
-    "limitations": "Bounded source-diff privacy review only. Does not certify native geometry, raster appearance, accessibility, physical devices, StoreKit products/prices, signed archives, legal/account declarations or App Store submission."
+    "limitations": "Bounded source-diff privacy review only. Does not certify native execution, screenshots, accessibility, physical devices, StoreKit configuration, signed archives, legal/account declarations or App Store submission."
   },
   "source_review_refresh_history": [
     {
@@ -917,6 +917,31 @@
       "listing_delta": "All 50 listing payload content hashes unchanged from the verified base; no new privacy/legal consumer claims.",
       "publication_observation": "Original 08:20 UTC public HTTP observations and policy/support bytes preserved. No fresh public fetch or deployment asserted.",
       "limitations": "Bounded source-diff privacy review only. Does not certify native font/VoiceOver/RTL/layout, physical devices, StoreKit products/prices, signed archives, legal/account declarations or App Store submission."
+    },
+    {
+      "reviewed_utc": "2026-10-27T23:02:58.005776+00:00",
+      "base_revision": "dfe5334613b07c8a55c5c059b6811517a0a71fb7",
+      "source_state": "base_revision_plus_explicit_reviewed_rtl_presentation_deltas",
+      "changes": [
+        {
+          "path": "ios/Timbre/Design/EdgeFade.swift",
+          "previous_reviewed_sha256": "27d3c89df0e85a36e01a498b349c770766feed2fad241bccf1251c66c90a162a",
+          "reviewed_sha256": "513f974afe85e43195eb54ed13d9214704d5fa8af5ca70f70623de6cdaa55707",
+          "diff_sha256": "e9b69ccd779e34d96fecd0110d4d1ba2bce185759e6a5b8e032e70f707e51e14",
+          "privacy_assessment": "Maps physical scroll bounds and mask ramps to semantic RTL/LTR ends using transient layout direction. No new permissions, persisted state, audio access, network requests, identifiers, telemetry or data collection. Native geometry/raster verification remains required."
+        },
+        {
+          "path": "ios/Timbre/Practice/PracticeChrome.swift",
+          "previous_reviewed_sha256": "2d21c1504905c0565849dc22f96cc5ff54ba1842621ffa824ecc8ac57adf69c7",
+          "reviewed_sha256": "51aa21ef73e9890f25c28cb632f453eea455387efb07b493d59ea04c7f011915",
+          "diff_sha256": "04e34cf1ed34675573987c77cb0aed34af874f56f5f6d1d8a0c8ab776cca67d7",
+          "privacy_assessment": "Maps physical scroll bounds and mask ramps to semantic RTL/LTR ends using transient layout direction. No new permissions, persisted state, audio access, network requests, identifiers, telemetry or data collection. Native geometry/raster verification remains required."
+        }
+      ],
+      "source_inventory_delta": "296 bound inputs unchanged in membership; only EdgeFade.swift and PracticeChrome.swift differ from the immediately preceding reviewed snapshot. Prior locale/presentation changes remain recorded in source_review_refresh_history.",
+      "listing_delta": "All 50 listing payload content hashes unchanged; no new privacy/legal consumer claims.",
+      "publication_observation": "Original 08:20 UTC public HTTP observations and policy/support bytes preserved. No fresh public fetch or deployment asserted.",
+      "limitations": "Bounded source-diff privacy review only. Does not certify native geometry, raster appearance, accessibility, physical devices, StoreKit products/prices, signed archives, legal/account declarations or App Store submission."
     }
   ]
 }

@@ -90,6 +90,7 @@ final class StoreRatingProvenanceTests: XCTestCase {
         for stars in [Double.nan, Double.infinity, -Double.infinity, -0.1, 5.1] {
             XCTAssertFalse(StoreRating.validCachedLine(cached(stars: stars), appID: appID, bundleID: bundleID))
         }
+        XCTAssertTrue(StoreRating.validCachedLine(cached(count: 0), appID: appID, bundleID: bundleID))
         XCTAssertFalse(StoreRating.validCachedLine(cached(count: -1), appID: appID, bundleID: bundleID))
         XCTAssertFalse(StoreRating.validCachedLine(cached(), appID: "123", bundleID: bundleID))
         XCTAssertFalse(StoreRating.validCachedLine(cached(), appID: appID, bundleID: "com.other.app"))

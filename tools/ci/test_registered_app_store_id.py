@@ -34,7 +34,8 @@ class RegisteredAppStoreIDTests(unittest.TestCase):
         self.assertIn('result.trackId == number, result.bundleId == bundleID', rating)
         self.assertIn('lookup.resultCount == 1, lookup.results.count == 1', rating)
         self.assertIn('validCachedLine(line, appID: AppLinks.appStoreID, bundleID: Bundle.main.bundleIdentifier)', rating)
-        self.assertIn('line.stars.isFinite && (0...5).contains(line.stars) && line.count >= 0', rating)
+        self.assertIn('let ratingCount = line.count', rating)
+        self.assertIn('line.stars.isFinite && (0...5).contains(line.stars) && ratingCount >= 0', rating)
         self.assertIn('cached.flatMap { Self.matchesCurrentApp($0) ? $0 : nil }', rating)
         self.assertIn('defaults.removeObject(forKey: Self.cacheKey)', rating)
 
