@@ -1,0 +1,736 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-10-27T01:49:52.455814+00:00",
+  "reviewed_head": "b6efd36f5f72d7ec723229949f7c54c32972b72c",
+  "scope": "Read-only historical reconciliation against current source and retained receipts; follow-up fixes may supersede this snapshot. Only this receipt is written.",
+  "review_skill": "C:/Users/shahr/.agents/skills/code-review-and-quality/SKILL.md",
+  "status_meanings": {
+    "resolved_source": "Historical source issue resolved or current source/publication evidence closes it; not blanket release approval.",
+    "native_pending": "Source fix exists but native/media/account evidence is required; no passing result invented.",
+    "hardware_required": "Physical device measurement remains required.",
+    "optional_growth": "Additional feature, media/art or owner policy choice.",
+    "nonblocking_debt": "Unfinished maintenance/semantic review or disproved historical diagnosis; not an established release-blocking defect.",
+    "needs_fix": "Concrete remaining developer source/tooling gap at reviewed snapshot; impact is stated separately."
+  },
+  "needs_fix_ids": [
+    "KI-2.4",
+    "KI-5.3"
+  ],
+  "needs_fix_release_impact": {
+    "KI-2.4": "Required gate can be green despite accessibility failure; historical G item remains unenforced. No all49 failure waiver is inferred.",
+    "KI-5.3": "Real importer defect; existing authored plural resources are not proved invalid. Root has been notified and is implementing a follow-up."
+  },
+  "issues": [
+    {
+      "id": "KI-1.1",
+      "historical_issue": "The microphone start race (an older tuner start releasing the session a newer one holds) was fixed from code reading, about 60 % confidence; a quiet retry precedes the \"Could not start audio\" alert. Never run on a device.",
+      "historical_priority": "R",
+      "historical_reference": "docs/KNOWN-ISSUES.md:13",
+      "status": "hardware_required",
+      "evidence": "Microphone generation/pending-activation accounting and retry exist; prior device uncertainty is not closed by source review.",
+      "evidence_paths": [
+        "ios/Timbre/Audio/AudioService.swift:296",
+        "docs/ios/readiness/reviews/audio-source-resolution-independent-review.json"
+      ],
+      "remaining_action": "Run cold start, stop/restart, denied permission, competing mic/drone, Bluetooth and call/interruption cases on devices."
+    },
+    {
+      "id": "KI-1.2",
+      "historical_issue": "On the CI simulator the main thread stalled 9.4 s (2.2 s on another run) when a song take started its audio output (`ensureOutput` → `configureSession` → `AudioSessionOwner` `queue.sync`). The click now starts before the take's clock, so notes aren't lost, but a freeze on a phone would be a serious bug.",
+      "historical_priority": "R",
+      "historical_reference": "docs/KNOWN-ISSUES.md:14",
+      "status": "native_pending",
+      "evidence": "Synchronous output activation was replaced with async readiness/session activation; current hosted validation and device responsiveness remain open.",
+      "evidence_paths": [
+        "ios/Timbre/Audio/AudioService.swift:128",
+        "ios/Timbre/Audio/AudioService.swift:549",
+        "docs/ios/readiness/reviews/audio-native-build-fix-independent-review.json"
+      ],
+      "remaining_action": "Finish final-head native build/tests, then measure Perform-to-first-click on device; investigate any main-thread freeze above the stated 300ms criterion."
+    },
+    {
+      "id": "KI-1.3",
+      "historical_issue": "The audio device test sheet has never been run (latency, speaker band vs strum grading, haptics while recording, Bluetooth).",
+      "historical_priority": "R",
+      "historical_reference": "docs/KNOWN-ISSUES.md:15",
+      "status": "hardware_required",
+      "evidence": "No completed multi-device audio sheet is established by reviewed receipts.",
+      "evidence_paths": [
+        "docs/ios/AUDIO-DEVICE-TESTS.md",
+        "docs/ios/RELEASE-CHECKLIST.md"
+      ],
+      "remaining_action": "Run and record latency, speaker/strum grading, haptics and Bluetooth on requested iPhones/iPad."
+    },
+    {
+      "id": "KI-1.4",
+      "historical_issue": "The band now renders at `.userInitiated` so it joins at the first downbeat; check on the phone speaker with the mic on (Kite Weather): drums at the first downbeat, joins within a bar after a tempo change, also in Low Power Mode and with AirPods (full band). A band prepared before any engine ran renders at 48 kHz and is redone after Start if the hardware rate differs.",
+      "historical_priority": "R",
+      "historical_reference": "docs/KNOWN-ISSUES.md:16",
+      "status": "hardware_required",
+      "evidence": "Band render queue remains userInitiated; hardware rate/tempo/route behavior is not proven by source.",
+      "evidence_paths": [
+        "ios/Timbre/Audio/AudioService.swift:84",
+        "ios/Timbre/Audio/AudioService.swift"
+      ],
+      "remaining_action": "Record first downbeat and tempo-change join timing, sample-rate rebuild, Low Power Mode and AirPods results."
+    },
+    {
+      "id": "KI-1.5",
+      "historical_issue": "The speaker band plays drums only while the mic listens; attack-graded steps (strum/chords) pass `onSpeaker: false` so drum hits can't be graded as strokes. Whether the drums leak into play-along judging on a speaker is unmeasured.",
+      "historical_priority": "R",
+      "historical_reference": "docs/KNOWN-ISSUES.md:17",
+      "status": "hardware_required",
+      "evidence": "Speaker/microphone band restrictions remain; acoustic leakage cannot be cleared on Windows.",
+      "evidence_paths": [
+        "ios/Timbre/Audio/Band.swift",
+        "ios/Timbre/Audio/AudioService.swift",
+        "ios/Timbre/Learn/Highway.swift"
+      ],
+      "remaining_action": "Run speaker band leakage/grading test 4 and retain observed results."
+    },
+    {
+      "id": "KI-2.1",
+      "historical_issue": "The App Preview's own gates refused the 0bbf273 cut: no band under \"Play songs with the band\", silence in the Show me / results / songs clips, the lock clip placed ~1.5 s early. Findings: the simulator recording drops frames (151.7–154.5 s had none, so the lock screenshot matched a frozen frame — a recording artefact, the app shows the badge and the bell in the same update and holds it ≥ 1.5 s); the band's render landed too late on a saturated runner (it now renders at `.userInitiated`, and the preview's `band` events record `rendering`). The preview is optional for submission.",
+      "historical_priority": "R",
+      "historical_reference": "docs/KNOWN-ISSUES.md:23",
+      "status": "native_pending",
+      "evidence": "Preview gates remain strict; no accepted replacement for the historically failed cut is established. Optional to Apple does not mean the requested preview is complete.",
+      "evidence_paths": [
+        "tools/marketing/preview.py",
+        "tools/marketing/gates.py",
+        ".github/workflows/preview.yml"
+      ],
+      "remaining_action": "Record/render final-source localized previews; verify band, silence, lock timing and actual playback, or explicitly omit preview from submission without calling it complete."
+    },
+    {
+      "id": "KI-2.2",
+      "historical_issue": "Nightly tour on 0bbf273 (the last one run): onboarding, purchase, iPad and the AX5 matrix pass; three store-capture checks still fail. **test14** (frame #2, Kite Weather): the take now holds a combo (90), but the words shown are a verse (\"your little brother runs with the spaniel\"), not the chorus — the new wait for a still Stop button moves the picture later; shift `TIMBRE_SCENE_BAR` or the wait. **test11** (frame #1, tuner lock): the probe saw the lock held 0.0 s over 7 s — check the `stage.state lock=` probe key the test reads against `RootView`/`TuneView` before suspecting the app (the app latches the badge ≥ 1.5 s, `LockLatch.swift`). **test01**: \"Failed to terminate\" at teardown (simulator flake). Failing frames are saved as `-wrong`.",
+      "historical_priority": "R",
+      "historical_reference": "docs/KNOWN-ISSUES.md:24",
+      "status": "native_pending",
+      "evidence": "Source fixes address all three historical tour subissues: lock key is read/written consistently, chorus starts at bar12 with still barrier, teardown terminates only a running app. Current frames remain unproven.",
+      "evidence_paths": [
+        "ios/TimbreUITests/TimbreUITests.swift:29",
+        "ios/TimbreUITests/TimbreUITests.swift:246",
+        "ios/TimbreUITests/TimbreUITests.swift:1039",
+        "ios/Timbre/Root/DemoScenes.swift:225",
+        "ios/Timbre/Tune/TuneView.swift:165"
+      ],
+      "remaining_action": "Run final-head tests01/11/14/18; inspect real lock hold, chorus image and teardown logs; preserve -wrong rejection gates."
+    },
+    {
+      "id": "KI-2.3",
+      "historical_issue": "Apple Watch screenshots are required (the build contains a watch app) and no workflow makes them.",
+      "historical_priority": "R",
+      "historical_reference": "docs/KNOWN-ISSUES.md:25",
+      "status": "native_pending",
+      "evidence": "Watch job and DEBUG native-view capture hooks now exist; 98 real captures and visual acceptance are not established.",
+      "evidence_paths": [
+        ".github/workflows/watch-captures.yml",
+        "tools/ci/watch_captures.py",
+        "docs/ios/readiness/reviews/watch-capture-independent-review.json"
+      ],
+      "remaining_action": "Execute final-source Watch capture workflow, validate all49 language/two-page pairs and50 store mappings, inspect pixels; real complication-face capture remains separate manual work."
+    },
+    {
+      "id": "KI-2.4",
+      "historical_issue": "The accessibility audit job is not part of the required gate. On 0bbf273 it found ~30 contrast hits, 2 small hit areas and one icon read by its symbol name; the real ones were fixed (play-along rail letters, the next arrow's label, 44 pt stars and tempo buttons) and the rest exempted with measured ratios — a few flagged elements measure far above the threshold for reasons not proven.",
+      "historical_priority": "G",
+      "historical_reference": "docs/KNOWN-ISSUES.md:26",
+      "status": "needs_fix",
+      "evidence": "Accessibility runs as its own workflow job, but required gate needs omit it. Historical contrast dispositions do not waive fresh all49 failures.",
+      "evidence_paths": [
+        ".github/workflows/ios.yml:335",
+        ".github/workflows/ios.yml:339",
+        ".github/workflows/ios.yml:365",
+        "ios/TimbreUITests/AccessibilityAuditUITests.swift"
+      ],
+      "remaining_action": "Include accessibility in required gate if retaining the requested enforced release bar; obtain current native audit/matrix results and resolve genuine layout/audit findings without blanket exemptions."
+    },
+    {
+      "id": "KI-2.5",
+      "historical_issue": "`FirstSessionUITests` runs in no workflow; no UI test launches the `lesson-dead-string` scene; `tools/curriculum/build.py --check` runs in no workflow.",
+      "historical_priority": "G",
+      "historical_reference": "docs/KNOWN-ISSUES.md:27",
+      "status": "native_pending",
+      "evidence": "FirstSession now runs nightly, its test launches lesson-dead-string, and core runs curriculum --check. Native execution of new coverage remains pending.",
+      "evidence_paths": [
+        ".github/workflows/nightly.yml:60",
+        "ios/TimbreUITests/FirstSessionUITests.swift:33",
+        ".github/workflows/ios.yml:65",
+        "docs/ios/readiness/reviews/ci-independent-review.json"
+      ],
+      "remaining_action": "Collect final-head nightly FirstSession/dead-string success and actual silent/pending state; retain curriculum check."
+    },
+    {
+      "id": "KI-2.6",
+      "historical_issue": "Localized store sets can't be rendered yet: frames #3 and #7 read English text and stay `-wrong` in other languages.",
+      "historical_priority": "G",
+      "historical_reference": "docs/KNOWN-ISSUES.md:28",
+      "status": "native_pending",
+      "evidence": "Frames3/7 use semantic completion/heard-string/three-star identifiers, replacing the historical English-caption dependence. This fixes selectors, not every localized capture.",
+      "evidence_paths": [
+        "ios/TimbreUITests/TimbreUITests.swift:976",
+        "ios/TimbreUITests/TimbreUITests.swift:746"
+      ],
+      "remaining_action": "Run localized frames3/7 on final head, inspect LTR/RTL and correct six-string/results state; complete all requested media sets."
+    },
+    {
+      "id": "KI-2.7",
+      "historical_issue": "StoreKit purchase tests are flaky on CI (e.g. `testYearlyArmGrantsPro`: \"transactions did not clear before timeout\"); a re-run of failed jobs passes. The accessibility audit often times out on hosted runners (\"Audit failed to complete in time\").",
+      "historical_priority": "R",
+      "historical_reference": "docs/KNOWN-ISSUES.md:29",
+      "status": "native_pending",
+      "evidence": "StoreKit remains serial and now awaits30s bounded cleanup in setup/teardown; audit retry preserves genuine failures and retries launch-only failures. Recurrence is not disproved.",
+      "evidence_paths": [
+        "ios/TimbreAppTests/StoreKitTestEnvironment.swift:40",
+        "ios/TimbreAppTests/CommerceIntegrationTests.swift:24",
+        ".github/workflows/ios.yml:299"
+      ],
+      "remaining_action": "Run repeated serial commerce suite then full gate; obtain successful real audits and investigate any repeated timeout without masking assertions."
+    },
+    {
+      "id": "KI-2.8",
+      "historical_issue": "`actions/checkout@v4` and `upload-artifact@v4` run on deprecated Node 20.",
+      "historical_priority": "T",
+      "historical_reference": "docs/KNOWN-ISSUES.md:30",
+      "status": "nonblocking_debt",
+      "evidence": "Workflows still use checkout@v4/upload-artifact@v4; no action-runtime upgrade performed. SDK minimum is separately checked as26, avoiding conflating SDK and action runtime.",
+      "evidence_paths": [
+        ".github/workflows/ios.yml:31",
+        ".github/workflows/ios.yml:115",
+        ".github/workflows/apple-delivery.yml:85"
+      ],
+      "remaining_action": "Review supported action versions/current migration guidance and upgrade in a focused CI change, then verify workflows."
+    },
+    {
+      "id": "KI-2.9",
+      "historical_issue": "Old results branches (`ci-results/convert/*`, `import/*`, `bench`, `scout`) come from workflows that no longer exist.",
+      "historical_priority": "T",
+      "historical_reference": "docs/KNOWN-ISSUES.md:31",
+      "status": "nonblocking_debt",
+      "evidence": "Historical remote result-branch cleanup is not verified or performed by this read-only review.",
+      "evidence_paths": [
+        "docs/KNOWN-ISSUES.md",
+        ".github/workflows/ios.yml:360"
+      ],
+      "remaining_action": "Inventory referenced remote result branches and remove obsolete ones only under an explicit cleanup decision."
+    },
+    {
+      "id": "KI-2.10",
+      "historical_issue": "Coverage floor is 50 % against ~95 % measured; TimbreCore has zero concurrency warnings (the condition `Package.swift` sets to move it to Swift 6).",
+      "historical_priority": "T",
+      "historical_reference": "docs/KNOWN-ISSUES.md:32",
+      "status": "nonblocking_debt",
+      "evidence": "Coverage floor remains50%; Package.swift retains Swift5 language mode with strict concurrency despite Swift6 tools version. No fresh95% or zero-warning measurement claimed.",
+      "evidence_paths": [
+        "tools/ci/coverage-floor.json:3",
+        "ios/Package.swift:24",
+        ".github/workflows/ios.yml:48"
+      ],
+      "remaining_action": "Use final native coverage/warning measurements to raise floor; plan separately tested Swift6 language-mode migration."
+    },
+    {
+      "id": "KI-3.1",
+      "historical_issue": "The hand rig for Show me needs the owner's rigged hand; the hook is ready.",
+      "historical_priority": "G",
+      "historical_reference": "docs/KNOWN-ISSUES.md:38",
+      "status": "optional_growth",
+      "evidence": "Hand-rig extension point remains; fingertip fallback is intentional until a rig ships.",
+      "evidence_paths": [
+        "ios/Timbre/Learn/ShowMeScene.swift:207",
+        "ios/Timbre/Learn/ShowMeScene.swift:402"
+      ],
+      "remaining_action": "Supply licensed rig, integrate and verify posing on actual Show me scenes if pursuing growth polish."
+    },
+    {
+      "id": "KI-3.2",
+      "historical_issue": "Ukulele and banjo 3D models are missing (drop in via `models-manifest.json`).",
+      "historical_priority": "G",
+      "historical_reference": "docs/KNOWN-ISSUES.md:39",
+      "status": "optional_growth",
+      "evidence": "Bundled model manifest has seven models and no ukulele/banjo3D entries; photo stages remain available.",
+      "evidence_paths": [
+        "ios/Timbre/Resources/Models/models-manifest.json"
+      ],
+      "remaining_action": "Acquire/build credited models, rig and visually test before claiming3D support for those instruments."
+    },
+    {
+      "id": "KI-3.3",
+      "historical_issue": "Metronome voices/grooves: new sounds need a joint change to `MetronomeRenderer.Sound` (TimbreCore `OutputAudio.swift`), `MetronomeView`'s exhaustive switch, FreeTier/PlanComparison and new strings.",
+      "historical_priority": "G",
+      "historical_reference": "docs/KNOWN-ISSUES.md:40",
+      "status": "optional_growth",
+      "evidence": "Additional metronome voices/grooves remain a coordinated product enhancement, not a demonstrated regression.",
+      "evidence_paths": [
+        "ios/Sources/TimbreCore/Audio/OutputAudio.swift",
+        "ios/Timbre/Practice/MetronomeView.swift"
+      ],
+      "remaining_action": "If expanding sounds, update renderer enum, exhaustive UI, free/pro comparison and reviewed translations together; native audio test."
+    },
+    {
+      "id": "KI-3.4",
+      "historical_issue": "The speaker band \"step 2\" (echo cancellation / voice processing behind a self-test, so the full band can play on the speaker while listening) needs a device.",
+      "historical_priority": "G",
+      "historical_reference": "docs/KNOWN-ISSUES.md:41",
+      "status": "optional_growth",
+      "evidence": "Full speaker band with voice processing/echo cancellation remains future work; current safety restrictions are retained.",
+      "evidence_paths": [
+        "ios/Timbre/Audio/AudioService.swift",
+        "ios/Timbre/Audio/CueVoice.swift"
+      ],
+      "remaining_action": "Design self-test and verify on device before enabling full-band speaker playback with mic."
+    },
+    {
+      "id": "KI-3.5",
+      "historical_issue": "A wrong-chord (\"Am?\") capture hook doesn't exist; only the dead-string one does.",
+      "historical_priority": "G",
+      "historical_reference": "docs/KNOWN-ISSUES.md:42",
+      "status": "optional_growth",
+      "evidence": "Dead-string scene exists; no wrong-chord capture scene was found in current DemoScene cases.",
+      "evidence_paths": [
+        "ios/Timbre/Root/DemoScenes.swift:51",
+        "ios/Timbre/Learn/LessonSteps.swift"
+      ],
+      "remaining_action": "Add real judge-driven wrong-chord capture hook only if required for planned media/testing."
+    },
+    {
+      "id": "KI-3.6",
+      "historical_issue": "At the largest text size (AX5) the tuner header is still cramped (clipped text, overlaps).",
+      "historical_priority": "G",
+      "historical_reference": "docs/KNOWN-ISSUES.md:43",
+      "status": "native_pending",
+      "evidence": "Accessibility-size tuner uses vertical scroll and stacked wrapping header; horizontal rail targeting was repaired. Recorded Bulgarian endpoint failure and wider all49 layout gates are not cleared by this source change.",
+      "evidence_paths": [
+        "ios/Timbre/Tune/TuneView.swift:51",
+        "ios/Timbre/Tune/TuneView.swift:229",
+        "ios/Timbre/Tune/StringRail.swift",
+        "ios/TimbreUITests/LocalizationMatrixUITests.swift",
+        "docs/ios/readiness/reviews/ax5-scroll-final-review.json"
+      ],
+      "remaining_action": "Run Bulgarian AX5 endpoint select/return and representative RTL/left-handed/paired-course cases, inspect header clipping/overlap and final all49 matrix. Preserve strict bounds/hittability checks."
+    },
+    {
+      "id": "KI-3.7",
+      "historical_issue": "The tuning menu sits on the tuning line only; the whole header would break tests that tap `tune.instrument`.",
+      "historical_priority": "G",
+      "historical_reference": "docs/KNOWN-ISSUES.md:44",
+      "status": "optional_growth",
+      "evidence": "Tuning menu remains on tuning line; instrument picker remains distinct tune.instrument button. This is unchanged interaction design, not a demonstrated bug.",
+      "evidence_paths": [
+        "ios/Timbre/Tune/TuneView.swift:236",
+        "ios/Timbre/Tune/TuneView.swift:267"
+      ],
+      "remaining_action": "Expand tuning hit surface only if desired; preserve separate instrument action/identifier and update interaction tests."
+    },
+    {
+      "id": "KI-3.8",
+      "historical_issue": "Carol week has no remote-config key; `freeSongs` stays open until the owner removes the songs from the settings file.",
+      "historical_priority": "G",
+      "historical_reference": "docs/KNOWN-ISSUES.md:45",
+      "status": "native_pending",
+      "evidence": "Optional strict Gregorian local-day freeSongsWindow,256-ID bound, offline enforcement, boundary refresh and catalog invalidation are implemented/reviewed. Actual native boundary/take-continuity validation remains pending.",
+      "evidence_paths": [
+        "ios/Sources/TimbreCore/Commerce/FreeSongWindow.swift",
+        "ios/Timbre/Services/RemoteConfig.swift",
+        "docs/ios/readiness/reviews/carol-window-resolution-independent-review.json"
+      ],
+      "remaining_action": "Run Core/app policy and retained-catalog tests; observe date/timezone/offline refresh and active-take continuity, then publish102-ID campaign with both window keys."
+    },
+    {
+      "id": "KI-3.9",
+      "historical_issue": "\"Next\", \"Again\" and \"Slower\" are both on-screen labels and Siri command titles, so one translation serves both.",
+      "historical_priority": "G",
+      "historical_reference": "docs/KNOWN-ISSUES.md:46",
+      "status": "nonblocking_debt",
+      "evidence": "Practice intent display representations still share Next/Again/Slower keys with UI labels. A contextual localization split has not been implemented.",
+      "evidence_paths": [
+        "ios/Timbre/Intents/PracticeIntents.swift:110"
+      ],
+      "remaining_action": "Evaluate actual Siri phrasing per language; introduce context-specific keys only when semantic review demonstrates need, then export/review translations."
+    },
+    {
+      "id": "KI-3.10",
+      "historical_issue": "Game Center still names the Pitch Sniper activity by its old name.",
+      "historical_priority": "G",
+      "historical_reference": "docs/KNOWN-ISSUES.md:47",
+      "status": "nonblocking_debt",
+      "evidence": "Old Pitch Sniper wording remains in setup comments; stable runtime activity ID is intentional. Current user-facing share/setup table uses Bullseye, so no runtime naming bug established.",
+      "evidence_paths": [
+        "ios/Timbre/Services/GameCenterIDs.swift:27",
+        "ios/Timbre/Services/GameCenterIDs.swift:90",
+        "ios/Timbre/Services/GameCenter.swift:38",
+        "docs/ios/APPLE-DELIVERY.md"
+      ],
+      "remaining_action": "Correct stale comments; keep stable activity IDs. Verify configured App Store Connect title only if enabling Game Center."
+    },
+    {
+      "id": "KI-4.1",
+      "historical_issue": "iCloud sync of progress isn't built (needs the iCloud entitlement and the owner enabling iCloud on the App ID).",
+      "historical_priority": "T",
+      "historical_reference": "docs/KNOWN-ISSUES.md:53",
+      "status": "optional_growth",
+      "evidence": "Persistence remains local with no iCloud progress sync implementation. No current first-release claim requires sync.",
+      "evidence_paths": [
+        "ios/Sources/TimbreCore/Persistence/LocalStore.swift"
+      ],
+      "remaining_action": "Design conflict-aware sync and obtain entitlement/account configuration if adding this feature."
+    },
+    {
+      "id": "KI-4.2",
+      "historical_issue": "Curriculum is one 11 MB JSON decoded at launch (off the main thread); sharding would cut memory and launch work.",
+      "historical_priority": "T",
+      "historical_reference": "docs/KNOWN-ISSUES.md:54",
+      "status": "nonblocking_debt",
+      "evidence": "Shared curriculum still decodes one bundled JSON off-thread; no sharding introduced.",
+      "evidence_paths": [
+        "ios/Sources/TimbreCore/Learn/CurriculumStore.swift:3",
+        "ios/Sources/TimbreCore/Learn/CurriculumStore.swift:28"
+      ],
+      "remaining_action": "Measure final native launch/memory before choosing a sharding design."
+    },
+    {
+      "id": "KI-4.3",
+      "historical_issue": "`AppStore` is still large; the Router/ProgressStore split was not done. `PracticeRecord.kind` is a string, not an enum.",
+      "historical_priority": "T",
+      "historical_reference": "docs/KNOWN-ISSUES.md:55",
+      "status": "nonblocking_debt",
+      "evidence": "AppStore remains large and PracticeRecord.kind remains String; proposed module/type refactor was not done.",
+      "evidence_paths": [
+        "ios/Timbre/Services/AppStore.swift",
+        "ios/Sources/TimbreCore/Persistence/LocalStore.swift:252"
+      ],
+      "remaining_action": "Plan focused module extraction/type migration with persistence compatibility tests if prioritizing this debt."
+    },
+    {
+      "id": "KI-4.4",
+      "historical_issue": "String Catalog (`.xcstrings`) migration not done; `Bundle.app` is prepared for it.",
+      "historical_priority": "T",
+      "historical_reference": "docs/KNOWN-ISSUES.md:56",
+      "status": "nonblocking_debt",
+      "evidence": "Shipped resources remain .strings/.stringsdict; xcstrings conversion verification exists but migration into the shipping project is not established.",
+      "evidence_paths": [
+        "ios/Timbre/Resources",
+        "docs/l10n/reviews/final-integration/validation.json"
+      ],
+      "remaining_action": "If migrating, preserve every localized/plural value and verify actual build/runtime lookup after project/resource changes."
+    },
+    {
+      "id": "KI-4.5",
+      "historical_issue": "Hygiene baseline (96 allowed occurrences), SwiftLint baseline and the concurrency-warning allowlist still hold older violations.",
+      "historical_priority": "T",
+      "historical_reference": "docs/KNOWN-ISSUES.md:57",
+      "status": "nonblocking_debt",
+      "evidence": "Hygiene/SwiftLint baselines and concurrency accounting remain. Warning allowlist now only permits generated ios/build files, so historical broad implication needs qualification.",
+      "evidence_paths": [
+        "tools/ci/hygiene-baseline.json",
+        "tools/ci/swiftlint-baseline.json",
+        "tools/ci/warnings-allowlist.json"
+      ],
+      "remaining_action": "Use actual final lint/warnings results to retire obsolete baseline entries without masking new failures."
+    },
+    {
+      "id": "KI-4.6",
+      "historical_issue": "`tools/brand/icon.py` renders the icon design in amber; the shipped interim icon is mint.",
+      "historical_priority": "T",
+      "historical_reference": "docs/KNOWN-ISSUES.md:58",
+      "status": "nonblocking_debt",
+      "evidence": "Legacy icon generator still describes/renders amber while current branding uses mint.",
+      "evidence_paths": [
+        "tools/brand/icon.py:17"
+      ],
+      "remaining_action": "Align generator with approved shipped icon before regenerating; do not silently replace shipping icon."
+    },
+    {
+      "id": "KI-4.7",
+      "historical_issue": "The Blender model pipeline's rigs lack the `credit` block `verify-ios-resources.py` requires; the shipped models are Sketchfab CC BY models whose converter isn't in the repo.",
+      "historical_priority": "T",
+      "historical_reference": "docs/KNOWN-ISSUES.md:59",
+      "status": "nonblocking_debt",
+      "evidence": "Procedural model builder writes rigs without credit contract; artist-model installer expects credited converted inputs. Shipped resources have their own validated credits, but conversion reproducibility remains incomplete.",
+      "evidence_paths": [
+        "tools/models/build_assets.py:150",
+        "tools/models/install_artist_models.py:95",
+        "tools/verify-ios-resources.py:38",
+        "ios/Timbre/Resources/Models"
+      ],
+      "remaining_action": "Document/reproduce converter and provenance fields for newly generated rigs before replacing current models."
+    },
+    {
+      "id": "KI-4.8",
+      "historical_issue": "`tools/localize-ios-copy.py` targets a folder that no longer exists; `tools/import-ios-resources.py` now refuses to run (it would overwrite the catalogue, photos, fonts and translations).",
+      "historical_priority": "T",
+      "historical_reference": "docs/KNOWN-ISSUES.md:60",
+      "status": "nonblocking_debt",
+      "evidence": "localize-ios-copy still addresses missing Views files; legacy Android import deliberately refuses by default to prevent destructive overwrite. These tools are not the current translation pipeline.",
+      "evidence_paths": [
+        "tools/localize-ios-copy.py:19",
+        "tools/import-ios-resources.py:1"
+      ],
+      "remaining_action": "Retire or clearly document obsolete localization helper; retain destructive-import guard and migrate only through current guarded tools."
+    },
+    {
+      "id": "KI-5.1",
+      "historical_issue": "The App Store delivery gate runs `critical.py --strict` without `--xliff`, so a string imported under a wrongly guessed key (`key_check`) counts as translated while the app shows English. Two of today's five guessed keys are critical.",
+      "historical_priority": "R",
+      "historical_reference": "docs/KNOWN-ISSUES.md:66",
+      "status": "native_pending",
+      "evidence": "Delivery now exports authoritative English XLIFF before selection and passes it to complete UI and strict critical gates; original metadata omission was independently resolved.",
+      "evidence_paths": [
+        ".github/workflows/apple-delivery.yml:102",
+        ".github/workflows/apple-delivery.yml:129",
+        "docs/ios/readiness/reviews/ci-r1-independent-rereview.json"
+      ],
+      "remaining_action": "Finish final-source native localization export/critical validation and inspect actual archive locales without dispatching Apple upload as a test."
+    },
+    {
+      "id": "KI-5.2",
+      "historical_issue": "Delivery trims locales with `shipping.py --min` but without `--critical`, so a locale above the bar that lacks a critical string fails the upload instead of being left out.",
+      "historical_priority": "R",
+      "historical_reference": "docs/KNOWN-ISSUES.md:67",
+      "status": "resolved_source",
+      "evidence": "Coverage-based shipping now receives the same XLIFF plus --critical; regression fixtures cover pending critical metadata and exclusion. All49 UI/all48 lesson requirements remain independent.",
+      "evidence_paths": [
+        ".github/workflows/apple-delivery.yml:118",
+        "tools/l10n/shipping.py",
+        "tools/l10n/tests/test_shipping.py",
+        "docs/ios/readiness/reviews/ci-r1-independent-rereview.json"
+      ],
+      "remaining_action": "Retain regressions and confirm final native export against exact revision; never use reduced shipping selection to waive requested full-language completion."
+    },
+    {
+      "id": "KI-5.3",
+      "historical_issue": "The import refuses a plural `one` form without the number although the English (and 27 locales) have one; `--import` never writes plurals (they're added by hand).",
+      "historical_priority": "G",
+      "historical_reference": "docs/KNOWN-ISSUES.md:68",
+      "status": "needs_fix",
+      "evidence": "At reviewed b6efd36 report.check compares every plural to other placeholders, and import_todo prints a manual instruction instead of importing plurals. Independent read-only probe reproduced valid numberless-one rejection.",
+      "evidence_paths": [
+        "tools/l10n/report.py:443",
+        "tools/l10n/report.py:1013"
+      ],
+      "remaining_action": "Implement form-aware placeholder validation and actual guarded stringsdict import with regression tests; current already-authored resource plurals are not proven broken by this tooling defect."
+    },
+    {
+      "id": "KI-5.4",
+      "historical_issue": "`max_length` is enforced nowhere; line breaks aren't compared for interface strings.",
+      "historical_priority": "G",
+      "historical_reference": "docs/KNOWN-ISSUES.md:69",
+      "status": "nonblocking_debt",
+      "evidence": "max_length remains a documented soft advisory; UI newline changes are accepted by report.check, while lesson newlines are enforced. No blanket limit/newline rejection was added.",
+      "evidence_paths": [
+        "tools/l10n/report.py:161",
+        "tools/l10n/report.py:443",
+        "docs/l10n/HANDOFF.md:35"
+      ],
+      "remaining_action": "Add explicit advisory reporting or source-bound hard constraints where justified; use real layout review. Do not reject language-specific wrapping solely to equal English."
+    },
+    {
+      "id": "KI-5.5",
+      "historical_issue": "Shipped tables have known errors: \"Intonation\" translated as guitar-setup octave adjustment in ca, es, ja, pt, zh-CN; mixed formal/informal register in he, hr, ro, sl, tr; mixed \"...\" and \"…\". They aren't in the TODO files, so they need a separate clean-up batch.",
+      "historical_priority": "G",
+      "historical_reference": "docs/KNOWN-ISSUES.md:70",
+      "status": "nonblocking_debt",
+      "evidence": "Historical blanket Intonation mistranslation diagnosis is not sustained: actual IntonationView compares12th-fret notes and directs saddle adjustment, making setup/octave terminology contextually plausible. Exact key appears only in setup tool titles/paywall focus, not a broad accuracy metric. Register/ellipsis allegations are not independently adjudicated by lesson coverage.",
+      "evidence_paths": [
+        "ios/Timbre/Practice/IntonationView.swift:4",
+        "ios/Timbre/Practice/PracticeView.swift:595",
+        "ios/Timbre/Paywall/PaywallPlan.swift:245",
+        "ios/Timbre/Resources/ca.lproj/Localizable.strings:1082",
+        "ios/Timbre/Resources/es.lproj/Localizable.strings:1082",
+        "ios/Timbre/Resources/ja.lproj/Localizable.strings:1082",
+        "ios/Timbre/Resources/pt.lproj/Localizable.strings:1082",
+        "ios/Timbre/Resources/zh-CN.lproj/Localizable.strings:1082"
+      ],
+      "remaining_action": "Do not bulk-replace setup terms. Perform bounded current-context UI semantic/register/ellipsis review if prioritizing cleanup; separately review paywall drone promise for feature accuracy."
+    },
+    {
+      "id": "KI-5.6",
+      "historical_issue": "The listing checker skips several keyword rules for localized listings and never checks localized description / promotional text / What's New.",
+      "historical_priority": "G",
+      "historical_reference": "docs/KNOWN-ISSUES.md:71",
+      "status": "resolved_source",
+      "evidence": "screenshots.localized_problems delegates all localized metadata to store.check_all; current store validator checks complete payloads, lengths/keywords and source-bound reviews. Draft validation does not certify media or native text.",
+      "evidence_paths": [
+        "tools/marketing/screenshots.py:398",
+        "tools/l10n/store.py",
+        "tools/l10n/tests/test_store_content.py",
+        "docs/l10n/reviews/store-release-privacy-update/integration-verification.json"
+      ],
+      "remaining_action": "Retain50-locale structural/content checks; complete separate visual/media/account gates."
+    },
+    {
+      "id": "KI-5.7",
+      "historical_issue": "`LocalizationLaunchUITests` expects the German welcome to be English (`XCTExpectFailure`); remove the wrapper in the same PR that imports the German funnel strings.",
+      "historical_priority": "R",
+      "historical_reference": "docs/KNOWN-ISSUES.md:72",
+      "status": "native_pending",
+      "evidence": "German welcome has positive localized assertions and regional de-DE test; no XCTExpectFailure wrapper remains. Source change cannot establish current native success.",
+      "evidence_paths": [
+        "ios/TimbreUITests/LocalizationLaunchUITests.swift:48",
+        "ios/TimbreUITests/LocalizationLaunchUITests.swift:61"
+      ],
+      "remaining_action": "Run final-head German first-launch/tab tests and inspect actual welcome."
+    },
+    {
+      "id": "KI-6.1",
+      "historical_issue": "68 of the 73 instrument photos are marked \"provided\" with no licence on record.",
+      "historical_priority": "R",
+      "historical_reference": "docs/KNOWN-ISSUES.md:80",
+      "status": "resolved_source",
+      "evidence": "Owner attested creation/generation of68 formerly-provided entries and per-asset/bundled/thumbnail hashes were recorded; manifest provenance was updated. This is recorded owner evidence, not external legal certification.",
+      "evidence_paths": [
+        "docs/ios/readiness/reviews/image-provenance-application.json",
+        "ios/Sources/TimbreCore/Resources/photos.json"
+      ],
+      "remaining_action": "Preserve attestation and hash records; review any future replacement asset provenance independently."
+    },
+    {
+      "id": "KI-6.2",
+      "historical_issue": "The hosted privacy policy (gh-pages, 23 Oct) says analytics stay on the device; the app sends anonymous analytics (with an opt-out). Updated pages are in `docs/site/` for the owner to publish; a Support URL page is there too.",
+      "historical_priority": "R",
+      "historical_reference": "docs/KNOWN-ISSUES.md:81",
+      "status": "resolved_source",
+      "evidence": "Canonical public Cloudflare privacy/support endpoints now have actual200/byte-equality/header evidence for current policy; policy discloses analytics, imports, consent and default-off Game Center. Legacy gh-pages is not current canonical proof.",
+      "evidence_paths": [
+        "docs/ios/readiness/reviews/privacy-publication-refresh.json",
+        "docs/ios/PRIVACY.md",
+        "docs/site/privacy.html",
+        "ios/project.yml:114"
+      ],
+      "remaining_action": "Reverify URLs/policy against final signed candidate and complete App Store privacy answers; preserve publication receipt."
+    },
+    {
+      "id": "KI-6.3",
+      "historical_issue": "MusicKit must be enabled on the App ID or \"Listen on Apple Music\" shows \"isn't available\"; the Game Center bullet must leave the description unless Game Center is set up.",
+      "historical_priority": "R",
+      "historical_reference": "docs/KNOWN-ISSUES.md:82",
+      "status": "native_pending",
+      "evidence": "Unconditional Game Center bullet is removed across50 listings and build defaults Game CenterNO. MusicKit App-ID entitlement/service configuration is not proven by source.",
+      "evidence_paths": [
+        "ios/project.yml:117",
+        "docs/ios/APP-STORE-LISTING.md",
+        "tools/l10n/store/en-US.json",
+        "docs/l10n/reviews/store-release-privacy-update/integration-verification.json",
+        "docs/ios/APPLE-DELIVERY.md"
+      ],
+      "remaining_action": "Verify MusicKit capability/authorization/playback with owner portal and signed device build. Keep Game Center off unless account assets/configuration and corresponding copy are approved."
+    },
+    {
+      "id": "KI-6.4",
+      "historical_issue": "The repository is public.",
+      "historical_priority": "G",
+      "historical_reference": "docs/KNOWN-ISSUES.md:83",
+      "status": "optional_growth",
+      "evidence": "Repository visibility is an owner policy decision; no change or current remote-settings verification performed in this read-only audit.",
+      "evidence_paths": [
+        "docs/KNOWN-ISSUES.md",
+        "docs/HANDOVER.md"
+      ],
+      "remaining_action": "Owner decides visibility; independent secret/dependency review remains separate from making a repository private."
+    }
+  ],
+  "historical_fixed_footer": {
+    "reference": "docs/KNOWN-ISSUES.md final paragraph",
+    "status": "resolved_source",
+    "evidence_paths": [
+      "tools/l10n/apply.py"
+    ],
+    "evidence": "Format-specifier normalization/validation covers historical %lf/%llu/%u argument checks; preserve regression coverage."
+  },
+  "handover_reconciliation": [
+    {
+      "id": "HO-quality-jury",
+      "status": "optional_growth",
+      "evidence_paths": [
+        "docs/HANDOVER.md:40",
+        "docs/process/templates"
+      ],
+      "evidence": "8.3 jury score and9.5 target are historical evaluation/aspiration, not current measured certification.",
+      "remaining_action": "If claiming a new score, conduct a new documented review; separate optional growth assets from first-release requirements."
+    },
+    {
+      "id": "HO-gate-health",
+      "status": "native_pending",
+      "evidence_paths": [
+        "docs/HANDOVER.md",
+        "docs/ios/readiness/reviews/0c67901-app-native-results.json",
+        ".github/workflows/ios.yml:335"
+      ],
+      "evidence": "Historical green handover gate and61 app-unit/3-smoke results at0c67901 cannot certify b6efd36. Accessibility dependency still omitted at review.",
+      "remaining_action": "Collect final committed-head gate, accessibility, export, matrix and capture evidence; update status prose using exact revision/run IDs."
+    },
+    {
+      "id": "HO-first-release-language-scope",
+      "status": "native_pending",
+      "evidence_paths": [
+        "docs/HANDOVER.md",
+        "docs/OWNER-ACTIONS.md",
+        "docs/l10n/reviews/final-integration/validation.json",
+        ".github/workflows/apple-delivery.yml:110"
+      ],
+      "evidence": "English-only handover option is superseded by owner full-language requirement; current source guards49 app languages and48 translated lesson locales. Coverage receipts do not waive historical all49 native accessibility/layout failures.",
+      "remaining_action": "Complete final-source full-language export/native matrix and all requested locale media; retain each failure until fixed and rerun."
+    },
+    {
+      "id": "HO-store-readiness-owner-gates",
+      "status": "native_pending",
+      "evidence_paths": [
+        "docs/HANDOVER.md",
+        "docs/ios/RELEASE-CHECKLIST.md",
+        "docs/ios/readiness/reviews/privacy-publication-refresh.json",
+        "docs/ios/readiness/reviews/image-provenance-application.json"
+      ],
+      "evidence": "Photos and public policy have newer evidence; audio devices, Watch/iPhone/iPad assets, signed account/StoreKit/MusicKit/Apple metadata checks remain independently open.",
+      "remaining_action": "Complete outstanding concrete device, artifact and owner-account steps; do not call all assets complete."
+    },
+    {
+      "id": "HO-authorization-rules",
+      "status": "nonblocking_debt",
+      "evidence_paths": [
+        "docs/HANDOVER.md",
+        "docs/OWNER-ACTIONS.md"
+      ],
+      "evidence": "Historical no-upload/no-main-without-review instructions are authorization constraints, not bug findings. Current explicit user authorizations/overrides govern work; this review performs no upload or repository mutation.",
+      "remaining_action": "Keep final status/actions distinguishable from historical instructions and obtain only genuinely missing authorization."
+    },
+    {
+      "id": "HO-service-config",
+      "status": "optional_growth",
+      "evidence_paths": [
+        "docs/HANDOVER.md",
+        "ios/project.yml:114",
+        "ios/Timbre/Services/RemoteConfig.swift"
+      ],
+      "evidence": "Analytics ID, hosted remote configuration and notifications service setup are separate owner choices; default absent URLs/IDs are supported. Carol scheduling requires actual config publication when used.",
+      "remaining_action": "Configure chosen services before relying on those features; verify final policy/build settings match enabled services."
+    }
+  ],
+  "verification": {
+    "independent_execution": "Read-only plural/newline report.check probes reproduced numberless-one rejection and permissive UI newline behavior. Prior integration review independently ran14 Watch and45 store tests.",
+    "root_reported": "Root reports fresh178 Python tests passing and current public privacy publication; no native success is inferred from this report.",
+    "native": "No Xcode/Swift/XCTest/simulator/device execution on this Windows reviewer. Native checks at b6efd36 remain pending at review time.",
+    "reviewed_document_hashes": {
+      "docs/KNOWN-ISSUES.md": "16d0e3bae327455cd00d5084e39f8ae94d6537f0ecbf6841ba8a505e254f14a1",
+      "docs/HANDOVER.md": "d5c37b7220db68d20eba644a45170fee7e064bfa8a127cf7d5719745dd1a758b"
+    }
+  },
+  "explicit_open_gates": [
+    "All49 current native accessibility/layout outcomes require actual acceptance; no blanket waiver.",
+    "Final-source iPhone/iPad and Watch screenshots and requested previews require real capture/visual review; no all-assets-complete claim.",
+    "Audio timing, leakage, routes, haptics and interruption hardware tests remain required.",
+    "Signed/account/service/App Store Connect evidence remains separate."
+  ],
+  "counts_by_status": {
+    "resolved_source": 4,
+    "native_pending": 12,
+    "hardware_required": 4,
+    "optional_growth": 8,
+    "nonblocking_debt": 14,
+    "needs_fix": 2
+  },
+  "follow_up_in_progress": {
+    "KI-2.4": "Root is adding accessibility to required gate after this baseline-bound review; native evidence remains separate.",
+    "KI-5.3": "Root authored uncommitted plural-import fix and six tests after this baseline. Independent follow-up review is recorded separately; this historical snapshot is not retroactively marked resolved."
+  }
+}

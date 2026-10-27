@@ -1,0 +1,22 @@
+{
+  "verified_utc": "2026-10-27T01:59:32.218818+00:00",
+  "repository": "azerish25-ux/tuner",
+  "branch": "main",
+  "prior_state": "unprotected (HTTP404)",
+  "required_status_checks": {
+    "url": "https://api.github.com/repos/azerish25-ux/tuner/branches/main/protection/required_status_checks",
+    "strict": true,
+    "contexts": [
+      "gate"
+    ],
+    "contexts_url": "https://api.github.com/repos/azerish25-ux/tuner/branches/main/protection/required_status_checks/contexts",
+    "checks": [
+      {
+        "context": "gate",
+        "app_id": 15368
+      }
+    ]
+  },
+  "enforce_admins": false,
+  "scope": "Require existing aggregate gate; ordinary GitHub administrator bypass retained. No changes to visibility, secrets, costs, reviewers, collaborators or Apple delivery. Current native results remain separately required."
+}

@@ -1,5 +1,8 @@
 # Timbre — hand-over (start here)
 
+**Historical snapshot.** For current release status and the disposition of the findings below, read
+[App Store readiness](ios/readiness/STATUS.md) and its issue reconciliation. The dated claims below are preserved as evidence.
+
 **Date:** 2026-10-25 · **Repository:** github.com/azerish25-ux/tuner · **Default branch:** `main` (the working branch
 `v2/foundations` and every commit of it were merged into `main` at hand-over).
 

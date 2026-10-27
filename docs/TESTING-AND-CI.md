@@ -1,6 +1,9 @@
 # Timbre for iOS: testing and CI
 
 Every test suite, every workflow and every gate, and how to read their results. Paths are from the repository root.
+Current release work and native results are tracked in [the readiness status](ios/readiness/STATUS.md).
+The detailed test counts and seven-workflow inventory below describe the original handover; additional localization,
+listing-asset, typography and Watch workflows have since been added. The current workflows are authoritative.
 The code layout these tests exercise is in [ARCHITECTURE.md](ARCHITECTURE.md); the scripts are listed in
 [TOOLS.md](TOOLS.md). Checked against the workflows and tests at the commit this file was added in.
 
@@ -29,7 +32,7 @@ The code layout these tests exercise is in [ARCHITECTURE.md](ARCHITECTURE.md); t
 | Python hygiene tests | `tools/ci/test_hygiene.py` | 25 | `ios.yml` core |
 | Resource and string checks | `tools/verify-ios-resources.py`, `tools/l10n/report.py`, `critical.py` | n/a | `ios.yml` core, `apple-delivery.yml` |
 
-`tools/curriculum/build.py --check` is **not** run by any workflow. The curriculum is guarded in CI only through the
+`tools/curriculum/build.py --check` now runs in the `ios.yml` core job. The curriculum is also guarded through the
 Swift tests that read the built `curriculum.json` (`LearnTests`, `SongArrangementTests`, `SongbookEditionTests`,
 `CurriculumIndexTests`, `PlacementTests`) and through the handoff check, which fails when `Learn.strings` changed
 without `report.py` being re-run. Run `build.py --check` yourself before committing lesson changes.
@@ -165,7 +168,7 @@ lint and the comment sweep.
 | `app` | macos-15 | 25 min | Check the iOS SDK is 26+; `xcodegen generate`; pick the newest iPhone simulator and boot it; `ensure-metal.sh`; restore the module cache (key = hash of `project.yml` + `Package.swift`); `xcodebuild build-for-testing` (Debug, simulator, no signing, no index store); `build_warnings.py`; grant the microphone; `xcodebuild test-without-building -only-testing:TimbreAppTests -only-testing:TimbreUITests/SmokeUITests` into `Gate.xcresult`; export attachments, summarize and gzip logs | `results-app` (7 days); `gate-xcresult` on failure (7 days) |
 | `release` | macos-15 | 25 min | `xcodegen generate`; `ensure-metal.sh`; `xcodebuild build -configuration Release -destination generic/platform=iOS CODE_SIGNING_ALLOWED=NO`; `build_warnings.py` | `results-release` (7 days) |
 | `accessibility` | macos-15 | 55 min | Build for testing (tail of the log kept); grant the microphone; one warm-up launch (up to 3 tries of 2 minutes, with `TIMBRE_STAGE_REST`, `TIMBRE_SKIP_ONBOARDING`, `TIMBRE_DEMO_DATA`); run `AccessibilityAuditUITests` and `LocalizationLaunchUITests`; on failure, `launch_retry.py` picks tests that failed only at launch and runs them once more (any other failure stands) | `results-accessibility` (7 days) |
-| `gate` | ubuntu-latest | 5 min | `if: always()`, `needs: [core, app, release]`; fails unless every one of them is `success` (skipped or cancelled fail it too) | – |
+| `gate` | ubuntu-latest | 5 min | `if: always()`, `needs: [core, app, release, accessibility]`; fails unless every one of them is `success` (skipped or cancelled fail it too) | – |
 | `publish` | ubuntu-latest | 10 min | `if: always()` and not a fork PR; `needs: [core, app, release, accessibility]`; downloads `results-*` and runs `tools/ci/publish-results.sh` for `core`→`ci-results/core`, `app`→`ci-results/gate`, `release`→`ci-results/release`, `accessibility`→`ci-results/accessibility` | – |
 
 Compiler warnings are treated as errors by the log gate (`build_warnings.py`), not by `SWIFT_TREAT_WARNINGS_AS_ERRORS`
@@ -250,18 +253,18 @@ Publishes `ci-out` to `ci-results/l10n`. Use its `en.xliff` to settle format spe
 
 ## 4. The required `gate`
 
-`gate` in `ios.yml` is the one check branch protection requires (per the workflow's header comment; the protection rule
-itself is a GitHub setting, not in the repository). It passes only when `core`, `app` and `release` all succeed. The
-three run in parallel; the target is under 15 minutes each (the `core` timeout is 15 minutes, `app` and `release` 25).
+`gate` in `ios.yml` is the check to require in branch protection (the rule itself is a GitHub setting, not in the
+repository). It passes only when `core`, `app`, `release` and `accessibility`
+all succeed. The jobs may run in parallel, subject to runner availability. An unfinished audit remains a failure.
 
 Consequences:
 
-- A cancelled or skipped gate job fails `gate`. A newer push cancels the running workflow for the same ref
-  (`cancel-in-progress`), so only the newest commit's run counts.
+- A cancelled or skipped gate job fails `gate`. PR updates, manual requests and commits marked `[ci-refresh]`
+  can cancel an older workflow for the same ref. Ordinary main checkpoints let existing native runs finish.
 - GitHub runs no workflow for a commit whose message contains `[skip ci]` (or the other skip forms), so a pull request
   whose newest commit skips CI never gets a `gate` result and cannot merge. `skip_ci_guard.py` additionally fails `core`
   when any earlier commit in the PR that touches `ios/` skips CI or starts with "WIP" (§6.5).
-- `accessibility` can turn the run red without blocking `gate`.
+- `accessibility` failures now block `gate`, including an audit that cannot finish.
 
 ## 5. Results branches (`ci-results/*`)
 

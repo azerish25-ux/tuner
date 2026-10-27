@@ -299,7 +299,15 @@ final class AccessibilityAuditUITests: XCTestCase {
                     + (label.isEmpty ? "-" : "\"\(label)\"")
                     + geometry
                 findings.lines.append(line)
-                if fails, !findings.failing.contains(line) { findings.failing.append(line) }
+                if fails, !findings.failing.contains(line) {
+                    findings.failing.append(line)
+                    // The audit can scroll or resize the screen after the initial still. Preserve the state
+                    // beside this finding so its reported bounds can be compared with the actual rendered pixels.
+                    let rendered = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+                    rendered.name = "ax-failure-\(screen)-\(findings.failing.count)"
+                    rendered.lifetime = .keepAlways
+                    self.add(rendered)
+                }
                 // true: recorded here (and failed below when it must); false would make XCTest fail it without context.
                 return true
             }

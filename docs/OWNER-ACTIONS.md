@@ -1,5 +1,8 @@
 # Timbre: what only the owner can do
 
+**Historical owner inventory.** [Current App Store readiness](ios/readiness/STATUS.md) supersedes resolved translation,
+publication, provenance and developer-task items below. Paid growth recommendations remain optional.
+
 Every action no developer or tool can take for you: accounts and money, licences, recordings, people, decisions, and the App Store programme. As of **25 October 2026** (`v2/foundations` at `0bbf273`).
 
 This list merges the October 2026 review panel's findings with the repository's owner notes, with duplicates removed. The panel was six jurors (visual, delight, inclusivity, technical, growth and category) and a foreman, plus the integration notes from the last work wave. The repository notes are in:

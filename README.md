@@ -2,7 +2,7 @@
 
 A precision tuner and a music-lessons app that listens as you play, for iPhone, iPad and Apple Watch, built in Swift and SwiftUI. Requires iOS 18 or later. App Store archives use Xcode 26 or later and the iOS 26 SDK or later.
 
-**New here? Start with [docs/HANDOVER.md](docs/HANDOVER.md)** — the state of the project, what's unfinished, how to release, how development was run, and links to every other document.
+**Release preparation:** [Current App Store readiness](docs/ios/readiness/STATUS.md) records verified work, native runs and remaining submission evidence. [docs/HANDOVER.md](docs/HANDOVER.md) preserves the original handover and development context.
 
 The app includes a 60-instrument catalogue with 132 tunings and 73 photographic instrument variants, 7 3D instruments, 300 recorded instrument samples, 526 teaching lessons in 11 courses plus songbooks (146 songs), a play-along with a band, chord and strum checking, ear training, metronome, drone, voice exercises, measured practice history, streaks, quests and badges, widgets, a Live Activity, App Intents, Game Center, a watch companion and 49 language tables. Pitch analysis runs on the device; microphone recordings are neither retained nor uploaded.
 

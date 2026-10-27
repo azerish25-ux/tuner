@@ -1,6 +1,7 @@
 # Documentation
 
-Start with **[HANDOVER.md](HANDOVER.md)**: it gives the state of the project and the reading order for everything else.
+Start with **[current App Store readiness](ios/readiness/STATUS.md)** for release status and evidence.
+[HANDOVER.md](HANDOVER.md) preserves the original project snapshot and the reading order for the development documentation.
 
 | Area | Documents |
 |---|---|

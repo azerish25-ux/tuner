@@ -1,0 +1,250 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-10-27T01:51:57.567042+00:00",
+  "reviewed_base": "b6efd36f5f72d7ec723229949f7c54c32972b72c",
+  "verdict": "request_changes",
+  "scope": "Uncommitted plural import delta only; read-only implementation review.",
+  "findings": [
+    {
+      "id": "PLURAL-01",
+      "priority": "P2",
+      "path": "tools/l10n/report.py",
+      "line": 490,
+      "problem": "Exact comparison against the matching English form rejects valid locale numeric usage and lexical plural forms.18 existing shipped plural contracts are rejected by the new check. Bulgarian/other one forms may legally include %lld although English one says Every bar; Arabic lexical two omits a numeric substitution although English has no two form.",
+      "action": "Validate against the plural variable value/type contract while permitting locale-appropriate numeric presence for grammatical categories; retain rejection of wrong types/extra args and incomplete other. Add fixtures for existing numeric-one and lexical-dual cases before approving importer."
+    }
+  ],
+  "existing_resource_rejections": [
+    {
+      "locale": "ar",
+      "key": "Every %lld bars",
+      "problems": [
+        "two: format arguments differ from the English form"
+      ],
+      "forms": {
+        "zero": "كل %lld مازورة",
+        "one": "كل مازورة",
+        "two": "كل مازورتين",
+        "few": "كل %lld مازورات",
+        "many": "كل %lld مازورة",
+        "other": "كل %lld مازورة"
+      }
+    },
+    {
+      "locale": "bg",
+      "key": "Every %lld bars",
+      "problems": [
+        "one: format arguments differ from the English form"
+      ],
+      "forms": {
+        "one": "Тактове на стъпка: %lld",
+        "other": "Тактове на стъпка: %lld"
+      }
+    },
+    {
+      "locale": "bn",
+      "key": "Every %lld bars",
+      "problems": [
+        "one: format arguments differ from the English form"
+      ],
+      "forms": {
+        "one": "প্রতি %lld বারে",
+        "other": "প্রতি %lld বারে"
+      }
+    },
+    {
+      "locale": "ca",
+      "key": "Every %lld bars",
+      "problems": [
+        "one: format arguments differ from the English form"
+      ],
+      "forms": {
+        "one": "Compassos per pas: %lld",
+        "other": "Compassos per pas: %lld"
+      }
+    },
+    {
+      "locale": "gu",
+      "key": "Every %lld bars",
+      "problems": [
+        "one: format arguments differ from the English form"
+      ],
+      "forms": {
+        "one": "દર %lld બારે",
+        "other": "દર %lld બારે"
+      }
+    },
+    {
+      "locale": "he",
+      "key": "Every %lld bars",
+      "problems": [
+        "two: format arguments differ from the English form"
+      ],
+      "forms": {
+        "one": "כל תיבה",
+        "two": "כל שתי תיבות",
+        "other": "כל %lld תיבות"
+      }
+    },
+    {
+      "locale": "hi",
+      "key": "Every %lld bars",
+      "problems": [
+        "one: format arguments differ from the English form"
+      ],
+      "forms": {
+        "one": "हर %lld बार",
+        "other": "हर %lld बार"
+      }
+    },
+    {
+      "locale": "is",
+      "key": "Every %lld bars",
+      "problems": [
+        "one: format arguments differ from the English form"
+      ],
+      "forms": {
+        "one": "Taktabil: %lld",
+        "other": "Taktabil: %lld"
+      }
+    },
+    {
+      "locale": "kn",
+      "key": "Every %lld bars",
+      "problems": [
+        "one: format arguments differ from the English form"
+      ],
+      "forms": {
+        "one": "ಪ್ರತಿ %lld ಬಾರ್‌ಗೆ",
+        "other": "ಪ್ರತಿ %lld ಬಾರ್‌ಗೆ"
+      }
+    },
+    {
+      "locale": "ml",
+      "key": "Every %lld bars",
+      "problems": [
+        "one: format arguments differ from the English form"
+      ],
+      "forms": {
+        "one": "ഓരോ %lld ബാറിലും",
+        "other": "ഓരോ %lld ബാറിലും"
+      }
+    },
+    {
+      "locale": "mr",
+      "key": "Every %lld bars",
+      "problems": [
+        "one: format arguments differ from the English form"
+      ],
+      "forms": {
+        "one": "दर %lld बारनंतर",
+        "other": "दर %lld बारनंतर"
+      }
+    },
+    {
+      "locale": "pa",
+      "key": "Every %lld bars",
+      "problems": [
+        "one: format arguments differ from the English form"
+      ],
+      "forms": {
+        "one": "ਹਰ %lld ਬਾਰ ਬਾਅਦ",
+        "other": "ਹਰ %lld ਬਾਰ ਬਾਅਦ"
+      }
+    },
+    {
+      "locale": "sv",
+      "key": "Every %lld bars",
+      "problems": [
+        "one: format arguments differ from the English form"
+      ],
+      "forms": {
+        "one": "Takter per steg: %lld",
+        "other": "Takter per steg: %lld"
+      }
+    },
+    {
+      "locale": "sw",
+      "key": "Every %lld bars",
+      "problems": [
+        "one: format arguments differ from the English form"
+      ],
+      "forms": {
+        "one": "Pau kwa kila hatua: %lld",
+        "other": "Pau kwa kila hatua: %lld"
+      }
+    },
+    {
+      "locale": "ta",
+      "key": "Every %lld bars",
+      "problems": [
+        "one: format arguments differ from the English form"
+      ],
+      "forms": {
+        "one": "ஒவ்வொரு %lld பாருக்கும்",
+        "other": "ஒவ்வொரு %lld பாருக்கும்"
+      }
+    },
+    {
+      "locale": "te",
+      "key": "Every %lld bars",
+      "problems": [
+        "one: format arguments differ from the English form"
+      ],
+      "forms": {
+        "one": "ప్రతి పెంపుకు బార్‌లు: %lld",
+        "other": "ప్రతి పెంపుకు బార్‌లు: %lld"
+      }
+    },
+    {
+      "locale": "ur",
+      "key": "Every %lld bars",
+      "problems": [
+        "one: format arguments differ from the English form"
+      ],
+      "forms": {
+        "one": "ہر %lld بارز بعد",
+        "other": "ہر %lld بارز بعد"
+      }
+    },
+    {
+      "locale": "zu",
+      "key": "Every %lld bars",
+      "problems": [
+        "one: format arguments differ from the English form"
+      ],
+      "forms": {
+        "one": "Amabha ngesinyathelo: %lld",
+        "other": "Amabha ngesinyathelo: %lld"
+      }
+    }
+  ],
+  "independent_verification": [
+    {
+      "command": "python -m unittest discover -s tools/l10n/tests -p test_plural_import.py",
+      "exit_code": 0,
+      "tests": 6,
+      "limits": "Does not cover legitimate existing numeric-one/numberless-dual contracts."
+    },
+    {
+      "command": "python tools/l10n/report.py --check --strict",
+      "exit_code": 0,
+      "limits": "This success does not prove every individual plural form satisfies the new import contract."
+    },
+    {
+      "command": "Read-only iteration of all current locale stringsdict forms through new report.check",
+      "rejected_contracts": 18
+    }
+  ],
+  "positive_assessment": [
+    "Writes real plist with English metadata and preserves unrelated entries.",
+    "Unknown keys/unsupported multi-variable templates and malformed categories fail closed.",
+    "Replacement removes stale categories and tests prove invalid input leaves original bytes unchanged."
+  ],
+  "reviewed_sha256": {
+    "tools/l10n/report.py": "15b63c1b3a870671e2051df8c1a30a597d5596939cf0d5d9f520323feeafdd36",
+    "tools/l10n/tests/test_plural_import.py": "1ca80108deb1ab16d849090231b908e22b80cd83a0ea0f49e8abd8f28ed1d370"
+  },
+  "limitations": "No source changed by reviewer. Tooling can be tested on Windows; no native result or release-readiness claim.",
+  "mutations": "Only review receipts created/updated."
+}

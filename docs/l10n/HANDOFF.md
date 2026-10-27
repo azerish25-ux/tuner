@@ -44,7 +44,7 @@ Rules the import checks (a translation that breaks one is kept out and listed ag
 - Lessons: keep every number, `♯`, `♭` and line break (`\n`) of the English. Note letters stay as in the English, except that German lessons write H for B natural and B for B flat (a German `B♭` becomes `B`; the check knows this).
 - Keep the brand names Timbre and Timbre Pro, game names the English capitalizes (Bullseye), and song titles that are names. Lyric credits (a name and a year) are usually kept as they are.
 - Voice: warm, direct, second person. Match the register the app already uses in your language (see its `Localizable.strings`) and keep it consistent. No exclamation marks or emoji the English doesn't have.
-- Plurals (`Localizable.stringsdict`): put a JSON object in `translation` with the forms your language uses, e.g. `{"one": "%lld Minute", "other": "%lld Minuten"}`.
+- Plurals (`Localizable.stringsdict`): put a JSON object in `translation` with the forms your language uses, e.g. `{"one": "%lld Minute", "other": "%lld Minuten"}`. The import writes the native plural resource automatically using the English numeric type. `zero`, `one` and `two` may express the number in words; other forms retain one correctly typed numeric argument. `other` is required. Complex multi-variable formats require a separate resource edit rather than a guessed import.
 
 Reuse what is already translated: the app's current tables are in `ios/Timbre/Resources/<locale>.lproj/` (`Localizable.strings`, `Learn.strings`), and the delivered lesson translations in `tools/l10n/learn/<locale>.json`.
 

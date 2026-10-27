@@ -1,6 +1,6 @@
-# The pull-request gate. Branch protection requires the `gate` job: it passes only when `core`, `app` and `release`
-# all pass, and the three run side by side in under 15 minutes. `accessibility` runs beside them and can fail the
-# workflow on its own (the accessibility audit and the localization launches). The full UI tour with its App Store
+# The pull-request gate. Require the `gate` job in branch protection: it passes only when `core`, `app`, `release`
+# and `accessibility` all pass, including the accessibility audit and the localization launches.
+# The full UI tour with its App Store
 # captures, the iPad shelf, the unsigned archive and the sanitizers run nightly or on the `captures` label
 # (nightly.yml). GitHub runs nothing for a commit marked [skip ci], so the required gate never reports and such a
 # pull request can't merge; the core job also refuses earlier commits that touch ios/ without CI. Every pull request
@@ -336,7 +336,7 @@ jobs:
     # The one required status check. It fails unless every gate job passed (a skipped or cancelled one fails it too).
     name: gate
     if: always()
-    needs: [core, app, release]
+    needs: [core, app, release, accessibility]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:

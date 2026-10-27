@@ -113,6 +113,53 @@ def plural_source(entry: dict) -> str:
     return entry.get("NSStringLocalizedFormatKey", "")
 
 
+PLURAL_FORMS = frozenset(("zero", "one", "two", "few", "many", "other"))
+
+
+def plural_arguments(text: str):
+    """A flat single-variable plural can refer only to its first numeric argument."""
+    if "%" in ui_apply.ARG.sub("", text):
+        return None
+    if any(match.group(1) not in (None, "1") for match in ui_apply.ARG.finditer(text)):
+        return None
+    return ui_apply.specs(text)
+
+
+def plural_definition(key: str):
+    """Bind flat translator forms to the single plural variable in the current English entry."""
+    entry = read_stringsdict(RES / "en.lproj/Localizable.stringsdict").get(key, {})
+    variables = [(name, rule) for name, rule in entry.items() if isinstance(rule, dict)
+                 and rule.get("NSStringFormatSpecTypeKey") == "NSStringPluralRuleType"]
+    if len(variables) != 1 or "other" not in variables[0][1]:
+        return None
+    name, rule = variables[0]
+    if entry.get("NSStringLocalizedFormatKey") != f"%#@{name}@":
+        return None
+    count_type = rule.get("NSStringFormatValueTypeKey")
+    if count_type not in ("d", "u", "ld", "lu", "lld", "llu"):
+        return None
+    # Flat TODO objects cannot describe extra arguments or nested plural variables safely.
+    if plural_arguments(rule["other"]) != [count_type]:
+        return None
+    if any(not isinstance(text, str) or plural_arguments(text) not in ([], [count_type])
+           for form, text in rule.items() if form in PLURAL_FORMS):
+        return None
+    return entry, name, rule
+
+
+def import_plural(loc: str, key: str, forms: dict) -> None:
+    """Write translated forms using Apple's existing English format/type metadata."""
+    entry, name, rule = plural_definition(key)
+    translated = dict(entry)
+    translated[name] = {field: value for field, value in rule.items() if field not in PLURAL_FORMS}
+    translated[name].update(forms)
+    path = RES / f"{loc}.lproj/Localizable.stringsdict"
+    entries = read_stringsdict(path)
+    entries[key] = translated
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(plistlib.dumps(entries, fmt=plistlib.FMT_XML, sort_keys=False))
+
+
 def locales() -> list:
     return sorted(p.name[:-6] for p in RES.glob("*.lproj") if p.name not in ("en.lproj", "Base.lproj"))
 
@@ -444,8 +491,26 @@ def check(table: str, key: str, source: str, value, loc: str) -> list:
     if table == "Localizable.stringsdict":
         if not isinstance(value, dict) or "other" not in value:
             return ["a plural needs a JSON object with at least an \"other\" form"]
-        return [f"{form}: format arguments differ from the English" for form, text in value.items()
-                if ui_apply.specs(source) != ui_apply.specs(str(text))]
+        definition = plural_definition(key)
+        if definition is None:
+            return ["plural needs a current English entry with one supported plural variable"]
+        rule = definition[2]
+        if source != rule["other"]:
+            return ["plural source differs from the current English other form"]
+        problems = []
+        for form, text in value.items():
+            if form not in PLURAL_FORMS:
+                problems.append(f"{form}: unknown plural category")
+            elif not isinstance(text, str) or not text.strip():
+                problems.append(f"{form}: empty or non-text plural form")
+            else:
+                arguments = plural_arguments(text)
+                expected = [rule["NSStringFormatValueTypeKey"]]
+                # A locale can spell out a specific count (Arabic dual, for example), or show
+                # a number where English says "Every bar". Never permit a wrong type or extra argument.
+                if arguments != expected and not (form in ("zero", "one", "two") and arguments == []):
+                    problems.append(f"{form}: format arguments differ from the declared plural count")
+        return problems
     if not isinstance(value, str) or not value.strip():
         return ["empty"]
     if table == LEARN:
@@ -872,7 +937,10 @@ def render_handoff(report: dict) -> str:
     w("- Voice: warm, direct, second person. Match the register the app already uses in your language (see its "
       "`Localizable.strings`) and keep it consistent. No exclamation marks or emoji the English doesn't have.")
     w("- Plurals (`Localizable.stringsdict`): put a JSON object in `translation` with the forms your language "
-      "uses, e.g. `{\"one\": \"%lld Minute\", \"other\": \"%lld Minuten\"}`.")
+      "uses, e.g. `{\"one\": \"%lld Minute\", \"other\": \"%lld Minuten\"}`. The import writes the native plural "
+      "resource automatically using the English numeric type. `zero`, `one` and `two` may express the number "
+      "in words; other forms retain one correctly typed numeric argument. `other` is required. Complex "
+      "multi-variable formats require a separate resource edit rather than a guessed import.")
     w("")
     w("Reuse what is already translated: the app's current tables are in `ios/Timbre/Resources/<locale>.lproj/` "
       "(`Localizable.strings`, `Learn.strings`), and the delivered lesson translations in `tools/l10n/learn/<locale>.json`.")
@@ -991,7 +1059,7 @@ def write(files: dict, stale_todo: list) -> int:
 # ------------------------------------------------------------------------------------------------- import
 
 def import_todo(folder: Path) -> None:
-    """Merges filled TODO files into tools/l10n/translations and tools/l10n/learn."""
+    """Merge filled TODO files into translation deliveries and native plural resources."""
     merged = rejected = 0
     for path in sorted(folder.glob("*.json")):
         if path.name == "index.json":
@@ -1011,7 +1079,8 @@ def import_todo(folder: Path) -> None:
                 rejected += 1
                 continue
             if table == "Localizable.stringsdict":
-                print(f"{loc}: plural {key!r}: add it to {loc}.lproj/Localizable.stringsdict by hand: {value!r}")
+                import_plural(loc, key, value)
+                merged += 1
                 continue
             if table == LEARN:
                 learn_doc[key] = value
