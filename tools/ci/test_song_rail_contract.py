@@ -191,6 +191,9 @@ class SongRailContractTests(unittest.TestCase):
         closure = source.split(r'ForEach(chords.indices, id: \.self) { index in', 1)[1].split('Color.orange', 1)[0]
         self.assertIn('self.oracleChip(self.chords[index].name)', closure)
         self.assertNotRegex(closure, r'(?m)^\s+oracleChip\(')
+        header = source.split('let actual = SongCaptionHeader(hasVersions: true) {', 1)[1].split('} versions:', 1)[0]
+        self.assertIn('ChordChips(chords: self.chords,', header)
+        self.assertNotIn('ChordChips(chords: chords,', header)
 
     def test_metadata_adapts_without_truncating_or_shrinking_values(self):
         metadata = SONGS.split('struct TileMetadata: View {', 1)[1].split('/// The part of a title', 1)[0]

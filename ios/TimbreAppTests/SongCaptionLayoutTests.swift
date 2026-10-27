@@ -68,7 +68,7 @@ final class SongCaptionLayoutTests: XCTestCase {
                             .position(x: versionRect.midX, y: versionRect.midY)
                     }.frame(width: width, height: height)
                     let actual = SongCaptionHeader(hasVersions: true) {
-                        ChordChips(chords: chords, key: nil, tint: Palette.mint,
+                        ChordChips(chords: self.chords, key: nil, tint: Palette.mint,
                                    identity: "oracle", wrapsAll: true)
                     } versions: { Color.orange.frame(width: 44, height: 44) }
                     let suffix = "\(language)-\(size)-\(Int(width))"
@@ -77,7 +77,7 @@ final class SongCaptionLayoutTests: XCTestCase {
                     XCTAssertEqual(pixels, expected, "Full glyphs and separate action, not merely full AX labels: " + suffix)
                     if size == .accessibility5 {
                         let former = HStack(alignment: .top, spacing: 6) {
-                            ChordChips(chords: chords, key: nil, tint: Palette.mint, identity: "old")
+                            ChordChips(chords: self.chords, key: nil, tint: Palette.mint, identity: "old")
                                 .frame(maxWidth: .infinity, minHeight: 24, alignment: .leading)
                             Color.orange.frame(width: 44, height: 44)
                         }
