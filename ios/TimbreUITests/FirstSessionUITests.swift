@@ -94,12 +94,16 @@ final class FirstSessionUITests: XCTestCase {
         let scroll = app.scrollViews["onboarding.welcome.scroll"].firstMatch
         XCTAssertTrue(scroll.exists, "The Urdu welcome needs a real vertical scroll view")
         var observations: [String] = []
-        defer {
+        var traceSaved = false
+        func captureTrace() {
+            guard !traceSaved else { return }
+            traceSaved = true
             let trace = XCTAttachment(string: observations.joined(separator: "\n"))
             trace.name = "urdu-welcome-scroll-" + target.identifier + "-\(edge)"
             trace.lifetime = .keepAlways
             add(trace)
         }
+        defer { captureTrace() }
         for attempt in 0..<16 {
             let viewport = scroll.frame.intersection(app.frame).insetBy(dx: 0, dy: 4)
             let frame = target.frame
@@ -118,11 +122,13 @@ final class FirstSessionUITests: XCTestCase {
                   wanted.minX >= viewport.minX, wanted.maxX <= viewport.maxX, !contained else { break }
             let distance = min(viewport.height * 0.45, max(-viewport.height * 0.45, viewport.midY - wanted.midY))
             let origin = app.coordinate(withNormalizedOffset: .zero)
-            let from = origin.withOffset(CGVector(dx: viewport.minX + 24, dy: viewport.midY))
-            let to = origin.withOffset(CGVector(dx: viewport.minX + 24, dy: viewport.midY + distance))
+            // Use the scroll's interior, not the RTL indicator/gutter where a drag can miss its content.
+            let from = origin.withOffset(CGVector(dx: viewport.midX, dy: viewport.midY))
+            let to = origin.withOffset(CGVector(dx: viewport.midX, dy: viewport.midY + distance))
             from.press(forDuration: 0.1, thenDragTo: to, withVelocity: .slow, thenHoldForDuration: 0.2)
         }
         captureWelcome("unreachable-" + target.identifier)
+        captureTrace() // A fatal XCTest failure need not unwind Swift defer blocks.
         XCTFail("The welcome target must be visible inside its own scroll viewport and hittable: \(target.identifier), \(edge)")
     }
 

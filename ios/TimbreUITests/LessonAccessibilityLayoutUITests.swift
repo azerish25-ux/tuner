@@ -74,16 +74,21 @@ final class LessonAccessibilityLayoutUITests: XCTestCase {
     }
 
     /// Scroll the same target into its actual content viewport, below the header and above pinned actions.
-    private func scrollClear(_ target: XCUIElement, above bottom: CGFloat? = nil) {
-        let scroll = app.scrollViews.firstMatch
+    private func scrollClear(_ target: XCUIElement, above bottom: CGFloat? = nil,
+                             in contentScroll: XCUIElement? = nil) {
+        let scroll = contentScroll ?? app.scrollViews.firstMatch
         XCTAssertTrue(scroll.exists, "The overflowing lesson content must scroll")
         var observations: [String] = []
-        defer {
+        var traceAttached = false
+        func attachTrace() {
+            guard !traceAttached else { return }
+            traceAttached = true
             let trace = XCTAttachment(string: observations.joined(separator: "\n"))
             trace.name = "layout-ax5-scroll-geometry-" + target.identifier
             trace.lifetime = .keepAlways
             add(trace)
         }
+        defer { attachTrace() }
         var previousFrame: CGRect?
         var previousViewport: CGRect?
         var stalled = 0
@@ -118,9 +123,131 @@ final class LessonAccessibilityLayoutUITests: XCTestCase {
             observations.append("dragDelta=\(distance) gutterX=\(x)")
             start.press(forDuration: 0.1, thenDragTo: end, withVelocity: .slow, thenHoldForDuration: 0.2)
         }
+        // XCTest can abort immediately with continueAfterFailure=false; attach before failing.
+        attachTrace()
         capture("unreachable")
         XCTAssertTrue(isClear(target, within: contentViewport(scroll, above: bottom)),
                       "Target is not fully visible and hittable inside its scroll viewport: \(target)")
+    }
+
+    /// Only a previously clear target below a newly shortened viewport may need lazy rediscovery.
+    /// Its old rectangle chooses a search direction; it is never accepted as current geometry.
+    private static func quizRediscoveryDistance(previousFrame: CGRect, previousViewport: CGRect,
+                                                viewport: CGRect) -> CGFloat? {
+        guard contains(previousFrame, in: previousViewport), valid(viewport),
+              viewport.minX == previousViewport.minX, viewport.width == previousViewport.width,
+              viewport.minY == previousViewport.minY, viewport.height < previousViewport.height,
+              previousFrame.minY >= viewport.maxY else { return nil }
+        return -min(120, viewport.height * 0.35)
+    }
+
+    /// Feedback is a pinned sibling: at AX5 it shortens the quiz scroll view and can dematerialize
+    /// its LazyVGrid. Search only for the exact, already observed answer in this same quiz step.
+    private func rediscoverSelectedFirstQuizOption(_ first: XCUIElement, in scroll: XCUIElement,
+                                                   prompt: XCUIElement, header: XCUIElement,
+                                                   next: XCUIElement, previousFrame: CGRect,
+                                                   previousViewport: CGRect) {
+        var observations: [String] = []
+        var traceAttached = false
+        func attachTrace() {
+            guard !traceAttached else { return }
+            traceAttached = true
+            let trace = XCTAttachment(string: observations.joined(separator: "\n"))
+            trace.name = "layout-ax5-selected-quiz-rediscovery"
+            trace.lifetime = .keepAlways
+            add(trace)
+        }
+        defer { attachTrace() }
+        let promptLabel = "What is string 5 called?"
+        let promptPredicate = NSPredicate(format: "label == %@", promptLabel)
+        let headerPredicate = NSPredicate(format: "label == %@", "The open strings")
+        let feedbackPredicate = NSPredicate(format: "label == %@", "Nice — that’s right.")
+        func sameStep() -> Bool {
+            guard header.exists && header.label == "The open strings" && (header.value as? String) == "Step 4 of 6"
+                && app.otherElements.matching(headerPredicate).count == 1
+                && prompt.exists && prompt.label == promptLabel
+                && scroll.exists && scroll.staticTexts.matching(promptPredicate).count == 1
+                && app.staticTexts.matching(feedbackPredicate).count == 1
+                && next.exists && next.identifier == "lesson.continue" && next.label == "Continue"
+                && next.isEnabled && isClear(next) else { return false }
+            let matchingScrolls: [XCUIElement] = app.scrollViews.allElementsBoundByIndex.filter {
+                $0.staticTexts.matching(promptPredicate).count == 1
+            }
+            return matchingScrolls.count == 1
+        }
+        func exactAnswerExists() -> Bool {
+            first.exists && first.identifier == "lesson.option.0" && first.elementType == .button
+                && first.isEnabled
+                && first.staticTexts.matching(NSPredicate(format: "label == %@", "A")).count == 1
+                && scroll.buttons.matching(identifier: "lesson.option.0").count == 1
+                && app.descendants(matching: .any).matching(identifier: "lesson.option.0").count == 1
+        }
+        if !first.exists { capture("quiz-post-feedback-before-rediscovery") }
+        for attempt in 0..<4 {
+            guard sameStep() else { observations.append("same quiz-step witness lost"); break }
+            if exactAnswerExists() {
+                observations.append("rediscovered currentLabel=\(first.label) frame=\(first.frame)")
+                return // Only rediscovery; scrollClear still proves current geometry.
+            }
+            guard !first.exists else { observations.append("answer identity changed or duplicated"); break }
+            let viewport = contentViewport(scroll, above: next.frame.minY)
+            let before = prompt.frame
+            guard let distance = Self.quizRediscoveryDistance(previousFrame: previousFrame,
+                                                               previousViewport: previousViewport,
+                                                               viewport: viewport), Self.valid(before),
+                  abs(distance) > 1 else {
+                observations.append("no bounded post-feedback rediscovery plan")
+                break
+            }
+            // The quiz content has 20-point horizontal padding; stay in that non-button gutter.
+            let x = viewport.minX + min(12, viewport.width * 0.1)
+            let origin = app.coordinate(withNormalizedOffset: .zero)
+            let start = origin.withOffset(CGVector(dx: x, dy: viewport.midY))
+            let end = origin.withOffset(CGVector(dx: x, dy: viewport.midY + distance))
+            let row = "attempt=\(attempt) missing=lesson.option.0 viewport=\(viewport) promptBefore=\(before) dragDelta=\(distance)"
+            observations.append(row)
+            print("TIMBRE_QUIZ_REDISCOVERY " + row)
+            start.press(forDuration: 0.1, thenDragTo: end, withVelocity: .slow, thenHoldForDuration: 0.2)
+            guard sameStep() else { observations.append("quiz-step witness lost after gesture"); break }
+            let after = prompt.frame
+            observations.append("promptAfter=\(after) targetExists=\(first.exists)")
+            // A gesture is not progress by itself. Do not keep blindly dragging if content stalled.
+            guard Self.valid(after), contentViewport(scroll, above: next.frame.minY) == viewport,
+                  abs(after.minX - before.minX) < 1, abs(after.width - before.width) < 1,
+                  abs(after.height - before.height) < 1, before.minY - after.minY >= 1 else {
+                observations.append("no measured upward content progress in stable viewport")
+                break
+            }
+            if exactAnswerExists() {
+                observations.append("rediscovered currentLabel=\(first.label) frame=\(first.frame)")
+                return
+            }
+        }
+        attachTrace()
+        capture("quiz-post-feedback-rediscovery-failed")
+        XCTFail("Previously observed lesson.option.0 was not rediscovered unchanged in the same quiz step")
+    }
+
+    func testQuizRediscoveryRequiresPreviouslyClearTargetAndShrunkenViewport() {
+        let before = CGRect(x: 0, y: 116, width: 402, height: 651.3333333333334)
+        let after = CGRect(x: 0, y: 116, width: 402, height: 427.7)
+        let selected = CGRect(x: 20, y: 577.3333333333333, width: 176, height: 84.00000000000011)
+        let distance = Self.quizRediscoveryDistance(previousFrame: selected, previousViewport: before, viewport: after)
+        XCTAssertEqual(distance, CGFloat(-120))
+        XCTAssertFalse(Self.contains(selected, in: after)) // The old witness never proves visibility.
+        XCTAssertGreaterThan(after.midY + distance!, after.minY)
+        XCTAssertLessThan(after.midY, after.maxY)
+        for invalidViewport in [before, CGRect(x: 1, y: 116, width: 402, height: 427.7),
+                                CGRect(x: 0, y: 117, width: 402, height: 427.7), .null, .zero, .infinite] {
+            XCTAssertNil(Self.quizRediscoveryDistance(previousFrame: selected, previousViewport: before,
+                                                       viewport: invalidViewport))
+        }
+        for invalidFrame in [CGRect(x: 20, y: 120, width: 176, height: 84),
+                             CGRect(x: -1, y: 577, width: 176, height: 84),
+                             CGRect(x: 20, y: 740, width: 176, height: 84), .zero, .infinite] {
+            XCTAssertNil(Self.quizRediscoveryDistance(previousFrame: invalidFrame, previousViewport: before,
+                                                       viewport: after))
+        }
     }
 
     func testReachabilityPlanRequiresCompleteGeometry() {
@@ -220,6 +347,19 @@ final class LessonAccessibilityLayoutUITests: XCTestCase {
     private func assertQuizOptionsReachableAndSelectable(above next: XCUIElement) {
         let first = app.buttons.matching(identifier: "lesson.option.0").firstMatch
         XCTAssertTrue(first.waitForExistence(timeout: 20))
+        let promptPredicate = NSPredicate(format: "label == %@", "What is string 5 called?")
+        let prompts = app.staticTexts.matching(promptPredicate)
+        let headers = app.otherElements.matching(NSPredicate(format: "label == %@", "The open strings"))
+        XCTAssertEqual(prompts.count, 1)
+        XCTAssertEqual(headers.count, 1)
+        let prompt = prompts.firstMatch
+        let header = headers.firstMatch
+        XCTAssertEqual(header.value as? String, "Step 4 of 6")
+        let quizScrolls = app.scrollViews.allElementsBoundByIndex.filter {
+            $0.staticTexts.matching(promptPredicate).count == 1
+        }
+        XCTAssertEqual(quizScrolls.count, 1, "The quiz prompt must identify one real content scroll view")
+        guard let quizScroll = quizScrolls.first else { return }
         for (index, label) in ["A", "D", "B", "G"].enumerated() {
             let id = "lesson.option.\(index)"
             let option = app.buttons.matching(identifier: id).firstMatch
@@ -234,13 +374,32 @@ final class LessonAccessibilityLayoutUITests: XCTestCase {
         // Return from the last row and activate the real first button, rather than an
         // identically named decoration. Its selected state must remain reachable too.
         scrollClear(first, above: next.frame.minY)
+        let previousFrame = first.frame
+        let previousViewport = contentViewport(quizScroll, above: next.frame.minY)
+        XCTAssertTrue(Self.contains(previousFrame, in: previousViewport) && first.isHittable)
+        XCTAssertEqual(first.identifier, "lesson.option.0")
+        XCTAssertEqual(first.label, "A")
+        XCTAssertEqual(first.elementType, .button)
+        XCTAssertEqual(quizScroll.buttons.matching(identifier: "lesson.option.0").count, 1)
+        XCTAssertEqual(header.value as? String, "Step 4 of 6")
         first.tap()
         let feedback = app.staticTexts.matching(NSPredicate(format: "label == %@", "Nice — that’s right.")).firstMatch
         XCTAssertTrue(feedback.waitForExistence(timeout: 10))
         XCTAssertEqual(next.label, "Continue")
         XCTAssertTrue(next.isEnabled)
         XCTAssertTrue(isClear(next), "Continue must remain pinned after selecting an answer")
-        scrollClear(first, above: next.frame.minY)
+        rediscoverSelectedFirstQuizOption(first, in: quizScroll, prompt: prompt, header: header, next: next,
+                                          previousFrame: previousFrame, previousViewport: previousViewport)
+        scrollClear(first, above: next.frame.minY, in: quizScroll)
+        XCTAssertEqual(app.descendants(matching: .any).matching(identifier: "lesson.option.0").count, 1)
+        XCTAssertEqual(first.identifier, "lesson.option.0")
+        XCTAssertEqual(first.elementType, .button)
+        XCTAssertTrue(first.isEnabled)
+        let answerText = first.staticTexts.matching(NSPredicate(format: "label == %@", "A"))
+        XCTAssertEqual(answerText.count, 1, "The selected answer must retain its complete text")
+        XCTAssertTrue(Self.contains(answerText.firstMatch.frame, in: first.frame))
+        XCTAssertTrue(Self.contains(answerText.firstMatch.frame, in: contentViewport(quizScroll, above: next.frame.minY)))
+        XCTAssertEqual(header.value as? String, "Step 4 of 6")
         capture("quiz-correct-answer-scroll-clear")
     }
 

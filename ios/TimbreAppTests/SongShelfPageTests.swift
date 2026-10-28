@@ -5,10 +5,18 @@ import XCTest
 
 @MainActor
 final class SongShelfPageTests: XCTestCase {
+    private enum Driver: String {
+        case scrollViewReader = "ScrollViewReader.scrollTo"
+        case bindingCommand = "scrollPosition binding + shelf selection (command, not observation)"
+    }
+
     private struct Shelf: Identifiable { let id: String }
     private struct Song: Identifiable { let id: Int }
 
     private final class State: ObservableObject {
+        let driver: Driver
+        let oversized: Bool
+        init(driver: Driver, oversized: Bool = false) { self.driver = driver; self.oversized = oversized }
         @Published var size = CGSize(width: 402, height: 874)
         @Published var position: SongShelfPageTarget<String>? {
             didSet { positionHistory.append(String(describing: position)) }
@@ -38,10 +46,16 @@ final class SongShelfPageTests: XCTestCase {
                 }
                 .onChange(of: state.requestedShelf) { _, value in
                     guard let value else { return }
-                    proxy.scrollTo(value, anchor: .center)
+                    if state.driver == .bindingCommand {
+                        // Separate command-path control only. The original reader tests never take this branch.
+                        state.position = value
+                    } else {
+                        proxy.scrollTo(value, anchor: .center)
+                    }
                 }
             }
             .environment(\.layoutDirection, direction)
+            .environment(\.dynamicTypeSize, state.oversized ? .accessibility5 : .large)
             .frame(width: state.size.width, height: state.size.height)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             .ignoresSafeArea()
@@ -51,14 +65,16 @@ final class SongShelfPageTests: XCTestCase {
             VStack(spacing: 12) {
                 Color.orange.frame(height: 40)
                 ScrollViewReader { proxy in
-                    SongShelfRail(items: songs, selection: 59, itemWidth: 148, height: 240, identity: shelf.id) { song in
-                        Text("Song \(song.id)").frame(width: 148, height: 80)
+                    SongShelfRail(items: songs,
+                                  selection: state.driver == .bindingCommand && state.requestedTerminalShelf == shelf.id ? 119 : 59,
+                                  itemWidth: 148, height: state.oversized ? 640 : 240, identity: shelf.id) { song in
+                        Text("Song \(song.id)").frame(width: 148, height: state.oversized ? 480 : 80)
                             .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { frame in
                                 if song.id == 119 { state.terminalFrames[shelf.id] = frame }
                             }
                     }
                     .onChange(of: state.requestedTerminalShelf) { _, value in
-                        guard value == shelf.id else { return }
+                        guard state.driver == .scrollViewReader, value == shelf.id else { return }
                         proxy.scrollTo(119, anchor: .trailing)
                     }
                 }
@@ -75,6 +91,27 @@ final class SongShelfPageTests: XCTestCase {
 
     func testProgrammaticScrollTracksShelfAndSurvivesRepeatedResizeRightToLeft() async throws {
         try await verify(direction: .rightToLeft)
+    }
+
+    /// Additive diagnostic: explicit identity commands must place real content and survive resizing.
+    /// This does not establish automatic binding writeback or user-gesture behavior, and does not
+    /// replace or clear either failing ScrollViewReader observation test above.
+    func testBindingCommandPlacesShelfAndTerminalAndPreservesResizeGeometry() async throws {
+        try await verify(direction: .leftToRight, driver: .bindingCommand)
+    }
+
+    func testBindingCommandPlacesShelfAndTerminalAndPreservesResizeGeometryRightToLeft() async throws {
+        try await verify(direction: .rightToLeft, driver: .bindingCommand)
+    }
+
+    /// Deliberately oversized content: the complete card cannot fit landscape, but its entire
+    /// primary sleeve must remain reachable. This is a command-path geometry control, not a touch test.
+    func testOversizedShelfKeepsPrimarySleeveAcrossRepeatedResize() async throws {
+        try await verify(direction: .leftToRight, driver: .bindingCommand, oversized: true)
+    }
+
+    func testOversizedShelfKeepsPrimarySleeveAcrossRepeatedResizeRightToLeft() async throws {
+        try await verify(direction: .rightToLeft, driver: .bindingCommand, oversized: true)
     }
 
     private func scrolls(_ view: UIView) -> [UIScrollView] {
@@ -97,7 +134,7 @@ final class SongShelfPageTests: XCTestCase {
     }
 
     private func record(_ state: State, window: UIWindow, stage: String) {
-        var lines = ["stage=\(stage) driver=ScrollViewReader.scrollTo, not a touch gesture",
+        var lines = ["stage=\(stage) driver=\(state.driver.rawValue), not a touch gesture",
                      "position=\(String(describing: state.position)) history=\(state.positionHistory)",
                      "requestedSize=\(state.size) window=\(window.bounds) key=\(window.isKeyWindow)"]
         for key in state.shelfFrames.keys.sorted() {
@@ -131,8 +168,8 @@ final class SongShelfPageTests: XCTestCase {
         add(rendered)
     }
 
-    private func verify(direction: LayoutDirection) async throws {
-        let state = State()
+    private func verify(direction: LayoutDirection, driver: Driver = .scrollViewReader, oversized: Bool = false) async throws {
+        let state = State(driver: driver, oversized: oversized)
         let host = UIHostingController(rootView: Fixture(state: state, direction: direction))
         let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
             .first { $0.activationState == .foregroundActive })
@@ -154,9 +191,9 @@ final class SongShelfPageTests: XCTestCase {
         record(state, window: window, stage: "loaded-\(direction)")
         let vertical = try XCTUnwrap(scrolls(host.view).first { $0.contentSize.height > 2000 })
         let target = "shelf-3"
-        // Use SwiftUI's public scrolling API, not a UIKit backing-view offset that bypasses
-        // SwiftUI's scroll lifecycle. This request does not write the observed position binding.
-        // Real touch scrolling remains covered by the production SongShelfRailUITests.
+        // The original reader path never writes the observed position binding. The additive
+        // binding-command control uses the production setter API and proves only measured placement
+        // and resize retention. Real touch scrolling remains a separate SongShelfRailUITests contract.
         XCTAssertTrue(vertical.window === window)
         state.requestedShelf = .shelf(target)
         let tracked = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
@@ -164,7 +201,9 @@ final class SongShelfPageTests: XCTestCase {
         }, object: nil)
         await fulfillment(of: [tracked], timeout: 3)
         record(state, window: window, stage: "programmatic-tracking-\(direction)")
-        XCTAssertEqual(state.position, .shelf(target), "The binding must observe the SwiftUI-scrolled shelf before resizing")
+        XCTAssertEqual(state.position, .shelf(target), driver == .scrollViewReader
+            ? "The binding must observe the SwiftUI-scrolled shelf before resizing"
+            : "The explicit command must remain bound while its target is realized")
         let shelf = try XCTUnwrap(state.shelfFrames[target])
         let horizontal = try XCTUnwrap(scrolls(host.view).first { scroll in
             let frame = scroll.convert(scroll.bounds, to: window)
@@ -172,14 +211,60 @@ final class SongShelfPageTests: XCTestCase {
         })
         XCTAssertTrue(horizontal.window === window)
         state.requestedTerminalShelf = target
-        await assertTerminal(state, target: target, window: window, stage: "browsed")
+        await assertCurrentGeometry(state, target: target, window: window, stage: "browsed")
         for cycle in 0..<2 {
             for size in [CGSize(width: 874, height: 402), CGSize(width: 402, height: 874)] {
                 state.size = size
                 host.view.setNeedsLayout()
                 host.view.layoutIfNeeded()
-                await assertTerminal(state, target: target, window: window, stage: "resize-\(cycle)-\(size)")
+                await assertCurrentGeometry(state, target: target, window: window, stage: "resize-\(cycle)-\(size)")
             }
+        }
+    }
+
+    private func assertCurrentGeometry(_ state: State, target: String, window: UIWindow, stage: String) async {
+        if state.oversized {
+            await assertPrimarySleeve(state, target: target, window: window, stage: stage)
+        } else {
+            await assertTerminal(state, target: target, window: window, stage: stage)
+        }
+    }
+
+    private func assertPrimarySleeve(_ state: State, target: String, window: UIWindow, stage: String) async {
+        func currentFrames() -> (page: CGRect, rail: CGRect, card: CGRect)? {
+            guard let root = window.rootViewController?.view, let shelf = state.shelfFrames[target],
+                  let card = state.terminalFrames[target] else { return nil }
+            let attached = scrolls(root).filter { $0.window === window }
+            guard let page = attached.first(where: { $0.contentSize.height > 2000 }),
+                  let rail = attached.first(where: { scroll in
+                      let frame = scroll.convert(scroll.bounds, to: window)
+                      return scroll.contentSize.width > 1000 && frame.minY >= shelf.minY - 1
+                          && frame.maxY <= shelf.maxY + 1
+                  }) else { return nil }
+            return (page.convert(page.bounds, to: window), rail.convert(rail.bounds, to: window), card)
+        }
+        func sleeve(_ card: CGRect) -> CGRect {
+            CGRect(x: card.minX, y: card.minY, width: card.width, height: min(card.width, card.height))
+        }
+        let visible = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            guard state.position == .shelf(target), let frames = currentFrames() else { return false }
+            return abs(frames.page.width - state.size.width) <= 1 && abs(frames.page.height - state.size.height) <= 1
+                && frames.page.insetBy(dx: -1, dy: -1).contains(sleeve(frames.card))
+                && frames.rail.insetBy(dx: -1, dy: -1).contains(frames.card)
+        }, object: nil)
+        await fulfillment(of: [visible], timeout: 3)
+        record(state, window: window, stage: "oversized-" + stage)
+        guard let frames = currentFrames() else { XCTFail("Current attached page/rail required: " + stage); return }
+        XCTAssertEqual(state.position, .shelf(target))
+        XCTAssertEqual(frames.page.width, state.size.width, accuracy: 1)
+        XCTAssertEqual(frames.page.height, state.size.height, accuracy: 1)
+        XCTAssertTrue(frames.page.insetBy(dx: -1, dy: -1).contains(sleeve(frames.card)),
+                      "The full primary sleeve must remain inside the page: " + stage)
+        XCTAssertTrue(frames.rail.insetBy(dx: -1, dy: -1).contains(frames.card),
+                      "Horizontal terminal identity and full rail containment must survive: " + stage)
+        if state.size.width > state.size.height {
+            XCTAssertGreaterThan(frames.card.height, frames.page.height,
+                                 "The landscape control must genuinely exceed the viewport")
         }
     }
 

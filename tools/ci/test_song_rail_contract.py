@@ -13,6 +13,53 @@ MEASURE = (ROOT / 'ios/Timbre/Songs/SongRailMeasurement.swift').read_text()
 
 
 class SongRailContractTests(unittest.TestCase):
+    def test_hero_metadata_isolates_whole_fields_not_the_surrounding_line(self):
+        helper = SONGS.split('struct HeroMetadata: View {', 1)[1].split('/// What the song asks', 1)[0]
+        visual = helper.split('var visual: Text {', 1)[1].split('var body:', 1)[0]
+        self.assertIn(r'Text(verbatim: "· \u{2066}\(length)\u{2069}")', visual)
+        self.assertIn(r'Text(verbatim: " · \u{2068}") + Text("+\(xp) XP") + Text(verbatim: "\u{2069}")', visual)
+        for forbidden in ['layoutDirection', 'String(format:', 'minimumScaleFactor', 'accessibilityHidden', 'TestSupport']:
+            self.assertNotIn(forbidden, helper)
+
+    def test_hero_metadata_preserves_original_single_spoken_text_and_identity(self):
+        helper = SONGS.split('struct HeroMetadata: View {', 1)[1].split('/// What the song asks', 1)[0]
+        spoken = helper.split('var spoken: Text {', 1)[1].split('var visual:', 1)[0]
+        self.assertIn(r'Text(verbatim: "· \(length) · ") + Text("+\(xp) XP")', spoken)
+        self.assertIn(r'Text(verbatim: "· \(length)")', spoken)
+        self.assertNotIn(r'\u{', spoken)
+        self.assertIn('visual.accessibilityLabel(spoken)', helper)
+        self.assertEqual(helper.count('.accessibilityLabel('), 1)
+        call = SONGS.split('private func heroText(', 1)[1].split('struct HeroMetadata:', 1)[0]
+        self.assertIn('HeroMetadata(length: sheet.length, xp: store.settings.calmMode ? nil : song.lesson.xp)', call)
+        self.assertEqual(call.count(r'.accessibilityIdentifier("songs.hero.\(song.id).metadata")'), 1)
+
+    def test_native_hero_metadata_render_and_negative_order_controls_are_strict(self):
+        native = (ROOT / 'ios/TimbreAppTests/SongHeroMetadataTests.swift').read_text()
+        for token in ['testExistingSingleSpokenTextPreservesValuesTranslationAndCalmMode',
+                      'testArabicAndEnglishWholeFieldRenderingRejectsRegroupedOrChangedValues',
+                      'testDefaultEnglishPixelsAndCalmModeDoNotChange',
+                      'testCalmArabicKeepsOnlyTheOriginalDuration',
+                      'testIndependentGlyphPositionsKeepRewardTogetherAndRejectOldArabicOrder',
+                      'locale: "ar_SA"', 'locale: "en_US"', '"٢:٣٦"', '"+٣٠ XP"',
+                      'DynamicTypeSize.large, .accessibility5', 'LayoutDirection.leftToRight, .rightToLeft',
+                      'XCTAssertEqual(actual, expected', 'XCTAssertEqual(actual, old',
+                      'XCTAssertNotEqual(actual, negative', 'CTRunGetPositions', 'CTRunGetStringIndices',
+                      'XCTAssertLessThan(sign, digits)', 'XCTAssertLessThan(digits, unit',
+                      'XCTAssertLessThan(duration, sign)', 'XCTAssertGreaterThan(duration, unit)',
+                      'CGColorSpace.sRGB', 'CGImageAlphaInfo.premultipliedLast',
+                      'CGBitmapInfo.byteOrder32Big', 'XCTAttachment(image: image)']:
+            self.assertIn(token, native)
+        for forbidden in ['XCTSkip', 'pngData()', 'accuracy:', 'minimumScaleFactor']:
+            self.assertNotIn(forbidden, native)
+
+    def test_native_hero_metadata_tests_are_included_and_selected(self):
+        project = (ROOT / 'ios/project.yml').read_text()
+        app_tests = project.split('  TimbreAppTests:', 1)[1].split('\nschemes:', 1)[0]
+        self.assertIn('- path: TimbreAppTests', app_tests)
+        workflow = (ROOT / '.github/workflows/ios.yml').read_text()
+        self.assertIn('-only-testing:TimbreAppTests -only-testing:TimbreUITests/SmokeUITests', workflow)
+        self.assertIn('python3 tools/ci/test_song_rail_contract.py', workflow)
+
     def test_native_oracle_uses_explicit_cgfloat_limit(self):
         oracle = (ROOT / "ios/TimbreAppTests/SongRailMeasurementTests.swift").read_text()
         self.assertIn("CGSize(width: 2000, height: CGFloat.greatestFiniteMagnitude)", oracle)
@@ -133,17 +180,45 @@ class SongRailContractTests(unittest.TestCase):
                       'case .shelf(let item): return .shelf(item.id)', 'ForEach(rows)',
                       '.scrollTargetLayout()', '.scrollPosition(id: $position, anchor: .center)']:
             self.assertIn(token, PAGE)
-        # One ID per collected row, rather than String ForEach IDs wrapped in a second enum ID.
-        self.assertNotIn('.id(', PAGE.split('ForEach(rows)', 1)[1])
+        # Explicit geometry target and collection identity use the exact same typed row key.
+        row = PAGE.split('ForEach(rows)', 1)[1].split('.scrollTargetLayout()', 1)[0]
+        self.assertIn('VStack(alignment: .leading, spacing: 0)', row)
+        self.assertEqual(row.count('.id(row.id)'), 1)
+        self.assertEqual(row.count('.id('), 1)
         for forbidden in ['DispatchQueue', 'scrollTo(', '.id(pageWidth)', '.id(typeSize)']:
             self.assertNotIn(forbidden, page)
             self.assertNotIn(forbidden, PAGE)
         self.assertIn('.scrollPosition(id: $position, anchor: .trailing)', RAIL)
 
+    def test_parent_identity_repair_keeps_constant_center_without_geometry_feedback(self):
+        self.assertIn('.scrollPosition(id: $position, anchor: .center)', PAGE)
+        for forbidden in ['scrollTo(', 'DispatchQueue', 'Task {', '.onAppear', 'position =',
+                          'rowHeights', 'scrollAnchor', 'onScrollGeometryChange',
+                          '.id(pageWidth)', 'accessibilityHidden', 'minimumScaleFactor']:
+            self.assertNotIn(forbidden, PAGE)
+
+    def test_additive_command_controls_keep_full_normal_card_and_oversized_primary_geometry(self):
+        native = (ROOT / 'ios/TimbreAppTests/SongShelfPageTests.swift').read_text()
+        for token in ['testBindingCommandPlacesShelfAndTerminalAndPreservesResizeGeometry()',
+                      'testBindingCommandPlacesShelfAndTerminalAndPreservesResizeGeometryRightToLeft()',
+                      'testOversizedShelfKeepsPrimarySleeveAcrossRepeatedResize()',
+                      'testOversizedShelfKeepsPrimarySleeveAcrossRepeatedResizeRightToLeft()',
+                      'driver: .bindingCommand, oversized: true',
+                      'state.oversized ? .accessibility5 : .large',
+                      'height: state.oversized ? 640 : 240', 'height: state.oversized ? 480 : 80',
+                      'frames.page.insetBy(dx: -1, dy: -1).contains(sleeve(frames.card))',
+                      'frames.rail.insetBy(dx: -1, dy: -1).contains(frames.card)',
+                      'XCTAssertGreaterThan(frames.card.height, frames.page.height',
+                      'await assertTerminal(state, target: target, window: window, stage: stage)']:
+            self.assertIn(token, native)
+        original = native.split('private func assertTerminal(', 1)[1]
+        self.assertIn('page.insetBy(dx: -1, dy: -1).contains(frame)', original)
+        self.assertNotIn('oversized', original)
+
     def test_native_parent_regression_observes_supported_programmatic_tracking_before_any_resize(self):
         native = (ROOT / 'ios/TimbreAppTests/SongShelfPageTests.swift').read_text()
         for token in ['SongShelfPage(items: shelves, position: $state.position)',
-                      'SongShelfRail(items: songs, selection: 59', '(0..<120)',
+                      'SongShelfRail(items: songs,', 'state.requestedTerminalShelf == shelf.id ? 119 : 59', '(0..<120)',
                       'UIWindow(windowScene: scene)', 'window.makeKeyAndVisible()',
                       'proxy.scrollTo(value, anchor: .center)', 'proxy.scrollTo(119, anchor: .trailing)',
                       'state.position == .shelf(target)', 'await fulfillment(of: [tracked], timeout: 3)',
@@ -154,15 +229,23 @@ class SongRailContractTests(unittest.TestCase):
                       'testProgrammaticScrollTracksShelfAndSurvivesRepeatedResizeRightToLeft']:
             self.assertIn(token, native)
         self.assertLess(native.index('await fulfillment(of: [tracked]'), native.index('state.size = size'))
-        # Setting the expected ID would hide a broken automatic tracking binding.
-        self.assertNotRegex(native, r'state\.position\s*=(?!=)')
+        # Only the separately named command control can set the ID; the original observation
+        # driver's branch must still use its proxy and never manufacture the expected readback.
+        self.assertEqual(native.count('state.position = value'), 1)
+        self.assertIn('if state.driver == .bindingCommand {', native)
+        self.assertIn('} else {\n                        proxy.scrollTo(value, anchor: .center)', native)
+        for name in ['testProgrammaticScrollTracksShelfAndSurvivesRepeatedResize()',
+                     'testProgrammaticScrollTracksShelfAndSurvivesRepeatedResizeRightToLeft()']:
+            method = native.split('func ' + name, 1)[1].split('\n    }', 1)[0]
+            self.assertNotIn('bindingCommand', method)
+            self.assertNotIn('oversized:', method)
         self.assertNotIn('setContentOffset(', native)
         self.assertEqual(native.count('proxy.scrollTo('), 2)
         fixture = native.split('private struct Fixture:', 1)[1].split('func testProgrammaticScroll', 1)[0]
         self.assertIn('.onChange(of: state.requestedShelf)', fixture)
         self.assertIn('.onChange(of: state.requestedTerminalShelf)', fixture)
         self.assertNotIn('.onAppear', fixture)
-        resize = native.split('for cycle in 0..<2', 1)[1].split('private func assertTerminal', 1)[0]
+        resize = native.split('for cycle in 0..<2', 1)[1].split('private func assertCurrentGeometry', 1)[0]
         for forbidden in ['scrollTo(', 'requestedShelf =', 'requestedTerminalShelf =', 'position =']:
             self.assertNotIn(forbidden, resize)
         self.assertNotIn('XCTSkip', native)

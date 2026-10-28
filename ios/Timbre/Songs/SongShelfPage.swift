@@ -35,14 +35,17 @@ struct SongShelfPage<Item: Identifiable, Introduction: View, Content: View, Foot
     var body: some View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 24) {
-                // One identity per row. Wrapping a String-identified ForEach child in another
-                // enum-valued .id gives the lazy collection and scroll binding different keys.
+                // One concrete scroll target per lazy row. The explicit target uses exactly
+                // the same typed key as ForEach, not a nested song ID or a second key type.
                 ForEach(rows) { row in
-                    switch row {
-                    case .introduction: introduction()
-                    case .shelf(let item): shelf(item)
-                    case .request: footer()
+                    VStack(alignment: .leading, spacing: 0) {
+                        switch row {
+                        case .introduction: introduction()
+                        case .shelf(let item): shelf(item)
+                        case .request: footer()
+                        }
                     }
+                    .id(row.id)
                 }
             }
             .scrollTargetLayout()

@@ -1,12 +1,13 @@
 import CoreText
 import SwiftUI
+import UIKit
 
 /// One native Text preserves shaping, natural RTL wrapping, and a single spoken heading.
 struct WelcomeHeadline: View {
     @Environment(\.locale) private var locale
+    @Environment(\.displayScale) private var displayScale
     @ScaledMetric(relativeTo: .largeTitle) private var urduPoints: CGFloat = 40
-    // The native AX5/280pt sample has a 48px trailing ink overhang at 3x (9.4 base points).
-    // Reserve 12 base points on both sides without shrinking or capping the script.
+    // Retain the existing minimum gutter; measured glyph overhang can require more at larger sizes.
     @ScaledMetric(relativeTo: .largeTitle) private var urduHorizontalClearance: CGFloat = 12
 
     private var isUrdu: Bool { locale.language.languageCode?.identifier == "ur" }
@@ -30,6 +31,88 @@ struct WelcomeHeadline: View {
         return String(localized: "Tune in seconds.\nThen learn to play.", bundle: bundle, locale: locale)
     }
 
+    private struct InkKey: Hashable {
+        let face: String
+        let points: CGFloat
+        let text: String
+        let scale: CGFloat
+    }
+
+    private static var inkCache: [InkKey: EdgeInsets] = [:]
+
+    /// Measure ink outside typographic advances, including fragments that emergency wrapping can expose.
+    /// These are font geometry measurements at the already-scaled point size, never screenshot offsets.
+    static func nativeUrduInkInsets(font: CTFont, text: String, displayScale: CGFloat) -> EdgeInsets {
+        let scale = max(1, displayScale)
+        let key = InkKey(face: CTFontCopyPostScriptName(font) as String, points: CTFontGetSize(font), text: text, scale: scale)
+        if let cached = inkCache[key] { return cached }
+        let paragraph = NSMutableParagraphStyle()
+        paragraph.baseWritingDirection = .rightToLeft
+        let attributes: [NSAttributedString.Key: Any] = [
+            NSAttributedString.Key(kCTFontAttributeName as String): font,
+            NSAttributedString.Key(kCTLanguageAttributeName as String): "ur",
+            .paragraphStyle: paragraph, .tracking: -1
+        ]
+        var horizontal: CGFloat = 0, top: CGFloat = 0, bottom: CGFloat = 0
+        for fragment in inkFragments(text) {
+            let line = CTLineCreateWithAttributedString(NSAttributedString(string: fragment, attributes: attributes) as CFAttributedString)
+            var ascent: CGFloat = 0, descent: CGFloat = 0
+            let advance = CGFloat(CTLineGetTypographicBounds(line, &ascent, &descent, nil))
+            // Tracking is trailing whitespace. Cover both the full and trimmed typographic edge.
+            let width = max(0, min(advance, advance - CGFloat(CTLineGetTrailingWhitespaceWidth(line))))
+            let ink = CTLineGetBoundsWithOptions(line, .useGlyphPathBounds)
+            guard !ink.isNull, [ink.minX, ink.maxX, ink.minY, ink.maxY, width].allSatisfy({ $0.isFinite }) else { continue }
+            horizontal = max(horizontal, max(-ink.minX, ink.maxX - width))
+            top = max(top, ink.maxY - ascent)
+            bottom = max(bottom, -descent - ink.minY)
+        }
+        func outward(_ value: CGFloat) -> CGFloat { ceil(max(0, value) * scale) / scale }
+        let insets = EdgeInsets(top: outward(top), leading: outward(horizontal),
+                                bottom: outward(bottom), trailing: outward(horizontal))
+        if inkCache.count >= 16 { inkCache.removeAll(keepingCapacity: true) }
+        inkCache[key] = insets
+        return insets
+    }
+
+    /// Whole-word spans preserve shaping at ordinary wraps; grapheme fragments cover emergency wraps
+    /// without separating a combining mark or removing the original punctuation from the measured copy.
+    private static func inkFragments(_ text: String) -> [String] {
+        var fragments: Set<String> = []
+        for paragraph in text.split(separator: "\n") {
+            let words = paragraph.split(whereSeparator: \.isWhitespace).map(String.init)
+            for start in words.indices {
+                for end in (start + 1)...words.count { fragments.insert(words[start..<end].joined(separator: " ")) }
+                let clusters = Array(words[start])
+                for first in clusters.indices {
+                    for last in (first + 1)...clusters.count { fragments.insert(String(clusters[first..<last])) }
+                }
+            }
+        }
+        return fragments.sorted()
+    }
+
+    static func nativeUrduLayoutInsets(ink: EdgeInsets, minimumHorizontal: CGFloat) -> EdgeInsets {
+        EdgeInsets(top: ink.top, leading: max(minimumHorizontal, ink.leading),
+                   bottom: ink.bottom, trailing: max(minimumHorizontal, ink.trailing))
+    }
+
+    private var urduInkInsets: EdgeInsets {
+        Self.nativeUrduInkInsets(font: Self.nativeUrduFont(points: urduPoints, locale: locale),
+                                 text: Self.fontSelectionText(locale: locale), displayScale: displayScale)
+    }
+
+    /// Raster allowance is separate from layout reserve: outer padding alone cannot stop Text's own
+    /// drawing layer clipping a Nastaliq stroke. Draw the original lines without transforming them.
+    private struct UrduInkRenderer: TextRenderer {
+        let displayPadding: EdgeInsets
+        nonisolated func sizeThatFits(proposal: ProposedViewSize, text: TextProxy) -> CGSize {
+            text.sizeThatFits(proposal)
+        }
+        nonisolated func draw(layout: Text.Layout, in context: inout GraphicsContext) {
+            for line in layout { context.draw(line) }
+        }
+    }
+
     private var font: Font {
         if isUrdu {
             // CTFont already has the uncapped ScaledMetric size: do not scale it a second time.
@@ -50,11 +133,12 @@ struct WelcomeHeadline: View {
         Group {
             if isUrdu {
                 headline.typesettingLanguage(locale.language)
+                    .textRenderer(UrduInkRenderer(displayPadding: urduInkInsets))
             } else {
                 headline
             }
         }
-        .padding(.horizontal, isUrdu ? urduHorizontalClearance : 0)
+        .padding(isUrdu ? Self.nativeUrduLayoutInsets(ink: urduInkInsets, minimumHorizontal: urduHorizontalClearance) : EdgeInsets())
         .fixedSize(horizontal: false, vertical: true)
         .accessibilityAddTraits(.isHeader)
         .accessibilityIdentifier("onboarding.headline")

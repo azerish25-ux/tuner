@@ -41,16 +41,16 @@
     "reviewer": "Independent AI semantic review (2026-10-26)",
     "method": "Independent source-aware AI semantic review of all consumer-facing fields; source available, not blinded",
     "identified_corrections": 1003,
-    "applied_corrections": 1006,
+    "applied_corrections": 1007,
     "application_method": "Original94 and2 Slovenian morphology corrections preserved;157 independently reviewed exact-source/old/new song-title alignment corrections added, with parent-hash lineage and unchanged full-payload review retained. Additional 56 independently source-aware reviewed Game Center achievement-description register/terminology deltas applied with exact source/current-old guards; original 253 ledger records and full-review inheritance retained. Additional100 exact description/productionURL field changes independently reviewed across all50 locales, preserving original309 ledger objects/raw prefix and bounded old/new source lineage. Additional350 independently reviewed exact-old/new distinct-song-count corrections (300quantity-only strings and50floor metadata) preserve all prior ledger objects and full-review inheritance. Additional 194 exact-old/new owner-approved multi-instrument descriptor and keyword-continuity deltas independently reviewed across all50locales; five idiom/terminology/duplication refinements applied before payload hash verification. Historical ledger objects and unchanged full-review inheritance preserved. Additional 50 independently source-aware reviewed live-feedback screenshot headline corrections applied with exact-old guards; all 956 prior correction objects and their raw ledger prefix retained.",
     "artifacts": {
       "evidence": {
         "file": "tools/l10n/store-review-independent.json",
-        "sha256": "2b31e1b81a7d18d3821494c6569f8278362ee59dd540ca17c3dc6a5ddc4353ab"
+        "sha256": "589c3496971c787c2d4848c429ff38a911005e5ada19e50149ffba01c3dc58c9"
       },
       "corrections": {
         "file": "tools/l10n/store-corrections.json",
-        "sha256": "210eaa5ea4aeb1bf25cca772d6cb90ea785f6a8df3e3bd69cf3c1285e0ad4491"
+        "sha256": "b09d3b1a5bba6e98313531cfd2281e75753c13e415b39da4d8a55b091ebffb27"
       }
     },
     "policy_recommendation_sha256": "d69ee544571082357801fd0d03e2ab1514a908718f0345d4a55474fe331cff17",
@@ -1937,10 +1937,10 @@
       "reviewer": "Independent AI semantic review (2026-10-26)",
       "method": "independent_source_aware_ai",
       "status": "reviewed_identified_corrections_resolved",
-      "reviewed_content_sha256": "27f4055850de5382eadec1d188da8b2917ecfde87aab56e17d05987552b001c1",
+      "reviewed_content_sha256": "8c1435c858c1648dd79cc49688e50c466025c6de838dcfbae65b109f84f7944d",
       "source_content_sha256": "754d2e076d2781a888759d58965fd19aaf00d04625b3df13b80c0345d7bc9f78",
-      "identified_corrections": 25,
-      "resolved_corrections": 25,
+      "identified_corrections": 26,
+      "resolved_corrections": 26,
       "unresolved_corrections": [],
       "scope": [
         "counts and course scope",
@@ -2052,6 +2052,28 @@
           "reviewed_file_sha256": "b4a6cf47886f0ef4e54ff36bf2a838ecd9948847ff7e2c2ffcd2231fd0a009a0",
           "decision": "approved_exact_text",
           "appended_field_corrections": 1
+        },
+        {
+          "locale": "ar-SA",
+          "field": "/iphone_screenshot_captions/2/caption",
+          "capture": "65-song-perform",
+          "source": "See feedback as you play",
+          "old": "شاهد الملاحظات أثناء عزفك",
+          "new": "تابع أداءك أثناء العزف",
+          "reason": "Describes live musical performance feedback without the ambiguous literal comments/observations wording. Supporting pitch/timing line unchanged.",
+          "reviewer": "Independent AI source-aware and rendered-layout review",
+          "method": "independent_source_aware_ai",
+          "scope": "One Arabic phone screenshot headline only; unchanged listing material inherits existing review. AI source-aware review, not native-speaker certification or release approval.",
+          "parent_content_sha256": "27f4055850de5382eadec1d188da8b2917ecfde87aab56e17d05987552b001c1",
+          "reviewed_content_sha256": "8c1435c858c1648dd79cc49688e50c466025c6de838dcfbae65b109f84f7944d",
+          "source_content_sha256": "754d2e076d2781a888759d58965fd19aaf00d04625b3df13b80c0345d7bc9f78",
+          "decision": "approved_exact_text",
+          "appended_field_corrections": 1,
+          "reviewed_utc": "2026-10-28T07:27:00Z",
+          "visual_review": "Full recomposed large-phone frame reviewed; source app capture is 210cc08043b3a7ecab43d4fb482290d3ca5b53e5, not a new native build.",
+          "release_ready": false,
+          "evidence": "docs/l10n/reviews/arabic-performance-caption/independent-review.json",
+          "evidence_sha256": "8441234234d6cf5274adf2c4a0a0fc6ddcb992b006560a4c877b880db86a265d"
         }
       ],
       "current_review_provenance": {

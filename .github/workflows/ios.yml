@@ -567,6 +567,32 @@ jobs:
             xcrun xcresulttool export attachments --path ios/build/ContrastReveal.xcresult \
               --output-path ci-out/contrast-reveal/attachments
           fi
+      - name: Summarize opt-in contrast reveal log
+        if: ${{ always() && steps.reveal-opt-in.outputs.enabled == 'true' }}
+        run: python3 tools/ci/summarize-log.py ci-out/contrast-reveal/test.log ci-out/contrast-reveal/test.summary.txt
+      # Keep original text/JSON inspectable even when the native bundle exceeds a download client's limit.
+      - name: Upload compact contrast reveal logs and metadata
+        if: ${{ always() && steps.reveal-opt-in.outputs.enabled == 'true' }}
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: accessibility-reveal-logs
+          path: |
+            ci-out/contrast-reveal/test*.log
+            ci-out/contrast-reveal/*.summary.txt
+            ci-out/contrast-reveal/*.json
+            ci-out/contrast-reveal/attachments/*.json
+            ci-out/contrast-reveal/attachments/*.txt
+          if-no-files-found: error
+          retention-days: 7
+      # Original exports, without the second copy embedded in the full xcresult below.
+      - name: Upload contrast reveal exported attachments
+        if: ${{ always() && steps.reveal-opt-in.outputs.enabled == 'true' }}
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: accessibility-reveal-attachments
+          path: ci-out/contrast-reveal/attachments
+          if-no-files-found: error
+          retention-days: 7
       - name: Upload separate contrast reveal diagnostic evidence
         if: ${{ always() && steps.reveal-opt-in.outputs.enabled == 'true' }}
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0

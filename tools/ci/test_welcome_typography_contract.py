@@ -17,7 +17,7 @@ class WelcomeTypographyContract(unittest.TestCase):
                       'Typeface.boldText ? Typeface.Face.semiBold.heavier : Typeface.Face.semiBold',
                       'Font(Self.nativeUrduFont(points: urduPoints, locale: locale))',
                       '.typesettingLanguage(locale.language)',
-                      '.padding(.horizontal, isUrdu ? urduHorizontalClearance : 0)',
+                      '.padding(isUrdu ? Self.nativeUrduLayoutInsets(ink: urduInkInsets, minimumHorizontal: urduHorizontalClearance) : EdgeInsets())',
                       'let copy = fontSelectionText(locale: locale)',
                       'Bundle.main.path(forResource: language, ofType: "lproj")',
                       'bundle: bundle, locale: locale',
@@ -50,7 +50,7 @@ class WelcomeTypographyContract(unittest.TestCase):
                       'union.elementsEqual(full.ink)', 'XCTAssertFalse(even.touches(odd)',
                       'XCTAssertTrue(masks.even.touches(masks.odd)', 'let example = Example(width: 362)',
                       '[CGFloat(280), 335, 362, 390]', 'DynamicTypeSize.large, .accessibility5',
-                      'contains(full.bounds)', 'XCTAssertGreaterThan(heights[1], heights[0]',
+                      'contains(native.bounds)', 'XCTAssertGreaterThan(heights[1], heights[0]',
                       '["en", "ta", "ar", "fa", "he"]', 'renderer.scale = 3',
                       'try requireSamePixels(expected, actual', '.keepAlways']:
             self.assertIn(token, source)
@@ -74,18 +74,19 @@ class WelcomeTypographyContract(unittest.TestCase):
                       'horizontal: CGFloat = 12', '.font(Font(fallback)).tracking(-1)',
                       'try requireSamePixels(native, independent', 'try autoreleasepool',
                       'XCTAssertEqual(samples, 8', 'production-vs-native-metrics-',
-                      'XCTAssertFalse(even.touches(odd)', 'contains(full.bounds)']:
+                      'XCTAssertFalse(even.touches(odd)', 'contains(native.bounds)']:
             self.assertIn(token, source)
         self.assertNotIn('CalibrationHeadline', source)
         self.assertNotIn('diagnosticOnly', source)
 
     def test_native_and_probe_share_physical_canvas_without_pixel_registration(self):
         source = (ROOT / 'ios/TimbreAppTests/WelcomeHeadlineLayoutTests.swift').read_text()
-        for token in ['struct PinnedCanvas: Layout', 'PinnedCanvas(width: example.width)',
+        for token in ['struct PinnedCanvas: Layout', 'PinnedCanvas(width: example.width, direction: example.direction)',
                       'subviews[0].sizeThatFits(ProposedViewSize(width: width, height: nil))',
-                      'anchor: UnitPoint(x: 0, y: 0)',
+                      'anchor: UnitPoint(x: rtl ? 1 : 0, y: 0)',
                       'proposal: ProposedViewSize(width: width, height: nil)',
-                      'CGPoint(x: bounds.minX + 80, y: bounds.minY + 80)',
+                      'let x = bounds.minX + 80 + (rtl ? width : 0)',
+                      'CGPoint(x: x, y: bounds.minY + 80)',
                       '.environment(\\.layoutDirection, example.direction)',
                       '.environment(\\.layoutDirection, .leftToRight)',
                       'expected.rgba == actual.rgba']:
@@ -93,6 +94,61 @@ class WelcomeTypographyContract(unittest.TestCase):
         for workaround in ['.translateBy(', '.offset(', 'CGAffineTransform', 'XCTSkip',
                            '.frame(width: example.width)', '.clipped()']:
             self.assertNotIn(workaround, source)
+
+    def test_native_bounds_are_checked_before_strict_probe_and_every_sample_is_attempted(self):
+        source = (ROOT / 'ios/TimbreAppTests/WelcomeHeadlineLayoutTests.swift').read_text()
+        test = source.split('func testUrduLinesHaveSeparateInkAtSmallPhoneAndAccessibilityWidths()', 1)[1].split('func testCollisionOracle', 1)[0]
+        self.assertLess(test.index('contains(native.bounds)'), test.index('let masks = try probe'))
+        for token in ['native: independent', '} catch {', 'XCTFail("Every requested sample requires a pixel-identical native probe:',
+                      'samples += 1', 'XCTAssertEqual(samples, 8', 'XCTAssertEqual(heights.count, 2']:
+            self.assertIn(token, test)
+        canvas = source.split('private struct PinnedCanvas:', 1)[1].split('private func render<', 1)[0]
+        self.assertIn('let direction: LayoutDirection', canvas)
+        self.assertIn('let rtl = direction == .rightToLeft', canvas)
+        self.assertNotIn('23', canvas)
+        self.assertNotIn('11', canvas)
+        self.assertIn('expected.rgba == actual.rgba', source)
+        for workaround in ['accuracy:', 'changed <=', '.drawingGroup(', 'disablesSubpixelQuantization']:
+            self.assertNotIn(workaround, source)
+
+    def test_measured_raster_allowance_is_separate_from_the_native_layout_and_plain_reference(self):
+        source = (ROOT / 'ios/Timbre/Onboarding/WelcomeHeadline.swift').read_text()
+        for token in ['nativeUrduInkInsets(font: CTFont, text: String, displayScale: CGFloat)',
+                      'CTLineGetBoundsWithOptions(line, .useGlyphPathBounds)', 'CTLineGetTypographicBounds',
+                      'CTLineGetTrailingWhitespaceWidth', '.paragraphStyle: paragraph, .tracking: -1',
+                      'ink.maxX - width', 'ink.maxY - ascent', '-descent - ink.minY',
+                      'ceil(max(0, value) * scale) / scale', 'Array(words[start])',
+                      'words[start..<end].joined(separator: " ")', 'String(clusters[first..<last])',
+                      'let displayPadding: EdgeInsets', 'text.sizeThatFits(proposal)',
+                      'for line in layout { context.draw(line) }', 'max(minimumHorizontal, ink.leading)',
+                      '.textRenderer(UrduInkRenderer(displayPadding: urduInkInsets))']:
+            self.assertIn(token, source)
+        raster = source.split('private struct UrduInkRenderer:', 1)[1].split('private var font:', 1)[0]
+        for workaround in ['ScaledMetric', 'CTFontCreate', 'translateBy', 'scaleBy', 'clip', 'disablesSubpixelQuantization']:
+            self.assertNotIn(workaround, raster)
+        native = (ROOT / 'ios/TimbreAppTests/WelcomeHeadlineLayoutTests.swift').read_text()
+        reference = native.split('private struct NativeMetricsHeadline:', 1)[1].split('func testProductionUses', 1)[0]
+        self.assertNotIn('.textRenderer(', reference)
+        test = native.split('func testUrduLinesHaveSeparateInkAtSmallPhoneAndAccessibilityWidths()', 1)[1].split('func testCollisionOracle', 1)[0]
+        self.assertLess(test.index('try requireSamePixels(native, independent'), test.index('let masks = try probe(NativeMetricsHeadline()'))
+        self.assertNotIn('probe(WelcomeHeadline()', test)
+        self.assertIn('.environment(\\.displayScale, 3)', native)
+        metric = (ROOT / 'ios/TimbreAppTests/WelcomeFallbackDiagnosticsTests.swift').read_text()
+        for token in ['testMeasuredInkAllowanceContainsIndependentGlyphPathsAtNormalAndAX5Sizes',
+                      'CTFontGetSize(font), points', 'CTFontCreatePathForGlyph', 'CTRunGetGlyphs',
+                      'CTRunGetPositions', 'path.boundingBoxOfPath', 'reserved.contains(ink)',
+                      'XCTAssertGreaterThan(checkedFragments, 20', '.accessibilityExtraExtraExtraLarge']:
+            self.assertIn(token, metric)
+
+    def test_live_welcome_gesture_uses_the_viewport_interior_and_saves_failed_trace_before_abort(self):
+        source = (ROOT / 'ios/TimbreUITests/FirstSessionUITests.swift').read_text()
+        helper = source.split('private func revealWelcome(', 1)[1].split('func testDeferredQuestions', 1)[0]
+        for token in ['for attempt in 0..<16', 'viewport.contains(wanted)', 'target.isHittable',
+                      'dx: viewport.midX', 'func captureTrace()', 'defer { captureTrace() }']:
+            self.assertIn(token, helper)
+        self.assertNotIn('viewport.minX + 24', helper)
+        failed = helper.split('captureWelcome("unreachable-"', 1)[1]
+        self.assertLess(failed.index('captureTrace()'), failed.index('XCTFail('))
 
     def test_native_fallback_evidence_checks_actual_production_resolution(self):
         source = (ROOT / 'ios/TimbreAppTests/WelcomeFallbackDiagnosticsTests.swift').read_text()

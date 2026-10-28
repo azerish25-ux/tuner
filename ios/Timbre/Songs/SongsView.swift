@@ -905,13 +905,9 @@ struct SongsView: View {
                     .accessibilityIdentifier("songs.hero.\(song.id).course")
                 // How long the song runs (not the lesson's minutes, which the song sheet gives beside it), as the rows
                 // up next say it: "Originals · 2:40 · +30 XP"; Calm mode leaves the XP out.
-                if store.settings.calmMode {
-                    Text(verbatim: "· \(sheet.length)").foregroundStyle(Palette.inkSoft)
-                        .accessibilityIdentifier("songs.hero.\(song.id).metadata")
-                } else {
-                    (Text(verbatim: "· \(sheet.length) · ") + Text("+\(song.lesson.xp) XP")).foregroundStyle(Palette.inkSoft)
-                        .accessibilityIdentifier("songs.hero.\(song.id).metadata")
-                }
+                HeroMetadata(length: sheet.length, xp: store.settings.calmMode ? nil : song.lesson.xp)
+                    .foregroundStyle(Palette.inkSoft)
+                    .accessibilityIdentifier("songs.hero.\(song.id).metadata")
             }
             .font(.subheadline).lineLimit(1)
             if compact {
@@ -934,6 +930,31 @@ struct SongsView: View {
                 .padding(.top, 6)
             }
         }
+    }
+
+    /// Keep each metadata field together without changing the surrounding paragraph or the localized reward.
+    /// In Arabic, one unisolated run can pull "XP" across the separator toward the duration.
+    struct HeroMetadata: View {
+        let length: String
+        let xp: Int?
+
+        // Preserve the previous single spoken Text, including its localization and integer formatting.
+        var spoken: Text {
+            if let xp { return Text(verbatim: "· \(length) · ") + Text("+\(xp) XP") }
+            return Text(verbatim: "· \(length)")
+        }
+
+        var visual: Text {
+            // Elapsed time has a fixed mathematical order. The complete translated reward chooses its
+            // own first-strong direction; do not force an Arabic translation or the whole line to LTR.
+            let duration = Text(verbatim: "· \u{2066}\(length)\u{2069}")
+            if let xp {
+                return duration + Text(verbatim: " · \u{2068}") + Text("+\(xp) XP") + Text(verbatim: "\u{2069}")
+            }
+            return duration
+        }
+
+        var body: some View { visual.accessibilityLabel(spoken) }
     }
 
     /// What the song asks for, at a glance: how hard it is and its chords (its key, for a melody).

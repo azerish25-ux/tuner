@@ -72,6 +72,42 @@ class SettingsLocalizationContract(unittest.TestCase):
         self.assertIn('found.lines.append("The audit did not complete:', capture)
         self.assertIn(".textClipped, .dynamicType, .contrast, .hitRegion", capture)
 
+    def test_matrix_waits_for_the_same_settings_identity_and_never_continues_under_a_sheet(self):
+        native = source("ios/TimbreUITests/AccessibilityMatrixUITests.swift")
+        opening = native.split("private func openSettings()", 1)[1].split("func testSettingsOpens", 1)[0]
+        self.assertIn("XCTWaiter.wait(for: [appeared], timeout: 20)", opening)
+        self.assertIn("if settingsVisible { return true }", opening)
+        self.assertLess(opening.index("if settingsVisible { return true }"),
+                        opening.index('guard element("tune.stage").exists'))
+        self.assertIn('for attempt in 1...3', opening)
+        matrix = native.split("func testMatrixScreens()", 1)[1].split("private var settingsVisible:", 1)[0]
+        for token in ["guard chooseHandedness() else { return }", "guard openSettings() else { return }",
+                      "guard closeSettings() else { return }", "guard tab(1) else { return }",
+                      "guard lesson.exists && lesson.isHittable else",
+                      'navigationEvidence("learn-lesson-unreachable")']:
+            self.assertIn(token, matrix)
+        self.assertLess(matrix.index("guard closeSettings()"), matrix.index("guard tab(1)"))
+        handedness = native.split("private func chooseHandedness()", 1)[1].split("private func closeSettings()", 1)[0]
+        self.assertIn("-> Bool", handedness)
+        self.assertIn("guard openSettings() else { return false }", handedness)
+        self.assertIn("return closeSettings()", handedness)
+        closing = native.split("private func closeSettings()", 1)[1].split("private func navigationEvidence", 1)[0]
+        for token in ["-> Bool", "guard done.waitForNonExistence(timeout: 10)",
+                      'element("settings.open").isHittable', 'navigationEvidence("settings-close-incomplete")',
+                      "return false"]:
+            self.assertIn(token, closing)
+
+    def test_matrix_requires_a_hittable_selected_tab_before_looking_for_lesson_identity(self):
+        native = source("ios/TimbreUITests/AccessibilityMatrixUITests.swift")
+        tab = native.split("private func tab(_ index:", 1)[1].split("func testMatrixScreens()", 1)[0]
+        for token in ["-> Bool", "guard button.isHittable else", "button.tap()",
+                      "button.exists && button.isHittable && button.isSelected",
+                      "XCTWaiter.wait(for: [selected], timeout: 20)", "return false"]:
+            self.assertIn(token, tab)
+        self.assertLess(tab.index("guard button.isHittable"), tab.index("button.tap()"))
+        for workaround in ["coordinate(withNormalizedOffset:", "XCTSkip", "continueAfterFailure = false"]:
+            self.assertNotIn(workaround, native)
+
     def test_native_precision_oracles_are_independent_and_include_negative_controls(self):
         native = source("ios/TimbreAppTests/SettingsOptionLabelTests.swift")
         for token in ["CTRunGetStringIndices", "CTRunGetPositions", "XCTAssertLessThan", "XCTAssertGreaterThan",

@@ -11,7 +11,9 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
 APP = ROOT / 'ios/Timbre'
-SEMANTIC_HASHES = {'Songs/SongsView.swift': '97c8d0b2e7f67059ba46de76cc3242f95aa4316d70b3daf8c2b5da627530a7d0',
+# Reviewed hero metadata adds only the original single spoken Text as its explicit label.
+# test_song_rail_contract.py locks its unchanged content; native shaping/AX acceptance remains required.
+SEMANTIC_HASHES = {'Songs/SongsView.swift': '78977deb91d0024334e8b2d2d56b37f62fe96aa1bd047f6cfb0b46d381989591',
  'YourSongs/YourSongsShelf.swift': '8f47e18e41ab5599c2b05c99e04e74fbf46cde7b066e27d7a463361cb628a993',
  'Journey/JourneyView.swift': 'ebfb16a206d83e6198c0074844446fd4192da63b23e7a12139bc4030313f3fcc',
  'Paywall/PaywallView.swift': '38d816bdbd86ae60b377e30e614633e815cd5742df6a85a1668a6b7faaffb98d',

@@ -68,24 +68,39 @@ final class WelcomeHeadlineLayoutTests: XCTestCase {
     }
 
     func testUrduLinesHaveSeparateInkAtSmallPhoneAndAccessibilityWidths() throws {
+        var samples = 0
         // 320/375/402/430-point phones, less the actual two 20-point welcome gutters.
         for width in [CGFloat(280), 335, 362, 390] {
             var heights: [Int] = []
             for size in [DynamicTypeSize.large, .accessibility5] {
                 let example = Example(width: width, size: size)
-                let masks = try probe(WelcomeHeadline(), example: example, name: example.name)
-                let full = masks.full, even = masks.even, odd = masks.odd
-                let union = zip(even.ink, odd.ink).map { $0 || $1 }
-                XCTAssertTrue(union.elementsEqual(full.ink), "The line masks must reconstruct the unmodified native render: " + example.name)
-                XCTAssertFalse(even.touches(odd), "Adjacent Nastaliq lines must not share or touch ink pixels: " + example.name)
-                // A generous outer canvas is deliberately NOT clipped to the layout's rectangle. Any overflowing
-                // first/last-line glyph or horizontally cropped word is visible to this bounds assertion.
-                let content = CGRect(x: 240, y: 240, width: width * 3, height: CGFloat(full.height - 480))
-                XCTAssertTrue(content.insetBy(dx: -1, dy: -1).contains(full.bounds), "All ink must fit its reserved layout: " + example.name)
-                heights.append(full.height)
+                do {
+                    try autoreleasepool {
+                        // Measure unmodified native ink before the probe can fail, so an unrelated renderer
+                        // mismatch cannot hide a real overflow. Every requested case must still be visited.
+                        let native = try render(WelcomeHeadline(), example: example, name: "headline-" + example.name)
+                        let content = CGRect(x: 240, y: 240, width: width * 3, height: CGFloat(native.height - 480))
+                        XCTAssertTrue(content.insetBy(dx: -1, dy: -1).contains(native.bounds), "All ink must fit its reserved layout: " + example.name)
+                        heights.append(native.height)
+                        let independent = try render(NativeMetricsHeadline(), example: example, name: "plain-native-" + example.name)
+                        try requireSamePixels(native, independent, name: "production-vs-plain-native-" + example.name)
+                        let masks = try probe(NativeMetricsHeadline(), example: example, name: example.name, native: independent)
+                        let full = masks.full, even = masks.even, odd = masks.odd
+                        let union = zip(even.ink, odd.ink).map { $0 || $1 }
+                        XCTAssertTrue(union.elementsEqual(full.ink), "The line masks must reconstruct the unmodified native render: " + example.name)
+                        XCTAssertFalse(even.touches(odd), "Adjacent Nastaliq lines must not share or touch ink pixels: " + example.name)
+                    }
+                } catch {
+                    XCTFail("Every requested sample requires a pixel-identical native probe: \(example.name): \(error)")
+                }
+                samples += 1
             }
-            XCTAssertGreaterThan(heights[1], heights[0], "AX5 must genuinely grow, never cap or shrink the heading")
+            XCTAssertEqual(heights.count, 2, "Both native Dynamic Type renders must succeed")
+            if heights.count == 2 {
+                XCTAssertGreaterThan(heights[1], heights[0], "AX5 must genuinely grow, never cap or shrink the heading")
+            }
         }
+        XCTAssertEqual(samples, 8, "A failed probe must not prevent the remaining native cases from being checked")
     }
 
     func testCollisionOracleRejectsTheOriginalZeroLeadingUrduLayout() throws {
@@ -114,8 +129,13 @@ final class WelcomeHeadlineLayoutTests: XCTestCase {
     /// the reference layout. Exact RGBA equality prevents the probe from silently measuring another font,
     /// reflowing the copy, translating its origins, clipping glyphs, or applying different antialiasing.
     private func probe<Content: View>(_ view: Content, example: Example, name: String,
-                                      diagnostics: Bool = true, nativeImage: Bool = true) throws -> ProbedText {
-        let full = try render(view, example: example, name: "headline-" + name, attachImage: nativeImage)
+                                      diagnostics: Bool = true, nativeImage: Bool = true, native: Bitmap? = nil) throws -> ProbedText {
+        let full: Bitmap
+        if let native {
+            full = native
+        } else {
+            full = try render(view, example: example, name: "headline-" + name, attachImage: nativeImage)
+        }
         let controlled = view.typesettingLanguage(Locale(identifier: example.language).language)
         let language = try render(controlled, example: example, name: "explicit-language-" + name, attachImage: diagnostics)
         try requireSamePixels(full, language, name: "native-vs-explicit-language-" + name)
@@ -150,6 +170,7 @@ final class WelcomeHeadlineLayoutTests: XCTestCase {
     private struct NativeMetricsHeadline: View {
         @ScaledMetric(relativeTo: .largeTitle) private var points: CGFloat = 40
         @ScaledMetric(relativeTo: .largeTitle) private var horizontal: CGFloat = 12
+        @Environment(\.displayScale) private var displayScale
 
         var body: some View {
             let face = Typeface.boldText ? Typeface.Face.semiBold.heavier : Typeface.Face.semiBold
@@ -159,7 +180,11 @@ final class WelcomeHeadlineLayoutTests: XCTestCase {
                 CFRange(location: 0, length: (word as NSString).length), "ur" as CFString)
             return Text("Tune in seconds.\nThen learn to play.").font(Font(fallback)).tracking(-1)
                 .typesettingLanguage(Locale(identifier: "ur").language)
-                .padding(.horizontal, horizontal)
+                // Share only the measured layout allowance, never the production TextRenderer.
+                .padding(WelcomeHeadline.nativeUrduLayoutInsets(
+                    ink: WelcomeHeadline.nativeUrduInkInsets(font: fallback,
+                        text: "سیکنڈوں میں ٹیون کریں۔\nپھر بجانا سیکھیں۔", displayScale: displayScale),
+                    minimumHorizontal: horizontal))
                 .fixedSize(horizontal: false, vertical: true)
         }
     }
@@ -168,11 +193,15 @@ final class WelcomeHeadlineLayoutTests: XCTestCase {
         var samples = 0
         for width in [CGFloat(280), 335, 362, 390] {
             for size in [DynamicTypeSize.large, .accessibility5] {
-                try autoreleasepool {
-                    let example = Example(width: width, size: size)
-                    let native = try render(WelcomeHeadline(), example: example, name: "native-metrics-production-" + example.name)
-                    let independent = try render(NativeMetricsHeadline(), example: example, name: "native-metrics-independent-" + example.name)
-                    try requireSamePixels(native, independent, name: "production-vs-native-metrics-" + example.name)
+                let example = Example(width: width, size: size)
+                do {
+                    try autoreleasepool {
+                        let native = try render(WelcomeHeadline(), example: example, name: "native-metrics-production-" + example.name)
+                        let independent = try render(NativeMetricsHeadline(), example: example, name: "native-metrics-independent-" + example.name)
+                        try requireSamePixels(native, independent, name: "production-vs-native-metrics-" + example.name)
+                    }
+                } catch {
+                    XCTFail("Independent native equality is required for every sample: \(example.name): \(error)")
                 }
                 samples += 1
             }
@@ -196,32 +225,38 @@ final class WelcomeHeadlineLayoutTests: XCTestCase {
         }
     }
 
-    /// Native Text and TextRenderer can report different intrinsic widths for overhanging ink.
-    /// A centred outer frame then moves the entire probe (11px in the observed native failure).
-    /// Pin every variant to one physical origin with an identical proposal, never register images.
+    /// Align the same logical leading edge before rasterization: right for RTL, left for LTR.
+    /// Native Text and TextRenderer can report different intrinsic widths for overhanging ink;
+    /// a physical-left anchor misplaces RTL text even when its typographic right edge agrees.
+    /// Both paths receive the same width proposal. No measured pixel offset enters placement.
     private struct PinnedCanvas: Layout {
         let width: CGFloat
+        let direction: LayoutDirection
 
         func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
             let size = subviews[0].sizeThatFits(ProposedViewSize(width: width, height: nil))
+            print("TIMBRE_WELCOME_CANVAS proposal=\(width) intrinsic=\(size) direction=\(direction)")
             return CGSize(width: width + 160, height: size.height + 160)
         }
 
         func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
-            subviews[0].place(at: CGPoint(x: bounds.minX + 80, y: bounds.minY + 80),
-                             anchor: UnitPoint(x: 0, y: 0),
+            let rtl = direction == .rightToLeft
+            let x = bounds.minX + 80 + (rtl ? width : 0)
+            subviews[0].place(at: CGPoint(x: x, y: bounds.minY + 80),
+                             anchor: UnitPoint(x: rtl ? 1 : 0, y: 0),
                              proposal: ProposedViewSize(width: width, height: nil))
         }
     }
 
     private func render<Content: View>(_ view: Content, example: Example, name: String, attachImage: Bool = true) throws -> Bitmap {
-        let content = PinnedCanvas(width: example.width) {
+        let content = PinnedCanvas(width: example.width, direction: example.direction) {
             view.foregroundStyle(Color.black)
                 .environment(\.layoutDirection, example.direction)
         }
         .background(Color.white)
         .environment(\.locale, Locale(identifier: example.language))
         .environment(\.dynamicTypeSize, example.size)
+        .environment(\.displayScale, 3)
         // Only the test canvas uses physical LTR coordinates; the native Text above keeps real RTL.
         .environment(\.layoutDirection, .leftToRight)
         let renderer = ImageRenderer(content: content)

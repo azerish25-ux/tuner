@@ -37,6 +37,78 @@ final class WelcomeFallbackDiagnosticsTests: XCTestCase {
                        "Tune in seconds.\nThen learn to play.")
     }
 
+    func testMeasuredInkAllowanceContainsIndependentGlyphPathsAtNormalAndAX5Sizes() throws {
+        let copy = "سیکنڈوں میں ٹیون کریں۔\nپھر بجانا سیکھیں۔"
+        let metrics = UIFontMetrics(forTextStyle: .largeTitle)
+        let normal = metrics.scaledValue(for: 40, compatibleWith: UITraitCollection(preferredContentSizeCategory: .large))
+        let ax5 = metrics.scaledValue(for: 40, compatibleWith: UITraitCollection(preferredContentSizeCategory: .accessibilityExtraExtraExtraLarge))
+        XCTAssertGreaterThan(ax5, normal)
+        var reports: [String] = []
+        for points in [normal, ax5] {
+            let font = WelcomeHeadline.nativeUrduFont(points: points, locale: Locale(identifier: "ur"))
+            XCTAssertEqual(CTFontGetSize(font), points, "The already-scaled font must not scale again")
+            let allowance = WelcomeHeadline.nativeUrduInkInsets(font: font, text: copy, displayScale: 3)
+            XCTAssertGreaterThan(allowance.leading, 0, "The actual Nastaliq overhang must be reserved")
+            XCTAssertEqual(allowance.leading, allowance.trailing, "Symmetric ink allowance cannot flip in RTL")
+            let paragraph = NSMutableParagraphStyle()
+            paragraph.baseWritingDirection = .rightToLeft
+            var checkedFragments = 0
+            for word in copy.split(whereSeparator: \.isWhitespace) {
+                let clusters = Array(word)
+                for start in clusters.indices {
+                    for end in (start + 1)...clusters.count {
+                        let fragment = String(clusters[start..<end])
+                        let attributed = NSAttributedString(string: fragment, attributes: [
+                            NSAttributedString.Key(kCTFontAttributeName as String): font,
+                            NSAttributedString.Key(kCTLanguageAttributeName as String): "ur",
+                            .tracking: -1, .paragraphStyle: paragraph
+                        ])
+                        let line = CTLineCreateWithAttributedString(attributed as CFAttributedString)
+                        var ascent: CGFloat = 0, descent: CGFloat = 0
+                        let width = CGFloat(CTLineGetTypographicBounds(line, &ascent, &descent, nil))
+                        let ink = try glyphPathBounds(line)
+                        guard !ink.isNull else { continue }
+                        checkedFragments += 1
+                        let reserved = CGRect(x: -allowance.leading, y: -descent - allowance.bottom,
+                            width: width + allowance.leading + allowance.trailing,
+                            height: ascent + descent + allowance.top + allowance.bottom)
+                        XCTAssertTrue(reserved.contains(ink), "Every actual glyph path needs drawing allowance: \(fragment), \(points)pt")
+                    }
+                }
+            }
+            XCTAssertGreaterThan(checkedFragments, 20, "The metric oracle must inspect real glyph paths")
+            let reserved = WelcomeHeadline.nativeUrduLayoutInsets(ink: allowance, minimumHorizontal: 12)
+            XCTAssertGreaterThanOrEqual(reserved.leading, allowance.leading)
+            XCTAssertGreaterThanOrEqual(reserved.trailing, allowance.trailing)
+            reports.append("points=\(points) measured=\(allowance) reserved=\(reserved)")
+        }
+        let attachment = XCTAttachment(string: reports.joined(separator: "\n"))
+        attachment.name = "urdu-measured-ink-allowance"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
+    /// Independent path union: do not validate CTLine's aggregate bounds with the same aggregate API.
+    private func glyphPathBounds(_ line: CTLine) throws -> CGRect {
+        var result = CGRect.null
+        let runs = try XCTUnwrap(CTLineGetGlyphRuns(line) as? [CTRun])
+        for run in runs {
+            let attributes = CTRunGetAttributes(run) as NSDictionary
+            let font = attributes[kCTFontAttributeName] as! CTFont
+            let count = CTRunGetGlyphCount(run)
+            var glyphs = [CGGlyph](repeating: 0, count: count)
+            var positions = [CGPoint](repeating: .zero, count: count)
+            CTRunGetGlyphs(run, CFRange(location: 0, length: 0), &glyphs)
+            CTRunGetPositions(run, CFRange(location: 0, length: 0), &positions)
+            for (glyph, position) in zip(glyphs, positions) {
+                if let path = CTFontCreatePathForGlyph(font, glyph, nil) {
+                    result = result.union(path.boundingBoxOfPath.offsetBy(dx: position.x, dy: position.y))
+                }
+            }
+        }
+        return result
+    }
+
     func testRecordUrduFallbackMetricsAndCandidateLayouts() throws {
         let face = Typeface.boldText ? Typeface.Face.semiBold.heavier : Typeface.Face.semiBold
         let name = face.fontName
@@ -99,7 +171,8 @@ final class WelcomeFallbackDiagnosticsTests: XCTestCase {
         let renderer = ImageRenderer(content: view.foregroundStyle(Color.black).frame(width: width)
             .fixedSize(horizontal: false, vertical: true).padding(80).background(Color.white)
             .environment(\.locale, Locale(identifier: "ur"))
-            .environment(\.layoutDirection, .rightToLeft).environment(\.dynamicTypeSize, size))
+            .environment(\.layoutDirection, .rightToLeft).environment(\.dynamicTypeSize, size)
+            .environment(\.displayScale, 3))
         renderer.scale = 3
         renderer.isOpaque = true
         let image = try XCTUnwrap(renderer.uiImage)

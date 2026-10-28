@@ -25681,5 +25681,28 @@
     "decision": "approved_exact_text",
     "appended_field_corrections": 1,
     "status": "applied-after-independent-exact-old-new-review"
+  },
+  {
+    "locale": "ar-SA",
+    "field": "/iphone_screenshot_captions/2/caption",
+    "capture": "65-song-perform",
+    "source": "See feedback as you play",
+    "old": "شاهد الملاحظات أثناء عزفك",
+    "new": "تابع أداءك أثناء العزف",
+    "reason": "Describes live musical performance feedback without the ambiguous literal comments/observations wording. Supporting pitch/timing line unchanged.",
+    "reviewer": "Independent AI source-aware and rendered-layout review",
+    "method": "independent_source_aware_ai",
+    "scope": "One Arabic phone screenshot headline only; unchanged listing material inherits existing review. AI source-aware review, not native-speaker certification or release approval.",
+    "parent_content_sha256": "27f4055850de5382eadec1d188da8b2917ecfde87aab56e17d05987552b001c1",
+    "reviewed_content_sha256": "8c1435c858c1648dd79cc49688e50c466025c6de838dcfbae65b109f84f7944d",
+    "source_content_sha256": "754d2e076d2781a888759d58965fd19aaf00d04625b3df13b80c0345d7bc9f78",
+    "decision": "approved_exact_text",
+    "appended_field_corrections": 1,
+    "reviewed_utc": "2026-10-28T07:27:00Z",
+    "visual_review": "Full recomposed large-phone frame reviewed; source app capture is 210cc08043b3a7ecab43d4fb482290d3ca5b53e5, not a new native build.",
+    "release_ready": false,
+    "evidence": "docs/l10n/reviews/arabic-performance-caption/independent-review.json",
+    "evidence_sha256": "8441234234d6cf5274adf2c4a0a0fc6ddcb992b006560a4c877b880db86a265d",
+    "status": "applied-after-independent-exact-old-new-review"
   }
 ]

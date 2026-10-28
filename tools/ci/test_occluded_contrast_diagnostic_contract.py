@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Portable reveal-diagnostic contracts; not native compilation, screenshots, or contrast proof."""
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -130,6 +131,60 @@ class SourceContracts(unittest.TestCase):
         self.assertIn('name: accessibility-reveal-diagnostics', upload)
         self.assertIn('if-no-files-found: error', upload)
         self.assertIn('ios/build/ContrastReveal.xcresult', upload)
+
+    def test_compact_reveal_artifacts_precede_unchanged_full_evidence_and_strict_aggregate(self):
+        names = ['Export opt-in contrast reveal attachments', 'Summarize opt-in contrast reveal log',
+                 'Upload compact contrast reveal logs and metadata', 'Upload contrast reveal exported attachments',
+                 'Upload separate contrast reveal diagnostic evidence',
+                 'Require every accessibility partition and expected test']
+        self.assertEqual(sorted(JOB.index('name: ' + name) for name in names),
+                         [JOB.index('name: ' + name) for name in names])
+        summary = step(names[1])
+        self.assertIn('summarize-log.py ci-out/contrast-reveal/test.log ci-out/contrast-reveal/test.summary.txt', summary)
+        for name, artifact in [(names[2], 'accessibility-reveal-logs'),
+                               (names[3], 'accessibility-reveal-attachments')]:
+            body = step(name)
+            self.assertIn("always() && steps.reveal-opt-in.outputs.enabled == 'true'", body)
+            self.assertIn('actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f', body)
+            self.assertIn('name: ' + artifact, body)
+            self.assertIn('if-no-files-found: error', body)
+            self.assertIn('retention-days: 7', body)
+            for forbidden in ['.xcresult', 'continue-on-error', '|| true', 'rm ', 'gzip ', 'zip ']:
+                self.assertNotIn(forbidden, body)
+        self.assertIn('path: ci-out/contrast-reveal/attachments', step(names[3]))
+        original = step(names[4])
+        self.assertIn('name: accessibility-reveal-diagnostics', original)
+        self.assertIn('path: |\n            ci-out/contrast-reveal\n            ios/build/ContrastReveal.xcresult', original)
+        self.assertIn('if-no-files-found: error', original)
+        self.assertIn('run: python3 tools/ci/accessibility_partitions.py aggregate', step(names[5]))
+
+    def test_compact_reveal_globs_preserve_original_metadata_and_exports_without_native_duplicate(self):
+        body = step('Upload compact contrast reveal logs and metadata')
+        patterns = [line.strip() for line in body.splitlines() if line.strip().startswith('ci-out/')]
+        self.assertEqual(patterns, ['ci-out/contrast-reveal/test*.log', 'ci-out/contrast-reveal/*.summary.txt',
+                                  'ci-out/contrast-reveal/*.json', 'ci-out/contrast-reveal/attachments/*.json',
+                                  'ci-out/contrast-reveal/attachments/*.txt'])
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            reveal = root / 'ci-out/contrast-reveal'
+            exported = reveal / 'attachments'
+            exported.mkdir(parents=True)
+            metadata = [reveal / 'test.log', reveal / 'test.summary.txt', reveal / 'invocation.json',
+                        exported / 'manifest.json', exported / 'hierarchy.json', exported / 'report.txt']
+            original_exports = [exported / 'native.png', exported / 'recording.mp4', exported / 'native-snapshot']
+            for path in metadata + original_exports:
+                path.write_bytes(('unaltered export: ' + path.name).encode())
+            native = root / 'ios/build/ContrastReveal.xcresult'
+            native.mkdir(parents=True)
+            with (native / 'data').open('wb') as handle:
+                handle.seek(600 * 1024 * 1024)
+                handle.write(b'0')
+            before = {path: hashlib.sha256(path.read_bytes()).hexdigest() for path in metadata + original_exports}
+            selected = {path for pattern in patterns for path in root.glob(pattern)}
+            self.assertEqual(selected, set(metadata))
+            self.assertLess(sum(path.stat().st_size for path in selected), 4096)
+            self.assertEqual(set(exported.rglob('*')), set(metadata[3:] + original_exports))
+            self.assertEqual({path: hashlib.sha256(path.read_bytes()).hexdigest() for path in before}, before)
 
     def test_hygiene_and_bounded_swift_line_lengths(self):
         self.assertEqual(comment_hygiene.lint_source('ios/TimbreUITests/' + CLASS + '.swift', SOURCE), [])
