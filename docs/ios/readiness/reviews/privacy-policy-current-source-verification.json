@@ -150,7 +150,7 @@
     "ios/Timbre/Learn/LessonMotion.swift": "ab46a5a3ff36f1a52f15231dbdf6a9f3cf940cc6bb590116afb47a93d61fa3ec",
     "ios/Timbre/Learn/LessonPlayer.swift": "5271cf5455c3eccbf722a30044708858daf0ba187295b142f72c9890b6c9f44e",
     "ios/Timbre/Learn/LessonResults.swift": "41cae10c31668216294a965c0d86fbca407c07cc13bcbc6e93f6bdc389a45ab1",
-    "ios/Timbre/Learn/LessonSteps.swift": "73b76277f2a4f2eeff6b7b0025f84ac14147d0affa576386a7645374d70c7825",
+    "ios/Timbre/Learn/LessonSteps.swift": "b4977029791d2b866e77030f27262889e989040b043d3e01bf83394ac3e5778d",
     "ios/Timbre/Learn/NotationEngraver.swift": "2892405016e4ab558e7a60de4ba0f7f885f561b509cece6a4842475e3965b3eb",
     "ios/Timbre/Learn/NotationGlyphs.swift": "9d9de08791dbb04271ed62f558182932b23c6aaff0219f292afe76d42de1e735",
     "ios/Timbre/Learn/NotationView.swift": "68be94dbae0fe07110db525b7106016da477f361f3e56ae69c89f4ba095a4e55",
@@ -1591,6 +1591,20 @@
           "previous_sha256": "50126dcc5c9d4659de2be308eebcb3a834c86e6022c2c9d6266e08ed150ac15c",
           "reviewed_sha256": "f64c4c1973d24fc3aa1715ecde295be05ffd12e45951fe7576b33e59dd0ec529",
           "assessment": "Removes the custom Urdu TextRenderer that shifts native RTL text; preserves measured CoreText ink reserve, native fallback font, uncapped scaled metrics, copy and accessibility heading. No change to permission or onboarding persistence."
+        }
+      ],
+      "limits": "Bounded presentation-source delta review only. No new HTTP availability, native execution, independent-review, portal, signed-archive or legal certification claimed. Prior HTTP dates, review history and all release-ready flags preserved."
+    },
+    {
+      "reviewed_utc": "2026-10-28T19:43:04.020070Z",
+      "reviewer": "Codex /root source review",
+      "base_revision": "e716a4a30db9d84828cc241d525a1f539fde34b0",
+      "changes": [
+        {
+          "path": "ios/Timbre/Learn/LessonSteps.swift",
+          "previous_sha256": "73b76277f2a4f2eeff6b7b0025f84ac14147d0affa576386a7645374d70c7825",
+          "reviewed_sha256": "b4977029791d2b866e77030f27262889e989040b043d3e01bf83394ac3e5778d",
+          "assessment": "Contains only the decorative chip reward within a faded 60-point band and reserves 16 additional vertical points. Existing listening orb, learning actions and microphone lifecycle are unchanged. No new collection or persistence."
         }
       ],
       "limits": "Bounded presentation-source delta review only. No new HTTP availability, native execution, independent-review, portal, signed-archive or legal certification claimed. Prior HTTP dates, review history and all release-ready flags preserved."

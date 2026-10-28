@@ -1,0 +1,99 @@
+name: Readiness regressions
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: readiness-regressions-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+jobs:
+  tooling:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [ci, l10n, marketing]
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - name: Install tooling dependencies
+        run: python3 -m pip install -r tools/marketing/requirements.txt
+      - name: Run complete tooling suite on POSIX
+        env:
+          SUITE: ${{ matrix.suite }}
+        run: |
+          set -euo pipefail
+          mkdir -p ci-out
+          git rev-parse HEAD > ci-out/source-revision.txt
+          case "$SUITE" in
+            ci) directory=tools/ci ;;
+            l10n) directory=tools/l10n/tests ;;
+            marketing) directory=tools/marketing/tests ;;
+            *) exit 1 ;;
+          esac
+          python3 -m unittest discover -s "$directory" -p 'test_*.py' 2>&1 | tee "ci-out/$SUITE.log"
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        if: always()
+        with:
+          name: readiness-tooling-${{ matrix.suite }}
+          path: ci-out
+          if-no-files-found: error
+          retention-days: 14
+  compact:
+    # Keep these original short-screen checks separate from the normal-phone tour.
+    needs: tooling
+    if: ${{ always() && !cancelled() }}
+    runs-on: macos-15
+    timeout-minutes: 65
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+      HOMEBREW_NO_AUTO_UPDATE: '1'
+      HOMEBREW_NO_INSTALL_CLEANUP: '1'
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          persist-credentials: false
+      - name: Create an owned compact iPhone simulator
+        run: |
+          set -euo pipefail
+          mkdir -p ci-out
+          git rev-parse HEAD > ci-out/source-revision.txt
+          xcrun simctl list runtimes --json > ci-out/runtimes.json
+          RUNTIME=$(python3 -c 'import json; r=json.load(open("ci-out/runtimes.json"))["runtimes"]; print(max((x for x in r if x.get("isAvailable") and x["identifier"].startswith("com.apple.CoreSimulator.SimRuntime.iOS-") and int(x["version"].split(".")[0])>=18), key=lambda x:tuple(map(int,x["version"].split("."))))["identifier"])')
+          DEVICE_ID=$(xcrun simctl create "Timbre compact $GITHUB_RUN_ID" com.apple.CoreSimulator.SimDeviceType.iPhone-SE-3rd-generation "$RUNTIME")
+          echo "DEVICE_ID=$DEVICE_ID" >> "$GITHUB_ENV"
+          xcrun simctl boot "$DEVICE_ID"
+          xcrun simctl bootstatus "$DEVICE_ID" -b
+      - name: Generate project and build compact app and tests
+        timeout-minutes: 25
+        run: |
+          set -euo pipefail
+          command -v xcodegen >/dev/null 2>&1 || brew install xcodegen
+          (cd ios && xcodegen generate)
+          bash tools/ci/ensure-metal.sh
+          xcodebuild build-for-testing -project ios/Timbre.xcodeproj -scheme Timbre \
+            -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd \
+            CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/build.log
+          xcrun simctl install "$DEVICE_ID" ios/build/dd/Build/Products/Debug-iphonesimulator/Timbre.app
+          xcrun simctl privacy "$DEVICE_ID" grant microphone com.shahradazerisharghi.timbre
+      - name: Eight real compact TuneCheck layouts
+        timeout-minutes: 42
+        run: python3 tools/ci/tunecheck_layout.py --device-id "$DEVICE_ID" --output ci-out/compact
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        if: always()
+        with:
+          name: readiness-compact-originals
+          path: ci-out
+          if-no-files-found: error
+          retention-days: 14
+      - name: Remove only the owned simulator
+        if: ${{ always() && env.DEVICE_ID != '' }}
+        run: |
+          xcrun simctl shutdown "$DEVICE_ID" || true
+          xcrun simctl delete "$DEVICE_ID"

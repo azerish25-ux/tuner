@@ -1341,17 +1341,35 @@ struct TuneCheckStep: View {
         .animation(Motion.pluck, value: index)
         .animation(Motion.pluck, value: tuned)
         .background(alignment: .leading) {
-            // Behind the chips, centred on the one just tuned (outside the animation, so it doesn't slide):
-            // sparks leave from the chip's rim, no ring, so nothing reaches across the title or the note.
+            // A local reward behind the newly tuned chip, not a second full-size listening orb.
+            // Keep its original canvas/origin, but fade only the decoration into a reserved band:
+            // ring:false still draws inner rings and outer nodes, so zIndex alone cannot protect text.
             SparkBurst(trigger: burst, color: accent, reach: 70, startFraction: 0.32, ring: false)
                 .frame(width: 140, height: 140)
+                .mask { Self.chipRewardMask }
                 .offset(x: CGFloat(burstAt) * (Self.chip + 8) + Self.chip / 2 - 70)
         }
+        // Stable even between rewards: no layout jump when a string locks, and no text is masked.
+        .padding(.vertical, Self.chipRewardFade)
         // Strings lie in space, not in reading order: right-to-left languages don't turn them round.
         .environment(\.layoutDirection, .leftToRight)
     }
 
     private static let chip: CGFloat = 44
+    static let chipRewardFade: CGFloat = 8
+    static var chipRewardHeight: CGFloat { chip + 2 * chipRewardFade }
+
+    /// Only the reward is masked. The opaque centre covers the chip; the outer eight points fade
+    /// to clear before the band ends, leaving the stack's existing 14-point text gap untouched.
+    static var chipRewardMask: some View {
+        let edge = chipRewardFade / chipRewardHeight
+        return LinearGradient(stops: [.init(color: .clear, location: 0),
+                                      .init(color: .white, location: edge),
+                                      .init(color: .white, location: 1 - edge),
+                                      .init(color: .clear, location: 1)],
+                              startPoint: .top, endPoint: .bottom)
+            .frame(height: chipRewardHeight)
+    }
 
     private func stringChip(_ string: RailString, done: Bool, current: Bool) -> some View {
         let ink = done ? Palette.onAccent : current ? Palette.ink : Palette.inkSoft
