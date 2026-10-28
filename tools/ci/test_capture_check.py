@@ -242,6 +242,37 @@ class CaptureLifecycleEvidenceContracts(unittest.TestCase):
         self.assertIn('let ending = tunerLock(strings: strings)', self.ui)
         self.assertIn('if !hold.held { problem =', self.ui)
 
+    def test_still_tuner_lead_frames_do_not_repluck_during_strict_verification(self):
+        cases = [
+            ('test16StoreViolinStage', 'violin.standard.4', '49d-tune-violin-locked', 'strings: 3'),
+            ('test20StoreCelloStage', 'cello.standard.4', '49e-tune-cello-locked', 'strings: 3'),
+            ('test21StoreUkuleleStage', 'ukulele.soprano.4', '17b-tune-ukulele-locked', 'strings: 3, stages: ["3d", "2d"]'),
+        ]
+        for method, instrument, frame, arguments in cases:
+            with self.subTest(method=method):
+                body = self.ui.split('func ' + method + '() throws {', 1)[1].split('\n    }', 1)[0]
+                self.assertIn('launch(pitch: true, scene: "tune-locked", instrument: "' + instrument + '", comet: false)', body)
+                self.assertIn('storeFrame("' + frame + '", tuner: lockedTunerFrame(' + arguments + '))', body)
+                self.assertNotIn('comet: true', body)
+        # No old picture is accepted using later state; the complete hold and final rejection remain.
+        capture = self.ui.split('private func lockedTunerFrame(', 1)[1].split('private func readoutRegion()', 1)[0]
+        hold = capture.index('let hold = lockHolds(stages: stages)')
+        picture = capture.index('picture = XCUIScreen.main.screenshot()', hold)
+        ending = capture.index('let ending = tunerLock(strings: strings)', picture)
+        self.assertLess(hold, picture)
+        self.assertLess(picture, ending)
+        self.assertIn('if !ending.shown { problem =', capture[ending:])
+        self.assertIn('XCTAssertTrue(hold.held', capture[ending:])
+
+    def test_explicit_animated_comet_opt_in_and_behavior_remain_available(self):
+        self.assertIn('if comet { app.launchEnvironment["TIMBRE_SCENE_COMET"] = "1" }', self.ui)
+        self.assertIn('private func cometPicture(readout: CGRect)', self.ui)
+        self.assertIn('static let comet = TestSupport.isOn(.sceneComet)', self.scene)
+        self.assertIn('static let cometPeriod = 4.0', self.scene)
+        loop = self.scene.split('guard Option.comet else { return }', 1)[1].split('/// Selects a string', 1)[0]
+        self.assertIn('Task.sleep(for: .seconds(cometPeriod))', loop)
+        self.assertIn('select(held, store)', loop)
+
     def test_evidence_fails_on_stale_or_gapped_or_nonmonotonic_samples(self):
         self.assertIn('maximumGap = 0.3', self.evidence)
         self.assertIn('seconds.isFinite, window.isFinite', self.evidence)

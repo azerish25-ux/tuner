@@ -14,7 +14,7 @@ import sys
 import time
 import uuid
 
-from simulator_priming_signal import wait_for_stage_rest
+from simulator_priming_signal import prepare_stage_rest_container, wait_for_stage_rest
 
 BUNDLE = 'com.shahradazerisharghi.timbre'
 SIMULATOR_PROCESSES = ('SpringBoard', 'testmanagerd', 'runningboardd', 'lsd', 'installd',
@@ -249,6 +249,13 @@ def warmup(app: Path, device: str, languages: list[str], locale: str, out: Path)
         predicate = simulator_predicate(executable)
         receipt['total_budget_seconds'] = 300
         invoke(['xcrun', 'simctl', 'install', device, app])
+        # Resolve the exact installed data container before app startup can overload simulator services.
+        # The prepared callable pins its identity and revalidates locally after successful launch.
+        receipt['rest_signal_container_lookup_phase'] = 'after-install-before-launch'
+        prepared_container = prepare_stage_rest_container(
+            device, storage, deadline - 30,
+            lambda: probe_query(['xcrun', 'simctl', 'get_app_container', device, BUNDLE, 'data'],
+                                record_key='rest_signal_commands'))
         # A successful CLI grant is a fixture action, not observed in-app permission state.
         receipt['microphone_runtime_permission'] = 'not_observed'
         receipt['microphone_grant_command_succeeded'] = False
@@ -268,8 +275,7 @@ def warmup(app: Path, device: str, languages: list[str], locale: str, out: Path)
         # It is a lifecycle milestone, not GPU completion or passing UI evidence. Keep cleanup's 30s.
         receipt['rest_signal'] = wait_for_stage_rest(
             device, storage, receipt['pid'], launch_started_epoch, deadline - 30,
-            lambda: probe_query(['xcrun', 'simctl', 'get_app_container', device, BUNDLE, 'data'],
-                                record_key='rest_signal_commands'), out)
+            prepared_container, out)
         os.kill(receipt['pid'], 0)
         invoke(['xcrun', 'simctl', 'terminate', device, BUNDLE], timeout=30)
         launched = False

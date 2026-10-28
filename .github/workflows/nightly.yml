@@ -247,7 +247,11 @@ jobs:
 
   archive:
     # Exactly one unsigned Release archive, independent of every simulator shard.
-    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'captures')
+    # Scheduling only: retain independent evidence on producer failure/skip, but honor workflow cancellation.
+    needs: tour-build
+    if: >-
+      always() && !cancelled()
+      && (github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'captures'))
     timeout-minutes: 30
     runs-on: macos-15
     steps:
@@ -287,7 +291,11 @@ jobs:
 
   ipad:
     # The build, the Full Screen Apps reboot and both orientations' captures take about 25 minutes on a busy runner.
-    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'captures')
+    # Scheduling only: retain independent evidence on producer failure/skip, but honor workflow cancellation.
+    needs: tour-build
+    if: >-
+      always() && !cancelled()
+      && (github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'captures'))
     timeout-minutes: 45
     runs-on: macos-15
     steps:
@@ -429,7 +437,11 @@ jobs:
     # The screens where layout breaks first, under one setting per run (AccessibilityMatrixUITests): the largest
     # text size, Bold Text, Increase Contrast, left-handed, left-handed upside down and Arabic. Pictures and audit
     # reports for review; a screen that can't be reached fails.
-    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'captures') || contains(github.event.pull_request.labels.*.name, 'accessibility')
+    # Scheduling only: retain independent evidence on producer failure/skip, but honor workflow cancellation.
+    needs: tour-build
+    if: >-
+      always() && !cancelled()
+      && (github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'captures') || contains(github.event.pull_request.labels.*.name, 'accessibility'))
     timeout-minutes: 75
     runs-on: macos-15
     steps:
@@ -509,7 +521,11 @@ jobs:
 
   tsan:
     # The engine's tests under the thread sanitizer: data races the compiler's checking can't see.
-    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'captures')
+    # Scheduling only: retain independent evidence on producer failure/skip, but honor workflow cancellation.
+    needs: tour-build
+    if: >-
+      always() && !cancelled()
+      && (github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'captures'))
     # A full suite took 28m05 before setup/build; another reached 30m with only 427 completions.
     # Leave bounded runner-variation headroom without filtering tests or weakening the sanitizer.
     timeout-minutes: 45

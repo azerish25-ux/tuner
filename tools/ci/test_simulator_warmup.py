@@ -36,6 +36,7 @@ class WarmupTests(unittest.TestCase):
             out = root / 'diagnostics'
             with patch.object(warm.subprocess, 'run', side_effect=native), patch.object(warm.time, 'sleep'), \
                  patch.object(warm.os, 'kill') as alive, patch.object(warm, 'wait_for_stage_rest', return_value={'synthetic': True}), \
+                 patch.object(warm, 'prepare_stage_rest_container', return_value=lambda: 'synthetic'), \
                  patch.dict(os.environ, {'GITHUB_SHA': 'source'}):
                 if failure:
                     with self.assertRaises(RuntimeError):
@@ -154,7 +155,8 @@ class WarmupTests(unittest.TestCase):
                     now[0] += kwargs['timeout']
                 return SimpleNamespace(returncode=0, stdout='')
             with patch.object(warm.time, 'monotonic', side_effect=lambda: now[0]), \
-                 patch.object(warm.subprocess, 'run', side_effect=native):
+                 patch.object(warm.subprocess, 'run', side_effect=native), \
+                 patch.object(warm, 'prepare_stage_rest_container', return_value=lambda: 'synthetic'):
                 with self.assertRaises(RuntimeError):
                     warm.warmup(app, DEVICE, ['en'], 'en_US', root / 'out')
             self.assertEqual(calls[-1][0][2], 'terminate')
@@ -240,7 +242,8 @@ class DiagnosticIdentityTests(unittest.TestCase):
 
             out = Path(directory) / 'out'
             with patch.object(warm.subprocess, 'run', side_effect=native), patch.object(warm.os, 'kill'), \
-                 patch.object(warm.time, 'sleep'), patch.object(warm, 'wait_for_stage_rest', return_value={'synthetic': True}):
+                 patch.object(warm.time, 'sleep'), patch.object(warm, 'wait_for_stage_rest', return_value={'synthetic': True}), \
+                 patch.object(warm, 'prepare_stage_rest_container', return_value=lambda: 'synthetic'):
                 if failure:
                     with self.assertRaises(RuntimeError):
                         warm.warmup(app, DEVICE, ['en'], 'en_US', out)
@@ -341,7 +344,8 @@ class ProcessProbeTests(unittest.TestCase):
                     return SimpleNamespace(returncode=0, stdout=malformed if malformed is not None else json.dumps(payload), stderr='')
                 return SimpleNamespace(returncode=0, stdout='', stderr='')
 
-            with patch.object(warm.subprocess, 'run', side_effect=native), patch.object(warm.time, 'sleep'):
+            with patch.object(warm.subprocess, 'run', side_effect=native), \
+                 patch.object(warm, 'prepare_stage_rest_container', return_value=lambda: 'synthetic'), patch.object(warm.time, 'sleep'):
                 with self.assertRaises(RuntimeError):
                     warm.warmup(app, DEVICE, ['en'], 'en_US', out)
             return json.loads((out / 'status.json').read_text()), calls
@@ -429,7 +433,8 @@ class ProcessProbeTests(unittest.TestCase):
                 return SimpleNamespace(returncode=0, stdout='', stderr='')
 
             with patch.object(warm.time, 'monotonic', side_effect=lambda: now[0]), \
-                 patch.object(warm.subprocess, 'run', side_effect=native):
+                 patch.object(warm.subprocess, 'run', side_effect=native), \
+                 patch.object(warm, 'prepare_stage_rest_container', return_value=lambda: 'synthetic'):
                 with self.assertRaises(RuntimeError):
                     warm.warmup(app, DEVICE, ['en'], 'en_US', root / 'out')
             status = json.loads((root / 'out/status.json').read_text())

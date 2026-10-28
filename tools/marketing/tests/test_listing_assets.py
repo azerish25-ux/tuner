@@ -453,9 +453,15 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn('let hold = lockHolds(stages: stages)', locked)
         self.assertIn('XCTAssertTrue(hold.held', locked)
         self.assertIn('as: name + "-wrong"', source)
-        # The violin CPP's optional shimmer and actual video tour are not changed by this still repair.
-        violin = source.split('func test16StoreViolinStage()', 1)[1].split('func test20StoreCelloStage()', 1)[0]
-        self.assertIn('comet: true', violin)
+        # All still leads preserve the same real lock while the fresh screenshot and final AX state are checked.
+        for name in ('test16StoreViolinStage', 'test20StoreCelloStage', 'test21StoreUkuleleStage'):
+            body = source.split('func ' + name + '() throws {', 1)[1].split('\n    }', 1)[0]
+            self.assertIn('comet: false', body)
+            self.assertIn('lockedTunerFrame(strings: 3', body)
+            self.assertNotIn('comet: true', body)
+        # Explicit animation capability remains; this does not claim a separate exercised video test.
+        self.assertIn('if comet { app.launchEnvironment["TIMBRE_SCENE_COMET"] = "1" }', source)
+        self.assertIn('private func cometPicture(readout: CGRect)', source)
 
     def test_runner_preserves_gate_failure_and_never_swallows_assertions(self):
         source = (assets.ROOT / 'tools/marketing/run_listing_assets.py').read_text()

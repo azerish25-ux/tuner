@@ -990,18 +990,22 @@ final class TimbreUITests: XCTestCase {
     }
 
     /// The violin page's lead frame (a Custom Product Page): the same scene on the 3D violin, G, D and A locked (the
-    /// third held, mid-comet).
+    /// third held).
     func test16StoreViolinStage() throws {
         app.launchEnvironment["TIMBRE_DEBUG_STATE"] = "1"
-        launch(pitch: true, scene: "tune-locked", instrument: "violin.standard.4", comet: true)
+        // Keep this still frame's real lock through its continuous proof and final semantic check.
+        // Periodic same-string replucks would restart the hold between those observations.
+        launch(pitch: true, scene: "tune-locked", instrument: "violin.standard.4", comet: false)
         storeFrame("49d-tune-violin-locked", tuner: lockedTunerFrame(strings: 3))
     }
 
     /// The cello page's lead frame (a Custom Product Page): the same scene on the 3D cello, C, G and D locked (the third
-    /// held, mid-comet).
+    /// held).
     func test20StoreCelloStage() throws {
         app.launchEnvironment["TIMBRE_DEBUG_STATE"] = "1"
-        launch(pitch: true, scene: "tune-locked", instrument: "cello.standard.4", comet: true)
+        // Keep this still frame's real lock through its continuous proof and final semantic check.
+        // Periodic same-string replucks would restart the hold between those observations.
+        launch(pitch: true, scene: "tune-locked", instrument: "cello.standard.4", comet: false)
         storeFrame("49e-tune-cello-locked", tuner: lockedTunerFrame(strings: 3))
     }
 
@@ -1009,7 +1013,9 @@ final class TimbreUITests: XCTestCase {
     /// ships), G, C and E locked.
     func test21StoreUkuleleStage() throws {
         app.launchEnvironment["TIMBRE_DEBUG_STATE"] = "1"
-        launch(pitch: true, scene: "tune-locked", instrument: "ukulele.soprano.4", comet: true)
+        // Keep this still frame's real lock through its continuous proof and final semantic check.
+        // Periodic same-string replucks would restart the hold between those observations.
+        launch(pitch: true, scene: "tune-locked", instrument: "ukulele.soprano.4", comet: false)
         storeFrame("17b-tune-ukulele-locked", tuner: lockedTunerFrame(strings: 3, stages: ["3d", "2d"]))
     }
 

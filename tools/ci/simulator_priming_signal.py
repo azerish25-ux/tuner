@@ -8,6 +8,7 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+import os
 from pathlib import Path
 import time
 import uuid
@@ -46,6 +47,46 @@ def validate_signal(raw, session, pid, launch_started_epoch, observed_epoch):
     return value
 
 
+def prepare_stage_rest_container(device, session, deadline, query_container):
+    """Resolve once before launch; later calls revalidate locally without asking simctl.
+
+    Pin the installed data directory, not app readiness. A replaced directory, changed
+    bundle owner, symlink, existing session namespace or exhausted budget is a failure.
+    """
+    if str(uuid.UUID(device)).lower() != device.lower() or str(uuid.UUID(session)) != session:
+        raise ValueError('Priming preflight requires exact device and fresh canonical session UUIDs')
+    if time.monotonic() >= deadline:
+        raise TimeoutError('Priming container preflight budget exhausted; 30s reserved for cleanup')
+    try:
+        container = scoped_container(query_container(), device.upper())
+        info = container.lstat()
+        if info.st_uid != os.getuid():
+            raise ValueError('Priming data container is not owned by the current runner')
+        identity = (info.st_dev, info.st_ino, info.st_uid)
+        namespace = container / 'Library/Application Support/TimbreUITests' / session
+        no_symlinks(namespace, allow_missing=True)
+        if namespace.exists():
+            raise ValueError('Fresh priming session namespace already exists')
+        if time.monotonic() >= deadline:
+            raise TimeoutError('Priming container preflight exceeded its cleanup-reserved deadline')
+    except CollectionError as error:
+        raise ValueError(str(error)) from error
+
+    def revalidate():
+        # The successful launch still supplies the PID/time used by wait_for_stage_rest.
+        # Cached path text alone is not trusted across app startup.
+        try:
+            current = scoped_container(str(container), device.upper())
+            current_info = current.lstat()
+            if (current_info.st_dev, current_info.st_ino, current_info.st_uid) != identity:
+                raise ValueError('Prepared priming data container identity changed after launch')
+        except CollectionError as error:
+            raise ValueError(str(error)) from error
+        return str(current)
+
+    return revalidate
+
+
 def wait_for_stage_rest(device, session, pid, launch_started_epoch, deadline, query_container, out):
     """Deadline already excludes cleanup's reserve. Missing signal is a failure, never success."""
     if str(uuid.UUID(device)).lower() != device.lower() or str(uuid.UUID(session)) != session:
@@ -74,6 +115,10 @@ def wait_for_stage_rest(device, session, pid, launch_started_epoch, deadline, qu
                     raise
                 raw = None
             if raw is not None:
+                # The prepared callable is local-only. Recheck its pinned directory at acceptance,
+                # including when the file appeared after several missing-signal polls.
+                if scoped_container(query_container(), device.upper()) != container:
+                    raise ValueError('Priming data container changed while waiting for its signal')
                 observed_epoch = time.time()
                 value = validate_signal(raw, session, pid, launch_started_epoch, observed_epoch)
                 # Preserve original bytes for diagnostics, but never write into the simulator's data container.

@@ -132,6 +132,124 @@ class SignalTests(unittest.TestCase):
             signal.wait_for_stage_rest(DEVICE, SESSION, 123, 1000, float('inf'), query, Path('unused'))
 
 
+class ContainerPreflightTests(unittest.TestCase):
+    def fixture(self, root):
+        container, source, out = SignalTests().fixture(root)
+        source.parent.rmdir()  # The generated session must not exist before this launch.
+        return container, source, out
+
+    def test_prepared_lookup_queries_once_and_keeps_postlaunch_signal_validation(self):
+        with tempfile.TemporaryDirectory() as directory:
+            container, source, out = self.fixture(Path(directory).resolve())
+            calls = []
+            def query(): calls.append(True); return str(container) + '\n'
+            with patch.object(signal.time, 'monotonic', return_value=0), patch.object(signal.time, 'time', return_value=1002):
+                prepared = signal.prepare_stage_rest_container(DEVICE, SESSION, 270, query)
+                self.assertFalse(source.parent.exists())
+                source.parent.mkdir(); source.write_bytes(payload())
+                result = signal.wait_for_stage_rest(DEVICE, SESSION, 123, 1000, 270, prepared, out)
+            self.assertEqual(calls, [True])
+            self.assertEqual(result['observed']['pid'], 123)
+            self.assertEqual((out/'priming-stage-signal.log').read_bytes(), payload())
+
+    def test_existing_namespace_is_rejected_before_launch_even_when_empty(self):
+        with tempfile.TemporaryDirectory() as directory:
+            container, source, out = self.fixture(Path(directory).resolve()); source.parent.mkdir()
+            with self.assertRaisesRegex(ValueError, 'namespace already exists'):
+                signal.prepare_stage_rest_container(DEVICE, SESSION, float('inf'), lambda: str(container))
+
+    def test_existing_namespace_symlink_is_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            container, source, out = self.fixture(Path(directory).resolve()); source.parent.symlink_to(out)
+            with self.assertRaisesRegex(ValueError, 'Symlink'):
+                signal.prepare_stage_rest_container(DEVICE, SESSION, float('inf'), lambda: str(container))
+
+    def test_foreign_runner_owner_is_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            container, source, out = self.fixture(Path(directory).resolve())
+            with patch.object(signal.os, 'getuid', return_value=container.stat().st_uid + 1), \
+                 self.assertRaisesRegex(ValueError, 'current runner'):
+                signal.prepare_stage_rest_container(DEVICE, SESSION, float('inf'), lambda: str(container))
+
+    def test_container_replacement_after_launch_is_rejected_even_with_matching_bundle(self):
+        with tempfile.TemporaryDirectory() as directory:
+            container, source, out = self.fixture(Path(directory).resolve())
+            prepared = signal.prepare_stage_rest_container(DEVICE, SESSION, float('inf'), lambda: str(container))
+            moved = container.with_name(container.name + '-retained'); container.rename(moved); container.mkdir()
+            (container/'.com.apple.mobile_container_manager.metadata.plist').write_bytes(
+                plistlib.dumps({'MCMMetadataIdentifier': signal.BUNDLE}))
+            with self.assertRaisesRegex(ValueError, 'identity changed'): prepared()
+            self.assertTrue(moved.exists())
+
+    def test_changed_metadata_or_symlink_after_launch_fails_closed(self):
+        for mutation in ['metadata', 'symlink']:
+            with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as directory:
+                container, source, out = self.fixture(Path(directory).resolve())
+                prepared = signal.prepare_stage_rest_container(DEVICE, SESSION, float('inf'), lambda: str(container))
+                if mutation == 'metadata':
+                    (container/'.com.apple.mobile_container_manager.metadata.plist').write_bytes(
+                        plistlib.dumps({'MCMMetadataIdentifier': 'foreign'}))
+                else:
+                    moved = container.with_name(container.name + '-retained'); container.rename(moved); container.symlink_to(moved)
+                with self.assertRaises(ValueError): prepared()
+                self.assertFalse((out/'priming-stage-signal.log').exists())
+
+    def test_invalid_uuid_or_expired_budget_does_not_query(self):
+        def query(): self.fail('No query is permitted')
+        for device, session in [('booted', SESSION), (DEVICE, SESSION.upper()), (DEVICE, '../foreign')]:
+            with self.subTest(device=device, session=session), self.assertRaises(ValueError):
+                signal.prepare_stage_rest_container(device, session, float('inf'), query)
+        with patch.object(signal.time, 'monotonic', return_value=270), self.assertRaises(TimeoutError):
+            signal.prepare_stage_rest_container(DEVICE, SESSION, 270, query)
+
+    def test_query_timeout_and_late_validation_never_prepare_success(self):
+        def failure(): raise subprocess.TimeoutExpired(['get_app_container'], 5)
+        with self.assertRaises(subprocess.TimeoutExpired):
+            signal.prepare_stage_rest_container(DEVICE, SESSION, float('inf'), failure)
+        with tempfile.TemporaryDirectory() as directory:
+            container, source, out = self.fixture(Path(directory).resolve())
+            with patch.object(signal.time, 'monotonic', side_effect=[0, 271]), self.assertRaises(TimeoutError):
+                signal.prepare_stage_rest_container(DEVICE, SESSION, 270, lambda: str(container))
+
+    def test_preflight_rejects_foreign_device_bundle_and_malformed_paths(self):
+        with tempfile.TemporaryDirectory() as directory:
+            container, source, out = self.fixture(Path(directory).resolve())
+            for response in ['booted', '/tmp/foreign', '/tmp\x00bad', str(container).replace(DEVICE, OTHER.upper())]:
+                with self.subTest(response=response), self.assertRaises(ValueError):
+                    signal.prepare_stage_rest_container(DEVICE, SESSION, float('inf'), lambda: response)
+            (container/'.com.apple.mobile_container_manager.metadata.plist').write_bytes(
+                plistlib.dumps({'MCMMetadataIdentifier': 'foreign'}))
+            with self.assertRaisesRegex(ValueError, 'wrong bundle'):
+                signal.prepare_stage_rest_container(DEVICE, SESSION, float('inf'), lambda: str(container))
+
+    def test_container_replaced_during_signal_read_is_rejected_before_copy(self):
+        with tempfile.TemporaryDirectory() as directory:
+            container, source, out = self.fixture(Path(directory).resolve())
+            prepared = signal.prepare_stage_rest_container(DEVICE, SESSION, float('inf'), lambda: str(container))
+            source.parent.mkdir(); source.write_bytes(payload())
+            original = signal.bounded_read
+            def changed(path, limit):
+                raw = original(path, limit)
+                if path == source:
+                    moved = container.with_name(container.name + '-retained'); container.rename(moved); container.mkdir()
+                    (container/'.com.apple.mobile_container_manager.metadata.plist').write_bytes(
+                        plistlib.dumps({'MCMMetadataIdentifier': signal.BUNDLE}))
+                return raw
+            with patch.object(signal, 'bounded_read', side_effect=changed), self.assertRaisesRegex(ValueError, 'identity changed'):
+                signal.wait_for_stage_rest(DEVICE, SESSION, 123, 1000, float('inf'), prepared, out)
+            self.assertFalse((out/'priming-stage-signal.log').exists())
+
+    def test_prepared_container_never_accepts_foreign_pid_or_stale_signal(self):
+        for changes in [{'pid': 124}, {'sessionID': OTHER}, {'utcEpoch': 999}]:
+            with self.subTest(changes=changes), tempfile.TemporaryDirectory() as directory:
+                container, source, out = self.fixture(Path(directory).resolve())
+                prepared = signal.prepare_stage_rest_container(DEVICE, SESSION, float('inf'), lambda: str(container))
+                source.parent.mkdir(); source.write_bytes(payload(**changes))
+                with patch.object(signal.time, 'time', return_value=1002), self.assertRaises(ValueError):
+                    signal.wait_for_stage_rest(DEVICE, SESSION, 123, 1000, float('inf'), prepared, out)
+                self.assertFalse((out/'priming-stage-signal.log').exists())
+
+
 class IntegrationTests(unittest.TestCase):
     def execute(self, milestone_failure=None, launch_failure=False, terminate_failure=False):
         with tempfile.TemporaryDirectory() as directory:
@@ -155,6 +273,7 @@ class IntegrationTests(unittest.TestCase):
                 return {'synthetic': True}
             with patch.object(warm.subprocess,'run',side_effect=native), \
                  patch.object(warm,'wait_for_stage_rest',side_effect=milestone) as wait, \
+                 patch.object(warm,'prepare_stage_rest_container',return_value=lambda: 'synthetic'), \
                  patch.object(warm.time,'monotonic',side_effect=lambda:now[0]), patch.object(warm.os,'kill'):
                 if milestone_failure or launch_failure or terminate_failure:
                     with self.assertRaises(RuntimeError): warm.warmup(app,DEVICE,['en'],'en_US',out)
@@ -167,10 +286,13 @@ class IntegrationTests(unittest.TestCase):
             (app/'Info.plist').write_bytes(plistlib.dumps({'CFBundleIdentifier': warm.BUNDLE, 'CFBundleExecutable':'Timbre'}))
             (app/'Timbre').write_bytes(b'fixture')
             container, source, unused = SignalTests().fixture(root)
-            events=[]
+            events=[]; launched=[False]
             def native(command, **kwargs):
                 events.append((command,kwargs))
+                if command[:3] == ['xcrun','simctl','get_app_container'] and launched[0]:
+                    raise subprocess.TimeoutExpired(command, 5)
                 if command[:3] == ['xcrun','simctl','launch']:
+                    launched[0]=True
                     session=kwargs['env']['SIMCTL_CHILD_TIMBRE_TEST_STORAGE_ID']
                     actual=source.parent.parent/session/signal.FILENAME;actual.parent.mkdir()
                     actual.write_bytes(payload(sessionID=session,utcEpoch=1002))
@@ -182,9 +304,31 @@ class IntegrationTests(unittest.TestCase):
             status=json.loads((out/'status.json').read_text())
             self.assertTrue(status['passed'])
             self.assertEqual(status['rest_signal']['observed']['sessionID'],status['automation_storage_id'])
+            self.assertEqual(status['rest_signal_container_lookup_phase'], 'after-install-before-launch')
             self.assertEqual(len(status['rest_signal_commands']),1)
             self.assertEqual(status['rest_signal_commands'][0]['timeout_seconds'],5)
-            self.assertEqual([c[0][2] for c in events],['install','privacy','launch','get_app_container','terminate'])
+            self.assertEqual([c[0][2] for c in events],['install','get_app_container','privacy','launch','terminate'])
+
+    def test_prelaunch_container_timeout_retains_failure_without_launch_or_signal_wait(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory).resolve(); app=root/'Timbre.app'; app.mkdir(); out=root/'out'
+            (app/'Info.plist').write_bytes(plistlib.dumps({'CFBundleIdentifier': warm.BUNDLE, 'CFBundleExecutable':'Timbre'}))
+            (app/'Timbre').write_bytes(b'fixture'); calls=[]
+            def native(command, **kwargs):
+                calls.append((command, kwargs))
+                if command[:3] == ['xcrun','simctl','get_app_container']:
+                    self.assertEqual(kwargs['timeout'], 5)
+                    raise subprocess.TimeoutExpired(command, kwargs['timeout'])
+                return SimpleNamespace(returncode=0, stdout='', stderr='')
+            with patch.object(warm.subprocess,'run',side_effect=native), \
+                 patch.object(warm.time,'monotonic',return_value=0), patch.object(warm,'wait_for_stage_rest') as wait:
+                with self.assertRaises(RuntimeError): warm.warmup(app,DEVICE,['en'],'en_US',out)
+            status=json.loads((out/'status.json').read_text())
+            self.assertFalse(status['passed']); self.assertEqual(status['launch_attempts'],0)
+            self.assertEqual(status['total_budget_seconds'],300); self.assertEqual(wait.call_count,0)
+            self.assertIn('5 seconds',status['error'])
+            self.assertFalse(any(c[0][:3] in (['xcrun','simctl','launch'], ['xcrun','simctl','terminate']) for c in calls))
+            self.assertEqual(status['rest_signal_commands'][0]['timeout_seconds'],5)
 
     def test_only_successful_launch_enters_milestone_wait_with_reserve(self):
         status,calls,count=self.execute()
@@ -236,6 +380,19 @@ class SourceContractTests(unittest.TestCase):
             self.assertIn(exact,body)
         for forbidden in ['accessibility','UserDefaults','URLSession']:
             self.assertNotIn(forbidden,body)
+
+    def test_prelaunch_resolution_is_between_install_and_launch_and_wait_uses_cached_revalidation(self):
+        root=Path(__file__).resolve().parents[2]
+        source=(root/'tools/ci/simulator_warmup.py').read_text()
+        install=source.index("invoke(['xcrun', 'simctl', 'install'")
+        prepare=source.index('prepared_container = prepare_stage_rest_container(')
+        launch=source.index("output = invoke(['xcrun', 'simctl', 'launch'")
+        wait=source.index("receipt['rest_signal'] = wait_for_stage_rest(")
+        self.assertLess(install,prepare); self.assertLess(prepare,launch); self.assertLess(launch,wait)
+        self.assertIn('device, storage, deadline - 30',source[prepare:launch])
+        self.assertIn('prepared_container, out)',source[wait:])
+        self.assertNotIn('get_app_container',source[wait:source.index('    except (OSError', wait)])
+        self.assertIn('def probe_query(command, limit=5',source)
 
     def test_host_has_no_guessed_settle_and_unmodified_independent_test_contract(self):
         root=Path(__file__).resolve().parents[2]
