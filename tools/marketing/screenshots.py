@@ -65,8 +65,7 @@ LOCALES = [r["locale"] for r in json.loads((ROOT / "tools/l10n/store-locales.jso
 # Where each capture's hero sits, as fractions of the upright capture:
 #   y0      the top of what a zoom, flip or plain card shows (the rest of the screen runs on below it)
 #   x       the columns a zoom keeps, to enlarge it further
-#   detail_clearance  verified whitespace band that may contain an enlarged detail
-#   detail  callout: the region enlarged in the card that breaks out over the screen's edge
+#   detail  callout: a native-content detector for the region enlarged over the screen's edge
 #
 # A zoom or flip starts below the status bar (it ends at 0.044 of a 6.3-inch capture) or at the very top, never across
 # it; render refuses a frame whose top edge cuts through text (`sliced`).
@@ -77,8 +76,7 @@ FOCUS = {
     "62-lesson-results": {"y0": 0.06, "x": (0.02, 0.98)},
     "62b-lesson-results-violin": {"y0": 0.06, "x": (0.02, 0.98)},
     # The callout enlarges the six ticked strings themselves: the step's headline stays at its own size in the screen.
-    "52b-lesson-chord": {"y0": 0.0, "detail": (0.149, 0.208, 0.902, 0.278),
-                         "detail_clearance": (0.202, 0.310)},
+    "52b-lesson-chord": {"y0": 0.0, "detail": "ticked-strings"},
     "31b-instruments-folk": {"y0": 0.0},
     "63-songs": {"y0": 0.0},
     "50-learn": {"y0": 0.0},
@@ -702,23 +700,80 @@ def _breakout(layout, accent, shot, focus, title, line, size):
     return frame
 
 
-def _callout_geometry(frame, shot, focus, scale, x, top, width):
-    """Enlarge only within the verified source whitespace around the string strip.
+def _ticked_strings_region(shot):
+    """Locate the six native note/badge shapes and their surrounding ink-free band.
 
-    No caption/instruction/chord title is covered; physical string order is never
-    mirrored. RTL reflects the editorial placement only.
+    SwiftUI uses different chord-header layouts by available width and language;
+    neither screen-height fractions nor locale-specific guesses are safe here.
+    This conservative detector requires six aligned, near-square mint/white
+    components. It preserves their full native pixels, including the white ticks
+    on either side in RTL/LTR, and refuses ambiguous/unrecognized captures.
     """
-    dx0, dy0, dx1, dy1 = focus["detail"]
-    y0 = focus.get("y0", 0.0)
-    clear_top, clear_bottom = focus.get("detail_clearance", (dy0, dy1))
+    width = shot.width
+    region = shot.convert("RGB").crop((0, 0, width, round(shot.height * .45)))
+    # Muted instructions count as protected ink too, not only white headlines.
+    pixels = region.get_flattened_data() if hasattr(region, "get_flattened_data") else region.getdata()
+    ink = bytearray((min(pixel) >= 100 and max(pixel) - min(pixel) <= 55)
+                    or (pixel[0] < 130 and pixel[1] > 170 and 90 < pixel[2] < 230
+                        and pixel[1] > pixel[2] * 1.05) for pixel in pixels)
+    remaining = ink.copy()
+    candidates = []
+    for index, value in enumerate(remaining):
+        if not value:
+            continue
+        remaining[index] = 0
+        stack = [index]
+        x0, y0, x1, y1, count = width, region.height, 0, 0, 0
+        while stack:
+            index = stack.pop()
+            y, x = divmod(index, width)
+            x0, y0, x1, y1 = min(x0, x), min(y0, y), max(x1, x), max(y1, y)
+            count += 1
+            neighbours = (index - width if y else -1,
+                          index + width if index + width < len(remaining) else -1,
+                          index - 1 if x else -1,
+                          index + 1 if x + 1 < width else -1)
+            for neighbour in neighbours:
+                if neighbour >= 0 and remaining[neighbour]:
+                    remaining[neighbour] = 0
+                    stack.append(neighbour)
+        w, h = x1 - x0 + 1, y1 - y0 + 1
+        if .06 * width < w < .14 * width and .75 < w / h < 1.25 and count > .4 * w * h:
+            candidates.append((x0, y0, x1 + 1, y1 + 1))
+    groups = {tuple(sorted(box for box in candidates if abs(box[1] - anchor[1]) < .02 * width))
+              for anchor in candidates}
+    groups = [group for group in groups if len(group) == 6]
+    if len(groups) != 1:
+        raise ValueError("Callout needs six unambiguous native ticked strings; review the source capture")
+    markers = groups[0]
+    x0, y0 = min(box[0] for box in markers), min(box[1] for box in markers)
+    x1, y1 = max(box[2] for box in markers), max(box[3] for box in markers)
+    # This also protects nearby native selectors: search all columns, not just Em.
+    above = next((y + 1 for y in range(y0 - 1, -1, -1) if any(ink[y * width:(y + 1) * width])), None)
+    below = next((y for y in range(y1, region.height) if any(ink[y * width:(y + 1) * width])), None)
+    padding = round(max(box[3] - box[1] for box in markers) * .18)
+    box = (x0 - padding, y0 - padding, x1 + padding, y1 + padding)
+    if (above is None or below is None or box[0] < 0 or box[2] > width
+            or box[1] <= above or box[3] >= below):
+        raise ValueError("Native string callout has no verified whitespace; review the source capture")
+    return box, (above, below)
+
+
+def _callout_geometry(frame, shot, focus, scale, x, top, width):
+    """Enlarge within native-content bounds; never mirror physical string order."""
+    if focus["detail"] != "ticked-strings":
+        raise ValueError("Callout requires a supported native-content detector")
+    box, (clear_top, clear_bottom) = _ticked_strings_region(shot)
+    y0 = round(focus.get("y0", 0.0) * shot.height)
     gap = frame.px(12)
-    safe_top = top + (clear_top - y0) * shot.height * scale + gap
-    safe_bottom = top + (clear_bottom - y0) * shot.height * scale - gap
-    box = tuple(round(v) for v in (dx0 * shot.width, dy0 * shot.height, dx1 * shot.width, dy1 * shot.height))
+    safe_top = top + (clear_top - y0) * scale + gap
+    safe_bottom = top + (clear_bottom - y0) * scale - gap
     zoom = min(scale * 1.55, (frame.w - 2 * frame.px(48)) / (box[2] - box[0]),
                (safe_bottom - safe_top) / (box[3] - box[1]))
+    if zoom <= scale:
+        raise ValueError("Native string callout cannot be enlarged without covering protected UI")
     picture = _scaled(shot, zoom, box)
-    centre_y = top + ((dy0 + dy1) / 2 - y0) * shot.height * scale
+    centre_y = top + ((box[1] + box[3]) / 2 - y0) * scale
     cy = round(max(safe_top, min(centre_y - picture.height / 2, safe_bottom - picture.height)))
     wanted_x = x - frame.px(150) if art.text_layout()["direction"] == "rtl" else x + width - picture.width + frame.px(150)
     cx = max(frame.px(48), min(frame.w - frame.px(48) - picture.width, wanted_x))
@@ -793,13 +848,11 @@ def _light(layout, accent, shot, focus, title, line, size):
     frame = Frame(size, accent, light=True, glow=(0.5, 0.55))
     m = frame.px(84)
     foot = frame.caption(title, line, frame.px(150), m, frame.w - m)
-    width = int(frame.w * 0.82)
-    scale = width / shot.width
     top = foot + frame.px(80)
-    visible = (frame.h - top + frame.px(80)) / scale
     y0 = focus.get("y0", 0.0)
-    screen = _scaled(shot, scale, (0, y0 * shot.height, shot.width, min(shot.height, y0 * shot.height + visible)))
-    frame.card(screen, (frame.w - width) // 2, top, _screen_radius(width), rim=False)
+    screen, _ = _contained_screen(shot, (0, y0 * shot.height, shot.width, shot.height),
+                                  int(frame.w * 0.82), frame.h - top - frame.px(64))
+    frame.card(screen, (frame.w - screen.width) // 2, top, _screen_radius(screen.width), rim=False)
     return frame
 
 
@@ -852,18 +905,20 @@ def _flip(layout, accent, shot, focus, title, line, size):
 
 
 LANDSCAPE_STATUS_ROWS = 60  # Verified native 2752x2064 EN/DE status/content whitespace.
+LANDSCAPE_CORNER_RADIUS = 16  # Source pixels: stays inside the native Done pill's 20px inset.
 
 
 def _landscape_x(canvas_width: int, screen_width: int, inset: int, *, light: bool, left: bool) -> int:
-    """Keep actual UI labels inside the canvas; reflect placement, never source pixels."""
-    if light:
-        return (canvas_width - screen_width) // 2
-    return canvas_width - screen_width - inset if left else inset
+    """Centre the height-fitted screen; caption alignment still alternates/reflects.
+
+    A tall translated heading can make the complete native screen much narrower
+    than the old bleed. Edge-pinning then leaves an unbalanced empty half-frame.
+    """
+    return (canvas_width - screen_width) // 2
 
 
 def _landscape(layout, accent, shot, title, line, size, out: Path) -> tuple:
-    """iPad landscape: the caption across the top, set left (`side`) or right (`side-right`) with the screen shifted the
-    other way while retaining both native horizontal edges; or the light frame, caption centred."""
+    """iPad landscape: an aligned heading above the centred, complete native viewport."""
     light = layout == "light"
     left = layout != "side-right"
     rtl = art.text_layout()["direction"] == "rtl"
@@ -873,14 +928,14 @@ def _landscape(layout, accent, shot, title, line, size, out: Path) -> tuple:
     m = frame.px(120)
     align = "centre" if light else ("left" if left else "right")
     foot = frame.caption(title, line, frame.px(96), m, frame.w - m, align=align)
-    width = int(frame.w * (0.80 if light else 0.86))
-    scale = width / shot.width
     top = foot + frame.px(64)
-    visible = (frame.h - top + frame.px(60)) / scale
-    screen = _scaled(shot, scale, (0, LANDSCAPE_STATUS_ROWS, shot.width,
-                                   min(shot.height, LANDSCAPE_STATUS_ROWS + visible)))
+    screen, _ = _contained_screen(shot, (0, LANDSCAPE_STATUS_ROWS, shot.width, shot.height),
+                                  int(frame.w * (0.80 if light else 0.86)),
+                                  frame.h - top - frame.px(64))
     x = _landscape_x(frame.w, screen.width, frame.px(80), light=light, left=left)
-    frame.card(screen, x, top, frame.px(40), rim=not light)
+    # Done starts four native pixels below the crop: an inset decorative rim
+    # would erase its top cap. Keep the native control, not an intrusive border.
+    frame.card(screen, x, top, max(1, round(LANDSCAPE_CORNER_RADIUS * screen.width / shot.width)), rim=False)
     return frame.save(out)
 
 

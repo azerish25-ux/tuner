@@ -10,7 +10,12 @@ final class SongShelfPageTests: XCTestCase {
 
     private final class State: ObservableObject {
         @Published var size = CGSize(width: 402, height: 874)
-        @Published var position: SongShelfPageTarget<String>?
+        @Published var position: SongShelfPageTarget<String>? {
+            didSet { positionHistory.append(String(describing: position)) }
+        }
+        @Published var requestedShelf: SongShelfPageTarget<String>?
+        @Published var requestedTerminalShelf: String?
+        var positionHistory: [String] = []
         var shelfFrames: [String: CGRect] = [:]
         var terminalFrames: [String: CGRect] = [:]
     }
@@ -22,42 +27,108 @@ final class SongShelfPageTests: XCTestCase {
         private let songs = (0..<120).map { Song(id: $0) }
 
         var body: some View {
-            SongShelfPage(items: shelves, position: $state.position) {
-                // The preceding content reflows as the production header/hero do on rotation.
-                Color.green.frame(height: state.size.width > state.size.height ? 440 : 500)
-            } shelf: { shelf in
-                VStack(spacing: 12) {
-                    Color.orange.frame(height: 40)
-                    SongShelfRail(items: songs, selection: 59, itemWidth: 148, height: 240, identity: shelf.id) { song in
-                        Text("Song \(song.id)").frame(width: 148, height: 80)
-                            .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { frame in
-                                if song.id == 119 { state.terminalFrames[shelf.id] = frame }
-                            }
-                    }
+            ScrollViewReader { proxy in
+                SongShelfPage(items: shelves, position: $state.position) {
+                    // The preceding content reflows as the production header/hero do on rotation.
+                    Color.green.frame(height: state.size.width > state.size.height ? 440 : 500)
+                } shelf: { shelf in
+                    shelfRow(shelf)
+                } footer: {
+                    Color.blue.frame(height: 200)
                 }
-                .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { frame in
-                    state.shelfFrames[shelf.id] = frame
+                .onChange(of: state.requestedShelf) { _, value in
+                    guard let value else { return }
+                    proxy.scrollTo(value, anchor: .center)
                 }
-            } footer: {
-                Color.blue.frame(height: 200)
             }
             .environment(\.layoutDirection, direction)
             .frame(width: state.size.width, height: state.size.height)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             .ignoresSafeArea()
         }
+
+        private func shelfRow(_ shelf: Shelf) -> some View {
+            VStack(spacing: 12) {
+                Color.orange.frame(height: 40)
+                ScrollViewReader { proxy in
+                    SongShelfRail(items: songs, selection: 59, itemWidth: 148, height: 240, identity: shelf.id) { song in
+                        Text("Song \(song.id)").frame(width: 148, height: 80)
+                            .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { frame in
+                                if song.id == 119 { state.terminalFrames[shelf.id] = frame }
+                            }
+                    }
+                    .onChange(of: state.requestedTerminalShelf) { _, value in
+                        guard value == shelf.id else { return }
+                        proxy.scrollTo(119, anchor: .trailing)
+                    }
+                }
+            }
+            .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { frame in
+                state.shelfFrames[shelf.id] = frame
+            }
+        }
     }
 
-    func testPhysicalBrowsingTracksShelfAndSurvivesRepeatedResize() async throws {
+    func testProgrammaticScrollTracksShelfAndSurvivesRepeatedResize() async throws {
         try await verify(direction: .leftToRight)
     }
 
-    func testPhysicalBrowsingTracksShelfAndSurvivesRepeatedResizeRightToLeft() async throws {
+    func testProgrammaticScrollTracksShelfAndSurvivesRepeatedResizeRightToLeft() async throws {
         try await verify(direction: .rightToLeft)
     }
 
     private func scrolls(_ view: UIView) -> [UIScrollView] {
-        (view as? UIScrollView).map { [$0] } ?? view.subviews.flatMap { scrolls($0) }
+        let current = (view as? UIScrollView).map { [$0] } ?? []
+        return current + view.subviews.flatMap { scrolls($0) }
+    }
+
+    func testScrollTraversalIncludesNestedRailsAndTheirPage() {
+        let root = UIView()
+        let page = UIScrollView()
+        let content = UIView()
+        let rail = UIScrollView()
+        root.addSubview(page)
+        page.addSubview(content)
+        content.addSubview(rail)
+        let found = scrolls(root)
+        XCTAssertEqual(found.count, 2)
+        XCTAssertTrue(found.first === page)
+        XCTAssertTrue(found.last === rail)
+    }
+
+    private func record(_ state: State, window: UIWindow, stage: String) {
+        var lines = ["stage=\(stage) driver=ScrollViewReader.scrollTo, not a touch gesture",
+                     "position=\(String(describing: state.position)) history=\(state.positionHistory)",
+                     "requestedSize=\(state.size) window=\(window.bounds) key=\(window.isKeyWindow)"]
+        for key in state.shelfFrames.keys.sorted() {
+            lines.append("shelf=\(key) frame=\(String(describing: state.shelfFrames[key])) "
+                + "terminal=\(String(describing: state.terminalFrames[key]))")
+        }
+        func describe(_ view: UIView, path: String) {
+            var line = "\(path) \(type(of: view)) frame=\(view.convert(view.bounds, to: window)) "
+                + "bounds=\(view.bounds) attached=\(view.window === window) hidden=\(view.isHidden) alpha=\(view.alpha)"
+            if let scroll = view as? UIScrollView {
+                line += " content=\(scroll.contentSize) offset=\(scroll.contentOffset) inset=\(scroll.adjustedContentInset) "
+                    + "dragging=\(scroll.isDragging) decelerating=\(scroll.isDecelerating)"
+            }
+            lines.append(line)
+            for (index, child) in view.subviews.enumerated() { describe(child, path: path + ".\(index)") }
+        }
+        if let root = window.rootViewController?.view { describe(root, path: "root") }
+        let text = lines.joined(separator: "\n")
+        print("SONG-PAGE: " + text)
+        let diagnostic = XCTAttachment(string: text)
+        diagnostic.name = "song-page-observed-" + stage
+        diagnostic.lifetime = .keepAlways
+        add(diagnostic)
+        guard window.bounds.width > 0, window.bounds.height > 0 else { return }
+        let image = UIGraphicsImageRenderer(bounds: window.bounds).image { _ in
+            _ = window.drawHierarchy(in: window.bounds, afterScreenUpdates: true)
+        }
+        let rendered = XCTAttachment(image: image)
+        rendered.name = "song-page-observed-" + stage
+        rendered.lifetime = .keepAlways
+        add(rendered)
     }
 
     private func verify(direction: LayoutDirection) async throws {
@@ -74,36 +145,33 @@ final class SongShelfPageTests: XCTestCase {
             window.rootViewController = nil
             previousKeyWindow?.makeKey()
         }
+        defer { record(state, window: window, stage: "final-\(direction)") }
         host.view.layoutIfNeeded()
         let loaded = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             self.scrolls(host.view).contains { $0.contentSize.height > 2000 && $0.bounds.height > 800 }
         }, object: nil)
         await fulfillment(of: [loaded], timeout: 3)
+        record(state, window: window, stage: "loaded-\(direction)")
         let vertical = try XCTUnwrap(scrolls(host.view).first { $0.contentSize.height > 2000 })
         let target = "shelf-3"
-        // Drive the actual scroll view, not the binding. The initial fixture has 500pt intro,
-        // 24pt gaps and 292pt shelves. The binding must OBSERVE this physical scroll itself.
-        let pagePadding: CGFloat = 12
-        let introductionHeight: CGFloat = 500
-        let rowGap: CGFloat = 24
-        let shelfHeight: CGFloat = 292
-        let precedingShelves: CGFloat = 3
-        let targetCenter = pagePadding + introductionHeight + rowGap
-            + precedingShelves * (shelfHeight + rowGap) + shelfHeight / 2
-        vertical.setContentOffset(CGPoint(x: 0, y: targetCenter - vertical.bounds.height / 2), animated: false)
+        // Use SwiftUI's public scrolling API, not a UIKit backing-view offset that bypasses
+        // SwiftUI's scroll lifecycle. This request does not write the observed position binding.
+        // Real touch scrolling remains covered by the production SongShelfRailUITests.
+        XCTAssertTrue(vertical.window === window)
+        state.requestedShelf = .shelf(target)
         let tracked = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             state.position == .shelf(target) && state.shelfFrames[target] != nil
         }, object: nil)
         await fulfillment(of: [tracked], timeout: 3)
-        XCTAssertEqual(state.position, .shelf(target), "The binding must identify the physically browsed shelf before resizing")
+        record(state, window: window, stage: "programmatic-tracking-\(direction)")
+        XCTAssertEqual(state.position, .shelf(target), "The binding must observe the SwiftUI-scrolled shelf before resizing")
         let shelf = try XCTUnwrap(state.shelfFrames[target])
         let horizontal = try XCTUnwrap(scrolls(host.view).first { scroll in
             let frame = scroll.convert(scroll.bounds, to: window)
             return scroll.contentSize.width > 1000 && frame.minY >= shelf.minY - 1 && frame.maxY <= shelf.maxY + 1
         })
-        let end = direction == .rightToLeft ? -horizontal.adjustedContentInset.left
-            : horizontal.contentSize.width - horizontal.bounds.width + horizontal.adjustedContentInset.right
-        horizontal.setContentOffset(CGPoint(x: end, y: 0), animated: false)
+        XCTAssertTrue(horizontal.window === window)
+        state.requestedTerminalShelf = target
         await assertTerminal(state, target: target, window: window, stage: "browsed")
         for cycle in 0..<2 {
             for size in [CGSize(width: 874, height: 402), CGSize(width: 402, height: 874)] {
@@ -137,6 +205,7 @@ final class SongShelfPageTests: XCTestCase {
                 && page.insetBy(dx: -1, dy: -1).contains(frame) && rail.insetBy(dx: -1, dy: -1).contains(frame)
         }, object: nil)
         await fulfillment(of: [visible], timeout: 3)
+        record(state, window: window, stage: stage)
         guard let current = currentScrolls() else {
             XCTFail("The browsed shelf must have current scroll views attached to its window: \(stage)")
             return

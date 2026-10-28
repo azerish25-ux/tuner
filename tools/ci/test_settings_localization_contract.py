@@ -82,9 +82,11 @@ class SettingsLocalizationContract(unittest.TestCase):
                       "CGBitmapInfo.byteOrder32Big", '(.beginner, "±5¢"), (.standard, "±3¢"), (.pro, "±1¢")']:
             self.assertIn(token, native)
         oracle = native.split("let expected = Text", 1)[1].split("let reversed = Text", 1)[0]
-        self.assertIn('verbatim: knownToken).environment(\\.layoutDirection, .leftToRight)', oracle)
+        self.assertIn(r'verbatim: "\u{202A}" + knownToken + "\u{202C}"', oracle)
         self.assertNotIn("SettingsOptionLabel", oracle)
         self.assertNotIn(r"\u{2066}", oracle)
+        self.assertNotIn(r"\u{2069}", oracle)
+        self.assertNotIn("layoutDirection", oracle)
         self.assertNotIn(".clipped()", native)
 
     def test_whole_token_raster_comparison_uses_identical_explicit_typography_without_tolerances(self):
@@ -96,12 +98,25 @@ class SettingsLocalizationContract(unittest.TestCase):
         test = native.split("func testPrecisionRendersAllGlyphsInOrderAtNormalAndAX5Sizes", 1)[1].split("private func glyphPositions", 1)[0]
         self.assertNotIn("HStack", test)
         self.assertIn('Text(verbatim: SettingsOptionLabel.precisionTolerance(precision))', test)
-        self.assertIn('Text(verbatim: knownToken)', test)
-        self.assertIn('Text(verbatim: reversedToken)', test)
+        self.assertIn(r'Text(verbatim: "\u{202A}" + knownToken + "\u{202C}")', test)
+        self.assertIn(r'Text(verbatim: "\u{202A}" + reversedToken + "\u{202C}")', test)
         self.assertIn('let changed = zip(actual, oracle).filter { $0 != $1 }.count', test)
         self.assertIn('XCTAssertEqual(actual, oracle,', test)
         for weakened in ['accuracy:', 'XCTAssertLessThan(changed', 'minimumScaleFactor', '.offset(']:
             self.assertNotIn(weakened, native)
+
+    def test_same_paragraph_reference_keeps_old_forced_ltr_only_as_diagnostic(self):
+        native = source("ios/TimbreAppTests/SettingsOptionLabelTests.swift")
+        test = native.split("func testPrecisionRendersAllGlyphsInOrderAtNormalAndAX5Sizes", 1)[1].split("private func glyphPositions", 1)[0]
+        self.assertIn('let forcedLTR = Text(verbatim: knownToken).environment(\\.layoutDirection, .leftToRight)', test)
+        self.assertIn('_ = try render(forcedLTR, size: size, direction: .rightToLeft, name: "forced-ltr-paragraph-', test)
+        loop = test.split('for direction in [LayoutDirection.leftToRight, .rightToLeft]', 1)[1]
+        for view in ('expected', 'reversed', 'token'):
+            self.assertIn(f'render({view}, size: size, direction: direction,', loop)
+        self.assertIn('XCTAssertEqual(actual, oracle,', loop)
+        self.assertIn('XCTAssertNotEqual(oracle, wrong,', loop)
+        self.assertIn('XCTAssertNotEqual(actual, wrong)', loop)
+        self.assertNotIn('forcedLTR', loop)
 
 
 if __name__ == "__main__":

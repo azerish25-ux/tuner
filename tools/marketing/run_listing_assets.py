@@ -2,7 +2,7 @@
 """Run isolated localized captures from one unsigned simulator build artifact.
 
 Only call on a macOS CI runner. Each locale gets fresh output directories and its
-own retained failed attempts; successful retries never overwrite failure evidence.
+own retained failed attempts; later XCTest success never clears failed diagnostic priming.
 """
 from __future__ import annotations
 
@@ -140,23 +140,56 @@ def tested_selectors(log: Path, selected: list[str]):
             raise RuntimeError(f'No executed passing test: {selector}')
 
 
-def test_attempts(xctestrun, device, kind, tests, out, env):
+def test_attempts(xctestrun, device, kind, tests, out, env, *, retained_failures, test_results):
     sys.path.insert(0, str(ROOT / 'tools/ci'))
+    from simulator_cleanup import isolate
     from simulator_warmup import warmup
     for attempt in (1, 2):
         folder = out / f'attempt-{attempt}'
         folder.mkdir(parents=True, exist_ok=False)
         bundle, log = folder / 'Tests.xcresult', folder / 'test.log'
-        warmup(Path(xctestrun).parent / 'Debug-iphonesimulator/Timbre.app', device['id'],
-               env['TEST_RUNNER_TIMBRE_UI_APPLE_LANGUAGES'].split(','),
-               env['TEST_RUNNER_TIMBRE_UI_LOCALE'], folder / 'warmup')
-        code = run(test_command(xctestrun, device, tests, bundle), log=log, env=env, check=False)
+        warmup_failed = False
+        def retain(stage, error):
+            retained_failures.append({'phase': out.name, 'attempt': attempt, 'stage': stage,
+                                      'evidence': str(folder.relative_to(out.parent)), 'error': str(error)})
+
+        try:
+            warmup(Path(xctestrun).parent / 'Debug-iphonesimulator/Timbre.app', device['id'],
+                   env['TEST_RUNNER_TIMBRE_UI_APPLE_LANGUAGES'].split(','),
+                   env['TEST_RUNNER_TIMBRE_UI_LOCALE'], folder / 'warmup')
+        except (ValueError, RuntimeError, OSError, subprocess.SubprocessError) as error:
+            warmup_failed = True
+            retain('warmup', error)
+            print(f'::error::Diagnostic priming failed; independent XCTest still runs: {error}', flush=True)
+            status = folder / 'warmup/status.json'
+            if status.is_file():
+                try:
+                    # The helper validates hosted-job ownership and the original receipt. It does
+                    # nothing after confirmed cleanup; never erase/re-prime to replace this failure.
+                    isolate(device['id'], status, folder / 'warmup-cleanup')
+                except (ValueError, RuntimeError, OSError, subprocess.SubprocessError) as cleanup_error:
+                    retain('warmup-cleanup', cleanup_error)
+        # Like Nightly, diagnostic priming/containment outcomes do not skip independent tests.
+        result = {'phase': out.name, 'attempt': attempt, 'selectors': list(tests),
+                  'evidence': str(folder.relative_to(out.parent)), 'exit_code': None,
+                  'selected_tests_verified': False}
+        test_results.append(result)
+        try:
+            code = run(test_command(xctestrun, device, tests, bundle), log=log, env=env, check=False)
+        except (RuntimeError, OSError, subprocess.SubprocessError) as error:
+            result['error'] = str(error)
+            retain('xctest', error)
+            raise
+        result['exit_code'] = code
+        if code:
+            retain('xctest', f'UI tests exited {code}; retained {folder}')
         if bundle.exists():
             export_attachments(bundle, folder / 'attachments')
         if code == 0:
             tested_selectors(log, tests)
+            result['selected_tests_verified'] = True
             return folder
-        if attempt == 1 and launch_only_failure(log):
+        if attempt == 1 and not warmup_failed and launch_only_failure(log):
             run(['xcrun', 'simctl', 'shutdown', device['id']], check=False)
             boot(device, kind)
             continue
@@ -331,6 +364,7 @@ def run_locale(locale, args, device, xctestrun, build_hash):
     env = environment(spec)
     manifest = {'schema_version': 1, **spec, 'kind': args.kind, 'source_sha': args.source_sha,
                 'build_sha256': build_hash, 'device': device, 'status': 'running',
+                'retained_failures': [], 'native_test_results': [],
                 'release_ready': False, 'visual_review': 'pending', 'native_review': 'pending',
                 'scope': 'Default listing assets' if args.kind != 'preview-violin' else 'Supplemental violin CPP preview only; not a complete CPP asset set'}
     manifest_file = args.manifests / f'{locale}-{args.kind}.manifest.json'
@@ -338,11 +372,13 @@ def run_locale(locale, args, device, xctestrun, build_hash):
     try:
         if spec['lesson_resource_status'] != 'shipped':
             raise RuntimeError(f'{spec["app_language"]}: localized Learn.strings is not shipped; do not frame English lesson fallback as localized assets')
-        verified = test_attempts(xctestrun, device, args.kind, [assets.EVIDENCE_TEST], base / 'language-check', env)
+        verified = test_attempts(xctestrun, device, args.kind, [assets.EVIDENCE_TEST], base / 'language-check', env,
+                                 retained_failures=manifest['retained_failures'], test_results=manifest['native_test_results'])
         manifest['language_evidence'] = assets.validate_language_evidence(spec, (verified / 'test.log').read_text(errors='replace'), 'VERIFIED')
         if args.kind in assets.SCREENSHOT_KINDS:
             selected = assets.selectors(args.kind)
-            result = test_attempts(xctestrun, device, args.kind, selected, base / 'capture', env)
+            result = test_attempts(xctestrun, device, args.kind, selected, base / 'capture', env,
+                                   retained_failures=manifest['retained_failures'], test_results=manifest['native_test_results'])
             manifest['launch_evidence'] = assets.validate_language_evidence(spec, (result / 'test.log').read_text(errors='replace'), 'LAUNCH', minimum=len(selected))
             manifest['captures'] = assets.capture_records(result / 'attachments', locale, args.kind, base)
             rendered = base / 'rendered'
@@ -358,6 +394,8 @@ def run_locale(locale, args, device, xctestrun, build_hash):
             manifest['launch_evidence'] = assets.validate_language_evidence(spec, (result / 'test.log').read_text(errors='replace'), 'LAUNCH', minimum=4 if args.kind == 'preview-main' else 3)
             manifest['assets'] = preview_records(result, base)
         manifest['selected_attempt'] = str(result.relative_to(base))
+        if manifest['retained_failures']:
+            raise RuntimeError('Native prerequisite failures retained despite later evidence; see retained_failures')
         manifest['status'] = 'mechanically_verified'
         return True
     except (ValueError, RuntimeError, OSError, subprocess.SubprocessError) as error:
@@ -399,6 +437,8 @@ def main():
     if len(runs) != 1:
         raise SystemExit(f'Expected exactly one shared xctestrun file, got {len(runs)}')
     device = choose_device(args.kind)
+    # Bind containment to this worker's selected simulator; isolate independently verifies CI ownership.
+    os.environ['DEVICE_ID'] = device['id']
     assets.write_json(args.out / 'device.json', device)
     boot(device, args.kind)
     passed = [run_locale(locale, args, device, runs[0].resolve(), build_hash) for locale in selected]

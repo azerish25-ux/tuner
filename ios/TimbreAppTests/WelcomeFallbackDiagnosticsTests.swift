@@ -30,13 +30,24 @@ final class WelcomeFallbackDiagnosticsTests: XCTestCase {
         }
     }
 
+    func testFontResolutionUsesTheViewLanguageRatherThanTheTestHost() {
+        XCTAssertEqual(WelcomeHeadline.fontSelectionText(locale: Locale(identifier: "ur_PK")),
+                       "سیکنڈوں میں ٹیون کریں۔\nپھر بجانا سیکھیں۔")
+        XCTAssertEqual(WelcomeHeadline.fontSelectionText(locale: Locale(identifier: "en")),
+                       "Tune in seconds.\nThen learn to play.")
+    }
+
     func testRecordUrduFallbackMetricsAndCandidateLayouts() throws {
         let face = Typeface.boldText ? Typeface.Face.semiBold.heavier : Typeface.Face.semiBold
         let name = face.fontName
         _ = try XCTUnwrap(UIFont(name: name, size: 40), "The actual bundled display face must be registered")
         let base = CTFontCreateWithName(name as CFString, 40, nil)
         XCTAssertEqual(CTFontCopyPostScriptName(base) as String, name)
-        var report = [metrics(base, label: "base")]
+        let production = WelcomeHeadline.nativeUrduFont(points: 40, locale: Locale(identifier: "ur"))
+        XCTAssertEqual(CTFontGetSize(production), 40, "The resolved face must not double-scale")
+        XCTAssertNotEqual(CTFontCopyPostScriptName(production) as String, name,
+                          "Urdu needs a covering native face, not the Latin base's line metrics")
+        var report = [metrics(base, label: "base"), metrics(production, label: "production-resolved")]
         var candidates: [String: String] = [:]
         for word in ["سیکنڈوں", "میں", "ٹیون", "کریں۔", "پھر", "بجانا", "سیکھیں۔"] {
             let range = CFRange(location: 0, length: (word as NSString).length)
@@ -44,6 +55,8 @@ final class WelcomeFallbackDiagnosticsTests: XCTestCase {
             let fallbackName = CTFontCopyPostScriptName(fallback) as String
             report.append(metrics(fallback, label: word))
             candidates[fallbackName] = word
+            XCTAssertEqual(fallbackName, CTFontCopyPostScriptName(production) as String,
+                           "The actual localized headline must select the same native face as every Urdu word")
             let automatic = Text(verbatim: word).font(Typeface.display(40)).tracking(-1)
                 .typesettingLanguage(Locale(identifier: "ur").language).fixedSize()
             let explicit = Text(verbatim: word).font(Font(fallback)).tracking(-1)

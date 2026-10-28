@@ -36,14 +36,16 @@ class LandscapeRTLTests(unittest.TestCase):
         with patch.object(shots, 'Frame', Frame), patch.dict(os.environ, TIMBRE_CAPTION_LOCALE=locale):
             frame = shots._landscape(layout, 'cyan', image, 'title', 'line', image.size, Path('unused'))
         self.assertEqual(original, hashlib.sha256(image.tobytes()).hexdigest())
+        self.assertLessEqual(frame.y + frame.screen.height, 2064 - frame.px(64))
         self.assertEqual(frame.screen.getpixel((10, 10)), (255, 0, 0))
         self.assertEqual(frame.screen.getpixel((frame.screen.width - 10, 10)), (0, 0, 255))
         return frame
 
-    def test_all_rtl_leading_edges_visible_and_bias_alternates(self):
+    def test_all_rtl_edges_visible_caption_bias_alternates_and_screen_is_centred(self):
         for locale in ('ar-SA', 'fa', 'he', 'ur'):
             a, b = self.render(locale, 'side'), self.render(locale, 'side-right')
-            self.assertLess(a.x, b.x)
+            self.assertEqual(a.x, b.x)
+            self.assertEqual(a.x, (a.w - a.screen.width) // 2)
             self.assertGreater(a.x, 0)
             for frame in (a, b):
                 self.assertGreaterEqual(frame.x, frame.px(80))
@@ -53,7 +55,7 @@ class LandscapeRTLTests(unittest.TestCase):
 
     def test_ltr_contained_geometry_and_original_pixels(self):
         a, b = self.render('en-US', 'side'), self.render('en-US', 'side-right')
-        self.assertEqual((a.x, b.x), (261, 125))
+        self.assertEqual((a.x, b.x), (302, 302))
         self.assertEqual((a.align, b.align), ('left', 'right'))
 
     def test_center_layout_identical(self):

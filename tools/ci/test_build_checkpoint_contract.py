@@ -9,6 +9,23 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 class BuildCheckpointContract(unittest.TestCase):
+    def test_sanitizer_budget_is_bounded_without_filtering_or_hiding_failures(self):
+        workflow = (ROOT / '.github/workflows/nightly.yml').read_text()
+        sanitizer = workflow.split('  tsan:\n', 1)[1].split('\n  publish:', 1)[0]
+        self.assertEqual([line.strip() for line in sanitizer.splitlines() if 'timeout-minutes:' in line],
+                         ['timeout-minutes: 45'])
+        self.assertIn('runs-on: macos-15', sanitizer)
+        run = sanitizer.split('        run: |\n', 1)[1].split('      - name: Summarize', 1)[0]
+        self.assertEqual([line.strip() for line in run.splitlines() if line.strip()], [
+            'set -o pipefail',
+            'mkdir -p ci-out',
+            'swift test --package-path ios --sanitize=thread 2>&1 | tee ci-out/tsan.log',
+        ])
+        self.assertNotIn('continue-on-error', sanitizer)
+        self.assertNotIn('strategy:', sanitizer)
+        self.assertIn('name: results-tsan', sanitizer)
+        self.assertEqual(sanitizer.count('if: always()'), 2)
+
     def test_both_simulator_builds_publish_immediately_and_keep_failure_status(self):
         workflow = (ROOT / '.github/workflows/nightly.yml').read_text()
         builds = workflow.split('      - name: Build app and tests\n')[1:]

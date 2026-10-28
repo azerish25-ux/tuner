@@ -1,0 +1,27 @@
+{
+  "source_sha": "9e1e3c41ec24c1a2c78c22ea7a90726dc4ae6599",
+  "run_id": 40600424514,
+  "artifact_sha256": "1633e5b181ceb0894291ca95390558fd0ff0b9a5e05a81be6ada6130114a863e",
+  "listing_locale": "en-US",
+  "native_size": [
+    1320,
+    2868
+  ],
+  "method": "Unaltered native-pixel crop from a verified XCUIScreen PNG. Tests place it at original coordinates on a synthetic black canvas; that reconstruction is not a native screenshot. Full native rerenders are separately inspected.",
+  "captures": [
+    {
+      "capture": "52b-lesson-chord",
+      "source_path": "capture/attempt-1/attachments/F8DF3A9C-EA4F-4899-A1BB-870428EC7643.png",
+      "source_sha256": "8034f7572769c9507b32c01cfb6c8f4bf6f93166aaf9ed931fbfc5ae47657f6e",
+      "source_pixel_sha256": "02559e9d9d7156d85a7f37a81ab469a845b5d8809bbe4e4c8e4809c2382ad271",
+      "crop_box": [
+        0,
+        350,
+        1320,
+        1100
+      ],
+      "crop_file": "52b-lesson-chord.png",
+      "crop_sha256": "174f0c901d8f83c6b77e245b973477ca0124236d11cccdf6c8c480771cdbc0ed"
+    }
+  ]
+}

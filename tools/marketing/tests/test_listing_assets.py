@@ -1,14 +1,22 @@
+import contextlib
 import copy
+import io
+import os
+import subprocess
 import json
 from pathlib import Path
 import sys
 import tempfile
 import unittest
+from types import SimpleNamespace
 from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import listing_assets as assets
 import run_listing_assets as runner
+sys.path.insert(0, str(assets.ROOT / 'tools/ci'))
+import simulator_cleanup
+import simulator_warmup
 
 
 class ListingPlanTests(unittest.TestCase):
@@ -453,11 +461,228 @@ class SourceContractTests(unittest.TestCase):
         source = (assets.ROOT / 'tools/marketing/run_listing_assets.py').read_text()
         self.assertIn("if cut in (3, 4) and attempt < 3:", source)
         self.assertIn('if attempt == 1 and launch_only_failure(log):', source)
+        attempts = source.split('def test_attempts(', 1)[1].split('def validate_preview_take(', 1)[0]
+        self.assertIn('if attempt == 1 and not warmup_failed and launch_only_failure(log):', attempts)
         self.assertIn("'check', '--out', folder", source)
         self.assertIn("'NOT FOR UPLOAD:' in report", source)
         self.assertNotIn('--reanchor', source)
         self.assertNotIn('--allow-english', source)
         self.assertNotIn('shutil.rmtree', source)
+
+
+DEVICE = 'E952A9B0-CC78-435C-BF08-06AD47FE1076'
+CI = {'DEVICE_ID': DEVICE, 'GITHUB_ACTIONS': 'true', 'RUNNER_ENVIRONMENT': 'github-hosted',
+      'GITHUB_SHA': 'a' * 40, 'GITHUB_RUN_ID': '123', 'GITHUB_RUN_ATTEMPT': '1', 'GITHUB_JOB': 'capture'}
+
+
+class ListingWarmupIndependenceTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name)
+        self.device = {'id': DEVICE}
+        self.spec = assets.locale_spec('de-DE')
+        self.env = runner.environment(self.spec)
+        self.failures, self.results, self.commands, self.receipts = [], [], [], []
+        self.codes = []
+        self.warmup_fails = self.write_receipt = self.language_valid = self.test_passes = True
+        self.cleanup_confirmed = self.wrong_job = False
+
+    def warmup(self, app, device, languages, locale, out):
+        out.mkdir()
+        if self.write_receipt:
+            receipt = {'passed': not self.warmup_fails, 'diagnostic_only': True, 'device': device,
+                       'source_sha': CI['GITHUB_SHA'], 'run_id': 'wrong' if self.wrong_job else CI['GITHUB_RUN_ID'],
+                       'run_attempt': CI['GITHUB_RUN_ATTEMPT'], 'job': CI['GITHUB_JOB'],
+                       'runner_environment': CI['RUNNER_ENVIRONMENT'], 'launch_attempts': 1,
+                       'cleanup_confirmed': self.cleanup_confirmed, 'cleanup_error': 'original terminate timeout'}
+            path = out / 'status.json'
+            path.write_text(json.dumps(receipt))
+            self.receipts.append((path, path.read_bytes()))
+        if self.warmup_fails:
+            raise RuntimeError('Original diagnostic priming timeout')
+
+    def native(self, command, *, log=None, env=None, check=True):
+        self.commands.append(command)
+        if command[0] != 'xcodebuild':
+            return 0
+        code = self.codes.pop(0) if self.codes else 0
+        selected = [x.split(':', 1)[1] for x in command if str(x).startswith('-only-testing:')]
+        Path(command[command.index('-resultBundlePath') + 1]).mkdir()
+        lines = []
+        for selector in selected:
+            target, cls, method = selector.split('/')
+            outcome = 'passed' if code == 0 and self.test_passes else 'failed'
+            lines.append(f"Test Case '-[{target}.{cls} {method}]' {outcome} (1.000 seconds).")
+        record = {k: self.spec[k] for k in ('listing_locale', 'app_language', 'apple_languages', 'apple_locale')}
+        if selected == [assets.EVIDENCE_TEST]:
+            record.update(checked_fields=['tune', 'learn', 'songs', 'practice', 'progress'],
+                          observed_labels=assets.expected_tab_labels('de' if self.language_valid else 'en'))
+            lines.append('TIMBRE_CAPTURE_VERIFIED ' + json.dumps(record))
+        else:
+            lines += ['TIMBRE_CAPTURE_LAUNCH ' + json.dumps(record)] * len(selected)
+        log.write_text('\n'.join(lines))
+        return code
+
+    def execute(self, *, real_cleanup=False, cleanup_error=None):
+        with contextlib.ExitStack() as stack:
+            stack.enter_context(contextlib.redirect_stdout(io.StringIO()))
+            warmup = stack.enter_context(patch.object(simulator_warmup, 'warmup', side_effect=self.warmup))
+            stack.enter_context(patch.object(runner, 'run', side_effect=self.native))
+            export = stack.enter_context(patch.object(runner, 'export_attachments'))
+            cleanup = None if real_cleanup else stack.enter_context(
+                patch.object(simulator_cleanup, 'isolate', side_effect=cleanup_error))
+            folder = runner.test_attempts(self.root / 'Tests.xctestrun', self.device, 'iphone',
+                                         [assets.EVIDENCE_TEST], self.root / 'language-check', self.env,
+                                         retained_failures=self.failures, test_results=self.results)
+        return folder, warmup, cleanup, export
+
+    def test_failed_priming_still_runs_one_independent_test_and_exports(self):
+        folder, warmup, cleanup, export = self.execute()
+        self.assertEqual(warmup.call_count, 1)
+        self.assertEqual(len([c for c in self.commands if c[0] == 'xcodebuild']), 1)
+        cleanup.assert_called_once_with(DEVICE, folder / 'warmup/status.json', folder / 'warmup-cleanup')
+        export.assert_called_once_with(folder / 'Tests.xcresult', folder / 'attachments')
+        self.assertEqual([row['stage'] for row in self.failures], ['warmup'])
+        self.assertEqual(self.results[0]['exit_code'], 0)
+        self.assertTrue(self.results[0]['selected_tests_verified'])
+        self.assertEqual(self.results[0]['phase'], 'language-check')
+        for path, original in self.receipts:
+            self.assertEqual(path.read_bytes(), original)
+
+    def test_successful_priming_needs_no_cleanup_and_no_retained_failure(self):
+        self.warmup_fails = False
+        _, _, cleanup, _ = self.execute()
+        cleanup.assert_not_called()
+        self.assertEqual(self.failures, [])
+
+    def test_missing_receipt_does_not_invent_cleanup_or_skip_xctest(self):
+        self.write_receipt = False
+        _, _, cleanup, _ = self.execute()
+        cleanup.assert_not_called()
+        self.assertTrue(self.results[0]['selected_tests_verified'])
+        self.assertEqual([row['stage'] for row in self.failures], ['warmup'])
+
+    def test_failed_containment_is_retained_but_does_not_skip_xctest(self):
+        self.execute(cleanup_error=RuntimeError('bounded containment timeout'))
+        self.assertEqual([row['stage'] for row in self.failures], ['warmup', 'warmup-cleanup'])
+        self.assertTrue(self.results[0]['selected_tests_verified'])
+
+    def test_confirmed_cleanup_never_reboots_with_real_helper(self):
+        self.cleanup_confirmed = True
+        with patch.dict(os.environ, CI), patch.object(simulator_cleanup.subprocess, 'run') as native:
+            folder, _, _, _ = self.execute(real_cleanup=True)
+        native.assert_not_called()
+        status = assets.read_json(folder / 'warmup-cleanup/status.json')
+        self.assertEqual(status['reset_attempts'], 0)
+        self.assertFalse(status['reset_completed'])
+        self.assertEqual([row['stage'] for row in self.failures], ['warmup'])
+
+    def test_unconfirmed_cleanup_reuses_exact_owned_device_and_existing_bounds(self):
+        with patch.dict(os.environ, CI), patch.object(simulator_cleanup.subprocess, 'run',
+                                                      return_value=SimpleNamespace(returncode=0)) as native:
+            folder, _, _, _ = self.execute(real_cleanup=True)
+        self.assertEqual([call.args[0][2] for call in native.call_args_list], ['shutdown', 'bootstatus', 'status_bar'])
+        for call, limit in zip(native.call_args_list, (30, 90, 15)):
+            self.assertEqual(call.args[0][3], DEVICE)
+            self.assertLessEqual(call.kwargs['timeout'], limit)
+        status = assets.read_json(folder / 'warmup-cleanup/status.json')
+        self.assertEqual(status['total_budget_seconds'], 150)
+        self.assertTrue(status['reset_completed'])
+        self.assertEqual([row['stage'] for row in self.failures], ['warmup'])
+
+    def test_foreign_job_receipt_never_resets_and_keeps_cleanup_failure(self):
+        self.wrong_job = True
+        with patch.dict(os.environ, CI), patch.object(simulator_cleanup.subprocess, 'run') as native:
+            self.execute(real_cleanup=True)
+        native.assert_not_called()
+        self.assertEqual([row['stage'] for row in self.failures], ['warmup', 'warmup-cleanup'])
+        self.assertTrue(self.results[0]['selected_tests_verified'])
+
+    def test_nonhosted_environment_never_resets(self):
+        with patch.dict(os.environ, dict(CI, RUNNER_ENVIRONMENT='self-hosted')), \
+                patch.object(simulator_cleanup.subprocess, 'run') as native:
+            self.execute(real_cleanup=True)
+        native.assert_not_called()
+        self.assertEqual([row['stage'] for row in self.failures], ['warmup', 'warmup-cleanup'])
+
+    def test_assertion_failure_never_retries_and_retains_both_stages(self):
+        self.codes = [65]
+        with patch.object(runner, 'launch_only_failure', return_value=False), self.assertRaises(RuntimeError):
+            self.execute()
+        self.assertEqual(len(self.results), 1)
+        self.assertEqual(self.results[0]['exit_code'], 65)
+        self.assertFalse(self.results[0]['selected_tests_verified'])
+        self.assertEqual([row['stage'] for row in self.failures], ['warmup', 'xctest'])
+
+    def test_existing_launch_only_second_attempt_cannot_clear_original_failure(self):
+        self.warmup_fails = False
+        self.codes = [65, 0]
+        with patch.object(runner, 'launch_only_failure', return_value=True), patch.object(runner, 'boot') as boot:
+            folder, warmup, _, _ = self.execute()
+        self.assertEqual(folder.name, 'attempt-2')
+        self.assertEqual(warmup.call_count, 2)
+        boot.assert_called_once_with(self.device, 'iphone')
+        self.assertEqual([row['exit_code'] for row in self.results], [65, 0])
+        self.assertEqual([row['stage'] for row in self.failures], ['xctest'])
+        self.assertEqual(self.failures[0]['attempt'], 1)
+
+    def test_failed_priming_never_gets_retried_after_independent_launch_failure(self):
+        self.codes = [65, 0]
+        with patch.object(runner, 'launch_only_failure', return_value=True), patch.object(runner, 'boot') as boot, \
+                self.assertRaises(RuntimeError):
+            self.execute()
+        boot.assert_not_called()
+        self.assertEqual(len(self.results), 1)
+        self.assertEqual(self.codes, [0])
+        self.assertEqual([row['stage'] for row in self.failures], ['warmup', 'xctest'])
+
+    def test_zero_or_skipped_test_success_code_is_not_verified(self):
+        self.test_passes = False
+        with self.assertRaisesRegex(RuntimeError, 'No executed passing test'):
+            self.execute()
+        self.assertEqual(len(self.results), 1)
+        self.assertEqual(self.results[0]['exit_code'], 0)
+        self.assertFalse(self.results[0]['selected_tests_verified'])
+
+    def locale(self):
+        args = SimpleNamespace(out=self.root / 'assets', manifests=self.root / 'manifests',
+                               kind='iphone', source_sha='a' * 40)
+        with patch.object(simulator_warmup, 'warmup', side_effect=self.warmup), \
+                patch.object(simulator_cleanup, 'isolate'), patch.object(runner, 'run', side_effect=self.native), \
+                patch.object(runner, 'export_attachments'), patch.object(assets, 'capture_records', return_value=['actual captures']), \
+                patch.object(assets, 'screenshot_records', return_value=['rendered assets']), contextlib.redirect_stdout(io.StringIO()):
+            passed = runner.run_locale('de-DE', args, self.device, self.root / 'Tests.xctestrun', 'b' * 64)
+        return passed, assets.read_json(args.manifests / 'de-DE-iphone.manifest.json')
+
+    def test_later_language_capture_and_render_evidence_cannot_green_failed_priming(self):
+        passed, manifest = self.locale()
+        self.assertFalse(passed)
+        self.assertEqual(manifest['status'], 'failed')
+        self.assertFalse(manifest['release_ready'])
+        self.assertEqual([r['phase'] for r in manifest['retained_failures']], ['language-check', 'capture'])
+        self.assertEqual([r['phase'] for r in manifest['native_test_results']], ['language-check', 'capture'])
+        self.assertTrue(all(r['selected_tests_verified'] for r in manifest['native_test_results']))
+        self.assertEqual(manifest['captures'], ['actual captures'])
+        self.assertEqual(manifest['assets'], ['rendered assets'])
+        self.assertTrue(manifest['language_evidence'])
+        self.assertEqual(manifest['selected_attempt'], 'capture/attempt-1')
+
+    def test_wrong_language_still_blocks_capture_even_after_independent_test_pass(self):
+        self.language_valid = False
+        passed, manifest = self.locale()
+        self.assertFalse(passed)
+        self.assertEqual(len(manifest['native_test_results']), 1)
+        self.assertNotIn('captures', manifest)
+        self.assertIn('tab labels', manifest['error'])
+
+    def test_failure_free_path_remains_mechanically_verified_not_release_ready(self):
+        self.warmup_fails = False
+        passed, manifest = self.locale()
+        self.assertTrue(passed)
+        self.assertEqual(manifest['status'], 'mechanically_verified')
+        self.assertEqual(manifest['retained_failures'], [])
+        self.assertFalse(manifest['release_ready'])
 
 
 if __name__ == '__main__':

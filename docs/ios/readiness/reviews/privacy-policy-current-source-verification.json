@@ -171,7 +171,7 @@
     "ios/Timbre/Onboarding/OnboardingView.swift": "2330381e2f9f8e26773251f535ec12f7af2b2b1d8b5a9b0746278e4266f3e52b",
     "ios/Timbre/Onboarding/PlacementCheckView.swift": "61ebbfe2c956cf39641138aa5c2cba60a917d75ff581cff9ca1f140ec1696a58",
     "ios/Timbre/Onboarding/ReminderAskStep.swift": "c720577fd380fc87c4d7c8dc4be11b2eebcd03c9c583995fbf5ab8ca1d0c3f3b",
-    "ios/Timbre/Onboarding/WelcomeHeadline.swift": "8f6d9e352781a1092b903739497c2184f0ac81f7f3111ec047d3d29276c391d9",
+    "ios/Timbre/Onboarding/WelcomeHeadline.swift": "d5764d55381411b3865c5f8b46e8e0fc06a73ba0788504109fb4194dc44c9bc4",
     "ios/Timbre/Paywall/BillingIssueBanner.swift": "fe1695fc7fa15997dc5b000376505e6222c0cf9a8f09f13a046761dc2ed18806",
     "ios/Timbre/Paywall/PaywallPlan.swift": "6e6ccaf832aba07a78b428b7250f6f6da1a249c178c295a2a18b5c86cd94d994",
     "ios/Timbre/Paywall/PaywallPlanHero.swift": "a14e3aba2fb315758b8e4714c678aa950fa42474e021757ebec68f20aad16fda",
@@ -415,38 +415,25 @@
   "mutations": "Only this receipt written. No listing verification/readiness flags, policy text, public website, signing, credentials or account settings changed.",
   "source_inventory_scope": "All shipped app/core/extension Swift, Objective-C/C/C++ sources and headers, app privacy manifests, xcconfig/plist/entitlement/permission configuration and package dependency inputs. Any edit/addition invalidates this source-review receipt; tests/docs outside named policy sources do not.",
   "source_review_refresh": {
-    "reviewed_utc": "2026-10-28T04:00:41.052641Z",
-    "base_revision": "7051df183d166ad8c7df2734fa7207d1d5efc326",
-    "source_state": "base_revision_plus_explicit_reviewed_quiz_accessibility_bounds_and_vertical_shelf_identity_deltas",
+    "reviewed_utc": "2026-10-28T05:50:12.267059Z",
+    "base_revision": "210cc08043b3a7ecab43d4fb482290d3ca5b53e5",
+    "reviewer": "Independent AI source review",
+    "source_state": "base_revision_plus_explicit_reviewed_urdu_headline_font_metrics_and_clearance_delta",
     "changes": [
       {
-        "path": "ios/Timbre/Learn/LessonPlayer.swift",
-        "previous_reviewed_sha256": "7ecb89520f2926d6143e84e72b190aa8d886ea20f122a75ee7f693fae7e7113e",
-        "reviewed_sha256": "5271cf5455c3eccbf722a30044708858daf0ba187295b142f72c9890b6c9f44e",
-        "diff_sha256": "8a30ce7382aa8bd700b6f28b695ab724317402e9a7235b76e68dc11ee512b4f5",
-        "privacy_assessment": "Moves the existing quiz-answer accessibility identifier before its decorative SparkBurst background and constrains the accessibility content shape to the complete answer tile. Existing button action, answer state, reward rendering, labels and enablement conditions are unchanged. No collection, storage, permissions, audio access, analytics or network changes; native uniqueness, focus bounds and answer reachability remain unverified."
-      },
-      {
-        "path": "ios/Timbre/Songs/SongShelfPage.swift",
-        "previous_reviewed_sha256": null,
-        "reviewed_sha256": "6ff7ac92e89458231292f64c0e83dc73916a9a7fb71027a88ba09c2571b3edf5",
-        "diff_sha256": null,
-        "privacy_assessment": "New SwiftUI presentation helper gives introduction, existing shelves and request footer one typed collection identity matching the optional vertical scroll binding. It retains the existing lazy layout, spacing, padding and centered anchor. State contains only transient existing shelf identifiers; no new user identifier, persistence, collection, permissions, audio or network behavior. Actual browsing/rotation and accessibility still require native validation."
-      },
-      {
-        "path": "ios/Timbre/Songs/SongsView.swift",
-        "previous_reviewed_sha256": "5f3b4bb681d19c835b3f59a5bc72888c4f3ff60fb73363f87445a013bcd43cb4",
-        "reviewed_sha256": "033f066f77745f570df2821e8f4964bca067920fd413969ad2bb7668e8fc6cf4",
-        "diff_sha256": "87bfc19b96c68b8cfb0420ab9c47af72eb58b430f93fd98501d63266fc674a0b",
-        "privacy_assessment": "Replaces the outer page ScrollPosition wrapper with the new typed optional SongShelfPageTarget binding and delegates unchanged introduction/shelf/footer content to SongShelfPage. The nested horizontal SongShelfRail is unchanged. Existing song/access/request actions, imported-chart content, playback, storage and data flows are unchanged; no new collection, network or permissions. Native rotation retention is pending, not established by source review."
+        "path": "ios/Timbre/Onboarding/WelcomeHeadline.swift",
+        "previous_reviewed_sha256": "8f6d9e352781a1092b903739497c2184f0ac81f7f3111ec047d3d29276c391d9",
+        "reviewed_sha256": "d5764d55381411b3865c5f8b46e8e0fc06a73ba0788504109fb4194dc44c9bc4",
+        "diff_sha256": "9799aa9b51eb8f7d70f3c9e166cdfc18bc3d063455e20e229ee243522bb68af2",
+        "privacy_assessment": "Changes only the existing Urdu onboarding headline presentation: resolves the installed system fallback font from the existing localized bundled text through CoreText, supplies that font at the uncapped scaled size, applies the locale typesetting language and reserves scaled horizontal ink clearance. Non-Urdu font choices, the existing displayed string and single heading accessibility identity are retained. Reads existing locale, Bold Text and bundled-resource values for transient rendering only. Adds no network request or font-download API, persistence, user identifier, collection, analytics, audio access or permission. Corrective native glyph separation, overhang, wrapping, fallback and accessibility results remain pending."
       }
     ],
-    "source_inventory_sha256": "b2d69a09e5745f993d55c754f374b9b6c3e23d40568bb3ae58dd2d8dce0ce1c6",
+    "source_inventory_sha256": "72672a319758cc63b5796b8cdee22002325575e7c58baf5ca89681a9300e0eed",
     "source_inventory_hash_method": "SHA-256 of UTF-8 JSON source_sha256 mapping with sorted keys and compact separators",
-    "source_inventory_delta": "299 bound inputs: LessonPlayer.swift and SongsView.swift change and SongShelfPage.swift is added relative to HEAD705 and the preceding 298-input reviewed snapshot. All other production input bytes match HEAD705 and the prior receipt, including the horizontal SongShelfRail and existing Urdu typography. Prior current review is appended unchanged to source_review_refresh_history. Test-only oracle corrections, diagnostics and bounded calibration are outside the production inventory and do not establish a production fix.",
-    "listing_delta": "All 50 listing content hashes and consumer payloads remain unchanged. Prior listing-only reviews, original old/new mappings, portal observations and every review/readiness flag remain untouched.",
-    "publication_observation": "Original 2026-10-27 08:20 UTC public HTTP observations, timestamps, routes and policy/support bytes preserved. No fresh public fetch, deployment, portal readback or publication asserted.",
-    "limitations": "Bounded source-diff privacy review only. Corrective native execution and calibration remain pending. Does not certify quiz focus/selection, Songs rotation, typography, RTL, screenshot correctness, accessibility/contrast, physical devices, StoreKit configuration, signed archives, legal/account declarations or App Store submission. Urdu production typography remains unchanged and its observed collision is not fixed by test diagnostics. No contrast exemption or proposal is activated."
+    "source_inventory_delta": "The same 299 bound input paths are retained. Only WelcomeHeadline.swift changes relative to HEAD210 and the preceding reviewed source snapshot. All other production inputs match the prior receipt and HEAD210. The prior current source review is appended unchanged to source_review_refresh_history. Test fixtures, capture diagnostics, CI orchestration and marketing renderer changes are outside this production privacy inventory.",
+    "listing_delta": "All 50 listing content hashes and consumer payload bytes remain unchanged. Existing listing-only history, original old/new mappings, portal observations and every review/readiness flag are preserved.",
+    "publication_observation": "Original 2026-10-27 08:20 UTC public HTTP observations, response bytes, timestamps, routes and policy/support page observations are preserved. No new public request, deployment, portal readback or publication is asserted.",
+    "limitations": "Bounded source-diff privacy review only, not a fresh legal or publication review. Corrective native build/execution and typography validation remain pending. This receipt does not certify Urdu glyph separation, font fallback, wrapping, RTL, Songs scrolling/rotation, screenshot correctness, accessibility/contrast, physical devices, StoreKit configuration, signed archives, legal/account declarations or App Store submission. All existing readiness limitations and native failures remain unresolved by this receipt. No contrast exemption or proof proposal is activated."
   },
   "source_review_refresh_history": [
     {
@@ -1126,6 +1113,40 @@
       "listing_delta": "All 50 content bindings advance only through the exact guarded caption-only review in listing_review_refresh_history. No payload readiness/privacy flags or six previously saved portal fields change; no new legal/privacy collection claim is introduced.",
       "publication_observation": "Original 08:20 UTC public HTTP observations, timestamps and policy/support bytes preserved. No fresh public fetch, deployment or publication asserted.",
       "limitations": "Bounded source-diff privacy review only. Does not certify native build/execution, Urdu ink separation, RTL/scroll geometry, screenshot fitting, accessibility/contrast, physical devices, StoreKit configuration, signed archives, legal/account declarations or App Store submission. All pending native assertions and strict audit failures remain unresolved by this receipt."
+    },
+    {
+      "reviewed_utc": "2026-10-28T04:00:41.052641Z",
+      "base_revision": "7051df183d166ad8c7df2734fa7207d1d5efc326",
+      "source_state": "base_revision_plus_explicit_reviewed_quiz_accessibility_bounds_and_vertical_shelf_identity_deltas",
+      "changes": [
+        {
+          "path": "ios/Timbre/Learn/LessonPlayer.swift",
+          "previous_reviewed_sha256": "7ecb89520f2926d6143e84e72b190aa8d886ea20f122a75ee7f693fae7e7113e",
+          "reviewed_sha256": "5271cf5455c3eccbf722a30044708858daf0ba187295b142f72c9890b6c9f44e",
+          "diff_sha256": "8a30ce7382aa8bd700b6f28b695ab724317402e9a7235b76e68dc11ee512b4f5",
+          "privacy_assessment": "Moves the existing quiz-answer accessibility identifier before its decorative SparkBurst background and constrains the accessibility content shape to the complete answer tile. Existing button action, answer state, reward rendering, labels and enablement conditions are unchanged. No collection, storage, permissions, audio access, analytics or network changes; native uniqueness, focus bounds and answer reachability remain unverified."
+        },
+        {
+          "path": "ios/Timbre/Songs/SongShelfPage.swift",
+          "previous_reviewed_sha256": null,
+          "reviewed_sha256": "6ff7ac92e89458231292f64c0e83dc73916a9a7fb71027a88ba09c2571b3edf5",
+          "diff_sha256": null,
+          "privacy_assessment": "New SwiftUI presentation helper gives introduction, existing shelves and request footer one typed collection identity matching the optional vertical scroll binding. It retains the existing lazy layout, spacing, padding and centered anchor. State contains only transient existing shelf identifiers; no new user identifier, persistence, collection, permissions, audio or network behavior. Actual browsing/rotation and accessibility still require native validation."
+        },
+        {
+          "path": "ios/Timbre/Songs/SongsView.swift",
+          "previous_reviewed_sha256": "5f3b4bb681d19c835b3f59a5bc72888c4f3ff60fb73363f87445a013bcd43cb4",
+          "reviewed_sha256": "033f066f77745f570df2821e8f4964bca067920fd413969ad2bb7668e8fc6cf4",
+          "diff_sha256": "87bfc19b96c68b8cfb0420ab9c47af72eb58b430f93fd98501d63266fc674a0b",
+          "privacy_assessment": "Replaces the outer page ScrollPosition wrapper with the new typed optional SongShelfPageTarget binding and delegates unchanged introduction/shelf/footer content to SongShelfPage. The nested horizontal SongShelfRail is unchanged. Existing song/access/request actions, imported-chart content, playback, storage and data flows are unchanged; no new collection, network or permissions. Native rotation retention is pending, not established by source review."
+        }
+      ],
+      "source_inventory_sha256": "b2d69a09e5745f993d55c754f374b9b6c3e23d40568bb3ae58dd2d8dce0ce1c6",
+      "source_inventory_hash_method": "SHA-256 of UTF-8 JSON source_sha256 mapping with sorted keys and compact separators",
+      "source_inventory_delta": "299 bound inputs: LessonPlayer.swift and SongsView.swift change and SongShelfPage.swift is added relative to HEAD705 and the preceding 298-input reviewed snapshot. All other production input bytes match HEAD705 and the prior receipt, including the horizontal SongShelfRail and existing Urdu typography. Prior current review is appended unchanged to source_review_refresh_history. Test-only oracle corrections, diagnostics and bounded calibration are outside the production inventory and do not establish a production fix.",
+      "listing_delta": "All 50 listing content hashes and consumer payloads remain unchanged. Prior listing-only reviews, original old/new mappings, portal observations and every review/readiness flag remain untouched.",
+      "publication_observation": "Original 2026-10-27 08:20 UTC public HTTP observations, timestamps, routes and policy/support bytes preserved. No fresh public fetch, deployment, portal readback or publication asserted.",
+      "limitations": "Bounded source-diff privacy review only. Corrective native execution and calibration remain pending. Does not certify quiz focus/selection, Songs rotation, typography, RTL, screenshot correctness, accessibility/contrast, physical devices, StoreKit configuration, signed archives, legal/account declarations or App Store submission. Urdu production typography remains unchanged and its observed collision is not fixed by test diagnostics. No contrast exemption or proposal is activated."
     }
   ],
   "listing_review_refresh_history": [

@@ -30,8 +30,8 @@ class RecordedFrame(shots.Frame):
 
 
 class CompositionIntegrityTests(unittest.TestCase):
-    def source(self, capture):
-        root = Path(__file__).parent / 'fixtures/native-arabic-composition'
+    def source(self, capture, fixture="native-arabic-composition"):
+        root = Path(__file__).parent / "fixtures" / fixture
         evidence = json.loads((root / 'evidence.json').read_text())
         row = next(row for row in evidence['captures'] if row['capture'] == capture)
         crop = root / row['crop_file']
@@ -45,17 +45,18 @@ class CompositionIntegrityTests(unittest.TestCase):
 
     def compose(self, capture, source, locale, handler):
         before = hashlib.sha256(source.tobytes()).hexdigest()
-        _, title, line, look = next(row for row in shots.plan('iphone', locale=locale) if row[0] == capture)
+        role = 'iphone-large' if source.size == (1320, 2868) else 'iphone'
+        _, title, line, look = next(row for row in shots.plan(role, locale=locale) if row[0] == capture)
         with patch.object(shots, 'Frame', RecordedFrame), patch.dict(os.environ, TIMBRE_CAPTION_LOCALE=locale):
             frame = handler(look.split()[0], look.split()[1], source,
-                            shots.focus_for(capture, 'iphone'), title, line, source.size)
+                            shots.focus_for(capture, role), title, line, source.size)
         self.assertEqual(hashlib.sha256(source.tobytes()).hexdigest(), before)
         self.assertLessEqual(frame.caption_bounds[3], frame.h - frame.px(64))
         return frame
 
-    def assert_native_region(self, frame, source, region, source_box=None):
+    def assert_native_region(self, frame, source, region, source_box=None, card_index=0):
         """Native protected pixels must equal one uniform resize, without overlays/fades."""
-        picture, x, y, _, _ = frame.cards[0]
+        picture, x, y, _, _ = frame.cards[card_index]
         box = source_box or (0, 0, source.width, source.height)
         expected = source.crop(box).resize(picture.size, Image.Resampling.LANCZOS)
         sx, sy = picture.width / (box[2] - box[0]), picture.height / (box[3] - box[1])
@@ -107,23 +108,65 @@ class CompositionIntegrityTests(unittest.TestCase):
                 callout, cx, cy, _, options = frame.cards[1]
                 main, x, top, _, _ = frame.cards[0]
                 self.assertEqual(options['shadow'], 0)  # Shadows must not darken protected labels.
+                detail_box, _ = shots._ticked_strings_region(source)
+                self.assert_native_region(frame, source, (214, 566, 1042, 691), detail_box, card_index=1)
                 # The real callout compositor must not opt its on-canvas bottom
                 # corners out of the rounded mask (the original native defect).
                 self.assertNotEqual(frame.canvas.getpixel((x + 2, top + main.height - 3))[:3], (0, 0, 0))
                 self.assertNotEqual(frame.canvas.getpixel((x + main.width - 3, top + main.height - 3))[:3], (0, 0, 0))
-                self.assertGreaterEqual(cy, top + .202 * main.height + frame.px(11))
-                self.assertLessEqual(cy + callout.height, top + .310 * main.height - frame.px(11))
+                _, clearance = shots._ticked_strings_region(source)
+                self.assertGreaterEqual(cy, top + clearance[0] * main.height / source.height + frame.px(11))
+                self.assertLessEqual(cy + callout.height, top + clearance[1] * main.height / source.height - frame.px(11))
                 self.assertLessEqual(cx + callout.width, frame.w - frame.px(48))
                 self.assertGreaterEqual(cx, frame.px(48))
                 frames.append(frame)
         # Caption heights may change the scale, but physical string order must not.
-        detail = shots.FOCUS['52b-lesson-chord']['detail']
-        box = tuple(round(v) for v in (detail[0] * source.width, detail[1] * source.height,
-                                       detail[2] * source.width, detail[3] * source.height))
+        box, _ = shots._ticked_strings_region(source)
         for frame in frames:
             picture = frame.cards[1][0]
             expected = source.crop(box).resize(picture.size, Image.Resampling.LANCZOS)
             self.assertEqual(picture.tobytes(), expected.tobytes())
+
+    def test_large_native_callout_preserves_full_badges_em_and_selector(self):
+        source = self.source('52b-lesson-chord', 'native-english-large-composition')
+        box, clearance = shots._ticked_strings_region(source)
+        self.assertEqual(box, (208, 544, 1181, 719))
+        self.assertEqual(clearance, (510, 810))
+        # The original height-fraction crop clipped badges and covered the selector.
+        self.assertGreater(round(.208 * source.height), 567)
+        self.assertGreater(round(.310 * source.height), 819)
+        for locale in ('en-US', 'ar-SA'):
+            with self.subTest(locale=locale):
+                frame = self.compose('52b-lesson-chord', source, locale, shots._callout)
+                self.assert_native_region(frame, source, (140, 360, 1190, 518))
+                self.assert_native_region(frame, source, (140, 805, 1190, 942))
+                # Includes every pixel of all six original note/checkmark shapes;
+                # rounded corners, border, or RTL placement may not erase them.
+                self.assert_native_region(frame, source, (231, 567, 1158, 696), box, card_index=1)
+                picture = frame.cards[1][0]
+                expected = source.crop(box).resize(picture.size, Image.Resampling.LANCZOS)
+                self.assertEqual(picture.tobytes(), expected.tobytes())
+                self.assertGreater(picture.width / (box[2] - box[0]), frame.cards[0][0].width / source.width)
+
+    def test_native_callout_tracks_content_instead_of_screen_height(self):
+        # Structural transformations of a native crop, not new native evidence.
+        source = self.source('52b-lesson-chord', 'native-english-large-composition')
+        box, clearance = shots._ticked_strings_region(source)
+        shifted = Image.new('RGB', source.size)
+        shifted.paste(source.crop((0, 350, source.width, 1100)), (0, 430))
+        moved_box, moved_clearance = shots._ticked_strings_region(shifted)
+        self.assertEqual(moved_box, (box[0], box[1] + 80, box[2], box[3] + 80))
+        self.assertEqual(moved_clearance, tuple(y + 80 for y in clearance))
+
+    def test_native_callout_fails_closed_when_shape_or_whitespace_is_missing(self):
+        source = self.source('52b-lesson-chord', 'native-english-large-composition')
+        for invalid in (Image.new('RGB', source.size), source.copy()):
+            invalid.paste('black', (200, 540, 370, 720))
+            with self.assertRaisesRegex(ValueError, 'six unambiguous'):
+                shots._ticked_strings_region(invalid)
+        source.paste('white', (50, 550, 120, 551))
+        with self.assertRaisesRegex(ValueError, 'whitespace'):
+            shots._ticked_strings_region(source)
 
     def test_visible_card_corners_match_the_rounded_rim(self):
         frame = shots.Frame((300, 600), 'mint')

@@ -66,25 +66,29 @@ final class SettingsOptionLabelTests: XCTestCase {
         }
     }
 
-    /// A separately authored whole token in an LTR paragraph is the raster oracle. Splitting its glyphs into
-    /// separate Text views can round glyph advances differently, so they are not an exact oracle for one Text run.
-    /// Expected tokens use neither directional controls nor the production formatter. Typography is identical.
+    /// An independently authored LTR embedding stays inside the same outer paragraph as the actual isolate.
+    /// A forced-LTR paragraph changed glyph placement at AX5 in RTL, despite matching font and language.
+    /// Keep that old context as diagnostic pixels, not an equality oracle. Never align or tolerate differing pixels.
     func testPrecisionRendersAllGlyphsInOrderAtNormalAndAX5Sizes() throws {
         let cases: [(TuningPrecision, String, String)] = [(.beginner, "±5¢", "¢5±"),
                                                         (.standard, "±3¢", "¢3±"), (.pro, "±1¢", "¢1±")]
         for size in [DynamicTypeSize.large, .accessibility5] {
             for (precision, knownToken, reversedToken) in cases {
-                let expected = Text(verbatim: knownToken).environment(\.layoutDirection, .leftToRight)
-                let reversed = Text(verbatim: reversedToken).environment(\.layoutDirection, .leftToRight)
-                let oracle = try render(expected, size: size, direction: .rightToLeft, name: "oracle-\(precision)-\(size)")
-                let wrong = try render(reversed, size: size, direction: .rightToLeft, name: "reversed-\(precision)-\(size)")
-                XCTAssertNotEqual(oracle, wrong, "The raster oracle must distinguish glyph order")
+                let forcedLTR = Text(verbatim: knownToken).environment(\.layoutDirection, .leftToRight)
+                _ = try render(forcedLTR, size: size, direction: .rightToLeft, name: "forced-ltr-paragraph-\(precision)-\(size)")
                 for direction in [LayoutDirection.leftToRight, .rightToLeft] {
+                    // LRE/PDF specifies an independent embedding, not the formatter's LRI/PDI isolate.
+                    // The entire token is one Text run; both sides retain the same outer paragraph direction.
+                    let expected = Text(verbatim: "\u{202A}" + knownToken + "\u{202C}")
+                    let reversed = Text(verbatim: "\u{202A}" + reversedToken + "\u{202C}")
+                    let oracle = try render(expected, size: size, direction: direction, name: "oracle-\(precision)-\(size)-\(direction)")
+                    let wrong = try render(reversed, size: size, direction: direction, name: "reversed-\(precision)-\(size)-\(direction)")
+                    XCTAssertNotEqual(oracle, wrong, "The raster oracle must distinguish glyph order")
                     let token = Text(verbatim: SettingsOptionLabel.precisionTolerance(precision))
                     let actual = try render(token, size: size, direction: direction, name: "actual-\(precision)-\(size)-\(direction)")
                     let changed = zip(actual, oracle).filter { $0 != $1 }.count
                     XCTAssertEqual(actual, oracle,
-                                   "Whole-token LTR oracle: \(precision), \(size), \(direction); \(changed) canonical RGBA bytes differ")
+                                   "Whole-token same-paragraph oracle: \(precision), \(size), \(direction); \(changed) canonical RGBA bytes differ")
                     XCTAssertNotEqual(actual, wrong)
                 }
             }

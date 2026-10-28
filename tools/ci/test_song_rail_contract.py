@@ -140,24 +140,55 @@ class SongRailContractTests(unittest.TestCase):
             self.assertNotIn(forbidden, PAGE)
         self.assertIn('.scrollPosition(id: $position, anchor: .trailing)', RAIL)
 
-    def test_native_parent_regression_observes_physical_tracking_before_any_resize(self):
+    def test_native_parent_regression_observes_supported_programmatic_tracking_before_any_resize(self):
         native = (ROOT / 'ios/TimbreAppTests/SongShelfPageTests.swift').read_text()
         for token in ['SongShelfPage(items: shelves, position: $state.position)',
                       'SongShelfRail(items: songs, selection: 59', '(0..<120)',
                       'UIWindow(windowScene: scene)', 'window.makeKeyAndVisible()',
-                      'vertical.setContentOffset', 'horizontal.setContentOffset',
+                      'proxy.scrollTo(value, anchor: .center)', 'proxy.scrollTo(119, anchor: .trailing)',
                       'state.position == .shelf(target)', 'await fulfillment(of: [tracked], timeout: 3)',
                       'XCTAssertEqual(state.position, .shelf(target)', 'for cycle in 0..<2',
                       'CGSize(width: 874, height: 402)', 'CGSize(width: 402, height: 874)',
                       'page.insetBy(dx: -1, dy: -1).contains(frame)',
                       'rail.insetBy(dx: -1, dy: -1).contains(frame)',
-                      'testPhysicalBrowsingTracksShelfAndSurvivesRepeatedResizeRightToLeft']:
+                      'testProgrammaticScrollTracksShelfAndSurvivesRepeatedResizeRightToLeft']:
             self.assertIn(token, native)
         self.assertLess(native.index('await fulfillment(of: [tracked]'), native.index('state.size = size'))
         # Setting the expected ID would hide a broken automatic tracking binding.
         self.assertNotRegex(native, r'state\.position\s*=(?!=)')
-        self.assertNotIn('scrollTo(', native)
+        self.assertNotIn('setContentOffset(', native)
+        self.assertEqual(native.count('proxy.scrollTo('), 2)
+        fixture = native.split('private struct Fixture:', 1)[1].split('func testProgrammaticScroll', 1)[0]
+        self.assertIn('.onChange(of: state.requestedShelf)', fixture)
+        self.assertIn('.onChange(of: state.requestedTerminalShelf)', fixture)
+        self.assertNotIn('.onAppear', fixture)
+        resize = native.split('for cycle in 0..<2', 1)[1].split('private func assertTerminal', 1)[0]
+        for forbidden in ['scrollTo(', 'requestedShelf =', 'requestedTerminalShelf =', 'position =']:
+            self.assertNotIn(forbidden, resize)
         self.assertNotIn('XCTSkip', native)
+
+    def test_native_parent_traversal_keeps_nested_scroll_views(self):
+        native = (ROOT / 'ios/TimbreAppTests/SongShelfPageTests.swift').read_text()
+        traversal = native.split('private func scrolls(', 1)[1].split('func testScrollTraversal', 1)[0]
+        self.assertIn('return current + view.subviews.flatMap { scrolls($0) }', traversal)
+        self.assertNotIn('?? view.subviews', traversal)
+        for token in ['testScrollTraversalIncludesNestedRailsAndTheirPage', 'content.addSubview(rail)',
+                      'XCTAssertEqual(found.count, 2)', 'XCTAssertTrue(found.first === page)',
+                      'XCTAssertTrue(found.last === rail)']:
+            self.assertIn(token, native)
+
+    def test_native_parent_diagnostics_precede_early_unwraps_and_retain_true_driver(self):
+        native = (ROOT / 'ios/TimbreAppTests/SongShelfPageTests.swift').read_text()
+        verify = native.split('private func verify(', 1)[1].split('private func assertTerminal(', 1)[0]
+        self.assertLess(verify.index('stage: "loaded-'), verify.index('let vertical = try XCTUnwrap'))
+        self.assertLess(verify.index('stage: "programmatic-tracking-'), verify.index('let horizontal = try XCTUnwrap'))
+        terminal = native.split('private func assertTerminal(', 1)[1]
+        self.assertLess(terminal.index('record(state, window: window, stage: stage)'),
+                        terminal.index('guard let current = currentScrolls() else'))
+        for token in ['not a touch gesture', 'positionHistory', 'scroll.isDragging', 'scroll.isDecelerating',
+                      'scroll.contentOffset', 'scroll.adjustedContentInset', 'XCTAttachment(image: image)',
+                      'diagnostic.lifetime = .keepAlways', 'rendered.lifetime = .keepAlways']:
+            self.assertIn(token, native)
 
     def test_primary_action_taps_real_sleeve_clear_of_independent_controls(self):
         native = (ROOT / 'ios/TimbreUITests/SongShelfRailUITests.swift').read_text()

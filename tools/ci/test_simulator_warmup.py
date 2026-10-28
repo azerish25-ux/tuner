@@ -448,7 +448,9 @@ class ProcessProbeTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             app = self.fixture(Path(directory))
             digest = hashlib.sha256(b'fixture').hexdigest()
-            self.assertEqual(warm.installed_executable(str(app), DEVICE, 'Timbre', digest), app / 'Timbre')
+            # macOS temporary roots can be spelled /var while resolving to /private/var.
+            self.assertEqual(warm.installed_executable(str(app), DEVICE, 'Timbre', digest),
+                             (app / 'Timbre').resolve(strict=True))
             for path, device, executable, code_hash in [
                 (str(app), OTHER, 'Timbre', digest),
                 (str(app), DEVICE, 'other', digest),
@@ -457,6 +459,30 @@ class ProcessProbeTests(unittest.TestCase):
             ]:
                 with self.assertRaises((ValueError, OSError)):
                     warm.installed_executable(path, device, executable, code_hash)
+
+    def test_same_filesystem_ancestor_alias_returns_canonical_executable(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory).resolve(strict=True)
+            canonical = root / 'canonical'
+            app = self.fixture(canonical)
+            alias = root / 'alias'
+            alias.symlink_to(canonical, target_is_directory=True)
+            aliased_app = alias / app.relative_to(canonical)
+            self.assertNotEqual(aliased_app, app)
+            self.assertTrue(aliased_app.samefile(app))
+            self.assertEqual(warm.installed_executable(str(aliased_app), DEVICE, 'Timbre',
+                                                     hashlib.sha256(b'fixture').hexdigest()), app / 'Timbre')
+
+    def test_device_directory_alias_cannot_disguise_another_device(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory).resolve(strict=True)
+            app = self.fixture(root, OTHER)
+            devices = root / 'CoreSimulator/Devices'
+            (devices / DEVICE).symlink_to(devices / OTHER, target_is_directory=True)
+            aliased_app = devices / DEVICE / app.relative_to(devices / OTHER)
+            self.assertTrue(aliased_app.samefile(app))
+            with self.assertRaises(ValueError):
+                warm.installed_executable(str(aliased_app), DEVICE, 'Timbre', hashlib.sha256(b'fixture').hexdigest())
 
     def test_invalid_and_duplicate_candidates_are_never_accepted(self):
         for matches in ((True,), (1,), ('321',), (321, 321)):

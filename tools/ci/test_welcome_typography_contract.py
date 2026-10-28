@@ -9,19 +9,26 @@ import matrix_fixture
 
 
 class WelcomeTypographyContract(unittest.TestCase):
-    def test_only_urdu_gains_scaled_leading_without_font_or_copy_replacement(self):
+    def test_only_urdu_uses_its_existing_native_glyph_face_and_scaled_overhang_clearance(self):
         source = (ROOT / "ios/Timbre/Onboarding/WelcomeHeadline.swift").read_text()
         for token in ['locale.language.languageCode?.identifier == "ur"',
-                      '@ScaledMetric(relativeTo: .largeTitle)', 'nastaliqLeading: CGFloat = 24',
-                      '.lineSpacing(isUrdu ? nastaliqLeading : 0)',
-                      '.padding(.vertical, isUrdu ? nastaliqLeading / 2 : 0)',
+                      '@ScaledMetric(relativeTo: .largeTitle)', 'urduPoints: CGFloat = 40',
+                      'urduHorizontalClearance: CGFloat = 12', 'CTFontCreateForStringWithLanguage',
+                      'Typeface.boldText ? Typeface.Face.semiBold.heavier : Typeface.Face.semiBold',
+                      'Font(Self.nativeUrduFont(points: urduPoints, locale: locale))',
+                      '.typesettingLanguage(locale.language)',
+                      '.padding(.horizontal, isUrdu ? urduHorizontalClearance : 0)',
+                      'let copy = fontSelectionText(locale: locale)',
+                      'Bundle.main.path(forResource: language, ofType: "lproj")',
+                      'bundle: bundle, locale: locale',
                       'Typeface.display(40)', 'Typeface.display(28, relativeTo: .largeTitle)',
                       'Text("Tune in seconds.\\nThen learn to play.")',
                       '.fixedSize(horizontal: false, vertical: true)',
                       '.accessibilityAddTraits(.isHeader)']:
             self.assertIn(token, source)
         for workaround in ['minimumScaleFactor', 'lineLimit', '.dynamicTypeSize(', '.leftToRight',
-                           'Text(verbatim:', '.clipped()', '.accessibilityLabel(']:
+                           'Text(verbatim:', '.clipped()', '.accessibilityLabel(', '.lineSpacing(',
+                           '.padding(.vertical', 'NotoNastaliqUrdu', 'Font.custom']:
             self.assertNotIn(workaround, source)
 
     def test_scroll_fallback_is_urdu_only_and_preserves_actions(self):
@@ -45,7 +52,7 @@ class WelcomeTypographyContract(unittest.TestCase):
                       '[CGFloat(280), 335, 362, 390]', 'DynamicTypeSize.large, .accessibility5',
                       'contains(full.bounds)', 'XCTAssertGreaterThan(heights[1], heights[0]',
                       '["en", "ta", "ar", "fa", "he"]', 'renderer.scale = 3',
-                      'actual.ink.elementsEqual(expected.ink)', '.keepAlways']:
+                      'try requireSamePixels(expected, actual', '.keepAlways']:
             self.assertIn(token, source)
         self.assertNotIn('.clipped()', source)
         self.assertNotIn('XCTSkip', source)
@@ -59,19 +66,35 @@ class WelcomeTypographyContract(unittest.TestCase):
         self.assertLess(source.index('try requireSamePixels(full, completeProbe'),
                         source.index('let even = try render(controlled.textRenderer'))
 
-    def test_calibration_is_bounded_native_only_and_keeps_production_gate(self):
+    def test_native_metrics_acceptance_covers_all_eight_samples_without_calibration_workarounds(self):
         source = (ROOT / 'ios/TimbreAppTests/WelcomeHeadlineLayoutTests.swift').read_text()
-        for token in ['testRecordBoundedUrduLeadingCalibration', '("baseline", 24, 12, 0)',
-                      '("roomier", 40, 32, 12)', '("separated", 48, 32, 12)',
-                      'try requireSamePixels(native, baseline', 'try autoreleasepool',
-                      'diagnostics: false, nativeImage: representative', 'XCTAssertEqual(rows.count, 24',
-                      '"diagnosticOnly": true', '"safeForThisSample": separated && fits && union.elementsEqual(full.ink)',
-                      '"urdu-leading-calibration.json"']:
+        for token in ['testProductionUsesNativeUrduMetricsAtEveryWidthAndSize',
+                      'struct NativeMetricsHeadline', 'CTFontCreateForStringWithLanguage',
+                      '@ScaledMetric(relativeTo: .largeTitle)', 'points: CGFloat = 40',
+                      'horizontal: CGFloat = 12', '.font(Font(fallback)).tracking(-1)',
+                      'try requireSamePixels(native, independent', 'try autoreleasepool',
+                      'XCTAssertEqual(samples, 8', 'production-vs-native-metrics-',
+                      'XCTAssertFalse(even.touches(odd)', 'contains(full.bounds)']:
             self.assertIn(token, source)
-        self.assertIn('XCTAssertFalse(even.touches(odd)', source)
-        self.assertIn('contains(full.bounds)', source)
+        self.assertNotIn('CalibrationHeadline', source)
+        self.assertNotIn('diagnosticOnly', source)
 
-    def test_native_fallback_diagnostic_discovers_the_face_without_changing_production(self):
+    def test_native_and_probe_share_physical_canvas_without_pixel_registration(self):
+        source = (ROOT / 'ios/TimbreAppTests/WelcomeHeadlineLayoutTests.swift').read_text()
+        for token in ['struct PinnedCanvas: Layout', 'PinnedCanvas(width: example.width)',
+                      'subviews[0].sizeThatFits(ProposedViewSize(width: width, height: nil))',
+                      'anchor: UnitPoint(x: 0, y: 0)',
+                      'proposal: ProposedViewSize(width: width, height: nil)',
+                      'CGPoint(x: bounds.minX + 80, y: bounds.minY + 80)',
+                      '.environment(\\.layoutDirection, example.direction)',
+                      '.environment(\\.layoutDirection, .leftToRight)',
+                      'expected.rgba == actual.rgba']:
+            self.assertIn(token, source)
+        for workaround in ['.translateBy(', '.offset(', 'CGAffineTransform', 'XCTSkip',
+                           '.frame(width: example.width)', '.clipped()']:
+            self.assertNotIn(workaround, source)
+
+    def test_native_fallback_evidence_checks_actual_production_resolution(self):
         source = (ROOT / 'ios/TimbreAppTests/WelcomeFallbackDiagnosticsTests.swift').read_text()
         for token in ['CTFontCreateForStringWithLanguage', 'CTFontCopyPostScriptName',
                       'CTFontGetAscent', 'CTFontGetDescent', 'CTFontGetLeading', 'CTFontGetBoundingBox',
@@ -83,7 +106,12 @@ class WelcomeTypographyContract(unittest.TestCase):
         for workaround in ['minimumScaleFactor', '.lineLimit(', '.clipped()', 'XCTSkip']:
             self.assertNotIn(workaround, source)
         production = (ROOT / 'ios/Timbre/Onboarding/WelcomeHeadline.swift').read_text()
-        self.assertNotIn('CTFontCreate', production)
+        self.assertIn('CTFontCreateForStringWithLanguage', production)
+        for token in ['testFontResolutionUsesTheViewLanguageRatherThanTheTestHost',
+                      'WelcomeHeadline.fontSelectionText(locale: Locale(identifier: "ur_PK"))',
+                      'WelcomeHeadline.nativeUrduFont(points: 40, locale:',
+                      'CTFontGetSize(production), 40', 'CTFontCopyPostScriptName(production)']:
+            self.assertIn(token, source)
 
     def test_actual_ui_flow_uses_exact_shipped_urdu_and_existing_first_session_class(self):
         source = (ROOT / 'ios/TimbreUITests/FirstSessionUITests.swift').read_text()

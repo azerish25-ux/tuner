@@ -104,6 +104,7 @@ jobs:
           python3 tools/ci/test_accessibility_partitions.py
           python3 tools/ci/test_accessibility_log_checkpoints.py
           python3 tools/ci/test_accessibility_visual_checkpoints.py
+          python3 tools/ci/test_occluded_contrast_diagnostic_contract.py
           python3 tools/ci/test_demo_course_seed.py
           python3 tools/ci/test_tablet_heading_contract.py
           python3 tools/ci/test_capture_check.py
@@ -276,6 +277,37 @@ jobs:
     runs-on: macos-15
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          # PR checkout is the merge commit; its head parent supplies the one-commit opt-in marker.
+          fetch-depth: 2
+      - name: Resolve bounded contrast reveal opt-in
+        id: reveal-opt-in
+        env:
+          SOURCE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          SOURCE_REPOSITORY: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+          SOURCE_BRANCH: ${{ github.head_ref || github.ref_name }}
+        run: |
+          python3 - <<'PYCODE'
+          import json, os, pathlib, re, subprocess
+          head = os.environ['SOURCE_HEAD']
+          if not re.fullmatch(r'[0-9a-f]{40}', head):
+              raise SystemExit('Invalid head SHA for diagnostic opt-in')
+          checkout = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+          if checkout != os.environ['GITHUB_SHA']:
+              raise SystemExit('Diagnostic checkout differs from the workflow SHA')
+          message = subprocess.check_output(['git', 'show', '-s', '--format=%B', head], text=True)
+          permitted = (os.environ['SOURCE_REPOSITORY'] == 'azerish25-ux/tuner'
+                       and os.environ['SOURCE_BRANCH'] in {'main', 'codex/app-store-readiness-gates'})
+          enabled = permitted and '[contrast-reveal-diagnostics]' in message.splitlines()
+          folder = pathlib.Path('ci-out/contrast-reveal')
+          folder.mkdir(parents=True, exist_ok=True)
+          receipt = {'diagnosticOnly': True, 'enabled': enabled, 'headSHA': head,
+                     'builtCheckoutSHA': checkout, 'originalFailuresResolved': 0}
+          (folder / 'invocation.json').write_text(json.dumps(receipt, indent=2) + '\n')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write(f'enabled={str(enabled).lower()}\nsource={checkout}\n')
+          print(json.dumps(receipt))
+          PYCODE
       - name: Generate Xcode project
         run: |
           command -v xcodegen >/dev/null 2>&1 || brew install xcodegen
@@ -512,6 +544,38 @@ jobs:
           path: |
             ci-out/tabs
             ios/build/Accessibility-tabs*.xcresult
+          retention-days: 7
+      - name: Collect opt-in revealed contrast frames (never dismiss strict failures)
+        if: ${{ !cancelled() && steps.reveal-opt-in.outputs.enabled == 'true' && steps.ax-build.outcome == 'success' }}
+        timeout-minutes: 15
+        env:
+          TEST_RUNNER_TIMBRE_REVEAL_CONTRAST: "1"
+          TEST_RUNNER_TIMBRE_DIAGNOSTIC_SOURCE_SHA: ${{ steps.reveal-opt-in.outputs.source }}
+        run: |
+          set -euo pipefail
+          mkdir -p ci-out/contrast-reveal
+          xcodebuild test-without-building -project ios/Timbre.xcodeproj -scheme Timbre \
+            -parallel-testing-enabled NO -only-testing:TimbreUITests/OccludedContrastDiagnosticUITests \
+            -test-timeouts-enabled YES -default-test-execution-time-allowance 120 -maximum-test-execution-time-allowance 120 \
+            -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd \
+            -resultBundlePath ios/build/ContrastReveal.xcresult CODE_SIGNING_ALLOWED=NO \
+            2>&1 | tee ci-out/contrast-reveal/test.log
+      - name: Export opt-in contrast reveal attachments
+        if: ${{ always() && steps.reveal-opt-in.outputs.enabled == 'true' }}
+        run: |
+          if [ -d ios/build/ContrastReveal.xcresult ]; then
+            xcrun xcresulttool export attachments --path ios/build/ContrastReveal.xcresult \
+              --output-path ci-out/contrast-reveal/attachments
+          fi
+      - name: Upload separate contrast reveal diagnostic evidence
+        if: ${{ always() && steps.reveal-opt-in.outputs.enabled == 'true' }}
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: accessibility-reveal-diagnostics
+          path: |
+            ci-out/contrast-reveal
+            ios/build/ContrastReveal.xcresult
+          if-no-files-found: error
           retention-days: 7
       - name: Require every accessibility partition and expected test
         if: always()

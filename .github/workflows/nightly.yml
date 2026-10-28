@@ -491,7 +491,9 @@ jobs:
   tsan:
     # The engine's tests under the thread sanitizer: data races the compiler's checking can't see.
     if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'captures')
-    timeout-minutes: 30
+    # A full suite took 28m05 before setup/build; another reached 30m with only 427 completions.
+    # Leave bounded runner-variation headroom without filtering tests or weakening the sanitizer.
+    timeout-minutes: 45
     runs-on: macos-15
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
