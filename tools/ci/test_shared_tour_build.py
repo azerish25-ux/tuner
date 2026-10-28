@@ -193,7 +193,9 @@ class WorkflowTests(unittest.TestCase):
                 'GITHUB_SHA': 'abc', 'GITHUB_RUN_ID': '123', 'GITHUB_RUN_ATTEMPT': '1',
                 'TOUR_SHARED_BUILD_REQUIRED': '1', 'TOUR_PRODUCER_OUTCOME': 'success',
                 'TOUR_JOB_OUTCOME': 'success', 'TOUR_ARCHIVE_OUTCOME': 'success',
-                'TOUR_BUILD_OUTCOME': 'success', 'TOUR_TEST_OUTCOME': 'success'}):
+                'TOUR_BUILD_OUTCOME': 'success', 'TOUR_TEST_OUTCOME': 'success',
+                'TOUR_PRIMING_ENABLED': 'false', 'TOUR_PRIMING_OUTCOME': 'skipped',
+                'DEVICE_ID': 'local', 'GITHUB_JOB': 'tour', 'RUNNER_ENVIRONMENT': 'github-hosted'}):
             root = Path(directory)
             receipt = dict(identity={'sha': 'abc', 'run_id': '123', 'run_attempt': '1'}, archive_sha256='archive',
                            toolchain={'xcode': 'A'}, fixtures={}, simulator={'runtime': 'A'}, architectures={'app': ['arm64']},

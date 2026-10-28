@@ -18,7 +18,13 @@ def record(directory):
     shard = os.environ['TOUR_SHARD']
     row = dict(shard=shard, test_class=SHARDS[shard], sha=os.environ['GITHUB_SHA'],
                run_id=os.environ['GITHUB_RUN_ID'], run_attempt=os.environ['GITHUB_RUN_ATTEMPT'],
-               build=os.environ['TOUR_BUILD_OUTCOME'], tests=os.environ['TOUR_TEST_OUTCOME'])
+               build=os.environ['TOUR_BUILD_OUTCOME'], tests=os.environ['TOUR_TEST_OUTCOME'],
+               device_id=os.environ.get('DEVICE_ID'), job=os.environ.get('GITHUB_JOB'),
+               runner_environment=os.environ.get('RUNNER_ENVIRONMENT'))
+    priming = directory / 'warmup/status.json'
+    row['priming'] = dict(requested=os.environ.get('TOUR_PRIMING_ENABLED') == 'true' and shard != 'launch',
+                         outcome=os.environ.get('TOUR_PRIMING_OUTCOME', 'missing'),
+                         receipt=json.loads(priming.read_text()) if priming.exists() else None)
     if os.environ.get('TOUR_SHARED_BUILD_REQUIRED') == '1':
         receipt = directory / 'shared-build.json'
         row['shared_build'] = json.loads(receipt.read_text()) if receipt.exists() else None
@@ -32,6 +38,9 @@ def aggregate(directory):
     shared = []
     expected = dict(sha=os.environ['GITHUB_SHA'], run_id=os.environ['GITHUB_RUN_ID'],
                     run_attempt=os.environ['GITHUB_RUN_ATTEMPT'])
+    enabled = os.environ.get('TOUR_PRIMING_ENABLED')
+    if enabled not in ('true', 'false'):
+        problems.append('Missing or invalid diagnostic priming selection')
     for shard, test_class in SHARDS.items():
         suffix = '-attempt-' + expected['run_attempt'] if os.environ.get('TOUR_SHARED_BUILD_REQUIRED') == '1' else ''
         full = directory if shard == 'captures' else directory / 'shards' / ('results-tour-' + shard + suffix)
@@ -61,6 +70,25 @@ def aggregate(directory):
         for key in ('build', 'tests'):
             if row.get(key) != 'success':
                 problems.append(f'{shard}: {key}={row.get(key, "missing")}')
+        requested = enabled == 'true' and shard != 'launch'
+        priming = row.get('priming')
+        if not isinstance(priming, dict) or set(priming) != {'requested', 'outcome', 'receipt'} \
+                or priming['requested'] is not requested:
+            problems.append(f'{shard}: missing or mismatched diagnostic priming selection')
+        elif not requested:
+            if priming['outcome'] != 'skipped' or priming['receipt'] is not None:
+                problems.append(f'{shard}: unrequested diagnostic priming ran or has unexpected evidence')
+        else:
+            receipt = priming['receipt']
+            if priming['outcome'] != 'success' or not isinstance(receipt, dict) \
+                    or receipt.get('passed') is not True or receipt.get('diagnostic_only') is not True \
+                    or receipt.get('source_sha') != expected['sha'] \
+                    or any(receipt.get(key) != expected[key] for key in ('run_id', 'run_attempt')) \
+                    or not row.get('device_id') or receipt.get('device') != row['device_id'] \
+                    or row.get('job') != 'tour' or receipt.get('job') != row['job'] \
+                    or receipt.get('shard') != shard or row.get('runner_environment') != 'github-hosted' \
+                    or receipt.get('runner_environment') != row['runner_environment']:
+                problems.append(f'{shard}: requested diagnostic priming failed, is missing or belongs to another run')
         if os.environ.get('TOUR_SHARED_BUILD_REQUIRED') == '1':
             receipt = row.get('shared_build')
             if not isinstance(receipt, dict) or receipt.get('identity') != expected:
@@ -68,6 +96,8 @@ def aggregate(directory):
             elif not all(receipt.get(key) for key in ('archive_sha256', 'toolchain', 'simulator', 'architectures', 'xctestrun_sha256', 'device_id')) or 'fixtures' not in receipt:
                 problems.append(f'{shard}: incomplete shared-build receipt')
             else:
+                if receipt['device_id'] != row.get('device_id'):
+                    problems.append(f'{shard}: device differs from the restored shared build')
                 shared.append({key: value for key, value in receipt.items() if key != 'device_id'})
         evidence[shard] = row
     jobs = {key: os.environ.get(key, 'missing') for key in ('TOUR_JOB_OUTCOME', 'TOUR_ARCHIVE_OUTCOME')}

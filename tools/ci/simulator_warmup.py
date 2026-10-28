@@ -105,6 +105,7 @@ def warmup(app: Path, device: str, languages: list[str], locale: str, out: Path)
     receipt['run_id'] = os.environ.get('GITHUB_RUN_ID')
     receipt['run_attempt'] = os.environ.get('GITHUB_RUN_ATTEMPT')
     receipt['job'] = os.environ.get('GITHUB_JOB')
+    receipt['shard'] = os.environ.get('TOUR_SHARD')
     receipt['runner_environment'] = os.environ.get('RUNNER_ENVIRONMENT')
     log = out / 'warmup.log'
     launched = False

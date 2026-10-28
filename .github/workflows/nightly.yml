@@ -7,6 +7,11 @@ on:
   schedule:
     - cron: "17 3 * * *"
   workflow_dispatch:
+    inputs:
+      priming:
+        description: Run the separate experimental simulator priming diagnostic before XCTest
+        type: boolean
+        default: false
   pull_request:
     types: [labeled, opened, reopened, synchronize]
 permissions:
@@ -16,6 +21,7 @@ concurrency:
   # Only superseded pull-request evidence is canceled; main, manual and scheduled runs finish.
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 env:
+  TOUR_PRIMING_ENABLED: ${{ inputs.priming == true || contains(github.event.pull_request.labels.*.name, 'simulator-priming') }}
   DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
   HOMEBREW_NO_AUTO_UPDATE: "1"
   HOMEBREW_NO_INSTALL_CLEANUP: "1"
@@ -70,6 +76,8 @@ jobs:
           retention-days: 7
 
   tour:
+    env:
+      TOUR_SHARD: ${{ matrix.shard }}
     needs: tour-build
     # Independent class shards retain every selected case; failures never cancel sibling evidence.
     name: tour (${{ matrix.shard }})
@@ -118,7 +126,7 @@ jobs:
             || echo "::warning::Could not override the simulator status bar; the captures show the real time"
       - name: Diagnostic simulator priming (not cold-install evidence)
         id: warmup
-        if: success() && matrix.shard != 'launch'
+        if: success() && matrix.shard != 'launch' && env.TOUR_PRIMING_ENABLED == 'true'
         timeout-minutes: 6
         run: |
           PYTHONPATH=tools/ci python3 - <<'PYWARM'
@@ -182,6 +190,7 @@ jobs:
           TOUR_BUILD_OUTCOME: ${{ steps.build.outcome }}
           TOUR_SHARED_BUILD_REQUIRED: "1"
           TOUR_TEST_OUTCOME: ${{ steps.tests.outcome }}
+          TOUR_PRIMING_OUTCOME: ${{ steps.warmup.outcome }}
         run: |
           mkdir -p ci-out
           python3 tools/ci/tour_evidence.py record ci-out

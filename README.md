@@ -1,4 +1,14 @@
-# Timbre — complete development and Apple submission handoff
+# Timbre — development and Apple submission readiness
+
+## Active continuation — 28 October 2026
+
+Development has resumed at the owner's request on `codex/app-store-readiness-gates` (draft PR #3). The preserved handoff below remains the baseline record; its stop instruction no longer describes this continuation. The app is **not submission-ready**. Current layout repairs and their native regressions remain under verification; no signing, upload or submission is authorized by this status.
+
+The required Nightly XCTest shards now run with **no preceding diagnostic priming launch** by default. This does not establish a cold OS/GPU state, and later launches within a class are conditioned by earlier tests. All existing XCTest selections, assertions, timeouts, source/build checks, original captures and native release/accessibility/localization/sanitizer gates remain required. The separate demo/stage-rest priming experiment does not establish app readiness or GPU completion: recent prelaunch setup failures were followed by passing actual first-session/capture XCTest classes.
+
+Priming remains available through the Nightly manual `priming=true` input, or the `simulator-priming` PR label alongside `captures`. Its request, outcome and original receipt are recorded in shard evidence. If requested, failure, missing evidence, unexpected skipping or a foreign receipt still fails aggregation. A default run records “not requested/skipped,” never a successful priming receipt. Historical failed runs remain failed. This changes the diagnostic setup contract, not any production acceptance assertion.
+
+## Preserved development handoff
 
 **Owner-requested stop: 28 October 2026. The app is NOT submission-ready. Apple Developer configuration is NOT the only remaining work.**
 

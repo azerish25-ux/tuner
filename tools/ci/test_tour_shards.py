@@ -185,7 +185,12 @@ class TourShardContracts(unittest.TestCase):
         source = (ROOT / '.github/workflows/nightly.yml').read_text()
         tour = source.split('  tour:\n')[1].split('\n  archive:')[0]
         warm = tour.split('      - name: Diagnostic simulator priming', 1)[1].split('      - name: Selected UI class', 1)[0]
-        self.assertIn("if: success() && matrix.shard != 'launch'", warm)
+        self.assertIn("if: success() && matrix.shard != 'launch' && env.TOUR_PRIMING_ENABLED == 'true'", warm)
+        self.assertIn('TOUR_PRIMING_OUTCOME: ${{ steps.warmup.outcome }}', tour)
+        self.assertIn("TOUR_PRIMING_ENABLED: ${{ inputs.priming == true || contains(github.event.pull_request.labels.*.name, 'simulator-priming') }}", source)
+        dispatch = source.split('  workflow_dispatch:', 1)[1].split('  pull_request:', 1)[0]
+        self.assertIn('type: boolean', dispatch)
+        self.assertIn('default: false', dispatch)
         self.assertIn('from simulator_warmup import warmup', warm)
         self.assertIn("os.environ['DEVICE_ID'], ['en'], 'en_US', Path('ci-out/warmup')", warm)
         self.assertIn('timeout-minutes: 6', warm)
@@ -286,7 +291,9 @@ class TourOutcomes(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.root = Path(self.temp.name)
         self.env = patch.dict(os.environ, dict(GITHUB_SHA='abc', GITHUB_RUN_ID='123', GITHUB_RUN_ATTEMPT='1',
-            TOUR_JOB_OUTCOME='success', TOUR_ARCHIVE_OUTCOME='success', TOUR_BUILD_OUTCOME='success', TOUR_TEST_OUTCOME='success'))
+            TOUR_JOB_OUTCOME='success', TOUR_ARCHIVE_OUTCOME='success', TOUR_BUILD_OUTCOME='success', TOUR_TEST_OUTCOME='success',
+            TOUR_PRIMING_ENABLED='false', TOUR_PRIMING_OUTCOME='skipped',
+            DEVICE_ID='fixture-device', GITHUB_JOB='tour', RUNNER_ENVIRONMENT='github-hosted'))
         self.env.start()
         for shard in evidence.SHARDS:
             os.environ['TOUR_SHARD'] = shard
@@ -310,6 +317,39 @@ class TourOutcomes(unittest.TestCase):
     def test_all_same_run_successes_are_required(self):
         self.assertTrue(self.aggregate())
         self.assertTrue(json.loads((self.root / 'tour-shards.json').read_text())['complete'])
+
+    def test_default_records_unrequested_diagnostic_without_a_success_receipt(self):
+        for shard in evidence.SHARDS:
+            row = json.loads((self.full(shard) / 'outcome.json').read_text())
+            self.assertEqual(row['priming'], {'requested': False, 'outcome': 'skipped', 'receipt': None})
+
+    def test_requested_priming_requires_current_success_receipt_except_launch(self):
+        os.environ['TOUR_PRIMING_ENABLED'] = 'true'
+        for shard in evidence.SHARDS:
+            priming = dict(requested=shard != 'launch', outcome='skipped', receipt=None)
+            if priming['requested']:
+                priming.update(outcome='success', receipt=dict(passed=True, diagnostic_only=True,
+                    source_sha='abc', run_id='123', run_attempt='1', device='fixture-device',
+                    job='tour', shard=shard, runner_environment='github-hosted'))
+            self.change(shard, priming=priming)
+        self.assertTrue(self.aggregate())
+        valid = json.loads((self.full('song-rails') / 'outcome.json').read_text())['priming']
+        for altered in (None, {**valid, 'requested': False}, {**valid, 'outcome': 'skipped'},
+                        {**valid, 'outcome': 'failure'}, {**valid, 'receipt': None},
+                        {**valid, 'receipt': {**valid['receipt'], 'passed': False}},
+                        {**valid, 'receipt': {**valid['receipt'], 'source_sha': 'old'}},
+                        *({**valid, 'receipt': {**valid['receipt'], field: 'foreign'}}
+                          for field in ('device', 'job', 'shard', 'runner_environment'))):
+            with self.subTest(altered=altered):
+                self.change('song-rails', priming=altered)
+                self.assertFalse(self.aggregate())
+
+    def test_default_rejects_unrequested_launch_or_missing_policy(self):
+        self.change('song-rails', priming=dict(requested=False, outcome='success', receipt=None))
+        self.assertFalse(self.aggregate())
+        self.change('song-rails', priming=dict(requested=False, outcome='skipped', receipt=None))
+        os.environ.pop('TOUR_PRIMING_ENABLED')
+        self.assertFalse(self.aggregate())
 
     def test_missing_full_results_cannot_be_replaced_by_compact_checkpoint(self):
         checkpoint = self.root / 'checkpoints/tour-logs-captures'
