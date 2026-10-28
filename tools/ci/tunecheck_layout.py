@@ -73,7 +73,7 @@ def test_command(device_id: str, bundle: Path) -> list[str]:
         raise ValueError('Invalid simulator UUID')
     return ['xcodebuild', 'test-without-building', '-project', 'ios/Timbre.xcodeproj',
             '-scheme', 'Timbre', '-parallel-testing-enabled', 'NO',
-            '-only-testing:TimbreUITests/' + CLASS, '-test-iterations', '1',
+            '-only-testing:TimbreUITests/' + CLASS,
             '-test-timeouts-enabled', 'YES', '-default-test-execution-time-allowance', '180',
             '-maximum-test-execution-time-allowance', '180', '-destination-timeout', '120',
             '-destination', f'platform=iOS Simulator,id={device_id}',

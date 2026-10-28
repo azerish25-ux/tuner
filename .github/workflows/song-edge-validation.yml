@@ -1,0 +1,106 @@
+name: Song rail edge validation
+on:
+  push:
+    branches: [codex/song-edge-restoration-31bcd46]
+permissions:
+  contents: read
+concurrency:
+  group: song-edge-validation-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  native:
+    runs-on: macos-15
+    timeout-minutes: 90
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+      HOMEBREW_NO_AUTO_UPDATE: '1'
+      HOMEBREW_NO_INSTALL_CLEANUP: '1'
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd
+        with:
+          persist-credentials: false
+      - name: Prepare exact source and simulator
+        run: |
+          set -euo pipefail
+          mkdir -p ci-out ios/build
+          git rev-parse HEAD > ci-out/source-revision.txt
+          xcodebuild -version > ci-out/toolchain.txt
+          command -v xcodegen >/dev/null 2>&1 || brew install xcodegen
+          (cd ios && xcodegen generate)
+          bash tools/ci/ensure-metal.sh
+          xcrun simctl list devices available -j > ci-out/devices.json
+          DEVICE_ID=$(python3 -c 'import json,re; d=json.load(open("ci-out/devices.json")); runtimes=sorted(d["devices"].items(),key=lambda p:tuple(map(int,re.findall(r"\d+",p[0]))),reverse=True); print(next(x["udid"] for k,v in runtimes if "iOS" in k for x in v if x["name"]=="iPhone 17 Pro"))')
+          echo "DEVICE_ID=$DEVICE_ID" >> "$GITHUB_ENV"
+          xcrun simctl boot "$DEVICE_ID" || true
+          xcrun simctl bootstatus "$DEVICE_ID" -b
+      - name: Build app and original tests
+        id: build
+        timeout-minutes: 25
+        run: |
+          set -o pipefail
+          xcodebuild build-for-testing -project ios/Timbre.xcodeproj -scheme Timbre \
+            -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd \
+            CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/build.log
+      - name: Install app and grant simulator microphone permission
+        run: |
+          xcrun simctl install "$DEVICE_ID" ios/build/dd/Build/Products/Debug-iphonesimulator/Timbre.app
+          xcrun simctl privacy "$DEVICE_ID" grant microphone com.shahradazerisharghi.timbre
+      - name: Six unchanged public-selection geometry tests
+        timeout-minutes: 15
+        run: |
+          set -o pipefail
+          xcodebuild test-without-building -project ios/Timbre.xcodeproj -scheme Timbre \
+            -parallel-testing-enabled NO -test-timeouts-enabled YES \
+            -default-test-execution-time-allowance 120 -maximum-test-execution-time-allowance 120 \
+            -only-testing:TimbreAppTests/SongShelfPageTests/testBindingCommandPlacesShelfAndTerminalAndPreservesResizeGeometry \
+            -only-testing:TimbreAppTests/SongShelfPageTests/testBindingCommandPlacesShelfAndTerminalAndPreservesResizeGeometryRightToLeft \
+            -only-testing:TimbreAppTests/SongShelfPageTests/testContainedHostCommandResize \
+            -only-testing:TimbreAppTests/SongShelfPageTests/testContainedHostCommandResizeRightToLeft \
+            -only-testing:TimbreAppTests/SongShelfPageTests/testOversizedShelfKeepsPrimarySleeveAcrossRepeatedResize \
+            -only-testing:TimbreAppTests/SongShelfPageTests/testOversizedShelfKeepsPrimarySleeveAcrossRepeatedResizeRightToLeft \
+            -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd \
+            -resultBundlePath ci-out/Units.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/unit.log
+          python3 - <<'PY'
+          from pathlib import Path
+          from collections import Counter
+          import re
+          stems = ['testBindingCommandPlacesShelfAndTerminalAndPreservesResizeGeometry',
+                   'testContainedHostCommandResize', 'testOversizedShelfKeepsPrimarySleeveAcrossRepeatedResize']
+          expected = {name + suffix for name in stems for suffix in ('', 'RightToLeft')}
+          events = re.findall(r"Test Case '-\[TimbreAppTests.SongShelfPageTests (test\w+)\]' (started|passed|failed|skipped)", Path('ci-out/unit.log').read_text())
+          if set(name for name, _ in events) != expected or any(Counter(state for name,state in events if name == method) != Counter(started=1,passed=1) for method in expected):
+              raise SystemExit('Missing, repeated or failed selected geometry test')
+          PY
+      - name: Three unchanged real-touch song rail tests
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        timeout-minutes: 60
+        run: |
+          set -o pipefail
+          xcodebuild test-without-building -project ios/Timbre.xcodeproj -scheme Timbre -parallel-testing-enabled NO \
+            -only-testing:TimbreUITests/SongShelfRailUITests \
+            -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd \
+            -resultBundlePath ci-out/Touch.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/touch.log
+          python3 - <<'PY'
+          from pathlib import Path
+          from collections import Counter
+          import re
+          expected = {'testFirstMiddleLastSongActionsAndStableHeight', 'testFirstMiddleLastSongActionsAtAX5',
+                      'testFullCatalogueRemainsReachableRightToLeft'}
+          events = re.findall(r"Test Case '-\[TimbreUITests.SongShelfRailUITests (test\w+)\]' (started|passed|failed|skipped)", Path('ci-out/touch.log').read_text())
+          if set(name for name, _ in events) != expected or any(Counter(state for name,state in events if name == method) != Counter(started=1,passed=1) for method in expected):
+              raise SystemExit('Missing, repeated or failed real-touch song rail test')
+          PY
+      - name: Export original results
+        if: always()
+        run: |
+          for suite in Units Touch; do
+            if [ -d "ci-out/$suite.xcresult" ]; then
+              xcrun xcresulttool export attachments --path "ci-out/$suite.xcresult" --output-path "ci-out/$suite-attachments"
+            fi
+          done
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        if: always()
+        with:
+          name: song-edge-validation-originals
+          path: ci-out
+          retention-days: 14

@@ -11,11 +11,11 @@ struct SongShelfRail<Item: Identifiable, Content: View>: View where Item.ID: Sen
     let identity: String
     @ViewBuilder let content: (Item) -> Content
 
-    // A stable item identity, not a pixel offset or a delayed scrollTo, survives lazy layout
-    // changes on rotation. SwiftUI updates this binding as the user browses.
-    @State private var position: Item.ID?
+    // Interior positions follow item identity; catalogue ends follow a semantic edge through reflow.
+    @State private var position = ScrollPosition(idType: Item.ID.self)
     @State private var initialized = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.layoutDirection) private var direction
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
@@ -29,12 +29,11 @@ struct SongShelfRail<Item: Identifiable, Content: View>: View where Item.ID: Sen
             .scrollTargetLayout()
             .frame(height: height, alignment: .top)
         }
-        // Track the logical trailing item in either language direction. At the catalogue end
-        // this is the terminal record, rather than its neighbour nearest the viewport centre.
-        .scrollPosition(id: $position, anchor: .trailing)
-        // Preserve the content's trailing edge through container-size changes as well as its item identity.
-        // In particular, the end card must remain inside the narrower viewport after rotation.
-        .defaultScrollAnchor(.trailing, for: .sizeChanges)
+        .scrollPosition($position, anchor: .trailing)
+        .onScrollPhaseChange { _, phase, context in
+            // Do not interrupt a gesture or replace an initial/programmatic interior selection.
+            if phase == .idle && position.isPositionedByUser { retainUserEdge(context.geometry) }
+        }
         .railBleed(leading: Metrics.gutter, trailing: Metrics.gutter)
         .frame(height: height)
         .accessibilityIdentifier(identity)
@@ -52,9 +51,16 @@ struct SongShelfRail<Item: Identifiable, Content: View>: View where Item.ID: Sen
     }
 
     private func reveal(_ value: Item.ID) {
-        // The modifier's trailing anchor also governs programmatic writes. Override that
-        // alignment for selection only; keep tracking the trailing identity during browsing
-        // so the terminal card, not its neighbour, survives a later viewport resize.
-        withTransaction(\.scrollTargetAnchor, .center) { position = value }
+        if value == items.first?.id { position.scrollTo(edge: .leading) }
+        else if value == items.last?.id { position.scrollTo(edge: .trailing) }
+        else { position.scrollTo(id: value, anchor: .center) }
+    }
+
+    private func retainUserEdge(_ geometry: ScrollGeometry) {
+        let overflow = EdgeOverflow(geometry, direction: direction)
+        // Both false means short content; both true means an interior browsing position.
+        guard overflow.leading != overflow.trailing else { return }
+        let edge: Edge = overflow.leading ? .trailing : .leading
+        if position.edge != edge { position.scrollTo(edge: edge) }
     }
 }
