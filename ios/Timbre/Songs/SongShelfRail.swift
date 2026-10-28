@@ -32,6 +32,9 @@ struct SongShelfRail<Item: Identifiable, Content: View>: View where Item.ID: Sen
         // Track the logical trailing item in either language direction. At the catalogue end
         // this is the terminal record, rather than its neighbour nearest the viewport centre.
         .scrollPosition(id: $position, anchor: .trailing)
+        // Preserve the content's trailing edge through container-size changes as well as its item identity.
+        // In particular, the end card must remain inside the narrower viewport after rotation.
+        .defaultScrollAnchor(.trailing, for: .sizeChanges)
         .railBleed(leading: Metrics.gutter, trailing: Metrics.gutter)
         .frame(height: height)
         .accessibilityIdentifier(identity)

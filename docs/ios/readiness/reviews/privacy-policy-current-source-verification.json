@@ -280,7 +280,7 @@
     "ios/Timbre/Songs/SongPageTrace.swift": "561a47681304d58507d70a55dcdfc95235509e050822790f7a21a97d0b97cccc",
     "ios/Timbre/Songs/SongRailMeasurement.swift": "74607dabc16d90803aaf1578037bf93db689b35100412199cb8bc425cb4e50f4",
     "ios/Timbre/Songs/SongShelfPage.swift": "5ef1e41b7afe6442e2ed9bbded7981fe9076302be9fa8731f905d7a319e3f6e7",
-    "ios/Timbre/Songs/SongShelfRail.swift": "7423063f0512160a3c3b70f964fd066ecd93a167b79d02454a8f3fbc50c01fc2",
+    "ios/Timbre/Songs/SongShelfRail.swift": "f42be87cf81224913325ddd3c399a0edf2976424eb5d1fc8a9ceffa27d6b8d3d",
     "ios/Timbre/Songs/SongsView.swift": "c3047a0164e524ad66ff946d73eefeca3535f78ff665c7b6b6f24b1bc99f53ea",
     "ios/Timbre/Stage/InstrumentRig.swift": "63356f8555b6735c9c27e18c2c5d3b1475887d412544a703d6e18c0139227ba0",
     "ios/Timbre/Stage/InstrumentStage.swift": "b9a7469e6419aa5e117b609080d258d1bb0c3f66679e3549b5b61d1dbd9fdb2d",
@@ -1608,6 +1608,20 @@
         }
       ],
       "limits": "Bounded presentation-source delta review only. No new HTTP availability, native execution, independent-review, portal, signed-archive or legal certification claimed. Prior HTTP dates, review history and all release-ready flags preserved."
+    },
+    {
+      "reviewed_utc": "2026-10-28T19:51:42.313412Z",
+      "reviewer": "Codex /root source review",
+      "base_revision": "e716a4a30db9d84828cc241d525a1f539fde34b0",
+      "changes": [
+        {
+          "path": "ios/Timbre/Songs/SongShelfRail.swift",
+          "previous_sha256": "7423063f0512160a3c3b70f964fd066ecd93a167b79d02454a8f3fbc50c01fc2",
+          "reviewed_sha256": "f42be87cf81224913325ddd3c399a0edf2976424eb5d1fc8a9ceffa27d6b8d3d",
+          "assessment": "Adds the native trailing size-change anchor to the existing horizontal song rail. Item tracking, initial/explicit selection and complete catalogue are unchanged. Only transient viewport behavior changes; no new data collection, persistence, request, audio or entitlement behavior. Native rotation and original proxy-readback regressions remain pending."
+        }
+      ],
+      "limits": "Bounded source-delta privacy alignment only; neither a native behavior pass nor fresh publication/account/legal verification."
     }
   ]
 }
