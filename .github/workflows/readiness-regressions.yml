@@ -1,5 +1,7 @@
 name: Readiness regressions
 on:
+  push:
+    branches: [codex/compact-layout-validation-31bcd46]
   pull_request:
   workflow_dispatch:
 permissions:
