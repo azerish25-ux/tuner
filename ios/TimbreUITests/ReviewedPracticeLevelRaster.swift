@@ -44,7 +44,7 @@ enum ReviewedPracticeLevelRaster {
     }
 
     static func load(_ reference: Reference) -> CGImage? {
-        guard let url = Bundle(for: ResourceAnchor.self).url(forResource: reference.name, withExtension: "png"),
+        guard let url = Bundle(for: ResourceAnchor.self).url(forResource: reference.name, withExtension: "png", subdirectory: "AuditReferences"),
               let data = try? Data(contentsOf: url),
               SHA256.hash(data: data).map({ String(format: "%02x", $0) }).joined() == reference.pngSHA256,
               let image = UIImage(data: data), image.imageOrientation == .up,

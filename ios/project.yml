@@ -252,6 +252,11 @@ targets:
     platform: iOS
     sources:
       - path: TimbreUITests
+        excludes: [AuditReferences]
+      # Preserve reviewed reference bytes; individual PNG resources are rewritten by copypng.
+      - path: TimbreUITests/AuditReferences
+        type: folder
+        buildPhase: resources
       - path: Tests/Fixtures/Timbre.storekit
         buildPhase: resources
     dependencies:
