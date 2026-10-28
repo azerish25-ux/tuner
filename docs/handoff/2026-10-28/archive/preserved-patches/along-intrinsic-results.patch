@@ -1,0 +1,458 @@
+diff --git a/ios/Timbre/Learn/Highway.swift b/ios/Timbre/Learn/Highway.swift
+--- a/ios/Timbre/Learn/Highway.swift
++++ b/ios/Timbre/Learn/Highway.swift
+@@ -156,6 +156,7 @@
+             if typeSize.isAccessibilitySize {
+                 ScrollViewReader { scroll in
+                     ScrollView { stepContent }
++                        .accessibilityIdentifier("along.scroll")
+                         .onChange(of: phase) { _, phase in
+                             if phase != .ready { scroll.scrollTo("along.runway", anchor: .top) }
+                         }
+@@ -250,9 +251,20 @@
+         .fixedSize(horizontal: false, vertical: true)
+     }
+ 
+-    /// The runway with the count-in over it, the combo HUD in its top corners and the results in its place once a
+-    /// take ends.
+-    private var stage: some View {
++    /// AX results participate in the existing outer scroll layout instead of overflowing a 420pt overlay.
++    /// Ready/playing and all normal-type stages retain their existing bounds and rendering.
++    @ViewBuilder private var stage: some View {
++        if typeSize.isAccessibilitySize && phase == .done {
++            // Retain the compact result fields, not its constrained height; the optional timing strip stays out.
++            AlongResultSurface(tint: scoreTint) { summaryCard(compact: true) }
++                .padding(.horizontal, 12)
++        } else {
++            runwayStage
++        }
++    }
++
++    /// The runway with the count-in and combo HUD; normal-type results keep the same bounded overlay.
++    private var runwayStage: some View {
+         TimelineView(.animation(paused: phase != .playing)) { _ in
+             let now = CACurrentMediaTime()
+             // Seconds since beat 0 on the heard clock (negative during the count-in).
+@@ -515,27 +527,35 @@
+                     Text(verdict).font(Typeface.label(.body)).foregroundStyle(scoreTint)
+                 }
+                 Text("\(percent)%").font(Typeface.note(compact ? .display : .hero)).foregroundStyle(scoreTint)
+-                    .minimumScaleFactor(0.7)
++                    .minimumScaleFactor(typeSize.isAccessibilitySize ? 1 : 0.7)
+             }
+             // Where VoiceOver lands when a take ends: the whole result in one sentence.
+             .accessibilityElement(children: .ignore)
+             .accessibilityLabel(Text(verbatim: resultSpoken))
+             .accessibilityAddTraits(.isHeader)
+             .accessibilityFocused($resultsFocused)
++            .accessibilityActions {
++                if typeSize.isAccessibilitySize {
++                    // The intrinsic results replace the runway's AX node, not its spoken-cue choice.
++                    Button {
++                        guard voiceOver else { return }
++                        spokenChoice = !spoken
++                    } label: {
++                        spoken ? Text("Turn spoken cues off") : Text("Turn spoken cues on")
++                    }
++                }
++            }
+             if steppedUp { tempoUp }
+             // In the grades' colours, as on the ribbon and the timing strip.
+-            HStack(spacing: 18) {
+-                stat("Perfect", session.count(.perfect), TakeRibbon.color(.perfect, accent: accent))
+-                stat("Good", session.count(.good), TakeRibbon.color(.good, accent: accent))
+-                stat("Early/late", session.count(.ok), TakeRibbon.color(.ok, accent: accent))
+-                stat("Missed", session.count(.miss), TakeRibbon.color(.miss, accent: accent))
+-            }
++            AlongResultStats(perfect: session.count(.perfect), good: session.count(.good),
++                             earlyLate: session.count(.ok), missed: session.count(.miss), accent: accent)
+             if !compact {
+                 // A dot per note, early above the line and late below; tapping a missed note loops its bar, slower.
+                 HighwayTimingStrip(count: take.count, judgments: session.judge.judgments, accent: accent, calm: reduceMotion,
+                                    onLoop: loopAction, bar: { bar(of: $0) })
+             }
+             Text(timingNote).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink).multilineTextAlignment(.center)
++                .accessibilityIdentifier("along.result.timing")
+             if timingIsOff {
+                 // Consistently early or late usually means the headphones or speaker lag: measure it.
+                 Button { calibrating = true } label: { Label("Calibrate timing", systemImage: "metronome") }
+@@ -556,17 +576,8 @@
+ 
+     /// The ladder moved up after a take of 90 % or better.
+     private var tempoUp: some View {
+-        HStack(spacing: 6) {
+-            Image(systemName: "arrow.up.right")
+-            Text("Tempo up")
+-            Text("\(ladder.percent)%")
+-        }
+-        .font(Typeface.label(13))
+-        .foregroundStyle(rungTint(ladder.rung))
+-        .padding(.horizontal, 12).padding(.vertical, 5)
+-        .background(Capsule().fill(rungTint(ladder.rung).opacity(0.14)))
+-        .transition(.scale.combined(with: .opacity))
+-        .accessibilityElement(children: .combine)
++        AlongTempoUpLabel(percent: ladder.percent, tint: rungTint(ladder.rung))
++            .transition(.scale.combined(with: .opacity))
+     }
+ 
+     /// A take of 90 % or more: its poster, a tap from the share sheet (three stars at the lesson tempo, else two),
+@@ -594,13 +605,6 @@
+         let ms = Int((abs(mean) * 1000).rounded())
+         if ms < 35 { return "Right on the beat" }
+         return mean > 0 ? "About \(ms) ms late on average" : "About \(ms) ms early on average"
+-    }
+-
+-    private func stat(_ label: LocalizedStringKey, _ value: Int, _ color: Color) -> some View {
+-        VStack(spacing: 2) {
+-            Text("\(value)").font(Typeface.number(20)).foregroundStyle(color)
+-            Text(label).font(.caption).foregroundStyle(Palette.inkSoft)
+-        }
+     }
+ 
+     @ViewBuilder private var controls: some View {
+@@ -1355,6 +1359,107 @@
+     }
+ }
+ 
++/// A completed AX take grows with its content; only decoration is masked, not text or actions.
++/// The old stage height is a minimum, never a ceiling. The existing parent ScrollView owns reachability.
++struct AlongResultSurface<Content: View>: View {
++    let tint: Color
++    let content: Content
++
++    init(tint: Color, @ViewBuilder content: () -> Content) {
++        self.tint = tint
++        self.content = content()
++    }
++
++    var body: some View {
++        content.fixedSize(horizontal: false, vertical: true)
++            .padding(12)
++            .frame(maxWidth: .infinity, minHeight: 420)
++            .background {
++                RoundedRectangle(cornerRadius: Metrics.cornerHero, style: .continuous)
++                    .fill(Palette.stageDeep)
++                    .overlay {
++                        RadialGradient(colors: [tint.opacity(0.14), .clear], center: .center,
++                                       startRadius: 4, endRadius: 220)
++                            .clipShape(RoundedRectangle(cornerRadius: Metrics.cornerHero, style: .continuous))
++                    }
++            }
++            .overlay(RoundedRectangle(cornerRadius: Metrics.cornerHero, style: .continuous)
++                .strokeBorder(Palette.hairline, lineWidth: 1))
++    }
++}
++
++/// Keep the normal four-stat row; at AX sizes complete localized stats flow to additional rows.
++struct AlongResultStats: View {
++    let perfect: Int
++    let good: Int
++    let earlyLate: Int
++    let missed: Int
++    let accent: Color
++    @Environment(\.dynamicTypeSize) private var typeSize
++
++    var body: some View {
++        let layout = typeSize.isAccessibilitySize
++            ? AnyLayout(ChordFlowLayout(spacing: 18, lineSpacing: 10))
++            : AnyLayout(HStackLayout(spacing: 18))
++        layout {
++            AlongResultStat(label: "Perfect", value: perfect, color: TakeRibbon.color(.perfect, accent: accent), id: "perfect")
++            AlongResultStat(label: "Good", value: good, color: TakeRibbon.color(.good, accent: accent), id: "good")
++            AlongResultStat(label: "Early/late", value: earlyLate, color: TakeRibbon.color(.ok, accent: accent), id: "early-late")
++            AlongResultStat(label: "Missed", value: missed, color: TakeRibbon.color(.miss, accent: accent), id: "missed")
++        }
++    }
++}
++
++struct AlongResultStat: View {
++    let label: LocalizedStringKey
++    let value: Int
++    let color: Color
++    let id: String
++    @Environment(\.dynamicTypeSize) private var typeSize
++
++    var body: some View {
++        VStack(spacing: 2) {
++            Text("\(value)").font(Typeface.number(20)).foregroundStyle(color)
++            Text(label).font(.caption).foregroundStyle(Palette.inkSoft)
++                .fixedSize(horizontal: false, vertical: typeSize.isAccessibilitySize)
++                .accessibilityIdentifier("along.result.stat.\(id)")
++        }
++    }
++}
++
++/// A full label and percentage, with native wrapping rather than squeezing "Tempo up" into an ellipsis.
++struct AlongTempoUpLabel: View {
++    let percent: Int
++    let tint: Color
++    @Environment(\.dynamicTypeSize) private var typeSize
++
++    var body: some View {
++        Group {
++            if typeSize.isAccessibilitySize {
++                ChordFlowLayout(spacing: 6, lineSpacing: 6) {
++                    HStack(spacing: 6) {
++                        Image(systemName: "arrow.up.right")
++                        Text("Tempo up").fixedSize(horizontal: false, vertical: true)
++                    }
++                    Text("\(percent)%").fixedSize()
++                }
++            } else {
++                HStack(spacing: 6) {
++                    Image(systemName: "arrow.up.right")
++                    Text("Tempo up")
++                    Text("\(percent)%")
++                }
++            }
++        }
++        .font(Typeface.label(13))
++        .foregroundStyle(tint)
++        .padding(.horizontal, 12).padding(.vertical, 5)
++        .background(Capsule().fill(tint.opacity(0.14)))
++        .accessibilityElement(children: .combine)
++        .accessibilityIdentifier("along.result.tempo-up")
++    }
++}
++
+ /// A full playing-place label: bounded width may add lines, never discard or shrink its words.
+ struct AlongPlaceLabel: View {
+     let words: String
+diff --git a/ios/TimbreAppTests/AlongTypographyLayoutTests.swift b/ios/TimbreAppTests/AlongTypographyLayoutTests.swift
+--- a/ios/TimbreAppTests/AlongTypographyLayoutTests.swift
++++ b/ios/TimbreAppTests/AlongTypographyLayoutTests.swift
+@@ -87,6 +87,111 @@
+         }
+     }
+ 
++    func testAXResultSurfaceUsesContentHeightInsteadOfTheFormerStageCeiling() throws {
++        executionTimeAllowance = 120
++        let language = TimbreLocalization.language
++        defer { TimbreLocalization.language = language }
++        for locale in ["en", "de", "ar"] {
++            TimbreLocalization.language = locale
++            for width in [CGFloat(280), 362] {
++                // This is a surface/component fixture, not a fabricated completed session or hosted screen.
++                let content = resultSurfaceFixture
++                let natural = measure(content, width: width - 24, locale: locale, size: .accessibility5)
++                let surface = AlongResultSurface(tint: Palette.mint) { content }
++                let actual = measure(surface, width: width, locale: locale, size: .accessibility5)
++                XCTAssertEqual(actual.width, width)
++                XCTAssertEqual(actual.height, max(420, natural.height + 24))
++                XCTAssertGreaterThan(actual.height, 420, "The real AX content must not be squeezed into the old stage")
++                let former = Color.clear.frame(height: 420).overlay(content.padding(12))
++                XCTAssertEqual(measure(former, width: width, locale: locale, size: .accessibility5).height, 420,
++                               "An overlaid summary does not reserve its own height")
++                try capture(surface, width: width, locale: locale, size: .accessibility5,
++                            name: "along-result-surface-\(locale)-\(Int(width))")
++            }
++        }
++    }
++
++    func testResultStatsAndTempoReserveFullLocalizedNativeText() throws {
++        executionTimeAllowance = 120
++        let language = TimbreLocalization.language
++        defer { TimbreLocalization.language = language }
++        for locale in ["en", "de", "ar"] {
++            TimbreLocalization.language = locale
++            for width in [CGFloat(140), 280, 338] {
++                let labels: [LocalizedStringKey] = ["Perfect", "Good", "Early/late", "Missed"]
++                for label in labels {
++                    let stat = AlongResultStat(label: label, value: 6, color: Palette.mint, id: "fixture")
++                    let fullText = VStack(spacing: 2) {
++                        Text("6").font(Typeface.number(20))
++                        Text(label).font(.caption).fixedSize(horizontal: false, vertical: true)
++                    }
++                    let actual = measure(stat, width: width, locale: locale, size: .accessibility5)
++                    let reference = measure(fullText, width: width, locale: locale, size: .accessibility5)
++                    XCTAssertLessThanOrEqual(actual.width, width)
++                    XCTAssertEqual(actual.height, reference.height, "Every complete localized grade receives native height")
++                }
++            }
++            for width in [CGFloat(280), 338] {
++                let stats = AlongResultStats(perfect: 6, good: 0, earlyLate: 0, missed: 0, accent: Palette.mint)
++                let actual = measure(stats, width: width, locale: locale, size: .accessibility5)
++                XCTAssertLessThanOrEqual(actual.width, width)
++                XCTAssertGreaterThan(actual.height, measure(stats, width: width, locale: locale, size: .large).height)
++                try capture(stats, width: width, locale: locale, size: .accessibility5,
++                            name: "along-result-stats-\(locale)-\(Int(width))")
++                let tempo = AlongTempoUpLabel(percent: 110, tint: Palette.mint)
++                let fullTempo = HStack(spacing: 6) {
++                    Image(systemName: "arrow.up.right")
++                    Text("Tempo up").fixedSize(horizontal: false, vertical: true)
++                }.font(Typeface.label(13)).padding(.horizontal, 12).padding(.vertical, 5)
++                let measured = measure(tempo, width: width, locale: locale, size: .accessibility5)
++                XCTAssertLessThanOrEqual(measured.width, width)
++                XCTAssertGreaterThanOrEqual(measured.height,
++                    measure(fullTempo, width: width, locale: locale, size: .accessibility5).height)
++                try capture(tempo, width: width, locale: locale, size: .accessibility5,
++                            name: "along-result-tempo-\(locale)-\(Int(width))")
++            }
++        }
++    }
++
++    func testNormalResultStatsKeepTheirOriginalRowGeometry() {
++        executionTimeAllowance = 120
++        let language = TimbreLocalization.language
++        defer { TimbreLocalization.language = language }
++        for locale in ["en", "de", "ar"] {
++            TimbreLocalization.language = locale
++            let original = HStack(spacing: 18) {
++                originalResultStat("Perfect", 6, TakeRibbon.color(.perfect, accent: Palette.mint))
++                originalResultStat("Good", 0, TakeRibbon.color(.good, accent: Palette.mint))
++                originalResultStat("Early/late", 0, TakeRibbon.color(.ok, accent: Palette.mint))
++                originalResultStat("Missed", 0, TakeRibbon.color(.miss, accent: Palette.mint))
++            }
++            for width in [CGFloat(280), 362] {
++                let current = AlongResultStats(perfect: 6, good: 0, earlyLate: 0, missed: 0, accent: Palette.mint)
++                XCTAssertEqual(measure(current, width: width, locale: locale, size: .large),
++                               measure(original, width: width, locale: locale, size: .large))
++            }
++        }
++    }
++
++    private var resultSurfaceFixture: some View {
++        VStack(spacing: 10) {
++            Text("100%").font(Typeface.note(.display))
++            AlongTempoUpLabel(percent: 110, tint: Palette.mint)
++            AlongResultStats(perfect: 6, good: 0, earlyLate: 0, missed: 0, accent: Palette.mint)
++            Text("Right on the beat").font(.subheadline.weight(.semibold))
++            Text("Best combo \(6)").font(.footnote)
++            // Actual pill layout; suppress only its asynchronous poster rendering in this geometry fixture.
++            SharePill(preview: "Right on the beat", tint: Palette.mint, armed: false) { Color.clear }
++        }
++    }
++
++    private func originalResultStat(_ label: LocalizedStringKey, _ value: Int, _ color: Color) -> some View {
++        VStack(spacing: 2) {
++            Text("\(value)").font(Typeface.number(20)).foregroundStyle(color)
++            Text(label).font(.caption).foregroundStyle(Palette.inkSoft)
++        }
++    }
++
+     /// Pass-through measurement of the real styled button. Assertions run only at actual native placement.
+     /// No production frame hook or independently invented text metrics are involved.
+     private struct ActionFitProbe: Layout {
+diff --git a/ios/TimbreUITests/LessonAccessibilityLayoutUITests.swift b/ios/TimbreUITests/LessonAccessibilityLayoutUITests.swift
+--- a/ios/TimbreUITests/LessonAccessibilityLayoutUITests.swift
++++ b/ios/TimbreUITests/LessonAccessibilityLayoutUITests.swift
+@@ -432,6 +432,34 @@
+         let again = element("along.again")
+         XCTAssertTrue(again.waitForExistence(timeout: 30))
+         capture("along-done-overlay")
++        let alongScroll = app.scrollViews["along.scroll"]
++        XCTAssertTrue(alongScroll.exists)
++        // Each original viewport is separate: a tall result need not fit on one screen, but every label/action must.
++        for (suffix, label) in [("perfect", "Perfect"), ("good", "Good"),
++                                ("early-late", "Early/late"), ("missed", "Missed")] {
++            let stat = element("along.result.stat.\(suffix)")
++            XCTAssertTrue(stat.waitForExistence(timeout: 15))
++            XCTAssertEqual(stat.label, label)
++            scrollClear(stat, in: alongScroll)
++            XCTAssertTrue(isClear(stat, within: contentViewport(alongScroll, above: nil)))
++            capture("along-result-stat-\(suffix)-clear")
++        }
++        let tempoUp = element("along.result.tempo-up")
++        XCTAssertTrue(tempoUp.exists)
++        XCTAssertTrue(tempoUp.label.contains("Tempo up"))
++        XCTAssertTrue(tempoUp.label.contains("110%"))
++        scrollClear(tempoUp, in: alongScroll)
++        capture("along-result-tempo-up-clear")
++        let timing = element("along.result.timing")
++        XCTAssertEqual(timing.label, "Right on the beat")
++        scrollClear(timing, in: alongScroll)
++        capture("along-result-timing-clear")
++        let share = app.buttons["along.share"]
++        XCTAssertTrue(share.waitForExistence(timeout: 15))
++        scrollClear(share, in: alongScroll)
++        XCTAssertTrue(isClear(share, within: contentViewport(alongScroll, above: nil)))
++        XCTAssertTrue(share.isEnabled)
++        capture("along-result-share-clear")
+         scrollClear(again)
+         XCTAssertTrue(isClear(again))
+         scrollClear(start)
+diff --git a/tools/ci/test_along_typography_contract.py b/tools/ci/test_along_typography_contract.py
+--- a/tools/ci/test_along_typography_contract.py
++++ b/tools/ci/test_along_typography_contract.py
+@@ -1,4 +1,5 @@
+ """Source guards only; native component and whole-step observations are required for approval."""
++import hashlib
+ from pathlib import Path
+ import unittest
+ 
+@@ -92,6 +93,75 @@
+             self.assertIn(token, along)
+         self.assertNotIn('XCTSkip', along)
+ 
++    def test_completed_ax_results_get_intrinsic_height_without_changing_the_runway(self):
++        branch = self.source.split('@ViewBuilder private var stage:', 1)[1].split('private var runwayStage:', 1)[0]
++        for token in ['typeSize.isAccessibilitySize && phase == .done',
++                      'AlongResultSurface(tint: scoreTint) { summaryCard(compact: true) }',
++                      '} else {\n            runwayStage']:
++            self.assertIn(token, branch)
++        normal = self.source.split('    private var runwayStage: some View {', 1)[1].split('    /// What VoiceOver reads', 1)[0]
++        self.assertEqual(hashlib.sha256(normal.encode()).hexdigest(), '061424689d28a1f7de8f4561c5bba70664485f7efc26da04ef319cb50576dba2')
++        panel = self.source.split('    private var resultsPanel: some View {', 1)[1].split("    /// The take's score", 1)[0]
++        self.assertEqual(hashlib.sha256(panel.encode()).hexdigest(), 'cd25a4ee835075a1e8c611a5b45de6c691ac89fe458f1eb46ec1763630618364')
++        self.assertEqual(self.source.count('ScrollView { stepContent }'), 1)
++        self.assertIn('.accessibilityIdentifier("along.scroll")', self.source)
++
++    def test_result_surface_measures_content_and_masks_only_its_background(self):
++        surface = self.source.split('struct AlongResultSurface<', 1)[1].split('struct AlongResultStats:', 1)[0]
++        for token in ['content.fixedSize(horizontal: false, vertical: true)', '.padding(12)',
++                      '.frame(maxWidth: .infinity, minHeight: 420)', '.background {', '.clipShape(']:
++            self.assertIn(token, surface)
++        self.assertLess(surface.index('content.fixedSize'), surface.index('.background {'))
++        self.assertLess(surface.index('.background {'), surface.index('.clipShape('))
++        for forbidden in ['maxHeight:', '.frame(height:', 'ScrollView', 'minimumScaleFactor', 'lineLimit']:
++            self.assertNotIn(forbidden, surface)
++        summary = self.source.split('private func summaryCard', 1)[1].split('/// The ladder moved up', 1)[0]
++        for token in ['.accessibilityFocused($resultsFocused)', '.accessibilityLabel(Text(verbatim: resultSpoken))',
++                      '.minimumScaleFactor(typeSize.isAccessibilitySize ? 1 : 0.7)',
++                      'Button { calibrating = true }', '.accessibilityActions {', 'if typeSize.isAccessibilitySize {',
++                      'guard voiceOver else { return }', 'spokenChoice = !spoken',
++                      'spoken ? Text("Turn spoken cues off") : Text("Turn spoken cues on")',
++                      'if percent >= LessonRun.greatTake && loop == nil',
++                      'takeShare.padding(.top, 2)', '.accessibilityIdentifier("along.slower")',
++                      '.lessonControl(.slower) { ladder.select(0); reset() }']:
++            self.assertIn(token, summary)
++
++    def test_complete_result_labels_flow_only_at_accessibility_sizes(self):
++        components = self.source.split('struct AlongResultStats:', 1)[1].split('struct AlongPlaceLabel:', 1)[0]
++        for token in ['AnyLayout(ChordFlowLayout(spacing: 18, lineSpacing: 10))',
++                      'AnyLayout(HStackLayout(spacing: 18))', '"Perfect"', '"Good"', '"Early/late"', '"Missed"',
++                      '.fixedSize(horizontal: false, vertical: typeSize.isAccessibilitySize)',
++                      'ChordFlowLayout(spacing: 6, lineSpacing: 6)',
++                      'Text("Tempo up").fixedSize(horizontal: false, vertical: true)',
++                      '.accessibilityElement(children: .combine)', '.accessibilityIdentifier("along.result.tempo-up")']:
++            self.assertIn(token, components)
++        for forbidden in ['lineLimit', 'minimumScaleFactor', '.dynamicTypeSize(', '.clipped()', 'ScrollView']:
++            self.assertNotIn(forbidden, components)
++
++    def test_result_component_proof_keeps_original_ceiling_negative_and_normal_control(self):
++        for token in ['testAXResultSurfaceUsesContentHeightInsteadOfTheFormerStageCeiling',
++                      'AlongResultSurface(tint: Palette.mint)', 'max(420, natural.height + 24)',
++                      'XCTAssertGreaterThan(actual.height, 420', 'Color.clear.frame(height: 420).overlay(content.padding(12))',
++                      'testResultStatsAndTempoReserveFullLocalizedNativeText', 'AlongResultStat(label: label',
++                      'XCTAssertEqual(actual.height, reference.height', 'AlongTempoUpLabel(percent: 110',
++                      'testNormalResultStatsKeepTheirOriginalRowGeometry', 'originalResultStat("Early/late"',
++                      'SharePill(preview: "Right on the beat", tint: Palette.mint, armed: false)',
++                      'not a fabricated completed session or hosted screen']:
++            self.assertIn(token, self.native)
++
++    def test_real_completed_take_checks_each_label_and_share_in_its_own_viewport(self):
++        along = self.ui.split('func testPlayAlongStartAndCompletedTakeAtAX5()', 1)[1]
++        for token in ['let alongScroll = app.scrollViews["along.scroll"]',
++                      'scrollClear(stat, in: alongScroll)', 'XCTAssertEqual(stat.label, label)',
++                      'isClear(stat, within: contentViewport(alongScroll, above: nil))',
++                      'scrollClear(tempoUp, in: alongScroll)', 'scrollClear(timing, in: alongScroll)',
++                      'let share = app.buttons["along.share"]', 'scrollClear(share, in: alongScroll)',
++                      'isClear(share, within: contentViewport(alongScroll, above: nil))',
++                      'XCTAssertTrue(share.isEnabled)', 'capture("along-result-share-clear")',
++                      'scrollClear(again)', 'capture("along-done-actions-clear")', 'element("lesson.results.level")']:
++            self.assertIn(token, along)
++        self.assertNotIn('XCTSkip', along)
++
+ 
+ if __name__ == '__main__':
+     unittest.main()

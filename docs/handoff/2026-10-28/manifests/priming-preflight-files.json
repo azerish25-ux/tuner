@@ -1,0 +1,22 @@
+[
+  {
+    "path": "tools/ci/simulator_priming_signal.py",
+    "sha256": "6dc5e5520d584641b5b12d9cf0bbabf961b8dc88a264ac7cb6b229824a662d42",
+    "parent_sha256": "bcfd32e79d04d07ad8192a5f59a673198de55291a066e001e4b76e07c3260b36"
+  },
+  {
+    "path": "tools/ci/simulator_warmup.py",
+    "sha256": "c06dd631bad59d49614e98721a17fefb0cc2b7c454e3800c06d4db951e22a52c",
+    "parent_sha256": "903f2cf0b0d7ac988407dd5f098f92c08f63612614a1c68ae398c7b5e78a0cb3"
+  },
+  {
+    "path": "tools/ci/test_simulator_priming_signal.py",
+    "sha256": "3e2c979e5a418638c4969ab3aa00290abdc3ab0dbe9f8324b1259281c6870f21",
+    "parent_sha256": "613dc9e34d6a319d6d92dc3152758ca11b0841975d6fa6d0b121bf49b0fe4d24"
+  },
+  {
+    "path": "tools/ci/test_simulator_warmup.py",
+    "sha256": "70faf95084261e09dccbfbb5830e544bd72b24bca228f3f8dc94a8dcaac15e71",
+    "parent_sha256": "0feb9891042a4205de783a7983fb9dbed89454e4a7800b33720c7cb077d9821a"
+  }
+]

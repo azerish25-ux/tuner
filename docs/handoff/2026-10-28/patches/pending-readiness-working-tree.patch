@@ -1,0 +1,679 @@
+diff --git a/.github/workflows/nightly.yml b/.github/workflows/nightly.yml
+index b36fc0b4..b036f07c 100644
+--- a/.github/workflows/nightly.yml
++++ b/.github/workflows/nightly.yml
+@@ -247,7 +247,11 @@ jobs:
+ 
+   archive:
+     # Exactly one unsigned Release archive, independent of every simulator shard.
+-    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'captures')
++    # Scheduling only: retain independent evidence on producer failure/skip, but honor workflow cancellation.
++    needs: tour-build
++    if: >-
++      always() && !cancelled()
++      && (github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'captures'))
+     timeout-minutes: 30
+     runs-on: macos-15
+     steps:
+@@ -287,7 +291,11 @@ jobs:
+ 
+   ipad:
+     # The build, the Full Screen Apps reboot and both orientations' captures take about 25 minutes on a busy runner.
+-    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'captures')
++    # Scheduling only: retain independent evidence on producer failure/skip, but honor workflow cancellation.
++    needs: tour-build
++    if: >-
++      always() && !cancelled()
++      && (github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'captures'))
+     timeout-minutes: 45
+     runs-on: macos-15
+     steps:
+@@ -429,7 +437,11 @@ jobs:
+     # The screens where layout breaks first, under one setting per run (AccessibilityMatrixUITests): the largest
+     # text size, Bold Text, Increase Contrast, left-handed, left-handed upside down and Arabic. Pictures and audit
+     # reports for review; a screen that can't be reached fails.
+-    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'captures') || contains(github.event.pull_request.labels.*.name, 'accessibility')
++    # Scheduling only: retain independent evidence on producer failure/skip, but honor workflow cancellation.
++    needs: tour-build
++    if: >-
++      always() && !cancelled()
++      && (github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'captures') || contains(github.event.pull_request.labels.*.name, 'accessibility'))
+     timeout-minutes: 75
+     runs-on: macos-15
+     steps:
+@@ -509,7 +521,11 @@ jobs:
+ 
+   tsan:
+     # The engine's tests under the thread sanitizer: data races the compiler's checking can't see.
+-    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'captures')
++    # Scheduling only: retain independent evidence on producer failure/skip, but honor workflow cancellation.
++    needs: tour-build
++    if: >-
++      always() && !cancelled()
++      && (github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'captures'))
+     # A full suite took 28m05 before setup/build; another reached 30m with only 427 completions.
+     # Leave bounded runner-variation headroom without filtering tests or weakening the sanitizer.
+     timeout-minutes: 45
+diff --git a/ios/TimbreUITests/TimbreUITests.swift b/ios/TimbreUITests/TimbreUITests.swift
+index 0c6b0b42..a3374350 100644
+--- a/ios/TimbreUITests/TimbreUITests.swift
++++ b/ios/TimbreUITests/TimbreUITests.swift
+@@ -990,18 +990,22 @@ final class TimbreUITests: XCTestCase {
+     }
+ 
+     /// The violin page's lead frame (a Custom Product Page): the same scene on the 3D violin, G, D and A locked (the
+-    /// third held, mid-comet).
++    /// third held).
+     func test16StoreViolinStage() throws {
+         app.launchEnvironment["TIMBRE_DEBUG_STATE"] = "1"
+-        launch(pitch: true, scene: "tune-locked", instrument: "violin.standard.4", comet: true)
++        // Keep this still frame's real lock through its continuous proof and final semantic check.
++        // Periodic same-string replucks would restart the hold between those observations.
++        launch(pitch: true, scene: "tune-locked", instrument: "violin.standard.4", comet: false)
+         storeFrame("49d-tune-violin-locked", tuner: lockedTunerFrame(strings: 3))
+     }
+ 
+     /// The cello page's lead frame (a Custom Product Page): the same scene on the 3D cello, C, G and D locked (the third
+-    /// held, mid-comet).
++    /// held).
+     func test20StoreCelloStage() throws {
+         app.launchEnvironment["TIMBRE_DEBUG_STATE"] = "1"
+-        launch(pitch: true, scene: "tune-locked", instrument: "cello.standard.4", comet: true)
++        // Keep this still frame's real lock through its continuous proof and final semantic check.
++        // Periodic same-string replucks would restart the hold between those observations.
++        launch(pitch: true, scene: "tune-locked", instrument: "cello.standard.4", comet: false)
+         storeFrame("49e-tune-cello-locked", tuner: lockedTunerFrame(strings: 3))
+     }
+ 
+@@ -1009,7 +1013,9 @@ final class TimbreUITests: XCTestCase {
+     /// ships), G, C and E locked.
+     func test21StoreUkuleleStage() throws {
+         app.launchEnvironment["TIMBRE_DEBUG_STATE"] = "1"
+-        launch(pitch: true, scene: "tune-locked", instrument: "ukulele.soprano.4", comet: true)
++        // Keep this still frame's real lock through its continuous proof and final semantic check.
++        // Periodic same-string replucks would restart the hold between those observations.
++        launch(pitch: true, scene: "tune-locked", instrument: "ukulele.soprano.4", comet: false)
+         storeFrame("17b-tune-ukulele-locked", tuner: lockedTunerFrame(strings: 3, stages: ["3d", "2d"]))
+     }
+ 
+diff --git a/tools/ci/simulator_priming_signal.py b/tools/ci/simulator_priming_signal.py
+index 8546578b..cf82d255 100644
+--- a/tools/ci/simulator_priming_signal.py
++++ b/tools/ci/simulator_priming_signal.py
+@@ -8,6 +8,7 @@ from __future__ import annotations
+ import hashlib
+ import json
+ import math
++import os
+ from pathlib import Path
+ import time
+ import uuid
+@@ -46,6 +47,46 @@ def validate_signal(raw, session, pid, launch_started_epoch, observed_epoch):
+     return value
+ 
+ 
++def prepare_stage_rest_container(device, session, deadline, query_container):
++    """Resolve once before launch; later calls revalidate locally without asking simctl.
++
++    Pin the installed data directory, not app readiness. A replaced directory, changed
++    bundle owner, symlink, existing session namespace or exhausted budget is a failure.
++    """
++    if str(uuid.UUID(device)).lower() != device.lower() or str(uuid.UUID(session)) != session:
++        raise ValueError('Priming preflight requires exact device and fresh canonical session UUIDs')
++    if time.monotonic() >= deadline:
++        raise TimeoutError('Priming container preflight budget exhausted; 30s reserved for cleanup')
++    try:
++        container = scoped_container(query_container(), device.upper())
++        info = container.lstat()
++        if info.st_uid != os.getuid():
++            raise ValueError('Priming data container is not owned by the current runner')
++        identity = (info.st_dev, info.st_ino, info.st_uid)
++        namespace = container / 'Library/Application Support/TimbreUITests' / session
++        no_symlinks(namespace, allow_missing=True)
++        if namespace.exists():
++            raise ValueError('Fresh priming session namespace already exists')
++        if time.monotonic() >= deadline:
++            raise TimeoutError('Priming container preflight exceeded its cleanup-reserved deadline')
++    except CollectionError as error:
++        raise ValueError(str(error)) from error
++
++    def revalidate():
++        # The successful launch still supplies the PID/time used by wait_for_stage_rest.
++        # Cached path text alone is not trusted across app startup.
++        try:
++            current = scoped_container(str(container), device.upper())
++            current_info = current.lstat()
++            if (current_info.st_dev, current_info.st_ino, current_info.st_uid) != identity:
++                raise ValueError('Prepared priming data container identity changed after launch')
++        except CollectionError as error:
++            raise ValueError(str(error)) from error
++        return str(current)
++
++    return revalidate
++
++
+ def wait_for_stage_rest(device, session, pid, launch_started_epoch, deadline, query_container, out):
+     """Deadline already excludes cleanup's reserve. Missing signal is a failure, never success."""
+     if str(uuid.UUID(device)).lower() != device.lower() or str(uuid.UUID(session)) != session:
+@@ -74,6 +115,10 @@ def wait_for_stage_rest(device, session, pid, launch_started_epoch, deadline, qu
+                     raise
+                 raw = None
+             if raw is not None:
++                # The prepared callable is local-only. Recheck its pinned directory at acceptance,
++                # including when the file appeared after several missing-signal polls.
++                if scoped_container(query_container(), device.upper()) != container:
++                    raise ValueError('Priming data container changed while waiting for its signal')
+                 observed_epoch = time.time()
+                 value = validate_signal(raw, session, pid, launch_started_epoch, observed_epoch)
+                 # Preserve original bytes for diagnostics, but never write into the simulator's data container.
+diff --git a/tools/ci/simulator_warmup.py b/tools/ci/simulator_warmup.py
+index ecd77d89..0d77d8b0 100644
+--- a/tools/ci/simulator_warmup.py
++++ b/tools/ci/simulator_warmup.py
+@@ -14,7 +14,7 @@ import sys
+ import time
+ import uuid
+ 
+-from simulator_priming_signal import wait_for_stage_rest
++from simulator_priming_signal import prepare_stage_rest_container, wait_for_stage_rest
+ 
+ BUNDLE = 'com.shahradazerisharghi.timbre'
+ SIMULATOR_PROCESSES = ('SpringBoard', 'testmanagerd', 'runningboardd', 'lsd', 'installd',
+@@ -249,6 +249,13 @@ def warmup(app: Path, device: str, languages: list[str], locale: str, out: Path)
+         predicate = simulator_predicate(executable)
+         receipt['total_budget_seconds'] = 300
+         invoke(['xcrun', 'simctl', 'install', device, app])
++        # Resolve the exact installed data container before app startup can overload simulator services.
++        # The prepared callable pins its identity and revalidates locally after successful launch.
++        receipt['rest_signal_container_lookup_phase'] = 'after-install-before-launch'
++        prepared_container = prepare_stage_rest_container(
++            device, storage, deadline - 30,
++            lambda: probe_query(['xcrun', 'simctl', 'get_app_container', device, BUNDLE, 'data'],
++                                record_key='rest_signal_commands'))
+         # A successful CLI grant is a fixture action, not observed in-app permission state.
+         receipt['microphone_runtime_permission'] = 'not_observed'
+         receipt['microphone_grant_command_succeeded'] = False
+@@ -268,8 +275,7 @@ def warmup(app: Path, device: str, languages: list[str], locale: str, out: Path)
+         # It is a lifecycle milestone, not GPU completion or passing UI evidence. Keep cleanup's 30s.
+         receipt['rest_signal'] = wait_for_stage_rest(
+             device, storage, receipt['pid'], launch_started_epoch, deadline - 30,
+-            lambda: probe_query(['xcrun', 'simctl', 'get_app_container', device, BUNDLE, 'data'],
+-                                record_key='rest_signal_commands'), out)
++            prepared_container, out)
+         os.kill(receipt['pid'], 0)
+         invoke(['xcrun', 'simctl', 'terminate', device, BUNDLE], timeout=30)
+         launched = False
+diff --git a/tools/ci/test_capture_check.py b/tools/ci/test_capture_check.py
+index 1fbf92d1..2c681058 100644
+--- a/tools/ci/test_capture_check.py
++++ b/tools/ci/test_capture_check.py
+@@ -242,6 +242,37 @@ class CaptureLifecycleEvidenceContracts(unittest.TestCase):
+         self.assertIn('let ending = tunerLock(strings: strings)', self.ui)
+         self.assertIn('if !hold.held { problem =', self.ui)
+ 
++    def test_still_tuner_lead_frames_do_not_repluck_during_strict_verification(self):
++        cases = [
++            ('test16StoreViolinStage', 'violin.standard.4', '49d-tune-violin-locked', 'strings: 3'),
++            ('test20StoreCelloStage', 'cello.standard.4', '49e-tune-cello-locked', 'strings: 3'),
++            ('test21StoreUkuleleStage', 'ukulele.soprano.4', '17b-tune-ukulele-locked', 'strings: 3, stages: ["3d", "2d"]'),
++        ]
++        for method, instrument, frame, arguments in cases:
++            with self.subTest(method=method):
++                body = self.ui.split('func ' + method + '() throws {', 1)[1].split('\n    }', 1)[0]
++                self.assertIn('launch(pitch: true, scene: "tune-locked", instrument: "' + instrument + '", comet: false)', body)
++                self.assertIn('storeFrame("' + frame + '", tuner: lockedTunerFrame(' + arguments + '))', body)
++                self.assertNotIn('comet: true', body)
++        # No old picture is accepted using later state; the complete hold and final rejection remain.
++        capture = self.ui.split('private func lockedTunerFrame(', 1)[1].split('private func readoutRegion()', 1)[0]
++        hold = capture.index('let hold = lockHolds(stages: stages)')
++        picture = capture.index('picture = XCUIScreen.main.screenshot()', hold)
++        ending = capture.index('let ending = tunerLock(strings: strings)', picture)
++        self.assertLess(hold, picture)
++        self.assertLess(picture, ending)
++        self.assertIn('if !ending.shown { problem =', capture[ending:])
++        self.assertIn('XCTAssertTrue(hold.held', capture[ending:])
++
++    def test_explicit_animated_comet_opt_in_and_behavior_remain_available(self):
++        self.assertIn('if comet { app.launchEnvironment["TIMBRE_SCENE_COMET"] = "1" }', self.ui)
++        self.assertIn('private func cometPicture(readout: CGRect)', self.ui)
++        self.assertIn('static let comet = TestSupport.isOn(.sceneComet)', self.scene)
++        self.assertIn('static let cometPeriod = 4.0', self.scene)
++        loop = self.scene.split('guard Option.comet else { return }', 1)[1].split('/// Selects a string', 1)[0]
++        self.assertIn('Task.sleep(for: .seconds(cometPeriod))', loop)
++        self.assertIn('select(held, store)', loop)
++
+     def test_evidence_fails_on_stale_or_gapped_or_nonmonotonic_samples(self):
+         self.assertIn('maximumGap = 0.3', self.evidence)
+         self.assertIn('seconds.isFinite, window.isFinite', self.evidence)
+diff --git a/tools/ci/test_simulator_priming_signal.py b/tools/ci/test_simulator_priming_signal.py
+index cb0abf78..4c37e172 100644
+--- a/tools/ci/test_simulator_priming_signal.py
++++ b/tools/ci/test_simulator_priming_signal.py
+@@ -132,6 +132,124 @@ class SignalTests(unittest.TestCase):
+             signal.wait_for_stage_rest(DEVICE, SESSION, 123, 1000, float('inf'), query, Path('unused'))
+ 
+ 
++class ContainerPreflightTests(unittest.TestCase):
++    def fixture(self, root):
++        container, source, out = SignalTests().fixture(root)
++        source.parent.rmdir()  # The generated session must not exist before this launch.
++        return container, source, out
++
++    def test_prepared_lookup_queries_once_and_keeps_postlaunch_signal_validation(self):
++        with tempfile.TemporaryDirectory() as directory:
++            container, source, out = self.fixture(Path(directory).resolve())
++            calls = []
++            def query(): calls.append(True); return str(container) + '\n'
++            with patch.object(signal.time, 'monotonic', return_value=0), patch.object(signal.time, 'time', return_value=1002):
++                prepared = signal.prepare_stage_rest_container(DEVICE, SESSION, 270, query)
++                self.assertFalse(source.parent.exists())
++                source.parent.mkdir(); source.write_bytes(payload())
++                result = signal.wait_for_stage_rest(DEVICE, SESSION, 123, 1000, 270, prepared, out)
++            self.assertEqual(calls, [True])
++            self.assertEqual(result['observed']['pid'], 123)
++            self.assertEqual((out/'priming-stage-signal.log').read_bytes(), payload())
++
++    def test_existing_namespace_is_rejected_before_launch_even_when_empty(self):
++        with tempfile.TemporaryDirectory() as directory:
++            container, source, out = self.fixture(Path(directory).resolve()); source.parent.mkdir()
++            with self.assertRaisesRegex(ValueError, 'namespace already exists'):
++                signal.prepare_stage_rest_container(DEVICE, SESSION, float('inf'), lambda: str(container))
++
++    def test_existing_namespace_symlink_is_rejected(self):
++        with tempfile.TemporaryDirectory() as directory:
++            container, source, out = self.fixture(Path(directory).resolve()); source.parent.symlink_to(out)
++            with self.assertRaisesRegex(ValueError, 'Symlink'):
++                signal.prepare_stage_rest_container(DEVICE, SESSION, float('inf'), lambda: str(container))
++
++    def test_foreign_runner_owner_is_rejected(self):
++        with tempfile.TemporaryDirectory() as directory:
++            container, source, out = self.fixture(Path(directory).resolve())
++            with patch.object(signal.os, 'getuid', return_value=container.stat().st_uid + 1), \
++                 self.assertRaisesRegex(ValueError, 'current runner'):
++                signal.prepare_stage_rest_container(DEVICE, SESSION, float('inf'), lambda: str(container))
++
++    def test_container_replacement_after_launch_is_rejected_even_with_matching_bundle(self):
++        with tempfile.TemporaryDirectory() as directory:
++            container, source, out = self.fixture(Path(directory).resolve())
++            prepared = signal.prepare_stage_rest_container(DEVICE, SESSION, float('inf'), lambda: str(container))
++            moved = container.with_name(container.name + '-retained'); container.rename(moved); container.mkdir()
++            (container/'.com.apple.mobile_container_manager.metadata.plist').write_bytes(
++                plistlib.dumps({'MCMMetadataIdentifier': signal.BUNDLE}))
++            with self.assertRaisesRegex(ValueError, 'identity changed'): prepared()
++            self.assertTrue(moved.exists())
++
++    def test_changed_metadata_or_symlink_after_launch_fails_closed(self):
++        for mutation in ['metadata', 'symlink']:
++            with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as directory:
++                container, source, out = self.fixture(Path(directory).resolve())
++                prepared = signal.prepare_stage_rest_container(DEVICE, SESSION, float('inf'), lambda: str(container))
++                if mutation == 'metadata':
++                    (container/'.com.apple.mobile_container_manager.metadata.plist').write_bytes(
++                        plistlib.dumps({'MCMMetadataIdentifier': 'foreign'}))
++                else:
++                    moved = container.with_name(container.name + '-retained'); container.rename(moved); container.symlink_to(moved)
++                with self.assertRaises(ValueError): prepared()
++                self.assertFalse((out/'priming-stage-signal.log').exists())
++
++    def test_invalid_uuid_or_expired_budget_does_not_query(self):
++        def query(): self.fail('No query is permitted')
++        for device, session in [('booted', SESSION), (DEVICE, SESSION.upper()), (DEVICE, '../foreign')]:
++            with self.subTest(device=device, session=session), self.assertRaises(ValueError):
++                signal.prepare_stage_rest_container(device, session, float('inf'), query)
++        with patch.object(signal.time, 'monotonic', return_value=270), self.assertRaises(TimeoutError):
++            signal.prepare_stage_rest_container(DEVICE, SESSION, 270, query)
++
++    def test_query_timeout_and_late_validation_never_prepare_success(self):
++        def failure(): raise subprocess.TimeoutExpired(['get_app_container'], 5)
++        with self.assertRaises(subprocess.TimeoutExpired):
++            signal.prepare_stage_rest_container(DEVICE, SESSION, float('inf'), failure)
++        with tempfile.TemporaryDirectory() as directory:
++            container, source, out = self.fixture(Path(directory).resolve())
++            with patch.object(signal.time, 'monotonic', side_effect=[0, 271]), self.assertRaises(TimeoutError):
++                signal.prepare_stage_rest_container(DEVICE, SESSION, 270, lambda: str(container))
++
++    def test_preflight_rejects_foreign_device_bundle_and_malformed_paths(self):
++        with tempfile.TemporaryDirectory() as directory:
++            container, source, out = self.fixture(Path(directory).resolve())
++            for response in ['booted', '/tmp/foreign', '/tmp\x00bad', str(container).replace(DEVICE, OTHER.upper())]:
++                with self.subTest(response=response), self.assertRaises(ValueError):
++                    signal.prepare_stage_rest_container(DEVICE, SESSION, float('inf'), lambda: response)
++            (container/'.com.apple.mobile_container_manager.metadata.plist').write_bytes(
++                plistlib.dumps({'MCMMetadataIdentifier': 'foreign'}))
++            with self.assertRaisesRegex(ValueError, 'wrong bundle'):
++                signal.prepare_stage_rest_container(DEVICE, SESSION, float('inf'), lambda: str(container))
++
++    def test_container_replaced_during_signal_read_is_rejected_before_copy(self):
++        with tempfile.TemporaryDirectory() as directory:
++            container, source, out = self.fixture(Path(directory).resolve())
++            prepared = signal.prepare_stage_rest_container(DEVICE, SESSION, float('inf'), lambda: str(container))
++            source.parent.mkdir(); source.write_bytes(payload())
++            original = signal.bounded_read
++            def changed(path, limit):
++                raw = original(path, limit)
++                if path == source:
++                    moved = container.with_name(container.name + '-retained'); container.rename(moved); container.mkdir()
++                    (container/'.com.apple.mobile_container_manager.metadata.plist').write_bytes(
++                        plistlib.dumps({'MCMMetadataIdentifier': signal.BUNDLE}))
++                return raw
++            with patch.object(signal, 'bounded_read', side_effect=changed), self.assertRaisesRegex(ValueError, 'identity changed'):
++                signal.wait_for_stage_rest(DEVICE, SESSION, 123, 1000, float('inf'), prepared, out)
++            self.assertFalse((out/'priming-stage-signal.log').exists())
++
++    def test_prepared_container_never_accepts_foreign_pid_or_stale_signal(self):
++        for changes in [{'pid': 124}, {'sessionID': OTHER}, {'utcEpoch': 999}]:
++            with self.subTest(changes=changes), tempfile.TemporaryDirectory() as directory:
++                container, source, out = self.fixture(Path(directory).resolve())
++                prepared = signal.prepare_stage_rest_container(DEVICE, SESSION, float('inf'), lambda: str(container))
++                source.parent.mkdir(); source.write_bytes(payload(**changes))
++                with patch.object(signal.time, 'time', return_value=1002), self.assertRaises(ValueError):
++                    signal.wait_for_stage_rest(DEVICE, SESSION, 123, 1000, float('inf'), prepared, out)
++                self.assertFalse((out/'priming-stage-signal.log').exists())
++
++
+ class IntegrationTests(unittest.TestCase):
+     def execute(self, milestone_failure=None, launch_failure=False, terminate_failure=False):
+         with tempfile.TemporaryDirectory() as directory:
+@@ -155,6 +273,7 @@ class IntegrationTests(unittest.TestCase):
+                 return {'synthetic': True}
+             with patch.object(warm.subprocess,'run',side_effect=native), \
+                  patch.object(warm,'wait_for_stage_rest',side_effect=milestone) as wait, \
++                 patch.object(warm,'prepare_stage_rest_container',return_value=lambda: 'synthetic'), \
+                  patch.object(warm.time,'monotonic',side_effect=lambda:now[0]), patch.object(warm.os,'kill'):
+                 if milestone_failure or launch_failure or terminate_failure:
+                     with self.assertRaises(RuntimeError): warm.warmup(app,DEVICE,['en'],'en_US',out)
+@@ -167,10 +286,13 @@ class IntegrationTests(unittest.TestCase):
+             (app/'Info.plist').write_bytes(plistlib.dumps({'CFBundleIdentifier': warm.BUNDLE, 'CFBundleExecutable':'Timbre'}))
+             (app/'Timbre').write_bytes(b'fixture')
+             container, source, unused = SignalTests().fixture(root)
+-            events=[]
++            events=[]; launched=[False]
+             def native(command, **kwargs):
+                 events.append((command,kwargs))
++                if command[:3] == ['xcrun','simctl','get_app_container'] and launched[0]:
++                    raise subprocess.TimeoutExpired(command, 5)
+                 if command[:3] == ['xcrun','simctl','launch']:
++                    launched[0]=True
+                     session=kwargs['env']['SIMCTL_CHILD_TIMBRE_TEST_STORAGE_ID']
+                     actual=source.parent.parent/session/signal.FILENAME;actual.parent.mkdir()
+                     actual.write_bytes(payload(sessionID=session,utcEpoch=1002))
+@@ -182,9 +304,31 @@ class IntegrationTests(unittest.TestCase):
+             status=json.loads((out/'status.json').read_text())
+             self.assertTrue(status['passed'])
+             self.assertEqual(status['rest_signal']['observed']['sessionID'],status['automation_storage_id'])
++            self.assertEqual(status['rest_signal_container_lookup_phase'], 'after-install-before-launch')
+             self.assertEqual(len(status['rest_signal_commands']),1)
+             self.assertEqual(status['rest_signal_commands'][0]['timeout_seconds'],5)
+-            self.assertEqual([c[0][2] for c in events],['install','privacy','launch','get_app_container','terminate'])
++            self.assertEqual([c[0][2] for c in events],['install','get_app_container','privacy','launch','terminate'])
++
++    def test_prelaunch_container_timeout_retains_failure_without_launch_or_signal_wait(self):
++        with tempfile.TemporaryDirectory() as directory:
++            root=Path(directory).resolve(); app=root/'Timbre.app'; app.mkdir(); out=root/'out'
++            (app/'Info.plist').write_bytes(plistlib.dumps({'CFBundleIdentifier': warm.BUNDLE, 'CFBundleExecutable':'Timbre'}))
++            (app/'Timbre').write_bytes(b'fixture'); calls=[]
++            def native(command, **kwargs):
++                calls.append((command, kwargs))
++                if command[:3] == ['xcrun','simctl','get_app_container']:
++                    self.assertEqual(kwargs['timeout'], 5)
++                    raise subprocess.TimeoutExpired(command, kwargs['timeout'])
++                return SimpleNamespace(returncode=0, stdout='', stderr='')
++            with patch.object(warm.subprocess,'run',side_effect=native), \
++                 patch.object(warm.time,'monotonic',return_value=0), patch.object(warm,'wait_for_stage_rest') as wait:
++                with self.assertRaises(RuntimeError): warm.warmup(app,DEVICE,['en'],'en_US',out)
++            status=json.loads((out/'status.json').read_text())
++            self.assertFalse(status['passed']); self.assertEqual(status['launch_attempts'],0)
++            self.assertEqual(status['total_budget_seconds'],300); self.assertEqual(wait.call_count,0)
++            self.assertIn('5 seconds',status['error'])
++            self.assertFalse(any(c[0][:3] in (['xcrun','simctl','launch'], ['xcrun','simctl','terminate']) for c in calls))
++            self.assertEqual(status['rest_signal_commands'][0]['timeout_seconds'],5)
+ 
+     def test_only_successful_launch_enters_milestone_wait_with_reserve(self):
+         status,calls,count=self.execute()
+@@ -237,6 +381,19 @@ class SourceContractTests(unittest.TestCase):
+         for forbidden in ['accessibility','UserDefaults','URLSession']:
+             self.assertNotIn(forbidden,body)
+ 
++    def test_prelaunch_resolution_is_between_install_and_launch_and_wait_uses_cached_revalidation(self):
++        root=Path(__file__).resolve().parents[2]
++        source=(root/'tools/ci/simulator_warmup.py').read_text()
++        install=source.index("invoke(['xcrun', 'simctl', 'install'")
++        prepare=source.index('prepared_container = prepare_stage_rest_container(')
++        launch=source.index("output = invoke(['xcrun', 'simctl', 'launch'")
++        wait=source.index("receipt['rest_signal'] = wait_for_stage_rest(")
++        self.assertLess(install,prepare); self.assertLess(prepare,launch); self.assertLess(launch,wait)
++        self.assertIn('device, storage, deadline - 30',source[prepare:launch])
++        self.assertIn('prepared_container, out)',source[wait:])
++        self.assertNotIn('get_app_container',source[wait:source.index('    except (OSError', wait)])
++        self.assertIn('def probe_query(command, limit=5',source)
++
+     def test_host_has_no_guessed_settle_and_unmodified_independent_test_contract(self):
+         root=Path(__file__).resolve().parents[2]
+         source=(root/'tools/ci/simulator_warmup.py').read_text()
+diff --git a/tools/ci/test_simulator_warmup.py b/tools/ci/test_simulator_warmup.py
+index 853af567..2fbb055f 100644
+--- a/tools/ci/test_simulator_warmup.py
++++ b/tools/ci/test_simulator_warmup.py
+@@ -36,6 +36,7 @@ class WarmupTests(unittest.TestCase):
+             out = root / 'diagnostics'
+             with patch.object(warm.subprocess, 'run', side_effect=native), patch.object(warm.time, 'sleep'), \
+                  patch.object(warm.os, 'kill') as alive, patch.object(warm, 'wait_for_stage_rest', return_value={'synthetic': True}), \
++                 patch.object(warm, 'prepare_stage_rest_container', return_value=lambda: 'synthetic'), \
+                  patch.dict(os.environ, {'GITHUB_SHA': 'source'}):
+                 if failure:
+                     with self.assertRaises(RuntimeError):
+@@ -154,7 +155,8 @@ class WarmupTests(unittest.TestCase):
+                     now[0] += kwargs['timeout']
+                 return SimpleNamespace(returncode=0, stdout='')
+             with patch.object(warm.time, 'monotonic', side_effect=lambda: now[0]), \
+-                 patch.object(warm.subprocess, 'run', side_effect=native):
++                 patch.object(warm.subprocess, 'run', side_effect=native), \
++                 patch.object(warm, 'prepare_stage_rest_container', return_value=lambda: 'synthetic'):
+                 with self.assertRaises(RuntimeError):
+                     warm.warmup(app, DEVICE, ['en'], 'en_US', root / 'out')
+             self.assertEqual(calls[-1][0][2], 'terminate')
+@@ -240,7 +242,8 @@ class DiagnosticIdentityTests(unittest.TestCase):
+ 
+             out = Path(directory) / 'out'
+             with patch.object(warm.subprocess, 'run', side_effect=native), patch.object(warm.os, 'kill'), \
+-                 patch.object(warm.time, 'sleep'), patch.object(warm, 'wait_for_stage_rest', return_value={'synthetic': True}):
++                 patch.object(warm.time, 'sleep'), patch.object(warm, 'wait_for_stage_rest', return_value={'synthetic': True}), \
++                 patch.object(warm, 'prepare_stage_rest_container', return_value=lambda: 'synthetic'):
+                 if failure:
+                     with self.assertRaises(RuntimeError):
+                         warm.warmup(app, DEVICE, ['en'], 'en_US', out)
+@@ -341,7 +344,8 @@ class ProcessProbeTests(unittest.TestCase):
+                     return SimpleNamespace(returncode=0, stdout=malformed if malformed is not None else json.dumps(payload), stderr='')
+                 return SimpleNamespace(returncode=0, stdout='', stderr='')
+ 
+-            with patch.object(warm.subprocess, 'run', side_effect=native), patch.object(warm.time, 'sleep'):
++            with patch.object(warm.subprocess, 'run', side_effect=native), \
++                 patch.object(warm, 'prepare_stage_rest_container', return_value=lambda: 'synthetic'), patch.object(warm.time, 'sleep'):
+                 with self.assertRaises(RuntimeError):
+                     warm.warmup(app, DEVICE, ['en'], 'en_US', out)
+             return json.loads((out / 'status.json').read_text()), calls
+@@ -429,7 +433,8 @@ class ProcessProbeTests(unittest.TestCase):
+                 return SimpleNamespace(returncode=0, stdout='', stderr='')
+ 
+             with patch.object(warm.time, 'monotonic', side_effect=lambda: now[0]), \
+-                 patch.object(warm.subprocess, 'run', side_effect=native):
++                 patch.object(warm.subprocess, 'run', side_effect=native), \
++                 patch.object(warm, 'prepare_stage_rest_container', return_value=lambda: 'synthetic'):
+                 with self.assertRaises(RuntimeError):
+                     warm.warmup(app, DEVICE, ['en'], 'en_US', root / 'out')
+             status = json.loads((root / 'out/status.json').read_text())
+diff --git a/tools/ci/test_tour_shards.py b/tools/ci/test_tour_shards.py
+index 04d743a6..e5a107ec 100644
+--- a/tools/ci/test_tour_shards.py
++++ b/tools/ci/test_tour_shards.py
+@@ -1,9 +1,11 @@
+ """Shards preserve selected classes and recover evidence without treating partial runs as green."""
++import ast
+ import contextlib
+ import glob
+ import io
+ import json
+ import os
++import re
+ from pathlib import Path
+ import tempfile
+ import unittest
+@@ -13,6 +15,135 @@ import tour_evidence as evidence
+ ROOT = Path(__file__).resolve().parents[2]
+ 
+ 
++def job_blocks(source):
++    """Read only this workflow's fixed two-space job mapping; actionlint validates YAML."""
++    jobs = source.split('\njobs:\n', 1)[1]
++    starts = list(re.finditer(r'^  ([a-zA-Z0-9_-]+):\n', jobs, re.M))
++    return {match.group(1): jobs[match.end():starts[i + 1].start() if i + 1 < len(starts) else len(jobs)]
++            for i, match in enumerate(starts)}
++
++
++def job_field(block, name):
++    match = re.search(r'^    ' + re.escape(name) + r': (.+)$', block, re.M)
++    if not match:
++        return None
++    value = match.group(1)
++    if value == '>-':
++        lines = []
++        for line in block[match.end() + 1:].splitlines():
++            if not line.startswith('      '): break
++            lines.append(line.strip())
++        return ' '.join(lines)
++    return value
++
++
++def job_needs(block):
++    value = job_field(block, 'needs')
++    if value is None: return []
++    return [item.strip() for item in value.strip('[]').split(',')]
++
++
++def condition_value(expression, event, labels, cancelled, predecessor):
++    """Evaluate the restricted actual job expression, including Actions' implicit success rule.
++
++    This is a regression model, not a substitute for executing GitHub's scheduler.
++    """
++    explicit_status = re.search(r'\b(always|success|failure|cancelled)\(', expression)
++    expression = re.sub(r"contains\(github\.event\.pull_request\.labels\.\*\.name, '([^']+)'\)",
++                        lambda match: str(match.group(1).lower() in {label.lower() for label in labels}), expression)
++    expression = expression.replace('github.event_name', repr(event))
++    for name, value in [('always()', True), ('cancelled()', cancelled),
++                        ('success()', predecessor == 'success'), ('failure()', predecessor == 'failure')]:
++        expression = expression.replace(name, str(value))
++    expression = expression.replace('&&', ' and ').replace('||', ' or ')
++    expression = re.sub(r'!(?!=)', ' not ', expression).strip()
++    tree = ast.parse(expression, mode='eval')
++    allowed = (ast.Expression, ast.BoolOp, ast.And, ast.Or, ast.UnaryOp, ast.Not,
++               ast.Compare, ast.Eq, ast.NotEq, ast.Constant)
++    if any(not isinstance(node, allowed) for node in ast.walk(tree)):
++        raise ValueError('Unexpected workflow-condition syntax')
++    result = bool(eval(compile(tree, '<workflow condition>', 'eval'), {'__builtins__': {}}, {}))
++    return result and (bool(explicit_status) or predecessor == 'success')
++
++
++class NightlySchedulingContracts(unittest.TestCase):
++    delayed = ('archive', 'ipad', 'a11y-matrix', 'tsan')
++
++    def setUp(self):
++        self.source = (ROOT / '.github/workflows/nightly.yml').read_text()
++        self.jobs = job_blocks(self.source)
++
++    def test_only_independent_jobs_wait_for_producer_terminal_not_for_other_consumers(self):
++        self.assertEqual(job_needs(self.jobs['tour-build']), [])
++        self.assertEqual(job_needs(self.jobs['tour']), ['tour-build'])
++        for name in self.delayed:
++            with self.subTest(job=name):
++                self.assertEqual(job_needs(self.jobs[name]), ['tour-build'])
++                self.assertNotIn('actions/download-artifact@', self.jobs[name])
++        self.assertEqual(set(job_needs(self.jobs['publish'])), set(self.jobs) - {'publish'})
++
++    def test_original_trigger_eligibility_survives_success_failure_and_skip(self):
++        for name in self.delayed:
++            expression = job_field(self.jobs[name], 'if')
++            self.assertTrue(expression.startswith('always() && !cancelled() && ('))
++            for event in ['schedule', 'workflow_dispatch', 'pull_request']:
++                for labels in [[], ['captures'], ['accessibility'], ['captures', 'accessibility'], ['unrelated']]:
++                    expected = event != 'pull_request' or 'captures' in labels or (name == 'a11y-matrix' and 'accessibility' in labels)
++                    for predecessor in ['success', 'failure', 'skipped']:
++                        with self.subTest(job=name, event=event, labels=labels, predecessor=predecessor):
++                            self.assertEqual(condition_value(expression, event, labels, False, predecessor), expected)
++
++    def test_explicit_workflow_cancellation_blocks_all_four_regardless_of_trigger_or_parent_result(self):
++        for name in self.delayed:
++            expression = job_field(self.jobs[name], 'if')
++            for predecessor in ['success', 'failure', 'skipped', 'cancelled']:
++                for event in ['schedule', 'workflow_dispatch', 'pull_request']:
++                    self.assertFalse(condition_value(expression, event, ['captures', 'accessibility'], True, predecessor))
++
++    def test_accessibility_only_pr_runs_matrix_after_skipped_unneeded_producer(self):
++        self.assertFalse(condition_value(job_field(self.jobs['tour-build'], 'if'), 'pull_request', ['accessibility'], False, 'success'))
++        for name in self.delayed:
++            self.assertEqual(condition_value(job_field(self.jobs[name], 'if'), 'pull_request', ['accessibility'], False, 'skipped'),
++                             name == 'a11y-matrix')
++        # cancelled() is a workflow state, not an alias for one prerequisite's result.
++        self.assertTrue(condition_value(job_field(self.jobs['archive'], 'if'), 'schedule', [], False, 'cancelled'))
++        # Real shared-build consumers still require producer success; no artifact-less tour run is introduced.
++        self.assertFalse(condition_value(job_field(self.jobs['tour'], 'if'), 'pull_request', ['captures'], False, 'failure'))
++
++    def test_default_success_and_missing_cancel_guard_are_detectable_negative_controls(self):
++        expression = job_field(self.jobs['archive'], 'if')
++        original_trigger = expression.split('&& (', 1)[1][:-1]
++        self.assertFalse(condition_value(original_trigger, 'pull_request', ['captures'], False, 'failure'))
++        unsafe = expression.replace('!cancelled()', 'always()')
++        self.assertTrue(condition_value(unsafe, 'pull_request', ['captures'], True, 'success'))
++        with self.assertRaises(ValueError): condition_value('unknown()', 'schedule', [], False, 'success')
++
++    def test_dependency_graph_is_acyclic_and_five_initial_macos_roots_replace_nine(self):
++        pending = {name: set(job_needs(block)) for name, block in self.jobs.items()}
++        self.assertTrue(all(deps <= set(pending) for deps in pending.values()))
++        finished = set()
++        while pending:
++            available = {name for name, deps in pending.items() if deps <= finished}
++            self.assertTrue(available, 'Dependency cycle would prevent evidence collection')
++            finished.update(available)
++            pending = {name: deps for name, deps in pending.items() if name not in available}
++        native = job_blocks((ROOT / '.github/workflows/ios.yml').read_text())
++        roots = lambda jobs: {name for name, block in jobs.items()
++                             if (job_field(block, 'runs-on') or '').startswith('macos-') and not job_needs(block)}
++        self.assertEqual(roots(native), {'core', 'app', 'release', 'accessibility'})
++        self.assertEqual(roots(self.jobs), {'tour-build'})
++        self.assertEqual(len(roots(native)) + len(roots(self.jobs)), 5)
++        self.assertEqual(len(roots(native)) + len(roots(self.jobs)) + len(self.delayed), 9)
++
++    def test_scheduling_does_not_raise_timeouts_or_mask_job_failures(self):
++        expected = {'tour-build': '30', 'tour': '90', 'archive': '30', 'ipad': '45', 'a11y-matrix': '75', 'tsan': '45'}
++        for name, minutes in expected.items():
++            self.assertEqual(job_field(self.jobs[name], 'timeout-minutes'), minutes)
++            self.assertIsNone(job_field(self.jobs[name], 'continue-on-error'))
++        self.assertEqual(self.source.count('contents: write'), 1)
++        self.assertIn("cancel-in-progress: ${{ github.event_name == 'pull_request' }}", self.source)
++
++
+ class TourShardContracts(unittest.TestCase):
+     def test_matrix_preserves_every_original_class_and_is_failure_independent(self):
+         source = (ROOT / '.github/workflows/nightly.yml').read_text()
+diff --git a/tools/marketing/tests/test_listing_assets.py b/tools/marketing/tests/test_listing_assets.py
+index c8ef2905..2f0d4d8c 100644
+--- a/tools/marketing/tests/test_listing_assets.py
++++ b/tools/marketing/tests/test_listing_assets.py
+@@ -453,9 +453,15 @@ class SourceContractTests(unittest.TestCase):
+         self.assertIn('let hold = lockHolds(stages: stages)', locked)
+         self.assertIn('XCTAssertTrue(hold.held', locked)
+         self.assertIn('as: name + "-wrong"', source)
+-        # The violin CPP's optional shimmer and actual video tour are not changed by this still repair.
+-        violin = source.split('func test16StoreViolinStage()', 1)[1].split('func test20StoreCelloStage()', 1)[0]
+-        self.assertIn('comet: true', violin)
++        # All still leads preserve the same real lock while the fresh screenshot and final AX state are checked.
++        for name in ('test16StoreViolinStage', 'test20StoreCelloStage', 'test21StoreUkuleleStage'):
++            body = source.split('func ' + name + '() throws {', 1)[1].split('\n    }', 1)[0]
++            self.assertIn('comet: false', body)
++            self.assertIn('lockedTunerFrame(strings: 3', body)
++            self.assertNotIn('comet: true', body)
++        # Explicit animation capability remains; this does not claim a separate exercised video test.
++        self.assertIn('if comet { app.launchEnvironment["TIMBRE_SCENE_COMET"] = "1" }', source)
++        self.assertIn('private func cometPicture(readout: CGRect)', source)
+ 
+     def test_runner_preserves_gate_failure_and_never_swallows_assertions(self):
+         source = (assets.ROOT / 'tools/marketing/run_listing_assets.py').read_text()

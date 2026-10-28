@@ -1,0 +1,512 @@
+--- a/ios/Timbre/Onboarding/WelcomeHeadline.swift
++++ b/ios/Timbre/Onboarding/WelcomeHeadline.swift
+@@ -1,12 +1,13 @@
+ import CoreText
+ import SwiftUI
++import UIKit
+ 
+ /// One native Text preserves shaping, natural RTL wrapping, and a single spoken heading.
+ struct WelcomeHeadline: View {
+     @Environment(\.locale) private var locale
++    @Environment(\.displayScale) private var displayScale
+     @ScaledMetric(relativeTo: .largeTitle) private var urduPoints: CGFloat = 40
+-    // The native AX5/280pt sample has a 48px trailing ink overhang at 3x (9.4 base points).
+-    // Reserve 12 base points on both sides without shrinking or capping the script.
++    // Retain the existing minimum gutter; measured glyph overhang can require more at larger sizes.
+     @ScaledMetric(relativeTo: .largeTitle) private var urduHorizontalClearance: CGFloat = 12
+ 
+     private var isUrdu: Bool { locale.language.languageCode?.identifier == "ur" }
+@@ -30,6 +31,88 @@
+         return String(localized: "Tune in seconds.\nThen learn to play.", bundle: bundle, locale: locale)
+     }
+ 
++    private struct InkKey: Hashable {
++        let face: String
++        let points: CGFloat
++        let text: String
++        let scale: CGFloat
++    }
++
++    private static var inkCache: [InkKey: EdgeInsets] = [:]
++
++    /// Measure ink outside typographic advances, including fragments that emergency wrapping can expose.
++    /// These are font geometry measurements at the already-scaled point size, never screenshot offsets.
++    static func nativeUrduInkInsets(font: CTFont, text: String, displayScale: CGFloat) -> EdgeInsets {
++        let scale = max(1, displayScale)
++        let key = InkKey(face: CTFontCopyPostScriptName(font) as String, points: CTFontGetSize(font), text: text, scale: scale)
++        if let cached = inkCache[key] { return cached }
++        let paragraph = NSMutableParagraphStyle()
++        paragraph.baseWritingDirection = .rightToLeft
++        let attributes: [NSAttributedString.Key: Any] = [
++            NSAttributedString.Key(kCTFontAttributeName as String): font,
++            NSAttributedString.Key(kCTLanguageAttributeName as String): "ur",
++            .paragraphStyle: paragraph, .tracking: -1
++        ]
++        var horizontal: CGFloat = 0, top: CGFloat = 0, bottom: CGFloat = 0
++        for fragment in inkFragments(text) {
++            let line = CTLineCreateWithAttributedString(NSAttributedString(string: fragment, attributes: attributes) as CFAttributedString)
++            var ascent: CGFloat = 0, descent: CGFloat = 0
++            let advance = CGFloat(CTLineGetTypographicBounds(line, &ascent, &descent, nil))
++            // Tracking is trailing whitespace. Cover both the full and trimmed typographic edge.
++            let width = max(0, min(advance, advance - CGFloat(CTLineGetTrailingWhitespaceWidth(line))))
++            let ink = CTLineGetBoundsWithOptions(line, .useGlyphPathBounds)
++            guard !ink.isNull, [ink.minX, ink.maxX, ink.minY, ink.maxY, width].allSatisfy({ $0.isFinite }) else { continue }
++            horizontal = max(horizontal, max(-ink.minX, ink.maxX - width))
++            top = max(top, ink.maxY - ascent)
++            bottom = max(bottom, -descent - ink.minY)
++        }
++        func outward(_ value: CGFloat) -> CGFloat { ceil(max(0, value) * scale) / scale }
++        let insets = EdgeInsets(top: outward(top), leading: outward(horizontal),
++                                bottom: outward(bottom), trailing: outward(horizontal))
++        if inkCache.count >= 16 { inkCache.removeAll(keepingCapacity: true) }
++        inkCache[key] = insets
++        return insets
++    }
++
++    /// Whole-word spans preserve shaping at ordinary wraps; grapheme fragments cover emergency wraps
++    /// without separating a combining mark or removing the original punctuation from the measured copy.
++    private static func inkFragments(_ text: String) -> [String] {
++        var fragments: Set<String> = []
++        for paragraph in text.split(separator: "\n") {
++            let words = paragraph.split(whereSeparator: \.isWhitespace).map(String.init)
++            for start in words.indices {
++                for end in (start + 1)...words.count { fragments.insert(words[start..<end].joined(separator: " ")) }
++                let clusters = Array(words[start])
++                for first in clusters.indices {
++                    for last in (first + 1)...clusters.count { fragments.insert(String(clusters[first..<last])) }
++                }
++            }
++        }
++        return fragments.sorted()
++    }
++
++    static func nativeUrduLayoutInsets(ink: EdgeInsets, minimumHorizontal: CGFloat) -> EdgeInsets {
++        EdgeInsets(top: ink.top, leading: max(minimumHorizontal, ink.leading),
++                   bottom: ink.bottom, trailing: max(minimumHorizontal, ink.trailing))
++    }
++
++    private var urduInkInsets: EdgeInsets {
++        Self.nativeUrduInkInsets(font: Self.nativeUrduFont(points: urduPoints, locale: locale),
++                                 text: Self.fontSelectionText(locale: locale), displayScale: displayScale)
++    }
++
++    /// Raster allowance is separate from layout reserve: outer padding alone cannot stop Text's own
++    /// drawing layer clipping a Nastaliq stroke. Draw the original lines without transforming them.
++    private struct UrduInkRenderer: TextRenderer {
++        let displayPadding: EdgeInsets
++        nonisolated func sizeThatFits(proposal: ProposedViewSize, text: TextProxy) -> CGSize {
++            text.sizeThatFits(proposal)
++        }
++        nonisolated func draw(layout: Text.Layout, in context: inout GraphicsContext) {
++            for line in layout { context.draw(line) }
++        }
++    }
++
+     private var font: Font {
+         if isUrdu {
+             // CTFont already has the uncapped ScaledMetric size: do not scale it a second time.
+@@ -50,11 +133,12 @@
+         Group {
+             if isUrdu {
+                 headline.typesettingLanguage(locale.language)
++                    .textRenderer(UrduInkRenderer(displayPadding: urduInkInsets))
+             } else {
+                 headline
+             }
+         }
+-        .padding(.horizontal, isUrdu ? urduHorizontalClearance : 0)
++        .padding(isUrdu ? Self.nativeUrduLayoutInsets(ink: urduInkInsets, minimumHorizontal: urduHorizontalClearance) : EdgeInsets())
+         .fixedSize(horizontal: false, vertical: true)
+         .accessibilityAddTraits(.isHeader)
+         .accessibilityIdentifier("onboarding.headline")
+--- a/ios/TimbreAppTests/WelcomeHeadlineLayoutTests.swift
++++ b/ios/TimbreAppTests/WelcomeHeadlineLayoutTests.swift
+@@ -68,24 +68,39 @@
+     }
+ 
+     func testUrduLinesHaveSeparateInkAtSmallPhoneAndAccessibilityWidths() throws {
++        var samples = 0
+         // 320/375/402/430-point phones, less the actual two 20-point welcome gutters.
+         for width in [CGFloat(280), 335, 362, 390] {
+             var heights: [Int] = []
+             for size in [DynamicTypeSize.large, .accessibility5] {
+                 let example = Example(width: width, size: size)
+-                let masks = try probe(WelcomeHeadline(), example: example, name: example.name)
+-                let full = masks.full, even = masks.even, odd = masks.odd
+-                let union = zip(even.ink, odd.ink).map { $0 || $1 }
+-                XCTAssertTrue(union.elementsEqual(full.ink), "The line masks must reconstruct the unmodified native render: " + example.name)
+-                XCTAssertFalse(even.touches(odd), "Adjacent Nastaliq lines must not share or touch ink pixels: " + example.name)
+-                // A generous outer canvas is deliberately NOT clipped to the layout's rectangle. Any overflowing
+-                // first/last-line glyph or horizontally cropped word is visible to this bounds assertion.
+-                let content = CGRect(x: 240, y: 240, width: width * 3, height: CGFloat(full.height - 480))
+-                XCTAssertTrue(content.insetBy(dx: -1, dy: -1).contains(full.bounds), "All ink must fit its reserved layout: " + example.name)
+-                heights.append(full.height)
+-            }
+-            XCTAssertGreaterThan(heights[1], heights[0], "AX5 must genuinely grow, never cap or shrink the heading")
+-        }
++                do {
++                    try autoreleasepool {
++                        // Measure unmodified native ink before the probe can fail, so an unrelated renderer
++                        // mismatch cannot hide a real overflow. Every requested case must still be visited.
++                        let native = try render(WelcomeHeadline(), example: example, name: "headline-" + example.name)
++                        let content = CGRect(x: 240, y: 240, width: width * 3, height: CGFloat(native.height - 480))
++                        XCTAssertTrue(content.insetBy(dx: -1, dy: -1).contains(native.bounds), "All ink must fit its reserved layout: " + example.name)
++                        heights.append(native.height)
++                        let independent = try render(NativeMetricsHeadline(), example: example, name: "plain-native-" + example.name)
++                        try requireSamePixels(native, independent, name: "production-vs-plain-native-" + example.name)
++                        let masks = try probe(NativeMetricsHeadline(), example: example, name: example.name, native: independent)
++                        let full = masks.full, even = masks.even, odd = masks.odd
++                        let union = zip(even.ink, odd.ink).map { $0 || $1 }
++                        XCTAssertTrue(union.elementsEqual(full.ink), "The line masks must reconstruct the unmodified native render: " + example.name)
++                        XCTAssertFalse(even.touches(odd), "Adjacent Nastaliq lines must not share or touch ink pixels: " + example.name)
++                    }
++                } catch {
++                    XCTFail("Every requested sample requires a pixel-identical native probe: \(example.name): \(error)")
++                }
++                samples += 1
++            }
++            XCTAssertEqual(heights.count, 2, "Both native Dynamic Type renders must succeed")
++            if heights.count == 2 {
++                XCTAssertGreaterThan(heights[1], heights[0], "AX5 must genuinely grow, never cap or shrink the heading")
++            }
++        }
++        XCTAssertEqual(samples, 8, "A failed probe must not prevent the remaining native cases from being checked")
+     }
+ 
+     func testCollisionOracleRejectsTheOriginalZeroLeadingUrduLayout() throws {
+@@ -114,8 +129,13 @@
+     /// the reference layout. Exact RGBA equality prevents the probe from silently measuring another font,
+     /// reflowing the copy, translating its origins, clipping glyphs, or applying different antialiasing.
+     private func probe<Content: View>(_ view: Content, example: Example, name: String,
+-                                      diagnostics: Bool = true, nativeImage: Bool = true) throws -> ProbedText {
+-        let full = try render(view, example: example, name: "headline-" + name, attachImage: nativeImage)
++                                      diagnostics: Bool = true, nativeImage: Bool = true, native: Bitmap? = nil) throws -> ProbedText {
++        let full: Bitmap
++        if let native {
++            full = native
++        } else {
++            full = try render(view, example: example, name: "headline-" + name, attachImage: nativeImage)
++        }
+         let controlled = view.typesettingLanguage(Locale(identifier: example.language).language)
+         let language = try render(controlled, example: example, name: "explicit-language-" + name, attachImage: diagnostics)
+         try requireSamePixels(full, language, name: "native-vs-explicit-language-" + name)
+@@ -150,6 +170,7 @@
+     private struct NativeMetricsHeadline: View {
+         @ScaledMetric(relativeTo: .largeTitle) private var points: CGFloat = 40
+         @ScaledMetric(relativeTo: .largeTitle) private var horizontal: CGFloat = 12
++        @Environment(\.displayScale) private var displayScale
+ 
+         var body: some View {
+             let face = Typeface.boldText ? Typeface.Face.semiBold.heavier : Typeface.Face.semiBold
+@@ -159,7 +180,11 @@
+                 CFRange(location: 0, length: (word as NSString).length), "ur" as CFString)
+             return Text("Tune in seconds.\nThen learn to play.").font(Font(fallback)).tracking(-1)
+                 .typesettingLanguage(Locale(identifier: "ur").language)
+-                .padding(.horizontal, horizontal)
++                // Share only the measured layout allowance, never the production TextRenderer.
++                .padding(WelcomeHeadline.nativeUrduLayoutInsets(
++                    ink: WelcomeHeadline.nativeUrduInkInsets(font: fallback,
++                        text: "سیکنڈوں میں ٹیون کریں۔\nپھر بجانا سیکھیں۔", displayScale: displayScale),
++                    minimumHorizontal: horizontal))
+                 .fixedSize(horizontal: false, vertical: true)
+         }
+     }
+@@ -168,11 +193,15 @@
+         var samples = 0
+         for width in [CGFloat(280), 335, 362, 390] {
+             for size in [DynamicTypeSize.large, .accessibility5] {
+-                try autoreleasepool {
+-                    let example = Example(width: width, size: size)
+-                    let native = try render(WelcomeHeadline(), example: example, name: "native-metrics-production-" + example.name)
+-                    let independent = try render(NativeMetricsHeadline(), example: example, name: "native-metrics-independent-" + example.name)
+-                    try requireSamePixels(native, independent, name: "production-vs-native-metrics-" + example.name)
++                let example = Example(width: width, size: size)
++                do {
++                    try autoreleasepool {
++                        let native = try render(WelcomeHeadline(), example: example, name: "native-metrics-production-" + example.name)
++                        let independent = try render(NativeMetricsHeadline(), example: example, name: "native-metrics-independent-" + example.name)
++                        try requireSamePixels(native, independent, name: "production-vs-native-metrics-" + example.name)
++                    }
++                } catch {
++                    XCTFail("Independent native equality is required for every sample: \(example.name): \(error)")
+                 }
+                 samples += 1
+             }
+@@ -196,32 +225,38 @@
+         }
+     }
+ 
+-    /// Native Text and TextRenderer can report different intrinsic widths for overhanging ink.
+-    /// A centred outer frame then moves the entire probe (11px in the observed native failure).
+-    /// Pin every variant to one physical origin with an identical proposal, never register images.
++    /// Align the same logical leading edge before rasterization: right for RTL, left for LTR.
++    /// Native Text and TextRenderer can report different intrinsic widths for overhanging ink;
++    /// a physical-left anchor misplaces RTL text even when its typographic right edge agrees.
++    /// Both paths receive the same width proposal. No measured pixel offset enters placement.
+     private struct PinnedCanvas: Layout {
+         let width: CGFloat
++        let direction: LayoutDirection
+ 
+         func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+             let size = subviews[0].sizeThatFits(ProposedViewSize(width: width, height: nil))
++            print("TIMBRE_WELCOME_CANVAS proposal=\(width) intrinsic=\(size) direction=\(direction)")
+             return CGSize(width: width + 160, height: size.height + 160)
+         }
+ 
+         func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+-            subviews[0].place(at: CGPoint(x: bounds.minX + 80, y: bounds.minY + 80),
+-                             anchor: UnitPoint(x: 0, y: 0),
++            let rtl = direction == .rightToLeft
++            let x = bounds.minX + 80 + (rtl ? width : 0)
++            subviews[0].place(at: CGPoint(x: x, y: bounds.minY + 80),
++                             anchor: UnitPoint(x: rtl ? 1 : 0, y: 0),
+                              proposal: ProposedViewSize(width: width, height: nil))
+         }
+     }
+ 
+     private func render<Content: View>(_ view: Content, example: Example, name: String, attachImage: Bool = true) throws -> Bitmap {
+-        let content = PinnedCanvas(width: example.width) {
++        let content = PinnedCanvas(width: example.width, direction: example.direction) {
+             view.foregroundStyle(Color.black)
+                 .environment(\.layoutDirection, example.direction)
+         }
+         .background(Color.white)
+         .environment(\.locale, Locale(identifier: example.language))
+         .environment(\.dynamicTypeSize, example.size)
++        .environment(\.displayScale, 3)
+         // Only the test canvas uses physical LTR coordinates; the native Text above keeps real RTL.
+         .environment(\.layoutDirection, .leftToRight)
+         let renderer = ImageRenderer(content: content)
+--- a/ios/TimbreAppTests/WelcomeFallbackDiagnosticsTests.swift
++++ b/ios/TimbreAppTests/WelcomeFallbackDiagnosticsTests.swift
+@@ -35,6 +35,78 @@
+                        "سیکنڈوں میں ٹیون کریں۔\nپھر بجانا سیکھیں۔")
+         XCTAssertEqual(WelcomeHeadline.fontSelectionText(locale: Locale(identifier: "en")),
+                        "Tune in seconds.\nThen learn to play.")
++    }
++
++    func testMeasuredInkAllowanceContainsIndependentGlyphPathsAtNormalAndAX5Sizes() throws {
++        let copy = "سیکنڈوں میں ٹیون کریں۔\nپھر بجانا سیکھیں۔"
++        let metrics = UIFontMetrics(forTextStyle: .largeTitle)
++        let normal = metrics.scaledValue(for: 40, compatibleWith: UITraitCollection(preferredContentSizeCategory: .large))
++        let ax5 = metrics.scaledValue(for: 40, compatibleWith: UITraitCollection(preferredContentSizeCategory: .accessibilityExtraExtraExtraLarge))
++        XCTAssertGreaterThan(ax5, normal)
++        var reports: [String] = []
++        for points in [normal, ax5] {
++            let font = WelcomeHeadline.nativeUrduFont(points: points, locale: Locale(identifier: "ur"))
++            XCTAssertEqual(CTFontGetSize(font), points, "The already-scaled font must not scale again")
++            let allowance = WelcomeHeadline.nativeUrduInkInsets(font: font, text: copy, displayScale: 3)
++            XCTAssertGreaterThan(allowance.leading, 0, "The actual Nastaliq overhang must be reserved")
++            XCTAssertEqual(allowance.leading, allowance.trailing, "Symmetric ink allowance cannot flip in RTL")
++            let paragraph = NSMutableParagraphStyle()
++            paragraph.baseWritingDirection = .rightToLeft
++            var checkedFragments = 0
++            for word in copy.split(whereSeparator: \.isWhitespace) {
++                let clusters = Array(word)
++                for start in clusters.indices {
++                    for end in (start + 1)...clusters.count {
++                        let fragment = String(clusters[start..<end])
++                        let attributed = NSAttributedString(string: fragment, attributes: [
++                            NSAttributedString.Key(kCTFontAttributeName as String): font,
++                            NSAttributedString.Key(kCTLanguageAttributeName as String): "ur",
++                            .tracking: -1, .paragraphStyle: paragraph
++                        ])
++                        let line = CTLineCreateWithAttributedString(attributed as CFAttributedString)
++                        var ascent: CGFloat = 0, descent: CGFloat = 0
++                        let width = CGFloat(CTLineGetTypographicBounds(line, &ascent, &descent, nil))
++                        let ink = try glyphPathBounds(line)
++                        guard !ink.isNull else { continue }
++                        checkedFragments += 1
++                        let reserved = CGRect(x: -allowance.leading, y: -descent - allowance.bottom,
++                            width: width + allowance.leading + allowance.trailing,
++                            height: ascent + descent + allowance.top + allowance.bottom)
++                        XCTAssertTrue(reserved.contains(ink), "Every actual glyph path needs drawing allowance: \(fragment), \(points)pt")
++                    }
++                }
++            }
++            XCTAssertGreaterThan(checkedFragments, 20, "The metric oracle must inspect real glyph paths")
++            let reserved = WelcomeHeadline.nativeUrduLayoutInsets(ink: allowance, minimumHorizontal: 12)
++            XCTAssertGreaterThanOrEqual(reserved.leading, allowance.leading)
++            XCTAssertGreaterThanOrEqual(reserved.trailing, allowance.trailing)
++            reports.append("points=\(points) measured=\(allowance) reserved=\(reserved)")
++        }
++        let attachment = XCTAttachment(string: reports.joined(separator: "\n"))
++        attachment.name = "urdu-measured-ink-allowance"
++        attachment.lifetime = .keepAlways
++        add(attachment)
++    }
++
++    /// Independent path union: do not validate CTLine's aggregate bounds with the same aggregate API.
++    private func glyphPathBounds(_ line: CTLine) throws -> CGRect {
++        var result = CGRect.null
++        let runs = try XCTUnwrap(CTLineGetGlyphRuns(line) as? [CTRun])
++        for run in runs {
++            let attributes = CTRunGetAttributes(run) as NSDictionary
++            let font = attributes[kCTFontAttributeName] as! CTFont
++            let count = CTRunGetGlyphCount(run)
++            var glyphs = [CGGlyph](repeating: 0, count: count)
++            var positions = [CGPoint](repeating: .zero, count: count)
++            CTRunGetGlyphs(run, CFRange(location: 0, length: 0), &glyphs)
++            CTRunGetPositions(run, CFRange(location: 0, length: 0), &positions)
++            for (glyph, position) in zip(glyphs, positions) {
++                if let path = CTFontCreatePathForGlyph(font, glyph, nil) {
++                    result = result.union(path.boundingBoxOfPath.offsetBy(dx: position.x, dy: position.y))
++                }
++            }
++        }
++        return result
+     }
+ 
+     func testRecordUrduFallbackMetricsAndCandidateLayouts() throws {
+@@ -99,7 +171,8 @@
+         let renderer = ImageRenderer(content: view.foregroundStyle(Color.black).frame(width: width)
+             .fixedSize(horizontal: false, vertical: true).padding(80).background(Color.white)
+             .environment(\.locale, Locale(identifier: "ur"))
+-            .environment(\.layoutDirection, .rightToLeft).environment(\.dynamicTypeSize, size))
++            .environment(\.layoutDirection, .rightToLeft).environment(\.dynamicTypeSize, size)
++            .environment(\.displayScale, 3))
+         renderer.scale = 3
+         renderer.isOpaque = true
+         let image = try XCTUnwrap(renderer.uiImage)
+--- a/ios/TimbreUITests/FirstSessionUITests.swift
++++ b/ios/TimbreUITests/FirstSessionUITests.swift
+@@ -94,12 +94,16 @@
+         let scroll = app.scrollViews["onboarding.welcome.scroll"].firstMatch
+         XCTAssertTrue(scroll.exists, "The Urdu welcome needs a real vertical scroll view")
+         var observations: [String] = []
+-        defer {
++        var traceSaved = false
++        func captureTrace() {
++            guard !traceSaved else { return }
++            traceSaved = true
+             let trace = XCTAttachment(string: observations.joined(separator: "\n"))
+             trace.name = "urdu-welcome-scroll-" + target.identifier + "-\(edge)"
+             trace.lifetime = .keepAlways
+             add(trace)
+         }
++        defer { captureTrace() }
+         for attempt in 0..<16 {
+             let viewport = scroll.frame.intersection(app.frame).insetBy(dx: 0, dy: 4)
+             let frame = target.frame
+@@ -118,11 +122,13 @@
+                   wanted.minX >= viewport.minX, wanted.maxX <= viewport.maxX, !contained else { break }
+             let distance = min(viewport.height * 0.45, max(-viewport.height * 0.45, viewport.midY - wanted.midY))
+             let origin = app.coordinate(withNormalizedOffset: .zero)
+-            let from = origin.withOffset(CGVector(dx: viewport.minX + 24, dy: viewport.midY))
+-            let to = origin.withOffset(CGVector(dx: viewport.minX + 24, dy: viewport.midY + distance))
++            // Use the scroll's interior, not the RTL indicator/gutter where a drag can miss its content.
++            let from = origin.withOffset(CGVector(dx: viewport.midX, dy: viewport.midY))
++            let to = origin.withOffset(CGVector(dx: viewport.midX, dy: viewport.midY + distance))
+             from.press(forDuration: 0.1, thenDragTo: to, withVelocity: .slow, thenHoldForDuration: 0.2)
+         }
+         captureWelcome("unreachable-" + target.identifier)
++        captureTrace() // A fatal XCTest failure need not unwind Swift defer blocks.
+         XCTFail("The welcome target must be visible inside its own scroll viewport and hittable: \(target.identifier), \(edge)")
+     }
+ 
+--- a/tools/ci/test_welcome_typography_contract.py
++++ b/tools/ci/test_welcome_typography_contract.py
+@@ -17,7 +17,7 @@
+                       'Typeface.boldText ? Typeface.Face.semiBold.heavier : Typeface.Face.semiBold',
+                       'Font(Self.nativeUrduFont(points: urduPoints, locale: locale))',
+                       '.typesettingLanguage(locale.language)',
+-                      '.padding(.horizontal, isUrdu ? urduHorizontalClearance : 0)',
++                      '.padding(isUrdu ? Self.nativeUrduLayoutInsets(ink: urduInkInsets, minimumHorizontal: urduHorizontalClearance) : EdgeInsets())',
+                       'let copy = fontSelectionText(locale: locale)',
+                       'Bundle.main.path(forResource: language, ofType: "lproj")',
+                       'bundle: bundle, locale: locale',
+@@ -50,7 +50,7 @@
+                       'union.elementsEqual(full.ink)', 'XCTAssertFalse(even.touches(odd)',
+                       'XCTAssertTrue(masks.even.touches(masks.odd)', 'let example = Example(width: 362)',
+                       '[CGFloat(280), 335, 362, 390]', 'DynamicTypeSize.large, .accessibility5',
+-                      'contains(full.bounds)', 'XCTAssertGreaterThan(heights[1], heights[0]',
++                      'contains(native.bounds)', 'XCTAssertGreaterThan(heights[1], heights[0]',
+                       '["en", "ta", "ar", "fa", "he"]', 'renderer.scale = 3',
+                       'try requireSamePixels(expected, actual', '.keepAlways']:
+             self.assertIn(token, source)
+@@ -74,18 +74,19 @@
+                       'horizontal: CGFloat = 12', '.font(Font(fallback)).tracking(-1)',
+                       'try requireSamePixels(native, independent', 'try autoreleasepool',
+                       'XCTAssertEqual(samples, 8', 'production-vs-native-metrics-',
+-                      'XCTAssertFalse(even.touches(odd)', 'contains(full.bounds)']:
++                      'XCTAssertFalse(even.touches(odd)', 'contains(native.bounds)']:
+             self.assertIn(token, source)
+         self.assertNotIn('CalibrationHeadline', source)
+         self.assertNotIn('diagnosticOnly', source)
+ 
+     def test_native_and_probe_share_physical_canvas_without_pixel_registration(self):
+         source = (ROOT / 'ios/TimbreAppTests/WelcomeHeadlineLayoutTests.swift').read_text()
+-        for token in ['struct PinnedCanvas: Layout', 'PinnedCanvas(width: example.width)',
++        for token in ['struct PinnedCanvas: Layout', 'PinnedCanvas(width: example.width, direction: example.direction)',
+                       'subviews[0].sizeThatFits(ProposedViewSize(width: width, height: nil))',
+-                      'anchor: UnitPoint(x: 0, y: 0)',
++                      'anchor: UnitPoint(x: rtl ? 1 : 0, y: 0)',
+                       'proposal: ProposedViewSize(width: width, height: nil)',
+-                      'CGPoint(x: bounds.minX + 80, y: bounds.minY + 80)',
++                      'let x = bounds.minX + 80 + (rtl ? width : 0)',
++                      'CGPoint(x: x, y: bounds.minY + 80)',
+                       '.environment(\\.layoutDirection, example.direction)',
+                       '.environment(\\.layoutDirection, .leftToRight)',
+                       'expected.rgba == actual.rgba']:
+@@ -93,6 +94,61 @@
+         for workaround in ['.translateBy(', '.offset(', 'CGAffineTransform', 'XCTSkip',
+                            '.frame(width: example.width)', '.clipped()']:
+             self.assertNotIn(workaround, source)
++
++    def test_native_bounds_are_checked_before_strict_probe_and_every_sample_is_attempted(self):
++        source = (ROOT / 'ios/TimbreAppTests/WelcomeHeadlineLayoutTests.swift').read_text()
++        test = source.split('func testUrduLinesHaveSeparateInkAtSmallPhoneAndAccessibilityWidths()', 1)[1].split('func testCollisionOracle', 1)[0]
++        self.assertLess(test.index('contains(native.bounds)'), test.index('let masks = try probe'))
++        for token in ['native: independent', '} catch {', 'XCTFail("Every requested sample requires a pixel-identical native probe:',
++                      'samples += 1', 'XCTAssertEqual(samples, 8', 'XCTAssertEqual(heights.count, 2']:
++            self.assertIn(token, test)
++        canvas = source.split('private struct PinnedCanvas:', 1)[1].split('private func render<', 1)[0]
++        self.assertIn('let direction: LayoutDirection', canvas)
++        self.assertIn('let rtl = direction == .rightToLeft', canvas)
++        self.assertNotIn('23', canvas)
++        self.assertNotIn('11', canvas)
++        self.assertIn('expected.rgba == actual.rgba', source)
++        for workaround in ['accuracy:', 'changed <=', '.drawingGroup(', 'disablesSubpixelQuantization']:
++            self.assertNotIn(workaround, source)
++
++    def test_measured_raster_allowance_is_separate_from_the_native_layout_and_plain_reference(self):
++        source = (ROOT / 'ios/Timbre/Onboarding/WelcomeHeadline.swift').read_text()
++        for token in ['nativeUrduInkInsets(font: CTFont, text: String, displayScale: CGFloat)',
++                      'CTLineGetBoundsWithOptions(line, .useGlyphPathBounds)', 'CTLineGetTypographicBounds',
++                      'CTLineGetTrailingWhitespaceWidth', '.paragraphStyle: paragraph, .tracking: -1',
++                      'ink.maxX - width', 'ink.maxY - ascent', '-descent - ink.minY',
++                      'ceil(max(0, value) * scale) / scale', 'Array(words[start])',
++                      'words[start..<end].joined(separator: " ")', 'String(clusters[first..<last])',
++                      'let displayPadding: EdgeInsets', 'text.sizeThatFits(proposal)',
++                      'for line in layout { context.draw(line) }', 'max(minimumHorizontal, ink.leading)',
++                      '.textRenderer(UrduInkRenderer(displayPadding: urduInkInsets))']:
++            self.assertIn(token, source)
++        raster = source.split('private struct UrduInkRenderer:', 1)[1].split('private var font:', 1)[0]
++        for workaround in ['ScaledMetric', 'CTFontCreate', 'translateBy', 'scaleBy', 'clip', 'disablesSubpixelQuantization']:
++            self.assertNotIn(workaround, raster)
++        native = (ROOT / 'ios/TimbreAppTests/WelcomeHeadlineLayoutTests.swift').read_text()
++        reference = native.split('private struct NativeMetricsHeadline:', 1)[1].split('func testProductionUses', 1)[0]
++        self.assertNotIn('.textRenderer(', reference)
++        test = native.split('func testUrduLinesHaveSeparateInkAtSmallPhoneAndAccessibilityWidths()', 1)[1].split('func testCollisionOracle', 1)[0]
++        self.assertLess(test.index('try requireSamePixels(native, independent'), test.index('let masks = try probe(NativeMetricsHeadline()'))
++        self.assertNotIn('probe(WelcomeHeadline()', test)
++        self.assertIn('.environment(\\.displayScale, 3)', native)
++        metric = (ROOT / 'ios/TimbreAppTests/WelcomeFallbackDiagnosticsTests.swift').read_text()
++        for token in ['testMeasuredInkAllowanceContainsIndependentGlyphPathsAtNormalAndAX5Sizes',
++                      'CTFontGetSize(font), points', 'CTFontCreatePathForGlyph', 'CTRunGetGlyphs',
++                      'CTRunGetPositions', 'path.boundingBoxOfPath', 'reserved.contains(ink)',
++                      'XCTAssertGreaterThan(checkedFragments, 20', '.accessibilityExtraExtraExtraLarge']:
++            self.assertIn(token, metric)
++
++    def test_live_welcome_gesture_uses_the_viewport_interior_and_saves_failed_trace_before_abort(self):
++        source = (ROOT / 'ios/TimbreUITests/FirstSessionUITests.swift').read_text()
++        helper = source.split('private func revealWelcome(', 1)[1].split('func testDeferredQuestions', 1)[0]
++        for token in ['for attempt in 0..<16', 'viewport.contains(wanted)', 'target.isHittable',
++                      'dx: viewport.midX', 'func captureTrace()', 'defer { captureTrace() }']:
++            self.assertIn(token, helper)
++        self.assertNotIn('viewport.minX + 24', helper)
++        failed = helper.split('captureWelcome("unreachable-"', 1)[1]
++        self.assertLess(failed.index('captureTrace()'), failed.index('XCTFail('))
+ 
+     def test_native_fallback_evidence_checks_actual_production_resolution(self):
+         source = (ROOT / 'ios/TimbreAppTests/WelcomeFallbackDiagnosticsTests.swift').read_text()

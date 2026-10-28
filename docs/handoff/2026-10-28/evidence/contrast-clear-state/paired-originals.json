@@ -1,0 +1,107 @@
+[
+  {
+    "group": "songs-filter",
+    "before": {
+      "test": "OccludedContrastDiagnosticUITests/testRevealSongsFilter()",
+      "configurationName": "Test Scheme Action",
+      "deviceId": "E952A9B0-CC78-435C-BF08-06AD47FE1076",
+      "deviceName": "iPhone 17 Pro",
+      "exportedFileName": "DC214045-E411-4EFF-966B-506D6FEF877F.png",
+      "isAssociatedWithFailure": false,
+      "suggestedHumanReadableName": "contrast-reveal-3-songs-filter-revealed-before_0_0D2C4A18-0A00-40EB-8ABC-98ABB34C56C4.png",
+      "timestamp": 1793189253.708,
+      "path": "originals/DC214045-E411-4EFF-966B-506D6FEF877F.png",
+      "sha256": "4cee9c82fe4f601d1c17824e74464e69a5e1049ea582e5747ca540840116b9ad"
+    },
+    "after": {
+      "test": "OccludedContrastDiagnosticUITests/testRevealSongsFilter()",
+      "configurationName": "Test Scheme Action",
+      "deviceId": "E952A9B0-CC78-435C-BF08-06AD47FE1076",
+      "deviceName": "iPhone 17 Pro",
+      "exportedFileName": "D63D1E50-2A75-4F41-A3F5-B320185D8EEC.png",
+      "isAssociatedWithFailure": false,
+      "suggestedHumanReadableName": "contrast-reveal-29-songs-filter-revealed-after_0_1908C8CA-5DAF-4322-AB13-883ADC4DE286.png",
+      "timestamp": 1793189301.267,
+      "path": "originals/D63D1E50-2A75-4F41-A3F5-B320185D8EEC.png",
+      "sha256": "53e7646087463ead72ca6488015d15105f5b250f4e8c9477ae2471523db78fde"
+    },
+    "different_pixels": 2168,
+    "difference_bounds": [
+      157,
+      79,
+      288,
+      117
+    ],
+    "review": "requested strings visually complete and outside edge fades/tab obstruction in final native image; no contrast proof or exemption"
+  },
+  {
+    "group": "songs-first-pair",
+    "before": {
+      "test": "OccludedContrastDiagnosticUITests/testRevealSongsFirstPair()",
+      "configurationName": "Test Scheme Action",
+      "deviceId": "E952A9B0-CC78-435C-BF08-06AD47FE1076",
+      "deviceName": "iPhone 17 Pro",
+      "exportedFileName": "59ABBC34-9763-4898-99BE-B6D98A391489.png",
+      "isAssociatedWithFailure": false,
+      "suggestedHumanReadableName": "contrast-reveal-3-songs-first-pair-revealed-before_0_79B03583-4795-414D-B20D-23FF4F9BF17F.png",
+      "timestamp": 1793189342.007,
+      "path": "originals/59ABBC34-9763-4898-99BE-B6D98A391489.png",
+      "sha256": "3ede2ed9305b009143d708acfa035a556c284886cee4815063d8256425284faf"
+    },
+    "after": {
+      "test": "OccludedContrastDiagnosticUITests/testRevealSongsFirstPair()",
+      "configurationName": "Test Scheme Action",
+      "deviceId": "E952A9B0-CC78-435C-BF08-06AD47FE1076",
+      "deviceName": "iPhone 17 Pro",
+      "exportedFileName": "39BC4105-C824-48E3-9351-CBD80682AB7C.png",
+      "isAssociatedWithFailure": false,
+      "suggestedHumanReadableName": "contrast-reveal-39-songs-first-pair-revealed-after_0_BE2B7EDF-0226-487F-9141-DF4237A6E676.png",
+      "timestamp": 1793189415.82,
+      "path": "originals/39BC4105-C824-48E3-9351-CBD80682AB7C.png",
+      "sha256": "0ad59cf832c8bcffece4cdb9f2325ae3b97de453a0011ec4a303e648f32fafea"
+    },
+    "different_pixels": 2585,
+    "difference_bounds": [
+      157,
+      79,
+      287,
+      117
+    ],
+    "review": "requested strings visually complete and outside edge fades/tab obstruction in final native image; no contrast proof or exemption"
+  },
+  {
+    "group": "songs-third",
+    "before": {
+      "test": "OccludedContrastDiagnosticUITests/testRevealSongsThirdCard()",
+      "configurationName": "Test Scheme Action",
+      "deviceId": "E952A9B0-CC78-435C-BF08-06AD47FE1076",
+      "deviceName": "iPhone 17 Pro",
+      "exportedFileName": "2D70CE1E-423C-44FF-AB2D-7FABAA75C2ED.png",
+      "isAssociatedWithFailure": false,
+      "suggestedHumanReadableName": "contrast-reveal-5-songs-third-revealed-before_0_4F92C193-16BE-4CDB-9416-B3DCE613703D.png",
+      "timestamp": 1793189475.777,
+      "path": "originals/2D70CE1E-423C-44FF-AB2D-7FABAA75C2ED.png",
+      "sha256": "68ab4abdffb52b0e4405e3674cdff0d1713d4466b272cd4c50d9c6780b7fe296"
+    },
+    "after": {
+      "test": "OccludedContrastDiagnosticUITests/testRevealSongsThirdCard()",
+      "configurationName": "Test Scheme Action",
+      "deviceId": "E952A9B0-CC78-435C-BF08-06AD47FE1076",
+      "deviceName": "iPhone 17 Pro",
+      "exportedFileName": "CAA03408-26BE-48CF-B2B0-80C80A8D8646.png",
+      "isAssociatedWithFailure": false,
+      "suggestedHumanReadableName": "contrast-reveal-28-songs-third-revealed-after_0_FF93783C-65F4-4936-AFC3-BB6E215C0888.png",
+      "timestamp": 1793189522.135,
+      "path": "originals/CAA03408-26BE-48CF-B2B0-80C80A8D8646.png",
+      "sha256": "754ff4444ee8009a0450788ec68d9b0a862698c5aa49d0d7f9a74ecdcfebfeab"
+    },
+    "different_pixels": 1793,
+    "difference_bounds": [
+      163,
+      79,
+      283,
+      116
+    ],
+    "review": "requested strings visually complete and outside edge fades/tab obstruction in final native image; no contrast proof or exemption"
+  }
+]

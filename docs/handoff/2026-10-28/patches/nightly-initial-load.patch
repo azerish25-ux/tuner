@@ -1,0 +1,206 @@
+diff --git a/.github/workflows/nightly.yml b/.github/workflows/nightly.yml
+--- a/.github/workflows/nightly.yml
++++ b/.github/workflows/nightly.yml
+@@ -247,7 +247,11 @@
+ 
+   archive:
+     # Exactly one unsigned Release archive, independent of every simulator shard.
+-    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'captures')
++    # Scheduling only: retain independent evidence on producer failure/skip, but honor workflow cancellation.
++    needs: tour-build
++    if: >-
++      always() && !cancelled()
++      && (github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'captures'))
+     timeout-minutes: 30
+     runs-on: macos-15
+     steps:
+@@ -287,7 +291,11 @@
+ 
+   ipad:
+     # The build, the Full Screen Apps reboot and both orientations' captures take about 25 minutes on a busy runner.
+-    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'captures')
++    # Scheduling only: retain independent evidence on producer failure/skip, but honor workflow cancellation.
++    needs: tour-build
++    if: >-
++      always() && !cancelled()
++      && (github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'captures'))
+     timeout-minutes: 45
+     runs-on: macos-15
+     steps:
+@@ -429,7 +437,11 @@
+     # The screens where layout breaks first, under one setting per run (AccessibilityMatrixUITests): the largest
+     # text size, Bold Text, Increase Contrast, left-handed, left-handed upside down and Arabic. Pictures and audit
+     # reports for review; a screen that can't be reached fails.
+-    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'captures') || contains(github.event.pull_request.labels.*.name, 'accessibility')
++    # Scheduling only: retain independent evidence on producer failure/skip, but honor workflow cancellation.
++    needs: tour-build
++    if: >-
++      always() && !cancelled()
++      && (github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'captures') || contains(github.event.pull_request.labels.*.name, 'accessibility'))
+     timeout-minutes: 75
+     runs-on: macos-15
+     steps:
+@@ -509,7 +521,11 @@
+ 
+   tsan:
+     # The engine's tests under the thread sanitizer: data races the compiler's checking can't see.
+-    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'captures')
++    # Scheduling only: retain independent evidence on producer failure/skip, but honor workflow cancellation.
++    needs: tour-build
++    if: >-
++      always() && !cancelled()
++      && (github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'captures'))
+     # A full suite took 28m05 before setup/build; another reached 30m with only 427 completions.
+     # Leave bounded runner-variation headroom without filtering tests or weakening the sanitizer.
+     timeout-minutes: 45
+diff --git a/tools/ci/test_tour_shards.py b/tools/ci/test_tour_shards.py
+--- a/tools/ci/test_tour_shards.py
++++ b/tools/ci/test_tour_shards.py
+@@ -1,9 +1,11 @@
+ """Shards preserve selected classes and recover evidence without treating partial runs as green."""
++import ast
+ import contextlib
+ import glob
+ import io
+ import json
+ import os
++import re
+ from pathlib import Path
+ import tempfile
+ import unittest
+@@ -11,6 +13,135 @@
+ import tour_evidence as evidence
+ 
+ ROOT = Path(__file__).resolve().parents[2]
++
++
++def job_blocks(source):
++    """Read only this workflow's fixed two-space job mapping; actionlint validates YAML."""
++    jobs = source.split('\njobs:\n', 1)[1]
++    starts = list(re.finditer(r'^  ([a-zA-Z0-9_-]+):\n', jobs, re.M))
++    return {match.group(1): jobs[match.end():starts[i + 1].start() if i + 1 < len(starts) else len(jobs)]
++            for i, match in enumerate(starts)}
++
++
++def job_field(block, name):
++    match = re.search(r'^    ' + re.escape(name) + r': (.+)$', block, re.M)
++    if not match:
++        return None
++    value = match.group(1)
++    if value == '>-':
++        lines = []
++        for line in block[match.end() + 1:].splitlines():
++            if not line.startswith('      '): break
++            lines.append(line.strip())
++        return ' '.join(lines)
++    return value
++
++
++def job_needs(block):
++    value = job_field(block, 'needs')
++    if value is None: return []
++    return [item.strip() for item in value.strip('[]').split(',')]
++
++
++def condition_value(expression, event, labels, cancelled, predecessor):
++    """Evaluate the restricted actual job expression, including Actions' implicit success rule.
++
++    This is a regression model, not a substitute for executing GitHub's scheduler.
++    """
++    explicit_status = re.search(r'\b(always|success|failure|cancelled)\(', expression)
++    expression = re.sub(r"contains\(github\.event\.pull_request\.labels\.\*\.name, '([^']+)'\)",
++                        lambda match: str(match.group(1).lower() in {label.lower() for label in labels}), expression)
++    expression = expression.replace('github.event_name', repr(event))
++    for name, value in [('always()', True), ('cancelled()', cancelled),
++                        ('success()', predecessor == 'success'), ('failure()', predecessor == 'failure')]:
++        expression = expression.replace(name, str(value))
++    expression = expression.replace('&&', ' and ').replace('||', ' or ')
++    expression = re.sub(r'!(?!=)', ' not ', expression).strip()
++    tree = ast.parse(expression, mode='eval')
++    allowed = (ast.Expression, ast.BoolOp, ast.And, ast.Or, ast.UnaryOp, ast.Not,
++               ast.Compare, ast.Eq, ast.NotEq, ast.Constant)
++    if any(not isinstance(node, allowed) for node in ast.walk(tree)):
++        raise ValueError('Unexpected workflow-condition syntax')
++    result = bool(eval(compile(tree, '<workflow condition>', 'eval'), {'__builtins__': {}}, {}))
++    return result and (bool(explicit_status) or predecessor == 'success')
++
++
++class NightlySchedulingContracts(unittest.TestCase):
++    delayed = ('archive', 'ipad', 'a11y-matrix', 'tsan')
++
++    def setUp(self):
++        self.source = (ROOT / '.github/workflows/nightly.yml').read_text()
++        self.jobs = job_blocks(self.source)
++
++    def test_only_independent_jobs_wait_for_producer_terminal_not_for_other_consumers(self):
++        self.assertEqual(job_needs(self.jobs['tour-build']), [])
++        self.assertEqual(job_needs(self.jobs['tour']), ['tour-build'])
++        for name in self.delayed:
++            with self.subTest(job=name):
++                self.assertEqual(job_needs(self.jobs[name]), ['tour-build'])
++                self.assertNotIn('actions/download-artifact@', self.jobs[name])
++        self.assertEqual(set(job_needs(self.jobs['publish'])), set(self.jobs) - {'publish'})
++
++    def test_original_trigger_eligibility_survives_success_failure_and_skip(self):
++        for name in self.delayed:
++            expression = job_field(self.jobs[name], 'if')
++            self.assertTrue(expression.startswith('always() && !cancelled() && ('))
++            for event in ['schedule', 'workflow_dispatch', 'pull_request']:
++                for labels in [[], ['captures'], ['accessibility'], ['captures', 'accessibility'], ['unrelated']]:
++                    expected = event != 'pull_request' or 'captures' in labels or (name == 'a11y-matrix' and 'accessibility' in labels)
++                    for predecessor in ['success', 'failure', 'skipped']:
++                        with self.subTest(job=name, event=event, labels=labels, predecessor=predecessor):
++                            self.assertEqual(condition_value(expression, event, labels, False, predecessor), expected)
++
++    def test_explicit_workflow_cancellation_blocks_all_four_regardless_of_trigger_or_parent_result(self):
++        for name in self.delayed:
++            expression = job_field(self.jobs[name], 'if')
++            for predecessor in ['success', 'failure', 'skipped', 'cancelled']:
++                for event in ['schedule', 'workflow_dispatch', 'pull_request']:
++                    self.assertFalse(condition_value(expression, event, ['captures', 'accessibility'], True, predecessor))
++
++    def test_accessibility_only_pr_runs_matrix_after_skipped_unneeded_producer(self):
++        self.assertFalse(condition_value(job_field(self.jobs['tour-build'], 'if'), 'pull_request', ['accessibility'], False, 'success'))
++        for name in self.delayed:
++            self.assertEqual(condition_value(job_field(self.jobs[name], 'if'), 'pull_request', ['accessibility'], False, 'skipped'),
++                             name == 'a11y-matrix')
++        # cancelled() is a workflow state, not an alias for one prerequisite's result.
++        self.assertTrue(condition_value(job_field(self.jobs['archive'], 'if'), 'schedule', [], False, 'cancelled'))
++        # Real shared-build consumers still require producer success; no artifact-less tour run is introduced.
++        self.assertFalse(condition_value(job_field(self.jobs['tour'], 'if'), 'pull_request', ['captures'], False, 'failure'))
++
++    def test_default_success_and_missing_cancel_guard_are_detectable_negative_controls(self):
++        expression = job_field(self.jobs['archive'], 'if')
++        original_trigger = expression.split('&& (', 1)[1][:-1]
++        self.assertFalse(condition_value(original_trigger, 'pull_request', ['captures'], False, 'failure'))
++        unsafe = expression.replace('!cancelled()', 'always()')
++        self.assertTrue(condition_value(unsafe, 'pull_request', ['captures'], True, 'success'))
++        with self.assertRaises(ValueError): condition_value('unknown()', 'schedule', [], False, 'success')
++
++    def test_dependency_graph_is_acyclic_and_five_initial_macos_roots_replace_nine(self):
++        pending = {name: set(job_needs(block)) for name, block in self.jobs.items()}
++        self.assertTrue(all(deps <= set(pending) for deps in pending.values()))
++        finished = set()
++        while pending:
++            available = {name for name, deps in pending.items() if deps <= finished}
++            self.assertTrue(available, 'Dependency cycle would prevent evidence collection')
++            finished.update(available)
++            pending = {name: deps for name, deps in pending.items() if name not in available}
++        native = job_blocks((ROOT / '.github/workflows/ios.yml').read_text())
++        roots = lambda jobs: {name for name, block in jobs.items()
++                             if (job_field(block, 'runs-on') or '').startswith('macos-') and not job_needs(block)}
++        self.assertEqual(roots(native), {'core', 'app', 'release', 'accessibility'})
++        self.assertEqual(roots(self.jobs), {'tour-build'})
++        self.assertEqual(len(roots(native)) + len(roots(self.jobs)), 5)
++        self.assertEqual(len(roots(native)) + len(roots(self.jobs)) + len(self.delayed), 9)
++
++    def test_scheduling_does_not_raise_timeouts_or_mask_job_failures(self):
++        expected = {'tour-build': '30', 'tour': '90', 'archive': '30', 'ipad': '45', 'a11y-matrix': '75', 'tsan': '45'}
++        for name, minutes in expected.items():
++            self.assertEqual(job_field(self.jobs[name], 'timeout-minutes'), minutes)
++            self.assertIsNone(job_field(self.jobs[name], 'continue-on-error'))
++        self.assertEqual(self.source.count('contents: write'), 1)
++        self.assertIn("cancel-in-progress: ${{ github.event_name == 'pull_request' }}", self.source)
+ 
+ 
+ class TourShardContracts(unittest.TestCase):

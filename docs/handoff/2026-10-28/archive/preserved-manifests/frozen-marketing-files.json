@@ -1,0 +1,61 @@
+{
+  "source_capture_sha": "9e1e3c41ec24c1a2c78c22ea7a90726dc4ae6599",
+  "changed_files": [
+    {
+      "path": "tools/marketing/screenshots.py",
+      "bytes": 56680,
+      "sha256": "5149a503273068db276a7e5a131d82198357f10de6c5e0750fad2a17ca58abd7"
+    },
+    {
+      "path": "tools/marketing/tests/test_composition_integrity.py",
+      "bytes": 13474,
+      "sha256": "76d48f4130bf9cf0376d00b0bd4aac67636231936b47e40fcfeeb40d595c5581"
+    },
+    {
+      "path": "tools/marketing/tests/test_ipad_edges.py",
+      "bytes": 6289,
+      "sha256": "9a22567daf34644b9e03f102b2a1962867aea8b263e5135dad6c838535d9d4f3"
+    },
+    {
+      "path": "tools/marketing/tests/test_landscape_rtl.py",
+      "bytes": 2926,
+      "sha256": "c5631ee37030c914c840080844ab2c4c0206349a9674cc6f3ab7c48639c7db5e"
+    },
+    {
+      "path": "tools/marketing/tests/fixtures/native-english-large-composition/52b-lesson-chord.png",
+      "bytes": 347428,
+      "sha256": "174f0c901d8f83c6b77e245b973477ca0124236d11cccdf6c8c480771cdbc0ed"
+    },
+    {
+      "path": "tools/marketing/tests/fixtures/native-english-large-composition/evidence.json",
+      "bytes": 1052,
+      "sha256": "a92b79cb64102ed5e88545dc4be6b9c9c07b315cf92753835e484f9cc9587d04"
+    },
+    {
+      "path": "tools/marketing/tests/fixtures/native-ipad-composition/de-DE-ipad-landscape-instruments.png",
+      "bytes": 5004,
+      "sha256": "cf8c04473f8c16834fd84a5b6532616bcfb26a405f876db0fd112fc76bc9f4e9"
+    },
+    {
+      "path": "tools/marketing/tests/fixtures/native-ipad-composition/de-DE-ipad-landscape-tune.png",
+      "bytes": 59487,
+      "sha256": "8e581932ed9338f27e7571226d0889c1ebf9ff0005e94357fb619f164cd33609"
+    },
+    {
+      "path": "tools/marketing/tests/fixtures/native-ipad-composition/en-US-ipad-landscape-instruments.png",
+      "bytes": 4979,
+      "sha256": "cb3baf7f0c3c5cd9fb54287dae2fac3f892ad96678e0b7db02717429707272a6"
+    },
+    {
+      "path": "tools/marketing/tests/fixtures/native-ipad-composition/en-US-ipad-landscape-tune.png",
+      "bytes": 59716,
+      "sha256": "3c7e6109b3ec5053ef656a1c25b503f02e2f4f2b8c4a781b33208415ea5df20c"
+    },
+    {
+      "path": "tools/marketing/tests/fixtures/native-ipad-composition/evidence.json",
+      "bytes": 2776,
+      "sha256": "abfe4f9091eb0540e92a7aded88f47c3bbda60c5e66f70b52e4f87fa144207ac"
+    }
+  ],
+  "new_fixture_total_bytes": 480442
+}

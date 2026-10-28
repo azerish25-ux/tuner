@@ -1,0 +1,217 @@
+{
+  "diagnosticOnly": true,
+  "authorization": false,
+  "targets": [
+    {
+      "finding": 10,
+      "id": "songs.filter.violin.standard.4.title",
+      "label": "Violin",
+      "group": "filter",
+      "requestedTargetCallbackCount": 0,
+      "callbackLines": [],
+      "auditReturned": true,
+      "groupBudgetFailed": false,
+      "reportFile": "E32BA3EC-1B2C-4798-9E1A-A59F5118F6AF.txt",
+      "reportSHA256": "58aec573b23ba15d7118016310c080cb32ee4fbc669568db4a0f3196e8c0a058",
+      "findingResolved": false
+    },
+    {
+      "finding": 12,
+      "id": "songs.tile.known.song-ode-to-joy.cover.title.1",
+      "label": "Joy",
+      "group": "first",
+      "requestedTargetCallbackCount": 1,
+      "callbackLines": [
+        "callback=7 id=songs.tile.known.song-ode-to-joy.cover.title.1 label=Joy type=Optional(48) frame=Optional((31.1, 396.2333333333333, 45.99999999999999, 32.0)) Contrast failed for SwiftUI.AccessibilityNode"
+      ],
+      "auditReturned": true,
+      "groupBudgetFailed": true,
+      "reportFile": "813EB7F6-E886-4233-86B4-3745BE87F082.txt",
+      "reportSHA256": "61aada7c49726c8ab6dac067488b7ebf3b9869a9301f1b465e0381b8eda56310",
+      "findingResolved": false
+    },
+    {
+      "finding": 14,
+      "id": "songs.tile.known.song-ode-to-joy.chords.chord.C",
+      "label": "C",
+      "group": "first",
+      "requestedTargetCallbackCount": 0,
+      "callbackLines": [],
+      "auditReturned": true,
+      "groupBudgetFailed": true,
+      "reportFile": "813EB7F6-E886-4233-86B4-3745BE87F082.txt",
+      "reportSHA256": "61aada7c49726c8ab6dac067488b7ebf3b9869a9301f1b465e0381b8eda56310",
+      "findingResolved": false
+    },
+    {
+      "finding": 15,
+      "id": "songs.tile.known.song-ode-to-joy.chords.chord.G",
+      "label": "G",
+      "group": "first",
+      "requestedTargetCallbackCount": 0,
+      "callbackLines": [],
+      "auditReturned": true,
+      "groupBudgetFailed": true,
+      "reportFile": "813EB7F6-E886-4233-86B4-3745BE87F082.txt",
+      "reportSHA256": "61aada7c49726c8ab6dac067488b7ebf3b9869a9301f1b465e0381b8eda56310",
+      "findingResolved": false
+    },
+    {
+      "finding": 16,
+      "id": "songs.tile.known.song-ode-to-joy.duration",
+      "label": "2:07",
+      "group": "first",
+      "requestedTargetCallbackCount": 0,
+      "callbackLines": [],
+      "auditReturned": true,
+      "groupBudgetFailed": true,
+      "reportFile": "813EB7F6-E886-4233-86B4-3745BE87F082.txt",
+      "reportSHA256": "61aada7c49726c8ab6dac067488b7ebf3b9869a9301f1b465e0381b8eda56310",
+      "findingResolved": false
+    },
+    {
+      "finding": 17,
+      "id": "songs.tile.known.song-ode-to-joy.xp",
+      "label": "+35 XP",
+      "group": "first",
+      "requestedTargetCallbackCount": 0,
+      "callbackLines": [],
+      "auditReturned": true,
+      "groupBudgetFailed": true,
+      "reportFile": "813EB7F6-E886-4233-86B4-3745BE87F082.txt",
+      "reportSHA256": "61aada7c49726c8ab6dac067488b7ebf3b9869a9301f1b465e0381b8eda56310",
+      "findingResolved": false
+    },
+    {
+      "finding": 18,
+      "id": "songs.tile.known.gtr-6-5.chords.chord.G",
+      "label": "G",
+      "group": "first",
+      "requestedTargetCallbackCount": 0,
+      "callbackLines": [],
+      "auditReturned": true,
+      "groupBudgetFailed": true,
+      "reportFile": "813EB7F6-E886-4233-86B4-3745BE87F082.txt",
+      "reportSHA256": "61aada7c49726c8ab6dac067488b7ebf3b9869a9301f1b465e0381b8eda56310",
+      "findingResolved": false
+    },
+    {
+      "finding": 19,
+      "id": "songs.tile.known.gtr-6-5.chords.chord.C",
+      "label": "C",
+      "group": "first",
+      "requestedTargetCallbackCount": 0,
+      "callbackLines": [],
+      "auditReturned": true,
+      "groupBudgetFailed": true,
+      "reportFile": "813EB7F6-E886-4233-86B4-3745BE87F082.txt",
+      "reportSHA256": "61aada7c49726c8ab6dac067488b7ebf3b9869a9301f1b465e0381b8eda56310",
+      "findingResolved": false
+    },
+    {
+      "finding": 20,
+      "id": "songs.tile.known.gtr-6-5.chords.chord.D",
+      "label": "D",
+      "group": "first",
+      "requestedTargetCallbackCount": 0,
+      "callbackLines": [],
+      "auditReturned": true,
+      "groupBudgetFailed": true,
+      "reportFile": "813EB7F6-E886-4233-86B4-3745BE87F082.txt",
+      "reportSHA256": "61aada7c49726c8ab6dac067488b7ebf3b9869a9301f1b465e0381b8eda56310",
+      "findingResolved": false
+    },
+    {
+      "finding": 21,
+      "id": "songs.tile.known.song-silent-night.cover.title.0",
+      "label": "Silent",
+      "group": "third",
+      "requestedTargetCallbackCount": 1,
+      "callbackLines": [
+        "callback=9 id=songs.tile.known.song-silent-night.cover.title.0 label=Silent type=Optional(48) frame=Optional((176.83333333333334, 450.15540799999997, 67.66666666666669, 29.666666666666742)) Contrast failed for SwiftUI.AccessibilityNode"
+      ],
+      "auditReturned": true,
+      "groupBudgetFailed": true,
+      "reportFile": "FA89786B-0F40-445F-8E02-1F863DDB16AD.txt",
+      "reportSHA256": "c014b0225336bca842138ecf832d7a9caecd2f96cc670dc8a59aaed031301ad9",
+      "findingResolved": false
+    },
+    {
+      "finding": 22,
+      "id": "songs.tile.known.song-silent-night.cover.title.1",
+      "label": "Night",
+      "group": "third",
+      "requestedTargetCallbackCount": 1,
+      "callbackLines": [
+        "callback=10 id=songs.tile.known.song-silent-night.cover.title.1 label=Night type=Optional(48) frame=Optional((177.16666666666666, 473.5043986666667, 67.0, 29.66666666666663)) Contrast failed for SwiftUI.AccessibilityNode"
+      ],
+      "auditReturned": true,
+      "groupBudgetFailed": true,
+      "reportFile": "FA89786B-0F40-445F-8E02-1F863DDB16AD.txt",
+      "reportSHA256": "c014b0225336bca842138ecf832d7a9caecd2f96cc670dc8a59aaed031301ad9",
+      "findingResolved": false
+    },
+    {
+      "finding": 23,
+      "id": "songs.tile.known.song-silent-night.cover.catalogue",
+      "label": "28",
+      "group": "third",
+      "requestedTargetCallbackCount": 0,
+      "callbackLines": [],
+      "auditReturned": true,
+      "groupBudgetFailed": true,
+      "reportFile": "FA89786B-0F40-445F-8E02-1F863DDB16AD.txt",
+      "reportSHA256": "c014b0225336bca842138ecf832d7a9caecd2f96cc670dc8a59aaed031301ad9",
+      "findingResolved": false
+    },
+    {
+      "finding": 24,
+      "id": "songs.tile.known.song-silent-night.chords.chord.A7",
+      "label": "A7",
+      "group": "third",
+      "requestedTargetCallbackCount": 0,
+      "callbackLines": [],
+      "auditReturned": true,
+      "groupBudgetFailed": true,
+      "reportFile": "FA89786B-0F40-445F-8E02-1F863DDB16AD.txt",
+      "reportSHA256": "c014b0225336bca842138ecf832d7a9caecd2f96cc670dc8a59aaed031301ad9",
+      "findingResolved": false
+    },
+    {
+      "finding": 25,
+      "id": "songs.tile.known.song-ode-to-joy.versions.more",
+      "label": "+5",
+      "group": "first",
+      "requestedTargetCallbackCount": 1,
+      "callbackLines": [
+        "callback=33 id=songs.tile.known.song-ode-to-joy.versions.more label=+5 type=Optional(48) frame=Optional((106.0, 449.3333333333333, 62.0, 44.0)) Contrast failed for SwiftUI.AccessibilityNode"
+      ],
+      "auditReturned": true,
+      "groupBudgetFailed": true,
+      "reportFile": "813EB7F6-E886-4233-86B4-3745BE87F082.txt",
+      "reportSHA256": "61aada7c49726c8ab6dac067488b7ebf3b9869a9301f1b465e0381b8eda56310",
+      "findingResolved": false
+    },
+    {
+      "finding": 26,
+      "id": "songs.tile.known.gtr-6-5.versions.more",
+      "label": "+5",
+      "group": "first",
+      "requestedTargetCallbackCount": 1,
+      "callbackLines": [
+        "callback=34 id=songs.tile.known.gtr-6-5.versions.more label=+5 type=Optional(48) frame=Optional((268.0, 449.3333333333333, 62.0, 44.0)) Contrast failed for SwiftUI.AccessibilityNode"
+      ],
+      "auditReturned": true,
+      "groupBudgetFailed": true,
+      "reportFile": "813EB7F6-E886-4233-86B4-3745BE87F082.txt",
+      "reportSHA256": "61aada7c49726c8ab6dac067488b7ebf3b9869a9301f1b465e0381b8eda56310",
+      "findingResolved": false
+    }
+  ],
+  "counts": {
+    "requested": 15,
+    "callbacksPresent": 5,
+    "callbacksAbsent": 10
+  },
+  "limitation": "An absent requested callback in a returned audit is observed evidence, not a pass for budget-failed diagnostic groups or clearance of the initial audit."
+}

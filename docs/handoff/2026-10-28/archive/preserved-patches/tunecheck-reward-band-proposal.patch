@@ -1,0 +1,1017 @@
+--- a/ios/Timbre/Learn/LessonSteps.swift
++++ b/ios/Timbre/Learn/LessonSteps.swift
+@@ -1341,17 +1341,35 @@
+         .animation(Motion.pluck, value: index)
+         .animation(Motion.pluck, value: tuned)
+         .background(alignment: .leading) {
+-            // Behind the chips, centred on the one just tuned (outside the animation, so it doesn't slide):
+-            // sparks leave from the chip's rim, no ring, so nothing reaches across the title or the note.
++            // A local reward behind the newly tuned chip, not a second full-size listening orb.
++            // Keep its original canvas/origin, but fade only the decoration into a reserved band:
++            // ring:false still draws inner rings and outer nodes, so zIndex alone cannot protect text.
+             SparkBurst(trigger: burst, color: accent, reach: 70, startFraction: 0.32, ring: false)
+                 .frame(width: 140, height: 140)
++                .mask { Self.chipRewardMask }
+                 .offset(x: CGFloat(burstAt) * (Self.chip + 8) + Self.chip / 2 - 70)
+         }
++        // Stable even between rewards: no layout jump when a string locks, and no text is masked.
++        .padding(.vertical, Self.chipRewardFade)
+         // Strings lie in space, not in reading order: right-to-left languages don't turn them round.
+         .environment(\.layoutDirection, .leftToRight)
+     }
+ 
+     private static let chip: CGFloat = 44
++    static let chipRewardFade: CGFloat = 8
++    static var chipRewardHeight: CGFloat { chip + 2 * chipRewardFade }
++
++    /// Only the reward is masked. The opaque centre covers the chip; the outer eight points fade
++    /// to clear before the band ends, leaving the stack's existing 14-point text gap untouched.
++    static var chipRewardMask: some View {
++        let edge = chipRewardFade / chipRewardHeight
++        return LinearGradient(stops: [.init(color: .clear, location: 0),
++                                      .init(color: .white, location: edge),
++                                      .init(color: .white, location: 1 - edge),
++                                      .init(color: .clear, location: 1)],
++                              startPoint: .top, endPoint: .bottom)
++            .frame(height: chipRewardHeight)
++    }
+ 
+     private func stringChip(_ string: RailString, done: Bool, current: Bool) -> some View {
+         let ink = done ? Palette.onAccent : current ? Palette.ink : Palette.inkSoft
+--- /dev/null
++++ b/ios/TimbreAppTests/TuneCheckRewardBandTests.swift
+@@ -0,0 +1,77 @@
++import SwiftUI
++import UIKit
++import XCTest
++@testable import Timbre
++
++/// The decorative mask is tested independently of the burst's transient animation clock.
++/// Full tune-check captures at short phone heights remain required for layout acceptance.
++@MainActor
++final class TuneCheckRewardBandTests: XCTestCase {
++    func testRewardCannotPaintOutsideItsReservedBandAtEitherDisplayScale() throws {
++        XCTAssertEqual(TuneCheckStep.chipRewardHeight, 60)
++        XCTAssertEqual(TuneCheckStep.chipRewardFade, 8)
++        for scale in [2, 3] {
++            var baseline: Data?
++            for direction in [LayoutDirection.leftToRight, .rightToLeft] {
++                for size in [DynamicTypeSize.large, .accessibility5] {
++                    // Fully opaque input is stricter than any individual ring/node phase.
++                    let actual = try pixels(masked: true, scale: scale, direction: direction, size: size)
++                    let side = 140 * scale
++                    let start = 40 * scale
++                    let end = 100 * scale
++                    var insideInk = 0
++                    var escapedInk = 0
++                    for y in 0..<side {
++                        for x in 0..<side {
++                            let alpha = actual[(y * side + x) * 4 + 3]
++                            if y < start || y >= end {
++                                if alpha > 0 { escapedInk += 1 }
++                            } else if alpha > 0 { insideInk += 1 }
++                        }
++                    }
++                    XCTAssertEqual(escapedInk, 0, "No decoration may escape the reserved 60-point band")
++                    XCTAssertGreaterThan(insideInk, 0, "Do not fix overlap by hiding the reward")
++                    XCTAssertEqual(actual[((side / 2) * side + side / 2) * 4 + 3], 255,
++                                   "The centre remains fully opaque")
++                    let edgeAlpha = actual[((start + 2 * scale) * side + side / 2) * 4 + 3]
++                    XCTAssertGreaterThan(edgeAlpha, 0)
++                    XCTAssertLessThan(edgeAlpha, 255, "The band edge must fade rather than hard-cut the arcs")
++                    if let baseline { XCTAssertEqual(actual, baseline) }
++                    else { baseline = actual }
++                }
++            }
++            let unmasked = try pixels(masked: false, scale: scale, direction: .leftToRight, size: .large)
++            XCTAssertEqual(unmasked[3], 255, "The negative control must actually paint outside the band")
++            XCTAssertNotEqual(unmasked, try XCTUnwrap(baseline))
++        }
++    }
++
++    private func pixels(masked: Bool, scale: Int, direction: LayoutDirection,
++                        size: DynamicTypeSize) throws -> Data {
++        let content = Color.red.frame(width: 140, height: 140)
++        let image = Group {
++            if masked { content.mask { TuneCheckStep.chipRewardMask } }
++            else { content }
++        }
++        .environment(\.layoutDirection, direction)
++        .environment(\.dynamicTypeSize, size)
++        .environment(\.displayScale, CGFloat(scale))
++        let renderer = ImageRenderer(content: image)
++        renderer.scale = CGFloat(scale)
++        renderer.isOpaque = false
++        let cgImage = try XCTUnwrap(renderer.cgImage)
++        let side = 140 * scale
++        XCTAssertEqual(cgImage.width, side)
++        XCTAssertEqual(cgImage.height, side)
++        let space = try XCTUnwrap(CGColorSpace(name: CGColorSpace.sRGB))
++        var data = Data(count: side * side * 4)
++        try data.withUnsafeMutableBytes { bytes in
++            let context = try XCTUnwrap(CGContext(data: bytes.baseAddress, width: side, height: side,
++                bitsPerComponent: 8, bytesPerRow: side * 4, space: space,
++                bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue | CGBitmapInfo.byteOrder32Big.rawValue))
++            context.interpolationQuality = .none
++            context.draw(cgImage, in: CGRect(x: 0, y: 0, width: side, height: side))
++        }
++        return data
++    }
++}
+--- /dev/null
++++ b/ios/TimbreUITests/TuneCheckLayoutUITests.swift
+@@ -0,0 +1,278 @@
++import UIKit
++import XCTest
++
++/// Real-app compact-phone coverage. Run explicitly on an iPhone SE (3rd generation), not a resized image.
++/// Screenshots include the real listening orb/meter; semantic geometry does not prove decorative-pixel bounds.
++final class TuneCheckLayoutUITests: XCTestCase {
++    private var app: XCUIApplication!
++    private var sample = "unstarted"
++    private var observations: [String] = []
++    private var watched: [String: XCUIElement] = [:]
++    private var header: XCUIElement!
++    private var skip: XCUIElement!
++    private var close: XCUIElement!
++    private var pinnedSkip = CGRect.zero
++    private var pinnedClose = CGRect.zero
++
++    private struct Failure: Error, CustomStringConvertible { let description: String }
++
++    private struct Copy {
++        let language: String
++        let locale: String
++        let learn: String
++        let lesson: String
++        let tuneUp: String
++        let title: String
++        let instructions: String
++        let hint: String
++        let skip: String
++        let stringPattern: String
++        let boardPattern: String
++        static let english = Copy(language: "en", locale: "en_US", learn: "Learn", lesson: "The open strings",
++            tuneUp: "Tune up", title: "Quick tune check",
++            instructions: "Pluck each open string. In-tune strings help Timbre hear you right.",
++            hint: "Pluck the string", skip: "My strings are tuned — skip",
++            stringPattern: "String [1-6]", boardPattern: "string 6 open")
++        static let arabic = Copy(language: "ar", locale: "ar_SA", learn: "تعلّم", lesson: "الأوتار المطلقة",
++            tuneUp: "ضبط الآلة", title: "فحص سريع للضبط",
++            instructions: "انقر كل وتر مفتوح. الأوتار المضبوطة تساعد Timbre على سماعك بدقة.",
++            hint: "انقر الوتر", skip: "أوتاري مضبوطة — تخطٍّ",
++            stringPattern: "الوتر [1-6١-٦]", boardPattern: "الوتر [6٦] مفتوح")
++    }
++
++    override func setUpWithError() throws {
++        continueAfterFailure = false
++        app = XCUIApplication()
++        XCUIDevice.shared.orientation = .portrait
++    }
++
++    override func tearDownWithError() throws {
++        app.terminate()
++        XCUIDevice.shared.orientation = .portrait
++    }
++
++    func testEnglishPortraitLarge() throws { try exercise(.english, landscape: false, ax5: false) }
++    func testEnglishLandscapeLarge() throws { try exercise(.english, landscape: true, ax5: false) }
++    func testEnglishPortraitAX5() throws { try exercise(.english, landscape: false, ax5: true) }
++    func testEnglishLandscapeAX5() throws { try exercise(.english, landscape: true, ax5: true) }
++    func testArabicPortraitLarge() throws { try exercise(.arabic, landscape: false, ax5: false) }
++    func testArabicLandscapeLarge() throws { try exercise(.arabic, landscape: true, ax5: false) }
++    func testArabicPortraitAX5() throws { try exercise(.arabic, landscape: false, ax5: true) }
++    func testArabicLandscapeAX5() throws { try exercise(.arabic, landscape: true, ax5: true) }
++
++    private func element(_ id: String) -> XCUIElement {
++        app.descendants(matching: .any).matching(identifier: id).firstMatch
++    }
++
++    private var screen: CGRect { app.windows.firstMatch.frame }
++
++    private static func valid(_ frame: CGRect) -> Bool {
++        !frame.isNull && !frame.isEmpty
++            && [frame.minX, frame.maxX, frame.minY, frame.maxY].allSatisfy { $0.isFinite }
++    }
++
++    private static func contains(_ frame: CGRect, in viewport: CGRect) -> Bool {
++        valid(frame) && valid(viewport) && frame.minX >= viewport.minX && frame.maxX <= viewport.maxX
++            && frame.minY >= viewport.minY && frame.maxY <= viewport.maxY
++    }
++
++    private func require(_ condition: Bool, _ message: String) throws {
++        guard condition else {
++            observations.append("FAIL: " + message)
++            capture("failure") // Attach before throwing, not a defer after a fatal XCTest assertion.
++            throw Failure(description: message)
++        }
++    }
++
++    private func exercise(_ copy: Copy, landscape: Bool, ax5: Bool) throws {
++        sample = "\(copy.language)-\(landscape ? "landscape" : "portrait")-\(ax5 ? "AX5" : "Large")"
++        app.launchEnvironment["TIMBRE_TEST_STORAGE_ID"] = UUID().uuidString
++        app.launchEnvironment["TIMBRE_SKIP_ONBOARDING"] = "1"
++        app.launchEnvironment["TIMBRE_DEMO_DATA"] = "1"
++        app.launchEnvironment["TIMBRE_STAGE_REST"] = "1"
++        // Existing UserDefaults argument domain: each case must really enter today's check, even after a prior skip.
++        // No synthetic pitch: the genuine waiting state cannot tune itself away while geometry is inspected.
++        app.launchArguments = ["-AppleLanguages", "(\(copy.language))", "-AppleLocale", copy.locale,
++            "-UIPreferredContentSizeCategoryName", ax5 ? "UICTContentSizeCategoryAccessibilityXXXL" : "UICTContentSizeCategoryL",
++            "-tunecheck.guitar.acoustic.6", "1900-01-01"]
++        app.launch()
++        try require(element("tune.stage").waitForExistence(timeout: 40), "Actual app did not reach the tuner")
++        try require(screen.size == CGSize(width: 375, height: 667),
++                    "Compact fixture requires an actual 375×667-point iPhone window, got \(screen)")
++        let tab = app.tabBars.buttons.matching(NSPredicate(format: "label == %@", copy.learn))
++        try require(tab.count == 1 && tab.firstMatch.isHittable, "Unique localized Learn tab is not available")
++        tab.firstMatch.tap()
++        let selected = XCTNSPredicateExpectation(predicate: NSPredicate(format: "selected == true"), object: tab.firstMatch)
++        try require(XCTWaiter.wait(for: [selected], timeout: 10) == .completed, "Learn tab did not become selected")
++        let lesson = element("learn.lesson.gtr-1-2")
++        for _ in 0..<10 {
++            if lesson.exists && lesson.isHittable && Self.contains(lesson.frame, in: screen) { break }
++            let scroll = app.scrollViews.firstMatch
++            if lesson.exists && Self.valid(lesson.frame) && scroll.exists {
++                let room = scroll.frame.intersection(screen)
++                let delta = max(-room.height * 0.4, min(room.height * 0.4, room.midY - lesson.frame.midY))
++                let origin = app.coordinate(withNormalizedOffset: .zero)
++                let start = origin.withOffset(CGVector(dx: room.midX, dy: room.midY))
++                let end = origin.withOffset(CGVector(dx: room.midX, dy: room.midY + delta))
++                start.press(forDuration: 0.1, thenDragTo: end, withVelocity: .slow, thenHoldForDuration: 0.2)
++            } else { app.swipeUp(velocity: .slow) }
++        }
++        try require(lesson.exists && lesson.isHittable && Self.contains(lesson.frame, in: screen),
++                    "The open-strings lesson must be a fully visible actual Learn-path target")
++        lesson.tap()
++        let next = element("lesson.continue")
++        try require(next.waitForExistence(timeout: 20) && next.isHittable && Self.contains(next.frame, in: screen),
++                    "The first real lesson explanation did not provide a clear Continue action")
++        next.tap()
++        skip = element("lesson.tunecheck.skip")
++        try require(skip.waitForExistence(timeout: 15), "Fresh guitar lesson did not enter its actual TuneCheckStep")
++        if landscape { XCUIDevice.shared.orientation = .landscapeLeft }
++        let expectedSize = landscape ? CGSize(width: 667, height: 375) : CGSize(width: 375, height: 667)
++        let rotated = XCTNSPredicateExpectation(predicate: NSPredicate { [unowned self] _, _ in
++            self.screen.size == expectedSize
++        }, object: nil)
++        try require(XCTWaiter.wait(for: [rotated], timeout: 10) == .completed,
++                    "Native window did not report the requested orientation; no transposed-frame substitute is accepted")
++        close = element("lesson.close")
++        let headers = app.otherElements.matching(NSPredicate(format: "label == %@ AND value == %@", copy.lesson, copy.tuneUp))
++        try require(headers.count == 1, "Expected localized lesson header with real Tune up state")
++        header = headers.firstMatch
++        try require(copy.language == "ar" ? close.frame.midX > header.frame.midX : close.frame.midX < header.frame.midX,
++                    "The actual lesson header must mirror with its language; translated copy alone does not prove RTL")
++        let title = element("lesson.tunecheck.title")
++        let instructions = element("lesson.tunecheck.instructions")
++        let hint = element("lesson.tunecheck.hint")
++        for (target, expected) in [(title, copy.title), (instructions, copy.instructions), (hint, copy.hint), (skip!, copy.skip)] {
++            try require(target.exists && target.label == expected, "Actual visible language/state differs: \(expected)")
++        }
++        let notes = app.staticTexts.matching(NSPredicate(format: "label == %@", "E2"))
++        try require(notes.count == 1, "The first actual listening target must remain E2")
++        let note = notes.firstMatch
++        let boards = app.descendants(matching: .any).matching(NSPredicate(format: "label MATCHES %@", copy.boardPattern))
++        try require(boards.count == 1, "Expected the actual string-6 open fretboard, not a geometry proxy")
++        let board = boards.firstMatch
++        let chips = app.descendants(matching: .any).matching(NSPredicate(format: "label MATCHES %@", copy.stringPattern))
++        try require(chips.count == 6, "Every real string chip must remain in the accessibility tree")
++        let rail = chips.allElementsBoundByIndex.sorted { $0.frame.minX < $1.frame.minX }
++        for (index, chip) in rail.enumerated() {
++            let number = chip.label.compactMap(\.wholeNumberValue).last
++            try require(number == 6 - index && (chip.value as? String) == ["E", "A", "D", "G", "B", "E"][index],
++                        "RTL must not reverse the physical string rail or lose its note/number")
++        }
++        try require(rail[0].isSelected, "String 6 must be the actual current string")
++        watched = ["header": header, "close": close, "skip": skip, "title": title, "instructions": instructions,
++                   "note": note, "hint": hint, "fretboard": board]
++        for (index, chip) in rail.enumerated() { watched["string-\(6 - index)"] = chip }
++        pinnedSkip = skip.frame
++        pinnedClose = close.frame
++        capture("arrival")
++        try assertPinned()
++        let scrolls = app.scrollViews.allElementsBoundByIndex.filter {
++            $0.descendants(matching: .any).matching(identifier: "lesson.tunecheck.instructions").count == 1
++        }
++        try require(scrolls.count == (ax5 ? 1 : 0), "Expected the actual TuneCheckStep scrolling branch")
++        let scroll = scrolls.first
++        for (name, target) in [("title", title), ("instructions", instructions), ("rail", rail[0]),
++                               ("note", note), ("hint", hint), ("fretboard", board)] {
++            try reveal(target, in: scroll)
++            if name == "rail" {
++                for chip in rail {
++                    try require(Self.contains(chip.frame, in: viewport(scroll)) && chip.isHittable,
++                                "All six chips must fit the same visible rail, not only its first chip")
++                }
++            }
++            // Read both frames from the same live content position, not a cached pre-scroll screenshot.
++            let railTop = rail.map { $0.frame.minY }.min()!
++            let railBottom = rail.map { $0.frame.maxY }.max()!
++            try require(railTop - 8 >= instructions.frame.maxY + 14,
++                        "The reserved reward band must not borrow the instruction's 14-point gap")
++            try require(railBottom + 8 + 14 <= note.frame.minY,
++                        "The reward band must stay separated from the actual listening note")
++            capture("clear-" + name)
++        }
++        try assertPinned()
++        skip.tap()
++        let nextTarget = element("lesson.notes.target")
++        try require(nextTarget.waitForExistence(timeout: 15) && !element("lesson.tunecheck.skip").exists,
++                    "The visible Skip action must actually leave TuneCheckStep for the lesson's notes step")
++        capture("skip-activated")
++    }
++
++    private func assertPinned() throws {
++        for (name, target) in [("Skip", skip!), ("Close", close!), ("Header", header!)] {
++            try require(target.exists && Self.contains(target.frame, in: screen) && target.isHittable,
++                        "\(name) must remain wholly visible and hittable")
++        }
++        try require(skip.frame == pinnedSkip && close.frame == pinnedClose,
++                    "Teaching-content scrolling must not move the fixed actions")
++    }
++
++    private func viewport(_ scroll: XCUIElement?) -> CGRect {
++        let top = max(header.frame.maxY, close.frame.maxY)
++        let bottom = min(screen.maxY, skip.frame.minY)
++        guard bottom > top else { return .null }
++        let content = CGRect(x: screen.minX, y: top, width: screen.width, height: bottom - top)
++        return scroll.map { $0.frame.intersection(content) } ?? content
++    }
++
++    private func reveal(_ target: XCUIElement, in scroll: XCUIElement?) throws {
++        var previous: CGRect?
++        var stalled = 0
++        for attempt in 0..<12 {
++            try assertPinned()
++            try require(target.exists, "The exact teaching target disappeared before it could be checked")
++            let frame = target.frame
++            let room = viewport(scroll)
++            observations.append("attempt=\(attempt) target=\(target.label) frame=\(frame) viewport=\(room)")
++            if Self.contains(frame, in: room) && target.isHittable { return }
++            guard let scroll else {
++                try require(false, "Normal-size teaching target is clipped; no scrolling fallback exists: \(target.label)")
++                return
++            }
++            try require(Self.valid(room) && frame.width <= room.width && frame.height <= room.height
++                        && frame.minX >= room.minX && frame.maxX <= room.maxX,
++                        "The complete teaching target cannot fit its real viewport: \(target.label)")
++            try require(!Self.contains(frame, in: room), "Contained but non-hittable target must not be scrolled into a false pass")
++            if let previous, abs(previous.minY - frame.minY) < 1 { stalled += 1 } else { stalled = 0 }
++            try require(stalled < 2, "Two gestures made no measured progress")
++            previous = frame
++            let distance = max(-room.height * 0.45, min(room.height * 0.45, room.midY - frame.midY))
++            try require(abs(distance) > 1, "No useful bounded scroll plan remains")
++            let origin = app.coordinate(withNormalizedOffset: .zero)
++            let start = origin.withOffset(CGVector(dx: room.midX, dy: room.midY))
++            let end = origin.withOffset(CGVector(dx: room.midX, dy: room.midY + distance))
++            observations.append("scroll=\(scroll.frame) interiorX=\(room.midX) dragDelta=\(distance)")
++            start.press(forDuration: 0.1, thenDragTo: end, withVelocity: .slow, thenHoldForDuration: 0.2)
++        }
++        try require(false, "Teaching target remained unreachable after the bounded scroll attempts")
++    }
++
++    private func capture(_ phase: String) {
++        let prefix = "tunecheck-compact-" + sample + "-" + phase
++        let screenshot = XCUIScreen.main.screenshot()
++        let picture = XCTAttachment(screenshot: screenshot)
++        picture.name = prefix
++        picture.lifetime = .keepAlways
++        add(picture)
++        let tree = XCTAttachment(string: app.debugDescription)
++        tree.name = prefix + "-hierarchy"
++        tree.lifetime = .keepAlways
++        add(tree)
++        var targets: [String: Any] = [:]
++        for (name, target) in watched {
++            targets[name] = target.exists ? ["label": target.label, "value": String(describing: target.value),
++                "frame": [target.frame.minX, target.frame.minY, target.frame.width, target.frame.height],
++                "hittable": target.isHittable] : ["exists": false]
++        }
++        let metadata: [String: Any] = ["sample": sample, "phase": phase, "window": [screen.minX, screen.minY, screen.width, screen.height],
++            "appFrame": String(describing: app.frame), "orientation": XCUIDevice.shared.orientation.rawValue,
++            "screenshotPixels": [screenshot.image.cgImage?.width ?? 0, screenshot.image.cgImage?.height ?? 0],
++            "launchArguments": app.launchArguments, "targets": targets, "observations": observations]
++        if let data = try? JSONSerialization.data(withJSONObject: metadata, options: [.prettyPrinted, .sortedKeys]) {
++            let geometry = XCTAttachment(data: data, uniformTypeIdentifier: "public.json")
++            geometry.name = prefix + "-geometry"
++            geometry.lifetime = .keepAlways
++            add(geometry)
++        }
++    }
++}
+--- /dev/null
++++ b/tools/ci/test_tunecheck_layout_runner.py
+@@ -0,0 +1,262 @@
++"""Portable fail-closed runner tests; these do not execute native UI tests."""
++import contextlib
++import io
++import json
++from pathlib import Path
++import subprocess
++import tempfile
++import unittest
++from unittest.mock import patch
++
++import tunecheck_layout as runner
++
++DEVICE = '01234567-89AB-CDEF-0123-456789ABCDEF'
++RUNTIME = 'com.apple.CoreSimulator.SimRuntime.iOS-18-0'
++
++
++def device_records():
++    return {'devices': {RUNTIME: [dict(udid=DEVICE, name='iPhone SE (3rd generation)',
++                                      deviceTypeIdentifier=runner.DEVICE_TYPE, isAvailable=True)]}}
++
++
++def runtime_records():
++    return {'runtimes': [dict(identifier=RUNTIME, version='18.0', isAvailable=True)]}
++
++
++def event(method, state, cls=runner.CLASS):
++    return f"Test Case '-[TimbreUITests.{cls} {method}]' {state} (0.100 seconds).\n"
++
++
++def passing_log():
++    return ''.join(event(method, 'started') + event(method, 'passed') for method in runner.METHODS)
++
++
++class TuneCheckLayoutRunnerTests(unittest.TestCase):
++    def test_exactly_eight_source_methods(self):
++        source = '\n'.join(f'    func {method}() throws {{}}' for method in runner.METHODS)
++        runner.validate_source(source)
++        for bad in [source + '\nfunc testExtra() {}', source.replace(runner.METHODS[0], 'testWrong'),
++                    source + '\nfunc ' + runner.METHODS[0] + '() {}']:
++            with self.assertRaises(ValueError):
++                runner.validate_source(bad)
++
++    def test_only_explicit_compact_type_and_available_ios18_or_later(self):
++        result = runner.validate_device(device_records(), runtime_records(), DEVICE.lower())
++        self.assertEqual(result['udid'], DEVICE)
++        self.assertEqual(result['expected_portrait_points'], [375, 667])
++        renamed = device_records()
++        renamed['devices'][RUNTIME][0]['name'] = 'User-renamed compact simulator'
++        runner.validate_device(renamed, runtime_records(), DEVICE)
++        for key, value in [('deviceTypeIdentifier', 'com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro'),
++                           ('deviceTypeIdentifier', None), ('isAvailable', False)]:
++            bad = device_records()
++            bad['devices'][RUNTIME][0][key] = value
++            with self.assertRaises(ValueError):
++                runner.validate_device(bad, runtime_records(), DEVICE)
++
++    def test_bad_missing_or_ambiguous_uuid_cannot_fall_back(self):
++        for device_id in ['booted', 'iPhone SE (3rd generation)', DEVICE[:-1] + '0']:
++            with self.assertRaises(ValueError):
++                runner.validate_device(device_records(), runtime_records(), device_id)
++        devices = device_records()
++        devices['devices'][RUNTIME] *= 2
++        with self.assertRaises(ValueError):
++            runner.validate_device(devices, runtime_records(), DEVICE)
++
++    def test_old_unavailable_non_ios_or_inconsistent_runtime_rejected(self):
++        for identifier, version, available in [
++            ('com.apple.CoreSimulator.SimRuntime.iOS-17-5', '17.5', True),
++            ('com.apple.CoreSimulator.SimRuntime.tvOS-18-0', '18.0', True),
++            (RUNTIME, '17.0', True), (RUNTIME, '18.0', False), (RUNTIME, '', True),
++        ]:
++            device = device_records()['devices'][RUNTIME]
++            with self.assertRaises(ValueError):
++                runner.validate_device({'devices': {identifier: device}},
++                                       {'runtimes': [dict(identifier=identifier, version=version,
++                                                          isAvailable=available)]}, DEVICE)
++        newer = 'com.apple.CoreSimulator.SimRuntime.iOS-26-2'
++        runner.validate_device({'devices': {newer: device_records()['devices'][RUNTIME]}},
++                               {'runtimes': [dict(identifier=newer, version='26.2', isAvailable=True)]}, DEVICE)
++
++    def test_command_selects_only_class_once_on_supplied_device(self):
++        command = runner.test_command(DEVICE, Path('/tmp/result.xcresult'))
++        self.assertEqual(command[:2], ['xcodebuild', 'test-without-building'])
++        self.assertEqual([arg for arg in command if arg.startswith('-only-testing:')],
++                         ['-only-testing:TimbreUITests/TuneCheckLayoutUITests'])
++        self.assertEqual(command[command.index('-destination') + 1], f'platform=iOS Simulator,id={DEVICE}')
++        self.assertEqual(command[command.index('-test-iterations') + 1], '1')
++        for forbidden in ['-skip-testing:', '-retry-tests-on-failure', '-run-tests-until-failure']:
++            self.assertFalse(any(arg.startswith(forbidden) for arg in command))
++
++    def test_all_eight_passes_and_zero_exit_required(self):
++        self.assertTrue(runner.evaluate_tests(0, passing_log())['passed'])
++        for code in [1, 65, 124, -9]:
++            self.assertFalse(runner.evaluate_tests(code, passing_log())['passed'])
++        self.assertFalse(runner.evaluate_tests(0, '')['passed'])
++
++    def test_missing_skipped_failed_duplicate_or_extra_case_is_sticky(self):
++        method = runner.METHODS[0]
++        good = passing_log()
++        for bad in [good.replace(event(method, 'passed'), ''),
++                    good.replace(event(method, 'passed'), event(method, 'skipped')),
++                    good.replace(event(method, 'passed'), event(method, 'failed')),
++                    good + event(method, 'passed'), good + event(method, 'started') + event(method, 'passed'),
++                    event(method, 'failed') + good, good + event('testExtra', 'passed'),
++                    good + event(method, 'passed', cls='AnotherUITest'),
++                    good.replace(event(method, 'started') + event(method, 'passed'),
++                                 event(method, 'passed') + event(method, 'started'))]:
++            with self.subTest(log=bad[-150:]):
++                self.assertFalse(runner.evaluate_tests(0, bad)['passed'])
++
++    def test_error_or_skip_summary_cannot_be_hidden_by_passing_terminals(self):
++        for marker in ['** TEST FAILED **', '** TEST EXECUTE FAILED **', 'Testing failed:',
++                       'error: -[TimbreUITests.TuneCheckLayoutUITests testEnglishPortraitLarge] : failed',
++                       'XCTAssertEqual failed', 'failed - missing capture', '1 test skipped']:
++            self.assertFalse(runner.evaluate_tests(0, passing_log() + marker)['passed'])
++        self.assertTrue(runner.evaluate_tests(0, passing_log() + '0 tests skipped\nTap skip button')['passed'])
++
++    def test_original_export_inventory_keeps_bytes_and_requires_attachments(self):
++        with tempfile.TemporaryDirectory() as folder:
++            path = Path(folder)
++            with self.assertRaises(ValueError):
++                runner.export_inventory(path)
++            (path / 'manifest.json').write_text('[]')
++            with self.assertRaises(ValueError):
++                runner.export_inventory(path)
++            (path / 'native.png').write_bytes(b'original native bytes')
++            before = {file.name: file.read_bytes() for file in path.iterdir()}
++            inventory = runner.export_inventory(path)
++            self.assertEqual({item['path'] for item in inventory}, set(before))
++            self.assertEqual({file.name: file.read_bytes() for file in path.iterdir()}, before)
++            self.assertTrue(all(len(item['sha256']) == 64 for item in inventory))
++
++    def test_every_method_requires_all_eight_phases_png_hierarchy_and_geometry(self):
++        self.assertEqual(runner.PHASES, ('arrival', 'clear-title', 'clear-instructions', 'clear-rail',
++                                        'clear-note', 'clear-hint', 'clear-fretboard', 'skip-activated'))
++        with tempfile.TemporaryDirectory() as folder:
++            directory = Path(folder)
++            manifest = []
++            for index, method in enumerate(runner.METHODS):
++                sample = ('en' if 'English' in method else 'ar') + '-' + (
++                    'landscape' if 'Landscape' in method else 'portrait') + '-' + ('AX5' if 'AX5' in method else 'Large')
++                attachments = []
++                for phase in runner.PHASES:
++                    prefix = f'tunecheck-compact-{sample}-{phase}'
++                    for suffix, role in [('.png', ''), ('.txt', '-hierarchy'), ('.json', '-geometry')]:
++                        filename = f'{index}-{phase}{suffix}'
++                        content = json.dumps(dict(sample=sample, phase=phase)) if suffix == '.json' else 'original'
++                        (directory / filename).write_text(content)
++                        attachments.append(dict(exportedFileName=filename, deviceId=DEVICE,
++                                                suggestedHumanReadableName=prefix + role + '_0_export' + suffix))
++                manifest.append(dict(testIdentifier=f'{runner.CLASS}/{method}()', attachments=attachments))
++            (directory / 'manifest.json').write_text(json.dumps(manifest))
++            self.assertEqual(runner.validate_export_coverage(directory, DEVICE), [])
++            manifest[0]['attachments'][0]['deviceId'] = DEVICE[:-1] + '0'
++            (directory / 'manifest.json').write_text(json.dumps(manifest))
++            self.assertTrue(runner.validate_export_coverage(directory, DEVICE))
++            manifest[0]['attachments'][0]['deviceId'] = DEVICE
++            (directory / 'manifest.json').write_text(json.dumps(manifest))
++            (directory / '0-clear-note.json').unlink()
++            failures = runner.validate_export_coverage(directory, DEVICE)
++            self.assertTrue(failures)
++            self.assertTrue(any('testEnglishPortraitLarge/clear-note: missing original geometry' in item
++                                for item in failures))
++
++    def test_mocked_run_exports_failed_attempt_once_without_retry(self):
++        with tempfile.TemporaryDirectory() as folder:
++            root = Path(folder)
++            source = root / 'ios/TimbreUITests/TuneCheckLayoutUITests.swift'
++            source.parent.mkdir(parents=True)
++            source.write_text('\n'.join(f'func {method}() {{}}' for method in runner.METHODS))
++            output = root / 'evidence'
++            commands = []
++
++            def execute(command, log, repo, timeout):
++                commands.append(command)
++                if command[:4] == ['xcrun', 'simctl', 'list', 'devices']:
++                    log.write_text(json.dumps(device_records()))
++                elif command[:4] == ['xcrun', 'simctl', 'list', 'runtimes']:
++                    log.write_text(json.dumps(runtime_records()))
++                elif command[0] == 'xcodebuild':
++                    Path(command[command.index('-resultBundlePath') + 1]).mkdir()
++                    log.write_text(passing_log().replace(event(runner.METHODS[0], 'passed'),
++                                                       event(runner.METHODS[0], 'failed')))
++                    return 65
++                else:
++                    log.write_text('Exported original attachments\n')
++                    attachments = Path(command[command.index('--output-path') + 1])
++                    attachments.mkdir()
++                    (attachments / 'manifest.json').write_text('[]')
++                    (attachments / 'native.png').write_bytes(b'original failure screenshot')
++                return 0
++
++            with patch.object(runner, 'logged_command', side_effect=execute), contextlib.redirect_stdout(io.StringIO()):
++                self.assertEqual(runner.run(root, output, DEVICE), 1)
++            receipt = json.loads((output / 'status.json').read_text())
++            self.assertFalse(receipt['passed'])
++            self.assertEqual(receipt['attempts'], 1)
++            self.assertEqual(len([command for command in commands if command[0] == 'xcodebuild']), 1)
++            self.assertEqual(receipt['export_exit'], 0)
++            self.assertTrue((output / 'TuneCheckLayout.xcresult').is_dir())
++            self.assertEqual((output / 'attachments/native.png').read_bytes(), b'original failure screenshot')
++            with self.assertRaises(FileExistsError):
++                runner.run(root, output, DEVICE)
++
++    def test_wrong_device_stops_before_any_xcodebuild_or_device_creation(self):
++        with tempfile.TemporaryDirectory() as folder:
++            root = Path(folder)
++            source = root / 'ios/TimbreUITests/TuneCheckLayoutUITests.swift'
++            source.parent.mkdir(parents=True)
++            source.write_text('\n'.join(f'func {method}() {{}}' for method in runner.METHODS))
++            commands = []
++
++            def execute(command, log, repo, timeout):
++                commands.append(command)
++                records = device_records() if 'devices' in command else runtime_records()
++                if 'devices' in command:
++                    records['devices'][RUNTIME][0]['deviceTypeIdentifier'] = 'iPhone-large'
++                log.write_text(json.dumps(records))
++                return 0
++
++            with patch.object(runner, 'logged_command', side_effect=execute), contextlib.redirect_stdout(io.StringIO()):
++                self.assertEqual(runner.run(root, root / 'evidence', DEVICE), 1)
++            receipt = json.loads((root / 'evidence/status.json').read_text())
++            self.assertEqual(receipt['attempts'], 0)
++            self.assertFalse(receipt['passed'])
++            self.assertEqual(len(commands), 2)
++            self.assertTrue(all(command[:3] == ['xcrun', 'simctl', 'list'] for command in commands))
++
++    def test_passing_test_log_without_original_bundle_remains_failure(self):
++        with tempfile.TemporaryDirectory() as folder:
++            root = Path(folder)
++            source = root / 'ios/TimbreUITests/TuneCheckLayoutUITests.swift'
++            source.parent.mkdir(parents=True)
++            source.write_text('\n'.join(f'func {method}() {{}}' for method in runner.METHODS))
++
++            def execute(command, log, repo, timeout):
++                if 'devices' in command:
++                    log.write_text(json.dumps(device_records()))
++                elif 'runtimes' in command:
++                    log.write_text(json.dumps(runtime_records()))
++                else:
++                    log.write_text(passing_log())
++                return 0
++
++            with patch.object(runner, 'logged_command', side_effect=execute), contextlib.redirect_stdout(io.StringIO()):
++                self.assertEqual(runner.run(root, root / 'evidence', DEVICE), 1)
++            receipt = json.loads((root / 'evidence/status.json').read_text())
++            self.assertTrue(receipt['tests']['passed'])
++            self.assertFalse(receipt['passed'])
++            self.assertIn('native result bundle', receipt['issues'][0])
++
++    def test_command_timeout_has_one_attempt_and_nonzero_result(self):
++        with tempfile.TemporaryDirectory() as folder:
++            path = Path(folder)
++            with patch.object(runner.subprocess, 'run', side_effect=subprocess.TimeoutExpired('xcodebuild', 2400)) as call:
++                with contextlib.redirect_stdout(io.StringIO()):
++                    self.assertEqual(runner.logged_command(['xcodebuild'], path / 'test.log', path, 2400), 124)
++            call.assert_called_once()
++
++
++if __name__ == '__main__':
++    unittest.main()
+--- /dev/null
++++ b/tools/ci/test_tunecheck_reward_contract.py
+@@ -0,0 +1,111 @@
++"""Bounded decoration guard; native mask pixels and short-screen layout still require iOS."""
++from pathlib import Path
++import unittest
++
++ROOT = Path(__file__).resolve().parents[2]
++
++
++class TuneCheckRewardContract(unittest.TestCase):
++    def setUp(self):
++        self.tune = (ROOT / 'ios/Timbre/Learn/LessonSteps.swift').read_text().split('struct TuneCheckStep: View {', 1)[1].split('final class TuneCheckVoice', 1)[0]
++        self.row = self.tune.split('private var stringChips:', 1)[1].split('private func stringChip(', 1)[0]
++
++    def test_only_decoration_is_masked_before_its_existing_offset(self):
++        reward = self.row.split('.background(alignment: .leading)', 1)[1].split('// Strings lie in space', 1)[0]
++        self.assertIn('SparkBurst(trigger: burst, color: accent, reach: 70, startFraction: 0.32, ring: false)', reward)
++        self.assertLess(reward.index('.frame(width: 140, height: 140)'), reward.index('.mask { Self.chipRewardMask }'))
++        self.assertLess(reward.index('.mask { Self.chipRewardMask }'), reward.index('.offset(x: CGFloat(burstAt)'))
++        self.assertLess(reward.index('.offset(x: CGFloat(burstAt)'), reward.index('.padding(.vertical, Self.chipRewardFade)'))
++        self.assertEqual(self.tune.count('.mask {'), 1)
++        self.assertNotIn('.clipped()', self.tune)
++        self.assertNotIn('.scaleEffect', self.row)
++
++    def test_stable_space_matches_the_actual_faded_mask(self):
++        for token in ['private static let chip: CGFloat = 44', 'static let chipRewardFade: CGFloat = 8',
++                      'chip + 2 * chipRewardFade', 'chipRewardFade / chipRewardHeight',
++                      '.init(color: .clear, location: 0)', '.init(color: .white, location: edge)',
++                      '.init(color: .white, location: 1 - edge)', '.init(color: .clear, location: 1)',
++                      '.frame(height: chipRewardHeight)']:
++            self.assertIn(token, self.row)
++        self.assertEqual(self.row.count('.padding(.vertical, Self.chipRewardFade)'), 1)
++        self.assertNotIn('if burst', self.row)
++        self.assertNotIn('if settling', self.row)
++        self.assertIn('.environment(\\.layoutDirection, .leftToRight)', self.row)
++
++    def test_native_pixel_guard_has_opaque_negative_control_and_real_edge_checks(self):
++        native = (ROOT / 'ios/TimbreAppTests/TuneCheckRewardBandTests.swift').read_text()
++        for token in ['for scale in [2, 3]', 'LayoutDirection.leftToRight, .rightToLeft',
++                      'DynamicTypeSize.large, .accessibility5', 'Color.red.frame(width: 140, height: 140)',
++                      'content.mask { TuneCheckStep.chipRewardMask }', 'if y < start || y >= end',
++                      'XCTAssertEqual(escapedInk, 0', 'XCTAssertGreaterThan(insideInk, 0',
++                      'XCTAssertEqual(actual, baseline)', 'XCTAssertEqual(unmasked[3], 255',
++                      'XCTAssertNotEqual(unmasked, try XCTUnwrap(baseline))', 'renderer.isOpaque = false']:
++            self.assertIn(token, native)
++
++    def test_text_primary_orb_and_audio_lifecycle_are_not_changed_or_masked(self):
++        header = self.tune.split('@ViewBuilder private var teachingContent:', 1)[1].split('stringChips', 1)[0]
++        self.assertIn('Pluck each open string. In-tune strings help Timbre hear you right.', header)
++        self.assertIn('.fixedSize(horizontal: false, vertical: true)', header)
++        self.assertNotIn('.mask', header)
++        cluster = self.tune.split('private var listeningCluster:', 1)[1].split('private enum Reading:', 1)[0]
++        self.assertIn('RingMotif(accent: orbColor, symbol: orbSymbol, active: reading.listening)', cluster)
++        self.assertNotIn('.mask', cluster)
++        for token in ['.onAppear { listen(); introduce(after: 1.4) }',
++                      '.onDisappear { lockTask?.cancel(); store.stopLessonListening(owner: owner) }',
++                      'if typeSize.isAccessibilitySize', 'ScrollView {',
++                      'identifier: "lesson.tunecheck.skip") { finish() }']:
++            self.assertIn(token, self.tune)
++
++    def test_whole_app_compact_matrix_uses_real_navigation_and_all_eight_cases(self):
++        native = (ROOT / 'ios/TimbreUITests/TuneCheckLayoutUITests.swift').read_text()
++        for language in ['English', 'Arabic']:
++            for orientation in ['Portrait', 'Landscape']:
++                for size in ['Large', 'AX5']:
++                    self.assertIn('func test' + language + orientation + size + '()', native)
++        for token in ['element("tune.stage")', 'element("learn.lesson.gtr-1-2")',
++                      'element("lesson.continue")', 'next.tap()',
++                      'element("lesson.tunecheck.skip")', 'skip.tap()',
++                      'element("lesson.notes.target")',
++                      'CGSize(width: 375, height: 667)', 'CGSize(width: 667, height: 375)',
++                      'XCUIDevice.shared.orientation = .landscapeLeft',
++                      'self.screen.size == expectedSize',
++                      '"-tunecheck.guitar.acoustic.6", "1900-01-01"']:
++            self.assertIn(token, native)
++        for forbidden in ['XCTSkip', 'ImageRenderer', 'UIHostingController', '.resizable()',
++                          'TIMBRE_DEMO_PITCH', 'TIMBRE_SCENE', 'if skip.waitForExistence']:
++            self.assertNotIn(forbidden, native)
++
++    def test_whole_app_targets_are_contained_not_merely_tappable_and_failures_keep_evidence(self):
++        native = (ROOT / 'ios/TimbreUITests/TuneCheckLayoutUITests.swift').read_text()
++        for token in ['chips.count == 6', 'rail[0].isSelected', 'notes.count == 1', 'boards.count == 1',
++                      'target.label == expected', 'close.frame.midX > header.frame.midX',
++                      'Self.contains(chip.frame, in: viewport(scroll)) && chip.isHittable',
++                      'skip.frame == pinnedSkip && close.frame == pinnedClose',
++                      'frame.height <= room.height', 'frame.minX >= room.minX && frame.maxX <= room.maxX',
++                      'frame.minY >= viewport.minY && frame.maxY <= viewport.maxY',
++                      'stalled < 2', 'room.midX', 'for attempt in 0..<12',
++                      'railTop - 8 >= instructions.frame.maxY + 14',
++                      'railBottom + 8 + 14 <= note.frame.minY',
++                      'XCTAttachment(screenshot: screenshot)', 'app.debugDescription',
++                      '"screenshotPixels"', '"launchArguments"', '"observations"',
++                      'capture("arrival")', 'capture("clear-" + name)', 'capture("skip-activated")']:
++            self.assertIn(token, native)
++        failure = native.split('private func require(', 1)[1].split('private func exercise(', 1)[0]
++        self.assertLess(failure.index('capture("failure")'), failure.index('throw Failure'))
++        self.assertNotIn('try?', failure)
++
++    def test_arabic_fixture_copy_is_the_current_shipped_translation(self):
++        native = (ROOT / 'ios/TimbreUITests/TuneCheckLayoutUITests.swift').read_text()
++        local = (ROOT / 'ios/Timbre/Resources/ar.lproj/Localizable.strings').read_text()
++        learn = (ROOT / 'ios/Timbre/Resources/ar.lproj/Learn.strings').read_text()
++        for translated in ['تعلّم', 'ضبط الآلة', 'فحص سريع للضبط',
++                           'انقر كل وتر مفتوح. الأوتار المضبوطة تساعد Timbre على سماعك بدقة.',
++                           'انقر الوتر', 'أوتاري مضبوطة — تخطٍّ']:
++            self.assertIn('"' + translated + '"', native)
++            self.assertIn('= "' + translated + '";', local)
++        self.assertIn('lesson: "الأوتار المطلقة"', native)
++        self.assertIn('"Lf608c3d2a6" = "الأوتار المطلقة";', learn)
++
++
++if __name__ == '__main__':
++    unittest.main()
+--- /dev/null
++++ b/tools/ci/tunecheck_layout.py
+@@ -0,0 +1,234 @@
++#!/usr/bin/env python3
++"""Run eight real tune-check layouts on one explicitly supplied compact simulator.
++
++Requires already-built Timbre UI tests and an available iPhone SE (3rd generation)
++on iOS 18 or later. Before invoking, use the standard native-CI preparation to boot
++that exact device, install the built app, and grant its microphone permission.
++This runner does not build, install, create devices, or alter privacy permissions.
++Never substitutes a device, retries, skips a case, or
++changes native attachments. The fresh output directory retains the full xcresult,
++original exports, logs, device metadata, and a fail-closed status receipt.
++"""
++from __future__ import annotations
++
++import argparse
++from collections import Counter
++import hashlib
++import json
++from pathlib import Path
++import re
++import subprocess
++import sys
++
++ROOT = Path(__file__).resolve().parents[2]
++CLASS = 'TuneCheckLayoutUITests'
++DEVICE_TYPE = 'com.apple.CoreSimulator.SimDeviceType.iPhone-SE-3rd-generation'
++METHODS = (
++    'testEnglishPortraitLarge', 'testEnglishLandscapeLarge',
++    'testEnglishPortraitAX5', 'testEnglishLandscapeAX5',
++    'testArabicPortraitLarge', 'testArabicLandscapeLarge',
++    'testArabicPortraitAX5', 'testArabicLandscapeAX5',
++)
++EXPECTED = frozenset(f'TimbreUITests/{CLASS}/{method}' for method in METHODS)
++PHASES = ('arrival', 'clear-title', 'clear-instructions', 'clear-rail', 'clear-note',
++          'clear-hint', 'clear-fretboard', 'skip-activated')
++UUID = re.compile(r'[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}')
++CASE = re.compile(
++    r"Test Case '-\[(?P<module>\w+)\.(?P<cls>\w+) (?P<test>\w+)\]' "
++    r'(?P<state>started|passed|failed|skipped)')
++
++
++def validate_source(source: str) -> None:
++    methods = re.findall(r'^\s*func (test\w+)\s*\(', source, re.MULTILINE)
++    if Counter(methods) != Counter(METHODS):
++        raise ValueError('UI source must contain exactly the eight expected test methods')
++
++
++def validate_device(devices: dict, runtimes: dict, device_id: str) -> dict:
++    if UUID.fullmatch(device_id) is None:
++        raise ValueError('--device-id must be an explicit simulator UUID')
++    matches = [(runtime, device) for runtime, items in devices.get('devices', {}).items()
++               for device in items if device.get('udid', '').lower() == device_id.lower()]
++    if len(matches) != 1:
++        raise ValueError('The supplied simulator UUID must identify exactly one available device')
++    runtime_id, device = matches[0]
++    if device.get('isAvailable') is not True or device.get('deviceTypeIdentifier') != DEVICE_TYPE:
++        raise ValueError('The supplied device must be an available iPhone SE (3rd generation)')
++    matching_runtimes = [item for item in runtimes.get('runtimes', []) if item.get('identifier') == runtime_id]
++    if len(matching_runtimes) != 1:
++        raise ValueError('The selected simulator runtime must have one matching runtime record')
++    runtime = matching_runtimes[0]
++    identifier = re.fullmatch(r'com\.apple\.CoreSimulator\.SimRuntime\.iOS-(\d+)(?:-\d+)*', runtime_id)
++    version = re.fullmatch(r'(\d+)(?:\.\d+)*', runtime.get('version', ''))
++    if (runtime.get('isAvailable') is not True or identifier is None or version is None
++            or int(version[1]) < 18 or version[1] != identifier[1]):
++        raise ValueError('The selected device requires an available iOS 18-or-later runtime')
++    return dict(udid=device['udid'], name=device.get('name'), device_type=DEVICE_TYPE,
++                runtime=runtime_id, runtime_version=runtime['version'],
++                expected_portrait_points=[375, 667])
++
++
++def test_command(device_id: str, bundle: Path) -> list[str]:
++    if UUID.fullmatch(device_id) is None:
++        raise ValueError('Invalid simulator UUID')
++    return ['xcodebuild', 'test-without-building', '-project', 'ios/Timbre.xcodeproj',
++            '-scheme', 'Timbre', '-parallel-testing-enabled', 'NO',
++            '-only-testing:TimbreUITests/' + CLASS, '-test-iterations', '1',
++            '-test-timeouts-enabled', 'YES', '-default-test-execution-time-allowance', '180',
++            '-maximum-test-execution-time-allowance', '180', '-destination-timeout', '120',
++            '-destination', f'platform=iOS Simulator,id={device_id}',
++            '-derivedDataPath', 'ios/build/dd', '-resultBundlePath', str(bundle),
++            'CODE_SIGNING_ALLOWED=NO']
++
++
++def evaluate_tests(code: int, text: str) -> dict:
++    events = [(f"{m['module']}/{m['cls']}/{m['test']}", m['state']) for m in CASE.finditer(text)]
++    seen = {name for name, _ in events}
++    counts = {name: Counter(state for case, state in events if case == name) for name in seen}
++    unexpected = sorted(seen - EXPECTED)
++    missing = sorted(name for name in EXPECTED if counts.get(name, {}).get('passed', 0) == 0)
++    invalid = sorted(name for name in seen if counts[name] != Counter(started=1, passed=1)
++                     or [state for case, state in events if case == name] != ['started', 'passed'])
++    # A failure followed by a pass is never repaired here, even if xcodebuild exits zero.
++    failure_markers = bool(re.search(r'\*\* TEST (?:EXECUTE )?FAILED \*\*|Testing failed:|'
++                                    r'\berror: -\[|XCTAssert\w* failed|\bfailed - ', text))
++    skipped_summary = any(int(match[1]) > 0 for match in re.finditer(r'\b(\d+) tests? skipped\b', text))
++    passed = code == 0 and not (unexpected or missing or invalid or failure_markers or skipped_summary)
++    return dict(passed=passed, exit_code=code, expected=sorted(EXPECTED),
++                missing=missing, unexpected=unexpected, invalid=invalid,
++                failure_markers=failure_markers, skipped_summary=skipped_summary,
++                events=[dict(test=name, state=state) for name, state in events])
++
++
++def logged_command(command: list[str], log: Path, root: Path, timeout: int) -> int:
++    print('Running: ' + ' '.join(command), flush=True)
++    with log.open('w') as output:
++        try:
++            return subprocess.run(command, cwd=root, stdout=output, stderr=subprocess.STDOUT,
++                                  timeout=timeout, check=False).returncode
++        except subprocess.TimeoutExpired:
++            return 124
++        except OSError as error:
++            output.write(str(error) + '\n')
++            return 127
++
++
++def export_inventory(directory: Path) -> list[dict]:
++    manifest = directory / 'manifest.json'
++    if not manifest.is_file() or not isinstance(json.loads(manifest.read_text()), list):
++        raise ValueError('Native attachment export did not produce its original JSON manifest')
++    files = [path for path in directory.rglob('*') if path.is_file()]
++    if len(files) < 2:
++        raise ValueError('Native attachment export contains no attachment files')
++    return [dict(path=path.relative_to(directory).as_posix(), bytes=path.stat().st_size,
++                 sha256=hashlib.sha256(path.read_bytes()).hexdigest()) for path in sorted(files)]
++
++
++def validate_export_coverage(directory: Path, device_id: str) -> list[str]:
++    """Require every real layout phase's original screenshot, hierarchy and geometry."""
++    manifest = json.loads((directory / 'manifest.json').read_text())
++    problems = []
++    for method in METHODS:
++        sample = ('en' if 'English' in method else 'ar') + '-' + (
++            'landscape' if 'Landscape' in method else 'portrait') + '-' + ('AX5' if 'AX5' in method else 'Large')
++        blocks = [block for block in manifest if block.get('testIdentifier', '').removesuffix('()').endswith(
++            f'{CLASS}/{method}')]
++        attachments = [attachment for block in blocks for attachment in block.get('attachments', [])]
++        for phase in PHASES:
++            prefix = f'tunecheck-compact-{sample}-{phase}'
++            found = set()
++            for attachment in attachments:
++                name = attachment.get('suggestedHumanReadableName', '')
++                if not name.startswith(prefix):
++                    continue
++                exported = attachment.get('exportedFileName', '')
++                if not exported or Path(exported).name != exported:
++                    problems.append(f'{method}/{phase}: invalid native export filename')
++                    continue
++                path = directory / exported
++                if not path.is_file() or path.stat().st_size == 0:
++                    problems.append(f'{method}/{phase}: missing or empty original {exported}')
++                    continue
++                if attachment.get('deviceId', '').lower() != device_id.lower():
++                    problems.append(f'{method}/{phase}: attachment belongs to a different or unknown device')
++                    continue
++                suffix = path.suffix.lower()
++                if suffix == '.png' and not name.startswith(prefix + '-hierarchy'):
++                    found.add('screenshot')
++                elif suffix == '.txt' and name.startswith(prefix + '-hierarchy'):
++                    found.add('hierarchy')
++                elif suffix == '.json' and name.startswith(prefix + '-geometry'):
++                    geometry = json.loads(path.read_text())
++                    if geometry.get('sample') == sample and geometry.get('phase') == phase:
++                        found.add('geometry')
++            for missing in sorted({'screenshot', 'hierarchy', 'geometry'} - found):
++                problems.append(f'{method}/{phase}: missing original {missing}')
++    return problems
++
++
++def write_status(directory: Path, receipt: dict) -> None:
++    (directory / 'status.json').write_text(json.dumps(receipt, indent=2) + '\n')
++
++
++def run(root: Path, output: Path, device_id: str) -> int:
++    # Never mix this attempt with a previous bundle, passing log, or exported attachment.
++    output.mkdir(parents=True, exist_ok=False)
++    receipt = dict(schema=1, passed=False, state='preflight', expected=sorted(EXPECTED),
++                   requested_device=device_id, attempts=0, issues=[])
++    write_status(output, receipt)
++    bundle = output / 'TuneCheckLayout.xcresult'
++    try:
++        validate_source((root / f'ios/TimbreUITests/{CLASS}.swift').read_text())
++        for name, command in [
++            ('devices', ['xcrun', 'simctl', 'list', 'devices', 'available', '--json']),
++            ('runtimes', ['xcrun', 'simctl', 'list', 'runtimes', '--json']),
++        ]:
++            code = logged_command(command, output / f'{name}.json', root, 60)
++            if code != 0:
++                raise RuntimeError(f'simctl {name} failed with exit {code}')
++        receipt['device'] = validate_device(json.loads((output / 'devices.json').read_text()),
++                                            json.loads((output / 'runtimes.json').read_text()), device_id)
++        command = test_command(receipt['device']['udid'], bundle)
++        receipt.update(state='testing', attempts=1, command=command)
++        write_status(output, receipt)
++        code = logged_command(command, output / 'test.log', root, 2400)
++        receipt['tests'] = evaluate_tests(code, (output / 'test.log').read_text(errors='replace'))
++        receipt['state'] = 'exporting'
++        write_status(output, receipt)
++        if not bundle.is_dir():
++            raise RuntimeError('xcodebuild did not preserve the expected native result bundle')
++        export_code = logged_command(
++            ['xcrun', 'xcresulttool', 'export', 'attachments', '--path', str(bundle),
++             '--output-path', str(output / 'attachments')], output / 'export.log', root, 300)
++        receipt['export_exit'] = export_code
++        if export_code != 0:
++            raise RuntimeError(f'Native attachment export failed with exit {export_code}')
++        receipt['original_exports'] = export_inventory(output / 'attachments')
++        receipt['evidence_issues'] = validate_export_coverage(output / 'attachments', receipt['device']['udid'])
++        receipt['passed'] = receipt['tests']['passed'] and not receipt['evidence_issues']
++        receipt['state'] = 'complete'
++    except Exception as error:
++        receipt['issues'].append(f'{type(error).__name__}: {error}')
++        receipt.update(passed=False, state='failed')
++    write_status(output, receipt)
++    print(json.dumps(receipt), flush=True)
++    return 0 if receipt['passed'] else 1
++
++
++def main(argv: list[str] | None = None) -> int:
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('--device-id', required=True, help='Existing compact SE3 simulator UUID; no fallback')
++    parser.add_argument('--repo', type=Path, default=ROOT, help='Repository with already-built UI tests')
++    parser.add_argument('--output', type=Path, help='Fresh evidence directory (must not exist)')
++    args = parser.parse_args(argv)
++    root = args.repo.resolve()
++    output = (args.output or root / 'ci-out/tunecheck-layout').resolve()
++    try:
++        return run(root, output, args.device_id)
++    except FileExistsError:
++        print(f'Refusing existing evidence directory: {output}', file=sys.stderr)
++        return 1
++
++
++if __name__ == '__main__':
++    sys.exit(main())

@@ -1,0 +1,65 @@
+{
+  "scope": "Documentation-only draft; source preservation f937 is already published, no code edits by this task",
+  "files": [
+    {
+      "path": "TECHNICAL-HANDOFF.md",
+      "bytes": 23481,
+      "sha256": "a2c46939995e408fd7e9896aaabdc7c464bb2d5a44affacca2d939b376311777"
+    },
+    {
+      "path": "manifests/along-summary-files.json",
+      "bytes": 1353,
+      "sha256": "1b13a157bd183ba4f13780fe904ec1e11e8e17d90b010b2c1af465f2c2770935"
+    },
+    {
+      "path": "manifests/inactive-contrast-proposals.json",
+      "bytes": 8610,
+      "sha256": "c62fc03e697dc7128029a51385a032469377db33a2c465e99c37a9b42d17b696"
+    },
+    {
+      "path": "manifests/native-snapshot.json",
+      "bytes": 36310,
+      "sha256": "b2939e1437927c79ddde66db7198687a3750eaac7eb0213fe09cbb2f474e8b6c"
+    },
+    {
+      "path": "manifests/nightly-scheduling-files.json",
+      "bytes": 510,
+      "sha256": "c0b89d19bd8f5eb8a8452861479d063dd211393c959113bcaf641d0cff176ea9"
+    },
+    {
+      "path": "manifests/preserved-readiness-changes.json",
+      "bytes": 3491,
+      "sha256": "a41ccb7a2c71227e97156e0d99917fda9d7f48c977bcc6dc7b2832d4477af5b4"
+    },
+    {
+      "path": "manifests/priming-preflight-files.json",
+      "bytes": 921,
+      "sha256": "fc7a93a42ee87b996961333e1aa8844859315355da9fe454e429c17c3c83f670"
+    },
+    {
+      "path": "patches/along-intrinsic-results.patch",
+      "bytes": 25810,
+      "sha256": "9b37eb08214ac3ddba9b02568015536b60d12f8f5fa614c8d8cd132ee631c1d4"
+    },
+    {
+      "path": "patches/current-callback-raster-diagnostics.patch",
+      "bytes": 343170,
+      "sha256": "5fbc081b4594f7facb8182811b8b7ff46e6d428b41800c9d4674c68effaa5dc4"
+    },
+    {
+      "path": "patches/nightly-initial-load.patch",
+      "bytes": 11564,
+      "sha256": "962cfd55cc1841e395c495c095dae1396deca74acb4f93b41bcf5cd5d24018e5"
+    },
+    {
+      "path": "patches/pending-readiness-working-tree.patch",
+      "bytes": 43188,
+      "sha256": "9eddd4d64960c04dbaf4b6454da709c4581175f4b3601b6091e927ea4738f3a7"
+    },
+    {
+      "path": "patches/priming-container-preflight.patch",
+      "bytes": 23043,
+      "sha256": "a43eebae4c403c37b617a32870bddcd51b6278d7803b3b6fc81f694103474ae1"
+    }
+  ]
+}

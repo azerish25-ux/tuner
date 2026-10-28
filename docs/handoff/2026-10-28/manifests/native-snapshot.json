@@ -1,0 +1,764 @@
+{
+  "snapshotAt": "2026-10-28T16:44:14Z",
+  "snapshotStartedAt": "2026-10-28T16:44:00Z",
+  "snapshotCompletedAt": "2026-10-28T16:44:14Z",
+  "branch": "codex/app-store-readiness-gates",
+  "sourceHead": "a161bec505f827a32feaeb74c6e955d4d6db146d",
+  "sourceTree": "2723b64d3d1ce73f3ed229a1bdee026c13432c6b",
+  "actualPRMergeCheckout": "52f6c14ffc807db7be184e16416e508c69f2c870",
+  "baseSHA": "7a0c7a45cb4c5efe3ada881b049634efc20b0343",
+  "monitoringStoppedByUser": true,
+  "retriesForbidden": true,
+  "stopReason": "User changed task to documentation-only; do not develop, rerun or cancel. Existing runs may finish naturally. This is a historical snapshot, not live status.",
+  "sourceBinding": {
+    "branchCommitURL": "https://github.com/azerish25-ux/tuner/commit/a161bec505f827a32feaeb74c6e955d4d6db146d",
+    "testedMergeCommitURL": "https://github.com/azerish25-ux/tuner/commit/52f6c14ffc807db7be184e16416e508c69f2c870",
+    "sameTreeVerified": true,
+    "producerCheckoutLogTimestamp": "2026-10-28T15:44:39.033Z"
+  },
+  "runs": [
+    {
+      "id": 40718128459,
+      "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128459",
+      "status": "in_progress",
+      "conclusion": null,
+      "attempt": 1,
+      "headSHA": "a161bec505f827a32feaeb74c6e955d4d6db146d",
+      "jobs": [
+        {
+          "id": 122921288949,
+          "name": "accessibility",
+          "status": "completed",
+          "conclusion": "failure",
+          "created_at": "2026-10-28T15:39:14Z",
+          "started_at": "2026-10-28T15:54:17Z",
+          "completed_at": "2026-10-28T16:34:10Z",
+          "runner_id": 1000008464,
+          "runner_name": "GitHub Actions 1000008464",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128459/job/122921288949",
+          "activeSteps": [],
+          "failedSteps": [
+            "Welcome, lesson, metronome, Settings and paywall audits",
+            "Every tab and every audit kind",
+            "Collect opt-in revealed contrast frames (never dismiss strict failures)",
+            "Require every accessibility partition and expected test"
+          ],
+          "stepCount": 38,
+          "note": "FAIL: localization6/0; screens4tests/2assertions; strict tabs1test/32contrast assertions; reveal5tests/70assertions (68contrast+2incomplete)."
+        },
+        {
+          "id": 122921289227,
+          "name": "release",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "created_at": "2026-10-28T15:39:14Z",
+          "started_at": "2026-10-28T15:39:14Z",
+          "completed_at": "2026-10-28T15:59:15Z",
+          "runner_id": 0,
+          "runner_name": "",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128459/job/122921289227",
+          "activeSteps": [],
+          "failedSteps": [],
+          "stepCount": 0,
+          "note": "CANCELLED without assigned runner/steps; no release build ran; cause unknown."
+        },
+        {
+          "id": 122921289618,
+          "name": "core",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-10-28T15:39:14Z",
+          "started_at": "2026-10-28T15:54:18Z",
+          "completed_at": "2026-10-28T16:01:49Z",
+          "runner_id": 1000008467,
+          "runner_name": "GitHub Actions 1000008467",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128459/job/122921289618",
+          "activeSteps": [],
+          "failedSteps": [],
+          "stepCount": 17,
+          "note": "PASS core/lint; coverage95.3% (11014/11554), floor94%."
+        },
+        {
+          "id": 122921289962,
+          "name": "app",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "created_at": "2026-10-28T15:39:14Z",
+          "started_at": "2026-10-28T15:39:14Z",
+          "completed_at": "2026-10-28T16:29:44Z",
+          "runner_id": 0,
+          "runner_name": "",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128459/job/122921289962",
+          "activeSteps": [],
+          "failedSteps": [],
+          "stepCount": 0,
+          "note": "CANCELLED without assigned runner/steps; no app compilation or XCTest ran; cause unknown."
+        },
+        {
+          "id": 122953697032,
+          "name": "publish results",
+          "status": "in_progress",
+          "conclusion": null,
+          "created_at": "2026-10-28T16:34:10Z",
+          "started_at": "2026-10-28T16:34:12Z",
+          "completed_at": null,
+          "runner_id": 1000008478,
+          "runner_name": "GitHub Actions 1000008478",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128459/job/122953697032",
+          "activeSteps": [
+            "Publish"
+          ],
+          "failedSteps": [],
+          "stepCount": 8,
+          "note": "Still running Publish step; this is CI report publication, not App Store distribution."
+        },
+        {
+          "id": 122953697661,
+          "name": "gate",
+          "status": "completed",
+          "conclusion": "failure",
+          "created_at": "2026-10-28T16:34:10Z",
+          "started_at": "2026-10-28T16:34:12Z",
+          "completed_at": "2026-10-28T16:34:16Z",
+          "runner_id": 1000008479,
+          "runner_name": "GitHub Actions 1000008479",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128459/job/122953697661",
+          "activeSteps": [],
+          "failedSteps": [
+            "Every gate job passed"
+          ],
+          "stepCount": 3,
+          "note": "FAIL because all required gate jobs did not pass."
+        }
+      ],
+      "artifacts": [
+        {
+          "id": 12833845960,
+          "name": "results-accessibility",
+          "size_in_bytes": 965186326,
+          "digest": "sha256:2161d6395faec6f19ad11778ebcc6cea6ff32f319113b966a9f2a240ed360fbc",
+          "expired": false,
+          "expires_at": "2026-11-04T16:32:57Z",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128459/artifacts/12833845960",
+          "apiMetadataURL": "https://api.github.com/repos/azerish25-ux/tuner/actions/artifacts/12833845960",
+          "connectorDownloadOver512MiB": true
+        },
+        {
+          "id": 12832972355,
+          "name": "accessibility-reveal-logs",
+          "size_in_bytes": 287155,
+          "digest": "sha256:356f9a42c99a24c73ea39c0c1dec8ab70f7a035c89b04b4ed33a324d02c87a97",
+          "expired": false,
+          "expires_at": "2026-11-04T16:32:14Z",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128459/artifacts/12832972355",
+          "apiMetadataURL": "https://api.github.com/repos/azerish25-ux/tuner/actions/artifacts/12832972355",
+          "connectorDownloadOver512MiB": false
+        },
+        {
+          "id": 12832757745,
+          "name": "accessibility-reveal-diagnostics",
+          "size_in_bytes": 427372583,
+          "digest": "sha256:aa49b0d0faa29a398e654d3e7a8d388ae934ac0319aa6346f5adae84d56897aa",
+          "expired": false,
+          "expires_at": "2026-11-04T16:32:30Z",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128459/artifacts/12832757745",
+          "apiMetadataURL": "https://api.github.com/repos/azerish25-ux/tuner/actions/artifacts/12832757745",
+          "connectorDownloadOver512MiB": false
+        },
+        {
+          "id": 12832497720,
+          "name": "accessibility-reveal-attachments",
+          "size_in_bytes": 253878884,
+          "digest": "sha256:553cf745e15cb40dab27ccfd2bf6c514e9c8753a7dc7ee54cb9e588e39a5580c",
+          "expired": false,
+          "expires_at": "2026-11-04T16:32:16Z",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128459/artifacts/12832497720",
+          "apiMetadataURL": "https://api.github.com/repos/azerish25-ux/tuner/actions/artifacts/12832497720",
+          "connectorDownloadOver512MiB": false
+        },
+        {
+          "id": 12832151130,
+          "name": "accessibility-visuals-screens",
+          "size_in_bytes": 16040067,
+          "digest": "sha256:9536d225edaa0105358bec5ffee34e15735fcc3712e89fb0bb20f8b6f17728f8",
+          "expired": false,
+          "expires_at": "2026-11-04T16:08:48Z",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128459/artifacts/12832151130",
+          "apiMetadataURL": "https://api.github.com/repos/azerish25-ux/tuner/actions/artifacts/12832151130",
+          "connectorDownloadOver512MiB": false
+        },
+        {
+          "id": 12832052901,
+          "name": "accessibility-checkpoint-tabs",
+          "size_in_bytes": 1018242840,
+          "digest": "sha256:36dd99bfc079632112e59472802b28a17285a63a4b8eb1f0519a7ffa2fe2f17c",
+          "expired": false,
+          "expires_at": "2026-11-04T16:24:18Z",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128459/artifacts/12832052901",
+          "apiMetadataURL": "https://api.github.com/repos/azerish25-ux/tuner/actions/artifacts/12832052901",
+          "connectorDownloadOver512MiB": true
+        },
+        {
+          "id": 12832028035,
+          "name": "accessibility-logs-tabs",
+          "size_in_bytes": 18480,
+          "digest": "sha256:49e3cc471e1665f648ec57246040617a28f925b0fb341f4f6a0b9c2d400189cc",
+          "expired": false,
+          "expires_at": "2026-11-04T16:24:16Z",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128459/artifacts/12832028035",
+          "apiMetadataURL": "https://api.github.com/repos/azerish25-ux/tuner/actions/artifacts/12832028035",
+          "connectorDownloadOver512MiB": false
+        },
+        {
+          "id": 12831978040,
+          "name": "accessibility-visuals-tabs",
+          "size_in_bytes": 107983738,
+          "digest": "sha256:916abd7d7a5af35a1d7bfda64bd95ee701164728d53c91454c79d60ea87002a5",
+          "expired": false,
+          "expires_at": "2026-11-04T16:24:08Z",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128459/artifacts/12831978040",
+          "apiMetadataURL": "https://api.github.com/repos/azerish25-ux/tuner/actions/artifacts/12831978040",
+          "connectorDownloadOver512MiB": false
+        },
+        {
+          "id": 12831555944,
+          "name": "accessibility-logs-localization",
+          "size_in_bytes": 3818,
+          "digest": "sha256:467a1f7f6a534ba3f3961ac15a40be54795a24a039df3ce4c5a48ba2f480ff17",
+          "expired": false,
+          "expires_at": "2026-11-04T16:04:04Z",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128459/artifacts/12831555944",
+          "apiMetadataURL": "https://api.github.com/repos/azerish25-ux/tuner/actions/artifacts/12831555944",
+          "connectorDownloadOver512MiB": false
+        },
+        {
+          "id": 12830896996,
+          "name": "results-core",
+          "size_in_bytes": 89184,
+          "digest": "sha256:21a3f8d2b7adf487a87e9aaee44f89b05c27a77b7f89212b8f287ba9c5a53746",
+          "expired": false,
+          "expires_at": "2026-11-04T16:01:44Z",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128459/artifacts/12830896996",
+          "apiMetadataURL": "https://api.github.com/repos/azerish25-ux/tuner/actions/artifacts/12830896996",
+          "connectorDownloadOver512MiB": false
+        },
+        {
+          "id": 12830784530,
+          "name": "accessibility-checkpoint-screens",
+          "size_in_bytes": 498381571,
+          "digest": "sha256:f0b72fc31a2cfef424ab396dc5e9848a7b95a942192bf2bfe4754ae6b8ebfbbc",
+          "expired": false,
+          "expires_at": "2026-11-04T16:08:51Z",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128459/artifacts/12830784530",
+          "apiMetadataURL": "https://api.github.com/repos/azerish25-ux/tuner/actions/artifacts/12830784530",
+          "connectorDownloadOver512MiB": false
+        },
+        {
+          "id": 12830649587,
+          "name": "accessibility-logs-screens",
+          "size_in_bytes": 9022,
+          "digest": "sha256:7c431fab2e7126ef275318fab501a4e1ee743be8081c154d020c7611619290eb",
+          "expired": false,
+          "expires_at": "2026-11-04T16:08:50Z",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128459/artifacts/12830649587",
+          "apiMetadataURL": "https://api.github.com/repos/azerish25-ux/tuner/actions/artifacts/12830649587",
+          "connectorDownloadOver512MiB": false
+        },
+        {
+          "id": 12829719470,
+          "name": "accessibility-checkpoint-localization",
+          "size_in_bytes": 18611721,
+          "digest": "sha256:5a884d53fa781fbbbe2baca13be0bfc9fc2a2ec5ca99b9eda53f3c2a4acc4037",
+          "expired": false,
+          "expires_at": "2026-11-04T16:04:05Z",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128459/artifacts/12829719470",
+          "apiMetadataURL": "https://api.github.com/repos/azerish25-ux/tuner/actions/artifacts/12829719470",
+          "connectorDownloadOver512MiB": false
+        },
+        {
+          "id": 12829454900,
+          "name": "accessibility-visuals-localization",
+          "size_in_bytes": 9193985,
+          "digest": "sha256:8e7e7ebdaf39e7c04e386c12bf0463c6ca7d1bce967860ce4accfd605b182afb",
+          "expired": false,
+          "expires_at": "2026-11-04T16:04:02Z",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128459/artifacts/12829454900",
+          "apiMetadataURL": "https://api.github.com/repos/azerish25-ux/tuner/actions/artifacts/12829454900",
+          "connectorDownloadOver512MiB": false
+        }
+      ]
+    },
+    {
+      "id": 40718128275,
+      "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128275",
+      "status": "in_progress",
+      "conclusion": null,
+      "attempt": 1,
+      "headSHA": "a161bec505f827a32feaeb74c6e955d4d6db146d",
+      "jobs": [
+        {
+          "id": 122921294139,
+          "name": "archive",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-10-28T15:39:15Z",
+          "started_at": "2026-10-28T16:26:06Z",
+          "completed_at": "2026-10-28T16:37:22Z",
+          "runner_id": 1000008475,
+          "runner_name": "GitHub Actions 1000008475",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128275/job/122921294139",
+          "activeSteps": [],
+          "failedSteps": [],
+          "stepCount": 10,
+          "note": "PASS unsigned archive only; not signing/upload/release-job clearance."
+        },
+        {
+          "id": 122921294321,
+          "name": "a11y-matrix",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "created_at": "2026-10-28T15:39:15Z",
+          "started_at": "2026-10-28T15:39:15Z",
+          "completed_at": "2026-10-28T16:34:45Z",
+          "runner_id": 0,
+          "runner_name": "",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128275/job/122921294321",
+          "activeSteps": [],
+          "failedSteps": [],
+          "stepCount": 0,
+          "note": "CANCELLED without assigned runner/steps; no matrix variant ran; cause unknown."
+        },
+        {
+          "id": 122921294372,
+          "name": "tour-build",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-10-28T15:39:15Z",
+          "started_at": "2026-10-28T15:44:18Z",
+          "completed_at": "2026-10-28T15:51:09Z",
+          "runner_id": 1000008454,
+          "runner_name": "GitHub Actions 1000008454",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128275/job/122921294372",
+          "activeSteps": [],
+          "failedSteps": [],
+          "stepCount": 12,
+          "note": "PASS simulator app+test build at exact PR merge; no compiler-error lines."
+        },
+        {
+          "id": 122921294554,
+          "name": "tsan",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-10-28T15:39:15Z",
+          "started_at": "2026-10-28T15:54:18Z",
+          "completed_at": "2026-10-28T16:21:02Z",
+          "runner_id": 1000008466,
+          "runner_name": "GitHub Actions 1000008466",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128275/job/122921294554",
+          "activeSteps": [],
+          "failedSteps": [],
+          "stepCount": 7,
+          "note": "PASS472tests,6skipped,0failures; test interval1529.707s."
+        },
+        {
+          "id": 122921294712,
+          "name": "ipad",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-10-28T15:39:15Z",
+          "started_at": "2026-10-28T15:56:13Z",
+          "completed_at": "2026-10-28T16:24:44Z",
+          "runner_id": 1000008468,
+          "runner_name": "GitHub Actions 1000008468",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128275/job/122921294712",
+          "activeSteps": [],
+          "failedSteps": [],
+          "stepCount": 13,
+          "note": "PASS mechanical iPad job; current originals not visually reviewed."
+        },
+        {
+          "id": 122928439224,
+          "name": "tour (lesson-layout)",
+          "status": "completed",
+          "conclusion": "failure",
+          "created_at": "2026-10-28T15:51:09Z",
+          "started_at": "2026-10-28T16:01:53Z",
+          "completed_at": "2026-10-28T16:15:50Z",
+          "runner_id": 1000008470,
+          "runner_name": "GitHub Actions 1000008470",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128275/job/122928439224",
+          "activeSteps": [],
+          "failedSteps": [
+            "Diagnostic simulator priming (not cold-install evidence)"
+          ],
+          "stepCount": 20,
+          "note": "FAIL retained priming lookup timeout; independent lesson XCTest4/0. Targeted3adaptive Along repairs visually confirmed in English portraitAX5; separate done-overlay clipping remains."
+        },
+        {
+          "id": 122928439250,
+          "name": "tour (launch)",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "created_at": "2026-10-28T15:51:09Z",
+          "started_at": "2026-10-28T15:51:09Z",
+          "completed_at": "2026-10-28T16:44:10Z",
+          "runner_id": 0,
+          "runner_name": "",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128275/job/122928439250",
+          "activeSteps": [],
+          "failedSteps": [],
+          "stepCount": 0,
+          "note": "CANCELLED without assigned runner/steps; no launch test ran; cause unknown."
+        },
+        {
+          "id": 122928439251,
+          "name": "tour (song-rails)",
+          "status": "in_progress",
+          "conclusion": null,
+          "created_at": "2026-10-28T15:51:09Z",
+          "started_at": "2026-10-28T16:15:53Z",
+          "completed_at": null,
+          "runner_id": 1000008472,
+          "runner_name": "GitHub Actions 1000008472",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128275/job/122928439251",
+          "activeSteps": [
+            "Selected UI class"
+          ],
+          "failedSteps": [
+            "Diagnostic simulator priming (not cold-install evidence)",
+            "Isolate owned simulator after unconfirmed priming cleanup"
+          ],
+          "stepCount": 19,
+          "note": "RUNNING independent XCTest; priming+cleanup already failed. No current touch/rotation result yet."
+        },
+        {
+          "id": 122928439274,
+          "name": "tour (captures)",
+          "status": "in_progress",
+          "conclusion": null,
+          "created_at": "2026-10-28T15:51:09Z",
+          "started_at": "2026-10-28T16:04:21Z",
+          "completed_at": null,
+          "runner_id": 1000008471,
+          "runner_name": "GitHub Actions 1000008471",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128275/job/122928439274",
+          "activeSteps": [
+            "Selected UI class"
+          ],
+          "failedSteps": [
+            "Diagnostic simulator priming (not cold-install evidence)",
+            "Isolate owned simulator after unconfirmed priming cleanup"
+          ],
+          "stepCount": 19,
+          "note": "RUNNING independent XCTest; priming+cleanup already failed. No current complete capture result yet."
+        },
+        {
+          "id": 122928439312,
+          "name": "tour (first-session)",
+          "status": "in_progress",
+          "conclusion": null,
+          "created_at": "2026-10-28T15:51:09Z",
+          "started_at": "2026-10-28T16:34:47Z",
+          "completed_at": null,
+          "runner_id": 1000008480,
+          "runner_name": "GitHub Actions 1000008480",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128275/job/122928439312",
+          "activeSteps": [
+            "Selected UI class"
+          ],
+          "failedSteps": [
+            "Diagnostic simulator priming (not cold-install evidence)"
+          ],
+          "stepCount": 19,
+          "note": "RUNNING independent XCTest; priming already failed, cleanup step succeeded. No current Urdu/onboarding test result yet."
+        }
+      ],
+      "artifacts": [
+        {
+          "id": 12834475240,
+          "name": "ios-evidence",
+          "size_in_bytes": 122289353,
+          "digest": "sha256:959fae8c9e253f90bd763cbe817547a17de7d869438b2e5b4ad701ab6a9fa0e5",
+          "expired": false,
+          "expires_at": "2026-11-11T16:37:04Z",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128275/artifacts/12834475240",
+          "apiMetadataURL": "https://api.github.com/repos/azerish25-ux/tuner/actions/artifacts/12834475240",
+          "connectorDownloadOver512MiB": false
+        },
+        {
+          "id": 12834095994,
+          "name": "results-archive",
+          "size_in_bytes": 71119,
+          "digest": "sha256:eda478d4452792938b8ff9df1c3f7f905a552d34c8bdf2c947ade6f8ad269edb",
+          "expired": false,
+          "expires_at": "2026-11-11T16:37:02Z",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128275/artifacts/12834095994",
+          "apiMetadataURL": "https://api.github.com/repos/azerish25-ux/tuner/actions/artifacts/12834095994",
+          "connectorDownloadOver512MiB": false
+        },
+        {
+          "id": 12833477445,
+          "name": "tour-warmup-first-session-attempt-1",
+          "size_in_bytes": 1186022,
+          "digest": "sha256:14ba050191caa04968682cf975d09c1ea3a8065f6327576874e10024c7d033ab",
+          "expired": false,
+          "expires_at": "2026-11-11T16:42:30Z",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128275/artifacts/12833477445",
+          "apiMetadataURL": "https://api.github.com/repos/azerish25-ux/tuner/actions/artifacts/12833477445",
+          "connectorDownloadOver512MiB": false
+        },
+        {
+          "id": 12833157981,
+          "name": "tour-warmup-cleanup-first-session-attempt-1",
+          "size_in_bytes": 480,
+          "digest": "sha256:90b04ca3e8daae38884b63baaedfeb336a147320318de6c4cc29b87d8a5ba3d3",
+          "expired": false,
+          "expires_at": "2026-11-11T16:42:33Z",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128275/artifacts/12833157981",
+          "apiMetadataURL": "https://api.github.com/repos/azerish25-ux/tuner/actions/artifacts/12833157981",
+          "connectorDownloadOver512MiB": false
+        },
+        {
+          "id": 12832725153,
+          "name": "ios-tour-evidence-lesson-layout-attempt-1",
+          "size_in_bytes": 14851257,
+          "digest": "sha256:4428aee2171dd98ab8abce0cd58f17e41b4f60e954e90082ccbda936c6da84b3",
+          "expired": false,
+          "expires_at": "2026-11-11T16:15:22Z",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128275/artifacts/12832725153",
+          "apiMetadataURL": "https://api.github.com/repos/azerish25-ux/tuner/actions/artifacts/12832725153",
+          "connectorDownloadOver512MiB": false
+        },
+        {
+          "id": 12832456198,
+          "name": "tour-frames-lesson-layout-attempt-1",
+          "size_in_bytes": 13859521,
+          "digest": "sha256:4e6854155c692e187c127647216453680aba7abf0099b3267c94f7487e0af82d",
+          "expired": false,
+          "expires_at": "2026-11-11T16:15:18Z",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128275/artifacts/12832456198",
+          "apiMetadataURL": "https://api.github.com/repos/azerish25-ux/tuner/actions/artifacts/12832456198",
+          "connectorDownloadOver512MiB": false
+        },
+        {
+          "id": 12832208585,
+          "name": "results-tsan",
+          "size_in_bytes": 18847,
+          "digest": "sha256:40b5f9d42e38559aaa302ed4e4b1f3de5259b85cb2a20ecc715a43004d6643b9",
+          "expired": false,
+          "expires_at": "2026-11-11T16:20:57Z",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128275/artifacts/12832208585",
+          "apiMetadataURL": "https://api.github.com/repos/azerish25-ux/tuner/actions/artifacts/12832208585",
+          "connectorDownloadOver512MiB": false
+        },
+        {
+          "id": 12831948934,
+          "name": "results-ipad",
+          "size_in_bytes": 37039939,
+          "digest": "sha256:452c73d900487480ea21fdc0cc8d51f70b4e5f784bf33377fdf1342e5b316ce9",
+          "expired": false,
+          "expires_at": "2026-11-11T16:24:10Z",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128275/artifacts/12831948934",
+          "apiMetadataURL": "https://api.github.com/repos/azerish25-ux/tuner/actions/artifacts/12831948934",
+          "connectorDownloadOver512MiB": false
+        },
+        {
+          "id": 12831684352,
+          "name": "tour-warmup-song-rails-attempt-1",
+          "size_in_bytes": 1852908,
+          "digest": "sha256:7b0f1438856f534b94b7288f4e57e40c43e5527aa4d006ae9afaffbb441ec4c5",
+          "expired": false,
+          "expires_at": "2026-11-11T16:22:44Z",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128275/artifacts/12831684352",
+          "apiMetadataURL": "https://api.github.com/repos/azerish25-ux/tuner/actions/artifacts/12831684352",
+          "connectorDownloadOver512MiB": false
+        },
+        {
+          "id": 12831602584,
+          "name": "results-tour-lesson-layout-attempt-1",
+          "size_in_bytes": 13880594,
+          "digest": "sha256:a5615760c32b40ee59b8e98e72c82bd438f868e8050a76344870e73cc3e02e5f",
+          "expired": false,
+          "expires_at": "2026-11-11T16:15:20Z",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128275/artifacts/12831602584",
+          "apiMetadataURL": "https://api.github.com/repos/azerish25-ux/tuner/actions/artifacts/12831602584",
+          "connectorDownloadOver512MiB": false
+        },
+        {
+          "id": 12831556626,
+          "name": "tour-warmup-lesson-layout-attempt-1",
+          "size_in_bytes": 8513,
+          "digest": "sha256:f070f8b3a2ef2fb94f43964b1ca143978974656187e131ceff159aacf0939f40",
+          "expired": false,
+          "expires_at": "2026-11-11T16:09:02Z",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128275/artifacts/12831556626",
+          "apiMetadataURL": "https://api.github.com/repos/azerish25-ux/tuner/actions/artifacts/12831556626",
+          "connectorDownloadOver512MiB": false
+        },
+        {
+          "id": 12831554229,
+          "name": "tour-logs-lesson-layout-attempt-1",
+          "size_in_bytes": 19791,
+          "digest": "sha256:dc1186952dc13b4a09401bc074b72d1bce7ba6f5e6cb4226828d35fa6ad0eba6",
+          "expired": false,
+          "expires_at": "2026-11-11T16:15:10Z",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128275/artifacts/12831554229",
+          "apiMetadataURL": "https://api.github.com/repos/azerish25-ux/tuner/actions/artifacts/12831554229",
+          "connectorDownloadOver512MiB": false
+        },
+        {
+          "id": 12831022409,
+          "name": "tour-warmup-cleanup-lesson-layout-attempt-1",
+          "size_in_bytes": 479,
+          "digest": "sha256:b89f190401ce7bed88d3560fdaeba5d1a723560b52a321b3090064b9ff34fa7b",
+          "expired": false,
+          "expires_at": "2026-11-11T16:09:05Z",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128275/artifacts/12831022409",
+          "apiMetadataURL": "https://api.github.com/repos/azerish25-ux/tuner/actions/artifacts/12831022409",
+          "connectorDownloadOver512MiB": false
+        },
+        {
+          "id": 12830994606,
+          "name": "tour-warmup-cleanup-song-rails-attempt-1",
+          "size_in_bytes": 1314,
+          "digest": "sha256:afaddc0c2e426c17daf45e5083cc66f237c1a1a2783b2c47a101cfdb030b1eae",
+          "expired": false,
+          "expires_at": "2026-11-11T16:24:53Z",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128275/artifacts/12830994606",
+          "apiMetadataURL": "https://api.github.com/repos/azerish25-ux/tuner/actions/artifacts/12830994606",
+          "connectorDownloadOver512MiB": false
+        },
+        {
+          "id": 12830749319,
+          "name": "tour-warmup-cleanup-captures-attempt-1",
+          "size_in_bytes": 1313,
+          "digest": "sha256:9ced1eee37a53093cde0f69e01b9d988e16b109e3a77946c151845a0a9041617",
+          "expired": false,
+          "expires_at": "2026-11-11T16:14:04Z",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128275/artifacts/12830749319",
+          "apiMetadataURL": "https://api.github.com/repos/azerish25-ux/tuner/actions/artifacts/12830749319",
+          "connectorDownloadOver512MiB": false
+        },
+        {
+          "id": 12830689840,
+          "name": "ipad-evidence",
+          "size_in_bytes": 41867550,
+          "digest": "sha256:210a082023541bc0f50052b9144879f0d40a377179e2ad8723a30d0c25256674",
+          "expired": false,
+          "expires_at": "2026-11-11T16:24:15Z",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128275/artifacts/12830689840",
+          "apiMetadataURL": "https://api.github.com/repos/azerish25-ux/tuner/actions/artifacts/12830689840",
+          "connectorDownloadOver512MiB": false
+        },
+        {
+          "id": 12830134725,
+          "name": "tour-warmup-captures-attempt-1",
+          "size_in_bytes": 1692940,
+          "digest": "sha256:e6ab736006b5a1cc9f2657696218ef76ea251b530e485eb225ddcd61dcdb25e3",
+          "expired": false,
+          "expires_at": "2026-11-11T16:12:52Z",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128275/artifacts/12830134725",
+          "apiMetadataURL": "https://api.github.com/repos/azerish25-ux/tuner/actions/artifacts/12830134725",
+          "connectorDownloadOver512MiB": false
+        },
+        {
+          "id": 12829547775,
+          "name": "nightly-build-tour-build-1",
+          "size_in_bytes": 142326,
+          "digest": "sha256:f85063c2f97247ec1bf327ae07d2b49151ed9f2af21c3012e9f34e44088e929c",
+          "expired": false,
+          "expires_at": "2026-11-11T15:50:29Z",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128275/artifacts/12829547775",
+          "apiMetadataURL": "https://api.github.com/repos/azerish25-ux/tuner/actions/artifacts/12829547775",
+          "connectorDownloadOver512MiB": false
+        },
+        {
+          "id": 12828729300,
+          "name": "tour-products-52f6c14ffc807db7be184e16416e508c69f2c870-40718128275-1",
+          "size_in_bytes": 150543008,
+          "digest": "sha256:ba5d3d71d3d3ddb4814bdbd81bf559119688cfc45dceb137d9b3b0e6336a0c16",
+          "expired": false,
+          "expires_at": "2026-11-04T15:50:59Z",
+          "url": "https://github.com/azerish25-ux/tuner/actions/runs/40718128275/artifacts/12828729300",
+          "apiMetadataURL": "https://api.github.com/repos/azerish25-ux/tuner/actions/artifacts/12828729300",
+          "connectorDownloadOver512MiB": false
+        }
+      ]
+    }
+  ],
+  "exactFailures": {
+    "screens": {
+      "tests": 4,
+      "assertions": 2,
+      "file": "ios/TimbreUITests/AccessibilityAuditUITests.swift:302",
+      "failures": [
+        "lesson-tunecheck anonymous enforced contrast, element nil",
+        "paywall anonymous enforced contrast, element nil"
+      ],
+      "boundary": "Additional attributed TuneCheck diagnostic does not identify original anonymous callback."
+    },
+    "tabs": {
+      "tests": 1,
+      "assertions": 32,
+      "file": "ios/TimbreUITests/AccessibilityAuditUITests.swift:302",
+      "kind": "enforced contrast",
+      "byTab": {
+        "Tune": 1,
+        "Learn": 2,
+        "Songs": 24,
+        "Practice": 5
+      },
+      "boundary": "No non-contrast error lines; callbacks retained, not waived."
+    },
+    "reveal": {
+      "tests": 5,
+      "assertions": 70,
+      "contrastCallbacks": 68,
+      "bySongsCase": {
+        "filter": 25,
+        "firstPair": 21,
+        "thirdCard": 22
+      },
+      "incomplete": [
+        "Learn Start target/control geometry did not settle",
+        "Practice Ear dimming overlay count=0"
+      ],
+      "files": [
+        "ios/TimbreUITests/OccludedContrastDiagnosticUITests.swift:226",
+        "ios/TimbreUITests/OccludedContrastDiagnosticUITests.swift:253"
+      ]
+    },
+    "priming": {
+      "lesson-layout": "launch exit0 PID4591; rest-signal get_app_container5s timeout; final terminate0, cleanup confirmed, reset skipped. Rest signal unread. No diagnostic PNG produced.",
+      "captures": "launch120s timeout; unknown-PID container5s timeout; terminate30s timeout; reset shutdown+boot0; marketing statusbar override15s timeout. Original PNG Home with Timbre icon, not proof of no earlier launch/crash.",
+      "song-rails": "launch120s timeout; unknown-PID container5s timeout; terminate30s timeout; reset shutdown+boot0; marketing statusbar override15s timeout.",
+      "first-session": "Priming failed and cleanup step succeeded per final job metadata; detailed new receipts listed but not downloaded/diagnosed before stop."
+    }
+  },
+  "keyBlockers": [
+    "No current app native unit/renderer/Urdu matrix output: app cancelled before runner assignment.",
+    "Current real-touch shelf restoration/rotation still unverified; prior226 three first-landscape failures retained.",
+    "Strict accessibility failures remain; no new contrast exemptions.",
+    "Current first-session/Urdu test result pending; prior226 actual right-edge Urdu crop remains evidence until a demonstrated repair.",
+    "Adaptive Along targeted ready/cue/action fixes visually pass only English portraitAX5; distinct fixed-stage done-overlay summary ellipsis/Share clipping remains.",
+    "Simulator priming/cleanup failures persist; no established app-crash or launch-infrastructure root cause.",
+    "Release, app, matrix and launch cancelled without runners; cause not established, no replacement pass.",
+    "No current full52-locale matrix, full pilot, hardware, watch complication-face, signing or App Store owner-business readiness claim."
+  ],
+  "retryHistory": {
+    "releaseRequestAt": "2026-10-28T16:14:55Z",
+    "releaseJobId": 122921289227,
+    "requests": 1,
+    "accepted": false,
+    "response": "403: The workflow run containing this job is already running",
+    "appRequests": 0,
+    "subsequentPlans": "All app/release retry authorization rescinded by user stop. No new attempt created; both runs remain attempt1."
+  },
+  "portableEvidenceNotes": [
+    "Artifact links require repository access and expire on listed dates. Retain verified copies before expiry if handoff needs durability.",
+    "SHA256/digests bind exact archive bytes. Some archives were verified wholly in bounded memory and only specified original entries extracted; those receipts disclose that the full ZIP is not stored locally.",
+    "Artifacts over536870912B were not requested through connector. Smaller compact/visual artifacts preserve primary findings.",
+    "Original artifact IDs, URLs and SHA-256 digests are portable recovery references; transient local paths are omitted.",
+    "Do not interpret documentation-only main-branch changes or future CI status as validation of this source without a new source binding."
+  ]
+}

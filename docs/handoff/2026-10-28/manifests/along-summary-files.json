@@ -1,0 +1,31 @@
+{
+  "base_head": "a161bec505f827a32feaeb74c6e955d4d6db146d",
+  "files": [
+    {
+      "path": "ios/Timbre/Learn/Highway.swift",
+      "base_sha256": "0b3949eb510ae9466a5f44da30055d2758ded5ae439e75c9f661815cffd14c29",
+      "candidate_sha256": "913d73adf6294640c580db47903c307be2daf9eb2f33d24bf5dd7d70888f6447",
+      "candidate_bytes": 86243
+    },
+    {
+      "path": "ios/TimbreAppTests/AlongTypographyLayoutTests.swift",
+      "base_sha256": "946b2b5c5b2e50d651634ae1e6951915c5dde147a8586242cf9734f6708ca617",
+      "candidate_sha256": "cf789197b5dc0b1d460e2a3654506737fbd7a4bfbce85bf3af2138c7e7b6bbe5",
+      "candidate_bytes": 14015
+    },
+    {
+      "path": "ios/TimbreUITests/LessonAccessibilityLayoutUITests.swift",
+      "base_sha256": "4f1ed3901b5ed0dcb3e68de67569f26898fa58ed62e2fcc12b23b0b415aa2a9f",
+      "candidate_sha256": "666283b7921520dc45d28d2157673440d01c870c120d15b073d7ff97cdbd94e3",
+      "candidate_bytes": 28716
+    },
+    {
+      "path": "tools/ci/test_along_typography_contract.py",
+      "base_sha256": "446f04d2baccffccc85a6d4f33e4fa67dd8fea4839d5cfde83090840904eebd0",
+      "candidate_sha256": "9967755e3145fd2013d6bb919cd80eb134a86be00134306b878ec723f238051a",
+      "candidate_bytes": 12479
+    }
+  ],
+  "patch_sha256": "9b37eb08214ac3ddba9b02568015536b60d12f8f5fa614c8d8cd132ee631c1d4",
+  "native_execution": false
+}

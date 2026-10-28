@@ -1,0 +1,74 @@
+{
+  "observed_utc": "2026-10-28T16:56:45Z",
+  "observation_scope": "Published preservation commit and matching fetched remote-tracking ref; clean checkout",
+  "readiness_branch": "codex/app-store-readiness-gates",
+  "origin_readiness": "f937c5d412956fd4d7b5468659f049103aee402f",
+  "main": "7a0c7a45cb4c5efe3ada881b049634efc20b0343",
+  "main_is_ancestor": true,
+  "readiness_commits_ahead_of_main": 57,
+  "patch": "patches/pending-readiness-working-tree.patch",
+  "patch_sha256": "9eddd4d64960c04dbaf4b6454da709c4581175f4b3601b6091e927ea4738f3a7",
+  "files": [
+    {
+      "path": ".github/workflows/nightly.yml",
+      "baseline_sha256": "2a6aea85f60a9583bf6a46f21b3b775a82fffc201abb48b553ddeee851bd31d7",
+      "preserved_sha256": "b31b92008ca5a4b0cb63d9635cebf21b18c1b0d91db639a93dad400e7a8868fe",
+      "preserved_bytes": 32246
+    },
+    {
+      "path": "ios/TimbreUITests/TimbreUITests.swift",
+      "baseline_sha256": "5f09237f10d78a157ac5210b83a8b81cdba0d88c5a6fc00cb69e12ee2bed53ac",
+      "preserved_sha256": "2c09bbb7ea15755a4061c22753227dbdaeafde16d23742e38f84a29bfa6b6a73",
+      "preserved_bytes": 90514
+    },
+    {
+      "path": "tools/ci/simulator_priming_signal.py",
+      "baseline_sha256": "bcfd32e79d04d07ad8192a5f59a673198de55291a066e001e4b76e07c3260b36",
+      "preserved_sha256": "6dc5e5520d584641b5b12d9cf0bbabf961b8dc88a264ac7cb6b229824a662d42",
+      "preserved_bytes": 7569
+    },
+    {
+      "path": "tools/ci/simulator_warmup.py",
+      "baseline_sha256": "903f2cf0b0d7ac988407dd5f098f92c08f63612614a1c68ae398c7b5e78a0cb3",
+      "preserved_sha256": "c06dd631bad59d49614e98721a17fefb0cc2b7c454e3800c06d4db951e22a52c",
+      "preserved_bytes": 19090
+    },
+    {
+      "path": "tools/ci/test_capture_check.py",
+      "baseline_sha256": "e733f8a05ae0d206052e9911251d990f75c852e2e337993643069ed363ca07fc",
+      "preserved_sha256": "d485634ec206aca282f81fe5e72cfe2dc215304de3d3efffb9bc0ff5431c927d",
+      "preserved_bytes": 17551
+    },
+    {
+      "path": "tools/ci/test_simulator_priming_signal.py",
+      "baseline_sha256": "613dc9e34d6a319d6d92dc3152758ca11b0841975d6fa6d0b121bf49b0fe4d24",
+      "preserved_sha256": "3e2c979e5a418638c4969ab3aa00290abdc3ab0dbe9f8324b1259281c6870f21",
+      "preserved_bytes": 26963
+    },
+    {
+      "path": "tools/ci/test_simulator_warmup.py",
+      "baseline_sha256": "0feb9891042a4205de783a7983fb9dbed89454e4a7800b33720c7cb077d9821a",
+      "preserved_sha256": "70faf95084261e09dccbfbb5830e544bd72b24bca228f3f8dc94a8dcaac15e71",
+      "preserved_bytes": 31566
+    },
+    {
+      "path": "tools/ci/test_tour_shards.py",
+      "baseline_sha256": "6e88d0614896ce66ed7786ccc5d06c55514972f372da2d15fe142602ace982a8",
+      "preserved_sha256": "36abb3e1e9ffbf773e57df6cb389d4d757cd232b35cf31f6acbcf379b2955fa5",
+      "preserved_bytes": 20497
+    },
+    {
+      "path": "tools/marketing/tests/test_listing_assets.py",
+      "baseline_sha256": "203982d5cac5c6db8657115ef2d2c9d2c0f9eb61def52f54a51510eed115ae27",
+      "preserved_sha256": "b70f1c5554d6348d1b1e91d482fe8de1cd85930d9b869ecd5b8b9544a92bad3c",
+      "preserved_bytes": 42451
+    }
+  ],
+  "production_source_changes": false,
+  "native_verified": false,
+  "baseline_head": "a161bec505f827a32feaeb74c6e955d4d6db146d",
+  "preservation_commit": "f937c5d412956fd4d7b5468659f049103aee402f",
+  "preservation_tree": "469926c5835eb3f057fa64d1b8f2a46de50e5ca1",
+  "patch_role": "Provenance only; exact a16-to-f937 diff. Do not reapply to f937.",
+  "working_tree_clean": true
+}
