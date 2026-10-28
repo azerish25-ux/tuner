@@ -1,0 +1,631 @@
+{
+  "schema_version": 1,
+  "scope": "App Store Connect version 1.0 draft text only",
+  "app": "Timbre",
+  "draft_status_at_completion": "Prepare for Submission",
+  "completion_audit_utc": "2026-10-28T00:39:47.045962+00:00",
+  "offline_reconciliation_utc": "2026-10-28T02:01:33+00:00",
+  "summary": {
+    "expected_locale_count": 50,
+    "recorded_locale_count": 50,
+    "version_fields_per_locale": [
+      "description",
+      "promotional_text",
+      "keywords",
+      "support_url"
+    ],
+    "exact_version_field_count": 200,
+    "duplicate_locale_count": 0,
+    "missing_locales": [],
+    "unexpected_locales": [],
+    "first_recorded_readback_utc": "2026-10-27T23:44:23.277366+00:00",
+    "last_recorded_readback_utc": "2026-10-28T00:39:36.367328+00:00",
+    "all_version_values_equal_frozen_source_and_current_source": true,
+    "all_existing_header_values_equal_frozen_source_and_current_source": true,
+    "original_keyword_strings_preserved": true,
+    "original_keyword_fields_over_100_utf8_bytes": [
+      "ar-SA",
+      "bn-BD",
+      "el",
+      "gu-IN",
+      "he",
+      "hi",
+      "ja",
+      "kn-IN",
+      "ko",
+      "ml-IN",
+      "mr-IN",
+      "or-IN",
+      "pa-IN",
+      "ru",
+      "ta-IN",
+      "te-IN",
+      "th",
+      "uk",
+      "ur-PK",
+      "zh-Hans"
+    ],
+    "keyword_rewrites_or_truncations": 0
+  },
+  "source_binding": {
+    "source_snapshot_revision": "4f8b69e3efad4e405714d031462a25167cc06799",
+    "repository_head_at_offline_check": "2013834d947756154688f34979bf7802c6f79946",
+    "checked_source_state": "Current working-tree values; not asserted to be identical to repository HEAD.",
+    "locale_inventory_file": "tools/l10n/store-locales.json",
+    "locale_inventory_sha256": "2de607c5b3789ebee25eac5b55e67434f84928556f63f4804a5fe90bff1bf461",
+    "existing_header_receipt": "docs/ios/readiness/reviews/app-information-headers-2026-10-27.json",
+    "existing_header_receipt_sha256": "6bf4f48101e00c26b8c99b82ca3440ae0a1919ef5c4985d09e17eeb787465cc2",
+    "support_url": "https://timbre-support.timbre.workers.dev/support",
+    "support_url_source_files": [
+      "docs/ios/APPLE-DELIVERY.md",
+      "ios/Timbre/Services/ShareDestination.swift"
+    ],
+    "support_url_binding": "The historical support value is recorded in saved-locales.json and README.md. It equals the current Support row and AppLinks.support declaration. Support URL is not a property of the per-locale JSON files.",
+    "original_snapshot_hash_definition": "SHA-256 of the original complete per-locale JSON bytes, verified against the frozen manifest and recorded receipts. These hashes are preserved, not replaced with current whole-file hashes, and do not imply that every file property was entered or read back.",
+    "canonical_hash_definition": "SHA-256 of UTF-8 json.dumps(projection, ensure_ascii=False, sort_keys=True, separators=(',', ':')); no trailing newline, trimming, Unicode normalization or line-break changes.",
+    "version_projection_keys": [
+      "description",
+      "promotional_text",
+      "keywords",
+      "support_url"
+    ],
+    "six_text_projection_keys": [
+      "name",
+      "subtitle",
+      "description",
+      "promotional_text",
+      "keywords",
+      "support_url"
+    ],
+    "projection_equality_definition": "Each version hash is computed only after exact equality of the recorded four-field readback, frozen-source projection plus historical Support URL, and current-source projection plus current Support URL. Each six-field hash additionally checks name and subtitle against the separate existing header receipt, frozen source and current source; this is not a new six-field readback.",
+    "all_locale_version_projection_sha256": "d883008e7be5ac0837d3d67155754d577c07fd6e0ee19e54eec5491a2e01957a",
+    "all_locale_six_text_projection_sha256": "c3896ecac326091a1c5e414b42110b1c84dfb61b63c468c71aef9c30a022bb38",
+    "aggregate_hash_definition": "Apply the same canonical encoding to an object mapping each locale code to its field projection."
+  },
+  "source_drift": {
+    "current_files_byte_equal_to_original_snapshot": false,
+    "changed_locale_file_count": 50,
+    "changed_json_pointers_in_each_locale": [
+      "/iphone_screenshot_captions/2/caption"
+    ],
+    "six_text_fields_unchanged": true,
+    "interpretation": "The original completion audit described source-file equality at its earlier check. All 50 complete files now differ only in the third iPhone screenshot caption. Field-scoped reconciliation retains the text evidence without transferring it to changed screenshot copy or assets."
+  },
+  "external_evidence": [
+    {
+      "artifact_name": "saved-locales.json",
+      "sha256": "1e4c330a39a1efc1464773e46f26502e9c38975b37731aa388e2fb2c66a1bc43",
+      "purpose": "Original 50-locale cumulative exact-readback ledger",
+      "included_in_repository": false
+    },
+    {
+      "artifact_name": "completion-audit.json",
+      "sha256": "55ea92b284fbca59aaa4ea8a6ab48aa3b749df22b043f08099f37b84967c43b7",
+      "purpose": "Original 200-field completion audit; historical whole-file equality claim is not a current claim",
+      "included_in_repository": false
+    },
+    {
+      "artifact_name": "README.md",
+      "sha256": "3de591e0e6d132b5b89085e315a311169e9453b763b6b0b070d8397adc5a4102",
+      "purpose": "Original completion scope and historical Support URL",
+      "included_in_repository": false
+    },
+    {
+      "artifact_name": "manifest.json",
+      "sha256": "626675882f469d2ef105f1fba42d52b27dd4423c381fec5742d083c2427f6c11",
+      "purpose": "Original frozen source manifest",
+      "included_in_repository": false
+    }
+  ],
+  "verification_limits": [
+    "This is an offline reconciliation of cumulative per-locale recorded readbacks, not a fresh simultaneous rescan of all 50 locales, an API export, or a guarantee of future state.",
+    "Version text scope is limited to description, promotional text, original keywords and Support URL. Name and subtitle remain evidenced by the separate earlier header receipt.",
+    "What's New was not entered for this initial version. Marketing URL is outside the four-field receipt.",
+    "No screenshot or App Preview asset, in-app purchase configuration or copy, privacy declaration, legal review, signing, build, submission, release or public-storefront verification is established.",
+    "No native-speaker approval, market performance, device rendering, public endpoint health or release-readiness certification is established.",
+    "No source consumer text, release-ready flag or release-evidence disposition is changed by this receipt.",
+    "External evidence is identified by artifact name and SHA-256 only; it is not represented as an included repository file or a public download."
+  ],
+  "locales": [
+    {
+      "locale": "ar-SA",
+      "source_file": "tools/l10n/store/ar-SA.json",
+      "original_snapshot_file_sha256": "ccdce17dc8856727f1292371158affaa73a9e06abcdbe0f0d2a2843a8e32b93c",
+      "version_fields_sha256": "ba58639b7a6741a78e681096e0d843fa65da4262c0d7c8d80ca5c5308102a721",
+      "six_text_fields_sha256": "f083e95a78e27893f7bb25516bb7ced4a912a285044b1cbcb6947ff33237c3ae",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-27T23:46:44.864623+00:00"
+    },
+    {
+      "locale": "bn-BD",
+      "source_file": "tools/l10n/store/bn-BD.json",
+      "original_snapshot_file_sha256": "19a3e213adff54d66e99858c704db7d3992009d7719833f19b85fa64f8695349",
+      "version_fields_sha256": "408ce2564649bba719e41fdc229df7f0b9b603788b167e4208f8c2ebac44b884",
+      "six_text_fields_sha256": "ee38322f99fbd9144a36d7b6a9b0e503cc6d5383b0527de947b8c1c39081ec0a",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-27T23:47:38.930068+00:00"
+    },
+    {
+      "locale": "ca",
+      "source_file": "tools/l10n/store/ca.json",
+      "original_snapshot_file_sha256": "7d0bac0d0dfc59f7a9cfb179194ed7bb873edacb1eb226807205f9dfb2134d8f",
+      "version_fields_sha256": "0804a9f17f7ef77e51fe996e8b8af0b1ed07aa052fa02d1ca2ab842ec24f3711",
+      "six_text_fields_sha256": "7a40e8b42aaec157ff424fcd248a1e0e41ca23decbba8dd85edd694cbc2f5c39",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-27T23:48:33.922261+00:00"
+    },
+    {
+      "locale": "cs",
+      "source_file": "tools/l10n/store/cs.json",
+      "original_snapshot_file_sha256": "11ffc7c493204cf49fb55202bedf1728542a152678ee9fe7d17ac2ff91563d70",
+      "version_fields_sha256": "ec0828c8c2224d24e9879d47b3d9cdd4055bfeb2956d80e355e70672b2f34665",
+      "six_text_fields_sha256": "d5b20b0eca57ea63500226046ac97a1d075aac98685ab9bb7cd907c6ba39712e",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-27T23:52:03.697122+00:00"
+    },
+    {
+      "locale": "da",
+      "source_file": "tools/l10n/store/da.json",
+      "original_snapshot_file_sha256": "3bddcd07a046b46412770e5dc3836caeb259d770ae176affc48dcc0ae2de5203",
+      "version_fields_sha256": "dc50a966ae982abd0ebd48e093a2d71d25280239e96e25b235b722759dd915bd",
+      "six_text_fields_sha256": "c06868a992608482710872b49bdbb02b35e9096dd84c7ac7762d180d12a17a98",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-27T23:52:51.471206+00:00"
+    },
+    {
+      "locale": "de-DE",
+      "source_file": "tools/l10n/store/de-DE.json",
+      "original_snapshot_file_sha256": "9a28861c95be49069fdb95caf2c0e21b6867816da54b07693ec0ef8d9a60a6a8",
+      "version_fields_sha256": "b5244e47348f46e4f1e881dd32c328e8d9228b859809e776741c1bc300524f1e",
+      "six_text_fields_sha256": "bd88c73aec8ad7b40cba8fd34bc96f6e684a95b853070a078f75d49dea13feca",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-28T00:01:14.358799+00:00"
+    },
+    {
+      "locale": "el",
+      "source_file": "tools/l10n/store/el.json",
+      "original_snapshot_file_sha256": "93e867cd0e185f1b3dd95eab5291df9bc012130f9032f706c5422ad66185932a",
+      "version_fields_sha256": "960ecd85874c0632a5c30615417a4fdbfc7fa1e611b026d1bb2774af27fd1231",
+      "six_text_fields_sha256": "3c5c9b34a5d14440440aa54172d30d9dfed5226e4cba6aa599e3f907a19e0e3b",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-28T00:02:17.704403+00:00"
+    },
+    {
+      "locale": "en-AU",
+      "source_file": "tools/l10n/store/en-AU.json",
+      "original_snapshot_file_sha256": "27da761ae4e7436676828ccc04fc65419f07b70391da4191fa7d206f1c842a54",
+      "version_fields_sha256": "22d39c9a7d5227db363ee79baed5332c5a683fdebf908ae5fca439718885f0ed",
+      "six_text_fields_sha256": "af6695ed4ab87871bbe8fefed94f068dec888ea5bc09f83c95055879e08ff28b",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-27T23:54:45.077256+00:00"
+    },
+    {
+      "locale": "en-CA",
+      "source_file": "tools/l10n/store/en-CA.json",
+      "original_snapshot_file_sha256": "7138f7eb3664f88d1078463439b7764576c22b3c8168baed1e57034d7ce0decd",
+      "version_fields_sha256": "ee22329e412935f11aa447f9a120ac9917133b6c746a787941a9972e2d1446bb",
+      "six_text_fields_sha256": "26fa3f7f5d135c4b9b91a4972b1c19402da5bfe8f0aaf21bc21aaf4d67dd03bd",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-27T23:55:47.302804+00:00"
+    },
+    {
+      "locale": "en-GB",
+      "source_file": "tools/l10n/store/en-GB.json",
+      "original_snapshot_file_sha256": "82608934b0b645895f1a3bcdea3c8cfb7f66e291895976fc1b8cf0575e4dbdf8",
+      "version_fields_sha256": "22d39c9a7d5227db363ee79baed5332c5a683fdebf908ae5fca439718885f0ed",
+      "six_text_fields_sha256": "af6695ed4ab87871bbe8fefed94f068dec888ea5bc09f83c95055879e08ff28b",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-27T23:56:55.482372+00:00"
+    },
+    {
+      "locale": "en-US",
+      "source_file": "tools/l10n/store/en-US.json",
+      "original_snapshot_file_sha256": "016ffd68e336e2445314d29780993e844d6f1802e7cc28f361b0c61e7be3ffb9",
+      "version_fields_sha256": "ee22329e412935f11aa447f9a120ac9917133b6c746a787941a9972e2d1446bb",
+      "six_text_fields_sha256": "26fa3f7f5d135c4b9b91a4972b1c19402da5bfe8f0aaf21bc21aaf4d67dd03bd",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-27T23:45:59.329215+00:00"
+    },
+    {
+      "locale": "es-ES",
+      "source_file": "tools/l10n/store/es-ES.json",
+      "original_snapshot_file_sha256": "3032d725c9307a47449c32389ef895b4b30d12b706faf059cceb9dcec3453b76",
+      "version_fields_sha256": "15a8d102c05b7582fdf41e9ddb2cd2f39775b151efb4cf19132ed5a6841d5389",
+      "six_text_fields_sha256": "c1a3fee4fdd016dd053b4123e0419e244d5cf9642c3def6aba58f39e0259410c",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-28T00:32:11.137717+00:00"
+    },
+    {
+      "locale": "es-MX",
+      "source_file": "tools/l10n/store/es-MX.json",
+      "original_snapshot_file_sha256": "6fb13410ed7f6fb9362245120781f699d1239310042f547aa415e86be81b2c41",
+      "version_fields_sha256": "d505a17287d7c657ed65af1424c4876c46be4fa8d9c5138dbfb3de3d0c436565",
+      "six_text_fields_sha256": "44036c59a0ca180c378bafde90aa89f817bc5dc9722d061977e251fddfcc5cc4",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-28T00:31:34.673984+00:00"
+    },
+    {
+      "locale": "fi",
+      "source_file": "tools/l10n/store/fi.json",
+      "original_snapshot_file_sha256": "718436651081fab25de7221cea933595ebec21bcbc1f1ef50168f5477aefe4c6",
+      "version_fields_sha256": "7f10a51924e972ff285dd7a64d0b37d7e4750a51b3f52e00031d606d6ed1e30c",
+      "six_text_fields_sha256": "521e4f41ec92ba5b20f51452e8d66ae344cbe8f868572ea0b4fed92748d017d2",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-27T23:57:45.197585+00:00"
+    },
+    {
+      "locale": "fr-CA",
+      "source_file": "tools/l10n/store/fr-CA.json",
+      "original_snapshot_file_sha256": "bf7ade94c7b73824a89962946836b78d6f520f363be7b0444dcf318ffb72a76f",
+      "version_fields_sha256": "7db8f5e9035641c5526c72c4dbbabd7471bd8500abdf26ca6a8a37728d934719",
+      "six_text_fields_sha256": "92227963c008eb75f699ee0fc31a9dd9af197004dec2c7b3097b0418c640447f",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-27T23:59:57.366027+00:00"
+    },
+    {
+      "locale": "fr-FR",
+      "source_file": "tools/l10n/store/fr-FR.json",
+      "original_snapshot_file_sha256": "d10e22b45350657c415701e48cbd24839e1e1229660a006264d2d3d4a11f7388",
+      "version_fields_sha256": "7db8f5e9035641c5526c72c4dbbabd7471bd8500abdf26ca6a8a37728d934719",
+      "six_text_fields_sha256": "92227963c008eb75f699ee0fc31a9dd9af197004dec2c7b3097b0418c640447f",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-27T23:58:49.963038+00:00"
+    },
+    {
+      "locale": "gu-IN",
+      "source_file": "tools/l10n/store/gu-IN.json",
+      "original_snapshot_file_sha256": "0656ae2a7ac0b36719ff33864927fcaa3bd3098aeb6a0ed5545636c456a21b6c",
+      "version_fields_sha256": "a94238418d663de50b38ef6b5cc504ee09dec3f00979fe3ca5e75d7282685e4a",
+      "six_text_fields_sha256": "4ae300b91cee89ac99b58809627935220f1567f399c8fea4087be11a3cd825c6",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-28T00:03:14.996929+00:00"
+    },
+    {
+      "locale": "he",
+      "source_file": "tools/l10n/store/he.json",
+      "original_snapshot_file_sha256": "c32f33515983a910346a19fb9fc1106fb06f3a2f2708c65ceb756392955a0906",
+      "version_fields_sha256": "201990888d4a6b7a907dd2a3eb40afd5dce46eeb519d3c59a36245c7c1c6c057",
+      "six_text_fields_sha256": "a477bacc8ed14fa1a28784882ef48009b96f449ac52ae25fb6db1ca5657c907f",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-28T00:04:42.619507+00:00"
+    },
+    {
+      "locale": "hi",
+      "source_file": "tools/l10n/store/hi.json",
+      "original_snapshot_file_sha256": "05f49529eb8ad6183b48a19131ac04eca690acd3a4924502bfb02d36fab0fa1b",
+      "version_fields_sha256": "86bfd7495b28ddf6ff363a6da27de8e81f85a253b48d0f23459e4830b57eb158",
+      "six_text_fields_sha256": "b570ce0014d6b4e1100158b6b6a861c2b6ec51532d4f83592dd5c22c419da9d4",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-28T00:05:38.114816+00:00"
+    },
+    {
+      "locale": "hr",
+      "source_file": "tools/l10n/store/hr.json",
+      "original_snapshot_file_sha256": "b2fe51258e0ea73b45bafa3d8cd1b788b760f4bf0da1a84f1443d8fc118cf9a3",
+      "version_fields_sha256": "777edc5e61eddafa258f1480381a31d79c248573af84cd3ac51be40da50de87f",
+      "six_text_fields_sha256": "e70f601554e2f66b4c0a4e099363a312760e77a6d6870f30a5b9f15b0239ba62",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-27T23:51:10.368230+00:00"
+    },
+    {
+      "locale": "hu",
+      "source_file": "tools/l10n/store/hu.json",
+      "original_snapshot_file_sha256": "76cd08ca6bd543cab6004993c8b024ad25b9b454e3e241aa6ab7d28aa2f13cf2",
+      "version_fields_sha256": "db06be6f6490253bab317dbc8d6af992ec6945c8af3ffc09f9ce994474d91674",
+      "six_text_fields_sha256": "f1f7a245acb973a256c20ef03eaa440aa73d70f5748c53056eca357efe802457",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-28T00:06:42.898199+00:00"
+    },
+    {
+      "locale": "id",
+      "source_file": "tools/l10n/store/id.json",
+      "original_snapshot_file_sha256": "08666fc48d60a0667214678f6470e16a141a8828fbc38a451ba684db09d4d435",
+      "version_fields_sha256": "a2c4b5f0b61878abfe8602617e9648c028e0bc8e79cf5c083609aff27d488aeb",
+      "six_text_fields_sha256": "7ef288a108d812f16654e6937c86f58d96b820461014c97e1363b4e59b522606",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-28T00:07:45.457332+00:00"
+    },
+    {
+      "locale": "it",
+      "source_file": "tools/l10n/store/it.json",
+      "original_snapshot_file_sha256": "a7cf458924457aac083dfd7d728655c6582ac16e861329f33df1c2b35352928e",
+      "version_fields_sha256": "903780980d7bba828fd688aa1a0604fcd0e1d2fa30a1b75d773a01681ff81457",
+      "six_text_fields_sha256": "a7bd52a46a32f568dd6aeda9e1b8b67848d38b16eacb6b770150189d5acde5e4",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-28T00:09:27.313857+00:00"
+    },
+    {
+      "locale": "ja",
+      "source_file": "tools/l10n/store/ja.json",
+      "original_snapshot_file_sha256": "106b5287c0e773dff40dae0cc952f7592b5d82146c810f49a299a40454845720",
+      "version_fields_sha256": "0ea30b3eaffc00aa8c345d62187a95cabf3fe33ce9fdd26820ea81766dc0bee3",
+      "six_text_fields_sha256": "aff8801beb3e56c9d399196946c485ae009ef9ee048c7c3eb0b3e4fd7733fcb0",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-27T23:44:23.277366+00:00"
+    },
+    {
+      "locale": "kn-IN",
+      "source_file": "tools/l10n/store/kn-IN.json",
+      "original_snapshot_file_sha256": "dfa124300d3cacd7cc1eabe2b4c5979d349d8d0f757a1c960b9b30bde98bbb6a",
+      "version_fields_sha256": "b19acb37ece3105dd96bc47d261852472cab5f4675f0a6629433a537c14eff77",
+      "six_text_fields_sha256": "ec0641baa99ce4035ea94d67391b16c9af57098a811ba8e54282df6a7f8a0789",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-28T00:10:46.690832+00:00"
+    },
+    {
+      "locale": "ko",
+      "source_file": "tools/l10n/store/ko.json",
+      "original_snapshot_file_sha256": "335610ef686577e35b19aaa271e875a6e0b25c71cb326c41b58db35bbe9675c6",
+      "version_fields_sha256": "568001e268d12157fce26f9f8145e48de8d2cf7ed87581b01cb6e429f4d8a0d3",
+      "six_text_fields_sha256": "4768a0d6ba2513d6a10cf363c51d34add565fc9497549a9001ca391c3f623cbe",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-28T00:18:14.148192+00:00"
+    },
+    {
+      "locale": "ml-IN",
+      "source_file": "tools/l10n/store/ml-IN.json",
+      "original_snapshot_file_sha256": "c209769703507c20ac6233a7ff8378b99fd52de1cb027687229f2d441533e73e",
+      "version_fields_sha256": "c343d0fc8027a078f1f285976b6cfefdcaddbafead5908ddf1a092a7000e6924",
+      "six_text_fields_sha256": "2d7cc94adaf633f3a837db831e9f58e8af3eae5bf4a10034d96fb7ba13253ebd",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-28T00:22:17.577347+00:00"
+    },
+    {
+      "locale": "mr-IN",
+      "source_file": "tools/l10n/store/mr-IN.json",
+      "original_snapshot_file_sha256": "a8c833f205a59a1e45a6445c756b0895833a072e737336a49b1c7e7c5b4ecb73",
+      "version_fields_sha256": "0536b540b1df6fbd34b1eee584a5156658a8af4e7bc32bde5ae44ff54c258d61",
+      "six_text_fields_sha256": "58761d44f6fdfac894f87a40058a11f18c956e0665e95b3e686d60144dc5e054",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-28T00:23:43.411342+00:00"
+    },
+    {
+      "locale": "ms",
+      "source_file": "tools/l10n/store/ms.json",
+      "original_snapshot_file_sha256": "84987d8dec20aa02aa739b0210c324ee4ab5b298f0dc8b950496725d85b0c0ea",
+      "version_fields_sha256": "74ba328ecdbafe358759ffd295d70c7c2fac8359bae013a76ff457d32b375247",
+      "six_text_fields_sha256": "42a6268b190264112e2800ab46f78797e374bc816c4c7876721ce1d0162e1a9f",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-28T00:20:03.424737+00:00"
+    },
+    {
+      "locale": "nl-NL",
+      "source_file": "tools/l10n/store/nl-NL.json",
+      "original_snapshot_file_sha256": "4671ab729681c7d971c9f0dfb1265ebfd4b5c5d8e6a3c0388233d8d8fe81eb95",
+      "version_fields_sha256": "bafffddeeac73e8db81a793d50c8cff2169f4e2aaec84d8feb07a85cce25f91e",
+      "six_text_fields_sha256": "aa99792b010798ee552501c10ba6a8d03add89ca6681686d7ecc7e84e81efaaf",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-27T23:53:49.354939+00:00"
+    },
+    {
+      "locale": "no",
+      "source_file": "tools/l10n/store/no.json",
+      "original_snapshot_file_sha256": "91f6b0843513173e4d189ce6e25fb42df6dfe06fbfb54ee3f14f11ebd2a3d347",
+      "version_fields_sha256": "652a2806c09fd37a95801cf1c8e0adab3df7961abc6d561954fb633afdbfea1c",
+      "six_text_fields_sha256": "1396a989c0cb208b2679bf9519eebc9815896c8de653255fcfe7f3d6ba283fda",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-28T00:24:55.201105+00:00"
+    },
+    {
+      "locale": "or-IN",
+      "source_file": "tools/l10n/store/or-IN.json",
+      "original_snapshot_file_sha256": "05c5c819b147e9337f732065e8c87b41021024550f68fd53130b352e876d9714",
+      "version_fields_sha256": "716de80a4c42515daa78b3d5422e51786341098ea0339a85509ebff1185a6424",
+      "six_text_fields_sha256": "46b8f82e7b3adbae0828f43dd46bfb5fff5e87ff79e48d42dd2ab1e6758b8381",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-28T00:25:49.023079+00:00"
+    },
+    {
+      "locale": "pa-IN",
+      "source_file": "tools/l10n/store/pa-IN.json",
+      "original_snapshot_file_sha256": "c6ee26afce3d13ec306044e2cea0f643c9d0bd7ca9a3f1c652072ac103a456f0",
+      "version_fields_sha256": "8a1bb2fbe723679d8d04599a85316d16207c3063222dc7f0d57c7771eb1866d8",
+      "six_text_fields_sha256": "2c3172386bd07f9bc0f4b3077a8eb58d6d52987cd368a9f6d039c44a998664eb",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-28T00:28:25.074236+00:00"
+    },
+    {
+      "locale": "pl",
+      "source_file": "tools/l10n/store/pl.json",
+      "original_snapshot_file_sha256": "f1dc6d3d4390a82f006a0bf823d75bba71ab22ef460bb88c5e56519a0f6fae6b",
+      "version_fields_sha256": "08e9b394b736ab8d5252c53fd4eedef1dc769889214c93df7a390bebb5fb8c96",
+      "six_text_fields_sha256": "c4b1d418a5d7197ac1713d082e66ddef3c562968b39bfb386f42d2516268b406",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-28T00:26:33.634955+00:00"
+    },
+    {
+      "locale": "pt-BR",
+      "source_file": "tools/l10n/store/pt-BR.json",
+      "original_snapshot_file_sha256": "7d7fe170e7c37a3c53d9540d30cdde926f2c75e28faf95bd7ca7ca71ec29f01d",
+      "version_fields_sha256": "76df2462564f60491ef5dcf275f776f11df0d04209a1de41a415f00a5c673485",
+      "six_text_fields_sha256": "713f2ab9ac1d476b4b02648416be242e49520e6cd144538723b88fe564487451",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-28T00:27:06.767263+00:00"
+    },
+    {
+      "locale": "pt-PT",
+      "source_file": "tools/l10n/store/pt-PT.json",
+      "original_snapshot_file_sha256": "1fd542d4c114ab806d0c3ff1305d7389785bf00209c6bc4217abc83b8aa15f47",
+      "version_fields_sha256": "8cb3738ecc1474eb5bcab2a4790c7dccb831d846007928912376049388da1154",
+      "six_text_fields_sha256": "4ec87b243e69eb4f23ad746a1147d466c5e5cb4c0eb78d88b343a1d6e5f79844",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-28T00:27:53.236184+00:00"
+    },
+    {
+      "locale": "ro",
+      "source_file": "tools/l10n/store/ro.json",
+      "original_snapshot_file_sha256": "9b7746ddfd6f67a3c2a31f42e925c917d5929b47d2d5633499790be35afb69e3",
+      "version_fields_sha256": "38d7177f3d57c094c719999904930e6e8c44e2d6131153e348736060d03157aa",
+      "six_text_fields_sha256": "5729ea04eb7d946e9b409ddaa47842eda15d2474edd07c596f6b0d8487471d7f",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-28T00:29:03.020909+00:00"
+    },
+    {
+      "locale": "ru",
+      "source_file": "tools/l10n/store/ru.json",
+      "original_snapshot_file_sha256": "4ebb786218f39ae18f5c3296418c799880b98dd47a1bf51a24c31eb968375a16",
+      "version_fields_sha256": "c09cd5a7e5d469ee0937fe19d4071fb25666ddcf1e59b31b942572ee965972a4",
+      "six_text_fields_sha256": "f64326f7b361e22d3b8bd9da4e607671abc35b49835538c3eb083e9ff5e77af5",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-28T00:29:40.640599+00:00"
+    },
+    {
+      "locale": "sk",
+      "source_file": "tools/l10n/store/sk.json",
+      "original_snapshot_file_sha256": "db0c06a19db417a67b7b7505a9d0d9558c7fb8013131f7bcce0b0e7da16cbd26",
+      "version_fields_sha256": "31f4f7279799d9d68d940afdbe25e43a9a43ac0814032cb9f16ee3ebff6c6927",
+      "six_text_fields_sha256": "e390895dcd23bef598c1122b2259f95b35866f4f59cb822aa87daa9446557ee5",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-28T00:30:12.764983+00:00"
+    },
+    {
+      "locale": "sl-SI",
+      "source_file": "tools/l10n/store/sl-SI.json",
+      "original_snapshot_file_sha256": "efa1a45f5533567b71ab8abb66edd3dbc419ba11ffc9351b2e9d5ddfecb80abd",
+      "version_fields_sha256": "ff5527ada271dcf38fc829d80e5a767d0a98cc3cf7a3e547033853e5e2e85a6d",
+      "six_text_fields_sha256": "095b66b20ca9a34d6ec3107332ef7f64a8dfddb64a7efe830358d0a4f6cb17d2",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-28T00:30:41.000328+00:00"
+    },
+    {
+      "locale": "sv",
+      "source_file": "tools/l10n/store/sv.json",
+      "original_snapshot_file_sha256": "5d14235707d5232028cf5ec025d53d545f72a26c0c6118bc18d5316775a19769",
+      "version_fields_sha256": "04081864860556ad0647f1b741f9f639b2f514ded181f8a1ba36825b40bed35b",
+      "six_text_fields_sha256": "d83c16e69c44dcc72322b31a85d58d4922475d1dfb02d8099b92012d8bc14715",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-28T00:32:47.798750+00:00"
+    },
+    {
+      "locale": "ta-IN",
+      "source_file": "tools/l10n/store/ta-IN.json",
+      "original_snapshot_file_sha256": "4f3740fb44b4698c0232439663ff9feb6b81fbcdc11c78dfe7580ae5bd33f82f",
+      "version_fields_sha256": "4cf68bb4d3d4a8ba31d8e252f937c447243fe8c7dbd8a126e94213de85e59125",
+      "six_text_fields_sha256": "c655bc00fc74f412ac29a9ca97a9f71f80cce0f9db1f5be85f1017285447efbe",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-28T00:35:04.118349+00:00"
+    },
+    {
+      "locale": "te-IN",
+      "source_file": "tools/l10n/store/te-IN.json",
+      "original_snapshot_file_sha256": "2c97b7b19df77c5113ded24b46b54d087e41bb21ab2066202d8b798dde6a8c81",
+      "version_fields_sha256": "5570f9367e6ac4ce5bd8567c11cd25378a6eb369273f8d364b77ae5ad80f8282",
+      "six_text_fields_sha256": "54afd5eac1b5ca05a72553d243f5e874dfa1aefea1bfddcbb95c5309383255e4",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-28T00:36:05.803503+00:00"
+    },
+    {
+      "locale": "th",
+      "source_file": "tools/l10n/store/th.json",
+      "original_snapshot_file_sha256": "f19f5b3ccb00a47ab153156a7c573e48148bbcd24b0c4e0c9126fc8d747d1a53",
+      "version_fields_sha256": "7fb345e08c32048ef1282ac3300565f5458eea82c8ea041efc5b86be45b5edaf",
+      "six_text_fields_sha256": "86e7f46775a81cde98c7e8ee6e7631d45ede4c790cb3eca93d999e285dccb9fb",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-28T00:36:47.007591+00:00"
+    },
+    {
+      "locale": "tr",
+      "source_file": "tools/l10n/store/tr.json",
+      "original_snapshot_file_sha256": "61a992aeface4d74c27c1ab052acec1ea6ae80995f4978cdd345cc0c5014d5e6",
+      "version_fields_sha256": "f6c59d7e36191c414ad1d22ef92819845b008405d4a795bd3db3f0db0a99dbfe",
+      "six_text_fields_sha256": "4e9dd74f7e4a1c62dd9ec04e2236a9d085119adbaf9689d1ae01d99c348d883d",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-28T00:37:22.294016+00:00"
+    },
+    {
+      "locale": "uk",
+      "source_file": "tools/l10n/store/uk.json",
+      "original_snapshot_file_sha256": "cb83b86f83c23c838b03f997f146b57609e3794b7ea818458bba87ef694c1ca0",
+      "version_fields_sha256": "c3918dd7b5db3ff17acc2bed619cb1343d2e77569ba7787199f941bbb5297114",
+      "six_text_fields_sha256": "9935501a2547b378d2c546ffed127770f57fddfb8b212f738a7c73cd8d1656ab",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-28T00:38:03.801747+00:00"
+    },
+    {
+      "locale": "ur-PK",
+      "source_file": "tools/l10n/store/ur-PK.json",
+      "original_snapshot_file_sha256": "22a24173f5eba2831b366e90c2405c9e2f8c0bb76572b4151b3543c8d866cc52",
+      "version_fields_sha256": "c8a7ef67bd593bab0d1e3387d9bae4aacbbf8b464fcc5b7f2c1280d2fb054912",
+      "six_text_fields_sha256": "a99653770d11119de4aa67d1ff792050fb45fcc8e3d97596a357731d8e73be61",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-28T00:38:49.790085+00:00"
+    },
+    {
+      "locale": "vi",
+      "source_file": "tools/l10n/store/vi.json",
+      "original_snapshot_file_sha256": "8d3a8d268121ca738b5857c9e61e0902d3d4fe0661ac6ae8fa75ea8bbe79794e",
+      "version_fields_sha256": "33cdf2ec8db9aa10543719acbacc3a9b75d4a5a6c1226b48b96f3562d3cc84c8",
+      "six_text_fields_sha256": "efd76953f214158e4157b6425abca69508d4ced66ebdb1e6e45097923663c9fc",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-28T00:39:36.367328+00:00"
+    },
+    {
+      "locale": "zh-Hans",
+      "source_file": "tools/l10n/store/zh-Hans.json",
+      "original_snapshot_file_sha256": "a085f59022d4d0b9ca7d81f3dbf5876aab1f19975b5bf747e9fb1401f166d8a1",
+      "version_fields_sha256": "04713a0f5d06a4810ab3f85efeac84b8ccf408d597dfcb349747c7d8f07a23b5",
+      "six_text_fields_sha256": "19c1b374900b11a8dd9ff005ddcfef88d9544db0191253f681f3ec3af2b5432d",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-27T23:49:21.547945+00:00"
+    },
+    {
+      "locale": "zh-Hant",
+      "source_file": "tools/l10n/store/zh-Hant.json",
+      "original_snapshot_file_sha256": "de99ee05980fcd729d42c6c1c706344b3acaf276749a1abee41343ea5664a849",
+      "version_fields_sha256": "08baec1b2b39daa9d74e050a1ee2af3212c92de7ef0ca8d939598659672dc523",
+      "six_text_fields_sha256": "bb810d026b319ce63002e72313fdbc8bb306084d9e1c56da6fba0152993bc881",
+      "exact_version_field_equality": true,
+      "exact_header_field_equality": true,
+      "recorded_readback_utc": "2026-10-27T23:50:07.311403+00:00"
+    }
+  ]
+}

@@ -193,7 +193,7 @@ The opening frames establish the free tuner (#1), breadth of supported instrumen
 |---|---|---|---|---|
 | 1 | **Free tuner. No ads.** | 60 instruments, to the cent | a string locked on the 3D headstock, its peg ringed and ticked, the lock's comet running down the string (`10b-tune-locked`) | `breakout mint` |
 | 2 | **Tune whatever you play** | 60 instruments, 132 tunings | the instrument browser on the Folk & world strings, the wall of instruments around it (`31b-instruments-folk`) | `wall spotlight` |
-| 3 | **Hear exactly how you played** | Pitch and timing on every note | *Kite Weather* on the highway mid-chorus at ×4, the words lighting up under the runway (`65-song-perform`) | `zoom sky` |
+| 3 | **See feedback as you play** | Pitch and timing on every note | *Kite Weather* on the highway mid-chorus at ×4, the words lighting up under the runway (`65-song-perform`) | `zoom sky` |
 | 4 | **Play songs you know** | 130+ songs, classics to Originals | the Songs tab, the songs people know on its first shelf (`63-songs`) | `light orchid` |
 | 5 | **Learn at your own pace** | 526 lessons in 11 courses | Learn, with the next lesson up (`50-learn`) | `offset violet` |
 | 6 | **Play your first chord today** | Timbre hears every string | E minor's chord step with every string lit, the six ticked strings enlarged (`52b-lesson-chord`) | `callout lime` |
@@ -218,7 +218,7 @@ The violin Custom Product Page's set ([below](#custom-product-pages)). Its first
 |---|---|---|---|---|
 | 1 | **Tune your violin, free** | G, D, A and E, to the cent | the 3D violin, G, D and A locked, the lock's comet on the A string (`49d-tune-violin-locked`) | `breakout orchid` |
 | 2 | **Play songs on your violin** | From Jingle Bells to Ode to Joy | *Jingle Bells* from the violin songbook on the runway, finger numbers on the gems, its last chorus lighting up (`65b-song-perform-violin`) | `zoom sky` |
-| 3 | **Hear exactly how you played** | Pitch and timing on every note | the violin's "Open-string checkup" results with three stars (`62b-lesson-results-violin`) | `zoom gold` |
+| 3 | **See how you played** | Pitch and timing on every note | the violin's "Open-string checkup" results with three stars (`62b-lesson-results-violin`) | `zoom gold` |
 | 4 | **Play songs you know** | 130+ songs, classics to Originals | the Songs tab (`63-songs`) | `light orchid` |
 | 5 | **Learn at your own pace** | 526 lessons in 11 courses | Learn (`50-learn`) | `offset violet` |
 

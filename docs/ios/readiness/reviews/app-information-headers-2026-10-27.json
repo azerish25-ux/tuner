@@ -1,0 +1,763 @@
+{
+  "schema_version": 1,
+  "scope": "app_store_connect_app_information_name_subtitle_only",
+  "app": "Timbre",
+  "observed_date_utc": "2026-10-27",
+  "summary": {
+    "locale_count": 50,
+    "new_locale_headers_saved": 49,
+    "existing_en_US_headers_fresh_readback": 1,
+    "fields_per_locale": [
+      "name",
+      "subtitle"
+    ],
+    "first_observation_utc": "2026-10-27T22:09:30Z",
+    "last_observation_utc": "2026-10-27T23:44:49Z"
+  },
+  "provenance": {
+    "method": "Transcription of recorded cloud-browser App Information observations: Save followed by full-page reload and exact visual readback for 49 new locales; fresh-page exact readback without editing for the existing en-US locale.",
+    "not_an_api_export": true,
+    "source_snapshot_revision": "4f8b69e3efad4e405714d031462a25167cc06799",
+    "reconciled_repository_revision": "2013834d947756154688f34979bf7802c6f79946",
+    "locale_inventory_file": "tools/l10n/store-locales.json",
+    "locale_inventory_sha256": "2de607c5b3789ebee25eac5b55e67434f84928556f63f4804a5fe90bff1bf461",
+    "source_hash_definition": "SHA-256 of complete per-locale JSON file bytes. This binds the source version; it does not mean fields other than name and subtitle were saved or read back.",
+    "source_reconciliation": "All 50 frozen source files are byte-identical to the repository files at the reconciled revision; names, subtitles and hashes match the recorded observations.",
+    "verification_limit": "Offline reconciliation checks these recorded observations against repository sources. It does not repeat the authenticated portal session or certify future portal state."
+  },
+  "public_url_browser_observation": {
+    "observed_utc": "2026-10-27T23:41:28Z",
+    "method": "Rendered public browser pages and accessibility-tree readback",
+    "http_status_measured": false,
+    "pages": [
+      {
+        "purpose": "support",
+        "url": "https://timbre-support.timbre.workers.dev/support",
+        "observed_title": "Timbre Support",
+        "page_visible": true
+      },
+      {
+        "purpose": "privacy",
+        "url": "https://timbre-support.timbre.workers.dev/privacy",
+        "observed_title": "Timbre Privacy Policy",
+        "page_visible": true
+      }
+    ],
+    "limit": "Page visibility only: no fresh HTTP status, response-body hash, security-header, source-alignment, uptime or App Store Connect URL-field verification is asserted."
+  },
+  "limits": [
+    "This is a point-in-time persistence receipt for App Information name and subtitle only, not a complete translated-listing or submission-readiness certification.",
+    "The en-US Save control appeared gray, but Playwright isEnabled returned true; no disabled-state assertion is made and no fields were edited for that baseline readback.",
+    "Descriptions, keywords, promotional text, What's New, localized screenshots and App Previews remain outside this receipt; their portal completion is not established.",
+    "Pricing, product configuration, signing, build upload, submission and public storefront availability remain outside this receipt and are not established.",
+    "Native-speaker approval, legal compliance, market performance and device-render quality are not certified.",
+    "No source consumer text, release-ready flag or release-evidence disposition is changed by this receipt."
+  ],
+  "locales": [
+    {
+      "locale": "ar-SA",
+      "name": "Timbre: ضبط الآلات ودروس",
+      "subtitle": "غيتار وكمان وتشيلو والمزيد",
+      "source_file": "tools/l10n/store/ar-SA.json",
+      "source_file_sha256": "ccdce17dc8856727f1292371158affaa73a9e06abcdbe0f0d2a2843a8e32b93c",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T22:09:30Z"
+      }
+    },
+    {
+      "locale": "bn-BD",
+      "name": "Timbre: টিউনার ও সংগীত শিক্ষা",
+      "subtitle": "গিটার, বেহালা, চেলো ও আরও",
+      "source_file": "tools/l10n/store/bn-BD.json",
+      "source_file_sha256": "19a3e213adff54d66e99858c704db7d3992009d7719833f19b85fa64f8695349",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T22:11:54Z"
+      }
+    },
+    {
+      "locale": "ca",
+      "name": "Timbre: Afinador i lliçons",
+      "subtitle": "Guitarra, violí, violoncel…",
+      "source_file": "tools/l10n/store/ca.json",
+      "source_file_sha256": "7d0bac0d0dfc59f7a9cfb179194ed7bb873edacb1eb226807205f9dfb2134d8f",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T22:14:24Z"
+      }
+    },
+    {
+      "locale": "cs",
+      "name": "Timbre: Ladička a lekce",
+      "subtitle": "Kytara, housle, violoncello…",
+      "source_file": "tools/l10n/store/cs.json",
+      "source_file_sha256": "11ffc7c493204cf49fb55202bedf1728542a152678ee9fe7d17ac2ff91563d70",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T22:24:25Z"
+      }
+    },
+    {
+      "locale": "da",
+      "name": "Timbre: Tuner og lektioner",
+      "subtitle": "Guitar, violin, cello og mere",
+      "source_file": "tools/l10n/store/da.json",
+      "source_file_sha256": "3bddcd07a046b46412770e5dc3836caeb259d770ae176affc48dcc0ae2de5203",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T22:28:13Z"
+      }
+    },
+    {
+      "locale": "de-DE",
+      "name": "Timbre: Stimmgerät & Lektionen",
+      "subtitle": "Gitarre, Geige, Cello & mehr",
+      "source_file": "tools/l10n/store/de-DE.json",
+      "source_file_sha256": "9a28861c95be49069fdb95caf2c0e21b6867816da54b07693ec0ef8d9a60a6a8",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T22:47:24.322788Z"
+      }
+    },
+    {
+      "locale": "el",
+      "name": "Timbre: Κούρδισμα και μαθήματα",
+      "subtitle": "Κιθάρα, βιολί, τσέλο και άλλα",
+      "source_file": "tools/l10n/store/el.json",
+      "source_file_sha256": "93e867cd0e185f1b3dd95eab5291df9bc012130f9032f706c5422ad66185932a",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T22:49:09.065175Z"
+      }
+    },
+    {
+      "locale": "en-AU",
+      "name": "Timbre: Tuner & Music Lessons",
+      "subtitle": "Guitar, Violin, Cello & More",
+      "source_file": "tools/l10n/store/en-AU.json",
+      "source_file_sha256": "27da761ae4e7436676828ccc04fc65419f07b70391da4191fa7d206f1c842a54",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T22:36:30Z"
+      }
+    },
+    {
+      "locale": "en-CA",
+      "name": "Timbre: Tuner & Music Lessons",
+      "subtitle": "Guitar, Violin, Cello & More",
+      "source_file": "tools/l10n/store/en-CA.json",
+      "source_file_sha256": "7138f7eb3664f88d1078463439b7764576c22b3c8168baed1e57034d7ce0decd",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T22:40:03.953970Z"
+      }
+    },
+    {
+      "locale": "en-GB",
+      "name": "Timbre: Tuner & Music Lessons",
+      "subtitle": "Guitar, Violin, Cello & More",
+      "source_file": "tools/l10n/store/en-GB.json",
+      "source_file_sha256": "82608934b0b645895f1a3bcdea3c8cfb7f66e291895976fc1b8cf0575e4dbdf8",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T22:41:12.251123Z"
+      }
+    },
+    {
+      "locale": "en-US",
+      "name": "Timbre: Tuner & Music Lessons",
+      "subtitle": "Guitar, Violin, Cello & More",
+      "source_file": "tools/l10n/store/en-US.json",
+      "source_file_sha256": "016ffd68e336e2445314d29780993e844d6f1802e7cc28f361b0c61e7be3ffb9",
+      "verification": {
+        "action": "existing_header_unchanged",
+        "fields_edited": false,
+        "readback_method": "fresh_page_exact_readback",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T23:44:49Z",
+        "save_control_observation": {
+          "visually_gray": true,
+          "playwright_is_enabled": true,
+          "semantic_disabled_asserted": false
+        }
+      }
+    },
+    {
+      "locale": "es-ES",
+      "name": "Timbre: Afinador y lecciones",
+      "subtitle": "Guitarra, violín, chelo y más",
+      "source_file": "tools/l10n/store/es-ES.json",
+      "source_file_sha256": "3032d725c9307a47449c32389ef895b4b30d12b706faf059cceb9dcec3453b76",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T23:31:22.719950Z"
+      }
+    },
+    {
+      "locale": "es-MX",
+      "name": "Timbre: Afinador y lecciones",
+      "subtitle": "Guitarra, violín, chelo y más",
+      "source_file": "tools/l10n/store/es-MX.json",
+      "source_file_sha256": "6fb13410ed7f6fb9362245120781f699d1239310042f547aa415e86be81b2c41",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T23:30:14.752805Z"
+      }
+    },
+    {
+      "locale": "fi",
+      "name": "Timbre: Viritin ja oppitunnit",
+      "subtitle": "Kitara, viulu, sello ja muut",
+      "source_file": "tools/l10n/store/fi.json",
+      "source_file_sha256": "718436651081fab25de7221cea933595ebec21bcbc1f1ef50168f5477aefe4c6",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T22:42:45.452562Z"
+      }
+    },
+    {
+      "locale": "fr-CA",
+      "name": "Timbre : Accordeur et cours",
+      "subtitle": "Guitare, violon, violoncelle…",
+      "source_file": "tools/l10n/store/fr-CA.json",
+      "source_file_sha256": "bf7ade94c7b73824a89962946836b78d6f520f363be7b0444dcf318ffb72a76f",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T22:45:51.132676Z"
+      }
+    },
+    {
+      "locale": "fr-FR",
+      "name": "Timbre : Accordeur et cours",
+      "subtitle": "Guitare, violon, violoncelle…",
+      "source_file": "tools/l10n/store/fr-FR.json",
+      "source_file_sha256": "d10e22b45350657c415701e48cbd24839e1e1229660a006264d2d3d4a11f7388",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T22:44:17.700344Z"
+      }
+    },
+    {
+      "locale": "gu-IN",
+      "name": "Timbre: ટ્યૂનર અને સંગીત પાઠ",
+      "subtitle": "ગિટાર, વાયોલિન, સેલો અને વધુ",
+      "source_file": "tools/l10n/store/gu-IN.json",
+      "source_file_sha256": "0656ae2a7ac0b36719ff33864927fcaa3bd3098aeb6a0ed5545636c456a21b6c",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T22:51:44.814178Z"
+      }
+    },
+    {
+      "locale": "he",
+      "name": "Timbre: טיונר ושיעורי מוזיקה",
+      "subtitle": "גיטרה, כינור, צ׳לו ועוד",
+      "source_file": "tools/l10n/store/he.json",
+      "source_file_sha256": "c32f33515983a910346a19fb9fc1106fb06f3a2f2708c65ceb756392955a0906",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T22:53:26.016233Z"
+      }
+    },
+    {
+      "locale": "hi",
+      "name": "Timbre: ट्यूनर और संगीत पाठ",
+      "subtitle": "गिटार, वायलिन, सेलो और भी",
+      "source_file": "tools/l10n/store/hi.json",
+      "source_file_sha256": "05f49529eb8ad6183b48a19131ac04eca690acd3a4924502bfb02d36fab0fa1b",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T22:55:31.061434Z"
+      }
+    },
+    {
+      "locale": "hr",
+      "name": "Timbre: Štimer i lekcije",
+      "subtitle": "Gitara, violina, violončelo…",
+      "source_file": "tools/l10n/store/hr.json",
+      "source_file_sha256": "b2fe51258e0ea73b45bafa3d8cd1b788b760f4bf0da1a84f1443d8fc118cf9a3",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T22:21:40Z"
+      }
+    },
+    {
+      "locale": "hu",
+      "name": "Timbre: Hangoló és zeneleckék",
+      "subtitle": "Gitár, hegedű, cselló és más",
+      "source_file": "tools/l10n/store/hu.json",
+      "source_file_sha256": "76cd08ca6bd543cab6004993c8b024ad25b9b454e3e241aa6ab7d28aa2f13cf2",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T23:11:15.872033Z"
+      }
+    },
+    {
+      "locale": "id",
+      "name": "Timbre: Tuner & Belajar Musik",
+      "subtitle": "Gitar, Biola, Selo & Lainnya",
+      "source_file": "tools/l10n/store/id.json",
+      "source_file_sha256": "08666fc48d60a0667214678f6470e16a141a8828fbc38a451ba684db09d4d435",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T23:13:01.928200Z"
+      }
+    },
+    {
+      "locale": "it",
+      "name": "Timbre: Accordatore e lezioni",
+      "subtitle": "Chitarra, violino, violoncello",
+      "source_file": "tools/l10n/store/it.json",
+      "source_file_sha256": "a7cf458924457aac083dfd7d728655c6582ac16e861329f33df1c2b35352928e",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T23:13:45.054177Z"
+      }
+    },
+    {
+      "locale": "ja",
+      "name": "Timbre: チューナー＆音楽レッスン",
+      "subtitle": "ギター・バイオリン・チェロなどに対応",
+      "source_file": "tools/l10n/store/ja.json",
+      "source_file_sha256": "106b5287c0e773dff40dae0cc952f7592b5d82146c810f49a299a40454845720",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T23:15:07.572799Z"
+      }
+    },
+    {
+      "locale": "kn-IN",
+      "name": "Timbre: ಟ್ಯೂನರ್, ಸಂಗೀತ ಪಾಠ",
+      "subtitle": "ಗಿಟಾರ್, ವಯಲಿನ್, ಸೆಲ್ಲೋ…",
+      "source_file": "tools/l10n/store/kn-IN.json",
+      "source_file_sha256": "dfa124300d3cacd7cc1eabe2b4c5979d349d8d0f757a1c960b9b30bde98bbb6a",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T23:16:07.503548Z"
+      }
+    },
+    {
+      "locale": "ko",
+      "name": "Timbre: 튜너 & 음악 레슨",
+      "subtitle": "기타, 바이올린, 첼로 등 다양한 악기",
+      "source_file": "tools/l10n/store/ko.json",
+      "source_file_sha256": "335610ef686577e35b19aaa271e875a6e0b25c71cb326c41b58db35bbe9675c6",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T23:16:56.082419Z"
+      }
+    },
+    {
+      "locale": "ml-IN",
+      "name": "Timbre: ട്യൂണർ, സംഗീതപാഠങ്ങൾ",
+      "subtitle": "ഗിറ്റാർ, വയലിൻ, ചെല്ലോ തുടങ്ങി",
+      "source_file": "tools/l10n/store/ml-IN.json",
+      "source_file_sha256": "c209769703507c20ac6233a7ff8378b99fd52de1cb027687229f2d441533e73e",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T23:18:38.633476Z"
+      }
+    },
+    {
+      "locale": "mr-IN",
+      "name": "Timbre: ट्यूनर व संगीताचे धडे",
+      "subtitle": "गिटार, व्हायोलिन, सेलो व आणखी",
+      "source_file": "tools/l10n/store/mr-IN.json",
+      "source_file_sha256": "a8c833f205a59a1e45a6445c756b0895833a072e737336a49b1c7e7c5b4ecb73",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T23:19:32.467043Z"
+      }
+    },
+    {
+      "locale": "ms",
+      "name": "Timbre: Penala & Belajar Muzik",
+      "subtitle": "Gitar, violin, selo…",
+      "source_file": "tools/l10n/store/ms.json",
+      "source_file_sha256": "84987d8dec20aa02aa739b0210c324ee4ab5b298f0dc8b950496725d85b0c0ea",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T23:17:39.932646Z"
+      }
+    },
+    {
+      "locale": "nl-NL",
+      "name": "Timbre: Stemmer & muziekles",
+      "subtitle": "Gitaar, viool, cello en meer",
+      "source_file": "tools/l10n/store/nl-NL.json",
+      "source_file_sha256": "4671ab729681c7d971c9f0dfb1265ebfd4b5c5d8e6a3c0388233d8d8fe81eb95",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T22:32:26Z"
+      }
+    },
+    {
+      "locale": "no",
+      "name": "Timbre: Stemmer og musikktimer",
+      "subtitle": "Gitar, fiolin, cello og mer",
+      "source_file": "tools/l10n/store/no.json",
+      "source_file_sha256": "91f6b0843513173e4d189ce6e25fb42df6dfe06fbfb54ee3f14f11ebd2a3d347",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T23:20:33.143729Z"
+      }
+    },
+    {
+      "locale": "or-IN",
+      "name": "Timbre: ଟ୍ୟୁନର ଓ ସଙ୍ଗୀତ ପାଠ",
+      "subtitle": "ଗିଟାର, ବାୟୋଲିନ, ସେଲୋ ଆଦି",
+      "source_file": "tools/l10n/store/or-IN.json",
+      "source_file_sha256": "05c5c819b147e9337f732065e8c87b41021024550f68fd53130b352e876d9714",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T23:21:23.616503Z"
+      }
+    },
+    {
+      "locale": "pa-IN",
+      "name": "Timbre: ਟਿਊਨਰ ਤੇ ਸੰਗੀਤ ਪਾਠ",
+      "subtitle": "ਗਿਟਾਰ, ਵਾਇਲਿਨ, ਸੈਲੋ ਤੇ ਹੋਰ",
+      "source_file": "tools/l10n/store/pa-IN.json",
+      "source_file_sha256": "c6ee26afce3d13ec306044e2cea0f643c9d0bd7ca9a3f1c652072ac103a456f0",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T23:25:22.112102Z"
+      }
+    },
+    {
+      "locale": "pl",
+      "name": "Timbre: Stroik i lekcje muzyki",
+      "subtitle": "Gitara, skrzypce, wiolonczela…",
+      "source_file": "tools/l10n/store/pl.json",
+      "source_file_sha256": "f1dc6d3d4390a82f006a0bf823d75bba71ab22ef460bb88c5e56519a0f6fae6b",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T23:22:23.936459Z"
+      }
+    },
+    {
+      "locale": "pt-BR",
+      "name": "Timbre: Afinador e aulas",
+      "subtitle": "Violão, violino e violoncelo",
+      "source_file": "tools/l10n/store/pt-BR.json",
+      "source_file_sha256": "7d7fe170e7c37a3c53d9540d30cdde926f2c75e28faf95bd7ca7ca71ec29f01d",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T23:23:14.231340Z"
+      }
+    },
+    {
+      "locale": "pt-PT",
+      "name": "Timbre: Afinador e aulas",
+      "subtitle": "Guitarra, violino, violoncelo",
+      "source_file": "tools/l10n/store/pt-PT.json",
+      "source_file_sha256": "1fd542d4c114ab806d0c3ff1305d7389785bf00209c6bc4217abc83b8aa15f47",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T23:24:11.570660Z"
+      }
+    },
+    {
+      "locale": "ro",
+      "name": "Timbre: Acordor și lecții",
+      "subtitle": "Chitară, vioară, violoncel…",
+      "source_file": "tools/l10n/store/ro.json",
+      "source_file_sha256": "9b7746ddfd6f67a3c2a31f42e925c917d5929b47d2d5633499790be35afb69e3",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T23:26:24.568803Z"
+      }
+    },
+    {
+      "locale": "ru",
+      "name": "Timbre: Тюнер и уроки музыки",
+      "subtitle": "Гитара, скрипка, виолончель…",
+      "source_file": "tools/l10n/store/ru.json",
+      "source_file_sha256": "4ebb786218f39ae18f5c3296418c799880b98dd47a1bf51a24c31eb968375a16",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T23:27:23.267995Z"
+      }
+    },
+    {
+      "locale": "sk",
+      "name": "Timbre: Ladička a lekcie",
+      "subtitle": "Gitara, husle, violončelo…",
+      "source_file": "tools/l10n/store/sk.json",
+      "source_file_sha256": "db0c06a19db417a67b7b7505a9d0d9558c7fb8013131f7bcce0b0e7da16cbd26",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T23:28:21.640217Z"
+      }
+    },
+    {
+      "locale": "sl-SI",
+      "name": "Timbre: Uglaševalnik in pouk",
+      "subtitle": "Kitara, violina, violončelo…",
+      "source_file": "tools/l10n/store/sl-SI.json",
+      "source_file_sha256": "efa1a45f5533567b71ab8abb66edd3dbc419ba11ffc9351b2e9d5ddfecb80abd",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T23:29:18.259478Z"
+      }
+    },
+    {
+      "locale": "sv",
+      "name": "Timbre: Stämapparat, lektioner",
+      "subtitle": "Gitarr, fiol, cello med mera",
+      "source_file": "tools/l10n/store/sv.json",
+      "source_file_sha256": "5d14235707d5232028cf5ec025d53d545f72a26c0c6118bc18d5316775a19769",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T23:32:18.702787Z"
+      }
+    },
+    {
+      "locale": "ta-IN",
+      "name": "Timbre: டியூனர், இசைப்பாடங்கள்",
+      "subtitle": "கிட்டார், வயலின், செல்லோ…",
+      "source_file": "tools/l10n/store/ta-IN.json",
+      "source_file_sha256": "4f3740fb44b4698c0232439663ff9feb6b81fbcdc11c78dfe7580ae5bd33f82f",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T23:33:19.608437Z"
+      }
+    },
+    {
+      "locale": "te-IN",
+      "name": "Timbre: ట్యూనర్, సంగీత పాఠాలు",
+      "subtitle": "గిటార్, వయొలిన్, సెల్లో వంటివి",
+      "source_file": "tools/l10n/store/te-IN.json",
+      "source_file_sha256": "2c97b7b19df77c5113ded24b46b54d087e41bb21ab2066202d8b798dde6a8c81",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T23:34:36.905491Z"
+      }
+    },
+    {
+      "locale": "th",
+      "name": "Timbre: จูนเสียงและเรียนดนตรี",
+      "subtitle": "กีตาร์ ไวโอลิน เชลโล และอื่นๆ",
+      "source_file": "tools/l10n/store/th.json",
+      "source_file_sha256": "f19f5b3ccb00a47ab153156a7c573e48148bbcd24b0c4e0c9126fc8d747d1a53",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T23:35:39.038620Z"
+      }
+    },
+    {
+      "locale": "tr",
+      "name": "Timbre: Akort ve Dersler",
+      "subtitle": "Gitar, keman, çello ve dahası",
+      "source_file": "tools/l10n/store/tr.json",
+      "source_file_sha256": "61a992aeface4d74c27c1ab052acec1ea6ae80995f4978cdd345cc0c5014d5e6",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T23:36:38.701399Z"
+      }
+    },
+    {
+      "locale": "uk",
+      "name": "Timbre: Тюнер і уроки музики",
+      "subtitle": "Гітара, скрипка, віолончель…",
+      "source_file": "tools/l10n/store/uk.json",
+      "source_file_sha256": "cb83b86f83c23c838b03f997f146b57609e3794b7ea818458bba87ef694c1ca0",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T23:37:54.819808Z"
+      }
+    },
+    {
+      "locale": "ur-PK",
+      "name": "Timbre: ٹیونر، موسیقی کے سبق",
+      "subtitle": "گٹار، وائلن، چیلو اور مزید",
+      "source_file": "tools/l10n/store/ur-PK.json",
+      "source_file_sha256": "22a24173f5eba2831b366e90c2405c9e2f8c0bb76572b4151b3543c8d866cc52",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T23:40:12.104979Z"
+      }
+    },
+    {
+      "locale": "vi",
+      "name": "Timbre: Chỉnh dây & học nhạc",
+      "subtitle": "Guitar, vĩ cầm, cello…",
+      "source_file": "tools/l10n/store/vi.json",
+      "source_file_sha256": "8d3a8d268121ca738b5857c9e61e0902d3d4fe0661ac6ae8fa75ea8bbe79794e",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T23:41:11.034707Z"
+      }
+    },
+    {
+      "locale": "zh-Hans",
+      "name": "Timbre：调音器与音乐课程",
+      "subtitle": "吉他、小提琴、大提琴及更多乐器",
+      "source_file": "tools/l10n/store/zh-Hans.json",
+      "source_file_sha256": "a085f59022d4d0b9ca7d81f3dbf5876aab1f19975b5bf747e9fb1401f166d8a1",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T22:16:31Z"
+      }
+    },
+    {
+      "locale": "zh-Hant",
+      "name": "Timbre：調音器與音樂課程",
+      "subtitle": "吉他、小提琴、大提琴等多種樂器",
+      "source_file": "tools/l10n/store/zh-Hant.json",
+      "source_file_sha256": "de99ee05980fcd729d42c6c1c706344b3acaf276749a1abee41343ea5664a849",
+      "verification": {
+        "action": "new_locale_header_saved",
+        "save_action_observed": true,
+        "readback_method": "full_page_reload_visual_exact",
+        "exact_name_and_subtitle_match": true,
+        "observed_utc": "2026-10-27T22:19:08Z"
+      }
+    }
+  ]
+}

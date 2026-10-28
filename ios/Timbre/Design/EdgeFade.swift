@@ -19,13 +19,20 @@ extension EdgeOverflow {
                   trailing: direction == .rightToLeft ? physicalLeft : physicalRight)
     }
 
-    /// Read from a horizontal scroll view (content margins included): an end counts once more than a point hides past it.
+    /// ScrollGeometry's x offset is logical, unlike a content GeometryProxy's physical bounds.
+    /// A live 300-point viewport with 20/32 margins reports a 248-point container, and starts
+    /// at -20 in LTR or +32 in RTL. Use the visible width, without counting those margins twice.
     init(_ geometry: ScrollGeometry, direction: LayoutDirection) {
-        let leftInset = direction == .rightToLeft ? geometry.contentInsets.trailing : geometry.contentInsets.leading
-        let offset = geometry.contentOffset.x + leftInset
-        let range = geometry.contentSize.width + geometry.contentInsets.leading + geometry.contentInsets.trailing - geometry.containerSize.width
+        self.init(offset: geometry.contentOffset.x, contentSize: geometry.contentSize,
+                  viewportSize: geometry.visibleRect.size, insets: geometry.contentInsets, direction: direction)
+    }
+
+    /// Separate the logical scroll measurement from CGRect's physical left/right conversion below.
+    init(offset: CGFloat, contentSize: CGSize, viewportSize: CGSize, insets: EdgeInsets, direction: LayoutDirection) {
+        let progress = offset + (direction == .rightToLeft ? -insets.trailing : insets.leading)
+        let range = contentSize.width + insets.leading + insets.trailing - viewportSize.width
         guard range > 1 else { self.init(); return }
-        self.init(physicalLeft: offset > 1, physicalRight: offset < range - 1, direction: direction)
+        self.init(leading: progress > 1, trailing: progress < range - 1)
     }
 
     /// Read from the row's own content, inside the scroll view: an end counts once more than a point of the

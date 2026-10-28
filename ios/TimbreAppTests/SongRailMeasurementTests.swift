@@ -335,10 +335,14 @@ final class SongRailMeasurementTests: XCTestCase {
         let items = (0..<120).map { Item(id: $0) }
         var constructed = Set<Int>()
         var appeared = false
+        var selectedFrame: CGRect?
         let host = UIHostingController(rootView:
             SongShelfRail(items: items, selection: 59, itemWidth: 148, height: 100, identity: "rail.selection-test") { item in
                 let _ = constructed.insert(item.id)
-                Text("Song \(item.id)").frame(height: 80)
+                Text("Song \(item.id)").frame(width: 148, height: 80)
+                    .onGeometryChange(for: CGRect.self) { proxy in proxy.frame(in: .global) } action: { frame in
+                        if item.id == 59 { selectedFrame = frame }
+                    }
             }.frame(width: 402, height: 100).onAppear { appeared = true })
         // A scene-less UIWindow can lay out offscreen views without a displayed SwiftUI scroll lifecycle.
         let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
@@ -360,15 +364,18 @@ final class SongRailMeasurementTests: XCTestCase {
         let itemCenter = CGFloat(59) * (148 + 14) + 20 + 74
         let revealed = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             guard appeared, host.view.window === window,
+                  let frame = selectedFrame,
                   let scroll = scrolls(host.view).first(where: { $0.contentSize.width > 1000 }) else { return false }
             let center = scroll.contentOffset.x + scroll.bounds.width / 2
-            return abs(center - itemCenter) <= 24
+            let viewport = scroll.convert(scroll.bounds, to: window)
+            return abs(center - itemCenter) <= 24 && abs(frame.midX - viewport.midX) <= 24
+                && frame.minX >= viewport.minX + 52 && frame.maxX <= viewport.maxX - 52
         }, object: nil)
         await fulfillment(of: [revealed], timeout: 3)
         let scroll = try XCTUnwrap(scrolls(host.view).first { $0.contentSize.width > 1000 })
         let diagnostic = XCTAttachment(string: "appeared=\(appeared) scene=\(scene.activationState.rawValue) key=\(window.isKeyWindow) "
             + "window=\(window.frame) scroll=\(scroll.frame) content=\(scroll.contentSize) offset=\(scroll.contentOffset) "
-            + "constructed=\(constructed.count) expectedCenter=\(itemCenter)")
+            + "constructed=\(constructed.count) expectedCenter=\(itemCenter) selectedFrame=\(String(describing: selectedFrame))")
         diagnostic.name = "song-rail-initial-selection-layout"
         diagnostic.lifetime = .keepAlways
         add(diagnostic)
@@ -377,6 +384,11 @@ final class SongRailMeasurementTests: XCTestCase {
         // Item 60's center must be inside the viewport; allow content margins, not a whole missing card.
         let center = scroll.contentOffset.x + scroll.bounds.width / 2
         XCTAssertEqual(center, itemCenter, accuracy: 24)
+        let frame = try XCTUnwrap(selectedFrame)
+        let viewport = scroll.convert(scroll.bounds, to: window)
+        XCTAssertEqual(frame.midX, viewport.midX, accuracy: 24)
+        XCTAssertGreaterThanOrEqual(frame.minX, viewport.minX + 52, "Selected card must clear the leading fade")
+        XCTAssertLessThanOrEqual(frame.maxX, viewport.maxX - 52, "Selected card must clear the trailing fade")
         XCTAssertGreaterThan(scroll.contentSize.width, CGFloat(119) * 162)
         XCTAssertLessThan(constructed.count, 120, "The lazy rail must not construct the complete offscreen card tree")
         print("Song rail initial middle selection: constructed \(constructed.count) of 120 cards")

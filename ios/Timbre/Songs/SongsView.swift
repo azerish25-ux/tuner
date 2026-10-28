@@ -28,6 +28,9 @@ struct SongsView: View {
     @AppStorage(Preferences.Key.learnCourse) private var learnCourseId = Preferences.defaultLearnCourse
     @State private var catalog = SongsCatalog()
     @State private var railMeasurement = SongRailMeasurement()
+    // The horizontal rail remembers its song, but the enclosing lazy page must also remember
+    // its shelf. Otherwise a width change can reset the page above the still-correct song rail.
+    @State private var shelfPosition = ScrollPosition(idType: PageTarget.self)
     @State private var playing: LearnView.PlayingLesson?
     /// Shake counters for order-locked tiles, by lesson id.
     @State private var shakes: [String: Int] = [:]
@@ -100,6 +103,13 @@ struct SongsView: View {
         }
     }
 
+    /// Separate from song IDs: only the outer page's top block, shelves and footer are targets.
+    private enum PageTarget: Hashable, Sendable {
+        case introduction
+        case shelf(String)
+        case request
+    }
+
     /// A shelf picked from the learner's progress or the songs themselves ("Because you learned E minor",
     /// "3 chords or fewer"), above the course shelves.
     struct Pick: Identifiable {
@@ -161,11 +171,19 @@ struct SongsView: View {
                         // its sheets and the song it opens stay up.
                         YourSongsShelf()
                     }
-                    ForEach(shelves) { item in shelfItem(item) }
-                    requestFooter
+                    .id(PageTarget.introduction)
+                    ForEach(shelves) { item in
+                        shelfItem(item).id(PageTarget.shelf(item.id))
+                    }
+                    requestFooter.id(PageTarget.request)
                 }
+                .scrollTargetLayout()
                 .padding(.horizontal, Metrics.gutter).padding(.vertical, 12)
             }
+            // Keep the shelf the reader is browsing, not the prior row's partially visible tail.
+            // SwiftUI maintains this identity through rotation; no delayed offset restoration.
+            .scrollPosition($shelfPosition, anchor: .center)
+            .accessibilityIdentifier("songs.page")
             .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.width } action: { width in pageWidth = width }
             .stageTopShade()
             .background(StageBackground(glow: glow, motes: false))
@@ -500,7 +518,7 @@ struct SongsView: View {
         let playable = access == .play
         return Button { open(song.course, song.lesson, from: source) } label: {
             HStack(spacing: 12) {
-                SongCover(art: art, corner: 6, locked: !playable)
+                SongCover(art: art, corner: 6, locked: !playable, identity: "songs.upnext.\(song.id).cover")
                     .frame(width: 52, height: 52)
                     .shadow(color: .black.opacity(0.4), radius: 6, y: 3)
                 VStack(alignment: .leading, spacing: 4) {
@@ -585,7 +603,7 @@ struct SongsView: View {
                 heroLead(song, art: art, titled: titleBeside)
                     // Above the record as it slides out.
                     .zIndex(1)
-                sleeve(art, playing: previewing == song.id)
+                sleeve(art, playing: previewing == song.id, identity: "songs.hero.\(song.id).cover")
             }
             // As tall as the sleeve (or the title, if taller): the lead's spacer then sets its foot level with the sleeve's.
             .fixedSize(horizontal: false, vertical: true)
@@ -844,10 +862,10 @@ struct SongsView: View {
 
     /// The sleeve, square and crisp, with its record peeking from the left; the record slides out and turns
     /// while the opening plays (it stays put with Reduce Motion).
-    private func sleeve(_ art: CoverArt, playing: Bool) -> some View {
+    private func sleeve(_ art: CoverArt, playing: Bool, identity: String) -> some View {
         let side = sleeveSide
         let out = playing && !reduceMotion ? side * 0.3 : side * 0.14
-        return SongCover(art: art, corner: 8)
+        return SongCover(art: art, corner: 8, identity: identity)
             .frame(width: side, height: side)
             .shadow(color: .black.opacity(0.5), radius: 14, y: 8)
             .background(alignment: .leading) {
@@ -1056,7 +1074,7 @@ struct SongsView: View {
         let shrink: CGFloat = reduceMotion ? 0 : 0.08
         return Button { open(song.course, song.lesson, from: source) } label: {
             VStack(alignment: .leading, spacing: Self.captionGap) {
-                tileCover(song, art: art, access: access)
+                tileCover(song, art: art, access: access, identity: source + ".cover")
                 Self.TileCaption(song: song, sheet: sheet, accent: accent, standing: standing, stars: stars,
                                  calm: store.settings.calmMode, versionLimit: versionLimit, others: others, identity: source)
             }
@@ -1276,9 +1294,9 @@ struct SongsView: View {
     /// The sleeve with its state: songs that play show, once played, a bar along the foot filled to the best accuracy
     /// (their stars are in the caption); songs that don't play yet, Pro or further on alike, calm under the same muted
     /// colour (the type stays crisp) and say why underneath. Every sleeve wears "Hear it" in its play corner (`tile`).
-    private func tileCover(_ song: Song, art: CoverArt, access: LessonAccess) -> some View {
+    private func tileCover(_ song: Song, art: CoverArt, access: LessonAccess, identity: String) -> some View {
         let best = access == .play ? store.learn.bestAccuracy[song.lesson.id] : nil
-        return SongCover(art: art, locked: access != .play)
+        return SongCover(art: art, locked: access != .play, identity: identity)
             .frame(width: tileWidth, height: tileWidth)
             .overlay(alignment: .bottom) { if let best { progressBar(best) } }
             .shadow(color: .black.opacity(0.45), radius: 12, y: 8)

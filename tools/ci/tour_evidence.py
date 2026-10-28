@@ -19,6 +19,9 @@ def record(directory):
     row = dict(shard=shard, test_class=SHARDS[shard], sha=os.environ['GITHUB_SHA'],
                run_id=os.environ['GITHUB_RUN_ID'], run_attempt=os.environ['GITHUB_RUN_ATTEMPT'],
                build=os.environ['TOUR_BUILD_OUTCOME'], tests=os.environ['TOUR_TEST_OUTCOME'])
+    if os.environ.get('TOUR_SHARED_BUILD_REQUIRED') == '1':
+        receipt = directory / 'shared-build.json'
+        row['shared_build'] = json.loads(receipt.read_text()) if receipt.exists() else None
     directory.mkdir(parents=True, exist_ok=True)
     (directory / 'outcome.json').write_text(json.dumps(row, indent=2) + '\n')
 
@@ -26,11 +29,13 @@ def record(directory):
 def aggregate(directory):
     problems = []
     evidence = {}
+    shared = []
     expected = dict(sha=os.environ['GITHUB_SHA'], run_id=os.environ['GITHUB_RUN_ID'],
                     run_attempt=os.environ['GITHUB_RUN_ATTEMPT'])
     for shard, test_class in SHARDS.items():
-        full = directory if shard == 'captures' else directory / 'shards' / ('results-tour-' + shard)
-        candidates = [full / 'outcome.json', directory / 'checkpoints' / ('tour-logs-' + shard) / 'outcome.json']
+        suffix = '-attempt-' + expected['run_attempt'] if os.environ.get('TOUR_SHARED_BUILD_REQUIRED') == '1' else ''
+        full = directory if shard == 'captures' else directory / 'shards' / ('results-tour-' + shard + suffix)
+        candidates = [full / 'outcome.json', directory / 'checkpoints' / ('tour-logs-' + shard + suffix) / 'outcome.json']
         rows = []
         for path in candidates:
             if not path.exists():
@@ -56,8 +61,20 @@ def aggregate(directory):
         for key in ('build', 'tests'):
             if row.get(key) != 'success':
                 problems.append(f'{shard}: {key}={row.get(key, "missing")}')
+        if os.environ.get('TOUR_SHARED_BUILD_REQUIRED') == '1':
+            receipt = row.get('shared_build')
+            if not isinstance(receipt, dict) or receipt.get('identity') != expected:
+                problems.append(f'{shard}: missing or foreign shared-build receipt')
+            elif not all(receipt.get(key) for key in ('archive_sha256', 'toolchain', 'simulator', 'architectures', 'xctestrun_sha256', 'device_id')) or 'fixtures' not in receipt:
+                problems.append(f'{shard}: incomplete shared-build receipt')
+            else:
+                shared.append({key: value for key, value in receipt.items() if key != 'device_id'})
         evidence[shard] = row
     jobs = {key: os.environ.get(key, 'missing') for key in ('TOUR_JOB_OUTCOME', 'TOUR_ARCHIVE_OUTCOME')}
+    if os.environ.get('TOUR_SHARED_BUILD_REQUIRED') == '1':
+        jobs['TOUR_PRODUCER_OUTCOME'] = os.environ.get('TOUR_PRODUCER_OUTCOME', 'missing')
+        if len(shared) != len(SHARDS) or any(row != shared[0] for row in shared[1:]):
+            problems.append('Shared-build identities differ across tour shards or are missing')
     for key, result in jobs.items():
         if result != 'success':
             problems.append(f'{key}={result}')

@@ -42,6 +42,41 @@ final class SmokeUITests: XCTestCase {
         XCTAssertTrue(start.isHittable)
     }
 
+    /// Rendering the accessibility-label Text is not enough: read the actual app's native accessibility
+    /// label, including the independently translated next-level name and the accepted fullwidth slash.
+    func testTraditionalChinesePracticeXPSpokenLabelKeepsTheAcceptedSentence() {
+        app.launchArguments = ["-AppleLanguages", "(zh-Hant)", "-AppleLocale", "zh_TW"]
+        app.launchEnvironment["TIMBRE_SKIP_ONBOARDING"] = "1"
+        app.launch()
+        let practice = app.tabBars.buttons["練習"].firstMatch
+        XCTAssertTrue(practice.waitForExistence(timeout: 40))
+        for _ in 0..<3 where !practice.isSelected {
+            practice.tap()
+            let selected = XCTNSPredicateExpectation(predicate: NSPredicate(format: "selected == true"), object: practice)
+            _ = XCTWaiter.wait(for: [selected], timeout: 3)
+        }
+        XCTAssertTrue(practice.isSelected, "Inspect the Practice screen, not whichever tab was selected before the tap")
+        let progress = element("practice.xp.progress")
+        scrollTo(progress)
+        XCTAssertTrue(progress.waitForExistence(timeout: 10))
+        XCTAssertTrue(progress.isHittable)
+        let actual = progress.label
+        let expected = "0／100 XP · 下一個：初上指板"
+        let scalars = actual.unicodeScalars.map { String(format: "U+%04X", $0.value) }.joined(separator: " ")
+        let report = XCTAttachment(string: "actual: \(actual)\nexpected: \(expected)\nscalars: \(scalars)\n\(app.debugDescription)")
+        report.name = "practice-xp-zh-Hant-native-accessibility-label"
+        report.lifetime = .keepAlways
+        add(report)
+        let screenshot = XCTAttachment(screenshot: app.screenshot())
+        screenshot.name = "practice-xp-zh-Hant-native-accessibility-screen"
+        screenshot.lifetime = .keepAlways
+        add(screenshot)
+        XCTAssertEqual(progress.elementType, .staticText)
+        XCTAssertEqual(actual, expected, "The real VoiceOver label must preserve every translated character and space")
+        XCTAssertFalse(actual.unicodeScalars.contains { (0x2066...0x2069).contains($0.value) },
+                       "Display-only directional isolates must not reach the spoken label")
+    }
+
     /// The fraction's RTL layout container must not turn a plain progress sentence into a tap target.
     func testTuningQuestIsOneStaticTextElementNotAnInteractiveTarget() throws {
         app.launchEnvironment["TIMBRE_SKIP_ONBOARDING"] = "1"

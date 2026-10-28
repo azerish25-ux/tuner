@@ -32,14 +32,29 @@ final class SongShelfRailUITests: XCTestCase {
 
     private func showRail() -> XCUIElement {
         let rail = app.scrollViews.matching(identifier: "songs.rail.bass-songbook").firstMatch
-        let vertical = app.scrollViews.firstMatch
-        for _ in 0..<24 {
+        let vertical = app.scrollViews.matching(identifier: "songs.page").firstMatch
+        for attempt in 0..<24 {
             if rail.exists {
-                let bounds = rail.frame
+                guard let bounds = stableFrame(rail) else { continue }
+                let top = app.frame.minY + 70
                 let bottom = app.tabBars.firstMatch.frame.minY - 24
-                if bounds.minY >= app.frame.minY + 70 && bounds.maxY <= bottom { return rail }
-                if bounds.minY < app.frame.minY + 70 { vertical.swipeDown(velocity: .slow) }
-                else { vertical.swipeUp(velocity: .slow) }
+                if bounds.minY >= top && bounds.maxY <= bottom { return rail }
+                guard usable(bounds), bounds.height <= bottom - top else {
+                    capture("vertical-too-tall")
+                    XCTFail("The complete songbook rail must fit vertically: rail=\(bounds), band=\(top)...\(bottom)")
+                    return rail
+                }
+                // AX5's 644-point rail fits this 697-point band, but a full-page swipe leaps
+                // over its 53-point placement window in both directions. Correct the measured
+                // physical distance with a held drag; keep the exact same containment checks.
+                let band = CGRect(x: vertical.frame.minX, y: top, width: vertical.frame.width, height: bottom - top)
+                let limit = band.height * 0.6
+                let distance = max(-limit, min(limit, band.midY - bounds.midY))
+                print("SONG-RAIL vertical: attempt=\(attempt) rail=\(bounds) band=\(band) drag=\(distance)")
+                let origin = app.coordinate(withNormalizedOffset: .zero)
+                let start = origin.withOffset(CGVector(dx: band.midX, dy: band.midY - distance / 2))
+                let end = origin.withOffset(CGVector(dx: band.midX, dy: band.midY + distance / 2))
+                start.press(forDuration: 0.05, thenDragTo: end, withVelocity: .slow, thenHoldForDuration: 0.3)
             } else { vertical.swipeUp(velocity: .slow) }
         }
         capture("vertical-unreachable")
@@ -116,6 +131,11 @@ final class SongShelfRailUITests: XCTestCase {
         XCTAssertLessThanOrEqual(frame.maxX, viewport.maxX + 1)
         XCTAssertGreaterThanOrEqual(frame.minY, viewport.minY - 1)
         XCTAssertLessThanOrEqual(frame.maxY, viewport.maxY + 1)
+        // Rail-relative containment alone can pass with the entire shelf below the screen.
+        let screen = app.frame
+        let contentBottom = app.tabBars.firstMatch.frame.minY
+        XCTAssertLessThan(frame.minY, contentBottom, "The parent page must keep the browsed shelf onscreen: \(stage)")
+        XCTAssertGreaterThan(frame.maxY, screen.minY, "The browsed card must intersect the visible page: \(stage)")
         XCTAssertTrue(card.isHittable, "Rotation must preserve the browsed end: \(stage)")
     }
 
@@ -212,15 +232,21 @@ final class SongShelfRailUITests: XCTestCase {
             verifyActions(id, tile: tile, rail: rail)
         }
         // A browsed row must not jump back to its initially selected first song on rotation.
-        XCUIDevice.shared.orientation = .landscapeLeft
-        Thread.sleep(forTimeInterval: 2)
-        let landscapeLast = rail.buttons.matching(identifier: "songs.song." + samples[2]).firstMatch
-        assertRotationVisible(landscapeLast, rail: rail, stage: "landscape-\(accessible)-\(rtl)")
-        XCTAssertLessThanOrEqual(landscapeLast.frame.height, rail.frame.height + 1)
-        XCUIDevice.shared.orientation = .portrait
-        Thread.sleep(forTimeInterval: 2)
-        let last = rail.buttons.matching(identifier: "songs.song." + samples[2]).firstMatch
-        assertRotationVisible(last, rail: rail, stage: "portrait-return-\(accessible)-\(rtl)")
+        for cycle in 0..<2 {
+            XCUIDevice.shared.orientation = .landscapeLeft
+            Thread.sleep(forTimeInterval: 2)
+            let landscapeLast = rail.buttons.matching(identifier: "songs.song." + samples[2]).firstMatch
+            assertRotationVisible(landscapeLast, rail: rail, stage: "landscape-\(accessible)-\(rtl)-\(cycle)")
+            XCTAssertLessThanOrEqual(landscapeLast.frame.height, rail.frame.height + 1)
+            XCUIDevice.shared.orientation = .portrait
+            Thread.sleep(forTimeInterval: 2)
+            let last = rail.buttons.matching(identifier: "songs.song." + samples[2]).firstMatch
+            assertRotationVisible(last, rail: rail, stage: "portrait-return-\(accessible)-\(rtl)-\(cycle)")
+        }
+        // Do not vertically recenter before this check: both separate actions and navigation
+        // must work in the position preserved by the page, not one repaired by the test.
+        let rotatedLast = rail.buttons.matching(identifier: "songs.song." + samples[2]).firstMatch
+        verifyActions(samples[2], tile: rotatedLast, rail: rail)
         _ = reveal(samples[0], in: rail, forward: false, rtl: rtl)
         XCTAssertEqual(rail.frame.height, height, accuracy: 1)
     }

@@ -437,6 +437,7 @@ private struct ChallengeChip: View {
             HStack(spacing: 8) {
                 ring(complete: complete)
                 challenge.title.font(.footnote.weight(.semibold))
+                    .accessibilityIdentifier("practice.\(challenge.game?.rawValue ?? "game").challenge.title")
                     .foregroundStyle(complete ? Palette.inkSoft : Palette.ink)
                     .strikethrough(complete, color: Palette.inkFaint)
                     .lineLimit(2).minimumScaleFactor(0.85)

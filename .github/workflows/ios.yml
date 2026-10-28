@@ -110,10 +110,15 @@ jobs:
           python3 tools/ci/test_result_polish_contract.py
           python3 tools/ci/test_build_checkpoint_contract.py
           python3 tools/ci/test_tour_shards.py
+          python3 tools/ci/test_shared_tour_build.py
+          python3 tools/ci/test_song_cover_audit_identity.py
+          python3 tools/ci/test_welcome_typography_contract.py
           python3 tools/ci/test_ci_concurrency_contract.py
           python3 tools/ci/test_country_pricing_policy.py
           python3 tools/ci/test_simulator_warmup.py
+          python3 tools/ci/test_simulator_cleanup.py
           python3 tools/ci/test_fraction_direction_contract.py
+          python3 tools/ci/test_settings_localization_contract.py
           python3 tools/ci/test_practice_xp_direction_contract.py
           python3 tools/ci/test_song_rail_contract.py
           python3 tools/ci/test_listing_artifact_review.py

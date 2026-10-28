@@ -141,6 +141,11 @@ final class LessonAccessibilityLayoutUITests: XCTestCase {
         XCTAssertNil(Self.scrollDistance(.zero, in: viewport))
         XCTAssertNil(Self.scrollDistance(.infinite, in: viewport))
         XCTAssertNil(Self.scrollDistance(topClipped, in: .null))
+        // Actual 2013834 failure: the hidden burst's 580-point canvas inflated a 402-point
+        // note target before any gesture. Never "fix" that horizontal overflow by scrolling.
+        let decorationBounds = CGRect(x: -89, y: 315, width: 580, height: 580)
+        XCTAssertFalse(Self.contains(decorationBounds, in: viewport))
+        XCTAssertNil(Self.scrollDistance(decorationBounds, in: viewport))
         let farBelow = CGRect(x: 0, y: 1400, width: 402, height: 350)
         XCTAssertEqual(Self.scrollDistance(farBelow, in: viewport)!, -viewport.height * 0.45, accuracy: 0.001)
         XCTAssertFalse(Self.contains(farBelow.offsetBy(dx: 0, dy: -viewport.height * 0.45), in: viewport))
@@ -185,7 +190,18 @@ final class LessonAccessibilityLayoutUITests: XCTestCase {
         XCTAssertTrue(isClear(override), "I played it must remain fully on screen")
         let target = element("lesson.notes.target")
         scrollClear(target, above: override.frame.minY)
+        XCTAssertEqual(target.label, "E, String 6, open")
         XCTAssertEqual(target.value as? String, "Listening…")
+        // Correct focus bounds must contain the real rendered note and full status, not a
+        // smaller synthetic proxy that lets clipped text pass through the viewport check.
+        let notesViewport = contentViewport(app.scrollViews.firstMatch, above: override.frame.minY)
+        XCTAssertGreaterThan(target.frame.height, 290, "AX5 target must include the status below its 290-point ring")
+        for label in ["E", "Listening…"] {
+            let text = target.staticTexts.matching(NSPredicate(format: "label == %@", label)).firstMatch
+            XCTAssertTrue(text.exists, "The complete visible note/status text must remain present: \(label)")
+            XCTAssertTrue(Self.contains(text.frame, in: target.frame), "Focus bounds must include all visible text: \(label)")
+            XCTAssertTrue(Self.contains(text.frame, in: notesViewport), "All note/status text must be inside the clear viewport: \(label)")
+        }
         capture("notes-status-scroll-clear")
         hear.tap()
         Thread.sleep(forTimeInterval: 3)

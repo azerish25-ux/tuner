@@ -20,7 +20,57 @@ env:
   HOMEBREW_NO_AUTO_UPDATE: "1"
   HOMEBREW_NO_INSTALL_CLEANUP: "1"
 jobs:
+  tour-build:
+    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'captures')
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          persist-credentials: false
+      - name: Generate Xcode project
+        run: |
+          command -v xcodegen >/dev/null 2>&1 || brew install xcodegen
+          cd ios && xcodegen generate
+      - name: Bind exact toolchain runtime and source fixtures
+        run: python3 tools/ci/shared_tour_build.py select ci-out/shared
+      - name: Ensure Metal toolchain
+        run: bash tools/ci/ensure-metal.sh
+      - name: Build app and tests
+        id: build
+        run: |
+          set -o pipefail
+          mkdir -p ios/build ci-out
+          xcodebuild build-for-testing -project ios/Timbre.xcodeproj -scheme Timbre -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/build.log
+      # Publish compiler diagnostics before tests or the independent Release archive can delay them.
+      - name: Summarize simulator build immediately
+        if: always() && hashFiles('ci-out/build.log') != ''
+        run: python3 tools/ci/summarize-log.py ci-out/build.log ci-out/build.summary.txt
+      - name: Upload simulator build checkpoint
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        if: always() && hashFiles('ci-out/build.log') != ''
+        with:
+          name: nightly-build-${{ github.job }}-${{ github.run_attempt }}
+          path: |
+            ci-out/build.log
+            ci-out/build.summary.txt
+          if-no-files-found: error
+          retention-days: 14
+      - name: Package verified products only after successful build
+        if: success()
+        run: python3 tools/ci/shared_tour_build.py pack ci-out/shared
+      - name: Upload same-run tour products
+        if: success()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: tour-products-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ci-out/shared
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
+
   tour:
+    needs: tour-build
     # Independent class shards retain every selected case; failures never cancel sibling evidence.
     name: tour (${{ matrix.shard }})
     strategy:
@@ -47,36 +97,14 @@ jobs:
     runs-on: macos-15
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
-      - name: Generate Xcode project
-        run: |
-          command -v xcodegen >/dev/null 2>&1 || brew install xcodegen
-          cd ios && xcodegen generate
-      - name: Select available iPhone simulator
-        run: |
-          DEVICE_ID=$(xcrun simctl list devices available -j | python3 -c 'import json,re,sys; d=json.load(sys.stdin); runtimes=sorted(d["devices"].items(),key=lambda pair:tuple(map(int,re.findall(r"\d+",pair[0]))),reverse=True); print(next(x["udid"] for k,v in runtimes if "iOS" in k for x in v if "iPhone" in x["name"]))')
-          echo "DEVICE_ID=$DEVICE_ID" >> "$GITHUB_ENV"
-      - name: Ensure Metal toolchain
-        run: bash tools/ci/ensure-metal.sh
-      - name: Build app and tests
-        id: build
-        run: |
-          set -o pipefail
-          mkdir -p ios/build ci-out
-          xcodebuild build-for-testing -project ios/Timbre.xcodeproj -scheme Timbre -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/build.log
-      # Publish compiler diagnostics before tests or the independent Release archive can delay them.
-      - name: Summarize simulator build immediately
-        if: always() && hashFiles('ci-out/build.log') != ''
-        run: python3 tools/ci/summarize-log.py ci-out/build.log ci-out/build.summary.txt
-      - name: Upload simulator build checkpoint
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
-        if: always() && hashFiles('ci-out/build.log') != ''
+      - name: Download exact same-run products
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
-          name: nightly-build-${{ github.job }}-${{ matrix.shard }}-${{ github.run_attempt }}
-          path: |
-            ci-out/build.log
-            ci-out/build.summary.txt
-          if-no-files-found: error
-          retention-days: 14
+          name: tour-products-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ci-build
+      - name: Verify and restore shared build
+        id: build
+        run: python3 tools/ci/shared_tour_build.py restore ci-build
       - name: Boot simulator and allow the microphone
         run: |
           xcrun simctl boot "$DEVICE_ID" || true
@@ -104,10 +132,30 @@ jobs:
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always() && matrix.shard != 'launch'
         with:
-          name: tour-warmup-${{ matrix.shard }}
+          name: tour-warmup-${{ matrix.shard }}-attempt-${{ github.run_attempt }}
           path: |
             ci-out/warmup/status.json
             ci-out/warmup/*.log
+            ci-out/warmup/diagnostic-only.png
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Isolate owned simulator after unconfirmed priming cleanup
+        id: warmup_cleanup
+        if: ${{ !cancelled() && steps.build.outcome == 'success' && steps.warmup.outcome == 'failure' && hashFiles('ci-out/warmup/status.json') != '' }}
+        timeout-minutes: 3
+        run: |
+          PYTHONPATH=tools/ci python3 - <<'PYCLEAN'
+          import os
+          from pathlib import Path
+          from simulator_cleanup import isolate
+          isolate(os.environ['DEVICE_ID'], Path('ci-out/warmup/status.json'), Path('ci-out/warmup-cleanup'))
+          PYCLEAN
+      - name: Upload owned simulator cleanup receipt before independent XCTest
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        if: always() && steps.warmup.outcome == 'failure'
+        with:
+          name: tour-warmup-cleanup-${{ matrix.shard }}-attempt-${{ github.run_attempt }}
+          path: ci-out/warmup-cleanup/
           if-no-files-found: warn
           retention-days: 14
       - name: Selected UI class
@@ -119,15 +167,16 @@ jobs:
         timeout-minutes: 60
         run: |
           set -o pipefail
-          xcodebuild test-without-building -project ios/Timbre.xcodeproj -scheme Timbre -parallel-testing-enabled NO \
+          xcodebuild test-without-building -xctestrun "$XCTESTRUN" -parallel-testing-enabled NO \
             -only-testing:TimbreUITests/${{ matrix.test_class }} \
-            -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd \
+            -destination "platform=iOS Simulator,id=$DEVICE_ID" \
             -resultBundlePath ios/build/UITests.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/test.log
       - name: Finalize compact shard diagnostics immediately
         if: always()
         env:
           TOUR_SHARD: ${{ matrix.shard }}
           TOUR_BUILD_OUTCOME: ${{ steps.build.outcome }}
+          TOUR_SHARED_BUILD_REQUIRED: "1"
           TOUR_TEST_OUTCOME: ${{ steps.tests.outcome }}
         run: |
           mkdir -p ci-out
@@ -139,13 +188,16 @@ jobs:
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()
         with:
-          name: tour-logs-${{ matrix.shard }}
+          name: tour-logs-${{ matrix.shard }}-attempt-${{ github.run_attempt }}
           path: |
             ci-out/*.log
             ci-out/*.summary.txt
             ci-out/outcome.json
+            ci-out/shared-build.json
             ci-out/warmup/status.json
             ci-out/warmup/*.log
+            ci-out/warmup/diagnostic-only.png
+            ci-out/warmup-cleanup/
           if-no-files-found: error
           retention-days: 14
       - name: Export simulator screenshots
@@ -163,13 +215,13 @@ jobs:
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()
         with:
-          name: ${{ matrix.artifact }}
+          name: ${{ matrix.artifact }}-attempt-${{ github.run_attempt }}
           path: ci-out
           retention-days: 14
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()
         with:
-          name: ios-tour-evidence-${{ matrix.shard }}
+          name: ios-tour-evidence-${{ matrix.shard }}-attempt-${{ github.run_attempt }}
           path: |
             ios/build/*.xcresult
           retention-days: 14
@@ -467,9 +519,9 @@ jobs:
     if: >-
       always()
       && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
-      && (needs.tour.result != 'skipped' || needs.archive.result != 'skipped' || needs.ipad.result != 'skipped'
+      && (needs['tour-build'].result != 'skipped' || needs.tour.result != 'skipped' || needs.archive.result != 'skipped' || needs.ipad.result != 'skipped'
           || needs['a11y-matrix'].result != 'skipped' || needs.tsan.result != 'skipped')
-    needs: [tour, archive, ipad, a11y-matrix, tsan]
+    needs: [tour-build, tour, archive, ipad, a11y-matrix, tsan]
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -482,20 +534,20 @@ jobs:
       - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         continue-on-error: true
         with:
-          name: results-tour
+          name: results-tour-attempt-${{ github.run_attempt }}
           path: results/results-tour
       # Preserve capture screenshot paths; other shards have isolated logs/manifests underneath.
       - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         continue-on-error: true
         with:
-          pattern: results-tour-*
+          pattern: results-tour-*-attempt-${{ github.run_attempt }}
           path: results/results-tour/shards
           merge-multiple: false
       # Compact checkpoints survive even when expensive attachment export/upload cannot finish.
       - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         continue-on-error: true
         with:
-          pattern: tour-logs-*
+          pattern: tour-logs-*-attempt-${{ github.run_attempt }}
           path: results/results-tour/checkpoints
           merge-multiple: false
       - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
@@ -519,8 +571,10 @@ jobs:
           name: results-tsan
           path: results/results-tsan
       - name: Require every shard outcome without hiding partial evidence
-        if: always() && needs.tour.result != 'skipped'
+        if: always() && needs['tour-build'].result != 'skipped'
         env:
+          TOUR_SHARED_BUILD_REQUIRED: "1"
+          TOUR_PRODUCER_OUTCOME: ${{ needs['tour-build'].result }}
           TOUR_JOB_OUTCOME: ${{ needs.tour.result }}
           TOUR_ARCHIVE_OUTCOME: ${{ needs.archive.result }}
         run: python3 tools/ci/tour_evidence.py aggregate results/results-tour

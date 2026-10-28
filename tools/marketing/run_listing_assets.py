@@ -118,6 +118,8 @@ def test_command(xctestrun, device, tests, bundle):
 def export_attachments(bundle, folder):
     if not bundle.is_dir():
         raise RuntimeError(f'Missing result bundle: {bundle}')
+    from listing_evidence import export_result_summaries
+    export_result_summaries(bundle, bundle.parent)
     run(['xcrun', 'xcresulttool', 'export', 'attachments', '--path', bundle, '--output-path', folder])
 
 

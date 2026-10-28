@@ -65,25 +65,20 @@ LOCALES = [r["locale"] for r in json.loads((ROOT / "tools/l10n/store-locales.jso
 # Where each capture's hero sits, as fractions of the upright capture:
 #   y0      the top of what a zoom, flip or plain card shows (the rest of the screen runs on below it)
 #   x       the columns a zoom keeps, to enlarge it further
-#   cut     breakout: where the screen card starts; above it the picture rises out of the card
-#   rise    breakout: the top of the picture that rises out
-#   keep    breakout: the columns of the rising picture kept (its sides fade away)
+#   detail_clearance  verified whitespace band that may contain an enlarged detail
 #   detail  callout: the region enlarged in the card that breaks out over the screen's edge
 #
 # A zoom or flip starts below the status bar (it ends at 0.044 of a 6.3-inch capture) or at the very top, never across
 # it; render refuses a frame whose top edge cuts through text (`sliced`).
 FOCUS = {
-    "10b-tune-locked": {"cut": 0.455, "rise": 0.132, "keep": (0.11, 0.79)},
-    "49d-tune-violin-locked": {"cut": 0.462, "rise": 0.132, "keep": (0.13, 0.80)},
-    "49e-tune-cello-locked": {"cut": 0.462, "rise": 0.132, "keep": (0.13, 0.80)},
-    "17b-tune-ukulele-locked": {"cut": 0.455, "rise": 0.132, "keep": (0.11, 0.79)},
     "65-song-perform": {"y0": 0.032},
     "65b-song-perform-violin": {"y0": 0.032},
     # Below the status bar, above the stars' rings' brightest part.
     "62-lesson-results": {"y0": 0.06, "x": (0.02, 0.98)},
     "62b-lesson-results-violin": {"y0": 0.06, "x": (0.02, 0.98)},
     # The callout enlarges the six ticked strings themselves: the step's headline stays at its own size in the screen.
-    "52b-lesson-chord": {"y0": 0.0, "detail": (0.149, 0.208, 0.902, 0.278)},
+    "52b-lesson-chord": {"y0": 0.0, "detail": (0.149, 0.208, 0.902, 0.278),
+                         "detail_clearance": (0.202, 0.310)},
     "31b-instruments-folk": {"y0": 0.0},
     "63-songs": {"y0": 0.0},
     "50-learn": {"y0": 0.0},
@@ -554,40 +549,69 @@ class Frame:
     def px(self, value: float) -> int:
         return int(round(value * self.unit))
 
-    def caption(self, title: str, line: str, top: float, left: float, right: float, align: str = "centre") -> int:
-        """The caption (Sora SemiBold, 136 px down to 96 at 1320 wide) and the supporting line under it (Sora Medium,
-        56 px, the ink at 60 %); returns the foot of the block."""
-        from PIL import ImageDraw
+    def caption_plan(self, title: str, line: str, left: float, right: float, align: str = "centre"):
+        """Measure shaped glyph ink on an *unclipped* mask, not just font advances.
+
+        Baseline/ascender anchors can put Arabic descenders below the nominal line
+        advance. The same runs are used to measure and draw the final composition.
+        """
+        from PIL import Image, ImageDraw
         width = right - left
         font, lines = art.fit_lines(title, "SemiBold", self.px(136), self.px(96), width)
         small, rows = art.fit_lines(line, "Medium", self.px(56), self.px(52), width) if line else (None, [])
-        draw = ImageDraw.Draw(self.canvas)
         x, anchor = {"centre": ((left + right) / 2, "ma"), "left": (left, "la"), "right": (right, "ra")}[align]
-        y = top
+        runs = []
+        y = 0
         step = art.line_step(font, lines, 1.04)
         for text in lines:
-            draw.text((x, y), text, font=font, fill=self.ink, anchor=anchor, **art.text_layout())
+            runs.append((x, y, text, font, anchor, False))
             bottom = y + font.getbbox(text, anchor=anchor, **art.text_layout())[3]
             y += step
         if lines:
             y = max(y, bottom)
         if rows:
             y += self.px(26)
-            sample = self.canvas.getpixel((int(min(max(x, 0), self.w - 1)), int(min(y + small.size // 2, self.h - 1))))
-            soft = art.mix(self.ink, sample[:3], 0.40)
             step = art.line_step(small, rows, 1.18)
             for text in rows:
-                draw.text((x, y), text, font=small, fill=soft, anchor=anchor, **art.text_layout())
+                runs.append((x, y, text, small, anchor, True))
                 bottom = y + small.getbbox(text, anchor=anchor, **art.text_layout())[3]
                 y += step
             y = max(y, bottom)
-        return int(y)
+        pad = self.px(200)
+        mask = Image.new("L", (self.w + 2 * pad, int(y) + 2 * pad), 0)
+        draw = ImageDraw.Draw(mask)
+        for x, row, text, font, anchor, _ in runs:
+            draw.text((x + pad, row + pad), text, font=font, fill=255, anchor=anchor, **art.text_layout())
+        bounds = mask.getbbox()
+        ink = tuple(value - pad for value in bounds) if bounds else (left, 0, left, 0)
+        return runs, int(y), ink
 
-    def card(self, picture, x: int, y: int, radius: int, corners=(True, True, True, True), rim: bool = True, shadow: int = 150):
+    def caption(self, title: str, line: str, top: float, left: float, right: float, align: str = "centre") -> int:
+        """Draw measured type, failing closed if actual ink crosses the safe canvas."""
+        from PIL import ImageDraw
+        runs, foot, ink = self.caption_plan(title, line, left, right, align)
+        bounds = (ink[0], ink[1] + top, ink[2], ink[3] + top)
+        if bounds[0] < 0 or bounds[2] > self.w or bounds[1] < 0 or bounds[3] > self.h - self.px(64):
+            raise ValueError(f"Caption ink {bounds} exceeds canvas/footer safe area {self.size}: {title}")
+        self.caption_bounds = bounds
+        draw = ImageDraw.Draw(self.canvas)
+        soft = None
+        for x, row, text, font, anchor, supporting in runs:
+            if supporting and soft is None:
+                sample = self.canvas.getpixel((int(min(max(x, 0), self.w - 1)),
+                                               int(min(top + row + font.size // 2, self.h - 1))))
+                soft = art.mix(self.ink, sample[:3], 0.40)
+            draw.text((x, top + row), text, font=font, fill=soft if supporting else self.ink,
+                      anchor=anchor, **art.text_layout())
+        return int(top + foot)
+
+    def card(self, picture, x: int, y: int, radius: int, rim: bool = True, shadow: int = 150):
         """A screen card: shadow, picture with rounded corners, a thin rim of the accent."""
         box = (x, y, x + picture.width, y + picture.height)
         art.drop_shadow(self.canvas, box, radius, self.px(46), shadow if not self.light else 70, self.px(24))
-        self.canvas.alpha_composite(art.rounded(picture, radius, corners), (int(x), int(y)))
+        # A nominal bleed may end on-canvas after native-height clamping. Match
+        # the always-rounded rim/shadow even then; never expose square pixels.
+        self.canvas.alpha_composite(art.rounded(picture, radius), (int(x), int(y)))
         if rim:
             colour = art.mix(art.STAGE, art.tint(self.accent), 0.5) if not self.light else (205, 198, 186)
             art.outline(self.canvas, (x, y, x + picture.width - 1, y + picture.height - 1), radius, colour + (255,), max(2, self.px(3)))
@@ -638,96 +662,85 @@ def compose(look: str, shot_path: Path, capture: str, title: str, line: str, dev
     return frame.save(out)
 
 
+def _contained_screen(shot, box, width, height):
+    """Fit a chosen native region without stretching or silently cropping its foot."""
+    box = tuple(int(round(value)) for value in box)
+    if width <= 0 or height <= 0 or box[2] <= box[0] or box[3] <= box[1]:
+        raise ValueError("Native screen has no positive available composition area")
+    scale = min(width / (box[2] - box[0]), height / (box[3] - box[1]))
+    return _scaled(shot, scale, box), scale
+
+
 def _zoom(layout, accent, shot, focus, title, line, size):
-    """The hero region, enlarged to the frame's width less its sides, bleeding off the bottom."""
+    """A large native hero region; complete actions remain above the safe footer."""
     frame = Frame(size, accent)
     m = frame.px(84)
     foot = frame.caption(title, line, frame.px(150), m, frame.w - m)
     x0, x1 = focus.get("x", (0.0, 1.0))
     y0 = focus.get("y0", 0.0)
-    width = frame.w - 2 * frame.px(64)
-    scale = width / ((x1 - x0) * shot.width)
     top = foot + frame.px(70)
-    visible = (frame.h - top + frame.px(80)) / scale
-    box = (x0 * shot.width, y0 * shot.height, x1 * shot.width, min(shot.height, y0 * shot.height + visible))
-    picture = _scaled(shot, scale, box)
-    frame.card(picture, frame.px(64), top, _screen_radius(width), corners=(True, True, False, False))
+    picture, _ = _contained_screen(shot, (x0 * shot.width, y0 * shot.height, x1 * shot.width, shot.height),
+                                   frame.w - 2 * frame.px(64), frame.h - top - frame.px(64))
+    frame.card(picture, (frame.w - picture.width) // 2, top, _screen_radius(picture.width))
     return frame
 
 
 def _breakout(layout, accent, shot, focus, title, line, size):
-    """The 3D headstock rising out of the screen: the screen card holds the readout and the string chips, enlarged;
-    above its top edge the picture goes on (the headstock, its peg ringed and ticked), unframed, fading out at its
-    sides and top, and over the card's rim, so it stands out of the screen and over the frame's stage."""
-    from PIL import Image, ImageDraw, ImageFilter
-    frame = Frame(size, accent, glow=(0.5, 0.30))
+    """The native instrument stage, intact, over a deep accent spotlight.
+
+    An axis-aligned feather cannot isolate an instrument from overlapping native
+    controls in every language. Keep the real stage and all its pegs/actions,
+    rather than dissolving meaningful UI into the marketing background.
+    """
+    frame = Frame(size, accent, glow=(0.5, 0.38))
     m = frame.px(84)
     foot = frame.caption(title, line, frame.px(150), m, frame.w - m)
-    cut, rise = focus.get("cut", 0.45), focus.get("rise", 0.07)
-    keep = focus.get("keep", (0.2, 0.8))
-    side = frame.px(70)
-    width = frame.w - 2 * side
-    bleed = frame.px(70)
-    # As wide as the frame allows, but the rise and the card together fit between the caption and the bottom edge.
-    scale = min(width / shot.width, (frame.h + bleed - foot - frame.px(30)) / ((1 - rise) * shot.height))
-    width = int(shot.width * scale)
-    x = (frame.w - width) // 2
-    card = _scaled(shot, scale, (0, cut * shot.height, shot.width, shot.height))
-    card_top = frame.h + bleed - card.height
-    frame.card(card, x, card_top, _screen_radius(width), corners=(True, True, False, False))
-    # The rising picture: from `rise` down to a little past the cut, so it laps over the card's rim.
-    lap = int(frame.px(90) / scale)
-    lifted = _scaled(shot, scale, (0, rise * shot.height, shot.width, min(shot.height, cut * shot.height + lap)))
-    mask = Image.new("L", lifted.size, 0)
-    left, right = keep[0] * lifted.width, keep[1] * lifted.width
-    feather = lifted.width * 0.045
-    ImageDraw.Draw(mask).rounded_rectangle([left + feather, feather, right - feather, lifted.height - feather * 0.5],
-                                            radius=int(feather * 2), fill=255)
-    mask = mask.filter(ImageFilter.GaussianBlur(feather * 0.7))
-    lifted_top = card_top - (lifted.height - int(lap * scale))
-    # Behind it, a pool of the capture's own stage colour (sampled along the kept region's edge), so the picture
-    # dissolves into the frame whatever the accent: no box where the stage's wash meets the frame's.
-    strip = lifted.crop((int(left), 0, int(right), lifted.height)).resize((32, 32))
-    border = [strip.getpixel((i, j)) for i in range(32) for j in range(32) if i in (0, 31) or j in (0, 31)]
-    pool_colour = tuple(sum(c[k] for c in border) // len(border) for k in range(3))
-    pad = int(feather * 8)
-    pool = Image.new("L", (lifted.width + 2 * pad, lifted.height + 2 * pad), 0)
-    ImageDraw.Draw(pool).ellipse([pad + left - feather * 2, pad + feather, pad + right + feather * 2,
-                                  pad + lifted.height + feather * 3], fill=235)
-    pool = pool.filter(ImageFilter.GaussianBlur(feather * 3))
-    wash = Image.new("RGBA", pool.size, pool_colour + (0,))
-    wash.putalpha(pool)
-    frame.canvas.alpha_composite(wash, (x - pad, lifted_top - pad))
-    rising = lifted.convert("RGBA")
-    rising.putalpha(mask)
-    frame.canvas.alpha_composite(rising, (x, lifted_top))
+    top = foot + frame.px(70)
+    screen, _ = _contained_screen(shot, (0, 0, shot.width, shot.height),
+                                  frame.w - 2 * frame.px(70), frame.h - top - frame.px(64))
+    frame.card(screen, (frame.w - screen.width) // 2, top, _screen_radius(screen.width), shadow=190)
     return frame
 
 
+def _callout_geometry(frame, shot, focus, scale, x, top, width):
+    """Enlarge only within the verified source whitespace around the string strip.
+
+    No caption/instruction/chord title is covered; physical string order is never
+    mirrored. RTL reflects the editorial placement only.
+    """
+    dx0, dy0, dx1, dy1 = focus["detail"]
+    y0 = focus.get("y0", 0.0)
+    clear_top, clear_bottom = focus.get("detail_clearance", (dy0, dy1))
+    gap = frame.px(12)
+    safe_top = top + (clear_top - y0) * shot.height * scale + gap
+    safe_bottom = top + (clear_bottom - y0) * shot.height * scale - gap
+    box = tuple(round(v) for v in (dx0 * shot.width, dy0 * shot.height, dx1 * shot.width, dy1 * shot.height))
+    zoom = min(scale * 1.55, (frame.w - 2 * frame.px(48)) / (box[2] - box[0]),
+               (safe_bottom - safe_top) / (box[3] - box[1]))
+    picture = _scaled(shot, zoom, box)
+    centre_y = top + ((dy0 + dy1) / 2 - y0) * shot.height * scale
+    cy = round(max(safe_top, min(centre_y - picture.height / 2, safe_bottom - picture.height)))
+    wanted_x = x - frame.px(150) if art.text_layout()["direction"] == "rtl" else x + width - picture.width + frame.px(150)
+    cx = max(frame.px(48), min(frame.w - frame.px(48) - picture.width, wanted_x))
+    return picture, cx, cy
+
+
 def _callout(layout, accent, shot, focus, title, line, size):
-    """The whole screen, its key detail enlarged in a card that breaks out over the screen's right edge."""
+    """A complete native screen with a bounded enlargement of its six strings."""
     frame = Frame(size, accent)
     m = frame.px(84)
     foot = frame.caption(title, line, frame.px(150), m, frame.w - m)
-    width = int(frame.w * 0.78)
-    scale = width / shot.width
-    x = frame.px(70)
     top = foot + frame.px(70)
-    visible = (frame.h - top + frame.px(80)) / scale
     y0 = focus.get("y0", 0.0)
-    screen = _scaled(shot, scale, (0, y0 * shot.height, shot.width, min(shot.height, y0 * shot.height + visible)))
-    frame.card(screen, x, top, _screen_radius(width), corners=(True, True, False, False))
-    detail = focus.get("detail")
-    if detail:
-        dx0, dy0, dx1, dy1 = detail
-        # Half as large again as in the screen, but never wider than the frame less its margins.
-        zoom = min(scale * 1.55, (frame.w - 2 * frame.px(48)) / ((dx1 - dx0) * shot.width))
-        picture = _scaled(shot, zoom, (dx0 * shot.width, dy0 * shot.height, dx1 * shot.width, dy1 * shot.height))
-        # Over the detail's own place in the screen, pushed right so it breaks out past the screen's edge.
-        centre_y = top + ((dy0 + dy1) / 2 - y0) * shot.height * scale
-        cx = max(frame.px(48), min(frame.w - frame.px(48) - picture.width, x + width - picture.width + frame.px(150)))
-        cy = int(centre_y - picture.height / 2 + frame.px(40))
-        frame.card(picture, cx, cy, frame.px(34), shadow=190)
+    screen, scale = _contained_screen(shot, (0, y0 * shot.height, shot.width, shot.height),
+                                      int(frame.w * 0.78), frame.h - top - frame.px(64))
+    x = frame.w - screen.width - frame.px(70) if art.text_layout()["direction"] == "rtl" else frame.px(70)
+    frame.card(screen, x, top, _screen_radius(screen.width))
+    if focus.get("detail"):
+        picture, cx, cy = _callout_geometry(frame, shot, focus, scale, x, top, screen.width)
+        # A drop shadow here would darken protected native labels even outside
+        # the card bounds. A crisp accent rim separates the enlarged detail.
+        frame.card(picture, cx, cy, frame.px(26), shadow=0)
     return frame
 
 
@@ -771,7 +784,7 @@ def _wall(layout, accent, shot, focus, title, line, size):
     visible = (frame.h - top + frame.px(80)) / scale
     y0 = focus.get("y0", 0.0)
     screen = _scaled(shot, scale, (0, y0 * shot.height, shot.width, min(shot.height, y0 * shot.height + visible)))
-    frame.card(screen, (frame.w - width) // 2, top, _screen_radius(width), corners=(True, True, False, False), shadow=200)
+    frame.card(screen, (frame.w - width) // 2, top, _screen_radius(width), shadow=200)
     return frame
 
 
@@ -786,7 +799,7 @@ def _light(layout, accent, shot, focus, title, line, size):
     visible = (frame.h - top + frame.px(80)) / scale
     y0 = focus.get("y0", 0.0)
     screen = _scaled(shot, scale, (0, y0 * shot.height, shot.width, min(shot.height, y0 * shot.height + visible)))
-    frame.card(screen, (frame.w - width) // 2, top, _screen_radius(width), corners=(True, True, False, False), rim=False)
+    frame.card(screen, (frame.w - width) // 2, top, _screen_radius(width), rim=False)
     return frame
 
 
@@ -798,42 +811,43 @@ def _offset(layout, accent, shot, focus, title, line, size):
     frame = Frame(size, accent, glow=(0.75 if left else 0.25, 0.12))
     m = frame.px(96)
     foot = frame.caption(title, line, frame.px(160), m, frame.w - m - frame.px(40), align="right" if left else "left")
-    width = int(frame.w * 0.86)
-    scale = width / shot.width
     top = foot + frame.px(80)
-    visible = (frame.h - top + frame.px(80)) / scale
     y0 = focus.get("y0", 0.0)
-    screen = _scaled(shot, scale, (0, y0 * shot.height, shot.width, min(shot.height, y0 * shot.height + visible)))
-    # Even trailing edges can contain meaningful controls or right-aligned text.
-    # Retain both at the same native scale; only the intentional bottom bleed remains.
+    screen, _ = _contained_screen(shot, (0, y0 * shot.height, shot.width, shot.height),
+                                  int(frame.w * 0.86), frame.h - top - frame.px(64))
+    # Retain both edges and the complete native tab bar, at one uniform scale.
     inset = frame.px(36)
     x = inset if left else frame.w - screen.width - inset
-    corners = (True, True, False, False)
-    frame.card(screen, x, top, _screen_radius(width), corners=corners)
+    frame.card(screen, x, top, _screen_radius(screen.width))
     return frame
 
 
-def _flip_geometry(shot, size, y0):
-    """Actual integer crop and placement, shared by composition and the edge guard."""
+def _flip_geometry(shot, size, y0, bottom=None):
+    """Fit the complete measured native crop between a top inset and the caption.
+
+    Caption height is language/font dependent; callers pass its actual safe top.
+    The default is retained for the source-edge guard, whose source row is now
+    invariant: fitting never hides a different top row off-canvas.
+    """
     unit = min(size) / 1320
     px = lambda value: int(round(value * unit))
-    scale = (size[0] - 2 * px(64)) / shot.width
-    bottom = size[1] - px(560)
+    bottom = size[1] - px(560) if bottom is None else bottom
     start = int(round(y0 * shot.height))
-    end = int(round(min(shot.height, y0 * shot.height + (bottom + px(60)) / scale)))
-    screen_height = max(1, int((end - start) * scale))
-    return (0, start, shot.width, end), scale, bottom - screen_height, bottom
+    scale = min((size[0] - 2 * px(64)) / shot.width, (bottom - px(64)) / (shot.height - start))
+    screen_height = max(1, int((shot.height - start) * scale))
+    return (0, start, shot.width, shot.height), scale, bottom - screen_height, bottom
 
 
 def _flip(layout, accent, shot, focus, title, line, size):
-    """The screen from the top, bleeding off it, the caption at the foot."""
+    """The whole measured screen region above an ink-measured footer caption."""
     frame = Frame(size, accent, glow=(0.5, 0.86))
     m = frame.px(84)
-    width = frame.w - 2 * frame.px(64)
-    box, scale, top, bottom = _flip_geometry(shot, size, focus.get("y0", 0.0))
+    _, advance, ink = frame.caption_plan(title, line, m, frame.w - m)
+    caption_top = frame.h - frame.px(64) - max(advance, ink[3])
+    box, scale, top, bottom = _flip_geometry(shot, size, focus.get("y0", 0.0), caption_top - frame.px(110))
     screen = _scaled(shot, scale, box)
-    frame.card(screen, frame.px(64), top, _screen_radius(width), corners=(False, False, True, True))
-    frame.caption(title, line, bottom + frame.px(110), m, frame.w - m)
+    frame.card(screen, (frame.w - screen.width) // 2, top, _screen_radius(screen.width))
+    frame.caption(title, line, caption_top, m, frame.w - m)
     return frame
 
 
@@ -866,14 +880,13 @@ def _landscape(layout, accent, shot, title, line, size, out: Path) -> tuple:
     screen = _scaled(shot, scale, (0, LANDSCAPE_STATUS_ROWS, shot.width,
                                    min(shot.height, LANDSCAPE_STATUS_ROWS + visible)))
     x = _landscape_x(frame.w, screen.width, frame.px(80), light=light, left=left)
-    corners = (True, True, False, False)
-    frame.card(screen, x, top, frame.px(40), corners=corners, rim=not light)
+    frame.card(screen, x, top, frame.px(40), rim=not light)
     return frame.save(out)
 
 
 def top_row(look: str, capture: str, device: str, shot) -> int | None:
     """The capture's row at the visible top edge of its frame's screen picture; None where the layout starts at the
-    capture's own top or fades its edge (a breakout's rising picture)."""
+    capture's own top."""
     size = frame_size(device, shot)
     if size[0] > size[1]:
         return LANDSCAPE_STATUS_ROWS
@@ -886,8 +899,7 @@ def top_row(look: str, capture: str, device: str, shot) -> int | None:
     y0 = focus_for(capture, device).get("y0", 0.0)
     row = y0 * shot.height
     if layout == "flip":
-        # Shorter native crops end before the nominal bleed, placing the card below the canvas top.
-        # Inspect the actual visible source row, not a hypothetical fixed 60px bleed.
+        # Fitting preserves the actual source row without any off-canvas bleed.
         box, scale, top, _ = _flip_geometry(shot, size, y0)
         row = box[1] + max(0, -top) / scale
     return int(row) if row >= 1 else None

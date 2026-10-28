@@ -23,13 +23,13 @@ class ScreenshotEdgeTests(unittest.TestCase):
                 with patch.dict(shots.FOCUS, {'fixture': {'y0': .118}}):
                     self.assertEqual(shots.top_row('flip', 'fixture', role, image), box[1])
 
-    def test_flip_that_really_bleeds_checks_first_visible_source_row(self):
+    def test_flip_preserves_full_source_even_when_it_would_have_bled(self):
         image = Image.new('RGB', (1206, 2622))
         box, scale, top, _ = shots._flip_geometry(image, image.size, 0)
-        self.assertLess(top, 0)
+        self.assertGreaterEqual(top, round(64 * 1206 / 1320))
         with patch.dict(shots.FOCUS, {'fixture': {'y0': 0}}):
             self.assertEqual(shots.top_row('flip', 'fixture', 'iphone', image),
-                             int(box[1] - top / scale))
+                             None)
 
     def test_grey_subtitle_is_not_missed_by_white_only_threshold(self):
         image = Image.new('RGB', (100, 100), (20, 18, 16))

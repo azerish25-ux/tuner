@@ -20,18 +20,14 @@ final class EdgeFadeDirectionTests: XCTestCase {
 
     func testUnequalInsetsRestingEndsMiddleAndOverscroll() {
         for direction in [LayoutDirection.leftToRight, .rightToLeft] {
-            let leftInset: CGFloat = direction == .rightToLeft ? 32 : 20
-            let rightInset: CGFloat = direction == .rightToLeft ? 20 : 32
-            let maxOffset: CGFloat = 900 + rightInset - 300
-            for offset in [-leftInset - 12, -leftInset, 200, maxOffset, maxOffset + 12] {
-                let geometry = ScrollGeometry(contentOffset: CGPoint(x: offset, y: 0),
+            let restingOffset: CGFloat = direction == .rightToLeft ? 32 : -20
+            let range: CGFloat = 900 + 20 + 32 - 300
+            for progress in [-12, 0, 200, range, range + 12] {
+                let value = EdgeOverflow(offset: restingOffset + progress,
                     contentSize: CGSize(width: 900, height: 44),
-                    contentInsets: EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 32),
-                    containerSize: CGSize(width: 300, height: 44))
-                let value = EdgeOverflow(geometry, direction: direction)
-                let expected = EdgeOverflow(physicalLeft: offset > -leftInset + 1,
-                                            physicalRight: offset < maxOffset - 1, direction: direction)
-                XCTAssertEqual(value, expected)
+                    viewportSize: CGSize(width: 300, height: 44),
+                    insets: EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 32), direction: direction)
+                XCTAssertEqual(value, EdgeOverflow(leading: progress > 1, trailing: progress < range - 1))
             }
         }
     }
@@ -52,12 +48,11 @@ final class EdgeFadeDirectionTests: XCTestCase {
     }
 
     func testShortContentDoesNotInventAContinuationFade() {
-        let geometry = ScrollGeometry(contentOffset: CGPoint(x: -20, y: 0),
-            contentSize: CGSize(width: 100, height: 44),
-            contentInsets: EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20),
-            containerSize: CGSize(width: 300, height: 44))
         for direction in [LayoutDirection.leftToRight, .rightToLeft] {
-            XCTAssertEqual(EdgeOverflow(geometry, direction: direction), EdgeOverflow())
+            let value = EdgeOverflow(offset: direction == .rightToLeft ? 20 : -20,
+                contentSize: CGSize(width: 100, height: 44), viewportSize: CGSize(width: 300, height: 44),
+                insets: EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20), direction: direction)
+            XCTAssertEqual(value, EdgeOverflow())
         }
     }
 
@@ -94,17 +89,24 @@ final class EdgeFadeDirectionTests: XCTestCase {
     func testLiveScrollGeometryReportsRestingLeadingEdgeWithoutFade() async throws {
         for direction in [LayoutDirection.leftToRight, .rightToLeft] {
             let probe = EdgeFadeGeometryProbe()
-            let host = UIHostingController(rootView: ScrollView(.horizontal) {
-                HStack(spacing: 8) {
-                    ForEach(0..<12) { index in
-                        Text("Item \(index)").frame(width: 100, height: 44)
+            let driver = EdgeFadeScrollDriver()
+            let host = UIHostingController(rootView: ScrollViewReader { scroller in
+                ScrollView(.horizontal) {
+                    HStack(spacing: 8) {
+                        ForEach(0..<12) { index in
+                            Text("Item \(index)").frame(width: 100, height: 44).id(index)
+                        }
                     }
+                    .onGeometryChange(for: CGRect?.self) { proxy in
+                        proxy.bounds(of: .scrollView)
+                    } action: { probe.viewport = $0 }
                 }
-            }
-            .contentMargins(.leading, 20, for: .scrollContent)
-            .contentMargins(.trailing, 32, for: .scrollContent)
-            .onScrollGeometryChange(for: ScrollGeometry.self) { $0 } action: { _, value in
-                probe.value = value
+                .contentMargins(.leading, 20, for: .scrollContent)
+                .contentMargins(.trailing, 32, for: .scrollContent)
+                .onScrollGeometryChange(for: ScrollGeometry.self) { $0 } action: { _, value in
+                    probe.value = value
+                }
+                .onAppear { driver.scroll = { id, anchor in scroller.scrollTo(id, anchor: anchor) } }
             }
             .frame(width: 300, height: 44)
             .environment(\.layoutDirection, direction))
@@ -117,18 +119,50 @@ final class EdgeFadeDirectionTests: XCTestCase {
             defer { window.isHidden = true; window.rootViewController = nil; previous?.makeKey() }
             host.view.layoutIfNeeded()
             let measured = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
-                guard let geometry = probe.value else { return false }
-                let overflow = EdgeOverflow(geometry, direction: direction)
-                return geometry.contentSize.width > 1000 && geometry.containerSize.width >= 300
-                    && !overflow.leading && overflow.trailing
+                guard let geometry = probe.value, let viewport = probe.viewport else { return false }
+                return abs(geometry.contentSize.width - 1288) < 1
+                    && abs(geometry.visibleRect.width - 300) < 1 && abs(viewport.width - 300) < 1
             }, object: nil)
             await fulfillment(of: [measured], timeout: 3)
             let geometry = try XCTUnwrap(probe.value)
+            XCTAssertEqual(geometry.containerSize.width, 248, accuracy: 1)
+            XCTAssertEqual(geometry.visibleRect.width, geometry.containerSize.width
+                           + geometry.contentInsets.leading + geometry.contentInsets.trailing, accuracy: 1)
+            XCTAssertEqual(geometry.contentOffset.x, direction == .rightToLeft ? 32 : -20, accuracy: 1)
             let overflow = EdgeOverflow(geometry, direction: direction)
-            print("EDGE-FADE native direction=\(direction) geometry=\(geometry) overflow=\(overflow)")
             XCTAssertFalse(overflow.leading, "Initial selected first item is fully visible at semantic leading")
             XCTAssertTrue(overflow.trailing, "Remaining catalogue still needs its continuation fade")
+            try assertLiveOverflow(probe, direction: direction, expected: .init(leading: false, trailing: true), stage: "initial")
+            // The content's physical bounds are an independent oracle. These stages establish that
+            // logical x grows toward trailing in RTL too; a synthetic offset cannot prove that contract.
+            for (id, anchor, expected) in [(5, UnitPoint.center, EdgeOverflow(leading: true, trailing: true)),
+                                           (11, UnitPoint.trailing, EdgeOverflow(leading: true, trailing: false)),
+                                           (0, UnitPoint.leading, EdgeOverflow(leading: false, trailing: true))] {
+                try XCTUnwrap(driver.scroll)(id, anchor)
+                let arrived = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+                    guard let viewport = probe.viewport else { return false }
+                    return EdgeOverflow(viewport: viewport, contentWidth: 1288, direction: direction) == expected
+                }, object: nil)
+                await fulfillment(of: [arrived], timeout: 3)
+                try assertLiveOverflow(probe, direction: direction, expected: expected, stage: "item-\(id)")
+            }
         }
+    }
+
+    private func assertLiveOverflow(_ probe: EdgeFadeGeometryProbe, direction: LayoutDirection,
+                                    expected: EdgeOverflow, stage: String) throws {
+        let geometry = try XCTUnwrap(probe.value)
+        let viewport = try XCTUnwrap(probe.viewport)
+        let actual = EdgeOverflow(geometry, direction: direction)
+        let report = "EDGE-FADE native direction=\(direction) stage=\(stage) geometry=\(geometry) "
+            + "contentViewport=\(viewport) overflow=\(actual)"
+        print(report)
+        let attachment = XCTAttachment(string: report)
+        attachment.name = "edge-fade-live-\(direction)-\(stage)"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+        XCTAssertEqual(actual, expected)
+        XCTAssertEqual(actual, EdgeOverflow(viewport: viewport, contentWidth: 1288, direction: direction))
     }
 
     /// White content on black makes RGB an independent observation of the actual mask opacity.
@@ -160,6 +194,20 @@ final class EdgeFadeDirectionTests: XCTestCase {
 private final class EdgeFadeGeometryProbe: @unchecked Sendable {
     private let lock = NSLock()
     private var storage: ScrollGeometry?
+    private var viewportStorage: CGRect?
+
+    var viewport: CGRect? {
+        get {
+            lock.lock()
+            defer { lock.unlock() }
+            return viewportStorage
+        }
+        set {
+            lock.lock()
+            defer { lock.unlock() }
+            viewportStorage = newValue
+        }
+    }
 
     var value: ScrollGeometry? {
         get {
@@ -173,4 +221,9 @@ private final class EdgeFadeGeometryProbe: @unchecked Sendable {
             storage = newValue
         }
     }
+}
+
+@MainActor
+private final class EdgeFadeScrollDriver {
+    var scroll: ((Int, UnitPoint) -> Void)?
 }

@@ -43,9 +43,33 @@ final class PracticeXPProgressTests: XCTestCase {
         TimbreLocalization.language = "zh-Hant"
         XCTAssertEqual(Timbre.NSLocalizedString(PracticeXPProgress.key, comment: ""), template)
         let view = PracticeXPProgress(done: 255, total: 500, next: "XP")
-        let spoken = try pixels(view.spoken, locale: Locale(identifier: "zh_TW"), name: "practice-xp-zh-Hant-spoken-label")
-        let expected = try pixels(Text(verbatim: "255／500 XP · 下一個：XP"), locale: Locale(identifier: "zh_TW"))
-        XCTAssertEqual(spoken, expected, "VoiceOver label Text retains the accepted sentence without directional isolates")
+        let locale = Locale(identifier: "zh_TW")
+        let accepted = Text(verbatim: "255／500 XP · 下一個：XP")
+        let spoken = try pixels(view.spoken, locale: locale, name: "practice-xp-zh-Hant-spoken-label")
+        let expected = try pixels(accepted, locale: locale, name: "practice-xp-zh-Hant-spoken-expected")
+        // Localized Text and verbatim Text can choose different automatic typesetting languages. Keep the
+        // original comparison, but attach a second pair with identical explicit typography to diagnose that
+        // independently from actual label content and from PNG metadata/compression differences.
+        let controlledSpoken = try pixels(view.spoken.typesettingLanguage(locale.language), locale: locale,
+                                          name: "practice-xp-zh-Hant-spoken-explicit-language")
+        let controlledExpected = try pixels(accepted.typesettingLanguage(locale.language), locale: locale,
+                                            name: "practice-xp-zh-Hant-expected-explicit-language")
+        let changed = zip(spoken, expected).filter { $0 != $1 }.count
+        let controlledChanged = zip(controlledSpoken, controlledExpected).filter { $0 != $1 }.count
+        let diagnostic = "XP spoken label: automatic typesetting differs in \(changed) RGBA channels; "
+            + "explicit zh-TW typesetting differs in \(controlledChanged) RGBA channels"
+        print(diagnostic)
+        let attachment = XCTAttachment(string: diagnostic)
+        attachment.name = "practice-xp-zh-Hant-pixel-comparison"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+        XCTAssertEqual(spoken, expected, "VoiceOver label Text retains the accepted sentence without directional isolates; \(diagnostic)")
+        XCTAssertEqual(controlledSpoken, controlledExpected, "The accepted copy must also match with identical typesetting language")
+        // Neither a halfwidth slash nor a swapped numerator may pass the pixel oracle.
+        for wrong in ["255 / 500 XP · 下一個：XP", "500／255 XP · 下一個：XP"] {
+            let negative = try pixels(Text(verbatim: wrong).typesettingLanguage(locale.language), locale: locale)
+            XCTAssertNotEqual(controlledExpected, negative)
+        }
     }
 
     private func position(of operand: String, in sentence: String, direction: NSWritingDirection) throws -> CGFloat {
@@ -78,7 +102,8 @@ final class PracticeXPProgressTests: XCTestCase {
 
     func testUnexpectedTemplateFallsBackWithoutRewritingTranslations() {
         for unsupported in ["%lld／%lld XP %@ %lld", "%lld／%lld XP %@ %@", "%lld／%lld XP %u",
-                            "%lld／%lld XP", "%lld／%@ XP %lld", "%lld ∕ %lld XP %@"] {
+                            "%lld／%lld XP", "%lld／%@ XP %lld", "%lld ∕ %lld XP %@",
+                            "%2$lld／%1$lld XP · 下一個：%3$@", "%3$@：%1$lld／%2$lld XP"] {
             XCTAssertNil(PracticeXPProgress.sentence(template: unsupported, counts: (255, 500),
                                                      next: "Next", locale: Locale(identifier: "zh_TW")))
         }
@@ -113,6 +138,20 @@ final class PracticeXPProgressTests: XCTestCase {
             let attachment = XCTAttachment(image: image)
             attachment.name = name; attachment.lifetime = .keepAlways; add(attachment)
         }
-        return try XCTUnwrap(image.pngData())
+        // Compare every canonical sRGB RGBA channel, not PNG metadata or encoder choices. No tolerance,
+        // cropping or text normalization: a single differing glyph/spacing pixel still fails.
+        let cgImage = try XCTUnwrap(image.cgImage)
+        XCTAssertEqual(cgImage.width, 600)
+        XCTAssertEqual(cgImage.height, 360)
+        let colorSpace = try XCTUnwrap(CGColorSpace(name: CGColorSpace.sRGB))
+        var data = Data(count: 600 * 360 * 4)
+        try data.withUnsafeMutableBytes { bytes in
+            let context = try XCTUnwrap(CGContext(data: bytes.baseAddress, width: 600, height: 360,
+                bitsPerComponent: 8, bytesPerRow: 600 * 4, space: colorSpace,
+                bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue | CGBitmapInfo.byteOrder32Big.rawValue))
+            context.interpolationQuality = .none
+            context.draw(cgImage, in: CGRect(x: 0, y: 0, width: 600, height: 360))
+        }
+        return data
     }
 }

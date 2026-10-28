@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "normalized_utc": "2026-10-28T01:57:18.254831Z",
+  "scope": "Presentation-only normalization of this caption review metadata: generic truthful AI reviewer roles and filename/hash/external-availability references. No new semantic, native, legal, visual, portal or publication review.",
+  "artifacts": [
+    {
+      "path": "docs/l10n/reviews/screenshot-feedback-caption/approved-pairs.json",
+      "before_sha256": "17682a8e94b20d890ab1afa9eaf92e85e26dc613dff0759c211a21c7774cc432",
+      "after_sha256": "eebca391c9872e23494ff9de2a4e77518b05cd774b771dc8d4b3a13e01fab903"
+    },
+    {
+      "path": "docs/l10n/reviews/screenshot-feedback-caption/independent-review.json",
+      "before_sha256": "be4cd0b8df0626eed3c1f5423dbe02887f3da4d6ce53f41889be82b2a2171e12",
+      "after_sha256": "9e742a3e9079cf846b8983b8d1796d897be155f40b7450c65235ed076efa987c"
+    },
+    {
+      "path": "docs/l10n/reviews/screenshot-feedback-caption/source-review.json",
+      "before_sha256": "831374e45e1f9de8bf31ae5ee65884f1f00f822cac1d2addd858f536be6a837a",
+      "after_sha256": "06610958265745ea9d3ef53ca1b13dc25a13e896fa8cb5b85344c00c7a31e289"
+    },
+    {
+      "path": "docs/l10n/reviews/screenshot-feedback-caption/integration-review.json",
+      "before_sha256": "6c369f3db2864cdce8f064053697783f295adf71907712746d23eed3f7767cda",
+      "after_sha256": "bca3306d6da9a87c0b61fad3466451239cc64258ed1e2c7a8adf33d7c19cbc32"
+    },
+    {
+      "path": "docs/l10n/reviews/screenshot-feedback-caption/privacy-listing-binding-refresh.json",
+      "before_sha256": "932b984af5a23ad118312dd14b73aa2ac9a40e53d8a51c595c301615ff1b228a",
+      "after_sha256": "14299eb7785744c0c2f8af5473b8721ae459173586e34dfecb522df56603acad"
+    },
+    {
+      "path": "docs/l10n/reviews/screenshot-feedback-caption/application-receipt.json",
+      "before_sha256": "81c540cb3930620cc3149a4b0261ce8fa19bafda875658817d057ed6191aacba",
+      "after_sha256": "bca23fbbb5923e22f56a7c689005bcad11ba447aeb427567b05a14880fb78558"
+    },
+    {
+      "path": "docs/l10n/reviews/screenshot-feedback-caption/final-validation.json",
+      "before_sha256": "43a41dd3c594021ff4e1233d9ff0573a50e9e48a6096b7a7a0b9dfeedec6eee6",
+      "after_sha256": "51524cc53d955823ee7ad791d400d3a6c31514bee9bc6e8bb6e045ee7bd965c7"
+    },
+    {
+      "path": "tools/l10n/store-corrections.json",
+      "before_sha256": "c2f52dfbb57cd2f7d99c7eb42908fc8b8163ac7eeedb4993ceb9a4530d24d306",
+      "after_sha256": "210eaa5ea4aeb1bf25cca772d6cb90ea785f6a8df3e3bd69cf3c1285e0ad4491"
+    },
+    {
+      "path": "tools/l10n/store-review-independent.json",
+      "before_sha256": "4148c750ea4c8aff579cc0049477963266938b7c2d8fc0506bc2b82a26194b43",
+      "after_sha256": "2b31e1b81a7d18d3821494c6569f8278362ee59dd540ca17c3dc6a5ddc4353ab"
+    },
+    {
+      "path": "tools/l10n/store-review.json",
+      "before_sha256": "89c087d7d3fa9466d83ed755549230308e523a9e76118c3e0fc6b54cb8ab3571",
+      "after_sha256": "fe69269bc62803b438dcdccd0fc127cb4841ca317d0e960295fc7076fd6abcd0"
+    }
+  ],
+  "external_artifacts": [
+    {
+      "filename": "saved-locales.json",
+      "sha256": "1e4c330a39a1efc1464773e46f26502e9c38975b37731aa388e2fb2c66a1bc43",
+      "availability": "external_artifact_not_in_repository"
+    },
+    {
+      "filename": "completion-audit.json",
+      "sha256": "55ea92b284fbca59aaa4ea8a6ab48aa3b749df22b043f08099f37b84967c43b7",
+      "availability": "external_artifact_not_in_repository"
+    },
+    {
+      "filename": "iphone-ar-SA-03.jpg",
+      "sha256": "26fdb4926dcc780e316e7d2db6fe00b14370ac47ab1830a517a8bc21f28e9088",
+      "availability": "external_artifact_not_in_repository"
+    },
+    {
+      "filename": "marketing-tests-final.log",
+      "sha256": "14d471ab6c7c35085417b647f60a20741fb960ac97fd9f87768f838fcb076717",
+      "availability": "external_artifact_not_in_repository"
+    },
+    {
+      "filename": "caption-typography-final.json",
+      "sha256": "9828fcebcf97f93ce970b5e50073f49df6fc9be6edc084467375f7133633743f",
+      "availability": "external_artifact_not_in_repository"
+    }
+  ],
+  "proof": {
+    "all50_consumer_json_files_byte_identical": true,
+    "all50_approved_old_new_semantic_pairs_unchanged": true,
+    "956_historical_ledger_objects_and_raw_prefix_unchanged": true,
+    "prior_review_history_unchanged": true,
+    "capability_findings_limits_flags_and_observation_times_unchanged": true,
+    "new_metadata_private_path_occurrences": 0,
+    "privacy_receipt_unchanged_by_this_worker": true,
+    "source_count_preserved": 298,
+    "listing_count_preserved": 50
+  },
+  "privacy_evidence_hash_refresh": "Three guarded evidence-reference hash substitutions supplied separately to the privacy receipt owner; no full receipt replacement or map refresh needed.",
+  "tests": {
+    "verified_utc": "2026-10-28T01:58:30.325237Z",
+    "store_py": "pass:50 locales,0 problems",
+    "screenshots_py_check": "pass",
+    "targeted_store_unit_tests": {
+      "passed": 46,
+      "failed": 0
+    },
+    "git_diff_check": "pass",
+    "scope": "Targeted post-normalization checks only; no fresh full699-suite claim."
+  }
+}

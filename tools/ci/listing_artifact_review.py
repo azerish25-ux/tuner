@@ -23,10 +23,54 @@ APPROVED = {
     'size_in_bytes': 1352807197,
     'digest': 'sha256:145260370afa7f8780b831e92cb6fa5c93f18b0d863ef7aee458cdc68c4c9560',
 }
+# Only individually reviewed historical archives may be recovered. This is not
+# a generic artifact downloader; external IDs/URLs/metadata are never accepted.
+REVIEWED_ARTIFACTS = {
+    '12722724126': APPROVED,
+    '12781917198': {
+        'repository': 'azerish25-ux/tuner', 'artifact_id': 12781917198,
+        'name': 'listing-assets-iphone-01', 'run_id': 40600424514,
+        'source_sha': '9e1e3c41ec24c1a2c78c22ea7a90726dc4ae6599',
+        'size_in_bytes': 627943240,
+        'digest': 'sha256:2aff1f3f12163c9c779718ffd9642a886dcd025471cbb8f42663bd2d3add8258',
+    },
+}
+REPOSITORY_ID = 1430176404
+ALLOWED_REFS = ('refs/heads/main', 'refs/heads/codex/app-store-readiness-gates')
 SLICE_LIMIT = 350_000_000
 MAX_SLICES = 8
 MAX_SELECTED = 2_000_000_000
 MAX_ENTRY = 300_000_000
+
+
+def reviewed_artifact(artifact_id):
+    if not isinstance(artifact_id, str) or artifact_id not in REVIEWED_ARTIFACTS:
+        raise ValueError('Only exact reviewed artifact IDs are allowed')
+    return REVIEWED_ARTIFACTS[artifact_id]
+
+
+def select_artifact(event_name, event, repository, ref):
+    """Resolve one exact dispatch choice or push marker before any network I/O."""
+    if repository != APPROVED['repository'] or ref not in ALLOWED_REFS:
+        raise ValueError('Only the reviewed same repository and branches are allowed')
+    if (not isinstance(event, dict) or not isinstance(event.get('repository'), dict) or
+            event['repository'].get('full_name') != repository):
+        raise ValueError('Unreviewed event repository')
+    if event_name == 'workflow_dispatch':
+        inputs = event.get('inputs')
+        artifact_id = inputs.get('artifact_id') if isinstance(inputs, dict) else None
+    elif event_name == 'push':
+        head = event.get('head_commit')
+        message = head.get('message') if isinstance(head, dict) else None
+        if not isinstance(message, str):
+            raise ValueError('Missing push head commit message')
+        markers = re.findall(r'\[listing-review-([^\]\r\n]*)\]', message)
+        if len(markers) != 1 or message.count('[listing-review-') != 1:
+            raise ValueError('Exactly one unambiguous reviewed artifact marker is required')
+        artifact_id = markers[0]
+    else:
+        raise ValueError('Only explicit dispatch choices or push markers are allowed')
+    return reviewed_artifact(artifact_id)
 
 
 def digest(path):
@@ -47,6 +91,12 @@ def validate_metadata(metadata, expected=APPROVED):
     run = metadata.get('workflow_run', {})
     if not isinstance(run, dict) or run.get('id') != expected['run_id'] or run.get('head_sha') != expected['source_sha']:
         raise ValueError('Unreviewed artifact source run/revision')
+    if (run.get('repository_id') != REPOSITORY_ID or
+            run.get('head_repository_id') != REPOSITORY_ID):
+        raise ValueError('Unreviewed artifact source repository')
+    base = 'https://api.github.com/repos/' + expected['repository'] + '/actions/artifacts/' + str(expected['artifact_id'])
+    if metadata.get('url') != base or metadata.get('archive_download_url') != base + '/zip':
+        raise ValueError('Unreviewed artifact repository/path')
     if metadata.get('expired') is not False:
         raise ValueError('Source artifact expired or expiry status missing')
 
@@ -178,16 +228,17 @@ class NoRedirect(urllib.request.HTTPRedirectHandler):
         return None
 
 
-def fetch(archive):
-    if os.environ.get('GITHUB_REPOSITORY') != APPROVED['repository']:
+def fetch(archive, artifact_id='12722724126'):
+    expected = reviewed_artifact(artifact_id)
+    if os.environ.get('GITHUB_REPOSITORY') != expected['repository']:
         raise ValueError('Only the reviewed same repository is allowed')
     token = os.environ['GH_TOKEN']
-    base = 'https://api.github.com/repos/' + APPROVED['repository'] + '/actions/artifacts/' + str(APPROVED['artifact_id'])
+    base = 'https://api.github.com/repos/' + expected['repository'] + '/actions/artifacts/' + str(expected['artifact_id'])
     headers = {'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json',
                'X-GitHub-Api-Version': '2022-11-28'}
     with urllib.request.build_opener(NoRedirect).open(urllib.request.Request(base, headers=headers), timeout=30) as response:
         metadata = json.load(response)
-    validate_metadata(metadata)
+    validate_metadata(metadata, expected)
     try:
         urllib.request.build_opener(NoRedirect).open(urllib.request.Request(base + '/zip', headers=headers), timeout=30)
     except urllib.error.HTTPError as response:
@@ -205,21 +256,25 @@ def fetch(archive):
     with urllib.request.build_opener(NoRedirect).open(location, timeout=30) as response, Path(archive).open('xb') as target:
         for block in iter(lambda: response.read(1024 * 1024), b''):
             count += len(block)
-            if count > APPROVED['size_in_bytes'] or time.monotonic() > deadline:
+            if count > expected['size_in_bytes'] or time.monotonic() > deadline:
                 raise ValueError('Artifact download exceeds reviewed byte/time bound')
             target.write(block)
-    if count != APPROVED['size_in_bytes']:
+    if count != expected['size_in_bytes']:
         raise ValueError('Incomplete source archive download')
 
 
 def main():
     if len(sys.argv) != 1:
         raise SystemExit('No arbitrary artifact IDs, metadata, or URLs accepted')
+    event = json.loads(Path(os.environ['GITHUB_EVENT_PATH']).read_text())
+    expected = select_artifact(os.environ.get('GITHUB_EVENT_NAME'), event,
+                               os.environ.get('GITHUB_REPOSITORY'), os.environ.get('GITHUB_REF'))
     archive = Path('source-listing-artifact.zip')
-    fetch(archive)
-    index = package(archive, Path('review-out'))
+    fetch(archive, str(expected['artifact_id']))
+    index = package(archive, Path('review-out'), expected)
     print(json.dumps(index, indent=2))
     with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+        output.write('artifact_id=' + str(expected['artifact_id']) + '\n')
         output.write('slice_count=' + str(len(index['slices'])) + '\n')
 
 

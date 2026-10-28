@@ -24,7 +24,8 @@ class PortraitOffsetEdgesTests(unittest.TestCase):
         self.assertEqual(frame.screen.getpixel((frame.screen.width - 10, 10)), (0, 0, 255))
         self.assertGreaterEqual(frame.x, frame.px(36))
         self.assertLessEqual(frame.x + frame.screen.width, frame.w - frame.px(36))
-        self.assertEqual(frame.corners, (True, True, False, False))
+        self.assertEqual(frame.corners, (True, True, True, True))
+        self.assertLessEqual(frame.y + frame.screen.height, frame.h - frame.px(64))
         return frame
 
     def test_both_edges_retained_without_mirroring_in_all_directions(self):

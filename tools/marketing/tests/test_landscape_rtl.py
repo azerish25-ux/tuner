@@ -21,7 +21,8 @@ class Frame:
         self.align = kwargs['align']
         return 300
     def card(self, screen, x, top, radius, **kwargs):
-        self.screen, self.x, self.corners = screen, x, kwargs['corners']
+        self.screen, self.x, self.y = screen, x, top
+        self.corners = (True, True, True, True)
     def save(self, out):
         return self
 

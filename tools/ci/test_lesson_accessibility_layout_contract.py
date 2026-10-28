@@ -68,6 +68,28 @@ class LessonAccessibilityLayoutContract(unittest.TestCase):
         self.assertIn('.accessibilityIdentifier("lesson.notes.target")', ring)
         self.assertIn(".accessibilityValue(Text(status))", ring)
 
+    def test_focus_shape_covers_full_note_and_status_not_overflow_decoration(self):
+        ring = self.notes.split("private var noteRing:", 1)[1].split("private func spokenPhrase", 1)[0]
+        # The native 580x580 burst still inflated the parent despite accessibilityHidden.
+        # Define the shape on the whole container, after its AX element, not on the letter.
+        shape = ".contentShape(.accessibility, Rectangle())"
+        self.assertEqual(ring.count(shape), 1)
+        self.assertLess(ring.index("Text(status)"), ring.index(shape))
+        self.assertLess(ring.index(".accessibilityElement(children: .ignore)"), ring.index(shape))
+        self.assertLess(ring.index(shape), ring.index('.accessibilityIdentifier("lesson.notes.target")'))
+        for forbidden in [".clipped()", ".minimumScaleFactor", ".lineLimit", ".dynamicTypeSize"]:
+            self.assertNotIn(forbidden, ring)
+        for token in ['CGRect(x: -89, y: 315, width: 580, height: 580)',
+                      'XCTAssertFalse(Self.contains(decorationBounds',
+                      'XCTAssertNil(Self.scrollDistance(decorationBounds',
+                      'XCTAssertGreaterThan(target.frame.height, 290',
+                      'for label in ["E", "Listening…"]',
+                      'XCTAssertTrue(text.exists',
+                      'Self.contains(text.frame, in: target.frame)',
+                      'Self.contains(text.frame, in: notesViewport)',
+                      'XCTAssertEqual(target.label, "E, String 6, open")']:
+            self.assertIn(token, self.ui)
+
     def test_instrument_capture_requires_clear_chip_and_real_selection(self):
         instruments = (ROOT / "ios/Timbre/Instruments/InstrumentsView.swift").read_text()
         filters = instruments.split("private var filters:", 1)[1].split("private static let allFamilies", 1)[0]

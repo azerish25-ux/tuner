@@ -1138,6 +1138,9 @@ struct SongCover: View {
     /// The glow drifts slowly (the featured song), unless Reduce Motion is on.
     var drift = false
     var outlined = true
+    /// Distinguishes the same song's hero and shelf artwork in native audit callbacks.
+    /// This is diagnostic identity only; the sleeve remains one decorative picture.
+    var identity: String? = nil
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var drifting = false
 
@@ -1193,6 +1196,8 @@ struct SongCover: View {
         }
     }
 
+    private var textIdentity: String { identity ?? "song.cover.\(art.seed)" }
+
     /// The colour band a bannered title sits on, across the foot of the sleeve.
     private func band(_ layout: SleeveLayout) -> some View {
         VStack(spacing: 0) {
@@ -1214,13 +1219,14 @@ struct SongCover: View {
                     .padding(.bottom, layout.labelSize * 0.35)
             }
             VStack(alignment: align, spacing: -points * 0.27) {
-                ForEach(Array(layout.fit.lines.enumerated()), id: \.offset) { _, line in
+                ForEach(Array(layout.fit.lines.enumerated()), id: \.offset) { index, line in
                     Text(verbatim: line)
                         .font(.custom(art.face, fixedSize: points))
                         .tracking(-points * 0.02)
                         .foregroundStyle(art.ink)
                         .lineLimit(1)
                         .fixedSize()
+                        .accessibilityIdentifier(textIdentity + ".title.\(index)")
                 }
             }
         }
@@ -1244,6 +1250,7 @@ struct SongCover: View {
             .font(.custom("Sora-Medium", fixedSize: size)).monospacedDigit()
             // Small catalogue numbers need full ink beneath the sleeve's top-light wash.
             .foregroundStyle(ink)
+            .accessibilityIdentifier(textIdentity + ".catalogue")
         switch art.imprint {
         case .catalogue:
             ZStack(alignment: .topLeading) {

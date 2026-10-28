@@ -48,6 +48,7 @@ struct SettingsView: View {
                 .frame(maxWidth: 640)
                 .frame(maxWidth: .infinity)
             }
+            .accessibilityIdentifier("settings.scroll")
             .scrollDismissesKeyboard(.interactively)
             .stageTopShade()
             .background(StageBackground(motes: false))
@@ -55,7 +56,9 @@ struct SettingsView: View {
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") { dismiss() }.accessibilityIdentifier("settings.done")
+                }
                 ToolbarItemGroup(placement: .keyboard) { Spacer(); Button("Done") { referenceFocused = false } }
             }
             .onAppear { referenceInput = String(store.settings.referencePitchHz) }
@@ -152,7 +155,7 @@ struct SettingsView: View {
         MenuRow(title: "Temperament", icon: Glyph(.temperament), id: "settings.temperament", selection: Binding(get: { store.settings.temperamentId }, set: { value in
             if value != "equal" && !commerce.isPro && !FreeTier.opens(.temperaments) { store.presentPaywall("temperament"); return }
             store.updateSettings { $0.temperamentId = value }
-        })) { ForEach(Temperament.all) { Text($0.name).tag($0.id) } }
+        })) { ForEach(Temperament.all) { Text(verbatim: SettingsOptionLabel.temperamentName($0)).tag($0.id) } }
     }
 
     /// The phone throbs at the beat between the string and its note (`Haptics`), so a string can be tuned by touch. It
@@ -257,7 +260,7 @@ struct SettingsView: View {
             store.updateSettings { $0.precision = value }
         })) {
             ForEach(TuningPrecision.allCases, id: \.self) { precision in
-                (Self.precisionName(precision) + Text(verbatim: " ±\(Int(precision.bandCents))¢")).tag(precision)
+                (Self.precisionName(precision) + Text(verbatim: " " + SettingsOptionLabel.precisionTolerance(precision))).tag(precision)
             }
         }
     }

@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "verified_utc": "2026-10-28T01:20:03.693467Z",
+  "scope": "Applied bounded screenshot-headline patch only; privacy final source receipt and rendered screenshots remain separately owned",
+  "prepared_patch_sha256": "7a5b4d5082d47c992997c23592a36889e68af6596df62622bf009dfa92b60085",
+  "integration_review_sha256": "bca3306d6da9a87c0b61fad3466451239cc64258ed1e2c7a8adf33d7c19cbc32",
+  "checks": {
+    "independent_integrity": {
+      "passed": 20,
+      "failed": 0
+    },
+    "exact_scope_and_history": {
+      "target": "repository working tree",
+      "50_exact_caption_only_deltas": true,
+      "all_other_payload_fields_unchanged": true,
+      "956_prior_ledger_objects_and_raw_prefix_preserved": true,
+      "prior_bounded_histories_preserved": true,
+      "new_total_ledger_records": 1006,
+      "all_50_review_hash_bindings_match": true,
+      "all_50_headlines_within_30_nfc_codepoints": true,
+      "all_flags_unchanged": true,
+      "release_applicability_only_hashes_changed": true,
+      "privacy_receipt_not_touched_by_this_patch": true,
+      "portal_writes": "none",
+      "new_portal_readback_claim": "none"
+    },
+    "store_py_draft_gate": "pass: 50 locales, 0 problems",
+    "screenshots_py_check": "pass: all50 plus canonical/source/capture/count constraints",
+    "store_unit_tests": {
+      "total": 46,
+      "passed": 45,
+      "failed": 1,
+      "failure": "test_ai_text_policy_does_not_require_false_native_certification",
+      "reason": "Shared privacy-policy-current-source-verification.json still needs the separately owned production-source review and listing content hash refresh; not masked or marked passed"
+    },
+    "git_diff_check": "pass",
+    "relevant_source_matches_actual_9e1_capture_revision": {
+      "ios/Timbre/Audio/AudioService.swift": true,
+      "ios/Timbre/Learn/LessonAnalyzer.swift": true,
+      "ios/Timbre/Learn/SongPerform.swift": true,
+      "ios/Sources/TimbreCore/Learn/PlayAlongSession.swift": true,
+      "ios/Sources/TimbreCore/Learn/LessonEngine.swift": true,
+      "ios/Timbre/Learn/SongStoryCard.swift": true,
+      "ios/Timbre/Learn/PlayAlongCues.swift": true,
+      "ios/Timbre/YourSongs/RecordingPlayer.swift": true,
+      "ios/Timbre/Learn/LessonExplain.swift": true,
+      "ios/Timbre/Learn/LessonResults.swift": true
+    },
+    "arabic_03_actual_rerender": {
+      "result": "pass_for_this_frame_only",
+      "inspected_by": "AI caption reviewer and independent renderer reviewer",
+      "artifact": {
+        "filename": "iphone-ar-SA-03.jpg",
+        "sha256": "26fdb4926dcc780e316e7d2db6fe00b14370ac47ab1830a517a8bc21f28e9088",
+        "availability": "external_artifact_not_in_repository"
+      },
+      "sha256": "26fdb4926dcc780e316e7d2db6fe00b14370ac47ab1830a517a8bc21f28e9088",
+      "observations": "Exact approved Arabic headline appears on two joined/readable lines, separated from supporting line without clipping/overlap. Actual gameplay and complete Stop control remain visible. No new UI or performance recording invented.",
+      "limits": "One real-capture-derived Arabic frame only; not all50 localized screenshot certification or live audio accuracy proof."
+    },
+    "renderer_owner_combined_source_checks": {
+      "marketing_tests": {
+        "passed": 126,
+        "failed": 0,
+        "log": {
+          "filename": "marketing-tests-final.log",
+          "sha256": "14d471ab6c7c35085417b647f60a20741fb960ac97fd9f87768f838fcb076717",
+          "availability": "external_artifact_not_in_repository"
+        }
+      },
+      "caption_audit": {
+        "glyph_checks": 2050,
+        "layout_strings": 2950,
+        "failures": 0,
+        "artifact": {
+          "filename": "caption-typography-final.json",
+          "sha256": "9828fcebcf97f93ce970b5e50073f49df6fc9be6edc084467375f7133633743f",
+          "availability": "external_artifact_not_in_repository"
+        }
+      },
+      "attribution": "Results reported by renderer owner; full composition review remains separately owned."
+    }
+  },
+  "preserved": "50 payload review/provenance objects, all non-target consumer text, six saved portal fields,956 prior correction records/raw prefix and historical reviews. Portal/header/version receipts unchanged; current whole-file JSON hashes have changed so old receipts remain old snapshots, not new readback.",
+  "limits": [
+    "No new Apple portal readback or public HTTP check",
+    "No native-speaker/legal certification",
+    "Caption codepoint bounds do not establish pixel fit; renderer worker rerenders actual captured images",
+    "No publishing, release readiness promotion or native runtime changes"
+  ]
+}

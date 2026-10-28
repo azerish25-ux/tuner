@@ -234,6 +234,9 @@ struct NotesStep: View {
         .zIndex(-1)
         // The note to play, as said ("D, string 4, open"), and how the pitch heard stands.
         .accessibilityElement(children: .ignore)
+        // The complete laid-out note and wrapped status own the focus bounds, not the burst's
+        // doubled canvas. Hiding that decoration alone does not constrain a parent's AX frame.
+        .contentShape(.accessibility, Rectangle())
         .accessibilityLabel(Text(verbatim: shown.map { spokenPhrase($0) } ?? ""))
         .accessibilityValue(Text(status))
         .accessibilityIdentifier("lesson.notes.target")
@@ -279,8 +282,8 @@ struct NotesStep: View {
                 .mask { Self.burstBand(ring: size.height) }
                 .position(x: size.width / 2, y: size.height / 2)
         }
-        // Hide the whole oversized geometry wrapper, not only SparkBurst's Canvas: otherwise its
-        // doubled frame can become the note's accessibility bounds even while the burst is invisible.
+        // The wrapper is decorative too. The note target's separate accessibility content shape
+        // prevents this oversized canvas from enlarging its parent's focus bounds.
         .accessibilityHidden(true)
         .allowsHitTesting(false)
     }

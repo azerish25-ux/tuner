@@ -14,21 +14,33 @@ import time
 import uuid
 
 BUNDLE = 'com.shahradazerisharghi.timbre'
+SIMULATOR_PREDICATE = ' OR '.join(
+    f'process == "{name}"' for name in
+    ('Timbre', 'SpringBoard', 'testmanagerd', 'runningboardd', 'lsd', 'installd', 'launchd', 'ReportCrash')
+)
 
 
 def warmup(app: Path, device: str, languages: list[str], locale: str, out: Path) -> None:
     """Install/launch once, terminate, or raise; never certify language/capture evidence."""
+    if str(uuid.UUID(device)).lower() != device.lower():
+        raise ValueError('Warmup requires an explicit simulator UUID, never an alias')
     out.mkdir(parents=True, exist_ok=False)
     receipt = {'passed': False, 'diagnostic_only': True, 'device': device,
                'app': str(app), 'languages': languages, 'locale': locale,
                'source_sha': os.environ.get('GITHUB_SHA'), 'launch_attempts': 0}
+    receipt['run_id'] = os.environ.get('GITHUB_RUN_ID')
+    receipt['run_attempt'] = os.environ.get('GITHUB_RUN_ATTEMPT')
+    receipt['job'] = os.environ.get('GITHUB_JOB')
+    receipt['runner_environment'] = os.environ.get('RUNNER_ENVIRONMENT')
     log = out / 'warmup.log'
     launched = False
     deadline = time.monotonic() + 300
 
-    def budget(limit):
-        remaining = deadline - time.monotonic()
+    def budget(limit, reserve=0):
+        remaining = deadline - time.monotonic() - reserve
         if remaining <= 0:
+            if reserve:
+                raise TimeoutError(f'Warmup diagnostic budget exhausted; {reserve}s reserved for cleanup')
             raise TimeoutError('Simulator warmup total 300-second budget expired')
         return min(limit, remaining)
 
@@ -67,6 +79,25 @@ def warmup(app: Path, device: str, languages: list[str], locale: str, out: Path)
             raise RuntimeError(f'Warmup command failed ({result.returncode}): {args[2]}')
         return result.stdout or ''
 
+    def diagnose(command, filename, reserve_cleanup=True):
+        """Record inconclusive/nonzero diagnostics too; never affect the warmup result."""
+        event = {'command': list(map(str, command)), 'filename': filename, 'started_at': stamp()}
+        receipt.setdefault('diagnostics', []).append(event)
+        try:
+            # Do not let optional evidence consume the last cleanup opportunity.
+            timeout = budget(30, reserve=30 if launched and reserve_cleanup else 0)
+            event['timeout_seconds'] = timeout
+            with (out / filename).open('w') as output:
+                result = subprocess.run(command, stdout=output, stderr=subprocess.STDOUT, timeout=timeout, check=False)
+            event['returncode'] = result.returncode
+        except (OSError, subprocess.SubprocessError) as error:
+            event['error'] = str(error)
+            if isinstance(error, subprocess.TimeoutExpired):
+                event['timed_out'] = True
+            receipt.setdefault('diagnostic_errors', []).append(str(error))
+        finally:
+            event['finished_at'] = stamp()
+
     try:
         if not languages or len(set(languages)) != len(languages) or any(not re.fullmatch(r'[A-Za-z]+(?:-[A-Za-z0-9]+)*', x) for x in languages):
             raise ValueError('Warmup requires exact explicit AppleLanguages')
@@ -97,6 +128,7 @@ def warmup(app: Path, device: str, languages: list[str], locale: str, out: Path)
         os.kill(receipt['pid'], 0)
         invoke(['xcrun', 'simctl', 'terminate', device, BUNDLE], timeout=30)
         launched = False
+        receipt['cleanup_confirmed'] = True
         receipt['passed'] = True
     except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as error:
         receipt['error'] = str(error)
@@ -111,23 +143,27 @@ def warmup(app: Path, device: str, languages: list[str], locale: str, out: Path)
                 receipt['owned_pid_error'] = str(pid_error)
         # Best-effort diagnosis must never turn a failed warmup into success.
         diagnostics = [
-            (['xcrun', 'simctl', 'spawn', device, 'log', 'show', '--last', '3m', '--style', 'compact',
-              '--predicate', 'process == "Timbre" OR process == "SpringBoard" OR process == "testmanagerd"'], 'simulator.log'),
+            (['xcrun', 'simctl', 'spawn', device, 'log', 'show', '--last', '5m', '--style', 'compact',
+              '--predicate', SIMULATOR_PREDICATE], 'simulator.log'),
             (['xcrun', 'simctl', 'io', device, 'screenshot', str(out / 'diagnostic-only.png')], 'screenshot.log'),
+            (['/usr/bin/log', 'show', '--last', '5m', '--style', 'compact', '--predicate',
+              f'eventMessage CONTAINS "{device}" OR eventMessage CONTAINS "{BUNDLE}"'], 'host-launch.log'),
+            (['xcrun', 'simctl', 'list', 'devices', '--json'], 'devices.log'),
         ]
         if 'pid' in receipt:
             diagnostics.append((['/bin/ps', '-p', str(receipt['pid']), '-o', 'pid=,ppid=,stat=,etime=,command='], 'owned-pid.log'))
         for command, filename in diagnostics:
-            try:
-                with (out / filename).open('w') as output:
-                    subprocess.run(command, stdout=output, stderr=subprocess.STDOUT, timeout=budget(30), check=False)
-            except (OSError, subprocess.SubprocessError) as diagnostic_error:
-                receipt.setdefault('diagnostic_errors', []).append(str(diagnostic_error))
+            diagnose(command, filename)
         raise RuntimeError('Simulator warmup failed; diagnostic-only evidence: ' + str(out)) from error
     finally:
         if launched:
             try:
                 invoke(['xcrun', 'simctl', 'terminate', device, BUNDLE], timeout=30)
+                receipt['cleanup_confirmed'] = True
             except (OSError, RuntimeError, subprocess.SubprocessError) as error:
+                receipt['cleanup_confirmed'] = False
                 receipt['cleanup_error'] = str(error)
+                diagnose(['xcrun', 'simctl', 'spawn', device, 'log', 'show', '--last', '5m',
+                          '--style', 'compact', '--predicate', SIMULATOR_PREDICATE],
+                         'simulator-after-cleanup.log', reserve_cleanup=False)
         (out / 'status.json').write_text(json.dumps(receipt, indent=2) + '\n')

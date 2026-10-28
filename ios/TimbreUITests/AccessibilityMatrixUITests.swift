@@ -68,7 +68,7 @@ final class AccessibilityMatrixUITests: XCTestCase {
 
         if openSettings() {
             capture("settings")
-            closeSheet()
+            closeSettings()
         }
 
         // A first lesson: the explanation, the tune check, a notes step, then the play-along before Start.
@@ -111,18 +111,58 @@ final class AccessibilityMatrixUITests: XCTestCase {
         capture("lesson-along-ready")
     }
 
-    /// Opens Settings with the tuner's header button. When another control takes the tap (at the largest text size the
-    /// stage's Strum control once stood over the button and opened Strum to tune), that fails the run by name and is
-    /// closed, so the screens after it are still captured.
+    /// A Settings screenshot needs positive screen identity, not merely the absence of the Strum sheet.
+    private var settingsVisible: Bool {
+        let scroll = app.scrollViews["settings.scroll"].firstMatch
+        let done = app.buttons["settings.done"].firstMatch
+        return scroll.exists && scroll.isHittable && done.exists && done.isHittable
+    }
+
+    /// Opens the real sheet and confirms its controls. A dropped tap can be retried only while still on the tuner;
+    /// a wrong sheet fails immediately. Navigation evidence is separate from the diagnostic audit's findings.
     private func openSettings() -> Bool {
-        element("settings.open").tap()
-        settle(1.5)
-        let strum = element("strum.close")
-        guard strum.exists else { return true }
-        XCTFail("the Settings button opened Strum to tune: the Strum control lies over it")
-        strum.tap()
-        settle(1.5)
+        let open = element("settings.open")
+        guard open.waitForExistence(timeout: 10), open.isHittable else {
+            navigationEvidence("settings-open-unreachable")
+            XCTFail("the tuner's Settings button is not reachable")
+            return false
+        }
+        for attempt in 1...3 {
+            open.tap()
+            let appeared = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in self.settingsVisible }, object: nil)
+            if XCTWaiter.wait(for: [appeared], timeout: 5) == .completed { return true }
+            navigationEvidence("settings-open-attempt-\(attempt)")
+            let strum = element("strum.close")
+            if strum.exists {
+                XCTFail("the Settings button opened Strum to tune: the Strum control lies over it")
+                if strum.isHittable { strum.tap() }
+                return false
+            }
+            guard element("tune.stage").exists, open.exists, open.isHittable else { break }
+        }
+        XCTFail("Settings did not become visible: both settings.scroll and settings.done must be reachable")
         return false
+    }
+
+    func testSettingsOpensClosesAndReopensWithPositiveScreenIdentity() {
+        app.launch()
+        XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 40))
+        XCTAssertFalse(settingsVisible, "The tuner must never satisfy the Settings screen assertion")
+        for _ in 0..<2 {
+            guard openSettings() else { return }
+            XCTAssertTrue(settingsVisible)
+            if Self.variant == "ar" {
+                let temperament = element("settings.temperament")
+                scrollTo(temperament)
+                XCTAssertTrue(temperament.exists && temperament.isHittable)
+                let selected = [temperament.label, temperament.value as? String ?? ""].joined(separator: " ")
+                XCTAssertTrue(selected.contains("متساوي"), "Arabic's selected temperament must use the app translation")
+                XCTAssertFalse(selected.contains("Equal"), "English data names must not leak into Arabic Settings")
+            }
+            closeSettings()
+            XCTAssertFalse(settingsVisible)
+            XCTAssertTrue(element("settings.open").isHittable, "The tuner must be reachable after Done")
+        }
     }
 
     /// Settings › Handedness: left-handed, or left-handed strung upside down.
@@ -137,23 +177,39 @@ final class AccessibilityMatrixUITests: XCTestCase {
         guard choice.waitForExistence(timeout: 5) else { return XCTFail("the handedness menu didn't open") }
         choice.tap()
         settle(1)
-        closeSheet()
+        closeSettings()
     }
 
-    /// Closes the sheet in front: its Done button when it has an English one, else a swipe down from its top.
-    private func closeSheet() {
-        let done = app.buttons["Done"].firstMatch
-        if done.exists && done.isHittable {
-            done.tap()
-        } else {
-            app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.12))
-                .press(forDuration: 0.05, thenDragTo: app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.9)))
+    /// The same localized Done control closes every language; no coordinate dismissal can hide a failed route.
+    private func closeSettings() {
+        let done = app.buttons["settings.done"].firstMatch
+        guard done.exists && done.isHittable else {
+            navigationEvidence("settings-close-unreachable")
+            return XCTFail("Settings Done is not reachable")
         }
-        settle(1.5)
+        done.tap()
+        XCTAssertTrue(done.waitForNonExistence(timeout: 10), "Settings did not close")
+        XCTAssertTrue(element("settings.open").waitForExistence(timeout: 10), "The tuner did not return")
+    }
+
+    private func navigationEvidence(_ phase: String) {
+        let name = "matrix-\(Self.variant)-\(phase)"
+        let picture = XCTAttachment(screenshot: app.screenshot())
+        picture.name = name
+        picture.lifetime = .keepAlways
+        add(picture)
+        let hierarchy = XCTAttachment(string: app.debugDescription)
+        hierarchy.name = name + "-hierarchy"
+        hierarchy.lifetime = .keepAlways
+        add(hierarchy)
     }
 
     /// A picture of the screen in front and its audit (clipped text, Dynamic Type, contrast, hit regions) as a report.
     private func capture(_ screen: String) {
+        if screen == "settings" && !settingsVisible {
+            navigationEvidence("settings-capture-rejected")
+            return XCTFail("Refusing to label a non-Settings screen as Settings")
+        }
         let name = "matrix-\(Self.variant)-\(screen)"
         let picture = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
         picture.name = name

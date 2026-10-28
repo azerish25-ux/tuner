@@ -12,9 +12,11 @@ from unittest.mock import patch
 
 import simulator_warmup as warm
 
+DEVICE = 'E952A9B0-CC78-435C-BF08-06AD47FE1076'
+
 
 class WarmupTests(unittest.TestCase):
-    def execute(self, failure=None, fail_once=False):
+    def execute(self, failure=None, fail_once=False, diagnostic_returncode=0):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             app = root / 'Timbre.app'
@@ -26,15 +28,16 @@ class WarmupTests(unittest.TestCase):
                 calls.append((command, kwargs))
                 if command[2] == failure and (not fail_once or sum(c[0][2] == failure for c in calls) == 1):
                     raise subprocess.TimeoutExpired(command, kwargs['timeout'])
-                return SimpleNamespace(returncode=0, stdout=warm.BUNDLE + ': 123\n')
+                code = diagnostic_returncode if kwargs.get('check') is False else 0
+                return SimpleNamespace(returncode=code, stdout=warm.BUNDLE + ': 123\n')
             out = root / 'diagnostics'
             with patch.object(warm.subprocess, 'run', side_effect=native), patch.object(warm.time, 'sleep'), \
                  patch.object(warm.os, 'kill') as alive, patch.dict(os.environ, {'GITHUB_SHA': 'source'}):
                 if failure:
                     with self.assertRaises(RuntimeError):
-                        warm.warmup(app, 'device', ['ar'], 'ar_SA', out)
+                        warm.warmup(app, DEVICE, ['ar'], 'ar_SA', out)
                 else:
-                    warm.warmup(app, 'device', ['ar'], 'ar_SA', out)
+                    warm.warmup(app, DEVICE, ['ar'], 'ar_SA', out)
             return json.loads((out / 'status.json').read_text()), calls
 
     def test_one_scoped_locale_specific_launch_then_terminate_with_binary_identity(self):
@@ -81,7 +84,7 @@ class WarmupTests(unittest.TestCase):
         status, calls = self.execute('launch')
         self.assertFalse(status['passed'])
         self.assertEqual(status['launch_attempts'], 1)
-        self.assertEqual([c[0][2] for c in calls], ['install', 'launch', 'spawn', 'io', 'terminate'])
+        self.assertEqual([c[0][2] for c in calls], ['install', 'launch', 'spawn', 'io', '--last', 'list', 'terminate'])
         self.assertTrue(any('diagnostic-only.png' in str(c[0]) for c in calls))
 
     def test_install_timeout_never_launches(self):
@@ -95,6 +98,68 @@ class WarmupTests(unittest.TestCase):
         second, _ = self.execute()
         self.assertNotEqual(first['automation_storage_id'], second['automation_storage_id'])
 
+    def test_nonzero_diagnostics_are_recorded_not_success_or_cleanup_failure(self):
+        status, _ = self.execute('launch', diagnostic_returncode=7)
+        self.assertFalse(status['passed'])
+        self.assertTrue(status['cleanup_confirmed'])
+        self.assertEqual(len(status['diagnostics']), 4)
+        for event in status['diagnostics']:
+            self.assertEqual(event['returncode'], 7)
+            self.assertLessEqual(event['started_at'], event['finished_at'])
+            self.assertLessEqual(event['timeout_seconds'], 30)
+
+    def test_cleanup_timeout_has_post_cleanup_evidence_without_second_launch(self):
+        status, calls = self.execute('terminate')
+        self.assertFalse(status['passed'])
+        self.assertFalse(status['cleanup_confirmed'])
+        self.assertEqual(status['diagnostics'][-1]['filename'], 'simulator-after-cleanup.log')
+        self.assertEqual(sum(command[2] == 'launch' for command, _ in calls), 1)
+
+    def test_launch_services_and_scoped_host_logs_are_not_filtered_out(self):
+        status, _ = self.execute('launch')
+        simulator = next(event for event in status['diagnostics'] if event['filename'] == 'simulator.log')
+        for process in ('runningboardd', 'lsd', 'installd', 'launchd', 'ReportCrash'):
+            self.assertIn(f'process == "{process}"', simulator['command'][-1])
+        host = next(event for event in status['diagnostics'] if event['filename'] == 'host-launch.log')
+        self.assertIn(DEVICE, host['command'][-1])
+        self.assertIn(warm.BUNDLE, host['command'][-1])
+
+    def test_device_alias_is_rejected_before_any_native_command(self):
+        with tempfile.TemporaryDirectory() as directory, patch.object(warm.subprocess, 'run') as native:
+            with self.assertRaises(ValueError):
+                warm.warmup(Path('unused'), 'booted', ['en'], 'en_US', Path(directory) / 'out')
+            native.assert_not_called()
+
+    def test_diagnostics_reserve_time_for_termination_within_original_total_budget(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            app = root / 'Timbre.app'
+            app.mkdir()
+            (app / 'Info.plist').write_bytes(plistlib.dumps({'CFBundleIdentifier': warm.BUNDLE, 'CFBundleExecutable': 'Timbre'}))
+            (app / 'Timbre').write_bytes(b'fixture')
+            now = [0.0]
+            calls = []
+            def native(command, **kwargs):
+                calls.append((command, kwargs))
+                if command[2] == 'install':
+                    now[0] += 119
+                elif command[2] == 'launch':
+                    now[0] += kwargs['timeout']
+                    raise subprocess.TimeoutExpired(command, kwargs['timeout'])
+                elif command[2] != 'terminate':
+                    now[0] += kwargs['timeout']
+                return SimpleNamespace(returncode=0, stdout='')
+            with patch.object(warm.time, 'monotonic', side_effect=lambda: now[0]), \
+                 patch.object(warm.subprocess, 'run', side_effect=native):
+                with self.assertRaises(RuntimeError):
+                    warm.warmup(app, DEVICE, ['en'], 'en_US', root / 'out')
+            self.assertEqual(calls[-1][0][2], 'terminate')
+            self.assertEqual(calls[-1][1]['timeout'], 30)
+            status = json.loads((root / 'out/status.json').read_text())
+            self.assertFalse(status['passed'])
+            self.assertTrue(status['cleanup_confirmed'])
+            self.assertTrue(any('reserved for cleanup' in event.get('error', '') for event in status['diagnostics']))
+
     def test_expired_total_deadline_never_starts_more_commands(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -102,10 +167,10 @@ class WarmupTests(unittest.TestCase):
             app.mkdir()
             (app / 'Info.plist').write_bytes(plistlib.dumps({'CFBundleIdentifier': warm.BUNDLE, 'CFBundleExecutable': 'Timbre'}))
             (app / 'Timbre').write_bytes(b'fixture')
-            times = iter([0, 301, 301, 301])
-            with patch.object(warm.time, 'monotonic', side_effect=lambda: next(times)), patch.object(warm.subprocess, 'run') as native:
+            times = iter([0])
+            with patch.object(warm.time, 'monotonic', side_effect=lambda: next(times, 301)), patch.object(warm.subprocess, 'run') as native:
                 with self.assertRaises(RuntimeError):
-                    warm.warmup(app, 'device', ['ar'], 'ar_SA', root / 'warmup')
+                    warm.warmup(app, DEVICE, ['ar'], 'ar_SA', root / 'warmup')
                 native.assert_not_called()
             status = json.loads((root / 'warmup/status.json').read_text())
             self.assertFalse(status['passed'])

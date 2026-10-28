@@ -105,16 +105,71 @@ class SongRailContractTests(unittest.TestCase):
 
     def test_selection_browsing_fades_and_unclipped_height_remain(self):
         self.assertIn('.railBleed(leading: Metrics.gutter, trailing: Metrics.gutter)', RAIL)
-        self.assertIn('ScrollPosition(idType: Item.ID.self)', RAIL)
-        self.assertIn('.scrollPosition($position, anchor: .trailing)', RAIL)
-        self.assertIn('position.scrollTo(id: selection, anchor: .center)', RAIL)
-        self.assertIn('position.scrollTo(id: value, anchor: .center)', RAIL)
+        self.assertIn('@State private var position: Item.ID?', RAIL)
+        self.assertIn('.scrollPosition(id: $position, anchor: .trailing)', RAIL)
+        self.assertIn('if let selection { reveal(selection) }', RAIL)
+        self.assertIn('reveal(value)', RAIL)
+        self.assertIn(r'withTransaction(\.scrollTargetAnchor, .center) { position = value }', RAIL)
         self.assertIn('guard !initialized else { return }', RAIL)
         self.assertNotIn('DispatchQueue.main.async', RAIL)
         self.assertNotIn('onGeometryChange', RAIL)
         self.assertNotIn('onScrollTargetVisibilityChange', RAIL)
         self.assertNotIn('.clipped()', RAIL)
         self.assertNotIn('.dynamicTypeSize(', RAIL)
+
+    def test_parent_page_tracks_shelf_identity_separately_from_horizontal_song(self):
+        # Native 2013834 evidence retained the terminal song inside its horizontal rail,
+        # but the enclosing page reset to the top (rail y=1324.7 LTR / 1298.7 RTL).
+        page = SONGS.split('var body: some View {', 1)[1].split('.onChange(of: filter)', 1)[0]
+        for token in ['ScrollPosition(idType: PageTarget.self)',
+                      'private enum PageTarget: Hashable, Sendable',
+                      'case introduction', 'case shelf(String)', 'case request']:
+            self.assertIn(token, SONGS)
+        for token in ['.id(PageTarget.introduction)', '.id(PageTarget.shelf(item.id))',
+                      'requestFooter.id(PageTarget.request)', '.scrollTargetLayout()',
+                      '.scrollPosition($shelfPosition, anchor: .center)',
+                      '.accessibilityIdentifier("songs.page")']:
+            self.assertIn(token, page)
+        for forbidden in ['DispatchQueue', 'scrollTo(', '.id(pageWidth)', '.id(typeSize)']:
+            self.assertNotIn(forbidden, page)
+        self.assertIn('.scrollPosition(id: $position, anchor: .trailing)', RAIL)
+
+    def test_vertical_reveal_corrects_measured_overshoot_without_weakening_viewport(self):
+        test = (ROOT / 'ios/TimbreUITests/SongShelfRailUITests.swift').read_text()
+        show = test.split('private func showRail()', 1)[1].split('private func reveal(', 1)[0]
+        for token in ['matching(identifier: "songs.page")', 'for attempt in 0..<24',
+                      'stableFrame(rail)', 'let top = app.frame.minY + 70',
+                      'app.tabBars.firstMatch.frame.minY - 24',
+                      'bounds.minY >= top && bounds.maxY <= bottom',
+                      'bounds.height <= bottom - top', 'capture("vertical-too-tall")',
+                      'band.height * 0.6', 'band.midY - bounds.midY',
+                      'band.midY - distance / 2', 'band.midY + distance / 2',
+                      'withVelocity: .slow, thenHoldForDuration: 0.3',
+                      'SONG-RAIL vertical:', 'XCTFail(']:
+            self.assertIn(token, show)
+        self.assertNotIn('vertical.swipeDown', show)
+        self.assertNotIn('XCTSkip', show)
+
+    def test_measured_ax5_rail_fits_and_bounded_physical_correction_converges(self):
+        # Values from the actual AX5 failure hierarchy: 402x874 window, tab y=791,
+        # rail y=-173.7/height=643.7. The unchanged 70...767 band has only 53.3pt slack.
+        top, bottom, height = 70.0, 791.0 - 24, 643.7
+        self.assertGreater(bottom - top, height)
+        self.assertAlmostEqual(bottom - top - height, 53.3)
+        for original in [-173.7, 400.0, 1298.7, -1800.0]:
+            y = original
+            for _ in range(24):
+                if y >= top and y + height <= bottom:
+                    break
+                mid = (top + bottom) / 2
+                limit = (bottom - top) * 0.6
+                delta = max(-limit, min(limit, mid - (y + height / 2)))
+                start, end = mid - delta / 2, mid + delta / 2
+                self.assertGreaterEqual(min(start, end), top)
+                self.assertLessEqual(max(start, end), bottom)
+                y += end - start
+            self.assertGreaterEqual(y, top, original)
+            self.assertLessEqual(y + height, bottom, original)
 
     def test_120_record_native_regression_uses_real_first_middle_last(self):
         curriculum = json.loads((ROOT / 'ios/Sources/TimbreCore/Resources/curriculum.json').read_text())
@@ -158,6 +213,21 @@ class SongRailContractTests(unittest.TestCase):
         self.assertIn('SONG-RAIL progress:', test)
         self.assertIn('if attempt % 10 == 0 { logProgress', test)
         self.assertIn('for attempt in 0..<85', test)
+
+    def test_rotation_cannot_pass_with_entire_parent_shelf_below_screen(self):
+        test = (ROOT / 'ios/TimbreUITests/SongShelfRailUITests.swift').read_text()
+        rotation = test.split('private func assertRotationVisible(', 1)[1].split('private func usable(', 1)[0]
+        for token in ['let screen = app.frame', 'app.tabBars.firstMatch.frame.minY',
+                      'XCTAssertLessThan(frame.minY, contentBottom',
+                      'XCTAssertGreaterThan(frame.maxY, screen.minY']:
+            self.assertIn(token, rotation)
+        cycle = test.split('for cycle in 0..<2 {', 1)[1].split('_ = reveal(samples[0]', 1)[0]
+        for token in ['.landscapeLeft', '.portrait', 'assertRotationVisible(landscapeLast',
+                      'assertRotationVisible(last', 'verifyActions(samples[2], tile: rotatedLast']:
+            self.assertIn(token, cycle)
+        # A test-side vertical recenter would hide the production regression.
+        for forbidden in ['showRail()', 'swipeUp', 'swipeDown', 'scrollTo']:
+            self.assertNotIn(forbidden, cycle)
 
     def test_adaptive_physical_drag_centers_both_failure_geometries(self):
         # Independent geometry model using the two native failure frames. Physical centering must not
@@ -260,12 +330,24 @@ class SongRailContractTests(unittest.TestCase):
         for token in ['.prefix(', 'XCTSkip', 'XCTAssertLessThan(sizingSeconds', 'measure(metrics:']:
             self.assertNotIn(token, full)
 
+    def test_native_selection_miss_is_trailing_alignment_not_center_tolerance(self):
+        # Actual app-unit attachment: frame 442, offset 9284, selected card width 148.
+        observed_center = 9284 + 442 / 2
+        expected_center = 59 * (148 + 14) + 20 + 74
+        self.assertEqual(observed_center, 9505)
+        self.assertEqual(expected_center, 9652)
+        self.assertEqual(expected_center - observed_center, (442 - 148) / 2)
+        self.assertGreater(abs(expected_center - observed_center), 24)
+
     def test_initial_reveal_fixture_uses_live_scene_and_observes_completion(self):
         test = (ROOT / 'ios/TimbreAppTests/SongRailMeasurementTests.swift').read_text().split('func testInitialMiddleSelectionIsRevealedWithoutBuildingEveryCard()', 1)[1]
         for token in ['UIWindow(windowScene: scene)', 'window.makeKeyAndVisible()',
                       'host.view.window === window', '.onAppear { appeared = true }',
                       'XCTNSPredicateExpectation', 'await fulfillment(of: [revealed], timeout: 3)',
-                      'XCTAssertEqual(center, itemCenter, accuracy: 24)', 'XCTAssertLessThan(constructed.count, 120']:
+                      'XCTAssertEqual(center, itemCenter, accuracy: 24)', 'XCTAssertLessThan(constructed.count, 120',
+                      'XCTAssertEqual(frame.midX, viewport.midX, accuracy: 24)',
+                      'XCTAssertGreaterThanOrEqual(frame.minX, viewport.minX + 52',
+                      'XCTAssertLessThanOrEqual(frame.maxX, viewport.maxX - 52']:
             self.assertIn(token, test)
         self.assertNotIn('Task.sleep', test)
 

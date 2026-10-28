@@ -77,6 +77,7 @@ jobs:
           ci-out/test-venv/bin/python3 -m unittest discover -s tools/marketing/tests -p 'test_listing_assets.py'
           ci-out/test-venv/bin/python3 -m unittest discover -s tools/marketing/tests -p 'test_artifact_qa_triggers.py'
           ci-out/test-venv/bin/python3 -m unittest discover -s tools/marketing/tests -p 'test_screenshot_roles.py'
+          ci-out/test-venv/bin/python3 -m unittest discover -s tools/marketing/tests -p 'test_listing_evidence.py'
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: listing-plan
@@ -217,6 +218,59 @@ jobs:
             --products ios/build/listing/Build/Products --build-archive ci-build/products.tgz \
             --build-info ci-build/build-info.json --source-sha "$GITHUB_SHA" \
             --out ci-out/assets --manifests ci-out/manifests
+      # Small evidence first: a slow/failed full forensic upload must not hide logs.
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        if: always()
+        with:
+          name: listing-manifests-${{ matrix.id }}
+          path: ci-out/manifests
+          if-no-files-found: error
+          retention-days: 7
+      - name: Package complete logs, result summaries and exported text hierarchies
+        if: always()
+        env:
+          LOCALES: ${{ matrix.locales }}
+          KIND: ${{ matrix.kind }}
+        run: |
+          "${LISTING_PY:-python3}" tools/marketing/listing_evidence.py diagnostics \
+            --assets ci-out/assets --manifests ci-out/manifests \
+            --build-info ci-build/build-info.json --build-archive ci-build/products.tgz \
+            --source-sha "$GITHUB_SHA" --locales "$LOCALES" --kind "$KIND" --out ci-out/diagnostics --failure-out ci-out/failure-images
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        if: always()
+        with:
+          name: listing-diagnostics-${{ matrix.id }}
+          path: ci-out/diagnostics
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        if: always()
+        with:
+          name: listing-failure-images-${{ matrix.id }}
+          path: ci-out/failure-images
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
+      - name: Package manifest-verified final assets and original native capture PNGs
+        if: always()
+        env:
+          LOCALES: ${{ matrix.locales }}
+          KIND: ${{ matrix.kind }}
+        run: |
+          "${LISTING_PY:-python3}" tools/marketing/listing_evidence.py review \
+            --assets ci-out/assets --manifests ci-out/manifests \
+            --build-info ci-build/build-info.json --build-archive ci-build/products.tgz \
+            --source-sha "$GITHUB_SHA" --locales "$LOCALES" --kind "$KIND" --out ci-out/review
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        if: always()
+        with:
+          name: listing-review-${{ matrix.id }}
+          path: ci-out/review
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
+      # Keep every raw attempt, xcresult, automatic attachment and video unchanged.
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()
         with:
@@ -226,13 +280,6 @@ jobs:
             ci-out/caption-typography.json
           if-no-files-found: error
           compression-level: 0
-          retention-days: 7
-      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
-        if: always()
-        with:
-          name: listing-manifests-${{ matrix.id }}
-          path: ci-out/manifests
-          if-no-files-found: error
           retention-days: 7
 
   inventory:

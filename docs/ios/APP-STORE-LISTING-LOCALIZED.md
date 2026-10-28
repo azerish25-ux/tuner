@@ -17,6 +17,10 @@ The subsequent56 independently reviewed Game Center achievement-description delt
 
 Bounded source-aware independent AI review of owner-approved multi-instrument title/subtitle positioning and keyword continuity across all 50 locales. Unchanged consumer fields inherit prior full-payload review. Exact-old/new deltas and source/payload hash lineage retained. Native-speaker, legal, market, rendered-device and Apple acceptance are not certified. All release flags remain false. The approved English name is **Timbre: Tuner & Music Lessons** and subtitle **Guitar, Violin, Cello & More**. All 50 locales retain the Timbre brand and use compact, reviewed local equivalents. This adds 194 guarded field deltas (49 names, 50 subtitles, 45 keyword fields and 50 whole-array phone-caption permutations) to the retained 759 records, for 953 total. The phone story now introduces instrument breadth before guitar-specific examples; all caption text and capture associations remain unchanged. See [proposal and independent review](../l10n/reviews/multi-instrument-positioning/).
 
+## App Information header persistence — 2026-10-27
+
+All 50 locale name/subtitle pairs were observed persisted in App Store Connect: 49 newly saved locale headers with full-page reload/readback, plus unchanged `en-US` with fresh-page readback. See the [headers-only receipt and source binding](readiness/APP-INFORMATION-HEADERS.md). This does not establish completion of descriptions, keywords, promotional text, localized assets, pricing, signing or submission, and it does not change the release flags below.
+
 ## Evidence, not release certification
 
 **Do not paste or upload these drafts as a finished release.** AI-authored text and automated structural checks are not native-speaker, market-search, legal, device, render or App Store Connect approval. Each JSON has independent review states; the manifest tracks actual draft validation separately from `release_ready`. English regional variants intentionally share source wording after regional drafting; they are not missing-language fallback. Nothing here claims keyword popularity has been measured.
@@ -197,7 +201,7 @@ Welcome to Timbre: a free tuner for {instruments} instruments, and {lessons} les
 |---|---|---|
 | 1 | Free tuner. No ads. | {instruments} instruments, to the cent |
 | 2 | Tune whatever you play | {instruments} instruments, {tunings} tunings |
-| 3 | Hear exactly how you played | Pitch and timing on every note |
+| 3 | See feedback as you play | Pitch and timing on every note |
 | 4 | Play songs you know | {songs_floor}+ songs, classics to Originals |
 | 5 | Learn at your own pace | {lessons} lessons in {courses} courses |
 | 6 | Play your first chord today | Timbre hears every string |

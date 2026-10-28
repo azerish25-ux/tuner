@@ -22,7 +22,7 @@ class BuildCheckpointContract(unittest.TestCase):
             self.assertLess(checkpoint.index('Summarize simulator build immediately'),
                             checkpoint.index('Upload simulator build checkpoint'))
             self.assertEqual(checkpoint.count("if: always() && hashFiles('ci-out/build.log') != ''"), 2)
-            suffix = '${{ matrix.shard }}-' if index == 0 else ''
+            suffix = ''  # Shared tour producer and independent a11y producer both bind run attempt.
             self.assertIn('nightly-build-${{ github.job }}-' + suffix + '${{ github.run_attempt }}', checkpoint)
             self.assertIn('if-no-files-found: error', checkpoint)
             for forbidden in ['continue-on-error', '|| true', 'printenv', 'test-without-building', 'xcodebuild archive']:

@@ -23,9 +23,11 @@ struct PracticeXPProgress: View {
                                         next: NSLocalizedString(next, comment: ""), locale: locale) {
             Text(verbatim: sentence)
                 .accessibilityLabel(spoken)
+                .accessibilityIdentifier("practice.xp.progress")
         } else {
             // A future translator may reorder placeholders. Never guess a different sentence or crash.
             spoken
+                .accessibilityIdentifier("practice.xp.progress")
         }
     }
 
