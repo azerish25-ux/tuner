@@ -94,7 +94,9 @@ final class WelcomeFallbackDiagnosticsTests: XCTestCase {
         let runs = try XCTUnwrap(CTLineGetGlyphRuns(line) as? [CTRun])
         for run in runs {
             let attributes = CTRunGetAttributes(run) as NSDictionary
-            let font = attributes[kCTFontAttributeName] as! CTFont
+            // UIFont is toll-free bridged to CTFont; retain this run's actual fallback, never rebuild the input font.
+            let runFont = try XCTUnwrap(attributes[kCTFontAttributeName] as? UIFont, "Glyph run must expose its actual font")
+            let font = runFont as CTFont
             let count = CTRunGetGlyphCount(run)
             var glyphs = [CGGlyph](repeating: 0, count: count)
             var positions = [CGPoint](repeating: .zero, count: count)

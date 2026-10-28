@@ -171,6 +171,10 @@ jobs:
             -only-testing:TimbreUITests/${{ matrix.test_class }} \
             -destination "platform=iOS Simulator,id=$DEVICE_ID" \
             -resultBundlePath ios/build/UITests.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/test.log
+      - name: Collect bounded opt-in Songs page trace
+        if: always() && matrix.shard == 'song-rails'
+        timeout-minutes: 2
+        run: python3 tools/ci/collect_song_page_trace.py --device "$DEVICE_ID" --output ci-out/song-page-trace
       - name: Finalize compact shard diagnostics immediately
         if: always()
         env:
@@ -198,6 +202,7 @@ jobs:
             ci-out/warmup/*.log
             ci-out/warmup/diagnostic-only.png
             ci-out/warmup-cleanup/
+            ci-out/song-page-trace/
           if-no-files-found: error
           retention-days: 14
       - name: Export simulator screenshots
@@ -212,6 +217,20 @@ jobs:
           fi
           for log in ci-out/build.log ci-out/test.log; do [ -f "$log" ] && python3 tools/ci/summarize-log.py "$log" "${log%.log}.summary.txt"; done
           gzip -f ci-out/build.log ci-out/test.log 2>/dev/null || true
+      # Original still frames and metadata stay retrievable without recordings or the result bundle.
+      # The shared consumer covers every class shard; the full exports below remain unchanged.
+      - name: Upload original tour frames and metadata before full exports
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        if: always()
+        with:
+          name: tour-frames-${{ matrix.shard }}-attempt-${{ github.run_attempt }}
+          path: |
+            ci-out/screenshots/**/*.png
+            ci-out/screenshots/**/*.txt
+            ci-out/screenshots/**/*.json
+            !ci-out/screenshots/**/*.xcresult/**
+          if-no-files-found: error
+          retention-days: 14
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()
         with:

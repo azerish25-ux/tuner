@@ -171,14 +171,48 @@ final class TimbreUITests: XCTestCase {
 
     /// Taps Continue (once it is enabled) until the next screen's element appears: a tap during the
     /// enable animation or the page transition can be dropped.
-    private func continueUntil(_ next: XCUIElement) {
+    private func continueUntil(_ next: XCUIElement) -> Bool {
         let button = element("onboarding.continue")
         for _ in 0..<4 where !next.exists {
             _ = button.waitForExistence(timeout: 3)
             if button.isEnabled { button.tap() }
             _ = next.waitForExistence(timeout: 2.5)
         }
-        XCTAssertTrue(next.exists)
+        guard next.exists else {
+            shot("onboarding-transition-failed")
+            XCTFail("Onboarding did not reach the expected next screen: \(next.identifier)")
+            return false
+        }
+        return true
+    }
+
+    /// A synthesized tap alone is not evidence that the answer was accepted.
+    private func selectOnboardingBeginner() -> Bool {
+        let answers = app.buttons.matching(identifier: "onboarding.option.beginner")
+        let answer = answers.firstMatch
+        let next = element("onboarding.continue")
+        var observations: [String] = []
+        for attempt in 0..<3 {
+            guard answer.waitForExistence(timeout: 10), answers.count == 1,
+                  answer.isEnabled, answer.isHittable else { break }
+            observations.append("attempt=\(attempt) frame=\(answer.frame) selectedBefore=\(answer.isSelected)")
+            if !answer.isSelected { answer.tap() }
+            let accepted = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+                answer.exists && answer.isSelected && next.exists && next.isEnabled
+            }, object: nil)
+            let result = XCTWaiter.wait(for: [accepted], timeout: 5)
+            observations.append("selectionWait=\(result.rawValue)")
+            if result == .completed {
+                let trace = XCTAttachment(string: observations.joined(separator: "\n"))
+                trace.name = "onboarding-beginner-selection"; trace.lifetime = .keepAlways; add(trace)
+                return true
+            }
+        }
+        let trace = XCTAttachment(string: observations.joined(separator: "\n"))
+        trace.name = "onboarding-beginner-selection-failed"; trace.lifetime = .keepAlways; add(trace)
+        shot("onboarding-beginner-selection-failed")
+        XCTFail("The unique beginner answer must become selected and enable Continue")
+        return false
     }
 
     // MARK: App Store frames
@@ -452,11 +486,13 @@ final class TimbreUITests: XCTestCase {
         element("onboarding.instrument.guitar.acoustic.6").tap()
         start.tap(); settle(1.5); shot("03-onboarding-experience")
         // Nothing is pre-selected: Continue waits for an answer. A beginner's path holds every page, the first chord too.
-        element("onboarding.option.beginner").tap()
+        guard selectOnboardingBeginner() else { return }
         // A beginner's goal starts on "Play my first songs".
-        continueUntil(element("onboarding.option.songs")); settle(1.2); shot("04-onboarding-goal")
+        guard continueUntil(element("onboarding.option.songs")) else { return }
+        settle(1.2); shot("04-onboarding-goal")
         // A guitar has strings to hold: which hand plays (right-handed until the player says otherwise).
-        continueUntil(element("onboarding.option.right")); settle(1.2); shot("04b-onboarding-hand")
+        guard continueUntil(element("onboarding.option.right")) else { return }
+        settle(1.2); shot("04b-onboarding-hand")
         let notNow = element("onboarding.microphone.skip")
         for _ in 0..<3 where !notNow.exists { element("onboarding.continue").tap(); settle(1.5) }
         XCTAssertTrue(notNow.waitForExistence(timeout: 5))

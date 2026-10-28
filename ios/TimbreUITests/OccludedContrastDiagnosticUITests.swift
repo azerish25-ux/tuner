@@ -127,13 +127,20 @@ final class OccludedContrastDiagnosticUITests: XCTestCase {
         let source = ProcessInfo.processInfo.environment["TIMBRE_DIAGNOSTIC_SOURCE_SHA"] ?? ""
         var lines = ["diagnosticOnly=true originalFailuresResolved=0 pixelProof=false",
                      "group=\(group.key) required=\(group.keys) source=\(source)", "locale=en_US requestedContentSize=large"]
-        defer {
-            let report = XCTAttachment(string: lines.joined(separator: "\n"))
-            report.name = "contrast-reveal-" + group.key + "-report"; report.lifetime = .keepAlways; add(report)
-            for line in lines { print("AX-REVEAL: " + line) }
-        }
+        defer { attachReport(lines, name: group.key + "-report") }
         do {
             try require(source.count == 40 && source.allSatisfy { $0.isHexDigit }, "Missing exact built checkout SHA")
+            if group.tab == "Learn" {
+                // The strict tab audit seeds once, then relaunches the same namespace before inspection.
+                // Do not retarget a completed lesson or relax the exact Next lesson witness below.
+                try require(app.tabBars.buttons.firstMatch.waitForExistence(timeout: 25),
+                            "Seed launch did not reach the tab bar before replay")
+                try budget()
+                app.terminate()
+                app.launch()
+                try budget()
+                lines.append("fixtureLifecycle=initial-seed-then-replay")
+            }
             let buttons = app.tabBars.buttons.matching(NSPredicate(format: "label == %@", group.tab))
             try require(buttons.firstMatch.waitForExistence(timeout: 25) && buttons.count == 1, "Tab identity missing/ambiguous")
             let tab = buttons.firstMatch
@@ -192,8 +199,26 @@ final class OccludedContrastDiagnosticUITests: XCTestCase {
                 let matches = app.buttons.matching(identifier: parent)
                 try require(matches.count == 1 && matches.firstMatch.isHittable, "Bound parent not reachable: " + parent)
             }
+            // Preserve a complete stable capture pair before a synchronous whole-app audit can stall.
+            // Geometry stability is not full-glyph coverage, pixel equality, or a contrast proof.
+            let checkpoint = try stable(group, targets: targets)
+            try require(same(state, checkpoint), "Target changed before the capture checkpoint")
             try capture(group.key + "-revealed-before")
-            lines.append("geometricallyRevealed=\(group.keys) clearBand=\(state.clearBand) frames=\(state.frames)")
+            let between = try stable(group, targets: targets)
+            try require(same(checkpoint, between), "Target changed between checkpoint captures")
+            try capture(group.key + "-revealed-after")
+            let captured = try stable(group, targets: targets)
+            try require(same(checkpoint, captured), "Target changed during the capture checkpoint")
+            for observed in [checkpoint, between, captured] {
+                try require(valid(observed.clearBand) && observed.frames.allSatisfy { observed.clearBand.contains($0) },
+                            "Checkpoint no longer fully revealed")
+            }
+            try budget()
+            lines.append("geometricallyRevealed=\(group.keys) clearBand=\(checkpoint.clearBand) frames=\(checkpoint.frames)")
+            lines.append("checkpointIdentities=\(checkpoint.identities)")
+            lines.append("revealedFramesCaptured=true captureCheckpointOnly=true contrastRecheckStatus=not-started")
+            lines.append("No original failure resolved; native pixels still require independent visual/contrast review")
+            attachReport(lines, name: group.key + "-capture-checkpoint")
             try budget()
             var callbacks = 0
             var auditReturned = false
@@ -201,12 +226,13 @@ final class OccludedContrastDiagnosticUITests: XCTestCase {
                 try app.performAccessibilityAudit(for: .contrast) { issue in
                     callbacks += 1
                     let node = try? issue.element?.snapshot()
-                    self.attachScreenshot("\(group.key)-callback-\(callbacks)")
+                    let requested = self.isRequestedCallback(node, targets: targets, state: checkpoint)
                     let detail = "callback=\(callbacks) id=\(node?.identifier ?? "") label=\(node?.label ?? "") "
                         + "type=\(String(describing: node?.elementType.rawValue)) frame=\(String(describing: node?.frame)) "
-                        + issue.detailedDescription
+                        + "requestedCallbackScreenshot=\(requested) " + issue.detailedDescription
                     lines.append(detail)
                     print("AX-REVEAL: " + detail)
+                    if requested { self.attachScreenshot("\(group.key)-callback-\(callbacks)") }
                     return false // Never ignore anonymous, duplicate, unrelated or target contrast failures.
                 }
                 auditReturned = true
@@ -215,11 +241,11 @@ final class OccludedContrastDiagnosticUITests: XCTestCase {
                 lines.append("contrastRequestReturned=false error=\(error)")
                 XCTFail("Isolated reveal audit did not complete: \(error)")
             }
-            try capture(group.key + "-revealed-after")
+            try capture(group.key + "-audit-after")
             let after = try stable(group, targets: targets)
             try require(same(state, after), "Audit changed target identity/geometry; after image is not accepted as same-state")
             try budget()
-            lines.append("revealedFramesCaptured=true contrastRequestReturned=\(auditReturned) callbacks=\(callbacks)")
+            lines.append("postAuditStateStable=true contrastRequestReturned=\(auditReturned) callbacks=\(callbacks)")
             lines.append("No original failure resolved; native pixels still require independent visual/contrast review")
         } catch {
             lines.append("UNRESOLVED required=\(group.keys) error=\(error)")
@@ -300,7 +326,8 @@ final class OccludedContrastDiagnosticUITests: XCTestCase {
             let parent = try unique(scope.filter { $0.elementType == .button && $0.identifier == target.parent }, target.key + " parent")
             if let label = target.parentLabel { try require(parent.label == label, target.key + " parent label changed") }
             if target.parent == "learn.lesson.gtr-1-1" {
-                try require(parent.value as? String == "Next lesson", "First lesson state changed")
+                try require(parent.value as? String == "Next lesson",
+                            "First lesson state changed: expected Next lesson; observed \(String(describing: parent.value))")
             }
             let leaf = try unique(nodes(parent).filter {
                 $0.elementType == .staticText && $0.identifier == target.identifier && $0.label == target.label
@@ -331,6 +358,24 @@ final class OccludedContrastDiagnosticUITests: XCTestCase {
             previous = next
         }
         throw Blocked.evidence("Target/control geometry did not settle")
+    }
+    /// Attachment selection only. The checkpoint already scoped each leaf to its exact parent.
+    /// A callback must match exactly one requested leaf snapshot; this never dismisses an issue,
+    /// proves callback ancestry, or authorizes pixels. Unknown/changed/ambiguous callbacks stay logged.
+    private func isRequestedCallback(_ node: (any XCUIElementSnapshot)?, targets: [Target], state: State) -> Bool {
+        guard let node, node.elementType == .staticText, valid(node.frame),
+              state.frames.count == targets.count * 2 else { return false }
+        let matches = targets.indices.filter { index in
+            let target = targets[index]
+            return node.identifier == target.identifier && node.label == target.label
+                && node.frame == state.frames[index * 2 + 1]
+        }
+        return matches.count == 1
+    }
+    private func attachReport(_ lines: [String], name: String) {
+        let report = XCTAttachment(string: lines.joined(separator: "\n"))
+        report.name = "contrast-reveal-" + name; report.lifetime = .keepAlways; add(report)
+        for line in lines { print("AX-REVEAL: " + line) }
     }
     private func attachScreenshot(_ name: String) {
         serial += 1

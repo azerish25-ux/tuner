@@ -191,10 +191,14 @@ class SongRailContractTests(unittest.TestCase):
         self.assertIn('.scrollPosition(id: $position, anchor: .trailing)', RAIL)
 
     def test_parent_identity_repair_keeps_constant_center_without_geometry_feedback(self):
-        self.assertIn('.scrollPosition(id: $position, anchor: .center)', PAGE)
+        # Debug-only passive file observations cannot become production feedback or a scroll command.
+        release = re.sub(r'        #if DEBUG\n.*?        #endif\n', '', PAGE, flags=re.S)
+        self.assertIn('.scrollPosition(id: $position, anchor: .center)', release)
         for forbidden in ['scrollTo(', 'DispatchQueue', 'Task {', '.onAppear', 'position =',
                           'rowHeights', 'scrollAnchor', 'onScrollGeometryChange',
                           '.id(pageWidth)', 'accessibilityHidden', 'minimumScaleFactor']:
+            self.assertNotIn(forbidden, release)
+        for forbidden in ['scrollTo(', 'position =', 'scrollAnchor', 'rowHeights', '@State', 'accessibilityValue']:
             self.assertNotIn(forbidden, PAGE)
 
     def test_additive_command_controls_keep_full_normal_card_and_oversized_primary_geometry(self):
@@ -249,6 +253,49 @@ class SongRailContractTests(unittest.TestCase):
         for forbidden in ['scrollTo(', 'requestedShelf =', 'requestedTerminalShelf =', 'position =']:
             self.assertNotIn(forbidden, resize)
         self.assertNotIn('XCTSkip', native)
+
+    def test_contained_host_control_resizes_real_child_without_replaying_commands(self):
+        native = (ROOT / 'ios/TimbreAppTests/SongShelfPageTests.swift').read_text()
+        helper = native.split('private func verifyContainedHost(', 1)[1].split('private func assertContainedHost(', 1)[0]
+        for token in ['CGSize(width: 300, height: 600)', 'CGSize(width: 402, height: 340)',
+                      'State(driver: .bindingCommand)', 'let container = UIViewController()',
+                      'window.rootViewController = container', 'container.addChild(host)',
+                      'container.view.addSubview(host.view)', 'host.didMove(toParent: container)',
+                      'window.bounds.width >= compact.width, window.bounds.height >= tall.height',
+                      'host.view.frame = CGRect(origin: .zero, size: size)',
+                      'await assertContainedHost(state, host: host, window: window, stage: stage)',
+                      'await assertTerminal(state, target: target, window: window, stage: stage)',
+                      'for cycle in 0..<2', 'for size in [compact, tall]']:
+            self.assertIn(token, helper)
+        resize = helper.split('for cycle in 0..<2', 1)[1]
+        for forbidden in ['position =', 'requestedShelf =', 'requestedTerminalShelf =', 'scrollTo(', 'setContentOffset(']:
+            self.assertNotIn(forbidden, resize)
+        self.assertEqual(helper.count('state.requestedShelf ='), 1)
+        self.assertEqual(helper.count('state.requestedTerminalShelf ='), 1)
+        for name, direction in [('testContainedHostCommandResize()', 'leftToRight'),
+                                ('testContainedHostCommandResizeRightToLeft()', 'rightToLeft')]:
+            method = native.split('func ' + name, 1)[1].split('\n    }', 1)[0]
+            self.assertIn('verifyContainedHost(direction: .' + direction + ')', method)
+        self.assertIn('not device rotation or automatic binding observation', native)
+
+    def test_contained_host_control_records_and_requires_window_root_host_page_containment(self):
+        native = (ROOT / 'ios/TimbreAppTests/SongShelfPageTests.swift').read_text()
+        helper = native.split('private func assertContainedHost(', 1)[1].split('private func assertTerminal(', 1)[0]
+        for token in ['record(state, window: window, stage: stage)',
+                      'root.convert(root.bounds, to: window)', 'host.view.convert(host.view.bounds, to: window)',
+                      'page.convert(page.bounds, to: window)', 'contained child sizing, not device rotation',
+                      'diagnostic.lifetime = .keepAlways',
+                      'root.window === window && host.view.window === window && page.window === window',
+                      'window.bounds.insetBy(dx: -1, dy: -1).contains(rootFrame)',
+                      'rootFrame.insetBy(dx: -1, dy: -1).contains(hostFrame)',
+                      'hostFrame.insetBy(dx: -1, dy: -1).contains(pageFrame)',
+                      'XCTAssertEqual(hostFrame.width, state.size.width, accuracy: 1)',
+                      'XCTAssertEqual(hostFrame.height, state.size.height, accuracy: 1)',
+                      'XCTAssertEqual(pageFrame.width, state.size.width, accuracy: 1)',
+                      'XCTAssertEqual(pageFrame.height, state.size.height, accuracy: 1)']:
+            self.assertIn(token, helper)
+        self.assertLess(helper.index('record(state,'), helper.index('guard let root ='))
+        self.assertNotIn('XCTSkip', helper)
 
     def test_native_parent_traversal_keeps_nested_scroll_views(self):
         native = (ROOT / 'ios/TimbreAppTests/SongShelfPageTests.swift').read_text()

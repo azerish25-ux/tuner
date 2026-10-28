@@ -52,5 +52,23 @@ struct SongShelfPage<Item: Identifiable, Introduction: View, Content: View, Foot
             .padding(.horizontal, Metrics.gutter).padding(.vertical, 12)
         }
         .scrollPosition(id: $position, anchor: .center)
+        #if DEBUG
+        .onAppear { SongPageTrace.record("appear", position: String(describing: position)) }
+        .onDisappear { SongPageTrace.record("disappear", position: String(describing: position)) }
+        .onChange(of: position) { old, new in
+            SongPageTrace.record("position-observed", position: String(describing: new), oldPosition: String(describing: old))
+        }
+        .onScrollGeometryChange(for: SongPageTrace.Geometry?.self) { geometry in
+            SongPageTrace.enabled ? SongPageTrace.Geometry(geometry) : nil
+        } action: { _, geometry in
+            guard let geometry else { return }
+            SongPageTrace.record("geometry", position: String(describing: position), geometry: geometry)
+        }
+        .onScrollPhaseChange { old, new, context in
+            guard SongPageTrace.enabled else { return }
+            SongPageTrace.record("phase", position: String(describing: position), geometry: SongPageTrace.Geometry(context.geometry),
+                                 oldPhase: String(describing: old), phase: String(describing: new))
+        }
+        #endif
     }
 }

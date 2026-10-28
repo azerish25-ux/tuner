@@ -37,6 +37,7 @@ final class SongHeroMetadataTests: XCTestCase {
             let locale = Locale(identifier: fixture.locale)
             // Independent literal oracle: the known reward uses LRI, unlike production's first-strong isolate.
             // Both complete fields keep their glyph order; the surrounding paragraph is still free to be RTL.
+            // Compare at one native text baseline, not the centers of potentially different fallback line boxes.
             let oracle = Text(verbatim: "· \u{2066}\(fixture.length)\u{2069} · \u{2066}\(fixture.reward)\u{2069}")
             let wrongGroup = Text(verbatim: "· \u{2066}\(fixture.reward)\u{2069} · \u{2066}\(fixture.length) XP\u{2069}")
             let wrongValue = Text(verbatim: "· \u{2066}3:26\u{2069} · \u{2066}\(fixture.reward)\u{2069}")
@@ -44,14 +45,18 @@ final class SongHeroMetadataTests: XCTestCase {
                 for size in [DynamicTypeSize.large, .accessibility5] {
                     let name = "\(fixture.language)-\(direction)-\(size)"
                     let view = SongsView.HeroMetadata(length: fixture.length, xp: 30)
-                    let actual = try pixels(view, locale: locale, direction: direction, size: size, name: name + "-actual")
-                    let expected = try pixels(oracle, locale: locale, direction: direction, size: size, name: name + "-oracle")
-                    XCTAssertEqual(actual, expected, "Every canonical RGBA byte must match the whole-field oracle")
-                    XCTAssertNotEqual(actual, try pixels(wrongGroup, locale: locale, direction: direction, size: size))
-                    XCTAssertNotEqual(actual, try pixels(wrongValue, locale: locale, direction: direction, size: size))
+                    let actual = try pixels(view, locale: locale, direction: direction, size: size,
+                                            alignment: .firstTextBaseline, name: name + "-actual")
+                    let expected = try pixels(oracle, locale: locale, direction: direction, size: size, alignment: .firstTextBaseline, name: name + "-oracle")
+                    XCTAssertEqual(actual, expected, "Every canonical RGBA byte must match the whole-field oracle: \(name)")
+                    XCTAssertNotEqual(actual, try pixels(wrongGroup, locale: locale, direction: direction,
+                                                           size: size, alignment: .firstTextBaseline))
+                    XCTAssertNotEqual(actual, try pixels(wrongValue, locale: locale, direction: direction,
+                                                           size: size, alignment: .firstTextBaseline))
                     if fixture.language == "ar" {
                         let old = Text(verbatim: "· \(fixture.length) · ") + Text("+\(30) XP")
-                        let negative = try pixels(old, locale: locale, direction: direction, size: size, name: name + "-old")
+                        let negative = try pixels(old, locale: locale, direction: direction, size: size,
+                                                alignment: .firstTextBaseline, name: name + "-old")
                         XCTAssertNotEqual(actual, negative, "The native pixel oracle must reject the observed Arabic bug")
                     }
                 }
@@ -112,6 +117,25 @@ final class SongHeroMetadataTests: XCTestCase {
         }
     }
 
+    func testBaselineOracleRejectsOnePointDrawingDisplacement() throws {
+        for fixture in fixtures {
+            let locale = Locale(identifier: fixture.locale)
+            let literal = Text(verbatim: "· \u{2066}\(fixture.length)\u{2069} · \u{2066}\(fixture.reward)\u{2069}")
+            for direction in [LayoutDirection.leftToRight, .rightToLeft] {
+                for size in [DynamicTypeSize.large, .accessibility5] {
+                    let expected = try pixels(literal, locale: locale, direction: direction,
+                                              size: size, alignment: .firstTextBaseline)
+                    let shiftedX = try pixels(literal.offset(x: 1), locale: locale, direction: direction,
+                                              size: size, alignment: .firstTextBaseline)
+                    let shiftedY = try pixels(literal.offset(y: 1), locale: locale, direction: direction,
+                                              size: size, alignment: .firstTextBaseline)
+                    XCTAssertNotEqual(expected, shiftedX, "No horizontal image registration is permitted")
+                    XCTAssertNotEqual(expected, shiftedY, "No vertical image registration is permitted")
+                }
+            }
+        }
+    }
+
     private func positions(_ text: String, direction: NSWritingDirection, size: CGFloat) throws -> [Int: CGFloat] {
         let paragraph = NSMutableParagraphStyle()
         paragraph.baseWritingDirection = direction
@@ -141,13 +165,55 @@ final class SongHeroMetadataTests: XCTestCase {
         return points.reduce(CGFloat.zero, +) / CGFloat(points.count)
     }
 
+    private enum RasterAlignment { case centered, firstTextBaseline }
+
+    /// A source-defined typographic baseline for the bidi oracle, independent of every rendered bitmap.
+    /// Literal and localized Text may have different fallback line boxes; neither box is a glyph-order oracle.
+    private struct BaselineCanvas: Layout {
+        let name: String?
+
+        func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+            CGSize(width: 1200, height: 180)
+        }
+
+        func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+            guard subviews.count == 1 else { XCTFail("The baseline canvas requires exactly one text view"); return }
+            let childProposal = ProposedViewSize(width: 1200, height: 180)
+            let dimensions = subviews[0].dimensions(in: childProposal)
+            let baseline: CGFloat = dimensions[.firstTextBaseline]
+            let baselineY: CGFloat = bounds.minY + 120
+            let top: CGFloat = baselineY - baseline
+            guard [dimensions.width, dimensions.height, baseline, top].allSatisfy(\.isFinite),
+                  dimensions.width > 0, dimensions.height > 0, baseline >= 0, baseline <= dimensions.height,
+                  dimensions.width <= bounds.width, top >= bounds.minY, top + dimensions.height <= bounds.maxY else {
+                XCTFail("The full native text line box must fit the baseline canvas")
+                return
+            }
+            if let name {
+                print("HERO-METADATA-LAYOUT: \(name) size=\(dimensions.width)x\(dimensions.height) "
+                      + "firstBaseline=\(baseline) placedBaseline=\(baselineY)")
+            }
+            subviews[0].place(at: CGPoint(x: bounds.midX, y: top), anchor: .top, proposal: childProposal)
+        }
+    }
+
     private func pixels<Content: View>(_ content: Content, locale: Locale, direction: LayoutDirection,
-                                       size: DynamicTypeSize = .large, name: String? = nil) throws -> Data {
-        let view = content.font(.subheadline).foregroundStyle(Color.black)
+                                       size: DynamicTypeSize = .large, alignment: RasterAlignment = .centered,
+                                       name: String? = nil) throws -> Data {
+        let styled = content.font(.subheadline).foregroundStyle(Color.black)
             .typesettingLanguage(locale.language)
             .environment(\.locale, locale).environment(\.layoutDirection, direction)
             .environment(\.dynamicTypeSize, size)
-            .frame(width: 1200, height: 180).background(Color.white)
+        switch alignment {
+        case .centered:
+            // Keep the original centered fixture for spoken-text, calm-mode and English pixel regressions.
+            return try raster(styled.frame(width: 1200, height: 180).background(Color.white), name: name)
+        case .firstTextBaseline:
+            return try raster(BaselineCanvas(name: name) { styled }.background(Color.white), name: name)
+        }
+    }
+
+    private func raster<Content: View>(_ view: Content, name: String?) throws -> Data {
         let renderer = ImageRenderer(content: view)
         renderer.scale = 1
         renderer.isOpaque = true

@@ -114,6 +114,16 @@ final class SongShelfPageTests: XCTestCase {
         try await verify(direction: .rightToLeft, driver: .bindingCommand, oversized: true)
     }
 
+    /// A contained-child sizing control, not device rotation or automatic binding observation.
+    /// Both viewports fit the actual window; all original full-size failures remain separate.
+    func testContainedHostCommandResize() async throws {
+        try await verifyContainedHost(direction: .leftToRight)
+    }
+
+    func testContainedHostCommandResizeRightToLeft() async throws {
+        try await verifyContainedHost(direction: .rightToLeft)
+    }
+
     private func scrolls(_ view: UIView) -> [UIScrollView] {
         let current = (view as? UIScrollView).map { [$0] } ?? []
         return current + view.subviews.flatMap { scrolls($0) }
@@ -266,6 +276,94 @@ final class SongShelfPageTests: XCTestCase {
             XCTAssertGreaterThan(frames.card.height, frames.page.height,
                                  "The landscape control must genuinely exceed the viewport")
         }
+    }
+
+    private func verifyContainedHost(direction: LayoutDirection) async throws {
+        let tall = CGSize(width: 300, height: 600)
+        let compact = CGSize(width: 402, height: 340)
+        let state = State(driver: .bindingCommand)
+        state.size = tall
+        let host = UIHostingController(rootView: Fixture(state: state, direction: direction))
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
+            .first { $0.activationState == .foregroundActive })
+        let previousKeyWindow = scene.windows.first { $0.isKeyWindow }
+        let window = UIWindow(windowScene: scene)
+        let container = UIViewController()
+        window.rootViewController = container
+        container.addChild(host)
+        container.view.addSubview(host.view)
+        host.didMove(toParent: container)
+        host.view.frame = CGRect(origin: .zero, size: tall)
+        window.makeKeyAndVisible()
+        defer {
+            window.isHidden = true
+            window.rootViewController = nil
+            previousKeyWindow?.makeKey()
+        }
+        defer { record(state, window: window, stage: "contained-final-\(direction)") }
+        guard window.bounds.width >= compact.width, window.bounds.height >= tall.height else {
+            record(state, window: window, stage: "contained-window-too-small-\(direction)")
+            XCTFail("Both diagnostic viewports must fit the real window without clipping")
+            return
+        }
+        container.view.layoutIfNeeded()
+        host.view.layoutIfNeeded()
+        await assertContainedHost(state, host: host, window: window, stage: "contained-loaded-\(direction)")
+        let target = "shelf-3"
+        state.requestedShelf = .shelf(target)
+        let tracked = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            state.position == .shelf(target) && state.shelfFrames[target] != nil
+        }, object: nil)
+        await fulfillment(of: [tracked], timeout: 3)
+        record(state, window: window, stage: "contained-command-\(direction)")
+        XCTAssertEqual(state.position, .shelf(target), "Explicit command only, not automatic writeback")
+        state.requestedTerminalShelf = target
+        await assertTerminal(state, target: target, window: window, stage: "contained-browsed-\(direction)")
+        for cycle in 0..<2 {
+            for size in [compact, tall] {
+                // Resize the actual child host and its SwiftUI content together; never replay a scroll command.
+                state.size = size
+                host.view.frame = CGRect(origin: .zero, size: size)
+                container.view.setNeedsLayout()
+                container.view.layoutIfNeeded()
+                host.view.setNeedsLayout()
+                host.view.layoutIfNeeded()
+                let stage = "contained-\(direction)-\(cycle)-\(size)"
+                await assertContainedHost(state, host: host, window: window, stage: stage)
+                await assertTerminal(state, target: target, window: window, stage: stage)
+            }
+        }
+    }
+
+    private func assertContainedHost(_ state: State, host: UIViewController, window: UIWindow, stage: String) async {
+        let settled = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            guard let page = self.scrolls(host.view).first(where: { $0.contentSize.height > 2000 }) else { return false }
+            return page.window === window && abs(page.bounds.width - state.size.width) <= 1
+                && abs(page.bounds.height - state.size.height) <= 1
+        }, object: nil)
+        await fulfillment(of: [settled], timeout: 3)
+        record(state, window: window, stage: stage)
+        guard let root = window.rootViewController?.view,
+              let page = scrolls(host.view).first(where: { $0.contentSize.height > 2000 }) else {
+            XCTFail("An attached root, child host, and page are required: " + stage)
+            return
+        }
+        let rootFrame = root.convert(root.bounds, to: window)
+        let hostFrame = host.view.convert(host.view.bounds, to: window)
+        let pageFrame = page.convert(page.bounds, to: window)
+        let diagnostic = XCTAttachment(string: "stage=\(stage) contained child sizing, not device rotation "
+            + "window=\(window.bounds) root=\(rootFrame) host=\(hostFrame) page=\(pageFrame) requested=\(state.size)")
+        diagnostic.name = "song-page-contained-host-" + stage
+        diagnostic.lifetime = .keepAlways
+        add(diagnostic)
+        XCTAssertTrue(root.window === window && host.view.window === window && page.window === window)
+        XCTAssertTrue(window.bounds.insetBy(dx: -1, dy: -1).contains(rootFrame))
+        XCTAssertTrue(rootFrame.insetBy(dx: -1, dy: -1).contains(hostFrame))
+        XCTAssertTrue(hostFrame.insetBy(dx: -1, dy: -1).contains(pageFrame))
+        XCTAssertEqual(hostFrame.width, state.size.width, accuracy: 1)
+        XCTAssertEqual(hostFrame.height, state.size.height, accuracy: 1)
+        XCTAssertEqual(pageFrame.width, state.size.width, accuracy: 1)
+        XCTAssertEqual(pageFrame.height, state.size.height, accuracy: 1)
     }
 
     private func assertTerminal(_ state: State, target: String, window: UIWindow, stage: String) async {

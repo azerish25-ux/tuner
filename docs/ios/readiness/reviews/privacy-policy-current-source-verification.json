@@ -277,8 +277,9 @@
     "ios/Timbre/Settings/SettingsView.swift": "1c7d610b9c96bb6555aae896717fe94edb4a54138b09bd509391e41d2d1ce871",
     "ios/Timbre/Songs/SongCaptionLayout.swift": "09021c799680c0e815ca0134e0ae55a019b05ee2384f86ded58b796907acf19f",
     "ios/Timbre/Songs/SongCover.swift": "b7c24cdb04698296ce4ac98c46f58bf98c828d2d30cee0fc68061ac808f6d4b1",
+    "ios/Timbre/Songs/SongPageTrace.swift": "561a47681304d58507d70a55dcdfc95235509e050822790f7a21a97d0b97cccc",
     "ios/Timbre/Songs/SongRailMeasurement.swift": "74607dabc16d90803aaf1578037bf93db689b35100412199cb8bc425cb4e50f4",
-    "ios/Timbre/Songs/SongShelfPage.swift": "c5270280e1323bfae63598ea8278fe9f393bb2b9e6d514261db03ec4e4ee352c",
+    "ios/Timbre/Songs/SongShelfPage.swift": "4d76bf558d8b3a9cefdd8a96c99a50cd08b8e87b064edf512081f6a23b2cf04a",
     "ios/Timbre/Songs/SongShelfRail.swift": "7423063f0512160a3c3b70f964fd066ecd93a167b79d02454a8f3fbc50c01fc2",
     "ios/Timbre/Songs/SongsView.swift": "c3047a0164e524ad66ff946d73eefeca3535f78ff665c7b6b6f24b1bc99f53ea",
     "ios/Timbre/Stage/InstrumentRig.swift": "63356f8555b6735c9c27e18c2c5d3b1475887d412544a703d6e18c0139227ba0",
@@ -289,7 +290,7 @@
     "ios/Timbre/Stage/StudioStage.swift": "62cbbf17df5c849ac591a6aaa71271817957883e9f2b676a2d73c907707db8eb",
     "ios/Timbre/Support/DemoData.swift": "23aeba29b0815448008f4c9a6ab9d8767b14e8076f74b271bdfd57da4c4ac83b",
     "ios/Timbre/Support/Preferences.swift": "fae842df2af6393fe0d7fddba0870d5777664bebdbfcf56885fb00e9a2b56015",
-    "ios/Timbre/Support/TestSupport.swift": "235dec4c59e14af1d125b5f59a69a9c89dd313fe848a683a86f6932cecbb3ff7",
+    "ios/Timbre/Support/TestSupport.swift": "94c8e77db346989a90439741e669c74f2cb01c58b173403bfbed8d4d98de9a67",
     "ios/Timbre/TimbreApp.swift": "a0b7524aaf8ffdb2d6ac3cb9cbe2c06ad8720a6fd3348fee2291f38fce143823",
     "ios/Timbre/Tips/TimbreTips.swift": "7e6e22fc3bd7befc32fc270002248c8afe239819169b637c9e9966bbab113833",
     "ios/Timbre/Tune/Celebration.swift": "33caa6cee5e0b8a9757ec0d9d267fd13112fb3ba4d0b65075d85e6938f5b9298",
@@ -415,45 +416,45 @@
   "mutations": "Only this receipt written. No listing verification/readiness flags, policy text, public website, signing, credentials or account settings changed.",
   "source_inventory_scope": "All shipped app/core/extension Swift, Objective-C/C/C++ sources and headers, app privacy manifests, xcconfig/plist/entitlement/permission configuration and package dependency inputs. Any edit/addition invalidates this source-review receipt; tests/docs outside named policy sources do not.",
   "source_review_refresh": {
-    "reviewed_utc": "2026-10-28T08:00:48.976241Z",
-    "base_revision": "c1ec4ebf6e08fa3c0177be6bb2f20c6c8a611885",
+    "reviewed_utc": "2026-10-28T12:44:45.162376Z",
+    "base_revision": "774253f53aeee27b9deaf2a0d1f9c9c433c14a51",
     "reviewer": "Independent AI source review",
-    "source_state": "base_revision_plus_explicit_reviewed_urdu_ink_song_hero_bidi_and_concrete_song_page_target_deltas",
+    "source_state": "base_revision_plus_explicit_reviewed_debug_only_song_page_trace",
     "changes": [
       {
-        "path": "ios/Timbre/Onboarding/WelcomeHeadline.swift",
-        "base_sha256": "d5764d55381411b3865c5f8b46e8e0fc06a73ba0788504109fb4194dc44c9bc4",
-        "previous_reviewed_sha256": "50126dcc5c9d4659de2be308eebcb3a834c86e6022c2c9d6266e08ed150ac15c",
-        "reviewed_sha256": "50126dcc5c9d4659de2be308eebcb3a834c86e6022c2c9d6266e08ed150ac15c",
-        "diff_sha256": "ae98ee8712ae988144803e66fb4f951f93bc4e0a5569c34684cbb98211db0a8e",
-        "review_status": "unchanged_since_preceding_source_review",
-        "privacy_assessment": "Urdu welcome presentation only: measures glyph-path overhang from the already-scaled, resolved native font and existing localized heading, with matching tracking and language; adds raster-layer allowance and separate real layout reserve without transforming the lines, changing copy, capping Dynamic Type or introducing a new accessibility label. A bounded, MainActor-isolated in-memory cache holds at most 16 font/text/scale geometry entries; it adds no disk storage or transmitted data. Non-Urdu presentation is unchanged. Adds no network request, user identifier, analytics, data collection, audio access, persistence or permission. Native compilation, exact raster containment, line separation, fallback parity and live AX5 scrolling remain pending."
-      },
-      {
-        "path": "ios/Timbre/Songs/SongsView.swift",
-        "base_sha256": "033f066f77745f570df2821e8f4964bca067920fd413969ad2bb7668e8fc6cf4",
-        "previous_reviewed_sha256": "c3047a0164e524ad66ff946d73eefeca3535f78ff665c7b6b6f24b1bc99f53ea",
-        "reviewed_sha256": "c3047a0164e524ad66ff946d73eefeca3535f78ff665c7b6b6f24b1bc99f53ea",
-        "diff_sha256": "a421f1cdfd70794b1e9046dc64b8b38b8a6ed297eabadc6d4a0aafeaa8f45f1c",
-        "review_status": "unchanged_since_preceding_source_review",
-        "privacy_assessment": "Changes only presentation of the existing Songs hero metadata: isolates the already-formatted elapsed duration and the complete existing localized XP reward as separate bidirectional text fields. Retains the original SwiftUI integer interpolation, translations, numbers, Calm-mode omission and single spoken Text label; no whole-line layout-direction override is introduced. Uses existing song metadata and view settings only for transient rendering. Adds no network request, persistence, user identifier, data collection, analytics, audio access or permission. Native pixel/glyph-order tests, actual accessibility exposure and correction in a fresh Arabic screenshot remain pending."
+        "path": "ios/Timbre/Songs/SongPageTrace.swift",
+        "base_sha256": null,
+        "previous_reviewed_sha256": null,
+        "reviewed_sha256": "561a47681304d58507d70a55dcdfc95235509e050822790f7a21a97d0b97cccc",
+        "diff_sha256": "299c575429f78ec4889dc2e7917ad20774f54a733967a1dbb19a9beb11e3b52d",
+        "review_status": "newly_reviewed_addition",
+        "privacy_assessment": "Adds an explicitly opted-in DEBUG-only diagnostic writer, compiled out of Release. It records public catalogue shelf identity descriptions, actual scroll geometry and phases, lifecycle observations, UTC/uptime timestamps, sequence/segment counters and the existing randomly generated test-storage UUID. It writes only bounded local diagnostic NDJSON under that test namespace: at most a current and previous 4 MiB segment per session, rotating only its own trace files. This is new diagnostic disk storage and observation, not a claim of no persistence; ordinary app data, audio and user-entered content are not recorded by this helper. The reviewed CI collector copies only those exact files after validating simulator, bundle, namespace, schema and size, into the existing authorized CI artifact process. No application network request, analytics event, permission, entitlement, owner-account action or shipped Release data practice is added. Native compilation, callback routing and actual file transport remain unverified; observations are not causal completeness or release eligibility."
       },
       {
         "path": "ios/Timbre/Songs/SongShelfPage.swift",
-        "base_sha256": "6ff7ac92e89458231292f64c0e83dc73916a9a7fb71027a88ba09c2571b3edf5",
-        "previous_reviewed_sha256": "6ff7ac92e89458231292f64c0e83dc73916a9a7fb71027a88ba09c2571b3edf5",
-        "reviewed_sha256": "c5270280e1323bfae63598ea8278fe9f393bb2b9e6d514261db03ec4e4ee352c",
-        "diff_sha256": "596772dcfdd6b582d697674f80cfdfb711995c26f64bd60daf279131f3929f04",
+        "base_sha256": "c5270280e1323bfae63598ea8278fe9f393bb2b9e6d514261db03ec4e4ee352c",
+        "previous_reviewed_sha256": "c5270280e1323bfae63598ea8278fe9f393bb2b9e6d514261db03ec4e4ee352c",
+        "reviewed_sha256": "4d76bf558d8b3a9cefdd8a96c99a50cd08b8e87b064edf512081f6a23b2cf04a",
+        "diff_sha256": "2c65ebf05f51a03d21a5b84d2e9883c97707d8a02be533ff8009f27a7183e371",
         "review_status": "newly_reviewed_delta",
-        "privacy_assessment": "Songs page presentation and identity only: gives each existing lazy vertical row one concrete zero-spacing layout root and the same typed explicit scroll target identity already used by its collection. Retains the existing center anchor, position binding, complete shelf data and independent horizontal rail. Adds no geometry tracking, scroll command, timer, page reset, network request, user identifier, analytics, collection, audio access, persistence or permission. This is a bounded native repair experiment after actual-touch rotation failures, not verified target-discovery or oversized-content acceptance. Native compilation, binding readback, repeated rotation and AX5 primary-action reachability remain pending; all prior failures remain evidence."
+        "privacy_assessment": "Adds only DEBUG passive lifecycle, committed position-change, native ScrollGeometry and scroll-phase callbacks to the opted-in local diagnostic writer. The existing position binding, center anchor, typed row identities, layout and complete shelf data remain unchanged; removing the DEBUG block yields byte-identical pre-change source. No scroll command, binding write, observable trace state, accessibility override, animation or new Release behavior is introduced. onChange may coalesce and synchronous diagnostic file I/O has nonzero timing overhead: this is not exhaustive setter history or zero-perturbation proof. The prior real-touch rotation failures remain unresolved and retained."
+      },
+      {
+        "path": "ios/Timbre/Support/TestSupport.swift",
+        "base_sha256": "235dec4c59e14af1d125b5f59a69a9c89dd313fe848a683a86f6932cecbb3ff7",
+        "previous_reviewed_sha256": "235dec4c59e14af1d125b5f59a69a9c89dd313fe848a683a86f6932cecbb3ff7",
+        "reviewed_sha256": "94c8e77db346989a90439741e669c74f2cb01c58b173403bfbed8d4d98de9a67",
+        "diff_sha256": "8a9a50758003dc338437b65579bda58f34f4fbe4a1772959186845ac4ef70b49",
+        "review_status": "newly_reviewed_delta",
+        "privacy_assessment": "Registers one explicit diagnostic environment key in the existing test-support key enum. Existing value access still reads launch environment only in DEBUG and always returns nil in Release. A valid existing test-storage UUID and an explicit value of 1 are both required before the trace writer is constructed. Adds no production permission, network request, analytics event, account identifier or Release storage behavior."
       }
     ],
-    "source_inventory_sha256": "312ccdd348c9d74ebd702b5521bc648d5fd4fe67d9863c4cc8d3b77e8b468737",
+    "source_inventory_sha256": "0e96618bd07da5e800906733144988e546413b6144a88bcff5318b2f8335ad18",
     "source_inventory_hash_method": "SHA-256 of UTF-8 JSON source_sha256 mapping with sorted keys and compact separators",
-    "source_inventory_delta": "The same 299 bound input paths are retained. Relative to the preceding source snapshot, only SongShelfPage.swift changes. WelcomeHeadline.swift and SongsView.swift retain their reviewed bytes. Relative to base_revision, exactly these three production inputs differ; all other inputs match both the prior receipt and base_revision. The prior current source review is appended unchanged to source_review_refresh_history. Additive test-only binding/geometry controls and other test, CI and marketing artifacts are outside this production privacy inventory.",
-    "listing_delta": "All 50 listing content hashes and consumer payload bytes are unchanged since the preceding review, including its independently approved single Arabic screenshot-caption correction. Existing listing-only history, parent/current maps, portal observations and all review/readiness flags remain unchanged.",
+    "source_inventory_delta": "Retains all 299 previously bound paths and adds only ios/Timbre/Songs/SongPageTrace.swift, for 300 inputs. Relative to both the preceding source snapshot and base_revision, the new DEBUG-only trace file is added and only SongShelfPage.swift and Support/TestSupport.swift change; all other 297 existing inputs retain their reviewed bytes. The previous current source review is appended unchanged to source_review_refresh_history. Test-only oracle, contained-host and renderer diagnostics, UI timestamp attachments, CI collection and artifact packaging are outside this production-source inventory; their bounded diagnostic role is described without implying native success.",
+    "listing_delta": "All 50 listing content hashes and consumer payload bytes are unchanged since the preceding review. Existing listing history, parent/current maps, portal observations and every review/readiness flag remain unchanged.",
     "publication_observation": "Original 2026-10-27 08:20 UTC public HTTP observations, response bytes, timestamps, routes and policy/support page observations are preserved. No new public request, deployment, portal readback or publication is asserted.",
-    "limitations": "Bounded source-diff privacy review only, not fresh legal or publication review. Native compilation/execution, Urdu raster containment and live scroll behavior, Arabic metadata shaping/accessibility, and Songs target discovery, repeated rotation and oversized AX5 primary-action reachability remain pending. Existing native failures are retained, including all three actual-touch SongRails failures. This receipt does not certify screenshots, accessibility/contrast, physical devices, StoreKit, signed archives, legal/account declarations or App Store submission. No contrast exemption or proof proposal is activated; no readiness limitation is cleared."
+    "limitations": "Source-diff privacy assessment only, not fresh legal, network, portal or publication review. Current native evidence still contains all three actual-touch Songs first-rotation failures and strict app-test failures; diagnostic traces are not a repair or an exemption. The Urdu live glyph clipping defect remains evidenced despite passing reachability checks. New trace compilation, callback routing, file collection and all newly added native diagnostic controls are unrun. Earlier limitations and historical observations are preserved. This receipt does not certify accessibility/contrast, screenshots, physical hardware, StoreKit, signed archives, legal/account declarations or App Store submission. No authorization, audit exemption, readiness flag or pending requirement is cleared."
   },
   "source_review_refresh_history": [
     {
@@ -1241,6 +1242,47 @@
       "listing_delta": "Exactly the Arabic ar-SA default iPhone 65-song-perform headline changes to the independently approved performance-feedback wording. All other 49 listing content hashes and every other payload field are unchanged. The parent map, current map and exact semantic review are appended to listing_review_refresh_history; all earlier records and review/readiness flags are preserved.",
       "publication_observation": "Original 2026-10-27 08:20 UTC public HTTP observations, response bytes, timestamps, routes and policy/support page observations are preserved. No new public request, deployment, portal readback or publication is asserted.",
       "limitations": "Bounded source-diff and caption-binding privacy review only, not a fresh legal or publication review. Corrective native build/execution, Urdu raster containment and actual scroll behavior, metadata shaping and accessibility validation remain pending. This receipt does not certify Arabic glyph grouping, spoken labels, Urdu separation or fallback, RTL, Songs scrolling/rotation, screenshot correctness, accessibility/contrast, physical devices, StoreKit, signed archives, legal/account declarations or App Store submission. Existing native failures and readiness limitations are not cleared. No contrast exemption or proof proposal is activated."
+    },
+    {
+      "reviewed_utc": "2026-10-28T08:00:48.976241Z",
+      "base_revision": "c1ec4ebf6e08fa3c0177be6bb2f20c6c8a611885",
+      "reviewer": "Independent AI source review",
+      "source_state": "base_revision_plus_explicit_reviewed_urdu_ink_song_hero_bidi_and_concrete_song_page_target_deltas",
+      "changes": [
+        {
+          "path": "ios/Timbre/Onboarding/WelcomeHeadline.swift",
+          "base_sha256": "d5764d55381411b3865c5f8b46e8e0fc06a73ba0788504109fb4194dc44c9bc4",
+          "previous_reviewed_sha256": "50126dcc5c9d4659de2be308eebcb3a834c86e6022c2c9d6266e08ed150ac15c",
+          "reviewed_sha256": "50126dcc5c9d4659de2be308eebcb3a834c86e6022c2c9d6266e08ed150ac15c",
+          "diff_sha256": "ae98ee8712ae988144803e66fb4f951f93bc4e0a5569c34684cbb98211db0a8e",
+          "review_status": "unchanged_since_preceding_source_review",
+          "privacy_assessment": "Urdu welcome presentation only: measures glyph-path overhang from the already-scaled, resolved native font and existing localized heading, with matching tracking and language; adds raster-layer allowance and separate real layout reserve without transforming the lines, changing copy, capping Dynamic Type or introducing a new accessibility label. A bounded, MainActor-isolated in-memory cache holds at most 16 font/text/scale geometry entries; it adds no disk storage or transmitted data. Non-Urdu presentation is unchanged. Adds no network request, user identifier, analytics, data collection, audio access, persistence or permission. Native compilation, exact raster containment, line separation, fallback parity and live AX5 scrolling remain pending."
+        },
+        {
+          "path": "ios/Timbre/Songs/SongsView.swift",
+          "base_sha256": "033f066f77745f570df2821e8f4964bca067920fd413969ad2bb7668e8fc6cf4",
+          "previous_reviewed_sha256": "c3047a0164e524ad66ff946d73eefeca3535f78ff665c7b6b6f24b1bc99f53ea",
+          "reviewed_sha256": "c3047a0164e524ad66ff946d73eefeca3535f78ff665c7b6b6f24b1bc99f53ea",
+          "diff_sha256": "a421f1cdfd70794b1e9046dc64b8b38b8a6ed297eabadc6d4a0aafeaa8f45f1c",
+          "review_status": "unchanged_since_preceding_source_review",
+          "privacy_assessment": "Changes only presentation of the existing Songs hero metadata: isolates the already-formatted elapsed duration and the complete existing localized XP reward as separate bidirectional text fields. Retains the original SwiftUI integer interpolation, translations, numbers, Calm-mode omission and single spoken Text label; no whole-line layout-direction override is introduced. Uses existing song metadata and view settings only for transient rendering. Adds no network request, persistence, user identifier, data collection, analytics, audio access or permission. Native pixel/glyph-order tests, actual accessibility exposure and correction in a fresh Arabic screenshot remain pending."
+        },
+        {
+          "path": "ios/Timbre/Songs/SongShelfPage.swift",
+          "base_sha256": "6ff7ac92e89458231292f64c0e83dc73916a9a7fb71027a88ba09c2571b3edf5",
+          "previous_reviewed_sha256": "6ff7ac92e89458231292f64c0e83dc73916a9a7fb71027a88ba09c2571b3edf5",
+          "reviewed_sha256": "c5270280e1323bfae63598ea8278fe9f393bb2b9e6d514261db03ec4e4ee352c",
+          "diff_sha256": "596772dcfdd6b582d697674f80cfdfb711995c26f64bd60daf279131f3929f04",
+          "review_status": "newly_reviewed_delta",
+          "privacy_assessment": "Songs page presentation and identity only: gives each existing lazy vertical row one concrete zero-spacing layout root and the same typed explicit scroll target identity already used by its collection. Retains the existing center anchor, position binding, complete shelf data and independent horizontal rail. Adds no geometry tracking, scroll command, timer, page reset, network request, user identifier, analytics, collection, audio access, persistence or permission. This is a bounded native repair experiment after actual-touch rotation failures, not verified target-discovery or oversized-content acceptance. Native compilation, binding readback, repeated rotation and AX5 primary-action reachability remain pending; all prior failures remain evidence."
+        }
+      ],
+      "source_inventory_sha256": "312ccdd348c9d74ebd702b5521bc648d5fd4fe67d9863c4cc8d3b77e8b468737",
+      "source_inventory_hash_method": "SHA-256 of UTF-8 JSON source_sha256 mapping with sorted keys and compact separators",
+      "source_inventory_delta": "The same 299 bound input paths are retained. Relative to the preceding source snapshot, only SongShelfPage.swift changes. WelcomeHeadline.swift and SongsView.swift retain their reviewed bytes. Relative to base_revision, exactly these three production inputs differ; all other inputs match both the prior receipt and base_revision. The prior current source review is appended unchanged to source_review_refresh_history. Additive test-only binding/geometry controls and other test, CI and marketing artifacts are outside this production privacy inventory.",
+      "listing_delta": "All 50 listing content hashes and consumer payload bytes are unchanged since the preceding review, including its independently approved single Arabic screenshot-caption correction. Existing listing-only history, parent/current maps, portal observations and all review/readiness flags remain unchanged.",
+      "publication_observation": "Original 2026-10-27 08:20 UTC public HTTP observations, response bytes, timestamps, routes and policy/support page observations are preserved. No new public request, deployment, portal readback or publication is asserted.",
+      "limitations": "Bounded source-diff privacy review only, not fresh legal or publication review. Native compilation/execution, Urdu raster containment and live scroll behavior, Arabic metadata shaping/accessibility, and Songs target discovery, repeated rotation and oversized AX5 primary-action reachability remain pending. Existing native failures are retained, including all three actual-touch SongRails failures. This receipt does not certify screenshots, accessibility/contrast, physical devices, StoreKit, signed archives, legal/account declarations or App Store submission. No contrast exemption or proof proposal is activated; no readiness limitation is cleared."
     }
   ],
   "listing_review_refresh_history": [

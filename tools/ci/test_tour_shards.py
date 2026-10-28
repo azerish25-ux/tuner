@@ -1,5 +1,6 @@
 """Shards preserve selected classes and recover evidence without treating partial runs as green."""
 import contextlib
+import glob
 import io
 import json
 import os
@@ -70,6 +71,80 @@ class TourShardContracts(unittest.TestCase):
         self.assertNotIn('steps.warmup.outcome', tests)
         self.assertIn('timeout-minutes: 60', tests)
         self.assertIn('ci-out/warmup/status.json', tour)
+
+    def test_original_frame_subset_is_additive_shared_and_before_full_exports(self):
+        source = (ROOT / '.github/workflows/nightly.yml').read_text()
+        tour = source.split('  tour:\n')[1].split('\n  archive:')[0]
+        name = 'Upload original tour frames and metadata before full exports'
+        subset = tour.split('      - name: ' + name + '\n', 1)[1].split('\n      - ', 1)[0]
+        for token in ['actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f', 'if: always()',
+                      'name: tour-frames-${{ matrix.shard }}-attempt-${{ github.run_attempt }}',
+                      'if-no-files-found: error', 'retention-days: 14']:
+            self.assertIn(token, subset)
+        self.assertNotIn('run:', subset)
+        self.assertNotIn('matrix.shard ==', subset)
+        self.assertNotIn('continue-on-error', subset)
+        order = ['Upload compact shard diagnostics before attachments', 'Export simulator screenshots',
+                 name, 'name: ${{ matrix.artifact }}-attempt-', 'name: ios-tour-evidence-']
+        positions = [tour.index(item) for item in order]
+        self.assertEqual(positions, sorted(positions))
+        # This extra retrieval artifact never substitutes for the existing publication/coverage inputs.
+        publish = source.split('  publish:\n', 1)[1]
+        self.assertNotIn('tour-frames-', publish)
+
+    def test_full_exports_and_compact_logs_stay_separate_and_unchanged(self):
+        source = (ROOT / '.github/workflows/nightly.yml').read_text()
+        tour = source.split('  tour:\n')[1].split('\n  archive:')[0]
+        self.assertIn('name: ${{ matrix.artifact }}-attempt-${{ github.run_attempt }}\n'
+                      '          path: ci-out\n          retention-days: 14', tour)
+        self.assertIn('name: ios-tour-evidence-${{ matrix.shard }}-attempt-${{ github.run_attempt }}\n'
+                      '          path: |\n            ios/build/*.xcresult\n          retention-days: 14', tour)
+        compact = tour.split('      - name: Upload compact shard diagnostics before attachments', 1)[1]
+        compact = compact.split('      - name: Export simulator screenshots', 1)[0]
+        for token in ['ci-out/*.log', 'ci-out/*.summary.txt', 'ci-out/outcome.json', 'ci-out/shared-build.json',
+                      'name: tour-logs-${{ matrix.shard }}-attempt-${{ github.run_attempt }}']:
+            self.assertIn(token, compact)
+        self.assertEqual(tour.count('xcrun xcresulttool export attachments'), 1)
+        self.assertNotIn('rm -', tour)
+
+    def test_original_frame_globs_keep_bytes_names_and_manifest_without_recordings_or_bundles(self):
+        source = (ROOT / '.github/workflows/nightly.yml').read_text()
+        subset = source.split('      - name: Upload original tour frames and metadata before full exports\n', 1)[1]
+        subset = subset.split('\n      - ', 1)[0]
+        patterns = [line.strip() for line in subset.split('          path: |\n', 1)[1]
+                    .split('          if-no-files-found:', 1)[0].splitlines()]
+        self.assertEqual(patterns, ['ci-out/screenshots/**/*.png', 'ci-out/screenshots/**/*.txt',
+                                    'ci-out/screenshots/**/*.json', '!ci-out/screenshots/**/*.xcresult/**'])
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            originals = {
+                'ci-out/screenshots/frame.png': b'original PNG bytes',
+                'ci-out/screenshots/hierarchy.txt': b'exact original hierarchy',
+                'ci-out/screenshots/state.json': b'{"state":"original"}',
+                'ci-out/screenshots/manifest.json': b'[{"file":"frame.png"},{"file":"recording.mp4"}]',
+                'ci-out/screenshots/nested/frame.png': b'nested original PNG',
+            }
+            excluded = ['ci-out/screenshots/recording.mp4', 'ci-out/screenshots/recording.mov',
+                        'ci-out/screenshots/nested/recording.mp4', 'ci-out/screenshots/other.bin',
+                        'ci-out/screenshots/Result.xcresult/Info.json',
+                        'ci-out/screenshots/nested/Result.xcresult/Attachments/frame.png',
+                        'ios/build/UITests.xcresult/Info.json', 'ci-out/test.log']
+            for relative, content in {**originals, **dict.fromkeys(excluded, b'not a still-frame export')}.items():
+                path = root / relative
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(content)
+            selected = set()
+            for pattern in patterns:
+                matched = {Path(path).relative_to(root).as_posix()
+                           for path in glob.glob(str(root / pattern.lstrip('!')), recursive=True) if Path(path).is_file()}
+                if pattern.startswith('!'):
+                    selected.difference_update(matched)
+                else:
+                    selected.update(matched)
+            self.assertEqual(selected, set(originals))
+            self.assertEqual({name: (root / name).read_bytes() for name in selected}, originals)
+            # Launch metrics can have no image attachments; its original empty manifest is still evidence.
+            self.assertIn('ci-out/screenshots/manifest.json', selected)
 
     def test_contract_is_selected(self):
         self.assertIn('python3 tools/ci/test_tour_shards.py', (ROOT / '.github/workflows/ios.yml').read_text())

@@ -26,6 +26,8 @@ enum TestSupport {
         case stageDebug = "TIMBRE_STAGE_DEBUG"
         /// "1": everything that moves on its own rests as in Low Power Mode (`stageResting`).
         case stageRest = "TIMBRE_STAGE_REST"
+        /// "1": bounded local Songs page geometry/position observations; never a scrolling instruction.
+        case songPageTrace = "TIMBRE_SONG_PAGE_TRACE"
         /// A capture scene's name (`DemoScene`).
         case scene = "TIMBRE_SCENE"
         /// A capture scene's instrument, song, bar, lock comet and cue file.

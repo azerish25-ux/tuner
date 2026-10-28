@@ -100,6 +100,82 @@ class SourceContracts(unittest.TestCase):
             self.assertIn(token, SOURCE)
         self.assertIn('JSONEncoder().encode(Hierarchy(app.snapshot()))', SOURCE)
 
+    def test_learn_replays_same_seeded_namespace_without_retargeting_or_resetting_budget(self):
+        collect = SOURCE.split('private func collect(', 1)[1].split('private func require(', 1)[0]
+        replay = collect.split('if group.tab == "Learn" {', 1)[1].split('let buttons =', 1)[0]
+        for token in ['waitForExistence(timeout: 25)', 'app.terminate()', 'app.launch()',
+                      'fixtureLifecycle=initial-seed-then-replay']:
+            self.assertIn(token, replay)
+        self.assertLess(replay.index('waitForExistence('), replay.index('app.terminate()'))
+        self.assertLess(replay.index('app.terminate()'), replay.index('app.launch()'))
+        self.assertEqual(replay.count('try budget()'), 2)
+        self.assertNotIn('launchEnvironment', replay)
+        self.assertNotIn('UUID()', replay)
+        self.assertNotIn('began =', replay)
+        self.assertEqual(collect.count('began ='), 1)
+        self.assertIn('parent.value as? String == "Next lesson"', SOURCE)
+        self.assertIn('expected Next lesson; observed', SOURCE)
+
+    def test_stable_capture_checkpoint_precedes_audit_and_keeps_full_containment(self):
+        collect = SOURCE.split('private func collect(', 1)[1].split('private func require(', 1)[0]
+        ordered = ['let checkpoint = try stable', 'same(state, checkpoint)',
+                   'try capture(group.key + "-revealed-before")', 'let between = try stable',
+                   'same(checkpoint, between)', 'try capture(group.key + "-revealed-after")',
+                   'let captured = try stable', 'same(checkpoint, captured)',
+                   'for observed in [checkpoint, between, captured]',
+                   'observed.frames.allSatisfy { observed.clearBand.contains($0) }',
+                   'revealedFramesCaptured=true captureCheckpointOnly=true contrastRecheckStatus=not-started',
+                   'attachReport(lines, name: group.key + "-capture-checkpoint")',
+                   'performAccessibilityAudit(for: .contrast)', 'try capture(group.key + "-audit-after")',
+                   'same(state, after)', 'postAuditStateStable=true']
+        positions = [collect.index(token) for token in ordered]
+        self.assertEqual(positions, sorted(positions))
+        self.assertIn('checkpointIdentities=', collect)
+        checkpoint = collect.split('for observed in [checkpoint, between, captured]', 1)[1].split('var callbacks', 1)[0]
+        self.assertEqual(checkpoint.count('try budget()'), 2)
+        report = SOURCE.split('private func attachReport(', 1)[1].split('private func attachScreenshot', 1)[0]
+        self.assertIn('report.lifetime = .keepAlways; add(report)', report)
+        self.assertIn('print("AX-REVEAL: " + line)', report)
+
+    def test_callback_screenshot_selection_cannot_suppress_or_skip_reporting_an_issue(self):
+        callback = SOURCE.split('performAccessibilityAudit(for: .contrast)', 1)[1].split('auditReturned = true', 1)[0]
+        for token in ['callbacks += 1', 'let node = try? issue.element?.snapshot()',
+                      'self.isRequestedCallback(node, targets: targets, state: checkpoint)',
+                      'requestedCallbackScreenshot=', 'issue.detailedDescription',
+                      'lines.append(detail)', 'print("AX-REVEAL: " + detail)',
+                      'if requested { self.attachScreenshot(']:
+            self.assertIn(token, callback)
+        self.assertLess(callback.index('print("AX-REVEAL:'), callback.index('if requested'))
+        self.assertEqual(re.findall(r'\breturn\s+([^\n/]+)', callback), ['false '])
+        self.assertNotIn('guard ', callback)
+        self.assertNotIn('throw ', callback)
+        self.assertEqual(callback.count('attachScreenshot('), 1)
+
+    def test_requested_attachment_requires_one_exact_finite_leaf_tuple_not_a_label_only_match(self):
+        selector = SOURCE.split('private func isRequestedCallback(', 1)[1].split('private func attachReport(', 1)[0]
+        for token in ['guard let node', 'node.elementType == .staticText', 'valid(node.frame)',
+                      'state.frames.count == targets.count * 2', 'targets.indices.filter',
+                      'node.identifier == target.identifier', 'node.label == target.label',
+                      'node.frame == state.frames[index * 2 + 1]', 'return matches.count == 1']:
+            self.assertIn(token, selector)
+        for forbidden in ['firstMatch', '.contains(', '.hasPrefix(', 'isHittable', 'return true', 'XCTFail']:
+            self.assertNotIn(forbidden, selector)
+        self.assertIn('Attachment selection only', SOURCE)
+        self.assertIn('proves callback ancestry, or authorizes pixels', SOURCE)
+
+    def test_missing_overlay_and_exact_parent_leaf_guards_remain_fail_closed(self):
+        read = SOURCE.split('private func read(', 1)[1].split('private func same(', 1)[0]
+        self.assertIn('let overlay = try unique(', read)
+        self.assertIn('$0.identifier == "AdditionalDimmingOverlay" && $0.elementType == .image', read)
+        self.assertIn('valid(overlay.frame)', read)
+        self.assertIn('min(bar.frame.minY, overlay.frame.minY)', read)
+        self.assertNotIn('try? unique', read)
+        self.assertNotIn('overlay?.', read)
+        self.assertIn('let parent = try unique(', read)
+        self.assertIn('let leaf = try unique(', read)
+        unique = SOURCE.split('private func unique(', 1)[1].split('private func read(', 1)[0]
+        self.assertIn('try require(nodes.count == 1', unique)
+
     def test_workflow_keeps_three_strict_partitions_before_diagnostic(self):
         previous = -1
         for partition in accessibility_partitions.PARTITIONS:

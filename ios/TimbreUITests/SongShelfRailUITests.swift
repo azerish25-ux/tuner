@@ -12,6 +12,7 @@ final class SongShelfRailUITests: XCTestCase {
         app.launchEnvironment["TIMBRE_SKIP_ONBOARDING"] = "1"
         app.launchEnvironment["TIMBRE_DEMO_DATA"] = "1"
         app.launchEnvironment["TIMBRE_STAGE_REST"] = "1"
+        app.launchEnvironment["TIMBRE_SONG_PAGE_TRACE"] = "1"
     }
 
     override func tearDownWithError() throws {
@@ -24,6 +25,13 @@ final class SongShelfRailUITests: XCTestCase {
     }
 
     private func capture(_ name: String) {
+        let session = app.launchEnvironment["TIMBRE_TEST_STORAGE_ID"] ?? "missing"
+        let marker = XCTAttachment(string: "stage=\(name) sessionID=\(session) "
+            + "wallTimeUTC=\(Date().timeIntervalSince1970) uptimeSeconds=\(ProcessInfo.processInfo.systemUptime) "
+            + "appFrame=\(app.frame) observationOnly=true")
+        marker.name = "song-rail-" + name + "-trace-time"
+        marker.lifetime = .keepAlways
+        add(marker)
         let image = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
         image.name = "song-rail-" + name; image.lifetime = .keepAlways; add(image)
         let tree = XCTAttachment(string: app.debugDescription)
@@ -255,6 +263,7 @@ final class SongShelfRailUITests: XCTestCase {
         }
         // A browsed row must not jump back to its initially selected first song on rotation.
         for cycle in 0..<2 {
+            capture("portrait-before-rotation-\(accessible)-\(rtl)-\(cycle)")
             XCUIDevice.shared.orientation = .landscapeLeft
             Thread.sleep(forTimeInterval: 2)
             let landscapeLast = rail.buttons.matching(identifier: "songs.song." + samples[2]).firstMatch
