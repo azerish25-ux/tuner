@@ -145,9 +145,9 @@ final class WelcomeHeadlineLayoutTests: XCTestCase {
     }
 
     private struct CalibrationHeadline: View {
-        @ScaledMetric(relativeTo: .largeTitle) private var leading: CGFloat
-        @ScaledMetric(relativeTo: .largeTitle) private var vertical: CGFloat
-        @ScaledMetric(relativeTo: .largeTitle) private var horizontal: CGFloat
+        @ScaledMetric private var leading: CGFloat
+        @ScaledMetric private var vertical: CGFloat
+        @ScaledMetric private var horizontal: CGFloat
 
         init(leading: CGFloat, vertical: CGFloat, horizontal: CGFloat) {
             _leading = ScaledMetric(wrappedValue: leading, relativeTo: .largeTitle)
