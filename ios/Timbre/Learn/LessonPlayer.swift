@@ -960,13 +960,16 @@ struct ChoiceStep: View {
         }
         .buttonStyle(PressScaleStyle())
         .disabled(picked != nil && !isPicked && index != answer)
+        // Name only the answer button, before adding its separate decorative background.
+        .accessibilityIdentifier("lesson.option.\(index)")
         // A right answer bursts out from behind its own tile, never over the words.
         .background {
             if index == answer {
                 SparkBurst(trigger: burst, color: accent, reach: 120, startFraction: 0.35).frame(width: 260, height: 260)
             }
         }
-        .accessibilityIdentifier("lesson.option.\(index)")
+        // VoiceOver follows the full answer tile, not the larger reward canvas behind it.
+        .contentShape(.accessibility, Rectangle())
     }
 
     private func feedback(_ picked: Int) -> some View {

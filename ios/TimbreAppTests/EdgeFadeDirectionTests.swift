@@ -120,8 +120,11 @@ final class EdgeFadeDirectionTests: XCTestCase {
             host.view.layoutIfNeeded()
             let measured = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
                 guard let geometry = probe.value, let viewport = probe.viewport else { return false }
+                // The content proxy sees the inset container, not the margin-inclusive visibleRect.
+                // Both directions report 248 + 20 + 32 = 300; requiring a 300-point proxy never settles.
                 return abs(geometry.contentSize.width - 1288) < 1
-                    && abs(geometry.visibleRect.width - 300) < 1 && abs(viewport.width - 300) < 1
+                    && abs(geometry.visibleRect.width - 300) < 1 && abs(viewport.width - 248) < 1
+                    && abs(viewport.width - geometry.containerSize.width) < 1
             }, object: nil)
             await fulfillment(of: [measured], timeout: 3)
             let geometry = try XCTUnwrap(probe.value)
@@ -161,6 +164,11 @@ final class EdgeFadeDirectionTests: XCTestCase {
         attachment.name = "edge-fade-live-\(direction)-\(stage)"
         attachment.lifetime = .keepAlways
         add(attachment)
+        XCTAssertEqual(viewport.width, 248, accuracy: 1, "Content bounds exclude the 20/32-point margins")
+        XCTAssertEqual(viewport.width, geometry.containerSize.width, accuracy: 1)
+        XCTAssertEqual(geometry.visibleRect.width, 300, accuracy: 1)
+        XCTAssertEqual(geometry.visibleRect.width, viewport.width
+                       + geometry.contentInsets.leading + geometry.contentInsets.trailing, accuracy: 1)
         XCTAssertEqual(actual, expected)
         XCTAssertEqual(actual, EdgeOverflow(viewport: viewport, contentWidth: 1288, direction: direction))
     }

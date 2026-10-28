@@ -146,6 +146,10 @@ final class LessonAccessibilityLayoutUITests: XCTestCase {
         let decorationBounds = CGRect(x: -89, y: 315, width: 580, height: 580)
         XCTAssertFalse(Self.contains(decorationBounds, in: viewport))
         XCTAssertNil(Self.scrollDistance(decorationBounds, in: viewport))
+        // A quiz reward also must not enlarge its button or become a duplicate target.
+        let quizDecorationBounds = CGRect(x: -22, y: 532, width: 260, height: 260)
+        XCTAssertFalse(Self.contains(quizDecorationBounds, in: viewport))
+        XCTAssertNil(Self.scrollDistance(quizDecorationBounds, in: viewport))
         let farBelow = CGRect(x: 0, y: 1400, width: 402, height: 350)
         XCTAssertEqual(Self.scrollDistance(farBelow, in: viewport)!, -viewport.height * 0.45, accuracy: 0.001)
         XCTAssertFalse(Self.contains(farBelow.offsetBy(dx: 0, dy: -viewport.height * 0.45), in: viewport))
@@ -210,12 +214,34 @@ final class LessonAccessibilityLayoutUITests: XCTestCase {
         Thread.sleep(forTimeInterval: 7)
         XCTAssertTrue(override.waitForExistence(timeout: 20))
         override.tap()
-        let first = element("lesson.option.0")
+        assertQuizOptionsReachableAndSelectable(above: next)
+    }
+
+    private func assertQuizOptionsReachableAndSelectable(above next: XCUIElement) {
+        let first = app.buttons.matching(identifier: "lesson.option.0").firstMatch
         XCTAssertTrue(first.waitForExistence(timeout: 20))
-        for index in 0..<4 {
-            scrollClear(element("lesson.option.\(index)"), above: next.frame.minY)
+        for (index, label) in ["A", "D", "B", "G"].enumerated() {
+            let id = "lesson.option.\(index)"
+            let option = app.buttons.matching(identifier: id).firstMatch
+            XCTAssertTrue(option.exists, "Every answer must remain a semantic button")
+            XCTAssertEqual(app.descendants(matching: .any).matching(identifier: id).count, 1,
+                           "A decorative background must not inherit the answer's identity")
+            XCTAssertEqual(option.label, label, "Every answer must retain its complete text")
+            scrollClear(option, above: next.frame.minY)
+            XCTAssertTrue(option.isEnabled)
             capture("quiz-option-\(index)-scroll-clear")
         }
+        // Return from the last row and activate the real first button, rather than an
+        // identically named decoration. Its selected state must remain reachable too.
+        scrollClear(first, above: next.frame.minY)
+        first.tap()
+        let feedback = app.staticTexts.matching(NSPredicate(format: "label == %@", "Nice — that’s right.")).firstMatch
+        XCTAssertTrue(feedback.waitForExistence(timeout: 10))
+        XCTAssertEqual(next.label, "Continue")
+        XCTAssertTrue(next.isEnabled)
+        XCTAssertTrue(isClear(next), "Continue must remain pinned after selecting an answer")
+        scrollClear(first, above: next.frame.minY)
+        capture("quiz-correct-answer-scroll-clear")
     }
 
     func testPlayAlongStartAndCompletedTakeAtAX5() throws {

@@ -1,0 +1,66 @@
+{
+  "review_date_utc": "2026-10-28",
+  "reviewer": "Independent AI source review",
+  "base_revision": "7051df183d166ad8c7df2734fa7207d1d5efc326",
+  "review_scope": "Unpublished UI-test helper/classifier, regression tests, and required CI selection only. No production edits; no publication or workflow cancellation.",
+  "decision": "approved_source_pending_native",
+  "blocking_findings": [],
+  "source_sha256": {
+    "ios/TimbreUITests/TimbreUITests.swift": "7f26df7a9cabd57ac46fe86db7bf287fdd711eaccc01edcc73419a325bca6012",
+    "ios/TimbreUITests/CapturePlayAlongReadiness.swift": "1285874ae240cf3d35ed3417f151612e01506114abdbc7a9a5a8f61a23cdbc5d",
+    "ios/TimbreUITests/CapturePlayAlongReadinessTests.swift": "3507dc9d0b3eab23995ffc9f70f6c3a3fc527859bf199544a29dbbddf232528e",
+    "tools/ci/test_playalong_readiness_contract.py": "5cf30d7f40224e6e2803c289f5c74e9d2da98c4060c6d0f6b9fd31ea524640cd",
+    ".github/workflows/ios.yml": "9d276c39653e2424dce29ab7859f95b15294a06cc94da8ad4e4dd59a3c84718c"
+  },
+  "recovered_evidence": {
+    "original_artifact_id": 12781917198,
+    "files": {
+      "test.log": "9605043b28d7f1d8d83043faeb8ee0803c76b4bebc1bd85a4a4658f949c14be9",
+      "attachments/manifest.json": "3a9ebb08eef9d2c79f7232a984bb21fadc466dd42af132498388aaa600411014",
+      "attachments/C03F2F8F-0DDD-4318-A3A8-58D9F7C8A682.png": "74184f891df8ba2f5bdcc9b180e497cfb42fea270382c94736381ec195be7e87",
+      "attachments/358CFFEF-6CE1-4A2F-8A30-72E051DA665A.png": "dee6f3e92270c56c62d5f32cf39f145263dbf574b7d90fa43e6bfb4377c6694e",
+      "attachments/BEFDF4F5-B6A5-4DC6-8633-D35BB7D6AB84.txt": "7261f123e234c4f37cf7c39020f29cbf318ea7f5ed268cee03fc53d371090047"
+    },
+    "direct_observations": [
+      "Viewed actual failure PNG: Quick tune check, real skip action, E4 in tune, not play-along.",
+      "Viewed manifest-mapped 59-along-ready PNG 358CFFEF-6CE1-4A2F-8A30-72E051DA665A.png: newly begun Quick tune check on E2; misleading old attachment name does not establish stage.",
+      "Failure hierarchy has lesson.tunecheck.title and lesson.tunecheck.skip, with no lesson.continue; later screenshot advances from B3 to E4, consistent with working demo-pitch progression.",
+      "Test starts 2026-10-27 23:57:58.598. Only initial skip probe occurred at t=96.20 through 104.61, before midnight; listening Continue event synthesized at t=124.88, after midnight. Manifest also records Synthesized Event 2026-10-28 at 12.00.04 AM, epoch 1793145604.503."
+    ],
+    "causal_assessment": "Strong evidence-supported inference: earlier same-day tuning preference bypassed the check, leaving this lesson-local tuneChecked false; Calendar.current dayKey(Date()) changed at midnight, so the next microphone stage legitimately presented its optional tune check. The exact stored preference value was not logged. This evidence does not establish a production fault."
+  },
+  "safeguards_reviewed": [
+    "Recognizes an optional check only from both visible title and unique enabled skip, with no primary or play-along controls; absence alone is not ready.",
+    "At most three waits/four observations; only a recognized check receives a 10-second hands-off tuning window. Unexpected/mixed transitions receive 1.5-second waits, never actions.",
+    "No helper taps, preference changes, forced tuning state, scene jump, or Release override. Avoids disappearing-skip coordinates accidentally hitting next Start.",
+    "A unique enabled exact localized Start plus enabled along.tempo.0 and absence of tune-check, notes, questions, or completed-take identity must be observed before 59. Start must also be hittable.",
+    "Failure retains XCTFail, wrong-named screenshot and hierarchy then returns before capture/start. All prior captures, 21-second hands-off playback, completion, earned 3-star, settled-results and room checks remain.",
+    "Six native classifier tests selected in required app gate; seven source contracts selected in core gate. project.yml auto-includes TimbreUITests sources."
+  ],
+  "checks_run": [
+    {
+      "command": "python3 tools/ci/test_playalong_readiness_contract.py",
+      "result": "passed",
+      "tests": 7
+    },
+    {
+      "command": "python3 tools/ci/test_lesson_turn_cue_contract.py",
+      "result": "passed",
+      "tests": 3
+    },
+    {
+      "command": "python3 tools/ci/test_result_polish_contract.py",
+      "result": "passed",
+      "tests": 3
+    },
+    {
+      "command": "git diff --check",
+      "result": "passed"
+    }
+  ],
+  "pending": [
+    "Swift/Xcode compilation and six native classifier tests: no native toolchain in this executor.",
+    "Actual regular/large-phone localized capture execution on final revision, optional tune-check completion and real 59/60/61/62 pixels, plus full required native gate. Older source passes are not inherited."
+  ],
+  "separate_existing_capture_limit": "Viewed recovered 56-lesson-notes attachment 5B08F494-7F7D-4C6A-B06E-DD634C2B88DC.png: it actually shows quiz Step 4 of 6 because the old timing passed the notes. This late 59 fix does not certify 56 or change its historical evidence."
+}

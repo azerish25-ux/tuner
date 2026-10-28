@@ -1,0 +1,1321 @@
+{
+  "schema_version": 1,
+  "scope": "Test-only correction for Settings precision raster oracle; production Settings and translations unchanged",
+  "source_commit": "7051df183d166ad8c7df2734fa7207d1d5efc326",
+  "tested_merge": "78060e534a69759b37cf50adac6b7f4d80ef4325",
+  "run_id": 40621117889,
+  "job_id": 122595125150,
+  "artifact_id": 12788890523,
+  "artifact_sha256": "64b7d36e265303941d325c7c208e54f275258c4c0890a60b960d0ca229de6456",
+  "native_results": {
+    "all_temperament_translations": "passed",
+    "precision_unicode_tokens": "passed",
+    "coretext_arabic_physical_order_and_raw_negative": "passed",
+    "raster_exact_comparisons": {
+      "total": 12,
+      "failed": 9,
+      "passed": 3
+    },
+    "coretext_position_attachments": "not emitted by this revision; pass/fail assertions available in test.log"
+  },
+  "observations": [
+    "All actual render tokens retain the visible physical order ±5¢, ±3¢ and ±1¢; no glyph-order reversal was found.",
+    "All six normal-size comparisons differ, with actual digit and cent ink starting approximately one pixel left of the separate-Text HStack oracle. Digit antialiasing differs as well; do not describe every glyph as identical.",
+    "All three AX5 left-to-right comparisons differ by one-pixel digit/cent placement; corresponding per-glyph crops are exactly equal. All three AX5 right-to-left comparisons are already byte-identical to the old oracle.",
+    "These observations demonstrate non-equivalent layout between the split-glyph expected view and single-run actual Text; they do not independently establish a precise kerning or internal SwiftUI rounding mechanism."
+  ],
+  "correction": [
+    "Independently authored complete tokens rendered as single Text runs in LTR paragraphs, without production formatter or isolate controls.",
+    "Both oracle and actual use the same explicit Arabic typesetting language, monospaced body font, locale, frame and requested Dynamic Type size.",
+    "Retain exact canonical RGBA byte equality for all 12 cases, literal Unicode sign/value/unit checks, reversed-token raster negatives and CoreText raw RTL negatives. No thresholds, masks, translations, production-font changes or offsets added."
+  ],
+  "validation": {
+    "settings_contracts": 6,
+    "fraction_contracts": 6,
+    "strict_accessibility_contracts": 9,
+    "hygiene_unit_tests": 25,
+    "native_corrected": "pending; Linux environment has no Swift/Xcode"
+  },
+  "references": [
+    "https://developer.apple.com/documentation/swiftui/view/typesettinglanguage(_:isenabled:)",
+    "https://www.unicode.org/reports/tr9/"
+  ],
+  "pixel_cases": [
+    {
+      "case": "5-large-leftToRight",
+      "changed_channels": 447,
+      "actual_bounds": [
+        [
+          105,
+          57,
+          114,
+          66
+        ],
+        [
+          115,
+          54,
+          124,
+          67
+        ],
+        [
+          126,
+          54,
+          134,
+          66
+        ]
+      ],
+      "oracle_bounds": [
+        [
+          105,
+          57,
+          114,
+          66
+        ],
+        [
+          116,
+          54,
+          125,
+          67
+        ],
+        [
+          127,
+          54,
+          135,
+          66
+        ]
+      ],
+      "glyphs": [
+        {
+          "index": 0,
+          "same_shape": true,
+          "exact_crop_equal": true,
+          "actual_size": [
+            9,
+            9
+          ],
+          "expected_size": [
+            9,
+            9
+          ],
+          "shift": [
+            0,
+            0
+          ]
+        },
+        {
+          "index": 1,
+          "same_shape": true,
+          "exact_crop_equal": false,
+          "actual_size": [
+            13,
+            9
+          ],
+          "expected_size": [
+            13,
+            9
+          ],
+          "shift": [
+            -1,
+            0
+          ]
+        },
+        {
+          "index": 2,
+          "same_shape": true,
+          "exact_crop_equal": true,
+          "actual_size": [
+            12,
+            8
+          ],
+          "expected_size": [
+            12,
+            8
+          ],
+          "shift": [
+            -1,
+            0
+          ]
+        }
+      ],
+      "actual_file": "screenshots/AC484746-4854-448A-BE99-3180DADBDD2F.png",
+      "actual_sha256": "a1301a96d242a2290248b37f735bf671707142c136c68e09dbf03013d5ab90e4",
+      "oracle_file": "screenshots/4453FED7-E9F8-43C9-AC9B-0040472238C3.png",
+      "oracle_sha256": "7bf1602d87e5499be8c8b6276f0efd2295633574acc83f01b174533785633a0b"
+    },
+    {
+      "case": "5-large-rightToLeft",
+      "changed_channels": 447,
+      "actual_bounds": [
+        [
+          105,
+          57,
+          114,
+          66
+        ],
+        [
+          115,
+          54,
+          124,
+          67
+        ],
+        [
+          126,
+          54,
+          134,
+          66
+        ]
+      ],
+      "oracle_bounds": [
+        [
+          105,
+          57,
+          114,
+          66
+        ],
+        [
+          116,
+          54,
+          125,
+          67
+        ],
+        [
+          127,
+          54,
+          135,
+          66
+        ]
+      ],
+      "glyphs": [
+        {
+          "index": 0,
+          "same_shape": true,
+          "exact_crop_equal": true,
+          "actual_size": [
+            9,
+            9
+          ],
+          "expected_size": [
+            9,
+            9
+          ],
+          "shift": [
+            0,
+            0
+          ]
+        },
+        {
+          "index": 1,
+          "same_shape": true,
+          "exact_crop_equal": false,
+          "actual_size": [
+            13,
+            9
+          ],
+          "expected_size": [
+            13,
+            9
+          ],
+          "shift": [
+            -1,
+            0
+          ]
+        },
+        {
+          "index": 2,
+          "same_shape": true,
+          "exact_crop_equal": true,
+          "actual_size": [
+            12,
+            8
+          ],
+          "expected_size": [
+            12,
+            8
+          ],
+          "shift": [
+            -1,
+            0
+          ]
+        }
+      ],
+      "actual_file": "screenshots/8E9FA4E3-6E2F-4C87-A2B8-9FEC1A1296E5.png",
+      "actual_sha256": "a1301a96d242a2290248b37f735bf671707142c136c68e09dbf03013d5ab90e4",
+      "oracle_file": "screenshots/4453FED7-E9F8-43C9-AC9B-0040472238C3.png",
+      "oracle_sha256": "7bf1602d87e5499be8c8b6276f0efd2295633574acc83f01b174533785633a0b"
+    },
+    {
+      "case": "3-large-leftToRight",
+      "changed_channels": 483,
+      "actual_bounds": [
+        [
+          105,
+          57,
+          114,
+          66
+        ],
+        [
+          115,
+          53,
+          124,
+          67
+        ],
+        [
+          126,
+          54,
+          134,
+          66
+        ]
+      ],
+      "oracle_bounds": [
+        [
+          105,
+          57,
+          114,
+          66
+        ],
+        [
+          116,
+          53,
+          125,
+          67
+        ],
+        [
+          127,
+          54,
+          135,
+          66
+        ]
+      ],
+      "glyphs": [
+        {
+          "index": 0,
+          "same_shape": true,
+          "exact_crop_equal": true,
+          "actual_size": [
+            9,
+            9
+          ],
+          "expected_size": [
+            9,
+            9
+          ],
+          "shift": [
+            0,
+            0
+          ]
+        },
+        {
+          "index": 1,
+          "same_shape": true,
+          "exact_crop_equal": false,
+          "actual_size": [
+            14,
+            9
+          ],
+          "expected_size": [
+            14,
+            9
+          ],
+          "shift": [
+            -1,
+            0
+          ]
+        },
+        {
+          "index": 2,
+          "same_shape": true,
+          "exact_crop_equal": true,
+          "actual_size": [
+            12,
+            8
+          ],
+          "expected_size": [
+            12,
+            8
+          ],
+          "shift": [
+            -1,
+            0
+          ]
+        }
+      ],
+      "actual_file": "screenshots/FDD962A3-906D-4536-9EBA-DA0E9119A2BE.png",
+      "actual_sha256": "a78f6700bf797453a5d4943712433742a5c3a00f9114642801df93cbdc6e64f3",
+      "oracle_file": "screenshots/A0EAA65B-089A-474C-B665-75CA0F50334B.png",
+      "oracle_sha256": "4462508fa393212b6eb9eda8382f4553cae83d162ab0a8d661dc4d27d1e7bd8b"
+    },
+    {
+      "case": "3-large-rightToLeft",
+      "changed_channels": 483,
+      "actual_bounds": [
+        [
+          105,
+          57,
+          114,
+          66
+        ],
+        [
+          115,
+          53,
+          124,
+          67
+        ],
+        [
+          126,
+          54,
+          134,
+          66
+        ]
+      ],
+      "oracle_bounds": [
+        [
+          105,
+          57,
+          114,
+          66
+        ],
+        [
+          116,
+          53,
+          125,
+          67
+        ],
+        [
+          127,
+          54,
+          135,
+          66
+        ]
+      ],
+      "glyphs": [
+        {
+          "index": 0,
+          "same_shape": true,
+          "exact_crop_equal": true,
+          "actual_size": [
+            9,
+            9
+          ],
+          "expected_size": [
+            9,
+            9
+          ],
+          "shift": [
+            0,
+            0
+          ]
+        },
+        {
+          "index": 1,
+          "same_shape": true,
+          "exact_crop_equal": false,
+          "actual_size": [
+            14,
+            9
+          ],
+          "expected_size": [
+            14,
+            9
+          ],
+          "shift": [
+            -1,
+            0
+          ]
+        },
+        {
+          "index": 2,
+          "same_shape": true,
+          "exact_crop_equal": true,
+          "actual_size": [
+            12,
+            8
+          ],
+          "expected_size": [
+            12,
+            8
+          ],
+          "shift": [
+            -1,
+            0
+          ]
+        }
+      ],
+      "actual_file": "screenshots/6D7EE3FE-6360-4395-9156-EAE235AE6B5F.png",
+      "actual_sha256": "a78f6700bf797453a5d4943712433742a5c3a00f9114642801df93cbdc6e64f3",
+      "oracle_file": "screenshots/A0EAA65B-089A-474C-B665-75CA0F50334B.png",
+      "oracle_sha256": "4462508fa393212b6eb9eda8382f4553cae83d162ab0a8d661dc4d27d1e7bd8b"
+    },
+    {
+      "case": "1-large-leftToRight",
+      "changed_channels": 384,
+      "actual_bounds": [
+        [
+          105,
+          57,
+          114,
+          66
+        ],
+        [
+          115,
+          54,
+          125,
+          66
+        ],
+        [
+          126,
+          54,
+          134,
+          66
+        ]
+      ],
+      "oracle_bounds": [
+        [
+          105,
+          57,
+          114,
+          66
+        ],
+        [
+          116,
+          54,
+          125,
+          66
+        ],
+        [
+          127,
+          54,
+          135,
+          66
+        ]
+      ],
+      "glyphs": [
+        {
+          "index": 0,
+          "same_shape": true,
+          "exact_crop_equal": true,
+          "actual_size": [
+            9,
+            9
+          ],
+          "expected_size": [
+            9,
+            9
+          ],
+          "shift": [
+            0,
+            0
+          ]
+        },
+        {
+          "index": 1,
+          "same_shape": false,
+          "exact_crop_equal": false,
+          "actual_size": [
+            12,
+            10
+          ],
+          "expected_size": [
+            12,
+            9
+          ],
+          "shift": [
+            -1,
+            0
+          ]
+        },
+        {
+          "index": 2,
+          "same_shape": true,
+          "exact_crop_equal": true,
+          "actual_size": [
+            12,
+            8
+          ],
+          "expected_size": [
+            12,
+            8
+          ],
+          "shift": [
+            -1,
+            0
+          ]
+        }
+      ],
+      "actual_file": "screenshots/5DED6932-3589-4A8F-B8BD-000A7824F6CA.png",
+      "actual_sha256": "ebd60095116f1b026b1bd98fbf5c3799913aca205725bb6aa9b2e8e7caceb358",
+      "oracle_file": "screenshots/831D6FD3-2995-47C6-B390-5905092503E8.png",
+      "oracle_sha256": "1ce13d4ea883bb8a07b18e6a959b5730345b6df1b969ff28bf696afca0afb203"
+    },
+    {
+      "case": "1-large-rightToLeft",
+      "changed_channels": 384,
+      "actual_bounds": [
+        [
+          105,
+          57,
+          114,
+          66
+        ],
+        [
+          115,
+          54,
+          125,
+          66
+        ],
+        [
+          126,
+          54,
+          134,
+          66
+        ]
+      ],
+      "oracle_bounds": [
+        [
+          105,
+          57,
+          114,
+          66
+        ],
+        [
+          116,
+          54,
+          125,
+          66
+        ],
+        [
+          127,
+          54,
+          135,
+          66
+        ]
+      ],
+      "glyphs": [
+        {
+          "index": 0,
+          "same_shape": true,
+          "exact_crop_equal": true,
+          "actual_size": [
+            9,
+            9
+          ],
+          "expected_size": [
+            9,
+            9
+          ],
+          "shift": [
+            0,
+            0
+          ]
+        },
+        {
+          "index": 1,
+          "same_shape": false,
+          "exact_crop_equal": false,
+          "actual_size": [
+            12,
+            10
+          ],
+          "expected_size": [
+            12,
+            9
+          ],
+          "shift": [
+            -1,
+            0
+          ]
+        },
+        {
+          "index": 2,
+          "same_shape": true,
+          "exact_crop_equal": true,
+          "actual_size": [
+            12,
+            8
+          ],
+          "expected_size": [
+            12,
+            8
+          ],
+          "shift": [
+            -1,
+            0
+          ]
+        }
+      ],
+      "actual_file": "screenshots/FE1097A3-D688-4A3C-99D3-6ED83AECF86D.png",
+      "actual_sha256": "ebd60095116f1b026b1bd98fbf5c3799913aca205725bb6aa9b2e8e7caceb358",
+      "oracle_file": "screenshots/831D6FD3-2995-47C6-B390-5905092503E8.png",
+      "oracle_sha256": "1ce13d4ea883bb8a07b18e6a959b5730345b6df1b969ff28bf696afca0afb203"
+    },
+    {
+      "case": "5-accessibility5-leftToRight",
+      "changed_channels": 1572,
+      "actual_bounds": [
+        [
+          74,
+          49,
+          101,
+          76
+        ],
+        [
+          106,
+          40,
+          132,
+          79
+        ],
+        [
+          141,
+          40,
+          164,
+          79
+        ]
+      ],
+      "oracle_bounds": [
+        [
+          74,
+          49,
+          101,
+          76
+        ],
+        [
+          107,
+          40,
+          133,
+          79
+        ],
+        [
+          142,
+          40,
+          165,
+          79
+        ]
+      ],
+      "glyphs": [
+        {
+          "index": 0,
+          "same_shape": true,
+          "exact_crop_equal": true,
+          "actual_size": [
+            27,
+            27
+          ],
+          "expected_size": [
+            27,
+            27
+          ],
+          "shift": [
+            0,
+            0
+          ]
+        },
+        {
+          "index": 1,
+          "same_shape": true,
+          "exact_crop_equal": true,
+          "actual_size": [
+            39,
+            26
+          ],
+          "expected_size": [
+            39,
+            26
+          ],
+          "shift": [
+            -1,
+            0
+          ]
+        },
+        {
+          "index": 2,
+          "same_shape": true,
+          "exact_crop_equal": true,
+          "actual_size": [
+            39,
+            23
+          ],
+          "expected_size": [
+            39,
+            23
+          ],
+          "shift": [
+            -1,
+            0
+          ]
+        }
+      ],
+      "actual_file": "screenshots/82FBC700-EA96-43B4-A508-DADA77770A39.png",
+      "actual_sha256": "c04f32e65f8143cd9c6096d642e10a6b09f44a0ae7dddc3b72fdd9325e27508f",
+      "oracle_file": "screenshots/31FA14CD-BBE5-4C78-8636-FB9C0199D1E6.png",
+      "oracle_sha256": "4667d54edd0af0efc53d39418fb78ce03f0e3ed5980652d03ebff7c66853c32a"
+    },
+    {
+      "case": "5-accessibility5-rightToLeft",
+      "changed_channels": 0,
+      "actual_bounds": [
+        [
+          74,
+          49,
+          101,
+          76
+        ],
+        [
+          107,
+          40,
+          133,
+          79
+        ],
+        [
+          142,
+          40,
+          165,
+          79
+        ]
+      ],
+      "oracle_bounds": [
+        [
+          74,
+          49,
+          101,
+          76
+        ],
+        [
+          107,
+          40,
+          133,
+          79
+        ],
+        [
+          142,
+          40,
+          165,
+          79
+        ]
+      ],
+      "glyphs": [
+        {
+          "index": 0,
+          "same_shape": true,
+          "exact_crop_equal": true,
+          "actual_size": [
+            27,
+            27
+          ],
+          "expected_size": [
+            27,
+            27
+          ],
+          "shift": [
+            0,
+            0
+          ]
+        },
+        {
+          "index": 1,
+          "same_shape": true,
+          "exact_crop_equal": true,
+          "actual_size": [
+            39,
+            26
+          ],
+          "expected_size": [
+            39,
+            26
+          ],
+          "shift": [
+            0,
+            0
+          ]
+        },
+        {
+          "index": 2,
+          "same_shape": true,
+          "exact_crop_equal": true,
+          "actual_size": [
+            39,
+            23
+          ],
+          "expected_size": [
+            39,
+            23
+          ],
+          "shift": [
+            0,
+            0
+          ]
+        }
+      ],
+      "actual_file": "screenshots/04E10F57-5E1A-497E-B101-362C7EB52967.png",
+      "actual_sha256": "4667d54edd0af0efc53d39418fb78ce03f0e3ed5980652d03ebff7c66853c32a",
+      "oracle_file": "screenshots/31FA14CD-BBE5-4C78-8636-FB9C0199D1E6.png",
+      "oracle_sha256": "4667d54edd0af0efc53d39418fb78ce03f0e3ed5980652d03ebff7c66853c32a"
+    },
+    {
+      "case": "3-accessibility5-leftToRight",
+      "changed_channels": 1650,
+      "actual_bounds": [
+        [
+          74,
+          49,
+          101,
+          76
+        ],
+        [
+          106,
+          39,
+          133,
+          79
+        ],
+        [
+          141,
+          40,
+          164,
+          79
+        ]
+      ],
+      "oracle_bounds": [
+        [
+          74,
+          49,
+          101,
+          76
+        ],
+        [
+          107,
+          39,
+          134,
+          79
+        ],
+        [
+          142,
+          40,
+          165,
+          79
+        ]
+      ],
+      "glyphs": [
+        {
+          "index": 0,
+          "same_shape": true,
+          "exact_crop_equal": true,
+          "actual_size": [
+            27,
+            27
+          ],
+          "expected_size": [
+            27,
+            27
+          ],
+          "shift": [
+            0,
+            0
+          ]
+        },
+        {
+          "index": 1,
+          "same_shape": true,
+          "exact_crop_equal": true,
+          "actual_size": [
+            40,
+            27
+          ],
+          "expected_size": [
+            40,
+            27
+          ],
+          "shift": [
+            -1,
+            0
+          ]
+        },
+        {
+          "index": 2,
+          "same_shape": true,
+          "exact_crop_equal": true,
+          "actual_size": [
+            39,
+            23
+          ],
+          "expected_size": [
+            39,
+            23
+          ],
+          "shift": [
+            -1,
+            0
+          ]
+        }
+      ],
+      "actual_file": "screenshots/6E12841E-4C05-4EEC-810A-5FE2E4AD4B43.png",
+      "actual_sha256": "0b91f57d2d5d8e34924753b01043846d62c27abab394d93c1709918695edaf62",
+      "oracle_file": "screenshots/7B331D27-7DA4-42BA-BF6C-386CEF1C5A85.png",
+      "oracle_sha256": "27a6d0dd49322655ee8460e210aff8a76488e5f8613bb43b81bbe9376e87e5d9"
+    },
+    {
+      "case": "3-accessibility5-rightToLeft",
+      "changed_channels": 0,
+      "actual_bounds": [
+        [
+          74,
+          49,
+          101,
+          76
+        ],
+        [
+          107,
+          39,
+          134,
+          79
+        ],
+        [
+          142,
+          40,
+          165,
+          79
+        ]
+      ],
+      "oracle_bounds": [
+        [
+          74,
+          49,
+          101,
+          76
+        ],
+        [
+          107,
+          39,
+          134,
+          79
+        ],
+        [
+          142,
+          40,
+          165,
+          79
+        ]
+      ],
+      "glyphs": [
+        {
+          "index": 0,
+          "same_shape": true,
+          "exact_crop_equal": true,
+          "actual_size": [
+            27,
+            27
+          ],
+          "expected_size": [
+            27,
+            27
+          ],
+          "shift": [
+            0,
+            0
+          ]
+        },
+        {
+          "index": 1,
+          "same_shape": true,
+          "exact_crop_equal": true,
+          "actual_size": [
+            40,
+            27
+          ],
+          "expected_size": [
+            40,
+            27
+          ],
+          "shift": [
+            0,
+            0
+          ]
+        },
+        {
+          "index": 2,
+          "same_shape": true,
+          "exact_crop_equal": true,
+          "actual_size": [
+            39,
+            23
+          ],
+          "expected_size": [
+            39,
+            23
+          ],
+          "shift": [
+            0,
+            0
+          ]
+        }
+      ],
+      "actual_file": "screenshots/59B7D319-3421-4405-9AAD-6CEC8703ED05.png",
+      "actual_sha256": "27a6d0dd49322655ee8460e210aff8a76488e5f8613bb43b81bbe9376e87e5d9",
+      "oracle_file": "screenshots/7B331D27-7DA4-42BA-BF6C-386CEF1C5A85.png",
+      "oracle_sha256": "27a6d0dd49322655ee8460e210aff8a76488e5f8613bb43b81bbe9376e87e5d9"
+    },
+    {
+      "case": "1-accessibility5-leftToRight",
+      "changed_channels": 1332,
+      "actual_bounds": [
+        [
+          74,
+          49,
+          101,
+          76
+        ],
+        [
+          107,
+          40,
+          134,
+          78
+        ],
+        [
+          141,
+          40,
+          164,
+          79
+        ]
+      ],
+      "oracle_bounds": [
+        [
+          74,
+          49,
+          101,
+          76
+        ],
+        [
+          108,
+          40,
+          135,
+          78
+        ],
+        [
+          142,
+          40,
+          165,
+          79
+        ]
+      ],
+      "glyphs": [
+        {
+          "index": 0,
+          "same_shape": true,
+          "exact_crop_equal": true,
+          "actual_size": [
+            27,
+            27
+          ],
+          "expected_size": [
+            27,
+            27
+          ],
+          "shift": [
+            0,
+            0
+          ]
+        },
+        {
+          "index": 1,
+          "same_shape": true,
+          "exact_crop_equal": true,
+          "actual_size": [
+            38,
+            27
+          ],
+          "expected_size": [
+            38,
+            27
+          ],
+          "shift": [
+            -1,
+            0
+          ]
+        },
+        {
+          "index": 2,
+          "same_shape": true,
+          "exact_crop_equal": true,
+          "actual_size": [
+            39,
+            23
+          ],
+          "expected_size": [
+            39,
+            23
+          ],
+          "shift": [
+            -1,
+            0
+          ]
+        }
+      ],
+      "actual_file": "screenshots/9AD079BA-A127-4563-A240-EC3A376A5CB2.png",
+      "actual_sha256": "2b60cd16c1a43e2ac4c14e75aed77bd6d2735fbd553344e0c048d910756c1974",
+      "oracle_file": "screenshots/22C420F5-F1A5-42D8-BDC9-978B01660358.png",
+      "oracle_sha256": "b43f70db9082db53f74586b3740b1335799dc4707d6aa22764ab4060f6eafebd"
+    },
+    {
+      "case": "1-accessibility5-rightToLeft",
+      "changed_channels": 0,
+      "actual_bounds": [
+        [
+          74,
+          49,
+          101,
+          76
+        ],
+        [
+          108,
+          40,
+          135,
+          78
+        ],
+        [
+          142,
+          40,
+          165,
+          79
+        ]
+      ],
+      "oracle_bounds": [
+        [
+          74,
+          49,
+          101,
+          76
+        ],
+        [
+          108,
+          40,
+          135,
+          78
+        ],
+        [
+          142,
+          40,
+          165,
+          79
+        ]
+      ],
+      "glyphs": [
+        {
+          "index": 0,
+          "same_shape": true,
+          "exact_crop_equal": true,
+          "actual_size": [
+            27,
+            27
+          ],
+          "expected_size": [
+            27,
+            27
+          ],
+          "shift": [
+            0,
+            0
+          ]
+        },
+        {
+          "index": 1,
+          "same_shape": true,
+          "exact_crop_equal": true,
+          "actual_size": [
+            38,
+            27
+          ],
+          "expected_size": [
+            38,
+            27
+          ],
+          "shift": [
+            0,
+            0
+          ]
+        },
+        {
+          "index": 2,
+          "same_shape": true,
+          "exact_crop_equal": true,
+          "actual_size": [
+            39,
+            23
+          ],
+          "expected_size": [
+            39,
+            23
+          ],
+          "shift": [
+            0,
+            0
+          ]
+        }
+      ],
+      "actual_file": "screenshots/F6C7A215-6B9B-40A9-AFE9-868ECEA238BB.png",
+      "actual_sha256": "b43f70db9082db53f74586b3740b1335799dc4707d6aa22764ab4060f6eafebd",
+      "oracle_file": "screenshots/22C420F5-F1A5-42D8-BDC9-978B01660358.png",
+      "oracle_sha256": "b43f70db9082db53f74586b3740b1335799dc4707d6aa22764ab4060f6eafebd"
+    }
+  ],
+  "independent_source_review": {
+    "reviewer": "fix_native_scroll_oracles",
+    "result": "no blocking finding",
+    "scope": "Read-only source and actual/old-oracle PNG review; six source contracts executed",
+    "limitations": [
+      "Corrected native execution pending",
+      "Controlled-typography token oracle is not a fresh automatic production-layout render"
+    ]
+  },
+  "fresh_production_matrix_review": {
+    "artifact_id": 12789287162,
+    "artifact_bytes": 39292158,
+    "artifact_sha256": "f63666ff456ebc4f2054cfa41bdcac19400702c729a16f65095de20de7732f66",
+    "source_commit": "7051df183d166ad8c7df2734fa7207d1d5efc326",
+    "tested_merge": "78060e534a69759b37cf50adac6b7f4d80ef4325",
+    "device": "iPhone 17 Pro",
+    "scope": "Original baseline, Arabic and AX5 Settings frames only; not all matrix screenshots",
+    "observations": [
+      "Baseline now visibly shows the actual Settings sheet, not the tuner.",
+      "Arabic selected temperament displays متساوي rather than literal English Equal. The precision value visibly retains ±5¢ beside the Arabic name, with the surrounding layout still RTL.",
+      "The AX5 frame shows Settings and Done but only the tall membership content at the initial scroll position; it does not establish lower-row visibility or reachability.",
+      "Baseline, Arabic and AX5 matrix logs each explicitly pass both matrix-screen navigation and Settings open/close/reopen regression tests.",
+      "Diagnostic Settings reports retain 4 baseline, 3 Arabic and 5 AX5 findings. These signals were not waived or converted into a clean audit certification. No timeout occurred in these three Settings reports; other matrix reports were not reviewed here."
+    ],
+    "conclusion": "The three original pixel-confirmed Settings defects are resolved in these source-bound frames; production formatter remains unchanged. The pending test-only whole-token oracle correction still needs a new native run.",
+    "frames": [
+      {
+        "variant": "baseline",
+        "file": "Matrix-baseline/652D09EE-B39C-465A-9F7C-5BA635FE390F.png",
+        "sha256": "df12a2b487e755a03c62a30670ccb7ed4da998a7ec54f2b761cb21c490446986",
+        "original_pixels_inspected": true,
+        "audit_file": "Matrix-baseline/0C3E875A-9012-426D-9C8C-EB69EC2FD175.txt",
+        "diagnostic_audit": "matrix-baseline-settings: 4 findings\n\nContrast failed | id settings.done | label \"Done\"\nDynamic Type font sizes are partially unsupported | id settings.done | label \"Done\"\nText clipped | id - | label \"Every lesson and song, every tuning and tool.\"\nText clipped | id settings.referenceInput | label -",
+        "native_navigation_results": [
+          "Test Case '-[TimbreUITests.AccessibilityMatrixUITests testMatrixScreens]' passed (196.158 seconds).",
+          "Test Case '-[TimbreUITests.AccessibilityMatrixUITests testSettingsOpensClosesAndReopensWithPositiveScreenIdentity]' passed (37.653 seconds)."
+        ]
+      },
+      {
+        "variant": "ar",
+        "file": "Matrix-ar/BEEE77A4-DE82-4048-AAED-55A9487B2435.png",
+        "sha256": "4588183802ae49c009f3d17159f4ce04742dd7530bdebcb334be5763ae2c7253",
+        "original_pixels_inspected": true,
+        "audit_file": "Matrix-ar/83DFA78E-CA3C-470A-9318-77506EF0702D.txt",
+        "diagnostic_audit": "matrix-ar-settings: 3 findings\n\nContrast failed | id settings.done | label \"تم\"\nDynamic Type font sizes are partially unsupported | id settings.done | label \"تم\"\nText clipped | id settings.referenceInput | label -",
+        "native_navigation_results": [
+          "Test Case '-[TimbreUITests.AccessibilityMatrixUITests testMatrixScreens]' passed (187.067 seconds).",
+          "Test Case '-[TimbreUITests.AccessibilityMatrixUITests testSettingsOpensClosesAndReopensWithPositiveScreenIdentity]' passed (101.335 seconds)."
+        ]
+      },
+      {
+        "variant": "ax5",
+        "file": "Matrix-ax5/7F3A1B01-75CD-44D9-8D5E-BDFD52A41648.png",
+        "sha256": "c7db11456634017675389d557f52dbaeaced4c1727c245a25ba54827bbed66c0",
+        "original_pixels_inspected": true,
+        "audit_file": "Matrix-ax5/D2AE6446-EE25-4300-A7B8-FA4EE4A16AC9.txt",
+        "diagnostic_audit": "matrix-ax5-settings: 5 findings\n\nContrast failed | id settings.done | label \"Done\"\nDynamic Type font sizes are partially unsupported | id settings.done | label \"Done\"\nDynamic Type font sizes are partially unsupported | id - | label \"Try Timbre Pro\"\nDynamic Type font sizes are partially unsupported | id - | label \"Every lesson and song, every tuning and tool.\"\nText clipped | id - | label \"Every lesson and song, every tuning and tool.\"",
+        "native_navigation_results": [
+          "Test Case '-[TimbreUITests.AccessibilityMatrixUITests testMatrixScreens]' passed (151.582 seconds).",
+          "Test Case '-[TimbreUITests.AccessibilityMatrixUITests testSettingsOpensClosesAndReopensWithPositiveScreenIdentity]' passed (37.068 seconds)."
+        ]
+      }
+    ]
+  }
+}

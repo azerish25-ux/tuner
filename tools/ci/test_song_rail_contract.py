@@ -8,6 +8,7 @@ import unittest
 ROOT = Path(__file__).resolve().parents[2]
 SONGS = (ROOT / 'ios/Timbre/Songs/SongsView.swift').read_text()
 RAIL = (ROOT / 'ios/Timbre/Songs/SongShelfRail.swift').read_text()
+PAGE = (ROOT / 'ios/Timbre/Songs/SongShelfPage.swift').read_text()
 MEASURE = (ROOT / 'ios/Timbre/Songs/SongRailMeasurement.swift').read_text()
 
 
@@ -121,18 +122,70 @@ class SongRailContractTests(unittest.TestCase):
         # Native 2013834 evidence retained the terminal song inside its horizontal rail,
         # but the enclosing page reset to the top (rail y=1324.7 LTR / 1298.7 RTL).
         page = SONGS.split('var body: some View {', 1)[1].split('.onChange(of: filter)', 1)[0]
-        for token in ['ScrollPosition(idType: PageTarget.self)',
-                      'private enum PageTarget: Hashable, Sendable',
-                      'case introduction', 'case shelf(String)', 'case request']:
-            self.assertIn(token, SONGS)
-        for token in ['.id(PageTarget.introduction)', '.id(PageTarget.shelf(item.id))',
-                      'requestFooter.id(PageTarget.request)', '.scrollTargetLayout()',
-                      '.scrollPosition($shelfPosition, anchor: .center)',
+        self.assertIn('@State private var shelfPosition: SongShelfPageTarget<String>?', SONGS)
+        for token in ['SongShelfPage(items: shelves, position: $shelfPosition)', 'shelfItem(item)',
                       '.accessibilityIdentifier("songs.page")']:
             self.assertIn(token, page)
+        for token in ['enum SongShelfPageTarget<ID: Hashable & Sendable>: Hashable, Sendable',
+                      '@Binding var position: SongShelfPageTarget<Item.ID>?',
+                      'private enum Row: Identifiable', 'var id: SongShelfPageTarget<Item.ID>',
+                      'case introduction', 'case shelf(Item)', 'case request',
+                      'case .shelf(let item): return .shelf(item.id)', 'ForEach(rows)',
+                      '.scrollTargetLayout()', '.scrollPosition(id: $position, anchor: .center)']:
+            self.assertIn(token, PAGE)
+        # One ID per collected row, rather than String ForEach IDs wrapped in a second enum ID.
+        self.assertNotIn('.id(', PAGE.split('ForEach(rows)', 1)[1])
         for forbidden in ['DispatchQueue', 'scrollTo(', '.id(pageWidth)', '.id(typeSize)']:
             self.assertNotIn(forbidden, page)
+            self.assertNotIn(forbidden, PAGE)
         self.assertIn('.scrollPosition(id: $position, anchor: .trailing)', RAIL)
+
+    def test_native_parent_regression_observes_physical_tracking_before_any_resize(self):
+        native = (ROOT / 'ios/TimbreAppTests/SongShelfPageTests.swift').read_text()
+        for token in ['SongShelfPage(items: shelves, position: $state.position)',
+                      'SongShelfRail(items: songs, selection: 59', '(0..<120)',
+                      'UIWindow(windowScene: scene)', 'window.makeKeyAndVisible()',
+                      'vertical.setContentOffset', 'horizontal.setContentOffset',
+                      'state.position == .shelf(target)', 'await fulfillment(of: [tracked], timeout: 3)',
+                      'XCTAssertEqual(state.position, .shelf(target)', 'for cycle in 0..<2',
+                      'CGSize(width: 874, height: 402)', 'CGSize(width: 402, height: 874)',
+                      'page.insetBy(dx: -1, dy: -1).contains(frame)',
+                      'rail.insetBy(dx: -1, dy: -1).contains(frame)',
+                      'testPhysicalBrowsingTracksShelfAndSurvivesRepeatedResizeRightToLeft']:
+            self.assertIn(token, native)
+        self.assertLess(native.index('await fulfillment(of: [tracked]'), native.index('state.size = size'))
+        # Setting the expected ID would hide a broken automatic tracking binding.
+        self.assertNotRegex(native, r'state\.position\s*=(?!=)')
+        self.assertNotIn('scrollTo(', native)
+        self.assertNotIn('XCTSkip', native)
+
+    def test_primary_action_taps_real_sleeve_clear_of_independent_controls(self):
+        native = (ROOT / 'ios/TimbreUITests/SongShelfRailUITests.swift').read_text()
+        primary = native.split('private func tapPrimarySleeve(', 1)[1].split('private func dismissDestination', 1)[0]
+        for token in ['stableFrame(tile)', 'min(frame.width, frame.height) / 2',
+                      'XCTAssertTrue(tile.isHittable)', 'frame.contains(point)',
+                      'rail.frame.contains(point)', 'app.frame.contains(point)',
+                      'XCTAssertFalse(preview.frame.contains(point)', 'XCTAssertFalse(versions.frame.contains(point)',
+                      'tile.coordinate(withNormalizedOffset: .zero).withOffset(offset).tap()']:
+            self.assertIn(token, primary)
+        actions = native.split('private func verifyActions(', 1)[1].split('private func tapPrimarySleeve', 1)[0]
+        self.assertIn('tapPrimarySleeve(tile, preview: preview, versions: versions, rail: rail)', actions)
+        self.assertNotIn('tile.tap()', actions)
+        self.assertIn('capture("destination-missing-" + stage)', native)
+
+    def test_ax5_synthesized_center_tap_hits_versions_but_sleeve_tap_does_not(self):
+        # Exact 705 XCTest event: (94, 298.5). Post-failure hierarchy contains Versions.
+        card = (20.0, 106.7, 148.0, 383.7)
+        versions = (92.3, 264.7, 75.7, 44.0)
+        preview = (120.0, 206.7, 44.0, 44.0)
+        def contains(rect, point):
+            x, y, width, height = rect
+            return x <= point[0] < x + width and y <= point[1] < y + height
+        self.assertTrue(contains(versions, (94.0, 298.5)))
+        point = (card[0] + card[2] / 2, card[1] + min(card[2], card[3]) / 2)
+        self.assertTrue(contains(card, point))
+        self.assertFalse(contains(versions, point))
+        self.assertFalse(contains(preview, point))
 
     def test_vertical_reveal_corrects_measured_overshoot_without_weakening_viewport(self):
         test = (ROOT / 'ios/TimbreUITests/SongShelfRailUITests.swift').read_text()

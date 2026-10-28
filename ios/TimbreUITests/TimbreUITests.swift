@@ -752,7 +752,9 @@ final class TimbreUITests: XCTestCase {
         element("lesson.option.0").tap(); settle(1); shot("57-lesson-quiz")
         element("lesson.continue").tap(); settle(2)
         element("lesson.option.1").tap(); settle(1); shot("58-lesson-listen")
-        element("lesson.continue").tap(); settle(1.5); shot("59-along-ready")
+        element("lesson.continue").tap(); settle(1.5)
+        guard waitForPlayAlongReady() else { return }
+        shot("59-along-ready")
         // Six notes occupy twelve beats at 60 BPM, plus a four-beat count-in and
         // the 1.2-second session tail: 17.2 seconds, not the old ten-second estimate.
         // Pictures are hands-off; leave 21 seconds before the first accessibility query
@@ -771,6 +773,55 @@ final class TimbreUITests: XCTestCase {
         storeFrame("62-lesson-results", picture: results, ok: headline && room.fits,
                    headline ? room.summary
                             : "the results don't show three stars: the play-along wasn't played clean")
+    }
+
+    /// A prior check's day can expire while the questions are open. The real check may then appear before
+    /// this microphone step, not just after the explanation. Let demo pitch finish it hands-off: a coordinate
+    /// tap on its disappearing skip could hit the next screen's Start in the same place.
+    private func waitForPlayAlongReady() -> Bool {
+        guard let startLabel = CaptureLocalization.lessonButtonLabel("Start") else {
+            return playAlongReadinessFailed("Missing localized play-along Start fixture")
+        }
+        for observation in 0...3 {
+            let viewport = app.frame
+            let controls = appNodes().filter {
+                !$0.frame.isEmpty && viewport.contains($0.frame)
+            }.map {
+                CapturePlayAlongReadiness.Control(identifier: $0.identifier, label: $0.label, enabled: $0.isEnabled)
+            }
+            let stage = CapturePlayAlongReadiness.observed(controls, startLabel: startLabel)
+            if stage == .ready {
+                guard element("lesson.continue").isHittable else {
+                    return playAlongReadinessFailed("The verified play-along Start is not hittable")
+                }
+                print("TIMBRE_PLAYALONG_READY observation=\(observation)")
+                return true
+            }
+            guard observation < 3 else { break }
+            switch stage {
+            case .tuneCheck:
+                print("TIMBRE_PLAYALONG_OPTIONAL_TUNECHECK observation=\(observation)")
+                shot("playalong-optional-tunecheck-\(observation)")
+                // Six strings need their real holds and handovers. Do not poll the main-thread pitch reader.
+                settle(10)
+            case .unexpected:
+                // A page transition may expose neither stage, or both. No action on an unidentified stage.
+                settle(1.5)
+            case .ready:
+                break
+            }
+        }
+        return playAlongReadinessFailed("Expected the actual play-along Start after at most three bounded waits")
+    }
+
+    private func playAlongReadinessFailed(_ message: String) -> Bool {
+        XCTFail(message)
+        shot("59-along-ready-wrong")
+        let hierarchy = XCTAttachment(string: app.debugDescription)
+        hierarchy.name = "59-along-ready-wrong-hierarchy"
+        hierarchy.lifetime = .keepAlways
+        add(hierarchy)
+        return false
     }
 
     /// The violin page's results frame: "Open-string checkup" (vln-1-6, free), opened on its play-along through the

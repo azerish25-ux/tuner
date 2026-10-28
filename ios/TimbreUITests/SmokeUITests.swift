@@ -56,14 +56,24 @@ final class SmokeUITests: XCTestCase {
             _ = XCTWaiter.wait(for: [selected], timeout: 3)
         }
         XCTAssertTrue(practice.isSelected, "Inspect the Practice screen, not whichever tab was selected before the tap")
-        let progress = element("practice.xp.progress")
-        scrollTo(progress)
-        XCTAssertTrue(progress.waitForExistence(timeout: 10))
-        XCTAssertTrue(progress.isHittable)
-        let actual = progress.label
+        // SwiftUI's combined card inherits the child's identifier. An untyped firstMatch finds that
+        // Other group, not the nested StaticText; inspect both rather than changing the card's semantics.
+        let groups = app.otherElements.matching(identifier: "practice.xp.progress")
+        let group = groups.firstMatch
+        scrollTo(group)
+        XCTAssertTrue(group.waitForExistence(timeout: 10))
+        XCTAssertEqual(groups.count, 1, "One combined level card must own the spoken XP sentence")
+        XCTAssertTrue(group.isHittable)
+        let sentences = group.staticTexts.matching(identifier: "practice.xp.progress")
+        XCTAssertEqual(sentences.count, 1, "The group must contain exactly one translated XP sentence")
+        let actual = sentences.firstMatch.label
         let expected = "0／100 XP · 下一個：初上指板"
+        let actualGroup = group.label
+        let expectedGroup = "等級 1，0／100 XP、空弦、" + expected
         let scalars = actual.unicodeScalars.map { String(format: "U+%04X", $0.value) }.joined(separator: " ")
-        let report = XCTAttachment(string: "actual: \(actual)\nexpected: \(expected)\nscalars: \(scalars)\n\(app.debugDescription)")
+        let groupScalars = actualGroup.unicodeScalars.map { String(format: "U+%04X", $0.value) }.joined(separator: " ")
+        let report = XCTAttachment(string: "actual: \(actual)\nexpected: \(expected)\nscalars: \(scalars)\n"
+            + "group: \(actualGroup)\nexpected group: \(expectedGroup)\ngroup scalars: \(groupScalars)\n\(app.debugDescription)")
         report.name = "practice-xp-zh-Hant-native-accessibility-label"
         report.lifetime = .keepAlways
         add(report)
@@ -71,10 +81,14 @@ final class SmokeUITests: XCTestCase {
         screenshot.name = "practice-xp-zh-Hant-native-accessibility-screen"
         screenshot.lifetime = .keepAlways
         add(screenshot)
-        XCTAssertEqual(progress.elementType, .staticText)
-        XCTAssertEqual(actual, expected, "The real VoiceOver label must preserve every translated character and space")
-        XCTAssertFalse(actual.unicodeScalars.contains { (0x2066...0x2069).contains($0.value) },
-                       "Display-only directional isolates must not reach the spoken label")
+        XCTAssertEqual(actual, expected, "The XP label must preserve every translated character and space")
+        XCTAssertEqual(actualGroup, expectedGroup, "VoiceOver's combined card must preserve the full level and XP labels")
+        XCTAssertEqual(actual.unicodeScalars.map(\.value), expected.unicodeScalars.map(\.value))
+        XCTAssertEqual(actualGroup.unicodeScalars.map(\.value), expectedGroup.unicodeScalars.map(\.value))
+        for spoken in [actual, actualGroup] {
+            XCTAssertFalse(spoken.unicodeScalars.contains { (0x2066...0x2069).contains($0.value) },
+                           "Display-only directional isolates must not reach either spoken label")
+        }
     }
 
     /// The fraction's RTL layout container must not turn a plain progress sentence into a tap target.

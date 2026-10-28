@@ -35,7 +35,7 @@ class LessonAccessibilityLayoutContract(unittest.TestCase):
                       'XCTAssertEqual(target.value as? String, "Listening…")',
                       "frame.maxY <= viewport.maxY", "target.isHittable",
                       'element("lesson.hear")', 'element("lesson.override")',
-                      'element("lesson.option.\\(index)")', 'scrollClear(explanation']:
+                      'app.buttons.matching(identifier: id)', 'scrollClear(explanation']:
             self.assertIn(token, self.ui)
 
     def test_scroll_geometry_excludes_header_and_moves_both_directions(self):
@@ -107,6 +107,33 @@ class LessonAccessibilityLayoutContract(unittest.TestCase):
         self.assertIn("CGRect(x: 10, y: 200, width: 160, height: 44)", geometry)
         self.assertIn("XCTAssertFalse(Self.instrumentFilterIsClear(clippedLeft", geometry)
         self.assertIn("XCTAssertTrue(Self.instrumentFilterIsClear(CGRect(x: 52", geometry)
+
+    def test_quiz_answer_identity_and_focus_exclude_reward_background(self):
+        player = (ROOT / "ios/Timbre/Learn/LessonPlayer.swift").read_text()
+        row = player.split("private func optionRow", 1)[1].split("private func feedback", 1)[0]
+        identity = '.accessibilityIdentifier("lesson.option.\\(index)")'
+        reward = row.index("// A right answer bursts")
+        self.assertEqual(row.count(identity), 1)
+        self.assertLess(row.index(identity), reward)
+        self.assertLess(reward, row.index(".contentShape(.accessibility, Rectangle())"))
+        self.assertIn("SparkBurst(trigger: burst", row)
+        self.assertIn(".frame(width: 260, height: 260)", row)
+        self.assertIn("Text(option.localized)", row)
+        self.assertIn(".contentShape(Rectangle())", row)
+        self.assertIn("guard picked == nil else { return }", row)
+        for forbidden in [".clipped()", ".minimumScaleFactor", ".lineLimit", ".dynamicTypeSize", ".accessibilityHidden"]:
+            self.assertNotIn(forbidden, row)
+        for token in ['CGRect(x: -22, y: 532, width: 260, height: 260)',
+                      'XCTAssertNil(Self.scrollDistance(quizDecorationBounds',
+                      'XCTAssertFalse(Self.contains(quizDecorationBounds',
+                      'app.buttons.matching(identifier: "lesson.option.0")',
+                      'for (index, label) in ["A", "D", "B", "G"].enumerated()',
+                      'matching(identifier: id).count, 1', 'XCTAssertEqual(option.label, label',
+                      'scrollClear(option, above: next.frame.minY)', 'XCTAssertTrue(option.isEnabled)',
+                      'scrollClear(first, above: next.frame.minY)', 'first.tap()',
+                      'feedback.waitForExistence(timeout: 10)', 'XCTAssertEqual(next.label, "Continue")',
+                      'XCTAssertTrue(next.isEnabled)', 'capture("quiz-correct-answer-scroll-clear")']:
+            self.assertIn(token, self.ui)
 
     def test_controls_use_their_actual_layout_container(self):
         along = (ROOT / "ios/Timbre/Learn/Highway.swift").read_text()

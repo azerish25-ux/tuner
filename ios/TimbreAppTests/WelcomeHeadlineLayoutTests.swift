@@ -17,13 +17,16 @@ final class WelcomeHeadlineLayoutTests: XCTestCase {
         var name: String { "\(language)-\(Int(width))-\(size)" }
     }
 
-    /// A rendering-only probe: retain the full original layout and its origins, draw alternate lines separately.
-    /// Applying this outside the production view cannot change its font, wrapping, leading, or translation.
+    /// Forward the unchanged proposal and retain the default zero display insets. The previous padded
+    /// probe reflowed the native text; the generous canvas belongs outside the Text instead.
+    /// A nil parity draws every line, proving this probe matches the unmodified production pixels first.
     private struct LineMask: TextRenderer {
-        let parity: Int
-        nonisolated var displayPadding: EdgeInsets { EdgeInsets(top: 80, leading: 80, bottom: 80, trailing: 80) }
+        let parity: Int?
+        nonisolated func sizeThatFits(proposal: ProposedViewSize, text: TextProxy) -> CGSize {
+            text.sizeThatFits(proposal)
+        }
         nonisolated func draw(layout: Text.Layout, in context: inout GraphicsContext) {
-            for (index, line) in layout.enumerated() where index % 2 == parity {
+            for (index, line) in layout.enumerated() where parity == nil || index % 2 == parity {
                 context.draw(line)
             }
         }
@@ -32,6 +35,7 @@ final class WelcomeHeadlineLayoutTests: XCTestCase {
     private struct Bitmap {
         let width: Int
         let height: Int
+        let rgba: Data
         let ink: [Bool]
 
         var inkCount: Int { ink.filter { $0 }.count }
@@ -68,14 +72,8 @@ final class WelcomeHeadlineLayoutTests: XCTestCase {
             var heights: [Int] = []
             for size in [DynamicTypeSize.large, .accessibility5] {
                 let example = Example(width: width, size: size)
-                let full = try render(WelcomeHeadline(), example: example, name: "headline-" + example.name)
-                let even = try render(WelcomeHeadline().textRenderer(LineMask(parity: 0)), example: example, name: "even-" + example.name)
-                let odd = try render(WelcomeHeadline().textRenderer(LineMask(parity: 1)), example: example, name: "odd-" + example.name)
-                XCTAssertGreaterThan(even.inkCount, 100, "Require real glyph ink, not a blank passing image")
-                XCTAssertGreaterThan(odd.inkCount, 100, "The fixture must exercise more than one actual line")
-                XCTAssertEqual(even.width, full.width)
-                XCTAssertEqual(even.height, full.height)
-                XCTAssertEqual(odd.height, full.height)
+                let masks = try probe(WelcomeHeadline(), example: example, name: example.name)
+                let full = masks.full, even = masks.even, odd = masks.odd
                 let union = zip(even.ink, odd.ink).map { $0 || $1 }
                 XCTAssertTrue(union.elementsEqual(full.ink), "The line masks must reconstruct the unmodified native render: " + example.name)
                 XCTAssertFalse(even.touches(odd), "Adjacent Nastaliq lines must not share or touch ink pixels: " + example.name)
@@ -90,15 +88,127 @@ final class WelcomeHeadlineLayoutTests: XCTestCase {
     }
 
     func testCollisionOracleRejectsTheOriginalZeroLeadingUrduLayout() throws {
-        let original = Text(verbatim: urdu).font(Typeface.display(40)).tracking(-1)
+        // Retain the old localized Text: plain verbatim Urdu under an English test-host language uses a
+        // different Arabic fallback face. The independently specified sentence must match with explicit Urdu.
+        let original = Text("Tune in seconds.\nThen learn to play.").font(Typeface.display(40)).tracking(-1)
             .fixedSize(horizontal: false, vertical: true)
+        let independent = Text(verbatim: urdu).font(Typeface.display(40)).tracking(-1)
+            .fixedSize(horizontal: false, vertical: true)
+            .typesettingLanguage(Locale(identifier: "ur").language)
         // Exact content width from the failing 1206-pixel / 3x native iPhone capture.
         let example = Example(width: 362)
-        let even = try render(original.textRenderer(LineMask(parity: 0)), example: example, name: "original-zero-leading-even")
-        let odd = try render(original.textRenderer(LineMask(parity: 1)), example: example, name: "original-zero-leading-odd")
-        XCTAssertGreaterThan(even.inkCount, 100)
-        XCTAssertGreaterThan(odd.inkCount, 100)
-        XCTAssertTrue(even.touches(odd), "The oracle must reject the observed collision, not merely accept the new spacing")
+        let masks = try probe(original, example: example, name: "original-zero-leading")
+        let expected = try render(independent, example: example, name: "original-independent-urdu-language")
+        try requireSamePixels(masks.full, expected, name: "old-localized-vs-independent-urdu")
+        XCTAssertTrue(masks.even.touches(masks.odd), "The oracle must reject the observed collision, not merely accept the new spacing")
+    }
+
+    private struct ProbedText {
+        let full: Bitmap
+        let even: Bitmap
+        let odd: Bitmap
+    }
+
+    /// Fail before interpreting parity masks if either explicit language or the custom renderer changes
+    /// the reference layout. Exact RGBA equality prevents the probe from silently measuring another font,
+    /// reflowing the copy, translating its origins, clipping glyphs, or applying different antialiasing.
+    private func probe<Content: View>(_ view: Content, example: Example, name: String,
+                                      diagnostics: Bool = true, nativeImage: Bool = true) throws -> ProbedText {
+        let full = try render(view, example: example, name: "headline-" + name, attachImage: nativeImage)
+        let controlled = view.typesettingLanguage(Locale(identifier: example.language).language)
+        let language = try render(controlled, example: example, name: "explicit-language-" + name, attachImage: diagnostics)
+        try requireSamePixels(full, language, name: "native-vs-explicit-language-" + name)
+        let completeProbe = try render(controlled.textRenderer(LineMask(parity: nil)), example: example, name: "full-probe-" + name, attachImage: diagnostics)
+        try requireSamePixels(full, completeProbe, name: "native-vs-full-probe-" + name)
+        let even = try render(controlled.textRenderer(LineMask(parity: 0)), example: example, name: "even-" + name, attachImage: diagnostics)
+        let odd = try render(controlled.textRenderer(LineMask(parity: 1)), example: example, name: "odd-" + name, attachImage: diagnostics)
+        for mask in [even, odd] {
+            _ = try XCTUnwrap(mask.width == full.width && mask.height == full.height ? true : nil,
+                              "Every line mask must keep the complete native canvas: " + name)
+            XCTAssertGreaterThan(mask.inkCount, 100, "Require real glyph ink on both parities, not blank passing images: " + name)
+        }
+        return ProbedText(full: full, even: even, odd: odd)
+    }
+
+    private func requireSamePixels(_ expected: Bitmap, _ actual: Bitmap, name: String) throws {
+        let same = expected.width == actual.width && expected.height == actual.height && expected.rgba == actual.rgba
+        let changed = same ? 0 : zip(expected.rgba, actual.rgba).reduce(0) { $0 + ($1.0 == $1.1 ? 0 : 1) }
+            + abs(expected.rgba.count - actual.rgba.count)
+        let bounds = same ? "" : " expectedInk=\(expected.bounds) actualInk=\(actual.bounds)"
+        let detail = "\(name): expected=\(expected.width)x\(expected.height) actual=\(actual.width)x\(actual.height) changedRGBA=\(changed)" + bounds
+        print("TIMBRE_WELCOME_PROBE " + detail)
+        let attachment = XCTAttachment(string: detail)
+        attachment.name = "probe-equivalence-" + name
+        attachment.lifetime = .keepAlways
+        add(attachment)
+        _ = try XCTUnwrap(same ? true : nil, "Only a pixel-identical probe may diagnose line collisions. " + detail)
+    }
+
+    private struct CalibrationHeadline: View {
+        @ScaledMetric(relativeTo: .largeTitle) private var leading: CGFloat
+        @ScaledMetric(relativeTo: .largeTitle) private var vertical: CGFloat
+        @ScaledMetric(relativeTo: .largeTitle) private var horizontal: CGFloat
+
+        init(leading: CGFloat, vertical: CGFloat, horizontal: CGFloat) {
+            _leading = ScaledMetric(wrappedValue: leading, relativeTo: .largeTitle)
+            _vertical = ScaledMetric(wrappedValue: vertical, relativeTo: .largeTitle)
+            _horizontal = ScaledMetric(wrappedValue: horizontal, relativeTo: .largeTitle)
+        }
+
+        var body: some View {
+            Text("Tune in seconds.\nThen learn to play.").font(Typeface.display(40)).tracking(-1)
+                .lineSpacing(leading).padding(.vertical, vertical).padding(.horizontal, horizontal)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
+    /// A bounded diagnostic table, not a replacement for the strict production test above. Every measurement
+    /// first passes the exact native/language/renderer equivalence gates. Only scalar results leave each pool.
+    func testRecordBoundedUrduLeadingCalibration() throws {
+        let candidates: [(String, CGFloat, CGFloat, CGFloat)] = [("baseline", 24, 12, 0), ("roomier", 40, 32, 12), ("separated", 48, 32, 12)]
+        var rows: [[String: Any]] = []
+        for width in [CGFloat(280), 335, 362, 390] {
+            for size in [DynamicTypeSize.large, .accessibility5] {
+                let example = Example(width: width, size: size)
+                // Do not silently calibrate a replica whose typography differs from the shipping view.
+                try autoreleasepool {
+                    let native = try render(WelcomeHeadline(), example: example, name: "calibration-baseline-native", attachImage: false)
+                    let baseline = try render(CalibrationHeadline(leading: 24, vertical: 12, horizontal: 0), example: example,
+                                              name: "calibration-baseline-replica", attachImage: false)
+                    try requireSamePixels(native, baseline, name: "calibration-baseline-" + example.name)
+                }
+                for (label, leading, vertical, horizontal) in candidates {
+                    let row: [String: Any] = try autoreleasepool {
+                        let view = CalibrationHeadline(leading: leading, vertical: vertical, horizontal: horizontal)
+                        let representative = (width == 362 && size == .large) || (width == 280 && size == .accessibility5)
+                        let masks = try probe(view, example: example, name: "calibration-" + label + "-" + example.name,
+                                              diagnostics: false, nativeImage: representative)
+                        let full = masks.full
+                        let content = CGRect(x: 240, y: 240, width: width * 3, height: CGFloat(full.height - 480))
+                        let bounds = full.bounds
+                        let separated = !masks.even.touches(masks.odd)
+                        let fits = content.insetBy(dx: -1, dy: -1).contains(bounds)
+                        let union = zip(masks.even.ink, masks.odd.ink).map { $0 || $1 }
+                        return ["candidate": label, "widthPoints": Double(width), "dynamicType": String(describing: size),
+                                "baseLeading": Double(leading), "baseVerticalClearance": Double(vertical),
+                                "baseHorizontalClearance": Double(horizontal), "canvasHeightPixels": full.height,
+                                "inkBoundsPixels": [bounds.minX, bounds.minY, bounds.maxX, bounds.maxY].map { Double($0) },
+                                "outsideLayoutPixels": [max(0, content.minX - bounds.minX), max(0, content.minY - bounds.minY),
+                                                        max(0, bounds.maxX - content.maxX), max(0, bounds.maxY - content.maxY)].map { Double($0) },
+                                "separatedByMoreThanTwoPixels": separated, "allInkInsideLayout": fits,
+                                "maskUnionMatchesNative": union.elementsEqual(full.ink),
+                                "safeForThisSample": separated && fits && union.elementsEqual(full.ink)]
+                    }
+                    rows.append(row)
+                }
+            }
+        }
+        XCTAssertEqual(rows.count, 24, "All three candidates must cover all eight width/type cases")
+        let data = try JSONSerialization.data(withJSONObject: ["diagnosticOnly": true, "samples": rows], options: [.prettyPrinted, .sortedKeys])
+        let attachment = XCTAttachment(data: data, uniformTypeIdentifier: "public.json")
+        attachment.name = "urdu-leading-calibration.json"
+        attachment.lifetime = .keepAlways
+        add(attachment)
     }
 
     func testNonUrduHeadlinePixelsRemainUnchangedIncludingTamil() throws {
@@ -117,7 +227,7 @@ final class WelcomeHeadlineLayoutTests: XCTestCase {
         }
     }
 
-    private func render<Content: View>(_ view: Content, example: Example, name: String) throws -> Bitmap {
+    private func render<Content: View>(_ view: Content, example: Example, name: String, attachImage: Bool = true) throws -> Bitmap {
         let content = view.foregroundStyle(Color.black)
             .frame(width: example.width)
             .fixedSize(horizontal: false, vertical: true)
@@ -130,10 +240,12 @@ final class WelcomeHeadlineLayoutTests: XCTestCase {
         renderer.scale = 3
         renderer.isOpaque = true
         let image = try XCTUnwrap(renderer.uiImage)
-        let attachment = XCTAttachment(image: image)
-        attachment.name = name
-        attachment.lifetime = .keepAlways
-        add(attachment)
+        if attachImage {
+            let attachment = XCTAttachment(image: image)
+            attachment.name = name
+            attachment.lifetime = .keepAlways
+            add(attachment)
+        }
         let cgImage = try XCTUnwrap(image.cgImage)
         let width = cgImage.width, height = cgImage.height
         var bytes = [UInt8](repeating: 255, count: width * height * 4)
@@ -145,6 +257,6 @@ final class WelcomeHeadlineLayoutTests: XCTestCase {
             context.draw(cgImage, in: CGRect(x: 0, y: 0, width: CGFloat(width), height: CGFloat(height)))
         }
         let ink = stride(from: 0, to: bytes.count, by: 4).map { bytes[$0] < 128 && bytes[$0 + 1] < 128 && bytes[$0 + 2] < 128 }
-        return Bitmap(width: width, height: height, ink: ink)
+        return Bitmap(width: width, height: height, rgba: Data(bytes), ink: ink)
     }
 }

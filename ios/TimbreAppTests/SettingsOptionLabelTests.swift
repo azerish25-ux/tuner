@@ -66,29 +66,25 @@ final class SettingsOptionLabelTests: XCTestCase {
         }
     }
 
-    /// Separate verbatim glyphs placed physically from left to right are an independent raster oracle. No isolate
-    /// controls or production formatter are used to construct the expected image; swapped glyphs must differ.
+    /// A separately authored whole token in an LTR paragraph is the raster oracle. Splitting its glyphs into
+    /// separate Text views can round glyph advances differently, so they are not an exact oracle for one Text run.
+    /// Expected tokens use neither directional controls nor the production formatter. Typography is identical.
     func testPrecisionRendersAllGlyphsInOrderAtNormalAndAX5Sizes() throws {
+        let cases: [(TuningPrecision, String, String)] = [(.beginner, "±5¢", "¢5±"),
+                                                        (.standard, "±3¢", "¢3±"), (.pro, "±1¢", "¢1±")]
         for size in [DynamicTypeSize.large, .accessibility5] {
-            for digit in ["5", "3", "1"] {
-                let precision: TuningPrecision = digit == "5" ? .beginner : (digit == "3" ? .standard : .pro)
-                let expected = HStack(spacing: 0) {
-                    Text(verbatim: "±")
-                    Text(verbatim: digit)
-                    Text(verbatim: "¢")
-                }.environment(\.layoutDirection, .leftToRight)
-                let reversed = HStack(spacing: 0) {
-                    Text(verbatim: "¢")
-                    Text(verbatim: digit)
-                    Text(verbatim: "±")
-                }.environment(\.layoutDirection, .leftToRight)
-                let oracle = try render(expected, size: size, direction: .rightToLeft, name: "oracle-\(digit)-\(size)")
-                let wrong = try render(reversed, size: size, direction: .rightToLeft, name: "reversed-\(digit)-\(size)")
+            for (precision, knownToken, reversedToken) in cases {
+                let expected = Text(verbatim: knownToken).environment(\.layoutDirection, .leftToRight)
+                let reversed = Text(verbatim: reversedToken).environment(\.layoutDirection, .leftToRight)
+                let oracle = try render(expected, size: size, direction: .rightToLeft, name: "oracle-\(precision)-\(size)")
+                let wrong = try render(reversed, size: size, direction: .rightToLeft, name: "reversed-\(precision)-\(size)")
                 XCTAssertNotEqual(oracle, wrong, "The raster oracle must distinguish glyph order")
                 for direction in [LayoutDirection.leftToRight, .rightToLeft] {
                     let token = Text(verbatim: SettingsOptionLabel.precisionTolerance(precision))
-                    let actual = try render(token, size: size, direction: direction, name: "actual-\(digit)-\(size)-\(direction)")
-                    XCTAssertEqual(actual, oracle, "Every precision glyph must match its independent full-sized template")
+                    let actual = try render(token, size: size, direction: direction, name: "actual-\(precision)-\(size)-\(direction)")
+                    let changed = zip(actual, oracle).filter { $0 != $1 }.count
+                    XCTAssertEqual(actual, oracle,
+                                   "Whole-token LTR oracle: \(precision), \(size), \(direction); \(changed) canonical RGBA bytes differ")
                     XCTAssertNotEqual(actual, wrong)
                 }
             }
@@ -122,6 +118,8 @@ final class SettingsOptionLabelTests: XCTestCase {
     private func render<Content: View>(_ content: Content, size: DynamicTypeSize,
                                        direction: LayoutDirection, name: String) throws -> Data {
         let view = content.font(.system(.body, design: .monospaced)).foregroundStyle(Color.black)
+            // Font, explicit typesetting language and locale match on both sides; only the token's direction differs.
+            .typesettingLanguage(Locale(identifier: "ar_SA").language)
             .frame(width: 240, height: 120).background(Color.white)
             .environment(\.locale, Locale(identifier: "ar_SA"))
             .environment(\.layoutDirection, direction).environment(\.dynamicTypeSize, size)

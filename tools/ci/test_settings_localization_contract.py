@@ -77,14 +77,31 @@ class SettingsLocalizationContract(unittest.TestCase):
         for token in ["CTRunGetStringIndices", "CTRunGetPositions", "XCTAssertLessThan", "XCTAssertGreaterThan",
                       'let raw = "مبتدئ ±" + digit + "¢"', '"The Arabic name must not flip"',
                       "DynamicTypeSize.large, .accessibility5", "LayoutDirection.leftToRight, .rightToLeft",
-                      'Text(verbatim: "±")', 'Text(verbatim: "¢")', "Text(verbatim: digit)",
+                      '(.beginner, "±5¢", "¢5±")', '(.standard, "±3¢", "¢3±")', '(.pro, "±1¢", "¢1±")',
                       "XCTAssertEqual(actual, oracle", "XCTAssertNotEqual(actual, wrong)",
                       "CGBitmapInfo.byteOrder32Big", '(.beginner, "±5¢"), (.standard, "±3¢"), (.pro, "±1¢")']:
             self.assertIn(token, native)
-        oracle = native.split("let expected = HStack", 1)[1].split("let reversed = HStack", 1)[0]
+        oracle = native.split("let expected = Text", 1)[1].split("let reversed = Text", 1)[0]
+        self.assertIn('verbatim: knownToken).environment(\\.layoutDirection, .leftToRight)', oracle)
         self.assertNotIn("SettingsOptionLabel", oracle)
         self.assertNotIn(r"\u{2066}", oracle)
         self.assertNotIn(".clipped()", native)
+
+    def test_whole_token_raster_comparison_uses_identical_explicit_typography_without_tolerances(self):
+        native = source("ios/TimbreAppTests/SettingsOptionLabelTests.swift")
+        render = native.split("private func render<", 1)[1]
+        self.assertIn('.font(.system(.body, design: .monospaced))', render)
+        self.assertIn('.typesettingLanguage(Locale(identifier: "ar_SA").language)', render)
+        self.assertIn('.environment(\\.locale, Locale(identifier: "ar_SA"))', render)
+        test = native.split("func testPrecisionRendersAllGlyphsInOrderAtNormalAndAX5Sizes", 1)[1].split("private func glyphPositions", 1)[0]
+        self.assertNotIn("HStack", test)
+        self.assertIn('Text(verbatim: SettingsOptionLabel.precisionTolerance(precision))', test)
+        self.assertIn('Text(verbatim: knownToken)', test)
+        self.assertIn('Text(verbatim: reversedToken)', test)
+        self.assertIn('let changed = zip(actual, oracle).filter { $0 != $1 }.count', test)
+        self.assertIn('XCTAssertEqual(actual, oracle,', test)
+        for weakened in ['accuracy:', 'XCTAssertLessThan(changed', 'minimumScaleFactor', '.offset(']:
+            self.assertNotIn(weakened, native)
 
 
 if __name__ == "__main__":

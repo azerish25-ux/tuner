@@ -189,20 +189,42 @@ final class SongShelfRailUITests: XCTestCase {
         let ownVersion = app.buttons.matching(identifier: "songs.tile." + id + ".version." + id).firstMatch
         XCTAssertTrue(ownVersion.waitForExistence(timeout: 5), "The menu must expose the actual version choices")
         ownVersion.tap()
-        dismissDestination()
+        dismissDestination("versions-" + id)
         XCTAssertTrue(tile.waitForExistence(timeout: 10), "Returning must preserve the same source tile")
-        tile.tap()
-        dismissDestination()
+        tapPrimarySleeve(tile, preview: preview, versions: versions, rail: rail)
+        dismissDestination("primary-" + id)
         XCTAssertTrue(tile.waitForExistence(timeout: 10), "The primary card action must return to the same tile")
     }
 
-    private func dismissDestination() {
+    private func tapPrimarySleeve(_ tile: XCUIElement, preview: XCUIElement, versions: XCUIElement, rail: XCUIElement) {
+        guard let frame = stableFrame(tile) else {
+            capture("primary-unstable")
+            XCTFail("The primary card must have stable geometry before tapping")
+            return
+        }
+        // The primary card includes its naturally tall caption. At AX5 its whole-card centre
+        // can land on the separate Versions control; tap the actual square sleeve instead.
+        let offset = CGVector(dx: frame.width / 2, dy: min(frame.width, frame.height) / 2)
+        let point = CGPoint(x: frame.minX + offset.dx, y: frame.minY + offset.dy)
+        XCTAssertTrue(tile.isHittable)
+        XCTAssertTrue(frame.contains(point))
+        XCTAssertTrue(rail.frame.contains(point))
+        XCTAssertTrue(app.frame.contains(point))
+        XCTAssertLessThan(point.y, app.tabBars.firstMatch.frame.minY)
+        XCTAssertFalse(preview.frame.contains(point), "The primary tap must not toggle preview")
+        XCTAssertFalse(versions.frame.contains(point), "The primary tap must not reopen Versions")
+        print("SONG-RAIL primary: card=\(frame) point=\(point) preview=\(preview.frame) versions=\(versions.frame)")
+        tile.coordinate(withNormalizedOffset: .zero).withOffset(offset).tap()
+    }
+
+    private func dismissDestination(_ stage: String) {
         let close = element("lesson.close")
         let paywallClose = element("paywall.close")
         if close.waitForExistence(timeout: 8) { close.tap() }
+        else if paywallClose.waitForExistence(timeout: 8) { paywallClose.tap() }
         else {
-            XCTAssertTrue(paywallClose.waitForExistence(timeout: 8))
-            paywallClose.tap()
+            capture("destination-missing-" + stage)
+            XCTFail("The chosen song action must open its lesson or paywall: \(stage)")
         }
     }
 

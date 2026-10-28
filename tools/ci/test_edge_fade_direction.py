@@ -1,5 +1,6 @@
 """Static RTL fade guards; the actual native geometry and raster tests remain mandatory."""
 from pathlib import Path
+import json
 import unittest
 ROOT = Path(__file__).resolve().parents[2]
 FADE = (ROOT / 'ios/Timbre/Design/EdgeFade.swift').read_text()
@@ -43,6 +44,40 @@ class EdgeFadeDirectionTests(unittest.TestCase):
             self.assertIn(token, NATIVE)
         self.assertNotIn('XCTSkip', NATIVE)
         self.assertNotIn('geometry.containerSize.width >= 300', NATIVE)
+
+    def test_live_readiness_distinguishes_inset_proxy_from_visible_rect(self):
+        for token in ['abs(viewport.width - 248) < 1',
+                      'abs(viewport.width - geometry.containerSize.width) < 1',
+                      'XCTAssertEqual(viewport.width, 248, accuracy: 1',
+                      'XCTAssertEqual(viewport.width, geometry.containerSize.width, accuracy: 1)',
+                      'XCTAssertEqual(geometry.visibleRect.width, 300, accuracy: 1)',
+                      'geometry.visibleRect.width, viewport.width',
+                      'await fulfillment(of: [measured], timeout: 3)',
+                      'await fulfillment(of: [arrived], timeout: 3)']:
+            self.assertIn(token, NATIVE)
+        self.assertNotIn('abs(viewport.width - 300)', NATIVE)
+
+    def test_eight_native_phases_preserve_independent_physical_endpoint_oracle(self):
+        review = json.loads((ROOT / 'docs/ios/readiness/reviews/edge-fade-live-viewport-review-2026-10-28.json').read_text())
+        contract = review['viewport_contract']
+        rows = contract['observations']
+        self.assertEqual(len(rows), 8)
+        expected = {'initial': (False, True), 'item-5': (True, True),
+                    'item-11': (True, False), 'item-0': (False, True)}
+        for row in rows:
+            x, _, width, _ = row['physical_content_viewport']
+            with self.subTest(direction=row['direction'], stage=row['stage']):
+                self.assertEqual(width, 248)
+                self.assertEqual(width, contract['scroll_geometry_container_width'])
+                self.assertEqual(width + contract['margin_leading'] + contract['margin_trailing'], 300)
+                # Demonstrate why the old readiness predicate cannot settle, rather than extend its wait.
+                self.assertFalse(abs(width - 300) < 1)
+                physical = (x > 1, x + width < contract['content_width'] - 1)
+                semantic = physical[::-1] if row['direction'] == 'rightToLeft' else physical
+                self.assertEqual(semantic, expected[row['stage']])
+                self.assertEqual(semantic, (row['overflow']['leading'], row['overflow']['trailing']))
+        self.assertEqual([row['physical_content_viewport'][0] for row in rows],
+                         [0, 466, 1040, 0, 1040, 574, 0, 1040])
 
     def test_observed_native_endpoints_do_not_double_count_margins(self):
         # Independent replay of native initial measurements, not a substitute for the live

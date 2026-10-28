@@ -30,7 +30,7 @@ struct SongsView: View {
     @State private var railMeasurement = SongRailMeasurement()
     // The horizontal rail remembers its song, but the enclosing lazy page must also remember
     // its shelf. Otherwise a width change can reset the page above the still-correct song rail.
-    @State private var shelfPosition = ScrollPosition(idType: PageTarget.self)
+    @State private var shelfPosition: SongShelfPageTarget<String>?
     @State private var playing: LearnView.PlayingLesson?
     /// Shake counters for order-locked tiles, by lesson id.
     @State private var shakes: [String: Int] = [:]
@@ -103,13 +103,6 @@ struct SongsView: View {
         }
     }
 
-    /// Separate from song IDs: only the outer page's top block, shelves and footer are targets.
-    private enum PageTarget: Hashable, Sendable {
-        case introduction
-        case shelf(String)
-        case request
-    }
-
     /// A shelf picked from the learner's progress or the songs themselves ("Because you learned E minor",
     /// "3 chords or fewer"), above the course shelves.
     struct Pick: Identifiable {
@@ -154,35 +147,27 @@ struct SongsView: View {
         let shelves = Self.items(layout)
         let glow: Color = hero.map { catalog.art($0).primary } ?? Palette.spotlight
         NavigationStack {
-            ScrollView {
-                LazyVStack(alignment: .leading, spacing: 24) {
-                    // The top of the page as one piece, so "Your songs" is built with it on any screen height: it opens
-                    // a chart another app hands to Timbre ("Open in Timbre").
-                    VStack(alignment: .leading, spacing: 24) {
-                        header
-                        if chips.count > 1 { filterRail(chips, active: active) }
-                        if let hero {
-                            featured(hero, layout: layout)
-                                .id(hero.id)
-                                .transition(.adaptive(.opacity.combined(with: .scale(scale: 0.97)), reduceMotion: reduceMotion))
-                        }
-                        // The player's own charts and "Add a song" (YourSongs/YourSongsShelf.swift), above the fold under
-                        // the song of the day: one row while there are none. It keeps this place whatever the filter, so
-                        // its sheets and the song it opens stay up.
-                        YourSongsShelf()
+            SongShelfPage(items: shelves, position: $shelfPosition) {
+                // The top of the page as one piece, so "Your songs" is built with it on any screen height: it opens
+                // a chart another app hands to Timbre ("Open in Timbre").
+                VStack(alignment: .leading, spacing: 24) {
+                    header
+                    if chips.count > 1 { filterRail(chips, active: active) }
+                    if let hero {
+                        featured(hero, layout: layout)
+                            .id(hero.id)
+                            .transition(.adaptive(.opacity.combined(with: .scale(scale: 0.97)), reduceMotion: reduceMotion))
                     }
-                    .id(PageTarget.introduction)
-                    ForEach(shelves) { item in
-                        shelfItem(item).id(PageTarget.shelf(item.id))
-                    }
-                    requestFooter.id(PageTarget.request)
+                    // The player's own charts and "Add a song" (YourSongs/YourSongsShelf.swift), above the fold under
+                    // the song of the day: one row while there are none. It keeps this place whatever the filter, so
+                    // its sheets and the song it opens stay up.
+                    YourSongsShelf()
                 }
-                .scrollTargetLayout()
-                .padding(.horizontal, Metrics.gutter).padding(.vertical, 12)
+            } shelf: { item in
+                shelfItem(item)
+            } footer: {
+                requestFooter
             }
-            // Keep the shelf the reader is browsing, not the prior row's partially visible tail.
-            // SwiftUI maintains this identity through rotation; no delayed offset restoration.
-            .scrollPosition($shelfPosition, anchor: .center)
             .accessibilityIdentifier("songs.page")
             .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.width } action: { width in pageWidth = width }
             .stageTopShade()

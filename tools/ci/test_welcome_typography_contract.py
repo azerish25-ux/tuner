@@ -38,10 +38,10 @@ class WelcomeTypographyContract(unittest.TestCase):
     def test_native_oracle_separates_actual_lines_and_rejects_original_collision(self):
         source = (ROOT / 'ios/TimbreAppTests/WelcomeHeadlineLayoutTests.swift').read_text()
         for token in ['struct LineMask: TextRenderer', 'layout.enumerated()', 'context.draw(line)',
-                      'WelcomeHeadline().textRenderer(LineMask(parity: 0))',
-                      'WelcomeHeadline().textRenderer(LineMask(parity: 1))',
+                      'controlled.textRenderer(LineMask(parity: 0))',
+                      'controlled.textRenderer(LineMask(parity: 1))',
                       'union.elementsEqual(full.ink)', 'XCTAssertFalse(even.touches(odd)',
-                      'XCTAssertTrue(even.touches(odd)', 'let example = Example(width: 362)',
+                      'XCTAssertTrue(masks.even.touches(masks.odd)', 'let example = Example(width: 362)',
                       '[CGFloat(280), 335, 362, 390]', 'DynamicTypeSize.large, .accessibility5',
                       'contains(full.bounds)', 'XCTAssertGreaterThan(heights[1], heights[0]',
                       '["en", "ta", "ar", "fa", "he"]', 'renderer.scale = 3',
@@ -49,6 +49,41 @@ class WelcomeTypographyContract(unittest.TestCase):
             self.assertIn(token, source)
         self.assertNotIn('.clipped()', source)
         self.assertNotIn('XCTSkip', source)
+        self.assertNotIn('var displayPadding:', source)
+        for token in ['text.sizeThatFits(proposal)', 'LineMask(parity: nil)',
+                      'view.typesettingLanguage(Locale(identifier: example.language).language)',
+                      'try requireSamePixels(full, language', 'try requireSamePixels(full, completeProbe',
+                      'expected.rgba == actual.rgba', 'XCTUnwrap(same ? true : nil',
+                      'try requireSamePixels(masks.full, expected', 'original-independent-urdu-language']:
+            self.assertIn(token, source)
+        self.assertLess(source.index('try requireSamePixels(full, completeProbe'),
+                        source.index('let even = try render(controlled.textRenderer'))
+
+    def test_calibration_is_bounded_native_only_and_keeps_production_gate(self):
+        source = (ROOT / 'ios/TimbreAppTests/WelcomeHeadlineLayoutTests.swift').read_text()
+        for token in ['testRecordBoundedUrduLeadingCalibration', '("baseline", 24, 12, 0)',
+                      '("roomier", 40, 32, 12)', '("separated", 48, 32, 12)',
+                      'try requireSamePixels(native, baseline', 'try autoreleasepool',
+                      'diagnostics: false, nativeImage: representative', 'XCTAssertEqual(rows.count, 24',
+                      '"diagnosticOnly": true', '"safeForThisSample": separated && fits && union.elementsEqual(full.ink)',
+                      '"urdu-leading-calibration.json"']:
+            self.assertIn(token, source)
+        self.assertIn('XCTAssertFalse(even.touches(odd)', source)
+        self.assertIn('contains(full.bounds)', source)
+
+    def test_native_fallback_diagnostic_discovers_the_face_without_changing_production(self):
+        source = (ROOT / 'ios/TimbreAppTests/WelcomeFallbackDiagnosticsTests.swift').read_text()
+        for token in ['CTFontCreateForStringWithLanguage', 'CTFontCopyPostScriptName',
+                      'CTFontGetAscent', 'CTFontGetDescent', 'CTFontGetLeading', 'CTFontGetBoundingBox',
+                      'Typeface.Face.semiBold', '@ScaledMetric(relativeTo: .largeTitle)',
+                      '.font(Font(fallback))', 'fallback-word-original-', 'fallback-word-explicit-',
+                      'fallback-production-reference-', 'fallback-explicit-candidate-',
+                      'DynamicTypeSize.large', 'CGFloat(280), .accessibility5', 'autoreleasepool']:
+            self.assertIn(token, source)
+        for workaround in ['minimumScaleFactor', '.lineLimit(', '.clipped()', 'XCTSkip']:
+            self.assertNotIn(workaround, source)
+        production = (ROOT / 'ios/Timbre/Onboarding/WelcomeHeadline.swift').read_text()
+        self.assertNotIn('CTFontCreate', production)
 
     def test_actual_ui_flow_uses_exact_shipped_urdu_and_existing_first_session_class(self):
         source = (ROOT / 'ios/TimbreUITests/FirstSessionUITests.swift').read_text()

@@ -47,9 +47,9 @@ final class PracticeXPProgressTests: XCTestCase {
         let accepted = Text(verbatim: "255／500 XP · 下一個：XP")
         let spoken = try pixels(view.spoken, locale: locale, name: "practice-xp-zh-Hant-spoken-label")
         let expected = try pixels(accepted, locale: locale, name: "practice-xp-zh-Hant-spoken-expected")
-        // Localized Text and verbatim Text can choose different automatic typesetting languages. Keep the
-        // original comparison, but attach a second pair with identical explicit typography to diagnose that
-        // independently from actual label content and from PNG metadata/compression differences.
+        // Localized Text and verbatim Text choose different automatic typesetting languages, including
+        // punctuation spacing. Preserve that pair as diagnostics, but compare the same accepted sentence
+        // under identical explicit typography. The native accessibility test separately checks every scalar.
         let controlledSpoken = try pixels(view.spoken.typesettingLanguage(locale.language), locale: locale,
                                           name: "practice-xp-zh-Hant-spoken-explicit-language")
         let controlledExpected = try pixels(accepted.typesettingLanguage(locale.language), locale: locale,
@@ -63,8 +63,8 @@ final class PracticeXPProgressTests: XCTestCase {
         attachment.name = "practice-xp-zh-Hant-pixel-comparison"
         attachment.lifetime = .keepAlways
         add(attachment)
-        XCTAssertEqual(spoken, expected, "VoiceOver label Text retains the accepted sentence without directional isolates; \(diagnostic)")
-        XCTAssertEqual(controlledSpoken, controlledExpected, "The accepted copy must also match with identical typesetting language")
+        XCTAssertEqual(controlledSpoken, controlledExpected,
+                       "The accepted copy must match every rendered pixel with identical typesetting language; \(diagnostic)")
         // Neither a halfwidth slash nor a swapped numerator may pass the pixel oracle.
         for wrong in ["255 / 500 XP · 下一個：XP", "500／255 XP · 下一個：XP"] {
             let negative = try pixels(Text(verbatim: wrong).typesettingLanguage(locale.language), locale: locale)

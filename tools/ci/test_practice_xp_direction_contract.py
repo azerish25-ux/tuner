@@ -41,7 +41,7 @@ class PracticeXPDirectionContract(unittest.TestCase):
     def test_fullwidth_native_controls_and_spoken_label_are_selected(self):
         native = (ROOT / 'ios/TimbreAppTests/PracticeXPProgressTests.swift').read_text()
         for token in ['testTraditionalChineseFullwidthFractionPreservesTranslationAndSpokenText',
-                      '255／500 XP · 下一個：XP', 'pixels(view.spoken', 'XCTAssertEqual(spoken, expected',
+                      '255／500 XP · 下一個：XP', 'pixels(view.spoken', 'XCTAssertEqual(controlledSpoken, controlledExpected',
                       '%lld／%lld XP %@ %lld', '%lld／%lld XP %@ %@', '%lld ∕ %lld XP %@',
                       '"zh-Hant"', 'Timbre.NSLocalizedString(PracticeXPProgress.key']:
             self.assertIn(token, native)
@@ -67,21 +67,30 @@ class PracticeXPDirectionContract(unittest.TestCase):
         for token in ['practice-xp-zh-Hant-spoken-label', 'practice-xp-zh-Hant-spoken-expected',
                       'practice-xp-zh-Hant-spoken-explicit-language',
                       'practice-xp-zh-Hant-expected-explicit-language',
-                      'XCTAssertEqual(spoken, expected',
                       'XCTAssertEqual(controlledSpoken, controlledExpected',
+                      'view.spoken.typesettingLanguage(locale.language)',
+                      'accepted.typesettingLanguage(locale.language)',
                       'CGColorSpace.sRGB', 'CGImageAlphaInfo.premultipliedLast',
                       'CGBitmapInfo.byteOrder32Big', 'XCTAssertNotEqual(controlledExpected, negative)',
                       '%2$lld／%1$lld XP · 下一個：%3$@', '%3$@：%1$lld／%2$lld XP']:
             self.assertIn(token, native)
         self.assertNotIn('image.pngData()', native, 'PNG byte equality is not a rendered-pixel oracle')
+        self.assertNotIn('XCTAssertEqual(spoken, expected', native,
+                         'Automatic localized and verbatim typography is diagnostic, not a like-for-like oracle')
 
     def test_real_native_accessibility_label_is_checked_in_required_smoke_suite(self):
         helper = (ROOT / 'ios/Timbre/Practice/PracticeXPProgress.swift').read_text()
         self.assertEqual(helper.count('.accessibilityIdentifier("practice.xp.progress")'), 2)
         smoke = (ROOT / 'ios/TimbreUITests/SmokeUITests.swift').read_text()
         for token in ['testTraditionalChinesePracticeXPSpokenLabelKeepsTheAcceptedSentence',
-                      '0／100 XP · 下一個：初上指板', 'let actual = progress.label',
+                      '0／100 XP · 下一個：初上指板', 'let actual = sentences.firstMatch.label',
                       'XCTAssertEqual(actual, expected', '(0x2066...0x2069)',
+                      'app.otherElements.matching(identifier: "practice.xp.progress")',
+                      'XCTAssertEqual(groups.count, 1', 'XCTAssertEqual(sentences.count, 1',
+                      'let expectedGroup = "等級 1，0／100 XP、空弦、" + expected',
+                      'XCTAssertEqual(actualGroup, expectedGroup', 'for spoken in [actual, actualGroup]',
+                      r'XCTAssertEqual(actual.unicodeScalars.map(\.value), expected.unicodeScalars.map(\.value))',
+                      r'XCTAssertEqual(actualGroup.unicodeScalars.map(\.value), expectedGroup.unicodeScalars.map(\.value))',
                       'practice-xp-zh-Hant-native-accessibility-label',
                       'practice-xp-zh-Hant-native-accessibility-screen']:
             self.assertIn(token, smoke)
