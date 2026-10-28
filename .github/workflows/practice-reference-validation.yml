@@ -1,0 +1,87 @@
+name: Practice native reference validation
+on:
+  push:
+    branches: [codex/practice-reference-validation-31bcd46]
+permissions:
+  contents: read
+concurrency:
+  group: practice-reference-validation-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  native:
+    runs-on: macos-15
+    timeout-minutes: 75
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+      HOMEBREW_NO_AUTO_UPDATE: '1'
+      HOMEBREW_NO_INSTALL_CLEANUP: '1'
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd
+        with:
+          persist-credentials: false
+      - name: Bind source and simulator
+        run: |
+          set -euo pipefail
+          mkdir -p ci-out
+          git rev-parse HEAD > ci-out/source-revision.txt
+          python3 tools/ci/test_audit_pixel_proof_contract.py
+          command -v xcodegen >/dev/null 2>&1 || brew install xcodegen
+          (cd ios && xcodegen generate)
+          bash tools/ci/ensure-metal.sh
+          xcrun simctl list devices available -j > ci-out/devices.json
+          DEVICE_ID=$(python3 -c 'import json,re; d=json.load(open("ci-out/devices.json")); runtimes=sorted(d["devices"].items(),key=lambda p:tuple(map(int,re.findall(r"\d+",p[0]))),reverse=True); print(next(x["udid"] for k,v in runtimes if "iOS" in k for x in v if x["name"]=="iPhone 17 Pro"))')
+          echo "DEVICE_ID=$DEVICE_ID" >> "$GITHUB_ENV"
+          xcrun simctl boot "$DEVICE_ID" || true
+          xcrun simctl bootstatus "$DEVICE_ID" -b
+      - name: Native positive and fail-closed negative guards
+        id: helpers
+        run: |
+          set -o pipefail
+          xcodebuild test -project ios/Timbre.xcodeproj -scheme Timbre -parallel-testing-enabled NO \
+            -only-testing:TimbreUITests/ReviewedPracticeLevelRasterTests \
+            -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd \
+            -resultBundlePath ci-out/Guards.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/guards.log
+          python3 - <<'PY'
+          from pathlib import Path
+          from collections import Counter
+          import re
+          expected = {'testExactNativeReferencesRequireTheirReviewedIdentityPoseTypeAndStableCapture',
+                      'testMissingRecoloredFadedClippedOrObscuredNativePaintIsNotAccepted'}
+          events = re.findall(r"Test Case '-\[TimbreUITests.ReviewedPracticeLevelRasterTests (test\w+)\]' (started|passed|failed|skipped)", Path('ci-out/guards.log').read_text())
+          if set(n for n,_ in events) != expected or any(Counter(s for n,s in events if n==m) != Counter(started=1,passed=1) for m in expected):
+              raise SystemExit('Incomplete native guard tests')
+          PY
+      - name: Observe actual audit callbacks without discarding other failures
+        if: ${{ !cancelled() && steps.helpers.outcome == 'success' }}
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,os,subprocess
+          cmd = ['xcodebuild','test-without-building','-project','ios/Timbre.xcodeproj','-scheme','Timbre',
+                 '-parallel-testing-enabled','NO','-only-testing:TimbreUITests/AccessibilityAuditUITests/testEveryTab',
+                 '-destination','platform=iOS Simulator,id='+os.environ['DEVICE_ID'],'-derivedDataPath','ios/build/dd',
+                 '-resultBundlePath','ci-out/Tabs.xcresult','CODE_SIGNING_ALLOWED=NO']
+          with Path('ci-out/tabs.log').open('w') as log:
+              code = subprocess.run(cmd,stdout=log,stderr=subprocess.STDOUT,check=False).returncode
+          text = Path('ci-out/tabs.log').read_text()
+          refs = ['practice-header-lv1-31bcd','practice-card-lv1-31bcd']
+          matched = {r:('known: exact reviewed native Practice LV1 pixels ('+r+')') in text for r in refs}
+          Path('ci-out/reference-status.json').write_text(json.dumps({'audit_exit':code,'actual_current_callbacks':matched,
+              'all_other_audit_failures_retained':True,'sdk_internal_raster_identified':False},indent=2)+'\n')
+          if not all(matched.values()): raise SystemExit('Current callback reference condition not demonstrated')
+          raise SystemExit(code)
+          PY
+      - name: Preserve original native evidence
+        if: always()
+        run: |
+          for suite in Guards Tabs; do
+            if [ -d "ci-out/$suite.xcresult" ]; then
+              xcrun xcresulttool export attachments --path "ci-out/$suite.xcresult" --output-path "ci-out/$suite-attachments"
+            fi
+          done
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        if: always()
+        with:
+          name: practice-native-reference-originals
+          path: ci-out
+          retention-days: 14

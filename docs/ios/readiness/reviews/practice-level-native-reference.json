@@ -1,0 +1,92 @@
+{
+  "schema": 1,
+  "scope": "Two reviewed Practice LV1 renderings only; no general SDK exemption",
+  "source_revision": "31bcd46b2a58529a52f23bf9b4d444f4fa713761",
+  "run_id": 40761971524,
+  "job_id": 123077842484,
+  "artifact_id": 12853280431,
+  "artifact_sha256": "e4393756d0de0bba11151a3b1bedf6fd948083d66173570eb3fef8d2d1a031bc",
+  "viewport": [
+    0,
+    0,
+    402,
+    874
+  ],
+  "image_pixels": [
+    1206,
+    2622
+  ],
+  "scale": 3,
+  "references": [
+    {
+      "name": "practice-header-lv1-31bcd",
+      "path": "ios/TimbreUITests/AuditReferences/practice-header-lv1-31bcd.png",
+      "png_sha256": "5d88e8ca39a114bafe811dd4a92748192f1905d8d4b727ff25d08da966fb3984",
+      "rgba_sha256": "f5a9b3c3a37ab037e674e346f3c7bcc77c6779720d4bb0ef550c543a07da69f0",
+      "pixels": [
+        66,
+        62
+      ],
+      "screen": "tab-4-practice",
+      "identifier": "screen.header.level.mark",
+      "label": "LV 1",
+      "frame": [
+        349.1666666666667,
+        85.83333333333334,
+        21.666666666666686,
+        20.33333333333333
+      ],
+      "crop_pixels": [
+        1047,
+        257,
+        1113,
+        319
+      ],
+      "source_png": "8A76767B-31AB-41B3-9C40-28A03230B8A9.png",
+      "conservative_minimum_contrast": 5.041
+    },
+    {
+      "name": "practice-card-lv1-31bcd",
+      "path": "ios/TimbreUITests/AuditReferences/practice-card-lv1-31bcd.png",
+      "png_sha256": "1b5858628680c4ac5e6bec8760e496420b85ba2beb2a89f968c6fae996263d03",
+      "rgba_sha256": "dc46c8d49ec258bf1ffee6751a0c475066e51c386f39d6eae3e0e3fe2b5e8354",
+      "pixels": [
+        98,
+        84
+      ],
+      "screen": "tab-4-practice",
+      "identifier": "practice.level.card.mark",
+      "label": "LV 1",
+      "frame": [
+        52.66666666666667,
+        392.66666666666663,
+        32.66666666666667,
+        28.0
+      ],
+      "crop_pixels": [
+        158,
+        1178,
+        256,
+        1262
+      ],
+      "source_png": "6BF818E6-80A8-456D-BA87-0463BF42EB05.png",
+      "conservative_minimum_contrast": 5.195044
+    }
+  ],
+  "source_sha256": {
+    "ios/Timbre/Design/GameUI.swift": "e4c659ba967212758ad959cac8d5066441df66034547dce7259ef7557a7074be",
+    "ios/Timbre/Design/Theme.swift": "a381a42bbfc2e732b3d6122df05a5ca75024a64bc5c5b2116e0feddf2fd3f816",
+    "ios/Timbre/Design/Components.swift": "358cc57235b4a5e59b73b4eb7cae46f2501e8c0901a885ef4a4fe7b6cc2f21fb",
+    "ios/Timbre/Design/Kit.swift": "e4a5f41d6df966402e633af87d21d52fa7853f10d8a1b6cb134d66823a4411f8",
+    "ios/Timbre/Practice/PracticeView.swift": "11fa623267c15c98b42801068ac887bc4c988997113bc71645593b0de6953584",
+    "ios/Timbre/Practice/PracticeChrome.swift": "51aa21ef73e9890f25c28cb632f453eea455387efb07b493d59ea04c7f011915",
+    "ios/Timbre/Root/RootView.swift": "f1f38f0ec713ad39d79ee836223cb4ac34f70d1f616a6f739acb32551969796e"
+  },
+  "reviewer": "Independent Codex review_actual_contrast",
+  "limits": [
+    "Exact current callback reproduction required; other states remain enforced",
+    "Callback image is not the SDK internal analysis raster",
+    "No native SDK pass or broad accessibility/submission certification"
+  ],
+  "review": "Header bound considers both encoded and linear-light .15 spotlight, no motes, interior clear of ring. Card bound uses362pt width, height>=98, source padding18/ring62 and exact reviewed crop: t>=.2169292608, tint alpha<=.1252913183; both paint roles exceed4.5 even in linear light. Source/code and all original full screenshots remain separate evidence."
+}

@@ -394,6 +394,28 @@ final class AccessibilityAuditUITests: XCTestCase {
                         self.add(evidence)
                     }
                 }
+                if reason == nil, issue.auditType == .contrast,
+                   ReviewedPracticeLevelRaster.supports(screen: screen, identifier: id, label: label),
+                   let before = snapshot, let element = issue.element {
+                    let capture = XCUIScreen.main.screenshot()
+                    callbackScreenshot = capture
+                    let after = try? element.snapshot()
+                    let stable: Bool
+                    if let after {
+                        stable = after.identifier == before.identifier && after.label == before.label
+                            && after.frame == before.frame && after.elementType == before.elementType
+                            && String(describing: after.value) == String(describing: before.value)
+                    } else { stable = false }
+                    if let proof = ReviewedPracticeLevelRaster.verify(screen: screen, identifier: id, label: label,
+                        frame: before.frame, viewport: viewport, image: capture.image,
+                        staticText: before.elementType == .staticText, stable: stable) {
+                        reason = proof
+                        let evidence = XCTAttachment(screenshot: capture)
+                        evidence.name = "ax-native-reference-\(screen)-\(findings.callbacks)"
+                        evidence.lifetime = .keepAlways
+                        self.add(evidence)
+                    }
+                }
                 let fails = enforced.contains(issue.auditType) && reason == nil
                 let tag = fails ? ", enforced" : (reason.map { ", known: \($0)" } ?? "")
                 // Unidentified callbacks are separate evidence: the same compact description may describe

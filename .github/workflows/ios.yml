@@ -216,6 +216,7 @@ jobs:
             -only-testing:TimbreUITests/CaptureLockEvidenceTests \
             -only-testing:TimbreUITests/CapturePlayAlongReadinessTests \
             -only-testing:TimbreUITests/AuditContrastPixelProofTests \
+            -only-testing:TimbreUITests/ReviewedPracticeLevelRasterTests \
             -only-testing:TimbreUITests/TabletShelfAlignmentTests \
             -only-testing:TimbreUITests/TimbreUITests/testInstrumentFamilyChipMustClearBothFades \
             -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd \
