@@ -101,6 +101,7 @@ jobs:
           python3 tools/ci/test_audit_pixel_proof_contract.py
           python3 tools/ci/test_accessibility_identity_contract.py
           python3 tools/ci/test_lesson_accessibility_layout_contract.py
+          python3 tools/ci/test_along_typography_contract.py
           python3 tools/ci/test_accessibility_partitions.py
           python3 tools/ci/test_accessibility_log_checkpoints.py
           python3 tools/ci/test_accessibility_visual_checkpoints.py
@@ -117,6 +118,7 @@ jobs:
           python3 tools/ci/test_ci_concurrency_contract.py
           python3 tools/ci/test_country_pricing_policy.py
           python3 tools/ci/test_simulator_warmup.py
+          python3 tools/ci/test_simulator_priming_signal.py
           python3 tools/ci/test_simulator_cleanup.py
           python3 tools/ci/test_fraction_direction_contract.py
           python3 tools/ci/test_settings_localization_contract.py
@@ -207,7 +209,9 @@ jobs:
       - name: Unit tests and smoke flows
         run: |
           set -o pipefail
+          # Enable XCTest's fail-and-continue watchdog; contained-host controls request 120 seconds each.
           xcodebuild test-without-building -project ios/Timbre.xcodeproj -scheme Timbre -parallel-testing-enabled NO \
+            -test-timeouts-enabled YES \
             -only-testing:TimbreAppTests -only-testing:TimbreUITests/SmokeUITests \
             -only-testing:TimbreUITests/CaptureLockEvidenceTests \
             -only-testing:TimbreUITests/CapturePlayAlongReadinessTests \

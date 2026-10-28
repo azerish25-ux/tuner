@@ -16,7 +16,12 @@ final class SongShelfPageTests: XCTestCase {
     private final class State: ObservableObject {
         let driver: Driver
         let oversized: Bool
-        init(driver: Driver, oversized: Bool = false) { self.driver = driver; self.oversized = oversized }
+        let synchronizeDiagnosticCapture: Bool
+        init(driver: Driver, oversized: Bool = false, synchronizeDiagnosticCapture: Bool = true) {
+            self.driver = driver
+            self.oversized = oversized
+            self.synchronizeDiagnosticCapture = synchronizeDiagnosticCapture
+        }
         @Published var size = CGSize(width: 402, height: 874)
         @Published var position: SongShelfPageTarget<String>? {
             didSet { positionHistory.append(String(describing: position)) }
@@ -117,11 +122,145 @@ final class SongShelfPageTests: XCTestCase {
     /// A contained-child sizing control, not device rotation or automatic binding observation.
     /// Both viewports fit the actual window; all original full-size failures remain separate.
     func testContainedHostCommandResize() async throws {
+        executionTimeAllowance = 120
         try await verifyContainedHost(direction: .leftToRight)
     }
 
     func testContainedHostCommandResizeRightToLeft() async throws {
+        executionTimeAllowance = 120
         try await verifyContainedHost(direction: .rightToLeft)
+    }
+
+    // Pure policy regressions supplement, never replace, the unchanged native geometry/touch gates.
+    private func resizeMeasurement(_ state: SongShelfPageResize<String>, height: CGFloat)
+        -> SongShelfPageResize<String>.Measurement {
+        .init(rowSize: CGSize(width: state.viewport.width - 2 * Metrics.gutter, height: height),
+              viewport: state.viewport, generation: state.generation)
+    }
+
+    func testResizePolicyDoesNotNavigateOnAppearanceOrNonShelfRows() {
+        let target = SongShelfPageTarget<String>.shelf("bass")
+        var state = SongShelfPageResize<String>()
+        state.resized(to: CGSize(width: 402, height: 729), position: target)
+        XCTAssertNil(state.target)
+        let positions: [SongShelfPageTarget<String>?] = [nil, .introduction, .request]
+        for position in positions {
+            state.resized(to: CGSize(width: 750, height: 338), position: position)
+            XCTAssertNil(state.target)
+            state.resized(to: CGSize(width: 402, height: 729), position: position)
+            XCTAssertNil(state.target)
+        }
+    }
+
+    func testResizePolicyKeepsTypedShelfAndConsumesBeforeCommandFeedback() {
+        let target = SongShelfPageTarget<String>.shelf("bass")
+        var state = SongShelfPageResize<String>()
+        state.resized(to: CGSize(width: 402, height: 729), position: target)
+        state.resized(to: CGSize(width: 750, height: 338), position: target)
+        XCTAssertEqual(state.target, target)
+        let measurement = resizeMeasurement(state, height: 292)
+        XCTAssertEqual(state.consume(for: target, measurement: measurement), .center)
+        XCTAssertNil(state.target)
+        XCTAssertNil(state.consume(for: target, measurement: measurement))
+        state.resized(to: state.viewport, position: target)
+        XCTAssertNil(state.target, "Content/offset changes at the same size must not replay a command")
+    }
+
+    func testResizePolicyUsesActualContainerNotInsetExpandedVisibleHeight() {
+        let target = SongShelfPageTarget<String>.shelf("bass")
+        var state = SongShelfPageResize<String>()
+        state.resized(to: CGSize(width: 402, height: 729), position: target)
+        state.resized(to: CGSize(width: 750, height: 338), position: target)
+        // Observed normal row 364.7 fits the 402pt visibleRect but not the clear 338pt container.
+        XCTAssertEqual(state.consume(for: target, measurement: resizeMeasurement(state, height: 364.7)), .top)
+        state.resized(to: CGSize(width: 402, height: 729), position: target)
+        XCTAssertEqual(state.consume(for: target, measurement: resizeMeasurement(state, height: 364.7)), .center)
+    }
+
+    func testResizePolicyRejectsStaleWidthViewportAndGenerationWithoutConsuming() {
+        let target = SongShelfPageTarget<String>.shelf("bass")
+        var state = SongShelfPageResize<String>()
+        state.resized(to: CGSize(width: 402, height: 729), position: target)
+        let old = resizeMeasurement(state, height: 852)
+        state.resized(to: CGSize(width: 340, height: 791), position: target)
+        let intermediate = resizeMeasurement(state, height: 852)
+        state.resized(to: CGSize(width: 750, height: 338), position: target)
+        XCTAssertNil(state.consume(for: target, measurement: old))
+        XCTAssertNil(state.consume(for: target, measurement: intermediate))
+        let staleWidth = SongShelfPageResize<String>.Measurement(rowSize: CGSize(width: 362, height: 776),
+                                                               viewport: state.viewport, generation: state.generation)
+        XCTAssertNil(state.consume(for: target, measurement: staleWidth))
+        XCTAssertEqual(state.target, target)
+        XCTAssertEqual(state.consume(for: target, measurement: resizeMeasurement(state, height: 776)), .top)
+        state.resized(to: CGSize(width: 402, height: 729), position: target)
+        XCTAssertNil(state.consume(for: target, measurement: old), "Same size from an old generation is still stale")
+        XCTAssertEqual(state.target, target)
+    }
+
+    func testResizePolicyRejectsWrongTargetAndInvalidRowGeometry() {
+        let target = SongShelfPageTarget<String>.shelf("bass")
+        var state = SongShelfPageResize<String>()
+        state.resized(to: CGSize(width: 402, height: 729), position: target)
+        state.resized(to: CGSize(width: 750, height: 338), position: target)
+        XCTAssertNil(state.consume(for: .shelf("preceding"), measurement: resizeMeasurement(state, height: 292)))
+        for size in [CGSize.zero, CGSize(width: 710, height: CGFloat.infinity),
+                     CGSize(width: CGFloat.nan, height: 292), CGSize(width: 710, height: -1)] {
+            let measurement = SongShelfPageResize<String>.Measurement(rowSize: size,
+                                                                     viewport: state.viewport, generation: state.generation)
+            XCTAssertNil(state.consume(for: target, measurement: measurement))
+        }
+        XCTAssertEqual(state.target, target)
+    }
+
+    func testResizePolicyUserInteractionCancelsAndCannotRearmWhileActive() {
+        let target = SongShelfPageTarget<String>.shelf("bass")
+        var state = SongShelfPageResize<String>()
+        state.resized(to: CGSize(width: 402, height: 729), position: target)
+        state.resized(to: CGSize(width: 750, height: 338), position: target)
+        state.userScrollChanged(true)
+        XCTAssertNil(state.target)
+        state.resized(to: CGSize(width: 402, height: 729), position: target)
+        XCTAssertNil(state.target)
+        state.userScrollChanged(false)
+        XCTAssertNil(state.target, "Ending a gesture is not another size change")
+        state.resized(to: CGSize(width: 750, height: 338), position: target)
+        XCTAssertEqual(state.target, target)
+        state.cancel()
+        XCTAssertNil(state.consume(for: target, measurement: resizeMeasurement(state, height: 292)))
+    }
+
+    func testResizePolicyDisappearanceDoesNotRetainAnActiveGesture() {
+        let target = SongShelfPageTarget<String>.shelf("bass")
+        var state = SongShelfPageResize<String>()
+        state.resized(to: CGSize(width: 402, height: 729), position: target)
+        state.userScrollChanged(true)
+        state.disappeared()
+        XCTAssertNil(state.target)
+        state.resized(to: CGSize(width: 402, height: 729), position: target)
+        XCTAssertNil(state.target, "Unchanged reappearance must not issue a command")
+        state.resized(to: CGSize(width: 750, height: 338), position: target)
+        XCTAssertEqual(state.target, target, "A later real resize must not inherit stale gesture state")
+        XCTAssertEqual(state.consume(for: target, measurement: resizeMeasurement(state, height: 292)), .center)
+    }
+
+    func testResizePolicyTwoRotationCyclesPreserveCenterOrOversizedTopInEitherDirection() {
+        let target = SongShelfPageTarget<String>.shelf("bass")
+        for direction in [LayoutDirection.leftToRight, .rightToLeft] {
+            let heights: [CGFloat] = [292, 776]
+            for height in heights {
+                var state = SongShelfPageResize<String>()
+                state.resized(to: CGSize(width: 402, height: 729), position: target)
+                for _ in 0..<2 {
+                    for size in [CGSize(width: 750, height: 338), CGSize(width: 402, height: 729)] {
+                        state.resized(to: size, position: target)
+                        let expected: UnitPoint = height > size.height ? .top : .center
+                        XCTAssertEqual(state.target, target, "\(direction)")
+                        XCTAssertEqual(state.consume(for: target, measurement: resizeMeasurement(state, height: height)), expected)
+                        XCTAssertNil(state.target)
+                    }
+                }
+            }
+        }
     }
 
     private func scrolls(_ view: UIView) -> [UIScrollView] {
@@ -146,7 +285,8 @@ final class SongShelfPageTests: XCTestCase {
     private func record(_ state: State, window: UIWindow, stage: String) {
         var lines = ["stage=\(stage) driver=\(state.driver.rawValue), not a touch gesture",
                      "position=\(String(describing: state.position)) history=\(state.positionHistory)",
-                     "requestedSize=\(state.size) window=\(window.bounds) key=\(window.isKeyWindow)"]
+                     "requestedSize=\(state.size) window=\(window.bounds) key=\(window.isKeyWindow)",
+                     "captureWaitsForUpdates=\(state.synchronizeDiagnosticCapture); diagnostic pixels are not acceptance evidence"]
         for key in state.shelfFrames.keys.sorted() {
             lines.append("shelf=\(key) frame=\(String(describing: state.shelfFrames[key])) "
                 + "terminal=\(String(describing: state.terminalFrames[key]))")
@@ -169,13 +309,26 @@ final class SongShelfPageTests: XCTestCase {
         diagnostic.lifetime = .keepAlways
         add(diagnostic)
         guard window.bounds.width > 0, window.bounds.height > 0 else { return }
+        checkpoint("renderer-begin " + stage)
         let image = UIGraphicsImageRenderer(bounds: window.bounds).image { _ in
-            _ = window.drawHierarchy(in: window.bounds, afterScreenUpdates: true)
+            checkpoint("drawHierarchy-begin " + stage)
+            let complete = window.drawHierarchy(in: window.bounds, afterScreenUpdates: state.synchronizeDiagnosticCapture)
+            checkpoint("drawHierarchy-end complete=\(complete) " + stage)
         }
+        checkpoint("renderer-end " + stage)
         let rendered = XCTAttachment(image: image)
         rendered.name = "song-page-observed-" + stage
+            + (state.synchronizeDiagnosticCapture ? "" : "-current-state-unsynchronized")
         rendered.lifetime = .keepAlways
+        checkpoint("image-attachment-begin " + stage)
         add(rendered)
+        checkpoint("record-end " + stage)
+    }
+
+    private func checkpoint(_ message: String) {
+        // Write directly so a blocked main run loop cannot leave the latest boundary in a print buffer.
+        let line = "SONG-PAGE-BOUNDARY uptime=\(ProcessInfo.processInfo.systemUptime) \(message)\n"
+        FileHandle.standardError.write(Data(line.utf8))
     }
 
     private func verify(direction: LayoutDirection, driver: Driver = .scrollViewReader, oversized: Bool = false) async throws {
@@ -281,7 +434,9 @@ final class SongShelfPageTests: XCTestCase {
     private func verifyContainedHost(direction: LayoutDirection) async throws {
         let tall = CGSize(width: 300, height: 600)
         let compact = CGSize(width: 402, height: 340)
-        let state = State(driver: .bindingCommand)
+        // The exploratory capture records current rendering without waiting for a display commit.
+        // Geometry assertions still wait for measured native bounds; screenshots never accept the result.
+        let state = State(driver: .bindingCommand, synchronizeDiagnosticCapture: false)
         state.size = tall
         let host = UIHostingController(rootView: Fixture(state: state, direction: direction))
         let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
@@ -322,15 +477,22 @@ final class SongShelfPageTests: XCTestCase {
         for cycle in 0..<2 {
             for size in [compact, tall] {
                 // Resize the actual child host and its SwiftUI content together; never replay a scroll command.
+                let stage = "contained-\(direction)-\(cycle)-\(size)"
+                checkpoint("state-size-begin " + stage)
                 state.size = size
+                checkpoint("host-frame-begin " + stage)
                 host.view.frame = CGRect(origin: .zero, size: size)
+                checkpoint("container-layout-begin " + stage)
                 container.view.setNeedsLayout()
                 container.view.layoutIfNeeded()
+                checkpoint("host-layout-begin " + stage)
                 host.view.setNeedsLayout()
                 host.view.layoutIfNeeded()
-                let stage = "contained-\(direction)-\(cycle)-\(size)"
+                checkpoint("containment-await-begin " + stage)
                 await assertContainedHost(state, host: host, window: window, stage: stage)
+                checkpoint("terminal-await-begin " + stage)
                 await assertTerminal(state, target: target, window: window, stage: stage)
+                checkpoint("resize-complete " + stage)
             }
         }
     }

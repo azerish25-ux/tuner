@@ -14,6 +14,8 @@ import sys
 import time
 import uuid
 
+from simulator_priming_signal import wait_for_stage_rest
+
 BUNDLE = 'com.shahradazerisharghi.timbre'
 SIMULATOR_PROCESSES = ('SpringBoard', 'testmanagerd', 'runningboardd', 'lsd', 'installd',
                        'launchd', 'ReportCrash', 'tccd', 'mediaserverd', 'audiomxd',
@@ -123,7 +125,7 @@ def warmup(app: Path, device: str, languages: list[str], locale: str, out: Path)
     child_env.update(SIMCTL_CHILD_TIMBRE_TEST_STORAGE_ID=storage,
                      SIMCTL_CHILD_TIMBRE_SKIP_ONBOARDING='1',
                      SIMCTL_CHILD_TIMBRE_DEMO_DATA='1', SIMCTL_CHILD_TIMBRE_DEMO_PITCH='1',
-                     SIMCTL_CHILD_TIMBRE_STAGE_REST='1')
+                     SIMCTL_CHILD_TIMBRE_STAGE_REST='1', SIMCTL_CHILD_TIMBRE_SIMULATOR_PRIMING='1')
     receipt['automation_storage_id'] = storage
 
     def stamp():
@@ -171,9 +173,9 @@ def warmup(app: Path, device: str, languages: list[str], locale: str, out: Path)
         finally:
             event['finished_at'] = stamp()
 
-    def probe_query(command, limit=5):
+    def probe_query(command, limit=5, record_key='process_probe_commands'):
         event = {'command': list(map(str, command)), 'started_at': stamp()}
-        receipt.setdefault('process_probe_commands', []).append(event)
+        receipt.setdefault(record_key, []).append(event)
         try:
             event['timeout_seconds'] = budget(limit, reserve=30)
             result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
@@ -255,15 +257,19 @@ def warmup(app: Path, device: str, languages: list[str], locale: str, out: Path)
         receipt['launch_attempts'] = 1
         # Terminate even after a timed-out launch: the process may have started.
         launched = True
+        launch_started_epoch = time.time()
         output = invoke(['xcrun', 'simctl', 'launch', device, BUNDLE,
                          '-AppleLanguages', '(' + ','.join(languages) + ')', '-AppleLocale', locale], env=child_env)
         match = re.search(re.escape(BUNDLE) + r': ([1-9]\d*)\b', output)
         if not match:
             raise RuntimeError('Warmup launch did not return a valid process ID')
         receipt['pid'] = int(match[1])
-        # Existing accessibility priming uses the same ten-second settle. This is
-        # not an assertion timeout increase and contributes no passing UI evidence.
-        time.sleep(budget(10))
+        # Wait for the existing resting live child's disappearance, never an elapsed-time guess.
+        # It is a lifecycle milestone, not GPU completion or passing UI evidence. Keep cleanup's 30s.
+        receipt['rest_signal'] = wait_for_stage_rest(
+            device, storage, receipt['pid'], launch_started_epoch, deadline - 30,
+            lambda: probe_query(['xcrun', 'simctl', 'get_app_container', device, BUNDLE, 'data'],
+                                record_key='rest_signal_commands'), out)
         os.kill(receipt['pid'], 0)
         invoke(['xcrun', 'simctl', 'terminate', device, BUNDLE], timeout=30)
         launched = False

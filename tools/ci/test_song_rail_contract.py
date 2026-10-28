@@ -185,21 +185,77 @@ class SongRailContractTests(unittest.TestCase):
         self.assertIn('VStack(alignment: .leading, spacing: 0)', row)
         self.assertEqual(row.count('.id(row.id)'), 1)
         self.assertEqual(row.count('.id('), 1)
-        for forbidden in ['DispatchQueue', 'scrollTo(', '.id(pageWidth)', '.id(typeSize)']:
+        for forbidden in ['DispatchQueue', '.id(pageWidth)', '.id(typeSize)']:
             self.assertNotIn(forbidden, page)
             self.assertNotIn(forbidden, PAGE)
         self.assertIn('.scrollPosition(id: $position, anchor: .trailing)', RAIL)
 
-    def test_parent_identity_repair_keeps_constant_center_without_geometry_feedback(self):
-        # Debug-only passive file observations cannot become production feedback or a scroll command.
-        release = re.sub(r'        #if DEBUG\n.*?        #endif\n', '', PAGE, flags=re.S)
+    def test_parent_resize_keeps_center_tracking_and_one_typed_command_only(self):
+        # Native 226 retains the correct shelf ID yet loses visibility during container resize.
+        # The new command is independent of tracking; no offsets or adaptive binding anchors.
+        release = re.sub(r' +#if DEBUG\n.*? +#endif\n', '', PAGE, flags=re.S)
         self.assertIn('.scrollPosition(id: $position, anchor: .center)', release)
-        for forbidden in ['scrollTo(', 'DispatchQueue', 'Task {', '.onAppear', 'position =',
-                          'rowHeights', 'scrollAnchor', 'onScrollGeometryChange',
+        self.assertEqual(release.count('proxy.scrollTo('), 1)
+        self.assertIn('withTransaction(transaction) { proxy.scrollTo(row.id, anchor: anchor) }', release)
+        self.assertIn('transaction.disablesAnimations = true', release)
+        for forbidden in ['DispatchQueue', 'Task {', '.onAppear', 'position =', 'Thread.sleep',
+                          'rowHeights', 'scrollAnchor', 'contentOffset', 'visibleRect',
                           '.id(pageWidth)', 'accessibilityHidden', 'minimumScaleFactor']:
             self.assertNotIn(forbidden, release)
-        for forbidden in ['scrollTo(', 'position =', 'scrollAnchor', 'rowHeights', '@State', 'accessibilityValue']:
-            self.assertNotIn(forbidden, PAGE)
+
+    def test_resize_request_requires_new_noninitial_container_and_actual_shelf(self):
+        policy = PAGE.split('struct SongShelfPageResize', 1)[1].split('/// A stable vertical', 1)[0]
+        for token in ['guard size != viewport else { return }', 'let previous = viewport',
+                      'generation += 1', '!userScrolling, Self.valid(previous), Self.valid(size)',
+                      'case .some(.shelf(_)) = position', 'target = position']:
+            self.assertIn(token, policy)
+        self.assertIn('.onScrollGeometryChange(for: CGSize.self) { $0.containerSize }', PAGE)
+        # This observer remains on the vertical ScrollView, before the reader closes.
+        observer = PAGE.split('.scrollPosition(id: $position, anchor: .center)', 1)[1]
+        self.assertIn('resize.resized(to: size, position: position)', observer)
+
+    def test_resize_consumption_requires_current_generation_and_fresh_full_width_geometry(self):
+        consume = PAGE.split('mutating func consume(', 1)[1].split('private static func valid', 1)[0]
+        for token in ['!userScrolling, target == id', 'measurement.generation == generation',
+                      'measurement.viewport == viewport', 'Self.valid(measurement.rowSize)',
+                      'measurement.rowSize.width - (viewport.width - 2 * Metrics.gutter)',
+                      'target = nil', 'measurement.rowSize.height > viewport.height ? .top : .center']:
+            self.assertIn(token, consume)
+        self.assertLess(consume.index('target = nil'), consume.index('return measurement.rowSize'))
+        geometry = PAGE.split('.onGeometryChange(for: SongShelfPageResize', 1)[1].split('.scrollTargetLayout()', 1)[0]
+        self.assertIn('rowSize: geometry.size, viewport: measuredViewport, generation: measuredGeneration', geometry)
+        self.assertLess(geometry.index('resize.consume('), geometry.index('proxy.scrollTo('))
+        self.assertIn('struct Measurement: Equatable, Sendable', PAGE)
+        self.assertIn('let measuredViewport = resize.viewport', PAGE)
+        self.assertIn('let measuredGeneration = resize.generation', PAGE)
+
+    def test_resize_request_yields_to_user_navigation_model_changes_and_disappearance(self):
+        for token in ['resize.userScrollChanged(phase == .tracking || phase == .interacting || phase == .decelerating)',
+                      'if let target = resize.target, value != target { resize.cancel() }',
+                      r'.onChange(of: items.map(\.id)) { _, _ in resize.cancel() }',
+                      '.onDisappear { resize.disappeared() }', 'if active { cancel() }']:
+            self.assertIn(token, PAGE)
+
+    def test_disappearance_clears_pending_command_and_stale_gesture_without_appearance_replay(self):
+        reset = PAGE.split('mutating func disappeared()', 1)[1].split('mutating func userScrollChanged', 1)[0]
+        self.assertIn('cancel()', reset)
+        self.assertIn('userScrolling = false', reset)
+        self.assertNotIn('viewport =', reset)
+
+    def test_native_resize_policy_covers_stale_geometry_user_cancellation_and_two_cycles(self):
+        native = (ROOT / 'ios/TimbreAppTests/SongShelfPageTests.swift').read_text()
+        for token in ['testResizePolicyDoesNotNavigateOnAppearanceOrNonShelfRows',
+                      'testResizePolicyKeepsTypedShelfAndConsumesBeforeCommandFeedback',
+                      'testResizePolicyUsesActualContainerNotInsetExpandedVisibleHeight',
+                      'testResizePolicyRejectsStaleWidthViewportAndGenerationWithoutConsuming',
+                      'testResizePolicyRejectsWrongTargetAndInvalidRowGeometry',
+                      'testResizePolicyUserInteractionCancelsAndCannotRearmWhileActive',
+                      'testResizePolicyTwoRotationCyclesPreserveCenterOrOversizedTopInEitherDirection',
+                      'testResizePolicyDisappearanceDoesNotRetainAnActiveGesture',
+                      'LayoutDirection.leftToRight, .rightToLeft', 'CGFloat.infinity', 'CGFloat.nan',
+                      'CGSize(width: 340, height: 791)', 'height: 364.7', 'height: 776',
+                      'state.userScrollChanged(true)', 'state.userScrollChanged(false)']:
+            self.assertIn(token, native)
 
     def test_additive_command_controls_keep_full_normal_card_and_oversized_primary_geometry(self):
         native = (ROOT / 'ios/TimbreAppTests/SongShelfPageTests.swift').read_text()
@@ -258,7 +314,7 @@ class SongRailContractTests(unittest.TestCase):
         native = (ROOT / 'ios/TimbreAppTests/SongShelfPageTests.swift').read_text()
         helper = native.split('private func verifyContainedHost(', 1)[1].split('private func assertContainedHost(', 1)[0]
         for token in ['CGSize(width: 300, height: 600)', 'CGSize(width: 402, height: 340)',
-                      'State(driver: .bindingCommand)', 'let container = UIViewController()',
+                      'State(driver: .bindingCommand, synchronizeDiagnosticCapture: false)', 'let container = UIViewController()',
                       'window.rootViewController = container', 'container.addChild(host)',
                       'container.view.addSubview(host.view)', 'host.didMove(toParent: container)',
                       'window.bounds.width >= compact.width, window.bounds.height >= tall.height',
@@ -296,6 +352,57 @@ class SongRailContractTests(unittest.TestCase):
             self.assertIn(token, helper)
         self.assertLess(helper.index('record(state,'), helper.index('guard let root ='))
         self.assertNotIn('XCTSkip', helper)
+
+    def test_contained_host_watchdog_is_per_test_and_does_not_raise_job_budget(self):
+        native = (ROOT / 'ios/TimbreAppTests/SongShelfPageTests.swift').read_text()
+        for name in ['testContainedHostCommandResize()', 'testContainedHostCommandResizeRightToLeft()']:
+            method = native.split('func ' + name, 1)[1].split('\n    }', 1)[0]
+            self.assertIn('executionTimeAllowance = 120', method)
+            self.assertLess(method.index('executionTimeAllowance = 120'), method.index('try await verifyContainedHost'))
+        self.assertEqual(native.count('executionTimeAllowance ='), 2)
+        workflow = (ROOT / '.github/workflows/ios.yml').read_text()
+        app = workflow.split('  app:\n', 1)[1].split('\n  release:', 1)[0]
+        self.assertIn('timeout-minutes: 40', app)
+        self.assertIn('-test-timeouts-enabled YES', app)
+        self.assertIn('-only-testing:TimbreAppTests -only-testing:TimbreUITests/SmokeUITests', app)
+        for forbidden in ['-skip-testing:', 'continue-on-error', '-default-test-execution-time-allowance',
+                          '-maximum-test-execution-time-allowance']:
+            self.assertNotIn(forbidden, app)
+
+    def test_contained_host_current_state_images_do_not_accept_geometry(self):
+        native = (ROOT / 'ios/TimbreAppTests/SongShelfPageTests.swift').read_text()
+        self.assertIn('synchronizeDiagnosticCapture: Bool = true', native)
+        self.assertEqual(native.count('synchronizeDiagnosticCapture: false'), 1)
+        helper = native.split('private func verifyContainedHost(', 1)[1].split('private func assertContainedHost(', 1)[0]
+        self.assertIn('State(driver: .bindingCommand, synchronizeDiagnosticCapture: false)', helper)
+        self.assertIn('await assertContainedHost(state, host: host, window: window, stage: stage)', helper)
+        self.assertIn('await assertTerminal(state, target: target, window: window, stage: stage)', helper)
+        self.assertIn('captureWaitsForUpdates=', native)
+        self.assertIn('-current-state-unsynchronized', native)
+        self.assertIn('diagnostic pixels are not acceptance evidence', native)
+        terminal = native.split('private func assertTerminal(', 1)[1]
+        for forbidden in ['synchronizeDiagnosticCapture', 'XCTSkip', 'XCTExpectFailure', 'accuracy: 2']:
+            self.assertNotIn(forbidden, terminal)
+
+    def test_synchronous_render_and_resize_boundaries_are_emitted_before_calls(self):
+        native = (ROOT / 'ios/TimbreAppTests/SongShelfPageTests.swift').read_text()
+        record = native.split('private func record(', 1)[1].split('private func verify(', 1)[0]
+        for before, call in [('renderer-begin', 'UIGraphicsImageRenderer('),
+                             ('drawHierarchy-begin', 'window.drawHierarchy('),
+                             ('image-attachment-begin', 'add(rendered)')]:
+            self.assertLess(record.index(before), record.index(call))
+        for token in ['drawHierarchy-end complete=', 'renderer-end', 'record-end',
+                      'FileHandle.standardError.write(Data(line.utf8))', 'ProcessInfo.processInfo.systemUptime']:
+            self.assertIn(token, record)
+        resize = native.split('private func verifyContainedHost(', 1)[1].split('private func assertContainedHost(', 1)[0]
+        resize = resize.split('for cycle in 0..<2', 1)[1]
+        for before, call in [('state-size-begin', 'state.size = size'), ('host-frame-begin', 'host.view.frame ='),
+                             ('container-layout-begin', 'container.view.layoutIfNeeded()'),
+                             ('host-layout-begin', 'host.view.layoutIfNeeded()'),
+                             ('containment-await-begin', 'await assertContainedHost('),
+                             ('terminal-await-begin', 'await assertTerminal(')]:
+            self.assertLess(resize.index(before), resize.index(call))
+        self.assertIn('resize-complete', resize)
 
     def test_native_parent_traversal_keeps_nested_scroll_views(self):
         native = (ROOT / 'ios/TimbreAppTests/SongShelfPageTests.swift').read_text()

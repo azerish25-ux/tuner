@@ -20,6 +20,18 @@ class WelcomeRendererGeometryContract(unittest.TestCase):
             self.assertIn(token, self.source)
         self.assertNotIn('XCTSkip', self.source)
 
+    def test_exploratory_cases_have_a_finite_xctest_watchdog(self):
+        setup = self.source.split('override func setUp() {', 1)[1].split('    func testRTL280Large()', 1)[0]
+        self.assertIn('executionTimeAllowance = 120', setup)
+        self.assertEqual(self.source.count('executionTimeAllowance ='), 1)
+        self.assertLess(setup.index('executionTimeAllowance = 120'), setup.index('continueAfterFailure = true'))
+        # A local poll cannot preempt synchronous UIKit drawing. Keep the original poll and coverage bounds too.
+        self.assertIn('Date().addingTimeInterval(5)', self.source)
+        self.assertIn('XCTAssertEqual(visited, 14', self.source)
+        self.assertIn('xs.count * ys.count <= 64', self.source)
+        self.assertNotIn('XCTExpectFailure', self.source)
+        self.assertNotIn('XCTSkip', self.source)
+
     def test_plain_reference_and_drawing_group_candidate_remain_distinct(self):
         variants = self.source.split('switch variant {', 1)[1].split('/// Truly default sizing', 1)[0]
         plain = variants.split('case .plain:', 1)[1].split('case .zeroDefaultSize:', 1)[0]

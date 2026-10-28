@@ -955,6 +955,9 @@ struct InstrumentStage: View {
                 // Under the picture it draws at a trace rather than not at all, so coming back it has drawn before it shows.
                 live
                     .opacity(still ? 0.02 : 1)
+                    #if DEBUG
+                    .onDisappear { reportPrimingRest() }
+                    #endif
             }
             if still, let card = restCard {
                 StudioStage(imageName: ModelLibrary.cardImageName(modelID), card: card, input: input, onSelect: onSelect,
@@ -964,6 +967,18 @@ struct InstrumentStage: View {
             }
         }
     }
+
+    #if DEBUG
+    /// The live child actually disappeared after the existing rest path detached its subscription and set
+    /// mounted=false. A parent disappearing while still mounted cannot satisfy this condition. RealityKit's
+    /// GPU teardown is not observed here, and no app or screenshot acceptance is inferred from this signal.
+    private func reportPrimingRest() {
+        guard TestSupport.isOn(.simulatorPriming), TestSupport.stageResting,
+              ready, still, !mounted, resting, !showcase,
+              controller.wanted == modelID, controller.loadedModel == modelID, !controller.failed else { return }
+        TestSupport.recordPrimingStageRest(modelID: modelID)
+    }
+    #endif
 
     /// The model in its scene, feathered into the screen, turned over for a left-handed player, the peg cue over it.
     private var live: some View {

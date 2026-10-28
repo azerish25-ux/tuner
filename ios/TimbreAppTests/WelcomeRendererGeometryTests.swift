@@ -12,6 +12,9 @@ import XCTest
 final class WelcomeRendererGeometryTests: XCTestCase {
     override func setUp() {
         super.setUp()
+        // Per-case diagnostic watchdog: local polling deadlines cannot interrupt a blocked UIKit draw/layout.
+        // The app workflow enables XCTest timeouts; timeout is a failure, never a skipped/accepted variant.
+        executionTimeAllowance = 120
         continueAfterFailure = true
     }
 

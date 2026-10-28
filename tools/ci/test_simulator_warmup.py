@@ -35,7 +35,8 @@ class WarmupTests(unittest.TestCase):
                 return SimpleNamespace(returncode=code, stdout=warm.BUNDLE + ': 123\n')
             out = root / 'diagnostics'
             with patch.object(warm.subprocess, 'run', side_effect=native), patch.object(warm.time, 'sleep'), \
-                 patch.object(warm.os, 'kill') as alive, patch.dict(os.environ, {'GITHUB_SHA': 'source'}):
+                 patch.object(warm.os, 'kill') as alive, patch.object(warm, 'wait_for_stage_rest', return_value={'synthetic': True}), \
+                 patch.dict(os.environ, {'GITHUB_SHA': 'source'}):
                 if failure:
                     with self.assertRaises(RuntimeError):
                         warm.warmup(app, DEVICE, ['ar'], 'ar_SA', out)
@@ -238,7 +239,8 @@ class DiagnosticIdentityTests(unittest.TestCase):
                 return SimpleNamespace(returncode=0, stdout=warm.BUNDLE + ': 123\n')
 
             out = Path(directory) / 'out'
-            with patch.object(warm.subprocess, 'run', side_effect=native), patch.object(warm.os, 'kill'), patch.object(warm.time, 'sleep'):
+            with patch.object(warm.subprocess, 'run', side_effect=native), patch.object(warm.os, 'kill'), \
+                 patch.object(warm.time, 'sleep'), patch.object(warm, 'wait_for_stage_rest', return_value={'synthetic': True}):
                 if failure:
                     with self.assertRaises(RuntimeError):
                         warm.warmup(app, DEVICE, ['en'], 'en_US', out)
