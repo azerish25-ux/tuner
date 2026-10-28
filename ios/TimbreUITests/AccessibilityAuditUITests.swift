@@ -215,6 +215,34 @@ final class AccessibilityAuditUITests: XCTestCase {
         audit("metronome")
     }
 
+    /// Explicit attribution run only; never selected by the required accessibility partitions.
+    func testSongsDynamicTypeTimingDiagnostic() throws { try diagnoseSongsSizing(.dynamicType, name: "dynamic-type") }
+    func testSongsClippedTextTimingDiagnostic() throws { try diagnoseSongsSizing(.textClipped, name: "clipped-text") }
+
+    private func diagnoseSongsSizing(_ kind: XCUIAccessibilityAuditType, name: String) throws {
+        guard ProcessInfo.processInfo.environment["TIMBRE_SONG_SIZING_DIAGNOSTIC"] == "1" else {
+            throw XCTSkip("Opt-in timing evidence only; required accessibility partitions remain unchanged")
+        }
+        app.launchEnvironment["TIMBRE_SONG_PAGE_TRACE"] = "1"
+        app.launchEnvironment["TIMBRE_SONG_SIZING_PROBE"] = "1"
+        launchOnboarded()
+        let buttons = app.tabBars.firstMatch.buttons
+        XCTAssertTrue(buttons.firstMatch.waitForExistence(timeout: 25))
+        XCTAssertEqual(buttons.count, 5)
+        XCTAssertTrue(replayTab(index: 2, count: 5, name: "Songs"))
+        let findings = Findings()
+        attachAuditState("songs-timing-before-" + name)
+        print("SONGS-SIZING-DIAGNOSTIC audit-begin \(name) pid-not-inferred time=\(Date().timeIntervalSince1970)")
+        let problem = run("tab-3-songs", types: kind, into: findings)
+        print("SONGS-SIZING-DIAGNOSTIC audit-end \(name) completed=\(problem == nil) time=\(Date().timeIntervalSince1970)")
+        let report = XCTAttachment(string: findings.lines.joined(separator: "\n"))
+        report.name = "songs-timing-" + name
+        report.lifetime = .keepAlways
+        add(report)
+        if let problem { XCTFail("Original SDK audit did not complete: " + problem) }
+        for failure in findings.failing { XCTFail(failure) }
+    }
+
     // MARK: Helpers
 
     private func launchOnboarded() {

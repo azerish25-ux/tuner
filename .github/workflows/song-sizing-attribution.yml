@@ -1,0 +1,146 @@
+name: Songs audit sizing attribution
+on:
+  push:
+    branches: [codex/song-sizing-attribution-c800]
+permissions:
+  contents: read
+concurrency:
+  group: songs-sizing-attribution-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  native:
+    runs-on: macos-15
+    timeout-minutes: 90
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+      HOMEBREW_NO_AUTO_UPDATE: '1'
+      HOMEBREW_NO_INSTALL_CLEANUP: '1'
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd
+        with:
+          persist-credentials: false
+      - name: Prepare exact source and simulator
+        run: |
+          set -euo pipefail
+          mkdir -p ci-out ios/build
+          git rev-parse HEAD > ci-out/source-revision.txt
+          xcodebuild -version > ci-out/toolchain.txt
+          command -v xcodegen >/dev/null 2>&1 || brew install xcodegen
+          (cd ios && xcodegen generate)
+          bash tools/ci/ensure-metal.sh
+          xcrun simctl list devices available -j > ci-out/devices.json
+          DEVICE_ID=$(python3 -c 'import json,re; d=json.load(open("ci-out/devices.json")); runtimes=sorted(d["devices"].items(),key=lambda p:tuple(map(int,re.findall(r"\d+",p[0]))),reverse=True); print(next(x["udid"] for k,v in runtimes if "iOS" in k for x in v if x["name"]=="iPhone 17 Pro"))')
+          echo "DEVICE_ID=$DEVICE_ID" >> "$GITHUB_ENV"
+          xcrun simctl boot "$DEVICE_ID" || true
+          xcrun simctl bootstatus "$DEVICE_ID" -b
+      - name: Build app and original tests
+        id: build
+        timeout-minutes: 25
+        run: |
+          set -o pipefail
+          xcodebuild build-for-testing -project ios/Timbre.xcodeproj -scheme Timbre \
+            -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd \
+            CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/build.log
+      - name: Install app and grant simulator microphone permission
+        run: |
+          xcrun simctl install "$DEVICE_ID" ios/build/dd/Build/Products/Debug-iphonesimulator/Timbre.app
+          xcrun simctl privacy "$DEVICE_ID" grant microphone com.shahradazerisharghi.timbre
+      - name: Attribute both original Songs layout audit kinds
+        timeout-minutes: 25
+        env:
+          TEST_RUNNER_TIMBRE_SONG_SIZING_DIAGNOSTIC: '1'
+        run: |
+          python3 - <<'PY'
+          import json,os,pathlib,subprocess,threading,time,re
+          from collections import Counter
+          output=pathlib.Path('ci-out')
+          device=os.environ['DEVICE_ID']
+          bundle='com.shahradazerisharghi.timbre'
+          statuses=[]
+          def sample_app(name):
+              receipt={'diagnosticOnly':True,'device':device,'bundle':bundle}
+              try:
+                  installed=subprocess.check_output(['xcrun','simctl','get_app_container',device,bundle,'app'],text=True).strip()
+                  executable=str(pathlib.Path(installed)/'Timbre')
+                  candidates=subprocess.run(['pgrep','-x','Timbre'],capture_output=True,text=True,check=False).stdout.split()
+                  def identity(pid):
+                      path=subprocess.check_output(['ps','-ww','-p',pid,'-o','comm='],text=True).strip()
+                      start=subprocess.check_output(['ps','-ww','-p',pid,'-o','lstart='],text=True).strip()
+                      return path,start
+                  valid=[]
+                  for pid in candidates:
+                      try:
+                          path,start=identity(pid)
+                          if path==executable and start: valid.append((pid,start))
+                      except subprocess.CalledProcessError: pass
+                  if len(valid)!=1: raise ValueError('Selected installed app process is missing or ambiguous')
+                  pid,start=valid[0]
+                  if identity(pid)!=(executable,start): raise ValueError('App process identity changed before sampling')
+                  receipt.update(pid=int(pid),executable=executable,start=start)
+                  receipt['sample_begin_utc']=time.time()
+                  result=subprocess.run(['sample',pid,'5','10','-file',str(output/(name+'-sample.txt'))],capture_output=True,text=True,timeout=12,check=False)
+                  receipt['sample_end_utc']=time.time()
+                  receipt['sample_exit']=result.returncode
+                  receipt['same_identity_after']=identity(pid)==(executable,start)
+                  receipt['sample_stderr']=result.stderr
+              except Exception as error:
+                  receipt['sampling_incomplete']=str(error)
+              (output/(name+'-sample-receipt.json')).write_text(json.dumps(receipt,indent=2)+'\n')
+          for name in ['testSongsDynamicTypeTimingDiagnostic','testSongsClippedTextTimingDiagnostic']:
+              command=['xcodebuild','test-without-building','-project','ios/Timbre.xcodeproj','-scheme','Timbre',
+                  '-parallel-testing-enabled','NO','-test-timeouts-enabled','YES',
+                  '-default-test-execution-time-allowance','600','-maximum-test-execution-time-allowance','600',
+                  '-only-testing:TimbreUITests/AccessibilityAuditUITests/'+name,
+                  '-destination','platform=iOS Simulator,id='+device,'-derivedDataPath','ios/build/dd',
+                  '-resultBundlePath',str(output/(name+'.xcresult')),'CODE_SIGNING_ALLOWED=NO']
+              sampler=None
+              with (output/(name+'.log')).open('w') as log:
+                  with subprocess.Popen(command,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True,bufsize=1) as process:
+                      for line in process.stdout:
+                          log.write(line);log.flush()
+                          if 'SONGS-SIZING-DIAGNOSTIC audit-begin' in line and sampler is None:
+                              sampler=threading.Thread(target=sample_app,args=(name,));sampler.start()
+                      code=process.wait()
+              if sampler: sampler.join(15)
+              events=re.findall(r"Test Case '-\[TimbreUITests.AccessibilityAuditUITests "+name+r"\]' (started|passed|failed|skipped)", (output/(name+'.log')).read_text())
+              complete=Counter(events)==Counter(started=1,passed=1)
+              text=(output/(name+'.log')).read_text()
+              begin=re.findall(r'SONGS-SIZING-DIAGNOSTIC audit-begin .* time=([0-9.]+)',text)
+              end=re.findall(r'SONGS-SIZING-DIAGNOSTIC audit-end .* time=([0-9.]+)',text)
+              receipt_path=output/(name+'-sample-receipt.json')
+              receipt=json.loads(receipt_path.read_text()) if receipt_path.exists() else {}
+              contained=(len(begin)==len(end)==1 and receipt.get('sample_exit')==0
+                  and receipt.get('same_identity_after') is True
+                  and float(begin[0])<=receipt.get('sample_begin_utc',-1)
+                  and receipt.get('sample_end_utc',float('inf'))<=float(end[0]))
+              receipt['sample_wholly_within_audit']=contained
+              receipt_path.write_text(json.dumps(receipt,indent=2)+'\n')
+              statuses.append({'method':name,'exit':code,'exact_once_pass':complete,'sample_within_audit':contained,'sample_triggered':sampler is not None})
+          (output/'diagnostic-status.json').write_text(json.dumps({'diagnosticOnly':True,'required_gate_replaced':False,'tests':statuses},indent=2)+'\n')
+          raise SystemExit(any(row['exit']!=0 or not row['exact_once_pass'] or not row['sample_triggered'] or not row['sample_within_audit'] for row in statuses))
+          PY
+      - name: Preserve original results and bounded app traces
+        if: always()
+        run: |
+          for suite in testSongsDynamicTypeTimingDiagnostic testSongsClippedTextTimingDiagnostic; do
+            if [ -d "ci-out/$suite.xcresult" ]; then
+              xcrun xcresulttool export attachments --path "ci-out/$suite.xcresult" --output-path "ci-out/$suite-attachments"
+            fi
+          done
+          DATA=$(xcrun simctl get_app_container "$DEVICE_ID" com.shahradazerisharghi.timbre data) || exit 1
+          if [ -d "$DATA/Library/Application Support/TimbreUITests" ]; then
+            mkdir -p ci-out/app-traces
+            find "$DATA/Library/Application Support/TimbreUITests" -name 'song-page-trace*.ndjson' -print
+            python3 - <<'PY'
+          import os,pathlib,shutil,subprocess
+          root=pathlib.Path(subprocess.check_output(['xcrun','simctl','get_app_container',os.environ['DEVICE_ID'],'com.shahradazerisharghi.timbre','data'],text=True).strip())/'Library/Application Support/TimbreUITests'
+          for source in root.glob('*/song-page-trace*.ndjson'):
+              shutil.copyfile(source,pathlib.Path('ci-out/app-traces')/(source.parent.name+'-'+source.name))
+          PY
+          fi
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        if: always()
+        with:
+          name: songs-sizing-attribution-originals
+          path: ci-out
+          retention-days: 14

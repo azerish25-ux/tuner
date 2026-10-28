@@ -29,6 +29,8 @@ enum TestSupport {
         #if DEBUG
         /// "1": report the resting live stage disappearing to its own priming session; not GPU completion.
         case simulatorPriming = "TIMBRE_SIMULATOR_PRIMING"
+        /// "1": add sizing intervals to the separately enabled local Songs trace.
+        case songSizingProbe = "TIMBRE_SONG_SIZING_PROBE"
         #endif
         /// "1": bounded local Songs page geometry/position observations; never a scrolling instruction.
         case songPageTrace = "TIMBRE_SONG_PAGE_TRACE"
