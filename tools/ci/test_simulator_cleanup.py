@@ -96,6 +96,23 @@ class CleanupTests(unittest.TestCase):
             _, calls = self.execute(changes=changes, invalid=True)
             self.assertEqual(calls, [])
 
+    def test_failed_prelaunch_needs_no_isolation_and_keeps_its_failure(self):
+        result, calls = self.execute(changes={'launch_attempts': 0, 'cleanup_not_required': True,
+                                              'cleanup_confirmed': None, 'cleanup_error': None})
+        self.assertEqual(calls, [])
+        self.assertEqual(result['skipped'], 'Failed before any app launch attempt')
+        self.assertTrue(result['warmup_failure_retained'])
+        self.assertFalse(result['reset_completed'])
+
+    def test_no_launch_marker_cannot_override_attempted_or_unknown_process_cleanup(self):
+        base = {'launch_attempts': 0, 'cleanup_not_required': True,
+                'cleanup_confirmed': None, 'cleanup_error': None}
+        for changed in ({'launch_attempts': 1}, {'launch_attempts': False}, {'pid': 321},
+                        {'cleanup_error': 'termination failed'}, {'cleanup_not_required': 'true'}):
+            with self.subTest(changed=changed):
+                _, calls = self.execute(changes={**base, **changed}, invalid=True)
+                self.assertEqual(calls, [])
+
     def test_malformed_receipt_shape_records_failure_without_native_commands(self):
         for raw in ('null', '[]', '42', '"receipt"', 'true', '{invalid'):
             with self.subTest(raw=raw):

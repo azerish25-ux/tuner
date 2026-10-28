@@ -309,6 +309,10 @@ def warmup(app: Path, device: str, languages: list[str], locale: str, out: Path)
             diagnose(command, filename)
         raise RuntimeError('Simulator warmup failed; diagnostic-only evidence: ' + str(out)) from error
     finally:
+        if receipt['launch_attempts'] == 0:
+            # A failed preflight never created an owned app process. Keep the setup failure,
+            # but do not ask the isolation step to recover an unattempted termination.
+            receipt['cleanup_not_required'] = True
         if launched:
             try:
                 invoke(['xcrun', 'simctl', 'terminate', device, BUNDLE], timeout=30)

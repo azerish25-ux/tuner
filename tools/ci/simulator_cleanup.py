@@ -75,6 +75,13 @@ def isolate(device: str, warmup_status: Path, out: Path) -> None:
         if prior.get('passed') is True or prior.get('cleanup_confirmed') is True:
             result['skipped'] = 'No unconfirmed failed priming cleanup'
             return
+        if 'cleanup_not_required' in prior:
+            if prior['cleanup_not_required'] is not True or prior.get('passed') is not False \
+                    or type(prior.get('launch_attempts')) is not int or prior['launch_attempts'] != 0 \
+                    or 'pid' in prior or prior.get('cleanup_error'):
+                raise ValueError('No-launch cleanup marker contradicts the priming receipt')
+            result['skipped'] = 'Failed before any app launch attempt'
+            return
         if prior.get('passed') is not False or type(prior.get('launch_attempts')) is not int or prior['launch_attempts'] != 1 \
                 or prior.get('cleanup_confirmed') is not False or not prior.get('cleanup_error'):
             raise ValueError('Receipt does not establish an unconfirmed failed priming cleanup')

@@ -19,7 +19,7 @@ OTHER = 'E952A9B0-CC78-435C-BF08-06AD47FE1077'
 
 
 class WarmupTests(unittest.TestCase):
-    def execute(self, failure=None, fail_once=False, diagnostic_returncode=0):
+    def execute(self, failure=None, fail_once=False, diagnostic_returncode=0, preflight_timeout=False):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             app = root / 'Timbre.app'
@@ -36,14 +36,27 @@ class WarmupTests(unittest.TestCase):
             out = root / 'diagnostics'
             with patch.object(warm.subprocess, 'run', side_effect=native), patch.object(warm.time, 'sleep'), \
                  patch.object(warm.os, 'kill') as alive, patch.object(warm, 'wait_for_stage_rest', return_value={'synthetic': True}), \
-                 patch.object(warm, 'prepare_stage_rest_container', return_value=lambda: 'synthetic'), \
+                 patch.object(warm, 'prepare_stage_rest_container', return_value=lambda: 'synthetic',
+                              side_effect=subprocess.TimeoutExpired(['xcrun', 'simctl', 'get_app_container'], 5)
+                              if preflight_timeout else None), \
                  patch.dict(os.environ, {'GITHUB_SHA': 'source'}):
-                if failure:
+                if failure or preflight_timeout:
                     with self.assertRaises(RuntimeError):
                         warm.warmup(app, DEVICE, ['ar'], 'ar_SA', out)
                 else:
                     warm.warmup(app, DEVICE, ['ar'], 'ar_SA', out)
             return json.loads((out / 'status.json').read_text()), calls
+
+    def test_prelaunch_container_timeout_retains_failure_without_claiming_cleanup(self):
+        status, calls = self.execute(preflight_timeout=True)
+        self.assertFalse(status['passed'])
+        self.assertEqual(status['launch_attempts'], 0)
+        self.assertTrue(status['cleanup_not_required'])
+        self.assertNotIn('cleanup_confirmed', status)
+        self.assertIn('get_app_container', status['error'])
+        self.assertIn('5 seconds', status['error'])
+        self.assertFalse(any(c[0][:3] in (['xcrun', 'simctl', 'launch'], ['xcrun', 'simctl', 'terminate'])
+                             for c in calls))
 
     def test_one_scoped_locale_specific_launch_then_terminate_with_binary_identity(self):
         status, calls = self.execute()
@@ -410,6 +423,8 @@ class ProcessProbeTests(unittest.TestCase):
         status, calls = self.execute(grant_code=7)
         self.assertFalse(status['microphone_grant_command_succeeded'])
         self.assertEqual(status['launch_attempts'], 0)
+        self.assertTrue(status['cleanup_not_required'])
+        self.assertNotIn('cleanup_confirmed', status)
         self.assertFalse(any(c[0][:3] == ['xcrun', 'simctl', 'launch'] for c in calls))
         self.assertEqual(status['commands'][1]['returncode'], 7)
 
