@@ -26,15 +26,17 @@ def job_condition(filename, job):
     return expression
 
 
-def enabled(expression, event='push', ref=HANDOFF, message='ordinary checkpoint', labels=()):
+def enabled(expression, event='push', ref=HANDOFF, message='ordinary checkpoint', labels=(), cancelled=False):
     values = {'github.event_name': event, 'github.ref': ref,
               'github.event.head_commit.message': message,
               'github.event.pull_request.labels.*.name': list(labels)}
     for key in sorted(values, key=len, reverse=True):
         expression = expression.replace(key, repr(values[key]))
     expression = expression.replace('&&', ' and ').replace('||', ' or ')
+    expression = re.sub(r'!(?!=)', ' not ', expression)
     return eval(expression, {'__builtins__': {}, 'contains': lambda value, item: item in value,
-                             'startsWith': lambda value, prefix: value.startswith(prefix)})
+                             'startsWith': lambda value, prefix: value.startswith(prefix),
+                             'always': lambda: True, 'cancelled': lambda: cancelled})
 
 
 class ArtifactQATriggerTests(unittest.TestCase):
@@ -100,6 +102,8 @@ class ArtifactQATriggerTests(unittest.TestCase):
         self.assertFalse(enabled(condition, event='pull_request'))
         self.assertTrue(enabled(condition, event='pull_request', labels=['captures']))
         self.assertTrue(enabled(condition, event='schedule'))
+        self.assertFalse(enabled(condition, event='schedule', cancelled=True))
+        self.assertFalse(enabled(condition, event='pull_request', labels=['captures'], cancelled=True))
         for filename in ['nightly.yml', 'l10n.yml', 'caption-typography.yml']:
             source = (assets.ROOT / '.github/workflows' / filename).read_text()
             expected = ("cancel-in-progress: ${{ github.event_name == 'pull_request' }}"

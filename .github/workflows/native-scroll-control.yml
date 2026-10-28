@@ -1,0 +1,73 @@
+name: Native scroll platform control
+on:
+  push:
+    branches: [codex/scroll-platform-control-31bcd46]
+permissions:
+  contents: read
+jobs:
+  marketing:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.12'
+      - run: python3 -m pip install -r tools/marketing/requirements.txt
+      - run: python3 -m unittest discover -s tools/marketing/tests -p 'test_*.py'
+  native-control:
+    runs-on: macos-15
+    timeout-minutes: 35
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+      HOMEBREW_NO_AUTO_UPDATE: '1'
+      HOMEBREW_NO_INSTALL_CLEANUP: '1'
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd
+        with:
+          persist-credentials: false
+      - name: Generate project and select simulator
+        run: |
+          set -euo pipefail
+          mkdir -p ci-out
+          git rev-parse HEAD > ci-out/source-revision.txt
+          command -v xcodegen >/dev/null 2>&1 || brew install xcodegen
+          (cd ios && xcodegen generate)
+          bash tools/ci/ensure-metal.sh
+          DEVICE_ID=$(xcrun simctl list devices available -j | python3 -c 'import json; d=json.load(__import__("sys").stdin); print(next(x["udid"] for k,v in d["devices"].items() if "iOS" in k for x in v if x["name"]=="iPhone 17 Pro"))')
+          echo "DEVICE_ID=$DEVICE_ID" >> "$GITHUB_ENV"
+          xcrun simctl boot "$DEVICE_ID" || true
+          xcrun simctl bootstatus "$DEVICE_ID" -b
+      - name: Run four diagnostic native controls
+        run: |
+          set -o pipefail
+          xcodebuild test -project ios/Timbre.xcodeproj -scheme Timbre -parallel-testing-enabled NO \
+            -only-testing:TimbreAppTests/NativeScrollTrackingControlTests \
+            -test-timeouts-enabled YES -default-test-execution-time-allowance 120 \
+            -maximum-test-execution-time-allowance 120 \
+            -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd \
+            -resultBundlePath ci-out/Control.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/test.log
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          text = Path('ci-out/test.log').read_text()
+          expected = {'testSingleReaderLeftToRight', 'testSingleReaderRightToLeft',
+                      'testNestedReaderLeftToRight', 'testNestedReaderRightToLeft'}
+          passed = re.findall(r"Test Case '-\[TimbreAppTests.NativeScrollTrackingControlTests (test\w+)\]' passed", text)
+          if len(passed) != 4 or set(passed) != expected or text.count('NATIVE_SCROLL_PLATFORM_CONTROL ') != 4:
+              raise SystemExit('Missing, duplicate or incomplete native diagnostic controls')
+          PY
+      - name: Export original diagnostic attachments
+        if: always()
+        run: |
+          if [ -d ci-out/Control.xcresult ]; then
+            xcrun xcresulttool export attachments --path ci-out/Control.xcresult --output-path ci-out/attachments
+          fi
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        if: always()
+        with:
+          name: native-scroll-platform-control
+          path: ci-out
+          retention-days: 14
