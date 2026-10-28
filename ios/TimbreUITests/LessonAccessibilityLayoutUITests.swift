@@ -432,6 +432,34 @@ final class LessonAccessibilityLayoutUITests: XCTestCase {
         let again = element("along.again")
         XCTAssertTrue(again.waitForExistence(timeout: 30))
         capture("along-done-overlay")
+        let alongScroll = app.scrollViews["along.scroll"]
+        XCTAssertTrue(alongScroll.exists)
+        // Each original viewport is separate: a tall result need not fit on one screen, but every label/action must.
+        for (suffix, label) in [("perfect", "Perfect"), ("good", "Good"),
+                                ("early-late", "Early/late"), ("missed", "Missed")] {
+            let stat = element("along.result.stat.\(suffix)")
+            XCTAssertTrue(stat.waitForExistence(timeout: 15))
+            XCTAssertEqual(stat.label, label)
+            scrollClear(stat, in: alongScroll)
+            XCTAssertTrue(isClear(stat, within: contentViewport(alongScroll, above: nil)))
+            capture("along-result-stat-\(suffix)-clear")
+        }
+        let tempoUp = element("along.result.tempo-up")
+        XCTAssertTrue(tempoUp.exists)
+        XCTAssertTrue(tempoUp.label.contains("Tempo up"))
+        XCTAssertTrue(tempoUp.label.contains("110%"))
+        scrollClear(tempoUp, in: alongScroll)
+        capture("along-result-tempo-up-clear")
+        let timing = element("along.result.timing")
+        XCTAssertEqual(timing.label, "Right on the beat")
+        scrollClear(timing, in: alongScroll)
+        capture("along-result-timing-clear")
+        let share = app.buttons["along.share"]
+        XCTAssertTrue(share.waitForExistence(timeout: 15))
+        scrollClear(share, in: alongScroll)
+        XCTAssertTrue(isClear(share, within: contentViewport(alongScroll, above: nil)))
+        XCTAssertTrue(share.isEnabled)
+        capture("along-result-share-clear")
         scrollClear(again)
         XCTAssertTrue(isClear(again))
         scrollClear(start)

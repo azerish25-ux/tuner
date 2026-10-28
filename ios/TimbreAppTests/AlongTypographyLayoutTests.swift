@@ -87,6 +87,111 @@ final class AlongTypographyLayoutTests: XCTestCase {
         }
     }
 
+    func testAXResultSurfaceUsesContentHeightInsteadOfTheFormerStageCeiling() throws {
+        executionTimeAllowance = 120
+        let language = TimbreLocalization.language
+        defer { TimbreLocalization.language = language }
+        for locale in ["en", "de", "ar"] {
+            TimbreLocalization.language = locale
+            for width in [CGFloat(280), 362] {
+                // This is a surface/component fixture, not a fabricated completed session or hosted screen.
+                let content = resultSurfaceFixture
+                let natural = measure(content, width: width - 24, locale: locale, size: .accessibility5)
+                let surface = AlongResultSurface(tint: Palette.mint) { content }
+                let actual = measure(surface, width: width, locale: locale, size: .accessibility5)
+                XCTAssertEqual(actual.width, width)
+                XCTAssertEqual(actual.height, max(420, natural.height + 24))
+                XCTAssertGreaterThan(actual.height, 420, "The real AX content must not be squeezed into the old stage")
+                let former = Color.clear.frame(height: 420).overlay(content.padding(12))
+                XCTAssertEqual(measure(former, width: width, locale: locale, size: .accessibility5).height, 420,
+                               "An overlaid summary does not reserve its own height")
+                try capture(surface, width: width, locale: locale, size: .accessibility5,
+                            name: "along-result-surface-\(locale)-\(Int(width))")
+            }
+        }
+    }
+
+    func testResultStatsAndTempoReserveFullLocalizedNativeText() throws {
+        executionTimeAllowance = 120
+        let language = TimbreLocalization.language
+        defer { TimbreLocalization.language = language }
+        for locale in ["en", "de", "ar"] {
+            TimbreLocalization.language = locale
+            for width in [CGFloat(140), 280, 338] {
+                let labels: [LocalizedStringKey] = ["Perfect", "Good", "Early/late", "Missed"]
+                for label in labels {
+                    let stat = AlongResultStat(label: label, value: 6, color: Palette.mint, id: "fixture")
+                    let fullText = VStack(spacing: 2) {
+                        Text("6").font(Typeface.number(20))
+                        Text(label).font(.caption).fixedSize(horizontal: false, vertical: true)
+                    }
+                    let actual = measure(stat, width: width, locale: locale, size: .accessibility5)
+                    let reference = measure(fullText, width: width, locale: locale, size: .accessibility5)
+                    XCTAssertLessThanOrEqual(actual.width, width)
+                    XCTAssertEqual(actual.height, reference.height, "Every complete localized grade receives native height")
+                }
+            }
+            for width in [CGFloat(280), 338] {
+                let stats = AlongResultStats(perfect: 6, good: 0, earlyLate: 0, missed: 0, accent: Palette.mint)
+                let actual = measure(stats, width: width, locale: locale, size: .accessibility5)
+                XCTAssertLessThanOrEqual(actual.width, width)
+                XCTAssertGreaterThan(actual.height, measure(stats, width: width, locale: locale, size: .large).height)
+                try capture(stats, width: width, locale: locale, size: .accessibility5,
+                            name: "along-result-stats-\(locale)-\(Int(width))")
+                let tempo = AlongTempoUpLabel(percent: 110, tint: Palette.mint)
+                let fullTempo = HStack(spacing: 6) {
+                    Image(systemName: "arrow.up.right")
+                    Text("Tempo up").fixedSize(horizontal: false, vertical: true)
+                }.font(Typeface.label(13)).padding(.horizontal, 12).padding(.vertical, 5)
+                let measured = measure(tempo, width: width, locale: locale, size: .accessibility5)
+                XCTAssertLessThanOrEqual(measured.width, width)
+                XCTAssertGreaterThanOrEqual(measured.height,
+                    measure(fullTempo, width: width, locale: locale, size: .accessibility5).height)
+                try capture(tempo, width: width, locale: locale, size: .accessibility5,
+                            name: "along-result-tempo-\(locale)-\(Int(width))")
+            }
+        }
+    }
+
+    func testNormalResultStatsKeepTheirOriginalRowGeometry() {
+        executionTimeAllowance = 120
+        let language = TimbreLocalization.language
+        defer { TimbreLocalization.language = language }
+        for locale in ["en", "de", "ar"] {
+            TimbreLocalization.language = locale
+            let original = HStack(spacing: 18) {
+                originalResultStat("Perfect", 6, TakeRibbon.color(.perfect, accent: Palette.mint))
+                originalResultStat("Good", 0, TakeRibbon.color(.good, accent: Palette.mint))
+                originalResultStat("Early/late", 0, TakeRibbon.color(.ok, accent: Palette.mint))
+                originalResultStat("Missed", 0, TakeRibbon.color(.miss, accent: Palette.mint))
+            }
+            for width in [CGFloat(280), 362] {
+                let current = AlongResultStats(perfect: 6, good: 0, earlyLate: 0, missed: 0, accent: Palette.mint)
+                XCTAssertEqual(measure(current, width: width, locale: locale, size: .large),
+                               measure(original, width: width, locale: locale, size: .large))
+            }
+        }
+    }
+
+    private var resultSurfaceFixture: some View {
+        VStack(spacing: 10) {
+            Text("100%").font(Typeface.note(.display))
+            AlongTempoUpLabel(percent: 110, tint: Palette.mint)
+            AlongResultStats(perfect: 6, good: 0, earlyLate: 0, missed: 0, accent: Palette.mint)
+            Text("Right on the beat").font(.subheadline.weight(.semibold))
+            Text("Best combo \(6)").font(.footnote)
+            // Actual pill layout; suppress only its asynchronous poster rendering in this geometry fixture.
+            SharePill(preview: "Right on the beat", tint: Palette.mint, armed: false) { Color.clear }
+        }
+    }
+
+    private func originalResultStat(_ label: LocalizedStringKey, _ value: Int, _ color: Color) -> some View {
+        VStack(spacing: 2) {
+            Text("\(value)").font(Typeface.number(20)).foregroundStyle(color)
+            Text(label).font(.caption).foregroundStyle(Palette.inkSoft)
+        }
+    }
+
     /// Pass-through measurement of the real styled button. Assertions run only at actual native placement.
     /// No production frame hook or independently invented text metrics are involved.
     private struct ActionFitProbe: Layout {

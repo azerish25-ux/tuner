@@ -156,6 +156,7 @@ struct AlongStep: View {
             if typeSize.isAccessibilitySize {
                 ScrollViewReader { scroll in
                     ScrollView { stepContent }
+                        .accessibilityIdentifier("along.scroll")
                         .onChange(of: phase) { _, phase in
                             if phase != .ready { scroll.scrollTo("along.runway", anchor: .top) }
                         }
@@ -250,9 +251,20 @@ struct AlongStep: View {
         .fixedSize(horizontal: false, vertical: true)
     }
 
-    /// The runway with the count-in over it, the combo HUD in its top corners and the results in its place once a
-    /// take ends.
-    private var stage: some View {
+    /// AX results participate in the existing outer scroll layout instead of overflowing a 420pt overlay.
+    /// Ready/playing and all normal-type stages retain their existing bounds and rendering.
+    @ViewBuilder private var stage: some View {
+        if typeSize.isAccessibilitySize && phase == .done {
+            // Retain the compact result fields, not its constrained height; the optional timing strip stays out.
+            AlongResultSurface(tint: scoreTint) { summaryCard(compact: true) }
+                .padding(.horizontal, 12)
+        } else {
+            runwayStage
+        }
+    }
+
+    /// The runway with the count-in and combo HUD; normal-type results keep the same bounded overlay.
+    private var runwayStage: some View {
         TimelineView(.animation(paused: phase != .playing)) { _ in
             let now = CACurrentMediaTime()
             // Seconds since beat 0 on the heard clock (negative during the count-in).
@@ -515,27 +527,35 @@ struct AlongStep: View {
                     Text(verdict).font(Typeface.label(.body)).foregroundStyle(scoreTint)
                 }
                 Text("\(percent)%").font(Typeface.note(compact ? .display : .hero)).foregroundStyle(scoreTint)
-                    .minimumScaleFactor(0.7)
+                    .minimumScaleFactor(typeSize.isAccessibilitySize ? 1 : 0.7)
             }
             // Where VoiceOver lands when a take ends: the whole result in one sentence.
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(Text(verbatim: resultSpoken))
             .accessibilityAddTraits(.isHeader)
             .accessibilityFocused($resultsFocused)
+            .accessibilityActions {
+                if typeSize.isAccessibilitySize {
+                    // The intrinsic results replace the runway's AX node, not its spoken-cue choice.
+                    Button {
+                        guard voiceOver else { return }
+                        spokenChoice = !spoken
+                    } label: {
+                        spoken ? Text("Turn spoken cues off") : Text("Turn spoken cues on")
+                    }
+                }
+            }
             if steppedUp { tempoUp }
             // In the grades' colours, as on the ribbon and the timing strip.
-            HStack(spacing: 18) {
-                stat("Perfect", session.count(.perfect), TakeRibbon.color(.perfect, accent: accent))
-                stat("Good", session.count(.good), TakeRibbon.color(.good, accent: accent))
-                stat("Early/late", session.count(.ok), TakeRibbon.color(.ok, accent: accent))
-                stat("Missed", session.count(.miss), TakeRibbon.color(.miss, accent: accent))
-            }
+            AlongResultStats(perfect: session.count(.perfect), good: session.count(.good),
+                             earlyLate: session.count(.ok), missed: session.count(.miss), accent: accent)
             if !compact {
                 // A dot per note, early above the line and late below; tapping a missed note loops its bar, slower.
                 HighwayTimingStrip(count: take.count, judgments: session.judge.judgments, accent: accent, calm: reduceMotion,
                                    onLoop: loopAction, bar: { bar(of: $0) })
             }
             Text(timingNote).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink).multilineTextAlignment(.center)
+                .accessibilityIdentifier("along.result.timing")
             if timingIsOff {
                 // Consistently early or late usually means the headphones or speaker lag: measure it.
                 Button { calibrating = true } label: { Label("Calibrate timing", systemImage: "metronome") }
@@ -556,17 +576,8 @@ struct AlongStep: View {
 
     /// The ladder moved up after a take of 90 % or better.
     private var tempoUp: some View {
-        HStack(spacing: 6) {
-            Image(systemName: "arrow.up.right")
-            Text("Tempo up")
-            Text("\(ladder.percent)%")
-        }
-        .font(Typeface.label(13))
-        .foregroundStyle(rungTint(ladder.rung))
-        .padding(.horizontal, 12).padding(.vertical, 5)
-        .background(Capsule().fill(rungTint(ladder.rung).opacity(0.14)))
-        .transition(.scale.combined(with: .opacity))
-        .accessibilityElement(children: .combine)
+        AlongTempoUpLabel(percent: ladder.percent, tint: rungTint(ladder.rung))
+            .transition(.scale.combined(with: .opacity))
     }
 
     /// A take of 90 % or more: its poster, a tap from the share sheet (three stars at the lesson tempo, else two),
@@ -594,13 +605,6 @@ struct AlongStep: View {
         let ms = Int((abs(mean) * 1000).rounded())
         if ms < 35 { return "Right on the beat" }
         return mean > 0 ? "About \(ms) ms late on average" : "About \(ms) ms early on average"
-    }
-
-    private func stat(_ label: LocalizedStringKey, _ value: Int, _ color: Color) -> some View {
-        VStack(spacing: 2) {
-            Text("\(value)").font(Typeface.number(20)).foregroundStyle(color)
-            Text(label).font(.caption).foregroundStyle(Palette.inkSoft)
-        }
     }
 
     @ViewBuilder private var controls: some View {
@@ -1352,6 +1356,107 @@ struct ComboBadge: View {
         .animation(calm ? nil : Motion.pluck, value: level)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("Combo ×\(combo)"))
+    }
+}
+
+/// A completed AX take grows with its content; only decoration is masked, not text or actions.
+/// The old stage height is a minimum, never a ceiling. The existing parent ScrollView owns reachability.
+struct AlongResultSurface<Content: View>: View {
+    let tint: Color
+    let content: Content
+
+    init(tint: Color, @ViewBuilder content: () -> Content) {
+        self.tint = tint
+        self.content = content()
+    }
+
+    var body: some View {
+        content.fixedSize(horizontal: false, vertical: true)
+            .padding(12)
+            .frame(maxWidth: .infinity, minHeight: 420)
+            .background {
+                RoundedRectangle(cornerRadius: Metrics.cornerHero, style: .continuous)
+                    .fill(Palette.stageDeep)
+                    .overlay {
+                        RadialGradient(colors: [tint.opacity(0.14), .clear], center: .center,
+                                       startRadius: 4, endRadius: 220)
+                            .clipShape(RoundedRectangle(cornerRadius: Metrics.cornerHero, style: .continuous))
+                    }
+            }
+            .overlay(RoundedRectangle(cornerRadius: Metrics.cornerHero, style: .continuous)
+                .strokeBorder(Palette.hairline, lineWidth: 1))
+    }
+}
+
+/// Keep the normal four-stat row; at AX sizes complete localized stats flow to additional rows.
+struct AlongResultStats: View {
+    let perfect: Int
+    let good: Int
+    let earlyLate: Int
+    let missed: Int
+    let accent: Color
+    @Environment(\.dynamicTypeSize) private var typeSize
+
+    var body: some View {
+        let layout = typeSize.isAccessibilitySize
+            ? AnyLayout(ChordFlowLayout(spacing: 18, lineSpacing: 10))
+            : AnyLayout(HStackLayout(spacing: 18))
+        layout {
+            AlongResultStat(label: "Perfect", value: perfect, color: TakeRibbon.color(.perfect, accent: accent), id: "perfect")
+            AlongResultStat(label: "Good", value: good, color: TakeRibbon.color(.good, accent: accent), id: "good")
+            AlongResultStat(label: "Early/late", value: earlyLate, color: TakeRibbon.color(.ok, accent: accent), id: "early-late")
+            AlongResultStat(label: "Missed", value: missed, color: TakeRibbon.color(.miss, accent: accent), id: "missed")
+        }
+    }
+}
+
+struct AlongResultStat: View {
+    let label: LocalizedStringKey
+    let value: Int
+    let color: Color
+    let id: String
+    @Environment(\.dynamicTypeSize) private var typeSize
+
+    var body: some View {
+        VStack(spacing: 2) {
+            Text("\(value)").font(Typeface.number(20)).foregroundStyle(color)
+            Text(label).font(.caption).foregroundStyle(Palette.inkSoft)
+                .fixedSize(horizontal: false, vertical: typeSize.isAccessibilitySize)
+                .accessibilityIdentifier("along.result.stat.\(id)")
+        }
+    }
+}
+
+/// A full label and percentage, with native wrapping rather than squeezing "Tempo up" into an ellipsis.
+struct AlongTempoUpLabel: View {
+    let percent: Int
+    let tint: Color
+    @Environment(\.dynamicTypeSize) private var typeSize
+
+    var body: some View {
+        Group {
+            if typeSize.isAccessibilitySize {
+                ChordFlowLayout(spacing: 6, lineSpacing: 6) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "arrow.up.right")
+                        Text("Tempo up").fixedSize(horizontal: false, vertical: true)
+                    }
+                    Text("\(percent)%").fixedSize()
+                }
+            } else {
+                HStack(spacing: 6) {
+                    Image(systemName: "arrow.up.right")
+                    Text("Tempo up")
+                    Text("\(percent)%")
+                }
+            }
+        }
+        .font(Typeface.label(13))
+        .foregroundStyle(tint)
+        .padding(.horizontal, 12).padding(.vertical, 5)
+        .background(Capsule().fill(tint.opacity(0.14)))
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier("along.result.tempo-up")
     }
 }
 

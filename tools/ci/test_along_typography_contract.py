@@ -1,4 +1,5 @@
 """Source guards only; native component and whole-step observations are required for approval."""
+import hashlib
 from pathlib import Path
 import unittest
 
@@ -89,6 +90,75 @@ class AlongTypographyContract(unittest.TestCase):
                       'XCTAssertLessThanOrEqual(again.frame.maxY, start.frame.minY)',
                       'XCTAssertGreaterThan(start.frame.width, app.frame.width * 0.75)',
                       'capture("along-done-actions-clear")', 'start.tap()', 'element("lesson.results.level")']:
+            self.assertIn(token, along)
+        self.assertNotIn('XCTSkip', along)
+
+    def test_completed_ax_results_get_intrinsic_height_without_changing_the_runway(self):
+        branch = self.source.split('@ViewBuilder private var stage:', 1)[1].split('private var runwayStage:', 1)[0]
+        for token in ['typeSize.isAccessibilitySize && phase == .done',
+                      'AlongResultSurface(tint: scoreTint) { summaryCard(compact: true) }',
+                      '} else {\n            runwayStage']:
+            self.assertIn(token, branch)
+        normal = self.source.split('    private var runwayStage: some View {', 1)[1].split('    /// What VoiceOver reads', 1)[0]
+        self.assertEqual(hashlib.sha256(normal.encode()).hexdigest(), '061424689d28a1f7de8f4561c5bba70664485f7efc26da04ef319cb50576dba2')
+        panel = self.source.split('    private var resultsPanel: some View {', 1)[1].split("    /// The take's score", 1)[0]
+        self.assertEqual(hashlib.sha256(panel.encode()).hexdigest(), 'cd25a4ee835075a1e8c611a5b45de6c691ac89fe458f1eb46ec1763630618364')
+        self.assertEqual(self.source.count('ScrollView { stepContent }'), 1)
+        self.assertIn('.accessibilityIdentifier("along.scroll")', self.source)
+
+    def test_result_surface_measures_content_and_masks_only_its_background(self):
+        surface = self.source.split('struct AlongResultSurface<', 1)[1].split('struct AlongResultStats:', 1)[0]
+        for token in ['content.fixedSize(horizontal: false, vertical: true)', '.padding(12)',
+                      '.frame(maxWidth: .infinity, minHeight: 420)', '.background {', '.clipShape(']:
+            self.assertIn(token, surface)
+        self.assertLess(surface.index('content.fixedSize'), surface.index('.background {'))
+        self.assertLess(surface.index('.background {'), surface.index('.clipShape('))
+        for forbidden in ['maxHeight:', '.frame(height:', 'ScrollView', 'minimumScaleFactor', 'lineLimit']:
+            self.assertNotIn(forbidden, surface)
+        summary = self.source.split('private func summaryCard', 1)[1].split('/// The ladder moved up', 1)[0]
+        for token in ['.accessibilityFocused($resultsFocused)', '.accessibilityLabel(Text(verbatim: resultSpoken))',
+                      '.minimumScaleFactor(typeSize.isAccessibilitySize ? 1 : 0.7)',
+                      'Button { calibrating = true }', '.accessibilityActions {', 'if typeSize.isAccessibilitySize {',
+                      'guard voiceOver else { return }', 'spokenChoice = !spoken',
+                      'spoken ? Text("Turn spoken cues off") : Text("Turn spoken cues on")',
+                      'if percent >= LessonRun.greatTake && loop == nil',
+                      'takeShare.padding(.top, 2)', '.accessibilityIdentifier("along.slower")',
+                      '.lessonControl(.slower) { ladder.select(0); reset() }']:
+            self.assertIn(token, summary)
+
+    def test_complete_result_labels_flow_only_at_accessibility_sizes(self):
+        components = self.source.split('struct AlongResultStats:', 1)[1].split('struct AlongPlaceLabel:', 1)[0]
+        for token in ['AnyLayout(ChordFlowLayout(spacing: 18, lineSpacing: 10))',
+                      'AnyLayout(HStackLayout(spacing: 18))', '"Perfect"', '"Good"', '"Early/late"', '"Missed"',
+                      '.fixedSize(horizontal: false, vertical: typeSize.isAccessibilitySize)',
+                      'ChordFlowLayout(spacing: 6, lineSpacing: 6)',
+                      'Text("Tempo up").fixedSize(horizontal: false, vertical: true)',
+                      '.accessibilityElement(children: .combine)', '.accessibilityIdentifier("along.result.tempo-up")']:
+            self.assertIn(token, components)
+        for forbidden in ['lineLimit', 'minimumScaleFactor', '.dynamicTypeSize(', '.clipped()', 'ScrollView']:
+            self.assertNotIn(forbidden, components)
+
+    def test_result_component_proof_keeps_original_ceiling_negative_and_normal_control(self):
+        for token in ['testAXResultSurfaceUsesContentHeightInsteadOfTheFormerStageCeiling',
+                      'AlongResultSurface(tint: Palette.mint)', 'max(420, natural.height + 24)',
+                      'XCTAssertGreaterThan(actual.height, 420', 'Color.clear.frame(height: 420).overlay(content.padding(12))',
+                      'testResultStatsAndTempoReserveFullLocalizedNativeText', 'AlongResultStat(label: label',
+                      'XCTAssertEqual(actual.height, reference.height', 'AlongTempoUpLabel(percent: 110',
+                      'testNormalResultStatsKeepTheirOriginalRowGeometry', 'originalResultStat("Early/late"',
+                      'SharePill(preview: "Right on the beat", tint: Palette.mint, armed: false)',
+                      'not a fabricated completed session or hosted screen']:
+            self.assertIn(token, self.native)
+
+    def test_real_completed_take_checks_each_label_and_share_in_its_own_viewport(self):
+        along = self.ui.split('func testPlayAlongStartAndCompletedTakeAtAX5()', 1)[1]
+        for token in ['let alongScroll = app.scrollViews["along.scroll"]',
+                      'scrollClear(stat, in: alongScroll)', 'XCTAssertEqual(stat.label, label)',
+                      'isClear(stat, within: contentViewport(alongScroll, above: nil))',
+                      'scrollClear(tempoUp, in: alongScroll)', 'scrollClear(timing, in: alongScroll)',
+                      'let share = app.buttons["along.share"]', 'scrollClear(share, in: alongScroll)',
+                      'isClear(share, within: contentViewport(alongScroll, above: nil))',
+                      'XCTAssertTrue(share.isEnabled)', 'capture("along-result-share-clear")',
+                      'scrollClear(again)', 'capture("along-done-actions-clear")', 'element("lesson.results.level")']:
             self.assertIn(token, along)
         self.assertNotIn('XCTSkip', along)
 
