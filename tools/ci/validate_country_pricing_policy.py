@@ -155,9 +155,9 @@ def _validate(policy, require_complete=False):
         if group not in GROUPS:
             check(all(v is None for v in row.get('prices', {}).values()), 'unclassified country cannot receive inferred prices')
     if complete or require_complete:
-        # A hand-edited count/boolean/ID is not independent evidence. Until an importer and
-        # source-bound price-point verifier exist, this research artifact must never certify coverage.
-        errors.append('independent active-territory and Apple price-point evidence verifier is not implemented')
+        # This proposal cannot certify live state. The separate verifier requires fresh authenticated
+        # reads and an independently approved target hash; counts/booleans here cannot substitute.
+        errors.append('proposal schema cannot certify live pricing; use the separate fresh Apple evidence verifier')
         check(complete, 'pricing verification is incomplete')
         check(coverage.get('classification_complete') is True, 'country income review unresolved')
         check(coverage.get('authenticated_app_availability_verified') is True, 'authenticated app availability unverified')

@@ -97,7 +97,7 @@ class CountryPricingPolicyTests(unittest.TestCase):
             row['prices'] = {'monthly': '3.99', 'annual': '19.99', 'lifetime': '59.99'}
             row['apple_price_point_ids'] = {k: 'invented-' + k for k in row['prices']}
         errors = validate(self.policy, require_complete=True)
-        self.assertIn('independent active-territory and Apple price-point evidence verifier is not implemented', errors)
+        self.assertIn('proposal schema cannot certify live pricing; use the separate fresh Apple evidence verifier', errors)
 
     def test_malformed_shapes_fail_closed_without_exception(self):
         for value in [None, [], True, 'policy', {'territories': [None]}, {'sources': []}]:

@@ -1,0 +1,31 @@
+name: Pricing evidence regressions
+on:
+  push:
+    branches: [codex/pricing-evidence-validation-c800]
+permissions:
+  contents: read
+jobs:
+  fixtures:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.12'
+      - name: Read-only collection and comparison fixtures
+        env:
+          PYTHONPATH: tools/ci
+        run: |
+          set -euo pipefail
+          mkdir -p ci-out/pricing-fixtures
+          git rev-parse HEAD > ci-out/pricing-fixtures/source-revision.txt
+          python3 -W error::ResourceWarning -m unittest test_apple_pricing_transport test_collect_apple_pricing test_verify_apple_pricing test_country_pricing_policy 2>&1 | tee ci-out/pricing-fixtures/test.log
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        if: always()
+        with:
+          name: pricing-fixture-results-not-account-evidence
+          path: ci-out/pricing-fixtures
+          retention-days: 14
