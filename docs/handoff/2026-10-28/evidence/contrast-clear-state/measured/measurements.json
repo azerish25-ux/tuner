@@ -1,0 +1,2049 @@
+{
+  "diagnosticOnly": true,
+  "auditAuthorization": false,
+  "threshold": 4.5,
+  "method": "Full reviewed support; source-color-near candidates (per-channel <=1), plus 2px-eroded ink interiors to retain top-wash variation, avoid deliberately using edge AA as foreground; these are core candidates, not native alpha/coverage proof; high-contrast strong-ink segmentation and a 2px exclusion band separate candidate backing. All support backing, not selected favorable pixels, supplies conservative observed extrema. Radius2-5 sensitivity retained. Segmentation is a measurement aid, not an independent glyph oracle or a proof of hidden backing.",
+  "limitations": [
+    "Only these three stable revealed layouts and available originals are assessed.",
+    "Finite sequential screenshots/hierarchies are not atomic callback proof.",
+    "A below-threshold support bound does not by itself prove background beneath glyphs is below threshold; inspect the candidate point.",
+    "No trait inference, original issue resolution, accessibility readiness or original offscreen contrast claim.",
+    "Full-glyph coverage needs human support/mask review; near-background AA is deliberately not counted as core. Candidate cores are not native alpha proof, and the 2px exclusion leaves immediate fringe/hidden backing unmeasured."
+  ],
+  "references": [
+    "https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html",
+    "https://www.w3.org/WAI/WCAG22/Techniques/general/G18"
+  ],
+  "targets": [
+    {
+      "finding": 10,
+      "group": "filter",
+      "label": "Violin",
+      "id": "songs.filter.violin.standard.4.title",
+      "parent": "songs.filter.violin.standard.4",
+      "parentLabel": "Violin",
+      "type": "StaticText",
+      "parentType": "Button",
+      "framePoints": [
+        237.66666666666663,
+        175.33333333333331,
+        89,
+        44
+      ],
+      "supportPixels": [
+        818,
+        569,
+        940,
+        614
+      ],
+      "coreROI": null,
+      "roleRGB": [
+        245,
+        243,
+        239
+      ],
+      "source": {
+        "before": {
+          "sha256": "4cee9c82fe4f601d1c17824e74464e69a5e1049ea582e5747ca540840116b9ad",
+          "profile": "sRGB",
+          "profileDescription": 0,
+          "normalization": "declared sRGB: no transform",
+          "size": [
+            1206,
+            2622
+          ],
+          "orientation": 1,
+          "file": "DC214045-E411-4EFF-966B-506D6FEF877F.png"
+        },
+        "after": {
+          "sha256": "53e7646087463ead72ca6488015d15105f5b250f4e8c9477ae2471523db78fde",
+          "profile": "sRGB",
+          "profileDescription": 0,
+          "normalization": "declared sRGB: no transform",
+          "size": [
+            1206,
+            2622
+          ],
+          "orientation": 1,
+          "file": "D63D1E50-2A75-4F41-A3F5-B320185D8EEC.png"
+        },
+        "hierarchyBefore": {
+          "file": "8E92E674-A733-48B8-896C-D05A4CB11B38.json",
+          "sha256": "29f953920f491ed1336cb10f9c4f6e50df0d0cd8a022982bfaeff790183ba347"
+        },
+        "hierarchyAfter": {
+          "file": "8BBA14B9-C024-4D8C-9CB5-920EB5FE8F7E.json",
+          "sha256": "d76b273818e6503ea0a87eeb3634059a7393021b55246c6690e205b13aacc998"
+        },
+        "appBodyExactEquality": true,
+        "appBodyPixelY": 118
+      },
+      "coreCount": 996,
+      "strongInkCount": 1189,
+      "ambiguousBoundaryCount": 1377,
+      "extremes": {
+        "fullSupportBacking": {
+          "ratio": 16.630796793332156,
+          "foreground": {
+            "pixel": [
+              827,
+              588
+            ],
+            "rgb": [
+              244,
+              242,
+              238
+            ],
+            "luminance": 0.8891040458913103
+          },
+          "background": {
+            "pixel": [
+              818,
+              569
+            ],
+            "rgb": [
+              17,
+              19,
+              23
+            ],
+            "luminance": 0.006467772263793671
+          },
+          "backgroundCount": 3117
+        },
+        "adjacentBacking2to8px": {
+          "ratio": 16.630796793332156,
+          "foreground": {
+            "pixel": [
+              827,
+              588
+            ],
+            "rgb": [
+              244,
+              242,
+              238
+            ],
+            "luminance": 0.8891040458913103
+          },
+          "background": {
+            "pixel": [
+              820,
+              569
+            ],
+            "rgb": [
+              17,
+              19,
+              23
+            ],
+            "luminance": 0.006467772263793671
+          },
+          "backgroundCount": 2561
+        }
+      },
+      "backgroundExclusionRadiusSensitivity": {
+        "2": 16.630796793332156,
+        "3": 16.630796793332156,
+        "4": 16.630796793332156,
+        "5": 16.630796793332156
+      },
+      "maskFile": "masks/finding-10.npz",
+      "maskSHA256": "60aada4692065a14560a015fa719f31cb1b10f023e8519b7af009862c4cbbfd4",
+      "authorization": false,
+      "result": "measured observed core/backing bound at least 4.5; no audit waiver"
+    },
+    {
+      "finding": 12,
+      "group": "first",
+      "label": "Joy",
+      "id": "songs.tile.known.song-ode-to-joy.cover.title.1",
+      "parent": "songs.known.song-ode-to-joy",
+      "parentLabel": "Ode to Joy, Songs",
+      "type": "StaticText",
+      "parentType": "Button",
+      "framePoints": [
+        31.1,
+        396.2333333333333,
+        45.99999999999999,
+        32
+      ],
+      "supportPixels": [
+        88,
+        1120,
+        355,
+        1290
+      ],
+      "coreROI": [
+        88,
+        1205,
+        240,
+        1290
+      ],
+      "roleRGB": [
+        6,
+        7,
+        8
+      ],
+      "source": {
+        "before": {
+          "sha256": "3ede2ed9305b009143d708acfa035a556c284886cee4815063d8256425284faf",
+          "profile": "sRGB",
+          "profileDescription": 0,
+          "normalization": "declared sRGB: no transform",
+          "size": [
+            1206,
+            2622
+          ],
+          "orientation": 1,
+          "file": "59ABBC34-9763-4898-99BE-B6D98A391489.png"
+        },
+        "after": {
+          "sha256": "0ad59cf832c8bcffece4cdb9f2325ae3b97de453a0011ec4a303e648f32fafea",
+          "profile": "sRGB",
+          "profileDescription": 0,
+          "normalization": "declared sRGB: no transform",
+          "size": [
+            1206,
+            2622
+          ],
+          "orientation": 1,
+          "file": "39BC4105-C824-48E3-9351-CBD80682AB7C.png"
+        },
+        "hierarchyBefore": {
+          "file": "6FBCAF98-43CC-4185-8ACC-D8D7C40FC04D.json",
+          "sha256": "1a925f2c5430b23013fd34aa8334ed217f440bbbd3e910c07d58d85d7ebb94d1"
+        },
+        "hierarchyAfter": {
+          "file": "97838678-4704-4E7D-B63C-71AE99F1D29F.json",
+          "sha256": "4f1c261b7f8a09e8020d54d11cfadaca076cff959bdac15229a2333623cbc397"
+        },
+        "appBodyExactEquality": true,
+        "appBodyPixelY": 118
+      },
+      "coreCount": 3104,
+      "strongInkCount": 10466,
+      "ambiguousBoundaryCount": 10903,
+      "extremes": {
+        "fullSupportBacking": {
+          "ratio": 7.918088050279351,
+          "foreground": {
+            "pixel": [
+              104,
+              1209
+            ],
+            "rgb": [
+              12,
+              13,
+              14
+            ],
+            "luminance": 0.003977165183822066
+          },
+          "background": {
+            "pixel": [
+              343,
+              1237
+            ],
+            "rgb": [
+              111,
+              172,
+              214
+            ],
+            "luminance": 0.37739594662997616
+          },
+          "backgroundCount": 31383
+        },
+        "adjacentBacking2to8px": {
+          "ratio": 9.290048322734034,
+          "foreground": {
+            "pixel": [
+              104,
+              1209
+            ],
+            "rgb": [
+              12,
+              13,
+              14
+            ],
+            "luminance": 0.003977165183822066
+          },
+          "background": {
+            "pixel": [
+              346,
+              1143
+            ],
+            "rgb": [
+              135,
+              184,
+              230
+            ],
+            "luminance": 0.45145047288190415
+          },
+          "backgroundCount": 9613
+        }
+      },
+      "backgroundExclusionRadiusSensitivity": {
+        "2": 7.918088050279351,
+        "3": 7.918088050279351,
+        "4": 7.918088050279351,
+        "5": 7.918088050279351
+      },
+      "maskFile": "masks/finding-12.npz",
+      "maskSHA256": "cbf6088912bdef65a8c0d5702e0152a14881b6c02df628839a884b2315c70673",
+      "authorization": false,
+      "result": "measured observed core/backing bound at least 4.5; no audit waiver"
+    },
+    {
+      "finding": 14,
+      "group": "first",
+      "label": "C",
+      "id": "songs.tile.known.song-ode-to-joy.chords.chord.C",
+      "parent": "songs.known.song-ode-to-joy",
+      "parentLabel": "Ode to Joy, Songs",
+      "type": "StaticText",
+      "parentType": "Button",
+      "framePoints": [
+        27,
+        453.6666666666667,
+        9.666666666666664,
+        15.333333333333258
+      ],
+      "supportPixels": [
+        79,
+        1365,
+        112,
+        1401
+      ],
+      "coreROI": null,
+      "roleRGB": [
+        245,
+        243,
+        239
+      ],
+      "source": {
+        "before": {
+          "sha256": "3ede2ed9305b009143d708acfa035a556c284886cee4815063d8256425284faf",
+          "profile": "sRGB",
+          "profileDescription": 0,
+          "normalization": "declared sRGB: no transform",
+          "size": [
+            1206,
+            2622
+          ],
+          "orientation": 1,
+          "file": "59ABBC34-9763-4898-99BE-B6D98A391489.png"
+        },
+        "after": {
+          "sha256": "0ad59cf832c8bcffece4cdb9f2325ae3b97de453a0011ec4a303e648f32fafea",
+          "profile": "sRGB",
+          "profileDescription": 0,
+          "normalization": "declared sRGB: no transform",
+          "size": [
+            1206,
+            2622
+          ],
+          "orientation": 1,
+          "file": "39BC4105-C824-48E3-9351-CBD80682AB7C.png"
+        },
+        "hierarchyBefore": {
+          "file": "6FBCAF98-43CC-4185-8ACC-D8D7C40FC04D.json",
+          "sha256": "1a925f2c5430b23013fd34aa8334ed217f440bbbd3e910c07d58d85d7ebb94d1"
+        },
+        "hierarchyAfter": {
+          "file": "97838678-4704-4E7D-B63C-71AE99F1D29F.json",
+          "sha256": "4f1c261b7f8a09e8020d54d11cfadaca076cff959bdac15229a2333623cbc397"
+        },
+        "appBodyExactEquality": true,
+        "appBodyPixelY": 118
+      },
+      "coreCount": 239,
+      "strongInkCount": 309,
+      "ambiguousBoundaryCount": 320,
+      "extremes": {
+        "fullSupportBacking": {
+          "ratio": 14.035707041591065,
+          "foreground": {
+            "pixel": [
+              86,
+              1373
+            ],
+            "rgb": [
+              244,
+              242,
+              238
+            ],
+            "luminance": 0.8891040458913103
+          },
+          "background": {
+            "pixel": [
+              91,
+              1388
+            ],
+            "rgb": [
+              43,
+              31,
+              46
+            ],
+            "luminance": 0.0169082108303149
+          },
+          "backgroundCount": 629
+        },
+        "adjacentBacking2to8px": {
+          "ratio": 14.035707041591065,
+          "foreground": {
+            "pixel": [
+              86,
+              1373
+            ],
+            "rgb": [
+              244,
+              242,
+              238
+            ],
+            "luminance": 0.8891040458913103
+          },
+          "background": {
+            "pixel": [
+              91,
+              1388
+            ],
+            "rgb": [
+              43,
+              31,
+              46
+            ],
+            "luminance": 0.0169082108303149
+          },
+          "backgroundCount": 595
+        }
+      },
+      "backgroundExclusionRadiusSensitivity": {
+        "2": 14.035707041591065,
+        "3": 14.035707041591065,
+        "4": 14.035707041591065,
+        "5": 14.035707041591065
+      },
+      "maskFile": "masks/finding-14.npz",
+      "maskSHA256": "cce1971abfd9581b0a980fe39c4faabbaea209d823035366e52f49e6ae7a8701",
+      "authorization": false,
+      "result": "measured observed core/backing bound at least 4.5; no audit waiver"
+    },
+    {
+      "finding": 15,
+      "group": "first",
+      "label": "G",
+      "id": "songs.tile.known.song-ode-to-joy.chords.chord.G",
+      "parent": "songs.known.song-ode-to-joy",
+      "parentLabel": "Ode to Joy, Songs",
+      "type": "StaticText",
+      "parentType": "Button",
+      "framePoints": [
+        54.666666666666664,
+        453.6666666666667,
+        9.999999999999993,
+        15.333333333333258
+      ],
+      "supportPixels": [
+        162,
+        1365,
+        197,
+        1401
+      ],
+      "coreROI": null,
+      "roleRGB": [
+        245,
+        243,
+        239
+      ],
+      "source": {
+        "before": {
+          "sha256": "3ede2ed9305b009143d708acfa035a556c284886cee4815063d8256425284faf",
+          "profile": "sRGB",
+          "profileDescription": 0,
+          "normalization": "declared sRGB: no transform",
+          "size": [
+            1206,
+            2622
+          ],
+          "orientation": 1,
+          "file": "59ABBC34-9763-4898-99BE-B6D98A391489.png"
+        },
+        "after": {
+          "sha256": "0ad59cf832c8bcffece4cdb9f2325ae3b97de453a0011ec4a303e648f32fafea",
+          "profile": "sRGB",
+          "profileDescription": 0,
+          "normalization": "declared sRGB: no transform",
+          "size": [
+            1206,
+            2622
+          ],
+          "orientation": 1,
+          "file": "39BC4105-C824-48E3-9351-CBD80682AB7C.png"
+        },
+        "hierarchyBefore": {
+          "file": "6FBCAF98-43CC-4185-8ACC-D8D7C40FC04D.json",
+          "sha256": "1a925f2c5430b23013fd34aa8334ed217f440bbbd3e910c07d58d85d7ebb94d1"
+        },
+        "hierarchyAfter": {
+          "file": "97838678-4704-4E7D-B63C-71AE99F1D29F.json",
+          "sha256": "4f1c261b7f8a09e8020d54d11cfadaca076cff959bdac15229a2333623cbc397"
+        },
+        "appBodyExactEquality": true,
+        "appBodyPixelY": 118
+      },
+      "coreCount": 283,
+      "strongInkCount": 352,
+      "ambiguousBoundaryCount": 366,
+      "extremes": {
+        "fullSupportBacking": {
+          "ratio": 13.908838491099905,
+          "foreground": {
+            "pixel": [
+              183,
+              1374
+            ],
+            "rgb": [
+              244,
+              242,
+              238
+            ],
+            "luminance": 0.8891040458913103
+          },
+          "background": {
+            "pixel": [
+              196,
+              1365
+            ],
+            "rgb": [
+              43,
+              32,
+              47
+            ],
+            "luminance": 0.01751850965069668
+          },
+          "backgroundCount": 611
+        },
+        "adjacentBacking2to8px": {
+          "ratio": 13.908838491099905,
+          "foreground": {
+            "pixel": [
+              183,
+              1374
+            ],
+            "rgb": [
+              244,
+              242,
+              238
+            ],
+            "luminance": 0.8891040458913103
+          },
+          "background": {
+            "pixel": [
+              192,
+              1373
+            ],
+            "rgb": [
+              43,
+              32,
+              47
+            ],
+            "luminance": 0.01751850965069668
+          },
+          "backgroundCount": 562
+        }
+      },
+      "backgroundExclusionRadiusSensitivity": {
+        "2": 13.908838491099905,
+        "3": 13.908838491099905,
+        "4": 13.908838491099905,
+        "5": 13.908838491099905
+      },
+      "maskFile": "masks/finding-15.npz",
+      "maskSHA256": "6dae8aa92dd11d944f48dc068dc0aac201163a499f5459a40bbdca0d2586330c",
+      "authorization": false,
+      "result": "measured observed core/backing bound at least 4.5; no audit waiver"
+    },
+    {
+      "finding": 16,
+      "group": "first",
+      "label": "2:07",
+      "id": "songs.tile.known.song-ode-to-joy.duration",
+      "parent": "songs.known.song-ode-to-joy",
+      "parentLabel": "Ode to Joy, Songs",
+      "type": "StaticText",
+      "parentType": "Button",
+      "framePoints": [
+        51,
+        500.49999999999994,
+        27.666666666666657,
+        15.333333333333314
+      ],
+      "supportPixels": [
+        147,
+        1495,
+        242,
+        1554
+      ],
+      "coreROI": null,
+      "roleRGB": [
+        163,
+        168,
+        177
+      ],
+      "source": {
+        "before": {
+          "sha256": "3ede2ed9305b009143d708acfa035a556c284886cee4815063d8256425284faf",
+          "profile": "sRGB",
+          "profileDescription": 0,
+          "normalization": "declared sRGB: no transform",
+          "size": [
+            1206,
+            2622
+          ],
+          "orientation": 1,
+          "file": "59ABBC34-9763-4898-99BE-B6D98A391489.png"
+        },
+        "after": {
+          "sha256": "0ad59cf832c8bcffece4cdb9f2325ae3b97de453a0011ec4a303e648f32fafea",
+          "profile": "sRGB",
+          "profileDescription": 0,
+          "normalization": "declared sRGB: no transform",
+          "size": [
+            1206,
+            2622
+          ],
+          "orientation": 1,
+          "file": "39BC4105-C824-48E3-9351-CBD80682AB7C.png"
+        },
+        "hierarchyBefore": {
+          "file": "6FBCAF98-43CC-4185-8ACC-D8D7C40FC04D.json",
+          "sha256": "1a925f2c5430b23013fd34aa8334ed217f440bbbd3e910c07d58d85d7ebb94d1"
+        },
+        "hierarchyAfter": {
+          "file": "97838678-4704-4E7D-B63C-71AE99F1D29F.json",
+          "sha256": "4f1c261b7f8a09e8020d54d11cfadaca076cff959bdac15229a2333623cbc397"
+        },
+        "appBodyExactEquality": true,
+        "appBodyPixelY": 118
+      },
+      "coreCount": 535,
+      "strongInkCount": 692,
+      "ambiguousBoundaryCount": 913,
+      "extremes": {
+        "fullSupportBacking": {
+          "ratio": 8.21612139629776,
+          "foreground": {
+            "pixel": [
+              165,
+              1510
+            ],
+            "rgb": [
+              162,
+              167,
+              176
+            ],
+            "luminance": 0.3845340449582884
+          },
+          "background": {
+            "pixel": [
+              221,
+              1495
+            ],
+            "rgb": [
+              7,
+              10,
+              12
+            ],
+            "luminance": 0.0028879776720548904
+          },
+          "backgroundCount": 4157
+        },
+        "adjacentBacking2to8px": {
+          "ratio": 8.219824102649063,
+          "foreground": {
+            "pixel": [
+              165,
+              1510
+            ],
+            "rgb": [
+              162,
+              167,
+              176
+            ],
+            "luminance": 0.3845340449582884
+          },
+          "background": {
+            "pixel": [
+              217,
+              1503
+            ],
+            "rgb": [
+              7,
+              10,
+              11
+            ],
+            "luminance": 0.0028641537254121847
+          },
+          "backgroundCount": 1958
+        }
+      },
+      "backgroundExclusionRadiusSensitivity": {
+        "2": 8.21612139629776,
+        "3": 8.21612139629776,
+        "4": 8.21612139629776,
+        "5": 8.21612139629776
+      },
+      "maskFile": "masks/finding-16.npz",
+      "maskSHA256": "b81451dd8b1a1653311ee8c12e63d6e46fcb28375ba7c82f0c6c82c186d5ed13",
+      "authorization": false,
+      "result": "measured observed core/backing bound at least 4.5; no audit waiver"
+    },
+    {
+      "finding": 17,
+      "group": "first",
+      "label": "+35 XP",
+      "id": "songs.tile.known.song-ode-to-joy.xp",
+      "parent": "songs.known.song-ode-to-joy",
+      "parentLabel": "Ode to Joy, Songs",
+      "type": "StaticText",
+      "parentType": "Button",
+      "framePoints": [
+        85.66666666666666,
+        500.3333333333333,
+        44.66666666666666,
+        15.666666666666686
+      ],
+      "supportPixels": [
+        251,
+        1495,
+        397,
+        1554
+      ],
+      "coreROI": null,
+      "roleRGB": [
+        163,
+        168,
+        177
+      ],
+      "source": {
+        "before": {
+          "sha256": "3ede2ed9305b009143d708acfa035a556c284886cee4815063d8256425284faf",
+          "profile": "sRGB",
+          "profileDescription": 0,
+          "normalization": "declared sRGB: no transform",
+          "size": [
+            1206,
+            2622
+          ],
+          "orientation": 1,
+          "file": "59ABBC34-9763-4898-99BE-B6D98A391489.png"
+        },
+        "after": {
+          "sha256": "0ad59cf832c8bcffece4cdb9f2325ae3b97de453a0011ec4a303e648f32fafea",
+          "profile": "sRGB",
+          "profileDescription": 0,
+          "normalization": "declared sRGB: no transform",
+          "size": [
+            1206,
+            2622
+          ],
+          "orientation": 1,
+          "file": "39BC4105-C824-48E3-9351-CBD80682AB7C.png"
+        },
+        "hierarchyBefore": {
+          "file": "6FBCAF98-43CC-4185-8ACC-D8D7C40FC04D.json",
+          "sha256": "1a925f2c5430b23013fd34aa8334ed217f440bbbd3e910c07d58d85d7ebb94d1"
+        },
+        "hierarchyAfter": {
+          "file": "97838678-4704-4E7D-B63C-71AE99F1D29F.json",
+          "sha256": "4f1c261b7f8a09e8020d54d11cfadaca076cff959bdac15229a2333623cbc397"
+        },
+        "appBodyExactEquality": true,
+        "appBodyPixelY": 118
+      },
+      "coreCount": 620,
+      "strongInkCount": 850,
+      "ambiguousBoundaryCount": 1352,
+      "extremes": {
+        "fullSupportBacking": {
+          "ratio": 7.958089155893247,
+          "foreground": {
+            "pixel": [
+              382,
+              1511
+            ],
+            "rgb": [
+              162,
+              167,
+              176
+            ],
+            "luminance": 0.3845340449582884
+          },
+          "background": {
+            "pixel": [
+              341,
+              1510
+            ],
+            "rgb": [
+              12,
+              15,
+              17
+            ],
+            "luminance": 0.004602811861752077
+          },
+          "backgroundCount": 6642
+        },
+        "adjacentBacking2to8px": {
+          "ratio": 7.958089155893247,
+          "foreground": {
+            "pixel": [
+              382,
+              1511
+            ],
+            "rgb": [
+              162,
+              167,
+              176
+            ],
+            "luminance": 0.3845340449582884
+          },
+          "background": {
+            "pixel": [
+              341,
+              1510
+            ],
+            "rgb": [
+              12,
+              15,
+              17
+            ],
+            "luminance": 0.004602811861752077
+          },
+          "backgroundCount": 3070
+        }
+      },
+      "backgroundExclusionRadiusSensitivity": {
+        "2": 7.958089155893247,
+        "3": 8.12779244630207,
+        "4": 8.12779244630207,
+        "5": 8.12779244630207
+      },
+      "maskFile": "masks/finding-17.npz",
+      "maskSHA256": "83363e93e41b3b43262325ee17cc315bafaf9e2ddd9d586e452bd3ad2e9f194f",
+      "authorization": false,
+      "result": "measured observed core/backing bound at least 4.5; no audit waiver"
+    },
+    {
+      "finding": 18,
+      "group": "first",
+      "label": "G",
+      "id": "songs.tile.known.gtr-6-5.chords.chord.G",
+      "parent": "songs.known.gtr-6-5",
+      "parentLabel": "Amazing Grace, Guitar",
+      "type": "StaticText",
+      "parentType": "Button",
+      "framePoints": [
+        189,
+        503.6666666666667,
+        10,
+        15.333333333333314
+      ],
+      "supportPixels": [
+        565,
+        1515,
+        600,
+        1551
+      ],
+      "coreROI": null,
+      "roleRGB": [
+        245,
+        243,
+        239
+      ],
+      "source": {
+        "before": {
+          "sha256": "3ede2ed9305b009143d708acfa035a556c284886cee4815063d8256425284faf",
+          "profile": "sRGB",
+          "profileDescription": 0,
+          "normalization": "declared sRGB: no transform",
+          "size": [
+            1206,
+            2622
+          ],
+          "orientation": 1,
+          "file": "59ABBC34-9763-4898-99BE-B6D98A391489.png"
+        },
+        "after": {
+          "sha256": "0ad59cf832c8bcffece4cdb9f2325ae3b97de453a0011ec4a303e648f32fafea",
+          "profile": "sRGB",
+          "profileDescription": 0,
+          "normalization": "declared sRGB: no transform",
+          "size": [
+            1206,
+            2622
+          ],
+          "orientation": 1,
+          "file": "39BC4105-C824-48E3-9351-CBD80682AB7C.png"
+        },
+        "hierarchyBefore": {
+          "file": "6FBCAF98-43CC-4185-8ACC-D8D7C40FC04D.json",
+          "sha256": "1a925f2c5430b23013fd34aa8334ed217f440bbbd3e910c07d58d85d7ebb94d1"
+        },
+        "hierarchyAfter": {
+          "file": "97838678-4704-4E7D-B63C-71AE99F1D29F.json",
+          "sha256": "4f1c261b7f8a09e8020d54d11cfadaca076cff959bdac15229a2333623cbc397"
+        },
+        "appBodyExactEquality": true,
+        "appBodyPixelY": 118
+      },
+      "coreCount": 283,
+      "strongInkCount": 354,
+      "ambiguousBoundaryCount": 368,
+      "extremes": {
+        "fullSupportBacking": {
+          "ratio": 12.529459601341712,
+          "foreground": {
+            "pixel": [
+              586,
+              1524
+            ],
+            "rgb": [
+              244,
+              242,
+              238
+            ],
+            "luminance": 0.8891040458913103
+          },
+          "background": {
+            "pixel": [
+              566,
+              1515
+            ],
+            "rgb": [
+              19,
+              49,
+              41
+            ],
+            "luminance": 0.0249516799424252
+          },
+          "backgroundCount": 609
+        },
+        "adjacentBacking2to8px": {
+          "ratio": 12.529459601341712,
+          "foreground": {
+            "pixel": [
+              586,
+              1524
+            ],
+            "rgb": [
+              244,
+              242,
+              238
+            ],
+            "luminance": 0.8891040458913103
+          },
+          "background": {
+            "pixel": [
+              569,
+              1515
+            ],
+            "rgb": [
+              19,
+              49,
+              41
+            ],
+            "luminance": 0.0249516799424252
+          },
+          "backgroundCount": 561
+        }
+      },
+      "backgroundExclusionRadiusSensitivity": {
+        "2": 12.529459601341712,
+        "3": 12.529459601341712,
+        "4": 12.529459601341712,
+        "5": 12.529459601341712
+      },
+      "maskFile": "masks/finding-18.npz",
+      "maskSHA256": "46b1cbb8f433454fea07061cb9ad96c922423672730f56884e0119003590dd60",
+      "authorization": false,
+      "result": "measured observed core/backing bound at least 4.5; no audit waiver"
+    },
+    {
+      "finding": 19,
+      "group": "first",
+      "label": "C",
+      "id": "songs.tile.known.gtr-6-5.chords.chord.C",
+      "parent": "songs.known.gtr-6-5",
+      "parentLabel": "Amazing Grace, Guitar",
+      "type": "StaticText",
+      "parentType": "Button",
+      "framePoints": [
+        251.66666666666666,
+        503.6666666666667,
+        9.666666666666657,
+        15.333333333333314
+      ],
+      "supportPixels": [
+        753,
+        1515,
+        786,
+        1551
+      ],
+      "coreROI": null,
+      "roleRGB": [
+        245,
+        243,
+        239
+      ],
+      "source": {
+        "before": {
+          "sha256": "3ede2ed9305b009143d708acfa035a556c284886cee4815063d8256425284faf",
+          "profile": "sRGB",
+          "profileDescription": 0,
+          "normalization": "declared sRGB: no transform",
+          "size": [
+            1206,
+            2622
+          ],
+          "orientation": 1,
+          "file": "59ABBC34-9763-4898-99BE-B6D98A391489.png"
+        },
+        "after": {
+          "sha256": "0ad59cf832c8bcffece4cdb9f2325ae3b97de453a0011ec4a303e648f32fafea",
+          "profile": "sRGB",
+          "profileDescription": 0,
+          "normalization": "declared sRGB: no transform",
+          "size": [
+            1206,
+            2622
+          ],
+          "orientation": 1,
+          "file": "39BC4105-C824-48E3-9351-CBD80682AB7C.png"
+        },
+        "hierarchyBefore": {
+          "file": "6FBCAF98-43CC-4185-8ACC-D8D7C40FC04D.json",
+          "sha256": "1a925f2c5430b23013fd34aa8334ed217f440bbbd3e910c07d58d85d7ebb94d1"
+        },
+        "hierarchyAfter": {
+          "file": "97838678-4704-4E7D-B63C-71AE99F1D29F.json",
+          "sha256": "4f1c261b7f8a09e8020d54d11cfadaca076cff959bdac15229a2333623cbc397"
+        },
+        "appBodyExactEquality": true,
+        "appBodyPixelY": 118
+      },
+      "coreCount": 239,
+      "strongInkCount": 311,
+      "ambiguousBoundaryCount": 322,
+      "extremes": {
+        "fullSupportBacking": {
+          "ratio": 12.669284626337417,
+          "foreground": {
+            "pixel": [
+              760,
+              1523
+            ],
+            "rgb": [
+              244,
+              242,
+              238
+            ],
+            "luminance": 0.8891040458913103
+          },
+          "background": {
+            "pixel": [
+              754,
+              1515
+            ],
+            "rgb": [
+              19,
+              48,
+              41
+            ],
+            "luminance": 0.024124472974509006
+          },
+          "backgroundCount": 627
+        },
+        "adjacentBacking2to8px": {
+          "ratio": 12.669284626337417,
+          "foreground": {
+            "pixel": [
+              760,
+              1523
+            ],
+            "rgb": [
+              244,
+              242,
+              238
+            ],
+            "luminance": 0.8891040458913103
+          },
+          "background": {
+            "pixel": [
+              757,
+              1515
+            ],
+            "rgb": [
+              19,
+              48,
+              41
+            ],
+            "luminance": 0.024124472974509006
+          },
+          "backgroundCount": 593
+        }
+      },
+      "backgroundExclusionRadiusSensitivity": {
+        "2": 12.669284626337417,
+        "3": 12.669284626337417,
+        "4": 12.669284626337417,
+        "5": 12.669284626337417
+      },
+      "maskFile": "masks/finding-19.npz",
+      "maskSHA256": "c66bb633fd8b3d8953c40be10c71b48476dcd6da826038a0000c75227897dea8",
+      "authorization": false,
+      "result": "measured observed core/backing bound at least 4.5; no audit waiver"
+    },
+    {
+      "finding": 20,
+      "group": "first",
+      "label": "D",
+      "id": "songs.tile.known.gtr-6-5.chords.chord.D",
+      "parent": "songs.known.gtr-6-5",
+      "parentLabel": "Amazing Grace, Guitar",
+      "type": "StaticText",
+      "parentType": "Button",
+      "framePoints": [
+        279.3333333333333,
+        503.6666666666667,
+        9.666666666666686,
+        15.333333333333314
+      ],
+      "supportPixels": [
+        837,
+        1515,
+        869,
+        1550
+      ],
+      "coreROI": null,
+      "roleRGB": [
+        245,
+        243,
+        239
+      ],
+      "source": {
+        "before": {
+          "sha256": "3ede2ed9305b009143d708acfa035a556c284886cee4815063d8256425284faf",
+          "profile": "sRGB",
+          "profileDescription": 0,
+          "normalization": "declared sRGB: no transform",
+          "size": [
+            1206,
+            2622
+          ],
+          "orientation": 1,
+          "file": "59ABBC34-9763-4898-99BE-B6D98A391489.png"
+        },
+        "after": {
+          "sha256": "0ad59cf832c8bcffece4cdb9f2325ae3b97de453a0011ec4a303e648f32fafea",
+          "profile": "sRGB",
+          "profileDescription": 0,
+          "normalization": "declared sRGB: no transform",
+          "size": [
+            1206,
+            2622
+          ],
+          "orientation": 1,
+          "file": "39BC4105-C824-48E3-9351-CBD80682AB7C.png"
+        },
+        "hierarchyBefore": {
+          "file": "6FBCAF98-43CC-4185-8ACC-D8D7C40FC04D.json",
+          "sha256": "1a925f2c5430b23013fd34aa8334ed217f440bbbd3e910c07d58d85d7ebb94d1"
+        },
+        "hierarchyAfter": {
+          "file": "97838678-4704-4E7D-B63C-71AE99F1D29F.json",
+          "sha256": "4f1c261b7f8a09e8020d54d11cfadaca076cff959bdac15229a2333623cbc397"
+        },
+        "appBodyExactEquality": true,
+        "appBodyPixelY": 118
+      },
+      "coreCount": 280,
+      "strongInkCount": 355,
+      "ambiguousBoundaryCount": 342,
+      "extremes": {
+        "fullSupportBacking": {
+          "ratio": 12.681079085964674,
+          "foreground": {
+            "pixel": [
+              854,
+              1520
+            ],
+            "rgb": [
+              244,
+              242,
+              238
+            ],
+            "luminance": 0.8891040458913103
+          },
+          "background": {
+            "pixel": [
+              837,
+              1515
+            ],
+            "rgb": [
+              19,
+              48,
+              40
+            ],
+            "luminance": 0.02405553104157389
+          },
+          "backgroundCount": 498
+        },
+        "adjacentBacking2to8px": {
+          "ratio": 12.681079085964674,
+          "foreground": {
+            "pixel": [
+              854,
+              1520
+            ],
+            "rgb": [
+              244,
+              242,
+              238
+            ],
+            "luminance": 0.8891040458913103
+          },
+          "background": {
+            "pixel": [
+              837,
+              1515
+            ],
+            "rgb": [
+              19,
+              48,
+              40
+            ],
+            "luminance": 0.02405553104157389
+          },
+          "backgroundCount": 473
+        }
+      },
+      "backgroundExclusionRadiusSensitivity": {
+        "2": 12.681079085964674,
+        "3": 12.681079085964674,
+        "4": 12.681079085964674,
+        "5": 12.681079085964674
+      },
+      "maskFile": "masks/finding-20.npz",
+      "maskSHA256": "43721a0e9b53166620085d49397951b636b276b348d8ff3d4e5d214e90147ec5",
+      "authorization": false,
+      "result": "measured observed core/backing bound at least 4.5; no audit waiver"
+    },
+    {
+      "finding": 21,
+      "group": "third",
+      "label": "Silent",
+      "id": "songs.tile.known.song-silent-night.cover.title.0",
+      "parent": "songs.known.song-silent-night",
+      "parentLabel": "Silent Night, Songs",
+      "type": "StaticText",
+      "parentType": "Button",
+      "framePoints": [
+        176.83333333333334,
+        450.15540799999997,
+        67.66666666666669,
+        29.666666666666742
+      ],
+      "supportPixels": [
+        528,
+        1358,
+        737,
+        1425
+      ],
+      "coreROI": null,
+      "roleRGB": [
+        245,
+        243,
+        239
+      ],
+      "source": {
+        "before": {
+          "sha256": "68ab4abdffb52b0e4405e3674cdff0d1713d4466b272cd4c50d9c6780b7fe296",
+          "profile": "sRGB",
+          "profileDescription": 0,
+          "normalization": "declared sRGB: no transform",
+          "size": [
+            1206,
+            2622
+          ],
+          "orientation": 1,
+          "file": "2D70CE1E-423C-44FF-AB2D-7FABAA75C2ED.png"
+        },
+        "after": {
+          "sha256": "754ff4444ee8009a0450788ec68d9b0a862698c5aa49d0d7f9a74ecdcfebfeab",
+          "profile": "sRGB",
+          "profileDescription": 0,
+          "normalization": "declared sRGB: no transform",
+          "size": [
+            1206,
+            2622
+          ],
+          "orientation": 1,
+          "file": "CAA03408-26BE-48CF-B2B0-80C80A8D8646.png"
+        },
+        "hierarchyBefore": {
+          "file": "C575B4E6-4B80-47AF-B153-1163B8DA9C25.json",
+          "sha256": "1653c3c1328fc94877fcaa2f0c2419c7b49b971f0aa2242a6614019c2cc32bd7"
+        },
+        "hierarchyAfter": {
+          "file": "64A45338-7C8E-4E35-9FAC-7CFC3EC12F88.json",
+          "sha256": "5162f035107c06040cd2b06eeb5962a0c12b2afae5d763044a2eafa4f2368f5a"
+        },
+        "appBodyExactEquality": true,
+        "appBodyPixelY": 118
+      },
+      "coreCount": 4050,
+      "strongInkCount": 4652,
+      "ambiguousBoundaryCount": 2800,
+      "extremes": {
+        "fullSupportBacking": {
+          "ratio": 4.882718253953286,
+          "foreground": {
+            "pixel": [
+              590,
+              1366
+            ],
+            "rgb": [
+              244,
+              242,
+              238
+            ],
+            "luminance": 0.8891040458913103
+          },
+          "background": {
+            "pixel": [
+              551,
+              1358
+            ],
+            "rgb": [
+              103,
+              108,
+              83
+            ],
+            "luminance": 0.14233222091628286
+          },
+          "backgroundCount": 7153
+        },
+        "adjacentBacking2to8px": {
+          "ratio": 4.882718253953286,
+          "foreground": {
+            "pixel": [
+              590,
+              1366
+            ],
+            "rgb": [
+              244,
+              242,
+              238
+            ],
+            "luminance": 0.8891040458913103
+          },
+          "background": {
+            "pixel": [
+              551,
+              1358
+            ],
+            "rgb": [
+              103,
+              108,
+              83
+            ],
+            "luminance": 0.14233222091628286
+          },
+          "backgroundCount": 5179
+        }
+      },
+      "backgroundExclusionRadiusSensitivity": {
+        "2": 4.882718253953286,
+        "3": 4.882718253953286,
+        "4": 4.882718253953286,
+        "5": 4.882718253953286
+      },
+      "maskFile": "masks/finding-21.npz",
+      "maskSHA256": "0c94b2848d2fa04dc2cf1c3ed84d543f11e061a2092844337db28ce7cbb0e345",
+      "authorization": false,
+      "result": "measured observed core/backing bound at least 4.5; no audit waiver"
+    },
+    {
+      "finding": 22,
+      "group": "third",
+      "label": "Night",
+      "id": "songs.tile.known.song-silent-night.cover.title.1",
+      "parent": "songs.known.song-silent-night",
+      "parentLabel": "Silent Night, Songs",
+      "type": "StaticText",
+      "parentType": "Button",
+      "framePoints": [
+        177.16666666666666,
+        473.5043986666667,
+        67,
+        29.66666666666663
+      ],
+      "supportPixels": [
+        532,
+        1428,
+        736,
+        1511
+      ],
+      "coreROI": null,
+      "roleRGB": [
+        245,
+        243,
+        239
+      ],
+      "source": {
+        "before": {
+          "sha256": "68ab4abdffb52b0e4405e3674cdff0d1713d4466b272cd4c50d9c6780b7fe296",
+          "profile": "sRGB",
+          "profileDescription": 0,
+          "normalization": "declared sRGB: no transform",
+          "size": [
+            1206,
+            2622
+          ],
+          "orientation": 1,
+          "file": "2D70CE1E-423C-44FF-AB2D-7FABAA75C2ED.png"
+        },
+        "after": {
+          "sha256": "754ff4444ee8009a0450788ec68d9b0a862698c5aa49d0d7f9a74ecdcfebfeab",
+          "profile": "sRGB",
+          "profileDescription": 0,
+          "normalization": "declared sRGB: no transform",
+          "size": [
+            1206,
+            2622
+          ],
+          "orientation": 1,
+          "file": "CAA03408-26BE-48CF-B2B0-80C80A8D8646.png"
+        },
+        "hierarchyBefore": {
+          "file": "C575B4E6-4B80-47AF-B153-1163B8DA9C25.json",
+          "sha256": "1653c3c1328fc94877fcaa2f0c2419c7b49b971f0aa2242a6614019c2cc32bd7"
+        },
+        "hierarchyAfter": {
+          "file": "64A45338-7C8E-4E35-9FAC-7CFC3EC12F88.json",
+          "sha256": "5162f035107c06040cd2b06eeb5962a0c12b2afae5d763044a2eafa4f2368f5a"
+        },
+        "appBodyExactEquality": true,
+        "appBodyPixelY": 118
+      },
+      "coreCount": 4272,
+      "strongInkCount": 4876,
+      "ambiguousBoundaryCount": 2832,
+      "extremes": {
+        "fullSupportBacking": {
+          "ratio": 7.799874761162249,
+          "foreground": {
+            "pixel": [
+              605,
+              1437
+            ],
+            "rgb": [
+              244,
+              242,
+              238
+            ],
+            "luminance": 0.8891040458913103
+          },
+          "background": {
+            "pixel": [
+              533,
+              1428
+            ],
+            "rgb": [
+              73,
+              77,
+              59
+            ],
+            "luminance": 0.07039988777350262
+          },
+          "backgroundCount": 9828
+        },
+        "adjacentBacking2to8px": {
+          "ratio": 8.016006811631865,
+          "foreground": {
+            "pixel": [
+              605,
+              1437
+            ],
+            "rgb": [
+              244,
+              242,
+              238
+            ],
+            "luminance": 0.8891040458913103
+          },
+          "background": {
+            "pixel": [
+              539,
+              1430
+            ],
+            "rgb": [
+              72,
+              75,
+              58
+            ],
+            "luminance": 0.06715359878793958
+          },
+          "backgroundCount": 5476
+        }
+      },
+      "backgroundExclusionRadiusSensitivity": {
+        "2": 7.799874761162249,
+        "3": 7.799874761162249,
+        "4": 7.799874761162249,
+        "5": 7.799874761162249
+      },
+      "maskFile": "masks/finding-22.npz",
+      "maskSHA256": "fe257735c4e69b2fe2f5b3059c7b3b5ddbfdbb9f9a4b3087f025e6d113eb4e90",
+      "authorization": false,
+      "result": "measured observed core/backing bound at least 4.5; no audit waiver"
+    },
+    {
+      "finding": 23,
+      "group": "third",
+      "label": "28",
+      "id": "songs.tile.known.song-silent-night.cover.catalogue",
+      "parent": "songs.known.song-silent-night",
+      "parentLabel": "Silent Night, Songs",
+      "type": "StaticText",
+      "parentType": "Button",
+      "framePoints": [
+        160.69594666666663,
+        421.1,
+        11,
+        10.333333333333258
+      ],
+      "supportPixels": [
+        477,
+        1258,
+        521,
+        1300
+      ],
+      "coreROI": null,
+      "roleRGB": [
+        245,
+        243,
+        239
+      ],
+      "source": {
+        "before": {
+          "sha256": "68ab4abdffb52b0e4405e3674cdff0d1713d4466b272cd4c50d9c6780b7fe296",
+          "profile": "sRGB",
+          "profileDescription": 0,
+          "normalization": "declared sRGB: no transform",
+          "size": [
+            1206,
+            2622
+          ],
+          "orientation": 1,
+          "file": "2D70CE1E-423C-44FF-AB2D-7FABAA75C2ED.png"
+        },
+        "after": {
+          "sha256": "754ff4444ee8009a0450788ec68d9b0a862698c5aa49d0d7f9a74ecdcfebfeab",
+          "profile": "sRGB",
+          "profileDescription": 0,
+          "normalization": "declared sRGB: no transform",
+          "size": [
+            1206,
+            2622
+          ],
+          "orientation": 1,
+          "file": "CAA03408-26BE-48CF-B2B0-80C80A8D8646.png"
+        },
+        "hierarchyBefore": {
+          "file": "C575B4E6-4B80-47AF-B153-1163B8DA9C25.json",
+          "sha256": "1653c3c1328fc94877fcaa2f0c2419c7b49b971f0aa2242a6614019c2cc32bd7"
+        },
+        "hierarchyAfter": {
+          "file": "64A45338-7C8E-4E35-9FAC-7CFC3EC12F88.json",
+          "sha256": "5162f035107c06040cd2b06eeb5962a0c12b2afae5d763044a2eafa4f2368f5a"
+        },
+        "appBodyExactEquality": true,
+        "appBodyPixelY": 118
+      },
+      "coreCount": 140,
+      "strongInkCount": 268,
+      "ambiguousBoundaryCount": 452,
+      "extremes": {
+        "fullSupportBacking": {
+          "ratio": 4.205449777402557,
+          "foreground": {
+            "pixel": [
+              510,
+              1282
+            ],
+            "rgb": [
+              244,
+              242,
+              238
+            ],
+            "luminance": 0.8891040458913103
+          },
+          "background": {
+            "pixel": [
+              515,
+              1285
+            ],
+            "rgb": [
+              113,
+              118,
+              97
+            ],
+            "luminance": 0.1733064465393131
+          },
+          "backgroundCount": 1256
+        },
+        "adjacentBacking2to8px": {
+          "ratio": 4.205449777402557,
+          "foreground": {
+            "pixel": [
+              510,
+              1282
+            ],
+            "rgb": [
+              244,
+              242,
+              238
+            ],
+            "luminance": 0.8891040458913103
+          },
+          "background": {
+            "pixel": [
+              515,
+              1285
+            ],
+            "rgb": [
+              113,
+              118,
+              97
+            ],
+            "luminance": 0.1733064465393131
+          },
+          "backgroundCount": 742
+        }
+      },
+      "backgroundExclusionRadiusSensitivity": {
+        "2": 4.205449777402557,
+        "3": 4.205449777402557,
+        "4": 4.2214247827488895,
+        "5": 4.506909642793473
+      },
+      "maskFile": "masks/finding-23.npz",
+      "maskSHA256": "1718d8c1914a18fc3f7c9103447c679d3ff5eaf12ee6215d0dbb84ab1ea26d7b",
+      "authorization": false,
+      "result": "measured lower bound below 4.5; manual backing/AA adjudication needed"
+    },
+    {
+      "finding": 24,
+      "group": "third",
+      "label": "A7",
+      "id": "songs.tile.known.song-silent-night.chords.chord.A7",
+      "parent": "songs.known.song-silent-night",
+      "parentLabel": "Silent Night, Songs",
+      "type": "StaticText",
+      "parentType": "Button",
+      "framePoints": [
+        143.66666666666666,
+        622.3333333333334,
+        16.666666666666686,
+        15.333333333333258
+      ],
+      "supportPixels": [
+        428,
+        1871,
+        482,
+        1906
+      ],
+      "coreROI": null,
+      "roleRGB": [
+        245,
+        243,
+        239
+      ],
+      "source": {
+        "before": {
+          "sha256": "68ab4abdffb52b0e4405e3674cdff0d1713d4466b272cd4c50d9c6780b7fe296",
+          "profile": "sRGB",
+          "profileDescription": 0,
+          "normalization": "declared sRGB: no transform",
+          "size": [
+            1206,
+            2622
+          ],
+          "orientation": 1,
+          "file": "2D70CE1E-423C-44FF-AB2D-7FABAA75C2ED.png"
+        },
+        "after": {
+          "sha256": "754ff4444ee8009a0450788ec68d9b0a862698c5aa49d0d7f9a74ecdcfebfeab",
+          "profile": "sRGB",
+          "profileDescription": 0,
+          "normalization": "declared sRGB: no transform",
+          "size": [
+            1206,
+            2622
+          ],
+          "orientation": 1,
+          "file": "CAA03408-26BE-48CF-B2B0-80C80A8D8646.png"
+        },
+        "hierarchyBefore": {
+          "file": "C575B4E6-4B80-47AF-B153-1163B8DA9C25.json",
+          "sha256": "1653c3c1328fc94877fcaa2f0c2419c7b49b971f0aa2242a6614019c2cc32bd7"
+        },
+        "hierarchyAfter": {
+          "file": "64A45338-7C8E-4E35-9FAC-7CFC3EC12F88.json",
+          "sha256": "5162f035107c06040cd2b06eeb5962a0c12b2afae5d763044a2eafa4f2368f5a"
+        },
+        "appBodyExactEquality": true,
+        "appBodyPixelY": 118
+      },
+      "coreCount": 417,
+      "strongInkCount": 511,
+      "ambiguousBoundaryCount": 529,
+      "extremes": {
+        "fullSupportBacking": {
+          "ratio": 14.516783264122884,
+          "foreground": {
+            "pixel": [
+              446,
+              1881
+            ],
+            "rgb": [
+              244,
+              242,
+              238
+            ],
+            "luminance": 0.8891040458913103
+          },
+          "background": {
+            "pixel": [
+              428,
+              1871
+            ],
+            "rgb": [
+              41,
+              28,
+              42
+            ],
+            "luminance": 0.014690918697686555
+          },
+          "backgroundCount": 944
+        },
+        "adjacentBacking2to8px": {
+          "ratio": 14.516783264122884,
+          "foreground": {
+            "pixel": [
+              446,
+              1881
+            ],
+            "rgb": [
+              244,
+              242,
+              238
+            ],
+            "luminance": 0.8891040458913103
+          },
+          "background": {
+            "pixel": [
+              434,
+              1871
+            ],
+            "rgb": [
+              41,
+              28,
+              42
+            ],
+            "luminance": 0.014690918697686555
+          },
+          "backgroundCount": 827
+        }
+      },
+      "backgroundExclusionRadiusSensitivity": {
+        "2": 14.516783264122884,
+        "3": 14.516783264122884,
+        "4": 14.516783264122884,
+        "5": 14.516783264122884
+      },
+      "maskFile": "masks/finding-24.npz",
+      "maskSHA256": "e37f9639856d3dd01f8e321c50e809dd9f2cec8b3333f966c01320adf902e623",
+      "authorization": false,
+      "result": "measured observed core/backing bound at least 4.5; no audit waiver"
+    },
+    {
+      "finding": 25,
+      "group": "first",
+      "label": "+5",
+      "id": "songs.tile.known.song-ode-to-joy.versions.more",
+      "parent": "songs.versions.song-ode-to-joy",
+      "parentLabel": "Versions",
+      "type": "StaticText",
+      "parentType": "Button",
+      "framePoints": [
+        106,
+        449.3333333333333,
+        62,
+        44
+      ],
+      "supportPixels": [
+        438,
+        1394,
+        489,
+        1432
+      ],
+      "coreROI": null,
+      "roleRGB": [
+        245,
+        243,
+        239
+      ],
+      "source": {
+        "before": {
+          "sha256": "3ede2ed9305b009143d708acfa035a556c284886cee4815063d8256425284faf",
+          "profile": "sRGB",
+          "profileDescription": 0,
+          "normalization": "declared sRGB: no transform",
+          "size": [
+            1206,
+            2622
+          ],
+          "orientation": 1,
+          "file": "59ABBC34-9763-4898-99BE-B6D98A391489.png"
+        },
+        "after": {
+          "sha256": "0ad59cf832c8bcffece4cdb9f2325ae3b97de453a0011ec4a303e648f32fafea",
+          "profile": "sRGB",
+          "profileDescription": 0,
+          "normalization": "declared sRGB: no transform",
+          "size": [
+            1206,
+            2622
+          ],
+          "orientation": 1,
+          "file": "39BC4105-C824-48E3-9351-CBD80682AB7C.png"
+        },
+        "hierarchyBefore": {
+          "file": "6FBCAF98-43CC-4185-8ACC-D8D7C40FC04D.json",
+          "sha256": "1a925f2c5430b23013fd34aa8334ed217f440bbbd3e910c07d58d85d7ebb94d1"
+        },
+        "hierarchyAfter": {
+          "file": "97838678-4704-4E7D-B63C-71AE99F1D29F.json",
+          "sha256": "4f1c261b7f8a09e8020d54d11cfadaca076cff959bdac15229a2333623cbc397"
+        },
+        "appBodyExactEquality": true,
+        "appBodyPixelY": 118
+      },
+      "coreCount": 319,
+      "strongInkCount": 391,
+      "ambiguousBoundaryCount": 454,
+      "extremes": {
+        "fullSupportBacking": {
+          "ratio": 15.202735774994988,
+          "foreground": {
+            "pixel": [
+              465,
+              1411
+            ],
+            "rgb": [
+              244,
+              242,
+              238
+            ],
+            "luminance": 0.8891040458913103
+          },
+          "background": {
+            "pixel": [
+              459,
+              1394
+            ],
+            "rgb": [
+              24,
+              29,
+              32
+            ],
+            "luminance": 0.011772042860596252
+          },
+          "backgroundCount": 1165
+        },
+        "adjacentBacking2to8px": {
+          "ratio": 15.202735774994988,
+          "foreground": {
+            "pixel": [
+              465,
+              1411
+            ],
+            "rgb": [
+              244,
+              242,
+              238
+            ],
+            "luminance": 0.8891040458913103
+          },
+          "background": {
+            "pixel": [
+              461,
+              1394
+            ],
+            "rgb": [
+              24,
+              29,
+              32
+            ],
+            "luminance": 0.011772042860596252
+          },
+          "backgroundCount": 893
+        }
+      },
+      "backgroundExclusionRadiusSensitivity": {
+        "2": 15.202735774994988,
+        "3": 15.202735774994988,
+        "4": 15.202735774994988,
+        "5": 15.202735774994988
+      },
+      "maskFile": "masks/finding-25.npz",
+      "maskSHA256": "8e5d18f2d1c548b6a8a511b7d3dba91aaee24fffa617285c4299d4bbefac264f",
+      "authorization": false,
+      "result": "measured observed core/backing bound at least 4.5; no audit waiver"
+    },
+    {
+      "finding": 26,
+      "group": "first",
+      "label": "+5",
+      "id": "songs.tile.known.gtr-6-5.versions.more",
+      "parent": "songs.versions.gtr-6-5",
+      "parentLabel": "Versions",
+      "type": "StaticText",
+      "parentType": "Button",
+      "framePoints": [
+        268,
+        449.3333333333333,
+        62,
+        44
+      ],
+      "supportPixels": [
+        924,
+        1394,
+        975,
+        1432
+      ],
+      "coreROI": null,
+      "roleRGB": [
+        245,
+        243,
+        239
+      ],
+      "source": {
+        "before": {
+          "sha256": "3ede2ed9305b009143d708acfa035a556c284886cee4815063d8256425284faf",
+          "profile": "sRGB",
+          "profileDescription": 0,
+          "normalization": "declared sRGB: no transform",
+          "size": [
+            1206,
+            2622
+          ],
+          "orientation": 1,
+          "file": "59ABBC34-9763-4898-99BE-B6D98A391489.png"
+        },
+        "after": {
+          "sha256": "0ad59cf832c8bcffece4cdb9f2325ae3b97de453a0011ec4a303e648f32fafea",
+          "profile": "sRGB",
+          "profileDescription": 0,
+          "normalization": "declared sRGB: no transform",
+          "size": [
+            1206,
+            2622
+          ],
+          "orientation": 1,
+          "file": "39BC4105-C824-48E3-9351-CBD80682AB7C.png"
+        },
+        "hierarchyBefore": {
+          "file": "6FBCAF98-43CC-4185-8ACC-D8D7C40FC04D.json",
+          "sha256": "1a925f2c5430b23013fd34aa8334ed217f440bbbd3e910c07d58d85d7ebb94d1"
+        },
+        "hierarchyAfter": {
+          "file": "97838678-4704-4E7D-B63C-71AE99F1D29F.json",
+          "sha256": "4f1c261b7f8a09e8020d54d11cfadaca076cff959bdac15229a2333623cbc397"
+        },
+        "appBodyExactEquality": true,
+        "appBodyPixelY": 118
+      },
+      "coreCount": 319,
+      "strongInkCount": 390,
+      "ambiguousBoundaryCount": 453,
+      "extremes": {
+        "fullSupportBacking": {
+          "ratio": 15.497375671248026,
+          "foreground": {
+            "pixel": [
+              951,
+              1411
+            ],
+            "rgb": [
+              244,
+              242,
+              238
+            ],
+            "luminance": 0.8891040458913103
+          },
+          "background": {
+            "pixel": [
+              924,
+              1394
+            ],
+            "rgb": [
+              23,
+              27,
+              30
+            ],
+            "luminance": 0.01059761767494682
+          },
+          "backgroundCount": 1166
+        },
+        "adjacentBacking2to8px": {
+          "ratio": 15.497375671248026,
+          "foreground": {
+            "pixel": [
+              951,
+              1411
+            ],
+            "rgb": [
+              244,
+              242,
+              238
+            ],
+            "luminance": 0.8891040458913103
+          },
+          "background": {
+            "pixel": [
+              948,
+              1394
+            ],
+            "rgb": [
+              23,
+              27,
+              30
+            ],
+            "luminance": 0.01059761767494682
+          },
+          "backgroundCount": 894
+        }
+      },
+      "backgroundExclusionRadiusSensitivity": {
+        "2": 15.497375671248026,
+        "3": 15.497375671248026,
+        "4": 15.497375671248026,
+        "5": 15.497375671248026
+      },
+      "maskFile": "masks/finding-26.npz",
+      "maskSHA256": "141a8aedd49a86a035270bc40a36cfb18a173524b351c42405c9163a537bf08a",
+      "authorization": false,
+      "result": "measured observed core/backing bound at least 4.5; no audit waiver"
+    }
+  ]
+}

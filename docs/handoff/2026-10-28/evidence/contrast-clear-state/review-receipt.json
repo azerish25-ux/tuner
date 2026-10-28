@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "diagnosticOnly": true,
+  "auditAuthorization": false,
+  "artifactID": "12814747299",
+  "artifactBytes": 404947485,
+  "artifactSHA256": "4e2ad730783e6464b5c10b424ee9b9b55cb6d2498f089125e3867da4a1021ef2",
+  "sourceSHAFromNativeReports": "9d7c91cc68269205260089b41139170ca87c6698",
+  "sourceMeaning": "Provenance only; actual native report checkout, not an eligibility comparison.",
+  "nativeReportedConfiguration": {
+    "locale": "en_US",
+    "preferredContentSize": "large"
+  },
+  "effectiveTraits": "unknown beyond original images and hierarchy; requested configuration is provenance only",
+  "checks": [
+    "12 PNG/hierarchy hashes match verified original attachment map",
+    "15 unique leaf type/ID/label and parent type/ID/label relationships before and after",
+    "exact target and parent frames across pair",
+    "all PNG pixels from row118 downward match exactly before/after; only status clock differs",
+    "PNG CRC/profile/orientation/opacity/dimensions validated",
+    "14 measured full-support core/backing lower bounds >=4.5; catalogue support bound retained below4.5 without defect attribution"
+  ],
+  "originalFailuresResolved": 0,
+  "files": {
+    "measure_revealed_songs.py": "504b3ea1dd610ba679b878e8b95c897692510f2cfe3609d0111abc2d99075297",
+    "paired-originals.json": "f930f6fdaa837cfc27851353f9b9192e4c3dad1dd5fe2bdaaa9122e94fca9aa1",
+    "measured/measurements.json": "c914b9ed760e713d10c8fd6b64a4055e6e745c941314a1bdf881a84da30a9d76",
+    "measured/support-and-masks.png": "26c82b25a552f461dc5d278702fd275ccfaaeaee48a52f7dc95df3bc649c7e0b",
+    "measured/summary.txt": "beb5e9dc6bda817a662f8939707cc07a568749178846cb6214f6a04c66543a0d",
+    "independent-catalogue/review.json": "37bd6fdde9f14d95aa1977429913bba422a5b78aa40c9acab71b57e151533fc3",
+    "independent-catalogue/adjacency-sensitivity.json": "c7873b438b6b393bfb19c9b73ad3528a01d1dc0afbd3864a95a0a453383eadf1",
+    "clear-state-callback-comparison.json": "3fb1e596e605a07932eed408d7c8a512b6683c1dc3b107dc1874e9259cb3ccab",
+    "REVIEW.md": "60b40560a3416a697bfa6f21f2105b0ecfb056f4834b8928989cfe054bbfbd27",
+    "visibility-disposition-options.md": "bac9dabec3303d11ed61270b8390a9654d4e7c6b23337fe2bd8eb58655857919"
+  },
+  "independentSupportReview": {
+    "reviewedTargets": 15,
+    "clippedGlyphsFound": 0,
+    "roleOrSupportBlockersFound": 0,
+    "maskHashesCountsChecked": true,
+    "scope": "Diagnostic observed extrema only. Core candidates are not native alpha proof; immediate fringe and hidden backing are not fully measured. No audit authorization."
+  }
+}

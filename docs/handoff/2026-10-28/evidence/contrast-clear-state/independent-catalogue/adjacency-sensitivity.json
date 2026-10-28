@@ -1,0 +1,124 @@
+{
+  "diagnosticOnly": true,
+  "notAGlyphMaskProof": true,
+  "sourceSHA256": "754ff4444ee8009a0450788ec68d9b0a862698c5aa49d0d7f9a74ecdcfebfeab",
+  "supportRectangle": [
+    477,
+    1258,
+    521,
+    1300
+  ],
+  "backgroundFit": "Independent least-squares 2D quadratic in screenshot RGB per channel; features [1,x,y,x*x,x*y,y*y], local crop coordinates. Fit excludes x6..37/y9..30 and x37..39/y26..28 (inclusive), reserving both glyphs and the grain patch.",
+  "componentMethod": "For each mean positive RGB residual cutoff, retain 8-connected components containing solid-core seeds (491,1285) and (510,1283). Examine the union of all 8-neighbor pixels outside those components, including counters. Compare their actual RGB to observed solid core [245,243,239].",
+  "caveat": "Background interpolation is a diagnostic aid, not native no-text backing evidence. Rim candidates may contain weak AA as cutoff increases; no mask or conformance guarantee is inferred. Cutoffs sweep rather than select the most favorable result.",
+  "results": [
+    {
+      "meanRGBResidualCutoff": 1,
+      "connectedGlyphCandidatePixelCount": 332,
+      "rimCandidatePixelCount": 220,
+      "grainPointIncludedInGlyph": false,
+      "grainPointIncludedInRim": false,
+      "minimumCandidateRimRatio": 4.933184046846941,
+      "minimumPoint": [
+        513,
+        1285
+      ],
+      "minimumRGB": [
+        102,
+        108,
+        85
+      ],
+      "candidateRimPixelsBelow4_5": 0
+    },
+    {
+      "meanRGBResidualCutoff": 2,
+      "connectedGlyphCandidatePixelCount": 327,
+      "rimCandidatePixelCount": 222,
+      "grainPointIncludedInGlyph": false,
+      "grainPointIncludedInRim": false,
+      "minimumCandidateRimRatio": 4.933184046846941,
+      "minimumPoint": [
+        513,
+        1285
+      ],
+      "minimumRGB": [
+        102,
+        108,
+        85
+      ],
+      "candidateRimPixelsBelow4_5": 0
+    },
+    {
+      "meanRGBResidualCutoff": 3,
+      "connectedGlyphCandidatePixelCount": 322,
+      "rimCandidatePixelCount": 223,
+      "grainPointIncludedInGlyph": false,
+      "grainPointIncludedInRim": false,
+      "minimumCandidateRimRatio": 4.929075524361502,
+      "minimumPoint": [
+        509,
+        1281
+      ],
+      "minimumRGB": [
+        102,
+        108,
+        86
+      ],
+      "candidateRimPixelsBelow4_5": 0
+    },
+    {
+      "meanRGBResidualCutoff": 4,
+      "connectedGlyphCandidatePixelCount": 320,
+      "rimCandidatePixelCount": 223,
+      "grainPointIncludedInGlyph": false,
+      "grainPointIncludedInRim": false,
+      "minimumCandidateRimRatio": 4.929075524361502,
+      "minimumPoint": [
+        509,
+        1281
+      ],
+      "minimumRGB": [
+        102,
+        108,
+        86
+      ],
+      "candidateRimPixelsBelow4_5": 0
+    },
+    {
+      "meanRGBResidualCutoff": 5,
+      "connectedGlyphCandidatePixelCount": 317,
+      "rimCandidatePixelCount": 224,
+      "grainPointIncludedInGlyph": false,
+      "grainPointIncludedInRim": false,
+      "minimumCandidateRimRatio": 4.785255622405344,
+      "minimumPoint": [
+        506,
+        1284
+      ],
+      "minimumRGB": [
+        104,
+        110,
+        88
+      ],
+      "candidateRimPixelsBelow4_5": 0
+    },
+    {
+      "meanRGBResidualCutoff": 6,
+      "connectedGlyphCandidatePixelCount": 314,
+      "rimCandidatePixelCount": 224,
+      "grainPointIncludedInGlyph": false,
+      "grainPointIncludedInRim": false,
+      "minimumCandidateRimRatio": 4.642609971321126,
+      "minimumPoint": [
+        508,
+        1287
+      ],
+      "minimumRGB": [
+        106,
+        112,
+        91
+      ],
+      "candidateRimPixelsBelow4_5": 0
+    }
+  ]
+}

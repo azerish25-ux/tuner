@@ -1,0 +1,33 @@
+--- a/ios/TimbreAppTests/WelcomeRendererGeometryTests.swift
++++ b/ios/TimbreAppTests/WelcomeRendererGeometryTests.swift
+@@ -12,6 +12,9 @@
+ final class WelcomeRendererGeometryTests: XCTestCase {
+     override func setUp() {
+         super.setUp()
++        // Per-case diagnostic watchdog: local polling deadlines cannot interrupt a blocked UIKit draw/layout.
++        // The app workflow enables XCTest timeouts; timeout is a failure, never a skipped/accepted variant.
++        executionTimeAllowance = 120
+         continueAfterFailure = true
+     }
+ 
+--- a/tools/ci/test_welcome_renderer_geometry_contract.py
++++ b/tools/ci/test_welcome_renderer_geometry_contract.py
+@@ -18,6 +18,18 @@
+                       'continueAfterFailure = true', 'visited += 1', 'XCTAssertEqual(visited, 14',
+                       'XCTFail("Native diagnostic capture failed:']:
+             self.assertIn(token, self.source)
++        self.assertNotIn('XCTSkip', self.source)
++
++    def test_exploratory_cases_have_a_finite_xctest_watchdog(self):
++        setup = self.source.split('override func setUp() {', 1)[1].split('    func testRTL280Large()', 1)[0]
++        self.assertIn('executionTimeAllowance = 120', setup)
++        self.assertEqual(self.source.count('executionTimeAllowance ='), 1)
++        self.assertLess(setup.index('executionTimeAllowance = 120'), setup.index('continueAfterFailure = true'))
++        # A local poll cannot preempt synchronous UIKit drawing. Keep the original poll and coverage bounds too.
++        self.assertIn('Date().addingTimeInterval(5)', self.source)
++        self.assertIn('XCTAssertEqual(visited, 14', self.source)
++        self.assertIn('xs.count * ys.count <= 64', self.source)
++        self.assertNotIn('XCTExpectFailure', self.source)
+         self.assertNotIn('XCTSkip', self.source)
+ 
+     def test_plain_reference_and_drawing_group_candidate_remain_distinct(self):

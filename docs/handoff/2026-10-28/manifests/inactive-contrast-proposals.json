@@ -1,0 +1,186 @@
+{
+  "scope": "Archived unapplied diagnostic proposals; not a repair, audit waiver, integration instruction, or current-revision applicability claim",
+  "proposals": [
+    {
+      "patch": "patches/current-callback-raster-diagnostics.patch",
+      "sha256": "5fbc081b4594f7facb8182811b8b7ff46e6d428b41800c9d4674c68effaa5dc4",
+      "applied": false,
+      "audit_authorization": false,
+      "native_verified": false,
+      "recorded_checks": {
+        "status": "outside-root-diagnostic-only-no-activation",
+        "patchSHA256": "5fbc081b4594f7facb8182811b8b7ff46e6d428b41800c9d4674c68effaa5dc4",
+        "patchBytes": 343170,
+        "files": [
+          {
+            "path": "docs/ci/current-callback-capture.md",
+            "bytes": 6806,
+            "sha256": "2bff5f16356e7bc00f89d890fa80df3d660c3f61e9fc8168717b8487b891d18a"
+          },
+          {
+            "path": "docs/ci/current-callback-raster.md",
+            "bytes": 13841,
+            "sha256": "1242a0e1a3a8e22549c6a1b63c294766c318c0133892b7d18278d584a0cd6437"
+          },
+          {
+            "path": "ios/TimbreUITests/CurrentCallbackCapture.swift",
+            "bytes": 8361,
+            "sha256": "ba8cb5c2b09bb4c2b3804a07022ac683a1c7e2f541dff21ecb86d536bb470e73"
+          },
+          {
+            "path": "ios/TimbreUITests/CurrentCallbackCaptureTests.swift",
+            "bytes": 2738,
+            "sha256": "cf3a05c079850950f33556665540895f7a512162f756b546218e53e3f1cf4de5"
+          },
+          {
+            "path": "ios/TimbreUITests/CurrentCallbackRasterCheck.swift",
+            "bytes": 20284,
+            "sha256": "dd1b3fd3ad4157430008715de1095da4ce58cb0357bf193f48cabb56826c9aef"
+          },
+          {
+            "path": "ios/TimbreUITests/CurrentCallbackRasterCheckTests.swift",
+            "bytes": 18967,
+            "sha256": "79dd425d3ef3e6ecdf4b7ffe93c0543c17d3143ea913e2f85729a3e184cd42a2"
+          },
+          {
+            "path": "ios/TimbreUITests/CurrentContrastFixtures/15b0010c7fca31bad0b8d84d0c30c7dfaaadd8eeb33d1d694c6ae56e6150dc3c.png",
+            "bytes": 47911,
+            "sha256": "15b0010c7fca31bad0b8d84d0c30c7dfaaadd8eeb33d1d694c6ae56e6150dc3c"
+          },
+          {
+            "path": "ios/TimbreUITests/CurrentContrastFixtures/46b36ee2263b971a92b1c92ec9f33459eb79f7469c1cbb008a19a0c972853a0e.png",
+            "bytes": 16532,
+            "sha256": "46b36ee2263b971a92b1c92ec9f33459eb79f7469c1cbb008a19a0c972853a0e"
+          },
+          {
+            "path": "ios/TimbreUITests/CurrentContrastFixtures/583efa4018e8d986bd871f3b1904182a7509bd9703e62da65b7fcbe4981dd0c3.png",
+            "bytes": 3580,
+            "sha256": "583efa4018e8d986bd871f3b1904182a7509bd9703e62da65b7fcbe4981dd0c3"
+          },
+          {
+            "path": "ios/TimbreUITests/CurrentContrastFixtures/5d1b8d0581190724c236421c54899d98a54859a249dbc9e350a39b1e5300b696.png",
+            "bytes": 2891,
+            "sha256": "5d1b8d0581190724c236421c54899d98a54859a249dbc9e350a39b1e5300b696"
+          },
+          {
+            "path": "ios/TimbreUITests/CurrentContrastFixtures/7b023f61e3e8c80b49a4bc790b753e46e90ebe8798278122708883cf4a1cd9e5.png",
+            "bytes": 8742,
+            "sha256": "7b023f61e3e8c80b49a4bc790b753e46e90ebe8798278122708883cf4a1cd9e5"
+          },
+          {
+            "path": "ios/TimbreUITests/CurrentContrastFixtures/959bd811434044eb5194efcacc6d40491f681efa16cbd162838380d9e38aa2ab.png",
+            "bytes": 3269,
+            "sha256": "959bd811434044eb5194efcacc6d40491f681efa16cbd162838380d9e38aa2ab"
+          },
+          {
+            "path": "ios/TimbreUITests/CurrentContrastFixtures/b30768b1c985f6d5f7697879c22fc19d90905052d56580eb8ef55046908281ed.png",
+            "bytes": 3548,
+            "sha256": "b30768b1c985f6d5f7697879c22fc19d90905052d56580eb8ef55046908281ed"
+          },
+          {
+            "path": "ios/TimbreUITests/CurrentContrastFixtures/catalog.json",
+            "bytes": 107583,
+            "sha256": "c56439643b1aedbd93a1570d722a434f1fd232c15e42bb306edcd97670f7f4c7"
+          },
+          {
+            "path": "ios/TimbreUITests/CurrentContrastFixtures/catalog.sha256",
+            "bytes": 65,
+            "sha256": "5172904387b44ffb693c6dea1aec85383b8f35dd4f0d4d3b6cadb51cb1b4bc3e"
+          },
+          {
+            "path": "ios/TimbreUITests/CurrentContrastFixtures/e18abfbc1c6f9369d725a2032f83627a097520176dc3a43e465ab589a25b5e5c.png",
+            "bytes": 3318,
+            "sha256": "e18abfbc1c6f9369d725a2032f83627a097520176dc3a43e465ab589a25b5e5c"
+          },
+          {
+            "path": "ios/TimbreUITests/CurrentContrastFixtures/fd8d3e2363610d1f9d6069dc912374d5f32cd258efffdd1576e99f7c425c0b4d.png",
+            "bytes": 5366,
+            "sha256": "fd8d3e2363610d1f9d6069dc912374d5f32cd258efffdd1576e99f7c425c0b4d"
+          },
+          {
+            "path": "tools/ci/build_current_contrast_fixtures.py",
+            "bytes": 7464,
+            "sha256": "207ba3eef2fd5456e1526ae644b459e8d39af3540ed094412e55d634f65c51ca"
+          },
+          {
+            "path": "tools/ci/current_contrast_raster_model.py",
+            "bytes": 7744,
+            "sha256": "8a0cf719270ec65f1d4fa5db7bf8d7be193297242d04e55fa0c84fef540be8f4"
+          },
+          {
+            "path": "tools/ci/materialize_current_contrast_originals.py",
+            "bytes": 1734,
+            "sha256": "e7727c1d460234d593ae8b8a3d71546fb00d07602980eff7a59a8fbcd54f2fd0"
+          },
+          {
+            "path": "tools/ci/requirements-current-contrast.txt",
+            "bytes": 127,
+            "sha256": "5335ecf7753707a59bbdf81a0ec32fbeb175edcbd3d8e997b165aae3b7d522fc"
+          },
+          {
+            "path": "tools/ci/test_current_callback_capture_contract.py",
+            "bytes": 2947,
+            "sha256": "807b7c6acdbe07192ce5c51322a89c5125b502b0ee181b87474f237998836465"
+          },
+          {
+            "path": "tools/ci/test_current_contrast_raster.py",
+            "bytes": 12172,
+            "sha256": "7975f49207320359ab0910119106bf556695febaf6afa4a2a06eb4bd4514e793"
+          }
+        ],
+        "checks": {
+          "portableTests": 13,
+          "rasterNegatives": 268,
+          "occludedCasesRejected": 18,
+          "fullReferencePNGCases": 10,
+          "deduplicatedOriginals": 6,
+          "originalBytes": 8268829,
+          "nativeTestsPrepared": 12,
+          "nativeTestsRun": 0,
+          "pythonCompilation": true,
+          "diffCheck": true,
+          "applyCheck": true,
+          "privacyScan": true,
+          "independentSourceReview": "clear-for-diagnostics-only, including source-PNG validation and actual untagged decode control",
+          "captureTimeLimitSeconds": 5,
+          "sourcePNGNegatives": 8,
+          "materializerStandardLibraryOnly": true,
+          "fullOriginalSourceProfiles": "10 explicitly sRGB",
+          "diagnosticPythonPackages": {
+            "numpy": "2.3.5",
+            "Pillow": "12.3.0",
+            "scipy": "1.17.0"
+          },
+          "newSourceProfileReviewNativeExecution": false
+        },
+        "referenceSupportReview": {
+          "status": "independently-inspected-complete-target-strings-and-backing-only",
+          "catalogSHA256": "c56439643b1aedbd93a1570d722a434f1fd232c15e42bb306edcd97670f7f4c7",
+          "contactSHA256": "eea267de911309666011b0066ecdbb369c90f6024641212687e47f49c90a800b",
+          "nativeCurrentCallbackAuthorization": false
+        },
+        "limitations": [
+          "No native compilation or test execution",
+          "Actual paired current-callback captures pending",
+          "Pre/post actual context observation/wiring is not implemented by collector",
+          "Sampled stability is not atomic audit measurement coupling",
+          "Effective target rendering traits unknown",
+          "No audit exemptions or original finding removal",
+          "New source-PNG validation and SDK zlib wrapper remain native-uncompiled/unrun"
+        ]
+      },
+      "later_reference_status": {
+        "visually_reviewed_reference_candidates": 10,
+        "cross_launch_raster_mismatches_rejected": 2,
+        "remaining_diagnostic_candidates_not_exemptions": 8
+      }
+    }
+  ],
+  "superseded_excluded": {
+    "name": "native-contrast-receipt-collection.patch",
+    "archived_sha256": "38ea71291d057623ed14fdf798b0d66b314fdf1e6375ccfc429c3d4941abcb89",
+    "status": "Superseded; not an active or recommended proposal; excluded from this bundle",
+    "reason": "Full installed-build attestation was abandoned as unnecessary for the narrow actual-pixel property",
+    "audit_authorization": false
+  }
+}

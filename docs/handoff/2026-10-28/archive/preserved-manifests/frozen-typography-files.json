@@ -1,0 +1,27 @@
+{
+  "frozen_at": "2026-10-28T05:50:55Z",
+  "base_head": "210cc080",
+  "native_status": "pending; no native compile or eight-case acceptance claimed",
+  "files": [
+    {
+      "path": "ios/Timbre/Onboarding/WelcomeHeadline.swift",
+      "bytes": 3089,
+      "sha256": "d5764d55381411b3865c5f8b46e8e0fc06a73ba0788504109fb4194dc44c9bc4"
+    },
+    {
+      "path": "ios/TimbreAppTests/WelcomeHeadlineLayoutTests.swift",
+      "bytes": 14735,
+      "sha256": "c7aded1826ee6e6bdae1e9010463c0d548a28485398744c771ae9f2c7bedad98"
+    },
+    {
+      "path": "ios/TimbreAppTests/WelcomeFallbackDiagnosticsTests.swift",
+      "bytes": 6648,
+      "sha256": "30a3f94c53eb5d6ce1f9037493809d5bb40488643e4a2482f97e88f35e95781a"
+    },
+    {
+      "path": "tools/ci/test_welcome_typography_contract.py",
+      "bytes": 9361,
+      "sha256": "f887b38e3af3d9aad2942e418abf1ef7d38907355b7edd0dacd86753d610bb5e"
+    }
+  ]
+}

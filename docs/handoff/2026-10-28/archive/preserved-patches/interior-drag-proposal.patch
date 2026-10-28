@@ -1,0 +1,13 @@
+--- a/ios/TimbreUITests/FirstSessionUITests.swift
++++ b/ios/TimbreUITests/FirstSessionUITests.swift
+@@ -118,8 +118,8 @@
+                   wanted.minX >= viewport.minX, wanted.maxX <= viewport.maxX, !contained else { break }
+             let distance = min(viewport.height * 0.45, max(-viewport.height * 0.45, viewport.midY - wanted.midY))
+             let origin = app.coordinate(withNormalizedOffset: .zero)
+-            let from = origin.withOffset(CGVector(dx: viewport.minX + 24, dy: viewport.midY))
+-            let to = origin.withOffset(CGVector(dx: viewport.minX + 24, dy: viewport.midY + distance))
++            let from = origin.withOffset(CGVector(dx: viewport.midX, dy: viewport.midY))
++            let to = origin.withOffset(CGVector(dx: viewport.midX, dy: viewport.midY + distance))
+             from.press(forDuration: 0.1, thenDragTo: to, withVelocity: .slow, thenHoldForDuration: 0.2)
+         }
+         captureWelcome("unreachable-" + target.identifier)

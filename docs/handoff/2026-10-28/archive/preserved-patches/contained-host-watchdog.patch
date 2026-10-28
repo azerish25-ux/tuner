@@ -1,0 +1,184 @@
+--- a/.github/workflows/ios.yml
++++ b/.github/workflows/ios.yml
+@@ -207,7 +207,9 @@
+       - name: Unit tests and smoke flows
+         run: |
+           set -o pipefail
++          # Enable XCTest's fail-and-continue watchdog; contained-host controls request 120 seconds each.
+           xcodebuild test-without-building -project ios/Timbre.xcodeproj -scheme Timbre -parallel-testing-enabled NO \
++            -test-timeouts-enabled YES \
+             -only-testing:TimbreAppTests -only-testing:TimbreUITests/SmokeUITests \
+             -only-testing:TimbreUITests/CaptureLockEvidenceTests \
+             -only-testing:TimbreUITests/CapturePlayAlongReadinessTests \
+--- a/ios/TimbreAppTests/SongShelfPageTests.swift
++++ b/ios/TimbreAppTests/SongShelfPageTests.swift
+@@ -16,7 +16,12 @@
+     private final class State: ObservableObject {
+         let driver: Driver
+         let oversized: Bool
+-        init(driver: Driver, oversized: Bool = false) { self.driver = driver; self.oversized = oversized }
++        let synchronizeDiagnosticCapture: Bool
++        init(driver: Driver, oversized: Bool = false, synchronizeDiagnosticCapture: Bool = true) {
++            self.driver = driver
++            self.oversized = oversized
++            self.synchronizeDiagnosticCapture = synchronizeDiagnosticCapture
++        }
+         @Published var size = CGSize(width: 402, height: 874)
+         @Published var position: SongShelfPageTarget<String>? {
+             didSet { positionHistory.append(String(describing: position)) }
+@@ -117,10 +122,12 @@
+     /// A contained-child sizing control, not device rotation or automatic binding observation.
+     /// Both viewports fit the actual window; all original full-size failures remain separate.
+     func testContainedHostCommandResize() async throws {
++        executionTimeAllowance = 120
+         try await verifyContainedHost(direction: .leftToRight)
+     }
+ 
+     func testContainedHostCommandResizeRightToLeft() async throws {
++        executionTimeAllowance = 120
+         try await verifyContainedHost(direction: .rightToLeft)
+     }
+ 
+@@ -146,7 +153,8 @@
+     private func record(_ state: State, window: UIWindow, stage: String) {
+         var lines = ["stage=\(stage) driver=\(state.driver.rawValue), not a touch gesture",
+                      "position=\(String(describing: state.position)) history=\(state.positionHistory)",
+-                     "requestedSize=\(state.size) window=\(window.bounds) key=\(window.isKeyWindow)"]
++                     "requestedSize=\(state.size) window=\(window.bounds) key=\(window.isKeyWindow)",
++                     "captureWaitsForUpdates=\(state.synchronizeDiagnosticCapture); diagnostic pixels are not acceptance evidence"]
+         for key in state.shelfFrames.keys.sorted() {
+             lines.append("shelf=\(key) frame=\(String(describing: state.shelfFrames[key])) "
+                 + "terminal=\(String(describing: state.terminalFrames[key]))")
+@@ -169,13 +177,26 @@
+         diagnostic.lifetime = .keepAlways
+         add(diagnostic)
+         guard window.bounds.width > 0, window.bounds.height > 0 else { return }
++        checkpoint("renderer-begin " + stage)
+         let image = UIGraphicsImageRenderer(bounds: window.bounds).image { _ in
+-            _ = window.drawHierarchy(in: window.bounds, afterScreenUpdates: true)
+-        }
++            checkpoint("drawHierarchy-begin " + stage)
++            let complete = window.drawHierarchy(in: window.bounds, afterScreenUpdates: state.synchronizeDiagnosticCapture)
++            checkpoint("drawHierarchy-end complete=\(complete) " + stage)
++        }
++        checkpoint("renderer-end " + stage)
+         let rendered = XCTAttachment(image: image)
+         rendered.name = "song-page-observed-" + stage
++            + (state.synchronizeDiagnosticCapture ? "" : "-current-state-unsynchronized")
+         rendered.lifetime = .keepAlways
++        checkpoint("image-attachment-begin " + stage)
+         add(rendered)
++        checkpoint("record-end " + stage)
++    }
++
++    private func checkpoint(_ message: String) {
++        // Write directly so a blocked main run loop cannot leave the latest boundary in a print buffer.
++        let line = "SONG-PAGE-BOUNDARY uptime=\(ProcessInfo.processInfo.systemUptime) \(message)\n"
++        FileHandle.standardError.write(Data(line.utf8))
+     }
+ 
+     private func verify(direction: LayoutDirection, driver: Driver = .scrollViewReader, oversized: Bool = false) async throws {
+@@ -281,7 +302,9 @@
+     private func verifyContainedHost(direction: LayoutDirection) async throws {
+         let tall = CGSize(width: 300, height: 600)
+         let compact = CGSize(width: 402, height: 340)
+-        let state = State(driver: .bindingCommand)
++        // The exploratory capture records current rendering without waiting for a display commit.
++        // Geometry assertions still wait for measured native bounds; screenshots never accept the result.
++        let state = State(driver: .bindingCommand, synchronizeDiagnosticCapture: false)
+         state.size = tall
+         let host = UIHostingController(rootView: Fixture(state: state, direction: direction))
+         let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
+@@ -322,15 +345,22 @@
+         for cycle in 0..<2 {
+             for size in [compact, tall] {
+                 // Resize the actual child host and its SwiftUI content together; never replay a scroll command.
++                let stage = "contained-\(direction)-\(cycle)-\(size)"
++                checkpoint("state-size-begin " + stage)
+                 state.size = size
++                checkpoint("host-frame-begin " + stage)
+                 host.view.frame = CGRect(origin: .zero, size: size)
++                checkpoint("container-layout-begin " + stage)
+                 container.view.setNeedsLayout()
+                 container.view.layoutIfNeeded()
++                checkpoint("host-layout-begin " + stage)
+                 host.view.setNeedsLayout()
+                 host.view.layoutIfNeeded()
+-                let stage = "contained-\(direction)-\(cycle)-\(size)"
++                checkpoint("containment-await-begin " + stage)
+                 await assertContainedHost(state, host: host, window: window, stage: stage)
++                checkpoint("terminal-await-begin " + stage)
+                 await assertTerminal(state, target: target, window: window, stage: stage)
++                checkpoint("resize-complete " + stage)
+             }
+         }
+     }
+--- a/tools/ci/test_song_rail_contract.py
++++ b/tools/ci/test_song_rail_contract.py
+@@ -258,7 +258,7 @@
+         native = (ROOT / 'ios/TimbreAppTests/SongShelfPageTests.swift').read_text()
+         helper = native.split('private func verifyContainedHost(', 1)[1].split('private func assertContainedHost(', 1)[0]
+         for token in ['CGSize(width: 300, height: 600)', 'CGSize(width: 402, height: 340)',
+-                      'State(driver: .bindingCommand)', 'let container = UIViewController()',
++                      'State(driver: .bindingCommand, synchronizeDiagnosticCapture: false)', 'let container = UIViewController()',
+                       'window.rootViewController = container', 'container.addChild(host)',
+                       'container.view.addSubview(host.view)', 'host.didMove(toParent: container)',
+                       'window.bounds.width >= compact.width, window.bounds.height >= tall.height',
+@@ -296,6 +296,57 @@
+             self.assertIn(token, helper)
+         self.assertLess(helper.index('record(state,'), helper.index('guard let root ='))
+         self.assertNotIn('XCTSkip', helper)
++
++    def test_contained_host_watchdog_is_per_test_and_does_not_raise_job_budget(self):
++        native = (ROOT / 'ios/TimbreAppTests/SongShelfPageTests.swift').read_text()
++        for name in ['testContainedHostCommandResize()', 'testContainedHostCommandResizeRightToLeft()']:
++            method = native.split('func ' + name, 1)[1].split('\n    }', 1)[0]
++            self.assertIn('executionTimeAllowance = 120', method)
++            self.assertLess(method.index('executionTimeAllowance = 120'), method.index('try await verifyContainedHost'))
++        self.assertEqual(native.count('executionTimeAllowance ='), 2)
++        workflow = (ROOT / '.github/workflows/ios.yml').read_text()
++        app = workflow.split('  app:\n', 1)[1].split('\n  release:', 1)[0]
++        self.assertIn('timeout-minutes: 40', app)
++        self.assertIn('-test-timeouts-enabled YES', app)
++        self.assertIn('-only-testing:TimbreAppTests -only-testing:TimbreUITests/SmokeUITests', app)
++        for forbidden in ['-skip-testing:', 'continue-on-error', '-default-test-execution-time-allowance',
++                          '-maximum-test-execution-time-allowance']:
++            self.assertNotIn(forbidden, app)
++
++    def test_contained_host_current_state_images_do_not_accept_geometry(self):
++        native = (ROOT / 'ios/TimbreAppTests/SongShelfPageTests.swift').read_text()
++        self.assertIn('synchronizeDiagnosticCapture: Bool = true', native)
++        self.assertEqual(native.count('synchronizeDiagnosticCapture: false'), 1)
++        helper = native.split('private func verifyContainedHost(', 1)[1].split('private func assertContainedHost(', 1)[0]
++        self.assertIn('State(driver: .bindingCommand, synchronizeDiagnosticCapture: false)', helper)
++        self.assertIn('await assertContainedHost(state, host: host, window: window, stage: stage)', helper)
++        self.assertIn('await assertTerminal(state, target: target, window: window, stage: stage)', helper)
++        self.assertIn('captureWaitsForUpdates=', native)
++        self.assertIn('-current-state-unsynchronized', native)
++        self.assertIn('diagnostic pixels are not acceptance evidence', native)
++        terminal = native.split('private func assertTerminal(', 1)[1]
++        for forbidden in ['synchronizeDiagnosticCapture', 'XCTSkip', 'XCTExpectFailure', 'accuracy: 2']:
++            self.assertNotIn(forbidden, terminal)
++
++    def test_synchronous_render_and_resize_boundaries_are_emitted_before_calls(self):
++        native = (ROOT / 'ios/TimbreAppTests/SongShelfPageTests.swift').read_text()
++        record = native.split('private func record(', 1)[1].split('private func verify(', 1)[0]
++        for before, call in [('renderer-begin', 'UIGraphicsImageRenderer('),
++                             ('drawHierarchy-begin', 'window.drawHierarchy('),
++                             ('image-attachment-begin', 'add(rendered)')]:
++            self.assertLess(record.index(before), record.index(call))
++        for token in ['drawHierarchy-end complete=', 'renderer-end', 'record-end',
++                      'FileHandle.standardError.write(Data(line.utf8))', 'ProcessInfo.processInfo.systemUptime']:
++            self.assertIn(token, record)
++        resize = native.split('private func verifyContainedHost(', 1)[1].split('private func assertContainedHost(', 1)[0]
++        resize = resize.split('for cycle in 0..<2', 1)[1]
++        for before, call in [('state-size-begin', 'state.size = size'), ('host-frame-begin', 'host.view.frame ='),
++                             ('container-layout-begin', 'container.view.layoutIfNeeded()'),
++                             ('host-layout-begin', 'host.view.layoutIfNeeded()'),
++                             ('containment-await-begin', 'await assertContainedHost('),
++                             ('terminal-await-begin', 'await assertTerminal(')]:
++            self.assertLess(resize.index(before), resize.index(call))
++        self.assertIn('resize-complete', resize)
+ 
+     def test_native_parent_traversal_keeps_nested_scroll_views(self):
+         native = (ROOT / 'ios/TimbreAppTests/SongShelfPageTests.swift').read_text()

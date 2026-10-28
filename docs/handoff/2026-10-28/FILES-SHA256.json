@@ -1,0 +1,806 @@
+{
+  "source_preservation_commit": "f937c5d412956fd4d7b5468659f049103aee402f",
+  "native_snapshot_utc": "2026-10-28T16:44:14Z",
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 49787,
+      "sha256": "2de96b6097bcd732a6f2524c232711dc959ad48f96a524b725fa310c454dee44"
+    },
+    {
+      "path": "docs/ios/APPLE-OWNER-CHECKLIST.md",
+      "bytes": 17583,
+      "sha256": "2f37cb038acff0ca5e2eb7c477fac1a8d4a51910c876ee912d00422813be99de"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/TECHNICAL-HANDOFF.md",
+      "bytes": 23481,
+      "sha256": "a2c46939995e408fd7e9896aaabdc7c464bb2d5a44affacca2d939b376311777"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/archive/PATCH-INVENTORY.md",
+      "bytes": 9428,
+      "sha256": "9416c30344a153ff72416197dcca921a9519bfac339d03634801821366b8db20"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/archive/patch-inventory.json",
+      "bytes": 8205,
+      "sha256": "9da3c038a4ec1c3946225301f4d50a8e3ad76431a789110bd31aa573259333ae"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/archive/preserved-manifests/frozen-marketing-files.json",
+      "bytes": 2367,
+      "sha256": "58b5694ff7b3607838f16b59936b2f967037c6b6c2158598c0eea9bcb553affa"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/archive/preserved-manifests/frozen-matrix-files.json",
+      "bytes": 607,
+      "sha256": "c1b4632afd1a7dc182a705f9f53a0b5c6f5e61742026413b9a66002f5a039fb5"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/archive/preserved-manifests/frozen-typography-files.json",
+      "bytes": 903,
+      "sha256": "19e0dd4471f8879113b2535ae0fca12d26ed2eceafe57c5b5d9459d56a96d68c"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/archive/preserved-patches/along-intrinsic-results.patch",
+      "bytes": 25810,
+      "sha256": "9b37eb08214ac3ddba9b02568015536b60d12f8f5fa614c8d8cd132ee631c1d4"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/archive/preserved-patches/arabic-frame03-caption.patch",
+      "bytes": 1936,
+      "sha256": "d57ee8883d72b3c6181bd68c809124ca6715d06b97ca73b852c84dd73965786c"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/archive/preserved-patches/contained-host-watchdog.patch",
+      "bytes": 11785,
+      "sha256": "e373f405950e07a31144d693c305929e72cb906b15ecec14da51d52c7ae59040"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/archive/preserved-patches/interior-drag-proposal.patch",
+      "bytes": 974,
+      "sha256": "c7eb094d0678f288f28e59c0fc46513d2cc27e0d17ad61a53f3ef077199d0149"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/archive/preserved-patches/playalong-adaptive-typography.patch",
+      "bytes": 26269,
+      "sha256": "86b3101dfeee8ebca3272222ea0f77a71ca92e6fb0d31c9b2c6270757c1dca68"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/archive/preserved-patches/priming-container-preflight.patch",
+      "bytes": 23043,
+      "sha256": "a43eebae4c403c37b617a32870bddcd51b6278d7803b3b6fc81f694103474ae1"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/archive/preserved-patches/priming-rest-milestone.patch",
+      "bytes": 30328,
+      "sha256": "9384ba7a1732896492b5a92961e10900fc260826059e2ecea35a2a363a556314"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/archive/preserved-patches/reveal-artifact-split.patch",
+      "bytes": 6723,
+      "sha256": "ae3c07450e4fb0107f0d0f55081326320dec2c486fc30d03feced9ccd6cb2bb8"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/archive/preserved-patches/tunecheck-reward-band-proposal.patch",
+      "bytes": 60671,
+      "sha256": "ba4aa2a26699e51305bed420d9a074873bbbb81a19b747f02771c2267d8797a5"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/archive/preserved-patches/urdu-diagnostic-watchdog.patch",
+      "bytes": 1892,
+      "sha256": "f1ff374d5e5467988ba362c5a5016262364788860667afdd1d42fc484a6067a3"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/archive/preserved-patches/urdu-raster-clearance-proposal.patch",
+      "bytes": 33383,
+      "sha256": "b5b4734d258efc04d4ebd85b5af397c1fc95c0093898daf7182b37a259f779e9"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/archive/preserved-patches/welcome-renderer-geometry-diagnostic.patch",
+      "bytes": 43430,
+      "sha256": "18d50f36bab29c5eb2c20fd421ec5c8daa5f52b9ba967ea1f4c24aa3d60b1eee"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/README.md",
+      "bytes": 4613,
+      "sha256": "90736d31a0eba783be6b1880fdd5fdbefef86cbf6b5bbd1aa88b4bc1ada0f931"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/REVIEW.md",
+      "bytes": 6500,
+      "sha256": "60b40560a3416a697bfa6f21f2105b0ecfb056f4834b8928989cfe054bbfbd27"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/artifact-index.json",
+      "bytes": 3956,
+      "sha256": "7228cb999de82d31002322b6f1492c831e01d5bd78b47aa76486e6f1f789e824"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/clear-state-callback-comparison.json",
+      "bytes": 8269,
+      "sha256": "3fb1e596e605a07932eed408d7c8a512b6683c1dc3b107dc1874e9259cb3ccab"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/crops/0.png",
+      "bytes": 17141,
+      "sha256": "5b5f11010a9f4bcdcaaf1d7ab8db23ccf667ce75ad05e19ad6d1a9e2390a51b3"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/crops/1.png",
+      "bytes": 59914,
+      "sha256": "e274fa9c7aa86de18d7e5b844c76ab6b62bbcd8106e8033686781ef270d9530e"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/crops/2.png",
+      "bytes": 114035,
+      "sha256": "09c53f6127d764b0eb0847f946f529c30b9c7e4a06ffe0ffc3e5bb00d3e57574"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/crops/3.png",
+      "bytes": 87022,
+      "sha256": "0cb8a4b0b70016369f802fb2124904b5556d2dad4e915290a5ff6b80e162800f"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/crops/4.png",
+      "bytes": 3078,
+      "sha256": "9e2dc3c59cae4f3960ece604659d623503e66812cff1f67a6a008259c22b4730"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/crops/catalogue-28-15x.png",
+      "bytes": 99485,
+      "sha256": "af070c0bcf231fb70a6d80a3771c544bde3044fcf371a0079622879580baf7f1"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/crops/catalogue-masks.png",
+      "bytes": 6818,
+      "sha256": "5ddbde5ddd7efbe79af539ce74de323995e265402b71ebb4789b1ebfbea4122f"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/crops/catalogue-pixels.png",
+      "bytes": 8585,
+      "sha256": "4802e1a9e1227b8433b1a606e72984c02c329cd5b78eb6de9b3d158a1789a9b1"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/crops/contact.png",
+      "bytes": 718432,
+      "sha256": "b5eaa800310609de1a8701c30ebf692247d71c45852753f6624caef45343db9f"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-10-original.png",
+      "bytes": 2283,
+      "sha256": "5a9e96fe125da8a0d13d3d131f1bfaf91c1b12786e0672197cd2557504473fb5"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-10-roles.png",
+      "bytes": 756,
+      "sha256": "7cf70b679865f4633c2feb510d44b1fd0567fa0cf09da458e02dc655d7be4cb2"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-10.npz",
+      "bytes": 2654,
+      "sha256": "60aada4692065a14560a015fa719f31cb1b10f023e8519b7af009862c4cbbfd4"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-12-original.png",
+      "bytes": 44396,
+      "sha256": "cc1a70ad8dadbb0d41d3a846b5ff67a5e40ef78382ec0a83a953e7309e54cbf1"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-12-roles.png",
+      "bytes": 2514,
+      "sha256": "9f4c2188d6c7ef559ee4d3298c104d9de0303fd8ed62f298cb4a9d7600e8b474"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-12.npz",
+      "bytes": 7459,
+      "sha256": "ea55c93b25ec7ad46df5d9efc72973663aa405b2a1737985b324052f42c668d0"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-14-original.png",
+      "bytes": 1873,
+      "sha256": "c29d7a05987b8ceb2918366742cc224ad322a271e24b42667b167ddaae24e3e3"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-14-roles.png",
+      "bytes": 415,
+      "sha256": "278977a7b1859c130cb13c4534ae307822b61623619b71627709ddec64d9c853"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-14.npz",
+      "bytes": 1661,
+      "sha256": "553ba658928c67365e80840004896605e13572be45cf84c85236037a3c15ffa9"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-15-original.png",
+      "bytes": 1959,
+      "sha256": "998df7dea6eeccd660cb5164fbf50ce7643c9fc81a1e00f49d9d19528e46e1a7"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-15-roles.png",
+      "bytes": 428,
+      "sha256": "a2a543415f5740b2fb9dd74406fa0af895bf707c9ad1d4bec6908f5fd6b8a97d"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-15.npz",
+      "bytes": 1693,
+      "sha256": "b7529fb822c08b5adfb8ccb5dc49509fba25405adba5a367135fda16b7107098"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-16-original.png",
+      "bytes": 3275,
+      "sha256": "e0903183f39af7c589743b092010c6395d584f78be585f5a7f1c74dae5fe0225"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-16-roles.png",
+      "bytes": 738,
+      "sha256": "44ea63fd0abbc8ad0a89c40ca40921e36b66fffae4f2679dc09a4e218e7ebee5"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-16.npz",
+      "bytes": 2371,
+      "sha256": "b81451dd8b1a1653311ee8c12e63d6e46fcb28375ba7c82f0c6c82c186d5ed13"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-17-original.png",
+      "bytes": 5080,
+      "sha256": "846b3d7154677f4f19c372ec62c6f0685c026562dd413c378bb08f19ec0d101a"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-17-roles.png",
+      "bytes": 1044,
+      "sha256": "06d5d33aff0b9b973ce8d5cd1c64a1eca74019aa5904ed2dae46caaee19de611"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-17.npz",
+      "bytes": 3149,
+      "sha256": "83363e93e41b3b43262325ee17cc315bafaf9e2ddd9d586e452bd3ad2e9f194f"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-18-original.png",
+      "bytes": 1771,
+      "sha256": "4eeb8e9e31606561eb0609d86dbdd7c542bb6d16556f8ecc9688645be24700c1"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-18-roles.png",
+      "bytes": 424,
+      "sha256": "d11901ba9c58071d9b84c49b930780afcacee02abf9247ad8f842a5c20849840"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-18.npz",
+      "bytes": 1684,
+      "sha256": "fd00e3244203015868113208b2d86a6c37d0a78c01e072d01a3b383b377cfca2"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-19-original.png",
+      "bytes": 1857,
+      "sha256": "ea0c1e3f5f7e2b134ae8a8c0f1c7c69043dab5fc0d0d1d007475d3723ffc061b"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-19-roles.png",
+      "bytes": 415,
+      "sha256": "0e6d2dbd5e62f44e0000b39d18f978c85ecd7c9d0b543648212c61a9953d1fef"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-19.npz",
+      "bytes": 1659,
+      "sha256": "adf7ad5cc0b7c3969569effb8acdd6af01de400db035b03364cc3ff008bd98b7"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-20-original.png",
+      "bytes": 1533,
+      "sha256": "75602b85f96310c9219052d351be226be6eed5a96a07fe43c17002f5555faed5"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-20-roles.png",
+      "bytes": 329,
+      "sha256": "277107136c8486c63e741aeacc8e29dd23922929f197181ab1d52a71548508f5"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-20.npz",
+      "bytes": 1576,
+      "sha256": "221999c188d1f1a6640d3106704e81ac688b12c6be1b00d16b80322d01b2e046"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-21-original.png",
+      "bytes": 13965,
+      "sha256": "685d7523afa6d6d7ae53de7f007a551013fe6fcb1917161f57be3ba76b4ad297"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-21-roles.png",
+      "bytes": 1473,
+      "sha256": "17b38b46496cbc1587c0d9ce297d83ed799afcdf6669777605163a512b85108d"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-21.npz",
+      "bytes": 4370,
+      "sha256": "0c94b2848d2fa04dc2cf1c3ed84d543f11e061a2092844337db28ce7cbb0e345"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-22-original.png",
+      "bytes": 15791,
+      "sha256": "74c53accce4bbbb5f38a04baddeefa15768f998babd4980bfb1e54910f69a0f8"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-22-roles.png",
+      "bytes": 1346,
+      "sha256": "a9de5d5ac3bf637fae7974f728e7e903b4906a41b602f51e84d0310e6cdd2b29"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-22.npz",
+      "bytes": 4418,
+      "sha256": "fe257735c4e69b2fe2f5b3059c7b3b5ddbfdbb9f9a4b3087f025e6d113eb4e90"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-23-original.png",
+      "bytes": 2346,
+      "sha256": "74d4864496c49408e9ffb61712333a93b5a663b5667bc0f0fa323321ed9a031f"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-23-roles.png",
+      "bytes": 395,
+      "sha256": "f0fc58c34bb689c52ef012e4c8e1254fef4932e89670dcc68cd44f2a149a2e6d"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-23.npz",
+      "bytes": 1676,
+      "sha256": "1718d8c1914a18fc3f7c9103447c679d3ff5eaf12ee6215d0dbb84ab1ea26d7b"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-24-original.png",
+      "bytes": 1558,
+      "sha256": "448dc2d1133508b3405e59f076e623e5204ad6a8153c44aad1d42e27360b2e8e"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-24-roles.png",
+      "bytes": 499,
+      "sha256": "687869daec1051435f2d68657b88288d85083d87a37051308612ca2cdef36455"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-24.npz",
+      "bytes": 1883,
+      "sha256": "d889a5be32b4d916549249e40c6074c9e2a28fe7706f5d2cc6e7be34e1cdacf4"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-25-original.png",
+      "bytes": 1449,
+      "sha256": "8dab93be99bc682e36b69bc162479d28fca7c0d8afc1a44eef5e5600747d12fc"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-25-roles.png",
+      "bytes": 429,
+      "sha256": "4e13540bdbeebd23a936ef85dd8050aeaf2fef22fa52e8b251d6614d7c333b2f"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-25.npz",
+      "bytes": 1741,
+      "sha256": "8e5d18f2d1c548b6a8a511b7d3dba91aaee24fffa617285c4299d4bbefac264f"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-26-original.png",
+      "bytes": 1398,
+      "sha256": "68751229fa0f434f771b408ca38e1b50d21c9ef31df557b488a37f2942a5a095"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-26-roles.png",
+      "bytes": 433,
+      "sha256": "b446f9458c34d1bdaffd3e924165c9a9410c0f14f9b86390cb5c4972274ca7a4"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/masks/finding-26.npz",
+      "bytes": 1741,
+      "sha256": "141a8aedd49a86a035270bc40a36cfb18a173524b351c42405c9163a537bf08a"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/measurements.json",
+      "bytes": 55823,
+      "sha256": "7ecaa80b5334aeec8bf981af26eeb4327847d32e5e47584aada824b5fc2781be"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/exploratory-wide-support/support-and-masks.png",
+      "bytes": 208690,
+      "sha256": "efd45e8f9c9abd5a8625afa4fd088e5a9aca41a7ead84199e3b92a45d28c8f68"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/independent-catalogue/REVIEW.md",
+      "bytes": 2536,
+      "sha256": "f1a451b739ce80d685dd28b385d05646a8daac65144ad89038381a2682f591f3"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/independent-catalogue/adjacency-sensitivity.json",
+      "bytes": 3636,
+      "sha256": "c7873b438b6b393bfb19c9b73ad3528a01d1dc0afbd3864a95a0a453383eadf1"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/independent-catalogue/context-6x.png",
+      "bytes": 26308,
+      "sha256": "b68213315b9a0238b54158fafa7a38515048bb29ff2c5cc7d1d5552338c1bf64"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/independent-catalogue/grain-and-edge-grid.png",
+      "bytes": 10231,
+      "sha256": "f1ad28295dfe9bf877332abccdeb1bed6d72d59fb0292ece1dd13cb12b1d22b7"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/independent-catalogue/review.json",
+      "bytes": 9963,
+      "sha256": "1573dc2b71386fc540d65973cf2778a77ab56360b18685109ba608593a9d1236"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/independent-catalogue/support-20x.png",
+      "bytes": 8585,
+      "sha256": "4802e1a9e1227b8433b1a606e72984c02c329cd5b78eb6de9b3d158a1789a9b1"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measure_revealed_songs.py",
+      "bytes": 12063,
+      "sha256": "504b3ea1dd610ba679b878e8b95c897692510f2cfe3609d0111abc2d99075297"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-10-original.png",
+      "bytes": 2283,
+      "sha256": "5a9e96fe125da8a0d13d3d131f1bfaf91c1b12786e0672197cd2557504473fb5"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-10-roles.png",
+      "bytes": 756,
+      "sha256": "7cf70b679865f4633c2feb510d44b1fd0567fa0cf09da458e02dc655d7be4cb2"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-10.npz",
+      "bytes": 2654,
+      "sha256": "60aada4692065a14560a015fa719f31cb1b10f023e8519b7af009862c4cbbfd4"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-12-original.png",
+      "bytes": 44396,
+      "sha256": "cc1a70ad8dadbb0d41d3a846b5ff67a5e40ef78382ec0a83a953e7309e54cbf1"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-12-roles.png",
+      "bytes": 2514,
+      "sha256": "7e417ab5c18c3fad95da9c8e913a305afb3619849280c62fd2c5357ed303ccb3"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-12.npz",
+      "bytes": 7444,
+      "sha256": "cbf6088912bdef65a8c0d5702e0152a14881b6c02df628839a884b2315c70673"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-14-original.png",
+      "bytes": 1195,
+      "sha256": "ba5cf47e44950cbbb2f4bba3c61484a4929ab6409c2f2b865f06e2f2b8b5b9d9"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-14-roles.png",
+      "bytes": 382,
+      "sha256": "6755630b5a42490c0253ded3432d2db87e9846999dac9ddf5265b29a91253329"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-14.npz",
+      "bytes": 1574,
+      "sha256": "cce1971abfd9581b0a980fe39c4faabbaea209d823035366e52f49e6ae7a8701"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-15-original.png",
+      "bytes": 1283,
+      "sha256": "c3a18caefdb8233166d6497975465c93605b9f73a6596d41eab3f47e465f8b63"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-15-roles.png",
+      "bytes": 395,
+      "sha256": "5b97cfbd8a5675639fa8e46914a8c5ad1d4962870e7e50815cbf9643e2ea96b4"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-15.npz",
+      "bytes": 1585,
+      "sha256": "6dae8aa92dd11d944f48dc068dc0aac201163a499f5459a40bbdca0d2586330c"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-16-original.png",
+      "bytes": 3275,
+      "sha256": "e0903183f39af7c589743b092010c6395d584f78be585f5a7f1c74dae5fe0225"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-16-roles.png",
+      "bytes": 738,
+      "sha256": "44ea63fd0abbc8ad0a89c40ca40921e36b66fffae4f2679dc09a4e218e7ebee5"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-16.npz",
+      "bytes": 2371,
+      "sha256": "b81451dd8b1a1653311ee8c12e63d6e46fcb28375ba7c82f0c6c82c186d5ed13"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-17-original.png",
+      "bytes": 5080,
+      "sha256": "846b3d7154677f4f19c372ec62c6f0685c026562dd413c378bb08f19ec0d101a"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-17-roles.png",
+      "bytes": 1044,
+      "sha256": "06d5d33aff0b9b973ce8d5cd1c64a1eca74019aa5904ed2dae46caaee19de611"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-17.npz",
+      "bytes": 3149,
+      "sha256": "83363e93e41b3b43262325ee17cc315bafaf9e2ddd9d586e452bd3ad2e9f194f"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-18-original.png",
+      "bytes": 1212,
+      "sha256": "dc10ff59490b68f8f9c06a3676d22a41102b1f043fdd2821243bc3fd28222f58"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-18-roles.png",
+      "bytes": 392,
+      "sha256": "4d98f1515d25c897bd9f74dc05e3a712169f924e69f956aa00bf7928b09870c1"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-18.npz",
+      "bytes": 1586,
+      "sha256": "46b1cbb8f433454fea07061cb9ad96c922423672730f56884e0119003590dd60"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-19-original.png",
+      "bytes": 1158,
+      "sha256": "6531a95f99e95d15d90fbb920bd63f3d593dc1a63629f911df89f68f59a82599"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-19-roles.png",
+      "bytes": 384,
+      "sha256": "cd266e06a88fe73b83a7b329113d9037a5f050b05b4fd12272c645a6eec60fa5"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-19.npz",
+      "bytes": 1571,
+      "sha256": "c66bb633fd8b3d8953c40be10c71b48476dcd6da826038a0000c75227897dea8"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-20-original.png",
+      "bytes": 891,
+      "sha256": "a656b9f107390783c37c7bb8d588dea59d880135001f058b445aa368852017ac"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-20-roles.png",
+      "bytes": 304,
+      "sha256": "d78d0f6249873fce31051f50fd7609728ad3eeab38235f016db4275a835f117f"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-20.npz",
+      "bytes": 1472,
+      "sha256": "43721a0e9b53166620085d49397951b636b276b348d8ff3d4e5d214e90147ec5"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-21-original.png",
+      "bytes": 13965,
+      "sha256": "685d7523afa6d6d7ae53de7f007a551013fe6fcb1917161f57be3ba76b4ad297"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-21-roles.png",
+      "bytes": 1473,
+      "sha256": "17b38b46496cbc1587c0d9ce297d83ed799afcdf6669777605163a512b85108d"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-21.npz",
+      "bytes": 4370,
+      "sha256": "0c94b2848d2fa04dc2cf1c3ed84d543f11e061a2092844337db28ce7cbb0e345"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-22-original.png",
+      "bytes": 15791,
+      "sha256": "74c53accce4bbbb5f38a04baddeefa15768f998babd4980bfb1e54910f69a0f8"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-22-roles.png",
+      "bytes": 1346,
+      "sha256": "a9de5d5ac3bf637fae7974f728e7e903b4906a41b602f51e84d0310e6cdd2b29"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-22.npz",
+      "bytes": 4418,
+      "sha256": "fe257735c4e69b2fe2f5b3059c7b3b5ddbfdbb9f9a4b3087f025e6d113eb4e90"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-23-original.png",
+      "bytes": 2346,
+      "sha256": "74d4864496c49408e9ffb61712333a93b5a663b5667bc0f0fa323321ed9a031f"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-23-roles.png",
+      "bytes": 395,
+      "sha256": "f0fc58c34bb689c52ef012e4c8e1254fef4932e89670dcc68cd44f2a149a2e6d"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-23.npz",
+      "bytes": 1676,
+      "sha256": "1718d8c1914a18fc3f7c9103447c679d3ff5eaf12ee6215d0dbb84ab1ea26d7b"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-24-original.png",
+      "bytes": 1218,
+      "sha256": "5498cd14fd1573fd1683caaaa6167ae146a0b026b24ea877c411dd4a732a0280"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-24-roles.png",
+      "bytes": 448,
+      "sha256": "de15dc7beac77566d123b7c5620229e2b21cd6c5f28d8f1fdef7b5e824e84442"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-24.npz",
+      "bytes": 1784,
+      "sha256": "e37f9639856d3dd01f8e321c50e809dd9f2cec8b3333f966c01320adf902e623"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-25-original.png",
+      "bytes": 1449,
+      "sha256": "8dab93be99bc682e36b69bc162479d28fca7c0d8afc1a44eef5e5600747d12fc"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-25-roles.png",
+      "bytes": 429,
+      "sha256": "4e13540bdbeebd23a936ef85dd8050aeaf2fef22fa52e8b251d6614d7c333b2f"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-25.npz",
+      "bytes": 1741,
+      "sha256": "8e5d18f2d1c548b6a8a511b7d3dba91aaee24fffa617285c4299d4bbefac264f"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-26-original.png",
+      "bytes": 1398,
+      "sha256": "68751229fa0f434f771b408ca38e1b50d21c9ef31df557b488a37f2942a5a095"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-26-roles.png",
+      "bytes": 433,
+      "sha256": "b446f9458c34d1bdaffd3e924165c9a9410c0f14f9b86390cb5c4972274ca7a4"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/masks/finding-26.npz",
+      "bytes": 1741,
+      "sha256": "141a8aedd49a86a035270bc40a36cfb18a173524b351c42405c9163a537bf08a"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/measurements.json",
+      "bytes": 56093,
+      "sha256": "c914b9ed760e713d10c8fd6b64a4055e6e745c941314a1bdf881a84da30a9d76"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/summary.txt",
+      "bytes": 1502,
+      "sha256": "beb5e9dc6bda817a662f8939707cc07a568749178846cb6214f6a04c66543a0d"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/measured/support-and-masks.png",
+      "bytes": 215702,
+      "sha256": "26c82b25a552f461dc5d278702fd275ccfaaeaee48a52f7dc95df3bc649c7e0b"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/paired-originals.json",
+      "bytes": 4889,
+      "sha256": "35c5ed1f4e0f2286083709e46d6083de697349d8a61defcca4b5352d1cdb4ad6"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/portable-manifest.json",
+      "bytes": 35991,
+      "sha256": "7b5ac46123bd55bdff81ba3d9a07a9acd0f999e96eef0436be8909351ac0e38f"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/review-receipt.json",
+      "bytes": 2573,
+      "sha256": "5420ce8cc6b9d94249155d990e3c57ca9ea7a13223e4af696b7212a102a84b8b"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/contrast-clear-state/visibility-disposition-options.md",
+      "bytes": 6214,
+      "sha256": "bac9dabec3303d11ed61270b8390a9654d4e7c6b23337fe2bd8eb58655857919"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/native-originals/11A1E3B4-7CBA-4747-A016-6C9AD2725EEE.png",
+      "bytes": 1191359,
+      "sha256": "0d5c920c3e31b10e856821a9acd17a3570f893e43831a9bfd8875eecf1ae6106"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/native-originals/20105E32-4D1D-42A6-8D80-D0348EE24245.png",
+      "bytes": 746780,
+      "sha256": "e729d89b04660f902b83a2550a32c7718709d08779a0aaef14b5ea34bb0aa261"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/native-originals/485970EF-CA6D-4FCE-9661-42A39E3E1867.png",
+      "bytes": 1843693,
+      "sha256": "422ab117b805381b5feb04e8c9a6fe2e5d71f60281f1ef94ada297ed57d472d4"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/native-originals/53B078E2-E1BD-49CF-AAFE-FF2B941160BA.png",
+      "bytes": 546213,
+      "sha256": "b966bfd477f8d837a3452759206ed7657242346f5199d14eaa8260131abec2da"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/native-originals/5ACDFDFB-66E8-4679-8F48-E5BBCD771746.png",
+      "bytes": 1306599,
+      "sha256": "2f2ebfd2401d33c36b3735852c993f4d4cb5ed9c6b5f2af2cd730ae86a88cfd2"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/native-originals/D99EE5B6-7642-4541-BD6B-37B6A5377020.png",
+      "bytes": 628205,
+      "sha256": "bdd124bea84b52505e3f004e58f532dc2ac0a1b906a8b70f9a3f928358b65648"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/native-originals/F1BE12F9-DF9F-4FB4-A2B9-8B06186D6221.png",
+      "bytes": 1137921,
+      "sha256": "cf7fd19ba0a713526483be48898208dc531d75ff44f8e9c0b6c020f5b6696b15"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/native-originals/README.md",
+      "bytes": 480,
+      "sha256": "2f4e1bb307f904bff7bc3b15e1874ade3335e4408488efb45127d82f883ced13"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/evidence/native-originals/index.json",
+      "bytes": 1950,
+      "sha256": "6be62edaf0f23926d3788ad8714efcd3d2ce9db18b6da37e621b65911be1a665"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/manifests/along-summary-files.json",
+      "bytes": 1353,
+      "sha256": "1b13a157bd183ba4f13780fe904ec1e11e8e17d90b010b2c1af465f2c2770935"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/manifests/inactive-contrast-proposals.json",
+      "bytes": 8610,
+      "sha256": "c62fc03e697dc7128029a51385a032469377db33a2c465e99c37a9b42d17b696"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/manifests/native-snapshot.json",
+      "bytes": 36310,
+      "sha256": "b2939e1437927c79ddde66db7198687a3750eaac7eb0213fe09cbb2f474e8b6c"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/manifests/nightly-scheduling-files.json",
+      "bytes": 510,
+      "sha256": "c0b89d19bd8f5eb8a8452861479d063dd211393c959113bcaf641d0cff176ea9"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/manifests/package-files.json",
+      "bytes": 2210,
+      "sha256": "b5bc2b12a9cc2b57628c4b788320c5c1f7e9cca7fb48a2e64ff5ecaaeeb0cdb0"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/manifests/preserved-readiness-changes.json",
+      "bytes": 3491,
+      "sha256": "a41ccb7a2c71227e97156e0d99917fda9d7f48c977bcc6dc7b2832d4477af5b4"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/manifests/priming-preflight-files.json",
+      "bytes": 921,
+      "sha256": "fc7a93a42ee87b996961333e1aa8844859315355da9fe454e429c17c3c83f670"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/patches/along-intrinsic-results.patch",
+      "bytes": 25810,
+      "sha256": "9b37eb08214ac3ddba9b02568015536b60d12f8f5fa614c8d8cd132ee631c1d4"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/patches/current-callback-raster-diagnostics.patch",
+      "bytes": 343170,
+      "sha256": "5fbc081b4594f7facb8182811b8b7ff46e6d428b41800c9d4674c68effaa5dc4"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/patches/nightly-initial-load.patch",
+      "bytes": 11564,
+      "sha256": "962cfd55cc1841e395c495c095dae1396deca74acb4f93b41bcf5cd5d24018e5"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/patches/pending-readiness-working-tree.patch",
+      "bytes": 43188,
+      "sha256": "9eddd4d64960c04dbaf4b6454da709c4581175f4b3601b6091e927ea4738f3a7"
+    },
+    {
+      "path": "docs/handoff/2026-10-28/patches/priming-container-preflight.patch",
+      "bytes": 23043,
+      "sha256": "a43eebae4c403c37b617a32870bddcd51b6278d7803b3b6fc81f694103474ae1"
+    }
+  ]
+}

@@ -1,0 +1,414 @@
+{
+  "schema": "catalogue-28-local-diagnosis/v1",
+  "source": {
+    "test": "OccludedContrastDiagnosticUITests/testRevealSongsThirdCard()",
+    "configurationName": "Test Scheme Action",
+    "deviceId": "E952A9B0-CC78-435C-BF08-06AD47FE1076",
+    "deviceName": "iPhone 17 Pro",
+    "exportedFileName": "CAA03408-26BE-48CF-B2B0-80C80A8D8646.png",
+    "isAssociatedWithFailure": false,
+    "suggestedHumanReadableName": "contrast-reveal-28-songs-third-revealed-after_0_FF93783C-65F4-4936-AFC3-BB6E215C0888.png",
+    "timestamp": 1793189522.135,
+    "path": "originals/CAA03408-26BE-48CF-B2B0-80C80A8D8646.png",
+    "sha256": "754ff4444ee8009a0450788ec68d9b0a862698c5aa49d0d7f9a74ecdcfebfeab"
+  },
+  "sourceSHA256Verified": true,
+  "sourcePNG": {
+    "dimensions": [
+      1206,
+      2622
+    ],
+    "orientation": 1,
+    "sRGBRenderingIntent": 0,
+    "allChunkCRCsVerified": true,
+    "chunkTypes": [
+      "IHDR",
+      "sRGB",
+      "eXIf",
+      "iTXt",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IEND"
+    ]
+  },
+  "target": {
+    "label": "28",
+    "leafAXFramePoints": [
+      160.6959466667,
+      421.1,
+      11,
+      10.3333333333
+    ],
+    "pixelsPerPoint": 3,
+    "reviewedFullSupportPixelRectangle": [
+      477,
+      1258,
+      521,
+      1300
+    ],
+    "largerContextPixelRectangle": [
+      440,
+      1210,
+      570,
+      1345
+    ]
+  },
+  "conclusion": "The 4.2428536 sample is real light backing grain, not antialiasing; however it does not touch/underlie the visible glyph edge in this screenshot. It is separated from the lower-right 8 edge by ordinary backing. Pairing that grain with the foreground is a conservative larger-rectangle bound, not a substantiated local text contrast failure. No source paint correction is justified by this point alone.",
+  "grainPatch": {
+    "approximateVisibleRectanglePixels": [
+      514,
+      1284,
+      517,
+      1287
+    ],
+    "center": [
+      515,
+      1285
+    ],
+    "rgb": [
+      113,
+      118,
+      97
+    ],
+    "ratioAgainstSolid245_243_239": 4.2428536228986236,
+    "separation": "At y=1285, x511 is AA; x512 and x513 are ordinary backing; the grain begins at x514. At y=1284, x512 is AA, x513 is ordinary backing, then grain x514. This isolated rectangular feature is consistent with the source fine grain drawn before text, rather than a connected digit fringe.",
+    "sourceContext": "SongCover draws CoverArt Canvas grain before catalogue text, then applies a top-light wash. Motifs.grain draws small rectangular white/black marks. This supports, but is not a no-text pixel render of, the grain attribution."
+  },
+  "samples": [
+    {
+      "point": [
+        491,
+        1285
+      ],
+      "rgb": [
+        245,
+        243,
+        239
+      ],
+      "interpretation": "solid interior of lower stroke of 2",
+      "contrastWith245_243_239": 1.0,
+      "contrastWith246_244_240": 1.008863852089059
+    },
+    {
+      "point": [
+        510,
+        1283
+      ],
+      "rgb": [
+        246,
+        244,
+        240
+      ],
+      "interpretation": "solid right stroke of 8",
+      "contrastWith245_243_239": 1.008863852089059,
+      "contrastWith246_244_240": 1.0
+    },
+    {
+      "point": [
+        511,
+        1285
+      ],
+      "rgb": [
+        153,
+        157,
+        141
+      ],
+      "interpretation": "antialiased lower-right edge; NOT a core/backing sample",
+      "contrastWith245_243_239": 2.5058800897834224,
+      "contrastWith246_244_240": 2.5280918402521806
+    },
+    {
+      "point": [
+        512,
+        1285
+      ],
+      "rgb": [
+        101,
+        107,
+        85
+      ],
+      "interpretation": "uncovered backing between 8 and grain",
+      "contrastWith245_243_239": 5.002947138992941,
+      "contrastWith246_244_240": 5.047292522442355
+    },
+    {
+      "point": [
+        513,
+        1285
+      ],
+      "rgb": [
+        102,
+        108,
+        85
+      ],
+      "interpretation": "uncovered backing between 8 and grain",
+      "contrastWith245_243_239": 4.933184046846941,
+      "contrastWith246_244_240": 4.976911060566297
+    },
+    {
+      "point": [
+        513,
+        1284
+      ],
+      "rgb": [
+        102,
+        107,
+        85
+      ],
+      "interpretation": "uncovered backing between 8 and grain",
+      "contrastWith245_243_239": 4.987650995319294,
+      "contrastWith246_244_240": 5.031860796013652
+    },
+    {
+      "point": [
+        514,
+        1284
+      ],
+      "rgb": [
+        112,
+        117,
+        96
+      ],
+      "interpretation": "light grain patch edge",
+      "contrastWith245_243_239": 4.304301857887018,
+      "contrastWith246_244_240": 4.34245455290199
+    },
+    {
+      "point": [
+        515,
+        1284
+      ],
+      "rgb": [
+        110,
+        117,
+        95
+      ],
+      "interpretation": "light grain patch",
+      "contrastWith245_243_239": 4.3334488338873385,
+      "contrastWith246_244_240": 4.371859883386421
+    },
+    {
+      "point": [
+        514,
+        1285
+      ],
+      "rgb": [
+        112,
+        117,
+        96
+      ],
+      "interpretation": "light grain patch",
+      "contrastWith245_243_239": 4.304301857887018,
+      "contrastWith246_244_240": 4.34245455290199
+    },
+    {
+      "point": [
+        515,
+        1285
+      ],
+      "rgb": [
+        113,
+        118,
+        97
+      ],
+      "interpretation": "light grain patch center",
+      "contrastWith245_243_239": 4.2428536228986236,
+      "contrastWith246_244_240": 4.280461649847525
+    },
+    {
+      "point": [
+        516,
+        1285
+      ],
+      "rgb": [
+        109,
+        114,
+        93
+      ],
+      "interpretation": "light grain patch edge",
+      "contrastWith245_243_239": 4.495396544183608,
+      "contrastWith246_244_240": 4.535243074232918
+    },
+    {
+      "point": [
+        515,
+        1286
+      ],
+      "rgb": [
+        112,
+        118,
+        96
+      ],
+      "interpretation": "light grain patch",
+      "contrastWith245_243_239": 4.258970712127394,
+      "contrastWith246_244_240": 4.296721598571325
+    },
+    {
+      "point": [
+        517,
+        1285
+      ],
+      "rgb": [
+        102,
+        110,
+        87
+      ],
+      "interpretation": "ordinary backing beyond grain",
+      "contrastWith245_243_239": 4.818042591165285,
+      "contrastWith246_244_240": 4.86074900805216
+    },
+    {
+      "point": [
+        513,
+        1287
+      ],
+      "rgb": [
+        102,
+        108,
+        85
+      ],
+      "interpretation": "ordinary backing below and left of grain",
+      "contrastWith245_243_239": 4.933184046846941,
+      "contrastWith246_244_240": 4.976911060566297
+    }
+  ],
+  "fullGlyphReview": "The expanded context visibly contains both complete digits, their counters, antialiasing fringe and surrounding backing; no clipping/occlusion is visible. The support rectangle has not been narrowed to discard the grain.",
+  "limitations": [
+    "This does not certify a >=4.5 full-glyph minimum or clear the original finding.",
+    "A single composite image cannot expose the background hidden underneath opaque core glyphs; no independently rendered no-text background or exact glyph coverage mask was available.",
+    "No antialiased pixels were treated as true foreground or clean backing for the cited contrast samples.",
+    "The bright grain remains part of the larger support rectangle, so that conservative full-rectangle bound remains below 4.5.",
+    "No native execution, source modification or exemption authorization occurred."
+  ],
+  "methodReference": "https://www.w3.org/WAI/WCAG21/Techniques/general/G18",
+  "auditAuthorization": false,
+  "provesContrastFailure": false,
+  "provesContrastPass": false,
+  "plots": [
+    "context-6x.png",
+    "support-20x.png",
+    "grain-and-edge-grid.png"
+  ],
+  "completeGlyphAdjacencyFollowup": {
+    "finding": "No genuine immediately adjacent <4.5 backing sample was substantiated across either complete digit. A diagnostic component/rim sensitivity sweep found no below4.5 candidate at cutoffs1 through6, while the isolated grain stayed outside both glyph components and their immediate rims. This is not a blanket pass.",
+    "report": "adjacency-sensitivity.json",
+    "minimumCandidateRimRatios": [
+      4.933184046846941,
+      4.933184046846941,
+      4.929075524361502,
+      4.929075524361502,
+      4.785255622405344,
+      4.642609971321126
+    ],
+    "maskStatus": "Exploratory raster-derived mask, not certified independent glyph coverage."
+  }
+}
