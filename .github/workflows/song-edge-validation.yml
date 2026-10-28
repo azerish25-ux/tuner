@@ -45,6 +45,23 @@ jobs:
         run: |
           xcrun simctl install "$DEVICE_ID" ios/build/dd/Build/Products/Debug-iphonesimulator/Timbre.app
           xcrun simctl privacy "$DEVICE_ID" grant microphone com.shahradazerisharghi.timbre
+      - name: Unchanged initial middle-selection regression
+        timeout-minutes: 10
+        run: |
+          set -o pipefail
+          xcodebuild test-without-building -project ios/Timbre.xcodeproj -scheme Timbre \
+            -parallel-testing-enabled NO -test-timeouts-enabled YES \
+            -default-test-execution-time-allowance 120 -maximum-test-execution-time-allowance 120 \
+            -only-testing:TimbreAppTests/SongRailMeasurementTests/testInitialMiddleSelectionIsRevealedWithoutBuildingEveryCard \
+            -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd \
+            -resultBundlePath ci-out/Initial.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/initial.log
+          python3 - <<'PY'
+          from pathlib import Path
+          from collections import Counter
+          import re
+          events=re.findall(r"Test Case '-\[TimbreAppTests.SongRailMeasurementTests testInitialMiddleSelectionIsRevealedWithoutBuildingEveryCard\]' (started|passed|failed|skipped)",Path('ci-out/initial.log').read_text())
+          if Counter(events)!=Counter(started=1,passed=1): raise SystemExit('Initial selection did not pass exactly once')
+          PY
       - name: Six unchanged public-selection geometry tests
         timeout-minutes: 15
         run: |
@@ -93,7 +110,7 @@ jobs:
       - name: Export original results
         if: always()
         run: |
-          for suite in Units Touch; do
+          for suite in Initial Units Touch; do
             if [ -d "ci-out/$suite.xcresult" ]; then
               xcrun xcresulttool export attachments --path "ci-out/$suite.xcresult" --output-path "ci-out/$suite-attachments"
             fi

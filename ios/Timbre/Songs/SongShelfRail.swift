@@ -29,7 +29,9 @@ struct SongShelfRail<Item: Identifiable, Content: View>: View where Item.ID: Sen
             .scrollTargetLayout()
             .frame(height: height, alignment: .top)
         }
-        .scrollPosition($position, anchor: .trailing)
+        // Interior identity restoration must agree with the initial centered reveal.
+        // Catalogue ends use explicit semantic edges, independent of this identity anchor.
+        .scrollPosition($position, anchor: .center)
         .onScrollPhaseChange { _, phase, context in
             // Do not interrupt a gesture or replace an initial/programmatic interior selection.
             if phase == .idle && position.isPositionedByUser { retainUserEdge(context.geometry) }
