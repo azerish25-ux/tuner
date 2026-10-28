@@ -1,0 +1,66 @@
+{
+  "schema": 1,
+  "status": "reviewed_contract_correction_full_native_gate_pending",
+  "old_source_revision": "31bcd46b2a58529a52f23bf9b4d444f4fa713761",
+  "superseded_tests": [
+    "testProgrammaticScrollTracksShelfAndSurvivesRepeatedResize",
+    "testProgrammaticScrollTracksShelfAndSurvivesRepeatedResizeRightToLeft"
+  ],
+  "old_evidence": {
+    "run_id": 40761971524,
+    "app_job_id": 123077841996,
+    "artifact_id": 12850003681,
+    "artifact_sha256": "00ca76a1da2ec94e0881d21944e6d69a8b15bd80b2841562b5378f5755564e1a",
+    "outcome": "235 app tests,54 assertions; all failures in six Songs cases. Historical failures remain failed, not relabeled."
+  },
+  "platform_control": {
+    "revision": "435837446d0807970d4000dd7beb0f4a7c9131c9",
+    "run_id": 40767073030,
+    "job_id": 123093973252,
+    "cases": 8,
+    "failures": 0,
+    "runtime": "iOS26.2 build23C54",
+    "dimensions_points": [
+      402,
+      874
+    ],
+    "variants": [
+      "State/ObservableObject",
+      "single/nested reader",
+      "LTR/RTL"
+    ],
+    "observation": "Each actual proxy command placed row6. Binding/history remained nil/empty during31samples extending past4seconds after command. Test did not assign an expected observed binding.",
+    "limit": "Bounded fixture observation only; no universal or perpetual platform-bug claim."
+  },
+  "production_candidate_evidence": {
+    "revision": "617b34729e4f0221747bfa94b6e52064bd3bc309",
+    "run_id": 40770391139,
+    "job_id": 123105684520,
+    "public_selection_geometry_cases": 6,
+    "real_touch_cases": 3,
+    "outcome": "All selected cases passed with original geometry/hittability assertions, whole catalogue, normal/AX5/RTL actions and both rotation cycles."
+  },
+  "replacement_contract": {
+    "tests": [
+      "testExternalProxyInitialGeometryInteroperability",
+      "testExternalProxyInitialGeometryInteroperabilityRightToLeft"
+    ],
+    "claim": "Initial proxy geometry interoperability only, not proxy-driven binding readback or resize ownership.",
+    "negative_controls": "Before each command, target geometry must not already satisfy the after-command predicate. The fixed ordered shelf fixture and measured lower-row bounds place the target beyond the page; measured distance from the horizontal end exceeds its viewport. Both actual offsets must change and the resulting shelf/terminal must fit current attached viewports.",
+    "binding": "Passive value/history attachment only: no expected-ID assignment, no nil assertion, no observed-ID success assumption."
+  },
+  "coverage_preserved": [
+    "six public-selection resize methods",
+    "nine pure resize-policy cases",
+    "three unchanged real-touch methods",
+    "full collection and first/middle/last actions",
+    "normal/AX5/RTL and two rotation cycles",
+    "original failed source and artifact provenance"
+  ],
+  "reviewer": "Independent review_readiness_candidates approved this bounded replacement plan subject to new full-app execution",
+  "limits": [
+    "Replacement tests themselves still require fresh native execution",
+    "Complete app/smoke/release/accessibility gates remain mandatory",
+    "No signing, account, submission or release-ready flags changed"
+  ]
+}

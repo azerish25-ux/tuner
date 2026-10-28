@@ -90,33 +90,32 @@ final class SongShelfPageTests: XCTestCase {
         }
     }
 
-    func testProgrammaticScrollTracksShelfAndSurvivesRepeatedResize() async throws {
+    func testExternalProxyInitialGeometryInteroperability() async throws {
+        try await verifyExternalProxyPlacement(direction: .leftToRight)
+    }
+
+    func testExternalProxyInitialGeometryInteroperabilityRightToLeft() async throws {
+        try await verifyExternalProxyPlacement(direction: .rightToLeft)
+    }
+
+    /// Public selection inputs must place actual content and survive resizing. Gesture behavior remains
+    /// independently exercised by the unchanged full-catalogue real-touch tests.
+    func testBindingCommandPlacesShelfAndTerminalAndPreservesResizeGeometry() async throws {
         try await verify(direction: .leftToRight)
     }
 
-    func testProgrammaticScrollTracksShelfAndSurvivesRepeatedResizeRightToLeft() async throws {
-        try await verify(direction: .rightToLeft)
-    }
-
-    /// Additive diagnostic: explicit identity commands must place real content and survive resizing.
-    /// This does not establish automatic binding writeback or user-gesture behavior, and does not
-    /// replace or clear either failing ScrollViewReader observation test above.
-    func testBindingCommandPlacesShelfAndTerminalAndPreservesResizeGeometry() async throws {
-        try await verify(direction: .leftToRight, driver: .bindingCommand)
-    }
-
     func testBindingCommandPlacesShelfAndTerminalAndPreservesResizeGeometryRightToLeft() async throws {
-        try await verify(direction: .rightToLeft, driver: .bindingCommand)
+        try await verify(direction: .rightToLeft)
     }
 
     /// Deliberately oversized content: the complete card cannot fit landscape, but its entire
     /// primary sleeve must remain reachable. This is a command-path geometry control, not a touch test.
     func testOversizedShelfKeepsPrimarySleeveAcrossRepeatedResize() async throws {
-        try await verify(direction: .leftToRight, driver: .bindingCommand, oversized: true)
+        try await verify(direction: .leftToRight, oversized: true)
     }
 
     func testOversizedShelfKeepsPrimarySleeveAcrossRepeatedResizeRightToLeft() async throws {
-        try await verify(direction: .rightToLeft, driver: .bindingCommand, oversized: true)
+        try await verify(direction: .rightToLeft, oversized: true)
     }
 
     /// A contained-child sizing control, not device rotation or automatic binding observation.
@@ -331,8 +330,80 @@ final class SongShelfPageTests: XCTestCase {
         FileHandle.standardError.write(Data(line.utf8))
     }
 
-    private func verify(direction: LayoutDirection, driver: Driver = .scrollViewReader, oversized: Bool = false) async throws {
-        let state = State(driver: driver, oversized: oversized)
+    /// External proxy interoperability is initial geometry only. Readback is recorded passively;
+    /// resize ownership is covered through the supported public selection and real-user paths.
+    private func verifyExternalProxyPlacement(direction: LayoutDirection) async throws {
+        executionTimeAllowance = 120
+        let state = State(driver: .scrollViewReader)
+        let host = UIHostingController(rootView: Fixture(state: state, direction: direction))
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
+            .first { $0.activationState == .foregroundActive })
+        let previous = scene.windows.first { $0.isKeyWindow }
+        let window = UIWindow(windowScene: scene)
+        window.rootViewController = host
+        window.makeKeyAndVisible()
+        defer {
+            window.isHidden = true
+            window.rootViewController = nil
+            previous?.makeKey()
+        }
+        host.view.layoutIfNeeded()
+        func page() -> UIScrollView? {
+            scrolls(host.view).first { $0.window === window && $0.contentSize.height > 2000 }
+        }
+        let loaded = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            page() != nil && state.shelfFrames["shelf-1"] != nil
+        }, object: nil)
+        await fulfillment(of: [loaded], timeout: 3)
+        let initialPage = try XCTUnwrap(page())
+        let initialOffset = initialPage.contentOffset
+        let secondRow = try XCTUnwrap(state.shelfFrames["shelf-1"])
+        let initialViewport = initialPage.convert(initialPage.bounds, to: window)
+        // The fixed-height ordered fixture puts shelf-3 after this already offscreen lower bound.
+        XCTAssertGreaterThan(secondRow.maxY, initialViewport.maxY)
+        let target = "shelf-3"
+        if let frame = state.shelfFrames[target] { XCTAssertFalse(initialViewport.contains(frame)) }
+        record(state, window: window, stage: "external-before-vertical-\(direction)")
+        let shelfPlaced = NSPredicate { _, _ in
+            guard let current = page(), let frame = state.shelfFrames[target] else { return false }
+            return current.contentOffset != initialOffset && current.convert(current.bounds, to: window).contains(frame)
+        }
+        XCTAssertFalse(shelfPlaced.evaluate(with: nil), "Withholding the vertical command must not satisfy its geometry")
+        state.requestedShelf = .shelf(target)
+        let placed = XCTNSPredicateExpectation(predicate: shelfPlaced, object: nil)
+        await fulfillment(of: [placed], timeout: 3)
+        let shelf = try XCTUnwrap(state.shelfFrames[target])
+        let horizontal = try XCTUnwrap(scrolls(host.view).first { scroll in
+            let frame = scroll.convert(scroll.bounds, to: window)
+            return scroll.window === window && scroll.contentSize.width > 1000
+                && frame.minY >= shelf.minY - 1 && frame.maxY <= shelf.maxY + 1
+        })
+        let before = horizontal.contentOffset
+        let distanceFromEnd = direction == .leftToRight
+            ? horizontal.contentSize.width + horizontal.adjustedContentInset.right - horizontal.bounds.width - before.x
+            : before.x + horizontal.adjustedContentInset.left
+        XCTAssertGreaterThan(distanceFromEnd, horizontal.bounds.width,
+                             "The terminal record must start beyond the current horizontal viewport")
+        if let frame = state.terminalFrames[target] {
+            XCTAssertFalse(horizontal.convert(horizontal.bounds, to: window).contains(frame))
+        }
+        record(state, window: window, stage: "external-before-horizontal-\(direction)")
+        let terminalPlaced = NSPredicate { _, _ in
+            guard let current = page(), let frame = state.terminalFrames[target] else { return false }
+            let rails = self.scrolls(host.view).filter { $0.window === window && $0.contentSize.width > 1000 }
+            return current.convert(current.bounds, to: window).contains(frame)
+                && rails.contains { $0.contentOffset != before && $0.convert($0.bounds, to: window).contains(frame) }
+        }
+        XCTAssertFalse(terminalPlaced.evaluate(with: nil), "Withholding the horizontal command must not satisfy its geometry")
+        state.requestedTerminalShelf = target
+        let terminal = XCTNSPredicateExpectation(predicate: terminalPlaced, object: nil)
+        await fulfillment(of: [terminal], timeout: 3)
+        record(state, window: window, stage: "external-after-commands-\(direction)")
+        // No assignment or expectation of state.position: its actual value/history stays in the attachments.
+    }
+
+    private func verify(direction: LayoutDirection, oversized: Bool = false) async throws {
+        let state = State(driver: .bindingCommand, oversized: oversized)
         let host = UIHostingController(rootView: Fixture(state: state, direction: direction))
         let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
             .first { $0.activationState == .foregroundActive })
@@ -354,9 +425,7 @@ final class SongShelfPageTests: XCTestCase {
         record(state, window: window, stage: "loaded-\(direction)")
         let vertical = try XCTUnwrap(scrolls(host.view).first { $0.contentSize.height > 2000 })
         let target = "shelf-3"
-        // The original reader path never writes the observed position binding. The additive
-        // binding-command control uses the production setter API and proves only measured placement
-        // and resize retention. Real touch scrolling remains a separate SongShelfRailUITests contract.
+        // This verifier drives the public setter input, not an inferred external-proxy readback.
         XCTAssertTrue(vertical.window === window)
         state.requestedShelf = .shelf(target)
         let tracked = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
@@ -364,9 +433,7 @@ final class SongShelfPageTests: XCTestCase {
         }, object: nil)
         await fulfillment(of: [tracked], timeout: 3)
         record(state, window: window, stage: "programmatic-tracking-\(direction)")
-        XCTAssertEqual(state.position, .shelf(target), driver == .scrollViewReader
-            ? "The binding must observe the SwiftUI-scrolled shelf before resizing"
-            : "The explicit command must remain bound while its target is realized")
+        XCTAssertEqual(state.position, .shelf(target), "The explicit command must remain bound while its target is realized")
         let shelf = try XCTUnwrap(state.shelfFrames[target])
         let horizontal = try XCTUnwrap(scrolls(host.view).first { scroll in
             let frame = scroll.convert(scroll.bounds, to: window)

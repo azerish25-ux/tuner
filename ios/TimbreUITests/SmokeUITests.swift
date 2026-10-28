@@ -204,9 +204,9 @@ final class LaunchPerformanceUITests: XCTestCase {
         app.launchEnvironment["TIMBRE_TEST_STORAGE_ID"] = UUID().uuidString
         app.launchEnvironment["TIMBRE_SKIP_ONBOARDING"] = "1"
         app.launchArguments = ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
+        defer { app.terminate() }
         measure(metrics: [XCTApplicationLaunchMetric(waitUntilResponsive: true)]) {
             app.launch()
-            app.terminate()
         }
     }
 }

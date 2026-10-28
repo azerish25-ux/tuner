@@ -150,7 +150,7 @@
     "ios/Timbre/Learn/LessonMotion.swift": "ab46a5a3ff36f1a52f15231dbdf6a9f3cf940cc6bb590116afb47a93d61fa3ec",
     "ios/Timbre/Learn/LessonPlayer.swift": "5271cf5455c3eccbf722a30044708858daf0ba187295b142f72c9890b6c9f44e",
     "ios/Timbre/Learn/LessonResults.swift": "41cae10c31668216294a965c0d86fbca407c07cc13bcbc6e93f6bdc389a45ab1",
-    "ios/Timbre/Learn/LessonSteps.swift": "b4977029791d2b866e77030f27262889e989040b043d3e01bf83394ac3e5778d",
+    "ios/Timbre/Learn/LessonSteps.swift": "99d9ebdd608535f9b8e0299d5ba232facc8ec99f3ac3c9621c4c37fd6241c3d9",
     "ios/Timbre/Learn/NotationEngraver.swift": "2892405016e4ab558e7a60de4ba0f7f885f561b509cece6a4842475e3965b3eb",
     "ios/Timbre/Learn/NotationGlyphs.swift": "9d9de08791dbb04271ed62f558182932b23c6aaff0219f292afe76d42de1e735",
     "ios/Timbre/Learn/NotationView.swift": "68be94dbae0fe07110db525b7106016da477f361f3e56ae69c89f4ba095a4e55",
@@ -280,7 +280,7 @@
     "ios/Timbre/Songs/SongPageTrace.swift": "561a47681304d58507d70a55dcdfc95235509e050822790f7a21a97d0b97cccc",
     "ios/Timbre/Songs/SongRailMeasurement.swift": "74607dabc16d90803aaf1578037bf93db689b35100412199cb8bc425cb4e50f4",
     "ios/Timbre/Songs/SongShelfPage.swift": "5ef1e41b7afe6442e2ed9bbded7981fe9076302be9fa8731f905d7a319e3f6e7",
-    "ios/Timbre/Songs/SongShelfRail.swift": "f42be87cf81224913325ddd3c399a0edf2976424eb5d1fc8a9ceffa27d6b8d3d",
+    "ios/Timbre/Songs/SongShelfRail.swift": "7d254fa6dc7ec5ad0fb32f536b067bd95bb879da753d9915142f7a149a2df2fd",
     "ios/Timbre/Songs/SongsView.swift": "c3047a0164e524ad66ff946d73eefeca3535f78ff665c7b6b6f24b1bc99f53ea",
     "ios/Timbre/Stage/InstrumentRig.swift": "63356f8555b6735c9c27e18c2c5d3b1475887d412544a703d6e18c0139227ba0",
     "ios/Timbre/Stage/InstrumentStage.swift": "b9a7469e6419aa5e117b609080d258d1bb0c3f66679e3549b5b61d1dbd9fdb2d",
@@ -1622,6 +1622,35 @@
         }
       ],
       "limits": "Bounded source-delta privacy alignment only; neither a native behavior pass nor fresh publication/account/legal verification."
+    },
+    {
+      "reviewed_utc": "2026-10-28T21:11:20.067369Z",
+      "reviewer": "Codex /root with independent review_readiness_candidates source review",
+      "base_revision": "31bcd46b2a58529a52f23bf9b4d444f4fa713761",
+      "changes": [
+        {
+          "path": "ios/Timbre/Songs/SongShelfRail.swift",
+          "previous_sha256": "f42be87cf81224913325ddd3c399a0edf2976424eb5d1fc8a9ceffa27d6b8d3d",
+          "reviewed_sha256": "7d254fa6dc7ec5ad0fb32f536b067bd95bb879da753d9915142f7a149a2df2fd",
+          "assessment": "Replaces the ID-only scroll binding and competing size-change default with native ScrollPosition. Explicit first/last selections address semantic catalogue edges; interiors address centered item IDs. A completed user gesture can retain a unique edge from fresh idle-context geometry; ambiguous/short/interior content is not promoted and no user-position flag is assigned. End positions follow catalogue boundaries on later data changes, while interior positions retain identity. No delayed command, fixed offset, data truncation, network request, persistence, analytics, permission or account behavior is introduced."
+        }
+      ],
+      "limits": "Source/privacy delta review only. Native six-method public-selection geometry and three unchanged real-touch cases remain pending; original proxy-readback tests and prior failures are preserved. Prior HTTP dates, source-review history and all release-ready flags remain unchanged.",
+      "official_reference": "https://developer.apple.com/documentation/swiftui/scrollposition"
+    },
+    {
+      "reviewed_utc": "2026-10-28T22:28:33.449469Z",
+      "reviewer": "Codex /root with independent review_readiness_candidates source review",
+      "base_revision": "9523327568ebee7eda331e9eef8659b4c0cc94a9",
+      "changes": [
+        {
+          "path": "ios/Timbre/Learn/LessonSteps.swift",
+          "previous_sha256": "b4977029791d2b866e77030f27262889e989040b043d3e01bf83394ac3e5778d",
+          "reviewed_sha256": "99d9ebdd608535f9b8e0299d5ba232facc8ec99f3ac3c9621c4c37fd6241c3d9",
+          "assessment": "Makes the existing TuneCheck teaching stack scroll independently at every text size while its Skip action remains outside the teaching viewport. A minimum content height preserves spare vertical space without a maximum-height or font cap. Existing strings, rail order, reward band, spoken guidance, listening ownership and action semantics remain. No network, persistence, analytics, permission or account behavior is added or changed."
+        }
+      ],
+      "limits": "Source/privacy alignment review only. The unchanged eight real compact orientation/language/text-size cases and 180-second case budget require a fresh native run. Prior HTTP observations, source review history, original failures and release-ready flags remain unchanged."
     }
   ]
 }

@@ -153,11 +153,11 @@ class SongRailContractTests(unittest.TestCase):
 
     def test_selection_browsing_fades_and_unclipped_height_remain(self):
         self.assertIn('.railBleed(leading: Metrics.gutter, trailing: Metrics.gutter)', RAIL)
-        self.assertIn('@State private var position: Item.ID?', RAIL)
-        self.assertIn('.scrollPosition(id: $position, anchor: .trailing)', RAIL)
+        self.assertIn('@State private var position = ScrollPosition(idType: Item.ID.self)', RAIL)
+        self.assertIn('.scrollPosition($position, anchor: .trailing)', RAIL)
         self.assertIn('if let selection { reveal(selection) }', RAIL)
         self.assertIn('reveal(value)', RAIL)
-        self.assertIn(r'withTransaction(\.scrollTargetAnchor, .center) { position = value }', RAIL)
+        self.assertIn('position.scrollTo(id: value, anchor: .center)', RAIL)
         self.assertIn('guard !initialized else { return }', RAIL)
         self.assertNotIn('DispatchQueue.main.async', RAIL)
         self.assertNotIn('onGeometryChange', RAIL)
@@ -188,7 +188,7 @@ class SongRailContractTests(unittest.TestCase):
         for forbidden in ['DispatchQueue', '.id(pageWidth)', '.id(typeSize)']:
             self.assertNotIn(forbidden, page)
             self.assertNotIn(forbidden, PAGE)
-        self.assertIn('.scrollPosition(id: $position, anchor: .trailing)', RAIL)
+        self.assertIn('.scrollPosition($position, anchor: .trailing)', RAIL)
 
     def test_parent_resize_keeps_center_tracking_and_one_typed_command_only(self):
         # Native 226 retains the correct shelf ID yet loses visibility during container resize.
@@ -257,13 +257,13 @@ class SongRailContractTests(unittest.TestCase):
                       'state.userScrollChanged(true)', 'state.userScrollChanged(false)']:
             self.assertIn(token, native)
 
-    def test_additive_command_controls_keep_full_normal_card_and_oversized_primary_geometry(self):
+    def test_public_command_controls_keep_full_normal_card_and_oversized_primary_geometry(self):
         native = (ROOT / 'ios/TimbreAppTests/SongShelfPageTests.swift').read_text()
         for token in ['testBindingCommandPlacesShelfAndTerminalAndPreservesResizeGeometry()',
                       'testBindingCommandPlacesShelfAndTerminalAndPreservesResizeGeometryRightToLeft()',
                       'testOversizedShelfKeepsPrimarySleeveAcrossRepeatedResize()',
                       'testOversizedShelfKeepsPrimarySleeveAcrossRepeatedResizeRightToLeft()',
-                      'driver: .bindingCommand, oversized: true',
+                      'State(driver: .bindingCommand, oversized: oversized)',
                       'state.oversized ? .accessibility5 : .large',
                       'height: state.oversized ? 640 : 240', 'height: state.oversized ? 480 : 80',
                       'frames.page.insetBy(dx: -1, dy: -1).contains(sleeve(frames.card))',
@@ -275,7 +275,7 @@ class SongRailContractTests(unittest.TestCase):
         self.assertIn('page.insetBy(dx: -1, dy: -1).contains(frame)', original)
         self.assertNotIn('oversized', original)
 
-    def test_native_parent_regression_observes_supported_programmatic_tracking_before_any_resize(self):
+    def test_external_proxy_initial_geometry_and_public_resize_contracts_are_distinct(self):
         native = (ROOT / 'ios/TimbreAppTests/SongShelfPageTests.swift').read_text()
         for token in ['SongShelfPage(items: shelves, position: $state.position)',
                       'SongShelfRail(items: songs,', 'state.requestedTerminalShelf == shelf.id ? 119 : 59', '(0..<120)',
@@ -286,25 +286,36 @@ class SongRailContractTests(unittest.TestCase):
                       'CGSize(width: 874, height: 402)', 'CGSize(width: 402, height: 874)',
                       'page.insetBy(dx: -1, dy: -1).contains(frame)',
                       'rail.insetBy(dx: -1, dy: -1).contains(frame)',
-                      'testProgrammaticScrollTracksShelfAndSurvivesRepeatedResizeRightToLeft']:
+                      'testExternalProxyInitialGeometryInteroperabilityRightToLeft']:
             self.assertIn(token, native)
         self.assertLess(native.index('await fulfillment(of: [tracked]'), native.index('state.size = size'))
-        # Only the separately named command control can set the ID; the original observation
-        # driver's branch must still use its proxy and never manufacture the expected readback.
+        # Only the public input driver assigns the supplied ID. External proxy observation stays passive.
         self.assertEqual(native.count('state.position = value'), 1)
         self.assertIn('if state.driver == .bindingCommand {', native)
         self.assertIn('} else {\n                        proxy.scrollTo(value, anchor: .center)', native)
-        for name in ['testProgrammaticScrollTracksShelfAndSurvivesRepeatedResize()',
-                     'testProgrammaticScrollTracksShelfAndSurvivesRepeatedResizeRightToLeft()']:
+        for name in ['testExternalProxyInitialGeometryInteroperability()',
+                     'testExternalProxyInitialGeometryInteroperabilityRightToLeft()']:
             method = native.split('func ' + name, 1)[1].split('\n    }', 1)[0]
             self.assertNotIn('bindingCommand', method)
             self.assertNotIn('oversized:', method)
         self.assertNotIn('setContentOffset(', native)
         self.assertEqual(native.count('proxy.scrollTo('), 2)
-        fixture = native.split('private struct Fixture:', 1)[1].split('func testProgrammaticScroll', 1)[0]
+        fixture = native.split('private struct Fixture:', 1)[1].split('func testExternalProxyInitialGeometry', 1)[0]
         self.assertIn('.onChange(of: state.requestedShelf)', fixture)
         self.assertIn('.onChange(of: state.requestedTerminalShelf)', fixture)
         self.assertNotIn('.onAppear', fixture)
+        external = native.split('private func verifyExternalProxyPlacement(', 1)[1].split('private func verify(', 1)[0]
+        for token in ['State(driver: .scrollViewReader)', 'initialOffset', 'distanceFromEnd',
+                      'XCTAssertGreaterThan(secondRow.maxY, initialViewport.maxY)',
+                      'state.requestedShelf = .shelf(target)', 'state.requestedTerminalShelf = target',
+                      'current.contentOffset != initialOffset', '$0.contentOffset != before',
+                      'external-after-commands-']:
+            self.assertIn(token, external)
+        for forbidden in ['state.position =', 'state.position ==', 'state.size =', 'XCTAssertNil']:
+            self.assertNotIn(forbidden, external)
+        public = native.split('private func verify(', 1)[1].split('private func assertCurrentGeometry', 1)[0]
+        self.assertIn('State(driver: .bindingCommand, oversized: oversized)', public)
+        self.assertNotIn('driver: Driver', public)
         resize = native.split('for cycle in 0..<2', 1)[1].split('private func assertCurrentGeometry', 1)[0]
         for forbidden in ['scrollTo(', 'requestedShelf =', 'requestedTerminalShelf =', 'position =']:
             self.assertNotIn(forbidden, resize)
@@ -359,7 +370,9 @@ class SongRailContractTests(unittest.TestCase):
             method = native.split('func ' + name, 1)[1].split('\n    }', 1)[0]
             self.assertIn('executionTimeAllowance = 120', method)
             self.assertLess(method.index('executionTimeAllowance = 120'), method.index('try await verifyContainedHost'))
-        self.assertEqual(native.count('executionTimeAllowance ='), 2)
+        self.assertEqual(native.count('executionTimeAllowance ='), 3)
+        external = native.split('private func verifyExternalProxyPlacement(', 1)[1].split('private func verify(', 1)[0]
+        self.assertIn('executionTimeAllowance = 120', external)
         workflow = (ROOT / '.github/workflows/ios.yml').read_text()
         app = workflow.split('  app:\n', 1)[1].split('\n  release:', 1)[0]
         self.assertIn('timeout-minutes: 40', app)

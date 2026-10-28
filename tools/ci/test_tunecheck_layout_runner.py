@@ -84,8 +84,7 @@ class TuneCheckLayoutRunnerTests(unittest.TestCase):
         self.assertEqual([arg for arg in command if arg.startswith('-only-testing:')],
                          ['-only-testing:TimbreUITests/TuneCheckLayoutUITests'])
         self.assertEqual(command[command.index('-destination') + 1], f'platform=iOS Simulator,id={DEVICE}')
-        self.assertEqual(command[command.index('-test-iterations') + 1], '1')
-        for forbidden in ['-skip-testing:', '-retry-tests-on-failure', '-run-tests-until-failure']:
+        for forbidden in ['-test-iterations', '-skip-testing:', '-retry-tests-on-failure', '-run-tests-until-failure']:
             self.assertFalse(any(arg.startswith(forbidden) for arg in command))
 
     def test_all_eight_passes_and_zero_exit_required(self):

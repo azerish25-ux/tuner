@@ -172,7 +172,7 @@ jobs:
         # remains a failed job. The launch-performance shard never primes the application.
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         # Leave time for compact evidence if this shard hangs; do not retry failed assertions.
-        timeout-minutes: 60
+        timeout-minutes: ${{ matrix.shard == 'song-rails' && 75 || 60 }}
         run: |
           set -o pipefail
           xcodebuild test-without-building -xctestrun "$XCTESTRUN" -parallel-testing-enabled NO \

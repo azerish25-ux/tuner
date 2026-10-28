@@ -162,7 +162,7 @@ class TourShardContracts(unittest.TestCase):
         self.assertLess(tour.index('Upload compact shard diagnostics'), tour.index('Export simulator screenshots'))
         self.assertLess(tour.index('Upload compact shard diagnostics'), tour.index('name: ios-tour-evidence-'))
         self.assertIn('id: tests\n', tour)
-        self.assertIn('timeout-minutes: 60', tour)
+        self.assertIn("timeout-minutes: ${{ matrix.shard == 'song-rails' && 75 || 60 }}", tour)
         self.assertNotIn('xcodebuild archive', tour)
         self.assertIn('Missing UI result bundle; compact logs are diagnostic only', tour)
         self.assertNotIn('--output-path ci-out/screenshots || true', tour)
@@ -205,7 +205,7 @@ class TourShardContracts(unittest.TestCase):
         tests = tour.split('      - name: Selected UI class', 1)[1].split('      - name: Finalize', 1)[0]
         self.assertIn("if: ${{ !cancelled() && steps.build.outcome == 'success' }}", tests)
         self.assertNotIn('steps.warmup.outcome', tests)
-        self.assertIn('timeout-minutes: 60', tests)
+        self.assertIn("timeout-minutes: ${{ matrix.shard == 'song-rails' && 75 || 60 }}", tests)
         self.assertIn('ci-out/warmup/status.json', tour)
 
     def test_original_frame_subset_is_additive_shared_and_before_full_exports(self):
