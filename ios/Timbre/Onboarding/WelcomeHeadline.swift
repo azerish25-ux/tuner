@@ -101,18 +101,6 @@ struct WelcomeHeadline: View {
                                  text: Self.fontSelectionText(locale: locale), displayScale: displayScale)
     }
 
-    /// Raster allowance is separate from layout reserve: outer padding alone cannot stop Text's own
-    /// drawing layer clipping a Nastaliq stroke. Draw the original lines without transforming them.
-    private struct UrduInkRenderer: TextRenderer {
-        let displayPadding: EdgeInsets
-        nonisolated func sizeThatFits(proposal: ProposedViewSize, text: TextProxy) -> CGSize {
-            text.sizeThatFits(proposal)
-        }
-        nonisolated func draw(layout: Text.Layout, in context: inout GraphicsContext) {
-            for line in layout { context.draw(line) }
-        }
-    }
-
     private var font: Font {
         if isUrdu {
             // CTFont already has the uncapped ScaledMetric size: do not scale it a second time.
@@ -132,8 +120,9 @@ struct WelcomeHeadline: View {
     var body: some View {
         Group {
             if isUrdu {
+                // Keep native Text placement: renderer display padding changes the RTL drawing origin
+                // and wrapping. The measured outer reserve already accounts for the font's ink bounds.
                 headline.typesettingLanguage(locale.language)
-                    .textRenderer(UrduInkRenderer(displayPadding: urduInkInsets))
             } else {
                 headline
             }

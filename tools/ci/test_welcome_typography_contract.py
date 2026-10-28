@@ -111,7 +111,7 @@ class WelcomeTypographyContract(unittest.TestCase):
         for workaround in ['accuracy:', 'changed <=', '.drawingGroup(', 'disablesSubpixelQuantization']:
             self.assertNotIn(workaround, source)
 
-    def test_measured_raster_allowance_is_separate_from_the_native_layout_and_plain_reference(self):
+    def test_measured_clearance_preserves_native_text_placement_and_plain_reference(self):
         source = (ROOT / 'ios/Timbre/Onboarding/WelcomeHeadline.swift').read_text()
         for token in ['nativeUrduInkInsets(font: CTFont, text: String, displayScale: CGFloat)',
                       'CTLineGetBoundsWithOptions(line, .useGlyphPathBounds)', 'CTLineGetTypographicBounds',
@@ -119,13 +119,12 @@ class WelcomeTypographyContract(unittest.TestCase):
                       'ink.maxX - width', 'ink.maxY - ascent', '-descent - ink.minY',
                       'ceil(max(0, value) * scale) / scale', 'Array(words[start])',
                       'words[start..<end].joined(separator: " ")', 'String(clusters[first..<last])',
-                      'let displayPadding: EdgeInsets', 'text.sizeThatFits(proposal)',
-                      'for line in layout { context.draw(line) }', 'max(minimumHorizontal, ink.leading)',
-                      '.textRenderer(UrduInkRenderer(displayPadding: urduInkInsets))']:
+                      'max(minimumHorizontal, ink.leading)',
+                      'headline.typesettingLanguage(locale.language)']:
             self.assertIn(token, source)
-        raster = source.split('private struct UrduInkRenderer:', 1)[1].split('private var font:', 1)[0]
-        for workaround in ['ScaledMetric', 'CTFontCreate', 'translateBy', 'scaleBy', 'clip', 'disablesSubpixelQuantization']:
-            self.assertNotIn(workaround, raster)
+        for workaround in ['TextRenderer', '.textRenderer(', '.offset(', 'translateBy',
+                           'scaleBy', '.clipped()', 'disablesSubpixelQuantization']:
+            self.assertNotIn(workaround, source)
         native = (ROOT / 'ios/TimbreAppTests/WelcomeHeadlineLayoutTests.swift').read_text()
         reference = native.split('private struct NativeMetricsHeadline:', 1)[1].split('func testProductionUses', 1)[0]
         self.assertNotIn('.textRenderer(', reference)

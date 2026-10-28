@@ -23,6 +23,20 @@ final class WelcomeRendererGeometryTests: XCTestCase {
     func testRTL362Large() { matrix(width: 362, size: .large) }
     func testRTL362AX5() { matrix(width: 362, size: .accessibility5) }
 
+    func testScrollOffsetComparisonRejectsOnePhysicalPixelButNotArithmeticRoundoff() {
+        let requested = CGPoint(x: 120, y: 1024.3333333333333 - 778)
+        let observed = CGPoint(x: 120, y: 246.33333333333334)
+        XCTAssertNotEqual(requested, observed, "Retain the actual native rounding reproduction")
+        XCTAssertTrue(Self.sameRasterOffset(requested, observed, scale: 3))
+        for scale in [CGFloat(2), 3] {
+            let origin = CGPoint(x: 120, y: 200)
+            XCTAssertFalse(Self.sameRasterOffset(origin, CGPoint(x: 120 + 1 / scale, y: 200), scale: scale))
+            XCTAssertFalse(Self.sameRasterOffset(origin, CGPoint(x: 120, y: 200 - 1 / scale), scale: scale))
+        }
+        XCTAssertFalse(Self.sameRasterOffset(requested, observed, scale: 0))
+        XCTAssertFalse(Self.sameRasterOffset(CGPoint(x: CGFloat.infinity, y: 0), observed, scale: 3))
+    }
+
     private enum Backend: String, CaseIterable { case imageRenderer, attachedScrollViewport }
     private struct Bitmap {
         let width: Int
@@ -219,8 +233,7 @@ final class WelcomeRendererGeometryTests: XCTestCase {
             transaction.disablesAnimations = true
             withTransaction(transaction) { model.position.scrollTo(x: target.x, y: target.y) }
             let needsChange = before.map {
-                $0.contentOffset != CGPoint(x: min(target.x, max(0, $0.contentSize.width - $0.containerSize.width)),
-                                            y: min(target.y, max(0, $0.contentSize.height - $0.containerSize.height)))
+                !Self.sameRasterOffset($0.contentOffset, Self.clamped(target, geometry: $0), scale: window.screen.scale)
             } ?? true
             let geometry: ScrollGeometry?
             var didSettle = true
@@ -245,7 +258,9 @@ final class WelcomeRendererGeometryTests: XCTestCase {
             }
             let unchanged = geometry != nil && geometry == model.geometry
             let viewportMatches = geometry.map { $0.containerSize == host.view.bounds.size && $0.contentInsets == EdgeInsets() } ?? false
-            let reached = geometry.map { $0.contentOffset == Self.clamped(target, geometry: $0) } ?? false
+            let reached = geometry.map {
+                Self.sameRasterOffset($0.contentOffset, Self.clamped(target, geometry: $0), scale: window.screen.scale)
+            } ?? false
             let valid = contained && bounded && nativeScaleMatches && drawn && didSettle && unchanged
                 && viewportMatches && reached && positions != nil
             log.add(["kind": "originalViewport", "index": index, "requestedOffset": [target.x, target.y].map(GeometryRecorder.scalar),
@@ -290,7 +305,10 @@ final class WelcomeRendererGeometryTests: XCTestCase {
             RunLoop.main.run(until: Date().addingTimeInterval(0.04))
             guard let current = model.geometry,
                   generation.map({ model.generation > $0 }) ?? true else { continue }
-            let reached = target.map { current.contentOffset == Self.clamped($0, geometry: current) } ?? true
+            let reached = target.map {
+                Self.sameRasterOffset(current.contentOffset, Self.clamped($0, geometry: current),
+                                      scale: host.view.window?.screen.scale ?? 0)
+            } ?? true
             if current == previous, reached, Self.finite(current.visibleRect),
                current.contentSize.width > 0, current.contentSize.height > 0 {
                 return current
@@ -302,6 +320,15 @@ final class WelcomeRendererGeometryTests: XCTestCase {
 
     private static func finite(_ value: CGRect) -> Bool {
         !value.isNull && !value.isEmpty && [value.minX, value.minY, value.width, value.height].allSatisfy(\.isFinite)
+    }
+
+    /// UIScrollView resolves offsets to display pixels; subtraction can leave a different last binary digit.
+    /// Compare exact pixel coordinates, retaining every raw geometry value and every unmodified raster byte.
+    private static func sameRasterOffset(_ lhs: CGPoint, _ rhs: CGPoint, scale: CGFloat) -> Bool {
+        guard scale.isFinite, scale > 0,
+              [lhs.x, lhs.y, rhs.x, rhs.y].allSatisfy(\.isFinite) else { return false }
+        return (lhs.x * scale).rounded() == (rhs.x * scale).rounded()
+            && (lhs.y * scale).rounded() == (rhs.y * scale).rounded()
     }
     private static func clamped(_ target: CGPoint, geometry: ScrollGeometry) -> CGPoint {
         CGPoint(x: min(max(0, target.x), max(0, geometry.contentSize.width - geometry.containerSize.width)),

@@ -134,7 +134,7 @@
     "ios/Timbre/Learn/CourseArt.swift": "30962191c17c00e418d7d4227f0fd70cf4d1aa21f17053c03fffa8ce40753f44",
     "ios/Timbre/Learn/Diagrams.swift": "9827ff2edcab023a754f02de4aadd85974161baa6eee24122203a10532ea85ba",
     "ios/Timbre/Learn/FingerboardPlace.swift": "6d14b5ed23d74caafde06808123eede53134d730c585085e8c30b1946b010995",
-    "ios/Timbre/Learn/Highway.swift": "0b3949eb510ae9466a5f44da30055d2758ded5ae439e75c9f661815cffd14c29",
+    "ios/Timbre/Learn/Highway.swift": "913d73adf6294640c580db47903c307be2daf9eb2f33d24bf5dd7d70888f6447",
     "ios/Timbre/Learn/HighwayHUD.swift": "95f17ba9567203adc68cb1a92fc93bd3fae93d0e56c78fce87e199611ae0242c",
     "ios/Timbre/Learn/HighwayLyrics.swift": "dde429e74b5ece03863339d79fc2e4cef39cbd94e100c7e9fa643a4e4b0848b9",
     "ios/Timbre/Learn/HighwayPop.swift": "349ae4673a3f94a7d743926d7e62709679dc9178e76262621693f13d39e7b439",
@@ -171,7 +171,7 @@
     "ios/Timbre/Onboarding/OnboardingView.swift": "2330381e2f9f8e26773251f535ec12f7af2b2b1d8b5a9b0746278e4266f3e52b",
     "ios/Timbre/Onboarding/PlacementCheckView.swift": "61ebbfe2c956cf39641138aa5c2cba60a917d75ff581cff9ca1f140ec1696a58",
     "ios/Timbre/Onboarding/ReminderAskStep.swift": "c720577fd380fc87c4d7c8dc4be11b2eebcd03c9c583995fbf5ab8ca1d0c3f3b",
-    "ios/Timbre/Onboarding/WelcomeHeadline.swift": "50126dcc5c9d4659de2be308eebcb3a834c86e6022c2c9d6266e08ed150ac15c",
+    "ios/Timbre/Onboarding/WelcomeHeadline.swift": "f64c4c1973d24fc3aa1715ecde295be05ffd12e45951fe7576b33e59dd0ec529",
     "ios/Timbre/Paywall/BillingIssueBanner.swift": "fe1695fc7fa15997dc5b000376505e6222c0cf9a8f09f13a046761dc2ed18806",
     "ios/Timbre/Paywall/PaywallPlan.swift": "6e6ccaf832aba07a78b428b7250f6f6da1a249c178c295a2a18b5c86cd94d994",
     "ios/Timbre/Paywall/PaywallPlanHero.swift": "a14e3aba2fb315758b8e4714c678aa950fa42474e021757ebec68f20aad16fda",
@@ -1572,6 +1572,28 @@
       "portal_observation": "The six already-saved fields (name, subtitle, description, promotional text, keywords and support URL) are unchanged. Historical header/version receipts and timestamps remain point-in-time observations. No new portal readback or write is claimed.",
       "publication_observation": "Original 08:20 UTC HTTP response bytes, timestamps, routes and policy/support observations are preserved. No fresh HTTP fetch, deployment or publication is performed.",
       "limitations": "Source-aware AI semantic and existing rendered-layout review only, not native-speaker or legal certification, new native capture, full-payload review, all-locales screenshot acceptance or readiness approval."
+    }
+  ],
+  "incremental_source_reviews": [
+    {
+      "reviewed_utc": "2026-10-28T19:43:04.020070Z",
+      "reviewer": "Codex /root source review",
+      "base_revision": "e716a4a30db9d84828cc241d525a1f539fde34b0",
+      "changes": [
+        {
+          "path": "ios/Timbre/Learn/Highway.swift",
+          "previous_sha256": "0b3949eb510ae9466a5f44da30055d2758ded5ae439e75c9f661815cffd14c29",
+          "reviewed_sha256": "913d73adf6294640c580db47903c307be2daf9eb2f33d24bf5dd7d70888f6447",
+          "assessment": "Completed AX summary grows intrinsically in the existing scroll view; grade and tempo text wrap; the existing VoiceOver spoken-cue choice transfers to the result heading. No new data producer, persistence, network, permission or audio behavior."
+        },
+        {
+          "path": "ios/Timbre/Onboarding/WelcomeHeadline.swift",
+          "previous_sha256": "50126dcc5c9d4659de2be308eebcb3a834c86e6022c2c9d6266e08ed150ac15c",
+          "reviewed_sha256": "f64c4c1973d24fc3aa1715ecde295be05ffd12e45951fe7576b33e59dd0ec529",
+          "assessment": "Removes the custom Urdu TextRenderer that shifts native RTL text; preserves measured CoreText ink reserve, native fallback font, uncapped scaled metrics, copy and accessibility heading. No change to permission or onboarding persistence."
+        }
+      ],
+      "limits": "Bounded presentation-source delta review only. No new HTTP availability, native execution, independent-review, portal, signed-archive or legal certification claimed. Prior HTTP dates, review history and all release-ready flags preserved."
     }
   ]
 }
