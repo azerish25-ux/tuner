@@ -8,6 +8,7 @@ final class TuneCheckLayoutUITests: XCTestCase {
     private var sample = "unstarted"
     private var observations: [String] = []
     private var watched: [String: XCUIElement] = [:]
+    private var watchedIdentity: [String: (id: String, label: String, value: String, type: XCUIElement.ElementType)] = [:]
     private var header: XCUIElement!
     private var skip: XCUIElement!
     private var close: XCUIElement!
@@ -85,6 +86,9 @@ final class TuneCheckLayoutUITests: XCTestCase {
     }
 
     private func exercise(_ copy: Copy, landscape: Bool, ax5: Bool) throws {
+        watched = [:]
+        watchedIdentity = [:]
+        observations = []
         sample = "\(copy.language)-\(landscape ? "landscape" : "portrait")-\(ax5 ? "AX5" : "Large")"
         app.launchEnvironment["TIMBRE_TEST_STORAGE_ID"] = UUID().uuidString
         app.launchEnvironment["TIMBRE_SKIP_ONBOARDING"] = "1"
@@ -167,11 +171,9 @@ final class TuneCheckLayoutUITests: XCTestCase {
         pinnedClose = close.frame
         capture("arrival")
         try assertPinned()
-        let scrolls = app.scrollViews.allElementsBoundByIndex.filter {
-            $0.descendants(matching: .any).matching(identifier: "lesson.tunecheck.instructions").count == 1
-        }
-        try require(scrolls.count == (ax5 ? 1 : 0), "Expected the actual TuneCheckStep scrolling branch")
-        let scroll = scrolls.first
+        let scrolls = app.scrollViews.matching(identifier: "lesson.tunecheck.scroll")
+        try require(scrolls.count == 1, "Expected the unique actual TuneCheckStep teaching viewport")
+        let scroll: XCUIElement? = scrolls.firstMatch
         for (name, target) in [("title", title), ("instructions", instructions), ("rail", rail[0]),
                                ("note", note), ("hint", hint), ("fretboard", board)] {
             try reveal(target, in: scroll)
@@ -254,25 +256,70 @@ final class TuneCheckLayoutUITests: XCTestCase {
         picture.name = prefix
         picture.lifetime = .keepAlways
         add(picture)
-        let tree = XCTAttachment(string: app.debugDescription)
+        let root: (any XCUIElementSnapshot)?
+        do { root = try app.snapshot() }
+        catch {
+            root = nil
+            observations.append("Root snapshot unavailable: \(error)")
+            XCTFail("Cannot preserve a complete native hierarchy: \(error)")
+        }
+        var nodes: [any XCUIElementSnapshot] = []
+        var hierarchy: [String] = []
+        func normalizedValue(_ value: Any?) -> String {
+            guard let value else { return "<nil>" }
+            return (value as? String) ?? String(describing: value)
+        }
+        func visit(_ node: any XCUIElementSnapshot, depth: Int) {
+            nodes.append(node)
+            hierarchy.append(String(repeating: " ", count: depth) + "\(node.elementType) id=\(node.identifier) label=\(node.label) value=\(String(describing: node.value)) frame=\(node.frame)")
+            for child in node.children { visit(child, depth: depth + 1) }
+        }
+        if let root { visit(root, depth: 0) }
+        let tree = XCTAttachment(string: hierarchy.joined(separator: "\n"))
         tree.name = prefix + "-hierarchy"
         tree.lifetime = .keepAlways
         add(tree)
         var targets: [String: Any] = [:]
         for (name, target) in watched {
-            targets[name] = target.exists ? ["label": target.label, "value": String(describing: target.value),
-                "frame": [target.frame.minX, target.frame.minY, target.frame.width, target.frame.height],
-                "hittable": target.isHittable] : ["exists": false]
+            if watchedIdentity[name] == nil, let snapshot = try? target.snapshot() {
+                watchedIdentity[name] = (snapshot.identifier, snapshot.label, normalizedValue(snapshot.value), snapshot.elementType)
+            }
+            if let identity = watchedIdentity[name] {
+                let matches = nodes.filter { node in
+                    if !identity.id.isEmpty { return node.identifier == identity.id }
+                    return node.elementType == identity.type && node.label == identity.label
+                        && normalizedValue(node.value) == identity.value
+                }
+                guard matches.count == 1, let snapshot = matches.first else {
+                    targets[name] = ["snapshot_matches": matches.count]
+                    if matches.count > 1 { XCTFail("Ambiguous native capture identity: \(name)") }
+                    continue
+                }
+                let frame = snapshot.frame
+                targets[name] = ["label": snapshot.label, "value": normalizedValue(snapshot.value),
+                    "frame": [frame.minX, frame.minY, frame.width, frame.height], "enabled": snapshot.isEnabled,
+                    "hittability": "checked by live assertions, not queried for metadata"]
+            } else { targets[name] = ["snapshot_unavailable": true] }
         }
-        let metadata: [String: Any] = ["sample": sample, "phase": phase, "window": [screen.minX, screen.minY, screen.width, screen.height],
+        let required = phase == "arrival" ? ["header", "close", "skip"]
+            : phase == "clear-rail" ? (1...6).map { "string-\($0)" }
+            : phase.hasPrefix("clear-") ? [String(phase.dropFirst("clear-".count))] : []
+        for name in required {
+            if (targets[name] as? [String: Any])?["frame"] == nil {
+                XCTFail("Native capture lacks the current visible target geometry: \(name)")
+            }
+        }
+        let window = screen
+        let metadata: [String: Any] = ["sample": sample, "phase": phase, "window": [window.minX, window.minY, window.width, window.height],
             "appFrame": String(describing: app.frame), "orientation": XCUIDevice.shared.orientation.rawValue,
             "screenshotPixels": [screenshot.image.cgImage?.width ?? 0, screenshot.image.cgImage?.height ?? 0],
             "launchArguments": app.launchArguments, "targets": targets, "observations": observations]
-        if let data = try? JSONSerialization.data(withJSONObject: metadata, options: [.prettyPrinted, .sortedKeys]) {
+        do {
+            let data = try JSONSerialization.data(withJSONObject: metadata, options: [.prettyPrinted, .sortedKeys])
             let geometry = XCTAttachment(data: data, uniformTypeIdentifier: "public.json")
             geometry.name = prefix + "-geometry"
             geometry.lifetime = .keepAlways
             add(geometry)
-        }
+        } catch { XCTFail("Cannot preserve native capture geometry: \(error)") }
     }
 }

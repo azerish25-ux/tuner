@@ -1188,20 +1188,17 @@ struct TuneCheckStep: View {
 
     var body: some View {
         Group {
-            if typeSize.isAccessibilitySize {
-                VStack(spacing: 0) {
+            VStack(spacing: 0) {
+                GeometryReader { viewport in
                     ScrollView {
                         VStack(spacing: 14) { teachingContent }
+                            .frame(minHeight: max(0, viewport.size.height - 14), alignment: .top)
                             .padding(.bottom, 14)
                     }
                     .scrollBounceBehavior(.basedOnSize)
-                    skipBar
+                    .accessibilityIdentifier("lesson.tunecheck.scroll")
                 }
-            } else {
-                VStack(spacing: 14) {
-                    teachingContent
-                    skipBar
-                }
+                skipBar
             }
         }
         .onAppear { listen(); introduce(after: 1.4) }
@@ -1210,7 +1207,7 @@ struct TuneCheckStep: View {
         .onChange(of: scenePhase) { _, phase in if phase == .active && !finished && !settling { listen() } }
     }
 
-    // Keep the normal stack's order and spacing; accessibility text scrolls independently of its action.
+    // Preserve the teaching order and spare space while keeping the action outside the scrollable content.
     @ViewBuilder private var teachingContent: some View {
         VStack(alignment: .leading, spacing: 6) {
             StepTitle("Quick tune check")

@@ -52,7 +52,8 @@ class TuneCheckRewardContract(unittest.TestCase):
         self.assertNotIn('.mask', cluster)
         for token in ['.onAppear { listen(); introduce(after: 1.4) }',
                       '.onDisappear { lockTask?.cancel(); store.stopLessonListening(owner: owner) }',
-                      'if typeSize.isAccessibilitySize', 'ScrollView {',
+                      'GeometryReader { viewport in', 'ScrollView {',
+                      '.accessibilityIdentifier("lesson.tunecheck.scroll")',
                       'identifier: "lesson.tunecheck.skip") { finish() }']:
             self.assertIn(token, self.tune)
 
@@ -86,7 +87,7 @@ class TuneCheckRewardContract(unittest.TestCase):
                       'stalled < 2', 'room.midX', 'for attempt in 0..<12',
                       'railTop - 8 >= instructions.frame.maxY + 14',
                       'railBottom + 8 + 14 <= note.frame.minY',
-                      'XCTAttachment(screenshot: screenshot)', 'app.debugDescription',
+                      'XCTAttachment(screenshot: screenshot)', 'root = try app.snapshot()',
                       '"screenshotPixels"', '"launchArguments"', '"observations"',
                       'capture("arrival")', 'capture("clear-" + name)', 'capture("skip-activated")']:
             self.assertIn(token, native)

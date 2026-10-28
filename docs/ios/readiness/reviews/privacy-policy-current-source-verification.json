@@ -150,7 +150,7 @@
     "ios/Timbre/Learn/LessonMotion.swift": "ab46a5a3ff36f1a52f15231dbdf6a9f3cf940cc6bb590116afb47a93d61fa3ec",
     "ios/Timbre/Learn/LessonPlayer.swift": "5271cf5455c3eccbf722a30044708858daf0ba187295b142f72c9890b6c9f44e",
     "ios/Timbre/Learn/LessonResults.swift": "41cae10c31668216294a965c0d86fbca407c07cc13bcbc6e93f6bdc389a45ab1",
-    "ios/Timbre/Learn/LessonSteps.swift": "b4977029791d2b866e77030f27262889e989040b043d3e01bf83394ac3e5778d",
+    "ios/Timbre/Learn/LessonSteps.swift": "99d9ebdd608535f9b8e0299d5ba232facc8ec99f3ac3c9621c4c37fd6241c3d9",
     "ios/Timbre/Learn/NotationEngraver.swift": "2892405016e4ab558e7a60de4ba0f7f885f561b509cece6a4842475e3965b3eb",
     "ios/Timbre/Learn/NotationGlyphs.swift": "9d9de08791dbb04271ed62f558182932b23c6aaff0219f292afe76d42de1e735",
     "ios/Timbre/Learn/NotationView.swift": "68be94dbae0fe07110db525b7106016da477f361f3e56ae69c89f4ba095a4e55",
@@ -1622,6 +1622,20 @@
         }
       ],
       "limits": "Bounded source-delta privacy alignment only; neither a native behavior pass nor fresh publication/account/legal verification."
+    },
+    {
+      "reviewed_utc": "2026-10-28T22:28:33.449469Z",
+      "reviewer": "Codex /root with independent review_readiness_candidates source review",
+      "base_revision": "9523327568ebee7eda331e9eef8659b4c0cc94a9",
+      "changes": [
+        {
+          "path": "ios/Timbre/Learn/LessonSteps.swift",
+          "previous_sha256": "b4977029791d2b866e77030f27262889e989040b043d3e01bf83394ac3e5778d",
+          "reviewed_sha256": "99d9ebdd608535f9b8e0299d5ba232facc8ec99f3ac3c9621c4c37fd6241c3d9",
+          "assessment": "Makes the existing TuneCheck teaching stack scroll independently at every text size while its Skip action remains outside the teaching viewport. A minimum content height preserves spare vertical space without a maximum-height or font cap. Existing strings, rail order, reward band, spoken guidance, listening ownership and action semantics remain. No network, persistence, analytics, permission or account behavior is added or changed."
+        }
+      ],
+      "limits": "Source/privacy alignment review only. The unchanged eight real compact orientation/language/text-size cases and 180-second case budget require a fresh native run. Prior HTTP observations, source review history, original failures and release-ready flags remain unchanged."
     }
   ]
 }
