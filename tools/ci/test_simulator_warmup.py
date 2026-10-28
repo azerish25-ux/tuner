@@ -1,4 +1,6 @@
 import contextlib
+import ctypes
+import hashlib
 import io
 import json
 import os
@@ -13,6 +15,7 @@ from unittest.mock import patch
 import simulator_warmup as warm
 
 DEVICE = 'E952A9B0-CC78-435C-BF08-06AD47FE1076'
+OTHER = 'E952A9B0-CC78-435C-BF08-06AD47FE1077'
 
 
 class WarmupTests(unittest.TestCase):
@@ -46,8 +49,8 @@ class WarmupTests(unittest.TestCase):
         self.assertTrue(status['diagnostic_only'])
         self.assertEqual(status['source_sha'], 'source')
         self.assertEqual(len(status['executable_sha256']), 64)
-        self.assertEqual([c[0][2] for c in calls], ['install', 'launch', 'terminate'])
-        launch, args = calls[1]
+        self.assertEqual([c[0][2] for c in calls], ['install', 'privacy', 'launch', 'terminate'])
+        launch, args = calls[2]
         self.assertEqual(launch[-4:], ['-AppleLanguages', '(ar)', '-AppleLocale', 'ar_SA'])
         self.assertRegex(args['env']['SIMCTL_CHILD_TIMBRE_TEST_STORAGE_ID'], r'^[a-f0-9-]{36}$')
         self.assertEqual(args['env']['SIMCTL_CHILD_TIMBRE_TEST_STORAGE_ID'], status['automation_storage_id'])
@@ -55,7 +58,7 @@ class WarmupTests(unittest.TestCase):
 
     def test_resting_warmup_retains_demo_pitch_and_records_command_timestamps(self):
         status, calls = self.execute()
-        env = calls[1][1]['env']
+        env = calls[2][1]['env']
         self.assertEqual(env['SIMCTL_CHILD_TIMBRE_STAGE_REST'], '1')
         self.assertEqual(env['SIMCTL_CHILD_TIMBRE_DEMO_PITCH'], '1')
         self.assertIsNone(calls[0][1]['env'])
@@ -84,7 +87,7 @@ class WarmupTests(unittest.TestCase):
         status, calls = self.execute('launch')
         self.assertFalse(status['passed'])
         self.assertEqual(status['launch_attempts'], 1)
-        self.assertEqual([c[0][2] for c in calls], ['install', 'launch', 'spawn', 'io', '--last', 'list', 'terminate'])
+        self.assertEqual([c[0][2] for c in calls], ['install', 'privacy', 'launch', 'get_app_container', '--probe-installed-app', 'spawn', 'io', '--last', 'list', 'terminate'])
         self.assertTrue(any('diagnostic-only.png' in str(c[0]) for c in calls))
 
     def test_install_timeout_never_launches(self):
@@ -198,7 +201,7 @@ class WarmupTests(unittest.TestCase):
             _, calls = self.execute()
             self.assertNotIn('SIMCTL_CHILD_TIMBRE_SKIP_ONBOARDING', os.environ)
             self.assertNotIn('SIMCTL_CHILD_TIMBRE_TEST_STORAGE_ID', os.environ)
-            child = calls[1][1]['env']
+            child = calls[2][1]['env']
             self.assertEqual(child['SIMCTL_CHILD_TIMBRE_SKIP_ONBOARDING'], '1')
             self.assertIn('SIMCTL_CHILD_TIMBRE_TEST_STORAGE_ID', child)
 
@@ -214,6 +217,288 @@ class WarmupTests(unittest.TestCase):
         self.assertIn('XCTAssertEqual(button.label, expected', proof)
         self.assertIn('XCTAssertTrue(button.isHittable', proof)
         self.assertLess(proof.index('XCTAssertEqual(button.label, expected'), proof.index('CaptureLocalization.recordVerified'))
+
+
+class DiagnosticIdentityTests(unittest.TestCase):
+    def execute(self, executable='timbre', debug=b'actual app implementation', failure='launch'):
+        with tempfile.TemporaryDirectory() as directory:
+            app = Path(directory) / 'User-facing Timbre.app'
+            app.mkdir()
+            info = plistlib.dumps({'CFBundleIdentifier': warm.BUNDLE, 'CFBundleExecutable': executable})
+            (app / 'Info.plist').write_bytes(info)
+            (app / executable).write_bytes(b'launcher stub')
+            if debug is not None:
+                (app / (executable + '.debug.dylib')).write_bytes(debug)
+            calls = []
+
+            def native(command, **kwargs):
+                calls.append((command, kwargs))
+                if command[:3] == ['xcrun', 'simctl', failure]:
+                    raise subprocess.TimeoutExpired(command, kwargs['timeout'])
+                return SimpleNamespace(returncode=0, stdout=warm.BUNDLE + ': 123\n')
+
+            out = Path(directory) / 'out'
+            with patch.object(warm.subprocess, 'run', side_effect=native), patch.object(warm.os, 'kill'), patch.object(warm.time, 'sleep'):
+                if failure:
+                    with self.assertRaises(RuntimeError):
+                        warm.warmup(app, DEVICE, ['en'], 'en_US', out)
+                else:
+                    warm.warmup(app, DEVICE, ['en'], 'en_US', out)
+            return json.loads((out / 'status.json').read_text()), calls, info
+
+    def test_actual_bundle_executable_not_display_name_selects_process(self):
+        status, _, info = self.execute()
+        self.assertEqual(status['executable'], 'timbre')
+        self.assertEqual(status['bundle_id'], warm.BUNDLE)
+        self.assertEqual(status['info_plist_sha256'], hashlib.sha256(info).hexdigest())
+        predicate = next(x for x in status['diagnostics'] if x['filename'] == 'simulator.log')['command'][-1]
+        self.assertIn('process == "timbre"', predicate)
+        self.assertNotIn('process == "Timbre"', predicate)
+
+    def test_predicate_escapes_executable_as_string_not_predicate_syntax(self):
+        predicate = warm.simulator_predicate('A" OR TRUEPREDICATE OR "B')
+        self.assertTrue(predicate.startswith('process == "A\\" OR TRUEPREDICATE OR \\"B" OR '))
+
+    def test_debug_app_implementation_hash_is_distinct_from_launcher(self):
+        status, _, _ = self.execute()
+        self.assertEqual(status['executable_sha256'], hashlib.sha256(b'launcher stub').hexdigest())
+        self.assertEqual(status['debug_dylib_sha256'], hashlib.sha256(b'actual app implementation').hexdigest())
+        self.assertNotEqual(status['executable_sha256'], status['debug_dylib_sha256'])
+
+    def test_no_debug_dylib_is_valid_for_nonstub_build(self):
+        status, _, _ = self.execute(debug=None, failure=None)
+        self.assertTrue(status['passed'])
+        self.assertNotIn('debug_dylib_sha256', status)
+
+    def test_all_log_snapshots_include_available_info_and_debug(self):
+        status, _, _ = self.execute(failure='terminate')
+        logs = [x for x in status['diagnostics'] if x['filename'] in
+                ('simulator.log', 'host-launch.log', 'simulator-after-cleanup.log')]
+        self.assertEqual(len(logs), 3)
+        for event in logs:
+            self.assertIn('--info', event['command'])
+            self.assertIn('--debug', event['command'])
+            self.assertLessEqual(event['timeout_seconds'], 30)
+
+    def test_simulator_services_and_bundle_events_not_omitted(self):
+        predicate = warm.simulator_predicate('timbre')
+        for process in ('tccd', 'mediaserverd', 'audiomxd', 'coreaudiod', 'storekitd', 'appstored'):
+            self.assertIn('process == ' + json.dumps(process), predicate)
+        self.assertIn('subsystem == ' + json.dumps(warm.BUNDLE), predicate)
+        self.assertIn('eventMessage CONTAINS[c] ' + json.dumps(warm.BUNDLE), predicate)
+
+    def test_failures_single_launch_cleanup_and_budget_remain_unchanged(self):
+        status, calls, _ = self.execute()
+        self.assertFalse(status['passed'])
+        self.assertTrue(status['diagnostic_only'])
+        self.assertEqual(status['launch_attempts'], 1)
+        self.assertEqual(status['total_budget_seconds'], 300)
+        self.assertTrue(status['cleanup_confirmed'])
+        self.assertEqual(sum(command[:3] == ['xcrun', 'simctl', 'launch'] for command, _ in calls), 1)
+        self.assertIn('timed out after 120', status['error'])
+        self.assertEqual([x[0][2] for x in calls], ['install', 'privacy', 'launch', 'get_app_container', '--probe-installed-app', 'spawn', 'io', '--last', 'list', 'terminate'])
+
+
+class ProcessProbeTests(unittest.TestCase):
+    def fixture(self, root, device=DEVICE):
+        app = root / 'CoreSimulator/Devices' / device / 'data/Containers/Bundle/Application/14F316F3-60DD-4F54-B941-3211AFCBCA3B/Timbre.app'
+        app.mkdir(parents=True)
+        (app / 'Info.plist').write_bytes(plistlib.dumps({'CFBundleIdentifier': warm.BUNDLE, 'CFBundleExecutable': 'Timbre'}))
+        (app / 'Timbre').write_bytes(b'fixture')
+        return app
+
+    def execute(self, matches=(321,), container_device=DEVICE, grant_code=0,
+                grant_timeout=False, probe_timeout=False, malformed=None):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            app = self.fixture(root)
+            installed = app if container_device == DEVICE else self.fixture(root, container_device)
+            out = root / 'out'
+            calls = []
+
+            def native(command, **kwargs):
+                calls.append((command, kwargs))
+                if command[:3] == ['xcrun', 'simctl', 'privacy']:
+                    if grant_timeout:
+                        raise subprocess.TimeoutExpired(command, kwargs['timeout'])
+                    return SimpleNamespace(returncode=grant_code, stdout='', stderr='')
+                if command[:3] == ['xcrun', 'simctl', 'launch']:
+                    raise subprocess.TimeoutExpired(command, kwargs['timeout'])
+                if command[:3] == ['xcrun', 'simctl', 'get_app_container']:
+                    if probe_timeout:
+                        raise subprocess.TimeoutExpired(command, kwargs['timeout'])
+                    return SimpleNamespace(returncode=0, stdout=str(installed) + '\n', stderr='')
+                if '--probe-installed-app' in command:
+                    try:
+                        expected = warm.installed_executable(*command[3:])
+                    except (ValueError, OSError):
+                        return SimpleNamespace(returncode=1, stdout='{}', stderr='')
+                    payload = {'matching_pids': list(matches), 'expected_executable': str(expected),
+                               'unreadable_path_count': 0, 'scope': 'current-user-kernel-executable-path',
+                               'observation_only': True}
+                    return SimpleNamespace(returncode=0, stdout=malformed if malformed is not None else json.dumps(payload), stderr='')
+                return SimpleNamespace(returncode=0, stdout='', stderr='')
+
+            with patch.object(warm.subprocess, 'run', side_effect=native), patch.object(warm.time, 'sleep'):
+                with self.assertRaises(RuntimeError):
+                    warm.warmup(app, DEVICE, ['en'], 'en_US', out)
+            return json.loads((out / 'status.json').read_text()), calls
+
+    def test_unique_exact_process_is_observed_without_racy_pid_sampling(self):
+        status, calls = self.execute()
+        observation = status['unknown_launch_pid_probe']
+        self.assertEqual(observation['observed_pid'], 321)
+        self.assertEqual(observation['sample_attempts'], 0)
+        self.assertEqual(observation['sample_skipped'], 'identity_not_atomically_bound')
+        self.assertEqual(observation['status'], 'one_exact_process_observed')
+        self.assertFalse(any(c[0][0] == '/usr/bin/sample' for c in calls))
+        helper = next(c for c in calls if '--probe-installed-app' in c[0])
+        self.assertLessEqual(helper[1]['timeout'], 8)
+        self.assertFalse(status['passed'])
+        self.assertEqual(status['launch_attempts'], 1)
+        self.assertTrue(status['cleanup_confirmed'])
+        self.assertNotIn('pid', status, 'A diagnostic lookup must not certify the launch returned a PID')
+
+    def test_absence_is_inconclusive_and_never_sampled(self):
+        status, calls = self.execute(matches=())
+        self.assertEqual(status['unknown_launch_pid_probe']['status'], 'no_exact_process_observed')
+        self.assertTrue(status['unknown_launch_pid_probe']['absence_is_not_proof_of_no_launch'])
+        self.assertFalse(any(c[0][0] == '/usr/bin/sample' for c in calls))
+
+    def test_ambiguity_is_inconclusive_and_never_sampled(self):
+        status, calls = self.execute(matches=(321, 322))
+        self.assertEqual(status['unknown_launch_pid_probe']['status'], 'ambiguous_exact_processes')
+        self.assertFalse(any(c[0][0] == '/usr/bin/sample' for c in calls))
+
+    def test_wrong_device_container_never_enumerates_or_samples(self):
+        status, calls = self.execute(container_device=OTHER)
+        self.assertIn('Process probe command failed', status['unknown_launch_pid_probe']['error'])
+        self.assertFalse(any(c[0][0] == '/usr/bin/sample' for c in calls))
+
+    def test_probe_timeout_remains_inconclusive_and_cleanup_runs(self):
+        status, calls = self.execute(probe_timeout=True)
+        self.assertIn('timed out', status['unknown_launch_pid_probe']['error'])
+        self.assertTrue(status['cleanup_confirmed'])
+        self.assertFalse(any(c[0][0] == '/usr/bin/sample' for c in calls))
+
+    def test_malformed_probe_results_are_inconclusive_and_keep_original_failure(self):
+        for payload in ('null', '[]', '{"matching_pids": null}', '{"matching_pids": ["321"]}', 'garbage'):
+            with self.subTest(payload=payload):
+                status, calls = self.execute(malformed=payload)
+                self.assertEqual(status['unknown_launch_pid_probe']['status'], 'inconclusive')
+                self.assertIn('error', status['unknown_launch_pid_probe'])
+                self.assertIn('timed out after 120', status['error'])
+                self.assertTrue(status['cleanup_confirmed'])
+                self.assertFalse(any(c[0][0] == '/usr/bin/sample' for c in calls))
+
+    def test_post_install_grant_is_recorded_without_claiming_runtime_permission(self):
+        status, _ = self.execute()
+        commands = status['commands']
+        self.assertEqual([c['command'][2] for c in commands[:3]], ['install', 'privacy', 'launch'])
+        self.assertEqual(commands[1]['command'][3:], [DEVICE, 'grant', 'microphone', warm.BUNDLE])
+        self.assertEqual(commands[1]['returncode'], 0)
+        self.assertTrue(status['microphone_grant_command_succeeded'])
+        self.assertEqual(status['microphone_runtime_permission'], 'not_observed')
+
+    def test_grant_failure_stops_before_launch_and_is_not_suppressed(self):
+        status, calls = self.execute(grant_code=7)
+        self.assertFalse(status['microphone_grant_command_succeeded'])
+        self.assertEqual(status['launch_attempts'], 0)
+        self.assertFalse(any(c[0][:3] == ['xcrun', 'simctl', 'launch'] for c in calls))
+        self.assertEqual(status['commands'][1]['returncode'], 7)
+
+    def test_grant_timeout_is_recorded_and_never_starts_launch(self):
+        status, _ = self.execute(grant_timeout=True)
+        self.assertEqual(status['launch_attempts'], 0)
+        self.assertTrue(status['commands'][1]['timed_out'])
+
+    def test_near_exhausted_budget_skips_probe_and_preserves_cleanup_reserve(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            app = self.fixture(root)
+            now = [0.0]
+            calls = []
+
+            def native(command, **kwargs):
+                calls.append((command, kwargs))
+                if command[:3] == ['xcrun', 'simctl', 'launch']:
+                    now[0] = 270.0
+                    raise subprocess.TimeoutExpired(command, kwargs['timeout'])
+                return SimpleNamespace(returncode=0, stdout='', stderr='')
+
+            with patch.object(warm.time, 'monotonic', side_effect=lambda: now[0]), \
+                 patch.object(warm.subprocess, 'run', side_effect=native):
+                with self.assertRaises(RuntimeError):
+                    warm.warmup(app, DEVICE, ['en'], 'en_US', root / 'out')
+            status = json.loads((root / 'out/status.json').read_text())
+            self.assertIn('reserved for cleanup', status['unknown_launch_pid_probe']['error'])
+            self.assertFalse(any(c[0][:3] == ['xcrun', 'simctl', 'get_app_container'] for c in calls))
+            self.assertEqual(calls[-1][0][:3], ['xcrun', 'simctl', 'terminate'])
+            self.assertEqual(calls[-1][1]['timeout'], 30)
+            self.assertTrue(status['cleanup_confirmed'])
+
+    def test_helper_filesystem_failure_cannot_escape_bounded_subprocess(self):
+        source = Path(warm.__file__).read_text()
+        body = source.split('    def locate_unknown_pid():', 1)[1].split('    try:\n        if not languages', 1)[0]
+        self.assertNotIn('installed_executable(', body)
+        self.assertIn('probe_query(command, limit=8)', body)
+        self.assertIn("expected = installed_executable(*sys.argv[2:])", source)
+
+    def test_identity_mismatches_fail_closed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            app = self.fixture(Path(directory))
+            digest = hashlib.sha256(b'fixture').hexdigest()
+            self.assertEqual(warm.installed_executable(str(app), DEVICE, 'Timbre', digest), app / 'Timbre')
+            for path, device, executable, code_hash in [
+                (str(app), OTHER, 'Timbre', digest),
+                (str(app), DEVICE, 'other', digest),
+                (str(app), DEVICE, 'Timbre', '0' * 64),
+                ('/System/Applications/Timbre.app', DEVICE, 'Timbre', digest),
+            ]:
+                with self.assertRaises((ValueError, OSError)):
+                    warm.installed_executable(path, device, executable, code_hash)
+
+    def test_invalid_and_duplicate_candidates_are_never_accepted(self):
+        for matches in ((True,), (1,), ('321',), (321, 321)):
+            with self.subTest(matches=matches):
+                status, _ = self.execute(matches=matches)
+                self.assertIn('Malformed scoped process observation', status['unknown_launch_pid_probe']['error'])
+                self.assertNotIn('observed_pid', status['unknown_launch_pid_probe'])
+
+    def test_malformed_installed_plist_fails_closed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            app = self.fixture(Path(directory))
+            (app / 'Info.plist').write_bytes(plistlib.dumps(['not', 'a', 'dictionary']))
+            with self.assertRaises(ValueError):
+                warm.installed_executable(str(app), DEVICE, 'Timbre', hashlib.sha256(b'fixture').hexdigest())
+
+    def test_installed_executable_symlink_is_never_followed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            app = self.fixture(Path(directory))
+            (app / 'Timbre').unlink()
+            external = Path(directory) / 'other'
+            external.write_bytes(b'fixture')
+            (app / 'Timbre').symlink_to(external)
+            with self.assertRaises(ValueError):
+                warm.installed_executable(str(app), DEVICE, 'Timbre', hashlib.sha256(b'fixture').hexdigest())
+
+    def test_kernel_path_not_process_name_or_arguments_controls_match(self):
+        expected = Path('/selected/device/Timbre.app/Timbre')
+        queried = []
+        class Lookup:
+            def __call__(self, pid, buffer, size):
+                queried.append(pid)
+                buffer.value = {101: str(expected).encode(), 103: b'/other/device/Timbre.app/Timbre'}[pid]
+                return len(buffer.value)
+        library = SimpleNamespace(proc_pidpath=Lookup())
+        with patch.object(warm.sys, 'platform', 'darwin'), patch.object(warm.os, 'getuid', return_value=501), \
+             patch.object(warm.os, 'geteuid', return_value=501), patch.object(ctypes, 'CDLL', return_value=library), \
+             patch.object(warm.subprocess, 'run', return_value=SimpleNamespace(returncode=0, stdout='101 501\n102 0\n103 501\n')) as ps:
+            self.assertEqual(warm.kernel_process_matches(expected)['matching_pids'], [101])
+            self.assertEqual(queried, [101, 103])
+            self.assertEqual(ps.call_args.args[0], ['/bin/ps', '-U', '501', '-o', 'pid=,uid='])
+            self.assertNotIn('comm', ' '.join(ps.call_args.args[0]))
+            self.assertNotIn('command', ' '.join(ps.call_args.args[0]))
 
 
 if __name__ == '__main__':

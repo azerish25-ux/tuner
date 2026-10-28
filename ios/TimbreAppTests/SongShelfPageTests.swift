@@ -83,7 +83,13 @@ final class SongShelfPageTests: XCTestCase {
         let target = "shelf-3"
         // Drive the actual scroll view, not the binding. The initial fixture has 500pt intro,
         // 24pt gaps and 292pt shelves. The binding must OBSERVE this physical scroll itself.
-        let targetCenter = CGFloat(12 + 500 + 24 + 3 * (292 + 24) + 146)
+        let pagePadding: CGFloat = 12
+        let introductionHeight: CGFloat = 500
+        let rowGap: CGFloat = 24
+        let shelfHeight: CGFloat = 292
+        let precedingShelves: CGFloat = 3
+        let targetCenter = pagePadding + introductionHeight + rowGap
+            + precedingShelves * (shelfHeight + rowGap) + shelfHeight / 2
         vertical.setContentOffset(CGPoint(x: 0, y: targetCenter - vertical.bounds.height / 2), animated: false)
         let tracked = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             state.position == .shelf(target) && state.shelfFrames[target] != nil
