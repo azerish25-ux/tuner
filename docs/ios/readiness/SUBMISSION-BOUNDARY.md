@@ -18,6 +18,8 @@ Demonstrated unreadable text, clipping, inaccessible controls, broken VoiceOver/
 
 The experimental raster-reference work remains separate and is not part of the shipping candidate. Do not add screenshot classifiers, visual exceptions, color changes or further audit frameworks merely to make uncorroborated callbacks disappear.
 
+The functional variant matrix retains screenshots, native hierarchies and all navigation assertions. Its formerly advisory, interleaved SDK reports are retired because SDK trait/scroll changes can interfere with subsequent actions. The separate strict audit retains its original kinds/screens; it does not replace equivalent per-variant SDK diagnostics, and no such equivalence is claimed.
+
 ## Evidence preserved
 
 - Source c800bb4feaa906cb0d1d33d80bfa6b408c37c8d4, native run 40784550829.

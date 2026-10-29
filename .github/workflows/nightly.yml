@@ -444,8 +444,8 @@ jobs:
 
   a11y-matrix:
     # The screens where layout breaks first, under one setting per run (AccessibilityMatrixUITests): the largest
-    # text size, Bold Text, Increase Contrast, left-handed, left-handed upside down and Arabic. Pictures and audit
-    # reports for review; a screen that can't be reached fails.
+    # text size, Bold Text, Increase Contrast, left-handed, left-handed upside down and Arabic. Pictures and native
+    # hierarchies support review; SDK diagnostics run separately in ios.yml and cannot mutate this navigation flow.
     # Scheduling only: retain independent evidence on producer failure/skip, but honor workflow cancellation.
     needs: tour-build
     if: >-

@@ -1,8 +1,9 @@
 import XCTest
 
 /// The nightly accessibility matrix (nightly.yml, job `a11y-matrix`): the screens where layout breaks first, under one
-/// setting per run, each captured and audited for clipped text, Dynamic Type, contrast and hit regions. The findings are
-/// attached for review beside the pictures (`matrix-<variant>-<screen>`); a screen that can't be reached fails.
+/// setting per run, each captured with its native hierarchy. A screen that can't be reached fails.
+/// State-changing SDK audits run separately in AccessibilityAuditUITests, so they cannot change this flow's
+/// text size or leave stale activation geometry between its real navigation actions.
 ///
 /// The variant comes from the workflow (`TEST_RUNNER_TIMBRE_MATRIX`):
 ///   ax5       the largest accessibility text size
@@ -13,11 +14,6 @@ import XCTest
 ///   ar        Arabic, right to left
 /// Without one the run is the plain baseline.
 final class AccessibilityMatrixUITests: XCTestCase {
-    /// What one audit found, filled in by its issue handler.
-    private final class Found {
-        var lines: [String] = []
-    }
-
     private var app: XCUIApplication!
     private static let variant = ProcessInfo.processInfo.environment["TIMBRE_MATRIX"].flatMap { $0.isEmpty ? nil : $0 } ?? "baseline"
 
@@ -239,7 +235,7 @@ final class AccessibilityMatrixUITests: XCTestCase {
         add(hierarchy)
     }
 
-    /// A picture of the screen in front and its audit (clipped text, Dynamic Type, contrast, hit regions) as a report.
+    /// Preserve the current variant without invoking an SDK audit that changes its UI traits or scroll state.
     private func capture(_ screen: String) {
         if screen == "settings" && !settingsVisible {
             navigationEvidence("settings-capture-rejected")
@@ -250,22 +246,9 @@ final class AccessibilityMatrixUITests: XCTestCase {
         picture.name = name
         picture.lifetime = .keepAlways
         add(picture)
-        let found = Found()
-        do {
-            try app.performAccessibilityAudit(for: [.textClipped, .dynamicType, .contrast, .hitRegion]) { issue in
-                let snapshot = try? issue.element?.snapshot()
-                let id = snapshot?.identifier ?? ""
-                let label = snapshot?.label ?? ""
-                found.lines.append("\(issue.compactDescription) | id \(id.isEmpty ? "-" : id) | label \(label.isEmpty ? "-" : "\"\(label)\"")")
-                return true
-            }
-        } catch {
-            found.lines.append("The audit did not complete: \(error.localizedDescription)")
-        }
-        let lines = found.lines
-        let report = XCTAttachment(string: (["\(name): \(lines.count) findings", ""] + lines).joined(separator: "\n"))
-        report.name = name + ".txt"
-        report.lifetime = .keepAlways
-        add(report)
+        let hierarchy = XCTAttachment(string: app.debugDescription)
+        hierarchy.name = name + "-hierarchy"
+        hierarchy.lifetime = .keepAlways
+        add(hierarchy)
     }
 }

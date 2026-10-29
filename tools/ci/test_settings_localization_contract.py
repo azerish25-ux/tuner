@@ -68,9 +68,14 @@ class SettingsLocalizationContract(unittest.TestCase):
         self.assertIn("XCTAssertFalse(settingsVisible", native)
         self.assertIn("done.waitForNonExistence(timeout: 10)", native)
         self.assertNotIn('app.buttons["Done"]', native)
-        # The matrix remains diagnostic: an audit timeout is recorded as incomplete, not converted into a pass.
-        self.assertIn('found.lines.append("The audit did not complete:', capture)
-        self.assertIn(".textClipped, .dynamicType, .contrast, .hitRegion", capture)
+        # Navigation/captures keep their selected variant; state-changing SDK diagnostics run separately.
+        self.assertNotIn('performAccessibilityAudit', native)
+        self.assertIn('hierarchy.name = name + "-hierarchy"', capture)
+        self.assertIn('XCTAttachment(string: app.debugDescription)', capture)
+        strict = source('ios/TimbreUITests/AccessibilityAuditUITests.swift')
+        for kind in ['.textClipped', '.dynamicType', '.contrast', '.hitRegion']:
+            self.assertIn(kind, strict)
+        self.assertIn('try app.performAccessibilityAudit', strict)
 
     def test_matrix_waits_for_the_same_settings_identity_and_never_continues_under_a_sheet(self):
         native = source("ios/TimbreUITests/AccessibilityMatrixUITests.swift")
