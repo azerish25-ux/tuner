@@ -1,0 +1,17 @@
+Accessibility audit, metronome: 15 lines, 0 failing
+
+Starting audit mask 18446744073709551615.
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "96" | frame (146.83333333333334, 224.0, 108.33333333333334, 101.0) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are unsupported | id - | label "3" | frame (154.0, 605.0, 50.0, 44.0) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[contrast, known: a beat's digit, inkSoft on the accent cell's gradient fill: 5.2:1 behind it] Contrast failed | id - | label "1" | frame (20.0, 692.0, 86.0, 76.0) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, known: a beat's digit, inkSoft on stageRaised over the cell's gradient level fill: 7.8:1] Contrast failed | id - | label "2" | frame (112.0, 692.0, 86.0, 76.0) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, known: a beat's digit, inkSoft on stageRaised over the cell's gradient level fill: 7.8:1] Contrast failed | id - | label "3" | frame (204.0, 692.0, 86.0, 76.0) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, known: a beat's digit, inkSoft on stageRaised over the cell's gradient level fill: 7.8:1] Contrast failed | id - | label "4" | frame (296.0, 692.0, 86.0, 76.0) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, known: under the dock's fade at rest (1.1:1 there); scrolled clear, mint on the card 13.0:1] Contrast failed | id - | label "Sound" | frame (38.0, 677.8333333333334, 37.66666666666666, 14.333333333333371) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, known: under the dock at rest; scrolled clear, stage on the selected ink pill 18.2:1] Contrast failed | id metronome.sound.click | label "Click" | frame (159.66666666666666, 665.0, 59.0, 40.0) | type 9 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, known: under the dock at rest; scrolled clear, inkSoft on surface 7.4:1] Contrast failed | id metronome.sound.wood | label "Wood" | frame (220.66666666666666, 665.0, 64.66666666666666, 40.0) | type 9 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, known: under the dock at rest; scrolled clear, ink on the card 16.8:1] Contrast failed | id - | label "Feel the beat" | frame (38.0, 722.0, 89.33333333333333, 18.0) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, known: under the meter rail's edge fade (3.3:1 there); in view ink on the card, 16.8:1] Contrast failed | id - | label "7/4" | frame (335.3333333333333, 524.6666666666666, 50.333333333333314, 44.0) | type 9 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, known: under the dock at rest; scrolled clear, inkSoft on surface 7.4:1] Contrast failed | id - | label "Beep" | frame (299.3333333333333, 676.0, 36.0, 18.0) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+Completed audit mask 18446744073709551615 on metronome.
+Completed all audit kinds.

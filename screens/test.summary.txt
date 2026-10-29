@@ -1,0 +1,79 @@
+# Errors
+
+# Matches
+--- line 518
+Accessibility audit, paywall: 16 lines, 1 failing
+    t =    53.91s Added attachment named 'ax-audit-paywall.txt'
+/Users/runner/work/tuner/tuner/ios/TimbreUITests/AccessibilityAuditUITests.swift:302: error: -[TimbreUITests.AccessibilityAuditUITests testSettingsAndPaywall] : failed - paywall: [contrast, enforced] Contrast failed | id - | label - | snapshot unavailable (element nil) | callback 12 | detail Contrast failed for SwiftUI.AccessibilityNode
+    t =    57.13s Tear Down
+    t =    57.13s     Terminate com.shahradazerisharghi.timbre:28320
+Test Case '-[TimbreUITests.AccessibilityAuditUITests testSettingsAndPaywall]' failed (63.645 seconds).
+--- line 521
+    t =    57.13s Tear Down
+    t =    57.13s     Terminate com.shahradazerisharghi.timbre:28320
+Test Case '-[TimbreUITests.AccessibilityAuditUITests testSettingsAndPaywall]' failed (63.645 seconds).
+Test Case '-[TimbreUITests.AccessibilityAuditUITests testWelcomeScreen]' started.
+    t =     0.00s Start Test at 2026-10-29 04:16:19.937
+    t =     0.04s Set Up
+
+# Tail
+    t =    22.26s Find the "onboarding.instrument.violin.standard.4" Button
+AX-AUDIT: [clipped text] Text clipped | id onboarding.instrument.violin.standard.4 | label "Violin" | frame (188.0, 620.0, 67.0, 44.0) | type 9 | detail Text of this SwiftUI.AccessibilityNode may be clipped at larger Dynamic Type sizes.
+    t =    22.33s Find the Any (Descendant with identity binding to AX element pid: 30673, elementOrHash.elementID: 4554971632.17)
+    t =    22.46s Find the "onboarding.instrument.ukulele.soprano.4" Button
+AX-AUDIT: [clipped text] Text clipped | id onboarding.instrument.ukulele.soprano.4 | label "Ukulele" | frame (99.33333333333333, 620.0, 80.66666666666667, 44.0) | type 9 | detail Text of this SwiftUI.AccessibilityNode may be clipped at larger Dynamic Type sizes.
+    t =    22.54s Find the Any (Descendant with identity binding to AX element pid: 30673, elementOrHash.elementID: 4554163040.19)
+    t =    22.64s Find the "onboarding.instrument.cello.standard.4" Button
+AX-AUDIT: [clipped text] Text clipped | id onboarding.instrument.cello.standard.4 | label "Cello" | frame (263.0, 620.0, 63.666666666666686, 44.0) | type 9 | detail Text of this SwiftUI.AccessibilityNode may be clipped at larger Dynamic Type sizes.
+    t =    22.70s Find the Any (Descendant with identity binding to AX element pid: 30673, elementOrHash.elementID: 4554289104.29)
+    t =    22.75s Find the "Just tune" StaticText
+AX-AUDIT: [contrast, known: ink link on the stage, 18.3:1, under the mint button's glass and glow] Contrast failed | id - | label "Just tune" | frame (137.66666666666666, 750.0, 126.66666666666666, 44.0) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+AX-AUDIT: Completed audit mask 18446744073709551615 on welcome.
+AX-AUDIT: Completed all audit kinds.
+Accessibility audit, welcome: 14 lines, 0 failing
+    t =    22.81s Added attachment named 'ax-audit-welcome.txt'
+    t =    22.81s Tear Down
+    t =    22.81s     Terminate com.shahradazerisharghi.timbre:30673
+Test Case '-[TimbreUITests.AccessibilityAuditUITests testWelcomeScreen]' passed (23.929 seconds).
+Test Suite 'AccessibilityAuditUITests' failed at 2026-10-29 04:16:43.866.
+	 Executed 4 tests, with 1 failure (0 unexpected) in 264.197 (264.204) seconds
+Test Suite 'TimbreUITests.xctest' failed at 2026-10-29 04:16:43.869.
+	 Executed 4 tests, with 1 failure (0 unexpected) in 264.197 (264.206) seconds
+Test Suite 'Selected tests' failed at 2026-10-29 04:16:43.869.
+	 Executed 4 tests, with 1 failure (0 unexpected) in 264.197 (264.207) seconds
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+2026-10-29 04:17:19.844 xcodebuild[19736:57952] [MT] IDETestOperationsObserverDebug: 309.233 elapsed -- Testing started completed.
+2026-10-29 04:17:19.844 xcodebuild[19736:57952] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-29 04:17:19.844 xcodebuild[19736:57952] [MT] IDETestOperationsObserverDebug: 309.233 sec, +309.233 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/runner/work/tuner/tuner/ios/build/Accessibility-screens.xcresult
+
+** TEST EXECUTE FAILED **
+
+Testing started

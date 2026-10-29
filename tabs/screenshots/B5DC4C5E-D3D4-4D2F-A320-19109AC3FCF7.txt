@@ -1,0 +1,168 @@
+Optional(Attributes: Application, 0x10b506ca0, pid: 56964, label: 'Timbre'
+Element subtree:
+ →Application, 0x10b506ca0, pid: 56964, label: 'Timbre'
+    Window (Main), 0x10b2b7ac0, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x1062ac250, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x1062a5830, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x1062a65e0, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x1062b9a60, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x10628ce90, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x1062a76a0, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x1062a23e0, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x1062a8100, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x1062b6e10, {{0.0, 0.0}, {402.0, 874.0}}
+                        Other, 0x1062c0de0, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x1062866c0, {{0.0, 0.0}, {402.0, 874.0}}
+                            Other, 0x10627bee0, {{0.0, 0.0}, {402.0, 874.0}}
+                              Other, 0x10629c140, {{0.0, 0.0}, {402.0, 874.0}}
+                                Other, 0x1062a87d0, {{0.0, 0.0}, {402.0, 874.0}}
+                                  Other, 0x1062d11e0, {{0.0, 0.0}, {402.0, 874.0}}
+                                    ScrollView, 0x1062be7d0, {{0.0, 0.0}, {402.0, 874.0}}
+                                      Other, 0x10627aac0, {{0.0, 0.0}, {402.0, 874.0}}
+                                        Other, 0x10627d3d0, {{0.0, 726.2}, {402.0, 147.8}}
+                                      Other, 0x1062a8ea0, {{0.0, 0.0}, {402.0, 874.0}}
+                                        Other, 0x1062b8530, {{0.0, 726.2}, {402.0, 147.8}}
+                                          Image, 0x106277a70, {{-120.0, 731.0}, {642.0, 286.0}}, identifier: 'AdditionalDimmingOverlay'
+                                          Other, 0x1062b37a0, {{0.0, 726.2}, {402.0, 147.8}}
+                                            Other, 0x106297250, {{0.0, 726.2}, {402.0, 147.8}}
+                                          Other, 0x10627d750, {{0.0, 726.2}, {402.0, 147.8}}
+                                            Other, 0x10627d040, {{0.0, 726.2}, {402.0, 147.8}}
+                                            Other, 0x1062a6290, {{0.0, 726.2}, {402.0, 147.8}}
+                                      Other, 0x106289ab0, {{0.0, 62.0}, {402.0, 1070.0}}
+                                        StaticText, 0x1062b1600, {{20.0, 78.3}, {114.7, 35.3}}, identifier: 'screen.header.title', label: 'Practice'
+                                        Button, 0x1062b5c70, {{264.7, 74.0}, {71.3, 44.0}}, identifier: 'streak.chip', label: '7-day streak', value: 1 streak freezes
+                                          Other, 0x10b4d8690, {{278.5, 87.9}, {12.4, 15.2}}
+                                          StaticText, 0x10b4d7030, {{297.7, 87.7}, {9.0, 16.7}}, identifier: 'screen.header.streak.count', label: '7'
+                                          Image, 0x10b433e50, {{312.7, 90.3}, {10.3, 11.3}}, identifier: 'snowflake', label: 'Snow Flurry'
+                                        Button, 0x10b4cb4e0, {{338.0, 74.0}, {44.0, 44.0}}, identifier: 'level.ring', label: 'Level 1, 0 of 100 XP'
+                                          StaticText, 0x1064f37f0, {{349.2, 85.8}, {21.7, 20.3}}, identifier: 'screen.header.level.mark', label: 'LV 1'
+                                        StaticText, 0x10b4a2b00, {{38.0, 158.0}, {52.3, 21.7}}, label: 'Today'
+                                        StaticText, 0x10b40db50, {{304.7, 162.7}, {59.3, 15.3}}, label: '+25 XP'
+                                          Image, 0x10b4dc330, {{304.7, 164.0}, {12.7, 12.7}}, identifier: 'sun.max.fill', label: 'Brightness Higher'
+                                          StaticText, 0x10b40f030, {{322.3, 162.7}, {41.7, 15.3}}, label: '+25 XP'
+                                        Other, 0x10b47fcc0, {{64.5, 234.5}, {59.0, 42.3}}, label: '0 of 3', value: 10 min left
+                                          StaticText, 0x10b40cef0, {{74.0, 234.5}, {40.0, 28.0}}, label: '0 of 3'
+                                            StaticText, 0x10b4dbf10, {{74.0, 234.5}, {15.0, 28.0}}, label: '0'
+                                            StaticText, 0x10b4c9010, {{89.0, 234.5}, {10.0, 28.0}}, label: ' / '
+                                            StaticText, 0x10b4b34e0, {{99.0, 234.5}, {15.0, 28.0}}, label: '3'
+                                          StaticText, 0x10b490610, {{64.5, 262.5}, {59.0, 14.3}}, label: '10 min left'
+                                        Button, 0x10b4d4af0, {{166.0, 193.7}, {198.0, 40.0}}, identifier: 'daily.lesson', label: 'Next lesson, 3 min, Meet your guitar'
+                                          Image, 0x10b4ac5a0, {{167.3, 203.3}, {23.0, 20.7}}, identifier: 'graduationcap', label: 'Itunes U'
+                                          StaticText, 0x10b482d40, {{202.0, 195.7}, {83.7, 18.0}}, label: 'Next lesson'
+                                          StaticText, 0x10b40e700, {{327.0, 197.3}, {37.0, 16.7}}, label: '3 min'
+                                          StaticText, 0x10b4c9850, {{202.0, 216.0}, {99.7, 15.7}}, label: 'Meet your guitar'
+                                        Button, 0x10b32f6e0, {{166.0, 235.7}, {198.0, 40.0}}, identifier: 'daily.tune', label: 'Tune up, 1 min, +20 XP', value: Tune every string:...
+                                          Image, 0x10b33a910, {{170.0, 246.7}, {18.0, 18.0}}, identifier: 'tuningfork', label: 'Tune'
+                                          StaticText, 0x10b33a4f0, {{202.0, 235.8}, {57.3, 18.0}}, label: 'Tune up'
+                                          StaticText, 0x10b3dbfe0, {{327.0, 237.5}, {37.0, 16.7}}, label: '1 min'
+                                          Other, 0x10b3da360, {{307.0, 256.3}, {57.0, 19.0}}
+                                          StaticText, 0x10b33b150, {{314.0, 258.2}, {43.0, 15.3}}, label: '+20 XP'
+                                        Button, 0x10b399540, {{166.0, 277.7}, {198.0, 40.0}}, identifier: 'daily.ear', label: 'Ear training, 6 min, +20 XP', value: Get 10 ear questio...
+                                          Image, 0x10b35fbb0, {{173.0, 288.7}, {13.0, 18.0}}, identifier: 'ear', label: 'ear'
+                                          StaticText, 0x10b33b570, {{202.0, 277.8}, {82.0, 18.0}}, label: 'Ear training'
+                                          StaticText, 0x10b3c8c30, {{327.0, 279.5}, {37.0, 16.7}}, label: '6 min'
+                                          Other, 0x10b3ae5a0, {{307.0, 298.3}, {57.0, 19.0}}
+                                          StaticText, 0x10b326430, {{314.0, 300.2}, {43.0, 15.3}}, label: '+20 XP'
+                                        Other, 0x10b3dbbc0, {{20.0, 357.7}, {362.0, 98.0}}, identifier: 'practice.xp.progress', label: 'Level 1, 0 of 100 XP, Open String, 0 / 100 XP · next: First Fret'
+                                          Other, 0x10b40f450, {{35.2, 372.9}, {67.6, 67.6}}, label: 'Level 1, 0 of 100 XP'
+                                            StaticText, 0x10b432590, {{52.7, 392.7}, {32.7, 28.0}}, identifier: 'practice.level.card.mark', label: 'LV 1'
+                                          StaticText, 0x10b4dbaf0, {{114.0, 379.0}, {106.0, 21.7}}, label: 'Open String'
+                                          Other, 0x10b4d8050, {{114.0, 406.7}, {250.0, 6.0}}
+                                          StaticText, 0x10b4f93b0, {{114.0, 418.7}, {160.3, 15.7}}, identifier: 'practice.xp.progress', label: '0 / 100 XP · next: First Fret'
+                                        StaticText, 0x10b4b9f20, {{20.0, 477.7}, {105.0, 25.3}}, label: 'Ear games'
+                                        Button, 0x10b39b940, {{20.0, 513.0}, {362.0, 188.0}}, identifier: 'practice.sniper', label: 'Bullseye, Ten notes. One hidden song., Level 1, Today’s challenge, Hit 5 bullseyes, +25 XP', value: 0 of 5
+                                          Other, 0x10b4f8f90, {{234.0, 513.0}, {148.0, 188.0}}
+                                          StaticText, 0x10b326010, {{20.0, 513.0}, {362.0, 188.0}}, identifier: 'practice.sniper.challenge.title', label: 'Bullseye, Ten notes. One hidden song., Level 1, Today’s challenge, Hit 5 bullseyes, +25 XP', value: 0 of 5
+                                            StaticText, 0x10b36c230, {{38.0, 531.0}, {72.7, 21.7}}, label: 'Bullseye'
+                                            StaticText, 0x10b431430, {{38.0, 557.7}, {173.3, 15.7}}, label: 'Ten notes. One hidden song.'
+                                            StaticText, 0x10b431550, {{38.0, 578.3}, {41.3, 15.7}}, label: 'Level 1'
+                                            StaticText, 0x1062b45a0, {{38.0, 616.0}, {192.0, 67.0}}, identifier: 'practice.sniper.challenge.title', label: 'Today’s challenge, Hit 5 bullseyes, +25 XP', value: 0 of 5
+                                              StaticText, 0x1062b7710, {{38.0, 616.0}, {105.7, 14.3}}, label: 'Today’s challenge'
+                                              Other, 0x10b431670, {{44.8, 648.8}, {20.5, 20.5}}
+                                              StaticText, 0x1062b81b0, {{72.0, 642.3}, {59.7, 33.7}}, identifier: 'practice.sniper.challenge.title', label: 'Hit 5 bullseyes'
+                                              StaticText, 0x10627b180, {{175.3, 651.5}, {41.7, 15.3}}, label: '+25 XP'
+                                        Button, 0x1062b3b20, {{20.0, 711.0}, {362.0, 177.7}}, identifier: 'practice.ear', label: 'Ear training, Hear two notes. Name the gap., 0 correct · Level 1, Today’s challenge, Get 10 right, +20 XP', value: 0 of 10
+                                          Other, 0x1062b8fc0, {{234.0, 711.0}, {148.0, 177.7}}
+                                          StaticText, 0x10627c950, {{20.0, 711.0}, {362.0, 177.7}}, identifier: 'practice.ear.challenge.title', label: 'Ear training, Hear two notes. Name the gap., 0 correct · Level 1, Today’s challenge, Get 10 right, +20 XP', value: 0 of 10
+                                            StaticText, 0x1062c22b0, {{38.0, 729.0}, {100.0, 21.7}}, label: 'Ear training'
+                                            StaticText, 0x106279670, {{38.0, 755.7}, {187.7, 15.7}}, label: 'Hear two notes. Name the gap.'
+                                            StaticText, 0x10627f980, {{38.0, 776.3}, {107.7, 15.7}}, label: '0 correct · Level 1'
+                                            StaticText, 0x1062803e0, {{38.0, 814.0}, {192.0, 56.7}}, identifier: 'practice.ear.challenge.title', label: 'Today’s challenge, Get 10 right, +20 XP', value: 0 of 10
+                                              StaticText, 0x1062d18e0, {{38.0, 814.0}, {105.7, 14.3}}, label: 'Today’s challenge'
+                                              Other, 0x106278c00, {{44.8, 841.8}, {20.5, 20.5}}
+                                              StaticText, 0x1062c0720, {{72.0, 844.2}, {74.0, 15.7}}, identifier: 'practice.ear.challenge.title', label: 'Get 10 right'
+                                              StaticText, 0x1062bd320, {{174.0, 844.3}, {43.0, 15.3}}, label: '+20 XP'
+                                        StaticText, 0x1062b3ea0, {{20.0, 910.7}, {55.3, 25.3}}, label: 'Tools'
+                                        Button, 0x1062b6a80, {{20.0, 946.0}, {114.0, 74.0}}, identifier: 'practice.metronome', label: 'Metronome'
+                                          Other, 0x1062b50e0, {{62.0, 958.0}, {30.0, 30.0}}
+                                          StaticText, 0x10b431790, {{20.0, 946.0}, {114.0, 74.0}}, label: 'Metronome'
+                                        Button, 0x10629cbc0, {{144.0, 946.0}, {114.0, 74.0}}, identifier: 'practice.drone', label: 'Drone, Timbre Pro'
+                                          Other, 0x1062964f0, {{186.0, 958.0}, {30.0, 30.0}}
+                                          StaticText, 0x106293c70, {{183.2, 993.8}, {35.7, 14.3}}, label: 'Drone'
+                                          Other, 0x1062d0440, {{233.0, 951.0}, {20.0, 20.0}}, label: 'Timbre Pro'
+                                            Image, 0x106281500, {{240.0, 956.7}, {6.3, 8.7}}, identifier: 'lock.fill', label: 'Lock'
+                                        Button, 0x1062b9360, {{268.0, 946.0}, {114.0, 74.0}}, identifier: 'practice.voice', label: 'Voice'
+                                          Other, 0x1062bfcd0, {{310.0, 958.0}, {30.0, 30.0}}
+                                          StaticText, 0x10627f600, {{268.0, 946.0}, {114.0, 74.0}}, label: 'Voice'
+                                        Button, 0x1062b1270, {{20.0, 1030.0}, {114.0, 74.0}}, identifier: 'practice.chords', label: 'Chords'
+                                          Other, 0x1062a1d50, {{62.0, 1042.0}, {30.0, 30.0}}
+                                          StaticText, 0x106295780, {{20.0, 1030.0}, {114.0, 74.0}}, label: 'Chords'
+                                        Button, 0x106284bb0, {{144.0, 1030.0}, {114.0, 74.0}}, identifier: 'practice.scales', label: 'Scales, Timbre Pro'
+                                          Other, 0x1062d1570, {{186.0, 1042.0}, {30.0, 30.0}}
+                                          StaticText, 0x10628e9e0, {{181.5, 1077.8}, {39.0, 14.3}}, label: 'Scales'
+                                          Other, 0x1062c7db0, {{233.0, 1035.0}, {20.0, 20.0}}, label: 'Timbre Pro'
+                                            Image, 0x106282990, {{240.0, 1040.7}, {6.3, 8.7}}, identifier: 'lock.fill', label: 'Lock'
+                                        Button, 0x10627a420, {{268.0, 1030.0}, {114.0, 74.0}}, identifier: 'practice.intonation', label: 'Intonation, Timbre Pro'
+                                          Other, 0x1062833e0, {{310.0, 1042.0}, {30.0, 30.0}}
+                                          StaticText, 0x1062c1170, {{295.0, 1077.8}, {60.0, 14.3}}, label: 'Intonation'
+                                          Other, 0x10629d600, {{357.0, 1035.0}, {20.0, 20.0}}, label: 'Timbre Pro'
+                                            Image, 0x1062b0f10, {{364.0, 1040.7}, {6.3, 8.7}}, identifier: 'lock.fill', label: 'Lock'
+                                      Other, 0x106290230, {{369.0, 62.0}, {30.0, 729.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                                        Other, 0x1062c1bd0, {{396.0, 65.0}, {3.0, 520.0}}
+                                      Other, 0x1062c3070, {{369.0, 62.0}, {30.0, 729.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                                        Other, 0x1062c1f20, {{396.0, 65.0}, {3.0, 520.0}}
+                                    Other, 0x106289e20, {{0.0, 0.0}, {402.0, 80.0}}
+                            Other, 0x10628e310, {{0.0, 0.0}, {402.0, 874.0}}
+                              Other, 0x1062c3f00, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x1062afe20, {{0.0, 791.0}, {402.0, 83.0}}
+                Other, 0x106284830, {{0.0, 791.0}, {402.0, 83.0}}
+                  Other, 0x1062b1970, {{0.0, 0.0}, {402.0, 874.0}}
+                    TabBar, 0x1062c3bb0, {{0.0, 791.0}, {402.0, 83.0}}, label: 'Tab Bar'
+                      Other, 0x10627a780, {{21.0, 791.0}, {360.0, 62.0}}
+                        Other, 0x1062b71a0, {{21.0, 791.0}, {78.0, 54.0}}
+                        Other, 0x106292b80, {{21.0, 791.0}, {360.0, 62.0}}
+                          Button, 0x1062893e0, {{25.0, 795.0}, {78.0, 54.0}}, identifier: 'gauge.with.needle', label: 'Tune'
+                            Image, 0x1062b6000, {{50.0, 801.3}, {27.3, 27.3}}, identifier: 'gauge.with.needle.fill', label: 'gauge.with.needle.fill'
+                          Button, 0x1062b2020, {{93.5, 795.0}, {78.0, 54.0}}, identifier: 'graduationcap', label: 'Learn'
+                            Image, 0x1062788b0, {{114.5, 801.7}, {36.7, 31.3}}, identifier: 'graduationcap.fill', label: 'itunes u'
+                          Button, 0x1062b4220, {{162.0, 795.0}, {78.0, 54.0}}, identifier: 'music.note.list', label: 'Songs'
+                            Image, 0x1062b6380, {{186.0, 801.7}, {29.3, 27.0}}, identifier: 'music.note.list', label: 'playlist'
+                          Button, 0x1062b3410, {{230.5, 795.0}, {78.0, 54.0}}, identifier: 'metronome', label: 'Practice', Selected
+                            Image, 0x1062c8490, {{255.5, 801.7}, {28.7, 26.0}}, identifier: 'metronome.fill', label: 'metronome.fill'
+                          Button, 0x106280e00, {{299.0, 795.0}, {78.0, 54.0}}, identifier: 'chart.bar', label: 'Progress'
+                            Image, 0x1062920e0, {{321.0, 802.3}, {35.0, 25.3}}, identifier: 'chart.bar.fill', label: 'chart column'
+                        Other, 0x1062b9de0, {{230.5, 795.0}, {78.0, 54.0}}
+                          Other, 0x1062916b0, {{230.5, 795.0}, {78.0, 54.0}}
+                            Other, 0x1062ba160, {{230.5, 795.0}, {78.0, 54.0}}
+                            Other, 0x106293fc0, {{230.5, 795.0}, {78.0, 54.0}}
+                              Other, 0x1062c9970, {{230.5, 795.0}, {78.0, 54.0}}
+                                Other, 0x1062c1500, {{230.5, 795.0}, {78.0, 54.0}}
+                                  Other, 0x1062babf0, {{230.5, 795.0}, {78.0, 54.0}}
+                                Other, 0x1062ba4e0, {{230.5, 795.0}, {78.0, 54.0}}
+                              Other, 0x1062b30c0, {{230.5, 795.0}, {78.0, 54.0}}
+                  Other, 0x1062b8c40, {{0.0, 791.0}, {402.0, 83.0}}
+                    Other, 0x1062a8450, {{0.0, 791.0}, {402.0, 83.0}}
+                      Other, 0x1062a54e0, {{0.0, 791.0}, {402.0, 83.0}}
+                        Other, 0x106280aa0, {{0.0, 791.0}, {402.0, 83.0}}
+                          Other, 0x106288280, {{0.0, 791.0}, {402.0, 83.0}}
+                            Other, 0x1062bd680, {{0.0, 791.0}, {402.0, 83.0}}
+                        Other, 0x1062bf280, {{0.0, 791.0}, {402.0, 83.0}}
+                          Other, 0x1062975d0, {{0.0, 791.0}, {402.0, 83.0}}
+Path to element:
+ →Application, 0x10b506ca0, pid: 56964, label: 'Timbre'
+Query chain:
+ →Find: Target Application 'com.shahradazerisharghi.timbre'
+  Output: {
+    Application, 0x10b4ea3c0, pid: 56964, label: 'Timbre'
+  }
+)

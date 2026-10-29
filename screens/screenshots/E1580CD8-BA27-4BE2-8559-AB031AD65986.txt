@@ -1,0 +1,8 @@
+Accessibility audit, lesson-along-ready: 6 lines, 0 failing
+
+Starting audit mask 18446744073709551615.
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "The open strings" | frame (60.0, 73.16666666666667, 111.33333333333331, 16.66666666666667) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "Step 6 of 6" | frame (316.0, 74.16666666666667, 66.0, 15.333333333333329) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[clipped text] Text clipped | id - | label - | snapshot unavailable (element nil) | callback 3 | detail Text of this element may be clipped at larger Dynamic Type sizes.
+Completed audit mask 18446744073709551615 on lesson-along-ready.
+Completed all audit kinds.

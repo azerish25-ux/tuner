@@ -1,0 +1,45 @@
+Accessibility audit, tab-2-learn: 43 lines, 2 failing
+
+Fresh-process navigation verified for contrast attempt 1.
+Starting audit mask 1.
+[contrast, enforced] Contrast failed | id screen.header.level.mark | label "LV 1" | frame (349.1666666666667, 85.83333333333334, 21.666666666666686, 20.33333333333333) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, enforced] Contrast failed | id - | label "Start" | frame (226.0, 843.0, 30.666666666666686, 15.333333333333371) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+Completed audit mask 1 on tab-2-learn.
+Completed contrast audit on isolated attempt 1.
+Fresh-process navigation verified for element description attempt 1.
+Starting audit mask 8.
+Completed audit mask 8 on tab-2-learn.
+Completed element description audit on isolated attempt 1.
+Fresh-process navigation verified for hit region attempt 1.
+Starting audit mask 4.
+Completed audit mask 4 on tab-2-learn.
+Completed hit region audit on isolated attempt 1.
+Fresh-process navigation verified for Dynamic Type attempt 1.
+Starting audit mask 65536.
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id screen.header.title | label "Learn" | frame (20.0, 78.33333333333334, 76.0, 35.333333333333314) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "3" | frame (54.833333333333336, 164.33333333333334, 8.333333333333336, 15.333333333333343) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label " / " | frame (49.16666666666667, 164.33333333333334, 5.666666666666664, 15.333333333333343) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "0" | frame (40.833333333333336, 164.33333333333334, 8.333333333333336, 15.333333333333343) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id screen.header.streak.count | label "7" | frame (297.66666666666663, 87.66666666666667, 9.0, 16.666666666666657) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id screen.header.level.mark | label "LV 1" | frame (349.1666666666667, 85.83333333333334, 21.666666666666686, 20.33333333333333) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+Completed audit mask 65536 on tab-2-learn.
+Completed Dynamic Type audit on isolated attempt 1.
+Fresh-process navigation verified for clipped text attempt 1.
+Starting audit mask 131072.
+[clipped text] Text clipped | id - | label "154" | frame (48.0, 356.6666666666667, 24.666666666666657, 15.333333333333314) | type 48 | detail Text of this SwiftUI.AccessibilityNode may be clipped at larger Dynamic Type sizes.
+[clipped text] Text clipped | id - | label "lessons" | frame (214.33333333333331, 356.6666666666667, 46.666666666666686, 15.333333333333314) | type 48 | detail Text of this SwiftUI.AccessibilityNode may be clipped at larger Dynamic Type sizes.
+[clipped text] Text clipped | id - | label "Unit 1 · Hello, guitar" | frame (40.0, 438.0, 117.66666666666666, 15.333333333333314) | type 48 | detail Text of this SwiftUI.AccessibilityNode may be clipped at larger Dynamic Type sizes.
+[clipped text] Text clipped | id - | label "lessons" | frame (360.3333333333333, 356.6666666666667, 46.666666666666686, 15.333333333333314) | type 48 | detail Text of this SwiftUI.AccessibilityNode may be clipped at larger Dynamic Type sizes.
+[clipped text] Text clipped | id - | label "Meet your guitar" | frame (40.0, 461.3333333333333, 144.66666666666666, 70.66666666666669) | type 48 | detail Text of this SwiftUI.AccessibilityNode may be clipped at larger Dynamic Type sizes.
+[clipped text] Text clipped | id - | label "Lesson · Tune up · Ear training" | frame (84.0, 175.33333333333334, 170.66666666666666, 14.333333333333343) | type 48 | detail Text of this SwiftUI.AccessibilityNode may be clipped at larger Dynamic Type sizes.
+[clipped text] Text clipped | id - | label "lessons" | frame (76.66666666666666, 356.6666666666667, 46.66666666666666, 15.333333333333314) | type 48 | detail Text of this SwiftUI.AccessibilityNode may be clipped at larger Dynamic Type sizes.
+Completed audit mask 131072 on tab-2-learn.
+Completed clipped text audit on isolated attempt 1.
+Fresh-process navigation verified for traits attempt 1.
+Starting audit mask 262144.
+Completed audit mask 262144 on tab-2-learn.
+Completed traits audit on isolated attempt 1.
+Fresh-process navigation verified for element detection attempt 1.
+Starting audit mask 2.
+Completed audit mask 2 on tab-2-learn.
+Completed element detection audit on isolated attempt 1.

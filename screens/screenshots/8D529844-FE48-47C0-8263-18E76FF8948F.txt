@@ -1,0 +1,18 @@
+Accessibility audit, paywall: 16 lines, 1 failing
+
+Starting audit mask 18446744073709551615.
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "·" | frame (214.0, 544.5, 4.0, 14.333333333333258) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "Privacy" | frame (268.3333333333333, 792.0, 63.0, 44.0) | type 9 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "Cancel anytime in Settings" | frame (53.666666666666686, 544.5, 154.33333333333331, 14.333333333333258) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "Terms" | frame (209.33333333333331, 792.0, 55.0, 44.0) | type 9 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "We remind you on day 12" | frame (224.0, 544.5, 144.33333333333331, 14.333333333333258) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "Free for 14 days, then $34.99 a year." | frame (90.0, 774.3333333333334, 222.0, 15.666666666666629) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "·" | frame (204.83333333333331, 806.1666666666666, 4.333333333333343, 15.666666666666629) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "·" | frame (264.16666666666663, 806.1666666666666, 4.333333333333314, 15.666666666666629) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id paywall.purchase | label "Start 14-day free trial" | frame (109.66666666666667, 728.4999999999999, 182.66666666666663, 21.66666666666663) | type 9 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[clipped text] Text clipped | id - | label "We remind you on day 12" | frame (224.0, 544.5, 144.33333333333331, 14.333333333333258) | type 48 | detail Text of this SwiftUI.AccessibilityNode may be clipped at larger Dynamic Type sizes.
+[clipped text] Text clipped | id - | label "Cancel anytime in Settings" | frame (53.666666666666686, 544.5, 154.33333333333331, 14.333333333333258) | type 48 | detail Text of this SwiftUI.AccessibilityNode may be clipped at larger Dynamic Type sizes.
+[contrast, enforced] Contrast failed | id - | label - | snapshot unavailable (element nil) | callback 12 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, known: a separator's dot, inkFaint on the stage: 6.3:1 at its core; hidden from VoiceOver] Contrast failed | id - | label "·" | frame (214.0, 544.5, 4.0, 14.333333333333258) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+Completed audit mask 18446744073709551615 on paywall.
+Completed all audit kinds.

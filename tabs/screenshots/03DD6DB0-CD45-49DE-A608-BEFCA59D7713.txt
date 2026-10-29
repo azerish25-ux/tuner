@@ -1,0 +1,38 @@
+Accessibility audit, tab-4-practice: 36 lines, 7 failing
+
+Fresh-process navigation verified for contrast attempt 1.
+Starting audit mask 1.
+[contrast, enforced] Contrast failed | id screen.header.level.mark | label "LV 1" | frame (349.1666666666667, 85.83333333333334, 21.666666666666686, 20.33333333333333) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, enforced] Contrast failed | id practice.level.card.mark | label "LV 1" | frame (52.66666666666667, 392.66666666666663, 32.66666666666667, 28.0) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, enforced] Contrast failed | id - | label "Hear two notes. Name the gap." | frame (38.0, 755.6666666666666, 187.66666666666666, 15.666666666666629) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, enforced] Contrast failed | id - | label "0 correct · Level 1" | frame (38.0, 776.3333333333334, 107.66666666666666, 15.666666666666629) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, enforced] Contrast failed | id - | label "Today’s challenge" | frame (38.0, 814.0, 105.66666666666666, 14.333333333333371) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, enforced] Contrast failed | id practice.ear.challenge.title | label "Get 10 right" | frame (72.0, 844.1666666666666, 74.0, 15.666666666666629) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, enforced] Contrast failed | id - | label "+20 XP" | frame (174.0, 844.3333333333333, 43.0, 15.333333333333371) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+Completed audit mask 1 on tab-4-practice.
+Completed contrast audit on isolated attempt 1.
+Fresh-process navigation verified for element description attempt 1.
+Starting audit mask 8.
+Completed audit mask 8 on tab-4-practice.
+Completed element description audit on isolated attempt 1.
+Fresh-process navigation verified for hit region attempt 1.
+Starting audit mask 4.
+Completed audit mask 4 on tab-4-practice.
+Completed hit region audit on isolated attempt 1.
+Fresh-process navigation verified for Dynamic Type attempt 1.
+Starting audit mask 65536.
+Completed audit mask 65536 on tab-4-practice.
+Completed Dynamic Type audit on isolated attempt 1.
+Fresh-process navigation verified for clipped text attempt 1.
+Starting audit mask 131072.
+[clipped text] Text clipped | id practice.xp.progress | label "0 / 100 XP · next: First Fret" | frame (114.0, 418.66666666666663, 160.33333333333331, 15.666666666666686) | type 48 | detail Text of this SwiftUI.AccessibilityNode may be clipped at larger Dynamic Type sizes.
+Completed audit mask 131072 on tab-4-practice.
+Completed clipped text audit on isolated attempt 1.
+Fresh-process navigation verified for traits attempt 1.
+Starting audit mask 262144.
+Completed audit mask 262144 on tab-4-practice.
+Completed traits audit on isolated attempt 1.
+Fresh-process navigation verified for element detection attempt 1.
+Starting audit mask 2.
+Completed audit mask 2 on tab-4-practice.
+Completed element detection audit on isolated attempt 1.
