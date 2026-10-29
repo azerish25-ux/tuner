@@ -1,0 +1,402 @@
+Optional(Attributes: Application, 0x10a4205c0, pid: 79641, label: 'Timbre'
+Element subtree:
+ →Application, 0x10a4205c0, pid: 79641, label: 'Timbre'
+    Window (Main), 0x10a4203e0, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x10a430b80, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10a430760, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x10a430fa0, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x10a412730, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x10a430340, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x10a41fda0, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x10a412b50, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x10a412c70, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x10a412d90, {{0.0, 0.0}, {402.0, 874.0}}
+                        Other, 0x10a412eb0, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x10a412fd0, {{0.0, 0.0}, {402.0, 874.0}}
+                            Other, 0x10a4130f0, {{0.0, 0.0}, {402.0, 874.0}}
+                              Other, 0x10a413210, {{0.0, 0.0}, {402.0, 874.0}}
+                                Other, 0x10a413330, {{0.0, 0.0}, {402.0, 874.0}}
+                                  Other, 0x10a413450, {{0.0, 0.0}, {402.0, 874.0}}
+                                    ScrollView, 0x10a413570, {{0.0, 0.0}, {402.0, 874.0}}
+                                      Other, 0x10a413690, {{0.0, -465.7}, {402.0, 9787.0}}
+                                        Other, 0x10a4137b0, {{0.0, -453.7}, {402.0, 2229.3}}
+                                          StaticText, 0x10a4138d0, {{336.0, -449.3}, {46.0, 35.3}}, identifier: 'screen.header.title', label: 'تعلّم'
+                                          Button, 0x10a4139f0, {{66.0, -453.7}, {52.3, 44.0}}, identifier: 'streak.chip', label: 'أيام متتالية: ٧'
+                                            Other, 0x10a413b10, {{92.1, -439.8}, {12.4, 15.2}}
+                                            StaticText, 0x10a413c30, {{66.0, -453.7}, {52.3, 44.0}}, identifier: 'screen.header.streak.count', label: '٧'
+                                          Button, 0x10a307420, {{20.0, -453.7}, {44.0, 44.0}}, identifier: 'level.ring', label: 'المستوى ٥، ٢٤٠ من ٥٠٠ XP'
+                                            StaticText, 0x10a306760, {{28.8, -442.8}, {26.3, 22.3}}, identifier: 'screen.header.level.mark', label: 'مس ٥'
+                                          Button, 0x10a306120, {{20.0, -387.7}, {362.0, 64.0}}, identifier: 'daily.compact', label: '١ من ٣‏، اليوم‏، درس · تدريب الأذن'
+                                            Other, 0x10a413d50, {{330.0, -375.1}, {40.0, 38.9}}, label: '١ من ٣'
+                                              Other, 0x10a413e70, {{330.0, -375.1}, {40.0, 38.9}}
+                                              StaticText, 0x10a413f90, {{340.8, -363.3}, {18.3, 15.3}}, label: '١ من ٣'
+                                                StaticText, 0x10a4140b0, {{340.8, -363.3}, {6.3, 15.3}}, label: '١'
+                                                StaticText, 0x10a306b80, {{347.2, -363.3}, {5.7, 15.3}}, label: ' / '
+                                                StaticText, 0x109b0cd00, {{352.8, -363.3}, {6.3, 15.3}}, label: '٣'
+                                            StaticText, 0x1053e5770, {{287.7, -374.3}, {30.3, 19.0}}, label: 'اليوم'
+                                            StaticText, 0x1053e61f0, {{229.7, -353.3}, {88.3, 16.3}}, label: 'درس · تدريب الأذن'
+                                            Image, 0x1053e5dd0, {{34.7, -361.3}, {7.0, 11.7}}, identifier: 'chevron.right', label: 'الأمام'
+                                          ScrollView, 0x1053e59b0, {{0.0, -301.7}, {402.0, 170.0}}
+                                            Other, 0x1053e5350, {{-2402.0, -301.7}, {2804.0, 170.0}}
+                                              Button, 0x1053e48d0, {{246.0, -301.7}, {136.0, 170.0}}, identifier: 'learn.course.guitar', label: 'جيتار‏، ٣ من ١٥٤ دروس', Selected
+                                                Image, 0x1053e6610, {{217.8, -321.9}, {132.4, 132.4}}, label: 'render_guitar_acoustic'
+                                                StaticText, 0x1053e6730, {{333.0, -196.0}, {35.0, 19.0}}, label: 'جيتار'
+                                                Other, 0x1053e6850, {{308.7, -171.0}, {59.3, 15.3}}, label: '٣ من ١٥٤ دروس'
+                                                  StaticText, 0x1053e6970, {{337.0, -171.0}, {31.0, 15.3}}, label: '٣ من ١٥٤'
+                                                    StaticText, 0x1053e6a90, {{337.0, -171.0}, {6.3, 15.3}}, label: '٣'
+                                                    StaticText, 0x1053e6bb0, {{343.3, -171.0}, {5.7, 15.3}}, label: ' / '
+                                                    StaticText, 0x1053faf50, {{349.0, -171.0}, {19.0, 15.3}}, label: '١٥٤'
+                                                  StaticText, 0x1053fb070, {{308.7, -171.0}, {24.3, 15.3}}, label: 'دروس'
+                                                Other, 0x1053fb190, {{260.0, -149.7}, {108.0, 4.0}}
+                                              Button, 0x1053fb2b0, {{100.0, -301.7}, {136.0, 170.0}}, identifier: 'learn.course.ukulele', label: 'يوكوليلي‏، ٠ من ٦١ دروس'
+                                                Image, 0x1053fb3d0, {{85.0, -316.2}, {106.0, 121.1}}, label: '10_ukulele_soprano_ukulele'
+                                                StaticText, 0x1053fb4f0, {{164.3, -196.0}, {57.7, 19.0}}, label: 'يوكوليلي'
+                                                Other, 0x1053fb610, {{169.0, -171.0}, {53.0, 15.3}}, label: '٠ من ٦١ دروس'
+                                                  StaticText, 0x1053fb730, {{197.3, -171.0}, {24.7, 15.3}}, label: '٠ من ٦١'
+                                                    StaticText, 0x1053fb850, {{197.3, -171.0}, {6.3, 15.3}}, label: '٠'
+                                                    StaticText, 0x1053fb970, {{203.7, -171.0}, {5.7, 15.3}}, label: ' / '
+                                                    StaticText, 0x1053fba90, {{209.3, -171.0}, {12.7, 15.3}}, label: '٦١'
+                                                  StaticText, 0x1053fbbb0, {{169.0, -171.0}, {24.3, 15.3}}, label: 'دروس'
+                                                Other, 0x1053fbcd0, {{114.0, -149.7}, {108.0, 4.0}}
+                                              Button, 0x1053fbdf0, {{-46.0, -301.7}, {136.0, 170.0}}, identifier: 'learn.course.bass', label: 'غيتار باس‏، ٠ من ٣٢ دروس'
+                                                Image, 0x1053fbf10, {{-71.0, -318.7}, {126.1, 126.1}}, label: 'render_bass_p4'
+                                                StaticText, 0x1053fc030, {{13.7, -196.0}, {62.3, 19.0}}, label: 'غيتار باس'
+                                                Other, 0x1053fc150, {{23.0, -171.0}, {53.0, 15.3}}, label: '٠ من ٣٢ دروس'
+                                                  StaticText, 0x1053fc270, {{51.3, -171.0}, {24.7, 15.3}}, label: '٠ من ٣٢'
+                                                    StaticText, 0x1053fc390, {{51.3, -171.0}, {6.3, 15.3}}, label: '٠'
+                                                    StaticText, 0x1053fc4b0, {{57.7, -171.0}, {5.7, 15.3}}, label: ' / '
+                                                    StaticText, 0x1053fc5d0, {{63.3, -171.0}, {12.7, 15.3}}, label: '٣٢'
+                                                  StaticText, 0x10a4141d0, {{23.0, -171.0}, {24.3, 15.3}}, label: 'دروس'
+                                                Other, 0x10a4142f0, {{-32.0, -149.7}, {108.0, 4.0}}
+                                              Button, 0x1053fc6f0, {{-192.0, -301.7}, {136.0, 170.0}}, identifier: 'learn.course.violin', label: 'كمان‏، ٠ من ٣٩ دروس'
+                                                Image, 0x10a414410, {{-217.0, -318.7}, {126.1, 126.1}}, label: 'render_violin'
+                                                StaticText, 0x10a3085b0, {{-98.3, -196.0}, {28.3, 19.0}}, label: 'كمان'
+                                                Other, 0x10a3086d0, {{-123.0, -171.0}, {53.0, 15.3}}, label: '٠ من ٣٩ دروس'
+                                                  StaticText, 0x10a3087f0, {{-94.7, -171.0}, {24.7, 15.3}}, label: '٠ من ٣٩'
+                                                    StaticText, 0x10a308910, {{-94.7, -171.0}, {6.3, 15.3}}, label: '٠'
+                                                    StaticText, 0x10a308a30, {{-88.3, -171.0}, {5.7, 15.3}}, label: ' / '
+                                                    StaticText, 0x10a308b50, {{-82.7, -171.0}, {12.7, 15.3}}, label: '٣٩'
+                                                  StaticText, 0x10a308c70, {{-123.0, -171.0}, {24.3, 15.3}}, label: 'دروس'
+                                                Other, 0x10a308d90, {{-178.0, -149.7}, {108.0, 4.0}}
+                                              Button, 0x10a308eb0, {{-338.0, -301.7}, {136.0, 170.0}}, identifier: 'learn.course.cello', label: 'تشيلو‏، ٠ من ٣٢ دروس'
+                                                Image, 0x10a308fd0, {{-363.0, -318.7}, {126.1, 126.1}}, label: 'render_cello'
+                                                StaticText, 0x10a3090f0, {{-254.0, -196.0}, {38.0, 19.0}}, label: 'تشيلو'
+                                                Other, 0x10a309210, {{-269.0, -171.0}, {53.0, 15.3}}, label: '٠ من ٣٢ دروس'
+                                                  StaticText, 0x10a309330, {{-240.7, -171.0}, {24.7, 15.3}}, label: '٠ من ٣٢'
+                                                    StaticText, 0x10a309450, {{-240.7, -171.0}, {6.3, 15.3}}, label: '٠'
+                                                    StaticText, 0x10a309570, {{-234.3, -171.0}, {5.7, 15.3}}, label: ' / '
+                                                    StaticText, 0x10a309690, {{-228.7, -171.0}, {12.7, 15.3}}, label: '٣٢'
+                                                  StaticText, 0x10a3097b0, {{-269.0, -171.0}, {24.3, 15.3}}, label: 'دروس'
+                                                Other, 0x10a3098d0, {{-324.0, -149.7}, {108.0, 4.0}}
+                                              Button, 0x10a3099f0, {{-484.0, -301.7}, {136.0, 170.0}}, identifier: 'learn.course.mandolin', label: 'مندولين‏، ٠ من ٣٤ دروس'
+                                                Image, 0x10a309b10, {{-509.0, -318.7}, {126.1, 126.1}}, label: 'render_mandolin'
+                                                StaticText, 0x10a309c30, {{-407.7, -196.0}, {45.7, 19.0}}, label: 'مندولين'
+                                                Other, 0x10a309d50, {{-415.0, -171.0}, {53.0, 15.3}}, label: '٠ من ٣٤ دروس'
+                                                  StaticText, 0x10a309e70, {{-386.7, -171.0}, {24.7, 15.3}}, label: '٠ من ٣٤'
+                                                    StaticText, 0x10a309f90, {{-386.7, -171.0}, {6.3, 15.3}}, label: '٠'
+                                                    StaticText, 0x1053fc810, {{-380.3, -171.0}, {5.7, 15.3}}, label: ' / '
+                                                    StaticText, 0x10a30a0b0, {{-374.7, -171.0}, {12.7, 15.3}}, label: '٣٤'
+                                                  StaticText, 0x10a30a1d0, {{-415.0, -171.0}, {24.3, 15.3}}, label: 'دروس'
+                                                Other, 0x10a30a2f0, {{-470.0, -149.7}, {108.0, 4.0}}
+                                              Button, 0x10a30a410, {{-630.0, -301.7}, {136.0, 170.0}}, identifier: 'learn.course.banjo', label: 'بانجو‏، ٠ من ٣١ دروس'
+                                                Image, 0x10a30a530, {{-645.0, -316.2}, {106.0, 121.1}}, label: '22_folk_world_strings_banjo_5_string'
+                                                StaticText, 0x10a30a650, {{-544.7, -196.0}, {36.7, 19.0}}, label: 'بانجو'
+                                                Other, 0x10a30a770, {{-561.0, -171.0}, {53.0, 15.3}}, label: '٠ من ٣١ دروس'
+                                                  StaticText, 0x10a30a890, {{-532.7, -171.0}, {24.7, 15.3}}, label: '٠ من ٣١'
+                                                    StaticText, 0x10a414530, {{-532.7, -171.0}, {6.3, 15.3}}, label: '٠'
+                                                    StaticText, 0x10a414650, {{-526.3, -171.0}, {5.7, 15.3}}, label: ' / '
+                                                    StaticText, 0x10a414770, {{-520.7, -171.0}, {12.7, 15.3}}, label: '٣١'
+                                                  StaticText, 0x10a414890, {{-561.0, -171.0}, {24.3, 15.3}}, label: 'دروس'
+                                                Other, 0x10a30a9b0, {{-616.0, -149.7}, {108.0, 4.0}}
+                                              Button, 0x10a30aad0, {{-776.0, -301.7}, {136.0, 170.0}}, identifier: 'learn.course.ear', label: 'تدريب الأذن‏، ٠ من ٤٠ دروس'
+                                                Other, 0x10a30abf0, {{-774.2, -291.9}, {72.5, 72.5}}
+                                                StaticText, 0x10a30ad10, {{-722.0, -196.0}, {68.0, 19.0}}, label: 'تدريب الأذن'
+                                                Other, 0x10a30ae30, {{-707.0, -171.0}, {53.0, 15.3}}, label: '٠ من ٤٠ دروس'
+                                                  StaticText, 0x10a30af50, {{-678.7, -171.0}, {24.7, 15.3}}, label: '٠ من ٤٠'
+                                                    StaticText, 0x10a30b070, {{-678.7, -171.0}, {6.3, 15.3}}, label: '٠'
+                                                    StaticText, 0x10a30b190, {{-672.3, -171.0}, {5.7, 15.3}}, label: ' / '
+                                                    StaticText, 0x10a30b2b0, {{-666.7, -171.0}, {12.7, 15.3}}, label: '٤٠'
+                                                  StaticText, 0x10a30b3d0, {{-707.0, -171.0}, {24.3, 15.3}}, label: 'دروس'
+                                                Other, 0x10a30b4f0, {{-762.0, -149.7}, {108.0, 4.0}}
+                                              Button, 0x10a30b610, {{-922.0, -301.7}, {136.0, 170.0}}, identifier: 'learn.course.theory', label: 'نظرية الموسيقى‏، ٠ من ٤٤ دروس'
+                                                Other, 0x10a30b730, {{-920.2, -291.9}, {72.5, 72.5}}
+                                                StaticText, 0x10a30b850, {{-894.7, -196.0}, {94.7, 19.0}}, label: 'نظرية الموسيقى'
+                                                Other, 0x10a30b970, {{-853.0, -171.0}, {53.0, 15.3}}, label: '٠ من ٤٤ دروس'
+                                                  StaticText, 0x10a30ba90, {{-824.7, -171.0}, {24.7, 15.3}}, label: '٠ من ٤٤'
+                                                    StaticText, 0x10a30bbb0, {{-824.7, -171.0}, {6.3, 15.3}}, label: '٠'
+                                                    StaticText, 0x10a30bcd0, {{-818.3, -171.0}, {5.7, 15.3}}, label: ' / '
+                                                    StaticText, 0x10a30bdf0, {{-812.7, -171.0}, {12.7, 15.3}}, label: '٤٤'
+                                                  StaticText, 0x10a30bf10, {{-853.0, -171.0}, {24.3, 15.3}}, label: 'دروس'
+                                                Other, 0x10a30c030, {{-908.0, -149.7}, {108.0, 4.0}}
+                                              Button, 0x10a30c150, {{-1068.0, -301.7}, {136.0, 170.0}}, identifier: 'learn.course.rhythm', label: 'الإيقاع‏، ٠ من ٢٩ دروس'
+                                                Other, 0x10a30c270, {{-1066.2, -291.9}, {72.5, 72.5}}
+                                                StaticText, 0x10a30c390, {{-986.3, -196.0}, {40.3, 19.0}}, label: 'الإيقاع'
+                                                Other, 0x10a30c4b0, {{-999.0, -171.0}, {53.0, 15.3}}, label: '٠ من ٢٩ دروس'
+                                                  StaticText, 0x10a30c5d0, {{-970.7, -171.0}, {24.7, 15.3}}, label: '٠ من ٢٩'
+                                                    StaticText, 0x10a30c6f0, {{-970.7, -171.0}, {6.3, 15.3}}, label: '٠'
+                                                    StaticText, 0x10a30c810, {{-964.3, -171.0}, {5.7, 15.3}}, label: ' / '
+                                                    StaticText, 0x10a30c930, {{-958.7, -171.0}, {12.7, 15.3}}, label: '٢٩'
+                                                  StaticText, 0x10a30ca50, {{-999.0, -171.0}, {24.3, 15.3}}, label: 'دروس'
+                                                Other, 0x10a30cb70, {{-1054.0, -149.7}, {108.0, 4.0}}
+                                              Button, 0x10a30cc90, {{-1214.0, -301.7}, {136.0, 170.0}}, identifier: 'learn.course.voice', label: 'الغناء‏، ٠ من ٣٠ دروس'
+                                                Other, 0x10a30cdb0, {{-1212.2, -291.9}, {72.5, 72.5}}
+                                                StaticText, 0x10a30ced0, {{-1127.0, -196.0}, {35.0, 19.0}}, label: 'الغناء'
+                                                Other, 0x10a30cff0, {{-1145.0, -171.0}, {53.0, 15.3}}, label: '٠ من ٣٠ دروس'
+                                                  StaticText, 0x10a30d110, {{-1116.7, -171.0}, {24.7, 15.3}}, label: '٠ من ٣٠'
+                                                    StaticText, 0x10a30d230, {{-1116.7, -171.0}, {6.3, 15.3}}, label: '٠'
+                                                    StaticText, 0x10a30d350, {{-1110.3, -171.0}, {5.7, 15.3}}, label: ' / '
+                                                    StaticText, 0x10a30d470, {{-1104.7, -171.0}, {12.7, 15.3}}, label: '٣٠'
+                                                  StaticText, 0x10a30d590, {{-1145.0, -171.0}, {24.3, 15.3}}, label: 'دروس'
+                                                Other, 0x10a30d6b0, {{-1200.0, -149.7}, {108.0, 4.0}}
+                                              Button, 0x10a30d7d0, {{-1360.0, -301.7}, {136.0, 170.0}}, identifier: 'learn.course.songs', label: 'الأغاني‏، ٠ من ٣٨ دروس'
+                                                Other, 0x10a30d8f0, {{-1358.2, -291.9}, {72.5, 72.5}}
+                                                StaticText, 0x10a30da10, {{-1282.3, -196.0}, {44.3, 19.0}}, label: 'الأغاني'
+                                                Other, 0x10a30db30, {{-1291.0, -171.0}, {53.0, 15.3}}, label: '٠ من ٣٨ دروس'
+                                                  StaticText, 0x10a30dc50, {{-1262.7, -171.0}, {24.7, 15.3}}, label: '٠ من ٣٨'
+                                                    StaticText, 0x10a30dd70, {{-1262.7, -171.0}, {6.3, 15.3}}, label: '٠'
+                                                    StaticText, 0x10a30de90, {{-1256.3, -171.0}, {5.7, 15.3}}, label: ' / '
+                                                    StaticText, 0x10a30dfb0, {{-1250.7, -171.0}, {12.7, 15.3}}, label: '٣٨'
+                                                  StaticText, 0x10a30e0d0, {{-1291.0, -171.0}, {24.3, 15.3}}, label: 'دروس'
+                                                Other, 0x10a30e1f0, {{-1346.0, -149.7}, {108.0, 4.0}}
+                                              Button, 0x10a30e310, {{-1506.0, -301.7}, {136.0, 170.0}}, identifier: 'learn.course.originals', label: 'أغانٍ أصلية‏، ٠ من ٦٠ دروس'
+                                                Other, 0x10a30e430, {{-1504.2, -291.9}, {72.5, 72.5}}
+                                                StaticText, 0x10a30e550, {{-1450.7, -196.0}, {66.7, 19.0}}, label: 'أغانٍ أصلية'
+                                                Other, 0x10a30e670, {{-1437.0, -171.0}, {53.0, 15.3}}, label: '٠ من ٦٠ دروس'
+                                                  StaticText, 0x10a30e790, {{-1408.7, -171.0}, {24.7, 15.3}}, label: '٠ من ٦٠'
+                                                    StaticText, 0x10a30e8b0, {{-1408.7, -171.0}, {6.3, 15.3}}, label: '٠'
+                                                    StaticText, 0x10a30e9d0, {{-1402.3, -171.0}, {5.7, 15.3}}, label: ' / '
+                                                    StaticText, 0x10a30eaf0, {{-1396.7, -171.0}, {12.7, 15.3}}, label: '٦٠'
+                                                  StaticText, 0x10a30ec10, {{-1437.0, -171.0}, {24.3, 15.3}}, label: 'دروس'
+                                                Other, 0x10a30ed30, {{-1492.0, -149.7}, {108.0, 4.0}}
+                                              Button, 0x10a30ee50, {{-1652.0, -301.7}, {136.0, 170.0}}, identifier: 'learn.course.standards', label: 'المعايير والكلاسيكيات‏، ٠ من ٤٧ دروس'
+                                                Image, 0x10a30ef70, {{-1677.0, -318.7}, {126.1, 126.1}}, label: 'render_guitar_acoustic'
+                                                StaticText, 0x10a30f090, {{-1637.0, -193.0}, {107.0, 16.0}}, label: 'المعايير والكلاسيكيات'
+                                                Other, 0x10a30f1b0, {{-1583.0, -171.0}, {53.0, 15.3}}, label: '٠ من ٤٧ دروس'
+                                                  StaticText, 0x10a30f2d0, {{-1554.7, -171.0}, {24.7, 15.3}}, label: '٠ من ٤٧'
+                                                    StaticText, 0x10a30f3f0, {{-1554.7, -171.0}, {6.3, 15.3}}, label: '٠'
+                                                    StaticText, 0x10a30f510, {{-1548.3, -171.0}, {5.7, 15.3}}, label: ' / '
+                                                    StaticText, 0x10a30f630, {{-1542.7, -171.0}, {12.7, 15.3}}, label: '٤٧'
+                                                  StaticText, 0x10a30f750, {{-1583.0, -171.0}, {24.3, 15.3}}, label: 'دروس'
+                                                Other, 0x10a30f870, {{-1638.0, -149.7}, {108.0, 4.0}}
+                                              Button, 0x10a30f990, {{-1798.0, -301.7}, {136.0, 170.0}}, identifier: 'learn.course.ukulele-songbook', label: 'كتاب أغاني اليوكوليلي‏، ٠ من ١١٠ دروس'
+                                                Image, 0x10a30fab0, {{-1813.0, -316.2}, {106.0, 121.1}}, label: '10_ukulele_soprano_ukulele'
+                                                StaticText, 0x10a30fbd0, {{-1782.0, -192.3}, {106.0, 15.3}}, label: 'كتاب أغاني اليوكوليلي'
+                                                Other, 0x10a30fcf0, {{-1735.3, -171.0}, {59.3, 15.3}}, label: '٠ من ١١٠ دروس'
+                                                  StaticText, 0x10a30fe10, {{-1707.0, -171.0}, {31.0, 15.3}}, label: '٠ من ١١٠'
+                                                    StaticText, 0x10a30ff30, {{-1707.0, -171.0}, {6.3, 15.3}}, label: '٠'
+                                                    StaticText, 0x10a310050, {{-1700.7, -171.0}, {5.7, 15.3}}, label: ' / '
+                                                    StaticText, 0x10a310170, {{-1695.0, -171.0}, {19.0, 15.3}}, label: '١١٠'
+                                                  StaticText, 0x10a310290, {{-1735.3, -171.0}, {24.3, 15.3}}, label: 'دروس'
+                                                Other, 0x10a3103b0, {{-1784.0, -149.7}, {108.0, 4.0}}
+                                              Button, 0x10a3104d0, {{-1944.0, -301.7}, {136.0, 170.0}}, identifier: 'learn.course.mandolin-songbook', label: 'كتاب أغاني المندولين‏، ٠ من ٦٨ دروس'
+                                                Image, 0x10a3105f0, {{-1969.0, -318.7}, {126.1, 126.1}}, label: 'render_mandolin'
+                                                StaticText, 0x10a310710, {{-1928.7, -194.0}, {106.7, 17.0}}, label: 'كتاب أغاني المندولين'
+                                                Other, 0x10a310830, {{-1875.0, -171.0}, {53.0, 15.3}}, label: '٠ من ٦٨ دروس'
+                                                  StaticText, 0x10a310950, {{-1846.7, -171.0}, {24.7, 15.3}}, label: '٠ من ٦٨'
+                                                    StaticText, 0x10a310a70, {{-1846.7, -171.0}, {6.3, 15.3}}, label: '٠'
+                                                    StaticText, 0x10a310b90, {{-1840.3, -171.0}, {5.7, 15.3}}, label: ' / '
+                                                    StaticText, 0x10a310cb0, {{-1834.7, -171.0}, {12.7, 15.3}}, label: '٦٨'
+                                                  StaticText, 0x10a310dd0, {{-1875.0, -171.0}, {24.3, 15.3}}, label: 'دروس'
+                                                Other, 0x10a310ef0, {{-1930.0, -149.7}, {108.0, 4.0}}
+                                              Button, 0x10a311010, {{-2090.0, -301.7}, {136.0, 170.0}}, identifier: 'learn.course.violin-songbook', label: 'كتاب أغاني الكمان‏، ٠ من ٦٦ دروس'
+                                                Image, 0x10a311130, {{-2115.0, -318.7}, {126.1, 126.1}}, label: 'render_violin'
+                                                StaticText, 0x10a311250, {{-2075.3, -195.7}, {107.3, 18.7}}, label: 'كتاب أغاني الكمان'
+                                                Other, 0x10a311370, {{-2021.0, -171.0}, {53.0, 15.3}}, label: '٠ من ٦٦ دروس'
+                                                  StaticText, 0x10a311490, {{-1992.7, -171.0}, {24.7, 15.3}}, label: '٠ من ٦٦'
+                                                    StaticText, 0x10a3115b0, {{-1992.7, -171.0}, {6.3, 15.3}}, label: '٠'
+                                                    StaticText, 0x10a3116d0, {{-1986.3, -171.0}, {5.7, 15.3}}, label: ' / '
+                                                    StaticText, 0x10a3117f0, {{-1980.7, -171.0}, {12.7, 15.3}}, label: '٦٦'
+                                                  StaticText, 0x10a311910, {{-2021.0, -171.0}, {24.3, 15.3}}, label: 'دروس'
+                                                Other, 0x10a311a30, {{-2076.0, -149.7}, {108.0, 4.0}}
+                                              Button, 0x10a311b50, {{-2236.0, -301.7}, {136.0, 170.0}}, identifier: 'learn.course.cello-songbook', label: 'كتاب أغاني التشيلو‏، ٠ من ٦٥ دروس'
+                                                Image, 0x10a311c70, {{-2261.0, -318.7}, {126.1, 126.1}}, label: 'render_cello'
+                                                StaticText, 0x10a311d90, {{-2221.0, -194.3}, {107.0, 17.3}}, label: 'كتاب أغاني التشيلو'
+                                                Other, 0x10a311eb0, {{-2167.0, -171.0}, {53.0, 15.3}}, label: '٠ من ٦٥ دروس'
+                                                  StaticText, 0x10a311fd0, {{-2138.7, -171.0}, {24.7, 15.3}}, label: '٠ من ٦٥'
+                                                    StaticText, 0x10a3120f0, {{-2138.7, -171.0}, {6.3, 15.3}}, label: '٠'
+                                                    StaticText, 0x10a312210, {{-2132.3, -171.0}, {5.7, 15.3}}, label: ' / '
+                                                    StaticText, 0x10a312330, {{-2126.7, -171.0}, {12.7, 15.3}}, label: '٦٥'
+                                                  StaticText, 0x10a312450, {{-2167.0, -171.0}, {24.3, 15.3}}, label: 'دروس'
+                                                Other, 0x10a312570, {{-2222.0, -149.7}, {108.0, 4.0}}
+                                              Button, 0x10a312690, {{-2382.0, -301.7}, {136.0, 170.0}}, identifier: 'learn.course.bass-songbook', label: 'كتاب أغاني غيتار الباس‏، ٠ من ١٢٠ دروس'
+                                                Image, 0x10a3127b0, {{-2407.0, -318.7}, {126.1, 126.1}}, label: 'render_bass_p4'
+                                                StaticText, 0x10a3128d0, {{-2366.7, -192.3}, {106.7, 15.3}}, label: 'كتاب أغاني غيتار الباس'
+                                                Other, 0x10a3129f0, {{-2319.3, -171.0}, {59.3, 15.3}}, label: '٠ من ١٢٠ دروس'
+                                                  StaticText, 0x10a312b10, {{-2291.0, -171.0}, {31.0, 15.3}}, label: '٠ من ١٢٠'
+                                                    StaticText, 0x10a312c30, {{-2291.0, -171.0}, {6.3, 15.3}}, label: '٠'
+                                                    StaticText, 0x10a312d50, {{-2284.7, -171.0}, {5.7, 15.3}}, label: ' / '
+                                                    StaticText, 0x10a312e70, {{-2279.0, -171.0}, {19.0, 15.3}}, label: '١٢٠'
+                                                  StaticText, 0x10a312f90, {{-2319.3, -171.0}, {24.3, 15.3}}, label: 'دروس'
+                                                Other, 0x10a3130b0, {{-2368.0, -149.7}, {108.0, 4.0}}
+                                          Button, 0x10a3131d0, {{20.0, -109.7}, {362.0, 218.0}}, identifier: 'learn.continue', label: 'الوحدة ١ · ⁨مرحبًا أيها الجيتار⁩‏، تآلفك الأول: E الصغير‏، ٥ د · +٢٥ XP‏، متابعة'
+                                            StaticText, 0x10a3132f0, {{223.3, -89.7}, {138.7, 15.3}}, label: 'الوحدة ١ · ⁨مرحبًا أيها الجيتار⁩'
+                                            StaticText, 0x10a313410, {{236.3, -66.3}, {125.7, 70.7}}, label: 'تآلفك الأول: E الصغير'
+                                            StaticText, 0x10a313530, {{283.0, 12.3}, {79.0, 20.0}}, label: '٥ د · +٢٥ XP'
+                                            Image, 0x10a313650, {{330.3, 58.7}, {13.3, 15.0}}, identifier: 'play.fill', label: 'تشغيل'
+                                            StaticText, 0x10a313770, {{277.7, 55.5}, {44.7, 21.7}}, label: 'متابعة'
+                                            Image, 0x10a313890, {{16.2, -69.5}, {137.6, 137.6}}, label: 'render_guitar_acoustic'
+                                          StaticText, 0x10a3139b0, {{321.0, 148.3}, {43.0, 15.3}}, label: 'الوحدة ١'
+                                          StaticText, 0x10a313ad0, {{218.3, 168.7}, {145.7, 25.3}}, label: 'مرحبًا أيها الجيتار'
+                                          StaticText, 0x10a313bf0, {{147.3, 199.0}, {216.7, 20.0}}, label: 'أمسكه واضبطه واعزف نغماتك الأولى.'
+                                          Other, 0x10a313d10, {{38.0, 148.3}, {48.0, 44.0}}, label: 'النجوم: ٨ من ١٨, ٣ من ٦ دروس'
+                                            Image, 0x10a313e30, {{71.7, 149.0}, {13.3, 12.7}}, identifier: 'star.fill', label: 'المفضلة'
+                                            StaticText, 0x10a313f50, {{38.0, 148.5}, {47.0, 15.3}}, label: '٨ من ١٨'
+                                              StaticText, 0x10a314070, {{38.0, 148.5}, {6.3, 15.3}}, label: '٨'
+                                              StaticText, 0x10a314190, {{44.3, 148.5}, {5.7, 15.3}}, label: ' / '
+                                              StaticText, 0x10a3142b0, {{50.0, 148.5}, {12.7, 15.3}}, label: '١٨'
+                                            Other, 0x10a3143d0, {{38.0, 169.9}, {46.7, 15.3}}, label: '٣ من ٦ دروس'
+                                              StaticText, 0x10a3144f0, {{66.3, 169.9}, {18.3, 15.3}}, label: '٣ من ٦'
+                                                StaticText, 0x10a314610, {{66.3, 169.9}, {6.3, 15.3}}, label: '٣'
+                                                StaticText, 0x10a314730, {{72.7, 169.9}, {5.7, 15.3}}, label: ' / '
+                                                StaticText, 0x10a314850, {{78.3, 169.9}, {6.3, 15.3}}, label: '٦'
+                                              StaticText, 0x10a314970, {{38.0, 169.9}, {24.3, 15.3}}, label: 'دروس'
+                                          Other, 0x10a314a90, {{126.0, 255.0}, {150.0, 624.0}}
+                                          Button, 0x10a314bb0, {{150.3, 265.7}, {64.0, 82.0}}, identifier: 'learn.lesson.gtr-1-1', label: 'تعرّف على جيتارك', value: ٣ من 3 نجوم, Selected
+                                            Image, 0x10a314cd0, {{172.7, 288.3}, {19.7, 19.0}}, identifier: 'checkmark', label: 'محدد', Selected
+                                            Image, 0x10a314df0, {{192.3, 336.7}, {11.7, 11.0}}, identifier: 'star.fill', label: 'المفضلة'
+                                            Image, 0x10a314f10, {{176.7, 336.7}, {11.7, 11.0}}, identifier: 'star.fill', label: 'المفضلة'
+                                            Image, 0x10a315030, {{161.0, 336.7}, {11.7, 11.0}}, identifier: 'star.fill', label: 'المفضلة'
+                                          Button, 0x10a315150, {{150.7, 369.7}, {64.0, 82.0}}, identifier: 'learn.lesson.gtr-1-2', label: 'الأوتار المطلقة', value: ٢ من 3 نجوم, Selected
+                                            Image, 0x10a315270, {{173.0, 392.3}, {19.7, 19.0}}, identifier: 'checkmark', label: 'محدد', Selected
+                                            Image, 0x10a315390, {{192.7, 440.7}, {11.7, 11.0}}, identifier: 'star.fill', label: 'المفضلة'
+                                            Image, 0x10a3154b0, {{177.0, 440.7}, {11.7, 11.0}}, identifier: 'star.fill', label: 'المفضلة'
+                                            Image, 0x10a3155d0, {{161.3, 440.7}, {11.7, 11.0}}, identifier: 'star.fill', label: 'المفضلة'
+                                          Button, 0x1053fc930, {{172.3, 473.7}, {64.0, 82.0}}, identifier: 'learn.lesson.gtr-1-3', label: 'نغماتك الأولى على الدساتين', value: ٣ من 3 نجوم, Selected
+                                            Image, 0x1053fca50, {{194.7, 496.3}, {19.7, 19.0}}, identifier: 'checkmark', label: 'محدد', Selected
+                                            Image, 0x1053fcb70, {{214.3, 544.7}, {11.7, 11.0}}, identifier: 'star.fill', label: 'المفضلة'
+                                            Image, 0x1053fcc90, {{198.7, 544.7}, {11.7, 11.0}}, identifier: 'star.fill', label: 'المفضلة'
+                                            Image, 0x1053fcdb0, {{183.0, 544.7}, {11.7, 11.0}}, identifier: 'star.fill', label: 'المفضلة'
+                                          Button, 0x1053fced0, {{167.8, 564.5}, {109.0, 109.0}}, identifier: 'learn.lesson.gtr-1-4', label: 'تآلفك الأول: E الصغير', value: الدرس التالي
+                                            Image, 0x1053fcff0, {{213.7, 605.7}, {17.0, 27.0}}, identifier: 'music.note', label: 'أغنية'
+                                            StaticText, 0x1053fd110, {{242.0, 611.3}, {17.3, 15.3}}, label: 'ابدأ'
+                                            Image, 0x1053fd230, {{232.6, 615.0}, {5.3, 8.3}}, identifier: 'chevron.forward', label: 'الأمام'
+                                          Button, 0x1053fd350, {{179.0, 687.0}, {72.0, 78.0}}, identifier: 'learn.lesson.gtr-1-5', label: 'تحدّي الخطوات الأولى', value: مقفل
+                                          Button, 0x1053fd470, {{159.0, 795.0}, {64.0, 70.0}}, identifier: 'learn.lesson.gtr-1-6', label: 'كان لدى ماري حمل صغير: ثلاث نغمات', value: مقفل
+                                          StaticText, 0x1053fd590, {{321.0, 919.0}, {43.0, 15.3}}, label: 'الوحدة ٢'
+                                          StaticText, 0x1053fd6b0, {{257.0, 939.3}, {107.0, 25.3}}, label: 'ألحانك الأولى'
+                                          StaticText, 0x1053fd7d0, {{121.7, 969.7}, {242.3, 42.0}}, label: 'نغمات على الوترين 1 و2، وقراءة التابلتشر، وأول لحنين لك.'
+                                          Other, 0x1053fd8f0, {{38.0, 919.0}, {24.0, 24.0}}, label: 'Timbre Pro'
+                                            Image, 0x10a4149b0, {{46.3, 925.7}, {7.7, 10.7}}, identifier: 'lock.fill', label: 'قفل'
+                                          Other, 0x10a414ad0, {{38.0, 949.0}, {48.0, 44.0}}, label: 'النجوم: ٠ من ٢١, ٠ من ٧ دروس'
+                                            Image, 0x1053fda10, {{71.7, 949.7}, {13.3, 12.7}}, identifier: 'star.fill', label: 'المفضلة'
+                                            StaticText, 0x1053fdb30, {{38.0, 949.2}, {47.0, 15.3}}, label: '٠ من ٢١'
+                                              StaticText, 0x1053fdc50, {{38.0, 949.2}, {6.3, 15.3}}, label: '٠'
+                                              StaticText, 0x1053fdd70, {{44.3, 949.2}, {5.7, 15.3}}, label: ' / '
+                                              StaticText, 0x1053fde90, {{50.0, 949.2}, {12.7, 15.3}}, label: '٢١'
+                                            Other, 0x1053fdfb0, {{38.0, 970.5}, {46.7, 15.3}}, label: '٠ من ٧ دروس'
+                                              StaticText, 0x1053fe0d0, {{66.3, 970.5}, {18.3, 15.3}}, label: '٠ من ٧'
+                                                StaticText, 0x1053fe1f0, {{66.3, 970.5}, {6.3, 15.3}}, label: '٠'
+                                                StaticText, 0x1053fe310, {{72.7, 970.5}, {5.7, 15.3}}, label: ' / '
+                                                StaticText, 0x1053fe430, {{78.3, 970.5}, {6.3, 15.3}}, label: '٧'
+                                              StaticText, 0x1053fe550, {{38.0, 970.5}, {24.3, 15.3}}, label: 'دروس'
+                                          Other, 0x1053fe670, {{126.0, 1047.7}, {150.0, 728.0}}
+                                          Button, 0x1053fe790, {{145.0, 1063.7}, {68.0, 74.0}}, identifier: 'learn.lesson.gtr-2-1', label: 'ثلاث نغمات على الوتر 2', value: Timbre Pro
+                                            Image, 0x1053fe8b0, {{174.0, 1088.7}, {14.0, 22.3}}, identifier: 'music.note', label: 'أغنية'
+                                            Other, 0x1053fe9d0, {{145.0, 1063.7}, {24.0, 24.0}}, label: 'Timbre Pro'
+                                              Image, 0x1053feaf0, {{153.0, 1070.3}, {7.7, 10.7}}, identifier: 'lock.fill', label: 'قفل'
+                                          Button, 0x1053fec10, {{165.3, 1167.7}, {68.0, 74.0}}, identifier: 'learn.lesson.gtr-2-2', label: 'قراءة التابلتشر', value: Timbre Pro
+                                            Image, 0x1053fed30, {{194.3, 1192.7}, {14.0, 22.3}}, identifier: 'music.note', label: 'أغنية'
+                                            Other, 0x10a414bf0, {{165.3, 1167.7}, {24.0, 24.0}}, label: 'Timbre Pro'
+                                              Image, 0x10a414d10, {{173.3, 1174.3}, {7.7, 10.7}}, identifier: 'lock.fill', label: 'قفل'
+                                          Button, 0x10a414e30, {{185.0, 1271.7}, {68.0, 74.0}}, identifier: 'learn.lesson.gtr-2-3', label: 'نغمات طويلة وقصيرة', value: Timbre Pro
+                                            Image, 0x10a414f50, {{214.0, 1296.7}, {14.0, 22.3}}, identifier: 'music.note', label: 'أغنية'
+                                            Other, 0x1053fee50, {{185.0, 1271.7}, {24.0, 24.0}}, label: 'Timbre Pro'
+                                              Image, 0x1053fef70, {{193.0, 1278.3}, {7.7, 10.7}}, identifier: 'lock.fill', label: 'قفل'
+                                          Button, 0x1053ff090, {{181.3, 1375.7}, {68.0, 74.0}}, identifier: 'learn.lesson.gtr-2-4', label: 'نشيد الفرح', value: Timbre Pro
+                                            Image, 0x10a415070, {{204.7, 1400.7}, {25.3, 22.0}}, identifier: 'music.quarternote.3', label: 'music.quarternote.3'
+                                            Other, 0x1053ff1b0, {{181.3, 1375.7}, {24.0, 24.0}}, label: 'Timbre Pro'
+                                              Image, 0x1053ff2d0, {{189.3, 1382.3}, {7.7, 10.7}}, identifier: 'lock.fill', label: 'قفل'
+                                          Button, 0x1053ff540, {{158.0, 1479.7}, {68.0, 74.0}}, identifier: 'learn.lesson.gtr-2-5', label: 'كان لدى ماري حمل صغير', value: Timbre Pro
+                                            Image, 0x1053ff660, {{181.3, 1504.7}, {25.3, 22.0}}, identifier: 'music.quarternote.3', label: 'music.quarternote.3'
+                                            Other, 0x1053ff780, {{158.0, 1479.7}, {24.0, 24.0}}, label: 'Timbre Pro'
+                                              Image, 0x1053ff8a0, {{166.0, 1486.3}, {7.7, 10.7}}, identifier: 'lock.fill', label: 'قفل'
+                                          Button, 0x1053ff9c0, {{143.0, 1583.7}, {68.0, 74.0}}, identifier: 'learn.lesson.gtr-2-spotlight', label: 'أغنية تحت الضوء: رسائل في علبة أحذية', value: Timbre Pro
+                                            Image, 0x1053ffae0, {{172.0, 1608.7}, {14.0, 22.3}}, identifier: 'music.note', label: 'أغنية'
+                                            Other, 0x1053ffc00, {{143.0, 1583.7}, {24.0, 24.0}}, label: 'Timbre Pro'
+                                              Image, 0x1053ffd20, {{151.0, 1590.3}, {7.7, 10.7}}, identifier: 'lock.fill', label: 'قفل'
+                                          Button, 0x1053ffe40, {{150.0, 1683.7}, {76.0, 82.0}}, identifier: 'learn.lesson.gtr-2-6', label: 'تحدّي الألحان', value: Timbre Pro
+                                            Image, 0x1053eab90, {{173.7, 1711.0}, {32.7, 25.7}}, identifier: 'crown.fill', label: 'crown.fill'
+                                            Other, 0x1053eacb0, {{150.0, 1683.7}, {24.0, 24.0}}, label: 'Timbre Pro'
+                                              Image, 0x1053eadd0, {{158.0, 1690.3}, {7.7, 10.7}}, identifier: 'lock.fill', label: 'قفل'
+                                      Other, 0x1053eb0f0, {{0.0, 0.0}, {402.0, 874.0}}
+                                        Other, 0x1053eb210, {{0.0, 726.2}, {402.0, 147.8}}
+                                      Other, 0x1053eb330, {{0.0, 0.0}, {402.0, 874.0}}
+                                        Other, 0x1053eb450, {{0.0, 726.2}, {402.0, 147.8}}
+                                          Other, 0x1053eb570, {{0.0, 726.2}, {402.0, 147.8}}
+                                            Other, 0x1053eb690, {{0.0, 726.2}, {402.0, 147.8}}
+                                          Other, 0x1053eb7b0, {{0.0, 726.2}, {402.0, 147.8}}
+                                            Other, 0x1053eb8d0, {{0.0, 726.2}, {402.0, 147.8}}
+                                            Other, 0x1053eb9f0, {{0.0, 726.2}, {402.0, 147.8}}
+                                          Image, 0x1053ebb10, {{-120.0, 731.0}, {642.0, 286.0}}, identifier: 'AdditionalDimmingOverlay'
+                                      Other, 0x1053ebc30, {{-24.0, 62.0}, {30.0, 729.0}}, label: 'شريط تمرير رأسي, ‏١٤ صفحة', value: ‏٦٪؜
+                                        Other, 0x1053ebd50, {{3.0, 106.0}, {3.0, 68.0}}
+                                      Other, 0x1053ebe70, {{-24.0, 62.0}, {30.0, 729.0}}, label: 'شريط تمرير رأسي, ‏١٤ صفحة', value: ‏٦٪؜
+                                        Other, 0x1053ebf90, {{3.0, 106.0}, {3.0, 68.0}}
+                                    Other, 0x1053ec0b0, {{0.0, 0.0}, {402.0, 20.0}}
+                            Other, 0x1053ec1d0, {{0.0, 0.0}, {402.0, 874.0}}
+                              Other, 0x1053ec2f0, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x1053ec410, {{0.0, 791.0}, {402.0, 83.0}}
+                Other, 0x1053ec530, {{0.0, 791.0}, {402.0, 83.0}}
+                  Other, 0x1053ec650, {{0.0, 0.0}, {402.0, 874.0}}
+                    TabBar, 0x1053ec770, {{0.0, 791.0}, {402.0, 83.0}}, label: 'شريط علامات التبويب'
+                      Other, 0x1053ec890, {{21.0, 791.0}, {360.0, 62.0}}
+                        Other, 0x1053ec9b0, {{231.2, 795.0}, {77.0, 54.0}}
+                          Other, 0x10a3156f0, {{231.2, 795.0}, {77.0, 54.0}}
+                            Other, 0x10a315810, {{231.2, 795.0}, {77.0, 54.0}}
+                            Other, 0x10a315930, {{231.2, 795.0}, {77.0, 54.0}}
+                              Other, 0x10a315a50, {{231.2, 795.0}, {77.0, 54.0}}
+                                Other, 0x10a315b70, {{231.2, 795.0}, {77.0, 54.0}}
+                                  Other, 0x10a315c90, {{231.2, 795.0}, {77.0, 54.0}}
+                                Other, 0x10a315db0, {{231.2, 795.0}, {77.0, 54.0}}
+                              Other, 0x10a315ed0, {{231.2, 795.0}, {77.0, 54.0}}
+                        Other, 0x10a315ff0, {{21.0, 791.0}, {77.0, 54.0}}
+                        Other, 0x10a316110, {{21.0, 791.0}, {360.0, 62.0}}
+                          Button, 0x10a316230, {{300.0, 795.0}, {77.0, 54.0}}, identifier: 'gauge.with.needle', label: 'ضبط'
+                            Image, 0x10a316350, {{325.0, 801.3}, {27.3, 27.3}}, identifier: 'gauge.with.needle.fill', label: 'gauge.with.needle.fill'
+                          Button, 0x10a316470, {{231.2, 795.0}, {77.0, 54.0}}, identifier: 'graduationcap', label: 'تعلّم', Selected
+                            Image, 0x10a316590, {{251.2, 801.7}, {36.7, 31.3}}, identifier: 'graduationcap.fill', label: 'itunes u'
+                          Button, 0x10a3166b0, {{162.5, 795.0}, {77.0, 54.0}}, identifier: 'music.note.list', label: 'الأغاني'
+                            Image, 0x10a3167d0, {{186.5, 801.7}, {29.3, 27.0}}, identifier: 'music.note.list', label: 'قائمة تشغيل'
+                          Button, 0x10a3168f0, {{93.8, 795.0}, {77.0, 54.0}}, identifier: 'metronome', label: 'التمرين'
+                            Image, 0x10a316a10, {{117.8, 801.7}, {28.7, 26.0}}, identifier: 'metronome.fill', label: 'metronome.fill'
+                          Button, 0x10a316b30, {{25.0, 795.0}, {77.0, 54.0}}, identifier: 'chart.bar', label: 'التقدّم'
+                            Image, 0x10a316c50, {{46.0, 802.3}, {35.0, 25.3}}, identifier: 'chart.bar.fill', label: 'مخطط عمودي'
+                  Other, 0x10a316d70, {{0.0, 791.0}, {402.0, 83.0}}
+                    Other, 0x10a316e90, {{0.0, 791.0}, {402.0, 83.0}}
+                      Other, 0x10a316fb0, {{0.0, 791.0}, {402.0, 83.0}}
+                        Other, 0x10a3170d0, {{0.0, 791.0}, {402.0, 83.0}}
+                          Other, 0x10a3171f0, {{0.0, 791.0}, {402.0, 83.0}}
+                            Other, 0x10a317310, {{0.0, 791.0}, {402.0, 83.0}}
+                        Other, 0x10a317430, {{0.0, 791.0}, {402.0, 83.0}}
+                          Other, 0x10a317550, {{0.0, 791.0}, {402.0, 83.0}}
+      Other, 0x10a317670, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10a317790, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x10a3178b0, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x10a3179d0, {{0.0, 62.0}, {402.0, 778.0}}
+            Button, 0x10a317af0, {{350.0, 66.0}, {44.0, 44.0}}, identifier: 'lesson.close', label: 'إغلاق الدرس'
+            Other, 0x10a317c10, {{20.0, 73.2}, {322.0, 29.8}}, label: 'الأوتار المطلقة', value: الخطوة ٢ من ٦
+              StaticText, 0x10a317d30, {{273.3, 73.2}, {68.7, 16.7}}, label: 'الأوتار المطلقة'
+              StaticText, 0x10a317e50, {{20.0, 74.2}, {61.3, 15.3}}, label: 'الخطوة ٢ من ٦'
+              Other, 0x10a317f70, {{20.0, 97.0}, {322.0, 6.0}}
+            Other, 0x1053ecad0, {{56.0, 262.0}, {290.0, 263.3}}, identifier: 'lesson.notes.target', label: 'مي, الوتر ٦، مفتوح', value: جارٍ الاستماع…
+              Other, 0x1053ecbf0, {{-89.0, 130.3}, {580.0, 526.7}}
+              StaticText, 0x1053ecd10, {{174.7, 326.2}, {52.7, 111.0}}, label: 'E'
+              StaticText, 0x1053ece30, {{156.3, 441.2}, {89.3, 20.0}}, label: 'جارٍ الاستماع…'
+            StaticText, 0x1053ecf50, {{94.2, 126.0}, {213.7, 19.0}}, label: 'اعزف الأوتار 6 و5 و4، كلًا على حدة.'
+            StaticText, 0x1053ed070, {{243.0, 169.7}, {8.0, 16.7}}, label: 'E'
+            StaticText, 0x1053ed190, {{195.8, 169.7}, {10.3, 16.7}}, label: 'A'
+            StaticText, 0x1053ed2b0, {{149.8, 169.7}, {10.3, 16.7}}, label: 'D'
+            StaticText, 0x1053ed3d0, {{151.7, 227.0}, {98.7, 19.0}}, label: 'اعزف هذه النغمة'
+            Other, 0x1053ed4f0, {{18.0, 557.3}, {366.0, 178.0}}, label: 'الوتر ٦ مفتوح'
+            StaticText, 0x1053ed610, {{162.8, 741.3}, {76.3, 16.7}}, label: 'الوتر ٦، مفتوح'
+            Button, 0x1053ed730, {{20.0, 774.0}, {362.0, 54.0}}, identifier: 'lesson.hear', label: 'استمع إليها'
+              Image, 0x1053ed850, {{235.0, 792.7}, {20.0, 15.3}}, identifier: 'speaker.wave.2.fill', label: 'مستوى صوت مرتفع'
+              StaticText, 0x1053ed970, {{20.0, 774.0}, {362.0, 54.0}}, label: 'استمع إليها'
+Path to element:
+ →Application, 0x10a4205c0, pid: 79641, label: 'Timbre'
+Query chain:
+ →Find: Target Application 'com.shahradazerisharghi.timbre'
+  Output: {
+    Application, 0x1053db030, pid: 79641, label: 'Timbre'
+  }
+)

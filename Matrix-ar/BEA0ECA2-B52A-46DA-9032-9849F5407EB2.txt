@@ -1,0 +1,278 @@
+Optional(Attributes: Application, 0x1055ee9e0, pid: 79641, label: 'Timbre'
+Element subtree:
+ →Application, 0x1055ee9e0, pid: 79641, label: 'Timbre'
+    Window (Main), 0x1055f4120, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x10558b700, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10558a950, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x10558a250, {{-402.0, -874.0}, {1206.0, 2622.0}}
+          Other, 0x10558ba60, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x10558bda0, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x105588d50, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x10558cb00, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x10558ce60, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x10558d8d0, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x10558dc30, {{0.0, 0.0}, {402.0, 874.0}}
+                        Other, 0x10558dfd0, {{-54.0, 0.0}, {562.0, 874.0}}
+                          Other, 0x10558e320, {{-54.0, 121.7}, {562.0, 594.0}}, identifier: 'tune.stage'
+                            Image, 0x10558d540, {{-54.0, 153.7}, {562.0, 562.0}}, label: 'render_guitar_acoustic'
+                            Other, 0x10558d1c0, {{16.0, 121.7}, {370.0, 281.0}}
+                            StaticText, 0x10558e6b0, {{111.0, 212.7}, {66.3, 28.7}}, label: 'اعزف ⁨E2⁩'
+                            Other, 0x1054ad740, {{233.0, 206.3}, {44.0, 44.0}}
+                            Other, 0x1054a8500, {{234.7, 185.0}, {44.0, 44.0}}
+                            Other, 0x1054a0920, {{237.3, 164.3}, {44.0, 44.0}}
+                            Other, 0x1054751c0, {{190.7, 163.7}, {44.0, 44.0}}
+                            Other, 0x10549ec60, {{190.3, 184.0}, {44.0, 44.0}}
+                            Other, 0x10549ace0, {{189.3, 205.0}, {44.0, 44.0}}
+                            Other, 0x1054ab330, {{20.0, 191.0}, {84.3, 62.3}}
+                            Button, 0x1054ab750, {{20.0, 191.0}, {84.3, 62.3}}, identifier: 'tune.strum', label: 'اضبط بالعزف على الأوتار'
+                              Other, 0x1054a24a0, {{51.3, 202.0}, {22.0, 22.0}}
+                              StaticText, 0x1054aaaf0, {{20.0, 238.0}, {84.3, 15.3}}, label: 'العزف على الأوتار'
+                            Button, 0x1054abb70, {{33.7, 267.3}, {57.0, 66.3}}, identifier: 'listenButton', label: 'إيقاف الاستماع مؤقتًا'
+                              Image, 0x1054aaf10, {{33.7, 267.3}, {57.0, 66.3}}, identifier: 'pause.fill', label: 'إيقاف مؤقت'
+                              StaticText, 0x1054aa6d0, {{33.7, 318.2}, {57.0, 15.3}}, label: 'إيقاف مؤقت'
+                            Other, 0x1054aa2b0, {{180.0, 409.7}, {144.0, 38.0}}, identifier: 'tune.detection'
+                              Button, 0x1054afea0, {{242.0, 409.7}, {82.0, 38.0}}, identifier: 'tune.auto', label: 'تلقائي', Selected
+                                Image, 0x1054affc0, {{303.0, 425.7}, {6.3, 6.3}}, identifier: 'circle.fill', label: 'دائرة'
+                                StaticText, 0x1054b00e0, {{242.0, 409.7}, {82.0, 38.0}}, label: 'تلقائي'
+                              Button, 0x1054b0200, {{180.0, 409.7}, {60.0, 38.0}}, identifier: 'tune.manual', label: 'يدوي'
+                            Button, 0x1054b0320, {{75.3, 406.7}, {91.7, 44.0}}, identifier: 'tune.tone', label: 'تشغيل النغمة المرجعية'
+                              Image, 0x10558ea30, {{133.7, 421.3}, {15.0, 15.0}}, identifier: 'tuningfork', label: 'تناغم'
+                              StaticText, 0x10558ed80, {{75.3, 406.7}, {91.7, 44.0}}, label: 'مرجع'
+                          Other, 0x10558f120, {{152.2, 456.7}, {97.7, 131.0}}, label: 'الهدف ⁨مي 2⁩', value: لا توجد نغمة
+                            StaticText, 0x10558f4a0, {{167.5, 456.7}, {45.3, 106.0}}, label: 'E'
+                            StaticText, 0x10558f7f0, {{215.8, 509.0}, {18.7, 38.0}}, label: '2'
+                            StaticText, 0x10558fb50, {{152.2, 568.7}, {97.7, 19.0}}, label: 'الهدف ⁨٨٢٫٤١ Hz⁩'
+                          Other, 0x10558fed0, {{32.0, 601.7}, {338.0, 38.0}}
+                          StaticText, 0x1054b0440, {{199.2, 653.7}, {3.7, 17.7}}, identifier: 'tune.status', label: 'اعزف ⁨E2⁩'
+                          StaticText, 0x1054b07a0, {{22.0, 681.3}, {358.0, 16.3}}, label: 'مهمة · اضبط كل وتر‏، ٠ من ٦‏، +٢٠ XP'
+                            StaticText, 0x1054b08c0, {{284.7, 681.3}, {95.3, 16.3}}, label: 'مهمة · اضبط كل وتر'
+                            StaticText, 0x105590230, {{256.7, 681.3}, {22.0, 16.3}}, label: '٠ من ٦'
+                              StaticText, 0x1054b09e0, {{256.7, 681.3}, {7.3, 16.3}}, label: '٠'
+                              StaticText, 0x1054b0b00, {{264.0, 681.3}, {7.3, 16.3}}, label: ' / '
+                              StaticText, 0x1054b0c20, {{271.3, 681.3}, {7.3, 16.3}}, label: '٦'
+                            StaticText, 0x1054b0d40, {{22.0, 682.0}, {39.3, 15.3}}, label: '+٢٠ XP'
+                          Other, 0x1054b0e60, {{23.5, 707.2}, {354.5, 75.8}}, identifier: 'tune.string.rail'
+                            Button, 0x105590580, {{23.5, 707.2}, {55.0, 55.0}}, identifier: 'string.1', label: 'الوتر ٦، ⁨مي 2⁩', Selected
+                              StaticText, 0x1055908e0, {{40.5, 722.8}, {11.4, 23.8}}, label: 'E'
+                              StaticText, 0x105590c60, {{53.0, 727.9}, {8.4, 16.9}}, label: '2'
+                              StaticText, 0x105590fe0, {{41.4, 723.7}, {10.5, 21.9}}, label: 'E'
+                              StaticText, 0x105591350, {{52.9, 728.4}, {7.8, 15.5}}, label: '2'
+                            Button, 0x1055916c0, {{86.0, 709.7}, {50.0, 50.0}}, identifier: 'string.2', label: 'الوتر ٥، ⁨لا 2⁩'
+                              StaticText, 0x105591a20, {{100.0, 723.8}, {13.3, 21.7}}, label: 'A'
+                              StaticText, 0x105591d80, {{114.3, 728.5}, {7.7, 15.3}}, label: '2'
+                              StaticText, 0x1055920e0, {{100.9, 724.7}, {12.3, 19.9}}, label: 'A'
+                              StaticText, 0x1054b0f80, {{114.1, 729.0}, {7.1, 14.1}}, label: '2'
+                            Button, 0x1054b10a0, {{146.0, 709.7}, {50.0, 50.0}}, identifier: 'string.3', label: 'الوتر ٤، ⁨ري 3⁩'
+                              StaticText, 0x1054b11c0, {{159.8, 723.8}, {13.7, 21.7}}, label: 'D'
+                              StaticText, 0x1054b12e0, {{174.5, 728.5}, {7.7, 15.3}}, label: '3'
+                              StaticText, 0x105592460, {{160.7, 724.7}, {12.6, 19.9}}, label: 'D'
+                              StaticText, 0x1055927e0, {{174.2, 729.0}, {7.1, 14.1}}, label: '3'
+                            Button, 0x105592b70, {{206.0, 709.7}, {50.0, 50.0}}, identifier: 'string.4', label: 'الوتر ٣، ⁨صول 3⁩'
+                              StaticText, 0x105592ec0, {{219.5, 723.8}, {14.3, 21.7}}, label: 'G'
+                              StaticText, 0x105593250, {{234.8, 728.5}, {7.7, 15.3}}, label: '3'
+                              StaticText, 0x1055935c0, {{220.4, 724.7}, {13.2, 19.9}}, label: 'G'
+                              StaticText, 0x105593930, {{234.5, 729.0}, {7.1, 14.1}}, label: '3'
+                            Button, 0x1054b1400, {{266.0, 709.7}, {50.0, 50.0}}, identifier: 'string.5', label: 'الوتر ٢، ⁨سي 3⁩'
+                              StaticText, 0x1054b1520, {{280.7, 723.8}, {12.0, 21.7}}, label: 'B'
+                              StaticText, 0x1054b1640, {{293.7, 728.5}, {7.7, 15.3}}, label: '3'
+                              StaticText, 0x1054b1760, {{281.5, 724.7}, {11.0, 19.9}}, label: 'B'
+                              StaticText, 0x1054b1880, {{293.5, 729.0}, {7.1, 14.1}}, label: '3'
+                            Button, 0x1054b19a0, {{326.0, 709.7}, {50.0, 50.0}}, identifier: 'string.6', label: 'الوتر ١، ⁨مي 4⁩'
+                              StaticText, 0x1054b1ac0, {{341.3, 723.8}, {10.3, 21.7}}, label: 'E'
+                              StaticText, 0x1054b1be0, {{352.7, 728.5}, {8.0, 15.3}}, label: '4'
+                              StaticText, 0x1054b1d00, {{342.1, 724.7}, {9.5, 19.9}}, label: 'E'
+                              StaticText, 0x105593c70, {{352.5, 729.0}, {7.4, 14.1}}, label: '4'
+                            StaticText, 0x105593fe0, {{24.0, 767.7}, {33.0, 15.3}}, label: 'الأسمك'
+                            StaticText, 0x105594350, {{347.3, 767.7}, {30.7, 15.3}}, label: 'الأنحف'
+                          Button, 0x1055946c0, {{267.7, 68.0}, {114.3, 26.0}}, identifier: 'tune.instrument', label: 'جيتار صوتي'
+                            StaticText, 0x105594a20, {{287.3, 68.0}, {94.7, 26.0}}, identifier: 'tune.instrument.name', label: 'جيتار صوتي'
+                            Image, 0x1053774a0, {{269.0, 77.7}, {11.0, 6.7}}, identifier: 'chevron.down', label: 'الانتقال لأسفل'
+                          Button, 0x105594d70, {{269.3, 96.0}, {112.7, 25.7}}, identifier: 'tunings.menu', label: '⁨قياسي⁩ · A4 ٤٤٠ Hz'
+                            Button, 0x1054b1e20, {{269.3, 96.0}, {112.7, 25.7}}
+                              StaticText, 0x1054b1f40, {{269.3, 96.0}, {112.7, 25.7}}, label: '⁨قياسي⁩ · A4 ٤٤٠ Hz'
+                              Image, 0x1054b2060, {{270.7, 103.0}, {8.3, 11.7}}, identifier: 'chevron.up.chevron.down', label: 'شارة رتبة لأعلى وأسفل'
+                          Button, 0x105370ea0, {{112.0, 73.0}, {52.3, 44.0}}, identifier: 'streak.chip', label: 'أيام متتالية: ٧', value: اليوم: ١ من ٣
+                            Other, 0x105377c20, {{138.1, 86.9}, {12.4, 15.2}}
+                            StaticText, 0x1054b2180, {{112.0, 73.0}, {52.3, 44.0}}, identifier: 'screen.header.streak.count', label: '٧'
+                          Button, 0x105369b50, {{66.0, 73.0}, {44.0, 44.0}}, identifier: 'level.ring', label: 'المستوى ٥، ٢٤٠ من ٥٠٠ XP'
+                            StaticText, 0x1053730b0, {{74.8, 83.7}, {26.3, 22.3}}, identifier: 'screen.header.level.mark', label: 'مس ٥'
+                          Button, 0x1053837d0, {{20.0, 73.0}, {44.0, 44.0}}, identifier: 'settings.open', label: 'الإعدادات'
+                          Other, 0x105372c90, {{0.0, 791.0}, {402.0, 83.0}}
+                Other, 0x1053734d0, {{0.0, 791.0}, {402.0, 83.0}}
+                  Other, 0x10537b700, {{0.0, 0.0}, {402.0, 874.0}}
+                    TabBar, 0x10537b820, {{0.0, 791.0}, {402.0, 83.0}}, label: 'شريط علامات التبويب'
+                      Other, 0x10537b940, {{21.0, 791.0}, {360.0, 62.0}}
+                        Other, 0x10537ba60, {{300.0, 795.0}, {77.0, 54.0}}
+                          Other, 0x10537bb80, {{300.0, 795.0}, {77.0, 54.0}}
+                            Other, 0x10537bca0, {{300.0, 795.0}, {77.0, 54.0}}
+                            Other, 0x10537bdc0, {{300.0, 795.0}, {77.0, 54.0}}
+                              Other, 0x1054b22a0, {{300.0, 795.0}, {77.0, 54.0}}
+                                Other, 0x1054b23c0, {{300.0, 795.0}, {77.0, 54.0}}
+                                  Other, 0x1054b24e0, {{300.0, 795.0}, {77.0, 54.0}}
+                                Other, 0x1054b2600, {{300.0, 795.0}, {77.0, 54.0}}
+                              Other, 0x1054b2720, {{300.0, 795.0}, {77.0, 54.0}}
+                        Other, 0x1054b2840, {{21.0, 791.0}, {77.0, 54.0}}
+                        Other, 0x1054b2960, {{21.0, 791.0}, {360.0, 62.0}}
+                          Button, 0x1054b2a80, {{300.0, 795.0}, {77.0, 54.0}}, identifier: 'gauge.with.needle', label: 'ضبط', Selected
+                            Image, 0x1054b2ba0, {{325.0, 801.3}, {27.3, 27.3}}, identifier: 'gauge.with.needle.fill', label: 'gauge.with.needle.fill'
+                          Button, 0x1054b2cc0, {{231.2, 795.0}, {77.0, 54.0}}, identifier: 'graduationcap', label: 'تعلّم'
+                            Image, 0x1054b2de0, {{251.2, 801.7}, {36.7, 31.3}}, identifier: 'graduationcap.fill', label: 'itunes u'
+                          Button, 0x1054b2f00, {{162.5, 795.0}, {77.0, 54.0}}, identifier: 'music.note.list', label: 'الأغاني'
+                            Image, 0x1054b3020, {{186.5, 801.7}, {29.3, 27.0}}, identifier: 'music.note.list', label: 'قائمة تشغيل'
+                          Button, 0x1054b3140, {{93.8, 795.0}, {77.0, 54.0}}, identifier: 'metronome', label: 'التمرين'
+                            Image, 0x1054b3260, {{117.8, 801.7}, {28.7, 26.0}}, identifier: 'metronome.fill', label: 'metronome.fill'
+                          Button, 0x1054b3380, {{25.0, 795.0}, {77.0, 54.0}}, identifier: 'chart.bar', label: 'التقدّم'
+                            Image, 0x1054b34a0, {{46.0, 802.3}, {35.0, 25.3}}, identifier: 'chart.bar.fill', label: 'مخطط عمودي'
+                  Other, 0x1054b35c0, {{0.0, 791.0}, {402.0, 83.0}}
+                    Other, 0x1054b36e0, {{0.0, 791.0}, {402.0, 83.0}}
+                      Other, 0x1054b3800, {{0.0, 791.0}, {402.0, 83.0}}
+                        Other, 0x1054b3920, {{0.0, 791.0}, {402.0, 83.0}}
+                          Other, 0x1054b3a40, {{0.0, 791.0}, {402.0, 83.0}}
+                            Other, 0x10537bee0, {{0.0, 791.0}, {402.0, 83.0}}
+      Other, 0x10537c000, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10537c120, {{-402.0, -874.0}, {1206.0, 2622.0}}
+        Other, 0x10537c240, {{0.0, 62.0}, {402.0, 812.0}}
+          Other, 0x10537c360, {{0.0, 62.0}, {402.0, 812.0}}
+          Other, 0x10537c480, {{0.0, 62.0}, {402.0, 812.0}}
+            Other, 0x10537c5a0, {{0.0, 62.0}, {402.0, 812.0}}
+              Other, 0x10537c6c0, {{0.0, 62.0}, {402.0, 812.0}}
+                Other, 0x10537c7e0, {{0.0, 62.0}, {402.0, 812.0}}
+                  Other, 0x10537c900, {{0.0, 62.0}, {402.0, 812.0}}
+                    NavigationBar, 0x10537ca20, {{0.0, 78.0}, {402.0, 54.0}}, identifier: 'الإعدادات'
+                      StaticText, 0x10537cb40, {{167.7, 88.7}, {67.0, 22.7}}, label: 'الإعدادات'
+                      Other, 0x10537cc60, {{20.0, 82.0}, {40.3, 36.0}}, identifier: 'settings.done', label: 'تم'
+                        Other, 0x10537cd80, {{20.0, 82.0}, {40.3, 36.0}}
+                          Button, 0x10537cea0, {{20.0, 82.0}, {40.3, 36.0}}, identifier: 'settings.done', label: 'تم'
+                    Other, 0x10537cfc0, {{0.0, 62.0}, {402.0, 812.0}}
+                      Other, 0x10537d0e0, {{0.0, 62.0}, {402.0, 812.0}}
+                        Other, 0x10537d200, {{0.0, 62.0}, {402.0, 812.0}}
+                          Other, 0x10537d320, {{0.0, 62.0}, {402.0, 812.0}}
+                            ScrollView, 0x10537d440, {{0.0, 62.0}, {402.0, 812.0}}, identifier: 'settings.scroll'
+                              Other, 0x10537d560, {{0.0, 62.0}, {402.0, 812.0}}
+                                Other, 0x10537d680, {{0.0, 62.0}, {402.0, 124.8}}
+                              Other, 0x10537d7a0, {{0.0, 62.0}, {402.0, 812.0}}
+                              Other, 0x10537d8c0, {{0.0, 132.0}, {402.0, 2210.0}}
+                                Button, 0x10537d9e0, {{36.0, 160.0}, {330.0, 67.3}}, identifier: 'settings.pro', label: 'جرّب Timbre Pro‏، كل درس وأغنية، وكل توليفة ضبط وأداة.‏، Timbre Pro'
+                                  Image, 0x10537db00, {{342.0, 181.7}, {20.0, 24.3}}, identifier: 'sparkles', label: 'شرارة متألقة'
+                                  StaticText, 0x10537dc20, {{197.3, 160.0}, {126.7, 22.3}}, label: 'جرّب Timbre Pro'
+                                  StaticText, 0x10537dd40, {{162.7, 185.3}, {161.3, 42.0}}, label: 'كل درس وأغنية، وكل توليفة ضبط وأداة.'
+                                  StaticText, 0x10537de60, {{36.0, 183.0}, {44.0, 21.3}}, label: 'TIMBRE PRO'
+                                Button, 0x10537df80, {{20.0, 244.3}, {362.0, 54.0}}, label: 'استعادة المشتريات'
+                                  Image, 0x10537e0a0, {{347.7, 262.3}, {15.0, 18.0}}, identifier: 'arrow.clockwise', label: 'تحديث'
+                                  StaticText, 0x10537e1c0, {{20.0, 244.3}, {362.0, 54.0}}, label: 'استعادة المشتريات'
+                                StaticText, 0x10537e2e0, {{334.7, 326.3}, {41.3, 16.3}}, label: 'الضبط'
+                                Switch, 0x10537e400, {{36.0, 365.7}, {328.0, 28.0}}, identifier: 'settings.tuneByFeel', label: 'الضبط بالاهتزاز', value: 0
+                                  Image, 0x10537e520, {{347.0, 370.0}, {17.0, 19.7}}, identifier: 'hand.tap', label: 'hand.tap'
+                                  StaticText, 0x10537e640, {{234.3, 368.5}, {97.7, 22.3}}, label: 'الضبط بالاهتزاز'
+                                  Switch, 0x10537e760, {{36.0, 365.7}, {63.0, 28.0}}, value: 0
+                                StaticText, 0x10537e880, {{310.3, 423.5}, {21.7, 22.3}}, label: 'A4'
+                                TextField, 0x10537e9a0, {{73.0, 423.0}, {72.0, 23.3}}, identifier: 'settings.referenceInput', placeholderValue: '440', value: 440.0
+                                StaticText, 0x10537eac0, {{48.0, 424.7}, {19.0, 20.0}}, label: 'Hz'
+                                StaticText, 0x10537ebe0, {{247.3, 478.7}, {84.7, 22.3}}, identifier: 'settings.temperament.title', label: 'نظام التسوية'
+                                Button, 0x10537ed00, {{36.0, 470.7}, {93.0, 38.3}}, identifier: 'settings.temperament', label: 'نظام التسوية‏، متساوي'
+                                  StaticText, 0x10537ee20, {{64.3, 477.7}, {52.7, 24.3}}, label: 'متساوي'
+                                StaticText, 0x1054b3b60, {{297.3, 534.0}, {34.7, 22.3}}, identifier: 'settings.precision.title', label: 'الدقة'
+                                Button, 0x1054b3c80, {{36.0, 526.0}, {117.3, 38.3}}, identifier: 'settings.precision', label: 'الدقة‏، مبتدئ ⁦±5¢⁩'
+                                  StaticText, 0x1054b3da0, {{64.3, 533.0}, {77.0, 24.3}}, label: 'مبتدئ ⁦±5¢⁩'
+                                Switch, 0x1054b3ec0, {{36.0, 586.3}, {327.7, 28.0}}, identifier: 'settings.strobe', label: 'دقة الستروب', value: 0
+                                  Image, 0x1054b3fe0, {{346.3, 592.0}, {17.3, 17.0}}, identifier: 'circle.dotted', label: 'circle.dotted'
+                                  StaticText, 0x1054b4100, {{246.3, 589.2}, {85.7, 22.3}}, label: 'دقة الستروب'
+                                  Switch, 0x1054b4220, {{36.0, 586.3}, {63.0, 28.0}}, value: 0
+                                StaticText, 0x1054b4340, {{242.0, 644.3}, {90.0, 22.3}}, identifier: 'settings.notation.title', label: 'أسماء النوتات'
+                                Button, 0x1054b4460, {{36.0, 636.3}, {81.3, 38.3}}, identifier: 'settings.notation', label: 'أسماء النوتات‏، حروف'
+                                  StaticText, 0x1054b4580, {{64.3, 643.3}, {41.0, 24.3}}, label: 'حروف'
+                                Stepper, 0x1054b46a0, {{36.0, 694.7}, {328.9, 32.0}}, identifier: 'settings.capo', label: 'كابو‏، متوقف', value: متوقف
+                                  Button, 0x1054b47c0, {{83.0, 694.7}, {47.0, 32.0}}, identifier: 'settings.capo-Decrement', label: 'كابو‏، متوقف, إنقاص', value: متوقف
+                                  Button, 0x1054b48e0, {{36.0, 694.7}, {47.0, 32.0}}, identifier: 'settings.capo-Increment', label: 'كابو‏، متوقف, زيادة', value: متوقف
+                                Stepper, 0x1054b4a00, {{36.0, 749.7}, {329.0, 32.0}}, identifier: 'settings.transpose', label: 'نقل المقام‏، 0', value: 0
+                                  Button, 0x1054b4b20, {{83.0, 749.7}, {47.0, 32.0}}, identifier: 'settings.transpose-Decrement', label: 'نقل المقام‏، 0, إنقاص', value: 0
+                                  Button, 0x1054b4c40, {{36.0, 749.7}, {47.0, 32.0}}, identifier: 'settings.transpose-Increment', label: 'نقل المقام‏، 0, زيادة', value: 0
+                                StaticText, 0x1054b4d60, {{26.0, 802.7}, {350.0, 77.7}}, label: 'ينبض الضبط بالاهتزاز وفق الخفقان بين الوتر ونغمته المستهدفة، ويتباطأ كلما اقتربا، ثم يسكن عند الضبط الصحيح. يغيّر الكابو والتحويل أسماء النغمات التي تراها، ولا يغيّران أبدًا طبقة الصوت التي يقيسها Timbre.'
+                                StaticText, 0x1054b5030, {{333.7, 908.3}, {42.3, 16.3}}, label: 'العرض'
+                                StaticText, 0x1054b5150, {{226.7, 950.7}, {105.3, 22.3}}, identifier: 'settings.handedness.title', label: 'اليد المستخدمة'
+                                Button, 0x1054b5270, {{36.0, 942.7}, {70.7, 38.3}}, identifier: 'settings.handedness', label: 'اليد المستخدمة‏، أيمن'
+                                  StaticText, 0x1054b5390, {{64.3, 949.7}, {30.3, 24.3}}, label: 'أيمن'
+                                StaticText, 0x1055950d0, {{253.7, 1005.8}, {110.7, 22.3}}, label: 'ترتيب الأوتار'
+                                Button, 0x105595430, {{20.0, 1045.0}, {362.0, 58.0}}, identifier: 'settings.stringOrder.tab', label: 'مخطط التآلفات‏، مثل التاب: الوتر 1، الأنحف، في الأعلى', Selected
+                                  Other, 0x1055957c0, {{345.0, 1063.3}, {20.0, 21.3}}
+                                  StaticText, 0x105595b10, {{229.0, 1053.0}, {103.0, 22.3}}, label: 'مخطط التآلفات'
+                                  StaticText, 0x105595e90, {{149.7, 1077.3}, {182.3, 17.7}}, label: 'مثل التاب: الوتر 1، الأنحف، في الأعلى'
+                                  Image, 0x105596210, {{38.0, 1066.7}, {15.0, 14.7}}, identifier: 'checkmark', label: 'محدد', Selected
+                                Button, 0x105596570, {{20.0, 1104.0}, {362.0, 58.0}}, identifier: 'settings.stringOrder.mirror', label: 'عرض العازف‏، كما تراه من فوق: الأسمك في الأعلى'
+                                  Other, 0x1055968c0, {{345.0, 1122.3}, {20.0, 21.3}}
+                                  StaticText, 0x105596c40, {{249.0, 1112.0}, {83.0, 22.3}}, label: 'عرض العازف'
+                                  StaticText, 0x105596f90, {{156.0, 1136.3}, {176.0, 17.7}}, label: 'كما تراه من فوق: الأسمك في الأعلى'
+                                  Image, 0x1055972e0, {{38.0, 1125.7}, {15.0, 14.7}}, identifier: 'checkmark', label: 'محدد', Selected
+                                Switch, 0x10537ef40, {{36.0, 1176.0}, {330.7, 28.0}}, identifier: 'settings.simpleTuner', label: 'موالف بسيط', value: 0
+                                  Image, 0x10537f060, {{343.7, 1181.0}, {23.0, 18.0}}, identifier: 'eye.slash', label: 'إخفاء'
+                                  StaticText, 0x10537f180, {{249.0, 1178.8}, {83.0, 22.3}}, label: 'موالف بسيط'
+                                  Switch, 0x10537f2a0, {{36.0, 1176.0}, {63.0, 28.0}}, value: 0
+                                Switch, 0x1054b54b0, {{36.0, 1231.0}, {328.0, 28.0}}, identifier: 'settings.calmMode', label: 'الوضع الهادئ', value: 0
+                                  Image, 0x1054b55d0, {{346.0, 1237.0}, {18.0, 16.0}}, identifier: 'leaf', label: 'leaf'
+                                  StaticText, 0x1054b56f0, {{244.3, 1233.8}, {87.7, 22.3}}, label: 'الوضع الهادئ'
+                                  Switch, 0x1054b5810, {{36.0, 1231.0}, {63.0, 28.0}}, value: 0
+                                StaticText, 0x105597650, {{58.7, 1282.0}, {317.3, 37.7}}, label: 'يعرض الموالف البسيط الموالف وحده. يخفي الوضع الهادئ XP والمستويات والمهام والسلاسل، وتبقى نجومك وشاراتك.'
+                                StaticText, 0x1054b5930, {{316.0, 1347.7}, {60.0, 16.3}}, label: 'الاستجابة'
+                                Switch, 0x1054b5ba0, {{36.0, 1387.0}, {332.7, 28.0}}, label: 'الاهتزاز', value: 1
+                                  Image, 0x1054b5cc0, {{341.7, 1392.0}, {27.0, 18.0}}, identifier: 'iphone.radiowaves.left.and.right', label: 'iphone.radiowaves.left.and.right'
+                                  StaticText, 0x1054b5de0, {{287.3, 1389.8}, {44.7, 22.3}}, label: 'الاهتزاز'
+                                  Switch, 0x1054b5f00, {{36.0, 1387.0}, {63.0, 28.0}}, value: 1
+                                Switch, 0x1054b6020, {{36.0, 1442.0}, {328.0, 28.0}}, identifier: 'settings.feelTheBeat', label: 'اشعر بالنبضة', value: 0
+                                  Image, 0x1054b6140, {{346.0, 1448.0}, {18.0, 16.0}}, identifier: 'metronome', label: 'سرعة الإيقاع'
+                                  StaticText, 0x1054b6260, {{246.0, 1444.8}, {86.0, 22.3}}, label: 'اشعر بالنبضة'
+                                  Switch, 0x1054b6380, {{36.0, 1442.0}, {63.0, 28.0}}, value: 0
+                                Button, 0x1054b64a0, {{20.0, 1484.0}, {362.0, 54.0}}, identifier: 'settings.feelTest', label: 'اختبار الاهتزاز‏، اعزف'
+                                  Image, 0x1054b65c0, {{344.7, 1501.3}, {20.7, 19.7}}, identifier: 'waveform.path', label: 'شكل الموجة'
+                                  StaticText, 0x1054b66e0, {{245.7, 1499.8}, {86.3, 22.3}}, label: 'اختبار الاهتزاز'
+                                  StaticText, 0x1054b6800, {{36.0, 1501.0}, {32.7, 20.0}}, label: 'اعزف'
+                                StaticText, 0x1054b6920, {{281.7, 1567.0}, {50.3, 22.3}}, identifier: 'settings.stage.title', label: 'المسرح'
+                                Button, 0x1054b6a40, {{36.0, 1547.0}, {133.0, 62.3}}, identifier: 'settings.stage', label: 'المسرح‏، 3D في الوقت الفعلي'
+                                  StaticText, 0x1054b6b60, {{64.3, 1553.7}, {92.7, 48.3}}, label: '3D في الوقت الفعلي'
+                                StaticText, 0x10537f3c0, {{312.7, 1621.3}, {63.3, 16.3}}, label: 'التذكيرات'
+                                Switch, 0x10537f4e0, {{20.0, 1647.7}, {362.0, 54.0}}, identifier: 'settings.reminder', label: 'تذكير التمرين اليومي', value: 0
+                                  Image, 0x10537f600, {{347.0, 1666.0}, {16.0, 17.3}}, identifier: 'bell', label: 'الإشعارات'
+                                  StaticText, 0x10537f720, {{197.7, 1663.5}, {134.3, 22.3}}, label: 'تذكير التمرين اليومي'
+                                  Switch, 0x10537f840, {{36.0, 1660.7}, {63.0, 28.0}}, value: 0
+                                StaticText, 0x10537f960, {{145.0, 1711.7}, {231.0, 17.7}}, label: 'تنبيه لطيف واحد يوميًا، في الوقت الذي تختاره.'
+                                Button, 0x10537fa80, {{20.0, 1757.3}, {362.0, 54.0}}, label: 'الاستماع المتقدم'
+                                  Image, 0x10537fba0, {{349.0, 1775.3}, {13.0, 18.0}}, identifier: 'ear', label: 'ear'
+                                  StaticText, 0x10537fcc0, {{20.0, 1757.3}, {362.0, 54.0}}, label: 'الاستماع المتقدم'
+                                  Image, 0x10537fde0, {{38.3, 1778.7}, {6.7, 11.7}}, identifier: 'chevron.right', label: 'الأمام'
+                                StaticText, 0x10537ff00, {{342.7, 1839.3}, {33.3, 16.3}}, label: 'اللغة'
+                                StaticText, 0x105380020, {{255.7, 1881.7}, {76.3, 22.3}}, identifier: 'settings.language.title', label: 'لغة التطبيق'
+                                Button, 0x105380140, {{36.0, 1873.7}, {136.0, 38.3}}, identifier: 'settings.language', label: 'لغة التطبيق‏، افتراضي النظام'
+                                  StaticText, 0x105380260, {{64.3, 1880.7}, {95.7, 24.3}}, label: 'افتراضي النظام'
+                                StaticText, 0x105380380, {{307.3, 1948.0}, {68.7, 16.3}}, label: 'الخصوصية'
+                                StaticText, 0x1053804a0, {{48.7, 1984.3}, {283.3, 42.0}}, label: 'يُحلَّل صوت الميكروفون على هذا الجهاز. لا تُحفظ التسجيلات ولا تُرفع أبدًا.'
+                                Switch, 0x1053805c0, {{36.0, 2043.3}, {329.7, 62.0}}, identifier: 'settings.shareUsage', label: 'مشاركة بيانات استخدام مجهولة‏، الميزات المستخدمة فقط، دون صوت أو معلومات مرتبطة بك.', value: 1
+                                  Image, 0x1053806e0, {{344.3, 2066.3}, {21.3, 16.0}}, identifier: 'chart.bar', label: 'مخطط عمودي'
+                                  StaticText, 0x105380800, {{125.0, 2043.3}, {207.0, 22.3}}, label: 'مشاركة بيانات استخدام مجهولة'
+                                  StaticText, 0x1055979a0, {{130.0, 2067.7}, {202.0, 37.7}}, label: 'الميزات المستخدمة فقط، دون صوت أو معلومات مرتبطة بك.'
+                                  Switch, 0x105597d20, {{36.0, 2060.3}, {63.0, 28.0}}, value: 1
+                                Button, 0x1055980b0, {{20.0, 2114.3}, {362.0, 54.0}}, label: 'سياسة الخصوصية'
+                                  Image, 0x105598420, {{348.0, 2132.3}, {14.3, 18.0}}, identifier: 'doc.text', label: 'مستند نص عادي'
+                                  StaticText, 0x1055987c0, {{20.0, 2114.3}, {362.0, 54.0}}, label: 'سياسة الخصوصية'
+                                  Image, 0x105598b10, {{37.7, 2136.3}, {10.0, 10.0}}, identifier: 'arrow.up.right', label: 'arrow.up.right'
+                                Button, 0x105598e60, {{20.0, 2169.3}, {362.0, 54.0}}, label: 'شكر وتقدير'
+                                  Image, 0x1055991d0, {{346.7, 2188.3}, {16.7, 15.7}}, identifier: 'heart', label: 'أحببته'
+                                  StaticText, 0x105599560, {{20.0, 2169.3}, {362.0, 54.0}}, label: 'شكر وتقدير'
+                                  Image, 0x105599900, {{38.3, 2190.7}, {6.7, 11.7}}, identifier: 'chevron.right', label: 'الأمام'
+                                Button, 0x105599c60, {{20.0, 2224.3}, {362.0, 54.0}}, label: 'مسح سجل التمرين'
+                                  Image, 0x105599fe0, {{347.0, 2242.0}, {16.3, 18.7}}, identifier: 'trash', label: 'سلة المهملات'
+                                  StaticText, 0x10559a360, {{20.0, 2224.3}, {362.0, 54.0}}, label: 'مسح سجل التمرين'
+                                StaticText, 0x10559a6c0, {{302.0, 2288.3}, {74.0, 17.7}}, label: 'Timbre 1.0.0'
+                              Other, 0x10559aa30, {{-24.0, 132.0}, {30.0, 680.0}}, label: 'شريط تمرير رأسي, ‏٤ صفحات', value: ‏٠٪؜
+                                Other, 0x10559ad90, {{3.0, 135.0}, {3.0, 239.7}}
+                              Other, 0x10559b100, {{-24.0, 132.0}, {30.0, 680.0}}, label: 'شريط تمرير رأسي, ‏٤ صفحات', value: ‏٠٪؜
+                                Other, 0x10559b4a0, {{3.0, 135.0}, {3.0, 239.7}}
+                            Other, 0x10559b800, {{0.0, 62.0}, {402.0, 88.0}}
+                    Other, 0x10559c2e0, {{0.0, 62.0}, {402.0, 812.0}}
+                      Other, 0x10559c660, {{0.0, 62.0}, {402.0, 812.0}}
+Path to element:
+ →Application, 0x1055ee9e0, pid: 79641, label: 'Timbre'
+Query chain:
+ →Find: Target Application 'com.shahradazerisharghi.timbre'
+  Output: {
+    Application, 0x1054986e0, pid: 79641, label: 'Timbre'
+  }
+)
