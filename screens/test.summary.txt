@@ -1,0 +1,65 @@
+# Errors
+
+# Matches
+
+# Tail
+AX-AUDIT: Begin screen welcome
+    t =    19.79s Find the Target Application 'com.shahradazerisharghi.timbre'
+AX-AUDIT: Starting audit mask 18446744073709551615.
+    t =    28.76s Find the Any (Descendant with identity binding to AX element pid: 62129, elementOrHash.elementID: 4568427008.29)
+    t =    29.28s Find the "Just tune" StaticText
+AX-AUDIT: [contrast, known: ink link on the stage, 18.3:1, under the mint button's glass and glow] Contrast failed | id - | label "Just tune" | frame (137.66666666666666, 750.0, 126.66666666666666, 44.0) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+    t =    29.41s Find the Any (Descendant with identity binding to AX element pid: 62129, elementOrHash.elementID: 4569294560.27)
+    t =    29.49s Find the "Timbre" StaticText
+AX-AUDIT: [Dynamic Type] Dynamic Type font sizes are unsupported | id - | label "Timbre" | frame (185.7866666666667, 112.0, 59.66666666666666, 21.666666666666657) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+    t =    29.57s Find the Any (Descendant with identity binding to AX element pid: 62129, elementOrHash.elementID: 4569002368.17)
+    t =    29.71s Find the "onboarding.instrument.ukulele.soprano.4" Button
+AX-AUDIT: [Dynamic Type] Dynamic Type font sizes are partially unsupported | id onboarding.instrument.ukulele.soprano.4 | label "Ukulele" | frame (99.33333333333333, 620.0, 80.66666666666667, 44.0) | type 9 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+    t =    29.81s Find the Any (Descendant with identity binding to AX element pid: 62129, elementOrHash.elementID: 4850356880.16)
+    t =    29.91s Find the "onboarding.instrument.guitar.acoustic.6" Button
+AX-AUDIT: [Dynamic Type] Dynamic Type font sizes are partially unsupported | id onboarding.instrument.guitar.acoustic.6 | label "Guitar" | frame (20.0, 620.0, 71.33333333333333, 44.0) | type 9 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+    t =    30.01s Find the Any (Descendant with identity binding to AX element pid: 62129, elementOrHash.elementID: 4850145680.18)
+    t =    30.12s Find the "onboarding.instrument.violin.standard.4" Button
+AX-AUDIT: [Dynamic Type] Dynamic Type font sizes are partially unsupported | id onboarding.instrument.violin.standard.4 | label "Violin" | frame (188.0, 620.0, 67.0, 44.0) | type 9 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+    t =    30.23s Find the Any (Descendant with identity binding to AX element pid: 62129, elementOrHash.elementID: 4393259616.19)
+    t =    30.34s Find the "onboarding.instrument.cello.standard.4" Button
+AX-AUDIT: [Dynamic Type] Dynamic Type font sizes are partially unsupported | id onboarding.instrument.cello.standard.4 | label "Cello" | frame (263.0, 620.0, 63.666666666666686, 44.0) | type 9 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+    t =    30.48s Find the Any (Descendant with identity binding to AX element pid: 62129, elementOrHash.elementID: 4569002368.17)
+    t =    30.62s Find the "onboarding.instrument.ukulele.soprano.4" Button
+AX-AUDIT: [clipped text] Text clipped | id onboarding.instrument.ukulele.soprano.4 | label "Ukulele" | frame (99.33333333333333, 620.0, 80.66666666666667, 44.0) | type 9 | detail Text of this SwiftUI.AccessibilityNode may be clipped at larger Dynamic Type sizes.
+    t =    30.71s Find the Any (Descendant with identity binding to AX element pid: 62129, elementOrHash.elementID: 4850356880.16)
+    t =    30.81s Find the "onboarding.instrument.guitar.acoustic.6" Button
+AX-AUDIT: [clipped text] Text clipped | id onboarding.instrument.guitar.acoustic.6 | label "Guitar" | frame (20.0, 620.0, 71.33333333333333, 44.0) | type 9 | detail Text of this SwiftUI.AccessibilityNode may be clipped at larger Dynamic Type sizes.
+    t =    30.90s Find the Any (Descendant with identity binding to AX element pid: 62129, elementOrHash.elementID: 4568758000.23)
+    t =    31.00s Find the "onboarding.restore" Button
+AX-AUDIT: [clipped text] Text clipped | id onboarding.restore | label "I already have Timbre Pro" | frame (108.33333333333333, 794.0, 185.66666666666669, 44.0) | type 9 | detail Text of this SwiftUI.AccessibilityNode may be clipped at larger Dynamic Type sizes.
+    t =    31.09s Find the Any (Descendant with identity binding to AX element pid: 62129, elementOrHash.elementID: 4850145680.18)
+    t =    31.20s Find the "onboarding.instrument.violin.standard.4" Button
+AX-AUDIT: [clipped text] Text clipped | id onboarding.instrument.violin.standard.4 | label "Violin" | frame (188.0, 620.0, 67.0, 44.0) | type 9 | detail Text of this SwiftUI.AccessibilityNode may be clipped at larger Dynamic Type sizes.
+    t =    31.27s Find the Any (Descendant with identity binding to AX element pid: 62129, elementOrHash.elementID: 4393259616.19)
+    t =    31.35s Find the "onboarding.instrument.cello.standard.4" Button
+AX-AUDIT: [clipped text] Text clipped | id onboarding.instrument.cello.standard.4 | label "Cello" | frame (263.0, 620.0, 63.666666666666686, 44.0) | type 9 | detail Text of this SwiftUI.AccessibilityNode may be clipped at larger Dynamic Type sizes.
+AX-AUDIT: Completed audit mask 18446744073709551615 on welcome.
+AX-AUDIT: Completed all audit kinds.
+Accessibility audit, welcome: 14 lines, 0 failing
+    t =    31.41s Added attachment named 'ax-audit-welcome.txt'
+    t =    31.41s Tear Down
+    t =    31.41s     Terminate com.shahradazerisharghi.timbre:62129
+Test Case '-[TimbreUITests.AccessibilityAuditUITests testWelcomeScreen]' passed (32.561 seconds).
+Test Suite 'AccessibilityAuditUITests' passed at 2026-10-29 02:24:44.612.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 559.692 (559.715) seconds
+Test Suite 'TimbreUITests.xctest' passed at 2026-10-29 02:24:44.620.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 559.692 (559.723) seconds
+Test Suite 'Selected tests' passed at 2026-10-29 02:24:44.623.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 559.692 (559.729) seconds
+Resolve Package Graph
+2026-10-29 02:24:46.740 xcodebuild[44682:119847] [MT] IDETestOperationsObserverDebug: 578.984 elapsed -- Testing started completed.
+2026-10-29 02:24:46.741 xcodebuild[44682:119847] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-29 02:24:46.741 xcodebuild[44682:119847] [MT] IDETestOperationsObserverDebug: 578.984 sec, +578.984 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/runner/work/tuner/tuner/ios/build/Accessibility-screens.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

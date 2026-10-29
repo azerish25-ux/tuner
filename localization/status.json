@@ -1,0 +1,17 @@
+{
+  "partition": "localization",
+  "expected": [
+    "TimbreUITests/LocalizationLaunchUITests/testAGermanDeviceNamesTheTabsInGerman",
+    "TimbreUITests/LocalizationLaunchUITests/testAGermanDeviceWelcomesInGerman",
+    "TimbreUITests/LocalizationLaunchUITests/testAGermanRegionalPhoneAutomaticallyWelcomesInGerman",
+    "TimbreUITests/LocalizationLaunchUITests/testAnArabicDeviceRunsRightToLeft",
+    "TimbreUITests/LocalizationLaunchUITests/testAnArabicTunerKeepsTheOctaveRightOfTheNote",
+    "TimbreUITests/LocalizationLaunchUITests/testNoTextOnTheWelcomeOrTheTunerBypassesTheStringTables"
+  ],
+  "missing": [],
+  "initial_exit": 0,
+  "retried": [],
+  "retry_exit": null,
+  "retry_missing": [],
+  "passed": true
+}

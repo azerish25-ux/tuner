@@ -1,0 +1,16 @@
+Accessibility audit, welcome: 14 lines, 0 failing
+
+Starting audit mask 18446744073709551615.
+[contrast, known: ink link on the stage, 18.3:1, under the mint button's glass and glow] Contrast failed | id - | label "Just tune" | frame (137.66666666666666, 750.0, 126.66666666666666, 44.0) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are unsupported | id - | label "Timbre" | frame (185.7866666666667, 112.0, 59.66666666666666, 21.666666666666657) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id onboarding.instrument.ukulele.soprano.4 | label "Ukulele" | frame (99.33333333333333, 620.0, 80.66666666666667, 44.0) | type 9 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id onboarding.instrument.guitar.acoustic.6 | label "Guitar" | frame (20.0, 620.0, 71.33333333333333, 44.0) | type 9 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id onboarding.instrument.violin.standard.4 | label "Violin" | frame (188.0, 620.0, 67.0, 44.0) | type 9 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id onboarding.instrument.cello.standard.4 | label "Cello" | frame (263.0, 620.0, 63.666666666666686, 44.0) | type 9 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[clipped text] Text clipped | id onboarding.instrument.ukulele.soprano.4 | label "Ukulele" | frame (99.33333333333333, 620.0, 80.66666666666667, 44.0) | type 9 | detail Text of this SwiftUI.AccessibilityNode may be clipped at larger Dynamic Type sizes.
+[clipped text] Text clipped | id onboarding.instrument.guitar.acoustic.6 | label "Guitar" | frame (20.0, 620.0, 71.33333333333333, 44.0) | type 9 | detail Text of this SwiftUI.AccessibilityNode may be clipped at larger Dynamic Type sizes.
+[clipped text] Text clipped | id onboarding.restore | label "I already have Timbre Pro" | frame (108.33333333333333, 794.0, 185.66666666666669, 44.0) | type 9 | detail Text of this SwiftUI.AccessibilityNode may be clipped at larger Dynamic Type sizes.
+[clipped text] Text clipped | id onboarding.instrument.violin.standard.4 | label "Violin" | frame (188.0, 620.0, 67.0, 44.0) | type 9 | detail Text of this SwiftUI.AccessibilityNode may be clipped at larger Dynamic Type sizes.
+[clipped text] Text clipped | id onboarding.instrument.cello.standard.4 | label "Cello" | frame (263.0, 620.0, 63.666666666666686, 44.0) | type 9 | detail Text of this SwiftUI.AccessibilityNode may be clipped at larger Dynamic Type sizes.
+Completed audit mask 18446744073709551615 on welcome.
+Completed all audit kinds.

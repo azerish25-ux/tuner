@@ -1,0 +1,10 @@
+Accessibility audit, settings: 8 lines, 0 failing
+
+Starting audit mask 18446744073709551615.
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id settings.done | label "Done" | frame (317.6666666666667, 82.0, 64.33333333333331, 36.0) | type 9 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[clipped text] Text clipped | id - | label "Every lesson and song, every tuning and tool." | frame (78.0, 183.33333333333331, 203.33333333333331, 38.0) | type 48 | detail Text of this SwiftUI.AccessibilityNode may be clipped at larger Dynamic Type sizes.
+[clipped text] Text clipped | id settings.referenceInput | label - | frame (257.0, 415.0, 72.0, 23.333333333333314) | type 49 | detail Text of this UITextField may be clipped at larger Dynamic Type sizes.
+[contrast, known: the system Done button, ink on Liquid Glass: 15.0:1] Contrast failed | id settings.done | label "Done" | frame (317.6666666666667, 82.0, 64.33333333333331, 36.0) | type 9 | detail Contrast failed for SwiftUI.AccessibilityNode
+[element detection] Potentially inaccessible text | id - | label - | snapshot unavailable (element nil) | callback 5 | detail This element appears to display text that should be represented using the accessibility API.
+Completed audit mask 18446744073709551615 on settings.
+Completed all audit kinds.

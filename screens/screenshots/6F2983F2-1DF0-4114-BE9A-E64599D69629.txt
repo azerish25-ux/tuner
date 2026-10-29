@@ -1,0 +1,11 @@
+Accessibility audit, lesson-explain: 9 lines, 0 failing
+
+Starting audit mask 18446744073709551615.
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "Hear it" | frame (20.0, 774.0, 135.33333333333331, 54.0) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "E A D G B E" | frame (20.0, 639.0, 145.66666666666666, 35.33333333333337) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "The open strings" | frame (60.0, 73.16666666666667, 111.33333333333331, 16.66666666666667) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "Step 1 of 6" | frame (316.0, 74.16666666666667, 66.0, 15.333333333333329) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id lesson.continue | label "Continue" | frame (165.33333333333331, 774.0, 216.66666666666669, 54.0) | type 9 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "From thick to thin: E, A, D, G, B, E. Try: Every Amateur Does Get Better Eventually." | frame (20.0, 684.3333333333334, 332.66666666666663, 77.66666666666663) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+Completed audit mask 18446744073709551615 on lesson-explain.
+Completed all audit kinds.

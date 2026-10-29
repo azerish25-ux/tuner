@@ -1,0 +1,83 @@
+Accessibility audit, tab-1-tune: 81 lines, 1 failing
+
+Fresh-process navigation verified for contrast attempt 1.
+Starting audit mask 1.
+[contrast, known: tune.status at opacity 0 while the peg's label shows the call (that label: 8.2:1); VoiceOver still reads it] Contrast failed | id - | label "Play E2" | frame (59.0, 209.0, 66.33333587646484, 28.666671752929688) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, enforced] Contrast failed | id screen.header.level.mark | label "LV 1" | frame (303.1666666666667, 82.66666666666666, 21.666666666666686, 20.33333333333333) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, known: ink on Liquid Glass (glassCapsule): 16.2:1] Contrast failed | id - | label "Reference" | frame (223.0, 404.66666666666663, 137.66666666666663, 44.0) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, known: the octaves in inkFaint: readout 6.2:1, E2 chip 6.3:1, A2 chip 6.0:1; redrawn with the live pitch] Contrast failed | id - | label "2" | frame (53.016666666666666, 729.8833333333333, 8.433333333333337, 16.866666666666674) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, known: the note, ink on the stage, 17.5:1 (the E2 chip's 12.7:1); redrawn every frame while listening] Contrast failed | id - | label "E" | frame (41.385999999999996, 725.7033333333333, 10.457333333333338, 21.926666666666733) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, known: the octaves in inkFaint: readout 6.2:1, E2 chip 6.3:1, A2 chip 6.0:1; redrawn with the live pitch] Contrast failed | id - | label "2" | frame (52.855333333333334, 730.4259999999999, 7.75866666666667, 15.51733333333334) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, known: mint on the mint thumb over Liquid Glass: 8.6:1] Contrast failed | id - | label "Auto" | frame (44.666666666666664, 407.66666666666663, 79.33333333333334, 38.0) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+Completed audit mask 1 on tab-1-tune.
+Completed contrast audit on isolated attempt 1.
+Fresh-process navigation verified for element description attempt 1.
+Starting audit mask 8.
+Completed audit mask 8 on tab-1-tune.
+Completed element description audit on isolated attempt 1.
+Fresh-process navigation verified for hit region attempt 1.
+Starting audit mask 4.
+Completed audit mask 4 on tab-1-tune.
+Completed hit region audit on isolated attempt 1.
+Fresh-process navigation verified for Dynamic Type attempt 1.
+Starting audit mask 65536.
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label " / " | frame (176.0, 684.6666666666667, 7.333333333333343, 14.333333333333371) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "3" | frame (174.22, 730.9933333333333, 7.053333333333342, 14.10666666666657) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "Play E2" | frame (59.0, 209.0, 66.33333587646484, 28.666671752929688) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "E" | frame (41.385999999999996, 725.7033333333333, 10.457333333333338, 21.926666666666733) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "A" | frame (100.0, 725.8333333333333, 13.333333333333329, 21.66666666666663) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "G" | frame (220.42, 726.6999999999999, 13.186666666666667, 19.933333333333394) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "E" | frame (341.3333333333333, 725.8333333333333, 10.333333333333314, 21.66666666666663) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "Standard · A4 440 Hz" | frame (20.0, 94.0, 146.33333333333331, 23.666666666666657) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id tune.instrument.name | label "Acoustic guitar" | frame (20.0, 68.0, 138.33333333333331, 24.0) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "2" | frame (52.855333333333334, 730.4259999999999, 7.75866666666667, 15.51733333333334) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "A" | frame (100.88, 726.6999999999999, 12.26666666666668, 19.933333333333394) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "3" | frame (234.52666666666667, 730.9933333333333, 7.053333333333313, 14.10666666666657) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "3" | frame (234.83333333333334, 730.5, 7.666666666666657, 15.333333333333371) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "2" | frame (53.016666666666666, 729.8833333333333, 8.433333333333337, 16.866666666666674) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "Strum" | frame (337.0, 235.0, 38.0, 15.333333333333343) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "2" | frame (217.5, 512.3333333333334, 18.666666666666657, 38.0) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "0" | frame (167.66666666666666, 684.6666666666667, 8.333333333333343, 14.333333333333371) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "E" | frame (342.1066666666667, 726.6999999999999, 9.50666666666666, 19.933333333333394) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "Pause" | frame (337.6666666666667, 315.1666666666667, 36.666666666666686, 15.333333333333314) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "Auto" | frame (44.666666666666664, 407.66666666666663, 79.33333333333334, 38.0) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "E" | frame (40.55, 724.75, 11.366666666666667, 23.833333333333258) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id screen.header.streak.count | label "7" | frame (251.66666666666666, 84.5, 8.999999999999972, 16.666666666666657) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "B" | frame (281.49333333333334, 726.6999999999999, 11.04000000000002, 19.933333333333394) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "4" | frame (352.6666666666667, 730.5, 8.0, 15.333333333333371) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "3" | frame (293.6666666666667, 730.5, 7.666666666666686, 15.333333333333371) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "2" | frame (114.06666666666666, 730.9933333333333, 7.053333333333342, 14.10666666666657) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "E" | frame (165.83333333333334, 454.66666666666674, 48.66666666666666, 113.0) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "Reference" | frame (223.0, 404.66666666666663, 137.66666666666663, 44.0) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "B" | frame (280.6666666666667, 725.8333333333333, 12.0, 21.66666666666663) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "Thickest" | frame (24.0, 769.6666666666667, 46.0, 13.333333333333371) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "2" | frame (114.33333333333333, 730.5, 7.666666666666671, 15.333333333333371) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "Thinnest" | frame (331.0, 769.6666666666667, 47.0, 13.333333333333371) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "3" | frame (293.4533333333333, 730.9933333333333, 7.053333333333342, 14.10666666666657) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "6" | frame (183.33333333333334, 684.6666666666667, 8.333333333333343, 14.333333333333371) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id screen.header.level.mark | label "LV 1" | frame (303.1666666666667, 82.66666666666666, 21.666666666666686, 20.33333333333333) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "+20 XP" | frame (337.0, 684.3333333333334, 43.0, 15.333333333333371) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "G" | frame (219.5, 725.8333333333333, 14.333333333333343, 21.66666666666663) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "D" | frame (160.72666666666666, 726.6999999999999, 12.573333333333352, 19.933333333333394) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "4" | frame (352.5333333333333, 730.9933333333333, 7.360000000000014, 14.10666666666657) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "Quest · tune every string" | frame (22.0, 684.6666666666667, 139.66666666666666, 14.333333333333371) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "Target 82.41 Hz" | frame (141.0, 573.6666666666666, 120.0, 19.0) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "3" | frame (174.5, 730.5, 7.666666666666657, 15.333333333333371) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "D" | frame (159.83333333333334, 725.8333333333333, 13.666666666666657, 21.66666666666663) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+Completed audit mask 65536 on tab-1-tune.
+Completed Dynamic Type audit on isolated attempt 1.
+Fresh-process navigation verified for clipped text attempt 1.
+Starting audit mask 131072.
+[clipped text] Text clipped | id - | label "Quest · tune every string" | frame (22.0, 684.6666666666667, 139.66666666666666, 14.333333333333371) | type 48 | detail Text of this SwiftUI.AccessibilityNode may be clipped at larger Dynamic Type sizes.
+[clipped text] Text clipped | id - | label "Standard · A4 440 Hz" | frame (20.0, 94.0, 146.33333333333331, 23.666666666666657) | type 48 | detail Text of this SwiftUI.AccessibilityNode may be clipped at larger Dynamic Type sizes.
+Completed audit mask 131072 on tab-1-tune.
+Completed clipped text audit on isolated attempt 1.
+Fresh-process navigation verified for traits attempt 1.
+Starting audit mask 262144.
+Completed audit mask 262144 on tab-1-tune.
+Completed traits audit on isolated attempt 1.
+Fresh-process navigation verified for element detection attempt 1.
+Starting audit mask 2.
+[element detection] Potentially inaccessible text | id - | label - | snapshot unavailable (element nil) | callback 53 | detail This element appears to display text that should be represented using the accessibility API.
+Completed audit mask 2 on tab-1-tune.
+Completed element detection audit on isolated attempt 1.

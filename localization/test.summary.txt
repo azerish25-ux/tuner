@@ -1,0 +1,65 @@
+# Errors
+
+# Matches
+
+# Tail
+    t =     0.82s         Setting up automation session
+    t =     3.60s         Wait for com.shahradazerisharghi.timbre to idle
+    t =     5.18s Waiting 30.0s for "tune.stage" Any to exist
+    t =     6.23s     Checking `Expect predicate `existsNoRetry == 1` for object "tune.stage" Any`
+    t =     6.23s         Checking existence of `"tune.stage" Any`
+    t =     8.16s Waiting 10.0s for "tune.status" Any to exist
+    t =     9.23s     Checking `Expect predicate `existsNoRetry == 1` for object "tune.status" Any`
+    t =     9.23s         Checking existence of `"tune.status" Any`
+    t =    12.90s Find the "tune.status" Any
+    t =    13.80s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    17.00s Added attachment named 'l10n-ar-tune'
+    t =    17.02s Tear Down
+    t =    17.02s     Terminate com.shahradazerisharghi.timbre:42997
+Test Case '-[TimbreUITests.LocalizationLaunchUITests testAnArabicTunerKeepsTheOctaveRightOfTheNote]' passed (18.154 seconds).
+Test Case '-[TimbreUITests.LocalizationLaunchUITests testNoTextOnTheWelcomeOrTheTunerBypassesTheStringTables]' started.
+    t =     0.00s Start Test at 2026-10-29 02:13:58.898
+    t =     0.07s Set Up
+    t =     0.07s Open com.shahradazerisharghi.timbre
+    t =     0.07s     Launch com.shahradazerisharghi.timbre
+    t =     0.86s         Setting up automation session
+Resolve Package Graph
+
+    t =     3.79s         Wait for com.shahradazerisharghi.timbre to idle
+    t =     5.30s Waiting 25.0s for "onboarding.start" Any to exist
+    t =     6.31s     Checking `Expect predicate `existsNoRetry == 1` for object "onboarding.start" Any`
+    t =     6.31s         Checking existence of `"onboarding.start" Any`
+    t =     8.42s Find the "onboarding.start" Any
+    t =    12.05s Added attachment named 'l10n-pseudo-welcome'
+    t =    12.06s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    12.54s Terminate com.shahradazerisharghi.timbre:43239
+    t =    13.56s Open com.shahradazerisharghi.timbre
+    t =    13.56s     Launch com.shahradazerisharghi.timbre
+    t =    14.62s         Setting up automation session
+    t =    17.32s         Wait for com.shahradazerisharghi.timbre to idle
+    t =    18.83s Waiting 30.0s for "tune.stage" Any to exist
+    t =    19.87s     Checking `Expect predicate `existsNoRetry == 1` for object "tune.stage" Any`
+    t =    19.88s         Checking existence of `"tune.stage" Any`
+    t =    24.86s Added attachment named 'l10n-pseudo-tuner'
+    t =    24.87s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    25.55s Added attachment named 'l10n-pseudo-offenders.txt'
+    t =    25.55s Tear Down
+    t =    25.55s     Terminate com.shahradazerisharghi.timbre:43614
+Test Case '-[TimbreUITests.LocalizationLaunchUITests testNoTextOnTheWelcomeOrTheTunerBypassesTheStringTables]' passed (26.714 seconds).
+Test Suite 'LocalizationLaunchUITests' passed at 2026-10-29 02:14:25.612.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 128.687 (128.695) seconds
+Test Suite 'TimbreUITests.xctest' passed at 2026-10-29 02:14:25.616.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 128.687 (128.699) seconds
+Test Suite 'Selected tests' passed at 2026-10-29 02:14:25.617.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 128.687 (128.703) seconds
+Resolve Package Graph
+2026-10-29 02:14:27.368 xcodebuild[39207:104219] [MT] IDETestOperationsObserverDebug: 158.025 elapsed -- Testing started completed.
+2026-10-29 02:14:27.368 xcodebuild[39207:104219] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-29 02:14:27.368 xcodebuild[39207:104219] [MT] IDETestOperationsObserverDebug: 158.025 sec, +158.025 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/runner/work/tuner/tuner/ios/build/Accessibility-localization.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

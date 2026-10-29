@@ -1,0 +1,31 @@
+Accessibility audit, tab-5-progress: 29 lines, 0 failing
+
+Fresh-process navigation verified for contrast attempt 1.
+Starting audit mask 1.
+Completed audit mask 1 on tab-5-progress.
+Completed contrast audit on isolated attempt 1.
+Fresh-process navigation verified for element description attempt 1.
+Starting audit mask 8.
+Completed audit mask 8 on tab-5-progress.
+Completed element description audit on isolated attempt 1.
+Fresh-process navigation verified for hit region attempt 1.
+Starting audit mask 4.
+Completed audit mask 4 on tab-5-progress.
+Completed hit region audit on isolated attempt 1.
+Fresh-process navigation verified for Dynamic Type attempt 1.
+Starting audit mask 65536.
+[Dynamic Type] Dynamic Type font sizes are partially unsupported | id - | label "40" | frame (38.0, 488.3333333333333, 54.33333333333333, 50.666666666666686) | type 48 | detail User will not be able to change the font size of this SwiftUI.AccessibilityNode
+Completed audit mask 65536 on tab-5-progress.
+Completed Dynamic Type audit on isolated attempt 1.
+Fresh-process navigation verified for clipped text attempt 1.
+Starting audit mask 131072.
+Completed audit mask 131072 on tab-5-progress.
+Completed clipped text audit on isolated attempt 1.
+Fresh-process navigation verified for traits attempt 1.
+Starting audit mask 262144.
+Completed audit mask 262144 on tab-5-progress.
+Completed traits audit on isolated attempt 1.
+Fresh-process navigation verified for element detection attempt 1.
+Starting audit mask 2.
+Completed audit mask 2 on tab-5-progress.
+Completed element detection audit on isolated attempt 1.

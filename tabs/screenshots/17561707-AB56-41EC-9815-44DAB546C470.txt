@@ -1,0 +1,64 @@
+Accessibility audit, tab-3-songs: 62 lines, 18 failing
+
+Fresh-process navigation verified for contrast attempt 1.
+Starting audit mask 1.
+[contrast, enforced] Contrast failed | id songs.hero.bass-sb-song-saints.cover.title.0 | label "When the" | frame (269.6666666666667, 296.7608373333333, 64.66666666666669, 17.333333333333314) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, enforced] Contrast failed | id songs.hero.bass-sb-song-saints.cover.title.1 | label "Saints Go" | frame (269.5, 310.41176133854833, 65.0, 17.333333333333314) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, enforced] Contrast failed | id songs.hero.bass-sb-song-saints.cover.title.2 | label "Marching In" | frame (262.1666666666667, 324.0626853437633, 79.66666666666669, 17.333333333333314) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, enforced] Contrast failed | id songs.hero.bass-sb-song-saints.eyebrow | label "Song of the day" | frame (68.33333333333334, 267.3333333333333, 95.33333333333334, 15.333333333333314) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, enforced] Contrast failed | id songs.hero.bass-sb-song-saints.chords.chord.F | label "F" | frame (350.0, 471.0, 7.0, 15.333333333333314) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, enforced] Contrast failed | id songs.filter.all | label "All" | frame (20.0, 175.33333333333331, 46.0, 44.0) | type 9 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, enforced] Contrast failed | id songs.filter.violin.standard.4.title | label "Violin" | frame (377.66666666666663, 175.33333333333331, 89.0, 44.0) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, enforced] Contrast failed | id songs.tile.known.song-ode-to-joy.cover.title.0 | label "Ode to" | frame (31.1, 767.6931999999999, 85.66666666666666, 32.0) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, enforced] Contrast failed | id songs.tile.known.song-ode-to-joy.cover.catalogue | label "03" | frame (44.02928, 699.1, 11.0, 10.333333333333258) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, enforced] Contrast failed | id songs.tile.known.song-ode-to-joy.chords.chord.C | label "C" | frame (27.0, 850.3333333333334, 9.666666666666664, 15.333333333333371) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, enforced] Contrast failed | id songs.tile.known.song-ode-to-joy.chords.chord.G | label "G" | frame (54.666666666666664, 850.3333333333334, 9.999999999999993, 15.333333333333371) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, enforced] Contrast failed | id songs.tile.known.gtr-6-5.cover.title.0 | label "Amazing" | frame (193.1, 785.311666914332, 81.33333333333334, 24.0) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, enforced] Contrast failed | id songs.tile.known.gtr-6-5.cover.title.1 | label "Grace" | frame (193.1, 804.23, 55.66666666666666, 24.0) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, enforced] Contrast failed | id songs.tile.known.song-silent-night.cover.title.0 | label "Silent" | frame (386.50409693400064, 734.1782352310595, 62.991806131998715, 27.617097269694113) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, enforced] Contrast failed | id songs.tile.known.song-silent-night.cover.title.1 | label "Night" | frame (386.81440139770507, 755.9141233116386, 62.37119720458986, 27.617097269694) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, enforced] Contrast failed | id songs.tile.known.song-silent-night.cover.catalogue | label "28" | frame (371.4815875884277, 707.1301668395996, 10.240047302246126, 9.61943837483716) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, enforced] Contrast failed | id songs.tile.known.song-ode-to-joy.versions.more | label "+5" | frame (106.0, 846.0, 62.0, 44.0) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+[contrast, enforced] Contrast failed | id songs.tile.known.gtr-6-5.versions.more | label "+5" | frame (268.0, 846.0, 62.0, 44.0) | type 48 | detail Contrast failed for SwiftUI.AccessibilityNode
+Completed audit mask 1 on tab-3-songs.
+Completed contrast audit on isolated attempt 1.
+Fresh-process navigation verified for element description attempt 1.
+Starting audit mask 8.
+Completed audit mask 8 on tab-3-songs.
+Completed element description audit on isolated attempt 1.
+Fresh-process navigation verified for hit region attempt 1.
+Starting audit mask 4.
+Completed audit mask 4 on tab-3-songs.
+Completed hit region audit on isolated attempt 1.
+Fresh-process navigation verified for Dynamic Type attempt 1.
+Starting audit mask 65536.
+Audit mask 65536 on tab-3-songs threw: Audit failed to complete in time
+Dynamic Type attempt 1 did not complete: Audit failed to complete in time
+Fresh-process navigation verified for Dynamic Type attempt 2.
+Starting audit mask 65536.
+Audit mask 65536 on tab-3-songs threw: Audit failed to complete in time
+Dynamic Type attempt 2 did not complete: Audit failed to complete in time
+Fresh-process navigation verified for Dynamic Type attempt 3.
+Starting audit mask 65536.
+Audit mask 65536 on tab-3-songs threw: Audit failed to complete in time
+Dynamic Type attempt 3 did not complete: Audit failed to complete in time
+Fresh-process navigation verified for clipped text attempt 1.
+Starting audit mask 131072.
+Audit mask 131072 on tab-3-songs threw: Audit failed to complete in time
+clipped text attempt 1 did not complete: Audit failed to complete in time
+Fresh-process navigation verified for clipped text attempt 2.
+Starting audit mask 131072.
+Audit mask 131072 on tab-3-songs threw: Audit failed to complete in time
+clipped text attempt 2 did not complete: Audit failed to complete in time
+Fresh-process navigation verified for clipped text attempt 3.
+Starting audit mask 131072.
+Audit mask 131072 on tab-3-songs threw: Audit failed to complete in time
+clipped text attempt 3 did not complete: Audit failed to complete in time
+Fresh-process navigation verified for traits attempt 1.
+Starting audit mask 262144.
+Completed audit mask 262144 on tab-3-songs.
+Completed traits audit on isolated attempt 1.
+Fresh-process navigation verified for element detection attempt 1.
+Starting audit mask 2.
+Completed audit mask 2 on tab-3-songs.
+Completed element detection audit on isolated attempt 1.

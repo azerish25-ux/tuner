@@ -1,0 +1,280 @@
+Optional(Attributes: Application, 0x108b3d800, pid: 5930, label: 'Timbre'
+Element subtree:
+ →Application, 0x108b3d800, pid: 5930, label: 'Timbre'
+    Window (Main), 0x103993bd0, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x1039afe70, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x1039bfe20, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x1039ac400, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x1039a0e00, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x1039b2e60, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x103989300, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x108d6b950, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x108cb4280, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x108d0cfc0, {{0.0, 0.0}, {402.0, 874.0}}
+                        Other, 0x108caf050, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x108c5ebe0, {{0.0, 0.0}, {402.0, 874.0}}
+                            Other, 0x108d0a200, {{0.0, 0.0}, {402.0, 874.0}}
+                              Other, 0x108c49f90, {{0.0, 0.0}, {402.0, 874.0}}
+                                Other, 0x108ca0a40, {{0.0, 0.0}, {402.0, 874.0}}
+                                  Other, 0x108cf0590, {{0.0, 0.0}, {402.0, 874.0}}
+                                    ScrollView, 0x108c88230, {{0.0, 0.0}, {402.0, 874.0}}
+                                      Other, 0x10397e580, {{0.0, 0.0}, {402.0, 874.0}}
+                                        Other, 0x1039915b0, {{0.0, 726.2}, {402.0, 147.8}}
+                                      Other, 0x10399a380, {{0.0, 0.0}, {402.0, 874.0}}
+                                        Other, 0x1039b1350, {{0.0, 726.2}, {402.0, 147.8}}
+                                          Image, 0x10399cce0, {{-120.0, 731.0}, {642.0, 286.0}}, identifier: 'AdditionalDimmingOverlay'
+                                          Other, 0x103987a80, {{0.0, 726.2}, {402.0, 147.8}}
+                                            Other, 0x1039c8dc0, {{0.0, 726.2}, {402.0, 147.8}}
+                                          Other, 0x108b4ef20, {{0.0, 726.2}, {402.0, 147.8}}
+                                            Other, 0x108bf9f40, {{0.0, 726.2}, {402.0, 147.8}}
+                                            Other, 0x108bb1250, {{0.0, 726.2}, {402.0, 147.8}}
+                                      Other, 0x108b48150, {{0.0, 62.0}, {402.0, 2385.7}}
+                                        StaticText, 0x108b70b30, {{20.0, 74.0}, {123.3, 35.3}}, identifier: 'screen.header.title', label: 'Progress'
+                                        StaticText, 0x108b35370, {{20.0, 129.3}, {114.0, 92.3}}, label: '7, day streak'
+                                          Other, 0x108b5b1b0, {{34.0, 141.2}, {14.0, 17.1}}
+                                          StaticText, 0x108be9820, {{32.0, 163.3}, {13.7, 25.3}}, label: '7'
+                                          StaticText, 0x108b855b0, {{32.0, 192.7}, {58.7, 14.3}}, label: 'day streak'
+                                        StaticText, 0x108b6b5c0, {{144.0, 129.3}, {114.0, 92.3}}, label: 'Level 1, Open String'
+                                          Other, 0x108b645d0, {{156.1, 141.4}, {17.9, 17.9}}
+                                          StaticText, 0x108cabd60, {{156.0, 163.3}, {34.0, 25.3}}, label: 'LV 1'
+                                          StaticText, 0x108ca3a70, {{156.0, 192.7}, {68.0, 14.3}}, label: 'Open String'
+                                        StaticText, 0x108d79a50, {{268.0, 129.3}, {114.0, 92.3}}, label: '±1.0¢, Avg. cents off'
+                                          Image, 0x103aa56c0, {{281.3, 142.7}, {18.0, 18.0}}, identifier: 'scope', label: 'scope'
+                                          StaticText, 0x103a88b80, {{280.0, 166.0}, {58.3, 25.3}}, label: '±1.0¢'
+                                          StaticText, 0x108c12cf0, {{280.0, 195.3}, {78.3, 14.3}}, label: 'Avg. cents off'
+                                        Other, 0x108cb8f60, {{20.0, 241.7}, {362.0, 134.3}}, identifier: 'journey.coach'
+                                          StaticText, 0x108c9bca0, {{38.0, 270.8}, {56.7, 21.7}}, label: 'Coach'
+                                          Other, 0x108cea5a0, {{283.0, 278.7}, {27.0, 6.0}}
+                                          Button, 0x108cec540, {{320.0, 259.7}, {44.0, 44.0}}, identifier: 'journey.coach.next', label: 'Next tip', value: 1 of 2
+                                          ScrollView, 0x108c77a40, {{20.0, 317.7}, {362.0, 40.3}}
+                                            Other, 0x108bc38d0, {{20.0, 317.7}, {724.0, 40.3}}
+                                              Other, 0x108bcab30, {{40.7, 317.7}, {323.3, 40.3}}
+                                                Image, 0x108b38270, {{40.7, 321.7}, {23.0, 20.0}}, identifier: 'chart.line.uptrend.xyaxis', label: 'Chart Line'
+                                                StaticText, 0x108bcb5a0, {{78.0, 317.7}, {286.0, 40.3}}, label: '40 minutes this week, 140% more than last week. That is how it sticks.'
+                                              Other, 0x108b9c700, {{403.0, 317.7}, {310.7, 40.3}}
+                                                Image, 0x108bb5a90, {{403.0, 320.7}, {22.0, 22.0}}, identifier: 'target', label: 'target'
+                                                StaticText, 0x108bc4790, {{440.0, 317.7}, {273.7, 40.3}}, label: 'Your tune-ups land within ±0.9¢ now, down from ±2.2¢ a few weeks ago.'
+                                        StaticText, 0x108c9e900, {{38.0, 417.0}, {90.0, 21.7}}, label: 'Your week'
+                                        StaticText, 0x108ca9660, {{38.0, 440.7}, {64.0, 14.3}}, label: 'Oct 23 – 29'
+                                        Button, 0x108ca01e0, {{278.7, 414.0}, {85.3, 44.0}}, identifier: 'journey.week.share', label: 'Share'
+                                          Image, 0x108c786a0, {{292.3, 427.7}, {11.7, 16.0}}, identifier: 'square.and.arrow.up', label: 'Share'
+                                          StaticText, 0x108c79b60, {{278.7, 414.0}, {85.3, 44.0}}, label: 'Share'
+                                        StaticText, 0x108ca2750, {{38.0, 488.3}, {54.3, 65.0}}, label: '40, minutes'
+                                          StaticText, 0x108cf2df0, {{38.0, 488.3}, {54.3, 50.7}}, label: '40'
+                                          StaticText, 0x108cab500, {{38.0, 539.0}, {45.0, 14.3}}, label: 'minutes'
+                                        StaticText, 0x108c66d60, {{39.0, 582.3}, {98.7, 36.0}}, label: '±0.6¢, best tune-up'
+                                          Image, 0x108c6bd90, {{39.0, 583.3}, {15.7, 15.7}}, identifier: 'scope', label: 'scope'
+                                          StaticText, 0x108cea180, {{64.0, 582.3}, {49.7, 21.7}}, label: '±0.6¢'
+                                          StaticText, 0x108cb8b40, {{64.0, 604.0}, {73.7, 14.3}}, label: 'best tune-up'
+                                        StaticText, 0x108c78280, {{148.7, 582.3}, {69.0, 36.0}}, label: '3, lessons'
+                                          Image, 0x108cb7ce0, {{148.7, 583.3}, {17.7, 15.7}}, identifier: 'graduationcap.fill', label: 'Itunes U'
+                                          StaticText, 0x108c88eb0, {{174.7, 582.3}, {11.7, 21.7}}, label: '3'
+                                          StaticText, 0x108c9fdc0, {{174.7, 604.0}, {43.0, 14.3}}, label: 'lessons'
+                                        StaticText, 0x108c99b40, {{261.6, 582.2}, {82.4, 36.1}}, label: '7, day streak'
+                                          Other, 0x108ce9500, {{261.6, 582.2}, {13.2, 16.1}}
+                                          StaticText, 0x108c9b880, {{285.3, 582.3}, {11.7, 21.7}}, label: '7'
+                                          StaticText, 0x108c9b040, {{285.3, 604.0}, {58.7, 14.3}}, label: 'day streak'
+                                        Other, 0x108c78ac0, {{20.0, 656.3}, {362.0, 258.0}}, label: 'Practiced on 20 of the last 35 days'
+                                          StaticText, 0x108c5b690, {{38.0, 674.3}, {131.0, 21.7}}, identifier: 'journey.calendar.title', label: 'Last five weeks'
+                                          StaticText, 0x108c55330, {{286.0, 679.3}, {78.0, 14.3}}, identifier: 'journey.calendar.active-days', label: '20 of 35 days'
+                                          StaticText, 0x108c78ee0, {{55.2, 708.0}, {7.0, 15.3}}, identifier: 'journey.calendar.weekday.6', label: 'F'
+                                          StaticText, 0x108c92330, {{102.0, 708.0}, {8.3, 15.3}}, identifier: 'journey.calendar.weekday.7', label: 'S'
+                                          StaticText, 0x108ceede0, {{149.4, 708.0}, {8.3, 15.3}}, identifier: 'journey.calendar.weekday.1', label: 'S'
+                                          StaticText, 0x108cb6240, {{195.2, 708.0}, {11.7, 15.3}}, identifier: 'journey.calendar.weekday.2', label: 'M'
+                                          StaticText, 0x108c6c5d0, {{244.8, 708.0}, {7.3, 15.3}}, identifier: 'journey.calendar.weekday.3', label: 'T'
+                                          StaticText, 0x108cf3a50, {{289.4, 708.0}, {13.0, 15.3}}, identifier: 'journey.calendar.weekday.4', label: 'W'
+                                          StaticText, 0x108ce7a60, {{339.6, 708.0}, {7.3, 15.3}}, identifier: 'journey.calendar.weekday.5', label: 'T'
+                                          Other, 0x108c77200, {{0.0, 0.0}, {0.0, 0.0}}
+                                        StaticText, 0x108cc2cc0, {{38.0, 952.3}, {113.0, 21.7}}, identifier: 'journey.strings.title', label: 'String health'
+                                        StaticText, 0x108ca9ec0, {{38.0, 984.0}, {324.7, 38.0}}, label: 'Tune on a few different days and Timbre learns how each string drifts.'
+                                        Button, 0x108cacf10, {{38.0, 1032.0}, {111.7, 44.0}}, identifier: 'journey.restrung', label: 'I just restrung'
+                                          Image, 0x108cee000, {{37.7, 1047.0}, {16.0, 13.3}}, identifier: 'arrow.triangle.2.circlepath', label: 'Syncing'
+                                          StaticText, 0x108ca72a0, {{38.0, 1032.0}, {111.7, 44.0}}, label: 'I just restrung'
+                                        Button, 0x108c8c130, {{20.0, 1114.0}, {362.0, 99.3}}, identifier: 'journey.accuracy.locked', label: 'Accuracy over time, Timbre Pro, See how close you land, session after session, with Timbre Pro.'
+                                          Image, 0x108cbfc80, {{40.7, 1153.7}, {23.0, 20.0}}, identifier: 'chart.xyaxis.line', label: 'chart.xyaxis.line'
+                                          StaticText, 0x108cedbe0, {{80.0, 1132.5}, {152.7, 20.3}}, label: 'Accuracy over time'
+                                          StaticText, 0x108c79300, {{240.7, 1132.0}, {44.0, 21.3}}, label: 'TIMBRE PRO'
+                                          StaticText, 0x108cec960, {{80.0, 1157.3}, {224.3, 38.0}}, label: 'See how close you land, session after session, with Timbre Pro.'
+                                          Image, 0x108cec120, {{356.3, 1158.0}, {7.0, 11.7}}, identifier: 'chevron.forward', label: 'Forward'
+                                        StaticText, 0x108cb20e0, {{38.0, 1251.3}, {125.7, 21.7}}, identifier: 'journey.achievements.title', label: 'Achievements'
+                                        StaticText, 0x108c77e60, {{334.0, 1256.3}, {30.0, 14.3}}, label: '3 of 42'
+                                          StaticText, 0x108c57cf0, {{334.0, 1256.3}, {7.7, 14.3}}, label: '3'
+                                          StaticText, 0x108c1a320, {{341.7, 1256.3}, {7.3, 14.3}}, label: ' / '
+                                          StaticText, 0x108c9aa00, {{349.0, 1256.3}, {15.0, 14.3}}, label: '42'
+                                        Button, 0x108c9b460, {{38.0, 1287.0}, {102.0, 101.7}}, identifier: 'badge.minutes_60', label: 'First hour', value: Earned
+                                          Button, 0x108ce9d60, {{38.0, 1287.0}, {102.0, 101.7}}, label: 'First hour, First hour, Earned', value: Earned
+                                            Other, 0x108c77620, {{3.6, 1269.9}, {114.4, 92.2}}, label: 'First hour', value: Earned
+                                              Image, 0x108cb09a0, {{78.7, 1306.0}, {20.7, 20.3}}, identifier: 'clock.fill', label: 'Clock'
+                                            StaticText, 0x108cf3e70, {{60.5, 1353.0}, {57.0, 14.3}}, label: 'First hour'
+                                            StaticText, 0x108cb76a0, {{67.5, 1373.3}, {43.0, 15.3}}, label: 'Earned'
+                                        Button, 0x108cf8750, {{150.0, 1287.0}, {102.0, 101.7}}, identifier: 'badge.streak_3', label: 'Warming up', value: Earned
+                                          Button, 0x108cf7f10, {{150.0, 1287.0}, {102.0, 101.7}}, label: 'Warming up, Warming up, Earned', value: Earned
+                                            Other, 0x108c8ac70, {{115.6, 1269.9}, {114.4, 92.2}}, label: 'Warming up', value: Earned
+                                              Other, 0x108c6c1b0, {{192.5, 1304.8}, {17.0, 20.9}}
+                                            StaticText, 0x108c7aea0, {{165.7, 1353.0}, {70.7, 14.3}}, label: 'Warming up'
+                                            StaticText, 0x108caaf40, {{179.5, 1373.3}, {43.0, 15.3}}, label: 'Earned'
+                                        Button, 0x108c8b8d0, {{262.0, 1287.0}, {102.0, 101.7}}, identifier: 'badge.streak_7', label: 'Perfect week', value: Earned
+                                          Button, 0x108c9cd80, {{262.0, 1287.0}, {102.0, 101.7}}, label: 'Perfect week, Perfect week, Earned', value: Earned
+                                            Other, 0x108ce82c0, {{227.6, 1269.9}, {114.4, 92.2}}, label: 'Perfect week', value: Earned
+                                              Other, 0x108cf8330, {{304.5, 1304.8}, {17.0, 20.9}}
+                                            StaticText, 0x108cfd1f0, {{274.3, 1353.0}, {77.3, 14.3}}, label: 'Perfect week'
+                                            StaticText, 0x108c64360, {{291.5, 1373.3}, {43.0, 15.3}}, label: 'Earned'
+                                        Button, 0x108d6c0b0, {{38.0, 1406.7}, {102.0, 101.7}}, identifier: 'badge.streak_30', label: 'Month of music', value: Play thirty days i...
+                                          Button, 0x108d6bc90, {{38.0, 1406.7}, {102.0, 101.7}}, label: 'Month of music, Month of music, 7 of 30', value: Play thirty days i...
+                                            Other, 0x108d0aa00, {{60.0, 1406.7}, {58.0, 58.0}}, label: 'Month of music', value: Play thirty days i...
+                                              Image, 0x108d6c4d0, {{79.0, 1426.3}, {20.3, 18.7}}, identifier: 'calendar', label: 'Calendar'
+                                              Image, 0x108d7f900, {{106.3, 1452.0}, {5.7, 7.7}}, identifier: 'lock.fill', label: 'Lock'
+                                            StaticText, 0x108d83240, {{43.5, 1472.7}, {91.0, 14.3}}, label: 'Month of music'
+                                            StaticText, 0x108d0b660, {{73.8, 1493.0}, {30.3, 15.3}}, label: '7 of 30'
+                                              StaticText, 0x108d7f4e0, {{73.8, 1493.0}, {8.3, 15.3}}, label: '7'
+                                              StaticText, 0x108d7fd20, {{82.2, 1493.0}, {5.7, 15.3}}, label: ' / '
+                                              StaticText, 0x108d3a980, {{87.8, 1493.0}, {16.3, 15.3}}, label: '30'
+                                        Button, 0x108d3ca80, {{150.0, 1406.7}, {102.0, 101.7}}, identifier: 'badge.level_5', label: 'Rising star', value: Reach level 5, 1 o...
+                                          Button, 0x108d40250, {{150.0, 1406.7}, {102.0, 101.7}}, label: 'Rising star, Rising star, 1 of 5', value: Reach level 5
+                                            Other, 0x108d0a5e0, {{172.0, 1406.7}, {58.0, 58.0}}, label: 'Rising star', value: Reach level 5
+                                              Image, 0x108d0b240, {{189.7, 1425.0}, {22.7, 21.7}}, identifier: 'star.fill', label: 'Favorite'
+                                              Image, 0x108d0d340, {{218.3, 1452.0}, {5.7, 7.7}}, identifier: 'lock.fill', label: 'Lock'
+                                            StaticText, 0x108d0ae20, {{169.7, 1472.7}, {62.7, 14.3}}, label: 'Rising star'
+                                            StaticText, 0x108d80140, {{189.8, 1493.0}, {22.3, 15.3}}, label: '1 of 5'
+                                              StaticText, 0x108d0ea00, {{189.8, 1493.0}, {8.3, 15.3}}, label: '1'
+                                              StaticText, 0x108c19b30, {{198.2, 1493.0}, {5.7, 15.3}}, label: ' / '
+                                              StaticText, 0x108c95430, {{203.8, 1493.0}, {8.3, 15.3}}, label: '5'
+                                        Button, 0x108d7ea40, {{262.0, 1406.7}, {102.0, 101.7}}, identifier: 'badge.minutes_600', label: 'Ten hours', value: Practice for ten h...
+                                          Button, 0x108d7eb60, {{262.0, 1406.7}, {102.0, 101.7}}, label: 'Ten hours, Ten hours, 103 of 600', value: Practice for ten h...
+                                            Other, 0x108d7ec80, {{284.0, 1406.7}, {58.0, 58.0}}, label: 'Ten hours', value: Practice for ten h...
+                                              Image, 0x108d73d90, {{307.0, 1426.3}, {12.0, 18.7}}, identifier: 'hourglass', label: 'Duration'
+                                              Image, 0x108d73eb0, {{330.3, 1452.0}, {5.7, 7.7}}, identifier: 'lock.fill', label: 'Lock'
+                                            StaticText, 0x108d73fd0, {{284.0, 1472.7}, {58.0, 14.3}}, label: 'Ten hours'
+                                            StaticText, 0x108d740f0, {{285.5, 1493.0}, {55.0, 15.3}}, label: '103 of 600'
+                                              StaticText, 0x108d74210, {{285.5, 1493.0}, {24.7, 15.3}}, label: '103'
+                                              StaticText, 0x108d74330, {{310.2, 1493.0}, {5.7, 15.3}}, label: ' / '
+                                              StaticText, 0x108d74450, {{315.8, 1493.0}, {24.7, 15.3}}, label: '600'
+                                        Button, 0x108d74570, {{38.0, 1526.3}, {102.0, 101.7}}, identifier: 'badge.streak_100', label: 'Hundred days', value: Play 100 days in a...
+                                          Button, 0x108d74690, {{38.0, 1526.3}, {102.0, 101.7}}, label: 'Hundred days, Hundred days, 7 of 100', value: Play 100 days in a...
+                                            Other, 0x108d747b0, {{60.0, 1526.3}, {58.0, 58.0}}, label: 'Hundred days', value: Play 100 days in a...
+                                              Image, 0x108b649f0, {{76.0, 1545.0}, {26.3, 20.7}}, identifier: 'crown.fill', label: 'crown.fill'
+                                              Image, 0x108baf4f0, {{106.3, 1571.7}, {5.7, 7.7}}, identifier: 'lock.fill', label: 'Lock'
+                                            StaticText, 0x108be69b0, {{47.8, 1592.3}, {82.3, 14.3}}, label: 'Hundred days'
+                                            StaticText, 0x108b52fd0, {{69.7, 1612.7}, {38.7, 15.3}}, label: '7 of 100'
+                                              StaticText, 0x108b4e2a0, {{69.7, 1612.7}, {8.3, 15.3}}, label: '7'
+                                              StaticText, 0x108b37e50, {{78.0, 1612.7}, {5.7, 15.3}}, label: ' / '
+                                              StaticText, 0x108b1ae30, {{83.7, 1612.7}, {24.7, 15.3}}, label: '100'
+                                        Button, 0x108b41f60, {{150.0, 1526.3}, {102.0, 101.7}}, identifier: 'badge.first_tune', label: 'First in tune', value: Tune your first st...
+                                          Button, 0x108ba4030, {{150.0, 1526.3}, {102.0, 101.7}}, label: 'First in tune, First in tune, 0 of 1', value: Tune your first st...
+                                            Other, 0x108b27570, {{172.0, 1526.3}, {58.0, 58.0}}, label: 'First in tune', value: Tune your first st...
+                                              Image, 0x108b76200, {{192.0, 1546.7}, {18.0, 17.3}}, identifier: 'checkmark', label: 'Selected', Selected
+                                              Image, 0x108b9cb20, {{218.3, 1571.7}, {5.7, 7.7}}, identifier: 'lock.fill', label: 'Lock'
+                                            StaticText, 0x108bc4bb0, {{166.0, 1592.3}, {70.0, 14.3}}, label: 'First in tune'
+                                            StaticText, 0x108b69f60, {{189.8, 1612.7}, {22.3, 15.3}}, label: '0 of 1'
+                                              StaticText, 0x108b1b250, {{189.8, 1612.7}, {8.3, 15.3}}, label: '0'
+                                              StaticText, 0x108b67d60, {{198.2, 1612.7}, {5.7, 15.3}}, label: ' / '
+                                              StaticText, 0x108b289d0, {{203.8, 1612.7}, {8.3, 15.3}}, label: '1'
+                                        Button, 0x108be9c40, {{262.0, 1526.3}, {102.0, 101.7}}, identifier: 'badge.full_tune', label: 'All six', value: Tune every string ...
+                                          Button, 0x108b3fec0, {{262.0, 1526.3}, {102.0, 101.7}}, label: 'All six, All six, 0 of 1', value: Tune every string ...
+                                            Other, 0x108bb6e90, {{284.0, 1526.3}, {58.0, 58.0}}, label: 'All six', value: Tune every string ...
+                                              Image, 0x108b4e6c0, {{306.7, 1545.3}, {12.7, 20.3}}, identifier: 'music.note', label: 'Song'
+                                              Image, 0x108b1ba90, {{330.3, 1571.7}, {5.7, 7.7}}, identifier: 'lock.fill', label: 'Lock'
+                                            StaticText, 0x108b27150, {{295.3, 1592.3}, {35.3, 14.3}}, label: 'All six'
+                                            StaticText, 0x108b3ba70, {{301.8, 1612.7}, {22.3, 15.3}}, label: '0 of 1'
+                                              StaticText, 0x108b4f8c0, {{301.8, 1612.7}, {8.3, 15.3}}, label: '0'
+                                              StaticText, 0x108bfc890, {{310.2, 1612.7}, {5.7, 15.3}}, label: ' / '
+                                              StaticText, 0x108b76620, {{315.8, 1612.7}, {8.3, 15.3}}, label: '1'
+                                        Button, 0x108bb5670, {{38.0, 1642.0}, {326.0, 44.0}}, identifier: 'journey.badges.more', label: 'Show all'
+                                          StaticText, 0x11506e150, {{164.2, 1656.2}, {52.7, 15.7}}, label: 'Show all'
+                                          Image, 0x11506dd30, {{224.3, 1660.7}, {11.7, 6.7}}, identifier: 'chevron.down', label: 'Go Down'
+                                        StaticText, 0x115071550, {{38.0, 1742.0}, {62.0, 21.7}}, identifier: 'journey.recent.title', label: 'Recent'
+                                        StaticText, 0x11506d910, {{296.3, 1747.0}, {67.7, 14.3}}, label: '34 sessions'
+                                        StaticText, 0x115071130, {{72.0, 1777.7}, {108.3, 18.0}}, label: 'Acoustic guitar'
+                                        StaticText, 0x11506ea10, {{326.0, 1786.5}, {38.0, 16.7}}, label: '±0.6¢'
+                                        StaticText, 0x115071970, {{72.0, 1797.7}, {102.7, 14.3}}, label: 'Oct 29 at 2:24 AM'
+                                        StaticText, 0x115071d90, {{72.0, 1830.0}, {82.0, 18.0}}, label: 'Ear training'
+                                        StaticText, 0x11506fe70, {{331.3, 1838.8}, {32.7, 16.7}}, label: '7 of 10'
+                                          StaticText, 0x11506ee30, {{331.3, 1838.8}, {9.0, 16.7}}, label: '7'
+                                          StaticText, 0x11506f630, {{340.3, 1838.8}, {6.0, 16.7}}, label: ' / '
+                                          StaticText, 0x11506fa50, {{346.3, 1838.8}, {17.7, 16.7}}, label: '10'
+                                        StaticText, 0x115060ba0, {{72.0, 1850.0}, {102.7, 14.3}}, label: 'Oct 29 at 2:24 AM'
+                                        StaticText, 0x115066aa0, {{72.0, 1882.3}, {44.0, 18.0}}, label: 'Guitar'
+                                        StaticText, 0x115061820, {{324.3, 1891.7}, {39.7, 15.7}}, label: '★★★'
+                                        StaticText, 0x115061400, {{72.0, 1902.3}, {102.3, 14.3}}, label: 'Oct 28 at 5:30 PM'
+                                        StaticText, 0x115068880, {{72.0, 1934.7}, {108.3, 18.0}}, label: 'Acoustic guitar'
+                                        StaticText, 0x1150360b0, {{326.0, 1943.5}, {38.0, 16.7}}, label: '±0.7¢'
+                                        StaticText, 0x108b3c0b0, {{72.0, 1954.7}, {102.7, 14.3}}, label: 'Oct 28 at 5:00 PM'
+                                        StaticText, 0x108b2e3d0, {{72.0, 1987.0}, {44.0, 18.0}}, label: 'Guitar'
+                                        StaticText, 0x108b5e540, {{337.7, 1996.3}, {26.3, 15.7}}, label: '★★'
+                                        StaticText, 0x108b28040, {{72.0, 2007.0}, {101.7, 14.3}}, label: 'Oct 27 at 5:30 PM'
+                                        StaticText, 0x108b699e0, {{72.0, 2039.3}, {82.0, 18.0}}, label: 'Ear training'
+                                        StaticText, 0x115024430, {{331.3, 2048.2}, {32.7, 16.7}}, label: '9 of 10'
+                                          StaticText, 0x115024550, {{331.3, 2048.2}, {9.0, 16.7}}, label: '9'
+                                          StaticText, 0x115024670, {{340.3, 2048.2}, {6.0, 16.7}}, label: ' / '
+                                          StaticText, 0x115024790, {{346.3, 2048.2}, {17.7, 16.7}}, label: '10'
+                                        StaticText, 0x1150248b0, {{72.0, 2059.3}, {99.7, 14.3}}, label: 'Oct 27 at 5:10 PM'
+                                        StaticText, 0x1150249d0, {{72.0, 2091.7}, {108.3, 18.0}}, label: 'Acoustic guitar'
+                                        StaticText, 0x115024af0, {{326.0, 2100.5}, {38.0, 16.7}}, label: '±0.8¢'
+                                        StaticText, 0x115024c10, {{72.0, 2111.7}, {101.7, 14.3}}, label: 'Oct 27 at 5:00 PM'
+                                        StaticText, 0x115024d30, {{72.0, 2144.0}, {44.0, 18.0}}, label: 'Guitar'
+                                        StaticText, 0x115024e50, {{324.3, 2153.3}, {39.7, 15.7}}, label: '★★★'
+                                        StaticText, 0x115024f70, {{72.0, 2164.0}, {102.3, 14.3}}, label: 'Oct 26 at 5:30 PM'
+                                        StaticText, 0x115025090, {{72.0, 2196.3}, {108.3, 18.0}}, label: 'Acoustic guitar'
+                                        StaticText, 0x1150251b0, {{326.0, 2205.2}, {38.0, 16.7}}, label: '±0.9¢'
+                                        StaticText, 0x1150252d0, {{72.0, 2216.3}, {102.7, 14.3}}, label: 'Oct 26 at 5:00 PM'
+                                        StaticText, 0x1150253f0, {{72.0, 2248.7}, {82.0, 18.0}}, label: 'Ear training'
+                                        StaticText, 0x115025510, {{331.3, 2257.5}, {32.7, 16.7}}, label: '8 of 10'
+                                          StaticText, 0x115025630, {{331.3, 2257.5}, {9.0, 16.7}}, label: '8'
+                                          StaticText, 0x115025750, {{340.3, 2257.5}, {6.0, 16.7}}, label: ' / '
+                                          StaticText, 0x115025870, {{346.3, 2257.5}, {17.7, 16.7}}, label: '10'
+                                        StaticText, 0x115025990, {{72.0, 2268.7}, {100.3, 14.3}}, label: 'Oct 25 at 5:10 PM'
+                                        StaticText, 0x108d748d0, {{72.0, 2301.0}, {108.3, 18.0}}, label: 'Acoustic guitar'
+                                        StaticText, 0x108d749f0, {{326.0, 2309.8}, {38.0, 16.7}}, label: '±1.0¢'
+                                        StaticText, 0x108d74b10, {{72.0, 2321.0}, {102.3, 14.3}}, label: 'Oct 25 at 5:00 PM'
+                                        StaticText, 0x108d74c30, {{72.0, 2353.3}, {108.3, 18.0}}, label: 'Acoustic guitar'
+                                        StaticText, 0x108d74d50, {{326.0, 2362.2}, {38.0, 16.7}}, label: '±1.0¢'
+                                        StaticText, 0x108d74e70, {{72.0, 2373.3}, {102.3, 14.3}}, label: 'Oct 24 at 5:00 PM'
+                                      Other, 0x108d74f90, {{369.0, 62.0}, {30.0, 729.0}}, label: 'Vertical scroll bar, 4 pages', value: 0%
+                                        Other, 0x108d750b0, {{396.0, 65.0}, {3.0, 249.7}}
+                                      Other, 0x1039eb1c0, {{369.0, 62.0}, {30.0, 729.0}}, label: 'Vertical scroll bar, 4 pages', value: 0%
+                                        Other, 0x108d751d0, {{396.0, 65.0}, {3.0, 249.7}}
+                                    Other, 0x108d752f0, {{0.0, 0.0}, {402.0, 80.0}}
+                            Other, 0x108d75410, {{0.0, 0.0}, {402.0, 874.0}}
+                              Other, 0x108d75530, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x108d75650, {{0.0, 791.0}, {402.0, 83.0}}
+                Other, 0x10399add0, {{0.0, 791.0}, {402.0, 83.0}}
+                  Other, 0x1039caa80, {{0.0, 0.0}, {402.0, 874.0}}
+                    TabBar, 0x10398b140, {{0.0, 791.0}, {402.0, 83.0}}, label: 'Tab Bar'
+                      Other, 0x10397ded0, {{21.0, 791.0}, {360.0, 62.0}}
+                        Other, 0x108d75770, {{21.0, 791.0}, {78.0, 54.0}}
+                        Other, 0x108d75890, {{21.0, 791.0}, {360.0, 62.0}}
+                          Button, 0x108d759b0, {{25.0, 795.0}, {78.0, 54.0}}, identifier: 'gauge.with.needle', label: 'Tune'
+                            Image, 0x115025ab0, {{50.0, 801.3}, {27.3, 27.3}}, identifier: 'gauge.with.needle.fill', label: 'gauge.with.needle.fill'
+                          Button, 0x115025bd0, {{93.5, 795.0}, {78.0, 54.0}}, identifier: 'graduationcap', label: 'Learn'
+                            Image, 0x115025cf0, {{114.5, 801.7}, {36.7, 31.3}}, identifier: 'graduationcap.fill', label: 'itunes u'
+                          Button, 0x115025e10, {{162.0, 795.0}, {78.0, 54.0}}, identifier: 'music.note.list', label: 'Songs'
+                            Image, 0x115025f30, {{186.0, 801.7}, {29.3, 27.0}}, identifier: 'music.note.list', label: 'playlist'
+                          Button, 0x115026050, {{230.5, 795.0}, {78.0, 54.0}}, identifier: 'metronome', label: 'Practice'
+                            Image, 0x115026170, {{255.5, 801.7}, {28.7, 26.0}}, identifier: 'metronome.fill', label: 'metronome.fill'
+                          Button, 0x115026290, {{299.0, 795.0}, {78.0, 54.0}}, identifier: 'chart.bar', label: 'Progress', Selected
+                            Image, 0x1150263b0, {{321.0, 802.3}, {35.0, 25.3}}, identifier: 'chart.bar.fill', label: 'chart column'
+                        Other, 0x1150264d0, {{299.0, 795.0}, {78.0, 54.0}}
+                          Other, 0x108d75ad0, {{299.0, 795.0}, {78.0, 54.0}}
+                            Other, 0x108d75bf0, {{299.0, 795.0}, {78.0, 54.0}}
+                            Other, 0x108d673f0, {{299.0, 795.0}, {78.0, 54.0}}
+                              Other, 0x108d67510, {{299.0, 795.0}, {78.0, 54.0}}
+                                Other, 0x108d67630, {{299.0, 795.0}, {78.0, 54.0}}
+                                  Other, 0x108d67750, {{299.0, 795.0}, {78.0, 54.0}}
+                                Other, 0x108d67870, {{299.0, 795.0}, {78.0, 54.0}}
+                              Other, 0x108d67990, {{299.0, 795.0}, {78.0, 54.0}}
+                  Other, 0x108d67ab0, {{0.0, 791.0}, {402.0, 83.0}}
+                    Other, 0x108d67bd0, {{0.0, 791.0}, {402.0, 83.0}}
+                      Other, 0x108d67cf0, {{0.0, 791.0}, {402.0, 83.0}}
+                        Other, 0x108d67e10, {{0.0, 791.0}, {402.0, 83.0}}
+                          Other, 0x108d67f30, {{0.0, 791.0}, {402.0, 83.0}}
+                            Other, 0x108d68050, {{0.0, 791.0}, {402.0, 83.0}}
+                        Other, 0x108d68170, {{0.0, 791.0}, {402.0, 83.0}}
+                          Other, 0x108d68290, {{0.0, 791.0}, {402.0, 83.0}}
+Path to element:
+ →Application, 0x108b3d800, pid: 5930, label: 'Timbre'
+Query chain:
+ →Find: Target Application 'com.shahradazerisharghi.timbre'
+  Output: {
+    Application, 0x1039bc160, pid: 5930, label: 'Timbre'
+  }
+)

@@ -1,0 +1,15 @@
+{
+  "partition": "screens",
+  "expected": [
+    "TimbreUITests/AccessibilityAuditUITests/testLessonSteps",
+    "TimbreUITests/AccessibilityAuditUITests/testMetronome",
+    "TimbreUITests/AccessibilityAuditUITests/testSettingsAndPaywall",
+    "TimbreUITests/AccessibilityAuditUITests/testWelcomeScreen"
+  ],
+  "missing": [],
+  "initial_exit": 0,
+  "retried": [],
+  "retry_exit": null,
+  "retry_missing": [],
+  "passed": true
+}
