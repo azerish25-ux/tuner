@@ -1,0 +1,39 @@
++----------------------------------+--------+-------------+--------+----------+--------+------------------+-----------------+
+| rule identifier                  | opt-in | correctable | custom | warnings | errors | total violations | number of files |
++----------------------------------+--------+-------------+--------+----------+--------+------------------+-----------------+
+| line_length                      | no     | no          | no     |      308 |     16 |              324 |              76 |
+| comma                            | no     | yes         | no     |      151 |      0 |              151 |               2 |
+| force_unwrapping                 | yes    | no          | no     |      106 |      0 |              106 |              29 |
+| function_parameter_count         | no     | no          | no     |       90 |     12 |              102 |              45 |
+| accessibility_label_for_image    | yes    | no          | no     |       90 |      0 |               90 |              45 |
+| statement_position               | no     | yes         | no     |       56 |      0 |               56 |              30 |
+| implicit_optional_initialization | no     | yes         | no     |       42 |      0 |               42 |              22 |
+| type_body_length                 | no     | no          | no     |       36 |      0 |               36 |              36 |
+| discouraged_optional_boolean     | yes    | no          | no     |       33 |      0 |               33 |              21 |
+| cyclomatic_complexity            | no     | no          | no     |       26 |      2 |               28 |              23 |
+| colon                            | no     | yes         | no     |       25 |      0 |               25 |               1 |
+| file_length                      | no     | no          | no     |       22 |      0 |               22 |              22 |
+| redundant_discardable_let        | no     | yes         | no     |       15 |      0 |               15 |               9 |
+| function_body_length             | no     | no          | no     |       11 |      0 |               11 |              10 |
+| shorthand_operator               | no     | no          | no     |        0 |     11 |               11 |               4 |
+| switch_case_alignment            | no     | no          | no     |       11 |      0 |               11 |               3 |
+| empty_count                      | yes    | yes         | no     |        0 |      9 |                9 |               5 |
+| vertical_parameter_alignment     | no     | no          | no     |        9 |      0 |                9 |               8 |
+| accessibility_trait_for_button   | yes    | no          | no     |        7 |      0 |                7 |               6 |
+| trailing_newline                 | no     | yes         | no     |        4 |      0 |                4 |               4 |
+| large_tuple                      | no     | no          | no     |        3 |      0 |                3 |               2 |
+| static_over_final_class          | no     | no          | no     |        3 |      0 |                3 |               2 |
+| vertical_whitespace              | no     | yes         | no     |        3 |      0 |                3 |               3 |
+| control_statement                | no     | yes         | no     |        2 |      0 |                2 |               2 |
+| for_where                        | no     | no          | no     |        2 |      0 |                2 |               2 |
+| force_try                        | no     | no          | no     |        0 |      2 |                2 |               1 |
+| optional_data_string_conversion  | no     | no          | no     |        2 |      0 |                2 |               2 |
+| xctfail_message                  | no     | no          | no     |        2 |      0 |                2 |               2 |
+| empty_enum_arguments             | no     | yes         | no     |        1 |      0 |                1 |               1 |
+| inclusive_language               | no     | no          | no     |        1 |      0 |                1 |               1 |
+| unneeded_synthesized_initializer | no     | yes         | no     |        1 |      0 |                1 |               1 |
+| unowned_variable_capture         | yes    | no          | no     |        1 |      0 |                1 |               1 |
+| void_function_in_ternary         | no     | no          | no     |        1 |      0 |                1 |               1 |
++----------------------------------+--------+-------------+--------+----------+--------+------------------+-----------------+
+| Total                            |        |             |        |    1,064 |     52 |            1,116 |             197 |
++----------------------------------+--------+-------------+--------+----------+--------+------------------+-----------------+

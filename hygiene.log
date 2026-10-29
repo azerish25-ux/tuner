@@ -1,0 +1,15 @@
+NOTICE ios/Timbre/Onboarding/WelcomeHeadline.swift:44: [test-coupling] 'screenshot': 1 in this file, 0 allowed by the baseline. Product code explained by its tests or captures: state the behaviour and why it matters to a user.
+    /// These are font geometry measurements at the already-scaled point size, never screenshot offsets.
+::notice file=ios/Timbre/Onboarding/WelcomeHeadline.swift,line=44,title=hygiene/test-coupling::[test-coupling] 'screenshot': 1 in this file, 0 allowed by the baseline. Product code explained by its tests or captures: state the behaviour and why it matters to a user.
+WARNING ios/Timbre/Paywall/PaywallWinBack.swift:132: [inline-orb] '.background(Circle().fill(Palette.starGold.opacity(0.14)': 1 in this file, 0 allowed by the baseline. A glyph on a translucent tinted circle is the retired orb tile drawn by hand: use the bare glyph.
+    .background(Circle().fill(Palette.starGold.opacity(0.14)))
+::warning file=ios/Timbre/Paywall/PaywallWinBack.swift,line=132,title=hygiene/inline-orb::[inline-orb] '.background(Circle().fill(Palette.starGold.opacity(0.14)': 1 in this file, 0 allowed by the baseline. A glyph on a translucent tinted circle is the retired orb tile drawn by hand: use the bare glyph.
+NOTICE ios/Timbre/Stage/InstrumentStage.swift:974: [test-coupling] 'screenshot': 1 in this file, 0 allowed by the baseline. Product code explained by its tests or captures: state the behaviour and why it matters to a user.
+    /// GPU teardown is not observed here, and no app or screenshot acceptance is inferred from this signal.
+::notice file=ios/Timbre/Stage/InstrumentStage.swift,line=974,title=hygiene/test-coupling::[test-coupling] 'screenshot': 1 in this file, 0 allowed by the baseline. Product code explained by its tests or captures: state the behaviour and why it matters to a user.
+NOTICE ios/TimbreWatch/WatchCapture.swift:5: [test-coupling] 'simulator': 1 in this file, 0 allowed by the baseline. Product code explained by its tests or captures: state the behaviour and why it matters to a user.
+    /// Opt-in simulator evidence for the existing Watch views. Absent from Release builds.
+::notice file=ios/TimbreWatch/WatchCapture.swift,line=5,title=hygiene/test-coupling::[test-coupling] 'simulator': 1 in this file, 0 allowed by the baseline. Product code explained by its tests or captures: state the behaviour and why it matters to a user.
+Hygiene lint: review-ref 0, bug-ref 0, qa-ref 0, store-frame 0, wip 0, process-ref 0, icon-orb 0, inline-orb 9, status-colour 81, type-scale 0, test-coupling 10 (baseline allows 96)
+Failing on new occurrences: review-ref, bug-ref, qa-ref, store-frame, wip, process-ref, icon-orb, type-scale
+OK: no new error-level occurrences

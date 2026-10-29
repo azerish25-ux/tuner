@@ -1,0 +1,595 @@
+Building for debugging...
+[0/10] /Users/runner/work/tuner/tuner/ios/.build/arm64-apple-macosx/debug/TimbreCorePackageTests.derived/runner.swift
+[1/10] Copying curriculum.json
+[1/10] Copying photos.json
+[1/10] Copying catalog.json
+[1/10] Write sources
+[7/10] Write swift-version-1977FEB4D2752686.txt
+[9/51] Compiling TimbreCore ChordRing.swift
+[10/51] Compiling TimbreCore DSP.swift
+[11/51] Compiling TimbreCore LessonListening.swift
+[12/51] Compiling TimbreCore OnsetDetector.swift
+[13/51] Compiling TimbreCore PitchDetectors.swift
+[14/51] Compiling TimbreCore PolyTuner.swift
+[15/51] Compiling TimbreCore StrokeChords.swift
+[16/51] Compiling TimbreCore PracticeAnalytics.swift
+[17/51] Compiling TimbreCore Curriculum.swift
+[18/51] Compiling TimbreCore CurriculumStore.swift
+[19/51] Compiling TimbreCore LessonEngine.swift
+[20/51] Compiling TimbreCore Placement.swift
+[21/51] Compiling TimbreCore PlayAlongSession.swift
+[22/51] Compiling TimbreCore SongArrangement.swift
+[23/51] Compiling TimbreCore SongOfTheDay.swift
+[24/51] Compiling TimbreCore StrumTake.swift
+[25/51] Compiling TimbreCore WeakSpots.swift
+[26/51] Compiling TimbreCore Notation.swift
+[27/51] Compiling TimbreCore NotationScore.swift
+[28/51] Compiling TimbreCore LocalStore.swift
+[29/51] Emitting module TimbreCore
+[30/70] Compiling TimbreCore BandGroove.swift
+[31/70] Compiling TimbreCore DroneRenderer.swift
+[32/70] Compiling TimbreCore InstrumentVoice.swift
+[33/70] Compiling TimbreCore OutputAudio.swift
+[34/70] Compiling TimbreCore SampleLibrary.swift
+[35/70] Compiling TimbreCore SampledTones.swift
+[36/70] Compiling TimbreCore StrumFeel.swift
+[37/70] Compiling TimbreCore ToneSynth.swift
+[38/70] Compiling TimbreCore Catalog.swift
+[39/70] Compiling TimbreCore NoteNames.swift
+[40/70] Compiling TimbreCore PhotoSelection.swift
+[41/70] Compiling TimbreCore PitchMath.swift
+[42/70] Compiling TimbreCore TimbreLocalization.swift
+[43/70] Compiling TimbreCore CoachNotes.swift
+[44/70] Compiling TimbreCore CoachTiming.swift
+[45/70] Compiling TimbreCore Access.swift
+[46/70] Compiling TimbreCore FreeSongWindow.swift
+[47/70] Compiling TimbreCore PlanComparison.swift
+[48/70] Compiling TimbreCore AudioClip.swift
+[49/70] Compiling TimbreCore ChordRecognizer.swift
+[50/70] Compiling TimbreCore Chords.swift
+[51/70] Compiling TimbreCore EarTraining.swift
+[52/70] Compiling TimbreCore FreeTier.swift
+[53/70] Compiling TimbreCore PitchSniper.swift
+[54/70] Compiling TimbreCore Progression.swift
+[55/70] Compiling TimbreCore SpacedReview.swift
+[56/70] Compiling TimbreCore SpacedReviewSession.swift
+[57/70] Compiling TimbreCore Streaks.swift
+[58/70] Compiling TimbreCore OneEuroFilter.swift
+[59/70] Compiling TimbreCore CourseGroups.swift
+[60/70] Compiling TimbreCore TargetLabelFormatter.swift
+[61/70] Compiling TimbreCore TuningTracker.swift
+[62/70] Compiling TimbreCore VoiceExercise.swift
+[63/70] Compiling TimbreCore ChartPlayback.swift
+[64/70] Compiling TimbreCore ChordPro.swift
+[65/70] Compiling TimbreCore ChordSymbol.swift
+[66/70] Compiling TimbreCore RecordingAnalysis.swift
+[67/70] Compiling TimbreCore UserSongLibrary.swift
+[68/70] Compiling TimbreCore resource_bundle_accessor.swift
+[69/102] Compiling TimbreCoreTests OnsetDetectorTests.swift
+[70/102] Compiling TimbreCoreTests OutputAudioTests.swift
+[71/102] Compiling TimbreCoreTests PersistenceTests.swift
+[72/102] Compiling TimbreCoreTests PhotoSelectionTests.swift
+[73/102] Compiling TimbreCoreTests PlacementTests.swift
+[74/102] Compiling TimbreCoreTests PlayAlongSessionTests.swift
+[75/102] Compiling TimbreCoreTests PolyTunerTests.swift
+[76/102] Compiling TimbreCoreTests PracticeAnalyticsTests.swift
+[77/102] Compiling TimbreCoreTests PracticeTests.swift
+[78/102] Compiling TimbreCoreTests ProgressionTests.swift
+[79/102] Compiling TimbreCoreTests RealWorldAccuracyTests.swift
+[80/102] Compiling TimbreCoreTests SampledTonesTests.swift
+[81/102] Compiling TimbreCoreTests ShowMeMemoryTests.swift
+[82/102] Compiling TimbreCoreTests SongArrangementTests.swift
+[83/102] Compiling TimbreCoreTests SongOfTheDayTests.swift
+[84/117] Emitting module TimbreCoreTests
+[85/117] Compiling TimbreCoreTests AccessPolicyTests.swift
+[86/117] Compiling TimbreCoreTests BandGrooveTests.swift
+[87/117] Compiling TimbreCoreTests CatalogTests.swift
+[88/117] Compiling TimbreCoreTests ChordLibraryTests.swift
+[89/117] Compiling TimbreCoreTests ChordRecognizerTests.swift
+[90/117] Compiling TimbreCoreTests CoachNotesTests.swift
+[91/117] Compiling TimbreCoreTests CoachTimingTests.swift
+[92/117] Compiling TimbreCoreTests CourseGroupTests.swift
+[93/117] Compiling TimbreCoreTests CurriculumIndexTests.swift
+[94/117] Compiling TimbreCoreTests CurriculumStoreTests.swift
+[95/117] Compiling TimbreCoreTests DSPTests.swift
+[96/117] Compiling TimbreCoreTests FreeSongWindowTests.swift
+[97/117] Compiling TimbreCoreTests HistoryRollUpTests.swift
+[98/117] Compiling TimbreCoreTests LearnTests.swift
+[99/117] Compiling TimbreCoreTests NotationTests.swift
+[100/117] Compiling TimbreCoreTests NoteNamesTests.swift
+[101/117] Compiling TimbreCoreTests SongbookEditionTests.swift
+[102/117] Compiling TimbreCoreTests SpacedReviewTests.swift
+[103/117] Compiling TimbreCoreTests StreakCacheTests.swift
+[104/117] Compiling TimbreCoreTests StrokeChordsTests.swift
+[105/117] Compiling TimbreCoreTests SynthesizedSignals.swift
+[106/117] Compiling TimbreCoreTests TargetLabelTests.swift
+[107/117] Compiling TimbreCoreTests TimbreLocalizationTests.swift
+[108/117] Compiling TimbreCoreTests ToneSynthTests.swift
+[109/117] Compiling TimbreCoreTests TuningTests.swift
+[110/117] Compiling TimbreCoreTests VoiceTests.swift
+[111/117] Compiling TimbreCoreTests ChartPlaybackTests.swift
+[112/117] Compiling TimbreCoreTests ChordProTests.swift
+[113/117] Compiling TimbreCoreTests ChordSymbolTests.swift
+[114/117] Compiling TimbreCoreTests RecordingAnalysisTests.swift
+[115/117] Compiling TimbreCoreTests UserSongLibraryTests.swift
+[116/119] Emitting module TimbreCorePackageTests
+[117/119] Compiling TimbreCorePackageTests runner.swift
+[117/119] Write Objects.LinkFileList
+[118/119] Linking TimbreCorePackageTests
+Build complete! (68.92s)
+[1/472] Testing TimbreCoreTests.AccessPolicyTests/testFreeInstrumentsKeepEveryPresetAndTheirOwnTunings
+[2/472] Testing TimbreCoreTests.AccessPolicyTests/testFreeAndProTableMatchesThePolicy
+[3/472] Testing TimbreCoreTests.AccessPolicyTests/testEveryInstrumentTunesFreeInItsStandardTuning
+[4/472] Testing TimbreCoreTests.AccessPolicyTests/testPlacementPassOpensOnlyThePlacedFirstLesson
+[5/472] Testing TimbreCoreTests.AccessPolicyTests/testProFollowsTheEntitlementsWhateverTheExpiryDate
+[6/472] Testing TimbreCoreTests.AccessPolicyTests/testOtherInstrumentsAlternateAndCustomTuningsArePro
+[7/472] Testing TimbreCoreTests.AccessPolicyTests/testRemoteOpeningsOpenUnitTwoAndListedSongs
+[8/472] Testing TimbreCoreTests.AccessPolicyTests/testRevokedUnknownOrNoEntitlementIsNotPro
+[9/472] Testing TimbreCoreTests.BandGrooveTests/testAChangeOnBeatThreeIsWhereTheStandardGrooveAlreadyMoves
+[10/472] Testing TimbreCoreTests.AccessPolicyTests/testYearlyTestArmsGrantPro
+[11/472] Testing TimbreCoreTests.BandGrooveTests/testCountryIsATwoStep
+[12/472] Testing TimbreCoreTests.BandGrooveTests/testAChangeOnBeatTwoCutsTheRingingChordAndRootAndSoundsTheNewOnes
+[13/472] Testing TimbreCoreTests.BandGrooveTests/testCuesIgnoreTempoAndNeedTwoChords
+[14/472] Testing TimbreCoreTests.BandGrooveTests/testEveryStyleStaysInsideItsBarInEveryMeter
+[15/472] Testing TimbreCoreTests.BandGrooveTests/testGenreWordsAndStrumPatterns
+[16/472] Testing TimbreCoreTests.BandGrooveTests/testFunkScratchesSixteenthsOverGhostNotes
+[17/472] Testing TimbreCoreTests.BandGrooveTests/testNothingRingsAcrossAChangeInAnyStyle
+[18/472] Testing TimbreCoreTests.BandGrooveTests/testNoChangeLeavesTheBarAsItIs
+[19/472] Testing TimbreCoreTests.AccessPolicyTests/testTheTableCountsUnitTwoWhenItIsFree
+[20/472] Testing TimbreCoreTests.BandGrooveTests/testRockPopAndBalladEachSoundTheirPart
+[21/472] Testing TimbreCoreTests.BandGrooveTests/testReggaeIsAOneDropWithASkank
+[22/472] Testing TimbreCoreTests.BandGrooveTests/testOriginalsSongsGetTheStyleTheirLessonsName
+[23/472] Testing TimbreCoreTests.BandGrooveTests/testTheStandardGrooveIsTheCoursesOwn
+[24/472] Testing TimbreCoreTests.CatalogTests/testCompleteCatalogAndDefaults
+[25/472] Testing TimbreCoreTests.CatalogTests/testPresetTuningsCoverTheirInstrumentsStrings
+[26/472] Testing TimbreCoreTests.CatalogTests/testReferenceAndNoteSystems
+[27/472] Testing TimbreCoreTests.CatalogTests/testShippedTemperamentLetterRule
+[28/472] Testing TimbreCoreTests.CatalogTests/testTwelveStringOctavePartnersAreRetained
+[29/472] Testing TimbreCoreTests.ChartPlaybackTests/testFindsTheEasiestCapo
+[30/472] Testing TimbreCoreTests.ChartPlaybackTests/testFreeAndPro
+[31/472] Testing TimbreCoreTests.ChartPlaybackTests/testPracticePlan
+[32/472] Testing TimbreCoreTests.ChartPlaybackTests/testTapAlong
+[33/472] Testing TimbreCoreTests.ChartPlaybackTests/testTimelineFindsTheChordAtATime
+[34/472] Testing TimbreCoreTests.ChartPlaybackTests/testTransposesAndWritesForTheCapo
+[35/472] Testing TimbreCoreTests.ChordLibraryTests/testEveryCuratedShapeSpellsItsChordAndIsPlayable
+[36/472] Testing TimbreCoreTests.ChordLibraryTests/testOneTuningQuestWithOneCounter
+[37/472] Testing TimbreCoreTests.ChordLibraryTests/testOpenPositionShapesAreTheFreeLibrary
+[38/472] Testing TimbreCoreTests.BandGrooveTests/testTheBandRecognisesOriginalsStepsAndLeavesOtherCoursesStandard
+[39/472] Testing TimbreCoreTests.ChordLibraryTests/testOpenShapesComeFirstThenBarreFamilies
+[40/472] Testing TimbreCoreTests.ChordLibraryTests/testPlayabilityAndFingering
+[41/472] Testing TimbreCoreTests.ChordLibraryTests/testScaleRunStaysInPositionAndClimbsAnOctave
+[42/472] Testing TimbreCoreTests.BandGrooveTests/testTheSharedIndexReadsTheAppsOneCurriculum
+[43/472] Testing TimbreCoreTests.ChordLibraryTests/testScaleTonesAreNamedAsIntervals
+[44/472] Testing TimbreCoreTests.ChordLibraryTests/testShiftedStandardTuningsReuseTheTable
+[45/472] Testing TimbreCoreTests.ChordProTests/testChordProKeepsItsOwnTitleOrTakesTheFileName
+[46/472] Testing TimbreCoreTests.ChordProTests/testConvertsChordsOverWords
+[47/472] Testing TimbreCoreTests.ChordProTests/testCustomSectionsTabsAndOldMacLineEnds
+[48/472] Testing TimbreCoreTests.ChordProTests/testIsLenientWithRealWorldFiles
+[49/472] Testing TimbreCoreTests.ChordProTests/testLooseParagraphsBecomeSections
+[50/472] Testing TimbreCoreTests.ChordProTests/testLyricsAreNeverTakenForChords
+[51/472] Testing TimbreCoreTests.ChordProTests/testMeters
+[52/472] Testing TimbreCoreTests.ChordProTests/testNewChart
+[53/472] Testing TimbreCoreTests.ChordProTests/testReadsDirectivesSectionsAndChords
+[54/472] Testing TimbreCoreTests.ChordProTests/testSectionNamesTabsAndDetails
+[55/472] Testing TimbreCoreTests.ChordProTests/testSetsDirectivesInPlace
+[56/472] Testing TimbreCoreTests.ChordProTests/testTapsChordsOntoWords
+[57/472] Testing TimbreCoreTests.ChordRecognizerTests/testBanjoTwoFingerD7PassesForD7
+[58/472] Testing TimbreCoreTests.ChordRecognizerTests/testBassAndChromaOfAReading
+[59/472] Testing TimbreCoreTests.ChordRecognizerTests/testChordTargetSymbolsAndLessonBridge
+[60/472] Testing TimbreCoreTests.ChordLibraryTests/testOtherTuningsFallBackToPlayableFinderShapes
+[61/472] Testing TimbreCoreTests.ChordRecognizerTests/testBarreAndPowerChords
+[62/472] Testing TimbreCoreTests.ChordRecognizerTests/testFollowsAChordChange
+[63/472] Testing TimbreCoreTests.ChordRecognizerTests/testIdealChromaRecoversEveryChord
+[64/472] Testing TimbreCoreTests.ChordRecognizerTests/testLessonMatchingAcceptsVoicingsAndInversionsButNotOtherChords
+[65/472] Testing TimbreCoreTests.ChordRecognizerTests/testNinthChordsAreCheckedAsTheirSeventh
+[66/472] Testing TimbreCoreTests.ChordRecognizerTests/testOpenPositionChordsAtBothSampleRates
+[67/472] Testing TimbreCoreTests.ChordRecognizerTests/testEveryRootAndQualityFromTheChordFinder
+[68/472] Testing TimbreCoreTests.ChordRecognizerTests/testSilenceEndsTheChordAndResetForgetsIt
+[69/472] Testing TimbreCoreTests.ChordRecognizerTests/testSilenceNoiseAndInvalidFramesGiveNoChord
+[70/472] Testing TimbreCoreTests.ChordRecognizerTests/testEachStrokeOfAProgressionIsReadForItsChord
+[71/472] Testing TimbreCoreTests.ChordRecognizerTests/testSymmetricChordsAreChecked
+[72/472] Testing TimbreCoreTests.ChordSymbolTests/testFormulaForEveryCommonSuffix
+[73/472] Testing TimbreCoreTests.ChordSymbolTests/testKeysAndKeyGuessing
+[74/472] Testing TimbreCoreTests.ChordSymbolTests/testParsesRootSuffixAndBass
+[75/472] Testing TimbreCoreTests.ChordSymbolTests/testRecognizerTargets
+[76/472] Testing TimbreCoreTests.ChordSymbolTests/testRejectsWordsThatAreNotChords
+[77/472] Testing TimbreCoreTests.ChordSymbolTests/testTransposesWithTheSpellingAsked
+[78/472] Testing TimbreCoreTests.CoachNotesTests/testADriftingStringIsWorthAWordOnceItIsSettled
+[79/472] Testing TimbreCoreTests.CoachNotesTests/testAFlawlessRunGetsTheNextLevelNotAFix
+[80/472] Testing TimbreCoreTests.CoachNotesTests/testAFullTempoTakeIsWhatStandsBetweenItAndThreeStars
+[81/472] Testing TimbreCoreTests.CoachNotesTests/testAKeepGoingPlayAlongHoldsTheStarsAndTheCoachAgrees
+[82/472] Testing TimbreCoreTests.CoachNotesTests/testALateChordChangeLeadsWithItsTempo
+[83/472] Testing TimbreCoreTests.CoachNotesTests/testAReviewDoesNotSendYouBackToTheDrill
+[84/472] Testing TimbreCoreTests.CoachNotesTests/testFlawlessIsThreeStarsAtNinetyEightPercent
+[85/472] Testing TimbreCoreTests.CoachNotesTests/testGrowthIsPraisedWithItsNumbers
+[86/472] Testing TimbreCoreTests.CoachNotesTests/testNotesAgainstChordsNamesTheWeakSkill
+[87/472] Testing TimbreCoreTests.CoachNotesTests/testNothingSpecificMeansNoNote
+[88/472] Testing TimbreCoreTests.CoachNotesTests/testOnlyOneKindOfItemIsNamedTogether
+[89/472] Testing TimbreCoreTests.CoachNotesTests/testRankingKeepsOneNotePerTopicBestFirst
+[90/472] Testing TimbreCoreTests.CoachNotesTests/testRecentTakesSpeakOnProgressToo
+[91/472] Testing TimbreCoreTests.CoachNotesTests/testSingleNotesMoveAndChordsChange
+[92/472] Testing TimbreCoreTests.CoachNotesTests/testSkillOfALessonIsWhatMostStepsPractise
+[93/472] Testing TimbreCoreTests.CoachNotesTests/testTappedRhythmSaysNothingAboutTiming
+[94/472] Testing TimbreCoreTests.CoachNotesTests/testTheCourseSplitPointsAtTheWeakestLessonOrTheDrill
+[95/472] Testing TimbreCoreTests.CoachNotesTests/testTheStreakNudgeComesOnlyBeforeTodaysPractice
+[96/472] Testing TimbreCoreTests.CoachTimingTests/testAChangeOnTimeWithTheWrongChordDidNotLand
+[97/472] Testing TimbreCoreTests.CoachTimingTests/testAnEvenlyLateTakeIsNotAChangeProblem
+[98/472] Testing TimbreCoreTests.CoachTimingTests/testBeatsInTheBar
+[99/472] Testing TimbreCoreTests.CoachTimingTests/testChangesNeverHeardStillCount
+[100/472] Testing TimbreCoreTests.CoachTimingTests/testLeanNeedsSixNotesAndSomeSpread
+[101/472] Testing TimbreCoreTests.CoachTimingTests/testLoopTempoIsARungDownOnAMultipleOfFive
+[102/472] Testing TimbreCoreTests.CoachTimingTests/testOneSlightlyLateNoteInAMelodyIsNoise
+[103/472] Testing TimbreCoreTests.CoachTimingTests/testPlayAlongTakeKeepsEachJudgedNoteAndItsTiming
+[104/472] Testing TimbreCoreTests.CoachTimingTests/testStrummedTakeMapsStrokesToChordsAndBeats
+[105/472] Testing TimbreCoreTests.CoachTimingTests/testTheLateChangeIntoCStandsOut
+[106/472] Testing TimbreCoreTests.CourseGroupTests/testAPairLocksOnlyOnceBothStringsHave
+[107/472] Testing TimbreCoreTests.CourseGroupTests/testMandolinPairsTuneAsFourCourses
+[108/472] Testing TimbreCoreTests.CourseGroupTests/testOctavePartnersKeepAChipEach
+[109/472] Testing TimbreCoreTests.CourseGroupTests/testPegsOfAPairResolveToTheirOwnString
+[110/472] Testing TimbreCoreTests.CurriculumIndexTests/testASongbookOpensEverySongButKeepsItsChallengesInOrder
+[111/472] Testing TimbreCoreTests.CurriculumIndexTests/testBundledCurriculumLookupsMatchAScan
+[112/472] Testing TimbreCoreTests.CurriculumIndexTests/testCourseIndexesItsLessonsInPathOrder
+[113/472] Testing TimbreCoreTests.CurriculumIndexTests/testDistinctTuneCountCountsSongsByTitle
+[114/472] Testing TimbreCoreTests.CurriculumIndexTests/testDistinctTunesCountEachSongOnce
+[115/472] Testing TimbreCoreTests.CurriculumIndexTests/testEveryHiddenTuneNamesASongLesson
+[116/472] Testing TimbreCoreTests.CurriculumIndexTests/testIndexIsRebuiltWhenDecoded
+[117/472] Testing TimbreCoreTests.CurriculumIndexTests/testInstrumentSongbooks
+[118/472] Testing TimbreCoreTests.CurriculumIndexTests/testSlowestTempoIsOneTheClickPlays
+[119/472] Testing TimbreCoreTests.CurriculumIndexTests/testSongsYouKnowLeadUntilThreeArePlayed
+[120/472] Testing TimbreCoreTests.CurriculumIndexTests/testUnlockingReadsTheIndex
+[121/472] Testing TimbreCoreTests.CurriculumStoreTests/testAFailedDecodeLeavesAnEmptyCurriculumAndSaysWhy
+[122/472] Testing TimbreCoreTests.CurriculumStoreTests/testDecodesOnceForEveryCaller
+[123/472] Testing TimbreCoreTests.CurriculumStoreTests/testReadingWithoutAPreloadDecodesOnTheSpot
+[124/472] Testing TimbreCoreTests.CurriculumStoreTests/testSharedIsTheBundledCurriculum
+[125/472] Testing TimbreCoreTests.CustomTuningTests/testBullseyeHidesATuneInItsRounds
+[126/472] Testing TimbreCoreTests.CustomTuningTests/testCustomTuningKeepsAnchorsAndOrder
+[127/472] Testing TimbreCoreTests.CustomTuningTests/testCustomTuningsPersistAndValidate
+[128/472] Testing TimbreCoreTests.CustomTuningTests/testFreeTierTable
+[129/472] Testing TimbreCoreTests.DSPTests/testAndroidAdaptiveWindowDetunedSweep
+[130/472] Testing TimbreCoreTests.DSPTests/testExtendedCalibratedPianoBounds
+[131/472] Testing TimbreCoreTests.DSPTests/testFFTAutocorrelationMatchesDirectDefinition
+[132/472] Testing TimbreCoreTests.DSPTests/testFFTForwardInverseRoundTrip
+[133/472] Testing TimbreCoreTests.DSPTests/testHarmonicsDoNotCauseOctaveErrors
+[134/472] Testing TimbreCoreTests.DSPTests/testLevelConfidenceFallsNearSilence
+[135/472] Testing TimbreCoreTests.DSPTests/testLowToneOutsideWindowReachIsRejected
+[136/472] Testing TimbreCoreTests.DSPTests/testNoisyRehearsalSignalRetainsPitch
+[137/472] Testing TimbreCoreTests.DSPTests/testPluckedStringAccuracyBench
+[138/472] Testing TimbreCoreTests.DSPTests/testSilenceShortFramesAndNoiseAreRejected
+[139/472] Testing TimbreCoreTests.DSPTests/testYinAccuracyAcrossRangeAndSampleRates
+[140/472] Testing TimbreCoreTests.FreeSongWindowTests/testCachedOpeningsReevaluateEveryReadWithoutRefresh
+[141/472] Testing TimbreCoreTests.FreeSongWindowTests/testDefaultClockAndGlobalSnapshotCannotPreserveExpiredLessons
+[142/472] Testing TimbreCoreTests.ChordRecognizerTests/testRobustnessBench
+[143/472] Testing TimbreCoreTests.FreeSongWindowTests/testFullActualCarolCampaignIncludingLateCelloAndBass
+[144/472] Testing TimbreCoreTests.FreeSongWindowTests/testInvalidWindowsNeverGrantAndHaveNoBoundary
+[145/472] Testing TimbreCoreTests.FreeSongWindowTests/testLocalDaysIncludeStartAndExcludeEnd
+[146/472] Testing TimbreCoreTests.FreeSongWindowTests/testWindowUsesEachPlayersTimeZoneAndGregorianDates
+[147/472] Testing TimbreCoreTests.HistoryRollUpTests/testAStorePastItsLimitRollsUpAndKeepsTheStreak
+[148/472] Testing TimbreCoreTests.HistoryRollUpTests/testRecentHistoryIsNeverRolledUp
+[149/472] Testing TimbreCoreTests.FreeSongWindowTests/testInvalidSongWindowDoesNotRestrictIndependentUnitTwoOrPro
+[150/472] Testing TimbreCoreTests.HistoryRollUpTests/testStagedSettingsWaitForAFlushOrTheNextWrite
+[151/472] Testing TimbreCoreTests.LearnTests/testAccentsMustStandOut
+[152/472] Testing TimbreCoreTests.LearnTests/testAChopLeftRingingIsCalled
+[153/472] Testing TimbreCoreTests.LearnTests/testACorrectChopLessonEarnsThreeStars
+[154/472] Testing TimbreCoreTests.LearnTests/testACorrectChunkTakeScoresFullMarks
+[155/472] Testing TimbreCoreTests.LearnTests/testANinthChordStrokeIsChecked
+[156/472] Testing TimbreCoreTests.LearnTests/testBundledCurriculumDecodesAndIsConsistent
+[157/472] Testing TimbreCoreTests.LearnTests/testCapoAndClipDecode
+[158/472] Testing TimbreCoreTests.LearnTests/testCombosCountOnlyPerfectAndGoodNotes
+[159/472] Testing TimbreCoreTests.HistoryRollUpTests/testRollUpKeepsStreaksMinutesAndRecentHistory
+[160/472] Testing TimbreCoreTests.LearnTests/testLessonsEarnXPAndCountTowardQuestsAndBadges
+[161/472] Testing TimbreCoreTests.LearnTests/testLessonsUnlockInOrderAndKeepBestStars
+[162/472] Testing TimbreCoreTests.LearnTests/testMutedAndAccentedBeatsDecode
+[163/472] Testing TimbreCoreTests.LearnTests/testNoteSequenceHoldsAndCountsWrongNotesOnce
+[164/472] Testing TimbreCoreTests.LearnTests/testEveryChordTheCurriculumAsksForIsChecked
+[165/472] Testing TimbreCoreTests.LearnTests/testNotesOnlyReviewRepeatsTheNotes
+[166/472] Testing TimbreCoreTests.LearnTests/testPlacementOpensEarlierUnitsWithoutFinishingThem
+[167/472] Testing TimbreCoreTests.LearnTests/testPlayAlongGradesTimingAndIntonation
+[168/472] Testing TimbreCoreTests.LearnTests/testRepeatedNoteNeedsAFreshAttack
+[169/472] Testing TimbreCoreTests.LearnTests/testRunHonoursAStarCapAndCollectsItems
+[170/472] Testing TimbreCoreTests.LearnTests/testRunScoresStarsAndXP
+[171/472] Testing TimbreCoreTests.LearnTests/testSpokenCuesComeTwoBeatsAheadWithoutColliding
+[172/472] Testing TimbreCoreTests.LearnTests/testStepsRoundTripThroughJSON
+[173/472] Testing TimbreCoreTests.LearnTests/testStrokesAreTimedAndMissed
+[174/472] Testing TimbreCoreTests.LearnTests/testTapAlongCalibrationFindsTheHeardDelay
+[175/472] Testing TimbreCoreTests.LearnTests/testTempoLadderStepsUpAndCapsSlowFinishes
+[176/472] Testing TimbreCoreTests.LearnTests/testTheFinalPlayAlongGatesTheStars
+[177/472] Testing TimbreCoreTests.LearnTests/testVoiceAcceptsAnyOctave
+[178/472] Testing TimbreCoreTests.LearnTests/testWeakSpotsAreTrackedAndReviewed
+[179/472] Testing TimbreCoreTests.NotationTests/testAccidentalsLastToTheBarline
+[180/472] Testing TimbreCoreTests.NotationTests/testANoteLongerThanTheBarIsTiedOverTheBarline
+[181/472] Testing TimbreCoreTests.NotationTests/testANoteTiedOverTheBarlineCarriesItsOwnAccidental
+[182/472] Testing TimbreCoreTests.NotationTests/testBarsBreakIntoTheFewestEvenLines
+[183/472] Testing TimbreCoreTests.NotationTests/testChromaticNotesReadAsStepsFromTheirNeighbours
+[184/472] Testing TimbreCoreTests.NotationTests/testClefPositions
+[185/472] Testing TimbreCoreTests.NotationTests/testCompoundTimeKeepsThePulseVisible
+[186/472] Testing TimbreCoreTests.NotationTests/testEighthsAreBeamedByTheBeat
+[187/472] Testing TimbreCoreTests.NotationTests/testGapsAreFilledWithRestsThatShowTheBeat
+[188/472] Testing TimbreCoreTests.NotationTests/testKeySignaturesTakeTheSpellingWithFewerAccidentals
+[189/472] Testing TimbreCoreTests.NotationTests/testMinorKeysRaiseTheirSixthAndSeventh
+[190/472] Testing TimbreCoreTests.NotationTests/testNotesOfTheKeyTakeTheirOwnLetters
+[191/472] Testing TimbreCoreTests.NotationTests/testRestsAndLongNotesBreakBeams
+[192/472] Testing TimbreCoreTests.NotationTests/testSignaturesSitWhereTheyAreWrittenOnEachClef
+[193/472] Testing TimbreCoreTests.NotationTests/testSpacingGrowsWithLengthButNotInProportion
+[194/472] Testing TimbreCoreTests.NotationTests/testSpellingKeepsTheOctaveOfTheLetter
+[195/472] Testing TimbreCoreTests.NotationTests/testStemsFollowTheNotesDistanceFromTheMiddleLine
+[196/472] Testing TimbreCoreTests.NotationTests/testSwungEighthsAreWrittenStraight
+[197/472] Testing TimbreCoreTests.NotationTests/testSyncopationsKeepTheirShape
+[198/472] Testing TimbreCoreTests.NoteNamesTests/testChordSymbolsFollowTheSystem
+[199/472] Testing TimbreCoreTests.NoteNamesTests/testChordSymbolsShowWithSigns
+[200/472] Testing TimbreCoreTests.NoteNamesTests/testDefaultSystemFollowsTheLanguageUntilChosen
+[201/472] Testing TimbreCoreTests.NoteNamesTests/testEveryNamingSystemShowsSigns
+[202/472] Testing TimbreCoreTests.NoteNamesTests/testGermanSpellsBNaturalAsHAndBFlatAsB
+[203/472] Testing TimbreCoreTests.NoteNamesTests/testLessonChordNamesFollowTheActiveSystem
+[204/472] Testing TimbreCoreTests.NoteNamesTests/testNamesThatNameNotesShowSigns
+[205/472] Testing TimbreCoreTests.NoteNamesTests/testNewLanguagesUseMusicalAccidentalsWithoutChangingNotation
+[206/472] Testing TimbreCoreTests.NoteNamesTests/testNotesShowWithSharpAndFlatSigns
+[207/472] Testing TimbreCoreTests.NoteNamesTests/testPitchClassNamesFollowTheSystem
+[208/472] Testing TimbreCoreTests.NoteNamesTests/testSpokenLeavesOtherTextAlone
+[209/472] Testing TimbreCoreTests.NoteNamesTests/testSpokenNamesInEnglish
+[210/472] Testing TimbreCoreTests.NoteNamesTests/testSpokenNamesInFixedDoAndOtherLanguages
+[211/472] Testing TimbreCoreTests.NoteNamesTests/testSpokenNamesInGermanicLanguages
+[212/472] Testing TimbreCoreTests.NoteNamesTests/testTunerNamesInGerman
+[213/472] Testing TimbreCoreTests.NoteNamesTests/testTunerNamesShowWithSigns
+[214/472] Testing TimbreCoreTests.NoteNamesTests/testTuningNamesShowSignsButKeepTheirData
+[215/472] Testing TimbreCoreTests.OnsetDetectorTests/testBeatTimesFromALessonPattern
+[216/472] Testing TimbreCoreTests.NotationTests/testEveryPlayAlongEngraves
+[217/472] Testing TimbreCoreTests.OnsetDetectorTests/testClickTrackOnsetsAreFoundAndTimed
+[218/472] Testing TimbreCoreTests.OnsetDetectorTests/testEachOnsetCountsForOneBeatOnly
+[219/472] Testing TimbreCoreTests.OnsetDetectorTests/testEmptyUnsortedAndLatencyCompensatedInput
+[220/472] Testing TimbreCoreTests.OnsetDetectorTests/testGradesAtTheWindowEdges
+[221/472] Testing TimbreCoreTests.OnsetDetectorTests/testPluckedNotesAtKnownTimes
+[222/472] Testing TimbreCoreTests.OnsetDetectorTests/testQuietClicksOverANoiseFloor
+[223/472] Testing TimbreCoreTests.OnsetDetectorTests/testChunkSizeDoesNotChangeTheResult
+[224/472] Testing TimbreCoreTests.OnsetDetectorTests/testRingingNoteIsOneOnset
+[225/472] Testing TimbreCoreTests.OnsetDetectorTests/testSixteenthNotesAt120Bpm
+[226/472] Testing TimbreCoreTests.OnsetDetectorTests/testSoftNotesAfterALoudOne
+[227/472] Testing TimbreCoreTests.OnsetDetectorTests/testSilenceAndSteadyNoiseStayQuiet
+[228/472] Testing TimbreCoreTests.OnsetDetectorTests/testStrummedChordIsOneOnset
+[229/472] Testing TimbreCoreTests.OutputAudioTests/testFiniteToneEnvelopeAndNaturalEnd
+[230/472] Testing TimbreCoreTests.OnsetDetectorTests/testStrumLessonEndToEnd
+[231/472] Testing TimbreCoreTests.OutputAudioTests/testHigherReferencesRemainPureAndDetectorFindsLowFundamental
+[232/472] Testing TimbreCoreTests.OutputAudioTests/testMetronomeChunkIndependenceAndTempoPhase
+[233/472] Testing TimbreCoreTests.OutputAudioTests/testMetronomePulsesAndAccentsFollowSampleTime
+[234/472] Testing TimbreCoreTests.PersistenceTests/testABackgroundWriteThatFailsIsReportedAndRetried
+[235/472] Testing TimbreCoreTests.ChordRecognizerTests/testStrokesOfTheWrongChordOrNoneAreCaught
+[236/472] Testing TimbreCoreTests.PersistenceTests/testAFileTheSystemWontHandOverIsLeftAlone
+[237/472] Testing TimbreCoreTests.PersistenceTests/testAFileCutOffOrTornAnywhereStillOpens
+[238/472] Testing TimbreCoreTests.PersistenceTests/testAnEnglishNobodyPickedFollowsTheDevice
+[239/472] Testing TimbreCoreTests.OutputAudioTests/testLowReferencesRetainFundamentalAndAudibleHarmonics
+[240/472] Testing TimbreCoreTests.PersistenceTests/testAnUnreadableFileWithoutABackupStartsFreshAndIsKept
+[241/472] Testing TimbreCoreTests.PersistenceTests/testAnUnreadableFileIsSetAsideAndTheBackupOpens
+[242/472] Testing TimbreCoreTests.PersistenceTests/testBackgroundSavesAreCurrentAtOnceAndOnDiskAfterAFlush
+[243/472] Testing TimbreCoreTests.PersistenceTests/testBackgroundStagedSettingsWaitForAFlush
+[244/472] Testing TimbreCoreTests.PersistenceTests/testEachSaveKeepsTheFileBeforeIt
+[245/472] Testing TimbreCoreTests.PersistenceTests/testEverySettingSurvivesTheLenientDecoder
+[246/472] Testing TimbreCoreTests.PersistenceTests/testFailedWriteDoesNotChangeMemory
+[247/472] Testing TimbreCoreTests.PersistenceTests/testGoldenV1FileOpensWithEverythingInIt
+[248/472] Testing TimbreCoreTests.PersistenceTests/testHistoryClearIsPersistedAndRetainsSettings
+[249/472] Testing TimbreCoreTests.PersistenceTests/testInvalidUpdateDoesNotReplaceSavedState
+[250/472] Testing TimbreCoreTests.PersistenceTests/testOnlyMeasuredCurrentVoiceEvidenceAdvancesProgress
+[251/472] Testing TimbreCoreTests.PersistenceTests/testOnlyTheNewestSetAsideFilesAreKept
+[252/472] Testing TimbreCoreTests.PersistenceTests/testOutOfBoundsAndUnreadableValuesAreRepairedOnOpening
+[253/472] Testing TimbreCoreTests.PersistenceTests/testRecentSelectionsBoundedAndDeduplicatedInOrder
+[254/472] Testing TimbreCoreTests.PersistenceTests/testReferencePitchAndWrittenTranspositionEnforceSourceBounds
+[255/472] Testing TimbreCoreTests.PersistenceTests/testSettingsAndRecordsSurviveReopen
+[256/472] Testing TimbreCoreTests.PhotoSelectionTests/testBassVariantsFollowTuningRatherThanIncompatiblePhoto
+[257/472] Testing TimbreCoreTests.PhotoSelectionTests/testEveryMalletRangeSelectsItsOwnPhoto
+[258/472] Testing TimbreCoreTests.PhotoSelectionTests/testForeignUnknownAndMissingInputsNeverSelectAnotherInstrumentPhoto
+[259/472] Testing TimbreCoreTests.PitchSniperTests/testDriftingOutOfTheBullseyeRestartsTheHoldAndTimeoutsReset
+[260/472] Testing TimbreCoreTests.PhotoSelectionTests/testSharedTuningAliasesRemainSelectable
+[261/472] Testing TimbreCoreTests.PitchSniperTests/testFastBullseyesScoreMoreAndBuildACombo
+[262/472] Testing TimbreCoreTests.PitchSniperTests/testRoundsAreDeterministicAndPlayable
+[263/472] Testing TimbreCoreTests.PersistenceTests/testHistoryIsRetainedUntilExplicitDeletion
+[264/472] Testing TimbreCoreTests.PlacementTests/testBanjo
+[265/472] Testing TimbreCoreTests.PlacementTests/testBass
+[266/472] Testing TimbreCoreTests.PlacementTests/testCello
+[267/472] Testing TimbreCoreTests.PlacementTests/testCheckMovesTheAnswerOneLevel
+[268/472] Testing TimbreCoreTests.PlacementTests/testCheckPlaysGCAndDThenAStrumFromTheCourse
+[269/472] Testing TimbreCoreTests.PlacementTests/testEarTheoryAndRhythm
+[270/472] Testing TimbreCoreTests.PlacementTests/testCoursesWithoutTheirOwnStartsPlaceByShare
+[271/472] Testing TimbreCoreTests.PlacementTests/testCheckVerdict
+[272/472] Testing TimbreCoreTests.PlacementTests/testGuitarPlacesAFewYearsAtSongsWithChordsAndManyYearsAtBarres
+[273/472] Testing TimbreCoreTests.PlacementTests/testMandolin
+[274/472] Testing TimbreCoreTests.PlacementTests/testPlanPassAndLearnAgreeInEveryCourse
+[275/472] Testing TimbreCoreTests.PlacementTests/testUkulele
+[276/472] Testing TimbreCoreTests.PlacementTests/testViolin
+[277/472] Testing TimbreCoreTests.PlacementTests/testVoice
+[278/472] Testing TimbreCoreTests.PlayAlongSessionTests/testABarIsTimedByItsFirstStrokeAndJudgedByItsChord
+[279/472] Testing TimbreCoreTests.PlayAlongSessionTests/testABarWithNoStrokeIsMissedOnceItIsOver
+[280/472] Testing TimbreCoreTests.PlayAlongSessionTests/testABrokenRunOfFourOrMoreIsReported
+[281/472] Testing TimbreCoreTests.PlayAlongSessionTests/testAChangeInsideABarIsJudgedOnItsOwn
+[282/472] Testing TimbreCoreTests.PlayAlongSessionTests/testANewTakeStartsClean
+[283/472] Testing TimbreCoreTests.PlayAlongSessionTests/testAnUnplayedTakeEndsOnItsOwn
+[284/472] Testing TimbreCoreTests.PlayAlongSessionTests/testChordBeatsAreSortedAndKeptOnce
+[285/472] Testing TimbreCoreTests.PlayAlongSessionTests/testEachSectionScoresItsOwnNotes
+[286/472] Testing TimbreCoreTests.PlayAlongSessionTests/testOnlyPitchLanesKeepATrail
+[287/472] Testing TimbreCoreTests.PlayAlongSessionTests/testTheClockCountsInABarBeforeBeatZero
+[288/472] Testing TimbreCoreTests.PlayAlongSessionTests/testRightChordsOnTheBeatBuildTheMultiplier
+[289/472] Testing TimbreCoreTests.PlayAlongSessionTests/testTheMultiplierSteps
+[290/472] Testing TimbreCoreTests.PolyTunerTests/testAStringOnAnOctaveIsNeverCalledDead
+[291/472] Testing TimbreCoreTests.PolyTunerTests/testBassStringsUseTheLongerWindow
+[292/472] Testing TimbreCoreTests.PlayAlongSessionTests/testTheMultiplierStepsUpAndScoresEachNote
+[293/472] Testing TimbreCoreTests.PolyTunerTests/testAMutedStringIsNamed
+[294/472] Testing TimbreCoreTests.PolyTunerTests/testClearStringsAreTheOnesOffEveryOtherStringsHarmonics
+[295/472] Testing TimbreCoreTests.PolyTunerTests/testEachStrumGivesItsOwnReading
+[296/472] Testing TimbreCoreTests.PolyTunerTests/testMutedStringIsNotHeard
+[297/472] Testing TimbreCoreTests.PolyTunerTests/testInTuneGuitarStringsAreToldFromLowerStringsHarmonics
+[298/472] Testing TimbreCoreTests.PolyTunerTests/testPartialModelMatchesDirectTransform
+[299/472] Testing TimbreCoreTests.PolyTunerTests/testReentrantUkulele
+[300/472] Testing TimbreCoreTests.PolyTunerTests/testCleanChordsHaveNoSilentString
+[301/472] Testing TimbreCoreTests.PolyTunerTests/testSilenceAndNoiseGiveNoReading
+[302/472] Testing TimbreCoreTests.PolyTunerTests/testSingleNoteDoesNotReadAsOtherStrings
+[303/472] Testing TimbreCoreTests.PolyTunerTests/testWindowDefaultsAndReadingValues
+[304/472] Testing TimbreCoreTests.PolyTunerTests/testUnisonCoursesShareOneReading
+[305/472] Testing TimbreCoreTests.PracticeAnalyticsTests/testComparisonRequiresThreeMeasuredPerSideAndUsesPerSessionMeans
+[306/472] Testing TimbreCoreTests.PracticeAnalyticsTests/testCalendarTimezoneControlsDayGroupingAcrossMidnight
+[307/472] Testing TimbreCoreTests.PracticeAnalyticsTests/testExactFourteenDayBoundaryAndInvalidAccuracy
+[308/472] Testing TimbreCoreTests.PracticeAnalyticsTests/testMissingHistoricalDurationIsUnknownRatherThanZero
+[309/472] Testing TimbreCoreTests.PracticeAnalyticsTests/testSevenDayActivityUsesCalendarDaysAndFiltersFutureAndInstrument
+[310/472] Testing TimbreCoreTests.PracticeAnalyticsTests/testVoiceBestAndAttemptsExcludeUnscoredWarmupAndRange
+[311/472] Testing TimbreCoreTests.PracticeTests/testAPinnedToolGivesWayOnlyWhenItCanNoLongerBePlayed
+[312/472] Testing TimbreCoreTests.PracticeTests/testChordFinderFindsStandardOpenShapes
+[313/472] Testing TimbreCoreTests.PracticeTests/testDailySetStartsWithTuneAndHasNoDuplicates
+[314/472] Testing TimbreCoreTests.PracticeTests/testEarSessionLevelsUpAndBackDeterministically
+[315/472] Testing TimbreCoreTests.PracticeTests/testDroneRendersFiniteAudioAndStops
+[316/472] Testing TimbreCoreTests.PracticeTests/testMetronomeBeatLevelsMuteBeats
+[317/472] Testing TimbreCoreTests.PracticeTests/testOneEuroFilterSmoothsJitterAndFollowsSteps
+[318/472] Testing TimbreCoreTests.PracticeTests/testQuestsForTheSamePracticeRideOnTodaysRows
+[319/472] Testing TimbreCoreTests.PracticeTests/testScaleMapMarksRootsAndDegrees
+[320/472] Testing TimbreCoreTests.PracticeTests/testStreakFreezesBridgeAGapWithoutAddingToTheRun
+[321/472] Testing TimbreCoreTests.PracticeTests/testStreaksCountConsecutiveDaysAndSurviveUntilTonight
+[322/472] Testing TimbreCoreTests.PracticeTests/testStrobeDriftsWithSignAndStopsInTune
+[323/472] Testing TimbreCoreTests.PracticeTests/testTodayOpensWithTheNextLessonThenTwoToolReps
+[324/472] Testing TimbreCoreTests.PracticeTests/testTodaysPlanIsSavedAndEarlierSavesStillOpen
+[325/472] Testing TimbreCoreTests.PracticeTests/testTodaysToolsStayPinnedWhenTheInstrumentChanges
+[326/472] Testing TimbreCoreTests.ProgressionTests/testAchievementSetKeepsSavedBadgesAndGrows
+[327/472] Testing TimbreCoreTests.ProgressionTests/testAFieldThatCantBeReadCostsOnlyThatField
+[328/472] Testing TimbreCoreTests.ProgressionTests/testBadgesReadAsSentencesAndEachHasItsOwnArtwork
+[329/472] Testing TimbreCoreTests.ProgressionTests/testDailyQuestsAreStableAndAlwaysIncludeTuning
+[330/472] Testing TimbreCoreTests.ProgressionTests/testDailySetPaysOnceADayAndCountsTowardBadges
+[331/472] Testing TimbreCoreTests.PolyTunerTests/testStandardGuitarDetunedStringsReadInOneStrum
+[332/472] Testing TimbreCoreTests.ProgressionTests/testLevelsGrowAndReportProgress
+[333/472] Testing TimbreCoreTests.ProgressionTests/testLevelUpIsReported
+[334/472] Testing TimbreCoreTests.ProgressionTests/testMergedUpdatesKeepEveryReward
+[335/472] Testing TimbreCoreTests.ProgressionTests/testNewStringsStretchingDoNotAskForARestring
+[336/472] Testing TimbreCoreTests.ProgressionTests/testRestringAdviceWithoutARestringDateWaitsForFiveDaysOfReadings
+[337/472] Testing TimbreCoreTests.ProgressionTests/testSamplesRollOff
+[338/472] Testing TimbreCoreTests.ProgressionTests/testSavesFromBeforeTheNewFieldsStillDecode
+[339/472] Testing TimbreCoreTests.ProgressionTests/testStreakAndInstrumentBadges
+[340/472] Testing TimbreCoreTests.ProgressionTests/testStringDriftUsesTheMedianRateBetweenSessions
+[341/472] Testing TimbreCoreTests.ProgressionTests/testStringsTunedTodayOutliveSessionsAndResetTheNextDay
+[342/472] Testing TimbreCoreTests.ProgressionTests/testTuningEarnsXPCompletesTheQuestAndUnlocksBadges
+[343/472] Testing TimbreCoreTests.RealWorldAccuracyTests/testAccentsStandOutFromThePlainStrokes
+[344/472] Testing TimbreCoreTests.RealWorldAccuracyTests/testChordStrokesAreJudgedWithinBudget
+[345/472] Testing TimbreCoreTests.RealWorldAccuracyTests/testMutedStrokesAreHeardStopping
+[346/472] Testing TimbreCoreTests.RealWorldAccuracyTests/testSilentStringsAreNamedWithoutFalseAccusations
+[347/472] Testing TimbreCoreTests.RealWorldAccuracyTests/testSingleStringsReadWithinBudget
+[348/472] Testing TimbreCoreTests.RealWorldAccuracyTests/testStrumsReadEveryStringWithinBudget
+[349/472] Testing TimbreCoreTests.ProgressionTests/testLearnMetricsCountCoursesUnitsAndSongs
+[350/472] Testing TimbreCoreTests.RecordingAnalysisTests/testDraftChartFromBars
+[351/472] Testing TimbreCoreTests.RecordingAnalysisTests/testTempoAndBeatsFromAnEnvelope
+[352/472] Testing TimbreCoreTests.PracticeTests/testEveryChordShapeContainsOnlyChordTonesWithRootInBass
+[353/472] Testing TimbreCoreTests.RecordingAnalysisTests/testTooShortOrSilent
+[354/472] Testing TimbreCoreTests.SampledTonesTests/testBundledLibraryCoversTheMainInstrumentsAndTheBand
+[355/472] Testing TimbreCoreTests.SampledTonesTests/testContinuousReferencesLoopFromRecordings
+[356/472] Testing TimbreCoreTests.SampledTonesTests/testDecodingIsLazyCappedAndPurgeable
+[357/472] Testing TimbreCoreTests.SampledTonesTests/testFallsBackToSynthesisWhereRecordingsCannotServe
+[358/472] Testing TimbreCoreTests.RecordingAnalysisTests/testTempoOfAClickTrack
+[359/472] Testing TimbreCoreTests.SampledTonesTests/testGuitarChordsAreStrummedStringByString
+[360/472] Testing TimbreCoreTests.SampledTonesTests/testHeldSustainedNoteLoopsSeamlessly
+[361/472] Testing TimbreCoreTests.SampledTonesTests/testMandolinPhrasesArePairedCoursesAndItsReferenceIsOneString
+[362/472] Testing TimbreCoreTests.RecordingAnalysisTests/testChordsBarByBar
+[363/472] Testing TimbreCoreTests.SampledTonesTests/testPitchShiftUsesTheExactRatio
+[364/472] Testing TimbreCoreTests.SampledTonesTests/testReferenceA4ReadsExactly440OnTheTunersDetector
+[365/472] Testing TimbreCoreTests.SampledTonesTests/testFrettedReferencesAreExactAcrossTheirRange
+[366/472] Testing TimbreCoreTests.SampledTonesTests/testStrumFeelTimesAndWeighsEachString
+[367/472] Testing TimbreCoreTests.ShowMeMemoryTests/testADemonstrationPlaysByItselfOncePerCourse
+[368/472] Testing TimbreCoreTests.ShowMeMemoryTests/testChordKeysFollowTheShape
+[369/472] Testing TimbreCoreTests.ShowMeMemoryTests/testMemoryIsBoundedOldestFirst
+[370/472] Testing TimbreCoreTests.ShowMeMemoryTests/testMemorySurvivesReopenAndEarlierFilesStillDecode
+[371/472] Testing TimbreCoreTests.SampledTonesTests/testSoftNotesOfSingleLayerSetsAreDarkened
+[372/472] Testing TimbreCoreTests.ShowMeMemoryTests/testStrumKeysFollowThePatternInItsBar
+[373/472] Testing TimbreCoreTests.SongArrangementTests/testASectionLoopsWithItsUpbeatAndWords
+[374/472] Testing TimbreCoreTests.SongArrangementTests/testChordChartNamesKnownShapesInOrder
+[375/472] Testing TimbreCoreTests.SongArrangementTests/testEarlierStepsKeepTheirWordsToo
+[376/472] Testing TimbreCoreTests.SongArrangementTests/testEverySongIsAWholeArrangementOfOneAndAHalfToThreeMinutes
+[377/472] Testing TimbreCoreTests.SongArrangementTests/testEverySongPlaysItsChartChangeByChange
+[378/472] Testing TimbreCoreTests.SongArrangementTests/testLyricSheetCuesTheLineAndSyllable
+[379/472] Testing TimbreCoreTests.SongArrangementTests/testNotesKeepTheirWordsThroughJSON
+[380/472] Testing TimbreCoreTests.SongArrangementTests/testLyricsAlignWithTheirNotes
+[381/472] Testing TimbreCoreTests.SongArrangementTests/testSectionTimesAndChordsReadTheChart
+[382/472] Testing TimbreCoreTests.SongArrangementTests/testTheSmallSongChangesOnTheThirdBeatOfItsThirdBar
+[383/472] Testing TimbreCoreTests.SongOfTheDayTests/testABeginnerGetsAnOpenAdultSongThatHoldsAllDay
+[384/472] Testing TimbreCoreTests.SongOfTheDayTests/testAPlayedSongComesBackOnlyWhenNothingIsNew
+[385/472] Testing TimbreCoreTests.SongArrangementTests/testSectionsCoverEveryBarInOrder
+[386/472] Testing TimbreCoreTests.SongOfTheDayTests/testAWholeSongExcerptRunsInWholeBarsFromItsOpening
+[387/472] Testing TimbreCoreTests.SongOfTheDayTests/testAWholeSongPreviewsItsFirstVerseNotItsIntro
+[388/472] Testing TimbreCoreTests.SongOfTheDayTests/testEmptyShelfHasNoSong
+[389/472] Testing TimbreCoreTests.SongOfTheDayTests/testCampfireAndKidsTunesAreKnownByTitle
+[390/472] Testing TimbreCoreTests.SongOfTheDayTests/testHashIsStable
+[391/472] Testing TimbreCoreTests.SongOfTheDayTests/testNurseryTunesWaitBehindTheAdultRepertoire
+[392/472] Testing TimbreCoreTests.SongOfTheDayTests/testPastTheBeginnerUnitsAnOriginalLeads
+[393/472] Testing TimbreCoreTests.SongOfTheDayTests/testPreviewFallsBackToNotesAndSkipsSongsWithout
+[394/472] Testing TimbreCoreTests.SongOfTheDayTests/testPreviewPlaysTheOpeningBarsAtThePerformanceTempo
+[395/472] Testing TimbreCoreTests.SongOfTheDayTests/testPreviewStretchesASparseOpeningAndStopsInTime
+[396/472] Testing TimbreCoreTests.SongOfTheDayTests/testEverySongWithAMelodyHasAShortPreview
+[397/472] Testing TimbreCoreTests.SongOfTheDayTests/testTheNextProOriginalComesBeforeATraditionalTune
+[398/472] Testing TimbreCoreTests.SongOfTheDayTests/testSongsNearTheLearnersUnitWin
+[399/472] Testing TimbreCoreTests.SongOfTheDayTests/testTheOpeningSectionPassesOverSilentSections
+[400/472] Testing TimbreCoreTests.SongOfTheDayTests/testWholeSongsPreviewTheirFirstVerseOrHook
+[401/472] Testing TimbreCoreTests.SongbookEditionTests/testChunksAndChopsAreMarkedMuted
+[402/472] Testing TimbreCoreTests.SongbookEditionTests/testCelloAndBassSongbooks
+[403/472] Testing TimbreCoreTests.SampledTonesTests/testRecordedPhrasesKeepTheSynthesizersTimingAndLevels
+[404/472] Testing TimbreCoreTests.SongbookEditionTests/testEveryInstrumentCourseEndsItsFirstUnitOnAFreeSong
+[405/472] Testing TimbreCoreTests.SongbookEditionTests/testUkuleleEditionsKeepEveryStepOfTheTune
+[406/472] Testing TimbreCoreTests.SpacedReviewTests/testALessonBeforeTheDayOnlyMovesItBackOnASlip
+[407/472] Testing TimbreCoreTests.SpacedReviewTests/testASessionPlaysAsAReviewAndItsStepsCreditTheSameItems
+[408/472] Testing TimbreCoreTests.SpacedReviewTests/testASlipComesBackTomorrowAndAHardPassWaitsLess
+[409/472] Testing TimbreCoreTests.SpacedReviewTests/testASessionTakesTheDueFirstThenTheWeakestInTurn
+[410/472] Testing TimbreCoreTests.SpacedReviewTests/testOnlyWhatSlippedJoinsAndComesBackTomorrow
+[411/472] Testing TimbreCoreTests.SpacedReviewTests/testOldSavesDecodeAndTheDeckRoundTrips
+[412/472] Testing TimbreCoreTests.SpacedReviewTests/testPassesSpaceAnItemOutUntilItRetires
+[413/472] Testing TimbreCoreTests.SpacedReviewTests/testQualityFollowsTheCredit
+[414/472] Testing TimbreCoreTests.SpacedReviewTests/testStepsCreditChangesRhythmsAndQuestions
+[415/472] Testing TimbreCoreTests.SpacedReviewTests/testTheDeckStaysWithinItsCapacity
+[416/472] Testing TimbreCoreTests.SpacedReviewTests/testTodayMakesRoomForTheReview
+[417/472] Testing TimbreCoreTests.SpacedReviewTests/testWeakSpotsFromBeforeSeedTheDeck
+[418/472] Testing TimbreCoreTests.StreakCacheTests/testARecordFromLaterCountsWhenItsTimeComes
+[419/472] Testing TimbreCoreTests.StreakCacheTests/testInvalidateCountsAgain
+[420/472] Testing TimbreCoreTests.SongbookEditionTests/testUkuleleEditionsSitInKeysTheHandCanHold
+[421/472] Testing TimbreCoreTests.StreakCacheTests/testMatchesAFreshCountAndRecountsWhenTheRecordsChange
+[422/472] Testing TimbreCoreTests.StreakCacheTests/testRecountsOnANewDay
+[423/472] Testing TimbreCoreTests.StreakCacheTests/testRecountsWhenFrozenDaysChange
+[424/472] Testing TimbreCoreTests.StrokeChordsTests/testAClipPlaysInTheTapsBuffers
+[425/472] Testing TimbreCoreTests.StrokeChordsTests/testAChopLeftRingingIsCalled
+[426/472] Testing TimbreCoreTests.StrokeChordsTests/testAccentsStandOutOnlyWhenPlayed
+[427/472] Testing TimbreCoreTests.StrokeChordsTests/testACorrectChunkTakeScoresFullMarks
+[428/472] Testing TimbreCoreTests.StrokeChordsTests/testAFrameStopsShortOfTheNextStroke
+[429/472] Testing TimbreCoreTests.TargetLabelTests/testFlatsAndDisplayShiftsMatchSource
+[430/472] Testing TimbreCoreTests.StrokeChordsTests/testRingIsUnknownWhenTheNextStrokeComesFirst
+[431/472] Testing TimbreCoreTests.TargetLabelTests/testPhysicalAndRelativeCuesSurvive
+[432/472] Testing TimbreCoreTests.TimbreLocalizationTests/testCanonicalLanguagePreservesChineseScript
+[433/472] Testing TimbreCoreTests.ToneSynthTests/testContinuousReferencesLoop
+[434/472] Testing TimbreCoreTests.ToneSynthTests/testBanjoIsShorterThanGuitarAndBassRingsLongest
+[435/472] Testing TimbreCoreTests.StrokeChordsTests/testChunksStopDeadAndStrumsRingOn
+[436/472] Testing TimbreCoreTests.ToneSynthTests/testNotesInTurnLeaveTheirGapsSilent
+[437/472] Testing TimbreCoreTests.ToneSynthTests/testPlayerLoopsAndFadesOutOnStop
+[438/472] Testing TimbreCoreTests.ToneSynthTests/testPluckedChordStrumsLowToHighAndDecays
+[439/472] Testing TimbreCoreTests.ToneSynthTests/testEveryCatalogueInstrumentAndCourseHasAVoice
+[440/472] Testing TimbreCoreTests.ToneSynthTests/testEveryVoiceRendersFiniteBoundedAndSilentAtTheEnd
+[441/472] Testing TimbreCoreTests.ToneSynthTests/testRendersAreDeterministicAndKeyedByRequest
+[442/472] Testing TimbreCoreTests.ToneSynthTests/testSustainedVoiceHoldsSteadyWithoutVibratoOnTheReference
+[443/472] Testing TimbreCoreTests.TuningTests/testAGapNeverCountsTowardAHoldOrKeepsALockThatLeftTheBand
+[444/472] Testing TimbreCoreTests.TuningTests/testAdaptiveWindowCoversPianoLowTuningMargin
+[445/472] Testing TimbreCoreTests.TuningTests/testALockSurvivesAShortGapWithTheBandEitherSide
+[446/472] Testing TimbreCoreTests.TuningTests/testCadenceStateChangeReanchorsAndClockReversalPublishes
+[447/472] Testing TimbreCoreTests.TuningTests/testLowConfidenceAndMissingFramesClearHoldAndNumbers
+[448/472] Testing TimbreCoreTests.TuningTests/testClassificationUsesTargetInsteadOfNearestChromaticNote
+[449/472] Testing TimbreCoreTests.TuningTests/testPrecisionBandDecidesWhereAHoldStarts
+[450/472] Testing TimbreCoreTests.TuningTests/testPrecisionSettingIsOptionalAndDefaultsToBeginner
+[451/472] Testing TimbreCoreTests.TuningTests/testStabilityRequiresThreeAgreeingFramesAndResets
+[452/472] Testing TimbreCoreTests.TuningTests/testRequiresFullContinuous650MillisecondHold
+[453/472] Testing TimbreCoreTests.TuningTests/testStatusIsATypedValueThatReadsItsOldNames
+[454/472] Testing TimbreCoreTests.TuningTests/testTargetChangesAndClockReversalRestartHold
+[455/472] Testing TimbreCoreTests.TuningTests/testUnobservedGapCannotCountAsContinuousHold
+[456/472] Testing TimbreCoreTests.UserSongLibraryTests/testImportsAudioIntoTheLibrary
+[457/472] Testing TimbreCoreTests.UserSongLibraryTests/testSavesLoadsAndDeletes
+[458/472] Testing TimbreCoreTests.UserSongLibraryTests/testSafeNames
+[459/472] Testing TimbreCoreTests.VoiceTests/testAccuracyAndStabilityMeasureDifferentProperties
+[460/472] Testing TimbreCoreTests.UserSongLibraryTests/testSkipsDamagedFilesAndReadsOldOnes
+[461/472] Testing TimbreCoreTests.VoiceTests/testEightExercisesAndTiming
+[462/472] Testing TimbreCoreTests.VoiceTests/testEveryMelodyStageMustContainSustainedEvidence
+[463/472] Testing TimbreCoreTests.VoiceTests/testExactToleranceAndGapsCannotJoinHolds
+[464/472] Testing TimbreCoreTests.VoiceTests/testMajorThirdScoredRelativeToSungStartingNote
+[465/472] Testing TimbreCoreTests.VoiceTests/testOffTargetSustainIsMeasuredButCannotDemonstrate
+[466/472] Testing TimbreCoreTests.VoiceTests/testOneRangeNoteDoesNotInventSpan
+[467/472] Testing TimbreCoreTests.VoiceTests/testProgressionNeverLocksSelection
+[468/472] Testing TimbreCoreTests.VoiceTests/testRangeRequiresRepeatedHeldNearTargetNotes
+[469/472] Testing TimbreCoreTests.VoiceTests/testSilenceAndInvalidFrequenciesProduceNoScores
+[470/472] Testing TimbreCoreTests.VoiceTests/testSilenceBetweenFragmentsDoesNotCountAsSustainedSinging
+[471/472] Testing TimbreCoreTests.VoiceTests/testSustainedTargetDemonstratesButWarmupIsUnscored
+[472/472] Testing TimbreCoreTests.ToneSynthTests/testReferencesSoundAtExactlyTheirPitch
+◇ Test run started.
+↳ Testing Library Version: 1501
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.
