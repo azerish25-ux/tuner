@@ -1,0 +1,183 @@
+[
+  {
+    "appBuild" : "1",
+    "appBundle" : "com.shahradazerisharghi.timbre",
+    "backend" : "imageRenderer",
+    "comparisonIsDiagnosticOnly" : true,
+    "declaredSourceSHA" : "not-provided",
+    "declaredSourceSHAIsIndependentlyVerified" : false,
+    "diagnosticOnly" : true,
+    "direction" : "rightToLeft",
+    "dynamicType" : "accessibility5",
+    "hostedRasterScale" : "actual-window-screen-scale",
+    "imageRendererScale" : 3,
+    "kind" : "provenance",
+    "osVersion" : "Version 26.2 (Build 23C54)",
+    "productionEligibilityClaim" : false,
+    "realOnboardingCoverage" : false,
+    "rendererCallbacksObservable" : false,
+    "sourceFile" : "TimbreAppTests\/WelcomeRendererGeometryTests.swift",
+    "stitchedOrScaledAcceptance" : false,
+    "textMetricDisplayScale" : 3,
+    "variant" : "actualProduction",
+    "width" : 280
+  },
+  {
+    "boldText" : false,
+    "inkInsets" : [
+      5,
+      30.666666666666668,
+      5,
+      30.666666666666668
+    ],
+    "kind" : "independentFont",
+    "outerReserve" : [
+      5,
+      30.666666666666668,
+      5,
+      30.666666666666668
+    ],
+    "points" : 68.333333333333329,
+    "postScriptName" : "NotoNastaliqUrdu-Bold"
+  },
+  {
+    "canvasReturned" : [
+      440,
+      1366
+    ],
+    "kind" : "wrapperSize",
+    "observationLevel" : "outside-padded-headline",
+    "outerProposal" : {
+      "height" : 0,
+      "width" : 0
+    },
+    "subviewProposal" : {
+      "height" : null,
+      "width" : 280
+    },
+    "subviewReturned" : [
+      274.66666666666663,
+      1206
+    ]
+  },
+  {
+    "anchor" : [
+      1,
+      0
+    ],
+    "at" : [
+      140,
+      -603
+    ],
+    "bounds" : [
+      -220,
+      -683,
+      440,
+      1366
+    ],
+    "kind" : "wrapperPlacement",
+    "subviewProposal" : {
+      "height" : null,
+      "width" : 280
+    }
+  },
+  {
+    "canvasReturned" : [
+      440,
+      1366
+    ],
+    "kind" : "wrapperSize",
+    "observationLevel" : "outside-padded-headline",
+    "outerProposal" : {
+      "height" : null,
+      "width" : 440
+    },
+    "subviewProposal" : {
+      "height" : null,
+      "width" : 280
+    },
+    "subviewReturned" : [
+      274.66666666666663,
+      1206
+    ]
+  },
+  {
+    "canvasReturned" : [
+      440,
+      1366
+    ],
+    "kind" : "wrapperSize",
+    "observationLevel" : "outside-padded-headline",
+    "outerProposal" : {
+      "height" : 1366,
+      "width" : 440
+    },
+    "subviewProposal" : {
+      "height" : null,
+      "width" : 280
+    },
+    "subviewReturned" : [
+      274.66666666666663,
+      1206
+    ]
+  },
+  {
+    "anchor" : [
+      1,
+      0
+    ],
+    "at" : [
+      360,
+      80
+    ],
+    "bounds" : [
+      0,
+      0,
+      440,
+      1366
+    ],
+    "kind" : "wrapperPlacement",
+    "subviewProposal" : {
+      "height" : null,
+      "width" : 280
+    }
+  },
+  {
+    "boundsThresholdOnly" : "RGB channels below128; equality still compares every unmodified RGBA byte",
+    "inkBoundsPixels" : [
+      399,
+      300,
+      678,
+      3408
+    ],
+    "inkPixels" : 164457,
+    "kind" : "canonicalRaster",
+    "pixels" : [
+      1320,
+      4098
+    ],
+    "registrationOrTolerance" : false,
+    "reservedContainsVisibleInk" : true,
+    "rgbaSHA256" : "a02df672c4abeaa104dbc521370317549b0e62c53c0209ba129d097cd14f7d6f",
+    "tile" : "urdu-geometry-280-accessibility5-imageRenderer-actualProduction-full",
+    "visibleReservedContentPixels" : [
+      240,
+      240,
+      840,
+      3618
+    ]
+  },
+  {
+    "captureValid" : true,
+    "changedRGBABytes" : 0,
+    "coordinateEquivalentComparison" : true,
+    "diagnosticOnly" : true,
+    "kind" : "strictComparison",
+    "noEligibility" : true,
+    "reference" : "plain",
+    "sameActualGeometry" : true,
+    "sameBackendOnly" : true,
+    "sameRGBA" : true,
+    "tile" : "urdu-geometry-280-accessibility5-imageRenderer-actualProduction-full"
+  }
+]

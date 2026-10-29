@@ -1,0 +1,173 @@
+actual: 0／100 XP · 下一個：初上指板
+expected: 0／100 XP · 下一個：初上指板
+scalars: U+0030 U+FF0F U+0031 U+0030 U+0030 U+0020 U+0058 U+0050 U+0020 U+00B7 U+0020 U+4E0B U+4E00 U+500B U+FF1A U+521D U+4E0A U+6307 U+677F
+group: 等級 1，0／100 XP、空弦、0／100 XP · 下一個：初上指板
+expected group: 等級 1，0／100 XP、空弦、0／100 XP · 下一個：初上指板
+group scalars: U+7B49 U+7D1A U+0020 U+0031 U+FF0C U+0030 U+FF0F U+0031 U+0030 U+0030 U+0020 U+0058 U+0050 U+3001 U+7A7A U+5F26 U+3001 U+0030 U+FF0F U+0031 U+0030 U+0030 U+0020 U+0058 U+0050 U+0020 U+00B7 U+0020 U+4E0B U+4E00 U+500B U+FF1A U+521D U+4E0A U+6307 U+677F
+Optional(Attributes: Application, 0x1038d5030, pid: 73159, label: 'Timbre'
+Element subtree:
+ →Application, 0x1038d5030, pid: 73159, label: 'Timbre'
+    Window (Main), 0x1038d57b0, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x1038daa10, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x1038dab30, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x1038da8c0, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x1038d63d0, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x1038dac50, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x1038dad70, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x1038dae90, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x10397d9f0, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x1039844a0, {{0.0, 0.0}, {402.0, 874.0}}
+                        Other, 0x103985ff0, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x103989340, {{0.0, 0.0}, {402.0, 874.0}}
+                            Other, 0x103984160, {{0.0, 0.0}, {402.0, 874.0}}
+                              Other, 0x1039825b0, {{0.0, 0.0}, {402.0, 874.0}}
+                                Other, 0x103983a80, {{0.0, 0.0}, {402.0, 874.0}}
+                                  Other, 0x10397c5d0, {{0.0, 0.0}, {402.0, 874.0}}
+                                    ScrollView, 0x10397d330, {{0.0, 0.0}, {402.0, 874.0}}
+                                      Other, 0x1039b5270, {{0.0, 0.0}, {402.0, 874.0}}
+                                        Other, 0x10396a310, {{0.0, 726.2}, {402.0, 147.8}}
+                                      Other, 0x103969bf0, {{0.0, 0.0}, {402.0, 874.0}}
+                                        Other, 0x103969850, {{0.0, 726.2}, {402.0, 147.8}}
+                                          Image, 0x10396b480, {{-120.0, 731.0}, {642.0, 286.0}}, identifier: 'AdditionalDimmingOverlay'
+                                          Other, 0x103969140, {{0.0, 726.2}, {402.0, 147.8}}
+                                            Other, 0x10396bb60, {{0.0, 726.2}, {402.0, 147.8}}
+                                          Other, 0x10396beb0, {{0.0, 726.2}, {402.0, 147.8}}
+                                            Other, 0x10396d710, {{0.0, 726.2}, {402.0, 147.8}}
+                                            Other, 0x10396c9c0, {{0.0, 726.2}, {402.0, 147.8}}
+                                      Other, 0x10397cfe0, {{0.0, 62.0}, {402.0, 1059.7}}
+                                        StaticText, 0x10397cc90, {{20.0, 78.3}, {55.0, 35.3}}, identifier: 'screen.header.title', label: '練習'
+                                        Button, 0x103978010, {{282.0, 74.0}, {54.0, 44.0}}, identifier: 'streak.chip', label: '連續練習 0 天'
+                                          Other, 0x10396eb60, {{295.8, 87.9}, {12.4, 15.2}}
+                                          StaticText, 0x10397d690, {{282.0, 74.0}, {54.0, 44.0}}, identifier: 'screen.header.streak.count', label: '0'
+                                        Button, 0x103988ff0, {{338.0, 74.0}, {44.0, 44.0}}, identifier: 'level.ring', label: '等級 1，0／100 XP'
+                                          StaticText, 0x103987470, {{346.7, 86.5}, {26.7, 19.0}}, identifier: 'screen.header.level.mark', label: '等級 1'
+                                        StaticText, 0x103987b10, {{38.0, 158.0}, {34.0, 21.7}}, label: '今日'
+                                        StaticText, 0x1039877c0, {{304.7, 162.7}, {59.3, 15.3}}, label: '+25 XP'
+                                          Image, 0x1039888e0, {{304.7, 164.0}, {12.7, 12.7}}, identifier: 'sun.max.fill', label: '調高亮度'
+                                          StaticText, 0x103989d90, {{322.3, 162.7}, {41.7, 15.3}}, label: '+25 XP'
+                                        Other, 0x10398ab90, {{61.0, 234.5}, {66.0, 42.3}}, label: '0／3', value: 剩餘 10分鐘
+                                          StaticText, 0x10398a130, {{74.0, 234.5}, {40.0, 28.0}}, label: '0／3'
+                                            StaticText, 0x10398a490, {{74.0, 234.5}, {15.0, 28.0}}, label: '0'
+                                            StaticText, 0x1039881d0, {{89.0, 234.5}, {10.0, 28.0}}, label: ' / '
+                                            StaticText, 0x103988550, {{99.0, 234.5}, {15.0, 28.0}}, label: '3'
+                                          StaticText, 0x103987e80, {{61.0, 262.5}, {66.0, 14.3}}, label: '剩餘 10分鐘'
+                                        Button, 0x10398a810, {{166.0, 193.7}, {198.0, 40.0}}, identifier: 'daily.lesson', label: '下一堂課、3分鐘、認識你的吉他'
+                                          Image, 0x10398bcd0, {{167.3, 203.3}, {23.0, 20.7}}, identifier: 'graduationcap', label: 'Itunes U'
+                                          StaticText, 0x103989a00, {{202.0, 195.7}, {59.7, 18.0}}, label: '下一堂課'
+                                          StaticText, 0x10398c030, {{329.0, 197.3}, {35.0, 16.7}}, label: '3分鐘'
+                                          StaticText, 0x10398aef0, {{202.0, 216.0}, {77.7, 15.7}}, label: '認識你的吉他'
+                                        Button, 0x1039e80f0, {{166.0, 235.7}, {198.0, 40.0}}, identifier: 'daily.tune', label: '調好音、+20 XP、1分鐘', value: 調好每條弦: 0／6
+                                          Image, 0x1039eb0d0, {{170.0, 246.7}, {18.0, 18.0}}, identifier: 'tuningfork', label: '調音'
+                                          StaticText, 0x1039f26e0, {{202.0, 245.7}, {44.7, 18.0}}, label: '調好音'
+                                          Other, 0x1039eb710, {{252.7, 246.3}, {57.0, 19.3}}
+                                          StaticText, 0x1039dcec0, {{259.7, 248.3}, {43.0, 15.3}}, label: '+20 XP'
+                                          StaticText, 0x1039ebf50, {{329.0, 247.3}, {35.0, 16.7}}, label: '1分鐘'
+                                        Button, 0x1039ff870, {{166.0, 277.7}, {198.0, 40.0}}, identifier: 'daily.ear', label: '聽力訓練、6分鐘、+20 XP', value: 答對 10 道聽力題: 0／10
+                                          Image, 0x1039e9e70, {{173.0, 288.7}, {13.0, 18.0}}, identifier: 'ear', label: 'ear'
+                                          StaticText, 0x1039eda10, {{202.0, 277.8}, {59.7, 18.0}}, label: '聽力訓練'
+                                          StaticText, 0x1039ee250, {{329.0, 279.5}, {35.0, 16.7}}, label: '6分鐘'
+                                          Other, 0x101fecc20, {{307.0, 298.3}, {57.0, 19.0}}
+                                          StaticText, 0x101fecd40, {{314.0, 300.2}, {43.0, 15.3}}, label: '+20 XP'
+                                        Other, 0x101fece60, {{20.0, 357.7}, {362.0, 98.0}}, identifier: 'practice.xp.progress', label: '等級 1，0／100 XP、空弦、0／100 XP · 下一個：初上指板'
+                                          Other, 0x101fecf80, {{35.2, 372.9}, {67.6, 67.6}}, label: '等級 1，0／100 XP'
+                                            StaticText, 0x1038dafb0, {{46.8, 392.7}, {44.3, 28.0}}, identifier: 'practice.level.card.mark', label: '等級 1'
+                                          StaticText, 0x1038db0d0, {{114.0, 379.0}, {34.0, 21.7}}, label: '空弦'
+                                          Other, 0x1038db1f0, {{114.0, 406.7}, {250.0, 6.0}}
+                                          StaticText, 0x1038db310, {{114.0, 418.7}, {184.0, 15.7}}, identifier: 'practice.xp.progress', label: '0／100 XP · 下一個：初上指板'
+                                        StaticText, 0x1038db430, {{20.0, 477.7}, {80.0, 25.3}}, label: '聽力遊戲'
+                                        Button, 0x1038db550, {{20.0, 513.0}, {362.0, 177.7}}, identifier: 'practice.sniper', label: '正中靶心、十個音符，一首隱藏歌曲。、等級 1、今日挑戰、正中靶心 5 次、+25 XP', value: 0／5
+                                          Other, 0x1038db670, {{234.0, 513.0}, {148.0, 177.7}}
+                                          StaticText, 0x1038db790, {{20.0, 513.0}, {362.0, 177.7}}, identifier: 'practice.sniper.challenge.title', label: '正中靶心、十個音符，一首隱藏歌曲。、等級 1、今日挑戰、正中靶心 5 次、+25 XP', value: 0／5
+                                            StaticText, 0x1038db8b0, {{38.0, 531.0}, {68.0, 21.7}}, label: '正中靶心'
+                                            StaticText, 0x1038db9d0, {{38.0, 557.7}, {152.0, 15.7}}, label: '十個音符，一首隱藏歌曲。'
+                                            StaticText, 0x1038dbaf0, {{38.0, 578.3}, {35.3, 15.7}}, label: '等級 1'
+                                            StaticText, 0x1038dbc10, {{38.0, 616.0}, {192.0, 56.7}}, identifier: 'practice.sniper.challenge.title', label: '今日挑戰、正中靶心 5 次、+25 XP', value: 0／5
+                                              StaticText, 0x1038dbd30, {{38.0, 616.0}, {48.0, 14.3}}, label: '今日挑戰'
+                                              Other, 0x1038dbe50, {{44.8, 643.8}, {20.5, 20.5}}
+                                              StaticText, 0x1038dbf70, {{72.0, 646.2}, {79.7, 15.7}}, identifier: 'practice.sniper.challenge.title', label: '正中靶心 5 次'
+                                              StaticText, 0x1038dc090, {{175.3, 646.3}, {41.7, 15.3}}, label: '+25 XP'
+                                        Button, 0x1038dc1b0, {{20.0, 700.7}, {362.0, 177.7}}, identifier: 'practice.ear', label: '聽力訓練、聽兩個音，辨認音程。、答對 0 題 · 等級 1、今日挑戰、答對 10 題、+20 XP', value: 0／10
+                                          Other, 0x1038dc2d0, {{234.0, 700.7}, {148.0, 177.7}}
+                                          StaticText, 0x1039e27a0, {{20.0, 700.7}, {362.0, 177.7}}, identifier: 'practice.ear.challenge.title', label: '聽力訓練、聽兩個音，辨認音程。、答對 0 題 · 等級 1、今日挑戰、答對 10 題、+20 XP', value: 0／10
+                                            StaticText, 0x1039ede30, {{38.0, 718.7}, {68.0, 21.7}}, label: '聽力訓練'
+                                            StaticText, 0x1039ed1d0, {{38.0, 745.3}, {126.3, 15.7}}, label: '聽兩個音，辨認音程。'
+                                            StaticText, 0x1039ee670, {{38.0, 766.0}, {103.0, 15.7}}, label: '答對 0 題 · 等級 1'
+                                            StaticText, 0x1039e41a0, {{38.0, 803.7}, {192.0, 56.7}}, identifier: 'practice.ear.challenge.title', label: '今日挑戰、答對 10 題、+20 XP', value: 0／10
+                                              StaticText, 0x115a042a0, {{38.0, 803.7}, {48.0, 14.3}}, label: '今日挑戰'
+                                              Other, 0x115a13a40, {{44.8, 831.4}, {20.5, 20.5}}
+                                              StaticText, 0x101fed0a0, {{72.0, 833.8}, {60.7, 15.7}}, identifier: 'practice.ear.challenge.title', label: '答對 10 題'
+                                              StaticText, 0x101fed1c0, {{174.0, 834.0}, {43.0, 15.3}}, label: '+20 XP'
+                                        StaticText, 0x101fed2e0, {{20.0, 900.3}, {40.0, 25.3}}, label: '工具'
+                                        Button, 0x101fed400, {{20.0, 935.7}, {114.0, 74.0}}, identifier: 'practice.metronome', label: '節拍器'
+                                          Other, 0x101fed520, {{62.0, 947.7}, {30.0, 30.0}}
+                                          StaticText, 0x101fed640, {{20.0, 935.7}, {114.0, 74.0}}, label: '節拍器'
+                                        Button, 0x115a13e60, {{144.0, 935.7}, {114.0, 74.0}}, identifier: 'practice.drone', label: '持續音、Timbre Pro'
+                                          Other, 0x115a14280, {{186.0, 947.7}, {30.0, 30.0}}
+                                          StaticText, 0x115a146a0, {{183.0, 983.5}, {36.0, 14.3}}, label: '持續音'
+                                          Other, 0x115a14ac0, {{233.0, 940.7}, {20.0, 20.0}}, label: 'Timbre Pro'
+                                            Image, 0x115a04b30, {{240.0, 946.3}, {6.3, 8.7}}, identifier: 'lock.fill', label: '鎖頭'
+                                        Button, 0x115a233f0, {{268.0, 935.7}, {114.0, 74.0}}, identifier: 'practice.voice', label: '音色'
+                                          Other, 0x115a23510, {{310.0, 947.7}, {30.0, 30.0}}
+                                          StaticText, 0x115a23630, {{268.0, 935.7}, {114.0, 74.0}}, label: '音色'
+                                        Button, 0x115a23750, {{20.0, 1019.7}, {114.0, 74.0}}, identifier: 'practice.chords', label: '和弦'
+                                          Other, 0x115a23870, {{62.0, 1031.7}, {30.0, 30.0}}
+                                          StaticText, 0x115a23990, {{20.0, 1019.7}, {114.0, 74.0}}, label: '和弦'
+                                        Button, 0x115a23ab0, {{144.0, 1019.7}, {114.0, 74.0}}, identifier: 'practice.scales', label: '音階、Timbre Pro'
+                                          Other, 0x101fed760, {{186.0, 1031.7}, {30.0, 30.0}}
+                                          StaticText, 0x101fed880, {{189.0, 1067.5}, {24.0, 14.3}}, label: '音階'
+                                          Other, 0x101fed9a0, {{233.0, 1024.7}, {20.0, 20.0}}, label: 'Timbre Pro'
+                                            Image, 0x101fee460, {{240.0, 1030.3}, {6.3, 8.7}}, identifier: 'lock.fill', label: '鎖頭'
+                                        Button, 0x101fee580, {{268.0, 1019.7}, {114.0, 74.0}}, identifier: 'practice.intonation', label: '八度音準校正、Timbre Pro'
+                                          Other, 0x101fee6a0, {{310.0, 1031.7}, {30.0, 30.0}}
+                                          StaticText, 0x101fee7c0, {{289.2, 1067.5}, {71.7, 14.3}}, label: '八度音準校正'
+                                          Other, 0x101fee8e0, {{357.0, 1024.7}, {20.0, 20.0}}, label: 'Timbre Pro'
+                                            Image, 0x101feea00, {{364.0, 1030.3}, {6.3, 8.7}}, identifier: 'lock.fill', label: '鎖頭'
+                                      Other, 0x101feeb20, {{369.0, 62.0}, {30.0, 729.0}}, label: '垂直捲軸, 2頁', value: 0%
+                                        Other, 0x101feec40, {{396.0, 65.0}, {3.0, 524.7}}
+                                      Other, 0x101feed60, {{369.0, 62.0}, {30.0, 729.0}}, label: '垂直捲軸, 2頁', value: 0%
+                                        Other, 0x115a23bd0, {{396.0, 65.0}, {3.0, 524.7}}
+                                    Other, 0x1038dc3f0, {{0.0, 0.0}, {402.0, 80.0}}
+                            Other, 0x1038dc510, {{0.0, 0.0}, {402.0, 874.0}}
+                              Other, 0x1038dc630, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x1038dc750, {{0.0, 791.0}, {402.0, 83.0}}
+                Other, 0x1038dc870, {{0.0, 791.0}, {402.0, 83.0}}
+                  Other, 0x1038dc990, {{0.0, 0.0}, {402.0, 874.0}}
+                    TabBar, 0x1038dcab0, {{0.0, 791.0}, {402.0, 83.0}}, label: '標籤頁列'
+                      Other, 0x115a23cf0, {{21.0, 791.0}, {360.0, 62.0}}
+                        Other, 0x115a23e10, {{21.0, 791.0}, {77.0, 54.0}}
+                        Other, 0x115a23f30, {{21.0, 791.0}, {360.0, 62.0}}
+                          Button, 0x1038dcbd0, {{25.0, 795.0}, {77.0, 54.0}}, identifier: 'gauge.with.needle', label: '調音'
+                            Image, 0x1038dccf0, {{50.0, 801.3}, {27.3, 27.3}}, identifier: 'gauge.with.needle.fill', label: 'gauge.with.needle.fill'
+                          Button, 0x1038dce10, {{93.8, 795.0}, {77.0, 54.0}}, identifier: 'graduationcap', label: '學習'
+                            Image, 0x1038dcf30, {{113.8, 801.7}, {36.7, 31.3}}, identifier: 'graduationcap.fill', label: 'itunes u'
+                          Button, 0x1038dd050, {{162.5, 795.0}, {77.0, 54.0}}, identifier: 'music.note.list', label: '歌曲'
+                            Image, 0x1038dd170, {{186.5, 801.7}, {29.3, 27.0}}, identifier: 'music.note.list', label: '播放列表'
+                          Button, 0x1038dd290, {{231.2, 795.0}, {77.0, 54.0}}, identifier: 'metronome', label: '練習', Selected
+                            Image, 0x1038dd3b0, {{255.2, 801.7}, {28.7, 26.0}}, identifier: 'metronome.fill', label: 'metronome.fill'
+                          Button, 0x1038dd4d0, {{300.0, 795.0}, {77.0, 54.0}}, identifier: 'chart.bar', label: '進度'
+                            Image, 0x1038dd5f0, {{321.0, 802.3}, {35.0, 25.3}}, identifier: 'chart.bar.fill', label: '長條圖'
+                        Other, 0x1038dd710, {{231.2, 795.0}, {77.0, 54.0}}
+                          Other, 0x1038dd830, {{231.2, 795.0}, {77.0, 54.0}}
+                            Other, 0x1038dd950, {{231.2, 795.0}, {77.0, 54.0}}
+                            Other, 0x1038dda70, {{231.2, 795.0}, {77.0, 54.0}}
+                              Other, 0x1038ddb90, {{231.2, 795.0}, {77.0, 54.0}}
+                                Other, 0x1038ddcb0, {{231.2, 795.0}, {77.0, 54.0}}
+                                  Other, 0x1038dddd0, {{231.2, 795.0}, {77.0, 54.0}}
+                                Other, 0x1038ddef0, {{231.2, 795.0}, {77.0, 54.0}}
+                              Other, 0x1038de010, {{231.2, 795.0}, {77.0, 54.0}}
+                  Other, 0x1038de130, {{0.0, 791.0}, {402.0, 83.0}}
+                    Other, 0x1038de250, {{0.0, 791.0}, {402.0, 83.0}}
+                      Other, 0x1038de370, {{0.0, 791.0}, {402.0, 83.0}}
+                        Other, 0x1038de490, {{0.0, 791.0}, {402.0, 83.0}}
+                          Other, 0x1038de5b0, {{0.0, 791.0}, {402.0, 83.0}}
+                            Other, 0x1038de6d0, {{0.0, 791.0}, {402.0, 83.0}}
+                        Other, 0x1038de7f0, {{0.0, 791.0}, {402.0, 83.0}}
+                          Other, 0x1038de910, {{0.0, 791.0}, {402.0, 83.0}}
+Path to element:
+ →Application, 0x1038d5030, pid: 73159, label: 'Timbre'
+Query chain:
+ →Find: Target Application 'com.shahradazerisharghi.timbre'
+  Output: {
+    Application, 0x101ff1850, pid: 73159, label: 'Timbre'
+  }
+)

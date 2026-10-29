@@ -1,0 +1,28 @@
+stage=contained-rightToLeft-1-(402.0, 340.0) driver=scrollPosition binding + shelf selection (command, not observation), not a touch gesture
+position=Optional(Timbre.SongShelfPageTarget<Swift.String>.shelf("shelf-3")) history=["Optional(Timbre.SongShelfPageTarget<Swift.String>.shelf(\"shelf-3\"))", "Optional(Timbre.SongShelfPageTarget<Swift.String>.shelf(\"shelf-3\"))"]
+requestedSize=(402.0, 340.0) window=(0.0, 0.0, 402.0, 874.0) key=true
+captureWaitsForUpdates=false; diagnostic pixels are not acceptance evidence
+shelf=shelf-0 frame=Optional((20.0, -794.0, 260.0, 292.0)) terminal=nil
+shelf=shelf-1 frame=Optional((20.0, -478.0, 260.0, 292.0)) terminal=nil
+shelf=shelf-2 frame=Optional((20.0, 4.0, 362.0, 292.0)) terminal=nil
+shelf=shelf-3 frame=Optional((20.0, 24.0, 362.0, 292.0)) terminal=Optional((40.0, 76.0, 148.0, 80.0))
+shelf=shelf-4 frame=Optional((40.0, 246.0, 362.0, 292.0)) terminal=nil
+root UIView frame=(0.0, 0.0, 402.0, 874.0) bounds=(0.0, 0.0, 402.0, 874.0) attached=true hidden=false alpha=1.0
+root.0 _UIHostingView<Fixture> frame=(0.0, 0.0, 402.0, 340.0) bounds=(0.0, 0.0, 402.0, 340.0) attached=true hidden=false alpha=1.0
+root.0.0 PlatformContainer frame=(0.0, 0.0, 402.0, 340.0) bounds=(0.0, 0.0, 402.0, 340.0) attached=true hidden=false alpha=1.0
+root.0.0.0 HostingScrollView frame=(0.0, 0.0, 402.0, 340.0) bounds=(0.0, 1548.0, 402.0, 340.0) attached=true hidden=false alpha=1.0 content=(402.0, 3495.0) offset=(0.0, 1548.0) inset=UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0) dragging=false decelerating=false
+root.0.0.0.0 PlatformGroupContainer frame=(0.0, -1548.0, 402.0, 3495.0) bounds=(0.0, 0.0, 402.0, 3495.0) attached=true hidden=false alpha=1.0
+root.0.0.0.0.0 _UIInheritedView frame=(0.0, 76.0, 402.0, 240.0) bounds=(0.0, 0.0, 402.0, 240.0) attached=true hidden=false alpha=1.0
+root.0.0.0.0.0.0 PlatformContainer frame=(0.0, 76.0, 402.0, 240.0) bounds=(0.0, 0.0, 402.0, 240.0) attached=true hidden=false alpha=1.0
+root.0.0.0.0.0.0.0 HostingScrollView frame=(0.0, 76.0, 402.0, 240.0) bounds=(-40.0, 0.0, 402.0, 240.0) attached=true hidden=false alpha=1.0 content=(19426.0, 240.0) offset=(-40.0, 0.0) inset=UIEdgeInsets(top: 0.0, left: 20.0, bottom: 0.0, right: 20.0) dragging=false decelerating=false
+root.0.0.0.0.0.0.0.0 PlatformGroupContainer frame=(40.0, 76.0, 19426.0, 240.0) bounds=(0.0, 0.0, 19426.0, 240.0) attached=true hidden=false alpha=1.0
+root.0.0.0.0.1 _UIInheritedView frame=(0.0, -240.0, 402.0, 240.0) bounds=(0.0, 0.0, 402.0, 240.0) attached=true hidden=true alpha=1.0
+root.0.0.0.0.1.0 PlatformContainer frame=(0.0, -240.0, 402.0, 240.0) bounds=(0.0, 0.0, 402.0, 240.0) attached=true hidden=false alpha=1.0
+root.0.0.0.0.1.0.0 HostingScrollView frame=(0.0, -240.0, 402.0, 240.0) bounds=(9644.0, 0.0, 402.0, 240.0) attached=true hidden=false alpha=1.0 content=(19426.0, 240.0) offset=(9644.0, 0.0) inset=UIEdgeInsets(top: 0.0, left: 20.0, bottom: 0.0, right: 20.0) dragging=false decelerating=false
+root.0.0.0.0.1.0.0.0 PlatformGroupContainer frame=(-9644.0, -240.0, 19426.0, 240.0) bounds=(0.0, 0.0, 19426.0, 240.0) attached=true hidden=false alpha=1.0
+root.0.0.0.0.2 _UIInheritedView frame=(0.0, 392.0, 402.0, 240.0) bounds=(0.0, 0.0, 402.0, 240.0) attached=true hidden=true alpha=1.0
+root.0.0.0.0.2.0 PlatformContainer frame=(0.0, 392.0, 402.0, 240.0) bounds=(0.0, 0.0, 402.0, 240.0) attached=true hidden=false alpha=1.0
+root.0.0.0.0.2.0.0 HostingScrollView frame=(0.0, 392.0, 402.0, 240.0) bounds=(9644.0, 0.0, 402.0, 240.0) attached=true hidden=false alpha=1.0 content=(19426.0, 240.0) offset=(9644.0, 0.0) inset=UIEdgeInsets(top: 0.0, left: 20.0, bottom: 0.0, right: 20.0) dragging=false decelerating=false
+root.0.0.0.0.2.0.0.0 PlatformGroupContainer frame=(-9644.0, 392.0, 19426.0, 240.0) bounds=(0.0, 0.0, 19426.0, 240.0) attached=true hidden=false alpha=1.0
+root.0.0.0.1 _UIScrollViewScrollIndicator frame=(3.0, 180.66666666666674, 3.0, 36.0) bounds=(0.0, 0.0, 3.0, 36.0) attached=true hidden=false alpha=0.0
+root.0.0.0.1.0 UIView frame=(3.0, 180.66666666666674, 3.0, 36.0) bounds=(0.0, 0.0, 3.0, 36.0) attached=true hidden=false alpha=1.0

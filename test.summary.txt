@@ -1,0 +1,72 @@
+# Errors
+
+# Matches
+--- line 65
+2026-10-29 03:11:06.998445+0000 Timbre[39569:106082] [events] app_open
+2026-10-29 03:11:07.513339+0000 Timbre[39569:107287] [Graphics] PSO compilation completed for driver shader copyFromBufferToTexture so=0 sbpr=2048 sbpi=524288 ss=(512, 256, 1) p=71 sc=1 ds=0 dl=0 do=(0, 0, 0) in 16
+2026-10-29 03:11:08.030909+0000 Timbre[39569:107475] [Metadata] Failed to refresh AppShortcut parameters with error: Error Domain=LinkDaemon.ApplicationServiceInstance.Errors Code=2 "(null)"
+2026-10-29 03:11:08.672640+0000 Timbre[39569:107287] [tbbmain] TBB Global TLS count is not == 1, instead it is: 2
+2026-10-29 03:11:10.489441+0000 Timbre[39569:107289] [plugin] AddInstanceForFactory: No factory registered for id <CFUUID 0x6000003c9e20> F8BB1C28-BAE8-11D6-9C31-00039315CD46
+2026-10-29 03:11:11.010849+0000 Timbre[39569:106082] [AQ]        LoudnessManager.mm:1755  ReadPListFile: unable to open stream for LoudnessManager plist
+
+# Tail
+    t =     0.00s Start Test at 2026-10-29 03:27:07.646
+    t =     0.04s Set Up
+    t =     0.04s Tear Down
+Test Case '-[TimbreUITests.TabletShelfAlignmentTests testOnlyFullyClearOrFullyHiddenHeadingPasses]' passed (0.148 seconds).
+Test Case '-[TimbreUITests.TabletShelfAlignmentTests testThreeCardBoundsAreNeverWeakened]' started.
+    t =     0.00s Start Test at 2026-10-29 03:27:07.795
+    t =     0.05s Set Up
+    t =     0.05s Tear Down
+Test Case '-[TimbreUITests.TabletShelfAlignmentTests testThreeCardBoundsAreNeverWeakened]' passed (0.163 seconds).
+Test Suite 'TabletShelfAlignmentTests' passed at 2026-10-29 03:27:07.958.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.560 (0.563) seconds
+Test Suite 'TimbreUITests' started at 2026-10-29 03:27:07.959.
+Test Case '-[TimbreUITests.TimbreUITests testInstrumentFamilyChipMustClearBothFades]' started.
+    t =     0.00s Start Test at 2026-10-29 03:27:07.960
+    t =     0.05s Set Up
+    t =     0.13s Tear Down
+Test Case '-[TimbreUITests.TimbreUITests testInstrumentFamilyChipMustClearBothFades]' passed (0.153 seconds).
+Test Suite 'TimbreUITests' passed at 2026-10-29 03:27:08.112.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.153 (0.154) seconds
+Test Suite 'TimbreUITests.xctest' passed at 2026-10-29 03:27:08.113.
+	 Executed 31 tests, with 0 failures (0 unexpected) in 293.534 (293.566) seconds
+Test Suite 'Selected tests' passed at 2026-10-29 03:27:08.113.
+	 Executed 31 tests, with 0 failures (0 unexpected) in 293.534 (293.568) seconds
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+2026-10-29 03:28:04.488 xcodebuild[21276:60452] [MT] IDETestOperationsObserverDebug: 1406.043 elapsed -- Testing started completed.
+2026-10-29 03:28:04.489 xcodebuild[21276:60452] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-29 03:28:04.489 xcodebuild[21276:60452] [MT] IDETestOperationsObserverDebug: 1406.043 sec, +1406.043 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/runner/work/tuner/tuner/ios/build/Gate.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

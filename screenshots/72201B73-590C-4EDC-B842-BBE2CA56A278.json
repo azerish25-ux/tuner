@@ -1,0 +1,729 @@
+[
+  {
+    "appBuild" : "1",
+    "appBundle" : "com.shahradazerisharghi.timbre",
+    "backend" : "attachedScrollViewport",
+    "comparisonIsDiagnosticOnly" : true,
+    "declaredSourceSHA" : "not-provided",
+    "declaredSourceSHAIsIndependentlyVerified" : false,
+    "diagnosticOnly" : true,
+    "direction" : "rightToLeft",
+    "dynamicType" : "accessibility5",
+    "hostedRasterScale" : "actual-window-screen-scale",
+    "imageRendererScale" : 3,
+    "kind" : "provenance",
+    "osVersion" : "Version 26.2 (Build 23C54)",
+    "productionEligibilityClaim" : false,
+    "realOnboardingCoverage" : false,
+    "rendererCallbacksObservable" : false,
+    "sourceFile" : "TimbreAppTests\/WelcomeRendererGeometryTests.swift",
+    "stitchedOrScaledAcceptance" : false,
+    "textMetricDisplayScale" : 3,
+    "variant" : "paddedDrawingGroup",
+    "width" : 280
+  },
+  {
+    "boldText" : false,
+    "inkInsets" : [
+      5,
+      30.666666666666668,
+      5,
+      30.666666666666668
+    ],
+    "kind" : "independentFont",
+    "outerReserve" : [
+      5,
+      30.666666666666668,
+      5,
+      30.666666666666668
+    ],
+    "points" : 68.333333333333329,
+    "postScriptName" : "NotoNastaliqUrdu-Bold"
+  },
+  {
+    "canvasReturned" : [
+      440,
+      1366
+    ],
+    "kind" : "wrapperSize",
+    "observationLevel" : "outside-padded-headline",
+    "outerProposal" : {
+      "height" : null,
+      "width" : null
+    },
+    "subviewProposal" : {
+      "height" : null,
+      "width" : 280
+    },
+    "subviewReturned" : [
+      274.66666666666663,
+      1206
+    ]
+  },
+  {
+    "anchor" : [
+      1,
+      0
+    ],
+    "at" : [
+      360,
+      80
+    ],
+    "bounds" : [
+      0,
+      0,
+      440,
+      1366
+    ],
+    "kind" : "wrapperPlacement",
+    "subviewProposal" : {
+      "height" : null,
+      "width" : 280
+    }
+  },
+  {
+    "generation" : 1,
+    "geometry" : {
+      "containerSize" : [
+        402,
+        778
+      ],
+      "contentInsets" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "contentOffset" : [
+        0,
+        0
+      ],
+      "contentSize" : [
+        440,
+        1366
+      ],
+      "visibleRect" : [
+        0,
+        0,
+        402,
+        778
+      ]
+    },
+    "kind" : "nativeScrollGeometry"
+  },
+  {
+    "attachedToExpectedWindow" : true,
+    "hostBounds" : [
+      0,
+      0,
+      402,
+      778
+    ],
+    "hostClipsToBounds" : false,
+    "hostContained" : true,
+    "hostFrameInWindow" : [
+      0,
+      62,
+      402,
+      778
+    ],
+    "hostingViewIsWindowBounded" : true,
+    "hostLayerMasksToBounds" : false,
+    "kind" : "boundedHost",
+    "layers" : [
+      {
+        "bounds" : [
+          0,
+          0,
+          402,
+          778
+        ],
+        "contentsScale" : 1,
+        "depth" : 0,
+        "frame" : [
+          0,
+          0,
+          402,
+          778
+        ],
+        "masksToBounds" : false,
+        "type" : "CALayer"
+      },
+      {
+        "bounds" : [
+          0,
+          0,
+          402,
+          778
+        ],
+        "contentsScale" : 3,
+        "depth" : 1,
+        "frame" : [
+          0,
+          0,
+          402,
+          778
+        ],
+        "masksToBounds" : false,
+        "type" : "CALayer"
+      },
+      {
+        "bounds" : [
+          0,
+          0,
+          402,
+          778
+        ],
+        "contentsScale" : 1,
+        "depth" : 1,
+        "frame" : [
+          0,
+          0,
+          402,
+          778
+        ],
+        "masksToBounds" : false,
+        "type" : "CALayer"
+      },
+      {
+        "bounds" : [
+          0,
+          0,
+          402,
+          778
+        ],
+        "contentsScale" : 1,
+        "depth" : 2,
+        "frame" : [
+          0,
+          0,
+          402,
+          778
+        ],
+        "masksToBounds" : true,
+        "type" : "CALayer"
+      },
+      {
+        "bounds" : [
+          0,
+          0,
+          440,
+          1366
+        ],
+        "contentsScale" : 1,
+        "depth" : 3,
+        "frame" : [
+          0,
+          0,
+          440,
+          1366
+        ],
+        "masksToBounds" : false,
+        "type" : "CALayer"
+      },
+      {
+        "bounds" : [
+          0,
+          0,
+          440,
+          1366
+        ],
+        "contentsScale" : 3,
+        "depth" : 4,
+        "frame" : [
+          0,
+          0,
+          440,
+          1366
+        ],
+        "masksToBounds" : false,
+        "type" : "CALayer"
+      },
+      {
+        "bounds" : [
+          0,
+          0,
+          274.66666666666663,
+          698
+        ],
+        "contentsScale" : 3,
+        "depth" : 4,
+        "frame" : [
+          85.333333333333329,
+          80,
+          274.66666666666663,
+          698
+        ],
+        "masksToBounds" : false,
+        "type" : "RBDrawingLayer"
+      },
+      {
+        "bounds" : [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentsScale" : 3,
+        "depth" : 5,
+        "frame" : [
+          0,
+          0,
+          0,
+          0
+        ],
+        "masksToBounds" : false,
+        "type" : "RBImageQueueLayer"
+      }
+    ],
+    "nativeScaleMatchesFixedMetrics" : true,
+    "realOnboardingCoverage" : false,
+    "safeAreaRegions" : "empty",
+    "windowSafeArea" : [
+      0,
+      62,
+      402,
+      778
+    ],
+    "windowScreenScale" : 3,
+    "windowViewport" : [
+      0,
+      0,
+      402,
+      874
+    ]
+  },
+  {
+    "actualScrollGeometry" : {
+      "containerSize" : [
+        402,
+        778
+      ],
+      "contentInsets" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "contentOffset" : [
+        0,
+        0
+      ],
+      "contentSize" : [
+        440,
+        1366
+      ],
+      "visibleRect" : [
+        0,
+        0,
+        402,
+        778
+      ]
+    },
+    "clampedExpectedOffset" : [
+      0,
+      0
+    ],
+    "drawHierarchyReturned" : true,
+    "geometryUnchangedDuringCapture" : true,
+    "hostContained" : true,
+    "index" : 0,
+    "kind" : "originalViewport",
+    "nativeContainerMatchesHost" : true,
+    "nativeScrollSettled" : true,
+    "rasterScale" : 3,
+    "requestedOffset" : [
+      0,
+      0
+    ],
+    "requestedOrClampedOffsetReached" : true,
+    "validReferenceCandidate" : true
+  },
+  {
+    "generation" : 2,
+    "geometry" : {
+      "containerSize" : [
+        402,
+        778
+      ],
+      "contentInsets" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "contentOffset" : [
+        38,
+        0
+      ],
+      "contentSize" : [
+        440,
+        1366
+      ],
+      "visibleRect" : [
+        38,
+        0,
+        402,
+        778
+      ]
+    },
+    "kind" : "nativeScrollGeometry"
+  },
+  {
+    "actualScrollGeometry" : {
+      "containerSize" : [
+        402,
+        778
+      ],
+      "contentInsets" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "contentOffset" : [
+        38,
+        0
+      ],
+      "contentSize" : [
+        440,
+        1366
+      ],
+      "visibleRect" : [
+        38,
+        0,
+        402,
+        778
+      ]
+    },
+    "clampedExpectedOffset" : [
+      38,
+      0
+    ],
+    "drawHierarchyReturned" : true,
+    "geometryUnchangedDuringCapture" : true,
+    "hostContained" : true,
+    "index" : 1,
+    "kind" : "originalViewport",
+    "nativeContainerMatchesHost" : true,
+    "nativeScrollSettled" : true,
+    "rasterScale" : 3,
+    "requestedOffset" : [
+      38,
+      0
+    ],
+    "requestedOrClampedOffsetReached" : true,
+    "validReferenceCandidate" : true
+  },
+  {
+    "generation" : 3,
+    "geometry" : {
+      "containerSize" : [
+        402,
+        778
+      ],
+      "contentInsets" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "contentOffset" : [
+        0,
+        588
+      ],
+      "contentSize" : [
+        440,
+        1366
+      ],
+      "visibleRect" : [
+        0,
+        588,
+        402,
+        778
+      ]
+    },
+    "kind" : "nativeScrollGeometry"
+  },
+  {
+    "actualScrollGeometry" : {
+      "containerSize" : [
+        402,
+        778
+      ],
+      "contentInsets" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "contentOffset" : [
+        0,
+        588
+      ],
+      "contentSize" : [
+        440,
+        1366
+      ],
+      "visibleRect" : [
+        0,
+        588,
+        402,
+        778
+      ]
+    },
+    "clampedExpectedOffset" : [
+      0,
+      588
+    ],
+    "drawHierarchyReturned" : true,
+    "geometryUnchangedDuringCapture" : true,
+    "hostContained" : true,
+    "index" : 2,
+    "kind" : "originalViewport",
+    "nativeContainerMatchesHost" : true,
+    "nativeScrollSettled" : true,
+    "rasterScale" : 3,
+    "requestedOffset" : [
+      0,
+      588
+    ],
+    "requestedOrClampedOffsetReached" : true,
+    "validReferenceCandidate" : true
+  },
+  {
+    "generation" : 4,
+    "geometry" : {
+      "containerSize" : [
+        402,
+        778
+      ],
+      "contentInsets" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "contentOffset" : [
+        38,
+        588
+      ],
+      "contentSize" : [
+        440,
+        1366
+      ],
+      "visibleRect" : [
+        38,
+        588,
+        402,
+        778
+      ]
+    },
+    "kind" : "nativeScrollGeometry"
+  },
+  {
+    "actualScrollGeometry" : {
+      "containerSize" : [
+        402,
+        778
+      ],
+      "contentInsets" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "contentOffset" : [
+        38,
+        588
+      ],
+      "contentSize" : [
+        440,
+        1366
+      ],
+      "visibleRect" : [
+        38,
+        588,
+        402,
+        778
+      ]
+    },
+    "clampedExpectedOffset" : [
+      38,
+      588
+    ],
+    "drawHierarchyReturned" : true,
+    "geometryUnchangedDuringCapture" : true,
+    "hostContained" : true,
+    "index" : 3,
+    "kind" : "originalViewport",
+    "nativeContainerMatchesHost" : true,
+    "nativeScrollSettled" : true,
+    "rasterScale" : 3,
+    "requestedOffset" : [
+      38,
+      588
+    ],
+    "requestedOrClampedOffsetReached" : true,
+    "validReferenceCandidate" : true
+  },
+  {
+    "coverageRequiredForReference" : false,
+    "everySourceCellVisible" : true,
+    "kind" : "sourceCoverage",
+    "planAlwaysDerivedFromPlain" : true,
+    "viewportCount" : 4
+  },
+  {
+    "boundsThresholdOnly" : "RGB channels below128; equality still compares every unmodified RGBA byte",
+    "inkBoundsPixels" : [
+      406,
+      300,
+      671,
+      1959
+    ],
+    "inkPixels" : 95687,
+    "kind" : "canonicalRaster",
+    "pixels" : [
+      1206,
+      2334
+    ],
+    "registrationOrTolerance" : false,
+    "reservedContainsVisibleInk" : true,
+    "rgbaSHA256" : "4868abe586bbd881017a92290be3baa1154651564fcfd1f504c0058421765d88",
+    "tile" : "urdu-geometry-280-accessibility5-attachedScrollViewport-paddedDrawingGroup-viewport-0",
+    "visibleReservedContentPixels" : [
+      240,
+      240,
+      840,
+      2094
+    ]
+  },
+  {
+    "captureValid" : true,
+    "changedRGBABytes" : 48795,
+    "coordinateEquivalentComparison" : true,
+    "diagnosticOnly" : true,
+    "kind" : "strictComparison",
+    "noEligibility" : true,
+    "reference" : "plain",
+    "sameActualGeometry" : true,
+    "sameBackendOnly" : true,
+    "sameRGBA" : false,
+    "tile" : "urdu-geometry-280-accessibility5-attachedScrollViewport-paddedDrawingGroup-viewport-0"
+  },
+  {
+    "boundsThresholdOnly" : "RGB channels below128; equality still compares every unmodified RGBA byte",
+    "inkBoundsPixels" : [
+      292,
+      300,
+      671,
+      1959
+    ],
+    "inkPixels" : 95687,
+    "kind" : "canonicalRaster",
+    "pixels" : [
+      1206,
+      2334
+    ],
+    "registrationOrTolerance" : false,
+    "reservedContainsVisibleInk" : true,
+    "rgbaSHA256" : "8ec30c96c638ac62f37c368296402e6b9c61a48bf9f6d1a27d79a312ac6ffc0d",
+    "tile" : "urdu-geometry-280-accessibility5-attachedScrollViewport-paddedDrawingGroup-viewport-1",
+    "visibleReservedContentPixels" : [
+      126,
+      240,
+      840,
+      2094
+    ]
+  },
+  {
+    "captureValid" : true,
+    "changedRGBABytes" : 48795,
+    "coordinateEquivalentComparison" : true,
+    "diagnosticOnly" : true,
+    "kind" : "strictComparison",
+    "noEligibility" : true,
+    "reference" : "plain",
+    "sameActualGeometry" : true,
+    "sameBackendOnly" : true,
+    "sameRGBA" : false,
+    "tile" : "urdu-geometry-280-accessibility5-attachedScrollViewport-paddedDrawingGroup-viewport-1"
+  },
+  {
+    "boundsThresholdOnly" : "RGB channels below128; equality still compares every unmodified RGBA byte",
+    "inkBoundsPixels" : [
+      399,
+      50,
+      678,
+      1894
+    ],
+    "inkPixels" : 94161,
+    "kind" : "canonicalRaster",
+    "pixels" : [
+      1206,
+      2334
+    ],
+    "registrationOrTolerance" : false,
+    "reservedContainsVisibleInk" : true,
+    "rgbaSHA256" : "38fc830023ed25e55aa59f1d757bfc8d4ccfd35c846a90468a3d197c840acacb",
+    "tile" : "urdu-geometry-280-accessibility5-attachedScrollViewport-paddedDrawingGroup-viewport-2",
+    "visibleReservedContentPixels" : [
+      240,
+      0,
+      840,
+      2094
+    ]
+  },
+  {
+    "captureValid" : true,
+    "changedRGBABytes" : 48207,
+    "coordinateEquivalentComparison" : true,
+    "diagnosticOnly" : true,
+    "kind" : "strictComparison",
+    "noEligibility" : true,
+    "reference" : "plain",
+    "sameActualGeometry" : true,
+    "sameBackendOnly" : true,
+    "sameRGBA" : false,
+    "tile" : "urdu-geometry-280-accessibility5-attachedScrollViewport-paddedDrawingGroup-viewport-2"
+  },
+  {
+    "boundsThresholdOnly" : "RGB channels below128; equality still compares every unmodified RGBA byte",
+    "inkBoundsPixels" : [
+      285,
+      50,
+      678,
+      1894
+    ],
+    "inkPixels" : 94161,
+    "kind" : "canonicalRaster",
+    "pixels" : [
+      1206,
+      2334
+    ],
+    "registrationOrTolerance" : false,
+    "reservedContainsVisibleInk" : true,
+    "rgbaSHA256" : "ee8c3daced61a284506c8798c1578de2264e9912b8a951d37aea9ab7bb1434ed",
+    "tile" : "urdu-geometry-280-accessibility5-attachedScrollViewport-paddedDrawingGroup-viewport-3",
+    "visibleReservedContentPixels" : [
+      126,
+      0,
+      840,
+      2094
+    ]
+  },
+  {
+    "captureValid" : true,
+    "changedRGBABytes" : 48207,
+    "coordinateEquivalentComparison" : true,
+    "diagnosticOnly" : true,
+    "kind" : "strictComparison",
+    "noEligibility" : true,
+    "reference" : "plain",
+    "sameActualGeometry" : true,
+    "sameBackendOnly" : true,
+    "sameRGBA" : false,
+    "tile" : "urdu-geometry-280-accessibility5-attachedScrollViewport-paddedDrawingGroup-viewport-3"
+  }
+]

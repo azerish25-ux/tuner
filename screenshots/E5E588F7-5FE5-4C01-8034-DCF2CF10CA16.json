@@ -1,0 +1,473 @@
+[
+  {
+    "appBuild" : "1",
+    "appBundle" : "com.shahradazerisharghi.timbre",
+    "backend" : "imageRenderer",
+    "comparisonIsDiagnosticOnly" : true,
+    "declaredSourceSHA" : "not-provided",
+    "declaredSourceSHAIsIndependentlyVerified" : false,
+    "diagnosticOnly" : true,
+    "direction" : "rightToLeft",
+    "dynamicType" : "accessibility5",
+    "hostedRasterScale" : "actual-window-screen-scale",
+    "imageRendererScale" : 3,
+    "kind" : "provenance",
+    "osVersion" : "Version 26.2 (Build 23C54)",
+    "productionEligibilityClaim" : false,
+    "realOnboardingCoverage" : false,
+    "rendererCallbacksObservable" : true,
+    "sourceFile" : "TimbreAppTests\/WelcomeRendererGeometryTests.swift",
+    "stitchedOrScaledAcceptance" : false,
+    "textMetricDisplayScale" : 3,
+    "variant" : "zeroDefaultSize",
+    "width" : 280
+  },
+  {
+    "boldText" : false,
+    "inkInsets" : [
+      5,
+      30.666666666666668,
+      5,
+      30.666666666666668
+    ],
+    "kind" : "independentFont",
+    "outerReserve" : [
+      5,
+      30.666666666666668,
+      5,
+      30.666666666666668
+    ],
+    "points" : 68.333333333333329,
+    "postScriptName" : "NotoNastaliqUrdu-Bold"
+  },
+  {
+    "canvasReturned" : [
+      440,
+      1366
+    ],
+    "kind" : "wrapperSize",
+    "observationLevel" : "outside-padded-headline",
+    "outerProposal" : {
+      "height" : 0,
+      "width" : 0
+    },
+    "subviewProposal" : {
+      "height" : null,
+      "width" : 280
+    },
+    "subviewReturned" : [
+      274.66666666666663,
+      1206
+    ]
+  },
+  {
+    "anchor" : [
+      1,
+      0
+    ],
+    "at" : [
+      140,
+      -603
+    ],
+    "bounds" : [
+      -220,
+      -683,
+      440,
+      1366
+    ],
+    "kind" : "wrapperPlacement",
+    "subviewProposal" : {
+      "height" : null,
+      "width" : 280
+    }
+  },
+  {
+    "clipBoundingRect" : [
+      -1.7014117331926443e+38,
+      -1.7014117331926443e+38,
+      3.4028234663852886e+38,
+      3.4028234663852886e+38
+    ],
+    "contextTransform" : [
+      1,
+      0,
+      0,
+      1,
+      0,
+      0
+    ],
+    "displayPadding" : [
+      0,
+      0,
+      0,
+      0
+    ],
+    "kind" : "rendererDraw",
+    "lineCount" : 7,
+    "lines" : [
+      {
+        "ascent" : 130.10666666666665,
+        "descent" : 40.726666666666659,
+        "index" : 0,
+        "leading" : 0,
+        "origin" : [
+          43.251666666666665,
+          130
+        ],
+        "rect" : [
+          43.251666666666665,
+          -0.10666666666665492,
+          170.08166666666665,
+          170.83333333333331
+        ],
+        "width" : 170.08166666666665
+      },
+      {
+        "ascent" : 130.10666666666665,
+        "descent" : 40.726666666666659,
+        "index" : 1,
+        "leading" : 0,
+        "origin" : [
+          59.216666666666669,
+          300.83333333333331
+        ],
+        "rect" : [
+          59.216666666666669,
+          170.72666666666666,
+          163.36666666666665,
+          170.83333333333331
+        ],
+        "width" : 163.36666666666665
+      },
+      {
+        "ascent" : 130.10666666666665,
+        "descent" : 40.726666666666659,
+        "index" : 2,
+        "leading" : 0,
+        "origin" : [
+          97.508333333333326,
+          471.66666666666663
+        ],
+        "rect" : [
+          97.508333333333326,
+          341.55999999999995,
+          125.07499999999999,
+          170.83333333333331
+        ],
+        "width" : 125.07499999999999
+      },
+      {
+        "ascent" : 130.10666666666665,
+        "descent" : 40.726666666666659,
+        "index" : 3,
+        "leading" : 0,
+        "origin" : [
+          15.849999999999994,
+          642.5
+        ],
+        "rect" : [
+          15.849999999999994,
+          512.39333333333332,
+          197.48333333333332,
+          170.83333333333331
+        ],
+        "width" : 197.48333333333332
+      },
+      {
+        "ascent" : 130.10666666666665,
+        "descent" : 40.726666666666659,
+        "index" : 4,
+        "leading" : 0,
+        "origin" : [
+          9.4699999999999989,
+          813.33333333333326
+        ],
+        "rect" : [
+          9.4699999999999989,
+          683.22666666666657,
+          213.11333333333332,
+          170.83333333333331
+        ],
+        "width" : 213.11333333333332
+      },
+      {
+        "ascent" : 130.10666666666665,
+        "descent" : 40.726666666666659,
+        "index" : 5,
+        "leading" : 0,
+        "origin" : [
+          23.435000000000002,
+          984.16666666666663
+        ],
+        "rect" : [
+          23.435000000000002,
+          854.05999999999995,
+          189.89833333333331,
+          170.83333333333331
+        ],
+        "width" : 189.89833333333331
+      },
+      {
+        "ascent" : 130.10666666666665,
+        "descent" : 40.726666666666659,
+        "index" : 6,
+        "leading" : 0,
+        "origin" : [
+          159.96499999999997,
+          1154.9999999999998
+        ],
+        "rect" : [
+          159.96499999999997,
+          1024.8933333333332,
+          53.368333333333332,
+          170.83333333333331
+        ],
+        "width" : 53.368333333333332
+      }
+    ]
+  },
+  {
+    "canvasReturned" : [
+      440,
+      1366
+    ],
+    "kind" : "wrapperSize",
+    "observationLevel" : "outside-padded-headline",
+    "outerProposal" : {
+      "height" : null,
+      "width" : 440
+    },
+    "subviewProposal" : {
+      "height" : null,
+      "width" : 280
+    },
+    "subviewReturned" : [
+      274.66666666666663,
+      1206
+    ]
+  },
+  {
+    "canvasReturned" : [
+      440,
+      1366
+    ],
+    "kind" : "wrapperSize",
+    "observationLevel" : "outside-padded-headline",
+    "outerProposal" : {
+      "height" : 1366,
+      "width" : 440
+    },
+    "subviewProposal" : {
+      "height" : null,
+      "width" : 280
+    },
+    "subviewReturned" : [
+      274.66666666666663,
+      1206
+    ]
+  },
+  {
+    "anchor" : [
+      1,
+      0
+    ],
+    "at" : [
+      360,
+      80
+    ],
+    "bounds" : [
+      0,
+      0,
+      440,
+      1366
+    ],
+    "kind" : "wrapperPlacement",
+    "subviewProposal" : {
+      "height" : null,
+      "width" : 280
+    }
+  },
+  {
+    "clipBoundingRect" : [
+      -1.7014117331926443e+38,
+      -1.7014117331926443e+38,
+      3.4028234663852886e+38,
+      3.4028234663852886e+38
+    ],
+    "contextTransform" : [
+      1,
+      0,
+      0,
+      1,
+      0,
+      0
+    ],
+    "displayPadding" : [
+      0,
+      0,
+      0,
+      0
+    ],
+    "kind" : "rendererDraw",
+    "lineCount" : 7,
+    "lines" : [
+      {
+        "ascent" : 130.10666666666665,
+        "descent" : 40.726666666666659,
+        "index" : 0,
+        "leading" : 0,
+        "origin" : [
+          43.251666666666665,
+          130
+        ],
+        "rect" : [
+          43.251666666666665,
+          -0.10666666666665492,
+          170.08166666666665,
+          170.83333333333331
+        ],
+        "width" : 170.08166666666665
+      },
+      {
+        "ascent" : 130.10666666666665,
+        "descent" : 40.726666666666659,
+        "index" : 1,
+        "leading" : 0,
+        "origin" : [
+          59.216666666666669,
+          300.83333333333331
+        ],
+        "rect" : [
+          59.216666666666669,
+          170.72666666666666,
+          163.36666666666665,
+          170.83333333333331
+        ],
+        "width" : 163.36666666666665
+      },
+      {
+        "ascent" : 130.10666666666665,
+        "descent" : 40.726666666666659,
+        "index" : 2,
+        "leading" : 0,
+        "origin" : [
+          97.508333333333326,
+          471.66666666666663
+        ],
+        "rect" : [
+          97.508333333333326,
+          341.55999999999995,
+          125.07499999999999,
+          170.83333333333331
+        ],
+        "width" : 125.07499999999999
+      },
+      {
+        "ascent" : 130.10666666666665,
+        "descent" : 40.726666666666659,
+        "index" : 3,
+        "leading" : 0,
+        "origin" : [
+          15.849999999999994,
+          642.5
+        ],
+        "rect" : [
+          15.849999999999994,
+          512.39333333333332,
+          197.48333333333332,
+          170.83333333333331
+        ],
+        "width" : 197.48333333333332
+      },
+      {
+        "ascent" : 130.10666666666665,
+        "descent" : 40.726666666666659,
+        "index" : 4,
+        "leading" : 0,
+        "origin" : [
+          9.4699999999999989,
+          813.33333333333326
+        ],
+        "rect" : [
+          9.4699999999999989,
+          683.22666666666657,
+          213.11333333333332,
+          170.83333333333331
+        ],
+        "width" : 213.11333333333332
+      },
+      {
+        "ascent" : 130.10666666666665,
+        "descent" : 40.726666666666659,
+        "index" : 5,
+        "leading" : 0,
+        "origin" : [
+          23.435000000000002,
+          984.16666666666663
+        ],
+        "rect" : [
+          23.435000000000002,
+          854.05999999999995,
+          189.89833333333331,
+          170.83333333333331
+        ],
+        "width" : 189.89833333333331
+      },
+      {
+        "ascent" : 130.10666666666665,
+        "descent" : 40.726666666666659,
+        "index" : 6,
+        "leading" : 0,
+        "origin" : [
+          159.96499999999997,
+          1154.9999999999998
+        ],
+        "rect" : [
+          159.96499999999997,
+          1024.8933333333332,
+          53.368333333333332,
+          170.83333333333331
+        ],
+        "width" : 53.368333333333332
+      }
+    ]
+  },
+  {
+    "boundsThresholdOnly" : "RGB channels below128; equality still compares every unmodified RGBA byte",
+    "inkBoundsPixels" : [
+      399,
+      300,
+      678,
+      3408
+    ],
+    "inkPixels" : 164457,
+    "kind" : "canonicalRaster",
+    "pixels" : [
+      1320,
+      4098
+    ],
+    "registrationOrTolerance" : false,
+    "reservedContainsVisibleInk" : true,
+    "rgbaSHA256" : "a02df672c4abeaa104dbc521370317549b0e62c53c0209ba129d097cd14f7d6f",
+    "tile" : "urdu-geometry-280-accessibility5-imageRenderer-zeroDefaultSize-full",
+    "visibleReservedContentPixels" : [
+      240,
+      240,
+      840,
+      3618
+    ]
+  },
+  {
+    "captureValid" : true,
+    "changedRGBABytes" : 0,
+    "coordinateEquivalentComparison" : true,
+    "diagnosticOnly" : true,
+    "kind" : "strictComparison",
+    "noEligibility" : true,
+    "reference" : "plain",
+    "sameActualGeometry" : true,
+    "sameBackendOnly" : true,
+    "sameRGBA" : true,
+    "tile" : "urdu-geometry-280-accessibility5-imageRenderer-zeroDefaultSize-full"
+  }
+]
