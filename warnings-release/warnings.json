@@ -1,0 +1,181 @@
+{
+ "sdk": [],
+ "allowed": [],
+ "concurrency": [
+  {
+   "path": "/Users/runner/work/tuner/tuner/ios/Timbre/Audio/AudioService.swift",
+   "repo": "ios/Timbre/Audio/AudioService.swift",
+   "line": 352,
+   "message": "reference to captured var 'self' in concurrently-executing code"
+  },
+  {
+   "path": "/Users/runner/work/tuner/tuner/ios/Timbre/Journey/CoachVoice.swift",
+   "repo": "ios/Timbre/Journey/CoachVoice.swift",
+   "line": 209,
+   "message": "call to main actor-isolated initializer 'init(_:size:tint:)' in a synchronous nonisolated context"
+  },
+  {
+   "path": "/Users/runner/work/tuner/tuner/ios/Timbre/Journey/CoachVoice.swift",
+   "repo": "ios/Timbre/Journey/CoachVoice.swift",
+   "line": 210,
+   "message": "call to main actor-isolated initializer 'init(_:size:tint:)' in a synchronous nonisolated context"
+  },
+  {
+   "path": "/Users/runner/work/tuner/tuner/ios/Timbre/Journey/CoachVoice.swift",
+   "repo": "ios/Timbre/Journey/CoachVoice.swift",
+   "line": 226,
+   "message": "call to main actor-isolated static method 'name' in a synchronous nonisolated context"
+  },
+  {
+   "path": "/Users/runner/work/tuner/tuner/ios/Timbre/Learn/Diagrams.swift",
+   "repo": "ios/Timbre/Learn/Diagrams.swift",
+   "line": 232,
+   "message": "call to main actor-isolated static method 'openStrings(kind:)' in a synchronous nonisolated context"
+  },
+  {
+   "path": "/Users/runner/work/tuner/tuner/ios/Timbre/Practice/EarTrainingView.swift",
+   "repo": "ios/Timbre/Practice/EarTrainingView.swift",
+   "line": 838,
+   "message": "conformance of 'EarStairsCanvas' to protocol 'Animatable' crosses into main actor-isolated code and can cause data races; this is an error in the Swift 6 language mode"
+  },
+  {
+   "path": "/Users/runner/work/tuner/tuner/ios/Timbre/Services/GameCenter.swift",
+   "repo": "ios/Timbre/Services/GameCenter.swift",
+   "line": 566,
+   "message": "capture of 'friends' with non-Sendable type '[GKPlayer]' in a '@Sendable' closure"
+  },
+  {
+   "path": "/Users/runner/work/tuner/tuner/ios/Timbre/Services/GameCenter.swift",
+   "repo": "ios/Timbre/Services/GameCenter.swift",
+   "line": 2,
+   "message": "add '@preconcurrency' to suppress 'Sendable'-related warnings from module 'GameKit'"
+  },
+  {
+   "path": "/Users/runner/work/tuner/tuner/ios/Timbre/Learn/HighwayPop.swift",
+   "repo": "ios/Timbre/Learn/HighwayPop.swift",
+   "line": 22,
+   "message": "main actor-isolated static property 'perfectGold' can not be referenced from a nonisolated context"
+  },
+  {
+   "path": "/Users/runner/work/tuner/tuner/ios/Timbre/Stage/InstrumentRig.swift",
+   "repo": "ios/Timbre/Stage/InstrumentRig.swift",
+   "line": 70,
+   "message": "static property 'rigs' is not concurrency-safe because it is nonisolated global shared mutable state; this is an error in the Swift 6 language mode"
+  },
+  {
+   "path": "/Users/runner/work/tuner/tuner/ios/Timbre/Design/Kit.swift",
+   "repo": "ios/Timbre/Design/Kit.swift",
+   "line": 438,
+   "message": "call to main actor-isolated initializer 'init(_:size:tint:)' in a synchronous nonisolated context"
+  },
+  {
+   "path": "/Users/runner/work/tuner/tuner/ios/Timbre/Design/Kit.swift",
+   "repo": "ios/Timbre/Design/Kit.swift",
+   "line": 438,
+   "message": "main actor-isolated static property 'lead' can not be referenced from a nonisolated context"
+  },
+  {
+   "path": "/Users/runner/work/tuner/tuner/ios/Timbre/Learn/LessonResults.swift",
+   "repo": "ios/Timbre/Learn/LessonResults.swift",
+   "line": 5,
+   "message": "let 'resultsSpace' is not concurrency-safe because non-'Sendable' type 'NamedCoordinateSpace' may have shared mutable state; this is an error in the Swift 6 language mode"
+  },
+  {
+   "path": "/Users/runner/work/tuner/tuner/ios/Timbre/Learn/LessonSteps.swift",
+   "repo": "ios/Timbre/Learn/LessonSteps.swift",
+   "line": 41,
+   "message": "call to main actor-isolated static method 'openStrings' in a synchronous nonisolated context"
+  },
+  {
+   "path": "/Users/runner/work/tuner/tuner/ios/Timbre/Learn/NotationView.swift",
+   "repo": "ios/Timbre/Learn/NotationView.swift",
+   "line": 17,
+   "message": "conformance of 'EngravedLineView' to protocol 'Equatable' crosses into main actor-isolated code and can cause data races; this is an error in the Swift 6 language mode"
+  },
+  {
+   "path": "/Users/runner/work/tuner/tuner/ios/Timbre/Paywall/PaywallPlanHero.swift",
+   "repo": "ios/Timbre/Paywall/PaywallPlanHero.swift",
+   "line": 197,
+   "message": "conformance of 'SleeveStrip' to protocol 'Equatable' crosses into main actor-isolated code and can cause data races; this is an error in the Swift 6 language mode"
+  },
+  {
+   "path": "/Users/runner/work/tuner/tuner/ios/Timbre/Practice/PracticeChrome.swift",
+   "repo": "ios/Timbre/Practice/PracticeChrome.swift",
+   "line": 40,
+   "message": "capture of non-Sendable type 'ID.Type' in an isolated closure"
+  },
+  {
+   "path": "/Users/runner/work/tuner/tuner/ios/Timbre/Practice/PracticeChrome.swift",
+   "repo": "ios/Timbre/Practice/PracticeChrome.swift",
+   "line": 40,
+   "message": "capture of non-Sendable type 'Content.Type' in an isolated closure"
+  },
+  {
+   "path": "/Users/runner/work/tuner/tuner/ios/Timbre/Practice/PracticeChrome.swift",
+   "repo": "ios/Timbre/Practice/PracticeChrome.swift",
+   "line": 40,
+   "message": "main actor-isolated property 'direction' can not be referenced from a Sendable closure"
+  },
+  {
+   "path": "/Users/runner/work/tuner/tuner/ios/Timbre/Tune/Readout.swift",
+   "repo": "ios/Timbre/Tune/Readout.swift",
+   "line": 7,
+   "message": "static property 'tuningBand' is not concurrency-safe because it is nonisolated global shared mutable state; this is an error in the Swift 6 language mode"
+  },
+  {
+   "path": "/Users/runner/work/tuner/tuner/ios/Timbre/Practice/ScalesView.swift",
+   "repo": "ios/Timbre/Practice/ScalesView.swift",
+   "line": 455,
+   "message": "main actor-isolated static property 'frets' can not be referenced from a nonisolated context"
+  },
+  {
+   "path": "/Users/runner/work/tuner/tuner/ios/Timbre/Settings/SettingsView.swift",
+   "repo": "ios/Timbre/Settings/SettingsView.swift",
+   "line": 710,
+   "message": "main actor-isolated default value in a nonisolated context; this is an error in the Swift 6 language mode"
+  },
+  {
+   "path": "/Users/runner/work/tuner/tuner/ios/Timbre/Learn/SongStoryCard.swift",
+   "repo": "ios/Timbre/Learn/SongStoryCard.swift",
+   "line": 29,
+   "message": "main actor-isolated static property 'perfectGold' can not be referenced from a nonisolated context"
+  },
+  {
+   "path": "/Users/runner/work/tuner/tuner/ios/Timbre/Journey/StreakCelebration.swift",
+   "repo": "ios/Timbre/Journey/StreakCelebration.swift",
+   "line": 146,
+   "message": "conformance of 'StageLamp' to protocol 'Animatable' crosses into main actor-isolated code and can cause data races; this is an error in the Swift 6 language mode"
+  },
+  {
+   "path": "/Users/runner/work/tuner/tuner/ios/Timbre/Journey/StreakCelebration.swift",
+   "repo": "ios/Timbre/Journey/StreakCelebration.swift",
+   "line": 194,
+   "message": "conformance of 'LampBeam' to protocol 'Animatable' crosses into main actor-isolated code and can cause data races; this is an error in the Swift 6 language mode"
+  },
+  {
+   "path": "/Users/runner/work/tuner/tuner/ios/Timbre/YourSongs/AppleMusicListen.swift",
+   "repo": "ios/Timbre/YourSongs/AppleMusicListen.swift",
+   "line": 92,
+   "message": "sending value of non-Sendable type 'ApplicationMusicPlayer' risks causing data races; this is an error in the Swift 6 language mode"
+  },
+  {
+   "path": "/Users/runner/work/tuner/tuner/ios/Timbre/YourSongs/AppleMusicListen.swift",
+   "repo": "ios/Timbre/YourSongs/AppleMusicListen.swift",
+   "line": 97,
+   "message": "sending value of non-Sendable type 'ApplicationMusicPlayer' risks causing data races; this is an error in the Swift 6 language mode"
+  },
+  {
+   "path": "/Users/runner/work/tuner/tuner/ios/Timbre/Services/LiveActivityController.swift",
+   "repo": "ios/Timbre/Services/LiveActivityController.swift",
+   "line": 241,
+   "message": "sending 'ending' risks causing data races; this is an error in the Swift 6 language mode"
+  },
+  {
+   "path": "/Users/runner/work/tuner/tuner/ios/Timbre/Services/LiveActivityController.swift",
+   "repo": "ios/Timbre/Services/LiveActivityController.swift",
+   "line": 237,
+   "message": "sending 'ending' risks causing data races; this is an error in the Swift 6 language mode"
+  }
+ ],
+ "other": []
+}
