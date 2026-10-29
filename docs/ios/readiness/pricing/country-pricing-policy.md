@@ -56,7 +56,7 @@ python3 tools/ci/validate_country_pricing_policy.py
 python3 tools/ci/validate_country_pricing_policy.py --require-complete
 ```
 
-Structural validation is permitted for a clearly labelled proposal. `--require-complete` is deliberately blocked in this proposal schema: an independent active-territory importer and source-bound Apple price-point verifier are not implemented yet. Filling in counts, flags or arbitrary IDs cannot bypass that blocker. Implement and review that evidence verifier before certifying a complete mapping. Do not infer readiness from the structural test passing.
+Structural validation is permitted for a clearly labelled proposal. `--require-complete` is deliberately blocked in this proposal schema: this proposal cannot certify authenticated live state. The separate [read-only evidence verifier](pricing-evidence-verification.md) requires fresh Apple reads and an externally approved target manifest; its fixtures do not verify account prices. Filling in counts, flags or arbitrary IDs here cannot bypass that blocker. Do not infer readiness from the structural test passing.
 
 Before configuration, verify the current authenticated Apple territory IDs, resolve both income-classification exceptions using country-specific evidence, resolve supported prices for all three products, and review proceeds. After configuration, independently read back schedules and verify sandbox prices. Existing annual price-experiment products must not bypass the country policy if activated.
 

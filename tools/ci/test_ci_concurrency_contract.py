@@ -9,12 +9,13 @@ MARKERS = {'[listing-assets-pilot]', '[listing-assets-all]',
 
 
 class CIConcurrencyContract(unittest.TestCase):
-    def test_only_pull_requests_cancel_running_native_checks(self):
+    def test_latest_pr_gate_and_uninterrupted_long_native_tours(self):
         for name, prefix in [('ios', 'ios-native'), ('nightly', 'nightly')]:
             source = (ROOT / f'.github/workflows/{name}.yml').read_text()
             block = source.split('concurrency:\n', 1)[1].split('env:\n', 1)[0]
             self.assertIn(f'group: {prefix}-${{{{ github.ref }}}}', block)
-            self.assertIn("cancel-in-progress: ${{ github.event_name == 'pull_request' }}", block)
+            expected = "${{ github.event_name == 'pull_request' }}" if name == 'ios' else 'false'
+            self.assertIn('cancel-in-progress: ' + expected, block)
             self.assertNotIn('[ci-refresh]', block)
             self.assertEqual(block.count('cancel-in-progress:'), 1)
 

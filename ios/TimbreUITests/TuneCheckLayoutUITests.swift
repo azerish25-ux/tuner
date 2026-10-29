@@ -105,9 +105,18 @@ final class TuneCheckLayoutUITests: XCTestCase {
                     "Compact fixture requires an actual 375×667-point iPhone window, got \(screen)")
         let tab = app.tabBars.buttons.matching(NSPredicate(format: "label == %@", copy.learn))
         try require(tab.count == 1 && tab.firstMatch.isHittable, "Unique localized Learn tab is not available")
-        tab.firstMatch.tap()
-        let selected = XCTNSPredicateExpectation(predicate: NSPredicate(format: "selected == true"), object: tab.firstMatch)
-        try require(XCTWaiter.wait(for: [selected], timeout: 10) == .completed, "Learn tab did not become selected")
+        // These cases exercise lesson layout. Confirm actual tab selection after bounded physical taps;
+        // preserve every attempted tap and require the selected state before entering the lesson.
+        for attempt in 1...3 {
+            if tab.firstMatch.isSelected { break }
+            try require(tab.firstMatch.isHittable, "Learn tab became unreachable before navigation")
+            tab.firstMatch.tap()
+            let selected = XCTNSPredicateExpectation(predicate: NSPredicate(format: "selected == true"), object: tab.firstMatch)
+            let completed = XCTWaiter.wait(for: [selected], timeout: 5) == .completed
+            observations.append("Learn navigation tap=\(attempt) selected=\(completed)")
+            if completed { break }
+        }
+        try require(tab.firstMatch.isSelected, "Learn tab did not become selected after bounded real taps")
         let lesson = element("learn.lesson.gtr-1-2")
         for _ in 0..<10 {
             if lesson.exists && lesson.isHittable && Self.contains(lesson.frame, in: screen) { break }
@@ -178,17 +187,20 @@ final class TuneCheckLayoutUITests: XCTestCase {
                                ("note", note), ("hint", hint), ("fretboard", board)] {
             try reveal(target, in: scroll)
             if name == "rail" {
-                for chip in rail {
-                    try require(Self.contains(chip.frame, in: viewport(scroll)) && chip.isHittable,
+                let current = try currentFrames()
+                let room = viewport(scroll, current: current)
+                for (index, chip) in rail.enumerated() {
+                    try require(Self.contains(current["string-\(6 - index)"]!, in: room) && chip.isHittable,
                                 "All six chips must fit the same visible rail, not only its first chip")
                 }
             }
             // Read both frames from the same live content position, not a cached pre-scroll screenshot.
-            let railTop = rail.map { $0.frame.minY }.min()!
-            let railBottom = rail.map { $0.frame.maxY }.max()!
-            try require(railTop - 8 >= instructions.frame.maxY + 14,
+            let current = try currentFrames()
+            let railTop = (1...6).map { current["string-\($0)"]!.minY }.min()!
+            let railBottom = (1...6).map { current["string-\($0)"]!.maxY }.max()!
+            try require(railTop - 8 >= current["instructions"]!.maxY + 14,
                         "The reserved reward band must not borrow the instruction's 14-point gap")
-            try require(railBottom + 8 + 14 <= note.frame.minY,
+            try require(railBottom + 8 + 14 <= current["note"]!.minY,
                         "The reward band must stay separated from the actual listening note")
             capture("clear-" + name)
         }
@@ -200,20 +212,48 @@ final class TuneCheckLayoutUITests: XCTestCase {
         capture("skip-activated")
     }
 
-    private func assertPinned() throws {
-        for (name, target) in [("Skip", skip!), ("Close", close!), ("Header", header!)] {
-            try require(target.exists && Self.contains(target.frame, in: screen) && target.isHittable,
-                        "\(name) must remain wholly visible and hittable")
+    /// One current hierarchy for each check; identities alone survive between checks, never geometry.
+    private func currentFrames() throws -> [String: CGRect] {
+        let root = try app.snapshot()
+        var nodes: [any XCUIElementSnapshot] = []
+        func visit(_ node: any XCUIElementSnapshot) {
+            nodes.append(node)
+            for child in node.children { visit(child) }
         }
-        try require(skip.frame == pinnedSkip && close.frame == pinnedClose,
-                    "Teaching-content scrolling must not move the fixed actions")
+        visit(root)
+        var frames: [String: CGRect] = [:]
+        for (name, identity) in watchedIdentity {
+            let matches = nodes.filter { node in
+                if !identity.id.isEmpty { return node.identifier == identity.id }
+                let value = node.value.map { ($0 as? String) ?? String(describing: $0) } ?? "<nil>"
+                return node.elementType == identity.type && node.label == identity.label && value == identity.value
+            }
+            try require(matches.count == 1, "Current geometry identity missing or ambiguous: \(name)")
+            frames[name] = matches[0].frame
+        }
+        try require(frames.count == watched.count, "Every watched target needs current native geometry")
+        frames["window"] = screen
+        return frames
     }
 
-    private func viewport(_ scroll: XCUIElement?) -> CGRect {
-        let top = max(header.frame.maxY, close.frame.maxY)
-        let bottom = min(screen.maxY, skip.frame.minY)
+    @discardableResult
+    private func assertPinned() throws -> [String: CGRect] {
+        let current = try currentFrames()
+        for (name, target) in [("skip", skip!), ("close", close!), ("header", header!)] {
+            try require(Self.contains(current[name]!, in: current["window"]!) && target.isHittable,
+                        "\(name) must remain wholly visible and hittable")
+        }
+        try require(current["skip"]! == pinnedSkip && current["close"]! == pinnedClose,
+                    "Teaching-content scrolling must not move the fixed actions")
+        return current
+    }
+
+    private func viewport(_ scroll: XCUIElement?, current: [String: CGRect]) -> CGRect {
+        let window = current["window"]!
+        let top = max(current["header"]!.maxY, current["close"]!.maxY)
+        let bottom = min(window.maxY, current["skip"]!.minY)
         guard bottom > top else { return .null }
-        let content = CGRect(x: screen.minX, y: top, width: screen.width, height: bottom - top)
+        let content = CGRect(x: window.minX, y: top, width: window.width, height: bottom - top)
         return scroll.map { $0.frame.intersection(content) } ?? content
     }
 
@@ -221,10 +261,10 @@ final class TuneCheckLayoutUITests: XCTestCase {
         var previous: CGRect?
         var stalled = 0
         for attempt in 0..<12 {
-            try assertPinned()
+            let current = try assertPinned()
             try require(target.exists, "The exact teaching target disappeared before it could be checked")
             let frame = target.frame
-            let room = viewport(scroll)
+            let room = viewport(scroll, current: current)
             observations.append("attempt=\(attempt) target=\(target.label) frame=\(frame) viewport=\(room)")
             if Self.contains(frame, in: room) && target.isHittable { return }
             guard let scroll else {

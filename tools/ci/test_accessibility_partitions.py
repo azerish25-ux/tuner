@@ -116,5 +116,84 @@ class PartitionTests(unittest.TestCase):
         self.assertIn('rendered.lifetime = .keepAlways', source)
 
 
+class SubmissionDispositionTests(unittest.TestCase):
+    def evidence(self, message, *, code=65, terminal='failed'):
+        text = (f"Test Case '-[{CASE_NAME}]' started.\n"
+                + (f"error: -[{CASE_NAME}] : {message}\n" if message else '')
+                + f"Test Case '-[{CASE_NAME}]' {terminal} (1 seconds).\n")
+        receipt = dict(expected=[NAME], initial_exit=code, retried=[], retry_exit=None,
+                       missing=[], retry_missing=[], passed=(code == 0))
+        return receipt, text
+
+    def test_contrast_stays_strictly_failed_but_is_advisory_for_submission(self):
+        receipt, text = self.evidence('failed - tab-3-songs: [contrast, enforced] Contrast failed | id example')
+        result = subject.submission_disposition(receipt, text, {NAME})
+        self.assertTrue(result['required_checks_passed'])
+        self.assertFalse(result['strict_sdk_passed'])
+        self.assertEqual(len(result['advisory']), 1)
+        self.assertFalse(receipt['passed'])
+
+    def test_two_uncorroborated_sdk_timeout_kinds_are_advisory(self):
+        for kind in ['Dynamic Type', 'clipped text']:
+            receipt, text = self.evidence('failed - tab-3-songs: the accessibility audit could not run '
+                f'(up to 3 isolated tries): {kind}: Audit failed to complete in time')
+            with self.subTest(kind=kind):
+                self.assertTrue(subject.submission_disposition(receipt, text, {NAME})['required_checks_passed'])
+
+    def test_other_accessibility_assertions_and_unknown_errors_remain_blocking(self):
+        for message in ['failed - tab-3-songs: [hit region, enforced] hit region failed',
+                        'failed - tab-3-songs: [traits, enforced] invalid trait',
+                        'failed - missing control', 'failed - anonymous unknown failure',
+                        'Failed to launch application via Xcode']:
+            receipt, text = self.evidence(message)
+            with self.subTest(message=message):
+                self.assertFalse(subject.submission_disposition(receipt, text, {NAME})['required_checks_passed'])
+
+    def test_missing_skipped_duplicate_foreign_or_crashed_cases_cannot_pass(self):
+        receipt, text = self.evidence('failed - tab-3-songs: [contrast, enforced] Contrast failed | id example')
+        for bad in ['', text.replace('failed (1', 'skipped (1'), text + text,
+                    text.replace('testEveryTab', 'testForeign'), text + 'Test crashed\n']:
+            with self.subTest(bad=bad):
+                self.assertFalse(subject.submission_disposition(receipt, bad, {NAME})['required_checks_passed'])
+        for code in [1, 70, 124, -9]:
+            changed = dict(receipt, initial_exit=code)
+            self.assertFalse(subject.submission_disposition(changed, text, {NAME})['required_checks_passed'])
+
+    def test_success_is_retained_and_receipt_tampering_or_retry_is_not_advisory_fallback(self):
+        receipt, text = self.evidence('', code=0, terminal='passed')
+        self.assertTrue(subject.submission_disposition(receipt, text, {NAME})['strict_sdk_passed'])
+        for changed in [dict(receipt, expected=[]), dict(receipt, retried=[NAME]),
+                        dict(receipt, missing=[NAME]), dict(receipt, initial_exit=65)]:
+            self.assertFalse(subject.submission_disposition(changed, text, {NAME})['required_checks_passed'])
+
+    def test_setup_failure_cannot_be_waived_alone_or_alongside_sdk_failures(self):
+        import re
+        workflow = (subject.ROOT / '.github/workflows/ios.yml').read_text()
+        job = workflow.split('  accessibility:\n', 1)[1].split('\n  gate:\n', 1)[0]
+        identities = re.findall(r'^        id: ([\w-]+)$', job, re.MULTILINE)
+        clean = {identity: {'outcome': 'success'} for identity in identities}
+        self.assertEqual(subject.submission_step_disposition(clean), [])
+        for sdk_failed in [False, True]:
+            changed = {key: dict(value) for key, value in clean.items()}
+            if sdk_failed:
+                changed['ax-sdk-tabs']['outcome'] = 'failure'
+                changed['ax-sdk-aggregate']['outcome'] = 'failure'
+                self.assertEqual(subject.submission_step_disposition(changed), [])
+            changed['ax-build']['outcome'] = 'failure'
+            self.assertTrue(subject.submission_step_disposition(changed))
+            changed['ax-build']['outcome'] = 'skipped'
+            self.assertTrue(subject.submission_step_disposition(changed))
+        missing = dict(clean); missing.pop('ax-logcollect')
+        self.assertTrue(subject.submission_step_disposition(missing))
+        foreign = dict(clean, foreign={'outcome': 'success'})
+        self.assertTrue(subject.submission_step_disposition(foreign))
+
+    def test_missing_receipt_fields_are_not_complete_evidence(self):
+        receipt, text = self.evidence('', code=0, terminal='passed')
+        for field in receipt:
+            changed = dict(receipt); del changed[field]
+            self.assertFalse(subject.submission_disposition(changed, text, {NAME})['required_checks_passed'])
+
+
 if __name__ == '__main__':
     unittest.main()

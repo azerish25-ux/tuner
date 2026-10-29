@@ -8,13 +8,14 @@ be replaced by one retry; all other failures are sticky.
 from __future__ import annotations
 
 import json
+import gzip
 import os
 from pathlib import Path
 import re
 import subprocess
 import sys
 
-from launch_retry import CASE, classify
+from launch_retry import CASE, ERROR, classify
 
 ROOT = Path(__file__).resolve().parents[2]
 PARTITIONS = ('localization', 'screens', 'tabs')
@@ -108,6 +109,98 @@ def aggregate() -> int:
             failed.append(partition)
     print('Accessibility partitions: ' + ('failed/missing: ' + ', '.join(failed) if failed else 'all passed'))
     return int(bool(failed))
+
+
+def submission_disposition(receipt: dict, text: str, expected: set[str]) -> dict:
+    """Prospective submission policy; never changes the strict SDK test result.
+
+    Contrast callbacks and the two uncorroborated SDK layout-audit timeouts are advisory.
+    Functional assertions, other accessibility failures and incomplete execution still block.
+    The fallback deliberately excludes retries and requires one complete execution of every case.
+    """
+    blocking, advisory, advisory_cases = [], [], set()
+    events = {}
+    pattern = re.compile(r"Test Case '-\[(\w+)\.(\w+) (test\w+)\]' (started|passed|failed|skipped)")
+    for match in pattern.finditer(text):
+        name = '/'.join(match.group(1, 2, 3))
+        events.setdefault(name, []).append(match[4])
+    failed = {name for name, states in events.items() if states == ['started', 'failed']}
+    if set(events) != expected or any(states not in (['started', 'passed'], ['started', 'failed']) for states in events.values()):
+        blocking.append('Missing, skipped, repeated or unexpected native test execution')
+    required = {'expected', 'initial_exit', 'retried', 'retry_exit', 'missing', 'retry_missing', 'passed'}
+    if (not required.issubset(receipt) or set(receipt.get('expected', [])) != expected or receipt.get('retried')
+            or receipt.get('retry_exit') is not None or receipt.get('missing') or receipt.get('retry_missing')):
+        blocking.append('Incomplete, foreign or retried evidence is not eligible for advisory fallback')
+    if (type(receipt.get('initial_exit')) is not int or receipt.get('initial_exit') != (65 if failed else 0)
+            or receipt.get('passed') is not (not failed)):
+        blocking.append('Exit status or strict receipt disagrees with native test events')
+    if re.search(r'Test crashed|unexpected exit|exceeded execution|[1-9]\d* tests? skipped', text, re.IGNORECASE):
+        blocking.append('Native execution did not finish normally')
+    contrast = re.compile(r'^failed - [^:]+: \[contrast, enforced\] Contrast failed \|')
+    timeout = re.compile(r'^failed - [^:]+: the accessibility audit could not run '
+                         r'\(up to [1-3] isolated tries\): (?:Dynamic Type|clipped text): '
+                         r'Audit failed to complete in time$')
+    for line in text.splitlines():
+        if 'error:' not in line:
+            continue
+        match = ERROR.search(line)
+        if match:
+            name = f"{match['module']}/{match['cls']}/{match['test']}"
+            message = match['message']
+            if name in expected and (contrast.match(message) or timeout.fullmatch(message)):
+                advisory.append(message)
+                advisory_cases.add(name)
+                continue
+        blocking.append(line)
+    if failed != advisory_cases:
+        blocking.append('A failed native case is not fully explained by advisory SDK findings')
+    return {'required_checks_passed': not blocking, 'strict_sdk_passed': receipt.get('passed') is True,
+            'advisory': advisory, 'blocking': blocking}
+
+
+def submission_summary(directory: Path) -> dict:
+    result = {}
+    for partition in PARTITIONS:
+        folder = directory / ('accessibility-logs-' + partition)
+        try:
+            receipt = json.loads((folder / 'status.json').read_text())
+            if receipt.get('partition') != partition:
+                raise ValueError('Partition identity differs from its evidence directory')
+            log = folder / 'test.log'
+            text = log.read_text(errors='replace') if log.is_file() else gzip.decompress(
+                (folder / 'test.log.gz').read_bytes()).decode('utf-8', errors='replace')
+            result[partition] = submission_disposition(receipt, text, expected_tests(partition))
+        except (OSError, ValueError, TypeError) as error:
+            result[partition] = {'required_checks_passed': False, 'blocking': [str(error)]}
+    return {'required_checks_passed': all(value['required_checks_passed'] for value in result.values()),
+            'strict_sdk_result_reclassified_as_pass': False, 'partitions': result}
+
+
+def submission_step_disposition(outcomes: dict) -> list[str]:
+    """Only the original SDK partition/aggregate failures may be advisory, never setup/evidence failures."""
+    workflow = (ROOT / '.github/workflows/ios.yml').read_text()
+    job = workflow.split('  accessibility:\n', 1)[1].split('\n  gate:\n', 1)[0]
+    blocks = re.split(r'(?=^      - )', job, flags=re.MULTILINE)[1:]
+    identities, optional = set(), set()
+    for block in blocks:
+        match = re.search(r'^        id: ([\w-]+)$', block, re.MULTILINE)
+        if not match or match[1] in identities:
+            return ['Every accessibility step must have a unique explicit identity']
+        identities.add(match[1])
+        if "steps.reveal-opt-in.outputs.enabled == 'true'" in block:
+            optional.add(match[1])
+    if not isinstance(outcomes, dict) or set(outcomes) != identities:
+        return ['Missing or foreign accessibility step outcomes']
+    sdk = {'ax-sdk-localization', 'ax-sdk-screens', 'ax-sdk-tabs', 'ax-sdk-aggregate'}
+    problems = []
+    for identity, details in outcomes.items():
+        outcome = details.get('outcome')
+        if outcome == 'success' or (identity in sdk and outcome == 'failure'):
+            continue
+        if identity in optional and outcome == 'skipped':
+            continue
+        problems.append(identity + ': ' + str(outcome))
+    return problems
 
 
 if __name__ == '__main__':

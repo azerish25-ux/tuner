@@ -18,8 +18,8 @@ permissions:
   contents: read
 concurrency:
   group: nightly-${{ github.ref }}
-  # Only superseded pull-request evidence is canceled; main, manual and scheduled runs finish.
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+  # Finish live native verification; GitHub retains only the latest pending run for this ref.
+  cancel-in-progress: false
 env:
   TOUR_PRIMING_ENABLED: ${{ inputs.priming == true || contains(github.event.pull_request.labels.*.name, 'simulator-priming') }}
   DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer

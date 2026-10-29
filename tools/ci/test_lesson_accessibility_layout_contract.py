@@ -149,11 +149,16 @@ class LessonAccessibilityLayoutContract(unittest.TestCase):
 
     def test_tunecheck_scrolls_teaching_content_not_skip_or_audio_lifecycle(self):
         tune = SOURCE.read_text().split("struct TuneCheckStep: View {", 1)[1]
-        body = tune.split("var body: some View {", 1)[1].split("// Keep the normal stack", 1)[0]
-        self.assertIn("if typeSize.isAccessibilitySize", body)
+        body = tune.split("var body: some View {", 1)[1].split("@ViewBuilder private var teachingContent:", 1)[0]
+        self.assertNotIn("if typeSize.isAccessibilitySize", body)
+        self.assertIn("GeometryReader { viewport in", body)
         self.assertIn("VStack(spacing: 14) { teachingContent }", body)
-        self.assertIn(".scrollBounceBehavior(.basedOnSize)\n                    skipBar", body)
-        self.assertIn("VStack(spacing: 14) {\n                    teachingContent\n                    skipBar", body)
+        self.assertIn(".frame(minHeight: max(0, viewport.size.height - 14)", body)
+        marker = '.accessibilityIdentifier("lesson.tunecheck.scroll")'
+        self.assertIn(marker, body)
+        self.assertGreater(body.index("skipBar"), body.index(marker))
+        teaching_scroll = body.split("ScrollView {", 1)[1].split(marker, 1)[0]
+        self.assertNotIn("skipBar", teaching_scroll)
         for token in [".onAppear { listen(); introduce(after: 1.4) }",
                       "lockTask?.cancel(); store.stopLessonListening(owner: owner)",
                       "phase == .active && !finished && !settling"]:

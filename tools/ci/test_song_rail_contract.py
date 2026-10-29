@@ -154,7 +154,7 @@ class SongRailContractTests(unittest.TestCase):
     def test_selection_browsing_fades_and_unclipped_height_remain(self):
         self.assertIn('.railBleed(leading: Metrics.gutter, trailing: Metrics.gutter)', RAIL)
         self.assertIn('@State private var position = ScrollPosition(idType: Item.ID.self)', RAIL)
-        self.assertIn('.scrollPosition($position, anchor: .trailing)', RAIL)
+        self.assertIn('.scrollPosition($position, anchor: .center)', RAIL)
         self.assertIn('if let selection { reveal(selection) }', RAIL)
         self.assertIn('reveal(value)', RAIL)
         self.assertIn('position.scrollTo(id: value, anchor: .center)', RAIL)
@@ -188,7 +188,7 @@ class SongRailContractTests(unittest.TestCase):
         for forbidden in ['DispatchQueue', '.id(pageWidth)', '.id(typeSize)']:
             self.assertNotIn(forbidden, page)
             self.assertNotIn(forbidden, PAGE)
-        self.assertIn('.scrollPosition($position, anchor: .trailing)', RAIL)
+        self.assertIn('.scrollPosition($position, anchor: .center)', RAIL)
 
     def test_parent_resize_keeps_center_tracking_and_one_typed_command_only(self):
         # Native 226 retains the correct shelf ID yet loses visibility during container resize.

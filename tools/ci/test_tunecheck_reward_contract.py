@@ -80,13 +80,13 @@ class TuneCheckRewardContract(unittest.TestCase):
         native = (ROOT / 'ios/TimbreUITests/TuneCheckLayoutUITests.swift').read_text()
         for token in ['chips.count == 6', 'rail[0].isSelected', 'notes.count == 1', 'boards.count == 1',
                       'target.label == expected', 'close.frame.midX > header.frame.midX',
-                      'Self.contains(chip.frame, in: viewport(scroll)) && chip.isHittable',
-                      'skip.frame == pinnedSkip && close.frame == pinnedClose',
+                      'Self.contains(current["string-\\(6 - index)"]!, in: room) && chip.isHittable',
+                      'current["skip"]! == pinnedSkip && current["close"]! == pinnedClose',
                       'frame.height <= room.height', 'frame.minX >= room.minX && frame.maxX <= room.maxX',
                       'frame.minY >= viewport.minY && frame.maxY <= viewport.maxY',
                       'stalled < 2', 'room.midX', 'for attempt in 0..<12',
-                      'railTop - 8 >= instructions.frame.maxY + 14',
-                      'railBottom + 8 + 14 <= note.frame.minY',
+                      'railTop - 8 >= current["instructions"]!.maxY + 14',
+                      'railBottom + 8 + 14 <= current["note"]!.minY',
                       'XCTAttachment(screenshot: screenshot)', 'root = try app.snapshot()',
                       '"screenshotPixels"', '"launchArguments"', '"observations"',
                       'capture("arrival")', 'capture("clear-" + name)', 'capture("skip-activated")']:
