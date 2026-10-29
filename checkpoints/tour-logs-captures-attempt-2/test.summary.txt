@@ -1,0 +1,65 @@
+# Errors
+
+# Matches
+
+# Tail
+    t =    40.92s Added attachment named '49e-tune-cello-locked'
+    t =    40.94s Tear Down
+    t =    40.94s     Terminate com.shahradazerisharghi.timbre:71577
+Test Case '-[TimbreUITests.TimbreUITests test20StoreCelloStage]' passed (42.205 seconds).
+Test Case '-[TimbreUITests.TimbreUITests test21StoreUkuleleStage]' started.
+    t =     0.00s Start Test at 2026-10-29 05:57:21.757
+    t =     0.12s Set Up
+    t =     0.21s Open com.shahradazerisharghi.timbre
+    t =     0.21s     Launch com.shahradazerisharghi.timbre
+    t =     1.30s         Setting up automation session
+    t =     4.34s         Wait for com.shahradazerisharghi.timbre to idle
+    t =     6.04s Waiting 25.0s for "tune.stage" Any to exist
+    t =     7.06s     Checking `Expect predicate `existsNoRetry == 1` for object "tune.stage" Any`
+    t =     7.06s         Checking existence of `"tune.stage" Any`
+    t =     7.64s Find the "stage.state" Any
+The tuner's stage is '2d', not 3D
+    t =    11.82s Find the "stage.state" Any
+    t =    20.57s Find the "debug.state" Any
+    t =    21.38s Find the "debug.state" Any
+    t =    21.97s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    22.68s Find the Target Application 'com.shahradazerisharghi.timbre'
+TUNER FRAME: no comet caught; the settled lock
+    t =    29.94s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    32.31s Added attachment named 'tuner-lock-state-evidence'
+    t =    32.73s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    33.47s Added attachment named '17b-tune-ukulele-locked'
+    t =    33.49s Tear Down
+    t =    33.50s     Terminate com.shahradazerisharghi.timbre:72387
+Test Case '-[TimbreUITests.TimbreUITests test21StoreUkuleleStage]' passed (35.494 seconds).
+Test Case '-[TimbreUITests.TimbreUITests testCaptureLocalizationNavigationFixture]' started.
+    t =     0.00s Start Test at 2026-10-29 05:57:57.251
+    t =     0.05s Set Up
+    t =     0.08s Tear Down
+Test Case '-[TimbreUITests.TimbreUITests testCaptureLocalizationNavigationFixture]' passed (0.366 seconds).
+Test Case '-[TimbreUITests.TimbreUITests testInstrumentFamilyChipMustClearBothFades]' started.
+    t =     0.00s Start Test at 2026-10-29 05:57:57.617
+    t =     0.07s Set Up
+    t =     0.08s Tear Down
+Test Case '-[TimbreUITests.TimbreUITests testInstrumentFamilyChipMustClearBothFades]' passed (0.203 seconds).
+Test Case '-[TimbreUITests.TimbreUITests testStoreResultsBoundsCalculation]' started.
+    t =     0.00s Start Test at 2026-10-29 05:57:57.820
+    t =     0.05s Set Up
+    t =     0.07s Tear Down
+Test Case '-[TimbreUITests.TimbreUITests testStoreResultsBoundsCalculation]' passed (0.204 seconds).
+Test Suite 'TimbreUITests' passed at 2026-10-29 05:57:58.032.
+	 Executed 24 tests, with 0 failures (0 unexpected) in 2161.877 (2161.934) seconds
+Test Suite 'TimbreUITests.xctest' passed at 2026-10-29 05:57:58.040.
+	 Executed 24 tests, with 0 failures (0 unexpected) in 2161.877 (2161.942) seconds
+Test Suite 'Selected tests' passed at 2026-10-29 05:57:58.040.
+	 Executed 24 tests, with 0 failures (0 unexpected) in 2161.877 (2161.944) seconds
+2026-10-29 05:58:02.819 xcodebuild[6039:23585] [MT] IDETestOperationsObserverDebug: 2365.142 elapsed -- Testing started completed.
+2026-10-29 05:58:02.820 xcodebuild[6039:23585] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-29 05:58:02.821 xcodebuild[6039:23585] [MT] IDETestOperationsObserverDebug: 2365.142 sec, +2365.142 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/runner/work/tuner/tuner/ios/build/UITests.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

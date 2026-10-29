@@ -1,0 +1,359 @@
+Optional(Attributes: Application, 0x10b2fe820, pid: 11220, label: 'Timbre'
+Element subtree:
+ →Application, 0x10b2fe820, pid: 11220, label: 'Timbre'
+    Window (Main), 0x10b27e360, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x10b27b600, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10b27d2e0, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x10b2e96b0, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x10b2ef250, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x10b292360, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x10b2d2b60, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x10b2f6770, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x10b27f800, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x10b27df40, {{0.0, 0.0}, {402.0, 874.0}}
+                        Other, 0x10b2d37c0, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x106acb880, {{0.0, 0.0}, {402.0, 874.0}}
+                            Other, 0x106acc0c0, {{0.0, 0.0}, {402.0, 874.0}}
+                              Other, 0x106adaed0, {{0.0, 0.0}, {402.0, 874.0}}
+                                Other, 0x106ad1d50, {{0.0, 0.0}, {402.0, 874.0}}
+                                  Other, 0x106af3380, {{0.0, 0.0}, {402.0, 874.0}}
+                                    ScrollView, 0x106ada690, {{0.0, 0.0}, {402.0, 874.0}}
+                                      Other, 0x10b374130, {{0.0, 0.0}, {402.0, 874.0}}
+                                        Other, 0x10b374550, {{0.0, 726.2}, {402.0, 147.8}}
+                                      Other, 0x10b374970, {{0.0, 0.0}, {402.0, 874.0}}
+                                        Other, 0x10b3755d0, {{0.0, 726.2}, {402.0, 147.8}}
+                                          Other, 0x10b375e10, {{0.0, 726.2}, {402.0, 147.8}}
+                                            Other, 0x10b376230, {{0.0, 726.2}, {402.0, 147.8}}
+                                          Other, 0x10b2f7230, {{0.0, 726.2}, {402.0, 147.8}}
+                                            Other, 0x10b374d90, {{0.0, 726.2}, {402.0, 147.8}}
+                                            Other, 0x10b3751b0, {{0.0, 726.2}, {402.0, 147.8}}
+                                          Image, 0x10b3557a0, {{-120.0, 764.4}, {642.0, 219.2}}, identifier: 'AdditionalDimmingOverlay'
+                                      Other, 0x10b373d10, {{0.0, 62.0}, {402.0, 11399.0}}
+                                        Other, 0x10b372bb0, {{0.0, 74.0}, {402.0, 2423.0}}
+                                          Button, 0x10b372370, {{201.0, 74.0}, {135.0, 54.3}}, identifier: 'streak.chip', label: '7-day streak'
+                                            Other, 0x106af9ad0, {{240.9, 77.6}, {35.9, 44.0}}
+                                            StaticText, 0x106afbcf0, {{201.0, 74.0}, {135.0, 54.3}}, identifier: 'screen.header.streak.count', label: '7'
+                                          Button, 0x106afbe10, {{338.0, 79.3}, {44.0, 44.0}}, identifier: 'level.ring', label: 'Level 5, 240 of 500 XP'
+                                            StaticText, 0x106afbf30, {{346.7, 91.0}, {26.7, 20.3}}, identifier: 'screen.header.level.mark', label: 'LV 5'
+                                          StaticText, 0x106afc050, {{20.0, 136.3}, {132.7, 60.7}}, identifier: 'screen.header.title', label: 'Learn'
+                                          Button, 0x106afc170, {{20.0, 219.0}, {362.0, 133.0}}, identifier: 'daily.compact', label: '1 of 3, Today, Lesson · Ear training'
+                                            Other, 0x106afc290, {{32.0, 266.2}, {40.0, 38.9}}, label: '1 of 3'
+                                              Other, 0x106afc3b0, {{32.0, 266.2}, {40.0, 38.9}}
+                                              StaticText, 0x106afc4d0, {{38.0, 274.7}, {28.0, 21.7}}, label: '1 of 3'
+                                                StaticText, 0x106afc5f0, {{38.0, 276.2}, {10.0, 18.7}}, label: '1'
+                                                StaticText, 0x106afc710, {{48.0, 274.7}, {8.0, 21.7}}, label: ' / '
+                                                StaticText, 0x106afc830, {{56.0, 276.2}, {10.0, 18.7}}, label: '3'
+                                            StaticText, 0x106afc950, {{84.0, 231.0}, {135.0, 55.7}}, label: 'Today'
+                                            StaticText, 0x106afca70, {{84.0, 288.7}, {209.7, 51.3}}, label: 'Lesson · Ear training'
+                                            Image, 0x106afcb90, {{344.0, 266.0}, {23.7, 39.3}}, identifier: 'chevron.right', label: 'Forward'
+                                          ScrollView, 0x106afccb0, {{0.0, 374.0}, {402.0, 258.3}}
+                                            Other, 0x106afcdd0, {{0.0, 374.0}, {4400.0, 258.3}}
+                                              Button, 0x106afcef0, {{20.0, 374.0}, {220.0, 170.0}}, identifier: 'learn.course.guitar', label: 'Guitar, 3 of 154 lessons', Selected
+                                                StaticText, 0x106afd010, {{34.0, 410.3}, {142.3, 55.7}}, label: 'Guitar'
+                                                Other, 0x106afd130, {{34.0, 472.0}, {179.7, 48.0}}, label: '3 of 154 lessons'
+                                                  StaticText, 0x106afd250, {{34.0, 472.0}, {89.3, 48.0}}, label: '3 of 154'
+                                                    StaticText, 0x106afd370, {{34.0, 472.0}, {26.0, 48.0}}, label: '3'
+                                                    StaticText, 0x106afd490, {{60.0, 472.0}, {17.3, 48.0}}, label: ' / '
+                                                    StaticText, 0x106afd5b0, {{77.3, 476.7}, {46.0, 38.7}}, label: '154'
+                                                  StaticText, 0x106afd6d0, {{127.3, 476.7}, {86.3, 38.7}}, label: 'lessons'
+                                                Other, 0x106afd7f0, {{34.0, 526.0}, {192.0, 4.0}}
+                                              Button, 0x106afd910, {{250.0, 374.0}, {220.0, 170.0}}, identifier: 'learn.course.ukulele', label: 'Ukulele, 0 of 61 lessons'
+                                                StaticText, 0x106afda30, {{264.0, 410.3}, {171.0, 55.7}}, label: 'Ukulele'
+                                                Other, 0x106afdb50, {{264.0, 472.0}, {184.3, 48.0}}, label: '0 of 61 lessons'
+                                                  StaticText, 0x106afdc70, {{264.0, 472.0}, {94.0, 48.0}}, label: '0 of 61'
+                                                    StaticText, 0x106afdd90, {{264.0, 472.0}, {26.0, 48.0}}, label: '0'
+                                                    StaticText, 0x106afdeb0, {{290.0, 472.0}, {17.3, 48.0}}, label: ' / '
+                                                    StaticText, 0x106afdfd0, {{307.3, 472.5}, {50.7, 47.0}}, label: '61'
+                                                  StaticText, 0x106afe0f0, {{362.0, 478.8}, {86.3, 38.7}}, label: 'lessons'
+                                                Other, 0x106afe210, {{264.0, 526.0}, {192.0, 4.0}}
+                                              Button, 0x106afe330, {{480.0, 374.0}, {220.0, 170.0}}, identifier: 'learn.course.bass', label: 'Bass, 0 of 32 lessons'
+                                                StaticText, 0x106afe450, {{494.0, 410.3}, {104.7, 55.7}}, label: 'Bass'
+                                                Other, 0x106afe570, {{494.0, 472.0}, {184.3, 48.0}}, label: '0 of 32 lessons'
+                                                  StaticText, 0x106afe690, {{494.0, 472.0}, {94.0, 48.0}}, label: '0 of 32'
+                                                    StaticText, 0x106afe7b0, {{494.0, 472.0}, {26.0, 48.0}}, label: '0'
+                                                    StaticText, 0x106afe8d0, {{520.0, 472.0}, {17.3, 48.0}}, label: ' / '
+                                                    StaticText, 0x106afe9f0, {{537.3, 472.5}, {50.7, 47.0}}, label: '32'
+                                                  StaticText, 0x106afeb10, {{592.0, 478.8}, {86.3, 38.7}}, label: 'lessons'
+                                                Other, 0x106afec30, {{494.0, 526.0}, {192.0, 4.0}}
+                                              Button, 0x106afed50, {{710.0, 374.0}, {220.0, 170.0}}, identifier: 'learn.course.violin', label: 'Violin, 0 of 39 lessons'
+                                                StaticText, 0x106afee70, {{724.0, 410.3}, {132.0, 55.7}}, label: 'Violin'
+                                                Other, 0x106afef90, {{724.0, 472.0}, {184.3, 48.0}}, label: '0 of 39 lessons'
+                                                  StaticText, 0x106aff0b0, {{724.0, 472.0}, {94.0, 48.0}}, label: '0 of 39'
+                                                    StaticText, 0x106aff1d0, {{724.0, 472.0}, {26.0, 48.0}}, label: '0'
+                                                    StaticText, 0x106aff2f0, {{750.0, 472.0}, {17.3, 48.0}}, label: ' / '
+                                                    StaticText, 0x106aff410, {{767.3, 472.5}, {50.7, 47.0}}, label: '39'
+                                                  StaticText, 0x106aff530, {{822.0, 478.8}, {86.3, 38.7}}, label: 'lessons'
+                                                Other, 0x106aff650, {{724.0, 526.0}, {192.0, 4.0}}
+                                              Button, 0x106aff770, {{940.0, 374.0}, {220.0, 170.0}}, identifier: 'learn.course.cello', label: 'Cello, 0 of 32 lessons'
+                                                StaticText, 0x106aff890, {{954.0, 410.3}, {119.3, 55.7}}, label: 'Cello'
+                                                Other, 0x106aff9b0, {{954.0, 472.0}, {184.3, 48.0}}, label: '0 of 32 lessons'
+                                                  StaticText, 0x106affad0, {{954.0, 472.0}, {94.0, 48.0}}, label: '0 of 32'
+                                                    StaticText, 0x106affbf0, {{954.0, 472.0}, {26.0, 48.0}}, label: '0'
+                                                    StaticText, 0x106affd10, {{980.0, 472.0}, {17.3, 48.0}}, label: ' / '
+                                                    StaticText, 0x106affe30, {{997.3, 472.5}, {50.7, 47.0}}, label: '32'
+                                                  StaticText, 0x106afa550, {{1052.0, 478.8}, {86.3, 38.7}}, label: 'lessons'
+                                                Other, 0x106afa670, {{954.0, 526.0}, {192.0, 4.0}}
+                                              Button, 0x106afa790, {{1170.0, 374.0}, {220.0, 203.0}}, identifier: 'learn.course.mandolin', label: 'Mandolin, 0 of 34 lessons'
+                                                StaticText, 0x106afa8b0, {{1184.0, 388.0}, {185.0, 111.0}}, label: 'Mandolin'
+                                                Other, 0x10b36e2d0, {{1184.0, 505.0}, {184.3, 48.0}}, label: '0 of 34 lessons'
+                                                  StaticText, 0x10b36e3f0, {{1184.0, 505.0}, {94.0, 48.0}}, label: '0 of 34'
+                                                    StaticText, 0x10b36e510, {{1184.0, 505.0}, {26.0, 48.0}}, label: '0'
+                                                    StaticText, 0x10b36e630, {{1210.0, 505.0}, {17.3, 48.0}}, label: ' / '
+                                                    StaticText, 0x10b36e750, {{1227.3, 505.5}, {50.7, 47.0}}, label: '34'
+                                                  StaticText, 0x10b36e870, {{1282.0, 511.8}, {86.3, 38.7}}, label: 'lessons'
+                                                Other, 0x10b36e990, {{1184.0, 559.0}, {192.0, 4.0}}
+                                              Button, 0x10b36eab0, {{1400.0, 374.0}, {220.0, 170.0}}, identifier: 'learn.course.banjo', label: 'Banjo, 0 of 31 lessons'
+                                                StaticText, 0x10b36ebd0, {{1414.0, 410.3}, {129.3, 55.7}}, label: 'Banjo'
+                                                Other, 0x10b36ecf0, {{1414.0, 472.0}, {184.3, 48.0}}, label: '0 of 31 lessons'
+                                                  StaticText, 0x10b36ee10, {{1414.0, 472.0}, {94.0, 48.0}}, label: '0 of 31'
+                                                    StaticText, 0x10b36ef30, {{1414.0, 472.0}, {26.0, 48.0}}, label: '0'
+                                                    StaticText, 0x10b36f050, {{1440.0, 472.0}, {17.3, 48.0}}, label: ' / '
+                                                    StaticText, 0x10b36f170, {{1457.3, 472.5}, {50.7, 47.0}}, label: '31'
+                                                  StaticText, 0x10b36f290, {{1512.0, 478.8}, {86.3, 38.7}}, label: 'lessons'
+                                                Other, 0x10b36f3b0, {{1414.0, 526.0}, {192.0, 4.0}}
+                                              Button, 0x10b36f4d0, {{1630.0, 374.0}, {220.0, 203.0}}, identifier: 'learn.course.ear', label: 'Ear Training, 0 of 40 lessons'
+                                                StaticText, 0x10b36f5f0, {{1644.0, 388.0}, {185.3, 111.0}}, label: 'Ear Training'
+                                                Other, 0x10b36f710, {{1644.0, 505.0}, {184.3, 48.0}}, label: '0 of 40 lessons'
+                                                  StaticText, 0x10b36f830, {{1644.0, 505.0}, {94.0, 48.0}}, label: '0 of 40'
+                                                    StaticText, 0x10b36f950, {{1644.0, 505.0}, {26.0, 48.0}}, label: '0'
+                                                    StaticText, 0x10b36fa70, {{1670.0, 505.0}, {17.3, 48.0}}, label: ' / '
+                                                    StaticText, 0x10b36fb90, {{1687.3, 505.5}, {50.7, 47.0}}, label: '40'
+                                                  StaticText, 0x10b36fcb0, {{1742.0, 511.8}, {86.3, 38.7}}, label: 'lessons'
+                                                Other, 0x10b36fdd0, {{1644.0, 559.0}, {192.0, 4.0}}
+                                              Button, 0x10b36fef0, {{1860.0, 374.0}, {220.0, 203.0}}, identifier: 'learn.course.theory', label: 'Music Theory, 0 of 44 lessons'
+                                                StaticText, 0x10b370010, {{1874.0, 388.0}, {156.3, 111.0}}, label: 'Music Theory'
+                                                Other, 0x10b370130, {{1874.0, 505.0}, {184.3, 48.0}}, label: '0 of 44 lessons'
+                                                  StaticText, 0x10b370250, {{1874.0, 505.0}, {94.0, 48.0}}, label: '0 of 44'
+                                                    StaticText, 0x10b370370, {{1874.0, 505.0}, {26.0, 48.0}}, label: '0'
+                                                    StaticText, 0x10b370490, {{1900.0, 505.0}, {17.3, 48.0}}, label: ' / '
+                                                    StaticText, 0x10b3705b0, {{1917.3, 505.5}, {50.7, 47.0}}, label: '44'
+                                                  StaticText, 0x10b3706d0, {{1972.0, 511.8}, {86.3, 38.7}}, label: 'lessons'
+                                                Other, 0x10b3707f0, {{1874.0, 559.0}, {192.0, 4.0}}
+                                              Button, 0x10b370910, {{2090.0, 374.0}, {220.0, 170.0}}, identifier: 'learn.course.rhythm', label: 'Rhythm, 0 of 29 lessons'
+                                                StaticText, 0x10b370a30, {{2104.0, 410.3}, {176.0, 55.7}}, label: 'Rhythm'
+                                                Other, 0x10b370b50, {{2104.0, 472.0}, {184.3, 48.0}}, label: '0 of 29 lessons'
+                                                  StaticText, 0x10b370c70, {{2104.0, 472.0}, {94.0, 48.0}}, label: '0 of 29'
+                                                    StaticText, 0x10b370d90, {{2104.0, 472.0}, {26.0, 48.0}}, label: '0'
+                                                    StaticText, 0x10b370eb0, {{2130.0, 472.0}, {17.3, 48.0}}, label: ' / '
+                                                    StaticText, 0x10b370fd0, {{2147.3, 472.5}, {50.7, 47.0}}, label: '29'
+                                                  StaticText, 0x10b3710f0, {{2202.0, 478.8}, {86.3, 38.7}}, label: 'lessons'
+                                                Other, 0x10b371210, {{2104.0, 526.0}, {192.0, 4.0}}
+                                              Button, 0x10b371330, {{2320.0, 374.0}, {220.0, 170.0}}, identifier: 'learn.course.voice', label: 'Singing, 0 of 30 lessons'
+                                                StaticText, 0x10b371450, {{2334.0, 410.3}, {175.7, 55.7}}, label: 'Singing'
+                                                Other, 0x10b371570, {{2334.0, 472.0}, {184.3, 48.0}}, label: '0 of 30 lessons'
+                                                  StaticText, 0x10b371690, {{2334.0, 472.0}, {94.0, 48.0}}, label: '0 of 30'
+                                                    StaticText, 0x10b3717b0, {{2334.0, 472.0}, {26.0, 48.0}}, label: '0'
+                                                    StaticText, 0x10b3718d0, {{2360.0, 472.0}, {17.3, 48.0}}, label: ' / '
+                                                    StaticText, 0x10b3719f0, {{2377.3, 472.5}, {50.7, 47.0}}, label: '30'
+                                                  StaticText, 0x10b371b10, {{2432.0, 478.8}, {86.3, 38.7}}, label: 'lessons'
+                                                Other, 0x10b372fd0, {{2334.0, 526.0}, {192.0, 4.0}}
+                                              Button, 0x10b3730f0, {{2550.0, 374.0}, {220.0, 170.0}}, identifier: 'learn.course.songs', label: 'Songs, 0 of 38 lessons'
+                                                StaticText, 0x10b373210, {{2564.0, 410.3}, {142.3, 55.7}}, label: 'Songs'
+                                                Other, 0x10b373330, {{2564.0, 472.0}, {184.3, 48.0}}, label: '0 of 38 lessons'
+                                                  StaticText, 0x10b373450, {{2564.0, 472.0}, {94.0, 48.0}}, label: '0 of 38'
+                                                    StaticText, 0x10b373570, {{2564.0, 472.0}, {26.0, 48.0}}, label: '0'
+                                                    StaticText, 0x10b373690, {{2590.0, 472.0}, {17.3, 48.0}}, label: ' / '
+                                                    StaticText, 0x10b3737b0, {{2607.3, 472.5}, {50.7, 47.0}}, label: '38'
+                                                  StaticText, 0x10b3738d0, {{2662.0, 478.8}, {86.3, 38.7}}, label: 'lessons'
+                                                Other, 0x10b383c20, {{2564.0, 526.0}, {192.0, 4.0}}
+                                              Button, 0x10b383d40, {{2780.0, 374.0}, {220.0, 203.0}}, identifier: 'learn.course.originals', label: 'Originals, 0 of 60 lessons'
+                                                StaticText, 0x10b383e60, {{2794.0, 388.0}, {183.0, 111.0}}, label: 'Originals'
+                                                Other, 0x10b383f80, {{2794.0, 505.0}, {184.3, 48.0}}, label: '0 of 60 lessons'
+                                                  StaticText, 0x10b3840a0, {{2794.0, 505.0}, {94.0, 48.0}}, label: '0 of 60'
+                                                    StaticText, 0x10b384460, {{2794.0, 505.0}, {26.0, 48.0}}, label: '0'
+                                                    StaticText, 0x10b384580, {{2820.0, 505.0}, {17.3, 48.0}}, label: ' / '
+                                                    StaticText, 0x10b3846a0, {{2837.3, 505.5}, {50.7, 47.0}}, label: '60'
+                                                  StaticText, 0x10b3847c0, {{2892.0, 511.8}, {86.3, 38.7}}, label: 'lessons'
+                                                Other, 0x10b3848e0, {{2794.0, 559.0}, {192.0, 4.0}}
+                                              Button, 0x10b384a00, {{3010.0, 374.0}, {220.0, 258.3}}, identifier: 'learn.course.standards', label: 'Standards & Classics, 0 of 47 lessons'
+                                                StaticText, 0x10b384b20, {{3024.0, 388.0}, {188.3, 166.3}}, label: 'Standards & Classics'
+                                                Other, 0x10b384c40, {{3024.0, 560.3}, {184.3, 48.0}}, label: '0 of 47 lessons'
+                                                  StaticText, 0x10b384d60, {{3024.0, 560.3}, {94.0, 48.0}}, label: '0 of 47'
+                                                    StaticText, 0x10b376650, {{3024.0, 560.3}, {26.0, 48.0}}, label: '0'
+                                                    StaticText, 0x10b376770, {{3050.0, 560.3}, {17.3, 48.0}}, label: ' / '
+                                                    StaticText, 0x10b376890, {{3067.3, 560.8}, {50.7, 47.0}}, label: '47'
+                                                  StaticText, 0x10b3769b0, {{3122.0, 567.2}, {86.3, 38.7}}, label: 'lessons'
+                                                Other, 0x10b376ad0, {{3024.0, 614.3}, {192.0, 4.0}}
+                                              Button, 0x10b376bf0, {{3240.0, 374.0}, {220.0, 258.3}}, identifier: 'learn.course.ukulele-songbook', label: 'Ukulele Songbook, 0 of 110 lessons'
+                                                StaticText, 0x10b376d10, {{3254.0, 388.0}, {180.3, 166.3}}, label: 'Ukulele Songbook'
+                                                Other, 0x10b376e30, {{3254.0, 560.3}, {179.7, 48.0}}, label: '0 of 110 lessons'
+                                                  StaticText, 0x10b376f50, {{3254.0, 560.3}, {89.3, 48.0}}, label: '0 of 110'
+                                                    StaticText, 0x10b377070, {{3254.0, 560.3}, {26.0, 48.0}}, label: '0'
+                                                    StaticText, 0x10b377190, {{3280.0, 560.3}, {17.3, 48.0}}, label: ' / '
+                                                    StaticText, 0x10b3772b0, {{3297.3, 565.0}, {46.0, 38.7}}, label: '110'
+                                                  StaticText, 0x10b3773d0, {{3347.3, 565.0}, {86.3, 38.7}}, label: 'lessons'
+                                                Other, 0x10b3774f0, {{3254.0, 614.3}, {192.0, 4.0}}
+                                              Button, 0x10b377610, {{3470.0, 374.0}, {220.0, 258.3}}, identifier: 'learn.course.mandolin-songbook', label: 'Mandolin Songbook, 0 of 68 lessons'
+                                                StaticText, 0x10b377730, {{3484.0, 388.0}, {186.0, 166.3}}, label: 'Mandolin Songbook'
+                                                Other, 0x10b377850, {{3484.0, 560.3}, {184.3, 48.0}}, label: '0 of 68 lessons'
+                                                  StaticText, 0x10b377970, {{3484.0, 560.3}, {94.0, 48.0}}, label: '0 of 68'
+                                                    StaticText, 0x10b377a90, {{3484.0, 560.3}, {26.0, 48.0}}, label: '0'
+                                                    StaticText, 0x10b377bb0, {{3510.0, 560.3}, {17.3, 48.0}}, label: ' / '
+                                                    StaticText, 0x10b377cd0, {{3527.3, 560.8}, {50.7, 47.0}}, label: '68'
+                                                  StaticText, 0x1069a7dd0, {{3582.0, 567.2}, {86.3, 38.7}}, label: 'lessons'
+                                                Other, 0x1069a8f10, {{3484.0, 614.3}, {192.0, 4.0}}
+                                              Button, 0x1069c0b30, {{3700.0, 374.0}, {220.0, 258.3}}, identifier: 'learn.course.violin-songbook', label: 'Violin Songbook, 0 of 66 lessons'
+                                                StaticText, 0x10699a9a0, {{3714.0, 388.0}, {179.0, 166.3}}, label: 'Violin Songbook'
+                                                Other, 0x1069be260, {{3714.0, 560.3}, {184.3, 48.0}}, label: '0 of 66 lessons'
+                                                  StaticText, 0x1069a0270, {{3714.0, 560.3}, {94.0, 48.0}}, label: '0 of 66'
+                                                    StaticText, 0x1069d8aa0, {{3714.0, 560.3}, {26.0, 48.0}}, label: '0'
+                                                    StaticText, 0x1069a7330, {{3740.0, 560.3}, {17.3, 48.0}}, label: ' / '
+                                                    StaticText, 0x1069bcdc0, {{3757.3, 560.8}, {50.7, 47.0}}, label: '66'
+                                                  StaticText, 0x1069a8470, {{3812.0, 567.2}, {86.3, 38.7}}, label: 'lessons'
+                                                Other, 0x1069c1f80, {{3714.0, 614.3}, {192.0, 4.0}}
+                                              Button, 0x1069cf540, {{3930.0, 374.0}, {220.0, 258.3}}, identifier: 'learn.course.cello-songbook', label: 'Cello Songbook, 0 of 65 lessons'
+                                                StaticText, 0x1069c18e0, {{3944.0, 388.0}, {179.0, 166.3}}, label: 'Cello Songbook'
+                                                Other, 0x1069dadd0, {{3944.0, 560.3}, {184.3, 48.0}}, label: '0 of 65 lessons'
+                                                  StaticText, 0x1069bfa20, {{3944.0, 560.3}, {94.0, 48.0}}, label: '0 of 65'
+                                                    StaticText, 0x106993db0, {{3944.0, 560.3}, {26.0, 48.0}}, label: '0'
+                                                    StaticText, 0x10699ad10, {{3970.0, 560.3}, {17.3, 48.0}}, label: ' / '
+                                                    StaticText, 0x1069d0db0, {{3987.3, 560.8}, {50.7, 47.0}}, label: '65'
+                                                  StaticText, 0x1069cdd00, {{4042.0, 567.2}, {86.3, 38.7}}, label: 'lessons'
+                                                Other, 0x1069b6720, {{3944.0, 614.3}, {192.0, 4.0}}
+                                              Button, 0x1069df7e0, {{4160.0, 374.0}, {220.0, 258.3}}, identifier: 'learn.course.bass-songbook', label: 'Bass Songbook, 0 of 120 lessons'
+                                                StaticText, 0x1069e05c0, {{4174.0, 388.0}, {179.0, 166.3}}, label: 'Bass Songbook'
+                                                Other, 0x1069c2cd0, {{4174.0, 560.3}, {179.7, 48.0}}, label: '0 of 120 lessons'
+                                                  StaticText, 0x10699bdc0, {{4174.0, 560.3}, {89.3, 48.0}}, label: '0 of 120'
+                                                    StaticText, 0x1069dcb00, {{4174.0, 560.3}, {26.0, 48.0}}, label: '0'
+                                                    StaticText, 0x1069ce070, {{4200.0, 560.3}, {17.3, 48.0}}, label: ' / '
+                                                    StaticText, 0x1069ba140, {{4217.3, 565.0}, {46.0, 38.7}}, label: '120'
+                                                  StaticText, 0x1069a8120, {{4267.3, 565.0}, {86.3, 38.7}}, label: 'lessons'
+                                                Other, 0x1069c1210, {{4174.0, 614.3}, {192.0, 4.0}}
+                                          Button, 0x1069c6120, {{20.0, 654.3}, {362.0, 473.7}}, identifier: 'learn.continue', label: 'Unit 1 · Hello, guitar, Your first chord: E minor, 5 min · +25 XP, Continue'
+                                            StaticText, 0x1069a68f0, {{40.0, 674.3}, {196.3, 48.0}}, label: 'Unit 1 · Hello, guitar'
+                                            StaticText, 0x1069d2260, {{40.0, 730.3}, {205.3, 120.0}}, label: 'Your first chord: E minor'
+                                            StaticText, 0x1069cf8a0, {{40.0, 858.3}, {157.7, 116.7}}, label: '5 min · +25 XP'
+                                            Image, 0x1069d6c70, {{64.0, 1026.7}, {37.3, 42.0}}, identifier: 'play.fill', label: 'Play'
+                                            StaticText, 0x1069c7c50, {{108.3, 987.0}, {123.0, 121.0}}, label: 'Continue'
+                                            Image, 0x1069c1590, {{248.2, 822.5}, {137.6, 137.6}}, label: 'render_guitar_acoustic'
+                                          StaticText, 0x1069dce80, {{38.0, 1168.0}, {107.7, 48.0}}, label: 'Unit 1'
+                                          StaticText, 0x1069c8680, {{38.0, 1221.0}, {140.3, 262.3}}, label: 'Hello, guitar'
+                                          StaticText, 0x1069cb230, {{38.0, 1488.3}, {150.0, 348.7}}, label: 'Hold it, tune it, play your first notes.'
+                                          Other, 0x1069c07d0, {{220.0, 1168.0}, {144.3, 198.3}}, label: '8 of 18 stars, 3 of 6 lessons'
+                                            Image, 0x1069d1b60, {{236.3, 1170.7}, {41.7, 39.7}}, identifier: 'star.fill', label: 'Favorite'
+                                            StaticText, 0x10698f8c0, {{236.3, 1168.5}, {128.0, 48.0}}, label: '8 of 18'
+                                              StaticText, 0x106991470, {{289.7, 1168.5}, {26.0, 48.0}}, label: '8'
+                                              StaticText, 0x1069b1c40, {{315.7, 1168.5}, {17.3, 48.0}}, label: ' / '
+                                              StaticText, 0x1069b2670, {{333.0, 1168.5}, {31.3, 48.0}}, label: '18'
+                                            Other, 0x106990d80, {{220.0, 1222.5}, {144.3, 143.7}}, label: '3 of 6 lessons'
+                                              StaticText, 0x10698fc20, {{220.0, 1222.5}, {69.3, 48.0}}, label: '3 of 6'
+                                                StaticText, 0x106990670, {{220.0, 1222.5}, {26.0, 48.0}}, label: '3'
+                                                StaticText, 0x106999f60, {{246.0, 1222.5}, {17.3, 48.0}}, label: ' / '
+                                                StaticText, 0x10698e3a0, {{263.3, 1222.5}, {26.0, 48.0}}, label: '6'
+                                              StaticText, 0x1069bbff0, {{293.3, 1222.5}, {71.0, 143.7}}, label: 'lessons'
+                                          Other, 0x10698c860, {{126.0, 1873.0}, {150.0, 624.0}}
+                                          Button, 0x1069ecf10, {{187.7, 1883.7}, {64.0, 82.0}}, identifier: 'learn.lesson.gtr-1-1', label: 'Meet your guitar', value: 3 of 3 stars, Selected
+                                            Image, 0x106987f20, {{210.0, 1906.3}, {19.7, 19.0}}, identifier: 'checkmark', label: 'Selected', Selected
+                                            Image, 0x1069ed610, {{198.3, 1954.7}, {11.7, 11.0}}, identifier: 'star.fill', label: 'Favorite'
+                                            Image, 0x10698be60, {{214.0, 1954.7}, {11.7, 11.0}}, identifier: 'star.fill', label: 'Favorite'
+                                            Image, 0x10698baf0, {{229.3, 1954.7}, {11.7, 11.0}}, identifier: 'star.fill', label: 'Favorite'
+                                          Button, 0x10699cb50, {{187.3, 1987.7}, {64.0, 82.0}}, identifier: 'learn.lesson.gtr-1-2', label: 'The open strings', value: 2 of 3 stars, Selected
+                                            Image, 0x10698eac0, {{209.7, 2010.3}, {19.7, 19.0}}, identifier: 'checkmark', label: 'Selected', Selected
+                                            Image, 0x1069a0cd0, {{198.0, 2058.7}, {11.7, 11.0}}, identifier: 'star.fill', label: 'Favorite'
+                                            Image, 0x10698c1a0, {{213.7, 2058.7}, {11.7, 11.0}}, identifier: 'star.fill', label: 'Favorite'
+                                            Image, 0x1069bfd90, {{229.0, 2058.7}, {11.7, 11.0}}, identifier: 'star.fill', label: 'Favorite'
+                                          Button, 0x1069a3280, {{165.7, 2091.7}, {64.0, 82.0}}, identifier: 'learn.lesson.gtr-1-3', label: 'Your first fretted notes', value: 3 of 3 stars, Selected
+                                            Image, 0x10699f160, {{188.0, 2114.3}, {19.7, 19.0}}, identifier: 'checkmark', label: 'Selected', Selected
+                                            Image, 0x1069a9cd0, {{176.3, 2162.7}, {11.7, 11.0}}, identifier: 'star.fill', label: 'Favorite'
+                                            Image, 0x1069bd4b0, {{192.0, 2162.7}, {11.7, 11.0}}, identifier: 'star.fill', label: 'Favorite'
+                                            Image, 0x1069bdef0, {{207.3, 2162.7}, {11.7, 11.0}}, identifier: 'star.fill', label: 'Favorite'
+                                          Button, 0x1069ed290, {{128.5, 2185.8}, {129.7, 102.4}}, identifier: 'learn.lesson.gtr-1-4', label: 'Your first chord: E minor', value: Next lesson
+                                            Image, 0x1069a6fb0, {{171.3, 2223.7}, {17.0, 27.0}}, identifier: 'music.note', label: 'Song'
+                                            StaticText, 0x1069c4ff0, {{142.7, 2213.0}, {97.0, 48.0}}, label: 'Start'
+                                            Image, 0x1069d7000, {{242.5, 2233.0}, {5.3, 8.3}}, identifier: 'chevron.forward', label: 'Forward'
+                                          Button, 0x1069c6490, {{151.0, 2305.0}, {72.0, 78.0}}, identifier: 'learn.lesson.gtr-1-5', label: 'First-steps challenge', value: Locked
+                                          Button, 0x1069daa50, {{179.0, 2413.0}, {64.0, 70.0}}, identifier: 'learn.lesson.gtr-1-6', label: 'Mary Had a Little Lamb: three notes', value: Locked
+                                      Other, 0x1069c9b10, {{369.0, 62.0}, {30.0, 729.0}}, label: 'Vertical scroll bar, 16 pages', value: 0%
+                                        Other, 0x1069bb920, {{396.0, 65.0}, {3.0, 87.7}}
+                                      Other, 0x1069c9790, {{369.0, 62.0}, {30.0, 729.0}}, label: 'Vertical scroll bar, 16 pages', value: 0%
+                                        Other, 0x1069db4e0, {{396.0, 65.0}, {3.0, 87.7}}
+                                    Other, 0x10699eab0, {{0.0, 0.0}, {402.0, 20.0}}
+                            Other, 0x1069bab90, {{0.0, 0.0}, {402.0, 874.0}}
+                              Other, 0x10699d240, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x10699d5e0, {{0.0, 791.0}, {402.0, 83.0}}
+                Other, 0x10699c7d0, {{0.0, 791.0}, {402.0, 83.0}}
+                  Other, 0x10699e040, {{0.0, 0.0}, {402.0, 874.0}}
+                    TabBar, 0x10699c110, {{0.0, 791.0}, {402.0, 83.0}}, label: 'Tab Bar'
+                      Other, 0x10699d930, {{21.0, 791.0}, {360.0, 62.0}}
+                        Other, 0x10699fef0, {{21.0, 791.0}, {78.0, 54.0}}
+                        Other, 0x1069a0960, {{21.0, 791.0}, {360.0, 62.0}}
+                          Button, 0x1069ac9f0, {{25.0, 795.0}, {78.0, 54.0}}, identifier: 'gauge.with.needle', label: 'Tune'
+                            Image, 0x1069c6b80, {{50.0, 801.3}, {27.3, 27.3}}, identifier: 'gauge.with.needle.fill', label: 'gauge.with.needle.fill'
+                          Button, 0x1069d59d0, {{93.5, 795.0}, {78.0, 54.0}}, identifier: 'graduationcap', label: 'Learn', Selected
+                            Image, 0x1069bc6c0, {{114.5, 801.7}, {36.7, 31.3}}, identifier: 'graduationcap.fill', label: 'itunes u'
+                          Button, 0x1069db870, {{162.0, 795.0}, {78.0, 54.0}}, identifier: 'music.note.list', label: 'Songs'
+                            Image, 0x1069a5820, {{186.0, 801.7}, {29.3, 27.0}}, identifier: 'music.note.list', label: 'playlist'
+                          Button, 0x1069b7ec0, {{230.5, 795.0}, {78.0, 54.0}}, identifier: 'metronome', label: 'Practice'
+                            Image, 0x1069f09a0, {{255.5, 801.7}, {28.7, 26.0}}, identifier: 'metronome.fill', label: 'metronome.fill'
+                          Button, 0x1069d1ef0, {{299.0, 795.0}, {78.0, 54.0}}, identifier: 'chart.bar', label: 'Progress'
+                            Image, 0x106987bc0, {{321.0, 802.3}, {35.0, 25.3}}, identifier: 'chart.bar.fill', label: 'chart column'
+                        Other, 0x1069c1c30, {{93.5, 795.0}, {78.0, 54.0}}
+                          Other, 0x1069c7580, {{93.5, 795.0}, {78.0, 54.0}}
+                            Other, 0x106990a00, {{93.5, 795.0}, {78.0, 54.0}}
+                            Other, 0x1069d39b0, {{93.5, 795.0}, {78.0, 54.0}}
+                              Other, 0x1069d3d00, {{93.5, 795.0}, {78.0, 54.0}}
+                                Other, 0x1069a05f0, {{93.5, 795.0}, {78.0, 54.0}}
+                                  Other, 0x1069af630, {{93.5, 795.0}, {78.0, 54.0}}
+                                Other, 0x10699f4e0, {{93.5, 795.0}, {78.0, 54.0}}
+                              Other, 0x1069a5120, {{93.5, 795.0}, {78.0, 54.0}}
+                  Other, 0x10699ee00, {{0.0, 791.0}, {402.0, 83.0}}
+                    Other, 0x1069ae1d0, {{0.0, 791.0}, {402.0, 83.0}}
+                      Other, 0x10699fb90, {{0.0, 791.0}, {402.0, 83.0}}
+                        Other, 0x1069a5ed0, {{0.0, 791.0}, {402.0, 83.0}}
+                          Other, 0x1069a2f40, {{0.0, 791.0}, {402.0, 83.0}}
+                            Other, 0x1069a9270, {{0.0, 791.0}, {402.0, 83.0}}
+                        Other, 0x1069acd70, {{0.0, 791.0}, {402.0, 83.0}}
+                          Other, 0x1069a6c60, {{0.0, 791.0}, {402.0, 83.0}}
+      Other, 0x1069ae540, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10699f840, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x1069a7a30, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x1069d25c0, {{0.0, 62.0}, {402.0, 778.0}}
+            Button, 0x1069caec0, {{8.0, 66.0}, {44.0, 44.0}}, identifier: 'lesson.close', label: 'Close lesson'
+            Other, 0x1069b8c60, {{60.0, 68.2}, {322.0, 39.8}}, label: 'The open strings', value: Step 6 of 6
+              StaticText, 0x1069aaab0, {{60.0, 68.2}, {180.0, 26.7}}, label: 'The open strings'
+              StaticText, 0x1069abc70, {{272.0, 69.2}, {110.0, 25.3}}, label: 'Step 6 of 6'
+              Other, 0x1069a9970, {{60.0, 102.0}, {322.0, 6.0}}
+            ScrollView, 0x1069d9530, {{0.0, 116.0}, {402.0, 758.0}}, identifier: 'along.scroll'
+              Other, 0x106988630, {{0.0, -233.0}, {402.0, 1855.7}}
+                StaticText, 0x1069d8e20, {{20.0, -225.0}, {362.0, 141.3}}, label: 'Open-string roll call'
+                StaticText, 0x1069aae10, {{20.0, -79.7}, {203.0, 116.7}}, label: '66 BPM · 6 notes'
+                Other, 0x10b377df0, {{231.0, -73.0}, {126.0, 54.0}}, label: 'Tempo', value: 110%
+                  StaticText, 0x10b377f10, {{239.0, -70.0}, {110.0, 48.0}}, label: '110%'
+                Button, 0x10b378030, {{209.7, 51.7}, {44.0, 44.0}}, identifier: 'along.calibrate', label: 'Calibrate timing'
+                Image, 0x10b378150, {{261.7, 45.0}, {68.3, 57.0}}, identifier: 'along.band.headphones', label: 'Full band in headphones'
+                Switch, 0x10b378270, {{338.0, 51.7}, {44.0, 44.0}}, identifier: 'along.band', label: 'Backing band', value: 1
+                StaticText, 0x10b378390, {{106.2, 128.0}, {189.7, 86.0}}, label: '6 of 6 notes, 6 perfect. 100%'
+                  StaticText, 0x10b3784b0, {{106.2, 128.0}, {189.7, 86.0}}, label: '100%'
+                StaticText, 0x10b3785d0, {{70.7, 222.0}, {261.0, 112.0}}, identifier: 'along.result.tempo-up', label: 'Tempo up, 110%'
+                  Image, 0x10b3786f0, {{87.0, 236.7}, {29.0, 28.7}}, identifier: 'arrow.up.right', label: 'arrow.up.right'
+                  StaticText, 0x10b378810, {{126.7, 227.0}, {193.0, 48.0}}, label: 'Tempo up'
+                  StaticText, 0x10b378930, {{82.7, 281.0}, {94.7, 48.0}}, label: '110%'
+                StaticText, 0x10b378a50, {{89.2, 342.0}, {35.3, 65.7}}, label: '6'
+                StaticText, 0x10b378b70, {{222.5, 342.0}, {35.3, 65.7}}, label: '0'
+                StaticText, 0x10b378c90, {{42.2, 409.7}, {129.3, 51.3}}, identifier: 'along.result.stat.perfect', label: 'Perfect'
+                StaticText, 0x1069c33b0, {{189.5, 409.7}, {101.3, 51.3}}, identifier: 'along.result.stat.good', label: 'Good'
+                StaticText, 0x1069b3eb0, {{108.0, 471.0}, {35.3, 65.7}}, label: '0'
+                StaticText, 0x10b2cd790, {{275.8, 471.0}, {35.3, 65.7}}, label: '0'
+                StaticText, 0x1068ef570, {{42.2, 538.7}, {167.0, 51.3}}, identifier: 'along.result.stat.early-late', label: 'Early/late'
+                StaticText, 0x10b2933e0, {{227.2, 538.7}, {132.7, 51.3}}, identifier: 'along.result.stat.missed', label: 'Missed'
+                StaticText, 0x10b2d9480, {{105.2, 598.0}, {191.7, 116.7}}, identifier: 'along.result.timing', label: 'Right on the beat'
+                StaticText, 0x10b2d95a0, {{70.5, 722.7}, {261.0, 52.7}}, label: 'Best combo 6'
+                Button, 0x10b2d96c0, {{107.0, 785.3}, {188.3, 48.0}}, identifier: 'along.share', label: 'Share'
+                  Image, 0x10b2d97e0, {{113.9, 794.7}, {24.2, 29.6}}
+                  Image, 0x10b2d9900, {{145.7, 801.3}, {12.0, 16.3}}, identifier: 'square.and.arrow.up', label: 'Share'
+                  StaticText, 0x10b2d9a20, {{107.0, 785.3}, {188.3, 48.0}}, label: 'Share'
+                Button, 0x10b2d9b40, {{20.0, 1447.3}, {362.0, 76.7}}, identifier: 'along.again', label: 'Try again'
+                Button, 0x10b2d9c60, {{20.0, 1534.0}, {362.0, 76.7}}, identifier: 'lesson.continue', label: 'Continue'
+                Other, 0x10b2d9d80, {{0.0, 0.0}, {0.0, 0.0}}
+              Other, 0x10b2d9ea0, {{369.0, 144.0}, {30.0, 668.0}}, label: 'Vertical scroll bar, 3 pages', value: 31%
+                Other, 0x10b2d9fc0, {{396.0, 296.0}, {3.0, 324.0}}
+              Other, 0x10b2da0e0, {{369.0, 144.0}, {30.0, 668.0}}, label: 'Vertical scroll bar, 3 pages', value: 31%
+                Other, 0x10b2da200, {{396.0, 296.0}, {3.0, 324.0}}
+Path to element:
+ →Application, 0x10b2fe820, pid: 11220, label: 'Timbre'
+Query chain:
+ →Find: Target Application 'com.shahradazerisharghi.timbre'
+  Output: {
+    Application, 0x10b2e5660, pid: 11220, label: 'Timbre'
+  }
+)
