@@ -1,0 +1,65 @@
+# Errors
+
+# Matches
+
+# Tail
+[417/472] Testing TimbreCoreTests.SpacedReviewTests/testTodayMakesRoomForTheReview
+[418/472] Testing TimbreCoreTests.SpacedReviewTests/testWeakSpotsFromBeforeSeedTheDeck
+[419/472] Testing TimbreCoreTests.StreakCacheTests/testARecordFromLaterCountsWhenItsTimeComes
+[420/472] Testing TimbreCoreTests.StreakCacheTests/testInvalidateCountsAgain
+[421/472] Testing TimbreCoreTests.StreakCacheTests/testMatchesAFreshCountAndRecountsWhenTheRecordsChange
+[422/472] Testing TimbreCoreTests.StreakCacheTests/testRecountsOnANewDay
+[423/472] Testing TimbreCoreTests.StreakCacheTests/testRecountsWhenFrozenDaysChange
+[424/472] Testing TimbreCoreTests.StrokeChordsTests/testAClipPlaysInTheTapsBuffers
+[425/472] Testing TimbreCoreTests.StrokeChordsTests/testAChopLeftRingingIsCalled
+[426/472] Testing TimbreCoreTests.StrokeChordsTests/testAFrameStopsShortOfTheNextStroke
+[427/472] Testing TimbreCoreTests.StrokeChordsTests/testACorrectChunkTakeScoresFullMarks
+[428/472] Testing TimbreCoreTests.StrokeChordsTests/testRingIsUnknownWhenTheNextStrokeComesFirst
+[429/472] Testing TimbreCoreTests.TargetLabelTests/testFlatsAndDisplayShiftsMatchSource
+[430/472] Testing TimbreCoreTests.TargetLabelTests/testPhysicalAndRelativeCuesSurvive
+[431/472] Testing TimbreCoreTests.TimbreLocalizationTests/testCanonicalLanguagePreservesChineseScript
+[432/472] Testing TimbreCoreTests.ToneSynthTests/testBanjoIsShorterThanGuitarAndBassRingsLongest
+[433/472] Testing TimbreCoreTests.ToneSynthTests/testContinuousReferencesLoop
+[434/472] Testing TimbreCoreTests.ToneSynthTests/testEveryCatalogueInstrumentAndCourseHasAVoice
+[435/472] Testing TimbreCoreTests.StrokeChordsTests/testAccentsStandOutOnlyWhenPlayed
+[436/472] Testing TimbreCoreTests.ToneSynthTests/testNotesInTurnLeaveTheirGapsSilent
+[437/472] Testing TimbreCoreTests.ToneSynthTests/testPlayerLoopsAndFadesOutOnStop
+[438/472] Testing TimbreCoreTests.ToneSynthTests/testPluckedChordStrumsLowToHighAndDecays
+[439/472] Testing TimbreCoreTests.ToneSynthTests/testReferencesSoundAtExactlyTheirPitch
+[440/472] Testing TimbreCoreTests.ToneSynthTests/testRendersAreDeterministicAndKeyedByRequest
+[441/472] Testing TimbreCoreTests.ToneSynthTests/testSustainedVoiceHoldsSteadyWithoutVibratoOnTheReference
+[442/472] Testing TimbreCoreTests.TuningTests/testAdaptiveWindowCoversPianoLowTuningMargin
+[443/472] Testing TimbreCoreTests.TuningTests/testAGapNeverCountsTowardAHoldOrKeepsALockThatLeftTheBand
+[444/472] Testing TimbreCoreTests.TuningTests/testALockSurvivesAShortGapWithTheBandEitherSide
+[445/472] Testing TimbreCoreTests.TuningTests/testCadenceStateChangeReanchorsAndClockReversalPublishes
+[446/472] Testing TimbreCoreTests.TuningTests/testClassificationUsesTargetInsteadOfNearestChromaticNote
+[447/472] Testing TimbreCoreTests.TuningTests/testLowConfidenceAndMissingFramesClearHoldAndNumbers
+[448/472] Testing TimbreCoreTests.TuningTests/testPrecisionBandDecidesWhereAHoldStarts
+[449/472] Testing TimbreCoreTests.TuningTests/testPrecisionSettingIsOptionalAndDefaultsToBeginner
+[450/472] Testing TimbreCoreTests.TuningTests/testRequiresFullContinuous650MillisecondHold
+[451/472] Testing TimbreCoreTests.TuningTests/testStabilityRequiresThreeAgreeingFramesAndResets
+[452/472] Testing TimbreCoreTests.TuningTests/testStatusIsATypedValueThatReadsItsOldNames
+[453/472] Testing TimbreCoreTests.TuningTests/testTargetChangesAndClockReversalRestartHold
+[454/472] Testing TimbreCoreTests.TuningTests/testUnobservedGapCannotCountAsContinuousHold
+[455/472] Testing TimbreCoreTests.UserSongLibraryTests/testImportsAudioIntoTheLibrary
+[456/472] Testing TimbreCoreTests.UserSongLibraryTests/testSafeNames
+[457/472] Testing TimbreCoreTests.UserSongLibraryTests/testSavesLoadsAndDeletes
+[458/472] Testing TimbreCoreTests.UserSongLibraryTests/testSkipsDamagedFilesAndReadsOldOnes
+[459/472] Testing TimbreCoreTests.VoiceTests/testAccuracyAndStabilityMeasureDifferentProperties
+[460/472] Testing TimbreCoreTests.VoiceTests/testEightExercisesAndTiming
+[461/472] Testing TimbreCoreTests.ToneSynthTests/testEveryVoiceRendersFiniteBoundedAndSilentAtTheEnd
+[462/472] Testing TimbreCoreTests.VoiceTests/testEveryMelodyStageMustContainSustainedEvidence
+[463/472] Testing TimbreCoreTests.VoiceTests/testExactToleranceAndGapsCannotJoinHolds
+[464/472] Testing TimbreCoreTests.VoiceTests/testMajorThirdScoredRelativeToSungStartingNote
+[465/472] Testing TimbreCoreTests.VoiceTests/testOffTargetSustainIsMeasuredButCannotDemonstrate
+[466/472] Testing TimbreCoreTests.VoiceTests/testOneRangeNoteDoesNotInventSpan
+[467/472] Testing TimbreCoreTests.VoiceTests/testProgressionNeverLocksSelection
+[468/472] Testing TimbreCoreTests.VoiceTests/testRangeRequiresRepeatedHeldNearTargetNotes
+[469/472] Testing TimbreCoreTests.VoiceTests/testSilenceAndInvalidFrequenciesProduceNoScores
+[470/472] Testing TimbreCoreTests.VoiceTests/testSilenceBetweenFragmentsDoesNotCountAsSustainedSinging
+[471/472] Testing TimbreCoreTests.VoiceTests/testSustainedTargetDemonstratesButWarmupIsUnscored
+[472/472] Testing TimbreCoreTests.StrokeChordsTests/testChunksStopDeadAndStrumsRingOn
+◇ Test run started.
+↳ Testing Library Version: 1501
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.
