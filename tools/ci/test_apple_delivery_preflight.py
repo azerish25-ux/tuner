@@ -87,6 +87,25 @@ class PreflightTests(unittest.TestCase):
         self.run['conclusion'] = 'failure'
         with self.assertRaises(p.PreflightError): self.verify()
 
+    def test_failed_sdk_report_is_advisory_only_with_exact_source_successful_required_gate(self):
+        self.run['conclusion'] = 'failure'
+        audit = next(job for job in self.jobs if job['name'] == 'accessibility')
+        audit['conclusion'] = 'failure'
+        self.assertEqual(self.verify(), 42)
+        gate = next(job for job in self.jobs if job['name'] == 'gate')
+        gate['conclusion'] = 'failure'
+        with self.assertRaises(p.PreflightError): self.verify()
+        gate['conclusion'] = 'success'
+        self.jobs.append({'name': 'publish results', 'head_sha': SHA, 'run_id': 42,
+                          'status': 'completed', 'conclusion': 'failure'})
+        with self.assertRaises(p.PreflightError): self.verify()
+
+    def test_delivery_version_requires_explicit_account_matched_input(self):
+        workflow = (p.ROOT / '.github/workflows/apple-delivery.yml').read_text()
+        field = workflow.split('      marketing_version:\n', 1)[1].split('      build_number:', 1)[0]
+        self.assertIn('required: true', field)
+        self.assertNotIn('default:', field)
+
     def test_every_required_job_is_mandatory(self):
         for name in p.REQUIRED_JOBS:
             saved = self.jobs

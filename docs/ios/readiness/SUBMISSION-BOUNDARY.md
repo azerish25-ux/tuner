@@ -4,6 +4,8 @@ The owner's latest instruction closes work on the completed 50 listings, transla
 
 Remaining engineering acceptance concerns actual behavior: successful native builds, launch and navigation, usable controls, complete visible instructions/results, scrolling and rotation, and the existing release/sanitizer checks. Account configuration, signing/upload, live StoreKit verification, Apple processing and submission remain a later owner-authorized phase.
 
+Manual delivery requires an explicitly entered App Store version matching the existing account record; it has no prefilled version. Delivery preflight requires the latest exact-main required gate and successful product jobs. It preserves that gate's SDK-advisory policy and rejects any additional failed, skipped or cancelled job.
+
 ## SDK audit reports
 
 The strict XCTest accessibility audit is retained unchanged. Its tests, failed outcomes, original logs and screenshots are preserved. A failed SDK report must never be described as a passed strict audit or proof of complete accessibility compliance.

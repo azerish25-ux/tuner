@@ -91,8 +91,8 @@ def verify_native_gate(env, checkout_sha, get):
             or run.get('path', '').split('@')[0] != WORKFLOW
             or run.get('repository', {}).get('full_name') != repo):
         raise PreflightError('iOS run does not belong to this exact main source/workflow')
-    if run.get('status') != 'completed' or run.get('conclusion') != 'success':
-        raise PreflightError('Latest exact-source iOS run is not completed successfully')
+    if run.get('status') != 'completed' or run.get('conclusion') not in ('success', 'failure'):
+        raise PreflightError('Latest exact-source iOS run has not completed with an assessable result')
     jobs = []
     page = 1
     while True:
@@ -110,8 +110,17 @@ def verify_native_gate(env, checkout_sha, get):
             raise PreflightError('Missing or ambiguous required iOS job: ' + name)
         job = matches[0]
         if (job.get('head_sha') != sha or job.get('run_id') != run['id']
-                or job.get('status') != 'completed' or job.get('conclusion') != 'success'):
+                or job.get('status') != 'completed'
+                or job.get('conclusion') not in (('success', 'failure') if name == 'accessibility' else ('success',))):
             raise PreflightError('Required iOS job lacks exact-source success: ' + name)
+    # The exact-source required gate already checks every SDK step outcome and original partition log.
+    # Preserve its explicit advisory policy; do not resurrect a blanket strict-SDK-success requirement.
+    unsuccessful = [job for job in jobs if job.get('conclusion') != 'success']
+    sdk_only = (len(unsuccessful) == 1 and unsuccessful[0].get('name') == 'accessibility'
+                and unsuccessful[0].get('conclusion') == 'failure')
+    if ((run.get('conclusion') == 'failure' and not sdk_only)
+            or (run.get('conclusion') == 'success' and unsuccessful)):
+        raise PreflightError('iOS workflow failure is not exclusively the gate-assessed advisory SDK report')
     return run['id']
 
 

@@ -7,9 +7,8 @@ on:
   workflow_dispatch:
     inputs:
       marketing_version:
-        description: App Store version (for example 2.0.0)
+        description: Exact existing App Store Connect version, verified before dispatch
         required: true
-        default: '2.0.0'
         type: string
       build_number:
         description: Unique positive build number not already uploaded for this version
