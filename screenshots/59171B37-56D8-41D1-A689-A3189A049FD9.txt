@@ -1,0 +1,15 @@
+stage=loaded-leftToRight driver=scrollPosition binding + shelf selection (command, not observation), not a touch gesture
+position=nil history=[]
+requestedSize=(402.0, 874.0) window=(0.0, 0.0, 402.0, 874.0) key=true
+captureWaitsForUpdates=true; diagnostic pixels are not acceptance evidence
+shelf=shelf-0 frame=Optional((20.0, 536.0, 362.0, 692.0)) terminal=nil
+root _UIHostingView<Fixture> frame=(0.0, 0.0, 402.0, 874.0) bounds=(0.0, 0.0, 402.0, 874.0) attached=true hidden=false alpha=1.0
+root.0 PlatformContainer frame=(0.0, 0.0, 402.0, 874.0) bounds=(0.0, 0.0, 402.0, 874.0) attached=true hidden=false alpha=1.0
+root.0.0 HostingScrollView frame=(0.0, 0.0, 402.0, 874.0) bounds=(0.0, 0.0, 402.0, 874.0) attached=true hidden=false alpha=1.0 content=(402.0, 6200.0) offset=(0.0, 0.0) inset=UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0) dragging=false decelerating=false
+root.0.0.0 PlatformGroupContainer frame=(0.0, 0.0, 402.0, 6200.0) bounds=(0.0, 0.0, 402.0, 6200.0) attached=true hidden=false alpha=1.0
+root.0.0.0.0 _UIInheritedView frame=(0.0, 588.0, 402.0, 640.0) bounds=(0.0, 0.0, 402.0, 640.0) attached=true hidden=false alpha=1.0
+root.0.0.0.0.0 PlatformContainer frame=(0.0, 588.0, 402.0, 640.0) bounds=(0.0, 0.0, 402.0, 640.0) attached=true hidden=false alpha=1.0
+root.0.0.0.0.0.0 HostingScrollView frame=(0.0, 588.0, 402.0, 640.0) bounds=(9445.0, 0.0, 402.0, 640.0) attached=true hidden=false alpha=1.0 content=(19426.0, 640.0) offset=(9445.0, 0.0) inset=UIEdgeInsets(top: 0.0, left: 20.0, bottom: 0.0, right: 20.0) dragging=false decelerating=false
+root.0.0.0.0.0.0.0 PlatformGroupContainer frame=(-9445.0, 588.0, 19426.0, 640.0) bounds=(0.0, 0.0, 19426.0, 640.0) attached=true hidden=false alpha=1.0
+root.0.0.1 _UIScrollViewScrollIndicator frame=(396.0, 802.0, 3.0, 7.0) bounds=(0.0, 0.0, 3.0, 7.0) attached=true hidden=false alpha=0.0
+root.0.0.1.0 UIView frame=(396.0, 802.0, 3.0, 7.0) bounds=(0.0, 0.0, 3.0, 7.0) attached=true hidden=false alpha=1.0

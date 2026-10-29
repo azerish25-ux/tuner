@@ -1,0 +1,41 @@
+Off-window caption sizing only; no covers, scene layout or AX traversal.
+type=large shelf=pick.known captions=12 sizingSeconds=0.1918100118637085 eagerOracleSeconds=0.06686741666658236 freshHostSeconds=0.11805549999985487
+type=large shelf=pick.few captions=12 sizingSeconds=0.06850695610046387 eagerOracleSeconds=0.058360500000162574 freshHostSeconds=0.08438470833334577
+type=large shelf=rail.originals captions=50 sizingSeconds=0.3590658903121948 eagerOracleSeconds=0.27547179166663227 freshHostSeconds=0.42196224999997867
+type=large shelf=rail.standards captions=38 sizingSeconds=0.2577250003814697 eagerOracleSeconds=0.22145233333321812 freshHostSeconds=0.3056148750001739
+type=large shelf=rail.songs captions=32 sizingSeconds=0.23343002796173096 eagerOracleSeconds=0.30621258333326296 freshHostSeconds=0.23132904166664048
+type=large shelf=rail.ukulele-songbook captions=110 sizingSeconds=0.7672570943832397 eagerOracleSeconds=0.7599210416665301 freshHostSeconds=0.7070213750000676
+type=large shelf=rail.mandolin-songbook captions=68 sizingSeconds=0.38271403312683105 eagerOracleSeconds=0.36869320833329766 freshHostSeconds=0.4342274583334529
+type=large shelf=rail.violin-songbook captions=66 sizingSeconds=0.40211498737335205 eagerOracleSeconds=0.38405729166652236 freshHostSeconds=0.48570329166682313
+type=large shelf=rail.cello-songbook captions=65 sizingSeconds=0.5025509595870972 eagerOracleSeconds=0.3691240000000562 freshHostSeconds=0.45444991666681744
+type=large shelf=rail.bass-songbook captions=120 sizingSeconds=1.0842180252075195 eagerOracleSeconds=0.6965237916667775 freshHostSeconds=0.8186814583332307
+type=large shelf=pick.campfire captions=8 sizingSeconds=0.09839498996734619 eagerOracleSeconds=0.040642583333465154 freshHostSeconds=0.03531512499989731
+type=large shelf=rail.guitar captions=12 sizingSeconds=0.05212199687957764 eagerOracleSeconds=0.07073979166671052 freshHostSeconds=0.09730583333316645
+type=large shelf=rail.ukulele captions=13 sizingSeconds=0.08586502075195312 eagerOracleSeconds=0.061773583333433635 freshHostSeconds=0.06865712500007248
+type=large shelf=rail.bass captions=3 sizingSeconds=0.011955022811889648 eagerOracleSeconds=0.00979879166675346 freshHostSeconds=0.012161708333223942
+type=large shelf=rail.violin captions=10 sizingSeconds=0.04648101329803467 eagerOracleSeconds=0.03338624999992135 freshHostSeconds=0.04576329166661708
+type=large shelf=rail.cello captions=8 sizingSeconds=0.039523959159851074 eagerOracleSeconds=0.0294064583333693 freshHostSeconds=0.028122541666789402
+type=large shelf=rail.mandolin captions=8 sizingSeconds=0.034066081047058105 eagerOracleSeconds=0.02813470833325482 freshHostSeconds=0.028881916666705365
+type=large shelf=rail.banjo captions=7 sizingSeconds=0.019502997398376465 eagerOracleSeconds=0.015539750000016284 freshHostSeconds=0.020747166666751582
+type=large shelf=rail.voice captions=6 sizingSeconds=0.026445984840393066 eagerOracleSeconds=0.032496791666744684 freshHostSeconds=0.04377199999998993
+TOTAL type=large shelves=19 uniqueSongs=616 captions=648 hosts=19 measurements=648 sizingSeconds=4.663750052452087 eagerOracleSeconds=3.8286026666667112 freshHostSeconds=4.442156583333599 wallSeconds=12.938386458333298
+type=accessibility5 shelf=pick.known captions=12 sizingSeconds=0.08010494709014893 eagerOracleSeconds=0.07154150000019399 freshHostSeconds=0.08226591666675631
+type=accessibility5 shelf=pick.few captions=12 sizingSeconds=0.07732200622558594 eagerOracleSeconds=0.06334787499986305 freshHostSeconds=0.08223745833333851
+type=accessibility5 shelf=rail.originals captions=50 sizingSeconds=0.3746049404144287 eagerOracleSeconds=0.32612104166673817 freshHostSeconds=0.3982900416665416
+type=accessibility5 shelf=rail.standards captions=38 sizingSeconds=0.25514495372772217 eagerOracleSeconds=0.24707683333326713 freshHostSeconds=0.23220087499998954
+type=accessibility5 shelf=rail.songs captions=32 sizingSeconds=0.18310296535491943 eagerOracleSeconds=0.17172929166667927 freshHostSeconds=0.18662258333324644
+type=accessibility5 shelf=rail.ukulele-songbook captions=110 sizingSeconds=0.7141120433807373 eagerOracleSeconds=0.5726018333332377 freshHostSeconds=0.609852166666542
+type=accessibility5 shelf=rail.mandolin-songbook captions=68 sizingSeconds=0.45527195930480957 eagerOracleSeconds=0.3706011250001211 freshHostSeconds=0.36839058333316643
+type=accessibility5 shelf=rail.violin-songbook captions=66 sizingSeconds=0.4743199348449707 eagerOracleSeconds=0.36390483333320844 freshHostSeconds=0.4884369166666147
+type=accessibility5 shelf=rail.cello-songbook captions=65 sizingSeconds=0.43545103073120117 eagerOracleSeconds=0.30310595833316256 freshHostSeconds=0.4316463333334468
+type=accessibility5 shelf=rail.bass-songbook captions=120 sizingSeconds=0.8294299840927124 eagerOracleSeconds=0.8343968749998112 freshHostSeconds=0.9755538333333789
+type=accessibility5 shelf=pick.campfire captions=8 sizingSeconds=0.05582296848297119 eagerOracleSeconds=0.038506125000139946 freshHostSeconds=0.05588533333320811
+type=accessibility5 shelf=rail.guitar captions=12 sizingSeconds=0.07142198085784912 eagerOracleSeconds=0.04877979166667501 freshHostSeconds=0.0704795416666002
+type=accessibility5 shelf=rail.ukulele captions=13 sizingSeconds=0.10684800148010254 eagerOracleSeconds=0.06539950000001227 freshHostSeconds=0.10652200000004086
+type=accessibility5 shelf=rail.bass captions=3 sizingSeconds=0.021803975105285645 eagerOracleSeconds=0.020692583333129733 freshHostSeconds=0.013768791666734614
+type=accessibility5 shelf=rail.violin captions=10 sizingSeconds=0.05385005474090576 eagerOracleSeconds=0.056791625000187196 freshHostSeconds=0.07261212499997782
+type=accessibility5 shelf=rail.cello captions=8 sizingSeconds=0.0358349084854126 eagerOracleSeconds=0.03760954166659758 freshHostSeconds=0.042738708333445175
+type=accessibility5 shelf=rail.mandolin captions=8 sizingSeconds=0.04133296012878418 eagerOracleSeconds=0.03499866666675189 freshHostSeconds=0.041172208333364324
+type=accessibility5 shelf=rail.banjo captions=7 sizingSeconds=0.02945101261138916 eagerOracleSeconds=0.028852291666680685 freshHostSeconds=0.03110787499986145
+type=accessibility5 shelf=rail.voice captions=6 sizingSeconds=0.03136599063873291 eagerOracleSeconds=0.026565000000118744 freshHostSeconds=0.03351499999985208
+TOTAL type=accessibility5 shelves=19 uniqueSongs=616 captions=648 hosts=19 measurements=648 sizingSeconds=4.326596617698669 eagerOracleSeconds=3.6826222916665756 freshHostSeconds=4.323298291666106 wallSeconds=12.335932708333303

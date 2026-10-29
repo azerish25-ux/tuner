@@ -1,0 +1,183 @@
+[
+  {
+    "appBuild" : "1",
+    "appBundle" : "com.shahradazerisharghi.timbre",
+    "backend" : "imageRenderer",
+    "comparisonIsDiagnosticOnly" : true,
+    "declaredSourceSHA" : "not-provided",
+    "declaredSourceSHAIsIndependentlyVerified" : false,
+    "diagnosticOnly" : true,
+    "direction" : "rightToLeft",
+    "dynamicType" : "accessibility5",
+    "hostedRasterScale" : "actual-window-screen-scale",
+    "imageRendererScale" : 3,
+    "kind" : "provenance",
+    "osVersion" : "Version 26.2 (Build 23C54)",
+    "productionEligibilityClaim" : false,
+    "realOnboardingCoverage" : false,
+    "rendererCallbacksObservable" : false,
+    "sourceFile" : "TimbreAppTests\/WelcomeRendererGeometryTests.swift",
+    "stitchedOrScaledAcceptance" : false,
+    "textMetricDisplayScale" : 3,
+    "variant" : "actualProduction",
+    "width" : 362
+  },
+  {
+    "boldText" : false,
+    "inkInsets" : [
+      5,
+      30.666666666666668,
+      5,
+      30.666666666666668
+    ],
+    "kind" : "independentFont",
+    "outerReserve" : [
+      5,
+      30.666666666666668,
+      5,
+      30.666666666666668
+    ],
+    "points" : 68.333333333333329,
+    "postScriptName" : "NotoNastaliqUrdu-Bold"
+  },
+  {
+    "canvasReturned" : [
+      522,
+      1024.3333333333333
+    ],
+    "kind" : "wrapperSize",
+    "observationLevel" : "outside-padded-headline",
+    "outerProposal" : {
+      "height" : 0,
+      "width" : 0
+    },
+    "subviewProposal" : {
+      "height" : null,
+      "width" : 362
+    },
+    "subviewReturned" : [
+      314,
+      864.33333333333326
+    ]
+  },
+  {
+    "anchor" : [
+      1,
+      0
+    ],
+    "at" : [
+      181,
+      -432.16666666666663
+    ],
+    "bounds" : [
+      -261,
+      -512.16666666666663,
+      522,
+      1024.3333333333333
+    ],
+    "kind" : "wrapperPlacement",
+    "subviewProposal" : {
+      "height" : null,
+      "width" : 362
+    }
+  },
+  {
+    "canvasReturned" : [
+      522,
+      1024.3333333333333
+    ],
+    "kind" : "wrapperSize",
+    "observationLevel" : "outside-padded-headline",
+    "outerProposal" : {
+      "height" : null,
+      "width" : 522
+    },
+    "subviewProposal" : {
+      "height" : null,
+      "width" : 362
+    },
+    "subviewReturned" : [
+      314,
+      864.33333333333326
+    ]
+  },
+  {
+    "canvasReturned" : [
+      522,
+      1024.3333333333333
+    ],
+    "kind" : "wrapperSize",
+    "observationLevel" : "outside-padded-headline",
+    "outerProposal" : {
+      "height" : 1024.3333333333333,
+      "width" : 522
+    },
+    "subviewProposal" : {
+      "height" : null,
+      "width" : 362
+    },
+    "subviewReturned" : [
+      314,
+      864.33333333333326
+    ]
+  },
+  {
+    "anchor" : [
+      1,
+      0
+    ],
+    "at" : [
+      442,
+      80
+    ],
+    "bounds" : [
+      0,
+      0,
+      522,
+      1024.3333333333333
+    ],
+    "kind" : "wrapperPlacement",
+    "subviewProposal" : {
+      "height" : null,
+      "width" : 362
+    }
+  },
+  {
+    "boundsThresholdOnly" : "RGB channels below128; equality still compares every unmodified RGBA byte",
+    "inkBoundsPixels" : [
+      514,
+      300,
+      809,
+      2471
+    ],
+    "inkPixels" : 164435,
+    "kind" : "canonicalRaster",
+    "pixels" : [
+      1566,
+      3073
+    ],
+    "registrationOrTolerance" : false,
+    "reservedContainsVisibleInk" : true,
+    "rgbaSHA256" : "7210647e5b021e78c75abc0d3930ea470bb6fb97d3fcbd36969e33a285b177b3",
+    "tile" : "urdu-geometry-362-accessibility5-imageRenderer-actualProduction-full",
+    "visibleReservedContentPixels" : [
+      240,
+      240,
+      1086,
+      2593
+    ]
+  },
+  {
+    "captureValid" : true,
+    "changedRGBABytes" : 0,
+    "coordinateEquivalentComparison" : true,
+    "diagnosticOnly" : true,
+    "kind" : "strictComparison",
+    "noEligibility" : true,
+    "reference" : "plain",
+    "sameActualGeometry" : true,
+    "sameBackendOnly" : true,
+    "sameRGBA" : true,
+    "tile" : "urdu-geometry-362-accessibility5-imageRenderer-actualProduction-full"
+  }
+]

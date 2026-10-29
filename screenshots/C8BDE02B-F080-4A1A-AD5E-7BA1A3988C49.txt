@@ -1,0 +1,31 @@
+stage=contained-browsed-leftToRight driver=scrollPosition binding + shelf selection (command, not observation), not a touch gesture
+position=Optional(Timbre.SongShelfPageTarget<Swift.String>.shelf("shelf-3")) history=["Optional(Timbre.SongShelfPageTarget<Swift.String>.shelf(\"shelf-3\"))", "Optional(Timbre.SongShelfPageTarget<Swift.String>.shelf(\"shelf-3\"))"]
+requestedSize=(300.0, 600.0) window=(0.0, 0.0, 402.0, 874.0) key=true
+captureWaitsForUpdates=false; diagnostic pixels are not acceptance evidence
+shelf=shelf-0 frame=Optional((20.0, 536.0, 260.0, 292.0)) terminal=nil
+shelf=shelf-2 frame=Optional((20.0, -162.0, 260.0, 292.0)) terminal=nil
+shelf=shelf-3 frame=Optional((20.0, 154.0, 260.0, 292.0)) terminal=Optional((132.0, 206.0, 148.0, 80.0))
+shelf=shelf-4 frame=Optional((20.0, 470.0, 260.0, 292.0)) terminal=nil
+root UIView frame=(0.0, 0.0, 402.0, 874.0) bounds=(0.0, 0.0, 402.0, 874.0) attached=true hidden=false alpha=1.0
+root.0 _UIHostingView<Fixture> frame=(0.0, 0.0, 300.0, 600.0) bounds=(0.0, 0.0, 300.0, 600.0) attached=true hidden=false alpha=1.0
+root.0.0 PlatformContainer frame=(0.0, 0.0, 300.0, 600.0) bounds=(0.0, 0.0, 300.0, 600.0) attached=true hidden=false alpha=1.0
+root.0.0.0 HostingScrollView frame=(0.0, 0.0, 300.0, 600.0) bounds=(0.0, 1330.0, 300.0, 600.0) attached=true hidden=false alpha=1.0 content=(300.0, 3598.0) offset=(0.0, 1330.0) inset=UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0) dragging=false decelerating=false
+root.0.0.0.0 PlatformGroupContainer frame=(0.0, -1330.0, 300.0, 3598.0) bounds=(0.0, 0.0, 300.0, 3598.0) attached=true hidden=false alpha=1.0
+root.0.0.0.0.0 _UIInheritedView frame=(0.0, -110.0, 300.0, 240.0) bounds=(0.0, 0.0, 300.0, 240.0) attached=true hidden=false alpha=1.0
+root.0.0.0.0.0.0 PlatformContainer frame=(0.0, -110.0, 300.0, 240.0) bounds=(0.0, 0.0, 300.0, 240.0) attached=true hidden=false alpha=1.0
+root.0.0.0.0.0.0.0 HostingScrollView frame=(0.0, -110.0, 300.0, 240.0) bounds=(9482.0, 0.0, 300.0, 240.0) attached=true hidden=false alpha=1.0 content=(19426.0, 240.0) offset=(9482.0, 0.0) inset=UIEdgeInsets(top: 0.0, left: 20.0, bottom: 0.0, right: 20.0) dragging=false decelerating=false
+root.0.0.0.0.0.0.0.0 PlatformGroupContainer frame=(-9482.0, -110.0, 19426.0, 240.0) bounds=(0.0, 0.0, 19426.0, 240.0) attached=true hidden=false alpha=1.0
+root.0.0.0.0.1 _UIInheritedView frame=(0.0, 206.0, 300.0, 240.0) bounds=(0.0, 0.0, 300.0, 240.0) attached=true hidden=false alpha=1.0
+root.0.0.0.0.1.0 PlatformContainer frame=(0.0, 206.0, 300.0, 240.0) bounds=(0.0, 0.0, 300.0, 240.0) attached=true hidden=false alpha=1.0
+root.0.0.0.0.1.0.0 HostingScrollView frame=(0.0, 206.0, 300.0, 240.0) bounds=(19146.0, 0.0, 300.0, 240.0) attached=true hidden=false alpha=1.0 content=(19426.0, 240.0) offset=(19146.0, 0.0) inset=UIEdgeInsets(top: 0.0, left: 20.0, bottom: 0.0, right: 20.0) dragging=false decelerating=false
+root.0.0.0.0.1.0.0.0 PlatformGroupContainer frame=(-19146.0, 206.0, 19426.0, 240.0) bounds=(0.0, 0.0, 19426.0, 240.0) attached=true hidden=false alpha=1.0
+root.0.0.0.0.2 _UIInheritedView frame=(0.0, 522.0, 300.0, 240.0) bounds=(0.0, 0.0, 300.0, 240.0) attached=true hidden=false alpha=1.0
+root.0.0.0.0.2.0 PlatformContainer frame=(0.0, 522.0, 300.0, 240.0) bounds=(0.0, 0.0, 300.0, 240.0) attached=true hidden=false alpha=1.0
+root.0.0.0.0.2.0.0 HostingScrollView frame=(0.0, 522.0, 300.0, 240.0) bounds=(9482.0, 0.0, 300.0, 240.0) attached=true hidden=false alpha=1.0 content=(19426.0, 240.0) offset=(9482.0, 0.0) inset=UIEdgeInsets(top: 0.0, left: 20.0, bottom: 0.0, right: 20.0) dragging=false decelerating=false
+root.0.0.0.0.2.0.0.0 PlatformGroupContainer frame=(-9482.0, 522.0, 19426.0, 240.0) bounds=(0.0, 0.0, 19426.0, 240.0) attached=true hidden=false alpha=1.0
+root.0.0.0.0.3 _UIInheritedView frame=(0.0, -742.0, 300.0, 240.0) bounds=(0.0, 0.0, 300.0, 240.0) attached=true hidden=true alpha=1.0
+root.0.0.0.0.3.0 PlatformContainer frame=(0.0, -742.0, 300.0, 240.0) bounds=(0.0, 0.0, 300.0, 240.0) attached=true hidden=false alpha=1.0
+root.0.0.0.0.3.0.0 HostingScrollView frame=(0.0, -742.0, 300.0, 240.0) bounds=(9496.0, 0.0, 300.0, 240.0) attached=true hidden=false alpha=1.0 content=(19440.0, 240.0) offset=(9496.0, 0.0) inset=UIEdgeInsets(top: 0.0, left: 20.0, bottom: 0.0, right: 20.0) dragging=false decelerating=false
+root.0.0.0.0.3.0.0.0 PlatformGroupContainer frame=(-9496.0, -742.0, 19440.0, 240.0) bounds=(0.0, 0.0, 19440.0, 240.0) attached=true hidden=false alpha=1.0
+root.0.0.0.1 _UIScrollViewScrollIndicator frame=(294.0, 191.0, 3.0, 85.0) bounds=(0.0, 0.0, 3.0, 85.0) attached=true hidden=false alpha=0.0
+root.0.0.0.1.0 UIView frame=(294.0, 191.0, 3.0, 85.0) bounds=(0.0, 0.0, 3.0, 85.0) attached=true hidden=false alpha=1.0

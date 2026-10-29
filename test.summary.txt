@@ -1,0 +1,72 @@
+# Errors
+
+# Matches
+--- line 87
+2026-10-29 02:22:00.653156+0000 Timbre[24464:68627] [Assets] Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute14.rematerial' in bundle at '/Users/runner/Library/Developer/CoreSimulator/Devices/E952A9B0-CC78-435C-BF08-06AD47FE1076/data/Containers/Bundle/Application/DAB435B4-6322-4174-B31B-F18FFC639E86/Timbre.app'. Loading via asset path.
+2026-10-29 02:22:01.079559+0000 Timbre[24464:68627] [Assets] Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute15.rematerial' in bundle at '/Users/runner/Library/Developer/CoreSimulator/Devices/E952A9B0-CC78-435C-BF08-06AD47FE1076/data/Containers/Bundle/Application/DAB435B4-6322-4174-B31B-F18FFC639E86/Timbre.app'. Loading via asset path.
+2026-10-29 02:22:02.370583+0000 Timbre[24464:71525] [Metadata] Failed to refresh AppShortcut parameters with error: Error Domain=LinkDaemon.ApplicationServiceInstance.Errors Code=2 "(null)"
+Test Case '-[TimbreAppTests.AnalyticsPrivacyTests testAnOldGenerationCannotCreateTokensRequestsOrRetriesAfterOffOn]' passed (6.997 seconds).
+Test Case '-[TimbreAppTests.AnalyticsPrivacyTests testAttributionRevocationBeforeStartDoesNotCreateToken]' started.
+
+
+# Tail
+Test Case '-[TimbreUITests.TabletShelfAlignmentTests testImpossibleAndInvalidGeometryFailsClosed]' passed (0.131 seconds).
+Test Case '-[TimbreUITests.TabletShelfAlignmentTests testOnlyFullyClearOrFullyHiddenHeadingPasses]' started.
+    t =     0.00s Start Test at 2026-10-29 02:35:37.287
+    t =     0.04s Set Up
+    t =     0.04s Tear Down
+Test Case '-[TimbreUITests.TabletShelfAlignmentTests testOnlyFullyClearOrFullyHiddenHeadingPasses]' passed (0.091 seconds).
+Test Case '-[TimbreUITests.TabletShelfAlignmentTests testThreeCardBoundsAreNeverWeakened]' started.
+    t =     0.00s Start Test at 2026-10-29 02:35:37.378
+    t =     0.03s Set Up
+    t =     0.03s Tear Down
+Test Case '-[TimbreUITests.TabletShelfAlignmentTests testThreeCardBoundsAreNeverWeakened]' passed (0.090 seconds).
+Test Suite 'TabletShelfAlignmentTests' passed at 2026-10-29 02:35:37.469.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.417 (0.419) seconds
+Test Suite 'TimbreUITests' started at 2026-10-29 02:35:37.469.
+Test Case '-[TimbreUITests.TimbreUITests testInstrumentFamilyChipMustClearBothFades]' started.
+    t =     0.00s Start Test at 2026-10-29 02:35:37.471
+    t =     0.03s Set Up
+    t =     0.08s Tear Down
+Test Case '-[TimbreUITests.TimbreUITests testInstrumentFamilyChipMustClearBothFades]' passed (0.092 seconds).
+Test Suite 'TimbreUITests' passed at 2026-10-29 02:35:37.563.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.092 (0.093) seconds
+Test Suite 'TimbreUITests.xctest' passed at 2026-10-29 02:35:37.563.
+	 Executed 31 tests, with 0 failures (0 unexpected) in 243.214 (243.238) seconds
+Test Suite 'Selected tests' passed at 2026-10-29 02:35:37.563.
+	 Executed 31 tests, with 0 failures (0 unexpected) in 243.214 (243.240) seconds
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+2026-10-29 02:36:13.659 xcodebuild[23084:65001] [MT] IDETestOperationsObserverDebug: 901.358 elapsed -- Testing started completed.
+2026-10-29 02:36:13.660 xcodebuild[23084:65001] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-29 02:36:13.660 xcodebuild[23084:65001] [MT] IDETestOperationsObserverDebug: 901.358 sec, +901.358 sec -- end
+Resolve Package Graph
+
+Test session results, code coverage, and logs:
+	/Users/runner/work/tuner/tuner/ios/build/Gate.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started
