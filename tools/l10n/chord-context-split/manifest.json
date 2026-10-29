@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "status": "source correction prepared; translations and independent review pending; not release ready",
+  "base_commit": "0b89f9ba4913bf5910302c059b30ce1aa1a59cc4",
+  "source_key_count_before": 6083,
+  "source_key_count_after": 6090,
+  "changed_localized_objects": 26,
+  "before_curriculum_content_sha256": "6bb0c98369ecb5aae50f34b9cb21d52c9aac94140f78cb6070bb1a8a7c384d33",
+  "after_curriculum_content_sha256": "549cac34a4fd3eccb6ec59491941214c10502084d5543f60cbbe60951cf9b543",
+  "before_english_content_sha256": "a20aa661e777ccf20b2ae5b72de0c24a9f83910d269312babf3db0b1b141a089",
+  "after_english_content_sha256": "5f586fa6801e8bed4452e8d4cbf18e6cbd9c4d8b9afee7f8b8a321dc54b5fe9d",
+  "new_sources": {
+    "L2369e9b812": "E minor scale",
+    "L9cf6021835": "F major chord",
+    "La1c8d3bc39": "C major chord",
+    "Lab958557bf": "D major chord",
+    "Lbdeb73715c": "B♭ major chord",
+    "Lc1965ac98d": "A major chord",
+    "Ld975a19a54": "G major chord"
+  },
+  "retained_sources": {
+    "L2449e81b73": "G major",
+    "L3c6bc13182": "A major",
+    "L42626aabd8": "D major",
+    "L4b65fb9aa1": "B♭ major",
+    "L728cd633f1": "A minor",
+    "Laa87302d09": "C major",
+    "Lc3e1440b37": "E minor",
+    "Lc819139d43": "A minor scale",
+    "Lea785300c4": "F major"
+  },
+  "source_file_guards": [
+    {
+      "path": "ios/Sources/TimbreCore/Resources/curriculum.json",
+      "before_sha256": "f5399d3d13edd2f94b660648e7dd23aceef66a21e095567988bbb6bd38995bf1",
+      "after_sha256": "9a8d26de0a0b2a3100a7a1a18310ebca061e629548d20d33b61469427d55705c"
+    },
+    {
+      "path": "ios/Timbre/Resources/en.lproj/Learn.strings",
+      "before_sha256": "718a9431e97997dcad904b99eb00f0072385142d63ebb7ffc1c27ff374ca6de3",
+      "after_sha256": "6c054cde7765a6b4430f875d541db4b897fa095787d42c84dad03f5a054de5a0"
+    },
+    {
+      "path": "tools/curriculum/courses/guitar.py",
+      "before_sha256": "028b8df892ba58bf7502f55ab74fdf508f7d2c528754455ccbb62ee1d989de05",
+      "after_sha256": "58aa9cb3b349a23fbfcf649765806fe12b1003a24afec94827b370a22329d28f"
+    },
+    {
+      "path": "tools/curriculum/courses/guitar_part3.py",
+      "before_sha256": "ca690e2b682ce2a9a0358535705dd054673936c97a19909aabc39c1dc56d6c0c",
+      "after_sha256": "f2311d4d8cecdd63408097f87b36c0e7fd9c8299106320141173a51c25741cc8"
+    },
+    {
+      "path": "tools/curriculum/courses/mandolin.py",
+      "before_sha256": "25c193601939e11e58e6e39dd741b860d1a13cf999c3ecd6ba0285017dfff741",
+      "after_sha256": "d5790cbbcaf1449c2180cbce861026a372a1ed120b92860fe86c2aebe4e7ee0e"
+    },
+    {
+      "path": "tools/curriculum/courses/theory.py",
+      "before_sha256": "1631be18069893b71c798e72c65b829f09c4392f387778e52f3ae2cd3f638c10",
+      "after_sha256": "1d0cf006888ddb5e3ca3bb4987d3b58aa7bbe6616a3b92bd8c07afbc5bd10d7b"
+    },
+    {
+      "path": "tools/curriculum/courses/ukulele.py",
+      "before_sha256": "0b67a58de9b462eccdb4ba3fab4f89258540eea4301f062edfd3660c15f5fdac",
+      "after_sha256": "8e5cecff502fe0e2c14b80a3de3ea71f3790943cb4d05d96e938598fa3ce3364"
+    },
+    {
+      "path": "tools/curriculum/courses/violin.py",
+      "before_sha256": "eb0f73c7343af2ab9ba0759d453aed7a4d4e16108a39767139ea870423bfa491",
+      "after_sha256": "ff024b968829dcd109ef7e0ba35d4b4b28a67028be472ba984cd4e41c3bbbd01"
+    }
+  ],
+  "scope": "Six explicitly named major chords plus E minor scale. Reuse existing A minor scale. Bare major labels now exclusively keys/scales; A/E minor exclusively chords. B-flat collision found during adjacent-context review."
+}

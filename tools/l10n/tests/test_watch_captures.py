@@ -7,6 +7,8 @@ from pathlib import Path
 import struct
 import tempfile
 import unittest
+from unittest.mock import patch
+import subprocess
 import zlib
 
 SPEC = importlib.util.spec_from_file_location('watch_captures', Path(__file__).resolve().parents[2] / 'ci/watch_captures.py')
@@ -37,8 +39,9 @@ class WatchCaptureTests(unittest.TestCase):
     def tearDown(self):
         self.temp.cleanup()
 
-    def test_real_applied_labels_and_exact_49_language_coverage(self):
-        self.assertEqual(len(self.expected), 49)
+    def test_real_applied_labels_and_exact_52_language_coverage(self):
+        self.assertEqual(set(self.expected), watch.SHIPPED_LANGUAGES)
+        self.assertEqual(len(self.expected), 52)
         self.assertIn('en', self.expected)
         self.assertEqual(self.expected['de']['today']['practiced'], 'Heute geübt')
         self.assertEqual(set(self.expected['ar']), {'today', 'metronome'})
@@ -152,6 +155,118 @@ class WatchCaptureTests(unittest.TestCase):
         self.assertEqual(fallback['type'], 'jpeg')
         self.assertFalse(fallback['black_mask'])
 
+    def test_missing_native_help_cannot_be_treated_as_a_jpeg_capability(self):
+        for help_text in ['', '\n', 'simctl help unavailable', '--type png']:
+            with self.subTest(help_text=help_text), self.assertRaises(ValueError):
+                watch.screenshot_format(help_text)
+
+    def test_help_can_be_captured_from_stderr_without_changing_json_commands(self):
+        with patch.object(watch.subprocess, 'check_output', return_value='--type png,jpeg --mask black') as run:
+            watch.command(['xcrun', 'simctl', 'help', 'io'], capture_stderr=True)
+        self.assertEqual(run.call_args.kwargs['stderr'], subprocess.STDOUT)
+
+    def test_scene_update_relaunch_is_bounded_and_every_attempt_uses_a_fresh_token(self):
+        calls = []
+        def launch(args, **kwargs):
+            calls.append(kwargs['env']['SIMCTL_CHILD_TIMBRE_WATCH_CAPTURE_TOKEN'])
+            return subprocess.CompletedProcess(args, 1 if len(calls) == 1 else 0,
+                stdout='FBSOpenApplicationServiceErrorDomain: Scene update failed' if len(calls) == 1 else 'bundle: 42')
+        with patch.object(watch.subprocess, 'run', side_effect=launch), \
+                patch.object(watch, 'command'), patch.object(watch.time, 'sleep'):
+            watch.launch_capture('watch-device', self.row, self.revision, self.root)
+        self.assertEqual(len(calls), 2)
+        self.assertNotEqual(calls[0], calls[1])
+        self.assertEqual(self.row['token'], calls[1])
+        records = json.loads((self.root / 'launches.json').read_text())
+        self.assertEqual([item['returncode'] for item in records], [1, 0])
+
+    def stale_scene_log(self):
+        return (f'[app<{watch.BUNDLE}>:22319] Already terminating; ignoring additional termination request.\n'
+                f'[app<{watch.BUNDLE}>:22319]: Still waiting on exit context after 79.1 seconds\n'
+                'Scene update failed. Client process exited.')
+
+    def test_stale_scene_classifier_requires_owned_bundle_same_pid_and_exit(self):
+        evidence = self.stale_scene_log()
+        self.assertTrue(watch.stale_terminating_scene(evidence))
+        for bad in [evidence.replace(watch.BUNDLE, 'com.other.app'),
+                    evidence.replace(':22319]: Still', ':999]: Still'),
+                    evidence.replace('Client process exited.', 'unknown'),
+                    'FBSOpenApplicationServiceErrorDomain: Scene update failed']:
+            self.assertFalse(watch.stale_terminating_scene(bad))
+
+    def test_stale_scene_recovery_restarts_only_owned_watch_and_retains_failure(self):
+        calls = []
+        def command(args, **kwargs):
+            calls.append(args)
+            if args[2] == 'spawn':
+                kwargs['log'].write_text(self.stale_scene_log())
+        with patch.object(watch.subprocess, 'run', side_effect=[
+                subprocess.CompletedProcess([], 1, stdout='FBSOpenApplicationServiceErrorDomain: Scene update failed'),
+                subprocess.CompletedProcess([], 0, stdout='bundle: 42')]) as launch, \
+                patch.object(watch, 'command', side_effect=command):
+            watch.launch_capture('owned-watch', self.row, self.revision, self.root)
+        self.assertEqual(launch.call_count, 2)
+        self.assertEqual([c[2] for c in calls], ['spawn', 'shutdown', 'boot', 'bootstatus'])
+        self.assertTrue(all(c[3] == 'owned-watch' for c in calls))
+        records = json.loads((self.root / 'launches.json').read_text())
+        self.assertEqual([r['returncode'] for r in records], [1, 0])
+        self.assertEqual(records[0]['recovery']['status'], 'completed')
+        self.assertNotEqual(records[0]['token'], records[1]['token'])
+        self.assertFalse((self.root / 'manifest.json').exists())
+
+    def test_recovery_failure_is_terminal_and_preserves_original_launch(self):
+        def command(args, **kwargs):
+            if args[2] == 'spawn':
+                kwargs['log'].write_text(self.stale_scene_log())
+            elif args[2] == 'shutdown':
+                raise subprocess.TimeoutExpired(args, 120)
+        with patch.object(watch.subprocess, 'run', return_value=subprocess.CompletedProcess(
+                [], 1, stdout='FBSOpenApplicationServiceErrorDomain: Scene update failed')) as launch, \
+                patch.object(watch, 'command', side_effect=command), self.assertRaises(subprocess.TimeoutExpired):
+            watch.launch_capture('owned-watch', self.row, self.revision, self.root)
+        self.assertEqual(launch.call_count, 1)
+        records = json.loads((self.root / 'launches.json').read_text())
+        self.assertEqual(records[0]['returncode'], 1)
+        self.assertEqual(records[0]['recovery']['status'], 'failed')
+        self.assertFalse((self.root / 'manifest.json').exists())
+
+    def test_repeated_stale_scene_never_restarts_again_or_succeeds(self):
+        def command(args, **kwargs):
+            if args[2] == 'spawn':
+                kwargs['log'].write_text(self.stale_scene_log())
+        with patch.object(watch.subprocess, 'run', return_value=subprocess.CompletedProcess(
+                [], 1, stdout='FBSOpenApplicationServiceErrorDomain: Scene update failed')) as launch, \
+                patch.object(watch, 'command', side_effect=command) as recovery, self.assertRaises(subprocess.CalledProcessError):
+            watch.launch_capture('owned-watch', self.row, self.revision, self.root)
+        self.assertEqual(launch.call_count, 2)
+        self.assertEqual(sum(c.args[0][2] == 'shutdown' for c in recovery.call_args_list), 1)
+        self.assertFalse((self.root / 'manifest.json').exists())
+
+    def test_other_launch_errors_fail_without_retry_or_success_evidence(self):
+        with patch.object(watch.subprocess, 'run', return_value=subprocess.CompletedProcess([], 1, stdout='Bundle not installed')) as run, \
+                patch.object(watch, 'command'), patch.object(watch.time, 'sleep'), self.assertRaises(subprocess.CalledProcessError):
+            watch.launch_capture('watch-device', self.row, self.revision, self.root)
+        self.assertEqual(run.call_count, 1)
+        self.assertFalse((self.root / 'manifest.json').exists())
+
+    def test_repeated_scene_update_failure_never_becomes_a_capture(self):
+        with patch.object(watch.subprocess, 'run', return_value=subprocess.CompletedProcess([], 1, stdout='FBSOpenApplicationServiceErrorDomain: Scene update failed')) as run, \
+                patch.object(watch, 'command'), patch.object(watch.time, 'sleep'), self.assertRaises(subprocess.CalledProcessError):
+            watch.launch_capture('watch-device', self.row, self.revision, self.root)
+        self.assertEqual(run.call_count, 3)
+        self.assertFalse((self.root / 'manifest.json').exists())
+
+    def test_launch_timeout_keeps_partial_output_and_never_retries(self):
+        error = subprocess.TimeoutExpired(['xcrun', 'simctl', 'launch'], 120, output=b'partial native output')
+        with patch.object(watch.subprocess, 'run', side_effect=error) as run, \
+                patch.object(watch, 'command'), patch.object(watch.time, 'sleep'), self.assertRaises(subprocess.TimeoutExpired):
+            watch.launch_capture('watch-device', self.row, self.revision, self.root)
+        self.assertEqual(run.call_count, 1)
+        records = json.loads((self.root / 'launches.json').read_text())
+        self.assertEqual(records[0]['failure_type'], 'TimeoutExpired')
+        self.assertIn('partial native output', records[0]['output'])
+        self.assertFalse((self.root / 'manifest.json').exists())
+
     def test_manifest_format_is_bound_to_recorded_native_help(self):
         help_text = '--type png,jpeg --mask black,alpha\n'
         path = self.root / 'simctl-io-help.txt'
@@ -170,17 +285,68 @@ class WatchCaptureTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 watch.validate_coverage(bad, set(self.expected))
 
-    def test_all_50_store_locales_bind_supported_or_explicit_fallback_media(self):
+    def test_all_50_store_locales_bind_supported_app_language_media(self):
         mapping = watch.store_mappings(set(self.expected))
         self.assertEqual(len(mapping), 50)
         rows = {row['store_locale']: row for row in mapping}
-        for locale in ['ms', 'or-IN', 'zh-Hant']:
-            self.assertEqual(rows[locale]['capture_language'], 'en')
-            self.assertEqual(rows[locale]['mapping'], 'explicit_english_fallback')
+        for locale, language in [('ms', 'ms'), ('or-IN', 'or'), ('zh-Hant', 'zh-Hant')]:
+            self.assertEqual(rows[locale]['capture_language'], language)
+        self.assertTrue(all(row['mapping'] == 'supported_app_language' and row['translated_app_ui'] for row in mapping))
         self.assertEqual(rows['zh-Hans']['capture_language'], 'zh-CN')
         self.assertEqual(rows['en-CA']['capture_language'], 'en')
         with self.assertRaises(ValueError):
             watch.store_mappings({'en'})
+
+
+class WatchExpandedScopeContractTests(unittest.TestCase):
+    def test_full_workflow_is_opt_in_and_noop_concurrency_is_isolated(self):
+        workflow = (Path(__file__).resolve().parents[3] / '.github/workflows/watch-captures.yml').read_text()
+        self.assertIn("contains(github.event.head_commit.message, '[watch-captures-all]')", workflow)
+        self.assertIn("&& 'requested' || 'noop'", workflow)
+        self.assertIn('cancel-in-progress: false', workflow)
+        self.assertNotIn('cancel-in-progress: true', workflow)
+        self.assertIn("github.event_name == 'workflow_dispatch'", workflow)
+        self.assertIn("github.ref == 'refs/heads/main'", workflow)
+        self.assertIn("github.ref == 'refs/heads/codex/app-store-readiness-gates'", workflow)
+        self.assertIn('104 images', workflow)
+        self.assertNotIn('watch-captures-pilot', workflow)
+
+    def test_probe_language_normalization_preserves_chinese_scripts(self):
+        aliases = {'zh-Hant': 'zh-Hant', 'zh-TW': 'zh-Hant', 'zh_HK': 'zh-Hant',
+                   'zh-MO': 'zh-Hant', 'zh-Hant-CN': 'zh-Hant', 'zh-Hans-TW': 'zh-CN',
+                   'zh-CN': 'zh-CN', 'zh-SG': 'zh-CN', 'ms-MY': 'ms', 'or-IN': 'or'}
+        for alias, wanted in aliases.items():
+            self.assertEqual(watch.normalized_language(alias), wanted)
+        self.assertNotEqual(watch.normalized_language('zh-Hant'), watch.normalized_language('zh-Hans'))
+
+    def test_canonical_set_has_52_languages_and_requires_new_three(self):
+        self.assertEqual(len(watch.SHIPPED_LANGUAGES), 52)
+        self.assertTrue({'zh-Hant', 'ms', 'or'} <= watch.SHIPPED_LANGUAGES)
+        self.assertNotIn('or-IN', watch.SHIPPED_LANGUAGES)
+
+    def test_previous49_scope_and_same_count_alias_replacement_are_rejected(self):
+        wanted = sorted(watch.SHIPPED_LANGUAGES - {'en'})
+        for bad in ([x for x in wanted if x not in {'zh-Hant', 'ms', 'or'}],
+                    ['or-IN' if x == 'or' else x for x in wanted], wanted + ['ms']):
+            with patch.object(watch.report, 'locales', return_value=bad):
+                with self.assertRaisesRegex(ValueError, '52 canonical'):
+                    watch.expectations()
+
+    def test_historical98_rows_cannot_certify_expanded104_coverage(self):
+        old = watch.SHIPPED_LANGUAGES - {'zh-Hant', 'ms', 'or'}
+        rows = [{'language': lang, 'page': page} for lang in old for page in watch.PAGES]
+        self.assertEqual(len(rows), 98)
+        with self.assertRaises(ValueError):
+            watch.validate_coverage(rows, watch.SHIPPED_LANGUAGES)
+        rows = [{'language': lang, 'page': page} for lang in watch.SHIPPED_LANGUAGES for page in watch.PAGES]
+        self.assertEqual(len(rows), 104)
+        watch.validate_coverage(rows, watch.SHIPPED_LANGUAGES)
+
+    def test_english_fallback_mapping_is_rejected_even_when_images_exist(self):
+        inventory = {'locales': [{'locale': 'ms', 'app_locale': None, 'app_fallback': 'en'}]}
+        with patch.object(Path, 'read_text', return_value=json.dumps(inventory)):
+            with self.assertRaisesRegex(ValueError, 'not fallback'):
+                watch.store_mappings(watch.SHIPPED_LANGUAGES)
 
 
 if __name__ == '__main__':

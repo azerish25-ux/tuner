@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-27T02:27:30Z",
+  "reviewer": "Independent integration review agent",
+  "skills": ["systematic-debugging", "code-review-and-quality"],
+  "verdict": "approve_test_fixture_source_resolution_native_confirmation_pending",
+  "scope": "AnalyticsPrivacyTests.swift fixture/path correction, three fixture regressions and one queued-retry regression; 18 authored methods. Production source unchanged.",
+  "findings": [],
+  "triage_receipt": "docs/ios/readiness/reviews/privacy-native-failure-triage.json",
+  "triage_receipt_sha256": "4bdedf6d9410b2f67b5f745136cc6db75de5e97b8d85198ce8f8fa55a89ac507",
+  "source_resolution_assessment": [
+    "The retry test asserts the exact expected endpoint URL and responds 404. The deprecated URL.path trailing-slash comparison and silent unmatched-route branch are removed.",
+    "Each session has a fresh UUID additional-header scope, and handlers are keyed by scope. Separate HTTP-status-loop sessions no longer overwrite one process-global current handler.",
+    "makeTransport tracks every test transport. Teardown revokes them, invalidates/cancels all sessions, waits for each invalidation delegate at the unchanged two-second bound, then removes only those scope registrations. URLSession retains its delegate; immutable expectation references are fulfilled from delegate callbacks.",
+    "Protocol instances capture their stop handler. waiting/loading/stopped/finished state makes repeated stop and late response inert. The recursive state lock permits inline respond from the start callback; the global registry lock is released before callbacks.",
+    "The configured protocol still accepts requests before resolving the scope. Missing or retired scopes fail through URLProtocolClient with a cancelled error rather than falling through to real HTTP or another session's handler.",
+    "The URLProtocolClient spy covers required redirect/cache/response/data/finish/fail/challenge selectors, with locked counters. No high-confidence API, Swift closure or delegate-signature defect was identified by inspection; actual SDK typecheck remains required.",
+    "Three direct protocol regressions cover held-A/configured-B stop ownership, retired-scope fail-closed behavior and one-shot cancellation. They do not themselves exercise actual URLSession header augmentation/invalidation.",
+    "The fourth new test obtains a valid enabled lease, queues work with 0.1-second delay, revokes consent and retains the 0.3-second inverted wait. It covers work queued before revocation, distinct from scheduling an already-revoked lease. This transport-level regression does not establish that the reporter test had already scheduled its own retry."
+  ],
+  "independent_checks": [
+    { "command": "git -c core.autocrlf=false diff --check -- ios/TimbreAppTests/AnalyticsPrivacyTests.swift", "exit_code": 0 },
+    { "check": "Production transport/telemetry hashes match frozen triage", "result": "pass" },
+    { "check": "Complete changed test file, lifecycle, fixture regressions and final queued-retry test reviewed", "result": "No blocking source finding" }
+  ],
+  "reviewed_sha256": {
+    "ios/TimbreAppTests/AnalyticsPrivacyTests.swift": "3e43a91f8c95acf3e9fc365cb79aaac6399e61c7650eec8e1c045eb39b599ccf",
+    "ios/Timbre/Services/AnalyticsTransport.swift": "7e89d80808af137b1491f3a73157e1743431f716e3e3aaf3e2ad2d39e1752113",
+    "ios/Timbre/Services/Analytics.swift": "0ef72ddad0382dacb1f300e98dbcf0e5a7cd324ae5d65ad686f816ea3419a72e"
+  },
+  "remaining_native_acceptance": [
+    "Compile against the actual Xcode SDK and run all 18 privacy tests before the full app gate. No native execution was performed by this Windows reviewer.",
+    "Confirm additional-header scope is present on actual custom-protocol requests and invalidation delegate fires once within the existing two-second cleanup bound. Apple documents session-task header augmentation, but that integration is unexecuted here.",
+    "Retain original timing, callback, cancellation and overfulfillment checks. Verify all six previous failures in a fresh process, repeat the full class serially, then obtain a full app/smoke pass without crash or restart.",
+    "For any remaining timeout, collect identity-bound start/respond/session-completion/telemetry-callback checkpoints before changing production or timeout bounds. The fixture correction does not prove every original timeout had the same cause."
+  ],
+  "nonblocking_limits": [
+    "Reporter retry test fulfills first before the 404 completion schedules its retry; main may revoke before a reporter retry exists. It proves no subsequent request after revocation, with the separate transport test covering queued-before-revoke work. A deterministic reporter scheduling barrier remains additional coverage.",
+    "Session invalidation drains URLSession callbacks; telemetry acknowledgments dispatched later to a global queue are separate work. They now retain their own scopes/expectations, but failed test callbacks still need trace evidence when diagnosing persistent timeouts.",
+    "Approval is source/test architecture review, not native compilation, runtime success or release certification."
+  ],
+  "primary_references": [
+    "https://developer.apple.com/documentation/foundation/urlsessionconfiguration/httpadditionalheaders",
+    "https://developer.apple.com/documentation/foundation/urlsession/invalidateandcancel()",
+    "https://developer.apple.com/documentation/foundation/urlsessiondelegate/urlsession(_:didbecomeinvalidwitherror:)",
+    "https://developer.apple.com/documentation/foundation/urlprotocolclient"
+  ],
+  "mutations": "Only this review receipt was written; no implementation edits, prior receipt changes, commit or push."
+}

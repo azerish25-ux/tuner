@@ -17,17 +17,19 @@ import SwiftUI
 struct TabHeader<Trailing: View>: View {
     private let title: Text
     private let subtitle: Text?
+    private let identity: String
     private let trailing: Trailing
     @Environment(\.dynamicTypeSize) private var typeSize
 
-    init(title: Text, subtitle: Text? = nil, @ViewBuilder trailing: () -> Trailing) {
+    init(title: Text, subtitle: Text? = nil, identity: String = "screen.header", @ViewBuilder trailing: () -> Trailing) {
+        self.identity = identity
         self.title = title
         self.subtitle = subtitle
         self.trailing = trailing()
     }
 
-    init(title: LocalizedStringKey, subtitle: LocalizedStringKey? = nil, @ViewBuilder trailing: () -> Trailing) {
-        self.init(title: Text(title), subtitle: subtitle.map { Text($0) }, trailing: trailing)
+    init(title: LocalizedStringKey, subtitle: LocalizedStringKey? = nil, identity: String = "screen.header", @ViewBuilder trailing: () -> Trailing) {
+        self.init(title: Text(title), subtitle: subtitle.map { Text($0) }, identity: identity, trailing: trailing)
     }
 
     var body: some View {
@@ -37,11 +39,11 @@ struct TabHeader<Trailing: View>: View {
                     Spacer(minLength: 0)
                     trailing
                 }
-                ScreenTitle(title: title, subtitle: subtitle)
+                ScreenTitle(title: title, subtitle: subtitle, identity: identity)
             }
         } else {
             HStack(alignment: .center, spacing: 8) {
-                ScreenTitle(title: title, subtitle: subtitle)
+                ScreenTitle(title: title, subtitle: subtitle, identity: identity)
                 trailing
             }
         }
@@ -50,12 +52,12 @@ struct TabHeader<Trailing: View>: View {
 
 extension TabHeader where Trailing == HeaderControls {
     /// With the standard controls. `showsToday` as `StreakChip`'s (false where a Today card sits right below).
-    init(title: LocalizedStringKey, subtitle: LocalizedStringKey? = nil, showsToday: Bool? = nil) {
-        self.init(title: title, subtitle: subtitle) { HeaderControls(showsToday: showsToday) }
+    init(title: LocalizedStringKey, subtitle: LocalizedStringKey? = nil, showsToday: Bool? = nil, identity: String = "screen.header") {
+        self.init(title: title, subtitle: subtitle, identity: identity) { HeaderControls(showsToday: showsToday, identity: identity) }
     }
 
-    init(title: Text, subtitle: Text? = nil, showsToday: Bool? = nil) {
-        self.init(title: title, subtitle: subtitle) { HeaderControls(showsToday: showsToday) }
+    init(title: Text, subtitle: Text? = nil, showsToday: Bool? = nil, identity: String = "screen.header") {
+        self.init(title: title, subtitle: subtitle, identity: identity) { HeaderControls(showsToday: showsToday, identity: identity) }
     }
 }
 
@@ -64,17 +66,19 @@ extension TabHeader where Trailing == HeaderControls {
 /// its title alone.
 struct HeaderControls: View {
     var showsToday: Bool?
+    var identity: String
     @EnvironmentObject private var store: AppStore
 
-    init(showsToday: Bool? = nil) {
+    init(showsToday: Bool? = nil, identity: String = "screen.header") {
         self.showsToday = showsToday
+        self.identity = identity
     }
 
     var body: some View {
         if !store.settings.calmMode {
             HStack(spacing: 2) {
-                StreakChip(showsToday: showsToday) { store.selectedTab = .journey }
-                LevelRing(size: 36) { store.selectedTab = .journey }
+                StreakChip(showsToday: showsToday, identity: identity + ".streak") { store.selectedTab = .journey }
+                LevelRing(size: 36, identity: identity + ".level") { store.selectedTab = .journey }
             }
             .transition(.opacity)
         }
@@ -85,11 +89,13 @@ struct HeaderControls: View {
 /// rotor, with an optional trailing control or count on its baseline (under it at the accessibility sizes).
 struct SectionHeader<Trailing: View>: View {
     private let title: Text
+    private let titleIdentifier: String?
     private let trailing: Trailing
     @Environment(\.dynamicTypeSize) private var typeSize
 
-    init(_ title: Text, @ViewBuilder trailing: () -> Trailing) {
+    init(_ title: Text, titleIdentifier: String? = nil, @ViewBuilder trailing: () -> Trailing) {
         self.title = title
+        self.titleIdentifier = titleIdentifier
         self.trailing = trailing()
     }
 
@@ -99,13 +105,17 @@ struct SectionHeader<Trailing: View>: View {
 
     @Environment(\.legibilityWeight) private var legibility
 
+    @ViewBuilder private var identifiedTitle: some View {
+        if let titleIdentifier { title.accessibilityIdentifier(titleIdentifier) } else { title }
+    }
+
     var body: some View {
         let _ = legibility
         let layout = typeSize.isAccessibilitySize
             ? AnyLayout(VStackLayout(alignment: .leading, spacing: 6))
             : AnyLayout(HStackLayout(alignment: .firstTextBaseline, spacing: 8))
         layout {
-            title.font(Typeface.sectionTitle).foregroundStyle(Palette.ink)
+            identifiedTitle.font(Typeface.sectionTitle).foregroundStyle(Palette.ink)
                 .fixedSize(horizontal: false, vertical: true)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .accessibilityAddTraits(.isHeader)
@@ -654,9 +664,20 @@ struct Hairline: View {
 extension Text {
     /// A compact counter, "3 / 10" (thin spaces, the numbers in the reader's locale); VoiceOver reads "3 of 10".
     /// Every compact count uses it; running prose keeps "of".
-    static func fraction(_ done: Int, _ total: Int) -> Text {
-        (Text("\(done)") + Text(verbatim: "\u{2009}/\u{2009}") + Text("\(total)"))
-            .accessibilityLabel(Text("\(done) of \(total)"))
+    static func fraction(_ done: Int, _ total: Int) -> some View {
+        // Separate numeral runs keep the completed count physically left of the total: a neutral slash
+        // between Arabic-Indic runs can reverse their order even in a left-to-right text paragraph.
+        HStack(spacing: 0) {
+            Text("\(done)").lineLimit(1)
+            Text(verbatim: "\u{2009}/\u{2009}").lineLimit(1)
+            Text("\(total)").lineLimit(1)
+        }
+        .environment(\.layoutDirection, .leftToRight)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text("\(done) of \(total)"))
+        // This replaces Text with a layout container only to control numeral order. Retain Text's
+        // noninteractive semantic role, including when a parent combines this counter with other text.
+        .accessibilityAddTraits(.isStaticText)
     }
 }
 

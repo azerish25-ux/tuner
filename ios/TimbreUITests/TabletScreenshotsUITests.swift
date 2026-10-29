@@ -166,9 +166,10 @@ final class TabletScreenshotsUITests: XCTestCase {
     /// leave the page where it was while the long lazy-load drags scrolled. So the alignment drags start in the page's
     /// side margin (no card under the finger), go further than needed and correct back, and when a drag still doesn't
     /// move the page, a slow swipe takes over. Every attempt is logged.
-    /// True when all three cards are whole on screen.
+    /// True only when all three cards are whole and the bowed heading is entirely clear or entirely hidden.
     private func scrollToFolkShelf() -> Bool {
         let cards = Self.folkCards.map { element("instrument." + $0) }
+        let heading = element("instruments.section.bowed_strings")
         let screen = screenFrame
         // The grid is lazy: down about half a page at a time until the shelf's cards are laid out.
         for _ in 0..<12 where !cards.allSatisfy({ $0.exists }) {
@@ -181,11 +182,32 @@ final class TabletScreenshotsUITests: XCTestCase {
         var stuck = 0
         for attempt in 0..<10 {
             guard let span = folkSpan(cards) else { log.append("\(attempt): cards not found"); break }
-            if span.minY >= top && span.maxY <= foot { return true }
-            // Positive: the row sits too low, so the page moves up (content scrolls down the list).
-            let offset = span.maxY - line
+            guard let headingFrame = liveFrame(heading) else {
+                log.append("\(attempt): bowed heading frame missing")
+                break
+            }
+            if TabletShelfAlignment.accepts(cardsTop: span.minY, cardsBottom: span.maxY,
+                                            headingTop: headingFrame.minY, headingBottom: headingFrame.maxY,
+                                            clearTop: top, hiddenBottom: screen.minY + 64, foot: foot) {
+                print("FOLK HEADING: accepted \(headingFrame), cards \(span), clear top \(top), hidden bottom \(screen.minY + 64)")
+                return true
+            }
+            // When the three cards fit, correct the title too: never accept a half-shaded heading.
+            // Positive shifts content upward. Every correction is remeasured after settling.
+            let offset: CGFloat
+            if span.minY >= top && span.maxY <= foot {
+                guard let correction = TabletShelfAlignment.correction(
+                    cardsTop: span.minY, cardsBottom: span.maxY,
+                    headingTop: headingFrame.minY, headingBottom: headingFrame.maxY,
+                    clearTop: top, hiddenBottom: screen.minY + 64, foot: foot) else {
+                    log.append("\(attempt): no whole-heading/whole-card alignment fits")
+                    break
+                }
+                offset = correction
+            } else { offset = span.maxY - line }
             // Past the line by a little more than the scroll view's slop, then the next round corrects back.
-            let overshoot: CGFloat = attempt == 0 ? 0 : (offset > 0 ? 24 : -24)
+            let cardsFit = span.minY >= top && span.maxY <= foot
+            let overshoot: CGFloat = attempt == 0 || cardsFit ? 0 : (offset > 0 ? 24 : -24)
             if stuck >= 2 {
                 if offset > 0 { app.swipeUp(velocity: .slow) } else { app.swipeDown(velocity: .slow) }
                 settle(1.2)  // a swipe carries momentum: let it come to rest before measuring
@@ -199,11 +221,16 @@ final class TabletScreenshotsUITests: XCTestCase {
             log.append("\(attempt): foot \(Int(span.maxY)) -> \(Int(after?.maxY ?? -1)) (aim \(Int(line)), \(how))")
             stuck = moved < 4 ? stuck + 1 : 0
         }
-        let whole = folkSpan(cards).map { $0.minY >= top && $0.maxY <= foot } ?? false
+        let whole: Bool
+        if let span = folkSpan(cards), let headingFrame = liveFrame(heading) {
+            whole = TabletShelfAlignment.accepts(cardsTop: span.minY, cardsBottom: span.maxY,
+                                                headingTop: headingFrame.minY, headingBottom: headingFrame.maxY,
+                                                clearTop: top, hiddenBottom: screen.minY + 64, foot: foot)
+        } else { whole = false }
         if !whole {
             let boxes = cards.map { liveFrame($0).map { "\($0)" } ?? "none" }.joined(separator: ", ")
             print("FOLK SHELF: screen \(screen) app \(app.frame) window \(app.windows.firstMatch.frame) cards \(boxes) "
-                  + "moves [\(log.joined(separator: "; "))]")
+                  + "heading \(String(describing: liveFrame(heading))) moves [\(log.joined(separator: "; "))]")
         }
         return whole
     }

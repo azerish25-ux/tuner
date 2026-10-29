@@ -1,0 +1,275 @@
+diff --git a/ios/Timbre/Audio/AudioService.swift b/ios/Timbre/Audio/AudioService.swift
+index 1ba1662..d5ad499 100644
+--- a/ios/Timbre/Audio/AudioService.swift
++++ b/ios/Timbre/Audio/AudioService.swift
+@@ -1071,6 +1071,13 @@ final class AudioService: ObservableObject {
+     /// A band is still rendering (`bandTrack`): one asked for now joins at the first downbeat after it lands.
+     var bandRenderPending: Bool { !bandRendering.isEmpty }
+ 
++    #if DEBUG
++    /// A recorded performance can begin once this arrangement exists at the active output's exact rate.
++    func previewBandIsPrepared(_ arrangement: BandArrangement) -> Bool {
++        bandCache[BandRenderKey(arrangement: arrangement, rate: renderer.rate)] != nil
++    }
++    #endif
++
+     /// A step that may play with a band: renders it ahead of time, off the main thread, so it is ready on Start.
+     func prepareBand(_ arrangement: BandArrangement?) {
+         bandPrepared = arrangement
+@@ -1289,25 +1296,37 @@ final class AudioStartGate {
+     private var generation = 0
+     private var task: Task<Void, Never>?
+     private var request: AudioReadiness?
++    private var rejection: (@MainActor () -> Void)?
+     var isPending: Bool { task != nil }
+ 
+-    func begin(_ request: AudioReadiness, ready: @escaping @MainActor () -> Void) {
++    func begin(_ request: AudioReadiness, prepared: @escaping @MainActor () -> Bool = { true },
++               rejected: (@MainActor () -> Void)? = nil, ready: @escaping @MainActor () -> Void) {
+         cancel()
+         let token = generation
+         self.request = request
++        rejection = rejected
+         task = Task { @MainActor in
+             let started = await request.value
+             guard !Task.isCancelled, self.generation == token else { return }
+             self.task = nil
+             self.request = nil
+-            if started { request.consume(ready) }
++            self.rejection = nil
++            if started && prepared() && request.consume(ready) { return }
++            rejected?()
+         }
+     }
+ 
+     func cancel() {
+         generation += 1
+-        request?.cancel(); request = nil
+-        task?.cancel(); task = nil
++        let canceledRequest = request
++        let canceledTask = task
++        let rejected = rejection
++        request = nil
++        task = nil
++        rejection = nil
++        rejected?()
++        canceledRequest?.cancel()
++        canceledTask?.cancel()
+     }
+ }
+ 
+diff --git a/ios/Timbre/Learn/SongPerform.swift b/ios/Timbre/Learn/SongPerform.swift
+index 86cda4f..a808665 100644
+--- a/ios/Timbre/Learn/SongPerform.swift
++++ b/ios/Timbre/Learn/SongPerform.swift
+@@ -169,7 +169,7 @@ struct SongPerformStep: View {
+         .task {
+             guard let beat = DemoScene.performBeat(lesson, beatsPerBar: beatsPerBar) else { return }
+             try? await Task.sleep(for: DemoScene.performDelay)
+-            if !Task.isCancelled { startScene(atBeat: beat) }
++            if !Task.isCancelled { await startScene(atBeat: beat) }
+         }
+         #endif
+         .onChange(of: ladder.rung) { _, _ in store.audio.prepareBand(band) }
+@@ -515,15 +515,25 @@ struct SongPerformStep: View {
+         Haptics.shared.selection()
+     }
+ 
+-    private func startMelody(afterReady: (() -> Void)? = nil) {
+-        guard !audioStart.isPending else { return }
++    @discardableResult
++    private func startMelody(prepared: @escaping @MainActor () -> Bool = { true },
++                             rejected: (@MainActor () -> Void)? = nil, afterReady: (() -> Void)? = nil) -> Bool {
++        guard !audioStart.isPending else { return false }
+         let requestedTempo = tempo
+         playingChords = false
+         ownsClick = true
+-        audioStart.begin(store.audio.setMetronome(bpm: Int(tempo), beats: beatsPerBar, subdivision: 1, accents: true)) {
++        let request = store.audio.setMetronome(bpm: Int(tempo), beats: beatsPerBar, subdivision: 1, accents: true)
++        audioStart.begin(request, prepared: prepared, rejected: {
++            if request.isCurrent {
++                store.audio.stopMetronome()
++                ownsClick = false
++            }
++            rejected?()
++        }) {
+             startMelodyReady(tempo: requestedTempo)
+             afterReady?()
+         }
++        return true
+     }
+ 
+     private func startMelodyReady(tempo: Double) {
+@@ -801,9 +811,41 @@ extension SongPerformStep {
+     /// moves on to there and every note before it is judged as the demo pitch plays them, on time, so the combo, the
+     /// score, the ribbon, the words and the song map stand where a clean take would; the demo pitch plays on from there,
+     /// and the band joins at the song's own bar.
+-    fileprivate func startScene(atBeat beat: Double) {
++    fileprivate func startScene(atBeat beat: Double) async {
+         guard phase == .stage else { return }
+-        startMelody { startSceneReady(atBeat: beat) }
++        if PreviewRecorder.shared.enabled {
++            let output = store.audio.reservePreviewOutput()
++            var handedOff = false
++            defer { if !handedOff { output.release() } }
++            guard await output.readiness.value, output.isCurrent, !Task.isCancelled, phase == .stage else {
++                PreviewRecorder.event("scene-not-ready", ["reason": "output"])
++                return
++            }
++            let arrangement = band
++            store.audio.prepareBand(arrangement)
++            let clock = ContinuousClock()
++            let deadline = clock.now.advanced(by: .seconds(45))
++            while !store.audio.previewBandIsPrepared(arrangement) {
++                guard !Task.isCancelled, output.isCurrent, phase == .stage, band == arrangement, clock.now < deadline else {
++                    PreviewRecorder.event("scene-not-ready", ["reason": "band preparation"])
++                    return
++                }
++                do { try await Task.sleep(for: .milliseconds(50)) } catch { return }
++            }
++            guard !Task.isCancelled, output.isCurrent, phase == .stage, band == arrangement else { return }
++            handedOff = startMelody(prepared: {
++                output.isCurrent && phase == .stage && band == arrangement && store.audio.previewBandIsPrepared(arrangement)
++            }, rejected: {
++                PreviewRecorder.event("scene-not-ready", ["reason": "final startup"])
++                output.release()
++            }, afterReady: {
++                PreviewRecorder.event("scene-ready", ["purpose": "band"])
++                startSceneReady(atBeat: beat)
++                output.release()
++            })
++            return
++        }
++        startMelody(afterReady: { startSceneReady(atBeat: beat) })
+     }
+ 
+     private func startSceneReady(atBeat beat: Double) {
+diff --git a/ios/TimbreAppTests/AudioStartupTests.swift b/ios/TimbreAppTests/AudioStartupTests.swift
+index f505e24..d5c6c51 100644
+--- a/ios/TimbreAppTests/AudioStartupTests.swift
++++ b/ios/TimbreAppTests/AudioStartupTests.swift
+@@ -178,6 +178,104 @@ final class AudioStartupTests: XCTestCase {
+         audio.stop()
+     }
+ 
++    func testPreparedLessonRechecksItsOutputLeaseBeforeStartingTheClock() async {
++        let gate = SessionGate()
++        let audio = service(gate)
++        let lesson = AudioStartGate()
++        var revisionMatches = true
++        var released = 0
++        var clocks = 0
++        let output = AudioPreviewLease(readiness: AudioReadiness(task: Task { true }, current: { revisionMatches }),
++                                       release: { released += 1 })
++        _ = await output.readiness.value
++        let rejected = expectation(description: "prepared output became stale during activation")
++        lesson.begin(audio.setMetronome(bpm: 60, beats: 4, subdivision: 1, accents: true),
++                     prepared: { output.isCurrent }, rejected: { output.release(); rejected.fulfill() }) {
++            clocks += 1
++            output.release()
++        }
++        await waitForActivation(gate)
++        revisionMatches = false
++        gate.finish()
++        let result = await XCTWaiter.fulfillment(of: [rejected], timeout: 1)
++        XCTAssertEqual(result, .completed)
++        XCTAssertEqual(clocks, 0)
++        XCTAssertEqual(released, 1)
++        lesson.cancel()
++        XCTAssertEqual(released, 1)
++        audio.stop()
++    }
++
++    func testCancellingPreparedStartupReleasesItsReservationExactlyOnce() async {
++        let gate = SessionGate()
++        let audio = service(gate)
++        let lesson = AudioStartGate()
++        var rejections = 0
++        var clocks = 0
++        lesson.begin(audio.setMetronome(bpm: 60, beats: 4, subdivision: 1, accents: true),
++                     prepared: { true }, rejected: { rejections += 1 }) { clocks += 1 }
++        await waitForActivation(gate)
++        lesson.cancel()
++        lesson.cancel()
++        XCTAssertEqual(rejections, 1)
++        gate.finish()
++        for _ in 0..<100 { await Task.yield() }
++        XCTAssertEqual(clocks, 0)
++        XCTAssertEqual(rejections, 1)
++        audio.stop()
++    }
++
++    func testCancellingReadyButUnconsumedStartupStopsItsOwnClickAndReleasesOutput() async {
++        let gate = SessionGate()
++        let audio = service(gate)
++        let request = audio.setMetronome(bpm: 60, beats: 4, subdivision: 1, accents: true)
++        await waitForActivation(gate)
++        gate.finish()
++        let started = await request.value
++        XCTAssertTrue(started)
++        let output = audio.reservePreviewOutput()
++        let prepared = await output.readiness.value
++        XCTAssertTrue(prepared)
++        let lesson = AudioStartGate()
++        var clocks = 0
++        lesson.begin(request, prepared: { output.isCurrent }, rejected: {
++            if request.isCurrent { audio.stopMetronome() }
++            output.release()
++        }) { clocks += 1 }
++        lesson.cancel()
++        XCTAssertFalse(audio.metronomeRunning)
++        XCTAssertFalse(output.isCurrent)
++        XCTAssertEqual(gate.releases, 1)
++        for _ in 0..<100 { await Task.yield() }
++        XCTAssertEqual(clocks, 0)
++        audio.stop()
++    }
++
++    func testReplacingPreparedStartupDoesNotStopTheNewerClick() async {
++        let gate = SessionGate()
++        let audio = service(gate)
++        let old = audio.setMetronome(bpm: 60, beats: 4, subdivision: 1, accents: true)
++        await waitForActivation(gate)
++        gate.finish()
++        _ = await old.value
++        let lesson = AudioStartGate()
++        var oldRejections = 0
++        var oldClocks = 0
++        lesson.begin(old, rejected: {
++            oldRejections += 1
++            if old.isCurrent { audio.stopMetronome() }
++        }) { oldClocks += 1 }
++        let newer = audio.setMetronome(bpm: 90, beats: 4, subdivision: 1, accents: true)
++        let ready = expectation(description: "newer prepared startup owns its click")
++        lesson.begin(newer) { ready.fulfill() }
++        let result = await XCTWaiter.fulfillment(of: [ready], timeout: 1)
++        XCTAssertEqual(result, .completed)
++        XCTAssertEqual(oldRejections, 1)
++        XCTAssertEqual(oldClocks, 0)
++        XCTAssertTrue(audio.metronomeRunning)
++        audio.stop()
++    }
++
+     func testPendingCaptureSurvivesInterruptionButAnExplicitCaptureStopCancelsRestore() async {
+         let gate = SessionGate()
+         let audio = service(gate)
+diff --git a/ios/TimbreUITests/AppPreviewUITests.swift b/ios/TimbreUITests/AppPreviewUITests.swift
+index 75614b7..68cf074 100644
+--- a/ios/TimbreUITests/AppPreviewUITests.swift
++++ b/ios/TimbreUITests/AppPreviewUITests.swift
+@@ -252,9 +252,12 @@ final class AppPreviewUITests: XCTestCase {
+         XCTAssertTrue(opened, "The performance never opened")
+         let shown = Date()
+         // Hands off from here: a query stalls the main thread, and a note heard late would break the run.
+-        let clock = takeClock(after: shown.addingTimeInterval(-15), until: shown.addingTimeInterval(12))
+-            ?? TakeClock(origin: shown.addingTimeInterval(3.2), beat: 60.0 / cut.bpm, meter: 4,
+-                         firstBeat: Double((cut.bar - 1) * 4), endBeat: cut.endBeat)
++        // Output activation and the exact band's render precede the clock. A predicted clock is not a take.
++        guard let clock = takeClock(after: shown.addingTimeInterval(-15), until: shown.addingTimeInterval(60)) else {
++            missed("the prepared performance never acknowledged its take clock")
++            XCTFail("No actual take clock after output and band preparation")
++            return
++        }
+         let hookStart = clock.time(ofBeat: Double(cut.hookBar * clock.meter))
+         let hookEnd = clock.time(ofBeat: Double((cut.hookBar + cut.hookBars) * clock.meter))
+         mark("PREVIEW-BEAT \(stamp(hookStart)) \(String(format: "%.5f", clock.beat)) \(clock.meter)")

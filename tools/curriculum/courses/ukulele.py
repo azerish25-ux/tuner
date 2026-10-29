@@ -326,7 +326,7 @@ UNIT_2 = unit("uke-2", "First chords", "A minor, F, G7 and G: with C, the chords
         progression([(G7, 2), (C, 2), (G7, 2), (C, 2)], DOWNS, bpm=60),
     ], minutes=4, xp=20),
     lesson("uke-2-5", "G: three fingers", [
-        explain("G major", "First finger on fret 2 of string 3, second on fret 2 of string 1, third on fret 3 of string 2. Arch your fingers so string 4 rings.",
+        explain("G major chord", "First finger on fret 2 of string 3, second on fret 2 of string 1, third on fret 3 of string 2. Arch your fingers so string 4 rings.",
                 {"type": "chord", "chord": G}),
         play_chord(G),
         quiz("G and G7 both press which spot?", ["Fret 1 of string 2", "Fret 3 of string 1", "Fret 2 of string 3"], 2,

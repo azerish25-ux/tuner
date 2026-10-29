@@ -1,0 +1,6545 @@
+{
+  "before": {
+    "La1c8d3bc39": [],
+    "Lab958557bf": [],
+    "Laa87302d09": [
+      {
+        "pointer": "/courses/0/units/4/lessons/0/title",
+        "lineage": [
+          "guitar",
+          "gtr-5",
+          "gtr-5-1"
+        ],
+        "value": {
+          "k": "Laa87302d09",
+          "t": "C major"
+        },
+        "context": {
+          "lesson_id": "gtr-5-1",
+          "title": {
+            "k": "Laa87302d09",
+            "t": "C major"
+          },
+          "kind": "lesson"
+        }
+      },
+      {
+        "pointer": "/courses/2/units/2/lessons/3/steps/5/options/2",
+        "lineage": [
+          "bass",
+          "bass-3",
+          "bass-3-4"
+        ],
+        "value": {
+          "k": "Laa87302d09",
+          "t": "C major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lacd2f46b7e",
+            "t": "You move the shape so it starts on fret 5 of string 4. Which scale is it now?"
+          },
+          "options": [
+            {
+              "k": "L3c6bc13182",
+              "t": "A major"
+            },
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "Laa87302d09",
+              "t": "C major"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "Lfa7b587ff3",
+            "t": "Fret 5 on string 4 is A, so the same shape plays A major."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/4/units/3/lessons/6/steps/3/options/0",
+        "lineage": [
+          "cello",
+          "vc-4",
+          "vc-4-7"
+        ],
+        "value": {
+          "k": "Laa87302d09",
+          "t": "C major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L2ffed6bb0c",
+            "t": "Which of these keys has no sharps?"
+          },
+          "options": [
+            {
+              "k": "Laa87302d09",
+              "t": "C major"
+            },
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            }
+          ],
+          "answer": 0,
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/4/steps/1/options/0",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-5"
+        ],
+        "value": {
+          "k": "Laa87302d09",
+          "t": "C major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L0cee63f97a",
+            "t": "A key signature has one sharp, F♯. Which major key is it?"
+          },
+          "options": [
+            {
+              "k": "Laa87302d09",
+              "t": "C major"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            },
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "Lb21922233a",
+            "t": "G major is the major key with just F♯."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/4/steps/5/options/2",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-5"
+        ],
+        "value": {
+          "k": "Laa87302d09",
+          "t": "C major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lb22495cd15",
+            "t": "Which major key has no sharps or flats?"
+          },
+          "options": [
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "Lea785300c4",
+              "t": "F major"
+            },
+            {
+              "k": "Laa87302d09",
+              "t": "C major"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "Lfeae291c1f",
+            "t": "C major uses only white keys."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/5/steps/3/options/2",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-6"
+        ],
+        "value": {
+          "k": "Laa87302d09",
+          "t": "C major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lcb5fb3182a",
+            "t": "Which major key has one flat?"
+          },
+          "options": [
+            {
+              "k": "Lea785300c4",
+              "t": "F major"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            },
+            {
+              "k": "Laa87302d09",
+              "t": "C major"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "L1b4a281d5d",
+            "t": "F major's one flat is B♭."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/6/lessons/3/steps/4/options/0",
+        "lineage": [
+          "theory",
+          "thy-7",
+          "thy-7-4"
+        ],
+        "value": {
+          "k": "Laa87302d09",
+          "t": "C major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lee6d0333e6",
+            "t": "In G major, which chord is V?"
+          },
+          "options": [
+            {
+              "k": "Laa87302d09",
+              "t": "C major"
+            },
+            {
+              "k": "Lf884b03c33",
+              "t": "D minor"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "L34bab6103a",
+            "t": "Count up from G: G, A, B, C, D. The fifth note is D, and V is major."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/6/lessons/3/steps/6/options/0",
+        "lineage": [
+          "theory",
+          "thy-7",
+          "thy-7-4"
+        ],
+        "value": {
+          "k": "Laa87302d09",
+          "t": "C major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lbf971f38ee",
+            "t": "In G major, which chord is IV?"
+          },
+          "options": [
+            {
+              "k": "Laa87302d09",
+              "t": "C major"
+            },
+            {
+              "k": "L0301e70c80",
+              "t": "C minor"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "L3b49c1540d",
+            "t": "G, A, B, C: the fourth note is C."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/6/lessons/4/steps/6/options/1",
+        "lineage": [
+          "theory",
+          "thy-7",
+          "thy-7-5"
+        ],
+        "value": {
+          "k": "Laa87302d09",
+          "t": "C major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L40ecadf834",
+            "t": "In F major, which chord is V?"
+          },
+          "options": [
+            {
+              "k": "L4b65fb9aa1",
+              "t": "B♭ major"
+            },
+            {
+              "k": "Laa87302d09",
+              "t": "C major"
+            },
+            {
+              "k": "L0301e70c80",
+              "t": "C minor"
+            }
+          ],
+          "answer": 1,
+          "why": {
+            "k": "L968a665a6d",
+            "t": "F, G, A, B♭, C: the fifth note is C."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      }
+    ],
+    "Lbdeb73715c": [],
+    "Ld975a19a54": [],
+    "L728cd633f1": [
+      {
+        "pointer": "/courses/0/units/2/lessons/2/title",
+        "lineage": [
+          "guitar",
+          "gtr-3",
+          "gtr-3-3"
+        ],
+        "value": {
+          "k": "L728cd633f1",
+          "t": "A minor"
+        },
+        "context": {
+          "lesson_id": "gtr-3-3",
+          "title": {
+            "k": "L728cd633f1",
+            "t": "A minor"
+          },
+          "kind": "lesson"
+        }
+      },
+      {
+        "pointer": "/courses/0/units/9/lessons/1/steps/4/options/0",
+        "lineage": [
+          "guitar",
+          "gtr-10",
+          "gtr-10-2"
+        ],
+        "value": {
+          "k": "L728cd633f1",
+          "t": "A minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L0c0eafc246",
+            "t": "The F barre is which open shape, moved up a fret?"
+          },
+          "options": [
+            {
+              "k": "L728cd633f1",
+              "t": "A minor"
+            },
+            {
+              "k": "L50c9e8d5fc",
+              "t": "D"
+            },
+            {
+              "k": "Le0184adedf",
+              "t": "E"
+            }
+          ],
+          "answer": 2,
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/1/units/1/lessons/1/steps/2/options/1",
+        "lineage": [
+          "ukulele",
+          "uke-2",
+          "uke-2-3"
+        ],
+        "value": {
+          "k": "L728cd633f1",
+          "t": "A minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L53029da8ad",
+            "t": "Which chord shares a finger with F?"
+          },
+          "options": [
+            {
+              "k": "L32096c2e0e",
+              "t": "C"
+            },
+            {
+              "k": "L728cd633f1",
+              "t": "A minor"
+            },
+            {
+              "k": "L03909ad236",
+              "t": "Neither"
+            }
+          ],
+          "answer": 1,
+          "why": {
+            "k": "L1e583e625c",
+            "t": "Your second finger sits on fret 2 of string 4 for both. Keep it down when you change."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/1/units/4/lessons/4/steps/1/options/1",
+        "lineage": [
+          "ukulele",
+          "uke-5",
+          "uke-5-5"
+        ],
+        "value": {
+          "k": "L728cd633f1",
+          "t": "A minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lfc65933519",
+            "t": "In the key of C, which chord is IV?"
+          },
+          "options": [
+            {
+              "k": "La36a6718f5",
+              "t": "G"
+            },
+            {
+              "k": "L728cd633f1",
+              "t": "A minor"
+            },
+            {
+              "k": "Le69f20e9f6",
+              "t": "F"
+            },
+            {
+              "k": "Lf884b03c33",
+              "t": "D minor"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "L025c45471b",
+            "t": "Count up the scale from C: C, D, E, F. F is the fourth note, so F is the IV chord."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/1/units/4/lessons/4/steps/3/options/0",
+        "lineage": [
+          "ukulele",
+          "uke-5",
+          "uke-5-5"
+        ],
+        "value": {
+          "k": "L728cd633f1",
+          "t": "A minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L5b206df439",
+            "t": "Which chord is vi in C?"
+          },
+          "options": [
+            {
+              "k": "L728cd633f1",
+              "t": "A minor"
+            },
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            },
+            {
+              "k": "Lf884b03c33",
+              "t": "D minor"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "L3257dbf5cd",
+            "t": "Lowercase numbers mean minor chords. The sixth note of C major is A."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/1/units/4/lessons/5/steps/4/options/3",
+        "lineage": [
+          "ukulele",
+          "uke-5",
+          "uke-5-6"
+        ],
+        "value": {
+          "k": "L728cd633f1",
+          "t": "A minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L8570060cff",
+            "t": "In the key of C, which chord is V?"
+          },
+          "options": [
+            {
+              "k": "Le69f20e9f6",
+              "t": "F"
+            },
+            {
+              "k": "La36a6718f5",
+              "t": "G"
+            },
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            },
+            {
+              "k": "L728cd633f1",
+              "t": "A minor"
+            }
+          ],
+          "answer": 1,
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/1/units/6/lessons/0/steps/4/options/2",
+        "lineage": [
+          "ukulele",
+          "uke-7",
+          "uke-7-1"
+        ],
+        "value": {
+          "k": "L728cd633f1",
+          "t": "A minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L70cf9ad2c0",
+            "t": "Which chord shares finger 1's spot on string 2 with B flat?"
+          },
+          "options": [
+            {
+              "k": "L32096c2e0e",
+              "t": "C"
+            },
+            {
+              "k": "Le69f20e9f6",
+              "t": "F"
+            },
+            {
+              "k": "L728cd633f1",
+              "t": "A minor"
+            }
+          ],
+          "answer": 1,
+          "why": {
+            "k": "Le3ff34666a",
+            "t": "F also puts finger 1 on string 2, fret 1. Keep it there as you change."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/3/units/4/lessons/2/title",
+        "lineage": [
+          "violin",
+          "vln-5",
+          "vln-5-3"
+        ],
+        "value": {
+          "k": "L728cd633f1",
+          "t": "A minor"
+        },
+        "context": {
+          "lesson_id": "vln-5-3",
+          "title": {
+            "k": "L728cd633f1",
+            "t": "A minor"
+          },
+          "kind": "lesson"
+        }
+      },
+      {
+        "pointer": "/courses/8/units/6/lessons/2/steps/6/options/2",
+        "lineage": [
+          "theory",
+          "thy-7",
+          "thy-7-3"
+        ],
+        "value": {
+          "k": "L728cd633f1",
+          "t": "A minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L23fc77a007",
+            "t": "Using only C major notes, what triad is built on A?"
+          },
+          "options": [
+            {
+              "k": "L3c6bc13182",
+              "t": "A major"
+            },
+            {
+              "k": "L05a2271256",
+              "t": "A diminished"
+            },
+            {
+              "k": "L728cd633f1",
+              "t": "A minor"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "L738524e244",
+            "t": "A C E: a minor third, then a major third."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/6/lessons/3/steps/3/options/1",
+        "lineage": [
+          "theory",
+          "thy-7",
+          "thy-7-4"
+        ],
+        "value": {
+          "k": "L728cd633f1",
+          "t": "A minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L9c2396e833",
+            "t": "In C major, which chord is vi?"
+          },
+          "options": [
+            {
+              "k": "L3c6bc13182",
+              "t": "A major"
+            },
+            {
+              "k": "L728cd633f1",
+              "t": "A minor"
+            },
+            {
+              "k": "Lea785300c4",
+              "t": "F major"
+            }
+          ],
+          "answer": 1,
+          "why": {
+            "k": "L193dfdb00e",
+            "t": "The sixth note is A, and lowercase vi means minor."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/7/lessons/1/steps/6/options/2",
+        "lineage": [
+          "theory",
+          "thy-8",
+          "thy-8-2"
+        ],
+        "value": {
+          "k": "L728cd633f1",
+          "t": "A minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L3aed14023d",
+            "t": "In F major, which chord is vi?"
+          },
+          "options": [
+            {
+              "k": "Lf884b03c33",
+              "t": "D minor"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            },
+            {
+              "k": "L728cd633f1",
+              "t": "A minor"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "L3ffa870aac",
+            "t": "F, G, A, B♭, C, D: the sixth note is D, and vi is minor."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      }
+    ],
+    "Lc819139d43": [
+      {
+        "pointer": "/courses/3/units/4/lessons/2/steps/5/title",
+        "lineage": [
+          "violin",
+          "vln-5",
+          "vln-5-3"
+        ],
+        "value": {
+          "k": "Lc819139d43",
+          "t": "A minor scale"
+        },
+        "context": {
+          "type": "along",
+          "notes": [
+            {
+              "m": 57,
+              "b": 0.0,
+              "d": 1.0,
+              "at": {
+                "s": 4,
+                "f": 2,
+                "g": 1
+              }
+            },
+            {
+              "m": 59,
+              "b": 1.0,
+              "d": 1.0,
+              "at": {
+                "s": 4,
+                "f": 4,
+                "g": 2
+              }
+            },
+            {
+              "m": 60,
+              "b": 2.0,
+              "d": 1.0,
+              "at": {
+                "s": 4,
+                "f": 5,
+                "g": 3
+              }
+            },
+            {
+              "m": 62,
+              "b": 3.0,
+              "d": 1.0,
+              "at": {
+                "s": 3,
+                "f": 0
+              }
+            },
+            {
+              "m": 64,
+              "b": 4.0,
+              "d": 1.0,
+              "at": {
+                "s": 3,
+                "f": 2,
+                "g": 1
+              }
+            },
+            {
+              "m": 65,
+              "b": 5.0,
+              "d": 1.0,
+              "at": {
+                "s": 3,
+                "f": 3,
+                "g": 2
+              }
+            },
+            {
+              "m": 67,
+              "b": 6.0,
+              "d": 1.0,
+              "at": {
+                "s": 3,
+                "f": 5,
+                "g": 3
+              }
+            },
+            {
+              "m": 69,
+              "b": 7.0,
+              "d": 1.0,
+              "at": {
+                "s": 2,
+                "f": 0
+              }
+            },
+            {
+              "m": 69,
+              "b": 8.0,
+              "d": 1.0,
+              "at": {
+                "s": 2,
+                "f": 0
+              }
+            },
+            {
+              "m": 67,
+              "b": 9.0,
+              "d": 1.0,
+              "at": {
+                "s": 3,
+                "f": 5,
+                "g": 3
+              }
+            },
+            {
+              "m": 65,
+              "b": 10.0,
+              "d": 1.0,
+              "at": {
+                "s": 3,
+                "f": 3,
+                "g": 2
+              }
+            },
+            {
+              "m": 64,
+              "b": 11.0,
+              "d": 1.0,
+              "at": {
+                "s": 3,
+                "f": 2,
+                "g": 1
+              }
+            },
+            {
+              "m": 62,
+              "b": 12.0,
+              "d": 1.0,
+              "at": {
+                "s": 3,
+                "f": 0
+              }
+            },
+            {
+              "m": 60,
+              "b": 13.0,
+              "d": 1.0,
+              "at": {
+                "s": 4,
+                "f": 5,
+                "g": 3
+              }
+            },
+            {
+              "m": 59,
+              "b": 14.0,
+              "d": 1.0,
+              "at": {
+                "s": 4,
+                "f": 4,
+                "g": 2
+              }
+            },
+            {
+              "m": 57,
+              "b": 15.0,
+              "d": 1.0,
+              "at": {
+                "s": 4,
+                "f": 2,
+                "g": 1
+              }
+            }
+          ],
+          "bpm": 66,
+          "beatsPerBar": 4,
+          "title": {
+            "k": "Lc819139d43",
+            "t": "A minor scale"
+          }
+        }
+      }
+    ],
+    "L42626aabd8": [
+      {
+        "pointer": "/courses/4/units/3/lessons/6/steps/3/options/2",
+        "lineage": [
+          "cello",
+          "vc-4",
+          "vc-4-7"
+        ],
+        "value": {
+          "k": "L42626aabd8",
+          "t": "D major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L2ffed6bb0c",
+            "t": "Which of these keys has no sharps?"
+          },
+          "options": [
+            {
+              "k": "Laa87302d09",
+              "t": "C major"
+            },
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            }
+          ],
+          "answer": 0,
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/5/units/4/lessons/2/steps/3/options/2",
+        "lineage": [
+          "mandolin",
+          "man-5",
+          "man-5-3"
+        ],
+        "value": {
+          "k": "L42626aabd8",
+          "t": "D major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L68d6126c37",
+            "t": "D, F♯ and A together spell which chord?"
+          },
+          "options": [
+            {
+              "k": "L3c6bc13182",
+              "t": "A major"
+            },
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "L7be9004c2e",
+            "t": "D, F♯ and A are the three notes of D major. Fiddle tunes often trace their chords like this."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/3/steps/5/options/2",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-4"
+        ],
+        "value": {
+          "k": "L42626aabd8",
+          "t": "D major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L8d6ce15313",
+            "t": "Which major key has two sharps?"
+          },
+          "options": [
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "Lea785300c4",
+              "t": "F major"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "L5249b2406f",
+            "t": "D major has F♯ and C♯."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/4/steps/1/options/1",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-5"
+        ],
+        "value": {
+          "k": "L42626aabd8",
+          "t": "D major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L0cee63f97a",
+            "t": "A key signature has one sharp, F♯. Which major key is it?"
+          },
+          "options": [
+            {
+              "k": "Laa87302d09",
+              "t": "C major"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            },
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "Lb21922233a",
+            "t": "G major is the major key with just F♯."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/4/steps/4/options/2",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-5"
+        ],
+        "value": {
+          "k": "L42626aabd8",
+          "t": "D major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lfb653af5fb",
+            "t": "A key signature has two sharps, F♯ and C♯. Which major key is it?"
+          },
+          "options": [
+            {
+              "k": "L3c6bc13182",
+              "t": "A major"
+            },
+            {
+              "k": "Lb04b781f54",
+              "t": "E major"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "Lafae9e3876",
+            "t": "The last sharp, C♯, is a half step below D."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/5/steps/3/options/1",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-6"
+        ],
+        "value": {
+          "k": "L42626aabd8",
+          "t": "D major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lcb5fb3182a",
+            "t": "Which major key has one flat?"
+          },
+          "options": [
+            {
+              "k": "Lea785300c4",
+              "t": "F major"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            },
+            {
+              "k": "Laa87302d09",
+              "t": "C major"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "L1b4a281d5d",
+            "t": "F major's one flat is B♭."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/5/steps/4/options/1",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-6"
+        ],
+        "value": {
+          "k": "L42626aabd8",
+          "t": "D major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L132c463c58",
+            "t": "Which scale has the notes D, E, F♯, G, A, B, C♯?"
+          },
+          "options": [
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            },
+            {
+              "k": "L3c6bc13182",
+              "t": "A major"
+            }
+          ],
+          "answer": 1,
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/6/lessons/2/steps/1/options/0",
+        "lineage": [
+          "theory",
+          "thy-7",
+          "thy-7-3"
+        ],
+        "value": {
+          "k": "L42626aabd8",
+          "t": "D major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L8bffd0e29a",
+            "t": "Using only C major notes, what triad is built on D?"
+          },
+          "options": [
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            },
+            {
+              "k": "Lf884b03c33",
+              "t": "D minor"
+            },
+            {
+              "k": "L72b3117837",
+              "t": "D diminished"
+            }
+          ],
+          "answer": 1,
+          "why": {
+            "k": "L8f921f64e0",
+            "t": "D F A: a minor third, then a major third."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/6/lessons/3/steps/4/options/2",
+        "lineage": [
+          "theory",
+          "thy-7",
+          "thy-7-4"
+        ],
+        "value": {
+          "k": "L42626aabd8",
+          "t": "D major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lee6d0333e6",
+            "t": "In G major, which chord is V?"
+          },
+          "options": [
+            {
+              "k": "Laa87302d09",
+              "t": "C major"
+            },
+            {
+              "k": "Lf884b03c33",
+              "t": "D minor"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "L34bab6103a",
+            "t": "Count up from G: G, A, B, C, D. The fifth note is D, and V is major."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/6/lessons/3/steps/6/options/2",
+        "lineage": [
+          "theory",
+          "thy-7",
+          "thy-7-4"
+        ],
+        "value": {
+          "k": "L42626aabd8",
+          "t": "D major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lbf971f38ee",
+            "t": "In G major, which chord is IV?"
+          },
+          "options": [
+            {
+              "k": "Laa87302d09",
+              "t": "C major"
+            },
+            {
+              "k": "L0301e70c80",
+              "t": "C minor"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "L3b49c1540d",
+            "t": "G, A, B, C: the fourth note is C."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/6/lessons/4/steps/4/options/1",
+        "lineage": [
+          "theory",
+          "thy-7",
+          "thy-7-5"
+        ],
+        "value": {
+          "k": "L42626aabd8",
+          "t": "D major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "La5b0809117",
+            "t": "In C major, which chord is ii?"
+          },
+          "options": [
+            {
+              "k": "Lf884b03c33",
+              "t": "D minor"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            },
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            }
+          ],
+          "answer": 0,
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/7/lessons/1/steps/6/options/1",
+        "lineage": [
+          "theory",
+          "thy-8",
+          "thy-8-2"
+        ],
+        "value": {
+          "k": "L42626aabd8",
+          "t": "D major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L3aed14023d",
+            "t": "In F major, which chord is vi?"
+          },
+          "options": [
+            {
+              "k": "Lf884b03c33",
+              "t": "D minor"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            },
+            {
+              "k": "L728cd633f1",
+              "t": "A minor"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "L3ffa870aac",
+            "t": "F, G, A, B♭, C, D: the sixth note is D, and vi is minor."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      }
+    ],
+    "L3c6bc13182": [
+      {
+        "pointer": "/courses/0/units/2/lessons/3/title",
+        "lineage": [
+          "guitar",
+          "gtr-3",
+          "gtr-3-4"
+        ],
+        "value": {
+          "k": "L3c6bc13182",
+          "t": "A major"
+        },
+        "context": {
+          "lesson_id": "gtr-3-4",
+          "title": {
+            "k": "L3c6bc13182",
+            "t": "A major"
+          },
+          "kind": "lesson"
+        }
+      },
+      {
+        "pointer": "/courses/2/units/2/lessons/3/steps/5/options/0",
+        "lineage": [
+          "bass",
+          "bass-3",
+          "bass-3-4"
+        ],
+        "value": {
+          "k": "L3c6bc13182",
+          "t": "A major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lacd2f46b7e",
+            "t": "You move the shape so it starts on fret 5 of string 4. Which scale is it now?"
+          },
+          "options": [
+            {
+              "k": "L3c6bc13182",
+              "t": "A major"
+            },
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "Laa87302d09",
+              "t": "C major"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "Lfa7b587ff3",
+            "t": "Fret 5 on string 4 is A, so the same shape plays A major."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/5/units/4/lessons/2/steps/3/options/0",
+        "lineage": [
+          "mandolin",
+          "man-5",
+          "man-5-3"
+        ],
+        "value": {
+          "k": "L3c6bc13182",
+          "t": "A major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L68d6126c37",
+            "t": "D, F♯ and A together spell which chord?"
+          },
+          "options": [
+            {
+              "k": "L3c6bc13182",
+              "t": "A major"
+            },
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "L7be9004c2e",
+            "t": "D, F♯ and A are the three notes of D major. Fiddle tunes often trace their chords like this."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/4/steps/4/options/0",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-5"
+        ],
+        "value": {
+          "k": "L3c6bc13182",
+          "t": "A major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lfb653af5fb",
+            "t": "A key signature has two sharps, F♯ and C♯. Which major key is it?"
+          },
+          "options": [
+            {
+              "k": "L3c6bc13182",
+              "t": "A major"
+            },
+            {
+              "k": "Lb04b781f54",
+              "t": "E major"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "Lafae9e3876",
+            "t": "The last sharp, C♯, is a half step below D."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/5/steps/4/options/2",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-6"
+        ],
+        "value": {
+          "k": "L3c6bc13182",
+          "t": "A major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L132c463c58",
+            "t": "Which scale has the notes D, E, F♯, G, A, B, C♯?"
+          },
+          "options": [
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            },
+            {
+              "k": "L3c6bc13182",
+              "t": "A major"
+            }
+          ],
+          "answer": 1,
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/6/lessons/2/steps/6/options/0",
+        "lineage": [
+          "theory",
+          "thy-7",
+          "thy-7-3"
+        ],
+        "value": {
+          "k": "L3c6bc13182",
+          "t": "A major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L23fc77a007",
+            "t": "Using only C major notes, what triad is built on A?"
+          },
+          "options": [
+            {
+              "k": "L3c6bc13182",
+              "t": "A major"
+            },
+            {
+              "k": "L05a2271256",
+              "t": "A diminished"
+            },
+            {
+              "k": "L728cd633f1",
+              "t": "A minor"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "L738524e244",
+            "t": "A C E: a minor third, then a major third."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/6/lessons/3/steps/3/options/0",
+        "lineage": [
+          "theory",
+          "thy-7",
+          "thy-7-4"
+        ],
+        "value": {
+          "k": "L3c6bc13182",
+          "t": "A major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L9c2396e833",
+            "t": "In C major, which chord is vi?"
+          },
+          "options": [
+            {
+              "k": "L3c6bc13182",
+              "t": "A major"
+            },
+            {
+              "k": "L728cd633f1",
+              "t": "A minor"
+            },
+            {
+              "k": "Lea785300c4",
+              "t": "F major"
+            }
+          ],
+          "answer": 1,
+          "why": {
+            "k": "L193dfdb00e",
+            "t": "The sixth note is A, and lowercase vi means minor."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/7/lessons/0/steps/6/options/1",
+        "lineage": [
+          "theory",
+          "thy-8",
+          "thy-8-1"
+        ],
+        "value": {
+          "k": "L3c6bc13182",
+          "t": "A major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Le691b34d33",
+            "t": "In D major, which chord is IV?"
+          },
+          "options": [
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "L3c6bc13182",
+              "t": "A major"
+            },
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "Lb480f56c92",
+            "t": "D, E, F♯, G: the fourth note is G."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      }
+    ],
+    "Lc1965ac98d": [],
+    "L4b65fb9aa1": [
+      {
+        "pointer": "/courses/8/units/4/lessons/4/steps/2/options/1",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-5"
+        ],
+        "value": {
+          "k": "L4b65fb9aa1",
+          "t": "B♭ major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L7e90bc9187",
+            "t": "A key signature has one flat, B♭. Which major key is it?"
+          },
+          "options": [
+            {
+              "k": "Lea785300c4",
+              "t": "F major"
+            },
+            {
+              "k": "L4b65fb9aa1",
+              "t": "B♭ major"
+            },
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "Lb2bc6030ed",
+            "t": "F major is the major key with just B♭."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/6/lessons/4/steps/6/options/0",
+        "lineage": [
+          "theory",
+          "thy-7",
+          "thy-7-5"
+        ],
+        "value": {
+          "k": "L4b65fb9aa1",
+          "t": "B♭ major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L40ecadf834",
+            "t": "In F major, which chord is V?"
+          },
+          "options": [
+            {
+              "k": "L4b65fb9aa1",
+              "t": "B♭ major"
+            },
+            {
+              "k": "Laa87302d09",
+              "t": "C major"
+            },
+            {
+              "k": "L0301e70c80",
+              "t": "C minor"
+            }
+          ],
+          "answer": 1,
+          "why": {
+            "k": "L968a665a6d",
+            "t": "F, G, A, B♭, C: the fifth note is C."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      }
+    ],
+    "Lea785300c4": [
+      {
+        "pointer": "/courses/8/units/4/lessons/3/steps/5/options/1",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-4"
+        ],
+        "value": {
+          "k": "Lea785300c4",
+          "t": "F major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L8d6ce15313",
+            "t": "Which major key has two sharps?"
+          },
+          "options": [
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "Lea785300c4",
+              "t": "F major"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "L5249b2406f",
+            "t": "D major has F♯ and C♯."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/4/steps/2/options/0",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-5"
+        ],
+        "value": {
+          "k": "Lea785300c4",
+          "t": "F major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L7e90bc9187",
+            "t": "A key signature has one flat, B♭. Which major key is it?"
+          },
+          "options": [
+            {
+              "k": "Lea785300c4",
+              "t": "F major"
+            },
+            {
+              "k": "L4b65fb9aa1",
+              "t": "B♭ major"
+            },
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "Lb2bc6030ed",
+            "t": "F major is the major key with just B♭."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/4/steps/5/options/1",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-5"
+        ],
+        "value": {
+          "k": "Lea785300c4",
+          "t": "F major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lb22495cd15",
+            "t": "Which major key has no sharps or flats?"
+          },
+          "options": [
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "Lea785300c4",
+              "t": "F major"
+            },
+            {
+              "k": "Laa87302d09",
+              "t": "C major"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "Lfeae291c1f",
+            "t": "C major uses only white keys."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/5/steps/3/options/0",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-6"
+        ],
+        "value": {
+          "k": "Lea785300c4",
+          "t": "F major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lcb5fb3182a",
+            "t": "Which major key has one flat?"
+          },
+          "options": [
+            {
+              "k": "Lea785300c4",
+              "t": "F major"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            },
+            {
+              "k": "Laa87302d09",
+              "t": "C major"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "L1b4a281d5d",
+            "t": "F major's one flat is B♭."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/6/lessons/3/steps/2/options/0",
+        "lineage": [
+          "theory",
+          "thy-7",
+          "thy-7-4"
+        ],
+        "value": {
+          "k": "Lea785300c4",
+          "t": "F major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lfd68d2b242",
+            "t": "In C major, which chord is IV?"
+          },
+          "options": [
+            {
+              "k": "Lea785300c4",
+              "t": "F major"
+            },
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            },
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "L4d08076fb1",
+            "t": "The fourth note of C major is F."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/6/lessons/3/steps/3/options/2",
+        "lineage": [
+          "theory",
+          "thy-7",
+          "thy-7-4"
+        ],
+        "value": {
+          "k": "Lea785300c4",
+          "t": "F major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L9c2396e833",
+            "t": "In C major, which chord is vi?"
+          },
+          "options": [
+            {
+              "k": "L3c6bc13182",
+              "t": "A major"
+            },
+            {
+              "k": "L728cd633f1",
+              "t": "A minor"
+            },
+            {
+              "k": "Lea785300c4",
+              "t": "F major"
+            }
+          ],
+          "answer": 1,
+          "why": {
+            "k": "L193dfdb00e",
+            "t": "The sixth note is A, and lowercase vi means minor."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      }
+    ],
+    "L2369e9b812": [],
+    "L2449e81b73": [
+      {
+        "pointer": "/courses/0/units/4/lessons/1/title",
+        "lineage": [
+          "guitar",
+          "gtr-5",
+          "gtr-5-2"
+        ],
+        "value": {
+          "k": "L2449e81b73",
+          "t": "G major"
+        },
+        "context": {
+          "lesson_id": "gtr-5-2",
+          "title": {
+            "k": "L2449e81b73",
+            "t": "G major"
+          },
+          "kind": "lesson"
+        }
+      },
+      {
+        "pointer": "/courses/0/units/20/lessons/6/steps/1/options/1",
+        "lineage": [
+          "guitar",
+          "gtr-21",
+          "gtr-21-6"
+        ],
+        "value": {
+          "k": "L2449e81b73",
+          "t": "G major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Le12ba17ea9",
+            "t": "Slide the minor box from fret 5 to fret 2 and it plays…"
+          },
+          "options": [
+            {
+              "k": "L7893d45a81",
+              "t": "D minor pentatonic"
+            },
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "L7212825ac8",
+              "t": "A major pentatonic"
+            }
+          ],
+          "answer": 2,
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/1/units/1/lessons/3/steps/0/title",
+        "lineage": [
+          "ukulele",
+          "uke-2",
+          "uke-2-5"
+        ],
+        "value": {
+          "k": "L2449e81b73",
+          "t": "G major"
+        },
+        "context": {
+          "type": "explain",
+          "title": {
+            "k": "L2449e81b73",
+            "t": "G major"
+          },
+          "body": {
+            "k": "La928974510",
+            "t": "First finger on fret 2 of string 3, second on fret 2 of string 1, third on fret 3 of string 2. Arch your fingers so string 4 rings."
+          },
+          "visual": {
+            "type": "chord",
+            "chord": {
+              "name": "G",
+              "root": 7,
+              "quality": "maj",
+              "frets": [
+                0,
+                2,
+                3,
+                2
+              ],
+              "fingers": [
+                0,
+                1,
+                3,
+                2
+              ]
+            }
+          }
+        }
+      },
+      {
+        "pointer": "/courses/2/units/2/lessons/3/steps/5/options/1",
+        "lineage": [
+          "bass",
+          "bass-3",
+          "bass-3-4"
+        ],
+        "value": {
+          "k": "L2449e81b73",
+          "t": "G major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lacd2f46b7e",
+            "t": "You move the shape so it starts on fret 5 of string 4. Which scale is it now?"
+          },
+          "options": [
+            {
+              "k": "L3c6bc13182",
+              "t": "A major"
+            },
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "Laa87302d09",
+              "t": "C major"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "Lfa7b587ff3",
+            "t": "Fret 5 on string 4 is A, so the same shape plays A major."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/4/units/3/lessons/0/steps/2/title",
+        "lineage": [
+          "cello",
+          "vc-4",
+          "vc-4-1"
+        ],
+        "value": {
+          "k": "L2449e81b73",
+          "t": "G major"
+        },
+        "context": {
+          "type": "explain",
+          "title": {
+            "k": "L2449e81b73",
+            "t": "G major"
+          },
+          "body": {
+            "k": "L0e09dfdc9c",
+            "t": "G, A, B, C on the G string plus D, E, F sharp, G on the D string make the G major scale. Same fingers on both strings."
+          },
+          "visual": {
+            "type": "staff",
+            "midi": [
+              43,
+              45,
+              47,
+              48,
+              50,
+              52,
+              54,
+              55
+            ],
+            "clef": "bass"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/4/units/3/lessons/6/steps/3/options/1",
+        "lineage": [
+          "cello",
+          "vc-4",
+          "vc-4-7"
+        ],
+        "value": {
+          "k": "L2449e81b73",
+          "t": "G major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L2ffed6bb0c",
+            "t": "Which of these keys has no sharps?"
+          },
+          "options": [
+            {
+              "k": "Laa87302d09",
+              "t": "C major"
+            },
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            }
+          ],
+          "answer": 0,
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/5/units/4/lessons/2/steps/3/options/1",
+        "lineage": [
+          "mandolin",
+          "man-5",
+          "man-5-3"
+        ],
+        "value": {
+          "k": "L2449e81b73",
+          "t": "G major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L68d6126c37",
+            "t": "D, F♯ and A together spell which chord?"
+          },
+          "options": [
+            {
+              "k": "L3c6bc13182",
+              "t": "A major"
+            },
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "L7be9004c2e",
+            "t": "D, F♯ and A are the three notes of D major. Fiddle tunes often trace their chords like this."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/2/title",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-3"
+        ],
+        "value": {
+          "k": "L2449e81b73",
+          "t": "G major"
+        },
+        "context": {
+          "lesson_id": "thy-5-3",
+          "title": {
+            "k": "L2449e81b73",
+            "t": "G major"
+          },
+          "kind": "lesson"
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/3/steps/5/options/0",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-4"
+        ],
+        "value": {
+          "k": "L2449e81b73",
+          "t": "G major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L8d6ce15313",
+            "t": "Which major key has two sharps?"
+          },
+          "options": [
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "Lea785300c4",
+              "t": "F major"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "L5249b2406f",
+            "t": "D major has F♯ and C♯."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/4/steps/1/options/2",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-5"
+        ],
+        "value": {
+          "k": "L2449e81b73",
+          "t": "G major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L0cee63f97a",
+            "t": "A key signature has one sharp, F♯. Which major key is it?"
+          },
+          "options": [
+            {
+              "k": "Laa87302d09",
+              "t": "C major"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            },
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "Lb21922233a",
+            "t": "G major is the major key with just F♯."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/4/steps/2/options/2",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-5"
+        ],
+        "value": {
+          "k": "L2449e81b73",
+          "t": "G major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L7e90bc9187",
+            "t": "A key signature has one flat, B♭. Which major key is it?"
+          },
+          "options": [
+            {
+              "k": "Lea785300c4",
+              "t": "F major"
+            },
+            {
+              "k": "L4b65fb9aa1",
+              "t": "B♭ major"
+            },
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "Lb2bc6030ed",
+            "t": "F major is the major key with just B♭."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/4/steps/5/options/0",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-5"
+        ],
+        "value": {
+          "k": "L2449e81b73",
+          "t": "G major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lb22495cd15",
+            "t": "Which major key has no sharps or flats?"
+          },
+          "options": [
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "Lea785300c4",
+              "t": "F major"
+            },
+            {
+              "k": "Laa87302d09",
+              "t": "C major"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "Lfeae291c1f",
+            "t": "C major uses only white keys."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/5/steps/4/options/0",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-6"
+        ],
+        "value": {
+          "k": "L2449e81b73",
+          "t": "G major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L132c463c58",
+            "t": "Which scale has the notes D, E, F♯, G, A, B, C♯?"
+          },
+          "options": [
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            },
+            {
+              "k": "L3c6bc13182",
+              "t": "A major"
+            }
+          ],
+          "answer": 1,
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/6/lessons/2/steps/2/options/0",
+        "lineage": [
+          "theory",
+          "thy-7",
+          "thy-7-3"
+        ],
+        "value": {
+          "k": "L2449e81b73",
+          "t": "G major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lce8f23f1b3",
+            "t": "Using only C major notes, what triad is built on G?"
+          },
+          "options": [
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "L162bc9fbcc",
+              "t": "G minor"
+            },
+            {
+              "k": "Le48c7961de",
+              "t": "G diminished"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "L70dbb7607e",
+            "t": "G B D: a major third, then a minor third."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/6/lessons/3/steps/2/options/2",
+        "lineage": [
+          "theory",
+          "thy-7",
+          "thy-7-4"
+        ],
+        "value": {
+          "k": "L2449e81b73",
+          "t": "G major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lfd68d2b242",
+            "t": "In C major, which chord is IV?"
+          },
+          "options": [
+            {
+              "k": "Lea785300c4",
+              "t": "F major"
+            },
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            },
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "L4d08076fb1",
+            "t": "The fourth note of C major is F."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/7/lessons/0/steps/6/options/0",
+        "lineage": [
+          "theory",
+          "thy-8",
+          "thy-8-1"
+        ],
+        "value": {
+          "k": "L2449e81b73",
+          "t": "G major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Le691b34d33",
+            "t": "In D major, which chord is IV?"
+          },
+          "options": [
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "L3c6bc13182",
+              "t": "A major"
+            },
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "Lb480f56c92",
+            "t": "D, E, F♯, G: the fourth note is G."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      }
+    ],
+    "L9cf6021835": [],
+    "Lc3e1440b37": [
+      {
+        "pointer": "/courses/0/units/4/lessons/5/steps/2/options/2",
+        "lineage": [
+          "guitar",
+          "gtr-5",
+          "gtr-5-spotlight"
+        ],
+        "value": {
+          "k": "Lc3e1440b37",
+          "t": "E minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L9e497e97e9",
+            "t": "Which chord in Kite Weather skips strings 5 and 6?"
+          },
+          "options": [
+            {
+              "k": "L32096c2e0e",
+              "t": "C"
+            },
+            {
+              "k": "L50c9e8d5fc",
+              "t": "D"
+            },
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            }
+          ],
+          "answer": 1,
+          "why": {
+            "k": "L45bae2049d",
+            "t": "D's root is open string 4, so strings 5 and 6 stay quiet."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/0/units/6/lessons/4/steps/2/options/2",
+        "lineage": [
+          "guitar",
+          "gtr-7",
+          "gtr-7-5"
+        ],
+        "value": {
+          "k": "Lc3e1440b37",
+          "t": "E minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L79ea537c97",
+            "t": "Which chord pulls toward G?"
+          },
+          "options": [
+            {
+              "k": "L92d40794f5",
+              "t": "D7"
+            },
+            {
+              "k": "L32096c2e0e",
+              "t": "C"
+            },
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "L58d52b16c1",
+            "t": "D7's extra note leans toward G. When G arrives, the tension lets go."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/0/units/6/lessons/6/steps/1/options/0",
+        "lineage": [
+          "guitar",
+          "gtr-7",
+          "gtr-7-6"
+        ],
+        "value": {
+          "k": "Lc3e1440b37",
+          "t": "E minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Ld8ca78c4d8",
+            "t": "Which chord pulls hardest toward G?"
+          },
+          "options": [
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            },
+            {
+              "k": "L32096c2e0e",
+              "t": "C"
+            },
+            {
+              "k": "L92d40794f5",
+              "t": "D7"
+            }
+          ],
+          "answer": 2,
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/0/units/7/lessons/1/steps/5/options/2",
+        "lineage": [
+          "guitar",
+          "gtr-8",
+          "gtr-8-2"
+        ],
+        "value": {
+          "k": "Lc3e1440b37",
+          "t": "E minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L224c7417dc",
+            "t": "Which chord does B7 lead to most naturally?"
+          },
+          "options": [
+            {
+              "k": "L50c9e8d5fc",
+              "t": "D"
+            },
+            {
+              "k": "L32096c2e0e",
+              "t": "C"
+            },
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "L68d4cfda41",
+            "t": "B7 pulls toward E. Its tension melts into E minor or E."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/0/units/17/lessons/5/steps/1/options/0",
+        "lineage": [
+          "guitar",
+          "gtr-18",
+          "gtr-18-spotlight"
+        ],
+        "value": {
+          "k": "Lc3e1440b37",
+          "t": "E minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Leacb886dc3",
+            "t": "Roller Rink's loop is the one, six, four and five of G. Which chord is the six?"
+          },
+          "options": [
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            },
+            {
+              "k": "L32096c2e0e",
+              "t": "C"
+            },
+            {
+              "k": "L50c9e8d5fc",
+              "t": "D"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "Lb615a6e600",
+            "t": "Count up G major: G 1, A 2, B 3, C 4, D 5, E 6. The chord on 6 is minor: E minor."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/0/units/19/lessons/2/steps/3/options/0",
+        "lineage": [
+          "guitar",
+          "gtr-20",
+          "gtr-20-3"
+        ],
+        "value": {
+          "k": "Lc3e1440b37",
+          "t": "E minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L2e035bd48b",
+            "t": "In G major, which chord is built on 6?"
+          },
+          "options": [
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            },
+            {
+              "k": "Le0184adedf",
+              "t": "E"
+            },
+            {
+              "k": "L32096c2e0e",
+              "t": "C"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "La227d18f6d",
+            "t": "The sixth note is E, and chords on 2, 3 and 6 are minor. Stack E, G and B: E minor."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/0/units/19/lessons/6/steps/3/options/2",
+        "lineage": [
+          "guitar",
+          "gtr-20",
+          "gtr-20-6"
+        ],
+        "value": {
+          "k": "Lc3e1440b37",
+          "t": "E minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L2f6d509f56",
+            "t": "Which mode starts on the second note of G major?"
+          },
+          "options": [
+            {
+              "k": "L454672c296",
+              "t": "D Mixolydian"
+            },
+            {
+              "k": "L45df8aaa94",
+              "t": "A Dorian"
+            },
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            }
+          ],
+          "answer": 1,
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/1/units/4/lessons/1/title",
+        "lineage": [
+          "ukulele",
+          "uke-5",
+          "uke-5-2"
+        ],
+        "value": {
+          "k": "Lc3e1440b37",
+          "t": "E minor"
+        },
+        "context": {
+          "lesson_id": "uke-5-2",
+          "title": {
+            "k": "Lc3e1440b37",
+            "t": "E minor"
+          },
+          "kind": "lesson"
+        }
+      },
+      {
+        "pointer": "/courses/1/units/4/lessons/4/steps/3/options/1",
+        "lineage": [
+          "ukulele",
+          "uke-5",
+          "uke-5-5"
+        ],
+        "value": {
+          "k": "Lc3e1440b37",
+          "t": "E minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L5b206df439",
+            "t": "Which chord is vi in C?"
+          },
+          "options": [
+            {
+              "k": "L728cd633f1",
+              "t": "A minor"
+            },
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            },
+            {
+              "k": "Lf884b03c33",
+              "t": "D minor"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "L3257dbf5cd",
+            "t": "Lowercase numbers mean minor chords. The sixth note of C major is A."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/1/units/4/lessons/5/steps/4/options/2",
+        "lineage": [
+          "ukulele",
+          "uke-5",
+          "uke-5-6"
+        ],
+        "value": {
+          "k": "Lc3e1440b37",
+          "t": "E minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L8570060cff",
+            "t": "In the key of C, which chord is V?"
+          },
+          "options": [
+            {
+              "k": "Le69f20e9f6",
+              "t": "F"
+            },
+            {
+              "k": "La36a6718f5",
+              "t": "G"
+            },
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            },
+            {
+              "k": "L728cd633f1",
+              "t": "A minor"
+            }
+          ],
+          "answer": 1,
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/1/units/6/lessons/5/steps/3/options/1",
+        "lineage": [
+          "ukulele",
+          "uke-7",
+          "uke-7-6"
+        ],
+        "value": {
+          "k": "Lc3e1440b37",
+          "t": "E minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L7be8ead7d9",
+            "t": "In the key of G, which chord is V?"
+          },
+          "options": [
+            {
+              "k": "L32096c2e0e",
+              "t": "C"
+            },
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            },
+            {
+              "k": "L92d40794f5",
+              "t": "D7"
+            }
+          ],
+          "answer": 2,
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/6/units/2/lessons/3/title",
+        "lineage": [
+          "banjo",
+          "bjo-3",
+          "bjo-3-4"
+        ],
+        "value": {
+          "k": "Lc3e1440b37",
+          "t": "E minor"
+        },
+        "context": {
+          "lesson_id": "bjo-3-4",
+          "title": {
+            "k": "Lc3e1440b37",
+            "t": "E minor"
+          },
+          "kind": "lesson"
+        }
+      },
+      {
+        "pointer": "/courses/8/units/6/lessons/3/steps/2/options/1",
+        "lineage": [
+          "theory",
+          "thy-7",
+          "thy-7-4"
+        ],
+        "value": {
+          "k": "Lc3e1440b37",
+          "t": "E minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lfd68d2b242",
+            "t": "In C major, which chord is IV?"
+          },
+          "options": [
+            {
+              "k": "Lea785300c4",
+              "t": "F major"
+            },
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            },
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "L4d08076fb1",
+            "t": "The fourth note of C major is F."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/6/lessons/4/steps/4/options/2",
+        "lineage": [
+          "theory",
+          "thy-7",
+          "thy-7-5"
+        ],
+        "value": {
+          "k": "Lc3e1440b37",
+          "t": "E minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "La5b0809117",
+            "t": "In C major, which chord is ii?"
+          },
+          "options": [
+            {
+              "k": "Lf884b03c33",
+              "t": "D minor"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            },
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            }
+          ],
+          "answer": 0,
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/7/lessons/0/steps/6/options/2",
+        "lineage": [
+          "theory",
+          "thy-8",
+          "thy-8-1"
+        ],
+        "value": {
+          "k": "Lc3e1440b37",
+          "t": "E minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Le691b34d33",
+            "t": "In D major, which chord is IV?"
+          },
+          "options": [
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "L3c6bc13182",
+              "t": "A major"
+            },
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "Lb480f56c92",
+            "t": "D, E, F♯, G: the fourth note is G."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/12/units/9/lessons/5/steps/5/options/0",
+        "lineage": [
+          "originals",
+          "orig-10",
+          "orig-barre-set"
+        ],
+        "value": {
+          "k": "Lc3e1440b37",
+          "t": "E minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L2a8419bbfc",
+            "t": "F sharp minor is which shape, barred at fret 2?"
+          },
+          "options": [
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            },
+            {
+              "k": "L6dcd4ce23d",
+              "t": "A"
+            },
+            {
+              "k": "L50c9e8d5fc",
+              "t": "D"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "L371ab07a8b",
+            "t": "Barre at fret 2 and the E minor shape sits in front of your first finger: F sharp minor."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      }
+    ]
+  },
+  "after": {
+    "La1c8d3bc39": [
+      {
+        "pointer": "/courses/0/units/4/lessons/0/title",
+        "lineage": [
+          "guitar",
+          "gtr-5",
+          "gtr-5-1"
+        ],
+        "value": {
+          "k": "La1c8d3bc39",
+          "t": "C major chord"
+        },
+        "context": {
+          "lesson_id": "gtr-5-1",
+          "title": {
+            "k": "La1c8d3bc39",
+            "t": "C major chord"
+          },
+          "kind": "lesson"
+        }
+      },
+      {
+        "pointer": "/courses/8/units/6/lessons/3/steps/4/options/0",
+        "lineage": [
+          "theory",
+          "thy-7",
+          "thy-7-4"
+        ],
+        "value": {
+          "k": "La1c8d3bc39",
+          "t": "C major chord"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lee6d0333e6",
+            "t": "In G major, which chord is V?"
+          },
+          "options": [
+            {
+              "k": "La1c8d3bc39",
+              "t": "C major chord"
+            },
+            {
+              "k": "Lf884b03c33",
+              "t": "D minor"
+            },
+            {
+              "k": "Lab958557bf",
+              "t": "D major chord"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "L34bab6103a",
+            "t": "Count up from G: G, A, B, C, D. The fifth note is D, and V is major."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/6/lessons/3/steps/6/options/0",
+        "lineage": [
+          "theory",
+          "thy-7",
+          "thy-7-4"
+        ],
+        "value": {
+          "k": "La1c8d3bc39",
+          "t": "C major chord"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lbf971f38ee",
+            "t": "In G major, which chord is IV?"
+          },
+          "options": [
+            {
+              "k": "La1c8d3bc39",
+              "t": "C major chord"
+            },
+            {
+              "k": "L0301e70c80",
+              "t": "C minor"
+            },
+            {
+              "k": "Lab958557bf",
+              "t": "D major chord"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "L3b49c1540d",
+            "t": "G, A, B, C: the fourth note is C."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/6/lessons/4/steps/6/options/1",
+        "lineage": [
+          "theory",
+          "thy-7",
+          "thy-7-5"
+        ],
+        "value": {
+          "k": "La1c8d3bc39",
+          "t": "C major chord"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L40ecadf834",
+            "t": "In F major, which chord is V?"
+          },
+          "options": [
+            {
+              "k": "Lbdeb73715c",
+              "t": "B♭ major chord"
+            },
+            {
+              "k": "La1c8d3bc39",
+              "t": "C major chord"
+            },
+            {
+              "k": "L0301e70c80",
+              "t": "C minor"
+            }
+          ],
+          "answer": 1,
+          "why": {
+            "k": "L968a665a6d",
+            "t": "F, G, A, B♭, C: the fifth note is C."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      }
+    ],
+    "Lab958557bf": [
+      {
+        "pointer": "/courses/5/units/4/lessons/2/steps/3/options/2",
+        "lineage": [
+          "mandolin",
+          "man-5",
+          "man-5-3"
+        ],
+        "value": {
+          "k": "Lab958557bf",
+          "t": "D major chord"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L68d6126c37",
+            "t": "D, F♯ and A together spell which chord?"
+          },
+          "options": [
+            {
+              "k": "Lc1965ac98d",
+              "t": "A major chord"
+            },
+            {
+              "k": "Ld975a19a54",
+              "t": "G major chord"
+            },
+            {
+              "k": "Lab958557bf",
+              "t": "D major chord"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "L7be9004c2e",
+            "t": "D, F♯ and A are the three notes of D major. Fiddle tunes often trace their chords like this."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/6/lessons/2/steps/1/options/0",
+        "lineage": [
+          "theory",
+          "thy-7",
+          "thy-7-3"
+        ],
+        "value": {
+          "k": "Lab958557bf",
+          "t": "D major chord"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L8bffd0e29a",
+            "t": "Using only C major notes, what triad is built on D?"
+          },
+          "options": [
+            {
+              "k": "Lab958557bf",
+              "t": "D major chord"
+            },
+            {
+              "k": "Lf884b03c33",
+              "t": "D minor"
+            },
+            {
+              "k": "L72b3117837",
+              "t": "D diminished"
+            }
+          ],
+          "answer": 1,
+          "why": {
+            "k": "L8f921f64e0",
+            "t": "D F A: a minor third, then a major third."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/6/lessons/3/steps/4/options/2",
+        "lineage": [
+          "theory",
+          "thy-7",
+          "thy-7-4"
+        ],
+        "value": {
+          "k": "Lab958557bf",
+          "t": "D major chord"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lee6d0333e6",
+            "t": "In G major, which chord is V?"
+          },
+          "options": [
+            {
+              "k": "La1c8d3bc39",
+              "t": "C major chord"
+            },
+            {
+              "k": "Lf884b03c33",
+              "t": "D minor"
+            },
+            {
+              "k": "Lab958557bf",
+              "t": "D major chord"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "L34bab6103a",
+            "t": "Count up from G: G, A, B, C, D. The fifth note is D, and V is major."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/6/lessons/3/steps/6/options/2",
+        "lineage": [
+          "theory",
+          "thy-7",
+          "thy-7-4"
+        ],
+        "value": {
+          "k": "Lab958557bf",
+          "t": "D major chord"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lbf971f38ee",
+            "t": "In G major, which chord is IV?"
+          },
+          "options": [
+            {
+              "k": "La1c8d3bc39",
+              "t": "C major chord"
+            },
+            {
+              "k": "L0301e70c80",
+              "t": "C minor"
+            },
+            {
+              "k": "Lab958557bf",
+              "t": "D major chord"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "L3b49c1540d",
+            "t": "G, A, B, C: the fourth note is C."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/6/lessons/4/steps/4/options/1",
+        "lineage": [
+          "theory",
+          "thy-7",
+          "thy-7-5"
+        ],
+        "value": {
+          "k": "Lab958557bf",
+          "t": "D major chord"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "La5b0809117",
+            "t": "In C major, which chord is ii?"
+          },
+          "options": [
+            {
+              "k": "Lf884b03c33",
+              "t": "D minor"
+            },
+            {
+              "k": "Lab958557bf",
+              "t": "D major chord"
+            },
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            }
+          ],
+          "answer": 0,
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/7/lessons/1/steps/6/options/1",
+        "lineage": [
+          "theory",
+          "thy-8",
+          "thy-8-2"
+        ],
+        "value": {
+          "k": "Lab958557bf",
+          "t": "D major chord"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L3aed14023d",
+            "t": "In F major, which chord is vi?"
+          },
+          "options": [
+            {
+              "k": "Lf884b03c33",
+              "t": "D minor"
+            },
+            {
+              "k": "Lab958557bf",
+              "t": "D major chord"
+            },
+            {
+              "k": "L728cd633f1",
+              "t": "A minor"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "L3ffa870aac",
+            "t": "F, G, A, B♭, C, D: the sixth note is D, and vi is minor."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      }
+    ],
+    "Laa87302d09": [
+      {
+        "pointer": "/courses/2/units/2/lessons/3/steps/5/options/2",
+        "lineage": [
+          "bass",
+          "bass-3",
+          "bass-3-4"
+        ],
+        "value": {
+          "k": "Laa87302d09",
+          "t": "C major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lacd2f46b7e",
+            "t": "You move the shape so it starts on fret 5 of string 4. Which scale is it now?"
+          },
+          "options": [
+            {
+              "k": "L3c6bc13182",
+              "t": "A major"
+            },
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "Laa87302d09",
+              "t": "C major"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "Lfa7b587ff3",
+            "t": "Fret 5 on string 4 is A, so the same shape plays A major."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/4/units/3/lessons/6/steps/3/options/0",
+        "lineage": [
+          "cello",
+          "vc-4",
+          "vc-4-7"
+        ],
+        "value": {
+          "k": "Laa87302d09",
+          "t": "C major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L2ffed6bb0c",
+            "t": "Which of these keys has no sharps?"
+          },
+          "options": [
+            {
+              "k": "Laa87302d09",
+              "t": "C major"
+            },
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            }
+          ],
+          "answer": 0,
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/4/steps/1/options/0",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-5"
+        ],
+        "value": {
+          "k": "Laa87302d09",
+          "t": "C major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L0cee63f97a",
+            "t": "A key signature has one sharp, F♯. Which major key is it?"
+          },
+          "options": [
+            {
+              "k": "Laa87302d09",
+              "t": "C major"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            },
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "Lb21922233a",
+            "t": "G major is the major key with just F♯."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/4/steps/5/options/2",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-5"
+        ],
+        "value": {
+          "k": "Laa87302d09",
+          "t": "C major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lb22495cd15",
+            "t": "Which major key has no sharps or flats?"
+          },
+          "options": [
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "Lea785300c4",
+              "t": "F major"
+            },
+            {
+              "k": "Laa87302d09",
+              "t": "C major"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "Lfeae291c1f",
+            "t": "C major uses only white keys."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/5/steps/3/options/2",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-6"
+        ],
+        "value": {
+          "k": "Laa87302d09",
+          "t": "C major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lcb5fb3182a",
+            "t": "Which major key has one flat?"
+          },
+          "options": [
+            {
+              "k": "Lea785300c4",
+              "t": "F major"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            },
+            {
+              "k": "Laa87302d09",
+              "t": "C major"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "L1b4a281d5d",
+            "t": "F major's one flat is B♭."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      }
+    ],
+    "Lbdeb73715c": [
+      {
+        "pointer": "/courses/8/units/6/lessons/4/steps/6/options/0",
+        "lineage": [
+          "theory",
+          "thy-7",
+          "thy-7-5"
+        ],
+        "value": {
+          "k": "Lbdeb73715c",
+          "t": "B♭ major chord"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L40ecadf834",
+            "t": "In F major, which chord is V?"
+          },
+          "options": [
+            {
+              "k": "Lbdeb73715c",
+              "t": "B♭ major chord"
+            },
+            {
+              "k": "La1c8d3bc39",
+              "t": "C major chord"
+            },
+            {
+              "k": "L0301e70c80",
+              "t": "C minor"
+            }
+          ],
+          "answer": 1,
+          "why": {
+            "k": "L968a665a6d",
+            "t": "F, G, A, B♭, C: the fifth note is C."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      }
+    ],
+    "Ld975a19a54": [
+      {
+        "pointer": "/courses/0/units/4/lessons/1/title",
+        "lineage": [
+          "guitar",
+          "gtr-5",
+          "gtr-5-2"
+        ],
+        "value": {
+          "k": "Ld975a19a54",
+          "t": "G major chord"
+        },
+        "context": {
+          "lesson_id": "gtr-5-2",
+          "title": {
+            "k": "Ld975a19a54",
+            "t": "G major chord"
+          },
+          "kind": "lesson"
+        }
+      },
+      {
+        "pointer": "/courses/1/units/1/lessons/3/steps/0/title",
+        "lineage": [
+          "ukulele",
+          "uke-2",
+          "uke-2-5"
+        ],
+        "value": {
+          "k": "Ld975a19a54",
+          "t": "G major chord"
+        },
+        "context": {
+          "type": "explain",
+          "title": {
+            "k": "Ld975a19a54",
+            "t": "G major chord"
+          },
+          "body": {
+            "k": "La928974510",
+            "t": "First finger on fret 2 of string 3, second on fret 2 of string 1, third on fret 3 of string 2. Arch your fingers so string 4 rings."
+          },
+          "visual": {
+            "type": "chord",
+            "chord": {
+              "name": "G",
+              "root": 7,
+              "quality": "maj",
+              "frets": [
+                0,
+                2,
+                3,
+                2
+              ],
+              "fingers": [
+                0,
+                1,
+                3,
+                2
+              ]
+            }
+          }
+        }
+      },
+      {
+        "pointer": "/courses/5/units/4/lessons/2/steps/3/options/1",
+        "lineage": [
+          "mandolin",
+          "man-5",
+          "man-5-3"
+        ],
+        "value": {
+          "k": "Ld975a19a54",
+          "t": "G major chord"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L68d6126c37",
+            "t": "D, F♯ and A together spell which chord?"
+          },
+          "options": [
+            {
+              "k": "Lc1965ac98d",
+              "t": "A major chord"
+            },
+            {
+              "k": "Ld975a19a54",
+              "t": "G major chord"
+            },
+            {
+              "k": "Lab958557bf",
+              "t": "D major chord"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "L7be9004c2e",
+            "t": "D, F♯ and A are the three notes of D major. Fiddle tunes often trace their chords like this."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/6/lessons/2/steps/2/options/0",
+        "lineage": [
+          "theory",
+          "thy-7",
+          "thy-7-3"
+        ],
+        "value": {
+          "k": "Ld975a19a54",
+          "t": "G major chord"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lce8f23f1b3",
+            "t": "Using only C major notes, what triad is built on G?"
+          },
+          "options": [
+            {
+              "k": "Ld975a19a54",
+              "t": "G major chord"
+            },
+            {
+              "k": "L162bc9fbcc",
+              "t": "G minor"
+            },
+            {
+              "k": "Le48c7961de",
+              "t": "G diminished"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "L70dbb7607e",
+            "t": "G B D: a major third, then a minor third."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/6/lessons/3/steps/2/options/2",
+        "lineage": [
+          "theory",
+          "thy-7",
+          "thy-7-4"
+        ],
+        "value": {
+          "k": "Ld975a19a54",
+          "t": "G major chord"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lfd68d2b242",
+            "t": "In C major, which chord is IV?"
+          },
+          "options": [
+            {
+              "k": "L9cf6021835",
+              "t": "F major chord"
+            },
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            },
+            {
+              "k": "Ld975a19a54",
+              "t": "G major chord"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "L4d08076fb1",
+            "t": "The fourth note of C major is F."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/7/lessons/0/steps/6/options/0",
+        "lineage": [
+          "theory",
+          "thy-8",
+          "thy-8-1"
+        ],
+        "value": {
+          "k": "Ld975a19a54",
+          "t": "G major chord"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Le691b34d33",
+            "t": "In D major, which chord is IV?"
+          },
+          "options": [
+            {
+              "k": "Ld975a19a54",
+              "t": "G major chord"
+            },
+            {
+              "k": "Lc1965ac98d",
+              "t": "A major chord"
+            },
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "Lb480f56c92",
+            "t": "D, E, F♯, G: the fourth note is G."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      }
+    ],
+    "L728cd633f1": [
+      {
+        "pointer": "/courses/0/units/2/lessons/2/title",
+        "lineage": [
+          "guitar",
+          "gtr-3",
+          "gtr-3-3"
+        ],
+        "value": {
+          "k": "L728cd633f1",
+          "t": "A minor"
+        },
+        "context": {
+          "lesson_id": "gtr-3-3",
+          "title": {
+            "k": "L728cd633f1",
+            "t": "A minor"
+          },
+          "kind": "lesson"
+        }
+      },
+      {
+        "pointer": "/courses/0/units/9/lessons/1/steps/4/options/0",
+        "lineage": [
+          "guitar",
+          "gtr-10",
+          "gtr-10-2"
+        ],
+        "value": {
+          "k": "L728cd633f1",
+          "t": "A minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L0c0eafc246",
+            "t": "The F barre is which open shape, moved up a fret?"
+          },
+          "options": [
+            {
+              "k": "L728cd633f1",
+              "t": "A minor"
+            },
+            {
+              "k": "L50c9e8d5fc",
+              "t": "D"
+            },
+            {
+              "k": "Le0184adedf",
+              "t": "E"
+            }
+          ],
+          "answer": 2,
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/1/units/1/lessons/1/steps/2/options/1",
+        "lineage": [
+          "ukulele",
+          "uke-2",
+          "uke-2-3"
+        ],
+        "value": {
+          "k": "L728cd633f1",
+          "t": "A minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L53029da8ad",
+            "t": "Which chord shares a finger with F?"
+          },
+          "options": [
+            {
+              "k": "L32096c2e0e",
+              "t": "C"
+            },
+            {
+              "k": "L728cd633f1",
+              "t": "A minor"
+            },
+            {
+              "k": "L03909ad236",
+              "t": "Neither"
+            }
+          ],
+          "answer": 1,
+          "why": {
+            "k": "L1e583e625c",
+            "t": "Your second finger sits on fret 2 of string 4 for both. Keep it down when you change."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/1/units/4/lessons/4/steps/1/options/1",
+        "lineage": [
+          "ukulele",
+          "uke-5",
+          "uke-5-5"
+        ],
+        "value": {
+          "k": "L728cd633f1",
+          "t": "A minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lfc65933519",
+            "t": "In the key of C, which chord is IV?"
+          },
+          "options": [
+            {
+              "k": "La36a6718f5",
+              "t": "G"
+            },
+            {
+              "k": "L728cd633f1",
+              "t": "A minor"
+            },
+            {
+              "k": "Le69f20e9f6",
+              "t": "F"
+            },
+            {
+              "k": "Lf884b03c33",
+              "t": "D minor"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "L025c45471b",
+            "t": "Count up the scale from C: C, D, E, F. F is the fourth note, so F is the IV chord."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/1/units/4/lessons/4/steps/3/options/0",
+        "lineage": [
+          "ukulele",
+          "uke-5",
+          "uke-5-5"
+        ],
+        "value": {
+          "k": "L728cd633f1",
+          "t": "A minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L5b206df439",
+            "t": "Which chord is vi in C?"
+          },
+          "options": [
+            {
+              "k": "L728cd633f1",
+              "t": "A minor"
+            },
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            },
+            {
+              "k": "Lf884b03c33",
+              "t": "D minor"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "L3257dbf5cd",
+            "t": "Lowercase numbers mean minor chords. The sixth note of C major is A."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/1/units/4/lessons/5/steps/4/options/3",
+        "lineage": [
+          "ukulele",
+          "uke-5",
+          "uke-5-6"
+        ],
+        "value": {
+          "k": "L728cd633f1",
+          "t": "A minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L8570060cff",
+            "t": "In the key of C, which chord is V?"
+          },
+          "options": [
+            {
+              "k": "Le69f20e9f6",
+              "t": "F"
+            },
+            {
+              "k": "La36a6718f5",
+              "t": "G"
+            },
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            },
+            {
+              "k": "L728cd633f1",
+              "t": "A minor"
+            }
+          ],
+          "answer": 1,
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/1/units/6/lessons/0/steps/4/options/2",
+        "lineage": [
+          "ukulele",
+          "uke-7",
+          "uke-7-1"
+        ],
+        "value": {
+          "k": "L728cd633f1",
+          "t": "A minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L70cf9ad2c0",
+            "t": "Which chord shares finger 1's spot on string 2 with B flat?"
+          },
+          "options": [
+            {
+              "k": "L32096c2e0e",
+              "t": "C"
+            },
+            {
+              "k": "Le69f20e9f6",
+              "t": "F"
+            },
+            {
+              "k": "L728cd633f1",
+              "t": "A minor"
+            }
+          ],
+          "answer": 1,
+          "why": {
+            "k": "Le3ff34666a",
+            "t": "F also puts finger 1 on string 2, fret 1. Keep it there as you change."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/6/lessons/2/steps/6/options/2",
+        "lineage": [
+          "theory",
+          "thy-7",
+          "thy-7-3"
+        ],
+        "value": {
+          "k": "L728cd633f1",
+          "t": "A minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L23fc77a007",
+            "t": "Using only C major notes, what triad is built on A?"
+          },
+          "options": [
+            {
+              "k": "Lc1965ac98d",
+              "t": "A major chord"
+            },
+            {
+              "k": "L05a2271256",
+              "t": "A diminished"
+            },
+            {
+              "k": "L728cd633f1",
+              "t": "A minor"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "L738524e244",
+            "t": "A C E: a minor third, then a major third."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/6/lessons/3/steps/3/options/1",
+        "lineage": [
+          "theory",
+          "thy-7",
+          "thy-7-4"
+        ],
+        "value": {
+          "k": "L728cd633f1",
+          "t": "A minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L9c2396e833",
+            "t": "In C major, which chord is vi?"
+          },
+          "options": [
+            {
+              "k": "Lc1965ac98d",
+              "t": "A major chord"
+            },
+            {
+              "k": "L728cd633f1",
+              "t": "A minor"
+            },
+            {
+              "k": "L9cf6021835",
+              "t": "F major chord"
+            }
+          ],
+          "answer": 1,
+          "why": {
+            "k": "L193dfdb00e",
+            "t": "The sixth note is A, and lowercase vi means minor."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/7/lessons/1/steps/6/options/2",
+        "lineage": [
+          "theory",
+          "thy-8",
+          "thy-8-2"
+        ],
+        "value": {
+          "k": "L728cd633f1",
+          "t": "A minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L3aed14023d",
+            "t": "In F major, which chord is vi?"
+          },
+          "options": [
+            {
+              "k": "Lf884b03c33",
+              "t": "D minor"
+            },
+            {
+              "k": "Lab958557bf",
+              "t": "D major chord"
+            },
+            {
+              "k": "L728cd633f1",
+              "t": "A minor"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "L3ffa870aac",
+            "t": "F, G, A, B♭, C, D: the sixth note is D, and vi is minor."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      }
+    ],
+    "Lc819139d43": [
+      {
+        "pointer": "/courses/3/units/4/lessons/2/title",
+        "lineage": [
+          "violin",
+          "vln-5",
+          "vln-5-3"
+        ],
+        "value": {
+          "k": "Lc819139d43",
+          "t": "A minor scale"
+        },
+        "context": {
+          "lesson_id": "vln-5-3",
+          "title": {
+            "k": "Lc819139d43",
+            "t": "A minor scale"
+          },
+          "kind": "lesson"
+        }
+      },
+      {
+        "pointer": "/courses/3/units/4/lessons/2/steps/5/title",
+        "lineage": [
+          "violin",
+          "vln-5",
+          "vln-5-3"
+        ],
+        "value": {
+          "k": "Lc819139d43",
+          "t": "A minor scale"
+        },
+        "context": {
+          "type": "along",
+          "notes": [
+            {
+              "m": 57,
+              "b": 0.0,
+              "d": 1.0,
+              "at": {
+                "s": 4,
+                "f": 2,
+                "g": 1
+              }
+            },
+            {
+              "m": 59,
+              "b": 1.0,
+              "d": 1.0,
+              "at": {
+                "s": 4,
+                "f": 4,
+                "g": 2
+              }
+            },
+            {
+              "m": 60,
+              "b": 2.0,
+              "d": 1.0,
+              "at": {
+                "s": 4,
+                "f": 5,
+                "g": 3
+              }
+            },
+            {
+              "m": 62,
+              "b": 3.0,
+              "d": 1.0,
+              "at": {
+                "s": 3,
+                "f": 0
+              }
+            },
+            {
+              "m": 64,
+              "b": 4.0,
+              "d": 1.0,
+              "at": {
+                "s": 3,
+                "f": 2,
+                "g": 1
+              }
+            },
+            {
+              "m": 65,
+              "b": 5.0,
+              "d": 1.0,
+              "at": {
+                "s": 3,
+                "f": 3,
+                "g": 2
+              }
+            },
+            {
+              "m": 67,
+              "b": 6.0,
+              "d": 1.0,
+              "at": {
+                "s": 3,
+                "f": 5,
+                "g": 3
+              }
+            },
+            {
+              "m": 69,
+              "b": 7.0,
+              "d": 1.0,
+              "at": {
+                "s": 2,
+                "f": 0
+              }
+            },
+            {
+              "m": 69,
+              "b": 8.0,
+              "d": 1.0,
+              "at": {
+                "s": 2,
+                "f": 0
+              }
+            },
+            {
+              "m": 67,
+              "b": 9.0,
+              "d": 1.0,
+              "at": {
+                "s": 3,
+                "f": 5,
+                "g": 3
+              }
+            },
+            {
+              "m": 65,
+              "b": 10.0,
+              "d": 1.0,
+              "at": {
+                "s": 3,
+                "f": 3,
+                "g": 2
+              }
+            },
+            {
+              "m": 64,
+              "b": 11.0,
+              "d": 1.0,
+              "at": {
+                "s": 3,
+                "f": 2,
+                "g": 1
+              }
+            },
+            {
+              "m": 62,
+              "b": 12.0,
+              "d": 1.0,
+              "at": {
+                "s": 3,
+                "f": 0
+              }
+            },
+            {
+              "m": 60,
+              "b": 13.0,
+              "d": 1.0,
+              "at": {
+                "s": 4,
+                "f": 5,
+                "g": 3
+              }
+            },
+            {
+              "m": 59,
+              "b": 14.0,
+              "d": 1.0,
+              "at": {
+                "s": 4,
+                "f": 4,
+                "g": 2
+              }
+            },
+            {
+              "m": 57,
+              "b": 15.0,
+              "d": 1.0,
+              "at": {
+                "s": 4,
+                "f": 2,
+                "g": 1
+              }
+            }
+          ],
+          "bpm": 66,
+          "beatsPerBar": 4,
+          "title": {
+            "k": "Lc819139d43",
+            "t": "A minor scale"
+          }
+        }
+      }
+    ],
+    "L42626aabd8": [
+      {
+        "pointer": "/courses/4/units/3/lessons/6/steps/3/options/2",
+        "lineage": [
+          "cello",
+          "vc-4",
+          "vc-4-7"
+        ],
+        "value": {
+          "k": "L42626aabd8",
+          "t": "D major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L2ffed6bb0c",
+            "t": "Which of these keys has no sharps?"
+          },
+          "options": [
+            {
+              "k": "Laa87302d09",
+              "t": "C major"
+            },
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            }
+          ],
+          "answer": 0,
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/3/steps/5/options/2",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-4"
+        ],
+        "value": {
+          "k": "L42626aabd8",
+          "t": "D major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L8d6ce15313",
+            "t": "Which major key has two sharps?"
+          },
+          "options": [
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "Lea785300c4",
+              "t": "F major"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "L5249b2406f",
+            "t": "D major has F♯ and C♯."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/4/steps/1/options/1",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-5"
+        ],
+        "value": {
+          "k": "L42626aabd8",
+          "t": "D major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L0cee63f97a",
+            "t": "A key signature has one sharp, F♯. Which major key is it?"
+          },
+          "options": [
+            {
+              "k": "Laa87302d09",
+              "t": "C major"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            },
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "Lb21922233a",
+            "t": "G major is the major key with just F♯."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/4/steps/4/options/2",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-5"
+        ],
+        "value": {
+          "k": "L42626aabd8",
+          "t": "D major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lfb653af5fb",
+            "t": "A key signature has two sharps, F♯ and C♯. Which major key is it?"
+          },
+          "options": [
+            {
+              "k": "L3c6bc13182",
+              "t": "A major"
+            },
+            {
+              "k": "Lb04b781f54",
+              "t": "E major"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "Lafae9e3876",
+            "t": "The last sharp, C♯, is a half step below D."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/5/steps/3/options/1",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-6"
+        ],
+        "value": {
+          "k": "L42626aabd8",
+          "t": "D major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lcb5fb3182a",
+            "t": "Which major key has one flat?"
+          },
+          "options": [
+            {
+              "k": "Lea785300c4",
+              "t": "F major"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            },
+            {
+              "k": "Laa87302d09",
+              "t": "C major"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "L1b4a281d5d",
+            "t": "F major's one flat is B♭."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/5/steps/4/options/1",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-6"
+        ],
+        "value": {
+          "k": "L42626aabd8",
+          "t": "D major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L132c463c58",
+            "t": "Which scale has the notes D, E, F♯, G, A, B, C♯?"
+          },
+          "options": [
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            },
+            {
+              "k": "L3c6bc13182",
+              "t": "A major"
+            }
+          ],
+          "answer": 1,
+          "visual": {
+            "type": "none"
+          }
+        }
+      }
+    ],
+    "L3c6bc13182": [
+      {
+        "pointer": "/courses/2/units/2/lessons/3/steps/5/options/0",
+        "lineage": [
+          "bass",
+          "bass-3",
+          "bass-3-4"
+        ],
+        "value": {
+          "k": "L3c6bc13182",
+          "t": "A major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lacd2f46b7e",
+            "t": "You move the shape so it starts on fret 5 of string 4. Which scale is it now?"
+          },
+          "options": [
+            {
+              "k": "L3c6bc13182",
+              "t": "A major"
+            },
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "Laa87302d09",
+              "t": "C major"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "Lfa7b587ff3",
+            "t": "Fret 5 on string 4 is A, so the same shape plays A major."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/4/steps/4/options/0",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-5"
+        ],
+        "value": {
+          "k": "L3c6bc13182",
+          "t": "A major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lfb653af5fb",
+            "t": "A key signature has two sharps, F♯ and C♯. Which major key is it?"
+          },
+          "options": [
+            {
+              "k": "L3c6bc13182",
+              "t": "A major"
+            },
+            {
+              "k": "Lb04b781f54",
+              "t": "E major"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "Lafae9e3876",
+            "t": "The last sharp, C♯, is a half step below D."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/5/steps/4/options/2",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-6"
+        ],
+        "value": {
+          "k": "L3c6bc13182",
+          "t": "A major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L132c463c58",
+            "t": "Which scale has the notes D, E, F♯, G, A, B, C♯?"
+          },
+          "options": [
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            },
+            {
+              "k": "L3c6bc13182",
+              "t": "A major"
+            }
+          ],
+          "answer": 1,
+          "visual": {
+            "type": "none"
+          }
+        }
+      }
+    ],
+    "Lc1965ac98d": [
+      {
+        "pointer": "/courses/0/units/2/lessons/3/title",
+        "lineage": [
+          "guitar",
+          "gtr-3",
+          "gtr-3-4"
+        ],
+        "value": {
+          "k": "Lc1965ac98d",
+          "t": "A major chord"
+        },
+        "context": {
+          "lesson_id": "gtr-3-4",
+          "title": {
+            "k": "Lc1965ac98d",
+            "t": "A major chord"
+          },
+          "kind": "lesson"
+        }
+      },
+      {
+        "pointer": "/courses/5/units/4/lessons/2/steps/3/options/0",
+        "lineage": [
+          "mandolin",
+          "man-5",
+          "man-5-3"
+        ],
+        "value": {
+          "k": "Lc1965ac98d",
+          "t": "A major chord"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L68d6126c37",
+            "t": "D, F♯ and A together spell which chord?"
+          },
+          "options": [
+            {
+              "k": "Lc1965ac98d",
+              "t": "A major chord"
+            },
+            {
+              "k": "Ld975a19a54",
+              "t": "G major chord"
+            },
+            {
+              "k": "Lab958557bf",
+              "t": "D major chord"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "L7be9004c2e",
+            "t": "D, F♯ and A are the three notes of D major. Fiddle tunes often trace their chords like this."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/6/lessons/2/steps/6/options/0",
+        "lineage": [
+          "theory",
+          "thy-7",
+          "thy-7-3"
+        ],
+        "value": {
+          "k": "Lc1965ac98d",
+          "t": "A major chord"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L23fc77a007",
+            "t": "Using only C major notes, what triad is built on A?"
+          },
+          "options": [
+            {
+              "k": "Lc1965ac98d",
+              "t": "A major chord"
+            },
+            {
+              "k": "L05a2271256",
+              "t": "A diminished"
+            },
+            {
+              "k": "L728cd633f1",
+              "t": "A minor"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "L738524e244",
+            "t": "A C E: a minor third, then a major third."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/6/lessons/3/steps/3/options/0",
+        "lineage": [
+          "theory",
+          "thy-7",
+          "thy-7-4"
+        ],
+        "value": {
+          "k": "Lc1965ac98d",
+          "t": "A major chord"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L9c2396e833",
+            "t": "In C major, which chord is vi?"
+          },
+          "options": [
+            {
+              "k": "Lc1965ac98d",
+              "t": "A major chord"
+            },
+            {
+              "k": "L728cd633f1",
+              "t": "A minor"
+            },
+            {
+              "k": "L9cf6021835",
+              "t": "F major chord"
+            }
+          ],
+          "answer": 1,
+          "why": {
+            "k": "L193dfdb00e",
+            "t": "The sixth note is A, and lowercase vi means minor."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/7/lessons/0/steps/6/options/1",
+        "lineage": [
+          "theory",
+          "thy-8",
+          "thy-8-1"
+        ],
+        "value": {
+          "k": "Lc1965ac98d",
+          "t": "A major chord"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Le691b34d33",
+            "t": "In D major, which chord is IV?"
+          },
+          "options": [
+            {
+              "k": "Ld975a19a54",
+              "t": "G major chord"
+            },
+            {
+              "k": "Lc1965ac98d",
+              "t": "A major chord"
+            },
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "Lb480f56c92",
+            "t": "D, E, F♯, G: the fourth note is G."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      }
+    ],
+    "L4b65fb9aa1": [
+      {
+        "pointer": "/courses/8/units/4/lessons/4/steps/2/options/1",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-5"
+        ],
+        "value": {
+          "k": "L4b65fb9aa1",
+          "t": "B♭ major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L7e90bc9187",
+            "t": "A key signature has one flat, B♭. Which major key is it?"
+          },
+          "options": [
+            {
+              "k": "Lea785300c4",
+              "t": "F major"
+            },
+            {
+              "k": "L4b65fb9aa1",
+              "t": "B♭ major"
+            },
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "Lb2bc6030ed",
+            "t": "F major is the major key with just B♭."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      }
+    ],
+    "Lea785300c4": [
+      {
+        "pointer": "/courses/8/units/4/lessons/3/steps/5/options/1",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-4"
+        ],
+        "value": {
+          "k": "Lea785300c4",
+          "t": "F major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L8d6ce15313",
+            "t": "Which major key has two sharps?"
+          },
+          "options": [
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "Lea785300c4",
+              "t": "F major"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "L5249b2406f",
+            "t": "D major has F♯ and C♯."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/4/steps/2/options/0",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-5"
+        ],
+        "value": {
+          "k": "Lea785300c4",
+          "t": "F major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L7e90bc9187",
+            "t": "A key signature has one flat, B♭. Which major key is it?"
+          },
+          "options": [
+            {
+              "k": "Lea785300c4",
+              "t": "F major"
+            },
+            {
+              "k": "L4b65fb9aa1",
+              "t": "B♭ major"
+            },
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "Lb2bc6030ed",
+            "t": "F major is the major key with just B♭."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/4/steps/5/options/1",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-5"
+        ],
+        "value": {
+          "k": "Lea785300c4",
+          "t": "F major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lb22495cd15",
+            "t": "Which major key has no sharps or flats?"
+          },
+          "options": [
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "Lea785300c4",
+              "t": "F major"
+            },
+            {
+              "k": "Laa87302d09",
+              "t": "C major"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "Lfeae291c1f",
+            "t": "C major uses only white keys."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/5/steps/3/options/0",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-6"
+        ],
+        "value": {
+          "k": "Lea785300c4",
+          "t": "F major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lcb5fb3182a",
+            "t": "Which major key has one flat?"
+          },
+          "options": [
+            {
+              "k": "Lea785300c4",
+              "t": "F major"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            },
+            {
+              "k": "Laa87302d09",
+              "t": "C major"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "L1b4a281d5d",
+            "t": "F major's one flat is B♭."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      }
+    ],
+    "L2369e9b812": [
+      {
+        "pointer": "/courses/0/units/19/lessons/6/steps/3/options/2",
+        "lineage": [
+          "guitar",
+          "gtr-20",
+          "gtr-20-6"
+        ],
+        "value": {
+          "k": "L2369e9b812",
+          "t": "E minor scale"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L2f6d509f56",
+            "t": "Which mode starts on the second note of G major?"
+          },
+          "options": [
+            {
+              "k": "L454672c296",
+              "t": "D Mixolydian"
+            },
+            {
+              "k": "L45df8aaa94",
+              "t": "A Dorian"
+            },
+            {
+              "k": "L2369e9b812",
+              "t": "E minor scale"
+            }
+          ],
+          "answer": 1,
+          "visual": {
+            "type": "none"
+          }
+        }
+      }
+    ],
+    "L2449e81b73": [
+      {
+        "pointer": "/courses/0/units/20/lessons/6/steps/1/options/1",
+        "lineage": [
+          "guitar",
+          "gtr-21",
+          "gtr-21-6"
+        ],
+        "value": {
+          "k": "L2449e81b73",
+          "t": "G major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Le12ba17ea9",
+            "t": "Slide the minor box from fret 5 to fret 2 and it plays…"
+          },
+          "options": [
+            {
+              "k": "L7893d45a81",
+              "t": "D minor pentatonic"
+            },
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "L7212825ac8",
+              "t": "A major pentatonic"
+            }
+          ],
+          "answer": 2,
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/2/units/2/lessons/3/steps/5/options/1",
+        "lineage": [
+          "bass",
+          "bass-3",
+          "bass-3-4"
+        ],
+        "value": {
+          "k": "L2449e81b73",
+          "t": "G major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lacd2f46b7e",
+            "t": "You move the shape so it starts on fret 5 of string 4. Which scale is it now?"
+          },
+          "options": [
+            {
+              "k": "L3c6bc13182",
+              "t": "A major"
+            },
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "Laa87302d09",
+              "t": "C major"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "Lfa7b587ff3",
+            "t": "Fret 5 on string 4 is A, so the same shape plays A major."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/4/units/3/lessons/0/steps/2/title",
+        "lineage": [
+          "cello",
+          "vc-4",
+          "vc-4-1"
+        ],
+        "value": {
+          "k": "L2449e81b73",
+          "t": "G major"
+        },
+        "context": {
+          "type": "explain",
+          "title": {
+            "k": "L2449e81b73",
+            "t": "G major"
+          },
+          "body": {
+            "k": "L0e09dfdc9c",
+            "t": "G, A, B, C on the G string plus D, E, F sharp, G on the D string make the G major scale. Same fingers on both strings."
+          },
+          "visual": {
+            "type": "staff",
+            "midi": [
+              43,
+              45,
+              47,
+              48,
+              50,
+              52,
+              54,
+              55
+            ],
+            "clef": "bass"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/4/units/3/lessons/6/steps/3/options/1",
+        "lineage": [
+          "cello",
+          "vc-4",
+          "vc-4-7"
+        ],
+        "value": {
+          "k": "L2449e81b73",
+          "t": "G major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L2ffed6bb0c",
+            "t": "Which of these keys has no sharps?"
+          },
+          "options": [
+            {
+              "k": "Laa87302d09",
+              "t": "C major"
+            },
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            }
+          ],
+          "answer": 0,
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/2/title",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-3"
+        ],
+        "value": {
+          "k": "L2449e81b73",
+          "t": "G major"
+        },
+        "context": {
+          "lesson_id": "thy-5-3",
+          "title": {
+            "k": "L2449e81b73",
+            "t": "G major"
+          },
+          "kind": "lesson"
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/3/steps/5/options/0",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-4"
+        ],
+        "value": {
+          "k": "L2449e81b73",
+          "t": "G major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L8d6ce15313",
+            "t": "Which major key has two sharps?"
+          },
+          "options": [
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "Lea785300c4",
+              "t": "F major"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "L5249b2406f",
+            "t": "D major has F♯ and C♯."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/4/steps/1/options/2",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-5"
+        ],
+        "value": {
+          "k": "L2449e81b73",
+          "t": "G major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L0cee63f97a",
+            "t": "A key signature has one sharp, F♯. Which major key is it?"
+          },
+          "options": [
+            {
+              "k": "Laa87302d09",
+              "t": "C major"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            },
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "Lb21922233a",
+            "t": "G major is the major key with just F♯."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/4/steps/2/options/2",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-5"
+        ],
+        "value": {
+          "k": "L2449e81b73",
+          "t": "G major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L7e90bc9187",
+            "t": "A key signature has one flat, B♭. Which major key is it?"
+          },
+          "options": [
+            {
+              "k": "Lea785300c4",
+              "t": "F major"
+            },
+            {
+              "k": "L4b65fb9aa1",
+              "t": "B♭ major"
+            },
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "Lb2bc6030ed",
+            "t": "F major is the major key with just B♭."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/4/steps/5/options/0",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-5"
+        ],
+        "value": {
+          "k": "L2449e81b73",
+          "t": "G major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lb22495cd15",
+            "t": "Which major key has no sharps or flats?"
+          },
+          "options": [
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "Lea785300c4",
+              "t": "F major"
+            },
+            {
+              "k": "Laa87302d09",
+              "t": "C major"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "Lfeae291c1f",
+            "t": "C major uses only white keys."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/4/lessons/5/steps/4/options/0",
+        "lineage": [
+          "theory",
+          "thy-5",
+          "thy-5-6"
+        ],
+        "value": {
+          "k": "L2449e81b73",
+          "t": "G major"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L132c463c58",
+            "t": "Which scale has the notes D, E, F♯, G, A, B, C♯?"
+          },
+          "options": [
+            {
+              "k": "L2449e81b73",
+              "t": "G major"
+            },
+            {
+              "k": "L42626aabd8",
+              "t": "D major"
+            },
+            {
+              "k": "L3c6bc13182",
+              "t": "A major"
+            }
+          ],
+          "answer": 1,
+          "visual": {
+            "type": "none"
+          }
+        }
+      }
+    ],
+    "L9cf6021835": [
+      {
+        "pointer": "/courses/8/units/6/lessons/3/steps/2/options/0",
+        "lineage": [
+          "theory",
+          "thy-7",
+          "thy-7-4"
+        ],
+        "value": {
+          "k": "L9cf6021835",
+          "t": "F major chord"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lfd68d2b242",
+            "t": "In C major, which chord is IV?"
+          },
+          "options": [
+            {
+              "k": "L9cf6021835",
+              "t": "F major chord"
+            },
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            },
+            {
+              "k": "Ld975a19a54",
+              "t": "G major chord"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "L4d08076fb1",
+            "t": "The fourth note of C major is F."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/6/lessons/3/steps/3/options/2",
+        "lineage": [
+          "theory",
+          "thy-7",
+          "thy-7-4"
+        ],
+        "value": {
+          "k": "L9cf6021835",
+          "t": "F major chord"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L9c2396e833",
+            "t": "In C major, which chord is vi?"
+          },
+          "options": [
+            {
+              "k": "Lc1965ac98d",
+              "t": "A major chord"
+            },
+            {
+              "k": "L728cd633f1",
+              "t": "A minor"
+            },
+            {
+              "k": "L9cf6021835",
+              "t": "F major chord"
+            }
+          ],
+          "answer": 1,
+          "why": {
+            "k": "L193dfdb00e",
+            "t": "The sixth note is A, and lowercase vi means minor."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      }
+    ],
+    "Lc3e1440b37": [
+      {
+        "pointer": "/courses/0/units/4/lessons/5/steps/2/options/2",
+        "lineage": [
+          "guitar",
+          "gtr-5",
+          "gtr-5-spotlight"
+        ],
+        "value": {
+          "k": "Lc3e1440b37",
+          "t": "E minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L9e497e97e9",
+            "t": "Which chord in Kite Weather skips strings 5 and 6?"
+          },
+          "options": [
+            {
+              "k": "L32096c2e0e",
+              "t": "C"
+            },
+            {
+              "k": "L50c9e8d5fc",
+              "t": "D"
+            },
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            }
+          ],
+          "answer": 1,
+          "why": {
+            "k": "L45bae2049d",
+            "t": "D's root is open string 4, so strings 5 and 6 stay quiet."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/0/units/6/lessons/4/steps/2/options/2",
+        "lineage": [
+          "guitar",
+          "gtr-7",
+          "gtr-7-5"
+        ],
+        "value": {
+          "k": "Lc3e1440b37",
+          "t": "E minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L79ea537c97",
+            "t": "Which chord pulls toward G?"
+          },
+          "options": [
+            {
+              "k": "L92d40794f5",
+              "t": "D7"
+            },
+            {
+              "k": "L32096c2e0e",
+              "t": "C"
+            },
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "L58d52b16c1",
+            "t": "D7's extra note leans toward G. When G arrives, the tension lets go."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/0/units/6/lessons/6/steps/1/options/0",
+        "lineage": [
+          "guitar",
+          "gtr-7",
+          "gtr-7-6"
+        ],
+        "value": {
+          "k": "Lc3e1440b37",
+          "t": "E minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Ld8ca78c4d8",
+            "t": "Which chord pulls hardest toward G?"
+          },
+          "options": [
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            },
+            {
+              "k": "L32096c2e0e",
+              "t": "C"
+            },
+            {
+              "k": "L92d40794f5",
+              "t": "D7"
+            }
+          ],
+          "answer": 2,
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/0/units/7/lessons/1/steps/5/options/2",
+        "lineage": [
+          "guitar",
+          "gtr-8",
+          "gtr-8-2"
+        ],
+        "value": {
+          "k": "Lc3e1440b37",
+          "t": "E minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L224c7417dc",
+            "t": "Which chord does B7 lead to most naturally?"
+          },
+          "options": [
+            {
+              "k": "L50c9e8d5fc",
+              "t": "D"
+            },
+            {
+              "k": "L32096c2e0e",
+              "t": "C"
+            },
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            }
+          ],
+          "answer": 2,
+          "why": {
+            "k": "L68d4cfda41",
+            "t": "B7 pulls toward E. Its tension melts into E minor or E."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/0/units/17/lessons/5/steps/1/options/0",
+        "lineage": [
+          "guitar",
+          "gtr-18",
+          "gtr-18-spotlight"
+        ],
+        "value": {
+          "k": "Lc3e1440b37",
+          "t": "E minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Leacb886dc3",
+            "t": "Roller Rink's loop is the one, six, four and five of G. Which chord is the six?"
+          },
+          "options": [
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            },
+            {
+              "k": "L32096c2e0e",
+              "t": "C"
+            },
+            {
+              "k": "L50c9e8d5fc",
+              "t": "D"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "Lb615a6e600",
+            "t": "Count up G major: G 1, A 2, B 3, C 4, D 5, E 6. The chord on 6 is minor: E minor."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/0/units/19/lessons/2/steps/3/options/0",
+        "lineage": [
+          "guitar",
+          "gtr-20",
+          "gtr-20-3"
+        ],
+        "value": {
+          "k": "Lc3e1440b37",
+          "t": "E minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L2e035bd48b",
+            "t": "In G major, which chord is built on 6?"
+          },
+          "options": [
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            },
+            {
+              "k": "Le0184adedf",
+              "t": "E"
+            },
+            {
+              "k": "L32096c2e0e",
+              "t": "C"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "La227d18f6d",
+            "t": "The sixth note is E, and chords on 2, 3 and 6 are minor. Stack E, G and B: E minor."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/1/units/4/lessons/1/title",
+        "lineage": [
+          "ukulele",
+          "uke-5",
+          "uke-5-2"
+        ],
+        "value": {
+          "k": "Lc3e1440b37",
+          "t": "E minor"
+        },
+        "context": {
+          "lesson_id": "uke-5-2",
+          "title": {
+            "k": "Lc3e1440b37",
+            "t": "E minor"
+          },
+          "kind": "lesson"
+        }
+      },
+      {
+        "pointer": "/courses/1/units/4/lessons/4/steps/3/options/1",
+        "lineage": [
+          "ukulele",
+          "uke-5",
+          "uke-5-5"
+        ],
+        "value": {
+          "k": "Lc3e1440b37",
+          "t": "E minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L5b206df439",
+            "t": "Which chord is vi in C?"
+          },
+          "options": [
+            {
+              "k": "L728cd633f1",
+              "t": "A minor"
+            },
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            },
+            {
+              "k": "Lf884b03c33",
+              "t": "D minor"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "L3257dbf5cd",
+            "t": "Lowercase numbers mean minor chords. The sixth note of C major is A."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/1/units/4/lessons/5/steps/4/options/2",
+        "lineage": [
+          "ukulele",
+          "uke-5",
+          "uke-5-6"
+        ],
+        "value": {
+          "k": "Lc3e1440b37",
+          "t": "E minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L8570060cff",
+            "t": "In the key of C, which chord is V?"
+          },
+          "options": [
+            {
+              "k": "Le69f20e9f6",
+              "t": "F"
+            },
+            {
+              "k": "La36a6718f5",
+              "t": "G"
+            },
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            },
+            {
+              "k": "L728cd633f1",
+              "t": "A minor"
+            }
+          ],
+          "answer": 1,
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/1/units/6/lessons/5/steps/3/options/1",
+        "lineage": [
+          "ukulele",
+          "uke-7",
+          "uke-7-6"
+        ],
+        "value": {
+          "k": "Lc3e1440b37",
+          "t": "E minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L7be8ead7d9",
+            "t": "In the key of G, which chord is V?"
+          },
+          "options": [
+            {
+              "k": "L32096c2e0e",
+              "t": "C"
+            },
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            },
+            {
+              "k": "L92d40794f5",
+              "t": "D7"
+            }
+          ],
+          "answer": 2,
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/6/units/2/lessons/3/title",
+        "lineage": [
+          "banjo",
+          "bjo-3",
+          "bjo-3-4"
+        ],
+        "value": {
+          "k": "Lc3e1440b37",
+          "t": "E minor"
+        },
+        "context": {
+          "lesson_id": "bjo-3-4",
+          "title": {
+            "k": "Lc3e1440b37",
+            "t": "E minor"
+          },
+          "kind": "lesson"
+        }
+      },
+      {
+        "pointer": "/courses/8/units/6/lessons/3/steps/2/options/1",
+        "lineage": [
+          "theory",
+          "thy-7",
+          "thy-7-4"
+        ],
+        "value": {
+          "k": "Lc3e1440b37",
+          "t": "E minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Lfd68d2b242",
+            "t": "In C major, which chord is IV?"
+          },
+          "options": [
+            {
+              "k": "L9cf6021835",
+              "t": "F major chord"
+            },
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            },
+            {
+              "k": "Ld975a19a54",
+              "t": "G major chord"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "L4d08076fb1",
+            "t": "The fourth note of C major is F."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/6/lessons/4/steps/4/options/2",
+        "lineage": [
+          "theory",
+          "thy-7",
+          "thy-7-5"
+        ],
+        "value": {
+          "k": "Lc3e1440b37",
+          "t": "E minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "La5b0809117",
+            "t": "In C major, which chord is ii?"
+          },
+          "options": [
+            {
+              "k": "Lf884b03c33",
+              "t": "D minor"
+            },
+            {
+              "k": "Lab958557bf",
+              "t": "D major chord"
+            },
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            }
+          ],
+          "answer": 0,
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/8/units/7/lessons/0/steps/6/options/2",
+        "lineage": [
+          "theory",
+          "thy-8",
+          "thy-8-1"
+        ],
+        "value": {
+          "k": "Lc3e1440b37",
+          "t": "E minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "Le691b34d33",
+            "t": "In D major, which chord is IV?"
+          },
+          "options": [
+            {
+              "k": "Ld975a19a54",
+              "t": "G major chord"
+            },
+            {
+              "k": "Lc1965ac98d",
+              "t": "A major chord"
+            },
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "Lb480f56c92",
+            "t": "D, E, F♯, G: the fourth note is G."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      },
+      {
+        "pointer": "/courses/12/units/9/lessons/5/steps/5/options/0",
+        "lineage": [
+          "originals",
+          "orig-10",
+          "orig-barre-set"
+        ],
+        "value": {
+          "k": "Lc3e1440b37",
+          "t": "E minor"
+        },
+        "context": {
+          "type": "quiz",
+          "prompt": {
+            "k": "L2a8419bbfc",
+            "t": "F sharp minor is which shape, barred at fret 2?"
+          },
+          "options": [
+            {
+              "k": "Lc3e1440b37",
+              "t": "E minor"
+            },
+            {
+              "k": "L6dcd4ce23d",
+              "t": "A"
+            },
+            {
+              "k": "L50c9e8d5fc",
+              "t": "D"
+            }
+          ],
+          "answer": 0,
+          "why": {
+            "k": "L371ab07a8b",
+            "t": "Barre at fret 2 and the E minor shape sits in front of your first finger: F sharp minor."
+          },
+          "visual": {
+            "type": "none"
+          }
+        }
+      }
+    ]
+  }
+}

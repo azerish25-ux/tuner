@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-10-27T02:22:52.564253+00:00",
+  "reviewer": "Independent integration review agent",
+  "skills": [
+    "systematic-debugging",
+    "code-review-and-quality"
+  ],
+  "native_revision": "b6efd36f5f72d7ec723229949f7c54c32972b72c",
+  "job_id": 121958964498,
+  "run_id": 40434233016,
+  "verdict": "confirmed_test_route_bug_and_fixture_isolation_defect_other_timeouts_need_identity_bound_rerun",
+  "scope": "Read-only investigation of actual completed app job log and current unchanged privacy source/tests; no timeout increase, code mutation or native rerun.",
+  "native_evidence": {
+    "log_path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\app-b6efd36-final.log",
+    "log_sha256": "c841061aa35ded5250640f59d47742f34ee1466d06e994190e51a5d104c0ed46",
+    "failed_cases": [
+      {
+        "test": "testAttributionRevocationDuringRetryWaitPreventsMoreRequestsAndEvents",
+        "source_line": 231,
+        "log_lines": [
+          16779,
+          16780,
+          16781
+        ],
+        "observed": "first-attempt expectation unfulfilled2s"
+      },
+      {
+        "test": "testAttributionWhitelistOmitsCountryAndDoesNotMarkSentBeforeAcknowledgment",
+        "source_line": 280,
+        "log_lines": [
+          16782,
+          16783,
+          16784
+        ],
+        "observed": "record callback unfulfilled2s"
+      },
+      {
+        "test": "testDeliveryRemainsOffUntilSavedPreferenceIsApplied",
+        "source_line": 126,
+        "log_lines": [
+          16785,
+          16786,
+          16787
+        ],
+        "observed": "accepted callback unfulfilled2s"
+      },
+      {
+        "test": "testExplicitRequestAcknowledgesOnlyIngestHTTP200AndNeverJustQueueing",
+        "source_line": 93,
+        "log_lines": [
+          16788,
+          16790,
+          16794,
+          16795,
+          16796
+        ],
+        "observed": "HTTP200/422/500 callback timeouts; HTTP202 not listed as failed"
+      },
+      {
+        "test": "testInflightAttributionIsCanceledAndAnOffOnCycleCanStartExactlyOneNewRun",
+        "source_line": 261,
+        "log_lines": [
+          16809,
+          16811,
+          16812,
+          16813,
+          16814
+        ],
+        "observed": "second request and record missing; token/request counters1 rather than2"
+      },
+      {
+        "test": "testOldHeldTokenCannotSendOrClearTheNewRunAfterOffOn",
+        "source_line": 191,
+        "log_lines": [
+          16820,
+          16823,
+          16832,
+          16854,
+          16864
+        ],
+        "observed": "newRequest expectation fulfilled twice; requests2 rather than1; uncaught XCTest NSInternalInconsistencyException from URLProtocol.startLoading closure terminates app"
+      }
+    ],
+    "restart": "Log16872 explicitly says restarting after unexpected exit/crash/testtimeout; later2 privacy tests and remaining app tests are in a new process.",
+    "partial_success": "Log17246/17248 reports102 tests zero failures after restart;17507/17511 reports3 smoke tests zero failures. Neither replaces earlier failures or establishes a full passing app job."
+  },
+  "confirmed_findings": [
+    {
+      "id": "PRIVACY-NATIVE-01",
+      "priority": "P2",
+      "path": "ios/TimbreAppTests/AnalyticsPrivacyTests.swift",
+      "line": 226,
+      "finding": "Legacy URL.path strips trailing slash, but test matches /api/v1/ for the actual /api/v1/ endpoint. The route condition never recognizes the normalized path, does not fulfill first and silently leaves its protocol request unanswered.",
+      "evidence": [
+        "Product endpoint is https://api-adservices.apple.com/api/v1/ at AnalyticsTransport.swift88.",
+        "Apple NSURL.path docs explicitly document trailing-slash stripping.",
+        "Official swift-foundation URL.swift1091 delegates legacy path; URL_Impl.swift543-558 strips trailing slashes even on non-file URLs.",
+        "Native first-attempt wait times out at231; no unexpected-route assertion in handler identifies mismatch."
+      ],
+      "minimal_fix": "Compare expected URL identity or URLComponents path/modern path(percentEncoded:false), and explicitly fail/complete unexpected routes. Add a platform URL semantic regression so tests do not silently depend on deprecated path normalization."
+    },
+    {
+      "id": "PRIVACY-NATIVE-02",
+      "priority": "P2",
+      "path": "ios/TimbreAppTests/AnalyticsPrivacyTests.swift",
+      "line": 318,
+      "finding": "Fixture callbacks are process-global mutable state consulted when startLoading/stopLoading execute; tests create many sessions but only reset globals at teardown, without revoking retained transports or canceling/draining sessions. Late starts/stops and retries can therefore adopt a later test or loop-iteration expectation.",
+      "evidence": [
+        "session helper6-10 creates untracked ephemeral sessions.",
+        "tearDown13-15 only resets onStart/onStop.",
+        "configure323-325 replaces shared closures; startLoading329 and stopLoading330 dynamically fetch the current global callback.",
+        "Explicit status loop constructs separate still-live sessions per iteration and continues after expectation timeout.",
+        "Failed attribution tests can leave enabled reporters/tasks/retry closures alive beyond their function lifetime because callbacks retain production objects.",
+        "Native overfulfill callstack16835-16864 reaches current test closure from PrivacyURLProtocol.startLoading; no request/session identity is logged to distinguish duplicate current request from an older request adopting that closure."
+      ],
+      "certainty": "Isolation defect is directly established by source. It is a strong explanation for cross-test crash/remaining timeouts, but the log lacks identity/phase traces to prove which historical task supplied the extra request."
+    }
+  ],
+  "production_assessment": [
+    "No high-confidence production lease/cancellation/HTTP-acknowledgement bug is established by these logs alone. Production generation is checked under lock, revoked tracked requests reject completion, reporter token/result/retry work is lease-gated, and old provider completion cannot clear a newer activeLease by source inspection.",
+    "Transport completion invokes its user completion outside its own lock. Reporter then deliberately re-enters withLease; immediate test done callbacks use recursive same-thread lease locking. Telemetry callbacks enqueue work rather than synchronously waiting on its serial queue. No concrete lock cycle is established in reviewed paths.",
+    "Static fixture lock is released before invoking onStart/onStop, so a global registry-lock deadlock is not supported by this source.",
+    "The missing second token counter could reflect delayed utility work under runner load or fixture contamination; do not assign it to a product logic bug without an isolated identity-bound rerun."
+  ],
+  "decisive_minimal_resolution": [
+    "Initially keep production code and timeout values unchanged. Correct only the endpoint matcher and make unexpected fixture requests explicit failures/completions.",
+    "Replace static current callbacks with per-session fixture identity carried in session configuration/request metadata; each protocol instance binds the fixture and start/stop handler for its own lifecycle. Status-loop sessions must not share mutable handlers.",
+    "Track all sessions and test-created transports. Revoke transports, invalidateAndCancel sessions and await their task/invalidation completion before unregistering fixture handlers; explicitly release held token providers. Retired/unknown fixture IDs fail closed through URLProtocolClient rather than falling through to real HTTP.",
+    "Serialize protocol response/stop state and enforce one-shot finished/cancelled behavior so a held response cannot deliver after cancellation. Do not hold registry locks while invoking callbacks or URLProtocolClient.",
+    "Retain overfulfillment assertions and existing tight timing expectations. Do not increase timeouts, suppress XCTest failures, or mark privacy tests passing based on restart remainder."
+  ],
+  "regression_proof_required": [
+    "A tiny native URL assertion demonstrates legacy normalized path and expected endpoint comparison before running reporter test; corrected retry-wait case passes at the original2s/.3s bounds.",
+    "Deterministic fixture regression: create/hold sessionA, configure sessionB, then release/cancelA; onlyA callbacks may fire. Repeat for A created before B but startLoading delayed until afterB exists.",
+    "Retired fixture/session late-start and late-stop regression must reject without fulfilling any newer expectation and without real network fallback.",
+    "Run HTTP200/202/422/500 test alone in fresh process with per-request identity start/respond/completion checkpoints, then run full privacy class repeatedly serially in both normal and stress/reversed order.",
+    "Collect session/request/protocol-instance synthetic IDs, URL host/path/method, phase and start/stop/respond/completion counts/timestamps. Do not log real attribution tokens or arbitrary user payloads.",
+    "Only after fixture isolation passes, rerun full app+smoke suite in one successful process. If any timeout remains, trace lease generation, token-entry count and request completion for that isolated test before changing production."
+  ],
+  "source_sha256": {
+    "ios/TimbreAppTests/AnalyticsPrivacyTests.swift": "6e09e649961e1fbc055cf14f1240c267078a1e76d07d62b594fb05ad0ffdc30f",
+    "ios/Timbre/Services/AnalyticsTransport.swift": "7e89d80808af137b1491f3a73157e1743431f716e3e3aaf3e2ad2d39e1752113",
+    "ios/Timbre/Services/Analytics.swift": "0ef72ddad0382dacb1f300e98dbcf0e5a7cd324ae5d65ad686f816ea3419a72e"
+  },
+  "primary_references": [
+    "https://developer.apple.com/documentation/foundation/nsurl/path",
+    "https://github.com/swiftlang/swift-foundation/blob/main/Sources/FoundationEssentials/URL/URL.swift",
+    "https://github.com/swiftlang/swift-foundation/blob/main/Sources/FoundationEssentials/URL/URL_Impl.swift#L543",
+    "https://developer.apple.com/documentation/foundation/urlsession/invalidateandcancel()",
+    "https://developer.apple.com/documentation/foundation/urlprotocol/startloading()"
+  ],
+  "limitations": [
+    "Windows source/log diagnosis only; no Darwin Swift reproduction or confirmation of the remaining timeout mechanism.",
+    "Official current Foundation source corroborates documented path behavior; no claim this review executed the exact Xcode26.3 Foundation binary.",
+    "Prior review receipts are unchanged. Only this triage receipt written; no implementation change, delegation, commit/push or native/Apple action."
+  ]
+}

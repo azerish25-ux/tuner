@@ -1,0 +1,71 @@
+{
+  "source_sha": "9e1e3c41ec24c1a2c78c22ea7a90726dc4ae6599",
+  "run_id": 40600424514,
+  "native_size": [
+    2752,
+    2064
+  ],
+  "method": "Unaltered upright native-pixel crops from verified XCUIScreen PNGs. Tests paste each crop at original coordinates on a synthetic black canvas; that reconstruction is not a native screenshot. Full eight-source native rerenders are separately inspected.",
+  "captures": [
+    {
+      "locale": "en-US",
+      "capture": "ipad-landscape-tune",
+      "source_path": "capture/attempt-1/attachments/E8EE4404-65A3-4D01-B77D-AEDC14DBB120.png",
+      "source_sha256": "9e911711107e0efff7a60e619af66e094f354598607774074db5f05e82575824",
+      "source_pixel_sha256": "77fa009b22227c11c896096ddd41a2a265842352c7dd888652547a51af333881",
+      "crop_box": [
+        150,
+        1880,
+        970,
+        2044
+      ],
+      "crop_file": "en-US-ipad-landscape-tune.png",
+      "crop_sha256": "3c7e6109b3ec5053ef656a1c25b503f02e2f4f2b8c4a781b33208415ea5df20c"
+    },
+    {
+      "locale": "en-US",
+      "capture": "ipad-landscape-instruments",
+      "source_path": "capture/attempt-1/attachments/0043C8E0-FE5F-4392-BED5-B15299549046.png",
+      "source_sha256": "a7ff0706f5d9cf6605c0479746cb5223045be94b51cd7fd6ea373e3571252615",
+      "source_pixel_sha256": "3ada3c5a990f2b7e9924f77565bd1922d3ad939593f4b61d3ad4f1a3045ecde4",
+      "crop_box": [
+        2500,
+        60,
+        2745,
+        175
+      ],
+      "crop_file": "en-US-ipad-landscape-instruments.png",
+      "crop_sha256": "cb3baf7f0c3c5cd9fb54287dae2fac3f892ad96678e0b7db02717429707272a6"
+    },
+    {
+      "locale": "de-DE",
+      "capture": "ipad-landscape-tune",
+      "source_path": "capture/attempt-1/attachments/93ABD269-0275-4AFF-8DEF-FB8177E9ADF6.png",
+      "source_sha256": "2820e72bc913b89ab59281806bff14cfe6fe36f986452d233e3dbd649b44d51f",
+      "source_pixel_sha256": "9508a7777bb3dfc14bcf22e8bd6f34bdf45c4c2e8ef37aa9f5bbf7babdc8a293",
+      "crop_box": [
+        150,
+        1880,
+        970,
+        2044
+      ],
+      "crop_file": "de-DE-ipad-landscape-tune.png",
+      "crop_sha256": "8e581932ed9338f27e7571226d0889c1ebf9ff0005e94357fb619f164cd33609"
+    },
+    {
+      "locale": "de-DE",
+      "capture": "ipad-landscape-instruments",
+      "source_path": "capture/attempt-1/attachments/E5186EDB-378C-4F01-9C5E-608D2873A28B.png",
+      "source_sha256": "2320811b1e95be201c43804507294f9fb1b3c95af2aea28bf817d4cbed108a48",
+      "source_pixel_sha256": "4b2db188415fbc4be0a80dc89675f88397453f1b6640d690f654274e08308666",
+      "crop_box": [
+        2500,
+        60,
+        2745,
+        175
+      ],
+      "crop_file": "de-DE-ipad-landscape-instruments.png",
+      "crop_sha256": "cf8c04473f8c16834fd84a5b6532616bcfb26a405f876db0fd112fc76bc9f4e9"
+    }
+  ]
+}

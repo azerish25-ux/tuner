@@ -154,13 +154,16 @@ struct Eyebrow: View {
 struct ScreenTitle: View {
     let title: Text
     var subtitle: Text?
+    let identity: String
 
-    init(title: LocalizedStringKey, subtitle: LocalizedStringKey? = nil) {
+    init(title: LocalizedStringKey, subtitle: LocalizedStringKey? = nil, identity: String = "screen.header") {
+        self.identity = identity
         self.title = Text(title)
         self.subtitle = subtitle.map { Text($0) }
     }
 
-    init(title: Text, subtitle: Text? = nil) {
+    init(title: Text, subtitle: Text? = nil, identity: String = "screen.header") {
+        self.identity = identity
         self.title = title
         self.subtitle = subtitle
     }
@@ -171,9 +174,11 @@ struct ScreenTitle: View {
         let _ = legibility
         VStack(alignment: .leading, spacing: 4) {
             title.font(Typeface.screenTitle).tracking(-0.6).foregroundStyle(Palette.ink)
+                .accessibilityIdentifier(identity + ".title")
                 .fixedSize(horizontal: false, vertical: true)
             if let subtitle {
                 subtitle.font(.subheadline).foregroundStyle(Palette.inkSoft)
+                    .accessibilityIdentifier(identity + ".subtitle")
                     .fixedSize(horizontal: false, vertical: true)
             }
         }

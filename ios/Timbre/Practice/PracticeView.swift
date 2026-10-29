@@ -166,11 +166,11 @@ struct PracticeView: View {
         let next = Progression.level(for: level.next)
         return VStack(alignment: .leading, spacing: 14) {
             HStack(alignment: .center, spacing: 16) {
-                LevelRing(size: 84)
+                LevelRing(size: 84, identity: "practice.level.tile")
                 VStack(alignment: .leading, spacing: 6) {
                     Text(LocalizedStringKey(level.name)).font(Typeface.display(20)).foregroundStyle(Palette.ink)
                         .lineLimit(2).minimumScaleFactor(0.8)
-                    Text("\(xp - level.floor) / \(level.next - level.floor) XP · next: \(Text(LocalizedStringKey(next.name)))")
+                    PracticeXPProgress(done: xp - level.floor, total: level.next - level.floor, next: next.name)
                         .font(.subheadline).foregroundStyle(Palette.inkSoft)
                         .fixedSize(horizontal: false, vertical: true)
                     ProgressLine(value: level.progress(xp), height: 6)
@@ -376,12 +376,12 @@ struct PracticeView: View {
         let level = store.level
         let next = Progression.level(for: level.next)
         return HStack(spacing: 14) {
-            LevelRing(size: 62)
+            LevelRing(size: 62, identity: "practice.level.card")
             VStack(alignment: .leading, spacing: 6) {
                 Text(LocalizedStringKey(level.name)).font(Typeface.cardTitle).foregroundStyle(Palette.ink)
                     .fixedSize(horizontal: false, vertical: true)
                 ProgressLine(value: level.progress(xp))
-                Text("\(xp - level.floor) / \(level.next - level.floor) XP · next: \(Text(LocalizedStringKey(next.name)))").font(.footnote).foregroundStyle(Palette.inkSoft)
+                PracticeXPProgress(done: xp - level.floor, total: level.next - level.floor, next: next.name).font(.footnote).foregroundStyle(Palette.inkSoft)
                     .fixedSize(horizontal: false, vertical: true)
             }
         }

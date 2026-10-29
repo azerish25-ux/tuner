@@ -20,6 +20,8 @@ import report
 BUNDLE = 'com.shahradazerisharghi.timbre.watchkitapp'
 SIZE = [416, 496]
 PAGES = ('today', 'metronome')
+# Explicit shipping contract: count alone must not accept a missing language replaced by an alias.
+SHIPPED_LANGUAGES = frozenset(('ar', 'bg', 'bn', 'ca', 'cs', 'da', 'de', 'el', 'en', 'es', 'et', 'fa', 'fi', 'fr', 'gu', 'he', 'hi', 'hr', 'hu', 'id', 'is', 'it', 'ja', 'kn', 'ko', 'lt', 'lv', 'ml', 'mr', 'ms', 'nl', 'no', 'or', 'pa', 'pl', 'pt', 'ro', 'ru', 'sk', 'sl', 'sv', 'sw', 'ta', 'te', 'th', 'tr', 'uk', 'ur', 'vi', 'zh-CN', 'zh-Hant', 'zu'))
 LABEL_KEYS = {
     'today': {'streak': 'day streak', 'practiced': 'Practised today', 'today': 'Today'},
     'metronome': {'title': 'Metronome', 'tempo': 'Andante', 'tap': 'Tap', 'stop': 'Stop', 'meter': 'Meter'},
@@ -28,7 +30,10 @@ LABEL_KEYS = {
 
 def expectations():
     result = {}
-    for language in ['en'] + report.locales():
+    languages = ['en'] + report.locales()
+    if len(languages) != 52 or set(languages) != SHIPPED_LANGUAGES:
+        raise ValueError('Watch capture scope must contain exactly the 52 canonical app languages')
+    for language in languages:
         table = report.read_strings(report.RES / f'{language}.lproj/Localizable.strings')
         pages = {}
         for page, keys in LABEL_KEYS.items():
@@ -39,8 +44,6 @@ def expectations():
                     raise ValueError(f'{language}: missing applied Watch label {key}')
                 pages[page][field] = value
         result[language] = pages
-    if len(result) != 49:
-        raise ValueError('Watch capture scope must contain all49app languages')
     return result
 
 
@@ -49,14 +52,16 @@ def store_mappings(languages, image_format='png'):
     inventory = json.loads((ROOT / 'tools/l10n/store-locales.json').read_text(encoding='utf-8'))
     rows = []
     for row in inventory['locales']:
-        language = row['app_locale'] or row['app_fallback']
+        language = row['app_locale']
+        if not language or row['app_fallback'] is not None:
+            raise ValueError(f"Watch store locale requires supported app UI, not fallback: {row['locale']}")
         if language not in languages:
             raise ValueError(f"No Watch captures for store locale {row['locale']}: {language}")
         rows.append({'store_locale': row['locale'], 'app_locale': row['app_locale'],
                      'capture_language': language,
-                     'mapping': 'supported_app_language' if row['app_locale'] else 'explicit_english_fallback',
+                     'mapping': 'supported_app_language',
                      'screenshots': [f'{language}/{page}.{suffix}' for page in PAGES],
-                     'translated_app_ui': row['app_locale'] is not None})
+                     'translated_app_ui': True})
     if len(rows) != 50 or len({row['store_locale'] for row in rows}) != 50:
         raise ValueError('Store inventory must contain50distinct locales')
     return rows
@@ -88,8 +93,12 @@ def jpeg_size(path):
 
 
 def screenshot_format(help_text):
+    if '--type' not in help_text or not any(kind in help_text for kind in ('png', 'jpeg')):
+        raise ValueError('Missing recorded native screenshot format capabilities')
     black = '--mask' in help_text and 'black' in help_text
     png = '--type' in help_text and 'png' in help_text and black
+    if not png and 'jpeg' not in help_text:
+        raise ValueError('Native opaque PNG or JPEG capability is not established')
     return {'type': 'png' if png else 'jpeg', 'black_mask': black,
             'reason': 'public native PNG and black mask supported' if png else 'public PNG/black-mask capability not found; native JPEG fallback'}
 
@@ -169,9 +178,14 @@ def png_info(path):
 
 
 def normalized_language(value):
-    if value in ('zh-CN', 'zh-Hans', 'zh-Hans-CN'):
-        return 'zh-CN'
-    return value.replace('_', '-').split('-')[0]
+    parts = value.replace('_', '-').lower().split('-')
+    if parts[0] == 'zh':
+        if 'hant' in parts:
+            return 'zh-Hant'
+        if 'hans' in parts:
+            return 'zh-CN'
+        return 'zh-Hant' if set(parts) & {'tw', 'hk', 'mo'} else 'zh-CN'
+    return 'no' if parts[0] in ('nb', 'nn') else parts[0]
 
 
 def validate_probe(probe, row, expected, revision):
@@ -233,12 +247,90 @@ def validate_coverage(rows, languages):
         raise ValueError('Missing, extra or duplicate Watch language/page captures')
 
 
-def command(args, *, timeout=120, env=None, log=None):
+def command(args, *, timeout=120, env=None, log=None, capture_stderr=False):
     if log:
         with log.open('w', encoding='utf-8') as output:
             subprocess.run(args, cwd=ROOT, check=True, timeout=timeout, env=env, stdout=output, stderr=subprocess.STDOUT)
         return ''
-    return subprocess.check_output(args, cwd=ROOT, timeout=timeout, env=env, text=True).strip()
+    return subprocess.check_output(args, cwd=ROOT, timeout=timeout, env=env, text=True,
+                                   stderr=subprocess.STDOUT if capture_stderr else None).strip()
+
+
+def stale_terminating_scene(diagnostic):
+    """Require the owned bundle/PID's termination and delayed exit, not a generic launch error."""
+    identity = r'\[app<' + re.escape(BUNDLE) + r'>:(\d+)\]'
+    terminating = set(re.findall(identity + r'.*(?:Terminating for new launch|Already terminating; ignoring additional termination request)', diagnostic))
+    waiting = set(re.findall(identity + r'.*Still waiting on exit context', diagnostic))
+    return bool(terminating & waiting) and 'Scene update failed. Client process exited.' in diagnostic
+
+
+def restart_capture_simulator(device, row, attempt, directory):
+    """Clear Carousel's stale scene on this capture-owned Watch; never erase or reset shared services."""
+    for action, timeout in [('shutdown', 120), ('boot', 120), ('bootstatus', 180)]:
+        args = ['xcrun', 'simctl', action, device] + (['-b'] if action == 'bootstatus' else [])
+        command(args, timeout=timeout,
+                log=directory / f"recovery-{row['language']}-{row['page']}-{attempt}-{action}.log")
+
+
+def launch_capture(device, row, revision, directory):
+    """Retain every launch result; only the observed scene-transition refusal gets a bounded retry."""
+    history = directory / 'launches.json'
+    attempts = json.loads(history.read_text(encoding='utf-8')) if history.exists() else []
+    restarted = False
+    for attempt in range(1, 4):
+        row['token'] = str(uuid.uuid4())
+        environment = {**os.environ, **{f'SIMCTL_CHILD_TIMBRE_WATCH_CAPTURE_{key}': value for key, value in {
+            'PAGE': row['page'], 'LOCALE': row['language'], 'REVISION': revision, 'TOKEN': row['token']}.items()}}
+        args = ['xcrun', 'simctl', 'launch', '--terminate-running-process', device, BUNDLE,
+                '-AppleLanguages', f"({row['language']})", '-AppleLocale', row['language'].replace('-', '_')]
+        failure = None
+        try:
+            result = subprocess.run(args, cwd=ROOT, timeout=120, env=environment, text=True,
+                                    stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            returncode, output = result.returncode, result.stdout or ''
+        except (subprocess.TimeoutExpired, OSError) as error:
+            failure = error
+            partial = getattr(error, 'output', '') or ''
+            output = partial.decode('utf-8', errors='replace') if isinstance(partial, bytes) else str(partial)
+            output += f'\n{type(error).__name__}: {error}'
+            returncode = None
+        attempts.append({'language': row['language'], 'page': row['page'], 'attempt': attempt,
+                         'revision': revision, 'device': device, 'token': row['token'],
+                         'returncode': returncode, 'output': output,
+                         'failure_type': type(failure).__name__ if failure else None,
+                         'observedAt': time.time()})
+        history.write_text(json.dumps(attempts, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+        if returncode == 0:
+            return
+        diagnostic = directory / f"launch-{row['language']}-{row['page']}-{attempt}.log"
+        try:
+            command(['xcrun', 'simctl', 'spawn', device, 'log', 'show', '--last', '2m', '--style', 'compact',
+                     '--predicate', f'process == "SpringBoard" OR eventMessage CONTAINS[c] "{BUNDLE}"'],
+                    timeout=30, log=diagnostic)
+        except (subprocess.SubprocessError, OSError) as error:
+            with diagnostic.open('a', encoding='utf-8') as handle:
+                handle.write(f'\nLaunch diagnostics unavailable: {error}\n')
+        if failure is not None:
+            raise failure
+        if 'FBSOpenApplicationServiceErrorDomain' not in output or 'Scene update failed' not in output or attempt == 3:
+            raise subprocess.CalledProcessError(returncode, args, output=output)
+        if diagnostic.exists() and stale_terminating_scene(diagnostic.read_text(encoding='utf-8', errors='replace')):
+            if restarted:
+                raise subprocess.CalledProcessError(returncode, args, output=output)
+            attempts[-1]['recovery'] = {'action': 'restart-owned-watch', 'status': 'started'}
+            history.write_text(json.dumps(attempts, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+            try:
+                restart_capture_simulator(device, row, attempt, directory)
+            except (subprocess.SubprocessError, OSError) as error:
+                attempts[-1]['recovery'].update(status='failed', failure_type=type(error).__name__)
+                history.write_text(json.dumps(attempts, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+                raise
+            attempts[-1]['recovery']['status'] = 'completed'
+            history.write_text(json.dumps(attempts, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+            restarted = True
+            continue
+        command(['xcrun', 'simctl', 'bootstatus', device, '-b'], timeout=120)
+        time.sleep(2)
 
 
 def simulator_pair():
@@ -294,7 +386,7 @@ def capture(directory, revision):
     if (directory / 'manifest.json').exists():
         raise ValueError('Refuse to replace a completed capture manifest')
     expected = expectations()
-    help_text = command(['xcrun', 'simctl', 'help', 'io'])
+    help_text = command(['xcrun', 'simctl', 'help', 'io'], capture_stderr=True)
     (directory / 'simctl-io-help.txt').write_text(help_text + '\n', encoding='utf-8')
     mode = screenshot_format(help_text)
     suffix = 'png' if mode['type'] == 'png' else 'jpg'
@@ -314,10 +406,7 @@ def capture(directory, revision):
             row = {'language': language, 'page': page, 'token': str(uuid.uuid4()), 'file': f'{language}/{page}.{suffix}'}
             destination = directory / row['file']
             destination.parent.mkdir(exist_ok=True)
-            environment = {**os.environ, **{f'SIMCTL_CHILD_TIMBRE_WATCH_CAPTURE_{key}': value for key, value in {
-                'PAGE': page, 'LOCALE': language, 'REVISION': revision, 'TOKEN': row['token']}.items()}}
-            command(['xcrun', 'simctl', 'launch', '--terminate-running-process', watch, BUNDLE,
-                     '-AppleLanguages', f'({language})', '-AppleLocale', language.replace('-', '_')], env=environment)
+            launch_capture(watch, row, revision, directory)
             container = Path(command(['xcrun', 'simctl', 'get_app_container', watch, BUNDLE, 'data']))
             probe_path = container / 'Documents/watch-capture.json'
             row['before'] = wait_probe(probe_path, row, expected, revision)

@@ -1,0 +1,365 @@
+import UIKit
+import XCTest
+
+/// Real-app compact-phone coverage. Run explicitly on an iPhone SE (3rd generation), not a resized image.
+/// Screenshots include the real listening orb/meter; semantic geometry does not prove decorative-pixel bounds.
+final class TuneCheckLayoutUITests: XCTestCase {
+    private var app: XCUIApplication!
+    private var sample = "unstarted"
+    private var observations: [String] = []
+    private var watched: [String: XCUIElement] = [:]
+    private var watchedIdentity: [String: (id: String, label: String, value: String, type: XCUIElement.ElementType)] = [:]
+    private var header: XCUIElement!
+    private var skip: XCUIElement!
+    private var close: XCUIElement!
+    private var pinnedSkip = CGRect.zero
+    private var pinnedClose = CGRect.zero
+
+    private struct Failure: Error, CustomStringConvertible { let description: String }
+
+    private struct Copy {
+        let language: String
+        let locale: String
+        let learn: String
+        let lesson: String
+        let tuneUp: String
+        let title: String
+        let instructions: String
+        let hint: String
+        let skip: String
+        let stringPattern: String
+        let boardPattern: String
+        static let english = Copy(language: "en", locale: "en_US", learn: "Learn", lesson: "The open strings",
+            tuneUp: "Tune up", title: "Quick tune check",
+            instructions: "Pluck each open string. In-tune strings help Timbre hear you right.",
+            hint: "Pluck the string", skip: "My strings are tuned — skip",
+            stringPattern: "String [1-6]", boardPattern: "string 6 open")
+        static let arabic = Copy(language: "ar", locale: "ar_SA", learn: "تعلّم", lesson: "الأوتار المطلقة",
+            tuneUp: "ضبط الآلة", title: "فحص سريع للضبط",
+            instructions: "انقر كل وتر مفتوح. الأوتار المضبوطة تساعد Timbre على سماعك بدقة.",
+            hint: "انقر الوتر", skip: "أوتاري مضبوطة — تخطٍّ",
+            stringPattern: "الوتر [1-6١-٦]", boardPattern: "الوتر [6٦] مفتوح")
+    }
+
+    override func setUpWithError() throws {
+        continueAfterFailure = false
+        app = XCUIApplication()
+        XCUIDevice.shared.orientation = .portrait
+    }
+
+    override func tearDownWithError() throws {
+        app.terminate()
+        XCUIDevice.shared.orientation = .portrait
+    }
+
+    func testEnglishPortraitLarge() throws { try exercise(.english, landscape: false, ax5: false) }
+    func testEnglishLandscapeLarge() throws { try exercise(.english, landscape: true, ax5: false) }
+    func testEnglishPortraitAX5() throws { try exercise(.english, landscape: false, ax5: true) }
+    func testEnglishLandscapeAX5() throws { try exercise(.english, landscape: true, ax5: true) }
+    func testArabicPortraitLarge() throws { try exercise(.arabic, landscape: false, ax5: false) }
+    func testArabicLandscapeLarge() throws { try exercise(.arabic, landscape: true, ax5: false) }
+    func testArabicPortraitAX5() throws { try exercise(.arabic, landscape: false, ax5: true) }
+    func testArabicLandscapeAX5() throws { try exercise(.arabic, landscape: true, ax5: true) }
+
+    private func element(_ id: String) -> XCUIElement {
+        app.descendants(matching: .any).matching(identifier: id).firstMatch
+    }
+
+    private var screen: CGRect { app.windows.firstMatch.frame }
+
+    private static func valid(_ frame: CGRect) -> Bool {
+        !frame.isNull && !frame.isEmpty
+            && [frame.minX, frame.maxX, frame.minY, frame.maxY].allSatisfy { $0.isFinite }
+    }
+
+    private static func contains(_ frame: CGRect, in viewport: CGRect) -> Bool {
+        valid(frame) && valid(viewport) && frame.minX >= viewport.minX && frame.maxX <= viewport.maxX
+            && frame.minY >= viewport.minY && frame.maxY <= viewport.maxY
+    }
+
+    private func require(_ condition: Bool, _ message: String) throws {
+        guard condition else {
+            observations.append("FAIL: " + message)
+            capture("failure") // Attach before throwing, not a defer after a fatal XCTest assertion.
+            throw Failure(description: message)
+        }
+    }
+
+    private func exercise(_ copy: Copy, landscape: Bool, ax5: Bool) throws {
+        watched = [:]
+        watchedIdentity = [:]
+        observations = []
+        sample = "\(copy.language)-\(landscape ? "landscape" : "portrait")-\(ax5 ? "AX5" : "Large")"
+        app.launchEnvironment["TIMBRE_TEST_STORAGE_ID"] = UUID().uuidString
+        app.launchEnvironment["TIMBRE_SKIP_ONBOARDING"] = "1"
+        app.launchEnvironment["TIMBRE_DEMO_DATA"] = "1"
+        app.launchEnvironment["TIMBRE_STAGE_REST"] = "1"
+        // Existing UserDefaults argument domain: each case must really enter today's check, even after a prior skip.
+        // No synthetic pitch: the genuine waiting state cannot tune itself away while geometry is inspected.
+        app.launchArguments = ["-AppleLanguages", "(\(copy.language))", "-AppleLocale", copy.locale,
+            "-UIPreferredContentSizeCategoryName", ax5 ? "UICTContentSizeCategoryAccessibilityXXXL" : "UICTContentSizeCategoryL",
+            "-tunecheck.guitar.acoustic.6", "1900-01-01"]
+        app.launch()
+        try require(element("tune.stage").waitForExistence(timeout: 40), "Actual app did not reach the tuner")
+        try require(screen.size == CGSize(width: 375, height: 667),
+                    "Compact fixture requires an actual 375×667-point iPhone window, got \(screen)")
+        let tab = app.tabBars.buttons.matching(NSPredicate(format: "label == %@", copy.learn))
+        try require(tab.count == 1 && tab.firstMatch.isHittable, "Unique localized Learn tab is not available")
+        // These cases exercise lesson layout. Confirm actual tab selection after bounded physical taps;
+        // preserve every attempted tap and require the selected state before entering the lesson.
+        for attempt in 1...3 {
+            if tab.firstMatch.isSelected { break }
+            try require(tab.firstMatch.isHittable, "Learn tab became unreachable before navigation")
+            tab.firstMatch.tap()
+            let selected = XCTNSPredicateExpectation(predicate: NSPredicate(format: "selected == true"), object: tab.firstMatch)
+            let completed = XCTWaiter.wait(for: [selected], timeout: 5) == .completed
+            observations.append("Learn navigation tap=\(attempt) selected=\(completed)")
+            if completed { break }
+        }
+        try require(tab.firstMatch.isSelected, "Learn tab did not become selected after bounded real taps")
+        let lesson = element("learn.lesson.gtr-1-2")
+        for _ in 0..<10 {
+            if lesson.exists && lesson.isHittable && Self.contains(lesson.frame, in: screen) { break }
+            let scroll = app.scrollViews.firstMatch
+            if lesson.exists && Self.valid(lesson.frame) && scroll.exists {
+                let room = scroll.frame.intersection(screen)
+                let delta = max(-room.height * 0.4, min(room.height * 0.4, room.midY - lesson.frame.midY))
+                let origin = app.coordinate(withNormalizedOffset: .zero)
+                let start = origin.withOffset(CGVector(dx: room.midX, dy: room.midY))
+                let end = origin.withOffset(CGVector(dx: room.midX, dy: room.midY + delta))
+                start.press(forDuration: 0.1, thenDragTo: end, withVelocity: .slow, thenHoldForDuration: 0.2)
+            } else { app.swipeUp(velocity: .slow) }
+        }
+        try require(lesson.exists && lesson.isHittable && Self.contains(lesson.frame, in: screen),
+                    "The open-strings lesson must be a fully visible actual Learn-path target")
+        lesson.tap()
+        let next = element("lesson.continue")
+        try require(next.waitForExistence(timeout: 20) && next.isHittable && Self.contains(next.frame, in: screen),
+                    "The first real lesson explanation did not provide a clear Continue action")
+        next.tap()
+        skip = element("lesson.tunecheck.skip")
+        try require(skip.waitForExistence(timeout: 15), "Fresh guitar lesson did not enter its actual TuneCheckStep")
+        if landscape { XCUIDevice.shared.orientation = .landscapeLeft }
+        let expectedSize = landscape ? CGSize(width: 667, height: 375) : CGSize(width: 375, height: 667)
+        let rotated = XCTNSPredicateExpectation(predicate: NSPredicate { [unowned self] _, _ in
+            self.screen.size == expectedSize
+        }, object: nil)
+        try require(XCTWaiter.wait(for: [rotated], timeout: 10) == .completed,
+                    "Native window did not report the requested orientation; no transposed-frame substitute is accepted")
+        close = element("lesson.close")
+        let headers = app.otherElements.matching(NSPredicate(format: "label == %@ AND value == %@", copy.lesson, copy.tuneUp))
+        try require(headers.count == 1, "Expected localized lesson header with real Tune up state")
+        header = headers.firstMatch
+        try require(copy.language == "ar" ? close.frame.midX > header.frame.midX : close.frame.midX < header.frame.midX,
+                    "The actual lesson header must mirror with its language; translated copy alone does not prove RTL")
+        let title = element("lesson.tunecheck.title")
+        let instructions = element("lesson.tunecheck.instructions")
+        let hint = element("lesson.tunecheck.hint")
+        for (target, expected) in [(title, copy.title), (instructions, copy.instructions), (hint, copy.hint), (skip!, copy.skip)] {
+            try require(target.exists && target.label == expected, "Actual visible language/state differs: \(expected)")
+        }
+        let notes = app.staticTexts.matching(NSPredicate(format: "label == %@", "E2"))
+        try require(notes.count == 1, "The first actual listening target must remain E2")
+        let note = notes.firstMatch
+        let boards = app.descendants(matching: .any).matching(NSPredicate(format: "label MATCHES %@", copy.boardPattern))
+        try require(boards.count == 1, "Expected the actual string-6 open fretboard, not a geometry proxy")
+        let board = boards.firstMatch
+        let chips = app.descendants(matching: .any).matching(NSPredicate(format: "label MATCHES %@", copy.stringPattern))
+        try require(chips.count == 6, "Every real string chip must remain in the accessibility tree")
+        let rail = chips.allElementsBoundByIndex.sorted { $0.frame.minX < $1.frame.minX }
+        for (index, chip) in rail.enumerated() {
+            let number = chip.label.compactMap(\.wholeNumberValue).last
+            try require(number == 6 - index && (chip.value as? String) == ["E", "A", "D", "G", "B", "E"][index],
+                        "RTL must not reverse the physical string rail or lose its note/number")
+        }
+        try require(rail[0].isSelected, "String 6 must be the actual current string")
+        watched = ["header": header, "close": close, "skip": skip, "title": title, "instructions": instructions,
+                   "note": note, "hint": hint, "fretboard": board]
+        for (index, chip) in rail.enumerated() { watched["string-\(6 - index)"] = chip }
+        pinnedSkip = skip.frame
+        pinnedClose = close.frame
+        capture("arrival")
+        try assertPinned()
+        let scrolls = app.scrollViews.matching(identifier: "lesson.tunecheck.scroll")
+        try require(scrolls.count == 1, "Expected the unique actual TuneCheckStep teaching viewport")
+        let scroll: XCUIElement? = scrolls.firstMatch
+        for (name, target) in [("title", title), ("instructions", instructions), ("rail", rail[0]),
+                               ("note", note), ("hint", hint), ("fretboard", board)] {
+            try reveal(target, in: scroll)
+            if name == "rail" {
+                let current = try currentFrames()
+                let room = viewport(scroll, current: current)
+                for (index, chip) in rail.enumerated() {
+                    try require(Self.contains(current["string-\(6 - index)"]!, in: room) && chip.isHittable,
+                                "All six chips must fit the same visible rail, not only its first chip")
+                }
+            }
+            // Read both frames from the same live content position, not a cached pre-scroll screenshot.
+            let current = try currentFrames()
+            let railTop = (1...6).map { current["string-\($0)"]!.minY }.min()!
+            let railBottom = (1...6).map { current["string-\($0)"]!.maxY }.max()!
+            try require(railTop - 8 >= current["instructions"]!.maxY + 14,
+                        "The reserved reward band must not borrow the instruction's 14-point gap")
+            try require(railBottom + 8 + 14 <= current["note"]!.minY,
+                        "The reward band must stay separated from the actual listening note")
+            capture("clear-" + name)
+        }
+        try assertPinned()
+        skip.tap()
+        let nextTarget = element("lesson.notes.target")
+        try require(nextTarget.waitForExistence(timeout: 15) && !element("lesson.tunecheck.skip").exists,
+                    "The visible Skip action must actually leave TuneCheckStep for the lesson's notes step")
+        capture("skip-activated")
+    }
+
+    /// One current hierarchy for each check; identities alone survive between checks, never geometry.
+    private func currentFrames() throws -> [String: CGRect] {
+        let root = try app.snapshot()
+        var nodes: [any XCUIElementSnapshot] = []
+        func visit(_ node: any XCUIElementSnapshot) {
+            nodes.append(node)
+            for child in node.children { visit(child) }
+        }
+        visit(root)
+        var frames: [String: CGRect] = [:]
+        for (name, identity) in watchedIdentity {
+            let matches = nodes.filter { node in
+                if !identity.id.isEmpty { return node.identifier == identity.id }
+                let value = node.value.map { ($0 as? String) ?? String(describing: $0) } ?? "<nil>"
+                return node.elementType == identity.type && node.label == identity.label && value == identity.value
+            }
+            try require(matches.count == 1, "Current geometry identity missing or ambiguous: \(name)")
+            frames[name] = matches[0].frame
+        }
+        try require(frames.count == watched.count, "Every watched target needs current native geometry")
+        frames["window"] = screen
+        return frames
+    }
+
+    @discardableResult
+    private func assertPinned() throws -> [String: CGRect] {
+        let current = try currentFrames()
+        for (name, target) in [("skip", skip!), ("close", close!), ("header", header!)] {
+            try require(Self.contains(current[name]!, in: current["window"]!) && target.isHittable,
+                        "\(name) must remain wholly visible and hittable")
+        }
+        try require(current["skip"]! == pinnedSkip && current["close"]! == pinnedClose,
+                    "Teaching-content scrolling must not move the fixed actions")
+        return current
+    }
+
+    private func viewport(_ scroll: XCUIElement?, current: [String: CGRect]) -> CGRect {
+        let window = current["window"]!
+        let top = max(current["header"]!.maxY, current["close"]!.maxY)
+        let bottom = min(window.maxY, current["skip"]!.minY)
+        guard bottom > top else { return .null }
+        let content = CGRect(x: window.minX, y: top, width: window.width, height: bottom - top)
+        return scroll.map { $0.frame.intersection(content) } ?? content
+    }
+
+    private func reveal(_ target: XCUIElement, in scroll: XCUIElement?) throws {
+        var previous: CGRect?
+        var stalled = 0
+        for attempt in 0..<12 {
+            let current = try assertPinned()
+            try require(target.exists, "The exact teaching target disappeared before it could be checked")
+            let frame = target.frame
+            let room = viewport(scroll, current: current)
+            observations.append("attempt=\(attempt) target=\(target.label) frame=\(frame) viewport=\(room)")
+            if Self.contains(frame, in: room) && target.isHittable { return }
+            guard let scroll else {
+                try require(false, "Normal-size teaching target is clipped; no scrolling fallback exists: \(target.label)")
+                return
+            }
+            try require(Self.valid(room) && frame.width <= room.width && frame.height <= room.height
+                        && frame.minX >= room.minX && frame.maxX <= room.maxX,
+                        "The complete teaching target cannot fit its real viewport: \(target.label)")
+            try require(!Self.contains(frame, in: room), "Contained but non-hittable target must not be scrolled into a false pass")
+            if let previous, abs(previous.minY - frame.minY) < 1 { stalled += 1 } else { stalled = 0 }
+            try require(stalled < 2, "Two gestures made no measured progress")
+            previous = frame
+            let distance = max(-room.height * 0.45, min(room.height * 0.45, room.midY - frame.midY))
+            try require(abs(distance) > 1, "No useful bounded scroll plan remains")
+            let origin = app.coordinate(withNormalizedOffset: .zero)
+            let start = origin.withOffset(CGVector(dx: room.midX, dy: room.midY))
+            let end = origin.withOffset(CGVector(dx: room.midX, dy: room.midY + distance))
+            observations.append("scroll=\(scroll.frame) interiorX=\(room.midX) dragDelta=\(distance)")
+            start.press(forDuration: 0.1, thenDragTo: end, withVelocity: .slow, thenHoldForDuration: 0.2)
+        }
+        try require(false, "Teaching target remained unreachable after the bounded scroll attempts")
+    }
+
+    private func capture(_ phase: String) {
+        let prefix = "tunecheck-compact-" + sample + "-" + phase
+        let screenshot = XCUIScreen.main.screenshot()
+        let picture = XCTAttachment(screenshot: screenshot)
+        picture.name = prefix
+        picture.lifetime = .keepAlways
+        add(picture)
+        let root: (any XCUIElementSnapshot)?
+        do { root = try app.snapshot() }
+        catch {
+            root = nil
+            observations.append("Root snapshot unavailable: \(error)")
+            XCTFail("Cannot preserve a complete native hierarchy: \(error)")
+        }
+        var nodes: [any XCUIElementSnapshot] = []
+        var hierarchy: [String] = []
+        func normalizedValue(_ value: Any?) -> String {
+            guard let value else { return "<nil>" }
+            return (value as? String) ?? String(describing: value)
+        }
+        func visit(_ node: any XCUIElementSnapshot, depth: Int) {
+            nodes.append(node)
+            hierarchy.append(String(repeating: " ", count: depth) + "\(node.elementType) id=\(node.identifier) label=\(node.label) value=\(String(describing: node.value)) frame=\(node.frame)")
+            for child in node.children { visit(child, depth: depth + 1) }
+        }
+        if let root { visit(root, depth: 0) }
+        let tree = XCTAttachment(string: hierarchy.joined(separator: "\n"))
+        tree.name = prefix + "-hierarchy"
+        tree.lifetime = .keepAlways
+        add(tree)
+        var targets: [String: Any] = [:]
+        for (name, target) in watched {
+            if watchedIdentity[name] == nil, let snapshot = try? target.snapshot() {
+                watchedIdentity[name] = (snapshot.identifier, snapshot.label, normalizedValue(snapshot.value), snapshot.elementType)
+            }
+            if let identity = watchedIdentity[name] {
+                let matches = nodes.filter { node in
+                    if !identity.id.isEmpty { return node.identifier == identity.id }
+                    return node.elementType == identity.type && node.label == identity.label
+                        && normalizedValue(node.value) == identity.value
+                }
+                guard matches.count == 1, let snapshot = matches.first else {
+                    targets[name] = ["snapshot_matches": matches.count]
+                    if matches.count > 1 { XCTFail("Ambiguous native capture identity: \(name)") }
+                    continue
+                }
+                let frame = snapshot.frame
+                targets[name] = ["label": snapshot.label, "value": normalizedValue(snapshot.value),
+                    "frame": [frame.minX, frame.minY, frame.width, frame.height], "enabled": snapshot.isEnabled,
+                    "hittability": "checked by live assertions, not queried for metadata"]
+            } else { targets[name] = ["snapshot_unavailable": true] }
+        }
+        let required = phase == "arrival" ? ["header", "close", "skip"]
+            : phase == "clear-rail" ? (1...6).map { "string-\($0)" }
+            : phase.hasPrefix("clear-") ? [String(phase.dropFirst("clear-".count))] : []
+        for name in required {
+            if (targets[name] as? [String: Any])?["frame"] == nil {
+                XCTFail("Native capture lacks the current visible target geometry: \(name)")
+            }
+        }
+        let window = screen
+        let metadata: [String: Any] = ["sample": sample, "phase": phase, "window": [window.minX, window.minY, window.width, window.height],
+            "appFrame": String(describing: app.frame), "orientation": XCUIDevice.shared.orientation.rawValue,
+            "screenshotPixels": [screenshot.image.cgImage?.width ?? 0, screenshot.image.cgImage?.height ?? 0],
+            "launchArguments": app.launchArguments, "targets": targets, "observations": observations]
+        do {
+            let data = try JSONSerialization.data(withJSONObject: metadata, options: [.prettyPrinted, .sortedKeys])
+            let geometry = XCTAttachment(data: data, uniformTypeIdentifier: "public.json")
+            geometry.name = prefix + "-geometry"
+            geometry.lifetime = .keepAlways
+            add(geometry)
+        } catch { XCTFail("Cannot preserve native capture geometry: \(error)") }
+    }
+}

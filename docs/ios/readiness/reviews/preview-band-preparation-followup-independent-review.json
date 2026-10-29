@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "reviewer": "Independent integration review agent",
+  "verdict": "request_changes",
+  "scope": "Second four-file preview preparation draft; no implementation changes. Prior PREP01/02 receipt preserved.",
+  "source_sha256": {
+    "ios/Timbre/Audio/AudioService.swift": "be59601b5ee37f10255e0db587d61d82f947d3256cedde0b056e72a336dd4444",
+    "ios/Timbre/Learn/SongPerform.swift": "468c5d937b1d6646c9d06d100ab9e90be72802cdcc10610159c13fcdaacc3932",
+    "ios/TimbreUITests/AppPreviewUITests.swift": "9d7c00538995326a4d172d31390ed7df2e5b1cabf1903d733a6d5404653fecbd",
+    "ios/TimbreAppTests/AudioStartupTests.swift": "782cbc39ca7d51b14e9574ea8d3a7c21480472277072346a12ce1bb82d922f5c"
+  },
+  "prior_findings": {
+    "PREVIEW-PREP-01": "Resolved by plain captured let arrangement=band.",
+    "PREVIEW-PREP-02": "Shared final prepared predicate and retained lease handoff address stale output/arrangement checks, subject to corrections below."
+  },
+  "findings": [
+    {
+      "id": "PREVIEW-PREP-03",
+      "priority": 2,
+      "path": "ios/Timbre/Audio/AudioService.swift",
+      "symbol": "AudioStartGate.cancel",
+      "title": "Cancellation invalidates readiness before ownership-sensitive rejection cleanup",
+      "evidence": "cancel invokes request.cancel before rejection. AudioReadiness.isCurrent includes !task.isCancelled, so startMelody rejection if request.isCurrent cannot stop a canceled request. If readiness completes before gate consumption, no unfinished readiness body remains to stop the installed metronome; lease release sees metronomeRunning and keeps output active.",
+      "requested_change": "Clear and invalidate gate state while retaining local old handles. Invoke ownership-sensitive rejection before canceling the captured request, or snapshot command ownership independently. Preserve protection against old cancellation stopping a newer request. Test ready-but-unconsumed cancellation and replacement."
+    },
+    {
+      "id": "PREVIEW-PREP-04",
+      "priority": 2,
+      "path": "ios/Timbre/Learn/SongPerform.swift",
+      "symbol": "startScene final prepared predicate",
+      "title": "Final predicate omits phase qualification after suspension",
+      "evidence": "The pre-handoff guard requires phase.stage, but final predicate checks only output lease,arrangement and cache. startChords can change phase.playing without canceling pending audioStart; an older melody startup can overwrite the newer phase.",
+      "requested_change": "Retain phase==.stage in the final prepared predicate immediately before clock start."
+    }
+  ],
+  "test_assessment": [
+    "Held actual session activation plus AudioPreviewLease instance/current closure meaningfully exercises final prepared consumption and one release.",
+    "Pending-activation repeated cancellation verifies one-shot rejection but misses already-completed readiness before gate consumption and old/new ownership.",
+    "No direct exact-arrangement/current-rate cache regression is added. Real native preview remains required."
+  ],
+  "api_note": "Explicit afterReady label at old startMelody trailing-closure call avoids Swift<6 backward matching compatibility. Project uses Swift5.10; this is not an executed compiler failure.",
+  "reference": "https://github.com/swiftlang/swift-evolution/blob/main/proposals/0286-forward-scan-trailing-closures.md",
+  "limits": [
+    "No Swift compilation or XCTest execution on Windows; native tests remain unrun.",
+    "Shared AudioStartGate changes require AudioStartup/RecordingStartup and full app native regression checks; ordinary callers retain prepared=true and rejected=nil defaults."
+  ],
+  "reviewed_at_utc": "2026-10-27T06:28:19.815344+00:00"
+}

@@ -50,7 +50,7 @@ targets:
         # The languages the app ships, English first: every .lproj today. Which ship is the owner's decision;
         # tools/l10n/shipping.py --min PERCENT --apply rewrites this line and the marked excludes together.
         # Quoted: YAML would read a bare `no` (Norwegian) as false.
-        CFBundleLocalizations: ["en", "ar", "bg", "bn", "ca", "cs", "da", "de", "el", "es", "et", "fa", "fi", "fr", "gu", "he", "hi", "hr", "hu", "id", "is", "it", "ja", "kn", "ko", "lt", "lv", "ml", "mr", "nl", "no", "pa", "pl", "pt", "ro", "ru", "sk", "sl", "sv", "sw", "ta", "te", "th", "tr", "uk", "ur", "vi", "zh-CN", "zu"]  # shipping.py
+        CFBundleLocalizations: ["en", "ar", "bg", "bn", "ca", "cs", "da", "de", "el", "es", "et", "fa", "fi", "fr", "gu", "he", "hi", "hr", "hu", "id", "is", "it", "ja", "kn", "ko", "lt", "lv", "ml", "mr", "ms", "nl", "no", "or", "pa", "pl", "pt", "ro", "ru", "sk", "sl", "sv", "sw", "ta", "te", "th", "tr", "uk", "ur", "vi", "zh-CN", "zh-Hant", "zu"]  # shipping.py
         # Delivery stamps an internal TestFlight build "internal" (apple-delivery.yml); an App Store build leaves it empty.
         TimbreBuildChannel: $(TIMBRE_BUILD_CHANNEL)
         # The version and build every bundle carries (app, widgets, watch app, complications): App Store Connect needs a
@@ -116,7 +116,8 @@ targets:
         TIMBRE_TELEMETRY_APP_ID: ""
         TIMBRE_GAME_CENTER_ENABLED: "NO"
         TIMBRE_PRIVACY_POLICY_URL: "https://timbre-support.timbre.workers.dev/privacy"
-        TIMBRE_APP_STORE_ID: ""
+        # Registered App Store Connect draft record; this does not assert a live listing.
+        TIMBRE_APP_STORE_ID: "6827721551"
         TIMBRE_SHARE_URL: ""
         TIMBRE_REMOTE_CONFIG_URL: ""
         PRODUCT_BUNDLE_IDENTIFIER: com.shahradazerisharghi.timbre

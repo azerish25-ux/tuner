@@ -1,0 +1,446 @@
+{
+  "schema_version": 1,
+  "reviewed_on": "2026-10-27",
+  "reviewer": "/root/refine_timbre_store_positioning/review_multilingual_store_descriptors",
+  "method": "independent_mechanical_source_aware_review",
+  "scope": "Only the exact permutation of nine whole iphone_screenshot_captions objects across all50locales, after the separately reviewed descriptor changes. No new translation, visual, device or account approval. iPad and CPP metadata unchanged.",
+  "proposal_sha256": "6dd681ff9ce77490ff1b81116f1af51926dd22fe3406b1677e789ccefb0429c2",
+  "descriptor_review_sha256": "72e2c2929b2f4181e9a769c6f9ccddbae1ce6ae4a3748449aa05c0882123e30a",
+  "base_commit": "ec995683",
+  "old_order": [
+    "10b-tune-locked",
+    "65-song-perform",
+    "52b-lesson-chord",
+    "31b-instruments-folk",
+    "63-songs",
+    "50-learn",
+    "62-lesson-results",
+    "11b-tune-strum",
+    "32-journey"
+  ],
+  "new_order": [
+    "10b-tune-locked",
+    "31b-instruments-folk",
+    "65-song-perform",
+    "63-songs",
+    "50-learn",
+    "52b-lesson-chord",
+    "62-lesson-results",
+    "11b-tune-strum",
+    "32-journey"
+  ],
+  "one_based_permutation": [
+    1,
+    4,
+    2,
+    5,
+    6,
+    3,
+    7,
+    8,
+    9
+  ],
+  "status": "accepted",
+  "locales": [
+    {
+      "locale": "ar-SA",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "5422a5cbfbe8aa0240a8d290a7fa3eb4a23a2a20bcba6913aab3e7f41fff6813",
+      "proposed_content_sha256": "4acd37c5f8461df5e23435926db8113917dfbcdb492baa3039243137a86f15b2",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "bn-BD",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "923a2e9494dd28ee843d5a92e93e0cb49d30679c4ab0b7ca89bf43908f448136",
+      "proposed_content_sha256": "24c95295dc5a94f520aa4a31e9b79081d8f69fb9910282c392f036b7bc36eeaf",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "ca",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "435e36d20a85ca0bb3bc4df28a7854b62a3d8fca3f67d87e4eef0d19eae5464d",
+      "proposed_content_sha256": "3573b1e4397296f87911d9ef1428829778b49a01ff81923666897ed6735b5e74",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "cs",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "11658e13eb618fb71d52010b6e1d4f7ecb955f847f09d8787ac91f9a6d315307",
+      "proposed_content_sha256": "105ae497761ba0e7901e973d5b9aecbe657b610c9005290436233f8431622e4e",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "da",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "cf6ac0599a8ced940f61dabea1e2440a5f92f89eda858a167a6d6aaf87a226c0",
+      "proposed_content_sha256": "07ff756332e45923bdd2d95c32955a28cb3abebac36292a0bf6aa76d329871f6",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "de-DE",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "1318e4024a4b5bf231529ffcafadc6aa4112f881f48d5c6706320ae29da9f29f",
+      "proposed_content_sha256": "a771b095b141b39d24172a196f4486888326c67004ce8d0fe8e7bbc6706b27f8",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "el",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "947f40b030e54e768e01bd429cb9d4622e5498f26ae72045a553d052d19bfaac",
+      "proposed_content_sha256": "210c79ebd1501c6da0f29140e4ad9000aef451f5ccd68bc7743ba3d7ea75d355",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "en-AU",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "44b2501b0911df9cb87fb390440958b5cd2fdc8a4891e09080ef7464aa4fadcd",
+      "proposed_content_sha256": "6f33dd798fa4e80b2bff10e6dfc7b815dcf84414dad438e9112bd13fc15a01b7",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "en-CA",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "4db123618e6c975c70cd80b66635b9c0f31054e6fe195b5433d5dd6a8347c621",
+      "proposed_content_sha256": "db983810a46752e6615ce6fb8245018177b26f2dfde4f902d5a74d9bfc9d7cbe",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "en-GB",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "e94b7374c8fc4d0b3b019c8754bd3cd924259a334ed19a944c93bc0c3d98a0df",
+      "proposed_content_sha256": "d1e0bbae6927985be4bfaffa0fdd33a74f7c38ffe0fa763f8ad8907f0f1b05fe",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "en-US",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "27c63f6283c70fe16bdb5538cd339c7abefea9a1daf0b760c41fb58be37a54c8",
+      "proposed_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "es-ES",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "85340fa536b4e7a1708989143cbaf9bf9a2dc8ccba620c804dc5a05b97e0e5ec",
+      "proposed_content_sha256": "3628f81e7210482eb80c2e30968d4e3e0122d2ffcb7d5e00a1a435f762f8f1c5",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "es-MX",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "a2ddfcd3ccfb6da79d3d4e5de480631f354633699f9224a117842df075b34660",
+      "proposed_content_sha256": "34110dc231ade5561a0786b531616f39d96e22ea0e33e3c05f6c9f84c27b78f1",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "fi",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "e4fc41de305409a37176df57121ecd8e33eb6bc57df069956fc11753c9ba33bd",
+      "proposed_content_sha256": "9a43e8ccf1ae053cc34c8a16a26abb14abb7d1b79bbf19738a5da6c542ad7454",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "fr-CA",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "a240349d03715ab7341565ea60eb84b60ba7fd488eae9595d03627803c498283",
+      "proposed_content_sha256": "288baa90ccb3dbf76f90536b669e5b071b34df3131bd392e454d19e2b6498269",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "fr-FR",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "12bd9ba90b8f67c25ce134775164f9183b8aeafde4e312f590ef41d6a523fc66",
+      "proposed_content_sha256": "04f06d809fff19320e7b19aee825cf8e03b5518cff28f39f8d44527d08335d63",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "gu-IN",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "5c7228ee0541f833778d68f25e78de7b60b3f5450f4e2d5c1f515848edf60a6d",
+      "proposed_content_sha256": "ae47420cc27b77463897d352a3a11df5b7d492857cfb41a273e36985f65319ee",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "he",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "8d4e8778c0d9b2688341f24c1ea0ec7ca80a919fdebb9ecc4f57260f3ce5ba90",
+      "proposed_content_sha256": "0b15373d420da263399794f81f20c2c558b91fdd17ef058bcc3cda1a150fa49c",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "hi",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "1020deff94445f78f7d72518ee238aa9448d80d19c0050d282b69ed001508843",
+      "proposed_content_sha256": "f9493c00db222939c07aed5337f7402785f8ed26c62dd1d5a01710c14b5f4986",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "hr",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "5258b0c4a021910ee161b1f803e4dbbb7b944d177a29c763cca4d95dd5207327",
+      "proposed_content_sha256": "76ab0425fceb1a96e689132d8a58f3eb044adda41a8667c5803a912a88ee5da3",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "hu",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "fe23910a372af2055dee67a905c491467c60b698dfda24dfc74a38248567e9d6",
+      "proposed_content_sha256": "efaeb83c7dd7b06e94964c71e2122f0eb7b66a0f2bee4a04b6e4e9d7456b7d13",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "id",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "8b2479d3091deb723396fd1eb7ee543a685959da470f500234919a60a40fa95f",
+      "proposed_content_sha256": "48ddbc20033893b4e37f1e7303f8b2a7dfcdaaae636bc0bd2b83077e3db6ca2c",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "it",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "4c942458de4529cbe39b01d52220f0f337c33109ae47c51f714b06f996ec6dc0",
+      "proposed_content_sha256": "6f6bace36ea31795201b7a71e8c44cceedb64e9ef5eda9de4b44bc9e35747f16",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "ja",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "a35c9d8110db0eeeea0406e20dca89c36bf19a8d8854eb0ca5ec56b72cdebdc7",
+      "proposed_content_sha256": "8cab636f1336a27d2fe31471be2761fb5f1327115e2cb7859785ab72a5d756a9",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "kn-IN",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "60d7b3178991dd4675807693f73e5d440c66e254bfe7a5282107f48368d2843f",
+      "proposed_content_sha256": "da4ed7186091f0f76dcef7274f1d241bb85f29b87f1ac617eef25121b8f3502c",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "ko",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "a97bb608c586d6a1e26d34ebc562e506255548b4659942d797c202fb51f5f166",
+      "proposed_content_sha256": "40476a3a4101dd1f162b266a4fc209967161b066fe6bbe8704bc09a389199668",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "ml-IN",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "c0e246441c4fae76fdd067461021d889068553429e801e0d3f5f347b71fcbe43",
+      "proposed_content_sha256": "c92e9cce171285715e1fab141ccf6db256596350cdd7b704e11b3255f62dbc17",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "mr-IN",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "436d215eccda2105225116e22dc7c9ecefdb5fabb4f6c8e3275fb7492520deaf",
+      "proposed_content_sha256": "8b3f9851fc47959dfd58798d16aa382d874bf092cc8838239515afa8be5ccccd",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "ms",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "1ace92aafa15788a6bc50e4f9ede58b2825ada2db8ba69bd105f625d57a63594",
+      "proposed_content_sha256": "647586b88bdd5973d15969193e8cae47608ebb1af06db4117f0a303083cee477",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "nl-NL",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "d8f1a638a4d6991ee3a735ec4b6962fbb9ebad93edb760cc458971a267707af0",
+      "proposed_content_sha256": "46f4f28dd2dbff0fcfeb761b27859218c86aef84b196a57b88157031f37e21b5",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "no",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "55ce3ce517947c301fb354e675352521c49cc00088d5ce2fd3923056ef92efba",
+      "proposed_content_sha256": "c701a627553e2e1e7714e8c892da476d0e2e8c6bfef6d3ab9082b61f6c877c92",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "or-IN",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "444b60015a258ada5af5f95adbdc91ea82b29fcc4af91d2b4230df99be1a7a62",
+      "proposed_content_sha256": "f2ff3f16170472d793086a6e26ebff6e9a592712e163c18a553490a32a6253ea",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "pa-IN",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "57b5f0e11055858ce54bb2df42d3a9c68bfab76fc53b78a526e8ecb6afa2b2b6",
+      "proposed_content_sha256": "1a5094e3bb2fdd7939b93c1f7da64f8b0558bde0d1e1bc01bdc349a994c87c7d",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "pl",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "27806d49e59f876e3f58532ead09f95b2fe1478a4135a0807879c9c8ebf48503",
+      "proposed_content_sha256": "f6257361695d15ad21ae2eea0e5852ae083de04308425b14cdda3ab1565b4636",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "pt-BR",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "0f39162db4875667325afb0ff8a0f24481c5ece814d32a3bbf2ca38cbb2bf621",
+      "proposed_content_sha256": "bb66f3fde455c850d8b59015453404209ac7a7615a23e282c4ae6005fcf7197f",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "pt-PT",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "482b958c025cf2045f49150bb0090cad11b48cb28836ba6751adeca436311eb4",
+      "proposed_content_sha256": "1689e775c10d50533b7b7312d774bd1c8614eaec524c8cb391351c30b11e2eea",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "ro",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "d44d05e626be7d42492e19b384f521c3bf53c92835190e9c96a36c0ebb158a8f",
+      "proposed_content_sha256": "faf6fabb91d98be0ed0572d47126b2fd3685893b4456c6a59c77cc357d539940",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "ru",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "2ae6988a9d999998f76ed93dae0e32031b1999e830cd5d17c6d3ad619acad4ff",
+      "proposed_content_sha256": "22123f4658fa274e4b1423f0c6a9a81c504da9350db20518efbe23fa805d8519",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "sk",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "f5c73f9bebc76e9fb27afe89b97a11e100e8a87a866875639c1295f275f961cb",
+      "proposed_content_sha256": "64127d3d5e0bfd82c847d7a9b845f0437ed323df54bcf40ec30ba3e392da9062",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "sl-SI",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "cb933bcab522940de5edbda7dc3b486d2ccddf4454a4b7bfb7ae803c4e3f34f0",
+      "proposed_content_sha256": "0288bb6f7f840e826a93fdce84c39fc1d933a3dadc4df72bc48eb4091cd6cf8b",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "sv",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "c8dc99ce4f0fb1d2a6d40fb95303ac08f2078d8be03d5558d0e25e937d85634e",
+      "proposed_content_sha256": "c0ac707ccdbb9186b2d03acbf6129c29aaa42e2f58809fea3298ef48b8fb531d",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "ta-IN",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "91f983d90f6b2390dccd4296a172621dd53a5f0c2572a9db2cfe7b4e628294e9",
+      "proposed_content_sha256": "805262501e7c07856c20c39ac038372a76703789a3cb00d2f78a56216f6db019",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "te-IN",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "107c4a1089eea42d4215a6c5d682307b40dd1fdc7a2759208487c3d461cb4735",
+      "proposed_content_sha256": "294118e2a9357ba0e11185c4c208ce5296fc419e013a0a7150e0b08dee4e46eb",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "th",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "5738118d2c428666748b8af2ed57e3423df11aa17f2f49f295e4ff22a9480f7f",
+      "proposed_content_sha256": "dd04d34bb6a450803d52ef57c24bc3b282a1b877b26f1bf53aa67824c9198ea1",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "tr",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "126ac881533360f23d1b9be204c66c967d0268aa98753c1b20161475bf6718f1",
+      "proposed_content_sha256": "b6f23abaef9540d495d008f6b61baf532c922ed05afee3b4cb85d713ca434e18",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "uk",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "e21e87888f803f4060be7641ae1c04b1fc13d82f1962ea8d1ca12e5e65a6533c",
+      "proposed_content_sha256": "4be5d07a009ea1b3a717277ba213a0ce5f6f3894005b2f7fc525a97759088f05",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "ur-PK",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "1e3a78d77f888b3f262cb8858612d0e4bed56870d372ad0b4429cedb1a6d1603",
+      "proposed_content_sha256": "49ea1c960bac9f2023eb552c4f9f15a0ae3542e857924ce0f3095c8a98826096",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "vi",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "b98688928c6e465f88b77052cfea1508950661afbd29c298a374c1be6ef814fa",
+      "proposed_content_sha256": "92e95f2fa32e4bf76b721546ed328b37ff132a07b83ed05ac5538b0eddd6bc0f",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "zh-Hans",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "f02d2656942ff72777945e1a9093fa0e475c89c5e2b85da1c69141663b40993e",
+      "proposed_content_sha256": "2ff0db135169902c1ee3e9f7909966056c685fa3224ba3e0c28dfb4b668c43df",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    },
+    {
+      "locale": "zh-Hant",
+      "status": "accepted_exact_permutation",
+      "parent_content_sha256": "c4b08434f1979e601d5335ec24c2b47af1db5b4ed8d1dd9762fff84072e1b638",
+      "proposed_content_sha256": "cefabcf3c0757c3079c31459ef12d589e9e0c6a2441d3e033de866932d2c2254",
+      "whole_object_identity_preserved": true,
+      "text_and_capture_associations_unchanged": true
+    }
+  ]
+}

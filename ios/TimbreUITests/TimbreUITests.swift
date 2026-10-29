@@ -6,6 +6,7 @@ import XCTest
 final class TimbreUITests: XCTestCase {
     private var app: XCUIApplication!
     private var storeKit: SKTestSession!
+    private var tunerEvidenceCue: URL?
 
     override func setUpWithError() throws {
         continueAfterFailure = true
@@ -37,6 +38,11 @@ final class TimbreUITests: XCTestCase {
     private func launch(onboarded: Bool = true, demo: Bool = true, studio: Bool = false, pitch: Bool = false, stageDebug: Bool = false,
                         scene: String? = nil, instrument: String? = nil, comet: Bool = false) {
         if let scene { app.launchEnvironment["TIMBRE_SCENE"] = scene }
+        if scene == "tune-locked" {
+            let cue = FileManager.default.temporaryDirectory.appendingPathComponent("timbre-lock-\(UUID().uuidString)")
+            tunerEvidenceCue = cue
+            app.launchEnvironment["TIMBRE_SCENE_CUE"] = cue.path
+        }
         if let instrument { app.launchEnvironment["TIMBRE_SCENE_INSTRUMENT"] = instrument }
         if comet { app.launchEnvironment["TIMBRE_SCENE_COMET"] = "1" }
         if stageDebug { app.launchEnvironment["TIMBRE_STAGE_DEBUG"] = "1" }
@@ -165,14 +171,48 @@ final class TimbreUITests: XCTestCase {
 
     /// Taps Continue (once it is enabled) until the next screen's element appears: a tap during the
     /// enable animation or the page transition can be dropped.
-    private func continueUntil(_ next: XCUIElement) {
+    private func continueUntil(_ next: XCUIElement) -> Bool {
         let button = element("onboarding.continue")
         for _ in 0..<4 where !next.exists {
             _ = button.waitForExistence(timeout: 3)
             if button.isEnabled { button.tap() }
             _ = next.waitForExistence(timeout: 2.5)
         }
-        XCTAssertTrue(next.exists)
+        guard next.exists else {
+            shot("onboarding-transition-failed")
+            XCTFail("Onboarding did not reach the expected next screen: \(next.identifier)")
+            return false
+        }
+        return true
+    }
+
+    /// A synthesized tap alone is not evidence that the answer was accepted.
+    private func selectOnboardingBeginner() -> Bool {
+        let answers = app.buttons.matching(identifier: "onboarding.option.beginner")
+        let answer = answers.firstMatch
+        let next = element("onboarding.continue")
+        var observations: [String] = []
+        for attempt in 0..<3 {
+            guard answer.waitForExistence(timeout: 10), answers.count == 1,
+                  answer.isEnabled, answer.isHittable else { break }
+            observations.append("attempt=\(attempt) frame=\(answer.frame) selectedBefore=\(answer.isSelected)")
+            if !answer.isSelected { answer.tap() }
+            let accepted = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+                answer.exists && answer.isSelected && next.exists && next.isEnabled
+            }, object: nil)
+            let result = XCTWaiter.wait(for: [accepted], timeout: 5)
+            observations.append("selectionWait=\(result.rawValue)")
+            if result == .completed {
+                let trace = XCTAttachment(string: observations.joined(separator: "\n"))
+                trace.name = "onboarding-beginner-selection"; trace.lifetime = .keepAlways; add(trace)
+                return true
+            }
+        }
+        let trace = XCTAttachment(string: observations.joined(separator: "\n"))
+        trace.name = "onboarding-beginner-selection-failed"; trace.lifetime = .keepAlways; add(trace)
+        shot("onboarding-beginner-selection-failed")
+        XCTFail("The unique beginner answer must become selected and enable Continue")
+        return false
     }
 
     // MARK: App Store frames
@@ -303,31 +343,37 @@ final class TimbreUITests: XCTestCase {
         return (stage && tuned >= strings && selectedTuned && badge, summary)
     }
 
-    /// Whether a lock, once on screen, stays there for `seconds` at a stretch (the tuner's probe reads lock=1 at every
-    /// look), watched for up to `window` seconds: the `comet` scene plucks the held string again every 4 s, which earns
-    /// the lock afresh, so one stretch between plucks is enough. A look stalls the app's main thread for about a second
-    /// over the 3D stage, so the looks are about that far apart; the lock holds over such a pause (LockLatch). A probe
-    /// without a lock field cannot prove the lock and fails the check. `summary` says what was seen.
-    private func lockHolds(for seconds: TimeInterval = 1.5, window: TimeInterval = 7) -> (held: Bool, summary: String) {
-        let end = Date().addingTimeInterval(window)
-        var since: Date?
-        var longest = 0.0
-        var looks = 0
-        while Date() < end {
-            guard let lock = tunerProbe().lock else { return (false, "the probe has no lock field") }
-            let now = Date()
-            looks += 1
-            if lock {
-                let start = since ?? now
-                since = start
-                longest = max(longest, now.timeIntervalSince(start))
-                if longest >= seconds { return (true, String(format: "the lock held %.1f s", longest)) }
-            } else {
-                since = nil
+    /// Observe the actual rendered badge state without blocking its main actor with AX queries.
+    /// The same 1.5-second hold must occur inside seven seconds, with fresh samples and no gaps.
+    private func lockHolds(for seconds: TimeInterval = 1.5, window: TimeInterval = 7,
+                           stages: Set<String>) -> (held: Bool, summary: String) {
+        guard let cue = tunerEvidenceCue else { return (false, "no lock evidence cue") }
+        let trace = URL(fileURLWithPath: cue.path + ".lock")
+        defer {
+            if let text = try? String(contentsOf: trace, encoding: .utf8) {
+                let attachment = XCTAttachment(string: text)
+                attachment.name = "tuner-lock-state-evidence"
+                attachment.lifetime = .keepAlways
+                add(attachment)
             }
-            settle(0.25)
+            try? FileManager.default.removeItem(at: cue)
+            try? FileManager.default.removeItem(at: trace)
         }
-        return (false, String(format: "the lock held %.1f s at most (%ld looks over %.0f s)", longest, looks, window))
+        let start = ProcessInfo.processInfo.systemUptime
+        guard FileManager.default.createFile(atPath: cue.path, contents: Data()) else {
+            return (false, "could not request lock evidence")
+        }
+        var count = 0
+        while ProcessInfo.processInfo.systemUptime <= start + window {
+            let samples = (try? Data(contentsOf: trace)).map(CaptureLockEvidence.samples) ?? []
+            count = samples.count
+            let now = ProcessInfo.processInfo.systemUptime
+            if CaptureLockEvidence.held(samples, since: start, now: now, seconds: seconds, window: window, stages: stages) {
+                return (true, "fresh continuous readout lock for at least \(seconds) s (\(count) samples)")
+            }
+            settle(0.05)
+        }
+        return (false, "no fresh continuous \(seconds) s lock in \(window) s (\(count) samples)")
     }
 
     // MARK: Head clearance
@@ -440,11 +486,13 @@ final class TimbreUITests: XCTestCase {
         element("onboarding.instrument.guitar.acoustic.6").tap()
         start.tap(); settle(1.5); shot("03-onboarding-experience")
         // Nothing is pre-selected: Continue waits for an answer. A beginner's path holds every page, the first chord too.
-        element("onboarding.option.beginner").tap()
+        guard selectOnboardingBeginner() else { return }
         // A beginner's goal starts on "Play my first songs".
-        continueUntil(element("onboarding.option.songs")); settle(1.2); shot("04-onboarding-goal")
+        guard continueUntil(element("onboarding.option.songs")) else { return }
+        settle(1.2); shot("04-onboarding-goal")
         // A guitar has strings to hold: which hand plays (right-handed until the player says otherwise).
-        continueUntil(element("onboarding.option.right")); settle(1.2); shot("04b-onboarding-hand")
+        guard continueUntil(element("onboarding.option.right")) else { return }
+        settle(1.2); shot("04b-onboarding-hand")
         let notNow = element("onboarding.microphone.skip")
         for _ in 0..<3 where !notNow.exists { element("onboarding.continue").tap(); settle(1.5) }
         XCTAssertTrue(notNow.waitForExistence(timeout: 5))
@@ -673,7 +721,18 @@ final class TimbreUITests: XCTestCase {
         // strings, then "Your turn" (or, when the demo pitch plays it back, "Nice") shows under the neck. The picture
         // waits for that line: every fingertip is down and the strings have stopped shimmering.
         element("learn.continue").tap()
-        XCTAssertTrue(element("lesson.explain.turnCue").waitForExistence(timeout: 12))
+        // Do not snapshot accessibility while the main-actor demonstration is running: native tour
+        // evidence showed individual exists queries stalling it for 11–16 seconds. Allow the actual
+        // two-finger Em sequence to run hands-off first. The slowest first-model path is
+        // settle(0.7) + patience(5) + lead(0.85) + two fingers(0.9) + ring tail(1.8) = 9.25 s.
+        // This does not force completion; the same unique cue and its real state must still appear.
+        settle(10)
+        let turnCue = element("lesson.explain.turnCue")
+        XCTAssertTrue(turnCue.waitForExistence(timeout: 12))
+        if Self.language.hasPrefix("en") {
+            XCTAssertTrue(["Your turn — play it back", "Nice — that’s right."].contains(turnCue.label),
+                          "The identified cue must expose the completed demonstration's real teaching state")
+        }
         stillShot("51-lesson-explain", timeout: 2.5)
         // The lesson zooms open: a tap during the transition can be dropped, so tap until the tune check shows.
         let skip = element("lesson.tunecheck.skip")
@@ -729,7 +788,9 @@ final class TimbreUITests: XCTestCase {
         element("lesson.option.0").tap(); settle(1); shot("57-lesson-quiz")
         element("lesson.continue").tap(); settle(2)
         element("lesson.option.1").tap(); settle(1); shot("58-lesson-listen")
-        element("lesson.continue").tap(); settle(1.5); shot("59-along-ready")
+        element("lesson.continue").tap(); settle(1.5)
+        guard waitForPlayAlongReady() else { return }
+        shot("59-along-ready")
         // Six notes occupy twelve beats at 60 BPM, plus a four-beat count-in and
         // the 1.2-second session tail: 17.2 seconds, not the old ten-second estimate.
         // Pictures are hands-off; leave 21 seconds before the first accessibility query
@@ -748,6 +809,55 @@ final class TimbreUITests: XCTestCase {
         storeFrame("62-lesson-results", picture: results, ok: headline && room.fits,
                    headline ? room.summary
                             : "the results don't show three stars: the play-along wasn't played clean")
+    }
+
+    /// A prior check's day can expire while the questions are open. The real check may then appear before
+    /// this microphone step, not just after the explanation. Let demo pitch finish it hands-off: a coordinate
+    /// tap on its disappearing skip could hit the next screen's Start in the same place.
+    private func waitForPlayAlongReady() -> Bool {
+        guard let startLabel = CaptureLocalization.lessonButtonLabel("Start") else {
+            return playAlongReadinessFailed("Missing localized play-along Start fixture")
+        }
+        for observation in 0...3 {
+            let viewport = app.frame
+            let controls = appNodes().filter {
+                !$0.frame.isEmpty && viewport.contains($0.frame)
+            }.map {
+                CapturePlayAlongReadiness.Control(identifier: $0.identifier, label: $0.label, enabled: $0.isEnabled)
+            }
+            let stage = CapturePlayAlongReadiness.observed(controls, startLabel: startLabel)
+            if stage == .ready {
+                guard element("lesson.continue").isHittable else {
+                    return playAlongReadinessFailed("The verified play-along Start is not hittable")
+                }
+                print("TIMBRE_PLAYALONG_READY observation=\(observation)")
+                return true
+            }
+            guard observation < 3 else { break }
+            switch stage {
+            case .tuneCheck:
+                print("TIMBRE_PLAYALONG_OPTIONAL_TUNECHECK observation=\(observation)")
+                shot("playalong-optional-tunecheck-\(observation)")
+                // Six strings need their real holds and handovers. Do not poll the main-thread pitch reader.
+                settle(10)
+            case .unexpected:
+                // A page transition may expose neither stage, or both. No action on an unidentified stage.
+                settle(1.5)
+            case .ready:
+                break
+            }
+        }
+        return playAlongReadinessFailed("Expected the actual play-along Start after at most three bounded waits")
+    }
+
+    private func playAlongReadinessFailed(_ message: String) -> Bool {
+        XCTFail(message)
+        shot("59-along-ready-wrong")
+        let hierarchy = XCTAttachment(string: app.debugDescription)
+        hierarchy.name = "59-along-ready-wrong-hierarchy"
+        hierarchy.lifetime = .keepAlways
+        add(hierarchy)
+        return false
     }
 
     /// The violin page's results frame: "Open-string checkup" (vln-1-6, free), opened on its play-along through the
@@ -792,12 +902,23 @@ final class TimbreUITests: XCTestCase {
             }
             if result.waitForExistence(timeout: 6) {
                 print("TIMBRE_RESULTS_OPENED attempt=\(attempt)")
-                return true
+                return waitForSettledResults()
             }
         }
         guard result.exists else {
             XCTFail("The completed take did not open lesson results after three Continue attempts")
             shot("lesson-results-navigation-wrong")
+            return false
+        }
+        return waitForSettledResults()
+    }
+
+    /// A level label appears before the reveal finishes. Wait for the real rewards and burst to settle,
+    /// without replacing the earned stars, timing, or the captured pixels.
+    private func waitForSettledResults() -> Bool {
+        guard waitSparingly(for: element("lesson.results.settled"), timeout: 20) else {
+            XCTFail("The real lesson result reveal did not finish before capture")
+            shot("lesson-results-unsettled-wrong")
             return false
         }
         return true
@@ -869,18 +990,22 @@ final class TimbreUITests: XCTestCase {
     }
 
     /// The violin page's lead frame (a Custom Product Page): the same scene on the 3D violin, G, D and A locked (the
-    /// third held, mid-comet).
+    /// third held).
     func test16StoreViolinStage() throws {
         app.launchEnvironment["TIMBRE_DEBUG_STATE"] = "1"
-        launch(pitch: true, scene: "tune-locked", instrument: "violin.standard.4", comet: true)
+        // Keep this still frame's real lock through its continuous proof and final semantic check.
+        // Periodic same-string replucks would restart the hold between those observations.
+        launch(pitch: true, scene: "tune-locked", instrument: "violin.standard.4", comet: false)
         storeFrame("49d-tune-violin-locked", tuner: lockedTunerFrame(strings: 3))
     }
 
     /// The cello page's lead frame (a Custom Product Page): the same scene on the 3D cello, C, G and D locked (the third
-    /// held, mid-comet).
+    /// held).
     func test20StoreCelloStage() throws {
         app.launchEnvironment["TIMBRE_DEBUG_STATE"] = "1"
-        launch(pitch: true, scene: "tune-locked", instrument: "cello.standard.4", comet: true)
+        // Keep this still frame's real lock through its continuous proof and final semantic check.
+        // Periodic same-string replucks would restart the hold between those observations.
+        launch(pitch: true, scene: "tune-locked", instrument: "cello.standard.4", comet: false)
         storeFrame("49e-tune-cello-locked", tuner: lockedTunerFrame(strings: 3))
     }
 
@@ -888,7 +1013,9 @@ final class TimbreUITests: XCTestCase {
     /// ships), G, C and E locked.
     func test21StoreUkuleleStage() throws {
         app.launchEnvironment["TIMBRE_DEBUG_STATE"] = "1"
-        launch(pitch: true, scene: "tune-locked", instrument: "ukulele.soprano.4", comet: true)
+        // Keep this still frame's real lock through its continuous proof and final semantic check.
+        // Periodic same-string replucks would restart the hold between those observations.
+        launch(pitch: true, scene: "tune-locked", instrument: "ukulele.soprano.4", comet: false)
         storeFrame("17b-tune-ukulele-locked", tuner: lockedTunerFrame(strings: 3, stages: ["3d", "2d"]))
     }
 
@@ -923,7 +1050,12 @@ final class TimbreUITests: XCTestCase {
         }
         // A lock on screen stays there while the string stays in the band (the In tune badge doesn't flicker).
         if problem.isEmpty {
-            let hold = lockHolds()
+            let hold = lockHolds(stages: stages)
+            if !hold.held { problem = "the tuner's lock didn't stay on screen for 1.5 s: " + hold.summary }
+            // The saved frame must still show the lock after its continuous-state proof.
+            picture = XCUIScreen.main.screenshot()
+            let ending = tunerLock(strings: strings)
+            if !ending.shown { problem = "lock not visible after observation: " + ending.summary }
             XCTAssertTrue(hold.held, "the tuner's lock didn't stay on screen for 1.5 s: \(hold.summary)")
         }
         return (picture, problem)
@@ -1040,8 +1172,10 @@ final class TimbreUITests: XCTestCase {
         // Start at the first chorus, leaving enough real music for both capture and validation.
         app.launchEnvironment["TIMBRE_SCENE_BAR"] = "12"
         app.launchEnvironment["TIMBRE_SCENE_STILL"] = "1"
+        let cue = FileManager.default.temporaryDirectory.appendingPathComponent("timbre-take-\(UUID().uuidString)")
+        app.launchEnvironment["TIMBRE_SCENE_CUE"] = cue.path
         launch(pitch: true, scene: "song-perform")
-        storePerformFrame("65-song-perform", song: "Kite Weather", chorus: ["kite weather", "let it climb", "summer winds"])
+        storePerformFrame("65-song-perform", cue: cue, song: "Kite Weather", chorus: ["kite weather", "let it climb", "summer winds"])
     }
 
     /// The violin page's second frame: Jingle Bells from the violin songbook (free) on the runway, its last chorus
@@ -1050,8 +1184,10 @@ final class TimbreUITests: XCTestCase {
         app.launchEnvironment["TIMBRE_SCENE_SONG"] = "vln-sb-song-jingle-bells"
         app.launchEnvironment["TIMBRE_SCENE_BAR"] = "42"
         app.launchEnvironment["TIMBRE_SCENE_STILL"] = "1"
+        let cue = FileManager.default.temporaryDirectory.appendingPathComponent("timbre-take-\(UUID().uuidString)")
+        app.launchEnvironment["TIMBRE_SCENE_CUE"] = cue.path
         launch(pitch: true, scene: "song-perform")
-        storePerformFrame("65b-song-perform-violin", song: "Jingle Bells", chorus: ["jingle bells", "jingle all the way", "what fun"])
+        storePerformFrame("65b-song-perform-violin", cue: cue, song: "Jingle Bells", chorus: ["jingle bells", "jingle all the way", "what fun"])
     }
 
     /// Where a performance's bottom button sits, as fractions of the screen: the stage's Perform (mint, mean grey about
@@ -1062,8 +1198,27 @@ final class TimbreUITests: XCTestCase {
 
     /// Read the current performance state, then choose a stable pair without an unnecessary
     /// six-pair delay. The HUD and lyric region must all be present and stable.
-    private func storePerformFrame(_ name: String, song: String, chorus: [String]) {
+    private func storePerformFrame(_ name: String, cue: URL, song: String, chorus: [String]) {
+        defer {
+            let events = URL(fileURLWithPath: cue.path + ".events")
+            if let data = try? Data(contentsOf: events), let text = String(data: data, encoding: .utf8) {
+                let attachment = XCTAttachment(string: text)
+                attachment.name = name + "-timing"
+                attachment.lifetime = .keepAlways
+                add(attachment)
+                print("TIMBRE_PERFORM_TIMING \(text)")
+            }
+            try? FileManager.default.removeItem(at: cue)
+            try? FileManager.default.removeItem(at: events)
+        }
         let opened = element("lesson.close").waitForExistence(timeout: 30)
+        // Finish the initial AX lookup before releasing the scene. During startup/playing,
+        // screenshot-only observation leaves the main actor free for the real demo take.
+        guard opened, FileManager.default.createFile(atPath: cue.path, contents: Data()) else {
+            storeFrame(name, ok: false, "the lesson did not open or its capture cue could not be written")
+            return
+        }
+        print("TIMBRE_PERFORM_CUE epoch=\(Date().timeIntervalSince1970)")
         let playing = waitForDark(Self.takeButton, hold: Self.takeHold, timeout: 40)
         let held = waitSparingly(for: element("performance.capture.frozen"), timeout: 30)
         // The explicit still barrier stops the actual take, not its displayed numbers alone.
@@ -1169,6 +1324,22 @@ final class TimbreUITests: XCTestCase {
         return regions
     }
 
+    /// Interior family chips must clear both active rail fades, not merely expose their centre.
+    private static func instrumentFilterIsClear(_ frame: CGRect, in viewport: CGRect) -> Bool {
+        !frame.isEmpty && viewport.insetBy(dx: 52, dy: 8).contains(frame)
+    }
+
+    func testInstrumentFamilyChipMustClearBothFades() {
+        let viewport = CGRect(x: 0, y: 0, width: 402, height: 874)
+        let clippedLeft = CGRect(x: 10, y: 200, width: 160, height: 44)
+        // The old centre-only rule accepted this partially faded chip.
+        XCTAssertTrue(viewport.insetBy(dx: 52, dy: 8).contains(
+            CGPoint(x: clippedLeft.midX, y: clippedLeft.midY)))
+        XCTAssertFalse(Self.instrumentFilterIsClear(clippedLeft, in: viewport))
+        XCTAssertFalse(Self.instrumentFilterIsClear(CGRect(x: 220, y: 200, width: 170, height: 44), in: viewport))
+        XCTAssertTrue(Self.instrumentFilterIsClear(CGRect(x: 52, y: 200, width: 298, height: 44), in: viewport))
+    }
+
     /// App Store frame #4 ("Tune whatever you play"), with the instrument wall around it: the `instrument-wall` scene opens
     /// the browser by itself; the Folk & world strings filter fills it with the instruments no other tuner has.
     func test17StoreInstrumentWall() throws {
@@ -1176,32 +1347,35 @@ final class TimbreUITests: XCTestCase {
         XCTAssertTrue(element("instruments.search").waitForExistence(timeout: 25), "The instrument browser never opened")
         settle(1)
         let folk = element("instruments.family.folk_world_strings")
-        let guitarChip = element("instruments.family.guitar")
-        // From one snapshot (`isHittable` throws while the chip is off the rail's edge): its centre is on screen.
-        func onScreen(_ target: XCUIElement) -> Bool {
-            guard let box = (try? target.snapshot())?.frame, !box.isEmpty, box.midX.isFinite else { return false }
-            return app.frame.insetBy(dx: 8, dy: 8).contains(CGPoint(x: box.midX, y: box.midY))
+        // A chip's centre can be visible while its title/target is clipped by the rail's fade.
+        // Bring the complete control clear before tapping; follow measured coordinates in either direction.
+        func clearFrame() -> CGRect? {
+            guard let frame = (try? folk.snapshot())?.frame, !frame.isEmpty,
+                  frame.minX.isFinite, frame.midY.isFinite else { return nil }
+            return frame
         }
-        let railY = (try? guitarChip.snapshot())?.frame.midY
-        for _ in 0..<5 where !onScreen(folk) {
-            guard let railY, railY.isFinite,
-                  let target = try? folk.snapshot(), !target.frame.isEmpty else { break }
-            // Follow the off-screen target's actual side, not an English/LTR-only swipe.
-            let towardLeft = target.frame.midX > app.frame.midX
-            let startX = app.frame.width * (towardLeft ? 0.85 : 0.15)
-            let endX = app.frame.width * (towardLeft ? 0.15 : 0.85)
+        for _ in 0..<5 {
+            guard let frame = clearFrame() else { break }
+            if Self.instrumentFilterIsClear(frame, in: app.frame) { break }
+            let viewport = app.frame
+            let startX = viewport.midX
+            let endX = min(viewport.maxX - 24, max(viewport.minX + 24, startX + viewport.midX - frame.midX))
             let origin = app.coordinate(withNormalizedOffset: .zero)
-            origin.withOffset(CGVector(dx: startX, dy: railY))
-                .press(forDuration: 0.1, thenDragTo: origin.withOffset(CGVector(dx: endX, dy: railY)))
+            origin.withOffset(CGVector(dx: startX, dy: frame.midY)).press(forDuration: 0.1,
+                thenDragTo: origin.withOffset(CGVector(dx: endX, dy: frame.midY)),
+                withVelocity: .slow, thenHoldForDuration: 0.2)
             settle(0.6)
         }
-        if onScreen(folk) { tapIfPresent(folk) }
+        if let frame = clearFrame(), Self.instrumentFilterIsClear(frame, in: app.frame) { tapIfPresent(folk) }
+        let selected = XCTWaiter.wait(for: [XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "selected == true"), object: folk)], timeout: 5) == .completed
         settle(1)
         let picture = stillScreenshot(timeout: 4)
         let banjo = element("instrument.22_folk_world_strings_banjo_5_string")
-        let filtered = banjo.exists && banjo.isHittable && !element("instrument.01_guitar_acoustic_guitar").exists
+        let filtered = selected && banjo.exists && banjo.isHittable && !element("instrument.01_guitar_acoustic_guitar").exists
         storeFrame("31b-instruments-folk", picture: picture, ok: filtered,
-                   "the browser isn't showing the Folk & world strings (banjo on screen: \(banjo.exists), filter chip found: \(folk.exists))")
+                   "the browser isn't showing the Folk & world strings (banjo on screen: \(banjo.exists), "
+                   + "filter chip found: \(folk.exists), selected: \(selected))")
     }
 
     // MARK: Show me

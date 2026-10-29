@@ -11,13 +11,13 @@ Every launch-critical string is translated in every locale.
 ## What is missing now
 
 - **App interface:** 0 distinct strings are missing somewhere, 0 locale-string pairs in all.
-- **Lessons:** 0 locale-string pairs across the 48 lesson languages (Arabic (ar), Bulgarian (bg), Bengali (bn), Catalan (ca), Czech (cs), Danish (da), German (de), Greek (el), Spanish (es), Estonian (et), Persian (fa), Finnish (fi), French (fr), Gujarati (gu), Hebrew (he), Hindi (hi), Croatian (hr), Hungarian (hu), Indonesian (id), Icelandic (is), Italian (it), Japanese (ja), Kannada (kn), Korean (ko), Lithuanian (lt), Latvian (lv), Malayalam (ml), Marathi (mr), Dutch (nl), Norwegian (no), Punjabi (pa), Polish (pl), Portuguese (pt), Romanian (ro), Russian (ru), Slovak (sk), Slovenian (sl), Swedish (sv), Swahili (sw), Tamil (ta), Telugu (te), Thai (th), Turkish (tr), Ukrainian (uk), Urdu (ur), Vietnamese (vi), Chinese (Simplified) (zh-CN), Zulu (zu)).
+- **Lessons:** 0 locale-string pairs across the 51 lesson languages (Arabic (ar), Bulgarian (bg), Bengali (bn), Catalan (ca), Czech (cs), Danish (da), German (de), Greek (el), Spanish (es), Estonian (et), Persian (fa), Finnish (fi), French (fr), Gujarati (gu), Hebrew (he), Hindi (hi), Croatian (hr), Hungarian (hu), Indonesian (id), Icelandic (is), Italian (it), Japanese (ja), Kannada (kn), Korean (ko), Lithuanian (lt), Latvian (lv), Malayalam (ml), Marathi (mr), Malay (ms), Dutch (nl), Norwegian (no), Odia (or), Punjabi (pa), Polish (pl), Portuguese (pt), Romanian (ro), Russian (ru), Slovak (sk), Slovenian (sl), Swedish (sv), Swahili (sw), Tamil (ta), Telugu (te), Thai (th), Turkish (tr), Ukrainian (uk), Urdu (ur), Vietnamese (vi), Chinese (Simplified) (zh-CN), Chinese (Traditional) (zh-Hant), Zulu (zu)).
 
 | Locales | App strings missing | Lesson strings missing |
 |---|---:|---:|
-| complete: ar, bg, bn, ca, cs, da, de, el, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, is, it, ja, kn, ko, lt, lv, ml, mr, nl, no, pa, pl, pt, ro, ru, sk, sl, sv, sw, ta, te, th, tr, uk, ur, vi, zh-CN, zu | 0 | 0 |
+| complete: ar, bg, bn, ca, cs, da, de, el, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, is, it, ja, kn, ko, lt, lv, ml, mr, ms, nl, no, or, pa, pl, pt, ro, ru, sk, sl, sv, sw, ta, te, th, tr, uk, ur, vi, zh-CN, zh-Hant, zu | 0 | 0 |
 
-Lessons and interface are required in all 49 app languages (English source + 48 translations). English fallback is temporary missing content, never completed localization.
+Lessons and interface are required in all 52 app languages (English source + 51 translations). English fallback is temporary missing content, never completed localization.
 English-identical lesson strings need explicit source-bound independent semantic review in `tools/l10n/lesson-invariants.json` (locale/key, exact `source`, `reason`, actual `reviewed_by`). Proper names, original song titles, notation and credits may legitimately remain unchanged; review the entire string, never approve untranslated surrounding prose or fabricate reviewer evidence.
 
 ## What to translate
@@ -44,7 +44,7 @@ Rules the import checks (a translation that breaks one is kept out and listed ag
 - Lessons: keep every number, `♯`, `♭` and line break (`\n`) of the English. Note letters stay as in the English, except that German lessons write H for B natural and B for B flat (a German `B♭` becomes `B`; the check knows this).
 - Keep the brand names Timbre and Timbre Pro, game names the English capitalizes (Bullseye), and song titles that are names. Lyric credits (a name and a year) are usually kept as they are.
 - Voice: warm, direct, second person. Match the register the app already uses in your language (see its `Localizable.strings`) and keep it consistent. No exclamation marks or emoji the English doesn't have.
-- Plurals (`Localizable.stringsdict`): put a JSON object in `translation` with the forms your language uses, e.g. `{"one": "%lld Minute", "other": "%lld Minuten"}`.
+- Plurals (`Localizable.stringsdict`): put a JSON object in `translation` with the forms your language uses, e.g. `{"one": "%lld Minute", "other": "%lld Minuten"}`. The import writes the native plural resource automatically using the English numeric type. `zero`, `one` and `two` may express the number in words; other forms retain one correctly typed numeric argument. `other` is required. Complex multi-variable formats require a separate resource edit rather than a guessed import.
 
 Reuse what is already translated: the app's current tables are in `ios/Timbre/Resources/<locale>.lproj/` (`Localizable.strings`, `Learn.strings`), and the delivered lesson translations in `tools/l10n/learn/<locale>.json`.
 
@@ -67,7 +67,7 @@ python3 tools/l10n/report.py --import tools/l10n/todo   # merge filled TODO file
 python3 tools/l10n/report.py --check --strict     # what CI runs: fails when this page is out of date
 python3 tools/l10n/critical.py --baseline         # what CI runs: fails on a new untranslated critical string
 python3 tools/l10n/shipping.py                    # coverage per locale, and the languages that ship
-python3 tools/l10n/lessons.py --strict             # full applied lesson coverage in all 48 targets
+python3 tools/l10n/lessons.py --strict             # full applied lesson coverage in all 51 targets
 ```
 
 `--import DIR` reads every `<locale>.json` in DIR (the TODO format), checks each translation, merges the good ones into `tools/l10n/translations/<locale>.json` and `tools/l10n/learn/<locale>.json`, then runs the two apply scripts and regenerates the handoff. By hand, the apply steps are:
@@ -85,4 +85,4 @@ Which languages ship is the owner's decision: `CFBundleLocalizations` in `ios/pr
 
 Interface strings are found by `tools/l10n/swiftstrings.py`, a scanner that reads Swift without Xcode. It infers the type of each interpolation (`%lld` for Int, `%@` for text); when a new string's key carries `key_check`, the inferred specifier is a guess. Confirm it with Xcode's export: run the *Localization export* workflow (`l10n.yml`) and pass its `en.xliff` with `--xliff`.
 
-Stale entries: 160 keys that some locale still holds have no English in the app any more (5,858 locale-key pairs; the keys are listed under `stale` in `tools/l10n/todo/index.json`). They are harmless, and they are where `changed` entries find their old translations.
+Stale entries: 159 keys that some locale still holds have no English in the app any more (5,810 locale-key pairs; the keys are listed under `stale` in `tools/l10n/todo/index.json`). They are harmless, and they are where `changed` entries find their old translations.

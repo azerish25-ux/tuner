@@ -438,6 +438,12 @@ struct TuneView: View {
             // locks, the latch holds it on screen while it stays in tune (`LockLatch`).
             let locked = latch.shows(reading, listening: audio.running, shown: printed?.shown)
             let badgeSaysIt = locked && !store.live.preserved
+            #if DEBUG
+            let _ = DemoScene.recordLockEvidence(locked: badgeSaysIt,
+                active: audio.running && scenePhase == .active && store.selectedTab == .tune &&
+                    !store.showSettings && !store.showInstrumentPicker && !store.showPaywall && !strumOpen && !creatingTuning,
+                target: store.targetHz, stage: stageState)
+            #endif
             // The stage's peg label has the call to play ("Play G3") while nothing is heard: said once, there.
             let quiet = badgeSaysIt || (calls && waitingForString(reading))
             VStack(spacing: scale.large ? 18 : 14) {

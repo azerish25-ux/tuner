@@ -24,11 +24,11 @@ class StoreLocaleRequirementsTests(unittest.TestCase):
         for url in self.manifest['sources'].values():
             self.assertTrue(url.startswith('https://developer.apple.com/'))
 
-    def test_app_mapping_does_not_expand_ui_languages(self):
+    def test_app_mapping_covers_all_52_ui_languages(self):
         app = {p.stem for p in (ROOT / 'ios/Timbre/Resources').glob('*.lproj')}
         self.assertEqual(len(app), self.manifest['app_language_count'])
-        self.assertEqual(len(app), 49)
-        special = {'zh-Hans': 'zh-CN', 'zh-Hant': None, 'ms': None, 'or-IN': None}
+        self.assertEqual(len(app), 52)
+        special = {'zh-Hans': 'zh-CN', 'zh-Hant': 'zh-Hant', 'ms': 'ms', 'or-IN': 'or'}
         for row in self.rows:
             expected = special.get(row['locale'], row['locale'].split('-')[0])
             self.assertEqual(row['app_locale'], expected)
@@ -38,7 +38,7 @@ class StoreLocaleRequirementsTests(unittest.TestCase):
         unmatched = app - {r['app_locale'] for r in self.rows}
         self.assertEqual(unmatched, set('fa bg et is lt lv sw zu'.split()))
         self.assertEqual(set(self.manifest['fallback_policy']['app_only_languages']), unmatched)
-        self.assertEqual({r['locale'] for r in self.rows if r['app_locale'] is None}, {'ms', 'or-IN', 'zh-Hant'})
+        self.assertEqual({r['locale'] for r in self.rows if r['app_locale'] is None}, set())
 
     def test_requirements_are_not_claimed_translations(self):
         self.assertEqual(set(self.manifest['existing_localized_blocks']), LEGACY)

@@ -1,6 +1,9 @@
 # Timbre for iOS: testing and CI
 
 Every test suite, every workflow and every gate, and how to read their results. Paths are from the repository root.
+Current release work and native results are tracked in [the readiness status](ios/readiness/STATUS.md).
+The detailed test counts and seven-workflow inventory below describe the original handover; additional localization,
+listing-asset, typography and Watch workflows have since been added. The current workflows are authoritative.
 The code layout these tests exercise is in [ARCHITECTURE.md](ARCHITECTURE.md); the scripts are listed in
 [TOOLS.md](TOOLS.md). Checked against the workflows and tests at the commit this file was added in.
 
@@ -29,7 +32,7 @@ The code layout these tests exercise is in [ARCHITECTURE.md](ARCHITECTURE.md); t
 | Python hygiene tests | `tools/ci/test_hygiene.py` | 25 | `ios.yml` core |
 | Resource and string checks | `tools/verify-ios-resources.py`, `tools/l10n/report.py`, `critical.py` | n/a | `ios.yml` core, `apple-delivery.yml` |
 
-`tools/curriculum/build.py --check` is **not** run by any workflow. The curriculum is guarded in CI only through the
+`tools/curriculum/build.py --check` now runs in the `ios.yml` core job. The curriculum is also guarded through the
 Swift tests that read the built `curriculum.json` (`LearnTests`, `SongArrangementTests`, `SongbookEditionTests`,
 `CurriculumIndexTests`, `PlacementTests`) and through the handoff check, which fails when `Learn.strings` changed
 without `report.py` being re-run. Run `build.py --check` yourself before committing lesson changes.
@@ -165,7 +168,7 @@ lint and the comment sweep.
 | `app` | macos-15 | 25 min | Check the iOS SDK is 26+; `xcodegen generate`; pick the newest iPhone simulator and boot it; `ensure-metal.sh`; restore the module cache (key = hash of `project.yml` + `Package.swift`); `xcodebuild build-for-testing` (Debug, simulator, no signing, no index store); `build_warnings.py`; grant the microphone; `xcodebuild test-without-building -only-testing:TimbreAppTests -only-testing:TimbreUITests/SmokeUITests` into `Gate.xcresult`; export attachments, summarize and gzip logs | `results-app` (7 days); `gate-xcresult` on failure (7 days) |
 | `release` | macos-15 | 25 min | `xcodegen generate`; `ensure-metal.sh`; `xcodebuild build -configuration Release -destination generic/platform=iOS CODE_SIGNING_ALLOWED=NO`; `build_warnings.py` | `results-release` (7 days) |
 | `accessibility` | macos-15 | 55 min | Build for testing (tail of the log kept); grant the microphone; one warm-up launch (up to 3 tries of 2 minutes, with `TIMBRE_STAGE_REST`, `TIMBRE_SKIP_ONBOARDING`, `TIMBRE_DEMO_DATA`); run `AccessibilityAuditUITests` and `LocalizationLaunchUITests`; on failure, `launch_retry.py` picks tests that failed only at launch and runs them once more (any other failure stands) | `results-accessibility` (7 days) |
-| `gate` | ubuntu-latest | 5 min | `if: always()`, `needs: [core, app, release]`; fails unless every one of them is `success` (skipped or cancelled fail it too) | – |
+| `gate` | ubuntu-latest | 5 min | `if: always()`, `needs: [core, app, release, accessibility]`; fails unless every one of them is `success` (skipped or cancelled fail it too) | – |
 | `publish` | ubuntu-latest | 10 min | `if: always()` and not a fork PR; `needs: [core, app, release, accessibility]`; downloads `results-*` and runs `tools/ci/publish-results.sh` for `core`→`ci-results/core`, `app`→`ci-results/gate`, `release`→`ci-results/release`, `accessibility`→`ci-results/accessibility` | – |
 
 Compiler warnings are treated as errors by the log gate (`build_warnings.py`), not by `SWIFT_TREAT_WARNINGS_AS_ERRORS`
@@ -181,7 +184,8 @@ Compiler warnings are treated as errors by the log gate (`build_warnings.py`), n
 
 | Job | Timeout | What it runs | Artifacts (14 days) | Published to |
 |---|---:|---|---|---|
-| `tour` | 90 min | Build for testing; boot the iPhone; status bar 9:41, full battery and signal; `-only-testing:TimbreUITests/TimbreUITests -only-testing:TimbreUITests/LaunchPerformanceUITests` into `UITests.xcresult`; `xcodebuild archive` unsigned (`Timbre.xcarchive`); export attachments | `results-tour`, `ios-evidence` (xcresult and archive) | `ci-results/app` |
+| `tour` (five independent class shards) | 90 min each; test step 60 min | Each shard builds and runs all cases in exactly one existing class: `TimbreUITests`, `LaunchPerformanceUITests`, `FirstSessionUITests`, `LessonAccessibilityLayoutUITests`, or `SongShelfRailUITests`. `fail-fast: false`; no assertion retries. Compact logs/outcomes upload before attachments. Captures retain 9:41 status bar and `screenshots/` layout. | Capture shard: `results-tour`; other shards: `results-tour-{shard}`; all: `tour-logs-{shard}`, `ios-tour-evidence-{shard}` | `ci-results/app` (captures at root, other evidence under `shards/`, compact checkpoints under `checkpoints/`, `tour-shards.json` records completeness) |
+| `archive` | 30 min | Exactly one independent unsigned `xcodebuild archive` (`Timbre.xcarchive`); compact archive logs upload before the bundle | `results-archive`, `ios-evidence` (archive only; raw UI xcresults are now per-shard) | `ci-results/app/archive` |
 | `ipad` | 45 min | Newest 13-inch iPad simulator; switch it to Full Screen Apps (SpringBoard defaults `SBMedusaMultitaskingEnabled`, `SBChamoisWindowingEnabled` = 0, reboot; falls back to the default mode with a warning if apps don't launch); 9:41 status bar; `xcodebuild test -only-testing:TimbreUITests/TabletScreenshotsUITests`; one reboot-and-retry if the runner "failed to initialize for UI testing" | `results-ipad`, `ipad-evidence` | `ci-results/ipad` |
 | `a11y-matrix` | 75 min | Build for testing; for each variant `baseline ax5 bold contrast lefty upside ar`: set the simulator setting where it is a system setting (Increase Contrast with `simctl ui`, Bold Text with a defaults write), run `AccessibilityMatrixUITests` with `TEST_RUNNER_TIMBRE_MATRIX=<variant>` into `Matrix-<variant>.xcresult`, reset the setting; fail if any variant failed | `results-a11y-matrix` | `ci-results/a11y-matrix` |
 | `tsan` | 30 min | `swift test --package-path ios --sanitize=thread` | `results-tsan` | `ci-results/tsan` |
@@ -250,18 +254,18 @@ Publishes `ci-out` to `ci-results/l10n`. Use its `en.xliff` to settle format spe
 
 ## 4. The required `gate`
 
-`gate` in `ios.yml` is the one check branch protection requires (per the workflow's header comment; the protection rule
-itself is a GitHub setting, not in the repository). It passes only when `core`, `app` and `release` all succeed. The
-three run in parallel; the target is under 15 minutes each (the `core` timeout is 15 minutes, `app` and `release` 25).
+`gate` in `ios.yml` is the check to require in branch protection (the rule itself is a GitHub setting, not in the
+repository). It passes only when `core`, `app`, `release` and `accessibility`
+all succeed. The jobs may run in parallel, subject to runner availability. An unfinished audit remains a failure.
 
 Consequences:
 
-- A cancelled or skipped gate job fails `gate`. A newer push cancels the running workflow for the same ref
-  (`cancel-in-progress`), so only the newest commit's run counts.
+- A cancelled or skipped gate job fails `gate`. PR updates, manual requests and commits marked `[ci-refresh]`
+  can cancel an older workflow for the same ref. Ordinary main checkpoints let existing native runs finish.
 - GitHub runs no workflow for a commit whose message contains `[skip ci]` (or the other skip forms), so a pull request
   whose newest commit skips CI never gets a `gate` result and cannot merge. `skip_ci_guard.py` additionally fails `core`
   when any earlier commit in the PR that touches `ios/` skips CI or starts with "WIP" (§6.5).
-- `accessibility` can turn the run red without blocking `gate`.
+- `accessibility` failures now block `gate`, including an audit that cannot finish.
 
 ## 5. Results branches (`ci-results/*`)
 
@@ -510,3 +514,17 @@ The manual audio checks that CI can't do (real microphone, silent switch, calls,
   `coverage.py --raise-floor`. None of these files should grow without a reviewed reason.
 - Adding a UI test class: name it in a workflow's `-only-testing` list, or it will not run in CI (as with
   `FirstSessionUITests` today).
+
+### Diagnostic tour priming
+
+The four non-launch tour shards use the existing one-launch, 300-second-bounded simulator priming helper before XCTest. Its UUID storage, demo/skip flags and language arguments are scoped to the priming child process and do not change XCTest's independent UUID or onboarding assertions. `FirstSessionUITests` verifies fresh **logical app storage**, not a never-launched OS installation; priming is diagnostic and is not cold-install or performance evidence. `LaunchPerformanceUITests` never receives this priming. A failed priming attempt remains a failed job, but the unchanged tests still run when the build succeeded; their outcomes remain separate. `tour-warmup-{shard}` preserves the diagnostic receipt before tests.
+
+### Explicitly superseding an obsolete readiness listing pilot
+
+Only an owner-approved push on `codex/app-store-readiness-gates` containing both `[listing-screenshots-pilot]` and `[supersede-listing-pilot]` may cancel older in-progress requested PUSH captures for that branch. Do not combine another listing scope marker: conflicting scopes cannot cancel existing evidence. The normal pilot scope remains the same three locales; the supersede marker alone requests nothing. Ordinary pushes, normal request markers without opt-in, main and manual requests cannot invoke this in-progress cancellation.
+
+PUSH captures retain the existing `listing-assets-${ref}-requested` concurrency group so an explicit candidate can supersede an older requested push. No-marker pushes remain `noop`. New manual requests use distinct `manual-${run_id}` groups, preventing push cancellation and preventing one manual request from replacing another pending manual request. **Migration caution:** an already-running manual run created under the old workflow still occupies its old group; inspect the active run's event/ref/source before using the first supersede marker. Do not use it if the old group contains protected manual work.
+
+Preserve available failure logs/artifacts and confirm the obsolete run's ID, push event and ref before recommending supersession. Cancellation is not a passing result, does not certify screenshots, and cannot count toward release evidence. The replacement must independently complete its native checks and artifact validation. Workflow conditions do not cancel anything until an approved marked commit is pushed; no direct cancellation operation is part of this change.
+
+GitHub still permits only one pending run per concurrency group by default: a newer requested PUSH can replace an older pending PUSH even without the supersede marker. This pre-existing queue behavior is not a passing result either; ordinary/no-marker pushes cannot affect the requested group. Main in-progress runs remain protected by the false cancellation condition. See [GitHub concurrency documentation](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency).

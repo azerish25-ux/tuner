@@ -286,7 +286,7 @@ struct OnboardingView: View {
             store.selectReference()
         }
         OnboardingDeferral.shared.deferQuestions()
-        store.updateSettings { $0.onboardingCompleted = true }
+        store.completeTunerOnboarding()
         store.selectedTab = .tune
         Analytics.log("onboarding_complete", ["instrument": instrumentID ?? "chromatic", "path": "just_tune"])
         store.startListening()
@@ -303,17 +303,26 @@ struct OnboardingView: View {
 
     // MARK: Welcome
 
-    private var welcomeHeadlineFont: Font {
-        // Tamil's wide letter clusters use the title step so the final word and its punctuation fit together.
-        // Keep the display face's Dynamic Type curve and allow the complete promise to wrap at every size.
-        if locale.language.languageCode?.identifier == "ta" {
-            return Typeface.display(28, relativeTo: .largeTitle)
+    /// Nastaliq needs more leading than the Latin display face. Let its complete promise and actions scroll
+    /// on a small phone or at accessibility sizes instead of compressing the script or losing the buttons.
+    @ViewBuilder private var welcome: some View {
+        if locale.language.languageCode?.identifier == "ur" {
+            GeometryReader { geometry in
+                ScrollView {
+                    welcomeContent(heroHeight: typeSize.isAccessibilitySize ? 160 : max(160, geometry.size.height * 0.34))
+                        .padding(.bottom, 12)
+                        .frame(minHeight: geometry.size.height, alignment: .top)
+                }
+                .scrollBounceBehavior(.basedOnSize)
+                .accessibilityIdentifier("onboarding.welcome.scroll")
+            }
+        } else {
+            welcomeContent()
         }
-        return Typeface.display(40)
     }
 
-    /// Spotlit instrument, the promise, and the instrument picker in one screen.
-    private var welcome: some View {
+    /// Spotlit instrument, the promise, and the instrument picker; the existing fit is unchanged outside Urdu.
+    private func welcomeContent(heroHeight: CGFloat? = nil) -> some View {
         VStack(alignment: .leading, spacing: 0) {
             ZStack(alignment: .top) {
                 Spotlight().fill(LinearGradient(colors: [Palette.spotlight.opacity(0.16), Palette.spotlight.opacity(0.03)], startPoint: .top, endPoint: .bottom))
@@ -336,11 +345,9 @@ struct OnboardingView: View {
                 .accessibilityHidden(true)
             }
             .frame(maxHeight: .infinity)
+            .frame(height: heroHeight)
             VStack(alignment: .leading, spacing: 12) {
-                // Translations may need more than the English copy's two lines, even at the usual text sizes.
-                Text("Tune in seconds.\nThen learn to play.").font(welcomeHeadlineFont).tracking(-1).foregroundStyle(Palette.ink)
-                    .fixedSize(horizontal: false, vertical: true).accessibilityAddTraits(.isHeader)
-                    .accessibilityIdentifier("onboarding.headline")
+                WelcomeHeadline().foregroundStyle(Palette.ink)
                 Text("Timbre listens and tells you exactly how you did.")
                     .font(.body).foregroundStyle(Palette.inkSoft).fixedSize(horizontal: false, vertical: true)
             }

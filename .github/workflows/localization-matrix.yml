@@ -2,18 +2,24 @@ name: Localization simulator matrix
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [main, codex/app-store-readiness-gates]
 permissions:
   contents: read
 concurrency:
-  group: localization-matrix-${{ github.ref }}
+  # Isolate no-marker pushes so they cannot replace a queued requested matrix.
+  group: >-
+    localization-matrix-${{ github.ref }}-${{
+      (github.event_name == 'workflow_dispatch' ||
+       contains(github.event.head_commit.message, '[l10n-matrix]')) && 'requested' || 'noop'
+    }}
   # A newer explicit matrix request supersedes stale queued/running tests; ordinary checkpoints do not.
   cancel-in-progress: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[l10n-matrix]') }}
 jobs:
   localized-launch:
-    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[l10n-matrix]')
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/codex/app-store-readiness-gates') && contains(github.event.head_commit.message, '[l10n-matrix]'))
     runs-on: macos-15
-    timeout-minutes: 60
+    # Six real locale tours plus a cold build must finish before result-bundle export.
+    timeout-minutes: 90
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -27,13 +33,14 @@ jobs:
           - 'et,lt,lv,hu,ro,sl'
           - 'hi,gu,kn,ml,mr,pa'
           - 'ta,te,tr,el,sw,zu'
+          - 'zh-Hant,ms,or'
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
       HOMEBREW_NO_AUTO_UPDATE: '1'
       HOMEBREW_NO_INSTALL_CLEANUP: '1'
       TIMBRE_L10N_MATRIX: ${{ matrix.locales }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
         with:
           persist-credentials: false
       - name: Generate exact localized expectations
@@ -95,7 +102,7 @@ jobs:
           if [ -d ci-out/LocalizationRetry.xcresult ]; then
             xcrun xcresulttool export attachments --path ci-out/LocalizationRetry.xcresult --output-path ci-out/retry-screenshots
           fi
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()
         with:
           name: localization-${{ matrix.locales }}

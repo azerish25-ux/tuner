@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "status": "reviewed_harness_correction_native_acceptance_pending",
+  "source_revision": "127276c86b1c62d3604043e1304fb6010510c5d5",
+  "run_id": 40786838156,
+  "artifact_id": 12861357616,
+  "artifact_sha256": "b5e95e725af9b9f1909c79b46babc89aebf87e3fcae375cc788901c26125173d",
+  "outcome": {
+    "passed": [
+      "testArabicPortraitAX5",
+      "testEnglishLandscapeAX5",
+      "testEnglishLandscapeLarge",
+      "testEnglishPortraitAX5"
+    ],
+    "case_watchdog_180_seconds": [
+      "testArabicLandscapeAX5",
+      "testArabicPortraitLarge",
+      "testEnglishPortraitLarge"
+    ],
+    "navigation_failed_before_layout": [
+      "testArabicLandscapeLarge"
+    ]
+  },
+  "observed": "Watchdogs interrupted continuing live accessibility queries and phase capture. No layout assertion failed in this run. Four complete cases include every required assertion and original phase capture.",
+  "correction": {
+    "functional_case_watchdog_seconds": 360,
+    "one_batch_timeout_seconds": 3180,
+    "workflow_step_minutes": 62,
+    "job_minutes": 90,
+    "finalization_reserve_seconds": 120,
+    "navigation_contract": "Eventual real navigation within three taps; not a first-tap responsiveness measurement.",
+    "navigation": "At most three real hittable Learn-tab taps, each followed by a selected-state predicate; actual selection and lesson navigation remain required; attempts retained in observations."
+  },
+  "scope": "This is a functional layout/evidence test, not a launch or responsiveness performance measurement. Separate launch-performance gates remain unchanged.",
+  "invariants": [
+    "exactly eight original cases",
+    "one test execution each, no case retry/skip/duplicate",
+    "all containment, gap, frame pinning, mirroring and hittability assertions retained",
+    "actual Skip activation retained",
+    "all eight native screenshot/hierarchy/geometry phases retained",
+    "original failed evidence remains failed"
+  ]
+}

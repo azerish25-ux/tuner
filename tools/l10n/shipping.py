@@ -7,7 +7,7 @@
                                                          #     VoiceOver string translated (the App Store gate)
     python3 tools/l10n/shipping.py --min 95 --apply      # write that set into ios/project.yml
     python3 tools/l10n/shipping.py --all --apply         # ship every locale that has a .lproj again
-    python3 tools/l10n/shipping.py --xliff en.xliff --require-complete  # release: full UI in all 49 languages
+    python3 tools/l10n/shipping.py --xliff en.xliff --require-complete  # release: full UI in all 52 languages
 
 Which locales ship is the owner's decision. Nothing here deletes a translation: `--apply` changes two things in
 ios/project.yml, both on lines marked `# shipping.py`:
@@ -22,7 +22,7 @@ checkout without committing it.
 
 Coverage is the share of the app's interface strings (Localizable, InfoPlist, AppShortcuts and the plurals) a locale
 has; lesson strings are required in every locale and reported separately. The independent lessons.py --strict gate
-requires full lesson coverage across all 48 targets; the UI percentage bar is not a completion certificate.
+requires full lesson coverage across all 51 targets; the UI percentage bar is not a completion certificate.
 """
 from __future__ import annotations
 
@@ -39,7 +39,7 @@ PROJECT = ROOT / "ios/project.yml"
 RESOURCES = ROOT / "ios/Timbre/Resources"
 SOURCE = "en"
 MARK = "# shipping.py"
-RELEASE_LANGUAGE_COUNT = 49
+RELEASE_LANGUAGE_COUNT = 52
 DECLARED = re.compile(r"^(\s+CFBundleLocalizations:\s*)\[([^\]]*)\](.*)$", re.M)
 EXCLUDES = re.compile(r"^(\s+excludes:\s*)\[([^\]]*)\](\s*" + re.escape(MARK) + r".*)$", re.M)
 
@@ -97,9 +97,11 @@ def validate_export(path: Path) -> None:
 
 def complete_ui(model: dict) -> bool:
     """Require every UI translation, regardless of which languages a build selects."""
+    import report
     folders = set(available())
     locales = folders - {SOURCE}
-    if SOURCE not in folders or len(folders) != RELEASE_LANGUAGE_COUNT or set(model["locales"]) != locales:
+    required = set(report.LANGUAGE_NAMES) | {SOURCE}
+    if folders != required or len(folders) != RELEASE_LANGUAGE_COUNT or set(model["locales"]) != locales:
         print(f"FAILED: complete UI requires {RELEASE_LANGUAGE_COUNT} app languages including English; "
               f"found {len(folders)} folders and {len(model['locales'])} translation reports.")
         return False
@@ -147,7 +149,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--github-output", action="store_true", help="append locales=<comma list> to $GITHUB_OUTPUT")
     parser.add_argument("--xliff", type=Path, help="English Xcode export used for authoritative interpolation keys")
     parser.add_argument("--require-complete", action="store_true",
-                        help="require complete applied UI in all 49 app languages, independent of shipping selection")
+                        help="require complete applied UI in all 52 app languages, independent of shipping selection")
     args = parser.parse_args(argv)
     if args.require_complete and not args.xliff:
         parser.error("--require-complete requires --xliff from this checkout's English Xcode export")

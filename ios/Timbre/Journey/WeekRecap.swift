@@ -66,7 +66,7 @@ struct WeekRecapCard: View {
     private var statsLayout: AnyLayout {
         typeSize.isAccessibilitySize
             ? AnyLayout(VStackLayout(alignment: .leading, spacing: 10))
-            : AnyLayout(HStackLayout(spacing: 6))
+            : AnyLayout(HStackLayout(alignment: .top, spacing: 6))
     }
 
     var body: some View {
@@ -161,7 +161,7 @@ struct WeekRecapCard: View {
 }
 
 /// One small figure of the week: icon, value and what it counts.
-private struct WeekStat: View {
+struct WeekStat: View {
     let symbol: String
     /// Drawn in place of `symbol` (the streak's lamp).
     var drawn: TimbreGlyph? = nil
@@ -170,11 +170,12 @@ private struct WeekStat: View {
     let label: Text
 
     var body: some View {
-        HStack(spacing: 8) {
+        HStack(alignment: .top, spacing: 8) {
             icon.frame(width: 18).accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 0) {
                 value.font(Typeface.number(.headline)).foregroundStyle(Palette.ink).lineLimit(1).minimumScaleFactor(0.7)
-                label.font(.caption).foregroundStyle(Palette.inkSoft).lineLimit(1).minimumScaleFactor(0.75)
+                label.font(.caption).foregroundStyle(Palette.inkSoft)
+                    .fixedSize(horizontal: false, vertical: true)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

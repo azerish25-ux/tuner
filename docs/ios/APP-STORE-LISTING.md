@@ -1,11 +1,11 @@
 # App Store listing (English, U.S.)
 
-Paste into App Store Connect → the app → the version's page and App Information. Every length below is within Apple's limits, and every count is the build's own: 60 instruments, 132 tunings, 11 courses, 526 lessons, 140+ songs (146 distinct titles; the songbooks' arrangements per instrument are more and count once) and 50 Originals. `python3 tools/marketing/screenshots.py --check` re-checks the counts in this file's paste blocks and tables against `curriculum.json` and `catalog.json`, and the lengths against Apple's limits, so a stale number fails before it reaches the store.
+Paste into App Store Connect → the app → the version's page and App Information. Every length below is within Apple's limits, and every count is the build's own: 60 instruments, 132 tunings, 11 courses, 526 lessons, 130+ songs (135 distinct tunes; the songbooks' arrangements per instrument are more and count once) and 50 Originals. The 616 song lessons include instrument versions and exercises; 615 have arrangement data, not 616 different tunes. `python3 tools/marketing/screenshots.py --check` re-checks the counts in this file's paste blocks and tables against `curriculum.json` and `catalog.json`, and the lengths against Apple's limits, so a stale number fails before it reaches the store.
 
 What the listing claims, and what it leaves out until the app makes it true:
 
 - **Free tuner, no ads, no account** leads, because those decide a tuner install and no funded competitor can say all three.
-- **"140+ songs"**, not the arrangement count: the same song on two instruments is one song to a buyer.
+- **"130+ songs"**, not the arrangement count: the same song on two instruments is one song to a buyer.
 - **"Timbre hears every strum: the right chord, on time, and which string didn't ring."** Strum steps judge each stroke's chord as well as its timing, a muted stroke (a ukulele chunk, a mandolin or reggae chop) passes as muted, and a chord step names the string that didn't ring with the finger that stopped it. No competitor does the last. The line goes if a release grades a correct muted stroke as a miss.
 - **Tune by feel** is a feature, not a default: the phone pulses with the beat between the string and its note and goes still at the lock. It is on under VoiceOver and a tap away on the tuner for everyone else.
 - **No VoiceOver claim** (here or in the [Accessibility Nutrition Labels](#accessibility-nutrition-labels)) until the lessons' notes step speaks the next note, the play-along's cues land on time, and blind testers have finished Unit 1.
@@ -16,14 +16,14 @@ What the listing claims, and what it leaves out until the app makes it true:
 
 | Field | Value | Limit |
 |---|---|---|
-| Name | Timbre: Guitar Tuner & Lessons | 30/30 |
-| Subtitle | Learn Songs: Ukulele & Violin | 29/30 |
+| Name | Timbre: Tuner & Music Lessons | 29/30 |
+| Subtitle | Guitar, Violin, Cello & More | 28/30 |
 | Primary category | Music | |
 | Secondary category | Education | |
 | Age rating | 4+: see [Age rating](#age-rating) | |
 | Privacy Policy URL | `https://timbre-support.timbre.workers.dev/privacy` (the build reads the same address from `TIMBRE_PRIVACY_POLICY_URL`; current candidate policy/source alignment verification remains pending) | required |
 
-The name carries "guitar tuner", the category's highest-volume search; the subtitle carries the intent that pays ("learn songs") and the two instruments where Timbre can rank first (ukulele, violin). Bass moves to the keywords.
+The name preserves Timbre and presents both tuning and music lessons without restricting the app to guitar. The subtitle gives concrete examples of supported instruments, including violin and cello. The catalogue has 60 instruments; lessons cover the 11 listed core courses, not all 60 instruments. This is an owner-approved positioning choice, not measured keyword-volume, ranking, conversion or revenue evidence. Track actual App Store search and conversion performance after release. [Apple product-page guidance](https://developer.apple.com/app-store/product-page/) and [search guidance](https://developer.apple.com/app-store/search/) inform this choice.
 
 ## Age rating
 
@@ -73,14 +73,14 @@ Timbre's answers, checked against this build: every title, lyric and lesson text
 violin,ukulele,uke,cello,bass,mandolin,banjo,fiddle,chromatic,strobe,ear training,metronome,chord
 ```
 
-The field is the inventory of the [Custom Product Pages](#custom-product-pages). Apple lets a page be assigned keywords only "from your latest approved app version", that is, from this field, and recommends "a unique set of keywords for each page". So every word a page needs is here, one page each: violin and fiddle (violin page), ukulele and uke (ukulele), cello, bass, mandolin, banjo, chromatic and strobe (chromatic tuner), ear training. "Violin" and "ukulele" are also in the subtitle; they are repeated here only because their pages need them. "Metronome" and "chord" stay with the default page.
+The field is the inventory of the [Custom Product Pages](#custom-product-pages). Apple lets a page be assigned keywords only "from your latest approved app version", that is, from this field, and recommends "a unique set of keywords for each page". So every word a page needs is here, one page each: violin and fiddle (violin page), ukulele and uke (ukulele), cello, bass, mandolin, banjo, chromatic and strobe (chromatic tuner), ear training. "Violin" and "cello" are also in the subtitle; they are repeated here only because their pages need them. "Metronome" and "chord" stay with the default page.
 
-The rest of each query comes from the name and subtitle (guitar, tuner, lessons, learn, songs), so "violin tuner", "learn ukulele" and "cello tuner" still match. Singular forms only (Apple matches plurals), no category names ("music"), no spaces after commas. "Uke" is its own query ("uke tuner", "uke chords"); App Store search doesn't match it inside "ukulele". "Practice", "tuning", "pitch" and "sing" gave way to the instrument words. `screenshots.py --check` fails when a page names a keyword that isn't in this field, when two pages share one, or when a word repeats the name or subtitle without a page that needs it.
+The name and subtitle identify tuning, lessons and three example instruments. The keyword field retains additional relevant instruments and practice features, with existing Custom Product Page assignments preserved. Violin and cello remain duplicated only because their pages reserve those terms. Ukulele and bass terms formerly carried by localized subtitles are retained in localized keyword fields where needed. These are relevant search intents, not a guarantee that any exact query will match or rank. No keyword-popularity measurement is claimed. `screenshots.py --check` verifies keyword membership, unique page assignments and explicit exceptions for terms repeated in a title or subtitle.
 
 ## Promotional text (170/170; can change without a review)
 
 ```
-Free tuner, no ads, no account. Feel each string come into tune, then play lessons that listen on guitar, ukulele, violin, cello, bass, mandolin or banjo, and 140+ songs.
+Free tuner, no ads, no account. Feel each string come into tune, then play lessons that listen on guitar, ukulele, violin, cello, bass, mandolin or banjo, and 130+ songs.
 ```
 
 ## Description
@@ -110,7 +110,7 @@ LEARN BY PLAYING
 • A play-along note highway that slows down for you, then speeds back up as you improve
 
 PLAY SONGS
-• 140+ songs, each a full arrangement: classics from Jingle Bells to Amazing Grace, and 50 Originals written for Timbre in today's styles
+• 130+ songs, each a full arrangement: classics from Jingle Bells to Amazing Grace, and 50 Originals written for Timbre in today's styles
 • Play along with the band in your headphones while the words light up
 • Your songs: paste or import any chord chart, transpose it, scroll it in time, and listen to the original on Apple Music beside it
 
@@ -140,12 +140,28 @@ Privacy: https://timbre-support.timbre.workers.dev/privacy
 Welcome to Timbre: a free tuner for 60 instruments, and 526 lessons that listen as you play.
 ```
 
-## Screenshots (6.9" iPhone and 13" iPad)
+## Screenshots (medium and large Dynamic Island iPhone and 13" iPad)
+
+Apple's [current screenshot specifications](https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications/)
+list medium Dynamic Island iPhone and 13-inch iPad as required sizes. The large Face ID iPhone requirement is
+conditional: it applies when large Dynamic Island screenshots are not provided. This release selects native
+large Dynamic Island captures as that large-phone coverage, in addition to its medium set; it does not claim
+that Apple universally requires every phone size.
+
+The selected roles are `iphone` at **1206×2622**, `iphone-large` at **1320×2868**, and `ipad` at
+**2752×2064** landscape. Each role requires its own native originals and matching manifest: no substitution,
+stretching or enlargement from another role. Both phone roles share the existing nine caption rows, not image
+files; the tablet has four. This is **22 images per locale**, **150 locale/device sets**, **75 two-locale shards**
+and **1,100 JPEGs** across 50 listings. The en-US/de-DE/ar-SA pilot plans **9 sets / 6 shards / 66 images**.
+Contact sheets and Watch screenshots are separate. These are planned inventories, not accepted native captures;
+large-phone capture and final visual acceptance remain pending. Earlier sets do not automatically satisfy the
+new source-bound inventory. Optional preview videos remain omitted from the initial submission.
 
 The tables below are the only place the store frames are described: `tools/marketing/screenshots.py` reads them and composes each capture under its caption, in the look the last column names. To change a caption or a look, edit it here and render again:
 
 ```
-python3 tools/marketing/screenshots.py <ci-out/screenshots> <out folder>                  # iPhone, 1320x2868
+python3 tools/marketing/screenshots.py <ci-out/screenshots> <out folder>                  # iPhone, 1206x2622
+python3 tools/marketing/screenshots.py <ci-out/iphone-large-screenshots> <out folder> --iphone-large # large iPhone, 1320x2868
 python3 tools/marketing/screenshots.py <ci-out/ipad-screenshots> <out folder> --ipad      # iPad, 2752x2064 landscape / 2064x2752 portrait
 python3 tools/marketing/screenshots.py <ci-out/screenshots> <out folder> --page violin    # a Custom Product Page's set
 python3 tools/marketing/screenshots.py <de captures> <out folder> --locale de-DE          # a localized set (APP-STORE-LISTING-LOCALIZED.md)
@@ -167,20 +183,20 @@ python3 tools/marketing/screenshots.py --check                                  
 | `flip` | The screen from the top, bleeding off it, the caption at the foot |
 | `side`, `side-right` | iPad landscape: the caption in a column on the left (right), the screen bleeding off the other edge |
 
-**The captures.** Every frame comes from exactly one capture in the UI tests, and that capture is deterministic: TimbreUITests keeps a frame under its own name only when it checked that the screen shows what the caption says (`storeFrame`); otherwise the test fails and keeps the picture as `<name>-wrong`, which this tool refuses. Store scenes (`TIMBRE_SCENE`, `ios/Timbre/Root/DemoScenes.swift`) put the app into each hero moment through its own code paths: the tuner's lock (#1 and the iPad's #1, caught mid-comet: the scene plucks the string again every 4 s and the test keeps the picture taken 0.35 s after a lock, and only when the selected string's chip shows its tick and the readout its In tune badge), *Kite Weather* from bar 16 with every earlier note played clean (#2, kept only when two pictures 120 ms apart show the same HUD, so no counter is caught mid-change), the chord with every string lit (#3), the instrument browser (#4), and the violin's, cello's and ukulele's locks, the violin's song and the violin's results (the instrument pages). The results (#7) follow a play-along the demo pitch plays clean, kept only with three stars. Every capture shows the same player: the UI tests' seeded history (`DemoData` in `ios/Timbre/TimbreApp.swift`), a 7-day streak that already counts today, level 5. Each waits for its screen to settle (`stillScreenshot` in `ios/TimbreUITests/StillScreen.swift`). A frame whose top edge would cut through text (the status bar, a screen's title) is refused at render: each crop starts in a gap (`FOCUS` in the script).
+**The captures.** Every frame comes from exactly one capture in the UI tests, and that capture is deterministic: TimbreUITests keeps a frame under its own name only when it checked that the screen shows what the caption says (`storeFrame`); otherwise the test fails and keeps the picture as `<name>-wrong`, which this tool refuses. Store scenes (`TIMBRE_SCENE`, `ios/Timbre/Root/DemoScenes.swift`) put the app into each hero moment through its own code paths: the tuner's lock (#1 and the iPad's #1, caught mid-comet: the scene plucks the string again every 4 s and the test keeps the picture taken 0.35 s after a lock, and only when the selected string's chip shows its tick and the readout its In tune badge), *Kite Weather* from bar 16 with every earlier note played clean (#3, kept only when two pictures 120 ms apart show the same HUD, so no counter is caught mid-change), the chord with every string lit (#6), the instrument browser (#2), and the violin's, cello's and ukulele's locks, the violin's song and the violin's results (the instrument pages). The results (#7) follow a play-along the demo pitch plays clean, kept only with three stars. Every capture shows the same player: the UI tests' seeded history (`DemoData` in `ios/Timbre/TimbreApp.swift`), a 7-day streak that already counts today, level 5. Each waits for its screen to settle (`stillScreenshot` in `ios/TimbreUITests/StillScreen.swift`). A frame whose top edge would cut through text (the status bar, a screen's title) is refused at render: each crop starts in a gap (`FOCUS` in the script).
 
-No two frames show the same lesson, and the first three answer the three questions a searcher has: is it free (#1), does it really listen (#2), can I play something today (#3).
+The opening frames establish the free tuner (#1), breadth of supported instruments (#2), and listening feedback (#3), followed by songs and courses. Guitar-specific chord and strum examples appear later; tuning support for 60 instruments does not imply lessons for all 60.
 
-### iPhone 6.9"
+### iPhone (medium Dynamic Island)
 
 | # | Caption | Supporting line | Capture | Look |
 |---|---|---|---|---|
 | 1 | **Free tuner. No ads.** | 60 instruments, to the cent | a string locked on the 3D headstock, its peg ringed and ticked, the lock's comet running down the string (`10b-tune-locked`) | `breakout mint` |
-| 2 | **Hear exactly how you played** | Pitch and timing on every note | *Kite Weather* on the highway mid-chorus at ×4, the words lighting up under the runway (`65-song-perform`) | `zoom sky` |
-| 3 | **Play your first chord today** | Timbre hears every string | E minor's chord step with every string lit, the six ticked strings enlarged (`52b-lesson-chord`) | `callout lime` |
-| 4 | **Tune whatever you play** | 60 instruments, 132 tunings | the instrument browser on the Folk & world strings, the wall of instruments around it (`31b-instruments-folk`) | `wall spotlight` |
-| 5 | **Play songs you know** | 140+ songs, classics to Originals | the Songs tab, the songs people know on its first shelf (`63-songs`) | `light orchid` |
-| 6 | **Learn at your own pace** | 526 lessons in 11 courses | Learn, with the next lesson up (`50-learn`) | `offset violet` |
+| 2 | **Tune whatever you play** | 60 instruments, 132 tunings | the instrument browser on the Folk & world strings, the wall of instruments around it (`31b-instruments-folk`) | `wall spotlight` |
+| 3 | **See feedback as you play** | Pitch and timing on every note | *Kite Weather* on the highway mid-chorus at ×4, the words lighting up under the runway (`65-song-perform`) | `zoom sky` |
+| 4 | **Play songs you know** | 130+ songs, classics to Originals | the Songs tab, the songs people know on its first shelf (`63-songs`) | `light orchid` |
+| 5 | **Learn at your own pace** | 526 lessons in 11 courses | Learn, with the next lesson up (`50-learn`) | `offset violet` |
+| 6 | **Play your first chord today** | Timbre hears every string | E minor's chord step with every string lit, the six ticked strings enlarged (`52b-lesson-chord`) | `callout lime` |
 | 7 | **Five minutes a day adds up** | Stars, streaks and daily quests | lesson results with three stars after a clean play-along (`62-lesson-results`) | `zoom gold` |
 | 8 | **One strum checks every string** | See which string to tune first | Strum to tune: six strings read from one strum, A2 the one to tune first (`11b-tune-strum`) | `flip mint` |
 | 9 | **See yourself get better** | Accuracy, string health, badges | the Progress screen (`32-journey`) | `offset-left flame` |
@@ -191,10 +207,10 @@ No two frames show the same lesson, and the first three answer the three questio
 |---|---|---|---|---|
 | 1 | **Free tuner. No ads.** | 60 instruments, to the cent | the tuner in landscape, a string locked (`ipad-landscape-tune`) | `side mint` |
 | 2 | **Tune whatever you play** | Violin to oud, sitar to erhu | the instrument browser, a full page of its own, on the bowed strings and the Folk & world strings (`ipad-landscape-instruments`) | `side-right spotlight` |
-| 3 | **Play songs you know** | 140+ songs, classics to Originals | the Songs tab (`ipad-landscape-songs`) | `light orchid` |
+| 3 | **Play songs you know** | 130+ songs, classics to Originals | the Songs tab (`ipad-landscape-songs`) | `light orchid` |
 | 4 | **Five minutes a day adds up** | A daily set, quests and ear games | the Practice tab (`ipad-landscape-practice`) | `side violet` |
 
-### iPhone 6.9": violin page
+### iPhone (medium Dynamic Island): violin page
 
 The violin Custom Product Page's set ([below](#custom-product-pages)). Its first three frames are the violin's own (its lock, its song with finger numbers on the gems, its results); the rest are the main set's that show no other instrument.
 
@@ -202,11 +218,11 @@ The violin Custom Product Page's set ([below](#custom-product-pages)). Its first
 |---|---|---|---|---|
 | 1 | **Tune your violin, free** | G, D, A and E, to the cent | the 3D violin, G, D and A locked, the lock's comet on the A string (`49d-tune-violin-locked`) | `breakout orchid` |
 | 2 | **Play songs on your violin** | From Jingle Bells to Ode to Joy | *Jingle Bells* from the violin songbook on the runway, finger numbers on the gems, its last chorus lighting up (`65b-song-perform-violin`) | `zoom sky` |
-| 3 | **Hear exactly how you played** | Pitch and timing on every note | the violin's "Open-string checkup" results with three stars (`62b-lesson-results-violin`) | `zoom gold` |
-| 4 | **Play songs you know** | 140+ songs, classics to Originals | the Songs tab (`63-songs`) | `light orchid` |
+| 3 | **See how you played** | Pitch and timing on every note | the violin's "Open-string checkup" results with three stars (`62b-lesson-results-violin`) | `zoom gold` |
+| 4 | **Play songs you know** | 130+ songs, classics to Originals | the Songs tab (`63-songs`) | `light orchid` |
 | 5 | **Learn at your own pace** | 526 lessons in 11 courses | Learn (`50-learn`) | `offset violet` |
 
-### iPhone 6.9": cello page
+### iPhone (medium Dynamic Island): cello page
 
 The cello Custom Product Page's set. Its first frame is the cello's own; the rest show no other instrument.
 
@@ -214,17 +230,17 @@ The cello Custom Product Page's set. Its first frame is the cello's own; the res
 |---|---|---|---|---|
 | 1 | **Tune your cello, free** | C, G, D and A, to the cent | the 3D cello, C, G and D locked, the lock's comet on the D string (`49e-tune-cello-locked`) | `breakout orchid` |
 | 2 | **Tune whatever you play** | 60 instruments, 132 tunings | the instrument browser on the Folk & world strings (`31b-instruments-folk`) | `wall spotlight` |
-| 3 | **Play songs you know** | 140+ songs, classics to Originals | the Songs tab (`63-songs`) | `light orchid` |
+| 3 | **Play songs you know** | 130+ songs, classics to Originals | the Songs tab (`63-songs`) | `light orchid` |
 | 4 | **See yourself get better** | Accuracy, string health, badges | the Progress screen (`32-journey`) | `offset-left flame` |
 
-### iPhone 6.9": ukulele page
+### iPhone (medium Dynamic Island): ukulele page
 
 The ukulele Custom Product Page's set. Its first frame is the ukulele's own; the rest show no other instrument.
 
 | # | Caption | Supporting line | Capture | Look |
 |---|---|---|---|---|
 | 1 | **Tune your ukulele, free** | G, C, E and A, to the cent | the soprano ukulele, G, C and E locked (`17b-tune-ukulele-locked`) | `breakout mint` |
-| 2 | **Play songs you know** | 140+ songs, classics to Originals | the Songs tab (`63-songs`) | `light orchid` |
+| 2 | **Play songs you know** | 130+ songs, classics to Originals | the Songs tab (`63-songs`) | `light orchid` |
 | 3 | **Tune whatever you play** | 60 instruments, 132 tunings | the instrument browser on the Folk & world strings (`31b-instruments-folk`) | `wall spotlight` |
 | 4 | **See yourself get better** | Accuracy, string health, badges | the Progress screen (`32-journey`) | `offset-left flame` |
 
@@ -232,7 +248,7 @@ The ukulele Custom Product Page's set. Its first frame is the ukulele's own; the
 
 Run the **App Preview** workflow by hand (Actions → App Preview → Run workflow; the `preview` input picks `both`, `guitar` or `violin`). It records the `AppPreviewUITests` tour on a Pro Max simulator with the status bar at 9:41, and publishes `preview.mp4` (886×1920, 30 fps, H.264 High, stereo AAC, 20–25 s), `poster.png`, `contact.png` and `PREVIEW.txt` to `ci-results/preview` (the violin cut to `ci-results/preview-violin`). `PREVIEW.txt` gives the poster frame's time; set it as the preview's poster frame in App Store Connect. Upload only a cut whose `PREVIEW.txt` ends "Meets the App Preview spec and its gates."
 
-The cut, in order, with hard cuts on the band's beat: a string drifting into tune on the 3D headstock, heard as it comes in, and locking with its bell, held 1.2 s (the poster, 0.3 s after the lock: ✓ In tune, the peg's tick, the comet); the other strings locking, chosen as automatic detection chooses them, and the full-tune celebration; "Show me" fingering E minor on the 3D guitar; *Kite Weather*'s chorus on the highway at ×4 with the band, from the take store frame #2 comes from; the song's stars ringing as they land; the Songs tab with the song of the day's preview playing, under 3 s; the end card over the app's three-note motif. The soundtrack is the app's own sound at the moment each clip was filmed (the string, the lock bells, the full-tune strum, Show me's chord, the band in headphones, the stars, the song's preview), loudness-normalised; nothing is added. `tools/marketing/preview.py` draws the captions and the end card from the tables below (Clip, Caption, Accent); the `end` row is the end card's line and `end-note` the line under it.
+The cut, in order, with hard cuts on the band's beat: a string drifting into tune on the 3D headstock, heard as it comes in, and locking with its bell, held 1.2 s (the poster, 0.3 s after the lock: ✓ In tune, the peg's tick, the comet); the other strings locking, chosen as automatic detection chooses them, and the full-tune celebration; "Show me" fingering E minor on the 3D guitar; *Kite Weather*'s chorus on the highway at ×4 with the band, from the take store frame #3 comes from; the song's stars ringing as they land; the Songs tab with the song of the day's preview playing, under 3 s; the end card over the app's three-note motif. The soundtrack is the app's own sound at the moment each clip was filmed (the string, the lock bells, the full-tune strum, Show me's chord, the band in headphones, the stars, the song's preview), loudness-normalised; nothing is added. `tools/marketing/preview.py` draws the captions and the end card from the tables below (Clip, Caption, Accent); the `end` row is the end card's line and `end-note` the line under it.
 
 **What the render checks before a cut can ship** (`PREVIEW.txt` lists each measurement; any failure prints NOT FOR UPLOAD and fails the run, which records the tour again when a new take can fix it):
 
@@ -250,7 +266,7 @@ The cut, in order, with hard cuts on the band's beat: a string drifting into tun
 | `showme` | See it played in 3D | mint |
 | `highway` | Play songs with the band | sky |
 | `results` | Hear how you did | gold |
-| `songs` | 140+ songs to learn | spotlight |
+| `songs` | 130+ songs to learn | spotlight |
 | `end` | Tune. Learn. Play songs. | mint |
 | `end-note` | Free tuner · No ads · No account | |
 
@@ -264,7 +280,7 @@ The same tour on the 3D violin, then *Jingle Bells* from the violin songbook (fr
 | `tuned` | G, D, A, E: all in tune | orchid |
 | `highway` | Play songs on your violin | sky |
 | `results` | Hear how you did | gold |
-| `songs` | 140+ songs to learn | spotlight |
+| `songs` | 130+ songs to learn | spotlight |
 | `end` | Violin tuner and lessons | orchid |
 | `end-note` | Free tuner · No ads · No account | |
 
@@ -290,9 +306,9 @@ Apple's rules, from [App Store Connect Help](https://developer.apple.com/help/ap
 | Chromatic and strobe | chromatic, strobe | `15-tune-chromatic`, then the main set | A precise chromatic and strobe tuner for anything you play or sing. Free, no ads. | `timbre://tune?instrument=guitar.acoustic.6` (then the chromatic chip) | main |
 | Ear training | ear training | `23-ear-training`, then the main set | Train your ear: intervals, chord qualities and a 40-lesson ear course. | `timbre://ear` | main |
 | Voice | — (link and Apple Ads only) | `24-voice-range`, then the main set | Find your range and sing in tune, with a voice course that listens. | `timbre://tune?instrument=guitar.acoustic.6` | main |
-| Songs | — (link and Apple Ads only; "chord" and "metronome" stay with the default page) | `65-song-perform`, `63-songs`, then the main set | 140+ songs to play along to, and any chord chart you paste. | `timbre://songs` | main |
+| Songs | — (link and Apple Ads only; "chord" and "metronome" stay with the default page) | `65-song-perform`, `63-songs`, then the main set | 130+ songs to play along to, and any chord chart you paste. | `timbre://songs` | main |
 
-Start with violin, cello and ukulele: those queries have the weakest competition and the highest prices paid elsewhere (Trala charges $119.99 a year for violin alone), and their first frames are store frames already. A page whose first frame is still a plain capture (`19-tune-bass-3d`, `49-tune-mandolin-3d`, …) needs it promoted first: a `storeFrame` check in its UI test and a table here.
+The initial Custom Product Page drafts cover violin, cello and ukulele and already have instrument-specific capture definitions. This selection does not establish search volume, competitive strength, willingness to pay or ranking potential. A page whose first frame is still a plain capture (`19-tune-bass-3d`, `49-tune-mandolin-3d`, …) needs it promoted first: a `storeFrame` check in its UI test and a table here.
 
 **When the deep link didn't run.** For installs from Apple Ads, the `attribution` event (Analytics.swift) arrives within seconds of the first launch with the ad group: map each instrument's ad group to its catalog id in the remote settings file and let onboarding preselect that instrument when no link has (this needs a small change in onboarding; until then onboarding asks).
 
@@ -330,7 +346,7 @@ No account or login is needed.
 
 ## Pricing: the owner decides
 
-The prices live in App Store Connect; the app shows whatever Apple returns. The recommendation for $10k a month: yearly **$49.99** with the **14-day** trial, monthly **$9.99** with no introductory offer, lifetime **$149.99**, kept off the onboarding paywall, and Family Sharing on for the yearly plan and lifetime. Then test $49.99 against $59.99 with a second yearly product chosen by the remote settings file ([APPLE-DELIVERY.md §5](APPLE-DELIVERY.md#5-analytics-links-and-remote-settings)), once a build grants Pro for that product.
+**Superseded pricing recommendation:** the former $9.99 monthly, $49.99 annual and $149.99 lifetime figures and related revenue/price-test projections are historical, not configured prices or the current launch recommendation. The owner requested country-based affordability pricing for all three products. See the [current country-pricing proposal and evidence gates](readiness/pricing/country-pricing-policy.md). That proposal is not yet configured or verified in App Store Connect; app and listing language do not determine storefront prices. The app must display the localized price Apple returns through StoreKit. No revenue outcome is promised. The offer and trial implementation considerations below remain separate from price approval.
 
 - **Keep the 14-day trial.** Yearly trials of 10–16 days convert at about 43 %, against 33 % for 5–9 days (RevenueCat, 2026). An earlier version of this file suggested 7 days; don't.
 - **No monthly introductory offer** until a build's paywall discloses it on the Monthly card (its own "7 days free", button, terms line and reminder). Before that build, a monthly trial would show "$9.99" while the App Store starts a free week. Win-back offers and offer codes cover the exit offer meanwhile ([APPLE-DELIVERY.md §6.4](APPLE-DELIVERY.md#64-the-paywalls-one-time-exit-offer)).

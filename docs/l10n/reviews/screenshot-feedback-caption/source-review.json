@@ -1,0 +1,203 @@
+{
+  "schema_version": 1,
+  "reviewer": "Independent AI source review",
+  "method": "independent_source_aware_ai_read_only",
+  "reviewed_utc": "2026-10-28T01:14:26.984947Z",
+  "source_revision": "2013834d947756154688f34979bf7802c6f79946",
+  "source_state": "Current working tree; source hashes below bind inspected bytes, including pending unrelated edits.",
+  "decision": "approve_bounded_visual_feedback_headline",
+  "old_caption": "Hear exactly how you played",
+  "new_caption": "See feedback as you play",
+  "capture": "65-song-perform",
+  "conclusion": "The new caption is supported by visible judgments while the user plays. The old wording can imply exact audible playback of the just-completed performance; that capability was not found in the inspected source. The app does have auditory feedback, so this is a removal of replay/accuracy ambiguity, not a finding that the app produces no audible feedback.",
+  "findings": [
+    {
+      "topic": "Live microphone pipeline",
+      "references": [
+        "ios/Timbre/Audio/AudioService.swift:329-352",
+        "ios/Timbre/Services/AppStore.swift:904-929",
+        "ios/Timbre/Learn/LessonAnalyzer.swift:48-79"
+      ],
+      "finding": "Audio tap copies short samples for in-memory pitch/onset analysis. The lesson handler receives hertz/level and the analyzer emits onset/chord/stroke/strum results. Stop clears the listener and frame callback."
+    },
+    {
+      "topic": "Performer feedback",
+      "references": [
+        "ios/Timbre/Learn/SongPerform.swift:347-352",
+        "ios/Timbre/Learn/SongPerform.swift:396-418",
+        "ios/Timbre/Learn/SongPerform.swift:453-463",
+        "ios/Timbre/Learn/SongPerform.swift:552-565",
+        "ios/Sources/TimbreCore/Learn/PlayAlongSession.swift:122-170"
+      ],
+      "finding": "Live hertz becomes heard MIDI/cents; PlayAlongSession judges notes and updates grades, offsets, hit times and score. Ribbon/runway/pitch lanes consume that state while phase is playing."
+    },
+    {
+      "topic": "Stored take data is not performance audio",
+      "references": [
+        "ios/Timbre/Learn/SongPerform.swift:639-676",
+        "ios/Timbre/Learn/SongStoryCard.swift:6-19",
+        "ios/Sources/TimbreCore/Learn/LessonEngine.swift:9-14",
+        "ios/Sources/TimbreCore/Learn/PlayAlongSession.swift:42-43",
+        "ios/Sources/TimbreCore/Learn/PlayAlongSession.swift:128-130"
+      ],
+      "finding": "SongTake retains score/grades/judgments; a judgment contains index, grade and timing offset, not recorded audio or played pitches. The transient pitch trail is capped at a few seconds and its located app consumer is HighwayCanvas, not a synthesis/replay path."
+    },
+    {
+      "topic": "Auditory feedback nuance",
+      "references": [
+        "ios/Timbre/Learn/PlayAlongCues.swift:8-36",
+        "ios/Timbre/Learn/PlayAlongCues.swift:45-59",
+        "ios/Timbre/Learn/SongPerform.swift:651-676"
+      ],
+      "finding": "Hit/miss earcons, band thinning/filling, swishes, celebration, and spoken VoiceOver summary exist. These are live feedback/result cues, not playback of exactly how the user performed."
+    },
+    {
+      "topic": "Unrelated playback/replay paths",
+      "references": [
+        "ios/Timbre/YourSongs/RecordingPlayer.swift:5-13",
+        "ios/Timbre/Learn/LessonExplain.swift:218-226",
+        "ios/Timbre/Learn/LessonResults.swift:451-462",
+        "ios/Timbre/Learn/SongStoryCard.swift:39-55"
+      ],
+      "finding": "RecordingPlayer plays deliberately imported audio; LessonExplain replay plays a lesson demonstration; results lesson action opens another lesson; Perform again starts a new performance. None establish a user-take recording/reconstruction playback feature."
+    },
+    {
+      "topic": "Privacy alignment",
+      "references": [
+        "docs/ios/PRIVACY.md:7-15"
+      ],
+      "finding": "Policy distinguishes no recorded/stored/uploaded live microphone audio from deliberately imported recordings. New headline makes no collection, recording, upload or perfect-accuracy promise."
+    }
+  ],
+  "search_scope": {
+    "trees": [
+      "ios/Timbre",
+      "ios/Sources"
+    ],
+    "extensions": [
+      ".swift"
+    ],
+    "terms": [
+      "AVAudioRecorder",
+      "AVAudioFile(forWriting",
+      "write(from",
+      "recordingURL",
+      "recordedAudio",
+      "resynth",
+      "replay",
+      "PlayAlongSession.trail consumers"
+    ],
+    "result": "No recording API or user-performance resynthesis path found in inspected production Swift; recordingURL matches route to the imported-file library. Negative search is supplementary to traced flow, not proof of all runtime behavior."
+  },
+  "additional_authorized_canonical_consistency": {
+    "decision": "approve_exact_caption_only",
+    "path": "docs/ios/APP-STORE-LISTING.md",
+    "line_at_review": 221,
+    "capture": "62b-lesson-results-violin",
+    "old": "Hear exactly how you played",
+    "new": "See how you played",
+    "new_nfc_characters": 18,
+    "reason": "This capture is the post-lesson results view, not live play. The test completes the final play-along, reaches lesson.results and checks three stars. LessonResults visibly provides a performance headline, stars, accuracy and coach summary. Present-tense as-you-play would be inaccurate here; See how you played accurately describes visible post-performance feedback.",
+    "references": [
+      "ios/TimbreUITests/TimbreUITests.swift:776-804",
+      "ios/Timbre/Learn/LessonResults.swift:7-12",
+      "ios/Timbre/Learn/LessonResults.swift:69-84",
+      "ios/Timbre/Learn/LessonResults.swift:221-242",
+      "ios/Timbre/Learn/LessonResults.swift:403-426"
+    ],
+    "scope": "Only the English violin CPP headline row; no new localized CPP deliverable, no iPad JSON or supporting-line changes; no visual QA claimed."
+  },
+  "required_refresh_map": [
+    {
+      "target": "tools/l10n/store/<locale>.json (50 files)",
+      "action": "Change only iphone_screenshot_captions row selected by capture65-song-perform, caption. Retain capture/index/order/supporting_line and every other consumer field. content_hash excludes review/provenance but includes this caption, so all50 content hashes change."
+    },
+    {
+      "target": "docs/ios/APP-STORE-LISTING.md default iPhone row and docs/ios/APP-STORE-LISTING-LOCALIZED.md translator-source iPhone row",
+      "action": "Keep canonical source and source mirror equal to English JSON. Mirror exact row204; canonical default row196. Separate authorized violin CPP row221 uses See how you played. Renderer code need not change; tools/l10n/store.py:436-438 and screenshots.py:429-463 verify source alignment."
+    },
+    {
+      "target": "tools/l10n/store-corrections.json",
+      "action": "Append50 exact-old/new caption correction records with independent-review artifact and source/content parent lineage; preserve all956 prior ledger objects and preferably byte prefix. No rewrite or retroactive correction to historical records."
+    },
+    {
+      "target": "tools/l10n/store-review-independent.json",
+      "action": "Append bounded-source-update record per locale with parent/current content/source hashes and new exact-caption review; update current content/proposed hash fields only as schema requires. Preserve inherited full-review history; no fresh full-payload certification."
+    },
+    {
+      "target": "tools/l10n/store-review.json",
+      "action": "Advance current English source hash and each locale current reviewed/source hashes after semantic approval; append bounded updates with parent lineage, retain prior records; increment each locale correction count by1 and overall applied total by50; recalculate artifact sha256 for independent evidence and corrections."
+    },
+    {
+      "target": "docs/ios/readiness/release-applicability.json",
+      "action": "Refresh listing_source_sha256 and source_sha256[docs/ios/APP-STORE-LISTING.md] after exact source-caption change review; keep evidence dispositions and owner authorization byte-for-byte unchanged. No flags promoted."
+    },
+    {
+      "target": "docs/ios/readiness/reviews/privacy-policy-current-source-verification.json",
+      "action": "Update listing_content_sha256 for all50 only after bounded listing/source semantic assessment, preserving old hashes and review history in an additive refresh record. Preserve original publication observation time, routes, bytes, policy, limitations; no fresh HTTP fetch/deploy inferred. Existing unrelated app-source drift must receive separate review, not be rubber-stamped as part of caption refresh."
+    },
+    {
+      "target": "per-listing review.evidence.privacy_policy mappings, if present/authorized elsewhere",
+      "action": "All50 current listing content bindings and reference_sha256 would need refreshing to the updated receipt. Currently the inspected en-US/ar-SA review is privacy_policy:not_verified with no such verified evidence map; do not invent verified status or fill release gaps."
+    },
+    {
+      "target": "Other hash-bound current screenshot evidence",
+      "action": "Any existing composed image using the old caption is stale relative to new text and needs re-render/review by renderer owner. Do not claim pixel/RTL/layout completion from character-count or source checks."
+    }
+  ],
+  "portal_receipt_preservation": {
+    "headers_receipt": "docs/ios/readiness/reviews/app-information-headers-2026-10-27.json",
+    "version_receipts": {
+      "filename": "saved-locales.json",
+      "sha256": "1e4c330a39a1efc1464773e46f26502e9c38975b37731aa388e2fb2c66a1bc43",
+      "availability": "external_artifact_not_in_repository"
+    },
+    "version_completion": {
+      "filename": "completion-audit.json",
+      "sha256": "55ea92b284fbca59aaa4ea8a6ab48aa3b749df22b043f08099f37b84967c43b7",
+      "availability": "external_artifact_not_in_repository"
+    },
+    "interpretation": "Whole-JSON file hashes in these point-in-time records bind the old snapshots. Preserve them, observed timestamps and original saved values; do not rewrite source hashes to pretend new portal readback. Caption changes leave the six saved fields unchanged: name/subtitle in header receipt and description/promotional_text/keywords/support_url in version receipt. support_url is a portal receipt field, not a current listing JSON top-level field.",
+    "recommended_new_reconciliation": "Add separate offline delta receipt proving protected fields equal historical/frozen values while explicitly stating new whole JSON bytes differ and no new portal observations occurred.",
+    "portal_writes_or_readback_performed": false
+  },
+  "preexisting_privacy_source_drift": [
+    "ios/Timbre/Learn/LessonSteps.swift",
+    "ios/Timbre/Settings/SettingsOptionLabel.swift",
+    "ios/Timbre/Settings/SettingsView.swift",
+    "ios/Timbre/Songs/SongsView.swift"
+  ],
+  "baseline_checks": {
+    "source_snapshot_errors": [],
+    "version_receipt_row_count": 50,
+    "correction_ledger_count": 956
+  },
+  "reviewed_source_sha256": {
+    "ios/Timbre/Audio/AudioService.swift": "6d86ffe45d45cb76a3fbedbcf789764450a86f80c5f660ad0b07c2d91c665f9e",
+    "ios/Timbre/Services/AppStore.swift": "b39dcbdf6b524cc622d56e0f5166f83f225fc4503af004a8abdc9f55ca5e0292",
+    "ios/Timbre/Learn/LessonAnalyzer.swift": "a7c1601bb54091f9bb92c587363dcfab28bf84d13252ebe89816b00e272e0127",
+    "ios/Timbre/Learn/SongPerform.swift": "5118fc03fbf2c6be0f623af3b9d29ee6226f3ca74f698c45c68a089cef9aa673",
+    "ios/Sources/TimbreCore/Learn/PlayAlongSession.swift": "c2ffa963fcd45bb9bb3087eed42a7d92338b40ddc3bd53fd62bbb9500f818f7b",
+    "ios/Sources/TimbreCore/Learn/LessonEngine.swift": "bafb0b1c1f1066545dde0609358970bf7e6482b1de751d3b25cb0004e2b41824",
+    "ios/Timbre/Learn/SongStoryCard.swift": "0c066e00e202792f40e7943c5fe4a9f8feb3cc4bdd1dbd0eb08efa496ebebb21",
+    "ios/Timbre/Learn/PlayAlongCues.swift": "df7d493928a1d2e829554e9813e5f212d3535bf6344d6df0ba61f66b00811bad",
+    "ios/Timbre/YourSongs/RecordingPlayer.swift": "f569142eb1c243d2e34d2699fe795c1c7bbdc5054213e253b667492b1ff7be73",
+    "ios/Timbre/Learn/LessonExplain.swift": "93653aab28cf316f769c3819d4e789146e3ce2be9829fcdbf1924abc070de73f",
+    "ios/Timbre/Learn/LessonResults.swift": "41cae10c31668216294a965c0d86fbca407c07cc13bcbc6e93f6bdc389a45ab1",
+    "ios/TimbreUITests/TimbreUITests.swift": "4911cdb60dc236d25a259f5388374d36c2e23a1584eb31ffa030304c84533389",
+    "docs/ios/PRIVACY.md": "a15dd87df281032b7943e5bd296dca5edcc237eea6028ccf83bf919a7a7e8cb9",
+    "tools/l10n/store.py": "b6013dd150f1e8520c294bfb4db421ec63b593e1bdc8b771407bc7ae903e2b67",
+    "tools/marketing/screenshots.py": "2972c26441ecbc70ff550a43c50ea9fbe14ad19e66a297b7b663e3adee4e8257",
+    "docs/ios/APP-STORE-LISTING.md": "02263f318205c2185ca7f277cd87798680f9f9c880ed90ca2de7889c7009a949",
+    "docs/ios/APP-STORE-LISTING-LOCALIZED.md": "74db97ea10d51329feae54387fec4725980f7b12e7aa282317f9736e835cabf9"
+  },
+  "limitations": [
+    "Source-aware AI assessment only; not native-speaker or legal certification.",
+    "No native run, device capture, audio replay experiment, screenshot pixel review, portal write/readback, publish, release flag or account change.",
+    "No assertion that uninspected dynamic/configured behavior is impossible; report is bounded to traced production sources."
+  ],
+  "mutations": {
+    "live_checkout": false,
+    "external_review_artifact_only": true
+  }
+}

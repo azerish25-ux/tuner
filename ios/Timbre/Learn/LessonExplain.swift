@@ -386,6 +386,7 @@ struct ExplainStep: View {
         ZStack {
             if cueShown, case .chord = visual {
                 turnCue(compact: false)
+                    .accessibilityIdentifier("lesson.explain.turnCue")
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
                     .id(demo == .heard)

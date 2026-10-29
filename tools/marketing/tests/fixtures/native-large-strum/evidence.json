@@ -1,0 +1,31 @@
+{
+  "source_commit": "17091417a12d68841bde5176319d34e795e39565",
+  "run_id": 40547339424,
+  "artifact_id": 12760337900,
+  "artifact_sha256": "b7bb44d4a496db0e82f79c85e31c9ca47736f10efa18755c18dcffd6d2819a7d",
+  "native_size": [
+    1320,
+    2868
+  ],
+  "strip_top": 300,
+  "strip_bottom": 420,
+  "purpose": "Unmodified native RGB pixel strips for crop-edge regression, not listing assets or proof of a full capture pass. German shard failed other tests.",
+  "captures": [
+    {
+      "locale": "en-US",
+      "capture": "11b-tune-strum",
+      "original_file": "48A2D319-47CC-4012-8554-38E70E9783AD.png",
+      "original_sha256": "04c8ca2f00e267dab8813ab442e683febd8440178849094d3ce5e7f8e8b61d47",
+      "strip_file": "en-US.png",
+      "strip_sha256": "ada5222c75ed303e57666813669a9f8b33280d52b7b45f8af5418cfbb2c949d3"
+    },
+    {
+      "locale": "de-DE",
+      "capture": "11b-tune-strum",
+      "original_file": "5BCD692E-9B9D-4E56-B932-56204387A9E6.png",
+      "original_sha256": "a53d870f02f367832b6d44057e1fd6590c407c82126963a1fcf3c0f4eecb26ab",
+      "strip_file": "de-DE.png",
+      "strip_sha256": "a47db6008a41bf24b164c414c7ae404ec54ae9819a694aa1008e6d0ce7f04071"
+    }
+  ]
+}

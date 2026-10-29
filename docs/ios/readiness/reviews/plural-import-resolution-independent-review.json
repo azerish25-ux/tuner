@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-27T01:55:23.172358+00:00",
+  "baseline_head": "b6efd36f5f72d7ec723229949f7c54c32972b72c",
+  "verdict": "approve_bounded_source_resolution",
+  "scope": "Plural-import correction and regression tests, generated handoff instructions, plus one-line required-gate accessibility dependency. Source review and Python execution only.",
+  "original_review": "docs/ios/readiness/reviews/plural-import-independent-review.json",
+  "original_review_sha256": "a2a5ad952a0be9cdce61653664b796ddd37b2f89aadbc66ef77aa0a8da9c229a",
+  "findings": [],
+  "resolved_findings": [
+    {
+      "id": "PLURAL-01",
+      "historical_issue": "KI-5.3",
+      "evidence": [
+        "Single numeric variable/type is bound to canonical English stringsdict metadata; unsupported multi-variable/complex format templates fail closed.",
+        "zero/one/two permit lexical counts without a numeric placeholder and may use the one declared count; other/few/many require the declared count. This preserves actual numeric singular and lexical dual contracts.",
+        "Full percent scan rejects unrecognized conversions, trailing percent, wrong numeric types, extra arguments and nonexistent argument positions. Literal %% and positional1$ are supported.",
+        "Native plist import keeps unrelated entries and metadata, replaces the delivered entry categories, and invalid deliveries do not write."
+      ],
+      "verification": "Nine focused tests passed independently; actual343 bundled plural entries independently rechecked with zero rejections.18 previously rejected resource contracts now pass."
+    },
+    {
+      "id": "REQUIRED-AX-GATE",
+      "historical_issue": "KI-2.4",
+      "path": ".github/workflows/ios.yml",
+      "line": 339,
+      "evidence": "needs now includes accessibility. Existing always-running generic result loop treats every dependency result other than success as failure, so audit failure/skipped/cancelled blocks required gate.",
+      "limits": "Source/control-flow review only. Independent YAML parser unavailable locally (PyYAML absent); root reports all-workflow YAML parsing succeeded. Actual required native/audit checks remain pending and no historical all49 failure is waived."
+    }
+  ],
+  "independently_executed_verification": [
+    {
+      "command": "python -m unittest discover -s tools/l10n/tests -p test_plural_import.py",
+      "exit_code": 0,
+      "tests": 9
+    },
+    {
+      "command": "Read-only all-current-stringsdict loop through current plural_definition/check",
+      "checked_entries": 343,
+      "rejected_entries": 0
+    },
+    {
+      "command": "git -c core.autocrlf=false diff --check -- tools/l10n/report.py tools/l10n/tests/test_plural_import.py .github/workflows/ios.yml",
+      "exit_code": 0
+    }
+  ],
+  "reviewed_sha256": {
+    "tools/l10n/report.py": "66522c7fb2b641b2dbb9fd87ce45d7ac8a48b0c12859c07f0dc667e8196b72f8",
+    "tools/l10n/tests/test_plural_import.py": "d20c0265ffdeff48048b4563c48a6a421461bf5b24b95358fdcbf2f67b0a1f5b",
+    ".github/workflows/ios.yml": "650f88f452cdb1248f6baab5f97359fa4b19688fe294d7ca325a3194f76793d9",
+    "docs/l10n/HANDOFF.md": "b249d391aa859d10836bd5877e06e7199211b6d55efb061f70c3cd6c1534c639"
+  },
+  "verification_limits": [
+    "Root full187-test run is in progress at review time; no full-suite pass is asserted here.",
+    "Tooling change can be validated on Windows; no Swift/native proof is needed to establish these Python import behaviors. Actual app resource/render acceptance remains separate.",
+    "No implementation change, commit, push, native run or Apple operation performed by reviewer. Original request-changes receipt retained unchanged."
+  ],
+  "mutations": "Only independent review/reconciliation receipts written."
+}

@@ -1,6 +1,7 @@
 import SwiftUI
 import TimbreCore
 import UIKit
+import CoreText
 
 /// Generative single-sleeve art for a song, so a shelf of songs reads like a rack of records with no image assets.
 /// Everything comes from the song: its id seeds the colours and the type (a song always wears the same sleeve), its
@@ -1137,6 +1138,9 @@ struct SongCover: View {
     /// The glow drifts slowly (the featured song), unless Reduce Motion is on.
     var drift = false
     var outlined = true
+    /// Distinguishes the same song's hero and shelf artwork in native audit callbacks.
+    /// This is diagnostic identity only; the sleeve remains one decorative picture.
+    var identity: String? = nil
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var drifting = false
 
@@ -1192,6 +1196,8 @@ struct SongCover: View {
         }
     }
 
+    private var textIdentity: String { identity ?? "song.cover.\(art.seed)" }
+
     /// The colour band a bannered title sits on, across the foot of the sleeve.
     private func band(_ layout: SleeveLayout) -> some View {
         VStack(spacing: 0) {
@@ -1206,25 +1212,21 @@ struct SongCover: View {
     private func typeBlock(_ layout: SleeveLayout) -> some View {
         let points = layout.fit.points
         let align = horizontal
-        let capitals = art.imprint == .catalogue
         let block = VStack(alignment: align, spacing: 0) {
             if art.imprint.credited {
-                Text(verbatim: capitals ? art.label.uppercased() : art.label)
-                    .font(.custom(capitals ? "Sora-SemiBold" : "Sora-Medium", fixedSize: layout.labelSize * (capitals ? 1 : 1.1)))
-                    .tracking(layout.labelSize * (capitals ? 0.16 : 0.01))
-                    .foregroundStyle(art.ink.opacity(0.72))
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.7)
+                SleeveCredit(fit: layout.credit, alignment: art.align, color: art.ink.opacity(0.72))
+                    .frame(width: layout.typeWidth, height: layout.credit.height)
                     .padding(.bottom, layout.labelSize * 0.35)
             }
             VStack(alignment: align, spacing: -points * 0.27) {
-                ForEach(Array(layout.fit.lines.enumerated()), id: \.offset) { _, line in
+                ForEach(Array(layout.fit.lines.enumerated()), id: \.offset) { index, line in
                     Text(verbatim: line)
                         .font(.custom(art.face, fixedSize: points))
                         .tracking(-points * 0.02)
                         .foregroundStyle(art.ink)
                         .lineLimit(1)
                         .fixedSize()
+                        .accessibilityIdentifier(textIdentity + ".title.\(index)")
                 }
             }
         }
@@ -1248,6 +1250,7 @@ struct SongCover: View {
             .font(.custom("Sora-Medium", fixedSize: size)).monospacedDigit()
             // Small catalogue numbers need full ink beneath the sleeve's top-light wash.
             .foregroundStyle(ink)
+            .accessibilityIdentifier(textIdentity + ".catalogue")
         switch art.imprint {
         case .catalogue:
             ZStack(alignment: .topLeading) {
@@ -1281,11 +1284,17 @@ struct SongCover: View {
 }
 
 /// Where a sleeve's type goes and at what size, and the room it leaves the motif.
-@MainActor private struct SleeveLayout {
+@MainActor struct SleeveLayout {
     let side: CGFloat
     let pad: CGFloat
     let labelSize: CGFloat
     let fit: TitleFit
+    let credit: SleeveCreditFit
+    let typeWidth: CGFloat
+    /// Measured type demand, exposed for compact-cover regression checks. Finite sleeves cannot fit
+    /// unbounded arbitrary copy at a fixed point size; do not mistake an empty motif for a text-fit pass.
+    let typeBlockHeight: CGFloat
+    let typeFitsBounds: Bool
     /// A bannered title's band, and the type's inset from its edges.
     let bandHeight: CGFloat
     let bandInset: CGFloat
@@ -1305,6 +1314,10 @@ struct SongCover: View {
         typeTop = pad + labelSize * 1.05 * 1.26 + side * 0.035
         guard titled else {
             fit = TitleFit(lines: [], points: 0)
+            credit = SleeveCreditFit(text: "", width: width, labelSize: labelSize, capitals: false)
+            typeWidth = width
+            typeBlockHeight = 0
+            typeFitsBounds = true
             bandHeight = 0
             bandInset = 0
             typeTrailing = pad
@@ -1312,21 +1325,146 @@ struct SongCover: View {
             return
         }
         typeTrailing = art.titleOnTop ? pad : max(pad, side * CoverArt.playCorner)
-        let typeWidth = max(1, size.width - pad - typeTrailing)
-        fit = TitleFit.make(art.title, width: typeWidth, maxHeight: side * (art.titleOnTop ? 0.36 : 0.4), largest: side * 0.17,
-                            smallest: side * 0.075, font: art.face)
-        let credit = art.imprint.credited ? labelSize * 1.26 + labelSize * 0.35 : 0
-        let block = credit + fit.height
-        let gap = side * 0.05
+        typeWidth = max(1, size.width - pad - typeTrailing)
+        credit = SleeveCreditFit(text: art.imprint.credited ? art.label : "", width: typeWidth,
+                                 labelSize: labelSize, capitals: art.imprint == .catalogue)
+        let creditHeight = art.imprint.credited ? credit.height + labelSize * 0.35 : 0
         bandInset = pad * 0.7
-        bandHeight = art.banner ? block + bandInset * 2 : 0
+        let bottomInset = art.banner ? bandInset : pad
+        // Credit wrapping spends the same finite type area as the title. Let the existing title
+        // fitter adapt within its original point-size bounds, rather than giving it a second,
+        // independent height budget that can push the combined block outside a compact sleeve.
+        let availableTypeHeight = max(0, size.height - (art.titleOnTop ? typeTop : pad) - bottomInset)
+        let titleBudget = min(side * (art.titleOnTop ? 0.36 : 0.4), max(0, availableTypeHeight - creditHeight))
+        fit = TitleFit.make(art.title, width: typeWidth, maxHeight: titleBudget, largest: side * 0.17,
+                            smallest: side * 0.075, font: art.face)
+        let block = creditHeight + fit.height
+        typeBlockHeight = block
+        let gap = side * 0.05
+        bandHeight = art.banner ? min(size.height, block + bandInset * 2) : 0
+        typeFitsBounds = block <= max(0, size.height - (art.titleOnTop ? typeTop : pad) - bottomInset)
+        // A long localized credit spends motif space, never a fictitious 20% minimum that extends
+        // past the sleeve or underneath its type. Zero motif room is valid: the ground/glow remain.
         if art.titleOnTop {
-            let top = typeTop + block + gap
-            region = CGRect(x: pad, y: top, width: width, height: max(side * 0.2, size.height - top - pad))
+            let bottom = max(pad, size.height - pad)
+            let top = min(bottom, typeTop + block + gap)
+            region = CGRect(x: pad, y: top, width: width, height: max(0, bottom - top))
         } else {
-            let used = art.banner ? bandHeight + pad + gap : pad * 2 + block + gap
-            region = CGRect(x: pad, y: pad, width: width, height: max(side * 0.2, size.height - used))
+            let typeStart = size.height - bottomInset - block
+            region = CGRect(x: pad, y: pad, width: width, height: max(0, typeStart - gap - pad))
         }
+    }
+}
+
+/// The credit keeps its original point size. Prefer the sleeve's spaced lettering in two rows; only
+/// relax positive tracking when that avoids another row. Longer translations retain every glyph and
+/// their measured height, rather than silently scaling or truncating at the play-corner boundary.
+@MainActor
+struct SleeveCreditFit {
+    let text: String
+    let font: UIFont
+    let tracking: CGFloat
+    let width: CGFloat
+    let height: CGFloat
+
+    private struct Key: Hashable {
+        let text: String
+        let font: String
+        let width: CGFloat
+        let labelSize: CGFloat
+        let capitals: Bool
+    }
+    private static var cache: [Key: SleeveCreditFit] = [:]
+    private static let cacheLimit = 512
+
+    var attributedText: NSAttributedString {
+        NSAttributedString(string: text, attributes: [.font: font, .kern: tracking])
+    }
+
+    init(text: String, width: CGFloat, labelSize: CGFloat, capitals: Bool) {
+        let name = capitals ? "Sora-SemiBold" : "Sora-Medium"
+        // Preserve exact dimensions: rounding near a word boundary can return a one-row result for
+        // a slightly narrower two-row proposal. The bounded cache also avoids repeated Core Text layout
+        // on repeated shelf/body updates.
+        let key = Key(text: text, font: name, width: width, labelSize: labelSize, capitals: capitals)
+        if let cached = Self.cache[key] {
+            self = cached
+            return
+        }
+        self.text = capitals ? text.uppercased() : text
+        self.width = max(1, width)
+        font = UIFont(name: name, size: labelSize * (capitals ? 1 : 1.1))
+            ?? UIFont.systemFont(ofSize: labelSize * (capitals ? 1 : 1.1), weight: capitals ? .semibold : .medium)
+        let preferred = labelSize * (capitals ? 0.16 : 0.01)
+        var chosen = preferred
+        var measured: CGFloat = 0
+        for candidate in [preferred, preferred * 0.5, 0] {
+            let text = NSAttributedString(string: self.text, attributes: [.font: font, .kern: candidate])
+            let setter = CTFramesetterCreateWithAttributedString(text)
+            let measuredSize = CTFramesetterSuggestFrameSizeWithConstraints(setter, CFRange(location: 0, length: 0),
+                nil, CGSize(width: self.width, height: CGFloat.greatestFiniteMagnitude), nil)
+            // A point of baseline/rounding slack prevents a fractional final descender from being
+            // omitted by CTFrame's finite-height fit. The same height is used to draw and reserve space.
+            let height = self.text.isEmpty ? 0 : ceil(measuredSize.height) + 1
+            if candidate == preferred || height < measured {
+                chosen = candidate
+                measured = height
+            }
+            if height <= ceil(font.lineHeight * 2) + 1 { break }
+        }
+        tracking = chosen
+        height = measured
+        if Self.cache.count >= Self.cacheLimit { Self.cache.removeAll(keepingCapacity: true) }
+        Self.cache[key] = self
+    }
+}
+
+/// Core Text supplies both the finite frame and the shaping used by Canvas. Unlike a UIKit-backed
+/// representable, this draws into SwiftUI ImageRenderer too (SongStoryCard's exported share image).
+/// It remains decorative fixed-size lettering; the accessible song identity lives outside the cover.
+struct SleeveCredit: View {
+    let fit: SleeveCreditFit
+    let alignment: CoverArt.Align
+    let color: Color
+    @Environment(\.layoutDirection) private var direction
+
+    var body: some View {
+        Canvas { context, size in
+            let frame = fit.frame(alignment: alignment, rightToLeft: direction == .rightToLeft,
+                                  color: UIColor(color).cgColor)
+            context.withCGContext { graphics in
+                graphics.textMatrix = .identity
+                graphics.translateBy(x: 0, y: size.height)
+                graphics.scaleBy(x: 1, y: -1)
+                CTFrameDraw(frame, graphics)
+            }
+        }
+        .frame(width: fit.width, height: fit.height)
+        .accessibilityHidden(true)
+    }
+}
+
+extension SleeveCreditFit {
+    /// The production drawing frame is also inspectable by native glyph-completeness tests.
+    func frame(alignment: CoverArt.Align = .leading, rightToLeft: Bool = false,
+               color: CGColor = UIColor.white.cgColor) -> CTFrame {
+        let paragraph = NSMutableParagraphStyle()
+        paragraph.lineBreakMode = .byWordWrapping
+        switch alignment {
+        case .center: paragraph.alignment = .center
+        case .leading: paragraph.alignment = rightToLeft ? .right : .left
+        case .trailing: paragraph.alignment = rightToLeft ? .left : .right
+        }
+        // Natural base direction preserves Arabic shaping without reordering Latin course names
+        // merely because the surrounding app uses an RTL layout.
+        paragraph.baseWritingDirection = .natural
+        let text = NSMutableAttributedString(attributedString: attributedText)
+        text.addAttributes([.paragraphStyle: paragraph,
+                            NSAttributedString.Key(kCTForegroundColorAttributeName as String): color],
+                           range: NSRange(location: 0, length: text.length))
+        let setter = CTFramesetterCreateWithAttributedString(text)
+        let path = CGPath(rect: CGRect(x: 0, y: 0, width: width, height: height), transform: nil)
+        return CTFramesetterCreateFrame(setter, CFRange(location: 0, length: 0), path, nil)
     }
 }
 
@@ -1343,11 +1481,21 @@ struct TitleFit {
     /// The block's height: Sora's line box is 1.26 em, and lines stack 0.99 em apart.
     var height: CGFloat { lines.isEmpty ? 0 : points * (1.26 + 0.99 * CGFloat(lines.count - 1)) }
 
-    @MainActor private static var cache: [String: TitleFit] = [:]
+    private struct Key: Hashable {
+        let text: String
+        let font: String
+        let width: CGFloat
+        let maxHeight: CGFloat
+        let largest: CGFloat
+        let smallest: CGFloat
+    }
+    @MainActor private static var cache: [Key: TitleFit] = [:]
 
     @MainActor static func make(_ text: String, width: CGFloat, maxHeight: CGFloat, largest: CGFloat, smallest: CGFloat,
                                 font: String = TitleFit.font) -> TitleFit {
-        let key = "\(text)|\(font)|\(Int(width.rounded()))|\(Int(maxHeight.rounded()))|\(Int(largest.rounded()))"
+        // A fractional change in the credit's remaining budget can change the fitting title size.
+        // Include both size bounds and exact geometry; a rounded cache hit can violate that budget.
+        let key = Key(text: text, font: font, width: width, maxHeight: maxHeight, largest: largest, smallest: smallest)
         if let hit = cache[key] { return hit }
         let result = compute(text, width: width, maxHeight: maxHeight, largest: largest, smallest: min(smallest, largest), font: font)
         if cache.count > 500 { cache.removeAll() }

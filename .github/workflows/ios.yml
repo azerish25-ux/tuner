@@ -1,6 +1,6 @@
-# The pull-request gate. Branch protection requires the `gate` job: it passes only when `core`, `app` and `release`
-# all pass, and the three run side by side in under 15 minutes. `accessibility` runs beside them and can fail the
-# workflow on its own (the accessibility audit and the localization launches). The full UI tour with its App Store
+# The required gate keeps core/app/Release and functional accessibility failures blocking.
+# Strict SDK audit results remain unchanged; only documented, uncorroborated SDK findings may be advisory.
+# The full UI tour with its App Store
 # captures, the iPad shelf, the unsigned archive and the sanitizers run nightly or on the `captures` label
 # (nightly.yml). GitHub runs nothing for a commit marked [skip ci], so the required gate never reports and such a
 # pull request can't merge; the core job also refuses earlier commits that touch ios/ without CI. Every pull request
@@ -15,9 +15,8 @@ permissions:
   contents: read
 concurrency:
   group: ios-native-${{ github.ref }}
-  # Frequent main checkpoints must not restart simulator builds before they can finish.
-  # PR updates, manual requests and explicit refreshes may supersede an obsolete run.
-  cancel-in-progress: ${{ github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[ci-refresh]') }}
+  # Only superseded pull-request evidence is canceled; main, manual and scheduled runs finish.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 env:
   DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
   HOMEBREW_NO_AUTO_UPDATE: "1"
@@ -28,7 +27,7 @@ jobs:
     timeout-minutes: 15
     runs-on: macos-15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
         with:
           # The commit history for the [skip ci] check, without the file contents of other commits (or of the
           # ci-results branches): a blobless clone fetches commits and trees only.
@@ -91,6 +90,46 @@ jobs:
           python3 tools/ci/test_hygiene.py 2>&1 | tee ci-out/hygiene-tests.log
           python3 tools/ci/test_song_cover_contrast.py 2>&1 | tee ci-out/song-cover-contrast-tests.log
           python3 tools/ci/comment_hygiene.py --github 2>&1 | tee ci-out/hygiene.log
+      - name: Release safety and accessibility audit contracts
+        run: |
+          set -euo pipefail
+          python3 tools/ci/test_apple_delivery_preflight.py
+          python3 tools/ci/test_registered_app_store_id.py
+          python3 tools/ci/test_apple_archive_scope.py
+          python3 tools/ci/test_accessibility_audit_contract.py
+          python3 tools/ci/test_edge_fade_direction.py
+          python3 tools/ci/test_audit_pixel_proof_contract.py
+          python3 tools/ci/test_accessibility_identity_contract.py
+          python3 tools/ci/test_lesson_accessibility_layout_contract.py
+          python3 tools/ci/test_along_typography_contract.py
+          python3 tools/ci/test_accessibility_partitions.py
+          python3 tools/ci/test_accessibility_log_checkpoints.py
+          python3 tools/ci/test_accessibility_visual_checkpoints.py
+          python3 tools/ci/test_occluded_contrast_diagnostic_contract.py
+          python3 tools/ci/test_demo_course_seed.py
+          python3 tools/ci/test_tablet_heading_contract.py
+          python3 tools/ci/test_capture_check.py
+          python3 tools/ci/test_result_polish_contract.py
+          python3 tools/ci/test_build_checkpoint_contract.py
+          python3 tools/ci/test_tour_shards.py
+          python3 tools/ci/test_shared_tour_build.py
+          python3 tools/ci/test_song_cover_audit_identity.py
+          python3 tools/ci/test_welcome_typography_contract.py
+          python3 tools/ci/test_ci_concurrency_contract.py
+          python3 tools/ci/test_country_pricing_policy.py
+          python3 tools/ci/test_simulator_warmup.py
+          python3 tools/ci/test_simulator_priming_signal.py
+          python3 tools/ci/test_simulator_cleanup.py
+          python3 tools/ci/test_fraction_direction_contract.py
+          python3 tools/ci/test_settings_localization_contract.py
+          python3 tools/ci/test_practice_xp_direction_contract.py
+          python3 tools/ci/test_song_rail_contract.py
+          python3 tools/ci/test_song_page_trace_contract.py
+          python3 tools/ci/test_song_page_trace.py
+          python3 tools/ci/test_listing_artifact_review.py
+          python3 tools/ci/test_lesson_turn_cue_contract.py
+          python3 tools/ci/test_playalong_readiness_contract.py
+          python3 tools/ci/test_paywall_offer_contrast.py
       - name: SwiftLint (new error-severity violations fail)
         # .swiftlint.yml at the repository root, against the committed baseline (tools/ci/swiftlint-baseline.json):
         # a violation the baseline doesn't hold is reported, and fails the job at error severity. A fresh baseline
@@ -112,7 +151,7 @@ jobs:
       - name: Summarize
         if: always()
         run: python3 tools/ci/summarize-log.py ci-out/core.log ci-out/core.summary.txt || true
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()
         with:
           name: results-core
@@ -120,12 +159,13 @@ jobs:
           retention-days: 7
 
   app:
-    # Unit tests (TimbreAppTests) and three smoke flows (SmokeUITests: a fresh launch, a string locked, Pro bought).
+    # Unit tests (TimbreAppTests) and five smoke flows: welcome, Quest text, badge button, string lock and Pro purchase.
     name: app
-    timeout-minutes: 25
+    # A cold build plus the complete serial suite needs room to finish and export its result bundle.
+    timeout-minutes: 40
     runs-on: macos-15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
       - name: Verify App Store SDK minimum
         run: |
           xcodebuild -version
@@ -148,7 +188,7 @@ jobs:
         id: modkey
         run: echo "key=$(cat ios/project.yml ios/Package.swift | shasum -a 256 | cut -c1-16)" >> "$GITHUB_OUTPUT"
       - name: Restore the compiled module cache
-        uses: actions/cache@v4
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
           path: ios/build/dd/ModuleCache.noindex
           key: modules-${{ runner.os }}-xcode26.3-${{ steps.modkey.outputs.key }}
@@ -169,8 +209,15 @@ jobs:
       - name: Unit tests and smoke flows
         run: |
           set -o pipefail
+          # Enable XCTest's fail-and-continue watchdog; contained-host controls request 120 seconds each.
           xcodebuild test-without-building -project ios/Timbre.xcodeproj -scheme Timbre -parallel-testing-enabled NO \
+            -test-timeouts-enabled YES \
             -only-testing:TimbreAppTests -only-testing:TimbreUITests/SmokeUITests \
+            -only-testing:TimbreUITests/CaptureLockEvidenceTests \
+            -only-testing:TimbreUITests/CapturePlayAlongReadinessTests \
+            -only-testing:TimbreUITests/AuditContrastPixelProofTests \
+            -only-testing:TimbreUITests/TabletShelfAlignmentTests \
+            -only-testing:TimbreUITests/TimbreUITests/testInstrumentFamilyChipMustClearBothFades \
             -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd \
             -resultBundlePath ios/build/Gate.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/test.log
       - name: Collect results
@@ -181,13 +228,13 @@ jobs:
           fi
           for log in ci-out/build.log ci-out/test.log; do [ -f "$log" ] && python3 tools/ci/summarize-log.py "$log" "${log%.log}.summary.txt"; done
           gzip -f ci-out/build.log ci-out/test.log 2>/dev/null || true
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()
         with:
           name: results-app
           path: ci-out
           retention-days: 7
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: failure()
         with:
           name: gate-xcresult
@@ -200,7 +247,7 @@ jobs:
     timeout-minutes: 25
     runs-on: macos-15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
       - name: Generate Xcode project
         run: |
           command -v xcodegen >/dev/null 2>&1 || brew install xcodegen
@@ -221,7 +268,7 @@ jobs:
         run: |
           [ -f ci-out/release.log ] && python3 tools/ci/summarize-log.py ci-out/release.log ci-out/release.summary.txt
           gzip -f ci-out/release.log 2>/dev/null || true
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()
         with:
           name: results-release
@@ -229,45 +276,86 @@ jobs:
           retention-days: 7
 
   accessibility:
+    outputs:
+      step_outcomes: ${{ toJSON(steps) }}
     # The accessibility audit (enforced kinds fail, and so does an audit that can't run) and the localization
     # launches (German, Arabic right to left with note names left to right, pseudo-localization).
     name: accessibility
-    timeout-minutes: 55
+    timeout-minutes: 75
     runs-on: macos-15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        id: ax-step-1
+        with:
+          # PR checkout is the merge commit; its head parent supplies the one-commit opt-in marker.
+          fetch-depth: 2
+      - name: Resolve bounded contrast reveal opt-in
+        id: reveal-opt-in
+        env:
+          SOURCE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          SOURCE_REPOSITORY: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+          SOURCE_BRANCH: ${{ github.head_ref || github.ref_name }}
+        run: |
+          python3 - <<'PYCODE'
+          import json, os, pathlib, re, subprocess
+          head = os.environ['SOURCE_HEAD']
+          if not re.fullmatch(r'[0-9a-f]{40}', head):
+              raise SystemExit('Invalid head SHA for diagnostic opt-in')
+          checkout = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+          if checkout != os.environ['GITHUB_SHA']:
+              raise SystemExit('Diagnostic checkout differs from the workflow SHA')
+          message = subprocess.check_output(['git', 'show', '-s', '--format=%B', head], text=True)
+          permitted = (os.environ['SOURCE_REPOSITORY'] == 'azerish25-ux/tuner'
+                       and os.environ['SOURCE_BRANCH'] in {'main', 'codex/app-store-readiness-gates'})
+          enabled = permitted and '[contrast-reveal-diagnostics]' in message.splitlines()
+          folder = pathlib.Path('ci-out/contrast-reveal')
+          folder.mkdir(parents=True, exist_ok=True)
+          receipt = {'diagnosticOnly': True, 'enabled': enabled, 'headSHA': head,
+                     'builtCheckoutSHA': checkout, 'originalFailuresResolved': 0}
+          (folder / 'invocation.json').write_text(json.dumps(receipt, indent=2) + '\n')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write(f'enabled={str(enabled).lower()}\nsource={checkout}\n')
+          print(json.dumps(receipt))
+          PYCODE
       - name: Generate Xcode project
+        id: ax-step-3
         run: |
           command -v xcodegen >/dev/null 2>&1 || brew install xcodegen
           cd ios && xcodegen generate
       - name: Select an iPhone simulator and boot it
+        id: ax-step-4
         run: |
           DEVICE_ID=$(xcrun simctl list devices available -j | python3 -c 'import json,re,sys; d=json.load(sys.stdin); runtimes=sorted(d["devices"].items(),key=lambda pair:tuple(map(int,re.findall(r"\d+",pair[0]))),reverse=True); print(next(x["udid"] for k,v in runtimes if "iOS" in k for x in v if "iPhone" in x["name"]))')
           echo "DEVICE_ID=$DEVICE_ID" >> "$GITHUB_ENV"
           xcrun simctl boot "$DEVICE_ID" || true
       - name: Ensure Metal toolchain
+        id: ax-step-5
         run: bash tools/ci/ensure-metal.sh
       # hashFiles() walks the whole workspace (samples, photos, models) and can time out; hash the two files directly.
       - name: Module cache key
         id: modkey
         run: echo "key=$(cat ios/project.yml ios/Package.swift | shasum -a 256 | cut -c1-16)" >> "$GITHUB_OUTPUT"
       - name: Restore the compiled module cache
-        uses: actions/cache@v4
+        id: ax-step-7
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
           path: ios/build/dd/ModuleCache.noindex
           key: modules-${{ runner.os }}-xcode26.3-${{ steps.modkey.outputs.key }}
           restore-keys: modules-${{ runner.os }}-xcode26.3-
       - name: Build app and tests
+        id: ax-build
         run: |
           set -o pipefail
           mkdir -p ios/build ci-out
           xcodebuild build-for-testing -project ios/Timbre.xcodeproj -scheme Timbre -destination "platform=iOS Simulator,id=$DEVICE_ID" \
             -derivedDataPath ios/build/dd COMPILER_INDEX_STORE_ENABLE=NO CODE_SIGNING_ALLOWED=NO 2>&1 | tail -40 | tee ci-out/build-tail.log
       - name: Allow the microphone
+        id: ax-step-9
         run: |
           xcrun simctl bootstatus "$DEVICE_ID" -b
           xcrun simctl privacy "$DEVICE_ID" grant microphone com.shahradazerisharghi.timbre || true
       - name: Warm the simulator up with one launch
+        id: ax-step-10
         run: |
           # A simulator that has just booted can lose app launches for minutes (XCUITest then reports "Timed out while
           # launching application" or "does not have a process ID" before a test has checked anything). The app is
@@ -289,43 +377,293 @@ jobs:
             xcrun simctl terminate "$DEVICE_ID" "$BUNDLE" || true
             sleep 15
           done
-      - name: Accessibility audit and localization launches
-        run: |
-          set -o pipefail
-          tests() {  # a result bundle, a log, then the -only-testing arguments
-            local bundle="$1" log="$2"
-            shift 2
-            xcodebuild test-without-building -project ios/Timbre.xcodeproj -scheme Timbre -parallel-testing-enabled NO "$@" \
-              -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd \
-              -resultBundlePath "$bundle" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$log"
-          }
-          tests ios/build/Accessibility.xcresult ci-out/test.log \
-            -only-testing:TimbreUITests/AccessibilityAuditUITests -only-testing:TimbreUITests/LocalizationLaunchUITests && exit 0
-          # One more try for the tests that failed only because the app never launched (tools/ci/launch_retry.py);
-          # every other failure stands, whatever the second try does.
-          status=0
-          python3 tools/ci/launch_retry.py ci-out/test.log ci-out/relaunch.txt || status=1
-          if [ -s ci-out/relaunch.txt ]; then
-            # One argument a line, no spaces in them.
-            # shellcheck disable=SC2046
-            tests ios/build/Accessibility-relaunch.xcresult ci-out/test-relaunch.log $(cat ci-out/relaunch.txt) || status=1
-          fi
-          exit $status
-      - name: Collect results
+      - name: Localization launches
+        id: ax-sdk-localization
+        if: ${{ !cancelled() && steps.ax-build.outcome == 'success' }}
+        run: python3 tools/ci/accessibility_partitions.py localization
+      - name: Finalize localization evidence before the next partition
+        id: ax-step-12
         if: always()
         run: |
-          if [ -d ios/build/Accessibility.xcresult ]; then
-            xcrun xcresulttool export attachments --path ios/build/Accessibility.xcresult --output-path ci-out/screenshots || true
-          fi
-          if [ -d ios/build/Accessibility-relaunch.xcresult ]; then
-            xcrun xcresulttool export attachments --path ios/build/Accessibility-relaunch.xcresult \
-              --output-path ci-out/screenshots-relaunch || true
-          fi
-          for log in ci-out/test.log ci-out/test-relaunch.log; do
-            if [ -f "$log" ]; then python3 tools/ci/summarize-log.py "$log" "${log%.log}.summary.txt"; fi
+          mkdir -p ci-out/localization
+          for suffix in "" -relaunch; do
+            bundle="ios/build/Accessibility-localization${suffix}.xcresult"
+            if [ -d "$bundle" ]; then
+              xcrun xcresulttool export attachments --path "$bundle" --output-path "ci-out/localization/screenshots${suffix}" || true
+            fi
           done
-          gzip -f ci-out/test.log ci-out/test-relaunch.log 2>/dev/null || true
-      - uses: actions/upload-artifact@v4
+          for log in ci-out/localization/test*.log; do
+            [ ! -f "$log" ] || python3 tools/ci/summarize-log.py "$log" "${log%.log}.summary.txt"
+          done
+      # Preserve original pixels and hierarchy before the potentially oversized native bundle upload.
+      - name: Upload compact localization audit visuals
+        id: ax-step-13
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        if: always()
+        with:
+          name: accessibility-visuals-localization
+          path: |
+            ci-out/localization/screenshots/*.png
+            ci-out/localization/screenshots/*.jpg
+            ci-out/localization/screenshots/*.jpeg
+            ci-out/localization/screenshots/*.PNG
+            ci-out/localization/screenshots/*.JPG
+            ci-out/localization/screenshots/*.JPEG
+            ci-out/localization/screenshots/manifest.json
+            ci-out/localization/screenshots/*.txt
+            ci-out/localization/screenshots-relaunch/*.png
+            ci-out/localization/screenshots-relaunch/*.jpg
+            ci-out/localization/screenshots-relaunch/*.jpeg
+            ci-out/localization/screenshots-relaunch/*.PNG
+            ci-out/localization/screenshots-relaunch/*.JPG
+            ci-out/localization/screenshots-relaunch/*.JPEG
+            ci-out/localization/screenshots-relaunch/manifest.json
+            ci-out/localization/screenshots-relaunch/*.txt
+          if-no-files-found: warn
+          retention-days: 7
+      # Small diagnostics stay inspectable without downloading the full native result bundle.
+      - name: Upload compact localization audit logs
+        id: ax-step-14
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        if: always()
+        with:
+          name: accessibility-logs-localization
+          path: |
+            ci-out/localization/test*.log
+            ci-out/localization/*.summary.txt
+            ci-out/localization/*.json
+          if-no-files-found: warn
+          retention-days: 7
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        id: ax-step-15
+        if: always()
+        with:
+          name: accessibility-checkpoint-localization
+          path: |
+            ci-out/localization
+            ios/build/Accessibility-localization*.xcresult
+          retention-days: 7
+      - name: Welcome, lesson, metronome, Settings and paywall audits
+        id: ax-sdk-screens
+        if: ${{ !cancelled() && steps.ax-build.outcome == 'success' }}
+        run: python3 tools/ci/accessibility_partitions.py screens
+      - name: Finalize screens evidence before the next partition
+        id: ax-step-17
+        if: always()
+        run: |
+          mkdir -p ci-out/screens
+          for suffix in "" -relaunch; do
+            bundle="ios/build/Accessibility-screens${suffix}.xcresult"
+            if [ -d "$bundle" ]; then
+              xcrun xcresulttool export attachments --path "$bundle" --output-path "ci-out/screens/screenshots${suffix}" || true
+            fi
+          done
+          for log in ci-out/screens/test*.log; do
+            [ ! -f "$log" ] || python3 tools/ci/summarize-log.py "$log" "${log%.log}.summary.txt"
+          done
+      # Preserve original pixels and hierarchy before the potentially oversized native bundle upload.
+      - name: Upload compact screens audit visuals
+        id: ax-step-18
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        if: always()
+        with:
+          name: accessibility-visuals-screens
+          path: |
+            ci-out/screens/screenshots/*.png
+            ci-out/screens/screenshots/*.jpg
+            ci-out/screens/screenshots/*.jpeg
+            ci-out/screens/screenshots/*.PNG
+            ci-out/screens/screenshots/*.JPG
+            ci-out/screens/screenshots/*.JPEG
+            ci-out/screens/screenshots/manifest.json
+            ci-out/screens/screenshots/*.txt
+            ci-out/screens/screenshots-relaunch/*.png
+            ci-out/screens/screenshots-relaunch/*.jpg
+            ci-out/screens/screenshots-relaunch/*.jpeg
+            ci-out/screens/screenshots-relaunch/*.PNG
+            ci-out/screens/screenshots-relaunch/*.JPG
+            ci-out/screens/screenshots-relaunch/*.JPEG
+            ci-out/screens/screenshots-relaunch/manifest.json
+            ci-out/screens/screenshots-relaunch/*.txt
+          if-no-files-found: warn
+          retention-days: 7
+      # Small diagnostics stay inspectable without downloading the full native result bundle.
+      - name: Upload compact screens audit logs
+        id: ax-step-19
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        if: always()
+        with:
+          name: accessibility-logs-screens
+          path: |
+            ci-out/screens/test*.log
+            ci-out/screens/*.summary.txt
+            ci-out/screens/*.json
+          if-no-files-found: warn
+          retention-days: 7
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        id: ax-step-20
+        if: always()
+        with:
+          name: accessibility-checkpoint-screens
+          path: |
+            ci-out/screens
+            ios/build/Accessibility-screens*.xcresult
+          retention-days: 7
+      - name: Every tab and every audit kind
+        id: ax-sdk-tabs
+        if: ${{ !cancelled() && steps.ax-build.outcome == 'success' }}
+        run: python3 tools/ci/accessibility_partitions.py tabs
+      - name: Finalize tabs evidence before the next partition
+        id: ax-step-22
+        if: always()
+        run: |
+          mkdir -p ci-out/tabs
+          for suffix in "" -relaunch; do
+            bundle="ios/build/Accessibility-tabs${suffix}.xcresult"
+            if [ -d "$bundle" ]; then
+              xcrun xcresulttool export attachments --path "$bundle" --output-path "ci-out/tabs/screenshots${suffix}" || true
+            fi
+          done
+          for log in ci-out/tabs/test*.log; do
+            [ ! -f "$log" ] || python3 tools/ci/summarize-log.py "$log" "${log%.log}.summary.txt"
+          done
+      # Preserve original pixels and hierarchy before the potentially oversized native bundle upload.
+      - name: Upload compact tabs audit visuals
+        id: ax-step-23
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        if: always()
+        with:
+          name: accessibility-visuals-tabs
+          path: |
+            ci-out/tabs/screenshots/*.png
+            ci-out/tabs/screenshots/*.jpg
+            ci-out/tabs/screenshots/*.jpeg
+            ci-out/tabs/screenshots/*.PNG
+            ci-out/tabs/screenshots/*.JPG
+            ci-out/tabs/screenshots/*.JPEG
+            ci-out/tabs/screenshots/manifest.json
+            ci-out/tabs/screenshots/*.txt
+            ci-out/tabs/screenshots-relaunch/*.png
+            ci-out/tabs/screenshots-relaunch/*.jpg
+            ci-out/tabs/screenshots-relaunch/*.jpeg
+            ci-out/tabs/screenshots-relaunch/*.PNG
+            ci-out/tabs/screenshots-relaunch/*.JPG
+            ci-out/tabs/screenshots-relaunch/*.JPEG
+            ci-out/tabs/screenshots-relaunch/manifest.json
+            ci-out/tabs/screenshots-relaunch/*.txt
+          if-no-files-found: warn
+          retention-days: 7
+      # Small diagnostics stay inspectable without downloading the full native result bundle.
+      - name: Upload compact tabs audit logs
+        id: ax-step-24
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        if: always()
+        with:
+          name: accessibility-logs-tabs
+          path: |
+            ci-out/tabs/test*.log
+            ci-out/tabs/*.summary.txt
+            ci-out/tabs/*.json
+          if-no-files-found: warn
+          retention-days: 7
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        id: ax-step-25
+        if: always()
+        with:
+          name: accessibility-checkpoint-tabs
+          path: |
+            ci-out/tabs
+            ios/build/Accessibility-tabs*.xcresult
+          retention-days: 7
+      - name: Collect opt-in revealed contrast frames (never dismiss strict failures)
+        id: ax-step-26
+        if: ${{ !cancelled() && steps.reveal-opt-in.outputs.enabled == 'true' && steps.ax-build.outcome == 'success' }}
+        timeout-minutes: 15
+        env:
+          TEST_RUNNER_TIMBRE_REVEAL_CONTRAST: "1"
+          TEST_RUNNER_TIMBRE_DIAGNOSTIC_SOURCE_SHA: ${{ steps.reveal-opt-in.outputs.source }}
+        run: |
+          set -euo pipefail
+          mkdir -p ci-out/contrast-reveal
+          xcodebuild test-without-building -project ios/Timbre.xcodeproj -scheme Timbre \
+            -parallel-testing-enabled NO -only-testing:TimbreUITests/OccludedContrastDiagnosticUITests \
+            -test-timeouts-enabled YES -default-test-execution-time-allowance 120 -maximum-test-execution-time-allowance 120 \
+            -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd \
+            -resultBundlePath ios/build/ContrastReveal.xcresult CODE_SIGNING_ALLOWED=NO \
+            2>&1 | tee ci-out/contrast-reveal/test.log
+      - name: Export opt-in contrast reveal attachments
+        id: ax-step-27
+        if: ${{ always() && steps.reveal-opt-in.outputs.enabled == 'true' }}
+        run: |
+          if [ -d ios/build/ContrastReveal.xcresult ]; then
+            xcrun xcresulttool export attachments --path ios/build/ContrastReveal.xcresult \
+              --output-path ci-out/contrast-reveal/attachments
+          fi
+      - name: Summarize opt-in contrast reveal log
+        id: ax-step-28
+        if: ${{ always() && steps.reveal-opt-in.outputs.enabled == 'true' }}
+        run: python3 tools/ci/summarize-log.py ci-out/contrast-reveal/test.log ci-out/contrast-reveal/test.summary.txt
+      # Keep original text/JSON inspectable even when the native bundle exceeds a download client's limit.
+      - name: Upload compact contrast reveal logs and metadata
+        id: ax-step-29
+        if: ${{ always() && steps.reveal-opt-in.outputs.enabled == 'true' }}
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: accessibility-reveal-logs
+          path: |
+            ci-out/contrast-reveal/test*.log
+            ci-out/contrast-reveal/*.summary.txt
+            ci-out/contrast-reveal/*.json
+            ci-out/contrast-reveal/attachments/*.json
+            ci-out/contrast-reveal/attachments/*.txt
+          if-no-files-found: error
+          retention-days: 7
+      # Original exports, without the second copy embedded in the full xcresult below.
+      - name: Upload contrast reveal exported attachments
+        id: ax-step-30
+        if: ${{ always() && steps.reveal-opt-in.outputs.enabled == 'true' }}
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: accessibility-reveal-attachments
+          path: ci-out/contrast-reveal/attachments
+          if-no-files-found: error
+          retention-days: 7
+      - name: Upload separate contrast reveal diagnostic evidence
+        id: ax-step-31
+        if: ${{ always() && steps.reveal-opt-in.outputs.enabled == 'true' }}
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: accessibility-reveal-diagnostics
+          path: |
+            ci-out/contrast-reveal
+            ios/build/ContrastReveal.xcresult
+          if-no-files-found: error
+          retention-days: 7
+      - name: Require every accessibility partition and expected test
+        id: ax-sdk-aggregate
+        if: always()
+        run: python3 tools/ci/accessibility_partitions.py aggregate
+      - name: Collect accessibility logs
+        id: ax-logcollect
+        if: always()
+        run: |
+          mkdir -p ci-out
+          # Preserve root-level log names for existing readers and the publisher's text-only fallback.
+          for stem in test test-relaunch; do
+            : > "ci-out/${stem}.log"
+            for partition in localization screens tabs; do
+              log="ci-out/${partition}/${stem}.log"
+              if [ -f "$log" ]; then
+                printf '\n=== %s ===\n' "$partition" >> "ci-out/${stem}.log"
+                cat "$log" >> "ci-out/${stem}.log"
+              fi
+            done
+            python3 tools/ci/summarize-log.py "ci-out/${stem}.log" "ci-out/${stem}.summary.txt"
+          done
+          find ci-out -name '*.log' -type f -exec gzip -f {} +
+      # Keep the historical aggregate name for ci-results/accessibility and downstream readers.
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        id: ax-step-34
         if: always()
         with:
           name: results-accessibility
@@ -333,26 +671,56 @@ jobs:
           retention-days: 7
 
   gate:
-    # The one required status check. It fails unless every gate job passed (a skipped or cancelled one fails it too).
+    # Required product checks remain blocking. The original strict SDK job stays failed/advisory
+    # only when complete native evidence contains exclusively the documented SDK diagnostics.
     name: gate
     if: always()
-    needs: [core, app, release]
+    needs: [core, app, release, accessibility]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Every gate job passed
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            tools/ci
+            ios/TimbreUITests
+            .github/workflows
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131
+        if: ${{ needs.accessibility.result == 'failure' }}
+        with:
+          pattern: accessibility-logs-*
+          path: gate-accessibility
+      - name: Required product checks and explicit SDK disposition
+        if: always()
         env:
           RESULTS: ${{ toJSON(needs) }}
+          PYTHONPATH: tools/ci
         run: |
           python3 - <<'PY'
           import json, os, sys
-          results = {job: value["result"] for job, value in json.loads(os.environ["RESULTS"]).items()}
+          from pathlib import Path
+          from accessibility_partitions import submission_summary, submission_step_disposition
+          needs = json.loads(os.environ["RESULTS"])
+          results = {job: value["result"] for job, value in needs.items()}
           for job, result in sorted(results.items()):
               print(f"{job}: {result}")
-          failed = [job for job, result in results.items() if result != "success"]
+          failed = [job for job, result in results.items() if job != "accessibility" and result != "success"]
           if failed:
-              sys.exit("The gate is red: " + ", ".join(sorted(failed)))
-          print("The gate is green")
+              sys.exit("Required product checks failed: " + ", ".join(sorted(failed)))
+          if results.get("accessibility") != "success":
+              if results.get("accessibility") != "failure":
+                  sys.exit("Accessibility execution/evidence is incomplete")
+              outcomes = json.loads(needs["accessibility"].get("outputs", {}).get("step_outcomes", "{}"))
+              setup_errors = submission_step_disposition(outcomes)
+              if setup_errors:
+                  sys.exit("Accessibility setup/evidence failed: " + "; ".join(setup_errors))
+              report = submission_summary(Path("gate-accessibility"))
+              print(json.dumps(report, indent=2))
+              if not report["required_checks_passed"]:
+                  sys.exit("Blocking accessibility failure or incomplete native evidence")
+              print("Strict SDK audit remains FAILED and advisory; it has not been reclassified as passed.")
+          print("Required submission checks passed; this does not certify complete accessibility compliance.")
           PY
 
   publish:
@@ -368,14 +736,30 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
         with:
           sparse-checkout: tools/ci
-      - uses: actions/download-artifact@v4
+      # Named destinations keep the publisher layout stable even when only one job uploaded evidence.
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         continue-on-error: true
         with:
-          pattern: results-*
-          path: results
+          name: results-core
+          path: results/results-core
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+        continue-on-error: true
+        with:
+          name: results-app
+          path: results/results-app
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+        continue-on-error: true
+        with:
+          name: results-release
+          path: results/results-release
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+        continue-on-error: true
+        with:
+          name: results-accessibility
+          path: results/results-accessibility
       - name: Publish
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

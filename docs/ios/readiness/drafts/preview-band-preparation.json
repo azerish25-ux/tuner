@@ -1,0 +1,15 @@
+{
+  "status": "Reviewed source draft; native compilation/execution UNRUN. Not applied to the handoff branch.",
+  "base_commit": "0bab4ed55d08d0972dfd9f436b4222c683adff15",
+  "patch": "preview-band-preparation.patch",
+  "patch_sha256": "bd83e1d89a4a0e974c604ac111e7e44d498c0598596cc98261898fafb3626c4d",
+  "bytes": 12851,
+  "draft_source_sha256": {
+    "ios/Timbre/Audio/AudioService.swift": "539527b6c58d9b60b124e9403dada7f0759a8cb444a4871b8836af5aa0356995",
+    "ios/Timbre/Learn/SongPerform.swift": "a3b2ad9e84f56388ef716cd9397e93e173fbe25d97a43b71f697a22791168812",
+    "ios/TimbreUITests/AppPreviewUITests.swift": "9d7c00538995326a4d172d31390ed7df2e5b1cabf1903d733a6d5404653fecbd",
+    "ios/TimbreAppTests/AudioStartupTests.swift": "9ad41ace5d2053fd5f4fa9487acf9f58d903fff889dfd4d0ec0c7aae374f8f36"
+  },
+  "review": "../reviews/preview-band-preparation-resolution-independent-review.json",
+  "reverse_check_against_draft_worktree": "passed"
+}

@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-27T05:40:27.976204+00:00",
+  "reviewer": "Independent peg-label layout source review agent",
+  "base_head": "5167d34e9e8d72c441ac76456099d2f5950f5ab5",
+  "scope": "Final uncommitted PegCue.swift, StudioStage.swift and PegLabelLayoutTests.swift only, including resolution of exact side-boundary finding.",
+  "verdict": "approve_source_change_only_native_build_tests_and_visual_proof_pending",
+  "findings": [],
+  "prior_review": {
+    "path": "docs/ios/readiness/reviews/peg-label-layout-independent-review.json",
+    "sha256": "b72486bdf90139a8103c4b98b5c424aca9f300367e04a369899d58dc3945c50f",
+    "finding": "peg-label-right-margin-selection",
+    "status": "Resolved: shared exact left/right clear bounds now evaluate preferred candidate then opposite candidate before vertical fallback. Obsolete PegLabel.side removed; no references remain."
+  },
+  "source_verification": [
+    "Reviewed final three scoped source files and host composition. No remaining fixed96-point estimate or placedBeside references.",
+    "Measured child label uses actual locale and Dynamic Type, a proposed clear width and vertical fixed size. Side choice and clamp use identical8-point margin/64-point control reserve boundaries mirrored by controlsOnLeft.",
+    "Above/below fallback occurs after both candidates fail. Horizontal and vertical clamping remain. Both 3D/studio hosts provide full finite stage frames and keep their prior hit-testing/accessibility policies.",
+    "Layout sizeThatFits/placeSubviews signatures and inferred Void cache follow existing ChordFlowLayout pattern. New layout stores only geometry values and accesses subviews within Layout callbacks; no new observable state, isolated controllers or tasks are introduced. Native SDK/compiler confirmation remains pending.",
+    "Tests are MainActor-isolated for UIHostingController measurement. Four authored native test methods cover real PegLabel locale/Dynamic Type measurement, fallback, compact preferred side, and LTR/RTL control-boundary opposite-side regression.",
+    "Tests measure real label then call pure geometry helper; they do not render actual custom Layout placement or certify final visual containment."
+  ],
+  "independent_checks": [
+    {
+      "command": "git -c core.autocrlf=false diff --check -- ios/Timbre/Stage/PegCue.swift ios/Timbre/Stage/StudioStage.swift ios/TimbreAppTests/PegLabelLayoutTests.swift",
+      "exit_code": 0
+    },
+    {
+      "check": "Python exact arithmetic translation of final placement helper",
+      "exit_code": 0,
+      "results": {
+        "former_failing_preferred_right": [
+          66,
+          135,
+          100,
+          30
+        ],
+        "mirrored_controls_left": [
+          236,
+          135,
+          100,
+          30
+        ],
+        "neither_side_fits": [
+          57,
+          56,
+          200,
+          60
+        ],
+        "compact_preferred_left": [
+          63,
+          135,
+          60,
+          30
+        ]
+      },
+      "limit": "Arithmetic validation of inspected source only, not Swift execution."
+    },
+    {
+      "check": "rg for obsolete side helper, placedBeside and callWidth",
+      "result": "No obsolete references remain; only PegLabelPlacement usages and declaration."
+    }
+  ],
+  "reviewed_sha256": {
+    "ios/Timbre/Stage/PegCue.swift": "e8cc94b9c3ddf7904d96f92438b064f651eedffbaf64d42e85ee3654e13b45d1",
+    "ios/Timbre/Stage/StudioStage.swift": "62cbbf17df5c849ac591a6aaa71271817957883e9f2b676a2d73c907707db8eb",
+    "ios/TimbreAppTests/PegLabelLayoutTests.swift": "c06d2c899b1a5ae6dc2f88f74bbebc8ff38278a4c649704684583f12b596580a"
+  },
+  "limits": [
+    "Windows source review only. No Swift compiler, native app build or four authored XCTest methods executed.",
+    "No native RED/GREEN or fixed visual behavior claim. Fresh final-source native build, tests and AX5 screenshots remain required.",
+    "Actual review should cover four tested locales, LTR/RTL, narrow stages, studio and 3D hosts, and turn-cue states as well as prompt.",
+    "Height clamp preserves measured height; a stage shorter than label height plus margins cannot contain complete label. Existing300-point test stage does not prove every host size.",
+    "Published5167 native jobs exclude this draft and cannot validate it. Caption audit status is outside this bounded review."
+  ],
+  "mutations": "Only this new review receipt written. Prior receipt preserved; no implementation edit, commit or push."
+}

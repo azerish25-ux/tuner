@@ -1,0 +1,321 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-27T02:54:39.766572+00:00",
+  "revision": "b6efd36f5f72d7ec723229949f7c54c32972b72c",
+  "parent_reported_run": 40434233041,
+  "scope": "18 actual native PNGs: six selected iPhone17Pro scenes in English/German/Arabic. Read-only visual review; no implementation or publication.",
+  "verdict": "one_RTL_numeric_direction_finding_other_reviewed_layouts_accepted_with_limits",
+  "findings": [
+    {
+      "id": "AR-RATIO-01",
+      "priority": "P2",
+      "frame": "ar/10b-tune-locked.png",
+      "source_sha256": "3feada2775891f8b97a43e096b8a0f334caeae7570d952a640c07ce04bc2710c",
+      "description": "Raw Arabic quest counter visibly presents left-to-right glyph sequence6/3, although the captured scene has3 locked strings out of6 and English counterpart shows3/6. Source fraction helper concatenates localized done, thin-space slash and total without numeric direction isolation; TuneView describes the counter as3of6.",
+      "source_references": [
+        "ios/Timbre/Design/Kit.swift:657",
+        "ios/Timbre/Tune/TuneView.swift:558"
+      ],
+      "raw_crop": "C:/Users/shahr/Desktop/Translation/native-qa/qa-contact-sheets-b6-captures/QA-ONLY-ar-quest-raw-crop.png",
+      "crop_box_pixels": [
+        0,
+        1980,
+        1206,
+        2260
+      ],
+      "remaining_action": "Verify intended compact numeric reading and constrain/isolate only the fraction run so done/total stays3/6 while the surrounding quest row remains RTL; rerun actual Arabic capture. Do not change physical musical rail order."
+    }
+  ],
+  "visual_observations": [
+    "No additional convincing frame-edge clipping, text/control overlap or missing-glyph boxes found in the18 reviewed standard-size images. Suspected tight areas were checked against raw PNGs/crops rather than inferred from contact-sheet edges.",
+    "German long strum headline, instrument family, chord header, reminder, coach recommendation and results buttons wrap or fit without losing text.",
+    "Arabic letter joining and RTL controls/grid/title alignment are visually coherent in these scenes; Latin pitch/octave/chord runs and physical six-string/highway order remain readable LTR. This is bounded visual inspection, not native-speaker grammar certification.",
+    "English song lyric lines remain visible in localized performance scenes. Their semantic translation policy and musical-content wording are not certified by this visual review.",
+    "Truthful visible states include locked tuner string, partial strum diagnosis, all-six-string chord completion, three-star violin result and combo-bearing chorus performance. Static images alone do not prove duration, audio, interaction or synchronization."
+  ],
+  "frames": [
+    {
+      "locale": "en",
+      "frame": "10b-tune-locked.png",
+      "path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\capture-en-b6efd36\\named\\screenshots\\10b-tune-locked.png",
+      "sha256": "835467b03da71d440651bec21bfe52f53badf69f480c2e0229fde827a7021da6",
+      "native_pixels": [
+        1206,
+        2622
+      ],
+      "exported_attachment": "58929F1D-B6AF-49A6-B403-76113F0A5723.png",
+      "device": "iPhone 17 Pro",
+      "capture_timestamp": 1793066500.558,
+      "review": "D3 readout and lock badge agree at0c; three locked chips visible, controls/header readable.",
+      "acceptance": "bounded_visual_layout_acceptance"
+    },
+    {
+      "locale": "en",
+      "frame": "11b-tune-strum.png",
+      "path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\capture-en-b6efd36\\named\\screenshots\\11b-tune-strum.png",
+      "sha256": "531b4313acfe5d3724a7a32022bc3907e12c69993b56989e695148342d42de65",
+      "native_pixels": [
+        1206,
+        2622
+      ],
+      "exported_attachment": "6A21E7C4-AEF5-48D7-BAF9-46D00E1599B2.png",
+      "device": "iPhone 17 Pro",
+      "capture_timestamp": 1793066598.222,
+      "review": "A2 raise12c instruction, four-of-six tuned state and estimate indicator visible; German wraps to two headline lines without overlap.",
+      "acceptance": "bounded_visual_layout_acceptance"
+    },
+    {
+      "locale": "en",
+      "frame": "31b-instruments-folk.png",
+      "path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\capture-en-b6efd36\\named\\screenshots\\31b-instruments-folk.png",
+      "sha256": "da8509e87801eded6ca288aa707aee62ac535d5e4e25f3927bc9997b04a30a3d",
+      "native_pixels": [
+        1206,
+        2622
+      ],
+      "exported_attachment": "E52ADB77-800B-4101-8F8C-FA9780CCCAE6.png",
+      "device": "iPhone 17 Pro",
+      "capture_timestamp": 1793066680.14,
+      "review": "Selected folk/world category,21 count and four instrument cards readable. Partial chips at horizontal viewport edges are scroll affordance, not clipped selected text.",
+      "acceptance": "bounded_visual_layout_acceptance"
+    },
+    {
+      "locale": "en",
+      "frame": "52b-lesson-chord.png",
+      "path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\capture-en-b6efd36\\named\\screenshots\\52b-lesson-chord.png",
+      "sha256": "6d2314f88a29da126dbab0a310804537639f6a177c26e1e95aa5c7a816ce8a49",
+      "native_pixels": [
+        1206,
+        2622
+      ],
+      "exported_attachment": "5E727545-71B1-4CF5-BFB9-46E6D76B328B.png",
+      "device": "iPhone 17 Pro",
+      "capture_timestamp": 1793066557.828,
+      "review": "E-minor step2of5; all six heard circles/checks and finger2/3 diagram visible. Physical string order preserved in RTL.",
+      "acceptance": "bounded_visual_layout_acceptance"
+    },
+    {
+      "locale": "en",
+      "frame": "62b-lesson-results-violin.png",
+      "path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\capture-en-b6efd36\\named\\screenshots\\62b-lesson-results-violin.png",
+      "sha256": "92b504004e56098efa59aa533df2e7db1cd182adc2eb94691540a40f4ea91603",
+      "native_pixels": [
+        1206,
+        2622
+      ],
+      "exported_attachment": "2A9F3AAA-826C-4E14-99F4-47E3427B1217.png",
+      "device": "iPhone 17 Pro",
+      "capture_timestamp": 1793066776.234,
+      "review": "Three stars, four-of-four clean,100% accuracy,+36XP and7-day streak visible; reminder/coach/level/buttons fit. German reminder wraps; Arabic controls mirror and text joins.",
+      "acceptance": "bounded_visual_layout_acceptance"
+    },
+    {
+      "locale": "en",
+      "frame": "65-song-perform.png",
+      "path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\capture-en-b6efd36\\named\\screenshots\\65-song-perform.png",
+      "sha256": "23b086043b73bd3b839cf8ae7cbe58c207b093f7b2c83725259bfb437ebc1833",
+      "native_pixels": [
+        1206,
+        2622
+      ],
+      "exported_attachment": "903D3CCF-3AB3-4EE8-97A1-B210671D0EAD.png",
+      "device": "iPhone 17 Pro",
+      "capture_timestamp": 1793066626.26,
+      "review": "Step8of8,21900 score,61 combo,x4, visible chorus lyrics and Stop. Highway musical order unchanged under Arabic UI mirroring.",
+      "acceptance": "bounded_visual_layout_acceptance"
+    },
+    {
+      "locale": "de",
+      "frame": "10b-tune-locked.png",
+      "path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\capture-de-b6efd36\\named\\screenshots\\10b-tune-locked.png",
+      "sha256": "cc31452b30849296da0da619bd98bf0a0e3ec98149902f2b4553ab84fea6991d",
+      "native_pixels": [
+        1206,
+        2622
+      ],
+      "exported_attachment": "9EAD7B42-95F2-41C2-AA3C-BF296202E397.png",
+      "device": "iPhone 17 Pro",
+      "capture_timestamp": 1793066502.119,
+      "review": "D3 readout and lock badge agree at0c; three locked chips visible, controls/header readable.",
+      "acceptance": "bounded_visual_layout_acceptance"
+    },
+    {
+      "locale": "de",
+      "frame": "11b-tune-strum.png",
+      "path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\capture-de-b6efd36\\named\\screenshots\\11b-tune-strum.png",
+      "sha256": "43684d361f49258c41dc67f51a552ab7cdfd09894929e15a90a23c7c4bc817c2",
+      "native_pixels": [
+        1206,
+        2622
+      ],
+      "exported_attachment": "FA8499B4-26A4-497A-ABDB-7D9F07A654F1.png",
+      "device": "iPhone 17 Pro",
+      "capture_timestamp": 1793066599.048,
+      "review": "A2 raise12c instruction, four-of-six tuned state and estimate indicator visible; German wraps to two headline lines without overlap.",
+      "acceptance": "bounded_visual_layout_acceptance"
+    },
+    {
+      "locale": "de",
+      "frame": "31b-instruments-folk.png",
+      "path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\capture-de-b6efd36\\named\\screenshots\\31b-instruments-folk.png",
+      "sha256": "36b6adb136d588b2be3e1630c22c9a3bd4ae64e16bdd80ebf1f7d0e26db5293b",
+      "native_pixels": [
+        1206,
+        2622
+      ],
+      "exported_attachment": "C1239278-BF01-42DF-B0C7-1A51E98581DC.png",
+      "device": "iPhone 17 Pro",
+      "capture_timestamp": 1793066706.805,
+      "review": "Selected folk/world category,21 count and four instrument cards readable. Partial chips at horizontal viewport edges are scroll affordance, not clipped selected text.",
+      "acceptance": "bounded_visual_layout_acceptance"
+    },
+    {
+      "locale": "de",
+      "frame": "52b-lesson-chord.png",
+      "path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\capture-de-b6efd36\\named\\screenshots\\52b-lesson-chord.png",
+      "sha256": "691be4a21ada6cbcbd7f43efa40f39903e5147c4a56e7b71b73b9538bc95981a",
+      "native_pixels": [
+        1206,
+        2622
+      ],
+      "exported_attachment": "FE1ED86E-2B60-41EB-8456-FEE031AE7D52.png",
+      "device": "iPhone 17 Pro",
+      "capture_timestamp": 1793066565.437,
+      "review": "E-minor step2of5; all six heard circles/checks and finger2/3 diagram visible. Physical string order preserved in RTL.",
+      "acceptance": "bounded_visual_layout_acceptance"
+    },
+    {
+      "locale": "de",
+      "frame": "62b-lesson-results-violin.png",
+      "path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\capture-de-b6efd36\\named\\screenshots\\62b-lesson-results-violin.png",
+      "sha256": "369599d5fdbb20508c8d2fe95c39b391f668432f8b9484ed63e815b006beb254",
+      "native_pixels": [
+        1206,
+        2622
+      ],
+      "exported_attachment": "A45C8B22-A89C-4DB5-9EEF-6207AC77D3A5.png",
+      "device": "iPhone 17 Pro",
+      "capture_timestamp": 1793066801.464,
+      "review": "Three stars, four-of-four clean,100% accuracy,+36XP and7-day streak visible; reminder/coach/level/buttons fit. German reminder wraps; Arabic controls mirror and text joins.",
+      "acceptance": "bounded_visual_layout_acceptance"
+    },
+    {
+      "locale": "de",
+      "frame": "65-song-perform.png",
+      "path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\capture-de-b6efd36\\named\\screenshots\\65-song-perform.png",
+      "sha256": "fb219a45478b761525372f8b644776f5ce0e40b347c96f4c7cf43e39b689633c",
+      "native_pixels": [
+        1206,
+        2622
+      ],
+      "exported_attachment": "53402703-834F-4B90-B047-5EE18CF93400.png",
+      "device": "iPhone 17 Pro",
+      "capture_timestamp": 1793066635.078,
+      "review": "Step8of8,21900 score,61 combo,x4, visible chorus lyrics and Stop. Highway musical order unchanged under Arabic UI mirroring.",
+      "acceptance": "bounded_visual_layout_acceptance"
+    },
+    {
+      "locale": "ar",
+      "frame": "10b-tune-locked.png",
+      "path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\capture-ar-b6efd36\\named\\screenshots\\10b-tune-locked.png",
+      "sha256": "3feada2775891f8b97a43e096b8a0f334caeae7570d952a640c07ce04bc2710c",
+      "native_pixels": [
+        1206,
+        2622
+      ],
+      "exported_attachment": "8DC71C62-37D0-4C8F-B473-97227C3449DB.png",
+      "device": "iPhone 17 Pro",
+      "capture_timestamp": 1793068758.426,
+      "review": "D3 readout and lock badge agree at0c; three locked chips visible, controls/header readable.",
+      "acceptance": "visual_layout_accepted_except_AR_RATIO_01"
+    },
+    {
+      "locale": "ar",
+      "frame": "11b-tune-strum.png",
+      "path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\capture-ar-b6efd36\\named\\screenshots\\11b-tune-strum.png",
+      "sha256": "337da0e446a3184444b5c37cd354dae352579507b0b6c29feed4d6339412e5f4",
+      "native_pixels": [
+        1206,
+        2622
+      ],
+      "exported_attachment": "08EF93F7-C2FA-43D6-BF1F-9FA23B53191D.png",
+      "device": "iPhone 17 Pro",
+      "capture_timestamp": 1793068867.659,
+      "review": "A2 raise12c instruction, four-of-six tuned state and estimate indicator visible; German wraps to two headline lines without overlap.",
+      "acceptance": "bounded_visual_layout_acceptance"
+    },
+    {
+      "locale": "ar",
+      "frame": "31b-instruments-folk.png",
+      "path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\capture-ar-b6efd36\\named\\screenshots\\31b-instruments-folk.png",
+      "sha256": "97fdb5d5e40bbb15b2ad88dbcf610266da10fae6284af7f61402b817227ef0e8",
+      "native_pixels": [
+        1206,
+        2622
+      ],
+      "exported_attachment": "B9427D1D-2BD9-4D68-81DC-AF4FECD3112E.png",
+      "device": "iPhone 17 Pro",
+      "capture_timestamp": 1793068980.481,
+      "review": "Selected folk/world category,21 count and four instrument cards readable. Partial chips at horizontal viewport edges are scroll affordance, not clipped selected text.",
+      "acceptance": "bounded_visual_layout_acceptance"
+    },
+    {
+      "locale": "ar",
+      "frame": "52b-lesson-chord.png",
+      "path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\capture-ar-b6efd36\\named\\screenshots\\52b-lesson-chord.png",
+      "sha256": "659bfed728d768b8070cea46c8db1b0bfeb598d165dbdfd75c3f64ba1bd7e1d5",
+      "native_pixels": [
+        1206,
+        2622
+      ],
+      "exported_attachment": "7C1690A0-86D7-49B5-882E-FD6678A34CD0.png",
+      "device": "iPhone 17 Pro",
+      "capture_timestamp": 1793068818.799,
+      "review": "E-minor step2of5; all six heard circles/checks and finger2/3 diagram visible. Physical string order preserved in RTL.",
+      "acceptance": "bounded_visual_layout_acceptance"
+    },
+    {
+      "locale": "ar",
+      "frame": "62b-lesson-results-violin.png",
+      "path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\capture-ar-b6efd36\\named\\screenshots\\62b-lesson-results-violin.png",
+      "sha256": "42a7857b2d79f9afb23c2253b8591d28f601a8e8280a23b175c831e0931f2504",
+      "native_pixels": [
+        1206,
+        2622
+      ],
+      "exported_attachment": "8CAFE596-9DA3-4F7D-A40B-3DBD065AEE8F.png",
+      "device": "iPhone 17 Pro",
+      "capture_timestamp": 1793069090.282,
+      "review": "Three stars, four-of-four clean,100% accuracy,+36XP and7-day streak visible; reminder/coach/level/buttons fit. German reminder wraps; Arabic controls mirror and text joins.",
+      "acceptance": "bounded_visual_layout_acceptance"
+    },
+    {
+      "locale": "ar",
+      "frame": "65-song-perform.png",
+      "path": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\capture-ar-b6efd36\\named\\screenshots\\65-song-perform.png",
+      "sha256": "af6dcfdf22460c5d953fb90da2b8e328d159cd86041a0af2e33fa299d65afa88",
+      "native_pixels": [
+        1206,
+        2622
+      ],
+      "exported_attachment": "E647DF91-EBE6-4515-A4E5-1D271371B116.png",
+      "device": "iPhone 17 Pro",
+      "capture_timestamp": 1793068922.054,
+      "review": "Step8of8,21900 score,61 combo,x4, visible chorus lyrics and Stop. Highway musical order unchanged under Arabic UI mirroring.",
+      "acceptance": "bounded_visual_layout_acceptance"
+    }
+  ],
+  "inspection_method": {
+    "contact_sheets_directory": "C:/Users/shahr/Desktop/Translation/native-qa/qa-contact-sheets-b6-captures",
+    "contact_sheets": "Three QA-ONLY six-frame sheets generated from original PNGs for comparative inspection. Tool display downsized sheets; direct original results/performance images and native-pixel crops of Arabic quest/header and German strum were additionally examined.",
+    "provenance_check": "All18 named PNG byte contents independently matched raw exported attachments using named/index.json IDs. Each is1206x2622; no original overwritten.",
+    "derived_QA_only": "Contact sheets/crops are outside git and are not deliverables or replacement media."
+  },
+  "limits": [
+    "Only six selected scenes per language, including violin results. This is not complete nine-frame main iPhone listing, any iPad set, all49 app-language matrix or all50 listing locales.",
+    "Hosted job success is parent-provided context; this reviewer inspected downloaded media/index bytes rather than independently retrieving run state.",
+    "No universal linguistic/semantic, VoiceOver, Dynamic Type/AX5, contrast-ratio, hit-target, animation, audio or physical-device certification.",
+    "AR-RATIO-01 is a raw-image numeric-order finding; proposed implementation must preserve accessibility spoken done-of-total semantics and surrounding RTL.",
+    "No source changed and no media published. Only this review receipt and explicitly labeled QA derivatives outside git created."
+  ]
+}

@@ -21,7 +21,7 @@ from pathlib import Path
 ARG = re.compile(r"%(?:(\d+)\$)?[-+ #0]*\d*(?:\.\d+)?(lld|llu|ld|lu|lf|d|u|f|@)")
 TOKEN = re.compile(r"\$\{\w+\}")
 RTL = {"ar", "fa", "he", "ur"}
-WIDE = {"ja", "ko", "zh-CN"}
+WIDE = {"ja", "ko", "zh-CN", "zh-Hant"}
 EMOJI = re.compile("[\U0001F000-\U0001FAFF]")
 # Invisible direction marks: ALM, LRM, RLM, the embeddings and overrides, the isolates.
 BIDI = re.compile("[" + "".join(map(chr, [0x061C, 0x200E, 0x200F, *range(0x202A, 0x202F), *range(0x2066, 0x206A)])) + "]")
@@ -30,12 +30,8 @@ KEEP_AS_IS = {"XP", "Hz", "BPM", "A4", "Timbre", "Timbre Pro", "OK"}
 
 def spec_list(text):
     """Every format argument in the order it is consumed (positional ones put back in order), and the ${…} tokens."""
-    found = [(m.group(1), m.group(2)) for m in ARG.finditer(text.replace("%%", ""))]
-    if any(p for p, _ in found):
-        if not all(p for p, _ in found):
-            return ["mixed"]
-        found = sorted(found, key=lambda pair: int(pair[0]))
-    return [kind for _, kind in found] + sorted(TOKEN.findall(text))
+    import apply as ui_apply
+    return ui_apply.specs(text)
 
 
 def todo_path(repo, loc):
@@ -53,6 +49,8 @@ def plural_forms(repo, loc):
     """The plural categories the locale's own .stringsdict uses (zero one two few many other)."""
     sys.path.insert(0, str(repo / "tools/l10n"))
     import report
+    if loc in report.NEW_LOCALE_CARDINAL_FORMS:
+        return list(report.NEW_LOCALE_CARDINAL_FORMS[loc])
     found = set()
     for entry in report.read_stringsdict(repo / f"ios/Timbre/Resources/{loc}.lproj/Localizable.stringsdict").values():
         for value in entry.values():
@@ -361,6 +359,7 @@ def width(text, loc):
 def problems(item, value, loc, report):
     """(errors, warnings) for one answer. Errors keep the answer out of the TODO file."""
     table, key, source = item["table"], item["key"], item["source"]
+    import apply as ui_apply
     errors = list(report.check(table, key, source, value, loc))
     texts = list(value.values()) if isinstance(value, dict) else [value]
     warnings = []
@@ -370,10 +369,10 @@ def problems(item, value, loc, report):
             missing = sorted(wanted - set(value))
             if missing:
                 warnings.append(f"plural forms missing: {', '.join(missing)}")
-    reference = source if table == "Learn.strings" else (key if table != "InfoPlist.strings" else source)
+    reference = source if table in ("Learn.strings", "InfoPlist.strings") or key.startswith("timbre_") else key
     for text in texts:
         text = str(text)
-        if table != "Learn.strings" and spec_list(reference) != spec_list(text):
+        if table not in ("Learn.strings", "Localizable.stringsdict") and not ui_apply.formats_match(reference, text):
             errors.append(f"format arguments differ (%lf, %llu and %u included): {spec_list(reference)} vs {spec_list(text)}")
         if table != "Learn.strings" and text.count("\n") != source.count("\n"):
             warnings.append("line breaks differ from the English")

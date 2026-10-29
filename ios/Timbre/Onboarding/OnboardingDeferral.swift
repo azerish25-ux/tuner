@@ -9,12 +9,22 @@ final class OnboardingDeferral: ObservableObject {
     static let shared = OnboardingDeferral()
 
     private static let key = "onboarding.questionsDeferred"
+    private let defaults: UserDefaults
+    private let storageKey: String
 
     /// The questions are still to be asked.
     @Published private(set) var pending: Bool
 
-    private init() {
-        pending = UserDefaults.standard.bool(forKey: Self.key)
+    init(defaults: UserDefaults = .standard, storageID: String? = TestSupport.value(.storageID)) {
+        self.defaults = defaults
+        // A fresh automated installation owns its saved questions, just as it owns its LocalStore folder.
+        // Normal launches retain the existing per-device preference, including previously deferred questions.
+        if let storageID, let identifier = UUID(uuidString: storageID) {
+            storageKey = Self.key + "." + identifier.uuidString
+        } else {
+            storageKey = Self.key
+        }
+        pending = defaults.bool(forKey: storageKey)
     }
 
     /// "Just tune" skipped the questions: Learn asks them when it first opens.
@@ -24,7 +34,7 @@ final class OnboardingDeferral: ObservableObject {
     func resolve() { set(false) }
 
     private func set(_ value: Bool) {
-        UserDefaults.standard.set(value, forKey: Self.key)
+        defaults.set(value, forKey: storageKey)
         if pending != value { pending = value }
     }
 }

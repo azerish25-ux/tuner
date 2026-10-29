@@ -1,0 +1,1173 @@
+{
+  "scope": "Only name/subtitle and newly duplicated unreserved keywords in all50listing locales; no availability or market claim; no app UI changes. Unchanged entire listing inherits prior review.",
+  "source": {
+    "name": "Timbre: Tuner & Music Lessons",
+    "subtitle": "Guitar, Violin, Cello & More"
+  },
+  "locales": [
+    {
+      "locale": "ar-SA",
+      "parent_content_sha256": "5184cf32fa21f2a5f9740b5450ed3a4930cefaf4c601165b6dbc0bb9104df8be",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: ضبط الغيتار ودروس",
+          "new": "Timbre: ضبط الآلات ودروس",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "تعلّم أغاني الكمان واليوكليلي",
+          "new": "غيتار وكمان وتشيلو والمزيد",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "تشيلو,باس,مندولين,بانجو,كروماتي,ستروب,تدريب السمع,مترونوم,وتر",
+          "new": "تشيلو,باس,مندولين,بانجو,كروماتي,ستروب,تدريب السمع,مترونوم,وتر,يوكليلي",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "bn-BD",
+      "parent_content_sha256": "f1eb473935e6371e6c66b8c6fcae5b9bfad685ee6c662a8111fcd274577ddd1f",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: গিটার টিউনার",
+          "new": "Timbre: টিউনার ও সংগীত শিক্ষা",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "ইউকুলেলে ও বেহালা শিখুন",
+          "new": "গিটার, বেহালা, চেলো ও আরও",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "চেলো,বেস,ম্যানডোলিন,ব্যাঞ্জো,ক্রোম্যাটিক,স্ট্রোব,শ্রুতি অনুশীলন,মেট্রোনোম,কর্ড",
+          "new": "বেস,ম্যানডোলিন,ব্যাঞ্জো,ক্রোম্যাটিক,স্ট্রোব,শ্রুতি অনুশীলন,মেট্রোনোম,কর্ড,ইউকুলেলে",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "ca",
+      "parent_content_sha256": "77194888c97fe4b4c0bc725542b6fdc668e88dd96b3fe60eb9b0eeacfa82c8c3",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: Afinador de guitarra",
+          "new": "Timbre: Afinador i lliçons",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "Aprèn violí, ukelele i baix",
+          "new": "Guitarra, violí, violoncel…",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "violí,violoncel,ukelele,mandolina,banjo,cromàtic,estroboscopi,oïda,metrònom,acord",
+          "new": "violí,violoncel,ukelele,mandolina,banjo,cromàtic,estroboscopi,oïda,metrònom,acord,baix",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "cs",
+      "parent_content_sha256": "ee9dc993277c98cb570e5816a621f671e42cc4ed98fa82b8398f2157a8bd0b2a",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: Kytarová ladička",
+          "new": "Timbre: Ladička a lekce",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "Uč se housle, ukulele a basu",
+          "new": "Kytara, housle, violoncello…",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "housle,violoncello,ukulele,mandolína,banjo,chromatická,stroboskop,sluch,metronom,akord",
+          "new": "housle,violoncello,ukulele,mandolína,banjo,chromatická,stroboskop,sluch,metronom,akord,basa",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "da",
+      "parent_content_sha256": "230a8330dc684f63be93e336c749dd4d25584d9a077966e8514306f2a1b9a5db",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: Guitarstemmer",
+          "new": "Timbre: Stemmer og lektioner",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "Lær violin, ukulele og bas",
+          "new": "Guitar, violin, cello og mere",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "violin,cello,ukulele,mandolin,banjo,kromatisk,stroboskop,gehør,metronom,akkord",
+          "new": "violin,cello,ukulele,mandolin,banjo,kromatisk,stroboskop,gehør,metronom,akkord,bas",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "de-DE",
+      "parent_content_sha256": "bfbd2ac2da3a156c84a5b5485248586e86fc225dcd5a5676520a320d323d18bd",
+      "changes": [
+        {
+          "field": "subtitle",
+          "old": "Gitarre, Geige, Ukulele lernen",
+          "new": "Gitarre, Geige, Cello & mehr",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        }
+      ]
+    },
+    {
+      "locale": "el",
+      "parent_content_sha256": "627d4b76b9fa12a9680961880f44ee61093e19df8f6e02a3b341faaf35284cff",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: Κουρδιστήρι κιθάρας",
+          "new": "Timbre: Κούρδισμα και μαθήματα",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "Μάθε βιολί, γιουκαλίλι, μπάσο",
+          "new": "Κιθάρα, βιολί, τσέλο και άλλα",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "βιολί,τσέλο,γιουκαλίλι,μαντολίνο,μπάντζο,χρωματικό,στροβοσκόπιο,αυτί,μετρονόμος,συγχορδία",
+          "new": "βιολί,τσέλο,γιουκαλίλι,μαντολίνο,μπάντζο,χρωματικό,στροβοσκόπιο,αυτί,μετρονόμος,συγχορδία,μπάσο",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "en-AU",
+      "parent_content_sha256": "3187abc0b5fd332b6957ef920444f9ba5e177679042756feae44d11180651d4a",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: Guitar Tuner & Lessons",
+          "new": "Timbre: Tuner & Music Lessons",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "Learn Songs: Ukulele & Violin",
+          "new": "Guitar, Violin, Cello & More",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        }
+      ]
+    },
+    {
+      "locale": "en-CA",
+      "parent_content_sha256": "fc6c87b3b22927eaf93611cd1d6ed4de1e597eec354e90f96cbb0279a91d7f45",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: Guitar Tuner & Lessons",
+          "new": "Timbre: Tuner & Music Lessons",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "Learn Songs: Ukulele & Violin",
+          "new": "Guitar, Violin, Cello & More",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        }
+      ]
+    },
+    {
+      "locale": "en-GB",
+      "parent_content_sha256": "c334e9d94cb4725a9b1820430fca459beea76540fa1bcc80df29035c575ca98d",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: Guitar Tuner & Lessons",
+          "new": "Timbre: Tuner & Music Lessons",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "Learn Songs: Ukulele & Violin",
+          "new": "Guitar, Violin, Cello & More",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        }
+      ]
+    },
+    {
+      "locale": "en-US",
+      "parent_content_sha256": "4d6d0c02da06621b49fc955f104cbd0e8ecec52e25e317097abb2549f8753740",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: Guitar Tuner & Lessons",
+          "new": "Timbre: Tuner & Music Lessons",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "Learn Songs: Ukulele & Violin",
+          "new": "Guitar, Violin, Cello & More",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        }
+      ]
+    },
+    {
+      "locale": "es-ES",
+      "parent_content_sha256": "c6168300baf484397e31c9bd1a682d94ec65ec69a80bdac74a8c0b0393048818",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: Afinador de Guitarra",
+          "new": "Timbre: Afinador y lecciones",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "Aprende violín, ukelele y bajo",
+          "new": "Guitarra, violín, chelo y más",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "violín,violonchelo,ukulele,mandolina,banjo,cromático,estroboscopio,oído,metrónomo,acorde",
+          "new": "violín,violonchelo,ukulele,mandolina,banjo,cromático,estroboscopio,oído,metrónomo,acorde,bajo",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "es-MX",
+      "parent_content_sha256": "21c68052edadd638ab5de96467ae9ad2bb1406ff04cabc5e459617b330e0bc66",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: Afinador de Guitarra",
+          "new": "Timbre: Afinador y lecciones",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "Aprende violín, ukelele y bajo",
+          "new": "Guitarra, violín, chelo y más",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "violín,violonchelo,ukulele,mandolina,banjo,cromático,estroboscopio,oído,metrónomo,acorde",
+          "new": "violín,violonchelo,ukulele,mandolina,banjo,cromático,estroboscopio,oído,metrónomo,acorde,bajo",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "fi",
+      "parent_content_sha256": "a5db9aa83c85b4c4ab4786ed86d4192e2e434662be4d96f48d8ac0dfaa5cd3ea",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: Kitaraviritin",
+          "new": "Timbre: Viritin ja oppitunnit",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "Opi viulua, ukulelea ja bassoa",
+          "new": "Kitara, viulu, sello ja muut",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "viulu,sello,ukulele,mandoliini,banjo,kromaattinen,stroboskooppi,säveltapailu,metronomi,sointu",
+          "new": "viulu,sello,ukulele,mandoliini,banjo,kromaattinen,stroboskooppi,säveltapailu,metronomi,sointu,basso",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "fr-CA",
+      "parent_content_sha256": "770c7a63be4626efc7b4faf4cd96ad93ebb8c04c3607064b9201ccef839432f2",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre : Accordeur Guitare",
+          "new": "Timbre : Accordeur et cours",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "Leçons violon, ukulélé, basse",
+          "new": "Guitare, violon, violoncelle…",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "violon,violoncelle,ukulélé,mandoline,banjo,chromatique,stroboscope,oreille,métronome,accord",
+          "new": "violon,violoncelle,ukulélé,mandoline,banjo,chromatique,stroboscope,oreille,métronome,accord,basse",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "fr-FR",
+      "parent_content_sha256": "773c74130658028c79968bd36029313e489bdd16c3dca8caf8ee350dd4681303",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre : Accordeur Guitare",
+          "new": "Timbre : Accordeur et cours",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "Leçons violon, ukulélé, basse",
+          "new": "Guitare, violon, violoncelle…",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "violon,violoncelle,ukulélé,mandoline,banjo,chromatique,stroboscope,oreille,métronome,accord",
+          "new": "violon,violoncelle,ukulélé,mandoline,banjo,chromatique,stroboscope,oreille,métronome,accord,basse",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "gu-IN",
+      "parent_content_sha256": "4e3c825e3e959951391b3cb73f0afd38fd634be70fe256987ef4a317a3023ffd",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: ગિટાર ટ્યૂનર",
+          "new": "Timbre: ટ્યૂનર અને સંગીત પાઠ",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "યુકુલેલે અને વાયોલિન શીખો",
+          "new": "ગિટાર, વાયોલિન, સેલો અને વધુ",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "સેલો,બેસ,મેન્ડોલિન,બેન્જો,ક્રોમેટિક,સ્ટ્રોબ,શ્રવણ તાલીમ,મેટ્રોનોમ,કોર્ડ",
+          "new": "બેસ,મેન્ડોલિન,બેન્જો,ક્રોમેટિક,સ્ટ્રોબ,શ્રવણ તાલીમ,મેટ્રોનોમ,કોર્ડ,યુકુલેલે",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "he",
+      "parent_content_sha256": "0d0233f073ffc302bdfa7a1ac148bd329cbee54e51da46d9b685a2c7b518686c",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: כיוון גיטרה ושיעורים",
+          "new": "Timbre: טיונר ושיעורי מוזיקה",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "ללמוד שירים ביוקולילי ובכינור",
+          "new": "גיטרה, כינור, צ׳לו ועוד",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "צ׳לו,בס,מנדולינה,בנג׳ו,כרומטי,סטרוב,פיתוח שמיעה,מטרונום,אקורד",
+          "new": "בס,מנדולינה,בנג׳ו,כרומטי,סטרוב,פיתוח שמיעה,מטרונום,אקורד,יוקולילי",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "hi",
+      "parent_content_sha256": "61087a65d1dacc6fe4737ae98199ca6029d642886699b22d76d37d8fcd04a2b0",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: गिटार ट्यूनर",
+          "new": "Timbre: ट्यूनर और संगीत पाठ",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "यूकेलेले और वायलिन सीखें",
+          "new": "गिटार, वायलिन, सेलो और भी",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "सेलो,बास,मैंन्डोलिन,बैंजो,क्रोमैटिक,स्ट्रोब,श्रवण अभ्यास,मेट्रोनोम,कॉर्ड",
+          "new": "बास,मैंन्डोलिन,बैंजो,क्रोमैटिक,स्ट्रोब,श्रवण अभ्यास,मेट्रोनोम,कॉर्ड,यूकेलेले",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "hr",
+      "parent_content_sha256": "4c52aac5b927d150739dc5a29944193f09da7d05600b1a2228cda6934851e71c",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: Štimer za gitaru",
+          "new": "Timbre: Štimer i lekcije",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "Uči violinu, ukulele i bas",
+          "new": "Gitara, violina, violončelo…",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "violina,violončelo,ukulele,mandolina,banjo,kromatski,stroboskop,sluh,metronom,akord",
+          "new": "violina,violončelo,ukulele,mandolina,banjo,kromatski,stroboskop,sluh,metronom,akord,bas",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "hu",
+      "parent_content_sha256": "c1ca63762220fb60fb0773af281a42a5a650d5d2ace68a5deb62588bc326c291",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: Gitárhangoló",
+          "new": "Timbre: Hangoló és zeneleckék",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "Hegedű, ukulele, basszusleckék",
+          "new": "Gitár, hegedű, cselló és más",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "hegedű,cselló,ukulele,mandolin,bendzsó,kromatikus,stroboszkóp,hallás,metronóm,akkord",
+          "new": "hegedű,cselló,ukulele,mandolin,bendzsó,kromatikus,stroboszkóp,hallás,metronóm,akkord,basszus",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "id",
+      "parent_content_sha256": "c315c88ad2ff411d151a6dd15c2dbad6f72d246b19d420af1acd3775f3a22751",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: Tuner Gitar",
+          "new": "Timbre: Tuner & Belajar Musik",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "Belajar Ukulele & Biola",
+          "new": "Gitar, Biola, Selo & Lainnya",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "selo,bas,mandolin,banjo,kromatis,stroboskop,latihan telinga,metronom,akor",
+          "new": "bas,mandolin,banjo,kromatis,stroboskop,latihan telinga,metronom,akor,ukulele",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "it",
+      "parent_content_sha256": "3599673ad97c82b9284ccd9e57d32c986e82d5b547bb9382794f958bd7c867fe",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: Accordatore Chitarra",
+          "new": "Timbre: Accordatore e lezioni",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "Impara violino, ukulele, basso",
+          "new": "Chitarra, violino, violoncello",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "violino,violoncello,ukulele,mandolino,banjo,cromatico,stroboscopio,orecchio,metronomo,accordo",
+          "new": "violino,violoncello,ukulele,mandolino,banjo,cromatico,stroboscopio,orecchio,metronomo,accordo,basso",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "ja",
+      "parent_content_sha256": "1300e0cf9935d7d52b75957f0ef5c1199da591ccdefd88a5bb8740c2afe101a6",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: ギター チューナー＆レッスン",
+          "new": "Timbre: チューナー＆音楽レッスン",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "ウクレレ・バイオリン・ベースが学べる",
+          "new": "ギター・バイオリン・チェロなどに対応",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "ヴァイオリン,チェロ,ウクレレ,マンドリン,バンジョー,クロマチック,ストロボ,耳トレ,メトロノーム,コード",
+          "new": "ヴァイオリン,チェロ,ウクレレ,マンドリン,バンジョー,クロマチック,ストロボ,耳トレ,メトロノーム,コード,ベース",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "kn-IN",
+      "parent_content_sha256": "b0b017ddd01596181465eec889e4f22160418baa91283e0fd4571d6846a9f949",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: ಗಿಟಾರ್ ಟ್ಯೂನರ್",
+          "new": "Timbre: ಟ್ಯೂನರ್, ಸಂಗೀತ ಪಾಠ",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "ಯುಕುಲೆಲೆ, ವಯಲಿನ್ ಕಲಿಯಿರಿ",
+          "new": "ಗಿಟಾರ್, ವಯಲಿನ್, ಸೆಲ್ಲೋ…",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "ಸೆಲ್ಲೋ,ಬಾಸ್,ಮ್ಯಾಂಡೊಲಿನ್,ಬ್ಯಾಂಜೊ,ಕ್ರೊಮ್ಯಾಟಿಕ್,ಸ್ಟ್ರೋಬ್,ಶ್ರವಣ ತರಬೇತಿ,ಮೆಟ್ರೊನೋಮ್,ಕಾರ್ಡ್",
+          "new": "ಬಾಸ್,ಮ್ಯಾಂಡೊಲಿನ್,ಬ್ಯಾಂಜೊ,ಕ್ರೊಮ್ಯಾಟಿಕ್,ಸ್ಟ್ರೋಬ್,ಶ್ರವಣ ತರಬೇತಿ,ಮೆಟ್ರೊನೋಮ್,ಕಾರ್ಡ್,ಯುಕುಲೆಲೆ",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "ko",
+      "parent_content_sha256": "eb7c166cc302b84968c861754e9c3a1c76cb30db82b5c7cca1a3d9b52f251559",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: 기타 튜너 & 레슨",
+          "new": "Timbre: 튜너 & 음악 레슨",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "바이올린, 우쿨렐레, 베이스 배우기",
+          "new": "기타, 바이올린, 첼로 등 다양한 악기",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "바이올린,첼로,우쿨렐레,만돌린,밴조,크로매틱,스트로브,청음,메트로놈,코드",
+          "new": "바이올린,첼로,우쿨렐레,만돌린,밴조,크로매틱,스트로브,청음,메트로놈,코드,베이스",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "ml-IN",
+      "parent_content_sha256": "564f9d20f560ec9dd28f2833969cc0a59ff7b186a27c0654da6381dc34c58fc2",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: ഗിറ്റാർ ട്യൂണർ",
+          "new": "Timbre: ട്യൂണർ, സംഗീതപാഠങ്ങൾ",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "യുകുലേലെ, വയലിൻ പഠിക്കൂ",
+          "new": "ഗിറ്റാർ, വയലിൻ, ചെല്ലോ തുടങ്ങി",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "ചെല്ലോ,ബാസ്,മാൻഡലിൻ,ബാൻജോ,ക്രോമാറ്റിക്,സ്ട്രോബ്,ശ്രവണ പരിശീലനം,മെട്രോനോം,കോർഡ്",
+          "new": "ബാസ്,മാൻഡലിൻ,ബാൻജോ,ക്രോമാറ്റിക്,സ്ട്രോബ്,ശ്രവണ പരിശീലനം,മെട്രോനോം,കോർഡ്,യുകുലേലെ",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "mr-IN",
+      "parent_content_sha256": "5b5fb0aef6aa2f16233e0cf2f88521bcf214e6fa7fca449d7d6d9040e6b0d924",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: गिटार ट्यूनर",
+          "new": "Timbre: ट्यूनर व संगीताचे धडे",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "युकुलेले आणि व्हायोलिन शिका",
+          "new": "गिटार, व्हायोलिन, सेलो व आणखी",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "सेलो,बास,मँडोलिन,बँजो,क्रोमॅटिक,स्ट्रोब,श्रवण प्रशिक्षण,मेट्रोनोम,कॉर्ड",
+          "new": "बास,मँडोलिन,बँजो,क्रोमॅटिक,स्ट्रोब,श्रवण प्रशिक्षण,मेट्रोनोम,कॉर्ड,युकुलेले",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "ms",
+      "parent_content_sha256": "72721ac3562c809b0481ed31e54bd891dd52c17dbfefff74387f3ec4dbd5d51a",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: Penala Gitar",
+          "new": "Timbre: Penala & Belajar Muzik",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "Belajar Ukulele & Violin",
+          "new": "Gitar, Violin, Selo & Lagi",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "selo,bes,mandolin,banjo,kromatik,strob,latihan telinga,metronom,kord",
+          "new": "bes,mandolin,banjo,kromatik,strob,latihan telinga,metronom,kord,ukulele",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "nl-NL",
+      "parent_content_sha256": "fc2cbeb195fd8887b8d6773c36a339163d3eff36cded7ad17ed61beb72f6bb5b",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: Gitaarstemmer",
+          "new": "Timbre: Stemmer & muziekles",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "Leer viool, ukelele en bas",
+          "new": "Gitaar, viool, cello en meer",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "viool,cello,ukelele,mandoline,banjo,chromatisch,stroboscoop,gehoor,metronoom,akkoord",
+          "new": "viool,cello,ukelele,mandoline,banjo,chromatisch,stroboscoop,gehoor,metronoom,akkoord,bas",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "no",
+      "parent_content_sha256": "2f91398a0edcd1bae720bf1432c16266263af5a24c48ae762c19cf52650aeccf",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: Gitarstemmer",
+          "new": "Timbre: Stemmer og musikktimer",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "Lær fiolin, ukulele og bass",
+          "new": "Gitar, fiolin, cello og mer",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "fiolin,cello,ukulele,mandolin,banjo,kromatisk,stroboskop,gehør,metronom,akkord",
+          "new": "fiolin,cello,ukulele,mandolin,banjo,kromatisk,stroboskop,gehør,metronom,akkord,bass",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "or-IN",
+      "parent_content_sha256": "7dbb3818df09627092306028b3b956f38f80b97e403eff865f18876a0b29d480",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: ଗିଟାର ଟ୍ୟୁନର",
+          "new": "Timbre: ଟ୍ୟୁନର ଓ ସଙ୍ଗୀତ ପାଠ",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "ୟୁକୁଲେଲେ ଓ ବାୟୋଲିନ ଶିଖନ୍ତୁ",
+          "new": "ଗିଟାର, ବାୟୋଲିନ, ସେଲୋ ଆଦି",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "ସେଲୋ,ବେସ୍,ମାଣ୍ଡୋଲିନ,ବାଞ୍ଜୋ,କ୍ରୋମାଟିକ,ଷ୍ଟ୍ରୋବ୍,ଶ୍ରବଣ ଅଭ୍ୟାସ,ମେଟ୍ରୋନୋମ,କର୍ଡ",
+          "new": "ବେସ୍,ମାଣ୍ଡୋଲିନ,ବାଞ୍ଜୋ,କ୍ରୋମାଟିକ,ଷ୍ଟ୍ରୋବ୍,ଶ୍ରବଣ ଅଭ୍ୟାସ,ମେଟ୍ରୋନୋମ,କର୍ଡ,ୟୁକୁଲେଲେ",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "pa-IN",
+      "parent_content_sha256": "1dbf954947481ca9c49dfb1ba383ef269c47f8b91be27917c166af8e8b4d3ab0",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: ਗਿਟਾਰ ਟਿਊਨਰ",
+          "new": "Timbre: ਟਿਊਨਰ ਤੇ ਸੰਗੀਤ ਪਾਠ",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "ਯੂਕੁਲੇਲੇ ਤੇ ਵਾਇਲਿਨ ਸਿੱਖੋ",
+          "new": "ਗਿਟਾਰ, ਵਾਇਲਿਨ, ਸੈਲੋ ਤੇ ਹੋਰ",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "ਸੈਲੋ,ਬੇਸ,ਮੈਂਡੋਲਿਨ,ਬੈਂਜੋ,ਕ੍ਰੋਮੈਟਿਕ,ਸਟ੍ਰੋਬ,ਸੁਣਨ ਅਭਿਆਸ,ਮੈਟਰੋਨੋਮ,ਕੋਰਡ",
+          "new": "ਬੇਸ,ਮੈਂਡੋਲਿਨ,ਬੈਂਜੋ,ਕ੍ਰੋਮੈਟਿਕ,ਸਟ੍ਰੋਬ,ਸੁਣਨ ਅਭਿਆਸ,ਮੈਟਰੋਨੋਮ,ਕੋਰਡ,ਯੂਕੁਲੇਲੇ",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "pl",
+      "parent_content_sha256": "375395b5e1083bf0732f51bac0080edac0603fccbcfa20d5a9168f00b5542cee",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: Stroik gitarowy",
+          "new": "Timbre: Stroik i lekcje muzyki",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "Nauka skrzypiec, ukulele, basu",
+          "new": "Gitara, skrzypce, wiolonczela…",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "skrzypce,wiolonczela,ukulele,mandolina,banjo,chromatyczny,stroboskop,słuch,metronom,akord",
+          "new": "skrzypce,wiolonczela,ukulele,mandolina,banjo,chromatyczny,stroboskop,słuch,metronom,akord,bas",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "pt-BR",
+      "parent_content_sha256": "1109510b2cb7cb33db130746d961f6230add358190ad30455dba583c2f0697cb",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: Afinador de Violão",
+          "new": "Timbre: Afinador e aulas",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "Aulas: ukulele, violino, baixo",
+          "new": "Violão, violino e violoncelo",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "violino,violoncelo,ukulele,bandolim,banjo,cromático,estroboscópio,ouvido,metrônomo,acorde",
+          "new": "violino,violoncelo,ukulele,bandolim,banjo,cromático,estroboscópio,ouvido,metrônomo,acorde,baixo",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "pt-PT",
+      "parent_content_sha256": "1181ff6b396b4d4f922a096a9390e6320c3d694d929f38efb847d2a330c610b1",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: Afinador de Guitarra",
+          "new": "Timbre: Afinador e aulas",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "Aulas: ukulele, violino, baixo",
+          "new": "Guitarra, violino, violoncelo",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "violino,violoncelo,ukulele,bandolim,banjo,cromático,estroboscópio,ouvido,metrónomo,acorde",
+          "new": "violino,violoncelo,ukulele,bandolim,banjo,cromático,estroboscópio,ouvido,metrónomo,acorde,baixo",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "ro",
+      "parent_content_sha256": "5b5e563bad970e232398797737f2afd30cf256b92df3287d0cf19c3063e3df11",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: Acordor de chitară",
+          "new": "Timbre: Acordor și lecții",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "Învață vioară, ukulele și bas",
+          "new": "Chitară, vioară, violoncel…",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "vioară,violoncel,ukulele,mandolină,banjo,cromatic,stroboscop,auz,metronom,acord",
+          "new": "vioară,violoncel,ukulele,mandolină,banjo,cromatic,stroboscop,auz,metronom,acord,bas",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "ru",
+      "parent_content_sha256": "6c11c01ad03c3d5d7f99eabaaaa505d926c5c535411c53b1ad49e3947e3ebc2b",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: Тюнер для гитары",
+          "new": "Timbre: Тюнер и уроки музыки",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "Уроки скрипки, укулеле и баса",
+          "new": "Гитара, скрипка, виолончель…",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "скрипка,виолончель,укулеле,мандолина,банджо,хроматический,стробоскоп,слух,метроном,аккорд",
+          "new": "скрипка,виолончель,укулеле,мандолина,банджо,хроматический,стробоскоп,слух,метроном,аккорд,бас",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "sk",
+      "parent_content_sha256": "fcdd439a9a604ce0ea4e11456c061e4d9e561a6a3d4be5189b1fb9a793b6de21",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: Gitarová ladička",
+          "new": "Timbre: Ladička a lekcie",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "Uč sa husle, ukulele a basu",
+          "new": "Gitara, husle, violončelo…",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "husle,violončelo,ukulele,mandolína,banjo,chromatická,stroboskop,sluch,metronóm,akord",
+          "new": "husle,violončelo,ukulele,mandolína,banjo,chromatická,stroboskop,sluch,metronóm,akord,basa",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "sl-SI",
+      "parent_content_sha256": "bb5b4d52d85f2d241d284484a100c45f33df9b2c7b9ed93c3e468271d67a32e9",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: Uglaševalnik kitare",
+          "new": "Timbre: Uglaševalnik in pouk",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "Uči se violino, ukulelo in bas",
+          "new": "Kitara, violina, violončelo…",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "violina,violončelo,ukulele,mandolina,banjo,kromatični,stroboskop,posluh,metronom,akord",
+          "new": "violina,violončelo,ukulele,mandolina,banjo,kromatični,stroboskop,posluh,metronom,akord,bas",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "sv",
+      "parent_content_sha256": "3510243c90a4bdde50d53331af3e6a7c989dba4e01c3a1330c70f34bc76f111f",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: Gitarrstämmare",
+          "new": "Timbre: Stämning & lektioner",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "Lär dig fiol, ukulele och bas",
+          "new": "Gitarr, fiol, cello med mera",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "fiol,cello,ukulele,mandolin,banjo,kromatisk,stroboskop,gehör,metronom,ackord",
+          "new": "fiol,cello,ukulele,mandolin,banjo,kromatisk,stroboskop,gehör,metronom,ackord,bas",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "ta-IN",
+      "parent_content_sha256": "80961b75c2e346a98bd303a488fa7e7fe48b785500461f7bb0840fb2597b876a",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: கிட்டார் டியூனர்",
+          "new": "Timbre: டியூனர், இசைப்பாடங்கள்",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "யுகுலேலே, வயலின் கற்கலாம்",
+          "new": "கிட்டார், வயலின், செல்லோ…",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "செல்லோ,பேஸ்,மாண்டலின்,பாஞ்சோ,குரோமேட்டிக்,ஸ்ட்ரோப்,செவிப்பயிற்சி,மெட்ரோனோம்,கார்டு",
+          "new": "பேஸ்,மாண்டலின்,பாஞ்சோ,குரோமேட்டிக்,ஸ்ட்ரோப்,செவிப்பயிற்சி,மெட்ரோனோம்,கார்டு,யுகுலேலே",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "te-IN",
+      "parent_content_sha256": "737b2f691564cd87e68294adddbb4887a171c1a2fde94ef282f580027a184f66",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: గిటార్ ట్యూనర్",
+          "new": "Timbre: ట్యూనర్, సంగీత పాఠాలు",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "యుకులేలే, వయొలిన్ నేర్చుకోండి",
+          "new": "గిటార్, వయొలిన్, సెల్లో వంటివి",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "సెల్లో,బాస్,మాండొలిన్,బాంజో,క్రోమాటిక్,స్ట్రోబ్,శ్రవణ శిక్షణ,మెట్రోనోమ్,కార్డ్",
+          "new": "బాస్,మాండొలిన్,బాంజో,క్రోమాటిక్,స్ట్రోబ్,శ్రవణ శిక్షణ,మెట్రోనోమ్,కార్డ్,యుకులేలే",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "th",
+      "parent_content_sha256": "0ea4c9d07accfcc4c5903260fdfaa22ded9917548f89fc178d00fdfebf484488",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: จูนกีตาร์และบทเรียน",
+          "new": "Timbre: จูนเสียงและเรียนดนตรี",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "เรียนเพลงอูคูเลเล่และไวโอลิน",
+          "new": "กีตาร์ ไวโอลิน เชลโล และอื่นๆ",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "เชลโล,เบส,แมนโดลิน,แบนโจ,โครมาติก,สโตรบ,ฝึกหู,เมโทรนอม,คอร์ด",
+          "new": "เบส,แมนโดลิน,แบนโจ,โครมาติก,สโตรบ,ฝึกหู,เมโทรนอม,คอร์ด,อูคูเลเล่",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "tr",
+      "parent_content_sha256": "522d36695bfa89e53b0789fd38330b161f4d3e84d7408a603d6e2677b7b969ae",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: Gitar Akort Aleti",
+          "new": "Timbre: Akort ve Dersler",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "Keman, ukulele ve bas öğren",
+          "new": "Gitar, keman, çello ve dahası",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "keman,çello,ukulele,mandolin,banjo,kromatik,stroboskop,kulak,metronom,akor",
+          "new": "keman,çello,ukulele,mandolin,banjo,kromatik,stroboskop,kulak,metronom,akor,bas",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "uk",
+      "parent_content_sha256": "302c014d369826b196dd21cbbe8a22b4a667cd2cdecdf0995b864a45fd90f88a",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: Тюнер для гітари",
+          "new": "Timbre: Тюнер і уроки музики",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "Уроки скрипки, укулеле й баса",
+          "new": "Гітара, скрипка, віолончель…",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "скрипка,віолончель,укулеле,мандоліна,банджо,хроматичний,стробоскоп,слух,метроном,акорд",
+          "new": "скрипка,віолончель,укулеле,мандоліна,банджо,хроматичний,стробоскоп,слух,метроном,акорд,бас",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "ur-PK",
+      "parent_content_sha256": "a8dd2c92c6ddf34e31ca1ab95deb68af37daa65436682b2f048397b93b89862c",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: گٹار ٹیونر",
+          "new": "Timbre: ٹیونر، موسیقی کے سبق",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "یوکلیلی اور وائلن سیکھیں",
+          "new": "گٹار، وائلن، چیلو اور مزید",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "چیلو,بیس,مینڈولن,بینجو,کرومیٹک,اسٹروب,سماعت کی مشق,میٹرونوم,کارڈ",
+          "new": "بیس,مینڈولن,بینجو,کرومیٹک,اسٹروب,سماعت کی مشق,میٹرونوم,کارڈ,یوکلیلی",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "vi",
+      "parent_content_sha256": "7aca92e957d43299997b62763f9d7dfd8a0da19e1b3957e6408349a7812682aa",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre: Chỉnh dây guitar",
+          "new": "Timbre: Chỉnh dây & học nhạc",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "Học ukulele và vĩ cầm",
+          "new": "Guitar, vĩ cầm, cello và nữa",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "cello,bass,mandolin,banjo,chromatic,strobe,luyện tai,máy đếm nhịp,hợp âm",
+          "new": "bass,mandolin,banjo,chromatic,strobe,luyện tai,máy đếm nhịp,hợp âm,ukulele",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "zh-Hans",
+      "parent_content_sha256": "2ea61d5e316933245b1d65ecbcc7eee482857bbc286d7984c78334e70eb6cbad",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre：吉他调音器与课程",
+          "new": "Timbre：调音器与音乐课程",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "边演奏边学小提琴、尤克里里、贝斯",
+          "new": "吉他、小提琴、大提琴及更多乐器",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "小提琴,大提琴,乌克丽丽,曼陀林,班卓琴,十二平均律,频闪,练耳,节拍器,和弦",
+          "new": "小提琴,大提琴,乌克丽丽,曼陀林,班卓琴,十二平均律,频闪,练耳,节拍器,和弦,尤克里里,贝斯",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    },
+    {
+      "locale": "zh-Hant",
+      "parent_content_sha256": "86bc20da106343c5e99cc11894737036690c6d254ac5ed235cbd7128e7fad16d",
+      "changes": [
+        {
+          "field": "name",
+          "old": "Timbre：吉他調音器與課程",
+          "new": "Timbre：調音器與音樂課程",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "subtitle",
+          "old": "學習演奏烏克麗麗與小提琴歌曲",
+          "new": "吉他、小提琴、大提琴等多種樂器",
+          "reason": "Broaden descriptor beyond guitar while retaining Timbre and tuning/learning intent; compact localized instrument examples."
+        },
+        {
+          "field": "keywords",
+          "old": "大提琴,貝斯,曼陀林,班卓琴,半音,頻閃,聽力訓練,節拍器,和弦",
+          "new": "貝斯,曼陀林,班卓琴,半音,頻閃,聽力訓練,節拍器,和弦,烏克麗麗",
+          "reason": "Remove newly repeated subtitle terms only when no existing Custom Product Page reserves them; retain instrument discovery previously carried in subtitle by adding ukulele/bass terms as applicable."
+        }
+      ]
+    }
+  ]
+}

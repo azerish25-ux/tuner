@@ -26,6 +26,12 @@ enum TestSupport {
         case stageDebug = "TIMBRE_STAGE_DEBUG"
         /// "1": everything that moves on its own rests as in Low Power Mode (`stageResting`).
         case stageRest = "TIMBRE_STAGE_REST"
+        #if DEBUG
+        /// "1": report the resting live stage disappearing to its own priming session; not GPU completion.
+        case simulatorPriming = "TIMBRE_SIMULATOR_PRIMING"
+        #endif
+        /// "1": bounded local Songs page geometry/position observations; never a scrolling instruction.
+        case songPageTrace = "TIMBRE_SONG_PAGE_TRACE"
         /// A capture scene's name (`DemoScene`).
         case scene = "TIMBRE_SCENE"
         /// A capture scene's instrument, song, bar, lock comet and cue file.
@@ -83,3 +89,34 @@ enum TestSupport {
             .appendingPathComponent("TimbreUITests", isDirectory: true).appendingPathComponent(identifier, isDirectory: true)
     }()
 }
+
+#if DEBUG
+extension TestSupport {
+    @MainActor private static var primingRestReported = false
+
+    /// A diagnostic lifecycle observation, not a rendering, permission or app-readiness certificate.
+    /// Called only by the live child's disappearance after its existing resting detach/unmount path.
+    @MainActor static func recordPrimingStageRest(modelID: String) {
+        guard isOn(.simulatorPriming), stageResting, !primingRestReported,
+              let session = value(.storageID), UUID(uuidString: session) != nil,
+              let directory = storageRoot else { return }
+        primingRestReported = true  // One bounded attempt; an I/O failure remains a missing host signal.
+        let observation: [String: Any] = [
+            "schema": 1, "diagnosticOnly": true, "event": "stage-rest-live-disappeared",
+            "sessionID": session, "pid": ProcessInfo.processInfo.processIdentifier,
+            "bundleID": Bundle.main.bundleIdentifier ?? "", "modelID": modelID,
+            "utcEpoch": Date().timeIntervalSince1970, "uptime": ProcessInfo.processInfo.systemUptime,
+            "semantics": "resting-live-child-disappeared-after-detach-not-gpu-completion"
+        ]
+        do {
+            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+            var data = try JSONSerialization.data(withJSONObject: observation, options: [.sortedKeys])
+            data.append(0x0A)
+            try data.write(to: directory.appendingPathComponent("simulator-priming-stage.json"), options: .atomic)
+        } catch {
+            let message = "Simulator priming rest observation could not be written; host must retain failure.\n"
+            FileHandle.standardError.write(Data(message.utf8))
+        }
+    }
+}
+#endif

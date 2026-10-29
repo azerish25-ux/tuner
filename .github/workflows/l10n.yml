@@ -1,26 +1,24 @@
 name: Localization export
 on:
   push:
-    branches: ["main", "l10n/**"]
-    paths:
-      - ".github/workflows/l10n.yml"
-      - "ios/**/*.swift"
-      - "ios/project.yml"
-      - "tools/l10n/*.py"
+    branches: ["main", "l10n/**", "codex/app-store-readiness-gates"]
   workflow_dispatch:
 concurrency:
   group: localization-export-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 permissions:
-  contents: write
+  contents: read
 jobs:
   export:
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/l10n/') || (github.ref == 'refs/heads/codex/app-store-readiness-gates' && contains(github.event.head_commit.message, '[l10n-export]'))))
     runs-on: macos-15
     timeout-minutes: 20
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          persist-credentials: false
       - name: Install XcodeGen
         run: brew install xcodegen
       - name: Generate Xcode project
@@ -48,15 +46,32 @@ jobs:
           LOCALES=$(python3 -c 'import sys; sys.path.insert(0,"tools/l10n"); import shipping; print(",".join(loc for loc in shipping.available() if loc != "en"))')
           python3 tools/l10n/critical.py --strict --locales "$LOCALES" --xliff "$XLIFF" --out ci-out 2>&1 | tee ci-out/critical.log
           python3 tools/l10n/lessons.py --strict --out ci-out/lessons.json 2>&1 | tee ci-out/lessons.log
-      - name: Publish
-        if: always()
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: bash tools/ci/publish-results.sh ci-results/l10n ci-out
       - name: Upload localization evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: localization-export-${{ github.sha }}
           path: ci-out
           if-no-files-found: error
+
+  publish:
+    # Preserve the historical publisher, never granting write access to handoff QA.
+    needs: export
+    if: >-
+      always() && needs.export.result != 'skipped' &&
+      github.ref != 'refs/heads/codex/app-store-readiness-gates'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+        with:
+          name: localization-export-${{ github.sha }}
+          path: ci-out
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash tools/ci/publish-results.sh ci-results/l10n ci-out export

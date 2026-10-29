@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-27T03:39:18Z",
+  "reviewer": "Independent integration review agent",
+  "skills": ["systematic-debugging", "code-review-and-quality"],
+  "verdict": "approve_bounded_lifecycle_guard_native_resolution_unproved",
+  "scope": "Four LocalizationMatrixUITests termination guards only; original fixture assertions, capture sequence, marker coverage and retry policy remain intact.",
+  "findings": [],
+  "actual_native_evidence": {
+    "revision": "b6efd36f5f72d7ec723229949f7c54c32972b72c",
+    "job_id": 121958964202,
+    "run_id": 40434232959,
+    "log": "C:/Users/shahr/Desktop/Translation/native-qa/east-b6efd36-final.log",
+    "log_sha256": "c00af1ea17d8ad0f9f9eb910f7b5cd314843ff0f5bf2f62dd34ae75c17ba7b28",
+    "completed_language_markers": ["ja", "ko", "zh-CN", "th"],
+    "incomplete_languages": ["vi", "id"],
+    "observations": [
+      "Each of the four completed languages prints LESSON_TESTED, REQUEST_UNAVAILABLE_TESTED and MATRIX_TESTED markers; independent marker extraction confirms all three sets.",
+      "Lines18944-18946: vi welcome attachment is captured, terminate starts with PID52550, then line45 fails roughly96seconds later with Failed to terminate ending in PID0. No complete vi matrix marker exists; id is not completed.",
+      "Teardown then attempts termination at PID0. The full test is failed, and its existing artifact upload retains the partial evidence."
+    ]
+  },
+  "source_assessment": [
+    "Teardown unwraps optional app and checks state before terminate; the three inter-phase/between-language cleanup sites also skip an application already reported notRunning. Swift optional binding and XCUIApplication state enum usage are consistent with existing test lifecycle patterns.",
+    "No content assertion, timeout, capture, fixture identity check, strict selection check, AX5 bounds/interaction check or completion marker is removed or weakened. continueAfterFailure remains false. Subsequent launches still require the same actual visible localized UI.",
+    "No catch, ignored error or generic retry is added for terminate while the application appears running. A failure after the guard still propagates. Strict launch_retry source and matrix workflow remain unchanged.",
+    "The guard is lifecycle hygiene, not established root-cause repair for the recorded96second in-flight termination failure. The native log presents a nonzero PID at terminate entry; a state query may detect a stale/notRunning process, but cannot eliminate a later process race or hung termination.",
+    "Skipping already-notRunning cleanup does not establish the absence of an unexpected app exit. Preserve native crash/termination diagnostics separately and do not use clean cleanup alone as crash-free proof."
+  ],
+  "independent_verification": [
+    { "command": "git -c core.autocrlf=false diff --check -- ios/TimbreUITests/LocalizationMatrixUITests.swift", "exit_code": 0 },
+    { "check": "Exact source diff contains four guarded terminate changes and no assertion/marker changes", "result": "pass" },
+    { "check": "Existing launch_retry.classify(actual complete native log)", "launch_only_retries": [], "other_failures": ["TimbreUITests/LocalizationMatrixUITests/testLocalizedWelcomeAndTabs"] },
+    { "check": "Exact lesson/request/matrix marker extraction", "result": "ja,ko,zh-CN,th only; not complete six-language shard" }
+  ],
+  "reviewed_sha256": {
+    "ios/TimbreUITests/LocalizationMatrixUITests.swift": "8722e0e3778bb564243e20e2fc06b761daa38edfcd86245d05a565bef0109078",
+    "tools/ci/launch_retry.py": "cc1c0606d99e7c68e33451dc74ab88ad6776b7c5ae5dfa25debd07c60bb9b005",
+    ".github/workflows/localization-matrix.yml": "dbc6257960fc492a8432ed43a816c552b7c304e19bc7bced8fc1b73a24334f8a"
+  },
+  "remaining_acceptance": [
+    "Compile and run the entire48-language matrix on the final candidate containing the RTL fraction correction and lifecycle guard. A four-language partial old-run result cannot certify the final scope.",
+    "If termination recurs, retain language/phase and application.state immediately before/after cleanup plus the native termination/crash logs and attachments; distinguish already-stopped cleanup from failure during a running-process terminate.",
+    "Preserve original b6 logs/attachments and failed status. No blanket termination-error retry classification, assertion suppression or universal pass is approved."
+  ],
+  "limits": "No local Swift/Xcode or simulator execution. Source approval does not prove the recorded lifecycle failure is fixed or the native matrix passes.",
+  "mutations": "Only this new review receipt written; no implementation, policy, translation, original evidence, commit or publication changed by reviewer."
+}

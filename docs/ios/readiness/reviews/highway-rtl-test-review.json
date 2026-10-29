@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-27T05:54:39.253625+00:00",
+  "reviewer": "Independent Highway accessible layout source reviewer",
+  "verdict": "approve_explicit_direction_test_improvement_native_unrun",
+  "findings": [],
+  "scope": "Additional layoutDirection environment modifier in TempoRungLayoutTests, reinspection of full current test and unchanged Highway implementation.",
+  "verification": [
+    "Highway.swift exact hash still matches prior review.",
+    "Re-read complete test: Arabic/Persian locales explicitly use rightToLeft; English/German use leftToRight. Both wide/narrow measurements use the same directional environment. Other visible assertions and loops match prior review content.",
+    "Scoped git diff --check passed.",
+    "Full current test source was reviewed; current test hash equals prior receipt hash. This new receipt explicitly records the present direction coverage without asserting a byte-only delta."
+  ],
+  "prior_review": {
+    "path": "docs/ios/readiness/reviews/highway-accessible-layout-independent-review.json",
+    "sha256": "320bbfb3fe2386e144513ecfab4419211365cfe06efb366363c4c6827a3a8836"
+  },
+  "reviewed_sha256": {
+    "ios/TimbreAppTests/TempoRungLayoutTests.swift": "ab24eacfd9a1c889a5cce00dcd2e3d70aae49dd0864309cb6c590161b1f5f300",
+    "ios/Timbre/Learn/Highway.swift": "8d5f3f174e4f456665ae918d104aac160bab1f17b7139a6de35c793fa2919aa9"
+  },
+  "limits": [
+    "Native XCTest remains unexecuted on Windows. No Swift compilation or native pass claimed.",
+    "Test checks wrapping height and unit composition under explicit direction; it does not establish glyph correctness, full grid, page interaction, scrolling or result acceptance.",
+    "Root strict localization and 50-marketing-test results were not independently repeated for this test review."
+  ],
+  "mutations": "Only this new receipt written; prior receipt preserved. No implementation edits, commit or push."
+}

@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """App Store screenshots from the CI screenshot tour, art-directed.
 
-python3 tools/marketing/screenshots.py <captures> <out folder> [--ipad] [--page NAME] [--locale CODE] [--font PATH]
+python3 tools/marketing/screenshots.py <captures> <out folder> [--ipad | --iphone-large] [--page NAME] [--locale CODE] [--font PATH]
 python3 tools/marketing/screenshots.py --check
 
 The frames live in one place only: the tables under "## Screenshots" in docs/ios/APP-STORE-LISTING.md ("### iPhone
-6.9"", "### iPad 13"", and one "### iPhone 6.9": <page>" per Custom Product Page), each row a caption, a supporting
+(medium Dynamic Island)", "### iPad 13"", and one "### iPhone ...: <page>" per Custom Product Page), each row a caption, a supporting
 line, the capture it frames and its look (`layout accent`). Localized captions live in tools/l10n/store/<locale>.json,
 with the same captures in the same order; the look always comes from the English row.
 
@@ -23,7 +23,7 @@ missing or untranslated content fails. Legacy Markdown rendering remains a fallb
 
 Rendering picks the captures a table names and composes each one (a capture is turned upright from its EXIF orientation
 first: XCUIScreen stores a landscape iPad capture as a portrait bitmap tagged orientation 8). iPhone output is
-1320x2868 (6.9-inch); --ipad output is 2752x2064 for a landscape capture, 2064x2752 for a portrait one. Every written
+1206x2622 (medium Dynamic Island iPhone), or --iphone-large 1320x2868 (large Dynamic Island, requiring a separate native capture); --ipad output is 2752x2064 for a landscape capture, 2064x2752 for a portrait one. Every written
 frame is read back and checked against those sizes. It renders what it can, writes sheet.png (the set side by side at
 search-result size) and warns when two frames look alike there, then exits non-zero if any frame is missing, was
 flagged wrong by its test, was captured more than once, or came out at a size App Store Connect would refuse.
@@ -42,6 +42,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import art  # noqa: E402
+from screenshot_roles import ROLES, screenshot_role
 
 ROOT = Path(__file__).resolve().parents[2]
 LISTING = ROOT / "docs/ios/APP-STORE-LISTING.md"
@@ -52,7 +53,7 @@ UI_TESTS = ROOT / "ios/TimbreUITests"
 CAPTION_LIMIT = 30
 FRAME_LIMIT = 10          # App Store Connect takes at most 10 screenshots per device size
 LIMITS = {"name": 30, "subtitle": 30, "keywords": 100, "promotional": 170, "description": 4000, "whats new": 4000}
-SIZES = {"iphone": (1320, 2868), "ipad": (2064, 2752)}  # portrait (width, height); landscape swaps them
+SIZES = {kind: tuple(sorted(role.native_size)) for kind, role in ROLES.items()}  # portrait (width, height); landscape swaps them
 # Counts a caption or a paste block may quote, checked against the build. A hyphenated "40-lesson" is a description,
 # not a count, and is left alone.
 COUNT = re.compile(r"(?<![\d\-])(\d[\d,]*)(\+?)\s+(lessons|courses|instruments|tunings|songs|originals)\b", re.IGNORECASE)
@@ -64,36 +65,31 @@ LOCALES = [r["locale"] for r in json.loads((ROOT / "tools/l10n/store-locales.jso
 # Where each capture's hero sits, as fractions of the upright capture:
 #   y0      the top of what a zoom, flip or plain card shows (the rest of the screen runs on below it)
 #   x       the columns a zoom keeps, to enlarge it further
-#   cut     breakout: where the screen card starts; above it the picture rises out of the card
-#   rise    breakout: the top of the picture that rises out
-#   keep    breakout: the columns of the rising picture kept (its sides fade away)
-#   detail  callout: the region enlarged in the card that breaks out over the screen's edge
+#   detail  callout: a native-content detector for the region enlarged over the screen's edge
 #
 # A zoom or flip starts below the status bar (it ends at 0.044 of a 6.3-inch capture) or at the very top, never across
 # it; render refuses a frame whose top edge cuts through text (`sliced`).
 FOCUS = {
-    "10b-tune-locked": {"cut": 0.455, "rise": 0.132, "keep": (0.11, 0.79)},
-    "49d-tune-violin-locked": {"cut": 0.462, "rise": 0.132, "keep": (0.13, 0.80)},
-    "49e-tune-cello-locked": {"cut": 0.462, "rise": 0.132, "keep": (0.13, 0.80)},
-    "17b-tune-ukulele-locked": {"cut": 0.455, "rise": 0.132, "keep": (0.11, 0.79)},
     "65-song-perform": {"y0": 0.032},
     "65b-song-perform-violin": {"y0": 0.032},
     # Below the status bar, above the stars' rings' brightest part.
     "62-lesson-results": {"y0": 0.06, "x": (0.02, 0.98)},
     "62b-lesson-results-violin": {"y0": 0.06, "x": (0.02, 0.98)},
     # The callout enlarges the six ticked strings themselves: the step's headline stays at its own size in the screen.
-    "52b-lesson-chord": {"y0": 0.0, "detail": (0.149, 0.208, 0.902, 0.278)},
+    "52b-lesson-chord": {"y0": 0.0, "detail": "ticked-strings"},
     "31b-instruments-folk": {"y0": 0.0},
     "63-songs": {"y0": 0.0},
     "50-learn": {"y0": 0.0},
-    # The flip's top edge falls between the screen's subtitle and "Tune A2 up 12¢ first", which leads the frame.
-    "11b-tune-strum": {"y0": 0.118},
+    # Below the complete toolbar (including its grey subtitle and pause button), above the lead instruction.
+    # Measured medium EN/DE native captures: row367 is clear; old row309 sliced the subtitle.
+    # Native large EN/DE independently measured: row367 is also clear, using its own fraction.
+    "11b-tune-strum": {"y0": 0.118, "y0_by_device": {"iphone": 0.140, "iphone-large": 0.128}},
     "32-journey": {"y0": 0.0},
 }
 
 # A frame's top edge may not cut through text ("9:41" or a screen title sliced in half): a capture row there with this
-# many columns at SLICE_LEVEL or brighter is a slice. Clean edges measure 0; the slices this guard was made for, 103
-# (the status bar on the results) and 141 (the strum screen's title).
+# many bright or secondary-neutral text columns is a slice. Include grey subtitles, not just white titles;
+# this is a conservative pixel guard, not OCR or a substitute for visual review.
 SLICE_COLUMNS = 8
 SLICE_LEVEL = 200
 
@@ -148,7 +144,7 @@ def _english_table(device: str, page: str | None) -> tuple[str, list[str]] | Non
 
 
 def pages() -> list[str]:
-    """The Custom Product Pages with a table of their own ("### iPhone 6.9": violin page" -> "violin")."""
+    """The Custom Product Pages with a table of their own ("### iPhone ...: violin page" -> "violin")."""
     found = []
     section = False
     for line in LISTING.read_text(encoding="utf-8").splitlines():
@@ -161,6 +157,7 @@ def pages() -> list[str]:
 
 def plan(device: str, page: str | None = None, locale: str | None = None) -> list[tuple]:
     """The rows of a set. A locale's rows take their captions from its table and their looks from the English rows."""
+    device = screenshot_role(device).caption_device
     table = _english_table(device, page)
     english = _rows(table[1]) if table else []
     if not locale or locale.lower() in ("en", "en-us"):
@@ -199,6 +196,16 @@ def _localized_rows(locale: str, device: str) -> list[tuple]:
     return _rows(lines)
 
 
+def counted_tune(title: str) -> str | None:
+    """Match SongOfTheDay.countedTune: treatments share a tune; exercises do not count."""
+    main = next((part for part in re.split(r'[:(（：]', title) if part), title)
+    for treatment in (', fingerpicked', ' on bass'):
+        if main.lower().endswith(treatment):
+            main = main[:-len(treatment)]
+    key = ''.join(character for character in main.lower() if character.isalpha() or character.isnumeric())
+    return key if key and key not in {'yourarrangement', 'walkingthebluesina'} else None
+
+
 def build_counts() -> dict:
     courses = json.loads(CURRICULUM.read_text(encoding="utf-8"))["courses"]
     catalog = json.loads(CATALOG.read_text(encoding="utf-8"))
@@ -225,8 +232,8 @@ def build_counts() -> dict:
         "courses": len(teaching),
         "instruments": len(catalog["instruments"]),
         "tunings": len(catalog["tunings"]),
-        # A song is a title: the same song arranged for two instruments is one song to a buyer.
-        "songs": len({title(lesson).strip().lower() for lesson in songs}),
+        # Match the app's distinctTuneCount, including treatment/punctuation aliases and exercises.
+        "songs": len({key for lesson in songs if (key := counted_tune(title(lesson))) is not None}),
         "originals": len({title(lesson).strip().lower() for lesson in originals}),
     }
     # The translators' source writes the song count as a round floor ("{songs_floor}+").
@@ -540,40 +547,69 @@ class Frame:
     def px(self, value: float) -> int:
         return int(round(value * self.unit))
 
-    def caption(self, title: str, line: str, top: float, left: float, right: float, align: str = "centre") -> int:
-        """The caption (Sora SemiBold, 136 px down to 96 at 1320 wide) and the supporting line under it (Sora Medium,
-        56 px, the ink at 60 %); returns the foot of the block."""
-        from PIL import ImageDraw
+    def caption_plan(self, title: str, line: str, left: float, right: float, align: str = "centre"):
+        """Measure shaped glyph ink on an *unclipped* mask, not just font advances.
+
+        Baseline/ascender anchors can put Arabic descenders below the nominal line
+        advance. The same runs are used to measure and draw the final composition.
+        """
+        from PIL import Image, ImageDraw
         width = right - left
         font, lines = art.fit_lines(title, "SemiBold", self.px(136), self.px(96), width)
         small, rows = art.fit_lines(line, "Medium", self.px(56), self.px(52), width) if line else (None, [])
-        draw = ImageDraw.Draw(self.canvas)
         x, anchor = {"centre": ((left + right) / 2, "ma"), "left": (left, "la"), "right": (right, "ra")}[align]
-        y = top
+        runs = []
+        y = 0
         step = art.line_step(font, lines, 1.04)
         for text in lines:
-            draw.text((x, y), text, font=font, fill=self.ink, anchor=anchor, **art.text_layout())
+            runs.append((x, y, text, font, anchor, False))
             bottom = y + font.getbbox(text, anchor=anchor, **art.text_layout())[3]
             y += step
         if lines:
             y = max(y, bottom)
         if rows:
             y += self.px(26)
-            sample = self.canvas.getpixel((int(min(max(x, 0), self.w - 1)), int(min(y + small.size // 2, self.h - 1))))
-            soft = art.mix(self.ink, sample[:3], 0.40)
             step = art.line_step(small, rows, 1.18)
             for text in rows:
-                draw.text((x, y), text, font=small, fill=soft, anchor=anchor, **art.text_layout())
+                runs.append((x, y, text, small, anchor, True))
                 bottom = y + small.getbbox(text, anchor=anchor, **art.text_layout())[3]
                 y += step
             y = max(y, bottom)
-        return int(y)
+        pad = self.px(200)
+        mask = Image.new("L", (self.w + 2 * pad, int(y) + 2 * pad), 0)
+        draw = ImageDraw.Draw(mask)
+        for x, row, text, font, anchor, _ in runs:
+            draw.text((x + pad, row + pad), text, font=font, fill=255, anchor=anchor, **art.text_layout())
+        bounds = mask.getbbox()
+        ink = tuple(value - pad for value in bounds) if bounds else (left, 0, left, 0)
+        return runs, int(y), ink
 
-    def card(self, picture, x: int, y: int, radius: int, corners=(True, True, True, True), rim: bool = True, shadow: int = 150):
+    def caption(self, title: str, line: str, top: float, left: float, right: float, align: str = "centre") -> int:
+        """Draw measured type, failing closed if actual ink crosses the safe canvas."""
+        from PIL import ImageDraw
+        runs, foot, ink = self.caption_plan(title, line, left, right, align)
+        bounds = (ink[0], ink[1] + top, ink[2], ink[3] + top)
+        if bounds[0] < 0 or bounds[2] > self.w or bounds[1] < 0 or bounds[3] > self.h - self.px(64):
+            raise ValueError(f"Caption ink {bounds} exceeds canvas/footer safe area {self.size}: {title}")
+        self.caption_bounds = bounds
+        draw = ImageDraw.Draw(self.canvas)
+        soft = None
+        for x, row, text, font, anchor, supporting in runs:
+            if supporting and soft is None:
+                sample = self.canvas.getpixel((int(min(max(x, 0), self.w - 1)),
+                                               int(min(top + row + font.size // 2, self.h - 1))))
+                soft = art.mix(self.ink, sample[:3], 0.40)
+            draw.text((x, top + row), text, font=font, fill=soft if supporting else self.ink,
+                      anchor=anchor, **art.text_layout())
+        return int(top + foot)
+
+    def card(self, picture, x: int, y: int, radius: int, rim: bool = True, shadow: int = 150):
         """A screen card: shadow, picture with rounded corners, a thin rim of the accent."""
         box = (x, y, x + picture.width, y + picture.height)
         art.drop_shadow(self.canvas, box, radius, self.px(46), shadow if not self.light else 70, self.px(24))
-        self.canvas.alpha_composite(art.rounded(picture, radius, corners), (int(x), int(y)))
+        # A nominal bleed may end on-canvas after native-height clamping. Match
+        # the always-rounded rim/shadow even then; never expose square pixels.
+        self.canvas.alpha_composite(art.rounded(picture, radius), (int(x), int(y)))
         if rim:
             colour = art.mix(art.STAGE, art.tint(self.accent), 0.5) if not self.light else (205, 198, 186)
             art.outline(self.canvas, (x, y, x + picture.width - 1, y + picture.height - 1), radius, colour + (255,), max(2, self.px(3)))
@@ -594,14 +630,25 @@ def _screen_radius(width: int) -> int:
     return int(width * 0.105)
 
 
+def focus_for(capture: str, device: str) -> dict:
+    """Keep measured crop adjustments role-specific even when caption tables are shared."""
+    focus = dict(FOCUS.get(capture, {}))
+    if device in focus.get("y0_by_device", {}):
+        focus["y0"] = focus["y0_by_device"][device]
+    return focus
+
+
 def compose(look: str, shot_path: Path, capture: str, title: str, line: str, device: str, out: Path) -> tuple:
     shot = upright(shot_path)
+    role = screenshot_role(device)
+    if role.caption_device == "iphone" and shot.size != role.native_size:
+        raise ValueError(f"{device}: need actual native {role.native_size} capture, got {shot.size}")
     size = frame_size(device, shot)
     parts = look.split()
     layout = parts[0] if parts else "zoom"
     accent = parts[1] if len(parts) > 1 else "mint"
     landscape = size[0] > size[1]
-    focus = FOCUS.get(capture, {})
+    focus = focus_for(capture, device)
     if landscape:
         layout = layout if layout in ("side", "side-right", "light") else "side"
         return _landscape(layout, accent, shot, title, line, size, out)
@@ -613,96 +660,142 @@ def compose(look: str, shot_path: Path, capture: str, title: str, line: str, dev
     return frame.save(out)
 
 
+def _contained_screen(shot, box, width, height):
+    """Fit a chosen native region without stretching or silently cropping its foot."""
+    box = tuple(int(round(value)) for value in box)
+    if width <= 0 or height <= 0 or box[2] <= box[0] or box[3] <= box[1]:
+        raise ValueError("Native screen has no positive available composition area")
+    scale = min(width / (box[2] - box[0]), height / (box[3] - box[1]))
+    return _scaled(shot, scale, box), scale
+
+
 def _zoom(layout, accent, shot, focus, title, line, size):
-    """The hero region, enlarged to the frame's width less its sides, bleeding off the bottom."""
+    """A large native hero region; complete actions remain above the safe footer."""
     frame = Frame(size, accent)
     m = frame.px(84)
     foot = frame.caption(title, line, frame.px(150), m, frame.w - m)
     x0, x1 = focus.get("x", (0.0, 1.0))
     y0 = focus.get("y0", 0.0)
-    width = frame.w - 2 * frame.px(64)
-    scale = width / ((x1 - x0) * shot.width)
     top = foot + frame.px(70)
-    visible = (frame.h - top + frame.px(80)) / scale
-    box = (x0 * shot.width, y0 * shot.height, x1 * shot.width, min(shot.height, y0 * shot.height + visible))
-    picture = _scaled(shot, scale, box)
-    frame.card(picture, frame.px(64), top, _screen_radius(width), corners=(True, True, False, False))
+    picture, _ = _contained_screen(shot, (x0 * shot.width, y0 * shot.height, x1 * shot.width, shot.height),
+                                   frame.w - 2 * frame.px(64), frame.h - top - frame.px(64))
+    frame.card(picture, (frame.w - picture.width) // 2, top, _screen_radius(picture.width))
     return frame
 
 
 def _breakout(layout, accent, shot, focus, title, line, size):
-    """The 3D headstock rising out of the screen: the screen card holds the readout and the string chips, enlarged;
-    above its top edge the picture goes on (the headstock, its peg ringed and ticked), unframed, fading out at its
-    sides and top, and over the card's rim, so it stands out of the screen and over the frame's stage."""
-    from PIL import Image, ImageDraw, ImageFilter
-    frame = Frame(size, accent, glow=(0.5, 0.30))
+    """The native instrument stage, intact, over a deep accent spotlight.
+
+    An axis-aligned feather cannot isolate an instrument from overlapping native
+    controls in every language. Keep the real stage and all its pegs/actions,
+    rather than dissolving meaningful UI into the marketing background.
+    """
+    frame = Frame(size, accent, glow=(0.5, 0.38))
     m = frame.px(84)
     foot = frame.caption(title, line, frame.px(150), m, frame.w - m)
-    cut, rise = focus.get("cut", 0.45), focus.get("rise", 0.07)
-    keep = focus.get("keep", (0.2, 0.8))
-    side = frame.px(70)
-    width = frame.w - 2 * side
-    bleed = frame.px(70)
-    # As wide as the frame allows, but the rise and the card together fit between the caption and the bottom edge.
-    scale = min(width / shot.width, (frame.h + bleed - foot - frame.px(30)) / ((1 - rise) * shot.height))
-    width = int(shot.width * scale)
-    x = (frame.w - width) // 2
-    card = _scaled(shot, scale, (0, cut * shot.height, shot.width, shot.height))
-    card_top = frame.h + bleed - card.height
-    frame.card(card, x, card_top, _screen_radius(width), corners=(True, True, False, False))
-    # The rising picture: from `rise` down to a little past the cut, so it laps over the card's rim.
-    lap = int(frame.px(90) / scale)
-    lifted = _scaled(shot, scale, (0, rise * shot.height, shot.width, min(shot.height, cut * shot.height + lap)))
-    mask = Image.new("L", lifted.size, 0)
-    left, right = keep[0] * lifted.width, keep[1] * lifted.width
-    feather = lifted.width * 0.045
-    ImageDraw.Draw(mask).rounded_rectangle([left + feather, feather, right - feather, lifted.height - feather * 0.5],
-                                            radius=int(feather * 2), fill=255)
-    mask = mask.filter(ImageFilter.GaussianBlur(feather * 0.7))
-    lifted_top = card_top - (lifted.height - int(lap * scale))
-    # Behind it, a pool of the capture's own stage colour (sampled along the kept region's edge), so the picture
-    # dissolves into the frame whatever the accent: no box where the stage's wash meets the frame's.
-    strip = lifted.crop((int(left), 0, int(right), lifted.height)).resize((32, 32))
-    border = [strip.getpixel((i, j)) for i in range(32) for j in range(32) if i in (0, 31) or j in (0, 31)]
-    pool_colour = tuple(sum(c[k] for c in border) // len(border) for k in range(3))
-    pad = int(feather * 8)
-    pool = Image.new("L", (lifted.width + 2 * pad, lifted.height + 2 * pad), 0)
-    ImageDraw.Draw(pool).ellipse([pad + left - feather * 2, pad + feather, pad + right + feather * 2,
-                                  pad + lifted.height + feather * 3], fill=235)
-    pool = pool.filter(ImageFilter.GaussianBlur(feather * 3))
-    wash = Image.new("RGBA", pool.size, pool_colour + (0,))
-    wash.putalpha(pool)
-    frame.canvas.alpha_composite(wash, (x - pad, lifted_top - pad))
-    rising = lifted.convert("RGBA")
-    rising.putalpha(mask)
-    frame.canvas.alpha_composite(rising, (x, lifted_top))
+    top = foot + frame.px(70)
+    screen, _ = _contained_screen(shot, (0, 0, shot.width, shot.height),
+                                  frame.w - 2 * frame.px(70), frame.h - top - frame.px(64))
+    frame.card(screen, (frame.w - screen.width) // 2, top, _screen_radius(screen.width), shadow=190)
     return frame
 
 
+def _ticked_strings_region(shot):
+    """Locate the six native note/badge shapes and their surrounding ink-free band.
+
+    SwiftUI uses different chord-header layouts by available width and language;
+    neither screen-height fractions nor locale-specific guesses are safe here.
+    This conservative detector requires six aligned, near-square mint/white
+    components. It preserves their full native pixels, including the white ticks
+    on either side in RTL/LTR, and refuses ambiguous/unrecognized captures.
+    """
+    width = shot.width
+    region = shot.convert("RGB").crop((0, 0, width, round(shot.height * .45)))
+    # Muted instructions count as protected ink too, not only white headlines.
+    pixels = region.get_flattened_data() if hasattr(region, "get_flattened_data") else region.getdata()
+    ink = bytearray((min(pixel) >= 100 and max(pixel) - min(pixel) <= 55)
+                    or (pixel[0] < 130 and pixel[1] > 170 and 90 < pixel[2] < 230
+                        and pixel[1] > pixel[2] * 1.05) for pixel in pixels)
+    remaining = ink.copy()
+    candidates = []
+    for index, value in enumerate(remaining):
+        if not value:
+            continue
+        remaining[index] = 0
+        stack = [index]
+        x0, y0, x1, y1, count = width, region.height, 0, 0, 0
+        while stack:
+            index = stack.pop()
+            y, x = divmod(index, width)
+            x0, y0, x1, y1 = min(x0, x), min(y0, y), max(x1, x), max(y1, y)
+            count += 1
+            neighbours = (index - width if y else -1,
+                          index + width if index + width < len(remaining) else -1,
+                          index - 1 if x else -1,
+                          index + 1 if x + 1 < width else -1)
+            for neighbour in neighbours:
+                if neighbour >= 0 and remaining[neighbour]:
+                    remaining[neighbour] = 0
+                    stack.append(neighbour)
+        w, h = x1 - x0 + 1, y1 - y0 + 1
+        if .06 * width < w < .14 * width and .75 < w / h < 1.25 and count > .4 * w * h:
+            candidates.append((x0, y0, x1 + 1, y1 + 1))
+    groups = {tuple(sorted(box for box in candidates if abs(box[1] - anchor[1]) < .02 * width))
+              for anchor in candidates}
+    groups = [group for group in groups if len(group) == 6]
+    if len(groups) != 1:
+        raise ValueError("Callout needs six unambiguous native ticked strings; review the source capture")
+    markers = groups[0]
+    x0, y0 = min(box[0] for box in markers), min(box[1] for box in markers)
+    x1, y1 = max(box[2] for box in markers), max(box[3] for box in markers)
+    # This also protects nearby native selectors: search all columns, not just Em.
+    above = next((y + 1 for y in range(y0 - 1, -1, -1) if any(ink[y * width:(y + 1) * width])), None)
+    below = next((y for y in range(y1, region.height) if any(ink[y * width:(y + 1) * width])), None)
+    padding = round(max(box[3] - box[1] for box in markers) * .18)
+    box = (x0 - padding, y0 - padding, x1 + padding, y1 + padding)
+    if (above is None or below is None or box[0] < 0 or box[2] > width
+            or box[1] <= above or box[3] >= below):
+        raise ValueError("Native string callout has no verified whitespace; review the source capture")
+    return box, (above, below)
+
+
+def _callout_geometry(frame, shot, focus, scale, x, top, width):
+    """Enlarge within native-content bounds; never mirror physical string order."""
+    if focus["detail"] != "ticked-strings":
+        raise ValueError("Callout requires a supported native-content detector")
+    box, (clear_top, clear_bottom) = _ticked_strings_region(shot)
+    y0 = round(focus.get("y0", 0.0) * shot.height)
+    gap = frame.px(12)
+    safe_top = top + (clear_top - y0) * scale + gap
+    safe_bottom = top + (clear_bottom - y0) * scale - gap
+    zoom = min(scale * 1.55, (frame.w - 2 * frame.px(48)) / (box[2] - box[0]),
+               (safe_bottom - safe_top) / (box[3] - box[1]))
+    if zoom <= scale:
+        raise ValueError("Native string callout cannot be enlarged without covering protected UI")
+    picture = _scaled(shot, zoom, box)
+    centre_y = top + ((box[1] + box[3]) / 2 - y0) * scale
+    cy = round(max(safe_top, min(centre_y - picture.height / 2, safe_bottom - picture.height)))
+    wanted_x = x - frame.px(150) if art.text_layout()["direction"] == "rtl" else x + width - picture.width + frame.px(150)
+    cx = max(frame.px(48), min(frame.w - frame.px(48) - picture.width, wanted_x))
+    return picture, cx, cy
+
+
 def _callout(layout, accent, shot, focus, title, line, size):
-    """The whole screen, its key detail enlarged in a card that breaks out over the screen's right edge."""
+    """A complete native screen with a bounded enlargement of its six strings."""
     frame = Frame(size, accent)
     m = frame.px(84)
     foot = frame.caption(title, line, frame.px(150), m, frame.w - m)
-    width = int(frame.w * 0.78)
-    scale = width / shot.width
-    x = frame.px(70)
     top = foot + frame.px(70)
-    visible = (frame.h - top + frame.px(80)) / scale
     y0 = focus.get("y0", 0.0)
-    screen = _scaled(shot, scale, (0, y0 * shot.height, shot.width, min(shot.height, y0 * shot.height + visible)))
-    frame.card(screen, x, top, _screen_radius(width), corners=(True, True, False, False))
-    detail = focus.get("detail")
-    if detail:
-        dx0, dy0, dx1, dy1 = detail
-        # Half as large again as in the screen, but never wider than the frame less its margins.
-        zoom = min(scale * 1.55, (frame.w - 2 * frame.px(48)) / ((dx1 - dx0) * shot.width))
-        picture = _scaled(shot, zoom, (dx0 * shot.width, dy0 * shot.height, dx1 * shot.width, dy1 * shot.height))
-        # Over the detail's own place in the screen, pushed right so it breaks out past the screen's edge.
-        centre_y = top + ((dy0 + dy1) / 2 - y0) * shot.height * scale
-        cx = max(frame.px(48), min(frame.w - frame.px(48) - picture.width, x + width - picture.width + frame.px(150)))
-        cy = int(centre_y - picture.height / 2 + frame.px(40))
-        frame.card(picture, cx, cy, frame.px(34), shadow=190)
+    screen, scale = _contained_screen(shot, (0, y0 * shot.height, shot.width, shot.height),
+                                      int(frame.w * 0.78), frame.h - top - frame.px(64))
+    x = frame.w - screen.width - frame.px(70) if art.text_layout()["direction"] == "rtl" else frame.px(70)
+    frame.card(screen, x, top, _screen_radius(screen.width))
+    if focus.get("detail"):
+        picture, cx, cy = _callout_geometry(frame, shot, focus, scale, x, top, screen.width)
+        # A drop shadow here would darken protected native labels even outside
+        # the card bounds. A crisp accent rim separates the enlarged detail.
+        frame.card(picture, cx, cy, frame.px(26), shadow=0)
     return frame
 
 
@@ -746,7 +839,7 @@ def _wall(layout, accent, shot, focus, title, line, size):
     visible = (frame.h - top + frame.px(80)) / scale
     y0 = focus.get("y0", 0.0)
     screen = _scaled(shot, scale, (0, y0 * shot.height, shot.width, min(shot.height, y0 * shot.height + visible)))
-    frame.card(screen, (frame.w - width) // 2, top, _screen_radius(width), corners=(True, True, False, False), shadow=200)
+    frame.card(screen, (frame.w - width) // 2, top, _screen_radius(width), shadow=200)
     return frame
 
 
@@ -755,102 +848,130 @@ def _light(layout, accent, shot, focus, title, line, size):
     frame = Frame(size, accent, light=True, glow=(0.5, 0.55))
     m = frame.px(84)
     foot = frame.caption(title, line, frame.px(150), m, frame.w - m)
-    width = int(frame.w * 0.82)
-    scale = width / shot.width
     top = foot + frame.px(80)
-    visible = (frame.h - top + frame.px(80)) / scale
     y0 = focus.get("y0", 0.0)
-    screen = _scaled(shot, scale, (0, y0 * shot.height, shot.width, min(shot.height, y0 * shot.height + visible)))
-    frame.card(screen, (frame.w - width) // 2, top, _screen_radius(width), corners=(True, True, False, False), rim=False)
+    screen, _ = _contained_screen(shot, (0, y0 * shot.height, shot.width, shot.height),
+                                  int(frame.w * 0.82), frame.h - top - frame.px(64))
+    frame.card(screen, (frame.w - screen.width) // 2, top, _screen_radius(screen.width), rim=False)
     return frame
 
 
 def _offset(layout, accent, shot, focus, title, line, size):
-    """The caption set to one side, the screen shifted the other way, bleeding off that edge and the bottom."""
+    """Offset the screen without cutting native labels at either horizontal edge."""
     left = layout == "offset-left"
+    if art.text_layout()["direction"] == "rtl":
+        left = not left  # Reflect placement, never source pixels or glyphs.
     frame = Frame(size, accent, glow=(0.75 if left else 0.25, 0.12))
     m = frame.px(96)
     foot = frame.caption(title, line, frame.px(160), m, frame.w - m - frame.px(40), align="right" if left else "left")
-    width = int(frame.w * 0.86)
-    scale = width / shot.width
     top = foot + frame.px(80)
-    visible = (frame.h - top + frame.px(80)) / scale
     y0 = focus.get("y0", 0.0)
-    screen = _scaled(shot, scale, (0, y0 * shot.height, shot.width, min(shot.height, y0 * shot.height + visible)))
-    # Left-aligned screens (a title, a column of cards) lose nothing on the right; keep their left edge on the frame.
-    x = frame.px(36) if left else frame.w - width + frame.px(70)
-    corners = (True, True, False, False) if left else (True, False, False, False)
-    frame.card(screen, x, top, _screen_radius(width), corners=corners)
+    screen, _ = _contained_screen(shot, (0, y0 * shot.height, shot.width, shot.height),
+                                  int(frame.w * 0.86), frame.h - top - frame.px(64))
+    # Retain both edges and the complete native tab bar, at one uniform scale.
+    inset = frame.px(36)
+    x = inset if left else frame.w - screen.width - inset
+    frame.card(screen, x, top, _screen_radius(screen.width))
     return frame
+
+
+def _flip_geometry(shot, size, y0, bottom=None):
+    """Fit the complete measured native crop between a top inset and the caption.
+
+    Caption height is language/font dependent; callers pass its actual safe top.
+    The default is retained for the source-edge guard, whose source row is now
+    invariant: fitting never hides a different top row off-canvas.
+    """
+    unit = min(size) / 1320
+    px = lambda value: int(round(value * unit))
+    bottom = size[1] - px(560) if bottom is None else bottom
+    start = int(round(y0 * shot.height))
+    scale = min((size[0] - 2 * px(64)) / shot.width, (bottom - px(64)) / (shot.height - start))
+    screen_height = max(1, int((shot.height - start) * scale))
+    return (0, start, shot.width, shot.height), scale, bottom - screen_height, bottom
 
 
 def _flip(layout, accent, shot, focus, title, line, size):
-    """The screen from the top, bleeding off it, the caption at the foot."""
+    """The whole measured screen region above an ink-measured footer caption."""
     frame = Frame(size, accent, glow=(0.5, 0.86))
     m = frame.px(84)
-    width = frame.w - 2 * frame.px(64)
-    scale = width / shot.width
-    caption_room = frame.px(560)
-    bottom = frame.h - caption_room
-    y0 = focus.get("y0", 0.0)
-    visible = (bottom + frame.px(60)) / scale
-    screen = _scaled(shot, scale, (0, y0 * shot.height, shot.width, min(shot.height, y0 * shot.height + visible)))
-    frame.card(screen, frame.px(64), bottom - screen.height, _screen_radius(width), corners=(False, False, True, True))
-    frame.caption(title, line, bottom + frame.px(110), m, frame.w - m)
+    _, advance, ink = frame.caption_plan(title, line, m, frame.w - m)
+    caption_top = frame.h - frame.px(64) - max(advance, ink[3])
+    box, scale, top, bottom = _flip_geometry(shot, size, focus.get("y0", 0.0), caption_top - frame.px(110))
+    screen = _scaled(shot, scale, box)
+    frame.card(screen, (frame.w - screen.width) // 2, top, _screen_radius(screen.width))
+    frame.caption(title, line, caption_top, m, frame.w - m)
     return frame
 
 
+LANDSCAPE_STATUS_ROWS = 60  # Verified native 2752x2064 EN/DE status/content whitespace.
+LANDSCAPE_CORNER_RADIUS = 16  # Source pixels: stays inside the native Done pill's 20px inset.
+
+
+def _landscape_x(canvas_width: int, screen_width: int, inset: int, *, light: bool, left: bool) -> int:
+    """Centre the height-fitted screen; caption alignment still alternates/reflects.
+
+    A tall translated heading can make the complete native screen much narrower
+    than the old bleed. Edge-pinning then leaves an unbalanced empty half-frame.
+    """
+    return (canvas_width - screen_width) // 2
+
+
 def _landscape(layout, accent, shot, title, line, size, out: Path) -> tuple:
-    """iPad landscape: the caption across the top, set left (`side`) or right (`side-right`) with the screen shifted the
-    other way and bleeding off that edge and the bottom; or the light frame, caption centred."""
+    """iPad landscape: an aligned heading above the centred, complete native viewport."""
     light = layout == "light"
     left = layout != "side-right"
+    rtl = art.text_layout()["direction"] == "rtl"
+    if rtl and not light:
+        left = not left  # Reflect placement, never native pixels or glyphs.
     frame = Frame(size, accent, light=light, glow=(0.5 if light else (0.25 if left else 0.75), 0.10))
     m = frame.px(120)
     align = "centre" if light else ("left" if left else "right")
     foot = frame.caption(title, line, frame.px(96), m, frame.w - m, align=align)
-    width = int(frame.w * (0.80 if light else 0.86))
-    scale = width / shot.width
     top = foot + frame.px(64)
-    visible = (frame.h - top + frame.px(60)) / scale
-    screen = _scaled(shot, scale, (0, 0, shot.width, min(shot.height, visible)))
-    if light:
-        x = (frame.w - width) // 2
-    else:
-        x = frame.w - width + frame.px(80) if left else -frame.px(80)
-    corners = (True, True, False, False) if light else ((True, False, False, False) if left else (False, True, False, False))
-    frame.card(screen, x, top, frame.px(40), corners=corners, rim=not light)
+    screen, _ = _contained_screen(shot, (0, LANDSCAPE_STATUS_ROWS, shot.width, shot.height),
+                                  int(frame.w * (0.80 if light else 0.86)),
+                                  frame.h - top - frame.px(64))
+    x = _landscape_x(frame.w, screen.width, frame.px(80), light=light, left=left)
+    # Done starts four native pixels below the crop: an inset decorative rim
+    # would erase its top cap. Keep the native control, not an intrusive border.
+    frame.card(screen, x, top, max(1, round(LANDSCAPE_CORNER_RADIUS * screen.width / shot.width)), rim=False)
     return frame.save(out)
 
 
 def top_row(look: str, capture: str, device: str, shot) -> int | None:
     """The capture's row at the visible top edge of its frame's screen picture; None where the layout starts at the
-    capture's own top or fades its edge (a breakout's rising picture)."""
+    capture's own top."""
     size = frame_size(device, shot)
     if size[0] > size[1]:
-        return None
+        return LANDSCAPE_STATUS_ROWS
     parts = look.split()
     layout = parts[0] if parts else "zoom"
     if device == "ipad":
         layout = "light" if layout == "light" else "zoom"
     if layout == "breakout":
         return None
-    y0 = FOCUS.get(capture, {}).get("y0", 0.0)
+    y0 = focus_for(capture, device).get("y0", 0.0)
     row = y0 * shot.height
     if layout == "flip":
-        # `_flip` lets the picture run 60 px (at 1320 wide) past the frame's top edge.
-        unit = min(size) / 1320
-        scale = (size[0] - 2 * int(round(64 * unit))) / shot.width
-        row += int(round(60 * unit)) / scale
+        # Fitting preserves the actual source row without any off-canvas bleed.
+        box, scale, top, _ = _flip_geometry(shot, size, y0)
+        row = box[1] + max(0, -top) / scale
     return int(row) if row >= 1 else None
 
 
 def sliced(shot, row: int) -> int:
-    """How many columns of the capture hold near-white (text) within two rows of `row`."""
-    gray = shot.convert("L")
-    pixels = gray.load()
-    rows = range(max(0, row - 2), min(gray.height, row + 3))
-    return sum(1 for x in range(gray.width) if any(pixels[x, y] >= SLICE_LEVEL for y in rows))
+    """Count bright or secondary neutral text at the visible edge, including grey subtitles."""
+    rgb = shot.convert("RGB")
+    pixels = rgb.load()
+    rows = range(max(0, row - 2), min(rgb.height, row + 3))
+
+    def text_pixel(pixel):
+        r, g, b = pixel
+        luminance = 0.299 * r + 0.587 * g + 0.114 * b
+        return luminance >= SLICE_LEVEL or (luminance >= 100 and max(pixel) - min(pixel) <= 24)
+
+    return sum(1 for x in range(rgb.width) if any(text_pixel(pixels[x, y]) for y in rows))
 
 
 def size_problem(device: str, path: Path, shot_path: Path):
@@ -863,6 +984,8 @@ def size_problem(device: str, path: Path, shot_path: Path):
     if size not in ((w, h), (h, w)):
         return f"{path.name} is {size[0]}x{size[1]}; App Store Connect takes {w}x{h} or {h}x{w}"
     shot = upright(shot_path)
+    if shot.size not in ((w, h), (h, w)):
+        return f"{shot_path.name} is {shot.width}x{shot.height} upright; need a native {w}x{h} or {h}x{w} capture"
     if (size[0] > size[1]) != (shot.width > shot.height):
         return f"{path.name} is {size[0]}x{size[1]} but its capture is {shot.width}x{shot.height} upright"
     return None
@@ -937,7 +1060,7 @@ def render(folder: Path, out: Path, device: str, page: str | None, locale: str |
         row = top_row(look, name, device, shot)
         if row is not None and sliced(shot, row) >= SLICE_COLUMNS:
             unusable.append(f"{where}: its top edge cuts through text at row {row} of the capture ({sliced(shot, row)} "
-                            "bright columns): move its y0 in FOCUS into a gap")
+                            "text-like columns): move its y0 in FOCUS into a gap")
             continue
         written.append(target)
         print("wrote", target, f"{size[0]}x{size[1]}", look)
@@ -977,7 +1100,9 @@ def main():
         import PIL  # noqa: F401
     except ImportError:
         sys.exit("Pillow is missing: python3 -m pip install pillow")
-    device = "ipad" if "--ipad" in flags else "iphone"
+    if "--ipad" in flags and "--iphone-large" in flags:
+        sys.exit("Choose one explicit screenshot role, not both --ipad and --iphone-large")
+    device = "ipad" if "--ipad" in flags else "iphone-large" if "--iphone-large" in flags else "iphone"
     sys.exit(render(Path(positional[0]), Path(positional[1]), device, page, locale, "--allow-english" in flags))
 
 

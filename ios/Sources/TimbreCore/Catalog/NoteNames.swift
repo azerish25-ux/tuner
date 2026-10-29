@@ -356,6 +356,8 @@ public enum NoteNames {
                                           fixedDo: ["דו", "רה", "מי", "פה", "סול", "לה", "סי"])
             case "ja": return SpokenWords(sharp: "シャープ", flat: "フラット", doubleSharp: "ダブルシャープ", doubleFlat: "ダブルフラット", tight: true)
             case "zh": return SpokenWords(sharp: "升", flat: "降", doubleSharp: "重升", doubleFlat: "重降", prefix: true)
+            case "or": return SpokenWords(sharp: "ଶାର୍ପ", flat: "ଫ୍ଲାଟ୍", doubleSharp: "ଡବଲ୍ ଶାର୍ପ", doubleFlat: "ଡବଲ୍ ଫ୍ଲାଟ୍")
+            case "ms": return SpokenWords(sharp: "syap", flat: "flet", doubleSharp: "syap berganda", doubleFlat: "flet berganda")
             case "ko": return SpokenWords(sharp: "샵", flat: "플랫", doubleSharp: "더블 샵", doubleFlat: "더블 플랫")
             default: return nil
             }

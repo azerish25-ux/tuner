@@ -61,8 +61,9 @@ struct AlongStep: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.accessibilityVoiceOverEnabled) private var voiceOver
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.dynamicTypeSize) private var typeSize
 
-    enum Phase { case ready, playing, done }
+    enum Phase: Equatable { case ready, playing, done }
 
     /// One bar of the tune on repeat: its notes `passes` times back to back (each held no longer than the bar), at `bpm`.
     struct BarLoop: Equatable {
@@ -151,19 +152,18 @@ struct AlongStep: View {
     private var band: BandArrangement { arrangement(under: chart) }
 
     var body: some View {
-        VStack(spacing: 14) {
-            header
-            stage
-            if !lyrics.isEmpty { lyricRow }
-            // Its whole height, always: the stage gives up the room instead, so "Next" never sits over its edge.
-            upcoming
-                .frame(minHeight: 44)
-                .fixedSize(horizontal: false, vertical: true)
-                .opacity(phase == .done ? 0 : 1)
-                .accessibilityHidden(phase == .done)
-            Spacer(minLength: 0)
-            MicrophoneHint()
-            controls
+        VStack(spacing: 0) {
+            if typeSize.isAccessibilitySize {
+                ScrollViewReader { scroll in
+                    ScrollView { stepContent }
+                        .accessibilityIdentifier("along.scroll")
+                        .onChange(of: phase) { _, phase in
+                            if phase != .ready { scroll.scrollTo("along.runway", anchor: .top) }
+                        }
+                }
+            } else {
+                stepContent
+            }
         }
         .onAppear {
             let found = LeadChart.bars(underStep: notes, meter: beatsPerBar, in: course)
@@ -193,6 +193,24 @@ struct AlongStep: View {
 
     // MARK: Pieces
 
+    private var stepContent: some View {
+        VStack(spacing: 14) {
+            header
+            stage
+                .id("along.runway")
+            if !lyrics.isEmpty { lyricRow }
+            // Its whole height, always: the stage gives up the room instead, so "Next" never sits over its edge.
+            upcoming
+                .frame(minHeight: 44)
+                .fixedSize(horizontal: false, vertical: true)
+                .opacity(phase == .done ? 0 : 1)
+                .accessibilityHidden(phase == .done)
+            Spacer(minLength: 0)
+            MicrophoneHint()
+            controls
+        }
+    }
+
     private var header: some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack(alignment: .top, spacing: 8) {
@@ -208,15 +226,24 @@ struct AlongStep: View {
             }
             // The combo lives in the stage's HUD; the row keeps its height so the stage never shifts.
             .frame(minHeight: 36)
-            HStack(spacing: 8) {
-                Text("\(Int(tempo)) BPM · \(take.count) notes").font(.subheadline).foregroundStyle(Palette.inkSoft)
-                    .lineLimit(1).minimumScaleFactor(0.8)
-                if let loop { loopBadge(loop) } else { tempoBadge }
-                Spacer(minLength: 8)
-                CalibrateButton(audio: store.audio, accent: accent) { calibrating = true }
-                    .disabled(phase == .playing)
-                    .opacity(phase == .playing ? 0.4 : 1)
-                BandControls(audio: store.audio, accent: accent)
+            let detailsLayout = typeSize.isAccessibilitySize
+                ? AnyLayout(VStackLayout(alignment: .leading, spacing: 8))
+                : AnyLayout(HStackLayout(spacing: 8))
+            detailsLayout {
+                HStack(alignment: .firstTextBaseline, spacing: 8) {
+                    Text("\(Int(tempo)) BPM · \(take.count) notes").font(.subheadline).foregroundStyle(Palette.inkSoft)
+                        .lineLimit(typeSize.isAccessibilitySize ? nil : 1)
+                        .minimumScaleFactor(typeSize.isAccessibilitySize ? 1 : 0.8)
+                    if let loop { loopBadge(loop) } else { tempoBadge }
+                    Spacer(minLength: 8)
+                }
+                HStack(spacing: 8) {
+                    CalibrateButton(audio: store.audio, accent: accent) { calibrating = true }
+                        .disabled(phase == .playing)
+                        .opacity(phase == .playing ? 0.4 : 1)
+                    BandControls(audio: store.audio, accent: accent)
+                }
+                .frame(maxWidth: typeSize.isAccessibilitySize ? .infinity : nil, alignment: .trailing)
             }
         }
         .padding(.horizontal, Metrics.gutter).padding(.top, 8)
@@ -224,9 +251,20 @@ struct AlongStep: View {
         .fixedSize(horizontal: false, vertical: true)
     }
 
-    /// The runway with the count-in over it, the combo HUD in its top corners and the results in its place once a
-    /// take ends.
-    private var stage: some View {
+    /// AX results participate in the existing outer scroll layout instead of overflowing a 420pt overlay.
+    /// Ready/playing and all normal-type stages retain their existing bounds and rendering.
+    @ViewBuilder private var stage: some View {
+        if typeSize.isAccessibilitySize && phase == .done {
+            // Retain the compact result fields, not its constrained height; the optional timing strip stays out.
+            AlongResultSurface(tint: scoreTint) { summaryCard(compact: true) }
+                .padding(.horizontal, 12)
+        } else {
+            runwayStage
+        }
+    }
+
+    /// The runway with the count-in and combo HUD; normal-type results keep the same bounded overlay.
+    private var runwayStage: some View {
         TimelineView(.animation(paused: phase != .playing)) { _ in
             let now = CACurrentMediaTime()
             // Seconds since beat 0 on the heard clock (negative during the count-in).
@@ -248,7 +286,8 @@ struct AlongStep: View {
                                       canSpeak: voiceOver) { spokenChoice = !spoken })
         // Shrinks on short phones rather than pushing the header off the top; the controls keep one height
         // through ready, playing and done, so the stage never changes size when a take starts or ends.
-        .frame(minHeight: 220, maxHeight: fretted ? 420 : 300)
+        .frame(minHeight: typeSize.isAccessibilitySize ? 420 : 220,
+               maxHeight: typeSize.isAccessibilitySize ? 420 : (fretted ? 420 : 300))
         // The combo and multiplier over the stage's top corners while a take plays.
         .overlay(alignment: .top) {
             if phase == .playing {
@@ -283,6 +322,7 @@ struct AlongStep: View {
     private var tempoBadge: some View {
         Text("\(ladder.percent)%")
             .font(Typeface.number(.caption))
+            .fixedSize()
             .foregroundStyle(rungTint(ladder.rung))
             .contentTransition(.numericText(value: Double(ladder.percent)))
             .padding(.horizontal, 8).padding(.vertical, 3)
@@ -396,18 +436,22 @@ struct AlongStep: View {
         if take.indices.contains(index) {
             let note = take[index]
             VStack(alignment: .leading, spacing: 10) {
-                HStack(spacing: 10) {
-                    Text("Next").font(Typeface.label(.footnote)).foregroundStyle(Palette.inkFaint)
-                    Text(NoteName.name(note.midi)).font(Typeface.display(.title3)).foregroundStyle(Palette.ink)
+                // Keep the cue together, but let its complete playing-place label move below it.
+                ChordFlowLayout(spacing: 10, lineSpacing: 8) {
+                    HStack(alignment: .firstTextBaseline, spacing: 10) {
+                        Text("Next").font(Typeface.label(.footnote)).foregroundStyle(Palette.inkFaint)
+                        Text(NoteName.name(note.midi)).font(Typeface.display(.title3)).foregroundStyle(Palette.ink)
+                    }
                     if fretted, let at = note.at { place(at, tint: nextTint(note)) }
-                    Spacer()
                 }
                 // Letters and places cross-fade: rolling them like digits doubles a note's octave figure.
                 .contentTransition(.opacity)
                 .accessibilityElement(children: .ignore)
                 .accessibilityLabel(Text("Next: \(NotePlace.spoken(note, fretted: fretted, board: board))"))
+                .accessibilityIdentifier("along.next")
                 UpNextRail(notes: take, from: index + 1, fretted: fretted, strings: course.stringCount, accent: accent, fingerboard: board)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, Metrics.gutter)
             .animation(reduceMotion ? nil : Motion.quick, value: index)
         }
@@ -416,11 +460,7 @@ struct AlongStep: View {
     /// Where to play the next note, on a chip in its string's colour: "String 2, fret 3" and the finger's tag on a
     /// fretted neck; "String 1, finger 1" on a fingerboard, where the finger is the place.
     @ViewBuilder private func place(_ at: Fretting, tint: Color) -> some View {
-        Text(verbatim: NotePlace.words(at, board: board))
-            .font(Typeface.label(.body)).foregroundStyle(tint)
-            .lineLimit(1).minimumScaleFactor(0.8)
-            .padding(.horizontal, 12).padding(.vertical, 6)
-            .background(Capsule().fill(tint.opacity(0.12)))
+        AlongPlaceLabel(words: NotePlace.words(at, board: board), tint: tint)
         if board == nil, at.fret > 0, let finger = at.finger, finger > 0 { fingerTag(finger, tint: tint) }
     }
 
@@ -487,27 +527,35 @@ struct AlongStep: View {
                     Text(verdict).font(Typeface.label(.body)).foregroundStyle(scoreTint)
                 }
                 Text("\(percent)%").font(Typeface.note(compact ? .display : .hero)).foregroundStyle(scoreTint)
-                    .minimumScaleFactor(0.7)
+                    .minimumScaleFactor(typeSize.isAccessibilitySize ? 1 : 0.7)
             }
             // Where VoiceOver lands when a take ends: the whole result in one sentence.
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(Text(verbatim: resultSpoken))
             .accessibilityAddTraits(.isHeader)
             .accessibilityFocused($resultsFocused)
+            .accessibilityActions {
+                if typeSize.isAccessibilitySize {
+                    // The intrinsic results replace the runway's AX node, not its spoken-cue choice.
+                    Button {
+                        guard voiceOver else { return }
+                        spokenChoice = !spoken
+                    } label: {
+                        spoken ? Text("Turn spoken cues off") : Text("Turn spoken cues on")
+                    }
+                }
+            }
             if steppedUp { tempoUp }
             // In the grades' colours, as on the ribbon and the timing strip.
-            HStack(spacing: 18) {
-                stat("Perfect", session.count(.perfect), TakeRibbon.color(.perfect, accent: accent))
-                stat("Good", session.count(.good), TakeRibbon.color(.good, accent: accent))
-                stat("Early/late", session.count(.ok), TakeRibbon.color(.ok, accent: accent))
-                stat("Missed", session.count(.miss), TakeRibbon.color(.miss, accent: accent))
-            }
+            AlongResultStats(perfect: session.count(.perfect), good: session.count(.good),
+                             earlyLate: session.count(.ok), missed: session.count(.miss), accent: accent)
             if !compact {
                 // A dot per note, early above the line and late below; tapping a missed note loops its bar, slower.
                 HighwayTimingStrip(count: take.count, judgments: session.judge.judgments, accent: accent, calm: reduceMotion,
                                    onLoop: loopAction, bar: { bar(of: $0) })
             }
             Text(timingNote).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink).multilineTextAlignment(.center)
+                .accessibilityIdentifier("along.result.timing")
             if timingIsOff {
                 // Consistently early or late usually means the headphones or speaker lag: measure it.
                 Button { calibrating = true } label: { Label("Calibrate timing", systemImage: "metronome") }
@@ -528,17 +576,8 @@ struct AlongStep: View {
 
     /// The ladder moved up after a take of 90 % or better.
     private var tempoUp: some View {
-        HStack(spacing: 6) {
-            Image(systemName: "arrow.up.right")
-            Text("Tempo up")
-            Text("\(ladder.percent)%")
-        }
-        .font(Typeface.label(13))
-        .foregroundStyle(rungTint(ladder.rung))
-        .padding(.horizontal, 12).padding(.vertical, 5)
-        .background(Capsule().fill(rungTint(ladder.rung).opacity(0.14)))
-        .transition(.scale.combined(with: .opacity))
-        .accessibilityElement(children: .combine)
+        AlongTempoUpLabel(percent: ladder.percent, tint: rungTint(ladder.rung))
+            .transition(.scale.combined(with: .opacity))
     }
 
     /// A take of 90 % or more: its poster, a tap from the share sheet (three stars at the lesson tempo, else two),
@@ -568,13 +607,6 @@ struct AlongStep: View {
         return mean > 0 ? "About \(ms) ms late on average" : "About \(ms) ms early on average"
     }
 
-    private func stat(_ label: LocalizedStringKey, _ value: Int, _ color: Color) -> some View {
-        VStack(spacing: 2) {
-            Text("\(value)").font(Typeface.number(20)).foregroundStyle(color)
-            Text(label).font(.caption).foregroundStyle(Palette.inkSoft)
-        }
-    }
-
     @ViewBuilder private var controls: some View {
         switch phase {
         case .ready:
@@ -596,7 +628,7 @@ struct AlongStep: View {
         case .done:
             VStack(spacing: 12) {
                 ladderOrLoop
-                HStack(spacing: 10) {
+                AlongActionLayout(spacing: 10) {
                     if loop != nil {
                         // The loop again until it's clean; then Done (back to the whole tune's results) comes first.
                         let clean = session.accuracy >= TempoLadder.stepUpAccuracy
@@ -634,21 +666,21 @@ struct AlongStep: View {
     }
 
     /// The results' pair: the one to do next as the primary button, the other as the secondary.
-    @ViewBuilder private func doneButton(_ title: LocalizedStringKey, primary: Bool, action: @escaping () -> Void) -> some View {
-        if primary {
-            Button(action: action) { Text(title) }
-                .buttonStyle(PrimaryButtonStyle())
-        } else {
-            Button(action: action) { Text(title) }
-                .buttonStyle(SecondaryButtonStyle())
-        }
+    private func doneButton(_ title: LocalizedStringKey, primary: Bool, action: @escaping () -> Void) -> some View {
+        AlongDoneButton(title: title, primary: primary, action: action)
     }
 
     /// The four tempo rungs, the current one filled; below the lesson tempo a note that full tempo earns three stars.
     private var ladderPicker: some View {
         VStack(spacing: 6) {
-            HStack(spacing: 8) {
-                ForEach(TempoLadder.rungs.indices, id: \.self) { rung in rungButton(rung) }
+            if typeSize.isAccessibilitySize {
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 160), spacing: 8)], spacing: 8) {
+                    ForEach(TempoLadder.rungs.indices, id: \.self) { rung in rungButton(rung) }
+                }
+            } else {
+                HStack(spacing: 8) {
+                    ForEach(TempoLadder.rungs.indices, id: \.self) { rung in rungButton(rung) }
+                }
             }
             Label("Full tempo for 3 stars", systemImage: "star.fill")
                 .font(.caption.weight(.semibold))
@@ -670,12 +702,8 @@ struct AlongStep: View {
             steppedUp = false
             Haptics.shared.selection()
         } label: {
-            VStack(spacing: 1) {
-                Text("\(Int((TempoLadder.rungs[rung] * 100).rounded()))%").font(Typeface.label(15))
-                Text(Int(ladder.tempo(at: rung)), format: .number).font(Typeface.number(.caption)).opacity(0.75)
-            }
+            TempoRungFace(percent: Int((TempoLadder.rungs[rung] * 100).rounded()), bpm: Int(ladder.tempo(at: rung)))
             .foregroundStyle(selected ? Palette.onAccent : Palette.ink)
-            .frame(maxWidth: .infinity, minHeight: 48)
             .background(shape.fill(selected ? AnyShapeStyle(tint) : AnyShapeStyle(Palette.stageRaised)))
             .overlay(shape.strokeBorder(selected ? Color.clear : Palette.controlLine, lineWidth: 1))
             .overlay(alignment: .topTrailing) {
@@ -895,6 +923,21 @@ struct AlongStep: View {
             onItem(course.practiceItem(for: note), PlayAlongJudge.credit(countedGrades[index] ?? .miss))
         }
         done(outcome?.score ?? session.accuracy)
+    }
+}
+
+/// A complete tempo choice: percentage and BPM each keep their own line as text grows.
+struct TempoRungFace: View {
+    let percent: Int
+    let bpm: Int
+
+    var body: some View {
+        VStack(spacing: 1) {
+            Text("\(percent)%").font(Typeface.label(15))
+            Text(bpm, format: .number).font(Typeface.number(.caption)).opacity(0.75)
+        }
+        .padding(.horizontal, 8).padding(.vertical, 6)
+        .frame(maxWidth: .infinity, minHeight: 48)
     }
 }
 
@@ -1316,6 +1359,179 @@ struct ComboBadge: View {
     }
 }
 
+/// A completed AX take grows with its content; only decoration is masked, not text or actions.
+/// The old stage height is a minimum, never a ceiling. The existing parent ScrollView owns reachability.
+struct AlongResultSurface<Content: View>: View {
+    let tint: Color
+    let content: Content
+
+    init(tint: Color, @ViewBuilder content: () -> Content) {
+        self.tint = tint
+        self.content = content()
+    }
+
+    var body: some View {
+        content.fixedSize(horizontal: false, vertical: true)
+            .padding(12)
+            .frame(maxWidth: .infinity, minHeight: 420)
+            .background {
+                RoundedRectangle(cornerRadius: Metrics.cornerHero, style: .continuous)
+                    .fill(Palette.stageDeep)
+                    .overlay {
+                        RadialGradient(colors: [tint.opacity(0.14), .clear], center: .center,
+                                       startRadius: 4, endRadius: 220)
+                            .clipShape(RoundedRectangle(cornerRadius: Metrics.cornerHero, style: .continuous))
+                    }
+            }
+            .overlay(RoundedRectangle(cornerRadius: Metrics.cornerHero, style: .continuous)
+                .strokeBorder(Palette.hairline, lineWidth: 1))
+    }
+}
+
+/// Keep the normal four-stat row; at AX sizes complete localized stats flow to additional rows.
+struct AlongResultStats: View {
+    let perfect: Int
+    let good: Int
+    let earlyLate: Int
+    let missed: Int
+    let accent: Color
+    @Environment(\.dynamicTypeSize) private var typeSize
+
+    var body: some View {
+        let layout = typeSize.isAccessibilitySize
+            ? AnyLayout(ChordFlowLayout(spacing: 18, lineSpacing: 10))
+            : AnyLayout(HStackLayout(spacing: 18))
+        layout {
+            AlongResultStat(label: "Perfect", value: perfect, color: TakeRibbon.color(.perfect, accent: accent), id: "perfect")
+            AlongResultStat(label: "Good", value: good, color: TakeRibbon.color(.good, accent: accent), id: "good")
+            AlongResultStat(label: "Early/late", value: earlyLate, color: TakeRibbon.color(.ok, accent: accent), id: "early-late")
+            AlongResultStat(label: "Missed", value: missed, color: TakeRibbon.color(.miss, accent: accent), id: "missed")
+        }
+    }
+}
+
+struct AlongResultStat: View {
+    let label: LocalizedStringKey
+    let value: Int
+    let color: Color
+    let id: String
+    @Environment(\.dynamicTypeSize) private var typeSize
+
+    var body: some View {
+        VStack(spacing: 2) {
+            Text("\(value)").font(Typeface.number(20)).foregroundStyle(color)
+            Text(label).font(.caption).foregroundStyle(Palette.inkSoft)
+                .fixedSize(horizontal: false, vertical: typeSize.isAccessibilitySize)
+                .accessibilityIdentifier("along.result.stat.\(id)")
+        }
+    }
+}
+
+/// A full label and percentage, with native wrapping rather than squeezing "Tempo up" into an ellipsis.
+struct AlongTempoUpLabel: View {
+    let percent: Int
+    let tint: Color
+    @Environment(\.dynamicTypeSize) private var typeSize
+
+    var body: some View {
+        Group {
+            if typeSize.isAccessibilitySize {
+                ChordFlowLayout(spacing: 6, lineSpacing: 6) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "arrow.up.right")
+                        Text("Tempo up").fixedSize(horizontal: false, vertical: true)
+                    }
+                    Text("\(percent)%").fixedSize()
+                }
+            } else {
+                HStack(spacing: 6) {
+                    Image(systemName: "arrow.up.right")
+                    Text("Tempo up")
+                    Text("\(percent)%")
+                }
+            }
+        }
+        .font(Typeface.label(13))
+        .foregroundStyle(tint)
+        .padding(.horizontal, 12).padding(.vertical, 5)
+        .background(Capsule().fill(tint.opacity(0.14)))
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier("along.result.tempo-up")
+    }
+}
+
+/// A full playing-place label: bounded width may add lines, never discard or shrink its words.
+struct AlongPlaceLabel: View {
+    let words: String
+    let tint: Color
+
+    var body: some View {
+        Text(verbatim: words).font(Typeface.label(.body)).foregroundStyle(tint)
+            .fixedSize(horizontal: false, vertical: true)
+            .padding(.horizontal, 12).padding(.vertical, 6)
+            .background(Capsule().fill(tint.opacity(0.12)))
+    }
+}
+
+/// Keep the same two action instances and keyboard roles when their intrinsic labels require a column.
+/// Placement is in logical coordinates; SwiftUI supplies the normal single RTL mirror.
+struct AlongActionLayout: Layout {
+    var spacing: CGFloat = 10
+
+    static func fitsRow(_ widths: [CGFloat], available: CGFloat, spacing: CGFloat) -> Bool {
+        guard !widths.isEmpty else { return true }
+        return CGFloat(widths.count) * (widths.max() ?? 0) + CGFloat(widths.count - 1) * spacing <= available
+    }
+
+    private func frames(_ subviews: Subviews, width: CGFloat) -> [CGRect] {
+        guard !subviews.isEmpty else { return [] }
+        let row = Self.fitsRow(subviews.map { $0.sizeThatFits(.unspecified).width }, available: width, spacing: spacing)
+        let cellWidth = row ? max(0, (width - CGFloat(subviews.count - 1) * spacing) / CGFloat(subviews.count)) : width
+        let heights = subviews.map { $0.sizeThatFits(ProposedViewSize(width: cellWidth, height: nil)).height }
+        let rowHeight = heights.max() ?? 0
+        var y: CGFloat = 0
+        return heights.enumerated().map { index, height in
+            let rect = CGRect(x: row ? CGFloat(index) * (cellWidth + spacing) : 0, y: row ? 0 : y,
+                              width: cellWidth, height: row ? rowHeight : height)
+            if !row { y += height + spacing }
+            return rect
+        }
+    }
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        let widths = subviews.map { $0.sizeThatFits(.unspecified).width }
+        let ideal = CGFloat(widths.count) * (widths.max() ?? 0) + CGFloat(max(0, widths.count - 1)) * spacing
+        let width = proposal.width.flatMap { $0.isFinite ? max(0, $0) : nil } ?? ideal
+        return CGSize(width: width, height: frames(subviews, width: width).map(\.maxY).max() ?? 0)
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        for (view, rect) in zip(subviews, frames(subviews, width: bounds.width)) {
+            view.place(at: CGPoint(x: bounds.minX + rect.minX, y: bounds.minY + rect.minY),
+                       anchor: .topLeading, proposal: ProposedViewSize(rect.size))
+        }
+    }
+}
+
+/// Full-size localized labels retain breathing room inside the existing capsule styles, including when wrapped.
+struct AlongDoneButton: View {
+    let title: LocalizedStringKey
+    let primary: Bool
+    let action: () -> Void
+
+    private var label: some View {
+        Text(title).fixedSize(horizontal: false, vertical: true).padding(.vertical, 8)
+    }
+
+    var body: some View {
+        if primary {
+            Button(action: action) { label }.buttonStyle(PrimaryButtonStyle())
+        } else {
+            Button(action: action) { label }.buttonStyle(SecondaryButtonStyle())
+        }
+    }
+}
+
 /// The notes after the next one, in order: tiles in their string's colour with the fret over the note name (a
 /// fingerboard's finger, "↓2" for a low 2; just the note on pitch lanes). They slide along as each note is played,
 /// their tiles fading toward the end of the rail while the figures and names stay at full strength (every string's
@@ -1335,7 +1551,7 @@ struct UpNextRail: View {
     private var shown: [Int] { from < notes.count ? Array(from..<min(notes.count, from + Self.length)) : [] }
 
     var body: some View {
-        HStack(spacing: 8) {
+        ChordFlowLayout(spacing: 8, lineSpacing: 8) {
             // VoiceOver skips the rail (the "Next" line says the note); the arrow is still named in words, never by its
             // symbol's name.
             Image(systemName: "arrow.turn.down.right")
@@ -1343,14 +1559,14 @@ struct UpNextRail: View {
                 .foregroundStyle(Palette.inkFaint)
                 .opacity(shown.isEmpty ? 0 : 1)
                 .accessibilityLabel(Text("Next"))
+                .frame(minHeight: 42)
             ForEach(shown, id: \.self) { index in
                 tile(notes[index], rank: index - from)
                     .transition(.asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity),
                                             removal: .scale(scale: 0.6).combined(with: .opacity)))
             }
-            Spacer(minLength: 0)
         }
-        .frame(height: 44)
+        .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
         .environment(\.layoutDirection, .leftToRight)
         .accessibilityHidden(true)
     }
@@ -1375,9 +1591,9 @@ struct UpNextRail: View {
                 Text(NoteName.pitchClass(note.midi)).font(Typeface.label(15)).foregroundStyle(Palette.ink)
             }
         }
-        .lineLimit(1)
-        .minimumScaleFactor(0.6)
-        .frame(width: 42, height: 42)
+        .fixedSize(horizontal: false, vertical: true)
+        .padding(.horizontal, 8).padding(.vertical, 6)
+        .frame(minWidth: 42, minHeight: 42)
         .background(shape.fill(tint.opacity(0.16 * fade)))
         .overlay(shape.strokeBorder(tint.opacity(0.55 * fade), lineWidth: 1))
         .overlay(alignment: .bottom) { Capsule().fill(tint.opacity(fade)).frame(width: 18, height: 3).offset(y: 1.5) }

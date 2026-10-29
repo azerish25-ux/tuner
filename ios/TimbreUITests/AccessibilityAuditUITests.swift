@@ -68,8 +68,18 @@ final class AccessibilityAuditUITests: XCTestCase {
 
     /// What one audit found, filled in by the issue handler.
     private final class Findings {
-        var lines: [String] = []
+        // Mirror report events immediately: a runner cancellation can leave its xcresult unfinalized.
+        // Attachments remain the visual evidence; console lines never substitute for a completed audit.
+        var lines: [String] = [] {
+            didSet {
+                for line in lines.dropFirst(oldValue.count) { print("AX-AUDIT: \(line)") }
+            }
+        }
         var failing: [String] = []
+        var callbacks = 0
+        var opaqueCallbacks = 0
+        var opaqueContrastCallbacks = 0
+        var isolatedContrastRequests = 0
     }
 
     private var app: XCUIApplication!
@@ -108,20 +118,25 @@ final class AccessibilityAuditUITests: XCTestCase {
         let count = buttons.count
         XCTAssertGreaterThan(count, 0)
         for index in 0..<count {
-            // Each tab gets a fresh process: an earlier screen's rendering and audit state must not keep the next
-            // screen busy. Keep discovering the actual tab bar rather than maintaining a second list of tabs.
-            if index > 0 {
-                app.terminate()
-                launchOnboarded()
-                XCTAssertTrue(buttons.firstMatch.waitForExistence(timeout: 25))
-                XCTAssertEqual(buttons.count, count)
-            }
-            let button = buttons.element(boundBy: index)
-            let name = button.label
-            button.tap()
-            settle(2.5)
-            audit("tab-\(index + 1)-\(slug(name))")
+            let name = buttons.element(boundBy: index).label
+            // Top-level screens replay the same navigation before EVERY kind and attempt. A timed-out
+            // combined audit must not leave scrolling, Dynamic Type or rendering state for the next request.
+            audit("tab-\(index + 1)-\(slug(name))", replay: {
+                self.replayTab(index: index, count: count, name: name)
+            })
         }
+    }
+
+    private func replayTab(index: Int, count: Int, name: String) -> Bool {
+        app.terminate()
+        launchOnboarded()
+        let buttons = app.tabBars.firstMatch.buttons
+        guard buttons.firstMatch.waitForExistence(timeout: 25), buttons.count == count else { return false }
+        let button = buttons.element(boundBy: index)
+        guard button.label == name else { return false }
+        button.tap()
+        settle(2.5)
+        return button.isSelected
     }
 
     func testSettingsAndPaywall() throws {
@@ -230,18 +245,27 @@ final class AccessibilityAuditUITests: XCTestCase {
         known.first { $0.screen == screen && $0.kind == kind && ($0.element == id || $0.element == label) }?.reason
     }
 
-    /// Runs the complete audit, or every kind separately if the combined request times out. Splitting the request
-    /// gives each kind its own time budget; it never omits an audit or treats an unfinished one as a pass.
+    /// Replayable screens run every kind in a fresh process. Other screens run the complete audit, then every
+    /// kind separately if it times out. Neither path omits a kind or treats an unfinished request as a pass.
     /// All attempts and their findings stay in the report, including failures found before a timeout.
-    private func audit(_ screen: String) {
-        let screenshot = XCTAttachment(screenshot: stillScreenshot())
-        screenshot.name = "ax-audit-\(screen)"
-        screenshot.lifetime = .keepAlways
-        add(screenshot)
+    private func audit(_ screen: String, replay: (() -> Bool)? = nil) {
+        if replay == nil {
+            let screenshot = XCTAttachment(screenshot: stillScreenshot())
+            screenshot.name = "ax-audit-\(screen)"
+            screenshot.lifetime = .keepAlways
+            add(screenshot)
+        }
 
+        print("AX-AUDIT: Begin screen \(screen)")
         let findings = Findings()
         var unfinished: [String] = []
-        if let reason = run(screen, types: .all, into: findings) {
+        if let replay {
+            for kind in Self.kinds {
+                if let problem = auditKind(kind.type, name: kind.name, screen: screen, into: findings, replay: replay) {
+                    unfinished.append("\(kind.name): \(problem)")
+                }
+            }
+        } else if let reason = run(screen, types: .all, into: findings) {
             findings.lines.append("Combined audit did not complete: \(reason). Retrying every kind separately.")
             for kind in Self.kinds {
                 if let problem = auditKind(kind.type, name: kind.name, screen: screen, into: findings) {
@@ -252,6 +276,19 @@ final class AccessibilityAuditUITests: XCTestCase {
             findings.lines.append("Completed all audit kinds.")
         }
 
+        // Diagnostic only: a completed combined audit can omit the contrast target's identity.
+        // Never retry to green: the same Findings retains every original failure. A timeout fallback
+        // already requested isolated contrast, so do not duplicate that request or its retry budget.
+        if screen == "lesson-tunecheck", findings.opaqueContrastCallbacks > 0,
+           findings.isolatedContrastRequests == 0 {
+            findings.lines.append("Anonymous TuneCheck contrast: one additional diagnostic request; original failures retained.")
+            attachAuditState("ax-before-lesson-tunecheck-contrast-diagnostic")
+            if let problem = run(screen, types: .contrast, into: findings, captureAllCallbacks: true) {
+                unfinished.append("TuneCheck diagnostic contrast (one request): \(problem)")
+            }
+            attachAuditState("ax-after-lesson-tunecheck-contrast-diagnostic")
+        }
+
         let header = "Accessibility audit, \(screen): \(findings.lines.count) lines, \(findings.failing.count) failing"
         print(header)
         let report = XCTAttachment(string: ([header, ""] + findings.lines).joined(separator: "\n"))
@@ -259,7 +296,7 @@ final class AccessibilityAuditUITests: XCTestCase {
         report.lifetime = .keepAlways
         add(report)
         for problem in unfinished {
-            XCTFail("\(screen): the accessibility audit could not run (\(Self.attempts) isolated tries): \(problem)")
+            XCTFail("\(screen): the accessibility audit could not run (up to \(Self.attempts) isolated tries): \(problem)")
         }
         for line in findings.failing {
             XCTFail("\(screen): \(line)")
@@ -267,9 +304,22 @@ final class AccessibilityAuditUITests: XCTestCase {
     }
 
     /// An isolated kind must complete, even when its findings are informational rather than enforced.
-    private func auditKind(_ type: XCUIAccessibilityAuditType, name: String, screen: String, into findings: Findings) -> String? {
+    private func auditKind(_ type: XCUIAccessibilityAuditType, name: String, screen: String,
+                           into findings: Findings, replay: (() -> Bool)? = nil) -> String? {
         var problem: String?
         for attempt in 1...Self.attempts {
+            if let replay {
+                guard replay() else {
+                    let reason = "Fresh-process navigation failed for \(name) attempt \(attempt)"
+                    findings.lines.append(reason)
+                    attachAuditState("ax-navigation-failed-\(screen)-\(slug(name))-\(attempt)")
+                    return reason
+                }
+                findings.lines.append("Fresh-process navigation verified for \(name) attempt \(attempt).")
+                let captureName = name == "contrast" && attempt == 1
+                    ? "ax-audit-\(screen)" : "ax-before-\(screen)-\(slug(name))-\(attempt)"
+                attachAuditState(captureName)
+            }
             settle(3)
             problem = run(screen, types: type, into: findings)
             guard let reason = problem else {
@@ -282,30 +332,109 @@ final class AccessibilityAuditUITests: XCTestCase {
     }
 
     /// One request for the screen in front; the reason it didn't complete, or nil.
-    private func run(_ screen: String, types: XCUIAccessibilityAuditType, into findings: Findings) -> String? {
+    private func run(_ screen: String, types: XCUIAccessibilityAuditType, into findings: Findings,
+                     captureAllCallbacks: Bool = false) -> String? {
+        if types == .contrast { findings.isolatedContrastRequests += 1 }
         let enforced = Self.enforced
         let kinds = Self.kinds
+        let previousOpaque = findings.opaqueCallbacks
+        let request = findings.lines.count
+        var incomplete = false
+        // Query outside the audit callback. Dynamic Type changes text, not the physical app viewport.
+        let viewport = app.frame
+        defer {
+            // Hierarchy queries are deliberately outside the issue handler: recursively querying the app
+            // while XCTest is auditing can interfere with its traversal. Callback screenshots stay in place.
+            if incomplete || findings.opaqueCallbacks > previousOpaque {
+                attachAuditState("ax-after-\(screen)-mask-\(types.rawValue)-request-\(request)")
+            }
+        }
         do {
+            findings.lines.append("Starting audit mask \(types.rawValue).")
             try app.performAccessibilityAudit(for: types) { issue in
+                findings.callbacks += 1
                 let kind = kinds.first { issue.auditType.contains($0.type) }?.name ?? "other"
-                let snapshot = try? issue.element?.snapshot()
+                var snapshot: (any XCUIElementSnapshot)?
+                var unavailable = "element nil"
+                if let element = issue.element {
+                    do {
+                        snapshot = try element.snapshot()
+                    } catch {
+                        unavailable = "snapshot threw: \(error)".replacingOccurrences(of: "\n", with: "\\n")
+                    }
+                }
+                if snapshot == nil {
+                    findings.opaqueCallbacks += 1
+                    if issue.auditType == .contrast { findings.opaqueContrastCallbacks += 1 }
+                }
                 let id = snapshot?.identifier ?? ""
                 let label = snapshot?.label ?? ""
-                let reason = Self.knownReason(screen: screen, kind: kind, id: id, label: label)
+                var reason = Self.knownReason(screen: screen, kind: kind, id: id, label: label)
+                var callbackScreenshot: XCUIScreenshot?
+                if captureAllCallbacks {
+                    let capture = XCUIScreen.main.screenshot()
+                    callbackScreenshot = capture
+                    let evidence = XCTAttachment(screenshot: capture)
+                    evidence.name = "ax-diagnostic-callback-\(screen)-\(findings.callbacks)"
+                    evidence.lifetime = .keepAlways
+                    self.add(evidence)
+                }
+                if reason == nil, issue.auditType == .contrast, snapshot?.elementType == .staticText,
+                   (screen == "settings" && id == "settings.notation.title" && label == "Note names")
+                    || (screen == "paywall" && id == "paywall.plan.yearly.saving" && label == "SAVE 58%") {
+                    let capture = XCUIScreen.main.screenshot()
+                    callbackScreenshot = capture
+                    if let frame = snapshot?.frame,
+                       let proof = AuditContrastPixelProof.verify(screen: screen, identifier: id, label: label,
+                                                                 frame: frame, viewport: viewport, image: capture.image) {
+                        reason = proof.summary
+                        let evidence = XCTAttachment(screenshot: capture)
+                        evidence.name = "ax-pixel-proof-\(screen)-\(findings.callbacks)"
+                        evidence.lifetime = .keepAlways
+                        self.add(evidence)
+                    }
+                }
                 let fails = enforced.contains(issue.auditType) && reason == nil
                 let tag = fails ? ", enforced" : (reason.map { ", known: \($0)" } ?? "")
-                let geometry = snapshot.map { " | frame \($0.frame) | type \($0.elementType.rawValue)" } ?? " | snapshot unavailable"
+                // Unidentified callbacks are separate evidence: the same compact description may describe
+                // several different elements whose snapshots the audit cannot return.
+                let geometry = snapshot.map { " | frame \($0.frame) | type \($0.elementType.rawValue)" }
+                    ?? " | snapshot unavailable (\(unavailable)) | callback \(findings.callbacks)"
+                let detail = issue.detailedDescription.replacingOccurrences(of: "\n", with: "\\n")
                 let line = "[\(kind)\(tag)] \(issue.compactDescription) | id \(id.isEmpty ? "-" : id) | label "
                     + (label.isEmpty ? "-" : "\"\(label)\"")
-                    + geometry
+                    + geometry + " | detail \(detail)"
                 findings.lines.append(line)
-                if fails, !findings.failing.contains(line) { findings.failing.append(line) }
+                if fails, !findings.failing.contains(line) {
+                    findings.failing.append(line)
+                    // The audit can scroll or resize the screen after the initial still. Preserve the state
+                    // beside this finding so its reported bounds can be compared with the actual rendered pixels.
+                    let rendered = XCTAttachment(screenshot: callbackScreenshot ?? XCUIScreen.main.screenshot())
+                    rendered.name = "ax-failure-\(screen)-\(findings.failing.count)"
+                    rendered.lifetime = .keepAlways
+                    self.add(rendered)
+                }
                 // true: recorded here (and failed below when it must); false would make XCTest fail it without context.
                 return true
             }
+            findings.lines.append("Completed audit mask \(types.rawValue) on \(screen).")
             return nil
         } catch {
+            findings.lines.append("Audit mask \(types.rawValue) on \(screen) threw: \(error.localizedDescription)")
+            incomplete = true
             return error.localizedDescription
         }
+    }
+
+    /// Before/after evidence is not a callback-time target identification or a substitute for a completed audit.
+    private func attachAuditState(_ name: String) {
+        let screenshot = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        screenshot.name = name
+        screenshot.lifetime = .keepAlways
+        add(screenshot)
+        let hierarchy = XCTAttachment(string: app.debugDescription)
+        hierarchy.name = name + "-hierarchy.txt"
+        hierarchy.lifetime = .keepAlways
+        add(hierarchy)
     }
 }

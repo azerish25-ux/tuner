@@ -101,9 +101,9 @@ class LessonScopeTests(unittest.TestCase):
         self.assertIn('(none yet)', batch.with_suffix('.prompt.txt').read_text())
         self.assertFalse((self.root / 'tools/l10n/learn/fa.json').exists())
 
-    def test_repository_requires_all_48_targets(self):
+    def test_repository_requires_all_51_targets(self):
         with patch.object(report, 'RES', report.ROOT / 'ios/Timbre/Resources'):
-            self.assertEqual(len(report.lesson_locales()), 48)
+            self.assertEqual(len(report.lesson_locales()), 51)
             self.assertEqual(report.lesson_locales(), report.locales())
 
 

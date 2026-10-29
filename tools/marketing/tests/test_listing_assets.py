@@ -1,23 +1,31 @@
+import contextlib
 import copy
+import io
+import os
+import subprocess
 import json
 from pathlib import Path
 import sys
 import tempfile
 import unittest
+from types import SimpleNamespace
 from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import listing_assets as assets
 import run_listing_assets as runner
+sys.path.insert(0, str(assets.ROOT / 'tools/ci'))
+import simulator_cleanup
+import simulator_warmup
 
 
 class ListingPlanTests(unittest.TestCase):
     def test_all_fifty_exactly_once_per_default_asset_kind(self):
         plan = assets.make_plan('all', 'all')
         self.assertTrue(plan['full_default_listing_scope'])
-        self.assertEqual(len(plan['matrix']['include']), 75)
-        self.assertEqual(len(set(x['id'] for x in plan['matrix']['include'])), 75)
-        for kind in assets.KINDS[:3]:
+        self.assertEqual(len(plan['matrix']['include']), 100)
+        self.assertEqual(len(set(x['id'] for x in plan['matrix']['include'])), 100)
+        for kind in assets.DEFAULT_KINDS:
             locales = [locale for row in plan['matrix']['include'] if row['kind'] == kind for locale in row['locales'].split(',')]
             self.assertEqual(len(locales), 50)
             self.assertEqual(set(locales), set(assets.locale_rows()))
@@ -34,7 +42,7 @@ class ListingPlanTests(unittest.TestCase):
             request = assets.request_scope('push', message, 'ja', 'screenshots', True)
             plan = assets.make_plan(request['locales'], request['scope'], request['violin'])
             self.assertEqual(plan['locales'], wanted)
-            self.assertEqual(plan['kinds'], ['iphone', 'ipad', 'preview-main'])
+            self.assertEqual(plan['kinds'], ['iphone', 'iphone-large', 'ipad', 'preview-main'])
         for message in ['Ordinary translation commit', '[capture-check]', '[listing-assets-pilot] [listing-assets-all]']:
             with self.subTest(message=message), self.assertRaises(ValueError):
                 assets.request_scope('push', message, 'all', 'all', False)
@@ -48,17 +56,18 @@ class ListingPlanTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             assets.make_plan('all', 'all', shard_size=50)
 
-    def test_listing_only_languages_are_requested_then_english_not_claimed_supported(self):
-        for locale, first in assets.FALLBACK_LANGUAGES.items():
+    def test_new_app_languages_are_requested_without_english_fallback(self):
+        for locale, language in [('ms', 'ms'), ('or-IN', 'or'), ('zh-Hant', 'zh-Hant')]:
             spec = assets.locale_spec(locale)
-            self.assertEqual(spec['apple_languages'], [first, 'en'])
-            self.assertEqual(spec['app_language'], 'en')
-            self.assertFalse(spec['ui_support_claim'])
-            self.assertTrue(spec['listing_only_fallback'])
+            self.assertEqual(spec['app_language'], language)
+            self.assertEqual(spec['apple_languages'], [language])
+            self.assertFalse(spec['listing_only_fallback'])
+            self.assertTrue(spec['ui_support_claim'])
         self.assertEqual(assets.locale_spec('de-DE')['apple_languages'], ['de'])
         self.assertEqual(assets.locale_spec('zh-Hans')['app_language'], 'zh-CN')
         self.assertEqual(assets.locale_spec('pt-PT')['apple_locale'], 'pt_PT')
         self.assertEqual(assets.locale_spec('pt-BR')['apple_locale'], 'pt_BR')
+
 
     def test_real_test_selectors_cover_nine_phone_and_four_tablet_frames(self):
         phone = (assets.ROOT / 'ios/TimbreUITests/TimbreUITests.swift').read_text()
@@ -68,7 +77,11 @@ class ListingPlanTests(unittest.TestCase):
             body = phone.split('func ' + method + '()', 1)[1].split('\n    func ', 1)[0]
             self.assertIn('"' + name + '"', body)
         self.assertEqual(len(assets.selectors('iphone')), 8)
-        self.assertIn('test10PlayAlongLesson', assets.selectors('iphone')[4])
+        self.assertEqual([selector.rsplit('/', 1)[1] for selector in assets.selectors('iphone')], [
+            'test11StoreTunerLock', 'test17StoreInstrumentWall', 'test14StoreSongPerform',
+            'test10PlayAlongLesson', 'test09LearnChordLesson', 'test12StoreChord',
+            'test13StoreStrum', 'test05OtherTabs',
+        ])
         self.assertNotIn('test19StoreViolinResults', ','.join(assets.selectors('iphone')))
         for kind in assets.KINDS:
             for selector in assets.selectors(kind):
@@ -128,8 +141,8 @@ class EvidenceTests(unittest.TestCase):
     def test_launch_environment_keeps_expected_and_requested_languages_separate(self):
         spec = assets.locale_spec('zh-Hant')
         env = runner.environment(spec)
-        self.assertEqual(env['TEST_RUNNER_TIMBRE_UI_LANGUAGE'], 'en')
-        self.assertEqual(env['TEST_RUNNER_TIMBRE_UI_APPLE_LANGUAGES'], 'zh-Hant,en')
+        self.assertEqual(env['TEST_RUNNER_TIMBRE_UI_LANGUAGE'], 'zh-Hant')
+        self.assertEqual(env['TEST_RUNNER_TIMBRE_UI_APPLE_LANGUAGES'], 'zh-Hant')
         self.assertEqual(env['TEST_RUNNER_TIMBRE_LISTING_LOCALE'], 'zh-Hant')
 
     def test_zero_tests_or_skipped_test_cannot_pass(self):
@@ -145,11 +158,11 @@ class EvidenceTests(unittest.TestCase):
 
     def test_simulator_selection_requires_correct_dimensions_and_latest_runtime(self):
         listing = {'devices': {'com.apple.CoreSimulator.SimRuntime.iOS-26-0': [
-            {'name': 'iPhone 17', 'udid': 'small'}, {'name': 'iPhone 17 Pro Max', 'udid': 'phone'},
+            {'name': 'iPhone 17 Pro', 'udid': 'medium'}, {'name': 'iPhone 17 Pro Max', 'udid': 'phone'},
             {'name': 'iPad Air 13-inch (M3)', 'udid': 'air'}, {'name': 'iPad Pro 13-inch (M4)', 'udid': 'pad'},
         ]}}
         with patch.object(runner, 'output', return_value=json.dumps(listing)):
-            self.assertEqual(runner.choose_device('iphone')['id'], 'phone')
+            self.assertEqual(runner.choose_device('iphone')['id'], 'medium')
             self.assertEqual(runner.choose_device('preview-main')['id'], 'phone')
             self.assertEqual(runner.choose_device('ipad')['id'], 'pad')
         with patch.object(runner, 'output', return_value=json.dumps({'devices': {}})), self.assertRaises(RuntimeError):
@@ -163,7 +176,7 @@ class CaptureInventoryTests(unittest.TestCase):
         self.names = ['first', 'second']
         from PIL import Image
         for i, name in enumerate(self.names):
-            Image.new('RGB', (1320, 2868), (i * 50, 0, 0)).save(self.base / (name + '.png'))
+            Image.new('RGB', (1206, 2622), (i * 50, 0, 0)).save(self.base / (name + '.png'))
         self.expected = patch.object(assets, 'expected_captures', return_value=self.names)
         self.expected.start()
 
@@ -197,8 +210,29 @@ class CaptureInventoryTests(unittest.TestCase):
     def test_wrong_device_size_fails_not_rescaled_into_fake_evidence(self):
         from PIL import Image
         Image.new('RGB', (100, 200)).save(self.base / 'first.png')
-        with self.assertRaisesRegex(ValueError, 'actual 6.9-inch'):
+        with self.assertRaisesRegex(ValueError, 'actual medium Dynamic Island'):
             self.captures()
+
+    def test_large_phone_cannot_replace_required_medium_capture(self):
+        from PIL import Image
+        Image.new('RGB', (1320, 2868)).save(self.base / 'first.png')
+        with self.assertRaisesRegex(ValueError, 'actual medium Dynamic Island'):
+            self.captures()
+
+    def test_default_phone_frame_matches_the_required_native_capture(self):
+        from PIL import Image
+        import screenshots
+        self.assertEqual(screenshots.frame_size('iphone', Image.new('RGB', (1206, 2622))), (1206, 2622))
+
+    def test_standalone_renderer_rejects_large_source_even_with_medium_output(self):
+        from PIL import Image
+        import screenshots
+        output = self.base / 'rendered.jpg'
+        Image.new('RGB', (1206, 2622)).save(output)
+        raw = self.base / 'first.png'
+        self.assertIsNone(screenshots.size_problem('iphone', output, raw))
+        Image.new('RGB', (1320, 2868)).save(raw)
+        self.assertIn('need a native 1206x2622', screenshots.size_problem('iphone', output, raw))
 
     def test_attachments_cannot_escape_evidence_folder(self):
         import screenshots
@@ -207,6 +241,15 @@ class CaptureInventoryTests(unittest.TestCase):
 
 
 class AggregationTests(unittest.TestCase):
+    def test_large_phone_manifest_cannot_replace_required_medium_set(self):
+        record = self.fixture()
+        assets.validate_manifest_assets(record)
+        for image in record['assets']:
+            if image['path'].endswith('.jpg'):
+                image['size'] = [1320, 2868]
+        with self.assertRaisesRegex(ValueError, 'Wrong screenshot dimensions'):
+            assets.validate_manifest_assets(record)
+
     def fixture(self, locale='de-DE'):
         import hashlib
         spec = assets.locale_spec(locale)
@@ -214,13 +257,13 @@ class AggregationTests(unittest.TestCase):
         verified = {**runtime, 'checked_fields': ['tune', 'learn', 'songs', 'practice', 'progress'],
                     'observed_labels': assets.expected_tab_labels(spec['app_language'])}
         needed = assets.expected_captures(locale, 'iphone')
-        files = [{'path': f'rendered/iphone-{locale}-{i:02d}.jpg', 'sha256': 'a' * 64, 'size': [1320, 2868]}
+        files = [{'path': f'rendered/iphone-{locale}-{i:02d}.jpg', 'sha256': 'a' * 64, 'size': [1206, 2622]}
                  for i in range(1, len(needed) + 1)]
         files.append({'path': f'rendered/iphone-{locale}-sheet.png', 'sha256': 'b' * 64})
         return {**spec, 'kind': 'iphone', 'source_sha': 'revision', 'build_sha256': 'c' * 64,
                 'status': 'mechanically_verified', 'release_ready': False, 'visual_review': 'pending', 'native_review': 'pending',
                 'language_evidence': [verified], 'launch_evidence': [runtime] * 8, 'assets': files,
-                'captures': [{'capture': n, 'pixel_sha256': hashlib.sha256((locale + n).encode()).hexdigest()} for n in needed]}
+                'captures': [{'capture': n, 'size': [1206, 2622], 'pixel_sha256': hashlib.sha256((locale + n).encode()).hexdigest()} for n in needed]}
 
     def test_missing_failed_stale_duplicate_and_wrong_build_never_become_green(self):
         plan = {'locales': ['de-DE'], 'kinds': ['iphone']}
@@ -272,7 +315,7 @@ class AggregationTests(unittest.TestCase):
                 self.assertTrue(any('Malformed plan' in message for message in result['errors']))
                 self.assertTrue(any('unreadable manifest JSON' in message for message in result['errors']))
 
-    def test_complete_all_fifty_phone_inventory_and_fallback_remain_unapproved(self):
+    def test_complete_all_fifty_phone_inventory_remains_unapproved(self):
         with tempfile.TemporaryDirectory() as folder, patch.object(assets, 'lesson_provenance', return_value={'lesson_resource_status': 'shipped', 'lesson_resource_sha256': 'd' * 64}):
             locales = list(assets.locale_rows())
             for locale in locales:
@@ -283,8 +326,8 @@ class AggregationTests(unittest.TestCase):
             self.assertFalse(result['release_ready'])
             self.assertEqual(result['visual_review'], 'pending')
             fallback = [row for row in result['manifests'] if row['listing_only_fallback']]
-            self.assertEqual({row['listing_locale'] for row in fallback}, {'ms', 'or-IN', 'zh-Hant'})
-            self.assertTrue(all(not row['ui_support_claim'] for row in fallback))
+            self.assertEqual({row['listing_locale'] for row in fallback}, set())
+            self.assertTrue(all(row['ui_support_claim'] for row in result['manifests']))
 
     def test_complete_identical_pixels_in_different_app_languages_are_rejected(self):
         with tempfile.TemporaryDirectory() as folder:
@@ -342,20 +385,24 @@ class PreviewEvidenceTests(unittest.TestCase):
 
 
 class SourceContractTests(unittest.TestCase):
-    def test_workflow_is_explicit_opt_in_main_only_artifact_only_and_bounded(self):
+    def test_workflow_is_explicit_opt_in_approved_refs_artifact_only_and_bounded(self):
         source = (assets.ROOT / '.github/workflows/listing-assets.yml').read_text()
         self.assertIn('workflow_dispatch:', source)
-        self.assertIn('\n  push:\n    branches: [main]', source)
+        self.assertIn('\n  push:\n    branches: [main, codex/app-store-readiness-gates]', source)
         self.assertIn("contains(github.event.head_commit.message, '[listing-assets-pilot]')", source)
         self.assertIn("contains(github.event.head_commit.message, '[listing-assets-all]')", source)
         self.assertIn("github.ref == 'refs/heads/main'", source)
         self.assertIn('contents: read', source)
         self.assertIn('max-parallel: 2', source)
-        self.assertIn('cancel-in-progress: false', source)
+        cancel = source.split('  cancel-in-progress: >-', 1)[1].split('jobs:', 1)[0]
+        self.assertIn("github.event_name == 'push'", cancel)
+        self.assertIn("github.ref == 'refs/heads/codex/app-store-readiness-gates'", cancel)
+        self.assertIn("contains(github.event.head_commit.message, '[supersede-listing-pilot]')", cancel)
+        self.assertIn("contains(github.event.head_commit.message, '[listing-screenshots-pilot]')", cancel)
         for forbidden in ['contents: write', 'publish-results.sh', 'ci-results/', 'git push', 'secrets.', 'apple-delivery', 'archivePath']:
             self.assertNotIn(forbidden, source)
         self.assertEqual(source.count('xcodebuild build-for-testing'), 1)
-        self.assertIn('actions/upload-artifact@v4', source)
+        self.assertRegex(source, r'actions/upload-artifact@[a-f0-9]{40}\b')
         self.assertIn('persist-credentials: false', source)
         self.assertNotIn('-allowProvisioningUpdates', source)
 
@@ -403,22 +450,245 @@ class SourceContractTests(unittest.TestCase):
         self.assertNotIn('"Hold it…"', checks.split('let badge =', 1)[1].split('return ', 1)[0])
         locked = source.split('private func lockedTunerFrame(', 1)[1].split('private func readoutRegion()', 1)[0]
         self.assertIn('let lock = tunerLock(strings: strings)', locked)
-        self.assertIn('let hold = lockHolds()', locked)
+        self.assertIn('let hold = lockHolds(stages: stages)', locked)
         self.assertIn('XCTAssertTrue(hold.held', locked)
         self.assertIn('as: name + "-wrong"', source)
-        # The violin CPP's optional shimmer and actual video tour are not changed by this still repair.
-        violin = source.split('func test16StoreViolinStage()', 1)[1].split('func test20StoreCelloStage()', 1)[0]
-        self.assertIn('comet: true', violin)
+        # All still leads preserve the same real lock while the fresh screenshot and final AX state are checked.
+        for name in ('test16StoreViolinStage', 'test20StoreCelloStage', 'test21StoreUkuleleStage'):
+            body = source.split('func ' + name + '() throws {', 1)[1].split('\n    }', 1)[0]
+            self.assertIn('comet: false', body)
+            self.assertIn('lockedTunerFrame(strings: 3', body)
+            self.assertNotIn('comet: true', body)
+        # Explicit animation capability remains; this does not claim a separate exercised video test.
+        self.assertIn('if comet { app.launchEnvironment["TIMBRE_SCENE_COMET"] = "1" }', source)
+        self.assertIn('private func cometPicture(readout: CGRect)', source)
 
     def test_runner_preserves_gate_failure_and_never_swallows_assertions(self):
         source = (assets.ROOT / 'tools/marketing/run_listing_assets.py').read_text()
         self.assertIn("if cut in (3, 4) and attempt < 3:", source)
         self.assertIn('if attempt == 1 and launch_only_failure(log):', source)
+        attempts = source.split('def test_attempts(', 1)[1].split('def validate_preview_take(', 1)[0]
+        self.assertIn('if attempt == 1 and not warmup_failed and launch_only_failure(log):', attempts)
         self.assertIn("'check', '--out', folder", source)
         self.assertIn("'NOT FOR UPLOAD:' in report", source)
         self.assertNotIn('--reanchor', source)
         self.assertNotIn('--allow-english', source)
         self.assertNotIn('shutil.rmtree', source)
+
+
+DEVICE = 'E952A9B0-CC78-435C-BF08-06AD47FE1076'
+CI = {'DEVICE_ID': DEVICE, 'GITHUB_ACTIONS': 'true', 'RUNNER_ENVIRONMENT': 'github-hosted',
+      'GITHUB_SHA': 'a' * 40, 'GITHUB_RUN_ID': '123', 'GITHUB_RUN_ATTEMPT': '1', 'GITHUB_JOB': 'capture'}
+
+
+class ListingWarmupIndependenceTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name)
+        self.device = {'id': DEVICE}
+        self.spec = assets.locale_spec('de-DE')
+        self.env = runner.environment(self.spec)
+        self.failures, self.results, self.commands, self.receipts = [], [], [], []
+        self.codes = []
+        self.warmup_fails = self.write_receipt = self.language_valid = self.test_passes = True
+        self.cleanup_confirmed = self.wrong_job = False
+
+    def warmup(self, app, device, languages, locale, out):
+        out.mkdir()
+        if self.write_receipt:
+            receipt = {'passed': not self.warmup_fails, 'diagnostic_only': True, 'device': device,
+                       'source_sha': CI['GITHUB_SHA'], 'run_id': 'wrong' if self.wrong_job else CI['GITHUB_RUN_ID'],
+                       'run_attempt': CI['GITHUB_RUN_ATTEMPT'], 'job': CI['GITHUB_JOB'],
+                       'runner_environment': CI['RUNNER_ENVIRONMENT'], 'launch_attempts': 1,
+                       'cleanup_confirmed': self.cleanup_confirmed, 'cleanup_error': 'original terminate timeout'}
+            path = out / 'status.json'
+            path.write_text(json.dumps(receipt))
+            self.receipts.append((path, path.read_bytes()))
+        if self.warmup_fails:
+            raise RuntimeError('Original diagnostic priming timeout')
+
+    def native(self, command, *, log=None, env=None, check=True):
+        self.commands.append(command)
+        if command[0] != 'xcodebuild':
+            return 0
+        code = self.codes.pop(0) if self.codes else 0
+        selected = [x.split(':', 1)[1] for x in command if str(x).startswith('-only-testing:')]
+        Path(command[command.index('-resultBundlePath') + 1]).mkdir()
+        lines = []
+        for selector in selected:
+            target, cls, method = selector.split('/')
+            outcome = 'passed' if code == 0 and self.test_passes else 'failed'
+            lines.append(f"Test Case '-[{target}.{cls} {method}]' {outcome} (1.000 seconds).")
+        record = {k: self.spec[k] for k in ('listing_locale', 'app_language', 'apple_languages', 'apple_locale')}
+        if selected == [assets.EVIDENCE_TEST]:
+            record.update(checked_fields=['tune', 'learn', 'songs', 'practice', 'progress'],
+                          observed_labels=assets.expected_tab_labels('de' if self.language_valid else 'en'))
+            lines.append('TIMBRE_CAPTURE_VERIFIED ' + json.dumps(record))
+        else:
+            lines += ['TIMBRE_CAPTURE_LAUNCH ' + json.dumps(record)] * len(selected)
+        log.write_text('\n'.join(lines))
+        return code
+
+    def execute(self, *, real_cleanup=False, cleanup_error=None):
+        with contextlib.ExitStack() as stack:
+            stack.enter_context(contextlib.redirect_stdout(io.StringIO()))
+            warmup = stack.enter_context(patch.object(simulator_warmup, 'warmup', side_effect=self.warmup))
+            stack.enter_context(patch.object(runner, 'run', side_effect=self.native))
+            export = stack.enter_context(patch.object(runner, 'export_attachments'))
+            cleanup = None if real_cleanup else stack.enter_context(
+                patch.object(simulator_cleanup, 'isolate', side_effect=cleanup_error))
+            folder = runner.test_attempts(self.root / 'Tests.xctestrun', self.device, 'iphone',
+                                         [assets.EVIDENCE_TEST], self.root / 'language-check', self.env,
+                                         retained_failures=self.failures, test_results=self.results)
+        return folder, warmup, cleanup, export
+
+    def test_failed_priming_still_runs_one_independent_test_and_exports(self):
+        folder, warmup, cleanup, export = self.execute()
+        self.assertEqual(warmup.call_count, 1)
+        self.assertEqual(len([c for c in self.commands if c[0] == 'xcodebuild']), 1)
+        cleanup.assert_called_once_with(DEVICE, folder / 'warmup/status.json', folder / 'warmup-cleanup')
+        export.assert_called_once_with(folder / 'Tests.xcresult', folder / 'attachments')
+        self.assertEqual([row['stage'] for row in self.failures], ['warmup'])
+        self.assertEqual(self.results[0]['exit_code'], 0)
+        self.assertTrue(self.results[0]['selected_tests_verified'])
+        self.assertEqual(self.results[0]['phase'], 'language-check')
+        for path, original in self.receipts:
+            self.assertEqual(path.read_bytes(), original)
+
+    def test_successful_priming_needs_no_cleanup_and_no_retained_failure(self):
+        self.warmup_fails = False
+        _, _, cleanup, _ = self.execute()
+        cleanup.assert_not_called()
+        self.assertEqual(self.failures, [])
+
+    def test_missing_receipt_does_not_invent_cleanup_or_skip_xctest(self):
+        self.write_receipt = False
+        _, _, cleanup, _ = self.execute()
+        cleanup.assert_not_called()
+        self.assertTrue(self.results[0]['selected_tests_verified'])
+        self.assertEqual([row['stage'] for row in self.failures], ['warmup'])
+
+    def test_failed_containment_is_retained_but_does_not_skip_xctest(self):
+        self.execute(cleanup_error=RuntimeError('bounded containment timeout'))
+        self.assertEqual([row['stage'] for row in self.failures], ['warmup', 'warmup-cleanup'])
+        self.assertTrue(self.results[0]['selected_tests_verified'])
+
+    def test_confirmed_cleanup_never_reboots_with_real_helper(self):
+        self.cleanup_confirmed = True
+        with patch.dict(os.environ, CI), patch.object(simulator_cleanup.subprocess, 'run') as native:
+            folder, _, _, _ = self.execute(real_cleanup=True)
+        native.assert_not_called()
+        status = assets.read_json(folder / 'warmup-cleanup/status.json')
+        self.assertEqual(status['reset_attempts'], 0)
+        self.assertFalse(status['reset_completed'])
+        self.assertEqual([row['stage'] for row in self.failures], ['warmup'])
+
+    def test_unconfirmed_cleanup_reuses_exact_owned_device_and_existing_bounds(self):
+        with patch.dict(os.environ, CI), patch.object(simulator_cleanup.subprocess, 'run',
+                                                      return_value=SimpleNamespace(returncode=0)) as native:
+            folder, _, _, _ = self.execute(real_cleanup=True)
+        self.assertEqual([call.args[0][2] for call in native.call_args_list], ['shutdown', 'bootstatus', 'status_bar'])
+        for call, limit in zip(native.call_args_list, (30, 90, 15)):
+            self.assertEqual(call.args[0][3], DEVICE)
+            self.assertLessEqual(call.kwargs['timeout'], limit)
+        status = assets.read_json(folder / 'warmup-cleanup/status.json')
+        self.assertEqual(status['total_budget_seconds'], 150)
+        self.assertTrue(status['reset_completed'])
+        self.assertEqual([row['stage'] for row in self.failures], ['warmup'])
+
+    def test_foreign_job_receipt_never_resets_and_keeps_cleanup_failure(self):
+        self.wrong_job = True
+        with patch.dict(os.environ, CI), patch.object(simulator_cleanup.subprocess, 'run') as native:
+            self.execute(real_cleanup=True)
+        native.assert_not_called()
+        self.assertEqual([row['stage'] for row in self.failures], ['warmup', 'warmup-cleanup'])
+        self.assertTrue(self.results[0]['selected_tests_verified'])
+
+    def test_nonhosted_environment_never_resets(self):
+        with patch.dict(os.environ, dict(CI, RUNNER_ENVIRONMENT='self-hosted')), \
+                patch.object(simulator_cleanup.subprocess, 'run') as native:
+            self.execute(real_cleanup=True)
+        native.assert_not_called()
+        self.assertEqual([row['stage'] for row in self.failures], ['warmup', 'warmup-cleanup'])
+
+    def test_assertion_failure_never_retries_and_retains_both_stages(self):
+        self.codes = [65]
+        with patch.object(runner, 'launch_only_failure', return_value=False), self.assertRaises(RuntimeError):
+            self.execute()
+        self.assertEqual(len(self.results), 1)
+        self.assertEqual(self.results[0]['exit_code'], 65)
+        self.assertFalse(self.results[0]['selected_tests_verified'])
+        self.assertEqual([row['stage'] for row in self.failures], ['warmup', 'xctest'])
+
+    def test_existing_launch_only_second_attempt_cannot_clear_original_failure(self):
+        self.warmup_fails = False
+        self.codes = [65, 0]
+        with patch.object(runner, 'launch_only_failure', return_value=True), patch.object(runner, 'boot') as boot:
+            folder, warmup, _, _ = self.execute()
+        self.assertEqual(folder.name, 'attempt-2')
+        self.assertEqual(warmup.call_count, 2)
+        boot.assert_called_once_with(self.device, 'iphone')
+        self.assertEqual([row['exit_code'] for row in self.results], [65, 0])
+        self.assertEqual([row['stage'] for row in self.failures], ['xctest'])
+        self.assertEqual(self.failures[0]['attempt'], 1)
+
+    def test_failed_priming_never_gets_retried_after_independent_launch_failure(self):
+        self.codes = [65, 0]
+        with patch.object(runner, 'launch_only_failure', return_value=True), patch.object(runner, 'boot') as boot, \
+                self.assertRaises(RuntimeError):
+            self.execute()
+        boot.assert_not_called()
+        self.assertEqual(len(self.results), 1)
+        self.assertEqual(self.codes, [0])
+        self.assertEqual([row['stage'] for row in self.failures], ['warmup', 'xctest'])
+
+    def test_zero_or_skipped_test_success_code_is_not_verified(self):
+        self.test_passes = False
+        with self.assertRaisesRegex(RuntimeError, 'No executed passing test'):
+            self.execute()
+        self.assertEqual(len(self.results), 1)
+        self.assertEqual(self.results[0]['exit_code'], 0)
+        self.assertFalse(self.results[0]['selected_tests_verified'])
+
+    def locale(self):
+        args = SimpleNamespace(out=self.root / 'assets', manifests=self.root / 'manifests',
+                               kind='iphone', source_sha='a' * 40)
+        with patch.object(simulator_warmup, 'warmup', side_effect=self.warmup), \
+                patch.object(simulator_cleanup, 'isolate'), patch.object(runner, 'run', side_effect=self.native), \
+                patch.object(runner, 'export_attachments'), patch.object(assets, 'capture_records', return_value=['actual captures']), \
+                patch.object(assets, 'screenshot_records', return_value=['rendered assets']), contextlib.redirect_stdout(io.StringIO()):
+            passed = runner.run_locale('de-DE', args, self.device, self.root / 'Tests.xctestrun', 'b' * 64)
+        return passed, assets.read_json(args.manifests / 'de-DE-iphone.manifest.json')
+
+    def test_later_language_capture_and_render_evidence_cannot_green_failed_priming(self):
+        passed, manifest = self.locale()
+        self.assertFalse(passed)
+        self.assertEqual(manifest['status'], 'failed')
+        self.assertFalse(manifest['release_ready'])
+        self.assertEqual([r['phase'] for r in manifest['retained_failures']], ['language-check', 'capture'])
+        self.assertEqual([r['phase'] for r in manifest['native_test_results']], ['language-check', 'capture'])
+        self.assertTrue(all(r['selected_tests_verified'] for r in manifest['native_test_results']))
+        self.assertEqual(manifest['captures'], ['actual captures'])
+        self.assertEqual(manifest['assets'], ['rendered assets'])
+        self.assertTrue(manifest['language_evidence'])
+        self.assertEqual(manifest['selected_attempt'], 'capture/attempt-1')
+
+    def test_wrong_language_still_blocks_capture_even_after_independent_test_pass(self):
+        self.language_valid = False
+        passed, manifest = self.locale()
+        self.assertFalse(passed)
+        self.assertEqual(len(manifest['native_test_results']), 1)
+        self.assertNotIn('captures', manifest)
+        self.assertIn('tab labels', manifest['error'])
+
+    def test_failure_free_path_remains_mechanically_verified_not_release_ready(self):
+        self.warmup_fails = False
+        passed, manifest = self.locale()
+        self.assertTrue(passed)
+        self.assertEqual(manifest['status'], 'mechanically_verified')
+        self.assertEqual(manifest['retained_failures'], [])
+        self.assertFalse(manifest['release_ready'])
 
 
 if __name__ == '__main__':

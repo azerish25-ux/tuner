@@ -185,7 +185,7 @@ class MatrixFixtureTests(unittest.TestCase):
 
     def test_workflow_missing_and_duplicate_locales_rejected(self):
         locales = list(matrix_fixture.report.LANGUAGE_NAMES)
-        self.assertEqual(len(locales), 48)
+        self.assertEqual(len(locales), 51)
         for locale in locales:
             (self.root / f'{locale}.lproj').mkdir()
         workflow = self.root / 'workflow.yml'
@@ -221,14 +221,19 @@ class MatrixIntegrationTests(unittest.TestCase):
         workflow = (matrix_fixture.report.ROOT / '.github/workflows/localization-matrix.yml').read_text()
         condition = "github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[l10n-matrix]')"
         self.assertIn('cancel-in-progress: ${{ ' + condition + ' }}', workflow)
-        self.assertIn('if: ' + condition, workflow)
+        self.assertIn("&& 'requested' || 'noop'", workflow)
+        request = ("github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && "
+                   "(github.ref == 'refs/heads/main' || "
+                   "github.ref == 'refs/heads/codex/app-store-readiness-gates') && "
+                   "contains(github.event.head_commit.message, '[l10n-matrix]'))")
+        self.assertIn('if: ' + request, workflow)
 
     def test_checked_in_workflow_covers_every_translated_locale(self):
         matrix_fixture.check_workflow(matrix_fixture.report.ROOT / '.github/workflows/localization-matrix.yml')
 
-    def test_all_48_real_tables_generate_exact_expectations(self):
+    def test_all_51_real_tables_generate_exact_expectations(self):
         result = matrix_fixture.fixture(list(matrix_fixture.report.LANGUAGE_NAMES))
-        self.assertEqual(len(result), 48)
+        self.assertEqual(len(result), 51)
         self.assertTrue(all(set(matrix_fixture.KEYS).issubset(labels) for labels in result.values()))
         for locale, labels in result.items():
             available = (matrix_fixture.report.RES / f'{locale}.lproj/Learn.strings').is_file()

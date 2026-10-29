@@ -14,6 +14,8 @@ import font_assets
 
 class FakeFont:
     size = 10
+    path = 'fixture.ttf'
+    index = 0
     def getlength(self, text, **kwargs):
         return len(text)
     def getbbox(self, text, **kwargs):
@@ -21,6 +23,56 @@ class FakeFont:
 
 
 class CaptionFontTests(unittest.TestCase):
+    def test_even_latin_captions_fail_before_font_selection_without_shaping(self):
+        with patch('PIL.features.check', return_value=False), patch.object(art, 'covers', return_value=True), \
+                patch.object(art, 'sora') as select:
+            with self.assertRaises(SystemExit):
+                art.caption_font('Free tuner. No ads.', 'SemiBold', 48)
+        select.assert_not_called()
+
+    def test_missing_shaping_is_recorded_in_the_caption_audit(self):
+        with tempfile.TemporaryDirectory() as folder, \
+                patch.object(font_assets, 'caption_rows', return_value=iter([('en-US', 'iphone/0/caption', 'Free tuner.')])), \
+                patch('PIL.features.check', return_value=False), patch.object(art, 'covers', return_value=True), \
+                patch.object(art, 'sora', return_value=FakeFont()):
+            result = font_assets.audit(Path(folder))
+        self.assertEqual(len(result['failures']), 1)
+        self.assertIn('libraqm', result['failures'][0]['error'])
+
+    def test_layout_audit_measures_both_phone_widths_and_rounding_separately(self):
+        import screenshots
+        rows = [('native', 'Title', 'Line', 'zoom mint'),
+                ('native-offset', 'Title', 'Line', 'offset mint')]
+        with patch.object(screenshots, 'LOCALES', []), patch.object(screenshots, 'plan', return_value=rows) as plan, \
+                patch.object(font_assets, 'caption_rows', return_value=iter([])), \
+                patch.object(art, 'fit_lines', return_value=(FakeFont(), ['Title'])) as fit:
+            result = font_assets.audit_layouts()
+        self.assertEqual([call.args[0] for call in plan.call_args_list], ['iphone', 'iphone-large', 'ipad'])
+        self.assertEqual(result['layout_strings_by_role'], {'iphone': 4, 'iphone-large': 4, 'ipad': 4})
+        self.assertEqual(result['native_screenshot_roles']['iphone'], [1206, 2622])
+        self.assertEqual(result['native_screenshot_roles']['iphone-large'], [1320, 2868])
+        args = [call.args for call in fit.call_args_list]
+        self.assertEqual(args[0], ('Title', 'SemiBold', 124, 88, 1052))
+        self.assertEqual(args[2], ('Title', 'SemiBold', 124, 88, 993))
+        self.assertEqual(args[4], ('Title', 'SemiBold', 136, 96, 1152))
+        self.assertEqual(args[6], ('Title', 'SemiBold', 136, 96, 1088))
+        self.assertEqual(result['layout_strings'], 12)
+        self.assertEqual(result['layout_failures'], [])
+
+    def test_large_role_typography_failure_cannot_be_hidden_by_medium_pass(self):
+        import screenshots
+        def fitting(text, weight, start, minimum, width):
+            if width == 1152:
+                raise ValueError('large role overflow fixture')
+            return FakeFont(), ['Title']
+        with patch.object(screenshots, 'LOCALES', []), \
+                patch.object(screenshots, 'plan', return_value=[('native', 'Title', 'Line', 'zoom mint')]), \
+                patch.object(font_assets, 'caption_rows', return_value=iter([])), \
+                patch.object(art, 'fit_lines', side_effect=fitting):
+            result = font_assets.audit_layouts()
+        self.assertEqual(len(result['layout_failures']), 2)
+        self.assertTrue(all(row['device_role'] == 'iphone-large' for row in result['layout_failures']))
+
     def test_unknown_glyph_coverage_fails_closed(self):
         with patch.object(art, '_cmap', return_value=None), patch.object(art, 'collection_face', return_value=0):
             self.assertFalse(art.covers('bad.ttf', 'Timbre'))

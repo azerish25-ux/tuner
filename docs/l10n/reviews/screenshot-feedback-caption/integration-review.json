@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "reviewer": "Independent AI source review",
+  "reviewed_utc": "2026-10-28T01:18:26.570036Z",
+  "scope": "Independent read-only integration audit of prepared exact-caption patch, not a second multilingual semantic or visual/native review.",
+  "decision": "approve_prepared_patch_integrity",
+  "patch_sha256": "7a5b4d5082d47c992997c23592a36889e68af6596df62622bf009dfa92b60085",
+  "source_review_sha256": "06610958265745ea9d3ef53ca1b13dc25a13e896fa8cb5b85344c00c7a31e289",
+  "prepared_file_count": 63,
+  "checks": [
+    {
+      "check": "50 unique approved locales equal authoritative inventory",
+      "passed": true
+    },
+    {
+      "check": "Source report unchanged from independent review",
+      "passed": true
+    },
+    {
+      "check": "Baseline files still match live current checkout",
+      "passed": true
+    },
+    {
+      "check": "Exactly one caption delta per 50 files, exact independent strings, unchanged all other payload fields/review flags",
+      "passed": true
+    },
+    {
+      "check": "docs/ios/APP-STORE-LISTING.md only approved exact caption rows changed",
+      "passed": true
+    },
+    {
+      "check": "docs/ios/APP-STORE-LISTING-LOCALIZED.md only approved exact caption rows changed",
+      "passed": true
+    },
+    {
+      "check": "All 956 original ledger objects preserved; 50 appended",
+      "passed": true
+    },
+    {
+      "check": "Original ledger raw prefix preserved",
+      "passed": true
+    },
+    {
+      "check": "New correction row locale inventory exact",
+      "passed": true
+    },
+    {
+      "check": "All appended correction exact-old/new, evidence hashes and content/source lineage valid",
+      "passed": true
+    },
+    {
+      "check": "All locale review objects retain original history and methods; current bindings advance by bounded append only",
+      "passed": true
+    },
+    {
+      "check": "Source history keeps exact previous source record",
+      "passed": true
+    },
+    {
+      "check": "Top review policy/limits/prior evidence remain unchanged",
+      "passed": true
+    },
+    {
+      "check": "Release applicability exactly two hash refreshes, no flag/authorization changes",
+      "passed": true
+    },
+    {
+      "check": "Privacy mapping old/new exact all50; no shared receipt in patch",
+      "passed": true
+    },
+    {
+      "check": "Prepared file inventory excludes renderer/runtime/portal/othermetadata",
+      "passed": true
+    },
+    {
+      "check": "All50 draft structural and AI semantic evidence validations",
+      "passed": true
+    },
+    {
+      "check": "Review artifact SHA and correction count checks",
+      "passed": true
+    },
+    {
+      "check": "Patch applies cleanly with whitespace error gate",
+      "passed": true
+    },
+    {
+      "check": "Offline equality to all50 historical portal saved name/subtitle/description/promo/keywords; constant support URL unchanged",
+      "passed": true
+    }
+  ],
+  "check_count": 20,
+  "check_errors": [],
+  "limits": [
+    "No live checkout edit, portal write/readback, publication, renderer change or release flags.",
+    "Prepared application-receipt asserts post-application facts; do not present it as applied until successful application and exact-file readback.",
+    "Shared privacy receipt refresh remains separately owned, and captions still need rerender/visual QA.",
+    "AI source-aware review only; no native-speaker, legal or hardware certification."
+  ],
+  "mutations": "External audit script and integration-review.json only."
+}

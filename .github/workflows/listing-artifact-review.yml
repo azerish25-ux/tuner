@@ -1,0 +1,122 @@
+# Two individually reviewed existing artifacts; originals only, never regeneration or approval.
+name: Review original listing artifact
+on:
+  push:
+    branches: [main, codex/app-store-readiness-gates]
+  workflow_dispatch:
+    inputs:
+      artifact_id:
+        description: Exact reviewed source artifact (other IDs are rejected)
+        type: choice
+        options: ['12722724126', '12781917198']
+        default: '12722724126'
+        required: true
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: listing-original-artifact-review
+  cancel-in-progress: false
+jobs:
+  recover:
+    if: >-
+      github.repository == 'azerish25-ux/tuner' &&
+      (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/codex/app-store-readiness-gates') &&
+      ((github.event_name == 'workflow_dispatch' &&
+        (inputs.artifact_id == '12722724126' || inputs.artifact_id == '12781917198')) ||
+       (github.event_name == 'push' &&
+        (contains(github.event.head_commit.message, '[listing-review-12722724126]') ||
+         contains(github.event.head_commit.message, '[listing-review-12781917198]'))))
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          persist-credentials: false
+      - name: Verify read-only recovery contracts
+        run: python3 tools/ci/test_listing_artifact_review.py
+      - name: Verify reviewed metadata and slice unchanged original files
+        id: recover
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 tools/ci/listing_artifact_review.py
+      - name: Publish review provenance index
+        if: ${{ success() && steps.recover.outputs.artifact_id != '' }}
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: listing-review-${{ steps.recover.outputs.artifact_id }}-index
+          path: review-out/index.json
+          if-no-files-found: error
+          retention-days: 7
+      - name: Publish original-byte review slice 1
+        if: ${{ success() && steps.recover.outputs.slice_count != '' && fromJSON(steps.recover.outputs.slice_count) >= 1 }}
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: listing-review-${{ steps.recover.outputs.artifact_id }}-01
+          path: review-out/listing-review-01.zip
+          compression-level: 0
+          if-no-files-found: error
+          retention-days: 7
+      - name: Publish original-byte review slice 2
+        if: ${{ success() && steps.recover.outputs.slice_count != '' && fromJSON(steps.recover.outputs.slice_count) >= 2 }}
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: listing-review-${{ steps.recover.outputs.artifact_id }}-02
+          path: review-out/listing-review-02.zip
+          compression-level: 0
+          if-no-files-found: error
+          retention-days: 7
+      - name: Publish original-byte review slice 3
+        if: ${{ success() && steps.recover.outputs.slice_count != '' && fromJSON(steps.recover.outputs.slice_count) >= 3 }}
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: listing-review-${{ steps.recover.outputs.artifact_id }}-03
+          path: review-out/listing-review-03.zip
+          compression-level: 0
+          if-no-files-found: error
+          retention-days: 7
+      - name: Publish original-byte review slice 4
+        if: ${{ success() && steps.recover.outputs.slice_count != '' && fromJSON(steps.recover.outputs.slice_count) >= 4 }}
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: listing-review-${{ steps.recover.outputs.artifact_id }}-04
+          path: review-out/listing-review-04.zip
+          compression-level: 0
+          if-no-files-found: error
+          retention-days: 7
+      - name: Publish original-byte review slice 5
+        if: ${{ success() && steps.recover.outputs.slice_count != '' && fromJSON(steps.recover.outputs.slice_count) >= 5 }}
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: listing-review-${{ steps.recover.outputs.artifact_id }}-05
+          path: review-out/listing-review-05.zip
+          compression-level: 0
+          if-no-files-found: error
+          retention-days: 7
+      - name: Publish original-byte review slice 6
+        if: ${{ success() && steps.recover.outputs.slice_count != '' && fromJSON(steps.recover.outputs.slice_count) >= 6 }}
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: listing-review-${{ steps.recover.outputs.artifact_id }}-06
+          path: review-out/listing-review-06.zip
+          compression-level: 0
+          if-no-files-found: error
+          retention-days: 7
+      - name: Publish original-byte review slice 7
+        if: ${{ success() && steps.recover.outputs.slice_count != '' && fromJSON(steps.recover.outputs.slice_count) >= 7 }}
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: listing-review-${{ steps.recover.outputs.artifact_id }}-07
+          path: review-out/listing-review-07.zip
+          compression-level: 0
+          if-no-files-found: error
+          retention-days: 7
+      - name: Publish original-byte review slice 8
+        if: ${{ success() && steps.recover.outputs.slice_count != '' && fromJSON(steps.recover.outputs.slice_count) >= 8 }}
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: listing-review-${{ steps.recover.outputs.artifact_id }}-08
+          path: review-out/listing-review-08.zip
+          compression-level: 0
+          if-no-files-found: error
+          retention-days: 7

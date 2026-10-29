@@ -1,0 +1,104 @@
+{
+  "reviewedAt": "2026-10-28T00:48:00Z",
+  "sourceSha": "dfe5334613b07c8a55c5c059b6811517a0a71fb7",
+  "runUrl": "https://github.com/azerish25-ux/tuner/actions/runs/40599300194",
+  "jobId": 122523487174,
+  "artifact": {
+    "id": 12782665924,
+    "bytes": 180233310,
+    "sha256": "696fa14940d923b6eabb879b1bf4108b2b95f9eb619e5120822774466f8d9288",
+    "downloadedAndHashVerified": true
+  },
+  "result": {
+    "executedTests": 1,
+    "assertionFailures": 1,
+    "failedLocale": "ja",
+    "unrunLocales": [
+      "ko",
+      "zh-CN",
+      "th",
+      "vi",
+      "id"
+    ],
+    "nativeCorrectionStatus": "pending"
+  },
+  "failure": {
+    "test": "LocalizationMatrixUITests/testLocalizedWelcomeAndTabs",
+    "line": 141,
+    "message": "ja: first guitar lesson cannot be opened"
+  },
+  "evidence": [
+    {
+      "path": "screenshots/718A55B2-8594-499C-A368-0F3ABB9ED80B",
+      "sha256": "b3a3e50372d3b26305e3a0a05474f1ac6a0ad040d5dea12617483b2a504ea2a8",
+      "type": "NSKeyedArchiver synthesized event",
+      "finding": "Learn tab tap synthesized at x=142.25, y=822.0, matching the Learn button frame."
+    },
+    {
+      "path": "screenshots/E1FCE158-D377-4C02-886C-7FF25B7335A4.txt",
+      "sha256": "d88f47ff9892fd7d935f19a73acfef17e3f878bb6a4dfe4c0721428fa5f79f97",
+      "type": "accessibility hierarchy",
+      "finding": "At 00:37:48 Tune (チューニング) remains Selected; Learn (学ぶ) is not selected; tune.stage and tune.instrument are present; no lesson path exists."
+    },
+    {
+      "path": "screenshots/493CFF02-DF00-4F48-A1B7-E74975AD8A7D.mp4",
+      "sha256": "2306ccc6e9aeb431aec0a73a348d21d55323b8a64d8af45da60cf0888296a8b6",
+      "type": "native screen recording",
+      "inspectedFrameSeconds": [
+        82,
+        85,
+        151
+      ],
+      "finding": "All three extracted full-screen frames show tuner content and Tune selection, including after the attempted Learn tap and all subsequent swipes."
+    }
+  ],
+  "conclusion": "The first observed failure is unconfirmed tab navigation, before the first guitar lesson is queried. The synthesized tap left Tune selected. This does not establish a Japanese lesson-copy/layout defect, a wrong selected course, or a production cause for the lost tap.",
+  "correction": {
+    "files": [
+      "ios/TimbreUITests/LocalizationMatrixUITests.swift",
+      "tools/l10n/tests/test_matrix_navigation.py"
+    ],
+    "scope": "Select the exact localized native tab with up to three idempotent taps, each followed by a selected-state wait. Save pixels and hierarchy on every missed selection; fail if selection does not complete. Apply to Learn, Songs and Tune returns.",
+    "preserved": [
+      "All exact localization fixtures",
+      "Real lesson open/close and visibility assertions",
+      "Song-request assertions",
+      "Per-locale success markers",
+      "Fail-fast assertion behavior",
+      "Production UI, copy, user preferences and Release behavior"
+    ],
+    "notChanged": "No course reseed, translation substitution, assertion waiver, UI coordinate tap, or workflow assertion retry."
+  },
+  "verification": {
+    "command": "python -m unittest discover -s tools/l10n/tests -p 'test_matrix*.py' -v",
+    "tests": 39,
+    "failures": 0,
+    "newNavigationGuardrails": 6,
+    "logSha256": "b5626e9e6e28db6eecbdbef453e2458a20944173cfd2b2c2780871a07096c3e0",
+    "limit": "Python source/fixture/classifier contracts only. Linux has no Xcode/iOS runtime; corrected native compilation and execution remain required.",
+    "workingTreeHygiene": "Strict aggregate hygiene failed on unrelated PaywallWinBack.swift:132 inline-orb; WatchCapture.swift:5 also emitted a test-coupling notice. No waiver or unrelated fix applied in this patch.",
+    "fullLocalizationSuite": {
+      "command": "python -m unittest discover -s tools/l10n/tests -v",
+      "tests": 266,
+      "failures": 4,
+      "failureCause": "All four failures require a valid hash-bound privacy publication/source receipt; unrelated receipt edits were left untouched.",
+      "failedTests": [
+        "test_privacy_evidence.PrivacyEvidenceTests.test_current_receipt_passes_offline",
+        "test_privacy_evidence.PrivacyEvidenceTests.test_trusted_root_ancestor_symlink_is_allowed",
+        "test_release_applicability.ReleaseApplicabilityTests.test_exclusions_need_no_false_verified_flags_but_keep_dependencies",
+        "test_store_content.StoreContentTests.test_ai_text_policy_does_not_require_false_native_certification"
+      ],
+      "logSha256": "b7ac693b6917db889ef1d1f2d36a3a52da63697c2a02a71fba79a8964ae55c98"
+    }
+  },
+  "coveragePolicy": "The failed shard remains failed, and its five later locales remain unrun. Keeping later locale evidence would require independent XCTest cases or runner invocations; continueAfterFailure=true would not safely isolate dependent assertions or success markers.",
+  "relatedEnglishPilot": {
+    "sourceSha": "9e1e3c41ec24c1a2c78c22ea7a90726dc4ae6599",
+    "runId": 40600424514,
+    "jobId": 122537660383,
+    "test": "TimbreUITests/test10PlayAlongLesson",
+    "finding": "Job export lists 56-lesson-notes, 57-lesson-quiz, 58-lesson-listen and 59-along-ready attachments before the failure screenshot. It reached the lesson, unlike the Japanese failure.",
+    "exactAssertion": "Unavailable in tailed job log; original 627943240-byte artifact 12781917198 exceeds the connector 536870912-byte limit.",
+    "correction": "None without original failure pixels/hierarchy and assertion."
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-27T02:07:57.781530+00:00",
+  "reviewer": "Independent integration review agent",
+  "skill": "C:/Users/shahr/.agents/skills/code-review-and-quality/SKILL.md",
+  "verdict": "approve_bounded_documentation_source_sync",
+  "scope": "Only current uncommitted APPLE-DELIVERY.md/RELEASE-CHECKLIST.md documentation deltas, including direct inconsistencies found and corrected during this review. No consumer listing JSON or portal certification.",
+  "findings": [],
+  "resolved_during_review": [
+    {
+      "id": "DOCSYNC-01",
+      "evidence": "H6 no longer treats an absent telemetry ID as definitive Data Not Collected or lists attribution as a remaining request. It now states actual transport disablement and requires final archive/service/current-questionnaire verification."
+    },
+    {
+      "id": "DOCSYNC-02",
+      "evidence": "APPLE-DELIVERY8.5 step2 now checks11th chart/first10, consistent with the corrected table, checklistF4 and YourSongsPolicy.freeChartLimit10."
+    },
+    {
+      "id": "DOCSYNC-03",
+      "evidence": "ChecklistH4 now treats historical answers as proposals and verifies actual portal result; no forced4+ outcome. Later product-page age check follows actual app/event content rather than fixed4+."
+    }
+  ],
+  "source_consistency": [
+    "Independently plist-parsed all7 manifest types: ProductInteraction, PerformanceData, CrashData, AdvertisingData, DeviceID, PurchaseHistory, OtherUserContent. Each source entry has Analytics purpose and linked/tracking false; documentation accurately describes source declarations while retaining archive/portal validation.",
+    "Analytics.swift and AnalyticsTransport.swift gate telemetry and AppleAds HTTP under transport lease/appID; song requests use the same transport. Missing appID does not establish every separate service collection answer.",
+    "GameCenter.enabled reads explicit project switch; project defaults TIMBRE_GAME_CENTER_ENABLEDNO and omits Game Center entitlement. Documentation now requires explicitYES, entitlement/account/assets and signed-device checks before enablement.",
+    "YourSongsPolicy sets freeChartLimit10; existing charts remain editable/playable and additional free-plan import/add is gated. Corrected procedural test now matches source.",
+    "AppleMusicListen search, resource lookup and ApplicationMusicPlayer flows can send selected title/artist/query/catalog/playback requests to Apple. The corrected privacy description distinguishes these from local imported chart/audio storage.",
+    "H5 retains resolved canonical privacy URL and current Game Center claim removal. This documentation-only change does not rewrite the50 reviewed consumer payloads."
+  ],
+  "independently_executed_verification": [
+    {
+      "command": "git -c core.autocrlf=false diff --check -- docs/ios/APPLE-DELIVERY.md docs/ios/RELEASE-CHECKLIST.md",
+      "exit_code": 0
+    },
+    {
+      "check": "plistlib decode and assertions on7 source manifest types/purposes/linked/tracking flags",
+      "result": "passed"
+    },
+    {
+      "check": "Local modified-link target presence plus Age rating/H6 heading anchor checks",
+      "result": "passed"
+    },
+    {
+      "check": "Direct source assertion for freeChartLimit10 and read of AppleMusic/Analytics/GameCenter paths",
+      "result": "passed"
+    }
+  ],
+  "primary_references": [
+    {
+      "url": "https://developer.apple.com/app-store/app-privacy-details/",
+      "checked": "Official page opens; responses must account for app/third-party practices and remain accurate. Source manifest alone is not actual portal verification."
+    },
+    {
+      "url": "https://developer.apple.com/help/app-store-connect/manage-app-information/set-an-app-age-rating/",
+      "checked": "Official current questionnaire procedure opens; resulting rating is determined from current answers/content."
+    }
+  ],
+  "reviewed_sha256": {
+    "docs/ios/APPLE-DELIVERY.md": "eec6b2aefd9daccdcbd925b128050aba17bad88c8f645853b774f0ef2e23f87f",
+    "docs/ios/RELEASE-CHECKLIST.md": "7229844e3a630074de3bd5ee7477ef6a58e67b78e36496f4903944c4487a545e"
+  },
+  "limits": [
+    "Approval covers changed procedural documentation and the resolved direct inconsistencies, not every historical instruction elsewhere in the dated checklist.",
+    "No App Store Connect/Developer Portal answers, signed archive privacy report, entitlement/service configuration, native execution or legal certification were performed or certified.",
+    "Root reports45 store tests and50-locale draft validation; this review did not rerun those unaffected consumer checks.",
+    "Historical44-issue ledger/original receipts remain unchanged. Prior empty GitHub review/comment inventories are parent-provided context, not independently queried here."
+  ],
+  "mutations": "Only this new review receipt was written; no implementation/docs/listing payload edit, commit or push by reviewer."
+}

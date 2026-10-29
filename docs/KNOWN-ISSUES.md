@@ -1,5 +1,9 @@
 # Known issues and unfinished work
 
+**Historical issue inventory.** [Current App Store readiness](ios/readiness/STATUS.md) and its
+[44-entry reconciliation](ios/readiness/reviews/claude-handoff-reconciliation.json) record current dispositions and evidence.
+Unrun native, media and hardware checks remain open; dated source findings below are not automatically current defects.
+
 The honest list at hand-over (2026-10-25). Each item says where it lives and what would close it. Release blockers
 that only the owner can clear (accounts, translations, licences) are in [OWNER-ACTIONS.md](OWNER-ACTIONS.md) and the
 step-by-step path to the store is in [ios/RELEASE-CHECKLIST.md](ios/RELEASE-CHECKLIST.md).

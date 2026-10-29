@@ -42,6 +42,7 @@ struct SongPerformStep: View {
     /// An actual rendered take timestamp, held only for explicitly requested still captures.
     /// Scores, grades, lyrics and runway all stay at this same state; releases and videos never hold.
     @State private var captureTime: CFTimeInterval?
+    @State private var capturedFirstTick = false
     #endif
 
     private var captureIsHeld: Bool {
@@ -167,7 +168,8 @@ struct SongPerformStep: View {
         #if DEBUG
         // A store scene (Root/DemoScenes.swift) performs the song by itself, from a chosen bar.
         .task {
-            guard let beat = DemoScene.performBeat(lesson, beatsPerBar: beatsPerBar) else { return }
+            guard let beat = DemoScene.performBeat(lesson, beatsPerBar: beatsPerBar),
+                  await DemoScene.waitForPerformCue() else { return }
             try? await Task.sleep(for: DemoScene.performDelay)
             if !Task.isCancelled { startScene(atBeat: beat) }
         }
@@ -529,6 +531,7 @@ struct SongPerformStep: View {
     private func startMelodyReady(tempo: Double) {
         #if DEBUG
         captureTime = nil
+        capturedFirstTick = false
         #endif
         playingChords = false
         session = PlayAlongSession(notes: notes, bpm: tempo, beatsPerBar: beatsPerBar, anyOctave: course.anyOctave, keepsTrail: !fretted)
@@ -583,6 +586,12 @@ struct SongPerformStep: View {
 
     private func tick(now: CFTimeInterval) {
         guard phase == .playing, !captureIsHeld else { return }
+        #if DEBUG
+        if !capturedFirstTick, DemoScene.current == .songPerform, TestSupport.isOn(.sceneStill) {
+            capturedFirstTick = true
+            DemoScene.performDiagnostic("first-rendered-tick", beat: session.clock(at: now) / spb)
+        }
+        #endif
         // Notes and judging follow the heard clock (the first click as it reached the ears), not the tap.
         if let heard = store.audio.heardStart(near: session.startTime) { session.follow(start: heard) }
         let beat = session.countInBeat(at: now)
@@ -597,6 +606,7 @@ struct SongPerformStep: View {
            session.clock(at: now) / spb >= hold {
             // Stop input first at the actual timestamp, without rewriting a note, grade or score.
             captureTime = now
+            DemoScene.performDiagnostic("capture-frozen", beat: session.clock(at: now) / spb)
             store.demoNoteDue = nil
             store.stopLessonListening(owner: owner)
             store.audio.stopBand()
@@ -803,10 +813,12 @@ extension SongPerformStep {
     /// and the band joins at the song's own bar.
     fileprivate func startScene(atBeat beat: Double) {
         guard phase == .stage else { return }
+        DemoScene.performDiagnostic("start-requested", beat: beat)
         startMelody { startSceneReady(atBeat: beat) }
     }
 
     private func startSceneReady(atBeat beat: Double) {
+        DemoScene.performDiagnostic("audio-ready", beat: session.clock(at: CACurrentMediaTime()) / spb)
         // The clock starts a bar before `beat`: the first frames after a jump this size (the runway's first draw of the
         // whole song, the band starting) can hold the main thread for a second, and a note due then would be a miss.
         // The readiness callback runs after output is ready and the take's clock has started.

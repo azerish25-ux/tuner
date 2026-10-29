@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-27T06:08:15.687410+00:00",
+  "reviewer": "Independent integration review agent",
+  "scope": "Read-only source/timeline triage of the c887 guitar preview metadata subset and full native job log. All source references/hashes are frozen git blobs at the failed revision, not concurrently edited worktree bytes.",
+  "revision": "c8874d91f85c3e79d96221fe2ccf70514a9f5085",
+  "artifact_id": 12709773212,
+  "verdict": "demonstrated_preview_handshake_and_readiness_ordering_defects_audio_and_upload_gates_remain_failed",
+  "inputs_sha256": {
+    "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\preview-c8874d9-final.log": "bddbde963542685475382beccddbfc622cc09c8a6a27a2a643861851efdb1437",
+    "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\preview-c8874d9-metadata\\app\\events.jsonl": "1da50b2b6a59846c736db56d8f667fbc6fecac06efd7e09073b28077930402fa",
+    "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\preview-c8874d9-metadata\\take.log": "310ef73eb6562f7c2659d99273dfe420b19ec296b4320edd3302be284282d396",
+    "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\preview-c8874d9-metadata\\record.json": "7dd8cba9ea3008b51533ed6492cdc01bd2348f061625ec4577e4e7b772a7475f",
+    "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\preview-c8874d9-metadata\\cut.json": "ae12d81960130cf5c550e37917633faecfa021c1aad0c59c467ff2889d33c31a",
+    "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\preview-c8874d9-metadata\\PREVIEW.txt": "0fc885afa2b820742637896affc20c74a23c743752c049912f8d11aab10a9c2c"
+  },
+  "frozen_source_sha256": {
+    "ios/Timbre/Root/DemoScenes.swift": "050f831402bc7adc10263f13897f724a6f95e1bcbc1b198fd80ea20aa28a29f8",
+    "ios/Timbre/Learn/SongPerform.swift": "6bc72b992d209610a1a5a9f7ca834b9e6951253eb0efbd8f87b02537433f0633",
+    "ios/Timbre/Audio/AudioService.swift": "6d86ffe45d45cb76a3fbedbcf789764450a86f80c5f660ad0b07c2d91c665f9e",
+    "ios/TimbreUITests/AppPreviewUITests.swift": "c5129671da0c25d1ca7f7f08476af04e5440f91c5c9279bfaa11ab37835978e9",
+    "ios/Timbre/Songs/SongsView.swift": "8bc9d66086b76ea1745d27ac9c5852d9b9fea4e5319d79dd2c4e7a30ea670796",
+    "ios/Timbre/Learn/SongSheet.swift": "69c95fbe2e44c94dcb3f5ecfadbc800d75498a4809adb01854ff01a3dfd09ff5",
+    "tools/marketing/preview.py": "ea817e062f39718edc1f67b87fb8b9f4f695c1f625697448b260ec8b217d8546"
+  },
+  "native_result": {
+    "ui_tour": "1 XCTest passed,516.343seconds; it records missed moments without asserting a successful deliverable",
+    "rendered_duration": 23.8,
+    "reported_sounding_percent": 39,
+    "longest_silence_seconds": 4.6,
+    "per_section_sounding_percent": {
+      "lock": 94,
+      "tuned": 74,
+      "showme": 25,
+      "highway": 15,
+      "results": 7,
+      "songs": 0,
+      "end_card": 68
+    },
+    "reported_highway_low_end_dbfs": -120,
+    "status": "NOT FOR UPLOAD; no gate waiver justified"
+  },
+  "findings": [
+    {
+      "id": "PREVIEW-CUE-01",
+      "priority": 1,
+      "path": "ios/Timbre/Root/DemoScenes.swift",
+      "line": 357,
+      "issue": "An explicitly supplied cue path is bypassed after90seconds.",
+      "evidence": [
+        "Preview launch1793075300.005783; listen1793075396.765936; first lock string0=1793075404.004001.",
+        "Tuner pre-cue screenshot spans1793075412.523\u20135413.208; UI source creates the fresh UUID cue file only after that sync returns. First lock is therefore at least9.204seconds before explicit cue creation.",
+        "Subsequent locks string1=5409.775310,string2=5412.836318,string3=5415.805812. UI waits for any lock after go; selected lock sync begins5415.824 and requested clip5413.206\u20135417.006 identifies string3 rather than first string.",
+        "PREVIEW.txt independently rejects detected lock outside final clip."
+      ],
+      "minimal_finite_fix": "With an explicit cue path, only the file authorizes start; retain12second fallback only when no cue was supplied. Exit canceled waits before provider/selection/event side effects, and check cancellation after sleeps/lock waits. Verify no lock/listen event before cue in a delayed-cue regression."
+    },
+    {
+      "id": "PREVIEW-BAND-01",
+      "priority": 1,
+      "path": "ios/Timbre/Learn/SongPerform.swift",
+      "line": 806,
+      "issue": "Scene starts take clock once output/click is ready while the exact arrangement is still rendering.",
+      "evidence": [
+        "SongPerform task sleeps3seconds at169\u2013172 then startScene\u2192startMelody. startMelody waits on setMetronome output readiness, not the band render cache.",
+        "AudioService.bandTrack1155\u20131172 returns nil while background rendering, then caches and refreshes later. prepareBand1075/playBand1084 do not await readiness. Cache key binds arrangement and renderer sample rate.",
+        "Band rendering=true5515.128321; take origin5518.685308,firstBeat56,bpm88. Hook beats64\u201372 compute5524.139854\u20135529.594399,matching requested clip.",
+        "Band playing=true only5542.161018,27.033seconds after render-pending event and12.567seconds after requested hook ends. All relevant band events report headphones=true.",
+        "Report says15% sounding,median low end-120dBFS and band not playing through clip."
+      ],
+      "minimal_finite_fix": "Before starting the debug scene take/metronome clock, await availability of the exact arrangement at the final current output sample rate; revalidate after every await, cancellation, and output revision change. Require actual cache/track hit, not merely !bandRenderPending. Bound failure and report no take when preparation fails; retain real-time playing and existing band/audio gates. No QoS bump: c887 bandQueue is already userInitiated at AudioService84."
+    },
+    {
+      "id": "PREVIEW-SONGS-01",
+      "priority": 1,
+      "path": "ios/TimbreUITests/AppPreviewUITests.swift",
+      "line": 320,
+      "issue": "An elapsed pre-tap deadline falls back to a guessed historical clip that predates actual sound.",
+      "evidence": [
+        "asked is stamped before snapshot/coordinate tapIfPresent650\u2013652; the operation includes app-idle waits in take.log. The5second deadline uses the old stamp.",
+        "Missing sound produces PREVIEW-MISSED but continues with (asked+0.6)+0.15 rather than an observed start.",
+        "Requested Songs clip5686.052\u20135688.752; first Songs-engine sound5732.003140 is45.951seconds after requested start and43.251seconds after end. Final section is0% sounding."
+      ],
+      "minimal_finite_fix": "Use an explicit bounded request/readiness/actual-sound acknowledgment scoped to this launch/play request. Timestamp observable onset, then record the actual sounding shelf interval. Missing acknowledgment must remain failed and must not emit a valid guessed clip. Do not fill with synthetic sound or weaken gates."
+    },
+    {
+      "id": "PREVIEW-SHOWME-01",
+      "priority": 2,
+      "path": "ios/TimbreUITests/AppPreviewUITests.swift",
+      "line": 237,
+      "issue": "Pre-action wall timestamp and predicted landing can include several seconds before the actual replay sounds.",
+      "evidence": [
+        "ShowMe clip5492.062\u20135499.634; replay engine sound5497.785166 occurs5.723seconds after clip start; another sound5498.852163.",
+        "Source stamps tapped before blocking tapIfPresent, uses that stamp for hold/start, and only later reads the landed probe.",
+        "Final report25% sounding is consistent with large leading quiet interval; the exact delay cause is not established."
+      ],
+      "minimal_finite_fix": "Bind replay to an actual app acknowledgment/landing and its recorded sound, then choose the bounded visual+audio interval. Verify source-state and PCM together on a fresh native take; do not infer a broken route from this timing alone."
+    },
+    {
+      "id": "PREVIEW-RESULTS-01",
+      "priority": 2,
+      "path": "ios/TimbreUITests/AppPreviewUITests.swift",
+      "line": 298,
+      "issue": "Late UI discovery of finale can miss all recorded star cues, then selects a late silent fallback.",
+      "evidence": [
+        "Actual star cues5631.540222,5632.240544,5633.156676,5634.091262.",
+        "Requested results clip5634.900\u20135638.200 begins0.809seconds after the last cue. Tour reports no star within its finale-relative search window; final results7% sounding."
+      ],
+      "minimal_finite_fix": "Record a scene-scoped app-side finale/cue acknowledgment and anchor from its actual first star, rather than inferring onset from a delayed XCUI query. Preserve diagnostics and fail when required moment is absent."
+    }
+  ],
+  "rejected_inferences": [
+    "No keep.tail implementation defect is established: trim preserves the declared tail by moving start. Original lockLead2.6/tail1.2 would contain the intended lock with a correct handshake; later cut/gate checks must still pass.",
+    "Headphone route was true throughout band diagnosis, so route-disabled/kit-only playback is not the established root cause.",
+    "Songs hero calls togglePreview(full:false); c887 SongsView299 only builds a band for full samples. Its short opening is intentionally melody-only. UITest comment307 says with band, but listing caption140+ songs does not promise a band in this section.",
+    "Shader/main-thread query/DSP warmup may explain delays, but these artifacts do not isolate their individual contribution. Do not alter production playback solely from those hypotheses.",
+    "Tuned/showme/results/end-card silence checks also remain failed; the two demonstrated source fixes do not certify every sound requirement resolved."
+  ],
+  "required_proof": [
+    "Targeted cancellation/late explicit-cue regression: explicit cue must not start after90seconds without file; absent-cue standalone fallback remains12seconds.",
+    "Readiness tests hold exact arrangement render incomplete: no scene take clock before cache hit; test canceled preparation, changed output rate/revision and a different cached arrangement.",
+    "Rerun a complete real native guitar preview; require fresh metadata showing first lock after cue, exact band prepared before take/hook and all intended sounds inside chosen clips. Run original silence/duty-cycle/low-end/band/lock/poster gates unchanged.",
+    "Retain current raw metadata and failed preview. Violin preview and other native/localized asset sets require their own proof."
+  ],
+  "limits": [
+    "Metadata subset does not contain original raw video, engine PCM or WAV payloads. This review independently verifies source and event ordering, and attributes measured audio/video outcomes to PREVIEW.txt/full log; it does not claim fresh waveform analysis or frame inspection.",
+    "No source implementation, code commit, branch change, native execution, publication or upload performed."
+  ]
+}

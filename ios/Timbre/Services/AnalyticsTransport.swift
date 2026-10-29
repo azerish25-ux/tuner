@@ -84,15 +84,18 @@ final class AppleAdsReporter: @unchecked Sendable {
     private let token: @Sendable () -> String?
     private let record: Record
     private let retryDelay: TimeInterval
+    private let tokenQueue: DispatchQueue
     private var activeLease: AnalyticsTransport.Lease?
     private static let doneKey = "telemetry.attributionSent"
     private static let endpoint = URL(string: "https://api-adservices.apple.com/api/v1/")!
 
     init(transport: AnalyticsTransport, defaults: UserDefaults = .standard, retryDelay: TimeInterval = 5,
+         tokenQueue: DispatchQueue = .global(qos: .utility),
          token: @escaping @Sendable () -> String?, record: @escaping Record) {
         self.transport = transport
         self.defaults = defaults
         self.retryDelay = retryDelay
+        self.tokenQueue = tokenQueue
         self.token = token
         self.record = record
     }
@@ -102,7 +105,7 @@ final class AppleAdsReporter: @unchecked Sendable {
         transport.withLease(lease) { [self] in
             guard !defaults.bool(forKey: Self.doneKey), activeLease != lease else { return }
             activeLease = lease
-            DispatchQueue.global(qos: .utility).async { [self] in acquireToken(lease: lease) }
+            tokenQueue.async { [self] in acquireToken(lease: lease) }
         }
     }
 

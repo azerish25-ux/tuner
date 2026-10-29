@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "reviewer": "Independent integration review agent",
+  "verdict": "approve_bounded_source_draft_native_unrun_handoff_not_release_ready",
+  "scope": "Final four-file prepared-audio draft only. Independent source approval for handoff, not proof the failed preview is fixed. Prior request-changes receipts remain preserved.",
+  "source_sha256": {
+    "ios/Timbre/Audio/AudioService.swift": "539527b6c58d9b60b124e9403dada7f0759a8cb444a4871b8836af5aa0356995",
+    "ios/Timbre/Learn/SongPerform.swift": "a3b2ad9e84f56388ef716cd9397e93e173fbe25d97a43b71f697a22791168812",
+    "ios/TimbreUITests/AppPreviewUITests.swift": "9d7c00538995326a4d172d31390ed7df2e5b1cabf1903d733a6d5404653fecbd",
+    "ios/TimbreAppTests/AudioStartupTests.swift": "9ad41ace5d2053fd5f4fa9487acf9f58d903fff889dfd4d0ec0c7aae374f8f36"
+  },
+  "findings": [],
+  "resolved_source_findings": {
+    "PREVIEW-PREP-01": "Nonoptional arrangement is captured with plain let.",
+    "PREVIEW-PREP-02": "Preparation lease survives handoff. Final prepared predicate checks current lease/output revision, stage phase, same arrangement and exact arrangement/current-rate cache. Predicate and request.consume run without an intervening await before actual clock startup.",
+    "PREVIEW-PREP-03": "Cancel increments generation, captures and clears old handles, invokes rejection while ownership can still be checked, then cancels captured readiness/task. Old rejection cannot erase new handles; metronome command identity prevents an old request stopping a newer click.",
+    "PREVIEW-PREP-04": "Final predicate now retains phase==stage. Nonrecorded scene call uses explicit afterReady label."
+  },
+  "lifetime_assessment": [
+    "Preparation polls exact BandRenderKey at current renderer rate, not global pending state. Initial output activation establishes a revision-bound lease; cancellation, stale revision, changed phase or arrangement reject preparation.",
+    "Before handoff, local defer releases the lease on failure. startMelody returns whether gate accepted ownership, so already-pending rejection cannot leak the lease. On successful handoff, ready and rejection callbacks release it; gate clears rejection before ready and repeated cancel remains one-shot.",
+    "The current metronome request is established synchronously before gate handoff. Its metronomeRunning intent keeps output active when successful preparation ownership is released. Rejection stops only its still-current metronome request, protecting replacements.",
+    "Ordinary gate callers retain default prepared=true and rejected=nil. Recorded scenes alone wait for band preparation. Shared AudioStartGate and SongPerform changes still require native regression testing.",
+    "UI preview requires actual take-clock acknowledgment within60seconds and returns a failed missing-moment result when absent. Predicted clock fallback is removed; musical intervals and delivery gates remain unchanged."
+  ],
+  "authored_native_tests": [
+    "Prepared lesson rechecks lease currency after held actual activation, starts zero clocks and releases once.",
+    "Repeated cancellation during pending activation invokes rejection once and later activation cannot start a clock.",
+    "Canceling already-ready but unconsumed startup stops its own metronome and releases output.",
+    "Replacing prepared startup rejects old request once, starts no old clock and preserves the newer click."
+  ],
+  "handoff_risks_and_remaining_work": [
+    "All four new native tests are authored but unrun on Windows. Source approval is conditional on native AudioStartup, RecordingStartup and full app-target results.",
+    "No direct native regression proves different arrangement/rate cache entries cannot satisfy the exact cache probe. Source key matches renderer lookup; fresh real preview and controlled cache/rate coverage remain desirable.",
+    "The45second monotonic deadline covers band polling after output activation, not the entire hardware activation lifetime. Host scheduling and native behavior remain unverified.",
+    "A real native guitar preview must prove band readiness before take/hook, then satisfy original lock, poster, silence, duty-cycle, low-end and band-event gates. Existing c887 failed artifact remains failed.",
+    "Songs, ShowMe and results clip timing findings in preview-c887-timing-triage.json have not been fixed by this draft. Tuned/end-card audio failures and violin preview also remain open. No audio gate waiver or ready-for-upload claim.",
+    "PegLabelLayoutTests and TempoRungLayoutTests changes visible elsewhere in the worktree are outside this review."
+  ],
+  "verification": {
+    "source_review": "One final bounded review pass completed; no further implementation requested.",
+    "native_compile_or_execution": "Not available on Windows; no native pass claimed."
+  },
+  "reviewed_at_utc": "2026-10-27T06:30:00.809923+00:00",
+  "comparison_head": "0bab4ed55d08d0972dfd9f436b4222c683adff15"
+}

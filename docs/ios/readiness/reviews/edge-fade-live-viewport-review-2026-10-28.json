@@ -1,0 +1,184 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-10-28",
+  "status": "test_correction_native_pending",
+  "source_evidence": {
+    "run_id": 40621117889,
+    "job_id": 122595125150,
+    "head_sha": "7051df183d166ad8c7df2734fa7207d1d5efc326",
+    "tested_merge_sha": "78060e534a69759b37cf50adac6b7f4d80ef4325",
+    "artifact_id": 12788890523,
+    "artifact_sha256": "64b7d36e265303941d325c7c208e54f275258c4c0890a60b960d0ca229de6456",
+    "url": "https://github.com/azerish25-ux/tuner/actions/runs/40621117889/job/122595125150"
+  },
+  "native_result": {
+    "edge_fade_tests": 6,
+    "edge_fade_failures": 2,
+    "failures": "Only the two initial readiness predicates timed out at line 126; all eight strict semantic and independent physical viewport assertions passed. The suite remains failed.",
+    "mask_raster_test": "passed; inspected LTR and RTL resting-leading masks",
+    "song_rail_measurement_tests": 11,
+    "song_rail_measurement_failures": 0,
+    "middle_selection": {
+      "constructed_cards": 61,
+      "catalogue_cards": 120,
+      "selected_global_frame": [
+        127,
+        401,
+        148,
+        80
+      ],
+      "scroll_width": 442,
+      "scroll_offset_x": 9425,
+      "centering_accuracy_unchanged": 24
+    }
+  },
+  "viewport_contract": {
+    "content_width": 1288,
+    "content_height": 44,
+    "margin_leading": 20,
+    "margin_trailing": 32,
+    "scroll_geometry_container_width": 248,
+    "scroll_geometry_visible_width": 300,
+    "content_geometry_proxy_bounds_width": 248,
+    "observations": [
+      {
+        "direction": "leftToRight",
+        "stage": "initial",
+        "logical_content_offset_x": -20.0,
+        "physical_content_viewport": [
+          0.0,
+          0,
+          248.0,
+          44
+        ],
+        "overflow": {
+          "leading": false,
+          "trailing": true
+        },
+        "attachment": "7DA426B2-4C85-440A-936A-A98996C1A77C.txt"
+      },
+      {
+        "direction": "leftToRight",
+        "stage": "item-5",
+        "logical_content_offset_x": 446.0,
+        "physical_content_viewport": [
+          466.0,
+          0,
+          248.0,
+          44
+        ],
+        "overflow": {
+          "leading": true,
+          "trailing": true
+        },
+        "attachment": "D8B305DB-1AB6-4C8D-8AC9-EFD768B4DB36.txt"
+      },
+      {
+        "direction": "leftToRight",
+        "stage": "item-11",
+        "logical_content_offset_x": 1020.0,
+        "physical_content_viewport": [
+          1040.0,
+          0,
+          248.0,
+          44
+        ],
+        "overflow": {
+          "leading": true,
+          "trailing": false
+        },
+        "attachment": "9F047D4B-81F9-4179-BB23-1A11346C9857.txt"
+      },
+      {
+        "direction": "leftToRight",
+        "stage": "item-0",
+        "logical_content_offset_x": -20.0,
+        "physical_content_viewport": [
+          0.0,
+          0,
+          248.0,
+          44
+        ],
+        "overflow": {
+          "leading": false,
+          "trailing": true
+        },
+        "attachment": "27A5B18A-9D62-4014-9AB6-4B395E87ABA9.txt"
+      },
+      {
+        "direction": "rightToLeft",
+        "stage": "initial",
+        "logical_content_offset_x": 32.0,
+        "physical_content_viewport": [
+          1040.0,
+          0,
+          248.0,
+          44
+        ],
+        "overflow": {
+          "leading": false,
+          "trailing": true
+        },
+        "attachment": "4C0867AD-572F-4D92-A7EA-F5791B5EA6AD.txt"
+      },
+      {
+        "direction": "rightToLeft",
+        "stage": "item-5",
+        "logical_content_offset_x": 498.0,
+        "physical_content_viewport": [
+          574.0,
+          0,
+          248.0,
+          44
+        ],
+        "overflow": {
+          "leading": true,
+          "trailing": true
+        },
+        "attachment": "F6721E57-74E3-46E2-8C88-2F171BE9C66C.txt"
+      },
+      {
+        "direction": "rightToLeft",
+        "stage": "item-11",
+        "logical_content_offset_x": 1072.0,
+        "physical_content_viewport": [
+          0.0,
+          0,
+          248.0,
+          44
+        ],
+        "overflow": {
+          "leading": true,
+          "trailing": false
+        },
+        "attachment": "750FBBF7-4709-49F1-AD73-0BF7389F651E.txt"
+      },
+      {
+        "direction": "rightToLeft",
+        "stage": "item-0",
+        "logical_content_offset_x": 32.0,
+        "physical_content_viewport": [
+          1040.0,
+          0,
+          248.0,
+          44
+        ],
+        "overflow": {
+          "leading": false,
+          "trailing": true
+        },
+        "attachment": "0785F204-C0E7-4A5E-8BE6-3228F7447D64.txt"
+      }
+    ]
+  },
+  "diagnosis": "GeometryProxy.bounds(of: .scrollView) is the physical inset content viewport in this fixture. Its width equals containerSize, not visibleRect. The previous predicate required both widths to be 300 and could never complete. RTL proxy positions travel opposite LTR, while logical contentOffset grows toward trailing in both directions.",
+  "change": "Test-only correction: require exact observed 248-point proxy / 300-point visible widths, compare proxy width with containerSize, and assert the inset relationship at every phase. Preserve 3-second waits and all strict endpoint, middle, return, mask and negative-control assertions.",
+  "unchanged": [
+    "EdgeFade.swift production offset calculation",
+    "EdgeFadeMask raster",
+    "GeometryProxy production overflow path",
+    "SongShelfRail selection centering and trailing identity tracking",
+    "SongRailMeasurementTests strict centering/fade clearance, complete catalogue and lazy card cap"
+  ],
+  "verification_limit": "Corrected native test has not run. Local source/replay tests do not constitute a native pass. No commit or push performed by this task."
+}

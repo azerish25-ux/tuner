@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "locale": "ar-SA",
+  "reviewed_utc": "2026-10-27T21:23:08Z",
+  "method": "independent_source_aware_ai",
+  "scope": "Three screenshot-caption terminology deltas only; unchanged material inherits earlier evidence.",
+  "proposal_sha256": "13ba3f153077b19ffc355dfdd61bccd288bed5418fe808c53679dc81c6baaf2a",
+  "parent_payload_sha256": "d34f193f0b6b24772d3f54aaf47a9d0f96d797d799dbc37eace5e274daab5111",
+  "source_content_sha256": "514669cf9ae60e4ed542ebc129647230cd620f20541e4e78c81a258541f63f47",
+  "parent_content_sha256": "4acd37c5f8461df5e23435926db8113917dfbcdb492baa3039243137a86f15b2",
+  "reviewed_content_sha256": "5799b5c388c864105cd6ee4f5bc35a2ce9de66b26e851cd2ca661fa99dc86f1b",
+  "glossary_sha256": "7a854703673afe1f0110ace426ba1dbb35f255ad16b2b7ee134fdb2e9c45d391",
+  "changes": [
+    {
+      "pointer": "/iphone_screenshot_captions/0/caption",
+      "source": "Free tuner. No ads.",
+      "old": "ضابط مجاني. بلا إعلانات.",
+      "proposed": "موالف مجاني. بلا إعلانات.",
+      "reason": "Binding Arabic glossary says tuner = موالف; ضابط is underspecified and can mean officer/controller. Preserves free/no-ad claims without expansion.",
+      "decision": "accepted_after_independent_source_aware_review",
+      "review_reason": "Tuner uses the binding glossary term موالف. A single strumming stroke uses ضربة واحدة in the pictured string-instrument context, replacing an ambiguous pass/swipe. Meaning and claim scope preserved."
+    },
+    {
+      "pointer": "/iphone_screenshot_captions/7/caption",
+      "source": "One strum checks every string",
+      "old": "تمريرة تفحص كل الأوتار",
+      "proposed": "ضربة واحدة تفحص كل الأوتار",
+      "reason": "A single strumming stroke is ضربة, supported by glossary downstroke/upstroke = ضربة لأسفل / ضربة لأعلى. تمريرة is a generic pass/swipe rather than idiomatic musical action. Requires independent linguistic acceptance and fresh typography render.",
+      "decision": "accepted_after_independent_source_aware_review",
+      "review_reason": "Tuner uses the binding glossary term موالف. A single strumming stroke uses ضربة واحدة in the pictured string-instrument context, replacing an ambiguous pass/swipe. Meaning and claim scope preserved."
+    },
+    {
+      "pointer": "/ipad_screenshot_captions/0/caption",
+      "source": "Free tuner. No ads.",
+      "old": "ضابط مجاني. بلا إعلانات.",
+      "proposed": "موالف مجاني. بلا إعلانات.",
+      "reason": "Binding Arabic glossary says tuner = موالف; ضابط is underspecified and can mean officer/controller. Preserves free/no-ad claims without expansion.",
+      "decision": "accepted_after_independent_source_aware_review",
+      "review_reason": "Tuner uses the binding glossary term موالف. A single strumming stroke uses ضربة واحدة in the pictured string-instrument context, replacing an ambiguous pass/swipe. Meaning and claim scope preserved."
+    }
+  ],
+  "limitations": "Not native-speaker, market, legal, device or submission certification. Fresh typography/render review required; no readiness flags changed."
+}

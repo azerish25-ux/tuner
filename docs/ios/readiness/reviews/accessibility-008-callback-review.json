@@ -1,0 +1,2290 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-27T05:28:17.718192+00:00",
+  "reviewer": "Independent integration review agent",
+  "revision_under_test": "0081d2a",
+  "scope": "All 13 original native audit reports, all 54 distinct enforced callback attachments and their reported target rectangles. 74 named PNGs include 13 baseline audit,54 callback,7 localization. Target crops derived without modifying originals.",
+  "verdict": "bounded_28_visible_target_dispositions_supported_25_obscured_and_six_opaque_callbacks_unresolved_two_required_audits_incomplete",
+  "counts": {
+    "visible_contradictory_contrast_report": 28,
+    "occluded_or_viewport_edge": 25,
+    "unidentified": 1,
+    "unique_enforced": 54,
+    "raw_opaque_callbacks": 6,
+    "demonstrated_product_contrast_defects": 0,
+    "required_audits_incomplete": 2
+  },
+  "provenance": {
+    "named_index_sha256": "5e5a1fa04efdb2eccd63c9bd29cce7da50dd60448fc5b18b2263dcad75027a3c",
+    "raw_manifest_sha256": "7c368e5b69a38f7ab73b4315e2ea287b1fcba69232590c5df086214a5bc98775",
+    "all54_named_callback_hashes_match_raw": true,
+    "reports": {
+      "welcome": {
+        "file": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\04438D50-B2B5-4A3A-9332-D202FA011AE1.txt",
+        "sha256": "281667dcd30f1bacdd3664fd76f1d5c7fd0c134d1943a1b9a12544e0df209619",
+        "header": "Accessibility audit, welcome: 17 lines, 0 failing"
+      },
+      "lesson-notes": {
+        "file": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\1228BD65-AC53-434B-AA92-6DCD69970536.txt",
+        "sha256": "104b081a9630fff4771579105ceb99a016ab4b4f09f48df1f61449dcebfef397",
+        "header": "Accessibility audit, lesson-notes: 4 lines, 0 failing"
+      },
+      "settings": {
+        "file": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\14B4D3D0-1F36-4B70-A478-9DFBEC734484.txt",
+        "sha256": "29e06f72ebe84819ba6e628e42eb21446a88b630dd6476bc68a803ccd7e02f8e",
+        "header": "Accessibility audit, settings: 12 lines, 0 failing"
+      },
+      "paywall": {
+        "file": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\16130CEB-FDB9-486E-833D-3D22F8C734B3.txt",
+        "sha256": "cddcb89498fc22364452b01cdce37c7946456488ce14a2b6aa2fcda5ce372e76",
+        "header": "Accessibility audit, paywall: 23 lines, 1 failing"
+      },
+      "lesson-tunecheck": {
+        "file": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\24621E3C-13A7-4F37-9C6C-507459890ED6.txt",
+        "sha256": "e91904ce62937a7022182c237a7f3c572474f6fe4b2bccfac82f06d6ee8397bb",
+        "header": "Accessibility audit, lesson-tunecheck: 17 lines, 0 failing"
+      },
+      "tab-5-progress": {
+        "file": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\325928E4-79C9-470D-93E8-9BF3975F168C.txt",
+        "sha256": "7470855f412cb7090099b26ea5683523fbd9ae76dbe0f993e9f2dd611a409591",
+        "header": "Accessibility audit, tab-5-progress: 36 lines, 10 failing"
+      },
+      "tab-3-songs": {
+        "file": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\3D03B722-1CD1-49A1-8304-2FAEDECF82E5.txt",
+        "sha256": "2bcd7c3e5ff2a42c838188c3fe014354bb780f3628ac345a6060726559797a25",
+        "header": "Accessibility audit, tab-3-songs: 53 lines, 41 failing"
+      },
+      "lesson-explain": {
+        "file": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\C73D757E-4731-4132-8B99-53F9AAF5415B.txt",
+        "sha256": "52d7ea8a5d843dbcabb85f9c5a21112b133d012b248dd964071334563b0414cc",
+        "header": "Accessibility audit, lesson-explain: 3 lines, 0 failing"
+      },
+      "lesson-along-ready": {
+        "file": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\CECCD175-977E-4692-9BFB-DE0233AE7816.txt",
+        "sha256": "485fdc388cca0a7165c5cad0942bff5c8f6af62ebc3fd2a3e166fdcfc794ab35",
+        "header": "Accessibility audit, lesson-along-ready: 7 lines, 0 failing"
+      },
+      "tab-2-learn": {
+        "file": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\EB91B050-034A-4090-B2BE-C798BE3BBFEE.txt",
+        "sha256": "44ae8c0f83f2383670eaefe9655243d8729e6a236ec6722796cd3dea7fe2f884",
+        "header": "Accessibility audit, tab-2-learn: 16 lines, 0 failing"
+      },
+      "tab-1-tune": {
+        "file": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\F4B5DEB5-8B3C-4CE1-911B-3C1E4CDFB858.txt",
+        "sha256": "48ea4fbee3b95a313810c8fd57afa5294a7138a11e33dd0c2d6288b3b7a09cc3",
+        "header": "Accessibility audit, tab-1-tune: 52 lines, 0 failing"
+      },
+      "metronome": {
+        "file": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\F4B84FC7-AD41-44B9-8055-4A5CE82209F3.txt",
+        "sha256": "4d56df330ea8d557bb0980d238be455d6445d83c14e3b71fcffc558ce4c420b9",
+        "header": "Accessibility audit, metronome: 30 lines, 0 failing"
+      },
+      "tab-4-practice": {
+        "file": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\F65DD5E1-3DC1-4120-BBB7-E7FD00669019.txt",
+        "sha256": "aebfea70b65ae937ece23561efe51120d4c3f0784365aa74b5d66adcc74c2884",
+        "header": "Accessibility audit, tab-4-practice: 10 lines, 2 failing"
+      }
+    }
+  },
+  "method": [
+    "Match report first-unique enforced line order to failure attachment index; Practice raw duplicate lines must not shift LV5 index2.",
+    "Inspect originals plus all53 identifiable reported-frame crops at native scale3 (1206x2622 pixels,402x874 points). Four full failing-screen originals checked; crops show actual tab bars occupying many alleged target rectangles.",
+    "Callback screenshot follows issue snapshot; it still cannot establish the exact instant/region sampled internally by XCTest. No ICC profile is embedded; RGB core/background samples below are diagnostic corroboration, not a measured full-target minimum or complete WCAG audit."
+  ],
+  "ordering_conclusion": {
+    "visible_isolated_kind": 24,
+    "visible_combined_all": 4,
+    "assessment": "Current isolated-kind retries already reproduce most visible contradictions. One fresh-process contrast-first run is a bounded test of state retained by a preceding failed .all; separating kinds in the same process alone is not established remediation."
+  },
+  "finite_next_steps": [
+    "For28 individually visible targets, implement an explicit evidence-linked contrast-only matcher: exact screen plus stable identifier when available; otherwise exact type,label and captured fully-visible target geometry/role. Fail closed when identity or visibility changes. Do not use screen-wide, keyword, or label-only exemption: Songs,Guitar,LV5 collide across targets.",
+    "Back those matchers with regressions for actual foreground/background roles, gradients, opacity and cover compositing. Existing test_song_cover_contrast.py primarily guards catalog-number ink; it does not guard every one of these28 roles. Preserve4.5 normal/3 large text applicable criteria and actual image receipt.",
+    "For25 occluded targets, add finite scroll-to-clear same-target audit cases (including below-dock song controls and weekdays, and horizontally clipped violin/cover). Preserve the initial reports; recheck unchanged contrast fully visible before proposing a disposition or source recolor.",
+    "Retain all6 opaque Practice callbacks using new callback ordinal/detailedDescription diagnostics; no target exemption until identified.",
+    "Retain both Songs DynamicType and clippedText incomplete-audit failures; current source already requires all kinds to finish. A contrast disposition cannot resolve these timeouts."
+  ],
+  "filter_policy_reference": {
+    "url": "https://developer.apple.com/videos/play/wwdc2023/10035/",
+    "support": "Apple explains individually investigated contrast false positives may be filtered by audit kind and element label, optionally type/identifier. This supports precise dispositions, not an automatic approval of a matcher implementation or of obscured/unidentified targets."
+  },
+  "native_limits": [
+    "No new native run/typecheck performed on Windows. No human VoiceOver, language or hardware certification.",
+    "Historical b6 review and this008 callback evidence are separate receipts; neither waives older mixed audit failures.",
+    "No product recolor, threshold change, broad known exception or source implementation authorized by this review."
+  ],
+  "per_failure": [
+    {
+      "screen": "paywall",
+      "failure_index": 1,
+      "kind": "contrast",
+      "label": "\"SAVE 58%\"",
+      "frame_points": [
+        291.6666666666667,
+        386.3333333333333,
+        69.33333333333331,
+        15.333333333333314
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"SAVE 58%\" | frame (291.6666666666667, 386.3333333333333, 69.33333333333331, 15.333333333333314) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "visible_contradictory_contrast_report",
+      "assessment": "Reported geometry maps to visible readable glyphs in callback pixels. Narrow investigated false-positive disposition is supported for this captured state; no universal SDK-bug or whole-target WCAG certification.",
+      "remaining_action": "Exact-identity contrast-only disposition plus paint-role regression, preserving other audit kinds.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-paywall-1.png",
+      "sha256": "4be8091ec89d83eae2c4385961836ece05aa0cfb9aa4d5b213df6653c76af7f8",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\CF44C33A-8187-42F2-AAEE-635C5A22A0F6.png",
+      "timestamp_unix": 1793075630.953,
+      "native_size_px": [
+        1206,
+        2622
+      ],
+      "pixel_corroboration": {
+        "foreground_rgb": [
+          27,
+          18,
+          6
+        ],
+        "foreground_pixel_count": 741,
+        "background_rgb": [
+          233,
+          167,
+          81
+        ],
+        "sample_coordinates_px": {
+          "foreground": [
+            883,
+            1168
+          ],
+          "background": [
+            887,
+            1197
+          ]
+        },
+        "sample_pair_srgb_ratio": 8.9025,
+        "limit": "Exact RGB samples within reported target crop; background is most-common sufficiently different color, not proof of local adjacency or full-glyph minimum."
+      }
+    },
+    {
+      "screen": "tab-5-progress",
+      "failure_index": 1,
+      "kind": "contrast",
+      "label": "\"Last five weeks\"",
+      "frame_points": [
+        38.0,
+        749.3333333333333,
+        131.0,
+        21.66666666666663
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"Last five weeks\" | frame (38.0, 749.3333333333333, 131.0, 21.66666666666663) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "completed_combined_all",
+      "classification": "visible_contradictory_contrast_report",
+      "assessment": "Reported geometry maps to visible readable glyphs in callback pixels. Narrow investigated false-positive disposition is supported for this captured state; no universal SDK-bug or whole-target WCAG certification.",
+      "remaining_action": "Exact-identity contrast-only disposition plus paint-role regression, preserving other audit kinds.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-5-progress-1.png",
+      "sha256": "760ffd5b1b7ca77ea51b8cfec74bedcaca96054f2339462be3a2922f2d5e5055",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\2B1F7E95-0BB8-41D2-85A2-A618FF3EA1D8.png",
+      "timestamp_unix": 1793075271.452,
+      "native_size_px": [
+        1206,
+        2622
+      ],
+      "pixel_corroboration": {
+        "foreground_rgb": [
+          237,
+          235,
+          232
+        ],
+        "foreground_pixel_count": 643,
+        "background_rgb": [
+          16,
+          18,
+          22
+        ],
+        "sample_coordinates_px": {
+          "foreground": [
+            119,
+            2272
+          ],
+          "background": [
+            114,
+            2272
+          ]
+        },
+        "sample_pair_srgb_ratio": 15.7565,
+        "limit": "Exact RGB samples within reported target crop; background is most-common sufficiently different color, not proof of local adjacency or full-glyph minimum."
+      }
+    },
+    {
+      "screen": "tab-5-progress",
+      "failure_index": 2,
+      "kind": "contrast",
+      "label": "\"20 of 35 days\"",
+      "frame_points": [
+        286.00000000000006,
+        754.3333333333333,
+        78.0,
+        14.333333333333371
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"20 of 35 days\" | frame (286.00000000000006, 754.3333333333333, 78.0, 14.333333333333371) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "completed_combined_all",
+      "classification": "visible_contradictory_contrast_report",
+      "assessment": "Reported geometry maps to visible readable glyphs in callback pixels. Narrow investigated false-positive disposition is supported for this captured state; no universal SDK-bug or whole-target WCAG certification.",
+      "remaining_action": "Exact-identity contrast-only disposition plus paint-role regression, preserving other audit kinds.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-5-progress-2.png",
+      "sha256": "760ffd5b1b7ca77ea51b8cfec74bedcaca96054f2339462be3a2922f2d5e5055",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\4205D8E9-5766-4FD3-BDE8-AF0D9B719448.png",
+      "timestamp_unix": 1793075271.792,
+      "native_size_px": [
+        1206,
+        2622
+      ],
+      "pixel_corroboration": {
+        "foreground_rgb": [
+          157,
+          162,
+          171
+        ],
+        "foreground_pixel_count": 146,
+        "background_rgb": [
+          16,
+          18,
+          22
+        ],
+        "sample_coordinates_px": {
+          "foreground": [
+            883,
+            2276
+          ],
+          "background": [
+            858,
+            2272
+          ]
+        },
+        "sample_pair_srgb_ratio": 7.3114,
+        "limit": "Exact RGB samples within reported target crop; background is most-common sufficiently different color, not proof of local adjacency or full-glyph minimum."
+      }
+    },
+    {
+      "screen": "tab-5-progress",
+      "failure_index": 3,
+      "kind": "contrast",
+      "label": "\"W\"",
+      "frame_points": [
+        52.21428571428572,
+        782.9999999999999,
+        13.0,
+        15.333333333333371
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"W\" | frame (52.21428571428572, 782.9999999999999, 13.0, 15.333333333333371) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "completed_combined_all",
+      "classification": "occluded_or_viewport_edge",
+      "assessment": "Reported frame maps to tab-dock occlusion, clipped horizontal viewport, or edge-faded artwork; current pixels cannot establish the unobscured same-target contrast.",
+      "remaining_action": "Scroll this same target fully clear of dock/edge, verify identity, capture and rerun unchanged contrast; fix product only if that view demonstrates a defect.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-5-progress-3.png",
+      "sha256": "760ffd5b1b7ca77ea51b8cfec74bedcaca96054f2339462be3a2922f2d5e5055",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\04AB386D-45FE-4966-B667-A166A5C03BBE.png",
+      "timestamp_unix": 1793075272.144,
+      "native_size_px": [
+        1206,
+        2622
+      ]
+    },
+    {
+      "screen": "tab-5-progress",
+      "failure_index": 4,
+      "kind": "contrast",
+      "label": "\"T\"",
+      "frame_points": [
+        102.4761904761905,
+        782.9999999999999,
+        7.333333333333329,
+        15.333333333333371
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"T\" | frame (102.4761904761905, 782.9999999999999, 7.333333333333329, 15.333333333333371) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "completed_combined_all",
+      "classification": "occluded_or_viewport_edge",
+      "assessment": "Reported frame maps to tab-dock occlusion, clipped horizontal viewport, or edge-faded artwork; current pixels cannot establish the unobscured same-target contrast.",
+      "remaining_action": "Scroll this same target fully clear of dock/edge, verify identity, capture and rerun unchanged contrast; fix product only if that view demonstrates a defect.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-5-progress-4.png",
+      "sha256": "760ffd5b1b7ca77ea51b8cfec74bedcaca96054f2339462be3a2922f2d5e5055",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\23580C83-715F-41B0-8DDA-4037148AEF02.png",
+      "timestamp_unix": 1793075272.482,
+      "native_size_px": [
+        1206,
+        2622
+      ]
+    },
+    {
+      "screen": "tab-5-progress",
+      "failure_index": 5,
+      "kind": "contrast",
+      "label": "\"F\"",
+      "frame_points": [
+        150.0714285714286,
+        782.9999999999999,
+        7.0,
+        15.333333333333371
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"F\" | frame (150.0714285714286, 782.9999999999999, 7.0, 15.333333333333371) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "completed_combined_all",
+      "classification": "occluded_or_viewport_edge",
+      "assessment": "Reported frame maps to tab-dock occlusion, clipped horizontal viewport, or edge-faded artwork; current pixels cannot establish the unobscured same-target contrast.",
+      "remaining_action": "Scroll this same target fully clear of dock/edge, verify identity, capture and rerun unchanged contrast; fix product only if that view demonstrates a defect.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-5-progress-5.png",
+      "sha256": "760ffd5b1b7ca77ea51b8cfec74bedcaca96054f2339462be3a2922f2d5e5055",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\9ECFCFA6-57D9-4064-8FB2-8613B5D778FF.png",
+      "timestamp_unix": 1793075272.832,
+      "native_size_px": [
+        1206,
+        2622
+      ]
+    },
+    {
+      "screen": "tab-5-progress",
+      "failure_index": 6,
+      "kind": "contrast",
+      "label": "\"S\"",
+      "frame_points": [
+        196.83333333333337,
+        782.9999999999999,
+        8.333333333333343,
+        15.333333333333371
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"S\" | frame (196.83333333333337, 782.9999999999999, 8.333333333333343, 15.333333333333371) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "completed_combined_all",
+      "classification": "occluded_or_viewport_edge",
+      "assessment": "Reported frame maps to tab-dock occlusion, clipped horizontal viewport, or edge-faded artwork; current pixels cannot establish the unobscured same-target contrast.",
+      "remaining_action": "Scroll this same target fully clear of dock/edge, verify identity, capture and rerun unchanged contrast; fix product only if that view demonstrates a defect.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-5-progress-6.png",
+      "sha256": "760ffd5b1b7ca77ea51b8cfec74bedcaca96054f2339462be3a2922f2d5e5055",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\2FA20B72-A280-4CD4-BBE8-9DEEA2FD3D41.png",
+      "timestamp_unix": 1793075273.347,
+      "native_size_px": [
+        1206,
+        2622
+      ]
+    },
+    {
+      "screen": "tab-5-progress",
+      "failure_index": 7,
+      "kind": "contrast",
+      "label": "\"S\"",
+      "frame_points": [
+        244.26190476190482,
+        782.9999999999999,
+        8.333333333333343,
+        15.333333333333371
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"S\" | frame (244.26190476190482, 782.9999999999999, 8.333333333333343, 15.333333333333371) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "completed_combined_all",
+      "classification": "occluded_or_viewport_edge",
+      "assessment": "Reported frame maps to tab-dock occlusion, clipped horizontal viewport, or edge-faded artwork; current pixels cannot establish the unobscured same-target contrast.",
+      "remaining_action": "Scroll this same target fully clear of dock/edge, verify identity, capture and rerun unchanged contrast; fix product only if that view demonstrates a defect.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-5-progress-7.png",
+      "sha256": "760ffd5b1b7ca77ea51b8cfec74bedcaca96054f2339462be3a2922f2d5e5055",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\A6C5C248-CB70-4481-B0F1-AC5E116C75DF.png",
+      "timestamp_unix": 1793075273.739,
+      "native_size_px": [
+        1206,
+        2622
+      ]
+    },
+    {
+      "screen": "tab-5-progress",
+      "failure_index": 8,
+      "kind": "contrast",
+      "label": "\"M\"",
+      "frame_points": [
+        290.02380952380963,
+        782.9999999999999,
+        11.666666666666686,
+        15.333333333333371
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"M\" | frame (290.02380952380963, 782.9999999999999, 11.666666666666686, 15.333333333333371) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "completed_combined_all",
+      "classification": "occluded_or_viewport_edge",
+      "assessment": "Reported frame maps to tab-dock occlusion, clipped horizontal viewport, or edge-faded artwork; current pixels cannot establish the unobscured same-target contrast.",
+      "remaining_action": "Scroll this same target fully clear of dock/edge, verify identity, capture and rerun unchanged contrast; fix product only if that view demonstrates a defect.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-5-progress-8.png",
+      "sha256": "760ffd5b1b7ca77ea51b8cfec74bedcaca96054f2339462be3a2922f2d5e5055",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\2101F584-CC50-411E-8DB2-99F608471A5E.png",
+      "timestamp_unix": 1793075274.145,
+      "native_size_px": [
+        1206,
+        2622
+      ]
+    },
+    {
+      "screen": "tab-5-progress",
+      "failure_index": 9,
+      "kind": "contrast",
+      "label": "\"T\"",
+      "frame_points": [
+        339.6190476190477,
+        782.9999999999999,
+        7.333333333333314,
+        15.333333333333371
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"T\" | frame (339.6190476190477, 782.9999999999999, 7.333333333333314, 15.333333333333371) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "completed_combined_all",
+      "classification": "occluded_or_viewport_edge",
+      "assessment": "Reported frame maps to tab-dock occlusion, clipped horizontal viewport, or edge-faded artwork; current pixels cannot establish the unobscured same-target contrast.",
+      "remaining_action": "Scroll this same target fully clear of dock/edge, verify identity, capture and rerun unchanged contrast; fix product only if that view demonstrates a defect.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-5-progress-9.png",
+      "sha256": "760ffd5b1b7ca77ea51b8cfec74bedcaca96054f2339462be3a2922f2d5e5055",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\4BD3406B-777F-40B2-92C3-9F072B2B8728.png",
+      "timestamp_unix": 1793075274.507,
+      "native_size_px": [
+        1206,
+        2622
+      ]
+    },
+    {
+      "screen": "tab-5-progress",
+      "failure_index": 10,
+      "kind": "contrast",
+      "label": "\"Tune up\"",
+      "frame_points": [
+        78.00000000000006,
+        389.0,
+        113.0,
+        44.0
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"Tune up\" | frame (78.00000000000006, 389.0, 113.0, 44.0) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "completed_combined_all",
+      "classification": "visible_contradictory_contrast_report",
+      "assessment": "Reported geometry maps to visible readable glyphs in callback pixels. Narrow investigated false-positive disposition is supported for this captured state; no universal SDK-bug or whole-target WCAG certification.",
+      "remaining_action": "Exact-identity contrast-only disposition plus paint-role regression, preserving other audit kinds.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-5-progress-10.png",
+      "sha256": "760ffd5b1b7ca77ea51b8cfec74bedcaca96054f2339462be3a2922f2d5e5055",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\80B93690-90CF-4109-9128-DC071D88E0EA.png",
+      "timestamp_unix": 1793075274.918,
+      "native_size_px": [
+        1206,
+        2622
+      ],
+      "pixel_corroboration": {
+        "foreground_rgb": [
+          255,
+          181,
+          71
+        ],
+        "foreground_pixel_count": 1550,
+        "background_rgb": [
+          50,
+          42,
+          30
+        ],
+        "sample_coordinates_px": {
+          "foreground": [
+            300,
+            1215
+          ],
+          "background": [
+            271,
+            1180
+          ]
+        },
+        "sample_pair_srgb_ratio": 8.0458,
+        "limit": "Exact RGB samples within reported target crop; background is most-common sufficiently different color, not proof of local adjacency or full-glyph minimum."
+      }
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 1,
+      "kind": "contrast",
+      "label": "\"Songs\"",
+      "frame_points": [
+        20.0,
+        74.0,
+        87.66666666666666,
+        35.33333333333333
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"Songs\" | frame (20.0, 74.0, 87.66666666666666, 35.33333333333333) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "visible_contradictory_contrast_report",
+      "assessment": "Reported geometry maps to visible readable glyphs in callback pixels. Narrow investigated false-positive disposition is supported for this captured state; no universal SDK-bug or whole-target WCAG certification.",
+      "remaining_action": "Exact-identity contrast-only disposition plus paint-role regression, preserving other audit kinds.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-1.png",
+      "sha256": "66f0628a9dad53517f8b3cf4806442ad3e98d0e4866fdf07ec19df6b67bef9ad",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\1B79DEAB-34E1-48B2-BAB1-F2F98AFCD623.png",
+      "timestamp_unix": 1793074884.414,
+      "native_size_px": [
+        1206,
+        2622
+      ],
+      "pixel_corroboration": {
+        "foreground_rgb": [
+          245,
+          243,
+          239
+        ],
+        "foreground_pixel_count": 6383,
+        "background_rgb": [
+          17,
+          13,
+          18
+        ],
+        "sample_coordinates_px": {
+          "foreground": [
+            87,
+            240
+          ],
+          "background": [
+            263,
+            222
+          ]
+        },
+        "sample_pair_srgb_ratio": 17.3823,
+        "limit": "Exact RGB samples within reported target crop; background is most-common sufficiently different color, not proof of local adjacency or full-glyph minimum."
+      }
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 2,
+      "kind": "contrast",
+      "label": "\"Play the melody, or strum the chords and sing\"",
+      "frame_points": [
+        20.0,
+        113.33333333333333,
+        254.0,
+        37.999999999999986
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"Play the melody, or strum the chords and sing\" | frame (20.0, 113.33333333333333, 254.0, 37.999999999999986) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "visible_contradictory_contrast_report",
+      "assessment": "Reported geometry maps to visible readable glyphs in callback pixels. Narrow investigated false-positive disposition is supported for this captured state; no universal SDK-bug or whole-target WCAG certification.",
+      "remaining_action": "Exact-identity contrast-only disposition plus paint-role regression, preserving other audit kinds.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-2.png",
+      "sha256": "66f0628a9dad53517f8b3cf4806442ad3e98d0e4866fdf07ec19df6b67bef9ad",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\65FD3D2D-CC74-470A-897E-573F5561FDA4.png",
+      "timestamp_unix": 1793074886.031,
+      "native_size_px": [
+        1206,
+        2622
+      ],
+      "pixel_corroboration": {
+        "foreground_rgb": [
+          163,
+          168,
+          177
+        ],
+        "foreground_pixel_count": 5507,
+        "background_rgb": [
+          25,
+          18,
+          26
+        ],
+        "sample_coordinates_px": {
+          "foreground": [
+            91,
+            350
+          ],
+          "background": [
+            467,
+            340
+          ]
+        },
+        "sample_pair_srgb_ratio": 7.6946,
+        "limit": "Exact RGB samples within reported target crop; background is most-common sufficiently different color, not proof of local adjacency or full-glyph minimum."
+      }
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 3,
+      "kind": "contrast",
+      "label": "\"7\"",
+      "frame_points": [
+        282.0,
+        90.66666666666666,
+        54.0,
+        44.0
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"7\" | frame (282.0, 90.66666666666666, 54.0, 44.0) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "visible_contradictory_contrast_report",
+      "assessment": "Reported geometry maps to visible readable glyphs in callback pixels. Narrow investigated false-positive disposition is supported for this captured state; no universal SDK-bug or whole-target WCAG certification.",
+      "remaining_action": "Exact-identity contrast-only disposition plus paint-role regression, preserving other audit kinds.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-3.png",
+      "sha256": "66f0628a9dad53517f8b3cf4806442ad3e98d0e4866fdf07ec19df6b67bef9ad",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\BD5481CD-F052-481A-8639-17674CF22FB5.png",
+      "timestamp_unix": 1793074887.641,
+      "native_size_px": [
+        1206,
+        2622
+      ],
+      "pixel_corroboration": {
+        "foreground_rgb": [
+          255,
+          211,
+          168
+        ],
+        "foreground_pixel_count": 201,
+        "background_rgb": [
+          43,
+          29,
+          26
+        ],
+        "sample_coordinates_px": {
+          "foreground": [
+            948,
+            323
+          ],
+          "background": [
+            901,
+            288
+          ]
+        },
+        "sample_pair_srgb_ratio": 11.702,
+        "limit": "Exact RGB samples within reported target crop; background is most-common sufficiently different color, not proof of local adjacency or full-glyph minimum."
+      }
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 4,
+      "kind": "contrast",
+      "label": "\"LV 5\"",
+      "frame_points": [
+        347.8333333333333,
+        102.5,
+        24.333333333333314,
+        20.33333333333333
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"LV 5\" | frame (347.8333333333333, 102.5, 24.333333333333314, 20.33333333333333) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "visible_contradictory_contrast_report",
+      "assessment": "Reported geometry maps to visible readable glyphs in callback pixels. Narrow investigated false-positive disposition is supported for this captured state; no universal SDK-bug or whole-target WCAG certification.",
+      "remaining_action": "Exact-identity contrast-only disposition plus paint-role regression, preserving other audit kinds.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-4.png",
+      "sha256": "66f0628a9dad53517f8b3cf4806442ad3e98d0e4866fdf07ec19df6b67bef9ad",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\119374AA-1568-4547-B251-E331726391F8.png",
+      "timestamp_unix": 1793074889.009,
+      "native_size_px": [
+        1206,
+        2622
+      ],
+      "pixel_corroboration": {
+        "foreground_rgb": [
+          245,
+          243,
+          239
+        ],
+        "foreground_pixel_count": 256,
+        "background_rgb": [
+          17,
+          13,
+          18
+        ],
+        "sample_coordinates_px": {
+          "foreground": [
+            1096,
+            329
+          ],
+          "background": [
+            1044,
+            308
+          ]
+        },
+        "sample_pair_srgb_ratio": 17.3823,
+        "limit": "Exact RGB samples within reported target crop; background is most-common sufficiently different color, not proof of local adjacency or full-glyph minimum."
+      }
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 5,
+      "kind": "contrast",
+      "label": "\"MANDOLIN SONGBOOK\"",
+      "frame_points": [
+        249.3,
+        326.69919817333334,
+        70.0,
+        6.0
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"MANDOLIN SONGBOOK\" | frame (249.3, 326.69919817333334, 70.0, 6.0) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "visible_contradictory_contrast_report",
+      "assessment": "Reported geometry maps to visible readable glyphs in callback pixels. Narrow investigated false-positive disposition is supported for this captured state; no universal SDK-bug or whole-target WCAG certification. Small translucent cover credit is near the normal-text boundary; retain its exact paint/compositing guard, not only palette-token checks.",
+      "remaining_action": "Exact-identity contrast-only disposition plus paint-role regression, preserving other audit kinds.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-5.png",
+      "sha256": "66f0628a9dad53517f8b3cf4806442ad3e98d0e4866fdf07ec19df6b67bef9ad",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\5E3B0DBD-367F-434C-9D29-0C4C2EE5D466.png",
+      "timestamp_unix": 1793074890.4,
+      "native_size_px": [
+        1206,
+        2622
+      ],
+      "pixel_corroboration": {
+        "foreground_rgb": [
+          204,
+          193,
+          200
+        ],
+        "foreground_pixel_count": 32,
+        "background_rgb": [
+          97,
+          64,
+          99
+        ],
+        "sample_coordinates_px": {
+          "foreground": [
+            865,
+            984
+          ],
+          "background": [
+            843,
+            981
+          ]
+        },
+        "sample_pair_srgb_ratio": 4.9672,
+        "limit": "Exact RGB samples within reported target crop; background is most-common sufficiently different color, not proof of local adjacency or full-glyph minimum."
+      }
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 6,
+      "kind": "contrast",
+      "label": "\"JINGLE\"",
+      "frame_points": [
+        249.3,
+        334.95599817333334,
+        68.0,
+        23.0
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"JINGLE\" | frame (249.3, 334.95599817333334, 68.0, 23.0) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "visible_contradictory_contrast_report",
+      "assessment": "Reported geometry maps to visible readable glyphs in callback pixels. Narrow investigated false-positive disposition is supported for this captured state; no universal SDK-bug or whole-target WCAG certification.",
+      "remaining_action": "Exact-identity contrast-only disposition plus paint-role regression, preserving other audit kinds.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-6.png",
+      "sha256": "66f0628a9dad53517f8b3cf4806442ad3e98d0e4866fdf07ec19df6b67bef9ad",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\FAA2F103-FB23-43B8-A44E-0202A4C1C426.png",
+      "timestamp_unix": 1793074891.695,
+      "native_size_px": [
+        1206,
+        2622
+      ],
+      "pixel_corroboration": {
+        "foreground_rgb": [
+          245,
+          243,
+          239
+        ],
+        "foreground_pixel_count": 2484,
+        "background_rgb": [
+          60,
+          38,
+          61
+        ],
+        "sample_coordinates_px": {
+          "foreground": [
+            866,
+            1017
+          ],
+          "background": [
+            750,
+            1021
+          ]
+        },
+        "sample_pair_srgb_ratio": 12.3306,
+        "limit": "Exact RGB samples within reported target crop; background is most-common sufficiently different color, not proof of local adjacency or full-glyph minimum."
+      }
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 7,
+      "kind": "contrast",
+      "label": "\"04\"",
+      "frame_points": [
+        260.13264000000004,
+        270.6333333333333,
+        9.333333333333314,
+        8.666666666666629
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"04\" | frame (260.13264000000004, 270.6333333333333, 9.333333333333314, 8.666666666666629) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "visible_contradictory_contrast_report",
+      "assessment": "Reported geometry maps to visible readable glyphs in callback pixels. Narrow investigated false-positive disposition is supported for this captured state; no universal SDK-bug or whole-target WCAG certification.",
+      "remaining_action": "Exact-identity contrast-only disposition plus paint-role regression, preserving other audit kinds.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-7.png",
+      "sha256": "66f0628a9dad53517f8b3cf4806442ad3e98d0e4866fdf07ec19df6b67bef9ad",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\40ACEE86-BC7F-468D-A78B-4582977BB6E1.png",
+      "timestamp_unix": 1793074893.166,
+      "native_size_px": [
+        1206,
+        2622
+      ],
+      "pixel_corroboration": {
+        "foreground_rgb": [
+          245,
+          243,
+          239
+        ],
+        "foreground_pixel_count": 33,
+        "background_rgb": [
+          77,
+          61,
+          85
+        ],
+        "sample_coordinates_px": {
+          "foreground": [
+            787,
+            817
+          ],
+          "background": [
+            800,
+            812
+          ]
+        },
+        "sample_pair_srgb_ratio": 8.9627,
+        "limit": "Exact RGB samples within reported target crop; background is most-common sufficiently different color, not proof of local adjacency or full-glyph minimum."
+      }
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 8,
+      "kind": "contrast",
+      "label": "\"Song of the day\"",
+      "frame_points": [
+        68.33333333333334,
+        267.3333333333333,
+        95.33333333333334,
+        15.333333333333314
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"Song of the day\" | frame (68.33333333333334, 267.3333333333333, 95.33333333333334, 15.333333333333314) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "visible_contradictory_contrast_report",
+      "assessment": "Reported geometry maps to visible readable glyphs in callback pixels. Narrow investigated false-positive disposition is supported for this captured state; no universal SDK-bug or whole-target WCAG certification.",
+      "remaining_action": "Exact-identity contrast-only disposition plus paint-role regression, preserving other audit kinds.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-8.png",
+      "sha256": "66f0628a9dad53517f8b3cf4806442ad3e98d0e4866fdf07ec19df6b67bef9ad",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\57A82067-AEE9-4ED6-B05C-CC8050AE4BDA.png",
+      "timestamp_unix": 1793074894.621,
+      "native_size_px": [
+        1206,
+        2622
+      ],
+      "pixel_corroboration": {
+        "foreground_rgb": [
+          245,
+          243,
+          239
+        ],
+        "foreground_pixel_count": 830,
+        "background_rgb": [
+          49,
+          31,
+          49
+        ],
+        "sample_coordinates_px": {
+          "foreground": [
+            213,
+            811
+          ],
+          "background": [
+            422,
+            802
+          ]
+        },
+        "sample_pair_srgb_ratio": 13.822,
+        "limit": "Exact RGB samples within reported target crop; background is most-common sufficiently different color, not proof of local adjacency or full-glyph minimum."
+      }
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 9,
+      "kind": "contrast",
+      "label": "\"Mandolin Songbook\"",
+      "frame_points": [
+        62.0,
+        399.3333333333333,
+        136.33333333333331,
+        18.0
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"Mandolin Songbook\" | frame (62.0, 399.3333333333333, 136.33333333333331, 18.0) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "visible_contradictory_contrast_report",
+      "assessment": "Reported geometry maps to visible readable glyphs in callback pixels. Narrow investigated false-positive disposition is supported for this captured state; no universal SDK-bug or whole-target WCAG certification.",
+      "remaining_action": "Exact-identity contrast-only disposition plus paint-role regression, preserving other audit kinds.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-9.png",
+      "sha256": "66f0628a9dad53517f8b3cf4806442ad3e98d0e4866fdf07ec19df6b67bef9ad",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\AF0AF94D-8418-4443-8C36-0B0DEEEAF7B6.png",
+      "timestamp_unix": 1793074896.035,
+      "native_size_px": [
+        1206,
+        2622
+      ],
+      "pixel_corroboration": {
+        "foreground_rgb": [
+          245,
+          243,
+          239
+        ],
+        "foreground_pixel_count": 2676,
+        "background_rgb": [
+          11,
+          12,
+          16
+        ],
+        "sample_coordinates_px": {
+          "foreground": [
+            295,
+            1208
+          ],
+          "background": [
+            250,
+            1226
+          ]
+        },
+        "sample_pair_srgb_ratio": 17.6386,
+        "limit": "Exact RGB samples within reported target crop; background is most-common sufficiently different color, not proof of local adjacency or full-glyph minimum."
+      }
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 10,
+      "kind": "contrast",
+      "label": "\"· 2:36 · +30 XP\"",
+      "frame_points": [
+        204.33333333333331,
+        399.3333333333333,
+        102.66666666666669,
+        18.0
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"· 2:36 · +30 XP\" | frame (204.33333333333331, 399.3333333333333, 102.66666666666669, 18.0) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "visible_contradictory_contrast_report",
+      "assessment": "Reported geometry maps to visible readable glyphs in callback pixels. Narrow investigated false-positive disposition is supported for this captured state; no universal SDK-bug or whole-target WCAG certification.",
+      "remaining_action": "Exact-identity contrast-only disposition plus paint-role regression, preserving other audit kinds.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-10.png",
+      "sha256": "66f0628a9dad53517f8b3cf4806442ad3e98d0e4866fdf07ec19df6b67bef9ad",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\08F846FC-7E92-4CEB-8444-1E0201BC8FB0.png",
+      "timestamp_unix": 1793074897.465,
+      "native_size_px": [
+        1206,
+        2622
+      ],
+      "pixel_corroboration": {
+        "foreground_rgb": [
+          163,
+          168,
+          177
+        ],
+        "foreground_pixel_count": 1537,
+        "background_rgb": [
+          24,
+          17,
+          25
+        ],
+        "sample_coordinates_px": {
+          "foreground": [
+            648,
+            1209
+          ],
+          "background": [
+            877,
+            1198
+          ]
+        },
+        "sample_pair_srgb_ratio": 7.7606,
+        "limit": "Exact RGB samples within reported target crop; background is most-common sufficiently different color, not proof of local adjacency or full-glyph minimum."
+      }
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 11,
+      "kind": "contrast",
+      "label": "\"Play\"",
+      "frame_points": [
+        77.66666666666667,
+        438.5,
+        36.0,
+        21.666666666666686
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"Play\" | frame (77.66666666666667, 438.5, 36.0, 21.666666666666686) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "visible_contradictory_contrast_report",
+      "assessment": "Reported geometry maps to visible readable glyphs in callback pixels. Narrow investigated false-positive disposition is supported for this captured state; no universal SDK-bug or whole-target WCAG certification.",
+      "remaining_action": "Exact-identity contrast-only disposition plus paint-role regression, preserving other audit kinds.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-11.png",
+      "sha256": "66f0628a9dad53517f8b3cf4806442ad3e98d0e4866fdf07ec19df6b67bef9ad",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\54D8F997-DFB1-4D37-93B4-6DAAC374B790.png",
+      "timestamp_unix": 1793074898.864,
+      "native_size_px": [
+        1206,
+        2622
+      ],
+      "pixel_corroboration": {
+        "foreground_rgb": [
+          4,
+          19,
+          13
+        ],
+        "foreground_pixel_count": 1489,
+        "background_rgb": [
+          76,
+          242,
+          184
+        ],
+        "sample_coordinates_px": {
+          "foreground": [
+            238,
+            1328
+          ],
+          "background": [
+            233,
+            1316
+          ]
+        },
+        "sample_pair_srgb_ratio": 13.314,
+        "limit": "Exact RGB samples within reported target crop; background is most-common sufficiently different color, not proof of local adjacency or full-glyph minimum."
+      }
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 12,
+      "kind": "contrast",
+      "label": "\"D\"",
+      "frame_points": [
+        287.0,
+        441.66666666666663,
+        9.666666666666686,
+        15.333333333333314
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"D\" | frame (287.0, 441.66666666666663, 9.666666666666686, 15.333333333333314) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "visible_contradictory_contrast_report",
+      "assessment": "Reported geometry maps to visible readable glyphs in callback pixels. Narrow investigated false-positive disposition is supported for this captured state; no universal SDK-bug or whole-target WCAG certification.",
+      "remaining_action": "Exact-identity contrast-only disposition plus paint-role regression, preserving other audit kinds.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-12.png",
+      "sha256": "66f0628a9dad53517f8b3cf4806442ad3e98d0e4866fdf07ec19df6b67bef9ad",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\D181803A-69A4-4B0D-9D15-98067805B4C2.png",
+      "timestamp_unix": 1793074900.255,
+      "native_size_px": [
+        1206,
+        2622
+      ],
+      "pixel_corroboration": {
+        "foreground_rgb": [
+          245,
+          243,
+          239
+        ],
+        "foreground_pixel_count": 279,
+        "background_rgb": [
+          46,
+          30,
+          46
+        ],
+        "sample_coordinates_px": {
+          "foreground": [
+            865,
+            1334
+          ],
+          "background": [
+            861,
+            1325
+          ]
+        },
+        "sample_pair_srgb_ratio": 14.1271,
+        "limit": "Exact RGB samples within reported target crop; background is most-common sufficiently different color, not proof of local adjacency or full-glyph minimum."
+      }
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 13,
+      "kind": "contrast",
+      "label": "\"G\"",
+      "frame_points": [
+        314.6666666666667,
+        441.66666666666663,
+        10.0,
+        15.333333333333314
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"G\" | frame (314.6666666666667, 441.66666666666663, 10.0, 15.333333333333314) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "visible_contradictory_contrast_report",
+      "assessment": "Reported geometry maps to visible readable glyphs in callback pixels. Narrow investigated false-positive disposition is supported for this captured state; no universal SDK-bug or whole-target WCAG certification.",
+      "remaining_action": "Exact-identity contrast-only disposition plus paint-role regression, preserving other audit kinds.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-13.png",
+      "sha256": "66f0628a9dad53517f8b3cf4806442ad3e98d0e4866fdf07ec19df6b67bef9ad",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\F295A56A-80C0-4276-8A8B-22578ADB5ADB.png",
+      "timestamp_unix": 1793074901.738,
+      "native_size_px": [
+        1206,
+        2622
+      ],
+      "pixel_corroboration": {
+        "foreground_rgb": [
+          245,
+          243,
+          239
+        ],
+        "foreground_pixel_count": 270,
+        "background_rgb": [
+          44,
+          28,
+          43
+        ],
+        "sample_coordinates_px": {
+          "foreground": [
+            954,
+            1334
+          ],
+          "background": [
+            973,
+            1351
+          ]
+        },
+        "sample_pair_srgb_ratio": 14.4862,
+        "limit": "Exact RGB samples within reported target crop; background is most-common sufficiently different color, not proof of local adjacency or full-glyph minimum."
+      }
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 14,
+      "kind": "contrast",
+      "label": "\"E7\"",
+      "frame_points": [
+        342.6666666666667,
+        441.66666666666663,
+        14.333333333333314,
+        15.333333333333314
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"E7\" | frame (342.6666666666667, 441.66666666666663, 14.333333333333314, 15.333333333333314) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "visible_contradictory_contrast_report",
+      "assessment": "Reported geometry maps to visible readable glyphs in callback pixels. Narrow investigated false-positive disposition is supported for this captured state; no universal SDK-bug or whole-target WCAG certification.",
+      "remaining_action": "Exact-identity contrast-only disposition plus paint-role regression, preserving other audit kinds.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-14.png",
+      "sha256": "66f0628a9dad53517f8b3cf4806442ad3e98d0e4866fdf07ec19df6b67bef9ad",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\35AC1811-6E4F-42E5-B713-438B352B7C22.png",
+      "timestamp_unix": 1793074903.162,
+      "native_size_px": [
+        1206,
+        2622
+      ],
+      "pixel_corroboration": {
+        "foreground_rgb": [
+          245,
+          243,
+          239
+        ],
+        "foreground_pixel_count": 248,
+        "background_rgb": [
+          43,
+          28,
+          43
+        ],
+        "sample_coordinates_px": {
+          "foreground": [
+            1033,
+            1334
+          ],
+          "background": [
+            1052,
+            1354
+          ]
+        },
+        "sample_pair_srgb_ratio": 14.5348,
+        "limit": "Exact RGB samples within reported target crop; background is most-common sufficiently different color, not proof of local adjacency or full-glyph minimum."
+      }
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 15,
+      "kind": "contrast",
+      "label": "\"Your songs\"",
+      "frame_points": [
+        104.0,
+        525.3333333333333,
+        96.33333333333331,
+        21.666666666666742
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"Your songs\" | frame (104.0, 525.3333333333333, 96.33333333333331, 21.666666666666742) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "visible_contradictory_contrast_report",
+      "assessment": "Reported geometry maps to visible readable glyphs in callback pixels. Narrow investigated false-positive disposition is supported for this captured state; no universal SDK-bug or whole-target WCAG certification.",
+      "remaining_action": "Exact-identity contrast-only disposition plus paint-role regression, preserving other audit kinds.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-15.png",
+      "sha256": "66f0628a9dad53517f8b3cf4806442ad3e98d0e4866fdf07ec19df6b67bef9ad",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\B009DE10-ACFC-47BA-B9DF-1F768F0CE260.png",
+      "timestamp_unix": 1793074904.508,
+      "native_size_px": [
+        1206,
+        2622
+      ],
+      "pixel_corroboration": {
+        "foreground_rgb": [
+          245,
+          243,
+          239
+        ],
+        "foreground_pixel_count": 3280,
+        "background_rgb": [
+          20,
+          30,
+          31
+        ],
+        "sample_coordinates_px": {
+          "foreground": [
+            314,
+            1588
+          ],
+          "background": [
+            437,
+            1576
+          ]
+        },
+        "sample_pair_srgb_ratio": 15.3405,
+        "limit": "Exact RGB samples within reported target crop; background is most-common sufficiently different color, not proof of local adjacency or full-glyph minimum."
+      }
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 16,
+      "kind": "contrast",
+      "label": "\"Play the songs you love\"",
+      "frame_points": [
+        104.0,
+        549.0,
+        92.0,
+        33.66666666666663
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"Play the songs you love\" | frame (104.0, 549.0, 92.0, 33.66666666666663) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "visible_contradictory_contrast_report",
+      "assessment": "Reported geometry maps to visible readable glyphs in callback pixels. Narrow investigated false-positive disposition is supported for this captured state; no universal SDK-bug or whole-target WCAG certification.",
+      "remaining_action": "Exact-identity contrast-only disposition plus paint-role regression, preserving other audit kinds.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-16.png",
+      "sha256": "66f0628a9dad53517f8b3cf4806442ad3e98d0e4866fdf07ec19df6b67bef9ad",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\C377CD38-B736-4CE2-99F5-3EABC53C0CAA.png",
+      "timestamp_unix": 1793074905.937,
+      "native_size_px": [
+        1206,
+        2622
+      ],
+      "pixel_corroboration": {
+        "foreground_rgb": [
+          163,
+          168,
+          177
+        ],
+        "foreground_pixel_count": 1923,
+        "background_rgb": [
+          18,
+          23,
+          26
+        ],
+        "sample_coordinates_px": {
+          "foreground": [
+            340,
+            1656
+          ],
+          "background": [
+            532,
+            1647
+          ]
+        },
+        "sample_pair_srgb_ratio": 7.5595,
+        "limit": "Exact RGB samples within reported target crop; background is most-common sufficiently different color, not proof of local adjacency or full-glyph minimum."
+      }
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 17,
+      "kind": "contrast",
+      "label": "\"Add a song\"",
+      "frame_points": [
+        262.6666564941406,
+        545.6666870117188,
+        95.33334350585938,
+        16.66668701171875
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"Add a song\" | frame (262.6666564941406, 545.6666870117188, 95.33334350585938, 16.66668701171875) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "visible_contradictory_contrast_report",
+      "assessment": "Reported geometry maps to visible readable glyphs in callback pixels. Narrow investigated false-positive disposition is supported for this captured state; no universal SDK-bug or whole-target WCAG certification.",
+      "remaining_action": "Exact-identity contrast-only disposition plus paint-role regression, preserving other audit kinds.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-17.png",
+      "sha256": "66f0628a9dad53517f8b3cf4806442ad3e98d0e4866fdf07ec19df6b67bef9ad",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\4B17B33E-8B25-4BE2-A0EC-ABCBFF93C02F.png",
+      "timestamp_unix": 1793074907.202,
+      "native_size_px": [
+        1206,
+        2622
+      ],
+      "pixel_corroboration": {
+        "foreground_rgb": [
+          4,
+          19,
+          13
+        ],
+        "foreground_pixel_count": 2173,
+        "background_rgb": [
+          76,
+          242,
+          184
+        ],
+        "sample_coordinates_px": {
+          "foreground": [
+            804,
+            1644
+          ],
+          "background": [
+            788,
+            1637
+          ]
+        },
+        "sample_pair_srgb_ratio": 13.314,
+        "limit": "Exact RGB samples within reported target crop; background is most-common sufficiently different color, not proof of local adjacency or full-glyph minimum."
+      }
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 18,
+      "kind": "contrast",
+      "label": "\"Bass\"",
+      "frame_points": [
+        286.0,
+        175.33333333333331,
+        83.66666666666663,
+        44.0
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"Bass\" | frame (286.0, 175.33333333333331, 83.66666666666663, 44.0) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "visible_contradictory_contrast_report",
+      "assessment": "Reported geometry maps to visible readable glyphs in callback pixels. Narrow investigated false-positive disposition is supported for this captured state; no universal SDK-bug or whole-target WCAG certification.",
+      "remaining_action": "Exact-identity contrast-only disposition plus paint-role regression, preserving other audit kinds.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-18.png",
+      "sha256": "66f0628a9dad53517f8b3cf4806442ad3e98d0e4866fdf07ec19df6b67bef9ad",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\3FB413F9-1F22-4C58-91EE-FF0200DD6A2C.png",
+      "timestamp_unix": 1793074908.485,
+      "native_size_px": [
+        1206,
+        2622
+      ],
+      "pixel_corroboration": {
+        "foreground_rgb": [
+          245,
+          243,
+          239
+        ],
+        "foreground_pixel_count": 669,
+        "background_rgb": [
+          17,
+          19,
+          23
+        ],
+        "sample_coordinates_px": {
+          "foreground": [
+            972,
+            576
+          ],
+          "background": [
+            938,
+            541
+          ]
+        },
+        "sample_pair_srgb_ratio": 16.7787,
+        "limit": "Exact RGB samples within reported target crop; background is most-common sufficiently different color, not proof of local adjacency or full-glyph minimum."
+      }
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 19,
+      "kind": "contrast",
+      "label": "\"Violin\"",
+      "frame_points": [
+        377.66666666666663,
+        175.33333333333331,
+        89.0,
+        44.0
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"Violin\" | frame (377.66666666666663, 175.33333333333331, 89.0, 44.0) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "occluded_or_viewport_edge",
+      "assessment": "Reported frame maps to tab-dock occlusion, clipped horizontal viewport, or edge-faded artwork; current pixels cannot establish the unobscured same-target contrast.",
+      "remaining_action": "Scroll this same target fully clear of dock/edge, verify identity, capture and rerun unchanged contrast; fix product only if that view demonstrates a defect.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-19.png",
+      "sha256": "66f0628a9dad53517f8b3cf4806442ad3e98d0e4866fdf07ec19df6b67bef9ad",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\34E3A61F-E2A3-47CD-B339-142E63A780B8.png",
+      "timestamp_unix": 1793074909.961,
+      "native_size_px": [
+        1206,
+        2622
+      ]
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 20,
+      "kind": "contrast",
+      "label": "\"SONGS\"",
+      "frame_points": [
+        31.1,
+        725.6662666666666,
+        36.333333333333336,
+        10.0
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"SONGS\" | frame (31.1, 725.6662666666666, 36.333333333333336, 10.0) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "visible_contradictory_contrast_report",
+      "assessment": "Reported geometry maps to visible readable glyphs in callback pixels. Narrow investigated false-positive disposition is supported for this captured state; no universal SDK-bug or whole-target WCAG certification.",
+      "remaining_action": "Exact-identity contrast-only disposition plus paint-role regression, preserving other audit kinds.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-20.png",
+      "sha256": "66f0628a9dad53517f8b3cf4806442ad3e98d0e4866fdf07ec19df6b67bef9ad",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\232B77A3-BD58-4CB9-BC03-C97D18AB69E5.png",
+      "timestamp_unix": 1793074911.228,
+      "native_size_px": [
+        1206,
+        2622
+      ],
+      "pixel_corroboration": {
+        "foreground_rgb": [
+          58,
+          69,
+          78
+        ],
+        "foreground_pixel_count": 16,
+        "background_rgb": [
+          171,
+          206,
+          237
+        ],
+        "sample_coordinates_px": {
+          "foreground": [
+            190,
+            2183
+          ],
+          "background": [
+            128,
+            2181
+          ]
+        },
+        "sample_pair_srgb_ratio": 5.9701,
+        "limit": "Exact RGB samples within reported target crop; background is most-common sufficiently different color, not proof of local adjacency or full-glyph minimum."
+      }
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 21,
+      "kind": "contrast",
+      "label": "\"Ode to\"",
+      "frame_points": [
+        31.1,
+        738.3598666666667,
+        85.66666666666666,
+        32.0
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"Ode to\" | frame (31.1, 738.3598666666667, 85.66666666666666, 32.0) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "visible_contradictory_contrast_report",
+      "assessment": "Reported geometry maps to visible readable glyphs in callback pixels. Narrow investigated false-positive disposition is supported for this captured state; no universal SDK-bug or whole-target WCAG certification.",
+      "remaining_action": "Exact-identity contrast-only disposition plus paint-role regression, preserving other audit kinds.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-21.png",
+      "sha256": "66f0628a9dad53517f8b3cf4806442ad3e98d0e4866fdf07ec19df6b67bef9ad",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\9BB5DA20-2D69-4CF9-AE68-CD9AC5727F7A.png",
+      "timestamp_unix": 1793074912.594,
+      "native_size_px": [
+        1206,
+        2622
+      ],
+      "pixel_corroboration": {
+        "foreground_rgb": [
+          6,
+          7,
+          8
+        ],
+        "foreground_pixel_count": 2963,
+        "background_rgb": [
+          173,
+          210,
+          240
+        ],
+        "sample_coordinates_px": {
+          "foreground": [
+            275,
+            2236
+          ],
+          "background": [
+            140,
+            2215
+          ]
+        },
+        "sample_pair_srgb_ratio": 12.7239,
+        "limit": "Exact RGB samples within reported target crop; background is most-common sufficiently different color, not proof of local adjacency or full-glyph minimum."
+      }
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 22,
+      "kind": "contrast",
+      "label": "\"03\"",
+      "frame_points": [
+        44.02928,
+        669.7666666666667,
+        11.0,
+        10.333333333333258
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"03\" | frame (44.02928, 669.7666666666667, 11.0, 10.333333333333258) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "visible_contradictory_contrast_report",
+      "assessment": "Reported geometry maps to visible readable glyphs in callback pixels. Narrow investigated false-positive disposition is supported for this captured state; no universal SDK-bug or whole-target WCAG certification.",
+      "remaining_action": "Exact-identity contrast-only disposition plus paint-role regression, preserving other audit kinds.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-22.png",
+      "sha256": "66f0628a9dad53517f8b3cf4806442ad3e98d0e4866fdf07ec19df6b67bef9ad",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\F62215EB-5D7E-4262-A3F1-AC9A2ABEE601.png",
+      "timestamp_unix": 1793074914.109,
+      "native_size_px": [
+        1206,
+        2622
+      ],
+      "pixel_corroboration": {
+        "foreground_rgb": [
+          37,
+          38,
+          39
+        ],
+        "foreground_pixel_count": 33,
+        "background_rgb": [
+          151,
+          177,
+          216
+        ],
+        "sample_coordinates_px": {
+          "foreground": [
+            153,
+            2016
+          ],
+          "background": [
+            132,
+            2032
+          ]
+        },
+        "sample_pair_srgb_ratio": 6.9277,
+        "limit": "Exact RGB samples within reported target crop; background is most-common sufficiently different color, not proof of local adjacency or full-glyph minimum."
+      }
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 23,
+      "kind": "contrast",
+      "label": "\"C\"",
+      "frame_points": [
+        27.0,
+        821.0,
+        9.666666666666664,
+        15.333333333333258
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"C\" | frame (27.0, 821.0, 9.666666666666664, 15.333333333333258) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "occluded_or_viewport_edge",
+      "assessment": "Reported frame maps to tab-dock occlusion, clipped horizontal viewport, or edge-faded artwork; current pixels cannot establish the unobscured same-target contrast.",
+      "remaining_action": "Scroll this same target fully clear of dock/edge, verify identity, capture and rerun unchanged contrast; fix product only if that view demonstrates a defect.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-23.png",
+      "sha256": "66f0628a9dad53517f8b3cf4806442ad3e98d0e4866fdf07ec19df6b67bef9ad",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\3D931E58-748A-47E6-8057-5ADEB5B7552B.png",
+      "timestamp_unix": 1793074915.524,
+      "native_size_px": [
+        1206,
+        2622
+      ]
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 24,
+      "kind": "contrast",
+      "label": "\"G\"",
+      "frame_points": [
+        54.666666666666664,
+        821.0,
+        9.999999999999993,
+        15.333333333333258
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"G\" | frame (54.666666666666664, 821.0, 9.999999999999993, 15.333333333333258) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "occluded_or_viewport_edge",
+      "assessment": "Reported frame maps to tab-dock occlusion, clipped horizontal viewport, or edge-faded artwork; current pixels cannot establish the unobscured same-target contrast.",
+      "remaining_action": "Scroll this same target fully clear of dock/edge, verify identity, capture and rerun unchanged contrast; fix product only if that view demonstrates a defect.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-24.png",
+      "sha256": "66f0628a9dad53517f8b3cf4806442ad3e98d0e4866fdf07ec19df6b67bef9ad",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\7BEB170A-B61D-4125-ACA7-688419638675.png",
+      "timestamp_unix": 1793074916.841,
+      "native_size_px": [
+        1206,
+        2622
+      ]
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 25,
+      "kind": "contrast",
+      "label": "\"2:07\"",
+      "frame_points": [
+        51.0,
+        847.8333333333333,
+        27.666666666666657,
+        15.333333333333371
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"2:07\" | frame (51.0, 847.8333333333333, 27.666666666666657, 15.333333333333371) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "occluded_or_viewport_edge",
+      "assessment": "Reported frame maps to tab-dock occlusion, clipped horizontal viewport, or edge-faded artwork; current pixels cannot establish the unobscured same-target contrast.",
+      "remaining_action": "Scroll this same target fully clear of dock/edge, verify identity, capture and rerun unchanged contrast; fix product only if that view demonstrates a defect.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-25.png",
+      "sha256": "66f0628a9dad53517f8b3cf4806442ad3e98d0e4866fdf07ec19df6b67bef9ad",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\247FBE3B-DF4E-4C3C-8DDD-FE78C995F2B7.png",
+      "timestamp_unix": 1793074918.071,
+      "native_size_px": [
+        1206,
+        2622
+      ]
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 26,
+      "kind": "contrast",
+      "label": "\"+35 XP\"",
+      "frame_points": [
+        85.66666666666666,
+        847.6666666666666,
+        44.66666666666666,
+        15.666666666666629
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"+35 XP\" | frame (85.66666666666666, 847.6666666666666, 44.66666666666666, 15.666666666666629) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "occluded_or_viewport_edge",
+      "assessment": "Reported frame maps to tab-dock occlusion, clipped horizontal viewport, or edge-faded artwork; current pixels cannot establish the unobscured same-target contrast.",
+      "remaining_action": "Scroll this same target fully clear of dock/edge, verify identity, capture and rerun unchanged contrast; fix product only if that view demonstrates a defect.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-26.png",
+      "sha256": "66f0628a9dad53517f8b3cf4806442ad3e98d0e4866fdf07ec19df6b67bef9ad",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\5CC73E5E-7E93-4A2A-A464-FA6FE3521D03.png",
+      "timestamp_unix": 1793074919.32,
+      "native_size_px": [
+        1206,
+        2622
+      ]
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 27,
+      "kind": "contrast",
+      "label": "\"Guitar\"",
+      "frame_points": [
+        193.1,
+        742.618066914332,
+        27.666666666666657,
+        10.666666666666629
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"Guitar\" | frame (193.1, 742.618066914332, 27.666666666666657, 10.666666666666629) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "visible_contradictory_contrast_report",
+      "assessment": "Reported geometry maps to visible readable glyphs in callback pixels. Narrow investigated false-positive disposition is supported for this captured state; no universal SDK-bug or whole-target WCAG certification.",
+      "remaining_action": "Exact-identity contrast-only disposition plus paint-role regression, preserving other audit kinds.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-27.png",
+      "sha256": "76512292f1780affdcabbf9b1015ef595b3a522a7c70c8b37ccd8647b3611f68",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\7C5D78C0-C76E-4EFD-87FB-3B146491C6D1.png",
+      "timestamp_unix": 1793074921.186,
+      "native_size_px": [
+        1206,
+        2622
+      ],
+      "pixel_corroboration": {
+        "foreground_rgb": [
+          61,
+          72,
+          40
+        ],
+        "foreground_pixel_count": 18,
+        "background_rgb": [
+          195,
+          230,
+          109
+        ],
+        "sample_coordinates_px": {
+          "foreground": [
+            655,
+            2244
+          ],
+          "background": [
+            642,
+            2230
+          ]
+        },
+        "sample_pair_srgb_ratio": 6.8924,
+        "limit": "Exact RGB samples within reported target crop; background is most-common sufficiently different color, not proof of local adjacency or full-glyph minimum."
+      }
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 28,
+      "kind": "contrast",
+      "label": "\"Amazing\"",
+      "frame_points": [
+        193.1,
+        755.9783335809987,
+        81.33333333333334,
+        24.0
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"Amazing\" | frame (193.1, 755.9783335809987, 81.33333333333334, 24.0) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "visible_contradictory_contrast_report",
+      "assessment": "Reported geometry maps to visible readable glyphs in callback pixels. Narrow investigated false-positive disposition is supported for this captured state; no universal SDK-bug or whole-target WCAG certification.",
+      "remaining_action": "Exact-identity contrast-only disposition plus paint-role regression, preserving other audit kinds.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-28.png",
+      "sha256": "76512292f1780affdcabbf9b1015ef595b3a522a7c70c8b37ccd8647b3611f68",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\F09BAB7B-CD78-4828-9B56-9A4451E27083.png",
+      "timestamp_unix": 1793074922.76,
+      "native_size_px": [
+        1206,
+        2622
+      ],
+      "pixel_corroboration": {
+        "foreground_rgb": [
+          6,
+          7,
+          8
+        ],
+        "foreground_pixel_count": 1012,
+        "background_rgb": [
+          190,
+          225,
+          104
+        ],
+        "sample_coordinates_px": {
+          "foreground": [
+            740,
+            2281
+          ],
+          "background": [
+            787,
+            2268
+          ]
+        },
+        "sample_pair_srgb_ratio": 13.5934,
+        "limit": "Exact RGB samples within reported target crop; background is most-common sufficiently different color, not proof of local adjacency or full-glyph minimum."
+      }
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 29,
+      "kind": "contrast",
+      "label": "\"Grace\"",
+      "frame_points": [
+        193.1,
+        774.8966666666666,
+        55.66666666666666,
+        24.0
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"Grace\" | frame (193.1, 774.8966666666666, 55.66666666666666, 24.0) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "occluded_or_viewport_edge",
+      "assessment": "Reported frame maps to tab-dock occlusion, clipped horizontal viewport, or edge-faded artwork; current pixels cannot establish the unobscured same-target contrast.",
+      "remaining_action": "Scroll this same target fully clear of dock/edge, verify identity, capture and rerun unchanged contrast; fix product only if that view demonstrates a defect.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-29.png",
+      "sha256": "76512292f1780affdcabbf9b1015ef595b3a522a7c70c8b37ccd8647b3611f68",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\9B14EB43-5898-4981-B83B-F64EA17C5954.png",
+      "timestamp_unix": 1793074924.862,
+      "native_size_px": [
+        1206,
+        2622
+      ]
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 30,
+      "kind": "contrast",
+      "label": "\"G\"",
+      "frame_points": [
+        189.0,
+        821.0,
+        10.0,
+        15.333333333333258
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"G\" | frame (189.0, 821.0, 10.0, 15.333333333333258) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "occluded_or_viewport_edge",
+      "assessment": "Reported frame maps to tab-dock occlusion, clipped horizontal viewport, or edge-faded artwork; current pixels cannot establish the unobscured same-target contrast.",
+      "remaining_action": "Scroll this same target fully clear of dock/edge, verify identity, capture and rerun unchanged contrast; fix product only if that view demonstrates a defect.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-30.png",
+      "sha256": "76512292f1780affdcabbf9b1015ef595b3a522a7c70c8b37ccd8647b3611f68",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\CB3D02B5-A2EA-4713-9BCB-FF9535894308.png",
+      "timestamp_unix": 1793074926.322,
+      "native_size_px": [
+        1206,
+        2622
+      ]
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 31,
+      "kind": "contrast",
+      "label": "\"D7\"",
+      "frame_points": [
+        217.0,
+        821.0,
+        16.666666666666657,
+        15.333333333333258
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"D7\" | frame (217.0, 821.0, 16.666666666666657, 15.333333333333258) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "occluded_or_viewport_edge",
+      "assessment": "Reported frame maps to tab-dock occlusion, clipped horizontal viewport, or edge-faded artwork; current pixels cannot establish the unobscured same-target contrast.",
+      "remaining_action": "Scroll this same target fully clear of dock/edge, verify identity, capture and rerun unchanged contrast; fix product only if that view demonstrates a defect.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-31.png",
+      "sha256": "76512292f1780affdcabbf9b1015ef595b3a522a7c70c8b37ccd8647b3611f68",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\4E335709-C35D-4D80-A7DC-E7F7E8774855.png",
+      "timestamp_unix": 1793074927.695,
+      "native_size_px": [
+        1206,
+        2622
+      ]
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 32,
+      "kind": "contrast",
+      "label": "\"+2\"",
+      "frame_points": [
+        244.66666666666666,
+        821.0,
+        14.666666666666657,
+        15.333333333333258
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"+2\" | frame (244.66666666666666, 821.0, 14.666666666666657, 15.333333333333258) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "occluded_or_viewport_edge",
+      "assessment": "Reported frame maps to tab-dock occlusion, clipped horizontal viewport, or edge-faded artwork; current pixels cannot establish the unobscured same-target contrast.",
+      "remaining_action": "Scroll this same target fully clear of dock/edge, verify identity, capture and rerun unchanged contrast; fix product only if that view demonstrates a defect.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-32.png",
+      "sha256": "76512292f1780affdcabbf9b1015ef595b3a522a7c70c8b37ccd8647b3611f68",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\23BB8ACF-0AE7-403D-9A1D-A4ACD7A8C1CE.png",
+      "timestamp_unix": 1793074929.107,
+      "native_size_px": [
+        1206,
+        2622
+      ]
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 33,
+      "kind": "contrast",
+      "label": "\"2:48\"",
+      "frame_points": [
+        213.0,
+        847.8333333333333,
+        27.666666666666657,
+        15.333333333333371
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"2:48\" | frame (213.0, 847.8333333333333, 27.666666666666657, 15.333333333333371) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "occluded_or_viewport_edge",
+      "assessment": "Reported frame maps to tab-dock occlusion, clipped horizontal viewport, or edge-faded artwork; current pixels cannot establish the unobscured same-target contrast.",
+      "remaining_action": "Scroll this same target fully clear of dock/edge, verify identity, capture and rerun unchanged contrast; fix product only if that view demonstrates a defect.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-33.png",
+      "sha256": "76512292f1780affdcabbf9b1015ef595b3a522a7c70c8b37ccd8647b3611f68",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\75F4D46B-2AB8-4753-8C0D-369855645D02.png",
+      "timestamp_unix": 1793074930.594,
+      "native_size_px": [
+        1206,
+        2622
+      ]
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 34,
+      "kind": "contrast",
+      "label": "\"+35 XP\"",
+      "frame_points": [
+        247.66666666666666,
+        847.6666666666666,
+        44.66666666666666,
+        15.666666666666629
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"+35 XP\" | frame (247.66666666666666, 847.6666666666666, 44.66666666666666, 15.666666666666629) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "occluded_or_viewport_edge",
+      "assessment": "Reported frame maps to tab-dock occlusion, clipped horizontal viewport, or edge-faded artwork; current pixels cannot establish the unobscured same-target contrast.",
+      "remaining_action": "Scroll this same target fully clear of dock/edge, verify identity, capture and rerun unchanged contrast; fix product only if that view demonstrates a defect.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-34.png",
+      "sha256": "76512292f1780affdcabbf9b1015ef595b3a522a7c70c8b37ccd8647b3611f68",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\06DDFAE7-57C0-4F89-9E7E-2B7CB29F0C76.png",
+      "timestamp_unix": 1793074932.024,
+      "native_size_px": [
+        1206,
+        2622
+      ]
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 35,
+      "kind": "contrast",
+      "label": "\"SONGS\"",
+      "frame_points": [
+        401.08840672810874,
+        690.3701810630095,
+        33.823186543782526,
+        9.30913391113279
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"SONGS\" | frame (401.08840672810874, 690.3701810630095, 33.823186543782526, 9.30913391113279) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "occluded_or_viewport_edge",
+      "assessment": "Reported frame maps to tab-dock occlusion, clipped horizontal viewport, or edge-faded artwork; current pixels cannot establish the unobscured same-target contrast.",
+      "remaining_action": "Scroll this same target fully clear of dock/edge, verify identity, capture and rerun unchanged contrast; fix product only if that view demonstrates a defect.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-35.png",
+      "sha256": "76512292f1780affdcabbf9b1015ef595b3a522a7c70c8b37ccd8647b3611f68",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\1A02D289-6AAA-4B53-9C5E-312F105BA622.png",
+      "timestamp_unix": 1793074933.485,
+      "native_size_px": [
+        1206,
+        2622
+      ]
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 36,
+      "kind": "contrast",
+      "label": "\"Silent\"",
+      "frame_points": [
+        386.50409693400064,
+        702.1868232844449,
+        62.991806131998715,
+        27.617097269694
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"Silent\" | frame (386.50409693400064, 702.1868232844449, 62.991806131998715, 27.617097269694) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "occluded_or_viewport_edge",
+      "assessment": "Reported frame maps to tab-dock occlusion, clipped horizontal viewport, or edge-faded artwork; current pixels cannot establish the unobscured same-target contrast.",
+      "remaining_action": "Scroll this same target fully clear of dock/edge, verify identity, capture and rerun unchanged contrast; fix product only if that view demonstrates a defect.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-36.png",
+      "sha256": "76512292f1780affdcabbf9b1015ef595b3a522a7c70c8b37ccd8647b3611f68",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\9AB9E14F-BE9B-41D1-ABA1-D263C2030D8D.png",
+      "timestamp_unix": 1793074935.076,
+      "native_size_px": [
+        1206,
+        2622
+      ]
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 37,
+      "kind": "contrast",
+      "label": "\"Night\"",
+      "frame_points": [
+        386.81440139770507,
+        723.9227113650239,
+        62.37119720458986,
+        27.617097269694
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"Night\" | frame (386.81440139770507, 723.9227113650239, 62.37119720458986, 27.617097269694) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "occluded_or_viewport_edge",
+      "assessment": "Reported frame maps to tab-dock occlusion, clipped horizontal viewport, or edge-faded artwork; current pixels cannot establish the unobscured same-target contrast.",
+      "remaining_action": "Scroll this same target fully clear of dock/edge, verify identity, capture and rerun unchanged contrast; fix product only if that view demonstrates a defect.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-37.png",
+      "sha256": "76512292f1780affdcabbf9b1015ef595b3a522a7c70c8b37ccd8647b3611f68",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\8B960980-7F1E-4990-8C28-37E730E67EB7.png",
+      "timestamp_unix": 1793074936.402,
+      "native_size_px": [
+        1206,
+        2622
+      ]
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 38,
+      "kind": "contrast",
+      "label": "\"28\"",
+      "frame_points": [
+        371.4815875884277,
+        676.0696682840983,
+        10.240047302246126,
+        9.619438374837273
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"28\" | frame (371.4815875884277, 676.0696682840983, 10.240047302246126, 9.619438374837273) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "occluded_or_viewport_edge",
+      "assessment": "Reported frame maps to tab-dock occlusion, clipped horizontal viewport, or edge-faded artwork; current pixels cannot establish the unobscured same-target contrast.",
+      "remaining_action": "Scroll this same target fully clear of dock/edge, verify identity, capture and rerun unchanged contrast; fix product only if that view demonstrates a defect.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-38.png",
+      "sha256": "76512292f1780affdcabbf9b1015ef595b3a522a7c70c8b37ccd8647b3611f68",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\86FCB681-8A43-40B0-A989-AEC95802764B.png",
+      "timestamp_unix": 1793074937.83,
+      "native_size_px": [
+        1206,
+        2622
+      ]
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 39,
+      "kind": "contrast",
+      "label": "\"A7\"",
+      "frame_points": [
+        355.62880279541014,
+        816.8548034667969,
+        15.515223185221373,
+        14.274005330403611
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"A7\" | frame (355.62880279541014, 816.8548034667969, 15.515223185221373, 14.274005330403611) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "occluded_or_viewport_edge",
+      "assessment": "Reported frame maps to tab-dock occlusion, clipped horizontal viewport, or edge-faded artwork; current pixels cannot establish the unobscured same-target contrast.",
+      "remaining_action": "Scroll this same target fully clear of dock/edge, verify identity, capture and rerun unchanged contrast; fix product only if that view demonstrates a defect.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-39.png",
+      "sha256": "76512292f1780affdcabbf9b1015ef595b3a522a7c70c8b37ccd8647b3611f68",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\8360D8D2-9283-40CF-9C35-603A9D6F2963.png",
+      "timestamp_unix": 1793074939.12,
+      "native_size_px": [
+        1206,
+        2622
+      ]
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 40,
+      "kind": "contrast",
+      "label": "\"+5\"",
+      "frame_points": [
+        106.0,
+        806.6666666666666,
+        62.0,
+        44.0
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"+5\" | frame (106.0, 806.6666666666666, 62.0, 44.0) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "occluded_or_viewport_edge",
+      "assessment": "Reported frame maps to tab-dock occlusion, clipped horizontal viewport, or edge-faded artwork; current pixels cannot establish the unobscured same-target contrast.",
+      "remaining_action": "Scroll this same target fully clear of dock/edge, verify identity, capture and rerun unchanged contrast; fix product only if that view demonstrates a defect.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-40.png",
+      "sha256": "76512292f1780affdcabbf9b1015ef595b3a522a7c70c8b37ccd8647b3611f68",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\7DA100C9-193B-4BC7-BD2D-5C974F0289E5.png",
+      "timestamp_unix": 1793074940.547,
+      "native_size_px": [
+        1206,
+        2622
+      ]
+    },
+    {
+      "screen": "tab-3-songs",
+      "failure_index": 41,
+      "kind": "contrast",
+      "label": "\"+5\"",
+      "frame_points": [
+        268.0,
+        806.6666666666666,
+        62.0,
+        44.0
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"+5\" | frame (268.0, 806.6666666666666, 62.0, 44.0) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "isolated_contrast_after_combined_timeout",
+      "classification": "occluded_or_viewport_edge",
+      "assessment": "Reported frame maps to tab-dock occlusion, clipped horizontal viewport, or edge-faded artwork; current pixels cannot establish the unobscured same-target contrast.",
+      "remaining_action": "Scroll this same target fully clear of dock/edge, verify identity, capture and rerun unchanged contrast; fix product only if that view demonstrates a defect.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-3-songs-41.png",
+      "sha256": "76512292f1780affdcabbf9b1015ef595b3a522a7c70c8b37ccd8647b3611f68",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\4E8ED18C-7CA0-4096-97FC-936A2B02E0DE.png",
+      "timestamp_unix": 1793074942.033,
+      "native_size_px": [
+        1206,
+        2622
+      ]
+    },
+    {
+      "screen": "tab-4-practice",
+      "failure_index": 1,
+      "kind": "contrast",
+      "label": "-",
+      "frame_points": null,
+      "element_type": null,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label - | snapshot unavailable",
+      "raw_repeat_count": 6,
+      "audit_request": "completed_combined_all",
+      "classification": "unidentified",
+      "assessment": "Six identical unavailable-snapshot callbacks collapsed to this one historical entry; only the first callback screenshot is identifiable. Do not exempt any of the six.",
+      "remaining_action": "Use detailedDescription and callback ordinal; retain separate evidence/failure for every opaque callback.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-4-practice-1.png",
+      "sha256": "a1115ca33a73b1f404eec67d9de28cd8e78ee06d796be97fda3391262b138381",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\A8F525A3-4333-4C7B-91B4-5D12EAB0D9EE.png",
+      "timestamp_unix": 1793075239.98,
+      "native_size_px": [
+        1206,
+        2622
+      ]
+    },
+    {
+      "screen": "tab-4-practice",
+      "failure_index": 2,
+      "kind": "contrast",
+      "label": "\"LV 5\"",
+      "frame_points": [
+        50.33333333333334,
+        392.66666666666663,
+        37.33333333333333,
+        28.0
+      ],
+      "element_type": 48,
+      "original_failure": "[contrast, enforced] Contrast failed | id - | label \"LV 5\" | frame (50.33333333333334, 392.66666666666663, 37.33333333333333, 28.0) | type 48",
+      "raw_repeat_count": 1,
+      "audit_request": "completed_combined_all",
+      "classification": "visible_contradictory_contrast_report",
+      "assessment": "Reported geometry maps to visible readable glyphs in callback pixels. Narrow investigated false-positive disposition is supported for this captured state; no universal SDK-bug or whole-target WCAG certification.",
+      "remaining_action": "Exact-identity contrast-only disposition plus paint-role regression, preserving other audit kinds.",
+      "image": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\named\\screenshots\\ax-failure-tab-4-practice-2.png",
+      "sha256": "48c1babdd79b33309f57e7a846ce811e29a9f6b48becc2da65b7c57568a9967b",
+      "raw_original": "C:\\Users\\shahr\\Desktop\\Translation\\native-qa\\accessibility-0081d2a\\screenshots\\3CC3ED54-C696-45C3-B226-9B328CE18A4B.png",
+      "timestamp_unix": 1793075240.529,
+      "native_size_px": [
+        1206,
+        2622
+      ],
+      "pixel_corroboration": {
+        "foreground_rgb": [
+          245,
+          243,
+          239
+        ],
+        "foreground_pixel_count": 821,
+        "background_rgb": [
+          24,
+          45,
+          42
+        ],
+        "sample_coordinates_px": {
+          "foreground": [
+            228,
+            1194
+          ],
+          "background": [
+            181,
+            1178
+          ]
+        },
+        "sample_pair_srgb_ratio": 13.0898,
+        "limit": "Exact RGB samples within reported target crop; background is most-common sufficiently different color, not proof of local adjacency or full-glyph minimum."
+      }
+    }
+  ],
+  "reviewed_source_sha256": {
+    "ios/Timbre/Design/Theme.swift": "caf1d87434c49d1af6bfb0f42e0bdbba92d77e07b8671a7f087b87b759debbc4",
+    "ios/Timbre/Songs/SongCover.swift": "8a9fb42a4cd80dbb3e7b3f39f381d7d3a85016f6fdb5cf1633dfceef642a2238",
+    "ios/Timbre/Songs/SongsView.swift": "8bc9d66086b76ea1745d27ac9c5852d9b9fea4e5319d79dd2c4e7a30ea670796",
+    "ios/Timbre/Practice/PracticeView.swift": "cdd1f924dba46c5228812cf660581d82ab3ba72b5a4c355634a96b18de1c678f",
+    "ios/Timbre/Paywall/PaywallPlan.swift": "6e6ccaf832aba07a78b428b7250f6f6da1a249c178c295a2a18b5c86cd94d994",
+    "ios/TimbreUITests/AccessibilityAuditUITests.swift": "68cb02f47c36098d76207b408b7c43c358b536528e23cd459d1ab28fe8dcbb1b",
+    "tools/ci/test_song_cover_contrast.py": "307d13a4d00383f13fe6cbdc9c7cdb87e58313d52f21483d081e32fdebdac18b"
+  },
+  "small_credit_compositing_note": "Songs5 local-column background estimate adjacent to glyph rows, applying source0.72 opacity and selecting333 near-full-stroke candidates, gave estimated minimum4.7414. This is an approximate diagnostic and motivates preserving a full composition regression; it is not an exact rendered minimum certificate.",
+  "inspection_derivatives": {
+    "outside_git_directory": "C:/Users/shahr/Desktop/Translation/native-qa/qa-accessibility-0081-targets",
+    "sheets": [
+      "QA-ONLY-target-sheet-1.png",
+      "QA-ONLY-target-sheet-2.png",
+      "QA-ONLY-target-sheet-3.png",
+      "QA-ONLY-target-sheet-4.png"
+    ],
+    "purpose": "Native reported-frame crops with padding, upscaled for readable manual comparison. Full originals used to verify viewport/dock context."
+  }
+}

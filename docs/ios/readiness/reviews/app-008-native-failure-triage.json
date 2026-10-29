@@ -1,0 +1,525 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-10-27T04:34:21Z",
+  "reviewer": "Independent integration review agent",
+  "skills": [
+    "systematic-debugging",
+    "code-review-and-quality"
+  ],
+  "source_head": "0081d2af7d29b88fd2b075334f76b4e483ad07fb",
+  "actual_checkout": "PR merge9d003f3 of0081d2a into b6efd36; frozen0081 source blobs used throughout this diagnosis",
+  "run_id": 40445768823,
+  "job_id": 121997637660,
+  "verdict": "native_failure_confirmed_fixture_defects_and_unproved_mechanisms_require_focused_rerun",
+  "native_summary": {
+    "tests": 120,
+    "skipped": 1,
+    "failures": 45,
+    "unexpected": 15,
+    "privacy_failures": 35,
+    "privacy_unexpected": 14,
+    "fraction_failures": 8,
+    "commerce_failures": 2,
+    "classification_counts": {
+      "cleanup_expectation_registration": 14,
+      "async_timeout": 16,
+      "downstream_assertion": 5,
+      "late_privacy_assertion": 1,
+      "StoreKit_cleanup": 1,
+      "encoded_render_inequality": 8
+    }
+  },
+  "input_log": {
+    "path": "C:/Users/shahr/Desktop/Translation/native-qa/app-0081d2a-final.log",
+    "bytes": 2501753,
+    "sha256": "ffb4e968ee69b6def43df4ef921b1dba1ddc9e61d8a27daa5f9d11114cc641a5"
+  },
+  "frozen_source_sha256": {
+    "ios/TimbreAppTests/AnalyticsPrivacyTests.swift": "3e43a91f8c95acf3e9fc365cb79aaac6399e61c7650eec8e1c045eb39b599ccf",
+    "ios/TimbreAppTests/FractionDirectionTests.swift": "e26e0da3945213d9f0911fb2e118d20feb0e0d0a3d103b92ddd7452c5c322d2d",
+    "ios/Timbre/Design/Kit.swift": "3f44a435be4d59ebf156691d923342373cf87b0e4202b524b02f4438c626a6eb",
+    "ios/Timbre/Services/AnalyticsTransport.swift": "7e89d80808af137b1491f3a73157e1743431f716e3e3aaf3e2ad2d39e1752113",
+    "ios/Timbre/Services/Analytics.swift": "0ef72ddad0382dacb1f300e98dbcf0e5a7cd324ae5d65ad686f816ea3419a72e"
+  },
+  "unique_failure_records": [
+    {
+      "file": "AnalyticsPrivacyTests.swift",
+      "source_line": 15,
+      "suite": "AnalyticsPrivacyTests",
+      "test": "testAnOldGenerationCannotCreateTokensRequestsOrRetriesAfterOffOn",
+      "message": "Failed due to unwaited expectation 'session 001B8C6D-C8CD-4925-94FD-20BBB8E96C94 invalidated'.",
+      "log_line": 16831,
+      "classification": "cleanup_expectation_registration"
+    },
+    {
+      "file": "AnalyticsPrivacyTests.swift",
+      "source_line": 15,
+      "suite": "AnalyticsPrivacyTests",
+      "test": "testAttributionRevocationBeforeStartDoesNotCreateToken",
+      "message": "Failed due to unwaited expectation 'session 3965ED3B-D054-460E-9775-10DC97F4165C invalidated'.",
+      "log_line": 16834,
+      "classification": "cleanup_expectation_registration"
+    },
+    {
+      "file": "AnalyticsPrivacyTests.swift",
+      "source_line": 268,
+      "suite": "AnalyticsPrivacyTests",
+      "test": "testAttributionRevocationDuringRetryWaitPreventsMoreRequestsAndEvents",
+      "message": "Asynchronous wait failed: Exceeded timeout of 2 seconds, with unfulfilled expectations: \"attribution first attempt\".",
+      "log_line": 16842,
+      "classification": "async_timeout"
+    },
+    {
+      "file": "AnalyticsPrivacyTests.swift",
+      "source_line": 15,
+      "suite": "AnalyticsPrivacyTests",
+      "test": "testAttributionRevocationDuringRetryWaitPreventsMoreRequestsAndEvents",
+      "message": "Failed due to unwaited expectation 'session D2C02592-0459-45B3-A128-82C1D11735A4 invalidated'.",
+      "log_line": 16843,
+      "classification": "cleanup_expectation_registration"
+    },
+    {
+      "file": "AnalyticsPrivacyTests.swift",
+      "source_line": 317,
+      "suite": "AnalyticsPrivacyTests",
+      "test": "testAttributionWhitelistOmitsCountryAndDoesNotMarkSentBeforeAcknowledgment",
+      "message": "Asynchronous wait failed: Exceeded timeout of 2 seconds, with unfulfilled expectations: \"attribution upload\".",
+      "log_line": 16846,
+      "classification": "async_timeout"
+    },
+    {
+      "file": "AnalyticsPrivacyTests.swift",
+      "source_line": 15,
+      "suite": "AnalyticsPrivacyTests",
+      "test": "testAttributionWhitelistOmitsCountryAndDoesNotMarkSentBeforeAcknowledgment",
+      "message": "Failed due to unwaited expectation 'session FE71550D-29CE-47C8-898D-34EE76B9C507 invalidated'.",
+      "log_line": 16847,
+      "classification": "cleanup_expectation_registration"
+    },
+    {
+      "file": "AnalyticsPrivacyTests.swift",
+      "source_line": 161,
+      "suite": "AnalyticsPrivacyTests",
+      "test": "testDeliveryRemainsOffUntilSavedPreferenceIsApplied",
+      "message": "Asynchronous wait failed: Exceeded timeout of 2 seconds, with unfulfilled expectations: \"saved default-on preference applied\".",
+      "log_line": 16852,
+      "classification": "async_timeout"
+    },
+    {
+      "file": "AnalyticsPrivacyTests.swift",
+      "source_line": 15,
+      "suite": "AnalyticsPrivacyTests",
+      "test": "testDeliveryRemainsOffUntilSavedPreferenceIsApplied",
+      "message": "Failed due to unwaited expectation 'session B4906D18-FA93-4CAC-B041-9D2C0E2C44E2 invalidated'.",
+      "log_line": 16853,
+      "classification": "cleanup_expectation_registration"
+    },
+    {
+      "file": "AnalyticsPrivacyTests.swift",
+      "source_line": 128,
+      "suite": "AnalyticsPrivacyTests",
+      "test": "testExplicitRequestAcknowledgesOnlyIngestHTTP200AndNeverJustQueueing",
+      "message": "Asynchronous wait failed: Exceeded timeout of 2 seconds, with unfulfilled expectations: \"HTTP 200 result\".",
+      "log_line": 16856,
+      "classification": "async_timeout"
+    },
+    {
+      "file": "AnalyticsPrivacyTests.swift",
+      "source_line": 128,
+      "suite": "AnalyticsPrivacyTests",
+      "test": "testExplicitRequestAcknowledgesOnlyIngestHTTP200AndNeverJustQueueing",
+      "message": "Asynchronous wait failed: Exceeded timeout of 2 seconds, with unfulfilled expectations: \"HTTP 202 result\".",
+      "log_line": 16857,
+      "classification": "async_timeout"
+    },
+    {
+      "file": "AnalyticsPrivacyTests.swift",
+      "source_line": 128,
+      "suite": "AnalyticsPrivacyTests",
+      "test": "testExplicitRequestAcknowledgesOnlyIngestHTTP200AndNeverJustQueueing",
+      "message": "Asynchronous wait failed: Exceeded timeout of 2 seconds, with unfulfilled expectations: \"HTTP 422 result\".",
+      "log_line": 16859,
+      "classification": "async_timeout"
+    },
+    {
+      "file": "AnalyticsPrivacyTests.swift",
+      "source_line": 128,
+      "suite": "AnalyticsPrivacyTests",
+      "test": "testExplicitRequestAcknowledgesOnlyIngestHTTP200AndNeverJustQueueing",
+      "message": "Asynchronous wait failed: Exceeded timeout of 2 seconds, with unfulfilled expectations: \"HTTP 500 result\".",
+      "log_line": 16860,
+      "classification": "async_timeout"
+    },
+    {
+      "file": "AnalyticsPrivacyTests.swift",
+      "source_line": 15,
+      "suite": "AnalyticsPrivacyTests",
+      "test": "testExplicitRequestAcknowledgesOnlyIngestHTTP200AndNeverJustQueueing",
+      "message": "Failed due to unwaited expectations 'session 202FD9D6-4663-4FB9-8647-4898E79BBFFD invalidated', 'session A873E341-E9DF-4CA8-AEC1-5281786E2610 invalidated', 'session 2A2C601F-9BE8-4B47-B850-BD8D30495FF6 invalidated', 'session 98981D5C-6923-4825-A5BF-452D7053398D invalidated'.",
+      "log_line": 16861,
+      "classification": "cleanup_expectation_registration"
+    },
+    {
+      "file": "AnalyticsPrivacyTests.swift",
+      "source_line": 15,
+      "suite": "AnalyticsPrivacyTests",
+      "test": "testExplicitRequestDoesNotSucceedWithoutConfigurationOrConsent",
+      "message": "Failed due to unwaited expectations 'session 02BC5A89-749D-4BD8-99DA-27A9C0FCDBAC invalidated', 'session 4A392853-300E-4648-98C2-B85C8E21D464 invalidated'.",
+      "log_line": 16864,
+      "classification": "cleanup_expectation_registration"
+    },
+    {
+      "file": "AnalyticsPrivacyTests.swift",
+      "source_line": 197,
+      "suite": "AnalyticsPrivacyTests",
+      "test": "testHeldTokenProviderDoesNotBlockStartOrRevocationAndItsResultIsDiscarded",
+      "message": "Asynchronous wait failed: Exceeded timeout of 2 seconds, with unfulfilled expectations: \"token provider held\".",
+      "log_line": 16871,
+      "classification": "async_timeout"
+    },
+    {
+      "file": "AnalyticsPrivacyTests.swift",
+      "source_line": 206,
+      "suite": "AnalyticsPrivacyTests",
+      "test": "testHeldTokenProviderDoesNotBlockStartOrRevocationAndItsResultIsDiscarded",
+      "message": "Asynchronous wait failed: Exceeded timeout of 0.3 seconds, with unfulfilled expectations: \"provider released\".",
+      "log_line": 16872,
+      "classification": "async_timeout"
+    },
+    {
+      "file": "AnalyticsPrivacyTests.swift",
+      "source_line": 15,
+      "suite": "AnalyticsPrivacyTests",
+      "test": "testHeldTokenProviderDoesNotBlockStartOrRevocationAndItsResultIsDiscarded",
+      "message": "Failed due to unwaited expectation 'session 974933EE-9479-475B-8745-D52C745ED2D6 invalidated'.",
+      "log_line": 16873,
+      "classification": "cleanup_expectation_registration"
+    },
+    {
+      "file": "AnalyticsPrivacyTests.swift",
+      "source_line": 292,
+      "suite": "AnalyticsPrivacyTests",
+      "test": "testInflightAttributionIsCanceledAndAnOffOnCycleCanStartExactlyOneNewRun",
+      "message": "Asynchronous wait failed: Exceeded timeout of 2 seconds, with unfulfilled expectations: \"first attribution held\".",
+      "log_line": 16876,
+      "classification": "async_timeout"
+    },
+    {
+      "file": "AnalyticsPrivacyTests.swift",
+      "source_line": 294,
+      "suite": "AnalyticsPrivacyTests",
+      "test": "testInflightAttributionIsCanceledAndAnOffOnCycleCanStartExactlyOneNewRun",
+      "message": "Asynchronous wait failed: Exceeded timeout of 2 seconds, with unfulfilled expectations: \"first attribution canceled\".",
+      "log_line": 16877,
+      "classification": "async_timeout"
+    },
+    {
+      "file": "AnalyticsPrivacyTests.swift",
+      "source_line": 298,
+      "suite": "AnalyticsPrivacyTests",
+      "test": "testInflightAttributionIsCanceledAndAnOffOnCycleCanStartExactlyOneNewRun",
+      "message": "Asynchronous wait failed: Exceeded timeout of 2 seconds, with unfulfilled expectations: \"second attribution held\", \"only the new generation uploads\".",
+      "log_line": 16878,
+      "classification": "async_timeout"
+    },
+    {
+      "file": "AnalyticsPrivacyTests.swift",
+      "source_line": 299,
+      "suite": "AnalyticsPrivacyTests",
+      "test": "testInflightAttributionIsCanceledAndAnOffOnCycleCanStartExactlyOneNewRun",
+      "message": "XCTAssertEqual failed: (\"0\") is not equal to (\"2\")",
+      "log_line": 16879,
+      "classification": "downstream_assertion"
+    },
+    {
+      "file": "AnalyticsPrivacyTests.swift",
+      "source_line": 300,
+      "suite": "AnalyticsPrivacyTests",
+      "test": "testInflightAttributionIsCanceledAndAnOffOnCycleCanStartExactlyOneNewRun",
+      "message": "XCTAssertEqual failed: (\"0\") is not equal to (\"2\")",
+      "log_line": 16880,
+      "classification": "downstream_assertion"
+    },
+    {
+      "file": "AnalyticsPrivacyTests.swift",
+      "source_line": 15,
+      "suite": "AnalyticsPrivacyTests",
+      "test": "testInflightAttributionIsCanceledAndAnOffOnCycleCanStartExactlyOneNewRun",
+      "message": "Failed due to unwaited expectation 'session A86D17D4-DB72-43D7-8764-34F53259B65A invalidated'.",
+      "log_line": 16881,
+      "classification": "cleanup_expectation_registration"
+    },
+    {
+      "file": "AnalyticsPrivacyTests.swift",
+      "source_line": 15,
+      "suite": "AnalyticsPrivacyTests",
+      "test": "testNewGenerationCanDeliverWithoutBeingCanceledByAnOldCompletion",
+      "message": "Failed due to unwaited expectation 'session 6C79189F-3CEB-447E-8586-1212702756EF invalidated'.",
+      "log_line": 16884,
+      "classification": "cleanup_expectation_registration"
+    },
+    {
+      "file": "AnalyticsPrivacyTests.swift",
+      "source_line": 238,
+      "suite": "AnalyticsPrivacyTests",
+      "test": "testOldHeldTokenCannotSendOrClearTheNewRunAfterOffOn",
+      "message": "Asynchronous wait failed: Exceeded timeout of 2 seconds, with unfulfilled expectations: \"old provider held\".",
+      "log_line": 16887,
+      "classification": "async_timeout"
+    },
+    {
+      "file": "AnalyticsPrivacyTests.swift",
+      "source_line": 242,
+      "suite": "AnalyticsPrivacyTests",
+      "test": "testOldHeldTokenCannotSendOrClearTheNewRunAfterOffOn",
+      "message": "Asynchronous wait failed: Exceeded timeout of 2 seconds, with unfulfilled expectations: \"new generation request held\".",
+      "log_line": 16888,
+      "classification": "async_timeout"
+    },
+    {
+      "file": "AnalyticsPrivacyTests.swift",
+      "source_line": 244,
+      "suite": "AnalyticsPrivacyTests",
+      "test": "testOldHeldTokenCannotSendOrClearTheNewRunAfterOffOn",
+      "message": "Asynchronous wait failed: Exceeded timeout of 2 seconds, with unfulfilled expectations: \"old provider released\".",
+      "log_line": 16889,
+      "classification": "async_timeout"
+    },
+    {
+      "file": "AnalyticsPrivacyTests.swift",
+      "source_line": 247,
+      "suite": "AnalyticsPrivacyTests",
+      "test": "testOldHeldTokenCannotSendOrClearTheNewRunAfterOffOn",
+      "message": "XCTAssertEqual failed: (\"0\") is not equal to (\"2\")",
+      "log_line": 16890,
+      "classification": "downstream_assertion"
+    },
+    {
+      "file": "AnalyticsPrivacyTests.swift",
+      "source_line": 250,
+      "suite": "AnalyticsPrivacyTests",
+      "test": "testOldHeldTokenCannotSendOrClearTheNewRunAfterOffOn",
+      "message": "Asynchronous wait failed: Exceeded timeout of 2 seconds, with unfulfilled expectations: \"new generation recorded once\".",
+      "log_line": 16892,
+      "classification": "async_timeout"
+    },
+    {
+      "file": "AnalyticsPrivacyTests.swift",
+      "source_line": 251,
+      "suite": "AnalyticsPrivacyTests",
+      "test": "testOldHeldTokenCannotSendOrClearTheNewRunAfterOffOn",
+      "message": "XCTAssertEqual failed: (\"0\") is not equal to (\"1\")",
+      "log_line": 16893,
+      "classification": "downstream_assertion"
+    },
+    {
+      "file": "AnalyticsPrivacyTests.swift",
+      "source_line": 252,
+      "suite": "AnalyticsPrivacyTests",
+      "test": "testOldHeldTokenCannotSendOrClearTheNewRunAfterOffOn",
+      "message": "XCTAssertTrue failed",
+      "log_line": 16894,
+      "classification": "downstream_assertion"
+    },
+    {
+      "file": "AnalyticsPrivacyTests.swift",
+      "source_line": 15,
+      "suite": "AnalyticsPrivacyTests",
+      "test": "testOldHeldTokenCannotSendOrClearTheNewRunAfterOffOn",
+      "message": "Failed due to unwaited expectation 'session 1322B69C-91F3-4DEE-8394-7F7615B9A149 invalidated'.",
+      "log_line": 16895,
+      "classification": "cleanup_expectation_registration"
+    },
+    {
+      "file": "AnalyticsPrivacyTests.swift",
+      "source_line": 15,
+      "suite": "AnalyticsPrivacyTests",
+      "test": "testOptOutDropsQueuedSignalsAndPreventsFurtherUploads",
+      "message": "Failed due to unwaited expectation 'session B7C463A8-2A8F-4359-9A52-7F8B5D0F5704 invalidated'.",
+      "log_line": 16898,
+      "classification": "cleanup_expectation_registration"
+    },
+    {
+      "file": "AnalyticsPrivacyTests.swift",
+      "source_line": 15,
+      "suite": "AnalyticsPrivacyTests",
+      "test": "testRevocationCancelsAnInflightRequestAndRejectsItsResult",
+      "message": "Failed due to unwaited expectation 'session 91139D21-0465-4191-B76C-9ADF0EC79B85 invalidated'.",
+      "log_line": 16903,
+      "classification": "cleanup_expectation_registration"
+    },
+    {
+      "file": "AnalyticsPrivacyTests.swift",
+      "source_line": 15,
+      "suite": "AnalyticsPrivacyTests",
+      "test": "testRevocationInvalidatesRetryWorkScheduledWhileConsentWasStillEnabled",
+      "message": "Failed due to unwaited expectation 'session DD0E7C6A-E9EF-44AE-8552-F88DE09F835C invalidated'.",
+      "log_line": 16906,
+      "classification": "cleanup_expectation_registration"
+    },
+    {
+      "file": "AnalyticsPrivacyTests.swift",
+      "source_line": 159,
+      "suite": "CommerceIntegrationTests",
+      "test": "testAnnualSubscriptionGrantsPro",
+      "message": "XCTAssertTrue failed",
+      "log_line": 17013,
+      "classification": "late_privacy_assertion"
+    },
+    {
+      "file": "StoreKitTestEnvironment.swift",
+      "source_line": 49,
+      "suite": "CommerceIntegrationTests",
+      "test": "testAnnualSubscriptionGrantsPro",
+      "message": "failed: caught error: \"StoreKit test transactions did not clear before timeout\"",
+      "log_line": 17014,
+      "classification": "StoreKit_cleanup"
+    },
+    {
+      "file": "FractionDirectionTests.swift",
+      "source_line": 13,
+      "suite": "FractionDirectionTests",
+      "test": "testProgressFractionKeepsTheSameNumericOrderInBothLayoutDirections",
+      "message": "XCTAssertEqual failed: (\"1933 bytes\") is not equal to (\"1945 bytes\") - The completed/total order must stay intact in ar_SA: 3/6",
+      "log_line": 17172,
+      "classification": "encoded_render_inequality"
+    },
+    {
+      "file": "FractionDirectionTests.swift",
+      "source_line": 13,
+      "suite": "FractionDirectionTests",
+      "test": "testProgressFractionKeepsTheSameNumericOrderInBothLayoutDirections",
+      "message": "XCTAssertEqual failed: (\"2388 bytes\") is not equal to (\"2448 bytes\") - The completed/total order must stay intact in ar_SA: 12/34",
+      "log_line": 17173,
+      "classification": "encoded_render_inequality"
+    },
+    {
+      "file": "FractionDirectionTests.swift",
+      "source_line": 13,
+      "suite": "FractionDirectionTests",
+      "test": "testProgressFractionKeepsTheSameNumericOrderInBothLayoutDirections",
+      "message": "XCTAssertEqual failed: (\"2060 bytes\") is not equal to (\"2029 bytes\") - The completed/total order must stay intact in fa_IR: 3/6",
+      "log_line": 17174,
+      "classification": "encoded_render_inequality"
+    },
+    {
+      "file": "FractionDirectionTests.swift",
+      "source_line": 13,
+      "suite": "FractionDirectionTests",
+      "test": "testProgressFractionKeepsTheSameNumericOrderInBothLayoutDirections",
+      "message": "XCTAssertEqual failed: (\"2514 bytes\") is not equal to (\"2533 bytes\") - The completed/total order must stay intact in fa_IR: 12/34",
+      "log_line": 17175,
+      "classification": "encoded_render_inequality"
+    },
+    {
+      "file": "FractionDirectionTests.swift",
+      "source_line": 13,
+      "suite": "FractionDirectionTests",
+      "test": "testProgressFractionKeepsTheSameNumericOrderInBothLayoutDirections",
+      "message": "XCTAssertEqual failed: (\"2253 bytes\") is not equal to (\"2248 bytes\") - The completed/total order must stay intact in he_IL: 3/6",
+      "log_line": 17176,
+      "classification": "encoded_render_inequality"
+    },
+    {
+      "file": "FractionDirectionTests.swift",
+      "source_line": 13,
+      "suite": "FractionDirectionTests",
+      "test": "testProgressFractionKeepsTheSameNumericOrderInBothLayoutDirections",
+      "message": "XCTAssertEqual failed: (\"2451 bytes\") is not equal to (\"2459 bytes\") - The completed/total order must stay intact in he_IL: 12/34",
+      "log_line": 17177,
+      "classification": "encoded_render_inequality"
+    },
+    {
+      "file": "FractionDirectionTests.swift",
+      "source_line": 13,
+      "suite": "FractionDirectionTests",
+      "test": "testProgressFractionKeepsTheSameNumericOrderInBothLayoutDirections",
+      "message": "XCTAssertEqual failed: (\"2253 bytes\") is not equal to (\"2248 bytes\") - The completed/total order must stay intact in en_US: 3/6",
+      "log_line": 17178,
+      "classification": "encoded_render_inequality"
+    },
+    {
+      "file": "FractionDirectionTests.swift",
+      "source_line": 13,
+      "suite": "FractionDirectionTests",
+      "test": "testProgressFractionKeepsTheSameNumericOrderInBothLayoutDirections",
+      "message": "XCTAssertEqual failed: (\"2451 bytes\") is not equal to (\"2459 bytes\") - The completed/total order must stay intact in en_US: 12/34",
+      "log_line": 17179,
+      "classification": "encoded_render_inequality"
+    }
+  ],
+  "confirmed_observations": [
+    {
+      "id": "APP008-01",
+      "path": "ios/TimbreAppTests/AnalyticsPrivacyTests.swift",
+      "line": 15,
+      "finding": "All14 session-owning cases report an unwaited session-invalidation expectation created through XCTestCase.expectation. This includes disabled/no-network cases and matches14 unexpected privacy failures. The message is unwaited, not a two-second invalidation timeout.",
+      "action": "Create teardown-owned signals with standalone XCTestExpectation(description:), still explicitly await invalidation. Prove this with a no-task session lifecycle native regression.",
+      "certainty": "Failure/registration pattern confirmed. Exact Darwin XCTest internal lifecycle-check ordering is not visible in this log; no claim that every timeout shares this cause."
+    },
+    {
+      "id": "APP008-02",
+      "path": "ios/TimbreAppTests/AnalyticsPrivacyTests.swift",
+      "line": 159,
+      "finding": "Log17013 attributes the saved-enable privacy callback assertion to current CommerceIntegrationTests.testAnnualSubscriptionGrantsPro. This directly proves a late privacy assertion escaped into the subsequent suite.",
+      "action": "Track/drain separately dispatched telemetry completions or evaluate callback assertions after explicit bounded waits. Retain missing/late callback failures. URLSession invalidation alone is not a barrier for Telemetry.completeSubmission global-queue work."
+    },
+    {
+      "id": "APP008-03",
+      "path": "ios/TimbreAppTests/StoreKitTestEnvironment.swift",
+      "line": 49,
+      "finding": "Log17014 independently reports transactions did not clear before timeout. This cannot be erased by identifying the other Commerce failure as a late privacy assertion.",
+      "action": "After fixing fixture isolation, rerun serial commerce tests with cleanup diagnostics. No entitlement/product change is justified by this log alone."
+    }
+  ],
+  "source_liveness_risk": {
+    "id": "APP008-04",
+    "evidence": [
+      "Frozen startLoading invokes handler.start under stateLock. Its unknown-scope path calls URLProtocolClient.didFail under the lock too.",
+      "respond marks finished and calls client didReceive/didLoad/didFinish under NSRecursiveLock. stop callback itself is already outside the lock.",
+      "NSRecursiveLock permits same-thread recursion only. If an external callback waits for another thread to call stopLoading, that thread waits for the held mutex. Existing direct same-thread tests do not exercise this liveness boundary.",
+      "Setting finished before notifications prevents stopLoading from changing cancellation state during a response sequence."
+    ],
+    "certainty": "External-callback-under-lock is established by source and admits a deterministic cross-thread regression. Actual CFNetwork deadlock as cause of every native timeout is unproved without that regression or thread traces.",
+    "action": [
+      "Add bounded deterministic regressions where start handler and client receive callback request stopLoading on another thread and await its return. Old helper should fail without an indefinite hang.",
+      "Move external handler/client calls outside the mutex, including unknown-scope failure. Preserve responding/stopped/finished state and cancellation checks between client notifications.",
+      "Keep retired scopes fail-closed, original timing bounds and overfulfill detection. Production transport consent logic need not change to repair this helper boundary."
+    ]
+  },
+  "unproved_timeout_hypotheses": [
+    "Scope-header visibility/binding lacks native diagnostic output. Record scope-present/bound and host, never payload or attribution token, before assigning this mechanism.",
+    "Some missing token-provider counters are0 before HTTP. They cannot all be blamed on URLProtocol routing without checkpoint evidence.",
+    "Runner overload/global queue starvation is possible but not demonstrated and does not authorize raising timeouts."
+  ],
+  "fraction_diagnosis": {
+    "id": "APP008-05",
+    "native_result": "All4 locales ar_SA/fa_IR/he_IL/en_US fail3/6 and12/34 encoded PNG Data equality. Swapped-value noncollapse guard passes.",
+    "proved": "ImageRenderer-produced encoded files differ in bytes/length; the helper is not universally blank or collapsed.",
+    "unproved": "No attached renders or canonical pixel comparison establishes order reversal versus positioning, antialiasing or PNG encoding. Eight failures must not be described as eight confirmed reversals.",
+    "action": [
+      "Attach both original renders with locale/count/direction labels. Decode canonical RGBA and compare exactly to separate encoding from rendering; retain strict checks, no tolerance/waiver.",
+      "Inspect actual numeric order and bounds. Contiguous interpolated Text isolation is plausible hardening, but requires native proof and preservation of localized digits/keys/spoken label.",
+      "Retain original b6 Arabic visual RED image. It does not prove how the0081 helper rendered or that a subsequent fix passed."
+    ]
+  },
+  "minimal_native_sequence": [
+    "First prove standalone cleanup expectation/no-task session behavior on Darwin.",
+    "Then execute cross-thread fixture liveness tests and a scoped real URLSession HTTP200 roundtrip with identity-safe checkpoints.",
+    "Repeat full privacy class serially and verify no late assertion reaches the next suite; then rerun commerce cleanup/purchase tests.",
+    "Run strict fraction tests with attached original renders and exact pixel diagnostics.",
+    "Require full app/smoke gate success on final committed candidate. Current failing120-test run remains failed."
+  ],
+  "primary_references": [
+    "https://developer.apple.com/documentation/xctest/xctestcase/expectation(description:)",
+    "https://developer.apple.com/documentation/xctest/xctestexpectation",
+    "https://developer.apple.com/documentation/foundation/nsrecursivelock",
+    "https://developer.apple.com/documentation/foundation/urlsession/invalidateandcancel()"
+  ],
+  "limits": [
+    "Windows frozen-source/log diagnosis only; no Darwin regression or native rerun performed by reviewer.",
+    "Confirmed native failures, source structural defects and hypotheses are distinguished. This harness evidence certifies neither a production privacy regression nor correctness.",
+    "Prior source approvals were conditional on native verification and remain historical. Original logs/receipts are unchanged."
+  ],
+  "mutations": "Only this triage receipt written; no implementation edits, commit, push or native execution."
+}

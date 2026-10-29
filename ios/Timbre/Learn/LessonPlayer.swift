@@ -107,6 +107,10 @@ struct LessonPlayer: View {
         .animation(Motion.reveal, value: result != nil)
         .preferredColorScheme(.dark)
         // "Hear it", chords and listen steps sound like the course's instrument (theory, ear, rhythm: the selected one).
+        #if DEBUG
+        .onAppear { DemoScene.lessonAppeared(lesson.id) }
+        .onDisappear { DemoScene.lessonDisappeared(lesson.id) }
+        #endif
         .onAppear { store.audio.courseVoice = InstrumentVoice(instrumentId: course.instrument) }
         .onDisappear { store.audio.courseVoice = nil }
         .confirmationDialog("Leave this lesson?", isPresented: $confirmQuit, titleVisibility: .visible) {
@@ -956,13 +960,16 @@ struct ChoiceStep: View {
         }
         .buttonStyle(PressScaleStyle())
         .disabled(picked != nil && !isPicked && index != answer)
+        // Name only the answer button, before adding its separate decorative background.
+        .accessibilityIdentifier("lesson.option.\(index)")
         // A right answer bursts out from behind its own tile, never over the words.
         .background {
             if index == answer {
                 SparkBurst(trigger: burst, color: accent, reach: 120, startFraction: 0.35).frame(width: 260, height: 260)
             }
         }
-        .accessibilityIdentifier("lesson.option.\(index)")
+        // VoiceOver follows the full answer tile, not the larger reward canvas behind it.
+        .contentShape(.accessibility, Rectangle())
     }
 
     private func feedback(_ picked: Int) -> some View {

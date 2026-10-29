@@ -292,8 +292,9 @@ struct JourneyView: View {
         let start = cal.date(byAdding: .day, value: -34, to: today)!
         let active = (0..<35).filter { days.contains(cal.date(byAdding: .day, value: $0, to: start)!) }.count
         return VStack(alignment: .leading, spacing: 12) {
-            JourneyCardHeading("Last five weeks") {
+            JourneyCardHeading("Last five weeks", identity: "journey.calendar") {
                 Text("\(active) of 35 days").font(.caption).foregroundStyle(Palette.inkSoft)
+                    .accessibilityIdentifier("journey.calendar.active-days")
             }
             weekdayHeader(start: start)
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 7), spacing: 6) {
@@ -328,6 +329,7 @@ struct JourneyView: View {
                 VStack(spacing: 3) {
                     Text(date, format: .dateTime.weekday(.narrow))
                         .font(Typeface.label(.caption)).foregroundStyle(today ? Palette.mint : Palette.inkSoft)
+                        .accessibilityIdentifier("journey.calendar.weekday.\(Calendar.current.component(.weekday, from: date))")
                     Circle().fill(today ? Palette.mint : .clear).frame(width: 4, height: 4)
                 }
                 .frame(maxWidth: .infinity)
@@ -345,7 +347,7 @@ struct JourneyView: View {
         let worst = drift.first
         let labels = stringLabels
         return VStack(alignment: .leading, spacing: 10) {
-            JourneyCardHeading("String health") {
+            JourneyCardHeading("String health", identity: "journey.strings") {
                 if advice { Text("Restring soon").font(.caption.weight(.semibold)).foregroundStyle(Palette.adjust) }
             }
             Group {
@@ -479,7 +481,7 @@ struct JourneyView: View {
         let earnedCount = badges.filter(\.earned).count
         let shown = allBadges ? badges : Array(badges.prefix(collapsed))
         return VStack(alignment: .leading, spacing: 14) {
-            JourneyCardHeading("Achievements") {
+            JourneyCardHeading("Achievements", identity: "journey.achievements") {
                 // The same counter as under each medal ("3 / 10"), read "9 of 42".
                 Text.fraction(earnedCount, Achievements.all.count).font(.caption).foregroundStyle(Palette.inkSoft)
             }
@@ -697,7 +699,7 @@ struct JourneyView: View {
     /// columns beside it; on a phone it takes no room.
     private func recentList(limit: Int) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            JourneyCardHeading("Recent") {
+            JourneyCardHeading("Recent", identity: "journey.recent") {
                 if !store.records.isEmpty { Text("\(store.records.count) sessions").font(.caption).foregroundStyle(Palette.inkSoft) }
             }
             if store.records.isEmpty {
@@ -801,11 +803,13 @@ private struct BadgeProgress: Identifiable {
 /// trailing edge; at the accessibility sizes the note moves under the title so neither is squeezed.
 private struct JourneyCardHeading<Trailing: View>: View {
     private let title: LocalizedStringKey
+    private let identity: String
     private let trailing: Trailing
     @Environment(\.dynamicTypeSize) private var typeSize
 
-    init(_ title: LocalizedStringKey, @ViewBuilder trailing: () -> Trailing) {
+    init(_ title: LocalizedStringKey, identity: String, @ViewBuilder trailing: () -> Trailing) {
         self.title = title
+        self.identity = identity
         self.trailing = trailing()
     }
 
@@ -815,6 +819,7 @@ private struct JourneyCardHeading<Trailing: View>: View {
             : AnyLayout(HStackLayout(alignment: .firstTextBaseline, spacing: 8))
         layout {
             CardTitle(title)
+                .accessibilityIdentifier(identity + ".title")
                 .frame(maxWidth: .infinity, alignment: .leading)
             trailing
         }

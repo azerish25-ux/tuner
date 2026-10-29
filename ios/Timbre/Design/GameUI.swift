@@ -12,6 +12,7 @@ struct StreakChip: View {
     /// Whether VoiceOver hears Today's progress with the streak. Nil decides by tab: not on Practice or Learn, whose
     /// Today cards say it.
     var showsToday: Bool? = nil
+    var identity = "header.streak"
     var action: () -> Void = {}
     /// The capsule's side inset, growing with the count's text.
     @ScaledMetric(relativeTo: .subheadline) private var inset: CGFloat = 12
@@ -34,6 +35,7 @@ struct StreakChip: View {
                         lamp.scaleEffect(CGFloat(reduceMotion ? 1 : scale), anchor: .bottom)
                     } animation: { _ in Motion.pop }
                 Text("\(streak.current)").font(Typeface.label(.footnote)).foregroundStyle(Palette.flameInk).monospacedDigit()
+                    .accessibilityIdentifier(identity + ".count")
                 if store.streakFreezes > 0 {
                     // Banked streak freezes, one flake each.
                     HStack(spacing: 1) {
@@ -77,6 +79,7 @@ struct StreakChip: View {
 struct LevelRing: View {
     @EnvironmentObject private var store: AppStore
     var size: CGFloat = 36
+    var identity = "level"
     var action: (() -> Void)?
     @Environment(\.legibilityWeight) private var legibility
 
@@ -90,7 +93,7 @@ struct LevelRing: View {
                 .stroke(Palette.mint, style: StrokeStyle(lineWidth: size * 0.09, lineCap: .round))
                 .rotationEffect(.degrees(-90))
                 .animation(Motion.settle, value: xp)
-            LevelMark(number: level.number, size: size)
+            LevelMark(number: level.number, size: size, identity: identity + ".mark")
                 .frame(maxWidth: size * 0.74)
         }
         .frame(width: size, height: size)
@@ -112,12 +115,14 @@ struct LevelRing: View {
 struct LevelMark: View {
     let number: Int
     var size: CGFloat = 36
+    var identity = "level.mark"
 
     var body: some View {
         (Text("LV").font(Typeface.label(size * 0.24)).tracking(0.3).foregroundStyle(Palette.mint)
             + Text(verbatim: " ")
             + Text("\(number)").font(Typeface.label(size * 0.36)).foregroundStyle(Palette.ink))
             .contentTransition(.numericText())
+            .accessibilityIdentifier(identity)
             .lineLimit(1).minimumScaleFactor(0.5)
     }
 }

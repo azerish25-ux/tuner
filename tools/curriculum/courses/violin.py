@@ -593,7 +593,7 @@ UNIT_5 = unit("vln-5", "Low 2 and high 2", "Move second finger to change keys: G
         tune("G3 A3 B3 C4 | D4 E4 F#4 G4 | A4 B4 C5 D5 | E5 F#5 G5:2 | F#5 E5 D5 C5 | B4 A4 G4 F#4 | E4 D4 C4 B3 | A3 G3:3",
              bpm=66, title="G major, two octaves"),
     ]),
-    lesson("vln-5-3", "A minor", [
+    lesson("vln-5-3", "A minor scale", [
         explain("A darker scale",
                 "A minor starts with first-finger A on the G string. Second finger is high on the G string for B, "
                 "then low on the D string for F natural.",

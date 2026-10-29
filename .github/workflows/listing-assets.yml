@@ -2,7 +2,7 @@
 name: Localized listing assets
 on:
   push:
-    branches: [main]
+    branches: [main, codex/app-store-readiness-gates]
   workflow_dispatch:
     inputs:
       locales:
@@ -14,7 +14,7 @@ on:
         description: Assets to capture from the actual localized app
         type: choice
         options: [all, screenshots, previews]
-        default: all
+        default: screenshots
         required: true
       violin:
         description: Include supplemental violin CPP preview (not a complete localized CPP set)
@@ -23,40 +23,62 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: listing-assets-${{ github.ref }}
-  cancel-in-progress: false
+  # Keep the existing PUSH requested group for explicit readiness-pilot supersession.
+  # Manual requests have per-run groups; ordinary/no-marker pushes remain isolated no-ops.
+  group: >-
+    listing-assets-${{ github.ref }}-${{
+      github.event_name == 'workflow_dispatch' && format('manual-{0}', github.run_id) ||
+      (contains(github.event.head_commit.message, '[listing-assets-pilot]') ||
+       contains(github.event.head_commit.message, '[listing-assets-all]') ||
+       contains(github.event.head_commit.message, '[listing-screenshots-pilot]') ||
+       contains(github.event.head_commit.message, '[listing-screenshots-all]')) && 'requested' || 'noop' }}
+  # Opt-in only. Conflicting scope markers must not cancel evidence before plan validation.
+  cancel-in-progress: >-
+    ${{ github.event_name == 'push' &&
+        github.ref == 'refs/heads/codex/app-store-readiness-gates' &&
+        contains(github.event.head_commit.message, '[listing-screenshots-pilot]') &&
+        contains(github.event.head_commit.message, '[supersede-listing-pilot]') &&
+        !contains(github.event.head_commit.message, '[listing-assets-pilot]') &&
+        !contains(github.event.head_commit.message, '[listing-assets-all]') &&
+        !contains(github.event.head_commit.message, '[listing-screenshots-all]') }}
 jobs:
   plan:
     if: >-
-      github.ref == 'refs/heads/main' &&
+      (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/codex/app-store-readiness-gates') &&
       (github.event_name == 'workflow_dispatch' ||
        contains(github.event.head_commit.message, '[listing-assets-pilot]') ||
-       contains(github.event.head_commit.message, '[listing-assets-all]'))
+       contains(github.event.head_commit.message, '[listing-assets-all]') ||
+       contains(github.event.head_commit.message, '[listing-screenshots-pilot]') ||
+       contains(github.event.head_commit.message, '[listing-screenshots-all]'))
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.plan.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
         with:
           persist-credentials: false
       - name: Validate requested scope and exact locale coverage
         id: plan
         env:
           LOCALES: ${{ inputs.locales || 'all' }}
-          SCOPE: ${{ inputs.scope || 'all' }}
+          SCOPE: ${{ inputs.scope || 'screenshots' }}
           VIOLIN: ${{ inputs.violin || false }}
+          SOURCE_REF: ${{ github.ref }}
           EVENT_NAME: ${{ github.event_name }}
           COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
         run: |
           set -euo pipefail
           extra=()
           if [ "$VIOLIN" = true ]; then extra+=(--violin); fi
-          python3 tools/marketing/listing_assets.py plan --locales "$LOCALES" --scope "$SCOPE" "${extra[@]}" --event "$EVENT_NAME" --message="$COMMIT_MESSAGE" --out ci-out/plan.json > ci-out-matrix.json
+          python3 tools/marketing/listing_assets.py plan --locales "$LOCALES" --scope "$SCOPE" "${extra[@]}" --ref "$SOURCE_REF" --event "$EVENT_NAME" --message="$COMMIT_MESSAGE" --out ci-out/plan.json > ci-out-matrix.json
           echo "matrix=$(cat ci-out-matrix.json)" >> "$GITHUB_OUTPUT"
           python3 -m venv ci-out/test-venv
           ci-out/test-venv/bin/pip install --quiet pillow
           ci-out/test-venv/bin/python3 -m unittest discover -s tools/marketing/tests -p 'test_listing_assets.py'
-      - uses: actions/upload-artifact@v4
+          ci-out/test-venv/bin/python3 -m unittest discover -s tools/marketing/tests -p 'test_artifact_qa_triggers.py'
+          ci-out/test-venv/bin/python3 -m unittest discover -s tools/marketing/tests -p 'test_screenshot_roles.py'
+          ci-out/test-venv/bin/python3 -m unittest discover -s tools/marketing/tests -p 'test_listing_evidence.py'
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: listing-plan
           path: ci-out/plan.json
@@ -72,7 +94,7 @@ jobs:
       HOMEBREW_NO_AUTO_UPDATE: '1'
       HOMEBREW_NO_INSTALL_CLEANUP: '1'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
         with:
           persist-credentials: false
       - name: Generate complete capture fixtures and project once
@@ -85,8 +107,14 @@ jobs:
       - name: Prepare and audit pinned caption fonts once
         run: |
           set -euo pipefail
+          brew list fribidi >/dev/null 2>&1 || brew install fribidi
+          export TIMBRE_FRIBIDI_LIBRARY_DIR="$(brew --prefix fribidi)/lib"
+          echo "TIMBRE_FRIBIDI_LIBRARY_DIR=$TIMBRE_FRIBIDI_LIBRARY_DIR" >> "$GITHUB_ENV"
+          export DYLD_FALLBACK_LIBRARY_PATH="$TIMBRE_FRIBIDI_LIBRARY_DIR${DYLD_FALLBACK_LIBRARY_PATH:+:$DYLD_FALLBACK_LIBRARY_PATH}"
+          mkdir -p ci-out/build
           python3 -m venv ios/build/listing-venv
           ios/build/listing-venv/bin/pip install --quiet -r tools/marketing/requirements.txt
+          ios/build/listing-venv/bin/python3 -c 'from PIL import features; assert features.check("raqm"), "Pillow must load libraqm/FriBiDi before caption rendering"'
           ios/build/listing-venv/bin/python3 tools/marketing/font_assets.py --audit --out ci-out/build/caption-typography.json
           tar -C build -czf ci-out/build/caption-fonts.tgz marketing-fonts
       - name: Ensure Metal toolchain
@@ -117,7 +145,7 @@ jobs:
           }
           listing_assets.write_json(Path('ci-out/build/build-info.json'), info)
           PY
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()
         with:
           name: listing-simulator-build
@@ -139,10 +167,10 @@ jobs:
       HOMEBREW_NO_AUTO_UPDATE: '1'
       HOMEBREW_NO_INSTALL_CLEANUP: '1'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
         with:
           persist-credentials: false
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
           name: listing-simulator-build
           path: ci-build
@@ -154,12 +182,18 @@ jobs:
           mkdir -p build ci-out
           tar -xzf ci-build/caption-fonts.tgz -C build
           cp ci-build/caption-typography.json ci-out/caption-typography.json
+          brew list fribidi >/dev/null 2>&1 || brew install fribidi
+          export TIMBRE_FRIBIDI_LIBRARY_DIR="$(brew --prefix fribidi)/lib"
+          echo "TIMBRE_FRIBIDI_LIBRARY_DIR=$TIMBRE_FRIBIDI_LIBRARY_DIR" >> "$GITHUB_ENV"
+          export DYLD_FALLBACK_LIBRARY_PATH="$TIMBRE_FRIBIDI_LIBRARY_DIR${DYLD_FALLBACK_LIBRARY_PATH:+:$DYLD_FALLBACK_LIBRARY_PATH}"
           python3 -m venv ios/build/listing/venv
           ios/build/listing/venv/bin/pip install --quiet -r tools/marketing/requirements.txt
+          ios/build/listing/venv/bin/python3 -c 'from PIL import features; assert features.check("raqm"), "Pillow must load libraqm/FriBiDi before caption rendering"'
           echo "LISTING_PY=$PWD/ios/build/listing/venv/bin/python3" >> "$GITHUB_ENV"
           command -v ffmpeg >/dev/null 2>&1 || brew install ffmpeg
       - name: Verify restored font hashes without downloading or repeating the audit
         run: |
+          export DYLD_FALLBACK_LIBRARY_PATH="$TIMBRE_FRIBIDI_LIBRARY_DIR${DYLD_FALLBACK_LIBRARY_PATH:+:$DYLD_FALLBACK_LIBRARY_PATH}"
           "$LISTING_PY" - <<'PY'
           import sys
           from pathlib import Path
@@ -179,11 +213,65 @@ jobs:
           LOCALES: ${{ matrix.locales }}
           KIND: ${{ matrix.kind }}
         run: |
+          export DYLD_FALLBACK_LIBRARY_PATH="$TIMBRE_FRIBIDI_LIBRARY_DIR${DYLD_FALLBACK_LIBRARY_PATH:+:$DYLD_FALLBACK_LIBRARY_PATH}"
           "$LISTING_PY" tools/marketing/run_listing_assets.py --locales "$LOCALES" --kind "$KIND" \
             --products ios/build/listing/Build/Products --build-archive ci-build/products.tgz \
             --build-info ci-build/build-info.json --source-sha "$GITHUB_SHA" \
             --out ci-out/assets --manifests ci-out/manifests
-      - uses: actions/upload-artifact@v4
+      # Small evidence first: a slow/failed full forensic upload must not hide logs.
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        if: always()
+        with:
+          name: listing-manifests-${{ matrix.id }}
+          path: ci-out/manifests
+          if-no-files-found: error
+          retention-days: 7
+      - name: Package complete logs, result summaries and exported text hierarchies
+        if: always()
+        env:
+          LOCALES: ${{ matrix.locales }}
+          KIND: ${{ matrix.kind }}
+        run: |
+          "${LISTING_PY:-python3}" tools/marketing/listing_evidence.py diagnostics \
+            --assets ci-out/assets --manifests ci-out/manifests \
+            --build-info ci-build/build-info.json --build-archive ci-build/products.tgz \
+            --source-sha "$GITHUB_SHA" --locales "$LOCALES" --kind "$KIND" --out ci-out/diagnostics --failure-out ci-out/failure-images
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        if: always()
+        with:
+          name: listing-diagnostics-${{ matrix.id }}
+          path: ci-out/diagnostics
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        if: always()
+        with:
+          name: listing-failure-images-${{ matrix.id }}
+          path: ci-out/failure-images
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
+      - name: Package manifest-verified final assets and original native capture PNGs
+        if: always()
+        env:
+          LOCALES: ${{ matrix.locales }}
+          KIND: ${{ matrix.kind }}
+        run: |
+          "${LISTING_PY:-python3}" tools/marketing/listing_evidence.py review \
+            --assets ci-out/assets --manifests ci-out/manifests \
+            --build-info ci-build/build-info.json --build-archive ci-build/products.tgz \
+            --source-sha "$GITHUB_SHA" --locales "$LOCALES" --kind "$KIND" --out ci-out/review
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        if: always()
+        with:
+          name: listing-review-${{ matrix.id }}
+          path: ci-out/review
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
+      # Keep every raw attempt, xcresult, automatic attachment and video unchanged.
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()
         with:
           name: listing-assets-${{ matrix.id }}
@@ -193,27 +281,20 @@ jobs:
           if-no-files-found: error
           compression-level: 0
           retention-days: 7
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: listing-manifests-${{ matrix.id }}
-          path: ci-out/manifests
-          if-no-files-found: error
-          retention-days: 7
 
   inventory:
     if: always() && needs.plan.result == 'success'
     needs: [plan, build, capture]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
         with:
           persist-credentials: false
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
           name: listing-plan
           path: ci-plan
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
           pattern: listing-manifests-*
           path: ci-manifests
@@ -222,7 +303,7 @@ jobs:
           python3 tools/marketing/listing_assets.py aggregate --plan ci-plan/plan.json \
             --manifests ci-manifests --source-sha "$GITHUB_SHA" --out ci-out/inventory.json
           echo 'Capture/render mechanical checks passed. Native-language, glyph/RTL/layout and visual/audio review remain pending; release_ready is false.' >> "$GITHUB_STEP_SUMMARY"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()
         with:
           name: listing-inventory

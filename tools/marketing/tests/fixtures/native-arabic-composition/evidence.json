@@ -1,0 +1,69 @@
+{
+  "source_sha": "9e1e3c41ec24c1a2c78c22ea7a90726dc4ae6599",
+  "run_id": 40600424514,
+  "artifact_id": 12781114599,
+  "listing_locale": "ar-SA",
+  "native_size": [
+    1206,
+    2622
+  ],
+  "method": "Unaltered native-pixel crops from verified XCUIScreen PNGs. Tests place each crop at its original coordinates on a synthetic black canvas; that reconstructed canvas is not a native screenshot. Full nine-source rerenders are separately inspected.",
+  "captures": [
+    {
+      "capture": "10b-tune-locked",
+      "source_path": "capture/attempt-1/attachments/B2048512-9B69-433F-AB32-E5B3682935A5.png",
+      "source_sha256": "e02e68c8abfb9096d0a4df277ac29df7e1746ec03cacf65080455dae9d8125a6",
+      "source_pixel_sha256": "cb21f763abbb1b0ce2acd419de287d37119a0b5b9ef95d072be82703fb92b8ee",
+      "crop_box": [
+        0,
+        340,
+        1206,
+        1280
+      ],
+      "crop_file": "10b-tune-locked.png",
+      "crop_sha256": "3b709162094184a82e6b2fa13f44291f0149e3b0ec33ae9f672e74b4c2547b5c"
+    },
+    {
+      "capture": "50-learn",
+      "source_path": "capture/attempt-1/attachments/ACFD6E13-60A0-4700-BF4E-CA2310E06A5B.png",
+      "source_sha256": "3f2a220b1848e69481de6e6b285650a108e622fad9600c967312fd9c5396acef",
+      "source_pixel_sha256": "265f1722167950bdcdaea4100f6afa0cd2a939fc0b1255ee0cd30787a3b2e4f5",
+      "crop_box": [
+        0,
+        2350,
+        1206,
+        2622
+      ],
+      "crop_file": "50-learn.png",
+      "crop_sha256": "91a1adbbe750f20f0556409d1a3722c3a6dc31c48fea7ea2475d8f1d5496affc"
+    },
+    {
+      "capture": "52b-lesson-chord",
+      "source_path": "capture/attempt-1/attachments/3E4A255A-02CD-441A-B8D5-75688571D726.png",
+      "source_sha256": "659bfed728d768b8070cea46c8db1b0bfeb598d165dbdfd75c3f64ba1bd7e1d5",
+      "source_pixel_sha256": "61c156030e09ac009a0f88aa5811d67ce3d0b5a52fc16728e99d3546212123b1",
+      "crop_box": [
+        0,
+        350,
+        1206,
+        1000
+      ],
+      "crop_file": "52b-lesson-chord.png",
+      "crop_sha256": "f54fbeac092b04ef06c2156f03ec8652eb5470cf1cb6e96b9bcd50ea442ede55"
+    },
+    {
+      "capture": "62-lesson-results",
+      "source_path": "capture/attempt-1/attachments/644D790B-47B4-4F27-AC4F-BBCE6646E679.png",
+      "source_sha256": "12605694c8134cc61a9f24fb4c8e0bd800431e0b0e5817f10558780f71ac52dc",
+      "source_pixel_sha256": "27edb90a478cf0bc7827f37a62c080d820e6a840aa56124f6d9b3225c3f93f70",
+      "crop_box": [
+        0,
+        2310,
+        1206,
+        2622
+      ],
+      "crop_file": "62-lesson-results.png",
+      "crop_sha256": "24aeaf95b92df7d7147111dee6c4cd1ee2c10f634d5faf767e42461a231c7ff1"
+    }
+  ]
+}

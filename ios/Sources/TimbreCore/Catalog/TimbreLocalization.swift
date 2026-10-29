@@ -44,7 +44,7 @@ public enum TimbreLocalization {
     /// The language a setting shows the app in: the one picked when the app has it, else the localization the app
     /// launched in.
     public static func resolvedLanguage(for setting: String) -> String {
-        if setting != system, localizationBundle(for: setting) != nil { return setting }
+        if setting != system, localizationBundle(for: setting) != nil { return canonicalLanguage(for: setting) }
         return Bundle.main.preferredLocalizations.first ?? "en"
     }
 
@@ -58,8 +58,25 @@ public enum TimbreLocalization {
         Locale.Language(identifier: resolvedLanguage(for: setting)).characterDirection == .rightToLeft
     }
 
+    /// Canonical resource identifier for an explicit language or regional alias. Script takes
+    /// precedence over region: Traditional Chinese must never collapse into Simplified Chinese.
+    /// Automatic language still uses Foundation's preference negotiation unchanged.
+    public static func canonicalLanguage(for setting: String) -> String {
+        let parts = setting.replacingOccurrences(of: "_", with: "-").lowercased().split(separator: "-").map(String.init)
+        guard let language = parts.first else { return setting }
+        if language == "zh" {
+            if parts.contains("hant") { return "zh-Hant" }
+            if parts.contains("hans") { return "zh-CN" }
+            if parts.contains(where: { ["tw", "hk", "mo"].contains($0) }) { return "zh-Hant" }
+            return "zh-CN"
+        }
+        if language == "nb" || language == "nn" { return "no" }
+        return language
+    }
+
     private static func localizationBundle(for setting: String) -> Bundle? {
-        guard setting != system, let path = Bundle.main.path(forResource: setting, ofType: "lproj") else { return nil }
+        guard setting != system,
+              let path = Bundle.main.path(forResource: canonicalLanguage(for: setting), ofType: "lproj") else { return nil }
         return Bundle(path: path)
     }
 }

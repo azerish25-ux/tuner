@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-27T02:57:09Z",
+  "reviewer": "Independent native-capture integration review agent",
+  "skill": "code-review-and-quality",
+  "verdict": "approve_bounded_source_fix_native_rendering_and_recapture_pending",
+  "scope": "Shared Text.fraction numeric-direction isolation and two new ImageRenderer XCTest methods only.",
+  "findings": [],
+  "original_finding": {
+    "id": "AR-RATIO-01",
+    "receipt": "docs/ios/readiness/reviews/b6-native-capture-visual-review.json",
+    "receipt_sha256": "599d7fd3d27590646f84e09bf0e59ecdafae9b90215c0da680eb0b9e9c9a9178",
+    "evidence": "Actual b6 Arabic tuner-lock PNG shows compact ratio6/3 for3-of6; original/source evidence is retained unchanged. This is observed native RED evidence, not an executed new unit-test RED run."
+  },
+  "source_assessment": [
+    "U+2066 LRI begins before done and U+2069 PDI ends after total, isolating the whole done/thin-space/slash/total sequence. Unicode UAX9 defines this as an isolated left-to-right run whose internal ordering does not alter surrounding text direction.",
+    "Text concatenation produces one composed Text value. The controls are verbatim invisible characters; existing numeric Text interpolation remains localized. No English numeral string conversion, translation-wording change or new localized key is introduced.",
+    "The original localized done-of-total accessibilityLabel remains on the complete value, so VoiceOver need not announce the visible slash or directional controls. The helper does not set layoutDirection on its containing row or alter musical physical order.",
+    "FractionDirectionTests is MainActor-isolated. ImageRenderer, UIKit UIImage.pngData and throwing XCTUnwrap use APIs available below the iOS18 deployment target. No high-confidence API/actor/type defect was identified by source inspection.",
+    "The first method compares ImageRenderer-produced PNG data under LTR/RTL for Arabic, Persian, Hebrew and English at3/6 and12/34. Fixed size/font/colors/dynamic type limit unrelated image variation. The second method requires3/6 and6/3 Arabic RTL renders to differ, preventing identical blank rendering from passing.",
+    "Tests exercise the actual shared Text helper rather than a duplicate direction string. They remain unexecuted on this Windows review host and do not establish complete app-row layout or spoken accessibility behavior."
+  ],
+  "independent_verification": [
+    { "command": "git -c core.autocrlf=false diff --check -- ios/Timbre/Design/Kit.swift ios/TimbreAppTests/FractionDirectionTests.swift", "exit_code": 0 },
+    { "check": "Exact helper diff, complete tests and shared accessibility label reviewed", "result": "No source blocker" },
+    { "check": "Unicode UAX9 directional-isolate definitions consulted", "result": "LRI/PDI scope matches the intended complete numeric run" }
+  ],
+  "reviewed_sha256": {
+    "ios/Timbre/Design/Kit.swift": "3f44a435be4d59ebf156691d923342373cf87b0e4202b524b02f4438c626a6eb",
+    "ios/TimbreAppTests/FractionDirectionTests.swift": "e26e0da3945213d9f0911fb2e118d20feb0e0d0a3d103b92ddd7452c5c322d2d"
+  },
+  "primary_reference": "https://www.unicode.org/reports/tr9/#Explicit_Directional_Isolates",
+  "remaining_acceptance": [
+    "Compile/run both new XCTest methods with actual SwiftUI ImageRenderer on the final native revision. No local Swift/native run was performed.",
+    "Recapture the actual Arabic tuner scene and inspect the raw compact counter as3/6 while its surrounding quest row remains RTL. Keep the b6 image as historical failure evidence.",
+    "Check Persian/Hebrew and longer numeric values in representative real fraction consumers; compare an English scene for unintended spacing or alignment change.",
+    "Confirm spoken localized done-of-total label with accessibility inspection/VoiceOver separately. No full all-language, AX5, linguistic or store-media certification follows from these tests."
+  ],
+  "limits": "Source approval resolves implementation review only. Encoded-render comparisons and a future corrected app capture still require execution; no universal test pass or final release-readiness claim.",
+  "mutations": "Only this review receipt written; no implementation, translation, original review/image, commit or publication changed by reviewer."
+}

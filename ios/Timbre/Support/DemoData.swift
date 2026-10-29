@@ -8,6 +8,11 @@ import TimbreCore
 /// counts as awarded.
 enum DemoData {
     @MainActor static func seed(_ store: AppStore) {
+        guard store.records.isEmpty else { return }
+        // LocalStore is isolated by the test storage UUID, but AppStorage uses shared device defaults.
+        // A prior capture can terminate while a song scene is open, before its course restoration runs.
+        // The seeded history below is explicitly the guitar course, so seed its selection too.
+        Preferences.learnCourse = Preferences.defaultLearnCourse
         let now = Date()
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: now)

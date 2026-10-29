@@ -70,6 +70,7 @@ struct NotesStep: View {
     var onItem: (PracticeItem, Double) -> Void = { _, _ in }
     let done: (Double?) -> Void
     @EnvironmentObject private var store: AppStore
+    @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(\.scenePhase) private var scenePhase
     @State private var owner = UUID()
     @State private var judge: NoteSequenceJudge
@@ -110,21 +111,53 @@ struct NotesStep: View {
     }
 
     var body: some View {
-        VStack(spacing: 16) {
-            header
-            if readsStaff { stepStaff } else if isSequence { sequenceChips }
-            Spacer(minLength: 0)
-            if isSequence { prompt }
-            noteRing
-            Spacer(minLength: 0)
-            targetPicture
-            MicrophoneHint()
-            LessonStepBar(canSkip: canSkip, accent: accent, sounding: sounding, skip: { finish(score: 0.6) }, hear: { hear() })
+        Group {
+            if typeSize.isAccessibilitySize {
+                VStack(spacing: 0) {
+                    ScrollView {
+                        noteContent
+                            .padding(.bottom, 16)
+                    }
+                    .scrollBounceBehavior(.basedOnSize)
+                    stepBar
+                }
+            } else {
+                VStack(spacing: 16) {
+                    noteContent
+                    stepBar
+                }
+            }
         }
         .onAppear { listen(); Task { try? await Task.sleep(for: .seconds(6)); withAnimation(Motion.settle) { canSkip = true } } }
         .onDisappear { hearTask?.cancel(); finishTask?.cancel(); store.stopLessonListening(owner: owner) }
         // The microphone stops in the background; pick the note up again on return.
         .onChange(of: scenePhase) { _, phase in if phase == .active && !finished && !sounding { listen() } }
+    }
+
+    /// At accessibility sizes the teaching content can scroll without pushing the lesson header or actions
+    /// outside the viewport. The normal-size stack keeps its existing spacing and flexible spacers.
+    @ViewBuilder private var noteContent: some View {
+        if typeSize.isAccessibilitySize {
+            VStack(spacing: 16) { teachingContent }
+        } else {
+            teachingContent
+        }
+    }
+
+    @ViewBuilder private var teachingContent: some View {
+        header
+        if readsStaff { stepStaff } else if isSequence { sequenceChips }
+        Spacer(minLength: 0)
+        if isSequence { prompt }
+        noteRing
+        Spacer(minLength: 0)
+        targetPicture
+        MicrophoneHint()
+    }
+
+    private var stepBar: some View {
+        LessonStepBar(canSkip: canSkip, accent: accent, sounding: sounding,
+                      skip: { finish(score: 0.6) }, hear: { hear() })
     }
 
     private var isSequence: Bool { notes.count > 1 }
@@ -167,25 +200,46 @@ struct NotesStep: View {
     }
 
     private var noteRing: some View {
-        ZStack {
-            HoldRing(progress: finished ? 1 : hold, tint: ringTint)
-            VStack(spacing: 4) {
-                noteLetter
-                Text(status).font(.subheadline.weight(.semibold)).foregroundStyle(ringTint).contentTransition(.opacity)
+        Group {
+            if typeSize.isAccessibilitySize {
+                VStack(spacing: 8) {
+                    ZStack {
+                        HoldRing(progress: finished ? 1 : hold, tint: ringTint)
+                        noteLetter
+                    }
+                    .frame(width: 290, height: 290)
+                    .background { ringBurst }
+                    Text(status).font(.subheadline.weight(.semibold)).foregroundStyle(ringTint)
+                        .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(.horizontal, Metrics.gutter)
+                        .contentTransition(.opacity)
+                }
+                .frame(maxWidth: .infinity)
+            } else {
+                ZStack {
+                    HoldRing(progress: finished ? 1 : hold, tint: ringTint)
+                    VStack(spacing: 4) {
+                        noteLetter
+                        Text(status).font(.subheadline.weight(.semibold)).foregroundStyle(ringTint).contentTransition(.opacity)
+                    }
+                }
+                .aspectRatio(1, contentMode: .fit)
+                .frame(minWidth: 150, maxWidth: 290, minHeight: 150, maxHeight: 290)
+                .background { ringBurst }
+                .layoutPriority(1)
             }
         }
-        // As big as the room between the words and the neck allows (up to 290 pt on the tallest phones, so no band of
-        // empty stage is left around it), smaller on short phones so the neck and the bar below still fit.
-        .aspectRatio(1, contentMode: .fit)
-        .frame(minWidth: 150, maxWidth: 290, minHeight: 150, maxHeight: 290)
-        .background { ringBurst }
-        .layoutPriority(1)
         // Below its neighbours, so the sparks pass behind the prompt and the chips, never over words.
         .zIndex(-1)
         // The note to play, as said ("D, string 4, open"), and how the pitch heard stands.
         .accessibilityElement(children: .ignore)
+        // The complete laid-out note and wrapped status own the focus bounds, not the burst's
+        // doubled canvas. Hiding that decoration alone does not constrain a parent's AX frame.
+        .contentShape(.accessibility, Rectangle())
         .accessibilityLabel(Text(verbatim: shown.map { spokenPhrase($0) } ?? ""))
         .accessibilityValue(Text(status))
+        .accessibilityIdentifier("lesson.notes.target")
         // The note to play is what this step is about: VoiceOver reads the step from here.
         .lessonStepArrival()
     }
@@ -228,6 +282,10 @@ struct NotesStep: View {
                 .mask { Self.burstBand(ring: size.height) }
                 .position(x: size.width / 2, y: size.height / 2)
         }
+        // The wrapper is decorative too. The note target's separate accessibility content shape
+        // prevents this oversized canvas from enlarging its parent's focus bounds.
+        .accessibilityHidden(true)
+        .allowsHitTesting(false)
     }
 
     /// The burst's canvas (twice the ring's height `ring`) is opaque across the ring's own height and clear from
@@ -1085,6 +1143,7 @@ struct TuneCheckStep: View {
     /// The beat after a lock (the string showing done, then the hand-over); it ends with the step, so it never
     /// points the demo pitch or the tuner at a lesson string after the lesson has closed.
     @State private var lockTask: Task<Void, Never>?
+    @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(\.scenePhase) private var scenePhase
     /// Spoken guidance for VoiceOver: the string, the cents and which way to turn.
     @State private var voice = TuneCheckVoice()
@@ -1128,39 +1187,60 @@ struct TuneCheckStep: View {
     }
 
     var body: some View {
-        VStack(spacing: 14) {
-            VStack(alignment: .leading, spacing: 6) {
-                StepTitle("Quick tune check")
-                Text("Pluck each open string. In-tune strings help Timbre hear you right.").font(.subheadline).foregroundStyle(Palette.inkSoft)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            .padding(.horizontal, Metrics.gutter)
-            .padding(.top, 14)
-            // Words and the note stay above the chips' sparks.
-            .zIndex(1)
-            stringChips
-            Spacer(minLength: 0)
-            listeningCluster
-                .zIndex(1)
-            Spacer(minLength: 0)
-            if let number = stringNumber {
-                // The string to pluck, lit on a strip of the neck.
-                FretboardDiagram(strings: course.stringCount, dots: [Fretting(string: number, fret: 0)], frets: 4, accent: accent,
-                                 activeString: number, fretless: course.fretless, rowHeight: 15, pulsing: true, edges: StringEdges.of(course),
-                                 fingerboard: Fingerboard(instrument: course.instrument))
-                    .padding(.horizontal, Metrics.gutter)
-                    .transition(.opacity)
-            }
-            MicrophoneHint()
-            LessonActionBar {
-                // The screen's one action: a pedal or the space bar moves past it too.
-                LessonBarButton(title: "My strings are tuned — skip", role: .primary, identifier: "lesson.tunecheck.skip") { finish() }
+        Group {
+            VStack(spacing: 0) {
+                GeometryReader { viewport in
+                    ScrollView {
+                        VStack(spacing: 14) { teachingContent }
+                            .frame(minHeight: max(0, viewport.size.height - 14), alignment: .top)
+                            .padding(.bottom, 14)
+                    }
+                    .scrollBounceBehavior(.basedOnSize)
+                    .accessibilityIdentifier("lesson.tunecheck.scroll")
+                }
+                skipBar
             }
         }
         .onAppear { listen(); introduce(after: 1.4) }
         .onDisappear { lockTask?.cancel(); store.stopLessonListening(owner: owner) }
         // The microphone stops in the background; listen for the string again on return.
         .onChange(of: scenePhase) { _, phase in if phase == .active && !finished && !settling { listen() } }
+    }
+
+    // Preserve the teaching order and spare space while keeping the action outside the scrollable content.
+    @ViewBuilder private var teachingContent: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            StepTitle("Quick tune check")
+                .accessibilityIdentifier("lesson.tunecheck.title")
+            Text("Pluck each open string. In-tune strings help Timbre hear you right.").font(.subheadline).foregroundStyle(Palette.inkSoft)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityIdentifier("lesson.tunecheck.instructions")
+        }
+        .padding(.horizontal, Metrics.gutter)
+        .padding(.top, 14)
+        // Words and the note stay above the chips' sparks.
+        .zIndex(1)
+        stringChips
+        Spacer(minLength: 0)
+        listeningCluster
+            .zIndex(1)
+        Spacer(minLength: 0)
+        if let number = stringNumber {
+            // The string to pluck, lit on a strip of the neck.
+            FretboardDiagram(strings: course.stringCount, dots: [Fretting(string: number, fret: 0)], frets: 4, accent: accent,
+                             activeString: number, fretless: course.fretless, rowHeight: 15, pulsing: true, edges: StringEdges.of(course),
+                             fingerboard: Fingerboard(instrument: course.instrument))
+                .padding(.horizontal, Metrics.gutter)
+                .transition(.opacity)
+        }
+        MicrophoneHint()
+    }
+
+    private var skipBar: some View {
+        LessonActionBar {
+            // The screen's one action: a pedal or the space bar moves past it too.
+            LessonBarButton(title: "My strings are tuned — skip", role: .primary, identifier: "lesson.tunecheck.skip") { finish() }
+        }
     }
 
     /// VoiceOver names the string to pluck: after the step's title has been read as it arrives, then as each string
@@ -1202,6 +1282,8 @@ struct TuneCheckStep: View {
                 }
             centsMeter
             Text(hint).font(.headline).foregroundStyle(meterColor)
+                .fixedSize(horizontal: false, vertical: typeSize.isAccessibilitySize)
+                .accessibilityIdentifier("lesson.tunecheck.hint")
         }
         .layoutPriority(1)
     }
@@ -1256,17 +1338,35 @@ struct TuneCheckStep: View {
         .animation(Motion.pluck, value: index)
         .animation(Motion.pluck, value: tuned)
         .background(alignment: .leading) {
-            // Behind the chips, centred on the one just tuned (outside the animation, so it doesn't slide):
-            // sparks leave from the chip's rim, no ring, so nothing reaches across the title or the note.
+            // A local reward behind the newly tuned chip, not a second full-size listening orb.
+            // Keep its original canvas/origin, but fade only the decoration into a reserved band:
+            // ring:false still draws inner rings and outer nodes, so zIndex alone cannot protect text.
             SparkBurst(trigger: burst, color: accent, reach: 70, startFraction: 0.32, ring: false)
                 .frame(width: 140, height: 140)
+                .mask { Self.chipRewardMask }
                 .offset(x: CGFloat(burstAt) * (Self.chip + 8) + Self.chip / 2 - 70)
         }
+        // Stable even between rewards: no layout jump when a string locks, and no text is masked.
+        .padding(.vertical, Self.chipRewardFade)
         // Strings lie in space, not in reading order: right-to-left languages don't turn them round.
         .environment(\.layoutDirection, .leftToRight)
     }
 
     private static let chip: CGFloat = 44
+    static let chipRewardFade: CGFloat = 8
+    static var chipRewardHeight: CGFloat { chip + 2 * chipRewardFade }
+
+    /// Only the reward is masked. The opaque centre covers the chip; the outer eight points fade
+    /// to clear before the band ends, leaving the stack's existing 14-point text gap untouched.
+    static var chipRewardMask: some View {
+        let edge = chipRewardFade / chipRewardHeight
+        return LinearGradient(stops: [.init(color: .clear, location: 0),
+                                      .init(color: .white, location: edge),
+                                      .init(color: .white, location: 1 - edge),
+                                      .init(color: .clear, location: 1)],
+                              startPoint: .top, endPoint: .bottom)
+            .frame(height: chipRewardHeight)
+    }
 
     private func stringChip(_ string: RailString, done: Bool, current: Bool) -> some View {
         let ink = done ? Palette.onAccent : current ? Palette.ink : Palette.inkSoft

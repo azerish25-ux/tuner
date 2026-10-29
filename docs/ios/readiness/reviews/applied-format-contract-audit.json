@@ -1,0 +1,14 @@
+{
+  "recorded_at_utc": "2026-10-27T02:26:13.224445+00:00",
+  "app_resource_baseline": "b6efd36f5f72d7ec723229949f7c54c32972b72c",
+  "target_languages": 48,
+  "checked_applied_entries": {
+    "Localizable.strings": 100034,
+    "AppShortcuts.strings": 864
+  },
+  "format_contract_mismatches": 0,
+  "source_rule": "English value for named keys; English literal key otherwise, including positional argument normalization and named tokens",
+  "resource_binding_sha256": "bc577823aa44d3d24636f418b3311188d2b6f998a7dad929aa4a137e88c42c11",
+  "binding_algorithm": "sorted relative *.lproj/*.strings paths, NUL, raw-file SHA256 digest",
+  "scope": "Recognized argument type/order and named-token contracts only; not linguistic fluency, layout, unsupported arbitrary printf grammar, native or release certification."
+}

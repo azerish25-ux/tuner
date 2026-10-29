@@ -48,6 +48,7 @@ struct SettingsView: View {
                 .frame(maxWidth: 640)
                 .frame(maxWidth: .infinity)
             }
+            .accessibilityIdentifier("settings.scroll")
             .scrollDismissesKeyboard(.interactively)
             .stageTopShade()
             .background(StageBackground(motes: false))
@@ -55,7 +56,9 @@ struct SettingsView: View {
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") { dismiss() }.accessibilityIdentifier("settings.done")
+                }
                 ToolbarItemGroup(placement: .keyboard) { Spacer(); Button("Done") { referenceFocused = false } }
             }
             .onAppear { referenceInput = String(store.settings.referencePitchHz) }
@@ -152,7 +155,7 @@ struct SettingsView: View {
         MenuRow(title: "Temperament", icon: Glyph(.temperament), id: "settings.temperament", selection: Binding(get: { store.settings.temperamentId }, set: { value in
             if value != "equal" && !commerce.isPro && !FreeTier.opens(.temperaments) { store.presentPaywall("temperament"); return }
             store.updateSettings { $0.temperamentId = value }
-        })) { ForEach(Temperament.all) { Text($0.name).tag($0.id) } }
+        })) { ForEach(Temperament.all) { Text(verbatim: SettingsOptionLabel.temperamentName($0)).tag($0.id) } }
     }
 
     /// The phone throbs at the beat between the string and its note (`Haptics`), so a string can be tuned by touch. It
@@ -257,7 +260,7 @@ struct SettingsView: View {
             store.updateSettings { $0.precision = value }
         })) {
             ForEach(TuningPrecision.allCases, id: \.self) { precision in
-                (Self.precisionName(precision) + Text(verbatim: " ±\(Int(precision.bandCents))¢")).tag(precision)
+                (Self.precisionName(precision) + Text(verbatim: " " + SettingsOptionLabel.precisionTolerance(precision))).tag(precision)
             }
         }
     }
@@ -548,7 +551,12 @@ struct SettingsView: View {
     /// one the app can't show.
     static let shippedLanguages = languages.filter { Bundle.main.path(forResource: $0, ofType: "lproj") != nil }
 
-    static let languages = ["ar", "bg", "bn", "ca", "cs", "da", "de", "el", "en", "es", "et", "fa", "fi", "fr", "gu", "he", "hi", "hr", "hu", "id", "is", "it", "ja", "kn", "ko", "lt", "lv", "ml", "mr", "nl", "no", "pa", "pl", "pt", "ro", "ru", "sk", "sl", "sv", "sw", "ta", "te", "th", "tr", "uk", "ur", "vi", "zh-CN", "zu"]
+    static let languages = [
+        "ar", "bg", "bn", "ca", "cs", "da", "de", "el", "en", "es", "et", "fa", "fi",
+        "fr", "gu", "he", "hi", "hr", "hu", "id", "is", "it", "ja", "kn", "ko", "lt",
+        "lv", "ml", "mr", "ms", "nl", "no", "or", "pa", "pl", "pt", "ro", "ru", "sk",
+        "sl", "sv", "sw", "ta", "te", "th", "tr", "uk", "ur", "vi", "zh-CN", "zh-Hant", "zu"
+    ]
 }
 
 // MARK: - Card parts
@@ -583,11 +591,16 @@ private struct RowLabel: View {
     let icon: Glyph
     let title: Text
     var titleColor: Color = Palette.ink
+    var titleIdentifier: String? = nil
+
+    @ViewBuilder private var identifiedTitle: some View {
+        if let titleIdentifier { title.accessibilityIdentifier(titleIdentifier) } else { title }
+    }
 
     var body: some View {
         HStack(spacing: 12) {
             icon
-            title.font(.body).foregroundStyle(titleColor).multilineTextAlignment(.leading)
+            identifiedTitle.font(.body).foregroundStyle(titleColor).multilineTextAlignment(.leading)
         }
     }
 }
@@ -651,7 +664,7 @@ private struct MenuRow<Selection: Hashable, Options: View>: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            RowLabel(icon: icon, title: Text(title))
+            RowLabel(icon: icon, title: Text(title), titleIdentifier: id + ".title")
             Spacer(minLength: 8)
             Picker(title, selection: $selection) { options }
                 .labelsHidden()

@@ -9,7 +9,7 @@ final class LocalizationMatrixUITests: XCTestCase {
     }
 
     override func tearDownWithError() throws {
-        app?.terminate()
+        if let app, app.state != .notRunning { app.terminate() }
         app = nil
     }
 
@@ -42,7 +42,7 @@ final class LocalizationMatrixUITests: XCTestCase {
             if language == "bg" {
                 try assertNoClipping(application, identifiers: ["onboarding.headline"], labels: [try XCTUnwrap(labels["headline"])])
             }
-            application.terminate()
+            if application.state != .notRunning { application.terminate() }
             application.launchEnvironment["TIMBRE_SKIP_ONBOARDING"] = "1"
             application.launch()
             let tabs = application.tabBars.firstMatch
@@ -60,7 +60,7 @@ final class LocalizationMatrixUITests: XCTestCase {
                 print("TIMBRE_L10N_LESSON_PENDING \(language)")
             }
             try assertUnavailableSongRequest(application, language: language, labels: labels)
-            application.terminate()
+            if application.state != .notRunning { application.terminate() }
             if language == "bg" {
                 application.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
                 application.launch()
@@ -69,7 +69,7 @@ final class LocalizationMatrixUITests: XCTestCase {
                 capture(application, name: "l10n-\(language)-tuner-ax5")
                 try assertInstrumentFits(application)
                 try assertAccessibleTunerCanScroll(application, language: language)
-                application.terminate()
+                if application.state != .notRunning { application.terminate() }
             }
             print("TIMBRE_L10N_MATRIX_TESTED \(language)")
         }
@@ -87,16 +87,12 @@ final class LocalizationMatrixUITests: XCTestCase {
         defer {
             let dismiss = alert.buttons[cancel]
             if alert.exists && dismiss.exists && dismiss.isHittable { dismiss.tap() }
-            XCTAssertTrue(tune.waitForExistence(timeout: 15), "\(language): Tune tab missing after request check")
-            XCTAssertTrue(tune.isHittable, "\(language): Tune tab is not reachable after request check")
-            tune.tap()
+            selectTab(tune, in: app, language: language, field: "tune")
             XCTAssertTrue(tune.isSelected, "\(language): Tune must remain selected for the next launch")
             XCTAssertTrue(app.buttons["tune.instrument"].waitForExistence(timeout: 15), "\(language): tuner did not reopen")
         }
         let songs = app.tabBars.firstMatch.buttons[try XCTUnwrap(labels["songs"])]
-        XCTAssertTrue(songs.waitForExistence(timeout: 15))
-        XCTAssertTrue(songs.isHittable)
-        songs.tap()
+        selectTab(songs, in: app, language: language, field: "songs")
         XCTAssertTrue(songs.isSelected, "\(language): Songs tab did not open")
         let request = app.buttons["songs.request"]
         let tabBar = app.tabBars.firstMatch
@@ -133,7 +129,8 @@ final class LocalizationMatrixUITests: XCTestCase {
 
     /// Exercise the real Learn route using the phone-language launch arguments, not a manual language override.
     private func assertLocalizedLesson(_ app: XCUIApplication, language: String, labels: [String: String]) throws {
-        app.tabBars.firstMatch.buttons[try XCTUnwrap(labels["learn"])].tap()
+        let learn = app.tabBars.firstMatch.buttons[try XCTUnwrap(labels["learn"])]
+        selectTab(learn, in: app, language: language, field: "learn")
         let node = app.descendants(matching: .any).matching(identifier: "learn.lesson.gtr-1-1").firstMatch
         _ = node.waitForExistence(timeout: 5)
         // A fresh Learn tab starts above the path: reveal the first unit below the course and Continue cards.
@@ -158,10 +155,32 @@ final class LocalizationMatrixUITests: XCTestCase {
         close.tap()
         XCTAssertTrue(close.waitForNonExistence(timeout: 15), "\(language): lesson did not close")
         let tune = app.tabBars.firstMatch.buttons[try XCTUnwrap(labels["tune"])]
-        XCTAssertTrue(tune.waitForExistence(timeout: 15))
-        tune.tap() // Keep the subsequent accessibility-size tuner launch on the same tab.
+        // Keep the subsequent accessibility-size tuner launch on the same tab.
+        selectTab(tune, in: app, language: language, field: "tune")
         XCTAssertTrue(app.buttons["tune.instrument"].waitForExistence(timeout: 15), "\(language): tuner did not reopen")
         print("TIMBRE_L10N_LESSON_TESTED \(language)")
+    }
+
+    /// A synthesized tab tap can leave the previous tab selected. Confirm selection before querying or
+    /// scrolling its content; repeating this idempotent tap never substitutes for any lesson or translation assertion.
+    private func selectTab(_ button: XCUIElement, in app: XCUIApplication, language: String, field: String) {
+        XCTAssertTrue(button.waitForExistence(timeout: 15), "\(language): missing \(field) tab")
+        let reachable = XCTNSPredicateExpectation(predicate: NSPredicate(format: "hittable == true"), object: button)
+        XCTAssertEqual(XCTWaiter.wait(for: [reachable], timeout: 5), .completed, "\(language): \(field) tab is not reachable")
+        for attempt in 1...3 {
+            if button.isSelected { return }
+            button.tap()
+            let selected = XCTNSPredicateExpectation(predicate: NSPredicate(format: "selected == true"), object: button)
+            if XCTWaiter.wait(for: [selected], timeout: 3) == .completed { return }
+            let name = "l10n-\(language)-tab-\(field)-attempt-\(attempt)"
+            capture(app, name: name)
+            let hierarchy = XCTAttachment(string: app.debugDescription)
+            hierarchy.name = "\(name)-hierarchy"
+            hierarchy.lifetime = .keepAlways
+            add(hierarchy)
+            print("TIMBRE_L10N_TAB_SELECTION_MISSED \(language) \(field) \(attempt)")
+        }
+        XCTAssertTrue(button.isSelected, "\(language): \(field) tab did not become selected after 3 taps")
     }
 
     /// Large localized text must remain reachable, not be squeezed into a screen-height stack.

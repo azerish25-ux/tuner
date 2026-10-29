@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-27T05:27:08.659146+00:00",
+  "reviewer": "Independent integration review agent",
+  "verdict": "approve_bounded_diagnostic_source_change_native_pending",
+  "scope": "Only current uncommitted AccessibilityAuditUITests.swift diagnostic delta against HEAD; no audit disposition or product change authorized.",
+  "head": "1f4c3f43cb54b7257706440663514c1d9169e1f6",
+  "source_sha256": "68cb02f47c36098d76207b408b7c43c358b536528e23cd459d1ab28fe8dcbb1b",
+  "source_path": "C:\\Users\\shahr\\Desktop\\Translation\\tuner\\ios\\TimbreUITests\\AccessibilityAuditUITests.swift",
+  "findings": [],
+  "assessment": [
+    "Each run now appends the requested audit mask before invoking the existing audit. A per-screen Findings callback counter survives combined and isolated requests and increments before snapshot acquisition.",
+    "Unavailable snapshots include callback ordinal in the existing failure identity, so six opaque callbacks cannot collapse to one failure/screenshot. Identified findings retain prior geometry identity; detailedDescription may distinguish genuinely different reports. No failure is suppressed.",
+    "Detailed description replaces LF with literal backslash-n; the description text remains in the single report line. Apple documents detailedDescription as String. Existing synchronous handler, screenshot attachment, final XCTFail loop and return true reporting mechanism remain unchanged.",
+    "No change to knownReason rules, enforced types, retries, timeouts, threshold, screen traversal or audit success criteria. This diagnostic delta neither resolves unidentified elements nor establishes a false positive."
+  ],
+  "verification": {
+    "git_diff_review": "Only counter/start marker/unavailable ordinal/detailedDescription additions",
+    "native_typecheck_or_execution": "Not available on Windows; pending hosted run. Current active native audit excludes these uncommitted bytes."
+  },
+  "references": [
+    "https://developer.apple.com/documentation/xcuiautomation/xcuiaccessibilityauditissue",
+    "https://developer.apple.com/videos/play/wwdc2023/10035/"
+  ]
+}

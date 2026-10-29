@@ -1,0 +1,1459 @@
+{
+  "schema_version": 1,
+  "as_of": "2026-10-27",
+  "status": "public_country_inventory_and_income_evidence_not_live_product_configuration",
+  "sources": {
+    "world_bank_country_api": {
+      "url": "https://api.worldbank.org/v2/country?format=json&per_page=400",
+      "retrieved_on": "2026-10-27",
+      "raw_file": "world-bank-countries.json",
+      "sha256": "c9acf3932785191a649cbc04c3056af4cf64a236e5c3b49d49be25ddb0440bce",
+      "bytes": 113954
+    },
+    "apple_app_store_selector": {
+      "url": "https://apps.apple.com/us/app/guitartuna-tune-play-guitar/id527588389",
+      "retrieved_on": "2026-10-27",
+      "raw_file": "apple-public-storefront-page.html",
+      "sha256": "872a171f9668d03ca7125885fbc59d812ed2795d62e0ee3e6a42a6ebfc49c23e",
+      "bytes": 819820
+    },
+    "apple_media_availability": {
+      "url": "https://support.apple.com/en-us/118205",
+      "retrieved_on": "2026-10-27",
+      "raw_file": "apple-media-availability.html",
+      "sha256": "80dfbb4da04f6bb0ee07c2072fecec0cb3b794f7e0712ac3e0b44a692f3c0455",
+      "bytes": 439347
+    },
+    "apple_territory_code_documentation": {
+      "url": "https://developer.apple.com/tutorials/data/documentation/appstoreconnectapi/territorycode.json",
+      "retrieved_on": "2026-10-27",
+      "raw_file": "apple-territory-code-documentation.json",
+      "sha256": "714ce85fcdf0fec6192b81b43420ae86736c2ece0f28416fccae8fa3286a1aaf",
+      "bytes": 37841
+    },
+    "world_bank_fy2027_table": {
+      "url": "https://datahelpdesk.worldbank.org/knowledgebase/articles/906519-world-bank%20country-and-lending-groups",
+      "retrieved_on": "2026-10-27",
+      "raw_file": "world-bank-income-table.html",
+      "sha256": "758fecb6f8838cd93e6f7833f1fbe117c8967f0d44352c183930889915342192",
+      "bytes": 247661,
+      "supplement": "Taiwan, China is explicitly listed under High-income economies; absent from country API."
+    }
+  },
+  "source_limitations": [
+    "Public App Store selector and Apple Media Services App Store sections independently reconcile to175 unique countries. This does not establish the app or its products are enabled there.",
+    "Apple TerritoryCode documentation includes234 entries/233 unique codes and a duplicate ARE row labelled Armenia; it is not the active storefront list.",
+    "Kosovo public storefront XK maps to World Bank XKX, but the fetched Apple enum does not supply a verified App Store Connect territory ID. Keep that API ID unresolved.",
+    "Anguilla and Montserrat are absent from the World Bank country API and FY2027 classification table. Do not infer the UK income group or apply high-income pricing.",
+    "All local currencies, final customer prices, proceeds and supported price-point IDs require separate portal/API verification."
+  ],
+  "public_storefront_count": 175,
+  "classified_storefront_count": 173,
+  "manual_review_country_codes": [
+    "AI",
+    "MS"
+  ],
+  "countries": [
+    {
+      "public_storefront_country_code": "AE",
+      "apple_public_name": "United Arab Emirates",
+      "world_bank_id": "ARE",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "ARE"
+    },
+    {
+      "public_storefront_country_code": "AF",
+      "apple_public_name": "Afghanistan",
+      "world_bank_id": "AFG",
+      "income_group_id": "LIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "AFG"
+    },
+    {
+      "public_storefront_country_code": "AG",
+      "apple_public_name": "Antigua and Barbuda",
+      "world_bank_id": "ATG",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "ATG"
+    },
+    {
+      "public_storefront_country_code": "AI",
+      "apple_public_name": "Anguilla",
+      "world_bank_id": null,
+      "income_group_id": null,
+      "income_group_source": null,
+      "apple_territory_code_candidate": "AIA"
+    },
+    {
+      "public_storefront_country_code": "AL",
+      "apple_public_name": "Albania",
+      "world_bank_id": "ALB",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "ALB"
+    },
+    {
+      "public_storefront_country_code": "AM",
+      "apple_public_name": "Armenia",
+      "world_bank_id": "ARM",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "ARM"
+    },
+    {
+      "public_storefront_country_code": "AO",
+      "apple_public_name": "Angola",
+      "world_bank_id": "AGO",
+      "income_group_id": "LMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "AGO"
+    },
+    {
+      "public_storefront_country_code": "AR",
+      "apple_public_name": "Argentina",
+      "world_bank_id": "ARG",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "ARG"
+    },
+    {
+      "public_storefront_country_code": "AT",
+      "apple_public_name": "Austria",
+      "world_bank_id": "AUT",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "AUT"
+    },
+    {
+      "public_storefront_country_code": "AU",
+      "apple_public_name": "Australia",
+      "world_bank_id": "AUS",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "AUS"
+    },
+    {
+      "public_storefront_country_code": "AZ",
+      "apple_public_name": "Azerbaijan",
+      "world_bank_id": "AZE",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "AZE"
+    },
+    {
+      "public_storefront_country_code": "BA",
+      "apple_public_name": "Bosnia and Herzegovina",
+      "world_bank_id": "BIH",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "BIH"
+    },
+    {
+      "public_storefront_country_code": "BB",
+      "apple_public_name": "Barbados",
+      "world_bank_id": "BRB",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "BRB"
+    },
+    {
+      "public_storefront_country_code": "BE",
+      "apple_public_name": "Belgium",
+      "world_bank_id": "BEL",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "BEL"
+    },
+    {
+      "public_storefront_country_code": "BF",
+      "apple_public_name": "Burkina Faso",
+      "world_bank_id": "BFA",
+      "income_group_id": "LIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "BFA"
+    },
+    {
+      "public_storefront_country_code": "BG",
+      "apple_public_name": "Bulgaria",
+      "world_bank_id": "BGR",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "BGR"
+    },
+    {
+      "public_storefront_country_code": "BH",
+      "apple_public_name": "Bahrain",
+      "world_bank_id": "BHR",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "BHR"
+    },
+    {
+      "public_storefront_country_code": "BJ",
+      "apple_public_name": "Benin",
+      "world_bank_id": "BEN",
+      "income_group_id": "LMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "BEN"
+    },
+    {
+      "public_storefront_country_code": "BM",
+      "apple_public_name": "Bermuda",
+      "world_bank_id": "BMU",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "BMU"
+    },
+    {
+      "public_storefront_country_code": "BN",
+      "apple_public_name": "Brunei",
+      "world_bank_id": "BRN",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "BRN"
+    },
+    {
+      "public_storefront_country_code": "BO",
+      "apple_public_name": "Bolivia",
+      "world_bank_id": "BOL",
+      "income_group_id": "LMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "BOL"
+    },
+    {
+      "public_storefront_country_code": "BR",
+      "apple_public_name": "Brazil",
+      "world_bank_id": "BRA",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "BRA"
+    },
+    {
+      "public_storefront_country_code": "BS",
+      "apple_public_name": "Bahamas",
+      "world_bank_id": "BHS",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "BHS"
+    },
+    {
+      "public_storefront_country_code": "BT",
+      "apple_public_name": "Bhutan",
+      "world_bank_id": "BTN",
+      "income_group_id": "LMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "BTN"
+    },
+    {
+      "public_storefront_country_code": "BW",
+      "apple_public_name": "Botswana",
+      "world_bank_id": "BWA",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "BWA"
+    },
+    {
+      "public_storefront_country_code": "BY",
+      "apple_public_name": "Belarus",
+      "world_bank_id": "BLR",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "BLR"
+    },
+    {
+      "public_storefront_country_code": "BZ",
+      "apple_public_name": "Belize",
+      "world_bank_id": "BLZ",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "BLZ"
+    },
+    {
+      "public_storefront_country_code": "CA",
+      "apple_public_name": "Canada",
+      "world_bank_id": "CAN",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "CAN"
+    },
+    {
+      "public_storefront_country_code": "CD",
+      "apple_public_name": "Congo, Democratic Republic of the",
+      "world_bank_id": "COD",
+      "income_group_id": "LIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "COD"
+    },
+    {
+      "public_storefront_country_code": "CG",
+      "apple_public_name": "Congo, Republic of the",
+      "world_bank_id": "COG",
+      "income_group_id": "LMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "COG"
+    },
+    {
+      "public_storefront_country_code": "CH",
+      "apple_public_name": "Switzerland",
+      "world_bank_id": "CHE",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "CHE"
+    },
+    {
+      "public_storefront_country_code": "CI",
+      "apple_public_name": "Côte d'Ivoire",
+      "world_bank_id": "CIV",
+      "income_group_id": "LMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "CIV"
+    },
+    {
+      "public_storefront_country_code": "CL",
+      "apple_public_name": "Chile",
+      "world_bank_id": "CHL",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "CHL"
+    },
+    {
+      "public_storefront_country_code": "CM",
+      "apple_public_name": "Cameroon",
+      "world_bank_id": "CMR",
+      "income_group_id": "LMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "CMR"
+    },
+    {
+      "public_storefront_country_code": "CN",
+      "apple_public_name": "China mainland",
+      "world_bank_id": "CHN",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "CHN"
+    },
+    {
+      "public_storefront_country_code": "CO",
+      "apple_public_name": "Colombia",
+      "world_bank_id": "COL",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "COL"
+    },
+    {
+      "public_storefront_country_code": "CR",
+      "apple_public_name": "Costa Rica",
+      "world_bank_id": "CRI",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "CRI"
+    },
+    {
+      "public_storefront_country_code": "CV",
+      "apple_public_name": "Cape Verde",
+      "world_bank_id": "CPV",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "CPV"
+    },
+    {
+      "public_storefront_country_code": "CY",
+      "apple_public_name": "Cyprus",
+      "world_bank_id": "CYP",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "CYP"
+    },
+    {
+      "public_storefront_country_code": "CZ",
+      "apple_public_name": "Czechia",
+      "world_bank_id": "CZE",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "CZE"
+    },
+    {
+      "public_storefront_country_code": "DE",
+      "apple_public_name": "Germany",
+      "world_bank_id": "DEU",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "DEU"
+    },
+    {
+      "public_storefront_country_code": "DK",
+      "apple_public_name": "Denmark",
+      "world_bank_id": "DNK",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "DNK"
+    },
+    {
+      "public_storefront_country_code": "DM",
+      "apple_public_name": "Dominica",
+      "world_bank_id": "DMA",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "DMA"
+    },
+    {
+      "public_storefront_country_code": "DO",
+      "apple_public_name": "Dominican Republic",
+      "world_bank_id": "DOM",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "DOM"
+    },
+    {
+      "public_storefront_country_code": "DZ",
+      "apple_public_name": "Algeria",
+      "world_bank_id": "DZA",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "DZA"
+    },
+    {
+      "public_storefront_country_code": "EC",
+      "apple_public_name": "Ecuador",
+      "world_bank_id": "ECU",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "ECU"
+    },
+    {
+      "public_storefront_country_code": "EE",
+      "apple_public_name": "Estonia",
+      "world_bank_id": "EST",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "EST"
+    },
+    {
+      "public_storefront_country_code": "EG",
+      "apple_public_name": "Egypt",
+      "world_bank_id": "EGY",
+      "income_group_id": "LMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "EGY"
+    },
+    {
+      "public_storefront_country_code": "ES",
+      "apple_public_name": "Spain",
+      "world_bank_id": "ESP",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "ESP"
+    },
+    {
+      "public_storefront_country_code": "FI",
+      "apple_public_name": "Finland",
+      "world_bank_id": "FIN",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "FIN"
+    },
+    {
+      "public_storefront_country_code": "FJ",
+      "apple_public_name": "Fiji",
+      "world_bank_id": "FJI",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "FJI"
+    },
+    {
+      "public_storefront_country_code": "FM",
+      "apple_public_name": "Micronesia",
+      "world_bank_id": "FSM",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "FSM"
+    },
+    {
+      "public_storefront_country_code": "FR",
+      "apple_public_name": "France",
+      "world_bank_id": "FRA",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "FRA"
+    },
+    {
+      "public_storefront_country_code": "GA",
+      "apple_public_name": "Gabon",
+      "world_bank_id": "GAB",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "GAB"
+    },
+    {
+      "public_storefront_country_code": "GB",
+      "apple_public_name": "United Kingdom",
+      "world_bank_id": "GBR",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "GBR"
+    },
+    {
+      "public_storefront_country_code": "GD",
+      "apple_public_name": "Grenada",
+      "world_bank_id": "GRD",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "GRD"
+    },
+    {
+      "public_storefront_country_code": "GE",
+      "apple_public_name": "Georgia",
+      "world_bank_id": "GEO",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "GEO"
+    },
+    {
+      "public_storefront_country_code": "GH",
+      "apple_public_name": "Ghana",
+      "world_bank_id": "GHA",
+      "income_group_id": "LMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "GHA"
+    },
+    {
+      "public_storefront_country_code": "GM",
+      "apple_public_name": "The Gambia",
+      "world_bank_id": "GMB",
+      "income_group_id": "LIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "GMB"
+    },
+    {
+      "public_storefront_country_code": "GR",
+      "apple_public_name": "Greece",
+      "world_bank_id": "GRC",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "GRC"
+    },
+    {
+      "public_storefront_country_code": "GT",
+      "apple_public_name": "Guatemala",
+      "world_bank_id": "GTM",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "GTM"
+    },
+    {
+      "public_storefront_country_code": "GW",
+      "apple_public_name": "Guinea-Bissau",
+      "world_bank_id": "GNB",
+      "income_group_id": "LIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "GNB"
+    },
+    {
+      "public_storefront_country_code": "GY",
+      "apple_public_name": "Guyana",
+      "world_bank_id": "GUY",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "GUY"
+    },
+    {
+      "public_storefront_country_code": "HK",
+      "apple_public_name": "Hong Kong",
+      "world_bank_id": "HKG",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "HKG"
+    },
+    {
+      "public_storefront_country_code": "HN",
+      "apple_public_name": "Honduras",
+      "world_bank_id": "HND",
+      "income_group_id": "LMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "HND"
+    },
+    {
+      "public_storefront_country_code": "HR",
+      "apple_public_name": "Croatia",
+      "world_bank_id": "HRV",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "HRV"
+    },
+    {
+      "public_storefront_country_code": "HU",
+      "apple_public_name": "Hungary",
+      "world_bank_id": "HUN",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "HUN"
+    },
+    {
+      "public_storefront_country_code": "ID",
+      "apple_public_name": "Indonesia",
+      "world_bank_id": "IDN",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "IDN"
+    },
+    {
+      "public_storefront_country_code": "IE",
+      "apple_public_name": "Ireland",
+      "world_bank_id": "IRL",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "IRL"
+    },
+    {
+      "public_storefront_country_code": "IL",
+      "apple_public_name": "Israel",
+      "world_bank_id": "ISR",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "ISR"
+    },
+    {
+      "public_storefront_country_code": "IN",
+      "apple_public_name": "India",
+      "world_bank_id": "IND",
+      "income_group_id": "LMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "IND"
+    },
+    {
+      "public_storefront_country_code": "IQ",
+      "apple_public_name": "Iraq",
+      "world_bank_id": "IRQ",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "IRQ"
+    },
+    {
+      "public_storefront_country_code": "IS",
+      "apple_public_name": "Iceland",
+      "world_bank_id": "ISL",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "ISL"
+    },
+    {
+      "public_storefront_country_code": "IT",
+      "apple_public_name": "Italy",
+      "world_bank_id": "ITA",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "ITA"
+    },
+    {
+      "public_storefront_country_code": "JM",
+      "apple_public_name": "Jamaica",
+      "world_bank_id": "JAM",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "JAM"
+    },
+    {
+      "public_storefront_country_code": "JO",
+      "apple_public_name": "Jordan",
+      "world_bank_id": "JOR",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "JOR"
+    },
+    {
+      "public_storefront_country_code": "JP",
+      "apple_public_name": "Japan",
+      "world_bank_id": "JPN",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "JPN"
+    },
+    {
+      "public_storefront_country_code": "KE",
+      "apple_public_name": "Kenya",
+      "world_bank_id": "KEN",
+      "income_group_id": "LMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "KEN"
+    },
+    {
+      "public_storefront_country_code": "KG",
+      "apple_public_name": "Kyrgyzstan",
+      "world_bank_id": "KGZ",
+      "income_group_id": "LMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "KGZ"
+    },
+    {
+      "public_storefront_country_code": "KH",
+      "apple_public_name": "Cambodia",
+      "world_bank_id": "KHM",
+      "income_group_id": "LMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "KHM"
+    },
+    {
+      "public_storefront_country_code": "KN",
+      "apple_public_name": "St. Kitts and Nevis",
+      "world_bank_id": "KNA",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "KNA"
+    },
+    {
+      "public_storefront_country_code": "KR",
+      "apple_public_name": "South Korea",
+      "world_bank_id": "KOR",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "KOR"
+    },
+    {
+      "public_storefront_country_code": "KW",
+      "apple_public_name": "Kuwait",
+      "world_bank_id": "KWT",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "KWT"
+    },
+    {
+      "public_storefront_country_code": "KY",
+      "apple_public_name": "Cayman Islands",
+      "world_bank_id": "CYM",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "CYM"
+    },
+    {
+      "public_storefront_country_code": "KZ",
+      "apple_public_name": "Kazakhstan",
+      "world_bank_id": "KAZ",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "KAZ"
+    },
+    {
+      "public_storefront_country_code": "LA",
+      "apple_public_name": "Laos",
+      "world_bank_id": "LAO",
+      "income_group_id": "LMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "LAO"
+    },
+    {
+      "public_storefront_country_code": "LB",
+      "apple_public_name": "Lebanon",
+      "world_bank_id": "LBN",
+      "income_group_id": "LMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "LBN"
+    },
+    {
+      "public_storefront_country_code": "LC",
+      "apple_public_name": "St. Lucia",
+      "world_bank_id": "LCA",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "LCA"
+    },
+    {
+      "public_storefront_country_code": "LK",
+      "apple_public_name": "Sri Lanka",
+      "world_bank_id": "LKA",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "LKA"
+    },
+    {
+      "public_storefront_country_code": "LR",
+      "apple_public_name": "Liberia",
+      "world_bank_id": "LBR",
+      "income_group_id": "LIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "LBR"
+    },
+    {
+      "public_storefront_country_code": "LT",
+      "apple_public_name": "Lithuania",
+      "world_bank_id": "LTU",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "LTU"
+    },
+    {
+      "public_storefront_country_code": "LU",
+      "apple_public_name": "Luxembourg",
+      "world_bank_id": "LUX",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "LUX"
+    },
+    {
+      "public_storefront_country_code": "LV",
+      "apple_public_name": "Latvia",
+      "world_bank_id": "LVA",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "LVA"
+    },
+    {
+      "public_storefront_country_code": "LY",
+      "apple_public_name": "Libya",
+      "world_bank_id": "LBY",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "LBY"
+    },
+    {
+      "public_storefront_country_code": "MA",
+      "apple_public_name": "Morocco",
+      "world_bank_id": "MAR",
+      "income_group_id": "LMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "MAR"
+    },
+    {
+      "public_storefront_country_code": "MD",
+      "apple_public_name": "Moldova",
+      "world_bank_id": "MDA",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "MDA"
+    },
+    {
+      "public_storefront_country_code": "ME",
+      "apple_public_name": "Montenegro",
+      "world_bank_id": "MNE",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "MNE"
+    },
+    {
+      "public_storefront_country_code": "MG",
+      "apple_public_name": "Madagascar",
+      "world_bank_id": "MDG",
+      "income_group_id": "LIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "MDG"
+    },
+    {
+      "public_storefront_country_code": "MK",
+      "apple_public_name": "North Macedonia",
+      "world_bank_id": "MKD",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "MKD"
+    },
+    {
+      "public_storefront_country_code": "ML",
+      "apple_public_name": "Mali",
+      "world_bank_id": "MLI",
+      "income_group_id": "LIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "MLI"
+    },
+    {
+      "public_storefront_country_code": "MM",
+      "apple_public_name": "Myanmar",
+      "world_bank_id": "MMR",
+      "income_group_id": "LMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "MMR"
+    },
+    {
+      "public_storefront_country_code": "MN",
+      "apple_public_name": "Mongolia",
+      "world_bank_id": "MNG",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "MNG"
+    },
+    {
+      "public_storefront_country_code": "MO",
+      "apple_public_name": "Macao",
+      "world_bank_id": "MAC",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "MAC"
+    },
+    {
+      "public_storefront_country_code": "MR",
+      "apple_public_name": "Mauritania",
+      "world_bank_id": "MRT",
+      "income_group_id": "LMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "MRT"
+    },
+    {
+      "public_storefront_country_code": "MS",
+      "apple_public_name": "Montserrat",
+      "world_bank_id": null,
+      "income_group_id": null,
+      "income_group_source": null,
+      "apple_territory_code_candidate": "MSR"
+    },
+    {
+      "public_storefront_country_code": "MT",
+      "apple_public_name": "Malta",
+      "world_bank_id": "MLT",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "MLT"
+    },
+    {
+      "public_storefront_country_code": "MU",
+      "apple_public_name": "Mauritius",
+      "world_bank_id": "MUS",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "MUS"
+    },
+    {
+      "public_storefront_country_code": "MV",
+      "apple_public_name": "Maldives",
+      "world_bank_id": "MDV",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "MDV"
+    },
+    {
+      "public_storefront_country_code": "MW",
+      "apple_public_name": "Malawi",
+      "world_bank_id": "MWI",
+      "income_group_id": "LIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "MWI"
+    },
+    {
+      "public_storefront_country_code": "MX",
+      "apple_public_name": "Mexico",
+      "world_bank_id": "MEX",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "MEX"
+    },
+    {
+      "public_storefront_country_code": "MY",
+      "apple_public_name": "Malaysia",
+      "world_bank_id": "MYS",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "MYS"
+    },
+    {
+      "public_storefront_country_code": "MZ",
+      "apple_public_name": "Mozambique",
+      "world_bank_id": "MOZ",
+      "income_group_id": "LIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "MOZ"
+    },
+    {
+      "public_storefront_country_code": "NA",
+      "apple_public_name": "Namibia",
+      "world_bank_id": "NAM",
+      "income_group_id": "LMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "NAM"
+    },
+    {
+      "public_storefront_country_code": "NE",
+      "apple_public_name": "Niger",
+      "world_bank_id": "NER",
+      "income_group_id": "LIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "NER"
+    },
+    {
+      "public_storefront_country_code": "NG",
+      "apple_public_name": "Nigeria",
+      "world_bank_id": "NGA",
+      "income_group_id": "LMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "NGA"
+    },
+    {
+      "public_storefront_country_code": "NI",
+      "apple_public_name": "Nicaragua",
+      "world_bank_id": "NIC",
+      "income_group_id": "LMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "NIC"
+    },
+    {
+      "public_storefront_country_code": "NL",
+      "apple_public_name": "Netherlands",
+      "world_bank_id": "NLD",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "NLD"
+    },
+    {
+      "public_storefront_country_code": "NO",
+      "apple_public_name": "Norway",
+      "world_bank_id": "NOR",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "NOR"
+    },
+    {
+      "public_storefront_country_code": "NP",
+      "apple_public_name": "Nepal",
+      "world_bank_id": "NPL",
+      "income_group_id": "LMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "NPL"
+    },
+    {
+      "public_storefront_country_code": "NR",
+      "apple_public_name": "Nauru",
+      "world_bank_id": "NRU",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "NRU"
+    },
+    {
+      "public_storefront_country_code": "NZ",
+      "apple_public_name": "New Zealand",
+      "world_bank_id": "NZL",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "NZL"
+    },
+    {
+      "public_storefront_country_code": "OM",
+      "apple_public_name": "Oman",
+      "world_bank_id": "OMN",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "OMN"
+    },
+    {
+      "public_storefront_country_code": "PA",
+      "apple_public_name": "Panama",
+      "world_bank_id": "PAN",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "PAN"
+    },
+    {
+      "public_storefront_country_code": "PE",
+      "apple_public_name": "Peru",
+      "world_bank_id": "PER",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "PER"
+    },
+    {
+      "public_storefront_country_code": "PG",
+      "apple_public_name": "Papua New Guinea",
+      "world_bank_id": "PNG",
+      "income_group_id": "LMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "PNG"
+    },
+    {
+      "public_storefront_country_code": "PH",
+      "apple_public_name": "Philippines",
+      "world_bank_id": "PHL",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "PHL"
+    },
+    {
+      "public_storefront_country_code": "PK",
+      "apple_public_name": "Pakistan",
+      "world_bank_id": "PAK",
+      "income_group_id": "LMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "PAK"
+    },
+    {
+      "public_storefront_country_code": "PL",
+      "apple_public_name": "Poland",
+      "world_bank_id": "POL",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "POL"
+    },
+    {
+      "public_storefront_country_code": "PT",
+      "apple_public_name": "Portugal",
+      "world_bank_id": "PRT",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "PRT"
+    },
+    {
+      "public_storefront_country_code": "PW",
+      "apple_public_name": "Palau",
+      "world_bank_id": "PLW",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "PLW"
+    },
+    {
+      "public_storefront_country_code": "PY",
+      "apple_public_name": "Paraguay",
+      "world_bank_id": "PRY",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "PRY"
+    },
+    {
+      "public_storefront_country_code": "QA",
+      "apple_public_name": "Qatar",
+      "world_bank_id": "QAT",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "QAT"
+    },
+    {
+      "public_storefront_country_code": "RO",
+      "apple_public_name": "Romania",
+      "world_bank_id": "ROU",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "ROU"
+    },
+    {
+      "public_storefront_country_code": "RS",
+      "apple_public_name": "Serbia",
+      "world_bank_id": "SRB",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "SRB"
+    },
+    {
+      "public_storefront_country_code": "RU",
+      "apple_public_name": "Russia",
+      "world_bank_id": "RUS",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "RUS"
+    },
+    {
+      "public_storefront_country_code": "RW",
+      "apple_public_name": "Rwanda",
+      "world_bank_id": "RWA",
+      "income_group_id": "LIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "RWA"
+    },
+    {
+      "public_storefront_country_code": "SA",
+      "apple_public_name": "Saudi Arabia",
+      "world_bank_id": "SAU",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "SAU"
+    },
+    {
+      "public_storefront_country_code": "SB",
+      "apple_public_name": "Solomon Islands",
+      "world_bank_id": "SLB",
+      "income_group_id": "LMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "SLB"
+    },
+    {
+      "public_storefront_country_code": "SC",
+      "apple_public_name": "Seychelles",
+      "world_bank_id": "SYC",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "SYC"
+    },
+    {
+      "public_storefront_country_code": "SE",
+      "apple_public_name": "Sweden",
+      "world_bank_id": "SWE",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "SWE"
+    },
+    {
+      "public_storefront_country_code": "SG",
+      "apple_public_name": "Singapore",
+      "world_bank_id": "SGP",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "SGP"
+    },
+    {
+      "public_storefront_country_code": "SI",
+      "apple_public_name": "Slovenia",
+      "world_bank_id": "SVN",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "SVN"
+    },
+    {
+      "public_storefront_country_code": "SK",
+      "apple_public_name": "Slovakia",
+      "world_bank_id": "SVK",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "SVK"
+    },
+    {
+      "public_storefront_country_code": "SL",
+      "apple_public_name": "Sierra Leone",
+      "world_bank_id": "SLE",
+      "income_group_id": "LIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "SLE"
+    },
+    {
+      "public_storefront_country_code": "SN",
+      "apple_public_name": "Senegal",
+      "world_bank_id": "SEN",
+      "income_group_id": "LMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "SEN"
+    },
+    {
+      "public_storefront_country_code": "SR",
+      "apple_public_name": "Suriname",
+      "world_bank_id": "SUR",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "SUR"
+    },
+    {
+      "public_storefront_country_code": "ST",
+      "apple_public_name": "São Tomé and Príncipe",
+      "world_bank_id": "STP",
+      "income_group_id": "LMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "STP"
+    },
+    {
+      "public_storefront_country_code": "SV",
+      "apple_public_name": "El Salvador",
+      "world_bank_id": "SLV",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "SLV"
+    },
+    {
+      "public_storefront_country_code": "SZ",
+      "apple_public_name": "Eswatini",
+      "world_bank_id": "SWZ",
+      "income_group_id": "LMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "SWZ"
+    },
+    {
+      "public_storefront_country_code": "TC",
+      "apple_public_name": "Turks and Caicos",
+      "world_bank_id": "TCA",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "TCA"
+    },
+    {
+      "public_storefront_country_code": "TD",
+      "apple_public_name": "Chad",
+      "world_bank_id": "TCD",
+      "income_group_id": "LIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "TCD"
+    },
+    {
+      "public_storefront_country_code": "TH",
+      "apple_public_name": "Thailand",
+      "world_bank_id": "THA",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "THA"
+    },
+    {
+      "public_storefront_country_code": "TJ",
+      "apple_public_name": "Tajikistan",
+      "world_bank_id": "TJK",
+      "income_group_id": "LMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "TJK"
+    },
+    {
+      "public_storefront_country_code": "TM",
+      "apple_public_name": "Turkmenistan",
+      "world_bank_id": "TKM",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "TKM"
+    },
+    {
+      "public_storefront_country_code": "TN",
+      "apple_public_name": "Tunisia",
+      "world_bank_id": "TUN",
+      "income_group_id": "LMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "TUN"
+    },
+    {
+      "public_storefront_country_code": "TO",
+      "apple_public_name": "Tonga",
+      "world_bank_id": "TON",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "TON"
+    },
+    {
+      "public_storefront_country_code": "TR",
+      "apple_public_name": "Türkiye",
+      "world_bank_id": "TUR",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "TUR"
+    },
+    {
+      "public_storefront_country_code": "TT",
+      "apple_public_name": "Trinidad and Tobago",
+      "world_bank_id": "TTO",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "TTO"
+    },
+    {
+      "public_storefront_country_code": "TW",
+      "apple_public_name": "Taiwan",
+      "world_bank_id": null,
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_fy2027_table",
+      "apple_territory_code_candidate": "TWN"
+    },
+    {
+      "public_storefront_country_code": "TZ",
+      "apple_public_name": "Tanzania",
+      "world_bank_id": "TZA",
+      "income_group_id": "LMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "TZA"
+    },
+    {
+      "public_storefront_country_code": "UA",
+      "apple_public_name": "Ukraine",
+      "world_bank_id": "UKR",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "UKR"
+    },
+    {
+      "public_storefront_country_code": "UG",
+      "apple_public_name": "Uganda",
+      "world_bank_id": "UGA",
+      "income_group_id": "LIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "UGA"
+    },
+    {
+      "public_storefront_country_code": "US",
+      "apple_public_name": "United States",
+      "world_bank_id": "USA",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "USA"
+    },
+    {
+      "public_storefront_country_code": "UY",
+      "apple_public_name": "Uruguay",
+      "world_bank_id": "URY",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "URY"
+    },
+    {
+      "public_storefront_country_code": "UZ",
+      "apple_public_name": "Uzbekistan",
+      "world_bank_id": "UZB",
+      "income_group_id": "LMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "UZB"
+    },
+    {
+      "public_storefront_country_code": "VC",
+      "apple_public_name": "St. Vincent and the Grenadines",
+      "world_bank_id": "VCT",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "VCT"
+    },
+    {
+      "public_storefront_country_code": "VE",
+      "apple_public_name": "Venezuela",
+      "world_bank_id": "VEN",
+      "income_group_id": "LMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "VEN"
+    },
+    {
+      "public_storefront_country_code": "VG",
+      "apple_public_name": "British Virgin Islands",
+      "world_bank_id": "VGB",
+      "income_group_id": "HIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "VGB"
+    },
+    {
+      "public_storefront_country_code": "VN",
+      "apple_public_name": "Vietnam",
+      "world_bank_id": "VNM",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "VNM"
+    },
+    {
+      "public_storefront_country_code": "VU",
+      "apple_public_name": "Vanuatu",
+      "world_bank_id": "VUT",
+      "income_group_id": "LMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "VUT"
+    },
+    {
+      "public_storefront_country_code": "XK",
+      "apple_public_name": "Kosovo",
+      "world_bank_id": "XKX",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": null
+    },
+    {
+      "public_storefront_country_code": "YE",
+      "apple_public_name": "Yemen",
+      "world_bank_id": "YEM",
+      "income_group_id": "LIC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "YEM"
+    },
+    {
+      "public_storefront_country_code": "ZA",
+      "apple_public_name": "South Africa",
+      "world_bank_id": "ZAF",
+      "income_group_id": "UMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "ZAF"
+    },
+    {
+      "public_storefront_country_code": "ZM",
+      "apple_public_name": "Zambia",
+      "world_bank_id": "ZMB",
+      "income_group_id": "LMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "ZMB"
+    },
+    {
+      "public_storefront_country_code": "ZW",
+      "apple_public_name": "Zimbabwe",
+      "world_bank_id": "ZWE",
+      "income_group_id": "LMC",
+      "income_group_source": "world_bank_country_api",
+      "apple_territory_code_candidate": "ZWE"
+    }
+  ],
+  "provenance_note": "Raw source archives and extraction builder were independently reviewed outside the repository. Only required country facts, source URLs and byte hashes are retained here; full HTML pages are not redistributed."
+}

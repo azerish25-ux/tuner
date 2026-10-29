@@ -2,8 +2,12 @@ from pathlib import Path
 import unittest
 import json
 import re
+import sys
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(ROOT / 'tools/ci'))
+import capture_check
 
 
 class LocalizedCaptureChecksTests(unittest.TestCase):
@@ -77,7 +81,10 @@ class LocalizedCaptureChecksTests(unittest.TestCase):
         for identifier in ['performance.combo.', 'performance.lyrics', 'performance.score', 'instruments.family.folk_world_strings', 'strum.summary.tune']:
             self.assertIn(identifier, checks)
         self.assertIn('hud == nil || score == nil || lyrics == nil || regions.count != 4', checks)
-        self.assertIn('target.frame.midX > app.frame.midX', checks)
+        # Physical geometry works in either language direction; require the full chip, not its centre.
+        self.assertIn('startX + viewport.midX - frame.midX', checks)
+        self.assertIn('viewport.insetBy(dx: 52, dy: 8).contains(frame)', checks)
+        self.assertIn('selected && banjo.exists && banjo.isHittable', checks)
         hud = (ROOT / 'ios/Timbre/Learn/HighwayHUD.swift').read_text()
         lyrics = (ROOT / 'ios/Timbre/Learn/HighwayLyrics.swift').read_text()
         self.assertIn('.accessibilityLabel(Text("Combo"))', hud)
@@ -100,7 +107,8 @@ class LocalizedCaptureChecksTests(unittest.TestCase):
         self.assertNotIn('app.tabBars.buttons[name]', phone)
         self.assertIn('CaptureLocalizationExpected.json', workflow)
         self.assertLess(workflow.index('CaptureLocalizationExpected.json'), workflow.index('(cd ios && xcodegen generate)'))
-        self.assertIn('-only-testing:TimbreUITests/TimbreUITests/testCaptureLocalizationNavigationFixture', workflow)
+        self.assertIn('run: python3 tools/ci/capture_check.py', workflow)
+        self.assertIn('TimbreUITests/TimbreUITests/testCaptureLocalizationNavigationFixture', capture_check.EXPECTED)
 
     def test_capture_fixture_supports_english_source_and_all_translation_targets(self):
         import sys
@@ -109,7 +117,7 @@ class LocalizedCaptureChecksTests(unittest.TestCase):
         import report
         locales = sorted(p.stem for p in report.RES.glob('*.lproj'))
         expected = matrix_fixture.fixture(locales)
-        self.assertEqual(len(expected), 49)
+        self.assertEqual(len(expected), 52)
         self.assertEqual(expected['en']['headline'], matrix_fixture.KEYS['headline'])
         for labels in expected.values():
             for key in ['tune', 'learn', 'songs', 'practice', 'progress', 'tuned', 'in_tune']:
@@ -123,7 +131,10 @@ class LocalizedCaptureChecksTests(unittest.TestCase):
             self.assertIn(identifier, phone)
         explain = (ROOT / 'ios/Timbre/Learn/LessonExplain.swift').read_text()
         self.assertIn('if cueShown {\n                turnCue(compact: false)\n                    .accessibilityIdentifier("lesson.explain.turnCue")', explain)
-        self.assertIn('XCTAssertTrue(element("lesson.explain.turnCue").waitForExistence', phone)
+        self.assertIn('let turnCue = element("lesson.explain.turnCue")', phone)
+        self.assertIn('XCTAssertTrue(turnCue.waitForExistence(timeout: 12))', phone)
+        self.assertLess(phone.index('XCTAssertTrue(turnCue.waitForExistence(timeout: 12))'),
+                        phone.index('if Self.language.hasPrefix("en")', phone.index('let turnCue = element("lesson.explain.turnCue")')))
 
     def test_tuner_capture_values_use_current_locale_and_missing_probe_fails(self):
         phone = (ROOT / 'ios/TimbreUITests/TimbreUITests.swift').read_text()
@@ -133,7 +144,14 @@ class LocalizedCaptureChecksTests(unittest.TestCase):
             self.assertIn('CaptureLocalization.inTune', code)
             self.assertNotIn('(node.value as? String) == "Tuned"', code)
             self.assertNotIn('status == "In tune"', code)
-        self.assertIn('return (false, "the probe has no lock field")', phone)
+        self.assertIn('return (false, "no lock evidence cue")', phone)
+        self.assertIn('return (false, "no fresh continuous', phone)
+        self.assertIn('map(CaptureLockEvidence.samples) ?? []', phone)
+        evidence = (ROOT / 'ios/TimbreUITests/CaptureLockEvidence.swift').read_text()
+        self.assertIn('let locked: Bool', evidence)
+        self.assertIn('JSONDecoder().decode(Sample.self, from: Data(line.utf8)) else { return [] }', evidence)
+        self.assertIn('sample.locked && sample.active && stages.contains(sample.stage)', evidence)
+        self.assertIn('guard let began, let previous, now - previous.time <= maximumGap else { return false }', evidence)
 
     def test_guitar_results_capture_wait_covers_the_actual_take(self):
         curriculum = json.loads((ROOT / 'ios/Sources/TimbreCore/Resources/curriculum.json').read_text())
@@ -273,12 +291,28 @@ class LocalizedCaptureChecksTests(unittest.TestCase):
         source = (ROOT / '.github/workflows/localized-capture-check.yml').read_text()
         for language in ['en', 'de', 'ar']:
             self.assertIn('language: ' + language, source)
-        for name in ['test12StoreChord', 'test19StoreViolinResults']:
-            self.assertIn('-only-testing:TimbreUITests/TimbreUITests/' + name, source)
+        self.assertIn('run: python3 tools/ci/capture_check.py', source)
+        self.assertIn('run: python3 tools/ci/test_capture_check.py', source)
+        expected = {'TimbreUITests/TimbreUITests/' + name for name in (
+            'testCaptureLocalizationNavigationFixture', 'testStoreResultsBoundsCalculation',
+            'test11StoreTunerLock', 'test13StoreStrum', 'test14StoreSongPerform',
+            'test17StoreInstrumentWall', 'test12StoreChord', 'test19StoreViolinResults')}
+        self.assertEqual(capture_check.EXPECTED, expected)
+        with patch.dict('os.environ', {'DEVICE_ID': 'contract-device'}):
+            command = capture_check.command('test-without-building', Path('contract.xcresult'))
+        selected = [arg.removeprefix('-only-testing:') for arg in command if arg.startswith('-only-testing:')]
+        self.assertEqual(len(selected), 8)
+        self.assertEqual(set(selected), expected)
+        self.assertEqual(set(capture_check.CAPTURES), {
+            '10b-tune-locked', '11b-tune-strum', '31b-instruments-folk',
+            '52b-lesson-chord', '62b-lesson-results-violin', '65-song-perform'})
+        helper = (ROOT / 'tools/ci/capture_check.py').read_text()
+        self.assertIn("name + '-wrong' in found", helper)
+        self.assertIn('len(found.get(name, [])) != 1', helper)
+        self.assertIn('not path.is_file()', helper)
+        self.assertIn('len(set(paths)) != len(CAPTURES)', helper)
         self.assertIn('TEST_RUNNER_TIMBRE_UI_LANGUAGE:', source)
         self.assertIn('TEST_RUNNER_TIMBRE_UI_LOCALE:', source)
-        self.assertIn("name + '-wrong' not in captures", source)
-        self.assertIn('len(captures.get(name, [])) == 1', source)
         self.assertIn('persist-credentials: false', source)
 
 

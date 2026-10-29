@@ -13,6 +13,8 @@ import re
 import sys
 from pathlib import Path
 
+from screenshot_roles import SCREENSHOT_KINDS, screenshot_role, expected_screenshot_count
+
 ROOT = Path(__file__).resolve().parents[2]
 REGISTRY = ROOT / 'tools/l10n/store-locales.json'
 PREFIX = 'TimbreUITests/'
@@ -28,7 +30,15 @@ CAPTURE_TESTS = {
     '11b-tune-strum': 'test13StoreStrum',
     '32-journey': 'test05OtherTabs',
 }
-KINDS = ('iphone', 'ipad', 'preview-main', 'preview-violin')
+ALLOWED_REFS = ('refs/heads/main', 'refs/heads/codex/app-store-readiness-gates')
+PUSH_MARKERS = {
+    '[listing-assets-pilot]': ('en-US,de-DE,ar-SA', 'all'),
+    '[listing-assets-all]': ('all', 'all'),
+    '[listing-screenshots-pilot]': ('en-US,de-DE,ar-SA', 'screenshots'),
+    '[listing-screenshots-all]': ('all', 'screenshots'),
+}
+DEFAULT_KINDS = SCREENSHOT_KINDS + ('preview-main',)
+KINDS = DEFAULT_KINDS + ('preview-violin',)
 # Explicit regional choices for Apple's language-only listing codes. They are
 # formatting locales, not a claim that every regional UI variant is translated.
 REGIONS = {
@@ -39,7 +49,7 @@ REGIONS = {
     'th': 'th_TH', 'tr': 'tr_TR', 'uk': 'uk_UA', 'vi': 'vi_VN',
     'zh-Hans': 'zh_CN', 'zh-Hant': 'zh_TW',
 }
-FALLBACK_LANGUAGES = {'ms': 'ms', 'or-IN': 'or', 'zh-Hant': 'zh-Hant'}
+APP_LANGUAGE_ALIASES = {'ms': 'ms', 'or-IN': 'or', 'zh-Hant': 'zh-Hant', 'zh-Hans': 'zh-CN'}
 
 
 def read_json(path: Path):
@@ -65,14 +75,14 @@ def locale_rows() -> dict:
     found = {row['locale']: row for row in rows}
     if len(rows) != 50 or len(found) != 50:
         raise ValueError('Registry must contain exactly 50 distinct listing locales')
-    fallback = {row['locale'] for row in rows if row['app_locale'] is None}
-    if fallback != set(FALLBACK_LANGUAGES):
-        raise ValueError(f'Unreviewed listing-only fallback set: {fallback}')
+    if registry['app_language_count'] != 52:
+        raise ValueError('Listing capture requires the 52-language app inventory')
     for locale, row in found.items():
         if not re.fullmatch(r'[A-Za-z]+(?:-[A-Za-z0-9]+)*', locale):
             raise ValueError(f'Unsafe locale: {locale}')
-        if row['app_locale'] is None and row['app_fallback'] != 'en':
-            raise ValueError(f'{locale}: unsupported fallback')
+        expected = APP_LANGUAGE_ALIASES.get(locale, locale.split('-')[0])
+        if row['app_locale'] != expected or row['app_fallback'] is not None:
+            raise ValueError(f'{locale}: listing requires its supported app language, not fallback')
     return found
 
 
@@ -84,16 +94,15 @@ def lesson_provenance(language: str) -> dict:
 
 def locale_spec(locale: str) -> dict:
     row = locale_rows()[locale]
-    fallback = row['app_locale'] is None
-    language = row['app_locale'] or row['app_fallback']
-    apple_languages = [FALLBACK_LANGUAGES[locale], 'en'] if fallback else [language]
+    language = row['app_locale']
+    apple_languages = [language]
     return {
         'listing_locale': locale,
         'app_language': language,
         'apple_languages': apple_languages,
         'apple_locale': REGIONS.get(locale, locale.replace('-', '_')),
-        'listing_only_fallback': fallback,
-        'ui_support_claim': not fallback,
+        'listing_only_fallback': False,
+        'ui_support_claim': True,
         'payload_sha256': digest(ROOT / row['content_file']),
         **lesson_provenance(language),
     }
@@ -111,7 +120,7 @@ def expected_captures(locale: str, device: str) -> list[str]:
     import screenshots
     rows = screenshots.plan(device, locale=locale)
     names = [row[0] for row in rows]
-    count = 9 if device == 'iphone' else 4
+    count = screenshot_role(device).frame_count
     if len(names) != count or len(set(names)) != count:
         raise ValueError(f'{locale}/{device}: expected {count} distinct default screenshots')
     if names != [row[0] for row in screenshots.plan(device)]:
@@ -120,7 +129,7 @@ def expected_captures(locale: str, device: str) -> list[str]:
 
 
 def selectors(kind: str) -> list[str]:
-    if kind == 'iphone':
+    if kind in ('iphone', 'iphone-large'):
         names = expected_captures('en-US', 'iphone')
         return [PREFIX + 'TimbreUITests/' + x for x in dict.fromkeys(CAPTURE_TESTS[n] for n in names)]
     if kind == 'ipad':
@@ -134,9 +143,9 @@ def make_plan(locales: str, scope: str, violin: bool = False, shard_size: int = 
     if scope not in ('all', 'screenshots', 'previews') or shard_size not in (1, 2, 3):
         raise ValueError('Unknown scope or shard size (allowed: 1, 2, 3)')
     selected = select_locales(locales)
-    kinds = list(KINDS[:2]) if scope == 'screenshots' else []
+    kinds = list(SCREENSHOT_KINDS) if scope == 'screenshots' else []
     if scope == 'all':
-        kinds = list(KINDS[:3])
+        kinds = list(DEFAULT_KINDS)
     if scope == 'previews':
         kinds = ['preview-main']
     if violin and scope != 'screenshots':
@@ -147,21 +156,29 @@ def make_plan(locales: str, scope: str, violin: bool = False, shard_size: int = 
             include.append({'id': f'{kind}-{start // shard_size + 1:02d}', 'kind': kind,
                             'locales': ','.join(selected[start:start + shard_size])})
     return {'schema_version': 1, 'locales': selected, 'kinds': kinds,
-            'full_default_listing_scope': len(selected) == 50 and all(k in kinds for k in KINDS[:3]),
+            'requested_scope': scope,
+            'expected_screenshot_sets': len(selected) * sum(k in SCREENSHOT_KINDS for k in kinds),
+            'expected_screenshots': expected_screenshot_count(selected, [k for k in kinds if k in SCREENSHOT_KINDS]),
+            'full_screenshot_listing_scope': len(selected) == 50 and all(k in kinds for k in SCREENSHOT_KINDS),
+            'full_default_listing_scope': len(selected) == 50 and all(k in kinds for k in DEFAULT_KINDS),
             'matrix': {'include': include}}
 
 
-def request_scope(event: str, message: str, locales: str, scope: str, violin: bool) -> dict:
-    """Only explicit main-push markers override manual inputs; never an ordinary push."""
+def request_scope(event: str, message: str, locales: str, scope: str, violin: bool,
+                  ref: str = 'refs/heads/main') -> dict:
+    """Exact approved refs only; push requires one unambiguous explicit marker."""
+    if ref not in ALLOWED_REFS:
+        raise ValueError('Listing assets require main or the exact reviewed handoff branch')
     if event == 'workflow_dispatch':
         return {'locales': locales, 'scope': scope, 'violin': violin, 'trigger': 'manual'}
     if event != 'push':
         raise ValueError('Unsupported listing-assets trigger')
-    pilot, full = '[listing-assets-pilot]' in message, '[listing-assets-all]' in message
-    if pilot == full:
-        raise ValueError('A push must contain exactly one listing-assets pilot/all marker')
-    return {'locales': 'all' if full else 'en-US,de-DE,ar-SA', 'scope': 'all', 'violin': False,
-            'trigger': 'main-push-all' if full else 'main-push-pilot'}
+    markers = [marker for marker in PUSH_MARKERS if marker in message]
+    if len(markers) != 1:
+        raise ValueError('A push must contain exactly one listing-assets/screenshots pilot/all marker')
+    selected, selected_scope = PUSH_MARKERS[markers[0]]
+    return {'locales': selected, 'scope': selected_scope, 'violin': False,
+            'trigger': ref.removeprefix('refs/heads/') + '-push-' + markers[0][1:-1]}
 
 
 def prepare_fixtures():
@@ -237,10 +254,9 @@ def capture_records(folder: Path, locale: str, device: str, base: Path) -> list[
             raise ValueError(f'{name}: attachment file reused for another capture')
         record = image_record(path, base.resolve())
         width, height = record['size']
-        if device == 'iphone' and (width, height) != (1320, 2868):
-            raise ValueError(f'{name}: need actual 6.9-inch iPhone capture, got {width}x{height}')
-        if device == 'ipad' and (width, height) != (2752, 2064):
-            raise ValueError(f'{name}: need actual landscape 13-inch iPad capture, got {width}x{height}')
+        if (width, height) != screenshot_role(device).native_size:
+            label = {'iphone': 'medium Dynamic Island iPhone', 'iphone-large': 'large Dynamic Island iPhone', 'ipad': 'landscape 13-inch iPad'}[device]
+            raise ValueError(f'{name}: need actual {label} capture, got {width}x{height}')
         if record['pixel_sha256'] in used_pixels:
             raise ValueError(f'{name}: duplicate capture pixels')
         used_paths.add(path)
@@ -256,7 +272,7 @@ def screenshot_records(out: Path, locale: str, device: str, base: Path) -> list[
     if actual != wanted:
         raise ValueError(f'{locale}/{device}: missing or extra rendered frames: {actual ^ wanted}')
     records = [image_record(out / name, base) for name in sorted(wanted)]
-    size = [1320, 2868] if device == 'iphone' else [2752, 2064]
+    size = list(screenshot_role(device).native_size)
     if any(r['size'] != size for r in records):
         raise ValueError('Rendered screenshot has wrong size')
     if len({r['pixel_sha256'] for r in records}) != len(records):
@@ -270,9 +286,11 @@ def screenshot_records(out: Path, locale: str, device: str, base: Path) -> list[
 def validate_manifest_assets(record: dict):
     """Validate the compact inventory too; a nonempty list is not complete evidence."""
     locale, kind = record['listing_locale'], record['kind']
+    if kind not in KINDS:
+        raise ValueError('Unknown manifest asset role')
     if record.get('lesson_resource_status') != 'shipped':
         raise ValueError('Required localized lesson resource is still pending')
-    for field, minimum in [('language_evidence', 1), ('launch_evidence', len(selectors(kind)) if kind in ('iphone', 'ipad') else 4 if kind == 'preview-main' else 3)]:
+    for field, minimum in [('language_evidence', 1), ('launch_evidence', len(selectors(kind)) if kind in SCREENSHOT_KINDS else 4 if kind == 'preview-main' else 3)]:
         rows = record.get(field, [])
         event = 'VERIFIED' if field == 'language_evidence' else 'LAUNCH'
         if not isinstance(rows, list) or not all(isinstance(row, dict) for row in rows):
@@ -289,11 +307,13 @@ def validate_manifest_assets(record: dict):
         raise ValueError('Duplicate asset inventory paths')
     if any(not re.fullmatch('[a-f0-9]{64}', row.get('sha256', '')) for row in files):
         raise ValueError('Missing/invalid asset hash')
-    if kind in ('iphone', 'ipad'):
+    if kind in SCREENSHOT_KINDS:
         captures = record.get('captures')
         if not isinstance(captures, list) or not all(isinstance(row, dict) for row in captures):
             raise ValueError('Expected a list of structured capture records')
         needed = expected_captures(locale, kind)
+        if any(row.get('size') != list(screenshot_role(kind).native_size) for row in captures):
+            raise ValueError('Wrong native capture dimensions in manifest')
         if [row.get('capture') for row in captures] != needed:
             raise ValueError('Incomplete capture inventory')
         if any(not re.fullmatch('[a-f0-9]{64}', row.get('pixel_sha256', '')) for row in captures):
@@ -304,7 +324,7 @@ def validate_manifest_assets(record: dict):
         wanted.add(f'{kind}-{locale}-sheet.png')
         if {Path(path).name for path in paths} != wanted or len(paths) != len(wanted):
             raise ValueError('Missing or extra screenshot asset inventory')
-        size = [1320, 2868] if kind == 'iphone' else [2752, 2064]
+        size = list(screenshot_role(kind).native_size)
         if any(row.get('size') != size for row in files if row['path'].endswith('.jpg')):
             raise ValueError('Wrong screenshot dimensions in manifest')
     else:
@@ -319,6 +339,8 @@ def validate_manifest_assets(record: dict):
 def aggregate(plan: dict, folder: Path, source_sha: str) -> dict:
     records, errors, seen, language_pixels = [], [], set(), {}
     expected = set()
+    screenshot_sets = screenshot_count = 0
+    full_screens = False
     # A corrupt plan or manifest must produce an incomplete inventory, not crash
     # before inventory.json can explain the failure to the next reviewer.
     valid_plan = (isinstance(plan, dict) and isinstance(plan.get('locales'), list)
@@ -332,6 +354,19 @@ def aggregate(plan: dict, folder: Path, source_sha: str) -> dict:
         errors.append('Malformed plan: expected distinct known locales and asset kinds')
     else:
         expected = {(locale, kind) for locale in plan['locales'] for kind in plan['kinds']}
+        full_screens = len(plan['locales']) == 50 and set(SCREENSHOT_KINDS) <= set(plan['kinds'])
+        if plan.get('full_screenshot_listing_scope') and not full_screens:
+            errors.append('Claimed full screenshot scope lacks exact 50 locales and all native roles')
+        required = SCREENSHOT_KINDS if plan.get('requested_scope') == 'screenshots' else DEFAULT_KINDS if plan.get('requested_scope') == 'all' else ()
+        if required and not set(required) <= set(plan['kinds']):
+            errors.append('Requested scope is missing required native screenshot roles')
+        if plan.get('requested_scope') == 'screenshots' and set(plan['kinds']) != set(SCREENSHOT_KINDS):
+            errors.append('Screenshots-only scope must contain exactly the three native screenshot roles')
+        screenshot_sets = len(plan['locales']) * sum(k in SCREENSHOT_KINDS for k in plan['kinds'])
+        screenshot_count = expected_screenshot_count(plan['locales'], [k for k in plan['kinds'] if k in SCREENSHOT_KINDS])
+        for field, value in [('expected_screenshot_sets', screenshot_sets), ('expected_screenshots', screenshot_count)]:
+            if field in plan and plan[field] != value:
+                errors.append(f'Plan {field} does not match its exact locale/role coverage')
     for path in sorted(folder.rglob('*.manifest.json')):
         try:
             record = read_json(path)
@@ -364,7 +399,7 @@ def aggregate(plan: dict, folder: Path, source_sha: str) -> dict:
             except (ValueError, TypeError, KeyError) as error:
                 errors.append(f'{key}: malformed or incomplete asset evidence: {error}')
             else:
-                if key[1] in ('iphone', 'ipad'):
+                if key[1] in SCREENSHOT_KINDS:
                     signature = tuple(x['pixel_sha256'] for x in record['captures'])
                     previous = language_pixels.setdefault((key[1], signature), spec['app_language'])
                     if previous != spec['app_language']:
@@ -376,6 +411,8 @@ def aggregate(plan: dict, folder: Path, source_sha: str) -> dict:
         errors.append('Evidence must use one identified shared build artifact')
     return {'schema_version': 1, 'source_sha': source_sha, 'expected_sets': len(expected),
             'manifest_count': len(records), 'scope': plan, 'errors': errors,
+            'expected_screenshot_sets': screenshot_sets, 'expected_screenshots': screenshot_count,
+            'full_screenshot_listing_scope': full_screens,
             'status': 'mechanically_verified' if not errors else 'incomplete',
             'release_ready': False, 'visual_review': 'pending', 'native_review': 'pending',
             'note': 'Device/render evidence only. No upload, signing, account changes, or release approval.',
@@ -393,6 +430,7 @@ def main():
     plan.add_argument('--out', type=Path, required=True)
     plan.add_argument('--event', choices=['workflow_dispatch', 'push'], default='workflow_dispatch')
     plan.add_argument('--message', default='')
+    plan.add_argument('--ref', default='refs/heads/main')
     commands.add_parser('fixtures')
     combined = commands.add_parser('aggregate')
     combined.add_argument('--plan', type=Path, required=True)
@@ -401,7 +439,7 @@ def main():
     combined.add_argument('--out', type=Path, required=True)
     args = parser.parse_args()
     if args.command == 'plan':
-        request = request_scope(args.event, args.message, args.locales, args.scope, args.violin)
+        request = request_scope(args.event, args.message, args.locales, args.scope, args.violin, args.ref)
         result = make_plan(request['locales'], request['scope'], request['violin'], args.shard_size)
         result['trigger'] = request['trigger']
         write_json(args.out, result)

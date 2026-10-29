@@ -231,12 +231,12 @@ struct StudioStage: View {
             let turn = PegTurn.from(cents: cents, locked: state.locked, listening: state.listening,
                                     tighten: card.turns[anchor], slides: card.slides.contains(anchor))
             let gap: CGFloat = 30 + 4 * frame.close
-            let side = PegLabel.side(for: center, preferred: peg.x < card.centerX ? -1 : 1, gap: gap, in: size,
-                                     width: calling ? PegLabel.callWidth : 60, controlsOnLeft: state.rightToLeft)
-            PegLabel(note: state.note, turn: turn, color: Palette.tuning(cents, locked: state.locked), prompt: calling,
-                     nudge: turn.nudge(at: date.timeIntervalSinceReferenceDate, reduceMotion: reduceMotion))
-                .environment(\.layoutDirection, state.rightToLeft ? .rightToLeft : .leftToRight)
-                .placedBeside(center, side: side, gap: gap)
+            PegLabelPlacement(point: center, preferred: peg.x < card.centerX ? -1 : 1, gap: gap, controlsOnLeft: state.rightToLeft) {
+                PegLabel(note: state.note, turn: turn, color: Palette.tuning(cents, locked: state.locked), prompt: calling,
+                         nudge: turn.nudge(at: date.timeIntervalSinceReferenceDate, reduceMotion: reduceMotion))
+                    .environment(\.layoutDirection, state.rightToLeft ? .rightToLeft : .leftToRight)
+            }
+            .frame(width: size.width, height: size.height)
         }
     }
 

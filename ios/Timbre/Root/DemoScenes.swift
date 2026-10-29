@@ -207,6 +207,43 @@ enum DemoScene: String {
     /// test's last look for the lesson (a query stalls the main thread; a note heard late would break the run).
     static let performDelay: Duration = .seconds(3)
 
+    /// Still captures release the take only after their initial accessibility queries finish.
+    /// No cue means the existing auto-start path (including preview videos) is unchanged.
+    static func waitForPerformCue() async -> Bool {
+        guard TestSupport.isOn(.sceneStill), let path = Option.cue else { return true }
+        performDiagnostic("waiting-for-cue")
+        let deadline = Date().addingTimeInterval(90)
+        while !FileManager.default.fileExists(atPath: path) {
+            guard !Task.isCancelled, Date() < deadline else {
+                performDiagnostic("cue-timeout-or-cancelled")
+                return false
+            }
+            do { try await Task.sleep(for: .milliseconds(50)) } catch { return false }
+        }
+        performDiagnostic("cue-received")
+        return !Task.isCancelled
+    }
+
+    /// Bounded, non-sensitive scene timing evidence, shared with the simulator UI test.
+    /// No audio, account data or file paths are recorded. Release builds omit this entire file.
+    static func performDiagnostic(_ event: String, beat: Double? = nil) {
+        guard current == .songPerform, TestSupport.isOn(.sceneStill), let path = Option.cue else { return }
+        var record: [String: Any] = ["event": event, "epoch": Date().timeIntervalSince1970]
+        if let beat, beat.isFinite { record["beat"] = beat }
+        guard var data = try? JSONSerialization.data(withJSONObject: record, options: [.sortedKeys]) else { return }
+        data.append(0x0A)
+        let url = URL(fileURLWithPath: path + ".events")
+        if !FileManager.default.fileExists(atPath: url.path) {
+            FileManager.default.createFile(atPath: url.path, contents: nil)
+        }
+        guard let file = try? FileHandle(forWritingTo: url) else { return }
+        defer { try? file.close() }
+        do {
+            try file.seekToEnd()
+            try file.write(contentsOf: data)
+        } catch { /* Diagnostics never change the actual take. */ }
+    }
+
     /// In `song-perform`, the beat of `lesson`'s performance its take starts at (nil otherwise: the player taps Perform).
     /// The take's clock starts a bar earlier (`SongPerformStep.startScene`): its first click is beat `beat − meter`.
     static func performBeat(_ lesson: Lesson, beatsPerBar: Int) -> Double? {
@@ -232,21 +269,76 @@ enum DemoScene: String {
     }
 
 
-    /// Learn opens the song (as a Siri or Spotlight link opens one), then goes back to the player's own course once
-    /// the song is on screen, so later runs in the same simulator still open Learn on guitar.
+    /// Restore the player's course only after this exact scene has left its presentation.
+    /// A fixed delay can change the matched zoom source while a slow presentation is still opening.
+    private struct CourseRestoration {
+        let lessonID: String
+        let previous: String
+        let presented: String
+        var appeared = false
+    }
+    @MainActor private static var courseRestoration: CourseRestoration?
+
+    @MainActor static func lessonAppeared(_ id: String) {
+        guard id == performSongId, current == .songPerform else { return }
+        performDiagnostic("lesson-appeared")
+        if courseRestoration?.lessonID == id { courseRestoration?.appeared = true }
+    }
+
+    @MainActor static func lessonDisappeared(_ id: String) {
+        guard id == performSongId, current == .songPerform else { return }
+        performDiagnostic("lesson-disappeared")
+        guard courseRestoration?.lessonID == id, courseRestoration?.appeared == true else { return }
+        restoreCourse(for: id)
+    }
+
+    @MainActor static func lessonPresentationCancelled(_ id: String) {
+        guard id == performSongId, current == .songPerform else { return }
+        performDiagnostic("lesson-presentation-cancelled")
+        guard courseRestoration?.appeared != true else { return }
+        restoreCourse(for: id)
+    }
+
+    @MainActor private static func restoreCourse(for id: String) {
+        guard let restoration = courseRestoration, restoration.lessonID == id else { return }
+        courseRestoration = nil
+        // Do not overwrite a course deliberately chosen in the meantime.
+        guard Preferences.savedLearnCourse == restoration.presented else { return }
+        Preferences.learnCourse = restoration.previous
+        performDiagnostic("course-restored")
+    }
+
+    /// Learn opens the song through the real pending-lesson path. Its lifecycle, not elapsed
+    /// wall time, owns restoration; cancellation restores only a course changed for this request.
     @MainActor private static func openSong(_ store: AppStore) {
         guard let found = store.curriculum.lesson(id: performSongId) else { return }
         let own = Preferences.learnCourse
+        courseRestoration = own == found.course.id ? nil : CourseRestoration(
+            lessonID: found.lesson.id, previous: own, presented: found.course.id)
         store.pendingLessonId = found.lesson.id
         store.selectedTab = .learn
-        guard own != found.course.id else { return }
-        Task { @MainActor in
-            for _ in 0..<50 where store.pendingLessonId != nil { try? await Task.sleep(for: .milliseconds(100)) }
-            // Past Learn's own wait for covering screens, so the switch happens behind the open song.
-            try? await Task.sleep(for: .milliseconds(2500))
-            guard Preferences.savedLearnCourse == found.course.id else { return }
-            Preferences.learnCourse = own
-        }
+    }
+
+    /// The actual readout supplies this state while a still-test cue file exists. Nothing is
+    /// inferred across a stalled render: gaps remain gaps in the evidence consumed by the UI test.
+    @MainActor private static var lastLockEvidenceTime = -Double.infinity
+    @MainActor static func recordLockEvidence(locked: Bool, active: Bool, target: Double, stage: String) {
+        guard current == .tuneLocked, let path = Option.cue else { return }
+        let now = ProcessInfo.processInfo.systemUptime
+        guard now - lastLockEvidenceTime >= 0.1, FileManager.default.fileExists(atPath: path) else { return }
+        lastLockEvidenceTime = now
+        let record: [String: Any] = ["time": now, "locked": locked, "active": active, "target": target, "stage": stage]
+        guard target.isFinite, var data = try? JSONSerialization.data(withJSONObject: record, options: [.sortedKeys]) else { return }
+        data.append(0x0A)
+        let url = URL(fileURLWithPath: path + ".lock")
+        if !FileManager.default.fileExists(atPath: url.path) { FileManager.default.createFile(atPath: url.path, contents: nil) }
+        guard let file = try? FileHandle(forWritingTo: url) else { return }
+        defer { try? file.close() }
+        do {
+            let size = try file.seekToEnd()
+            guard size < 256_000 else { return }
+            try file.write(contentsOf: data)
+        } catch { /* Missing evidence fails the test; it never changes tuner behavior. */ }
     }
 
     // MARK: Tuner
@@ -323,7 +415,8 @@ enum PreviewTune {
         // 3D model must stay up), but the lowest string is chosen again every 0.4 s, so its 0.65 s hold never completes
         // and nothing locks before the camera rolls.
         var chosen = Date.distantPast
-        while !cued(since: launched) {
+        while !cued(since: launched, cuePath: Option.cue) {
+            guard !Task.isCancelled else { return }
             if !store.audio.running { store.startListening() }
             if Date().timeIntervalSince(chosen) > 0.4 {
                 DemoScene.select(first, store)
@@ -331,6 +424,7 @@ enum PreviewTune {
             }
             try? await Task.sleep(for: .milliseconds(50))
         }
+        guard !Task.isCancelled else { return }
         // A fresh session (the demo pitch's drift starts over, 14 cents flat), with no pause long enough to rest.
         store.pauseListening()
         DemoScene.select(first, store)
@@ -351,10 +445,11 @@ enum PreviewTune {
         PreviewRecorder.shared.endStrings(store)
     }
 
-    private static func cued(since launched: Date) -> Bool {
+    static func cued(since launched: Date, cuePath: String?) -> Bool {
         let waited = Date().timeIntervalSince(launched)
-        guard let path = Option.cue else { return waited > fallbackStart }
-        return FileManager.default.fileExists(atPath: path) || waited > 90
+        guard let path = cuePath else { return waited > fallbackStart }
+        // An explicit camera handshake must never start the scene before the camera is ready.
+        return FileManager.default.fileExists(atPath: path)
     }
 
     private typealias Option = DemoScene.Option
