@@ -528,8 +528,8 @@ final class SongShelfPageTests: XCTestCase {
             XCTFail("Both diagnostic viewports must fit the real window without clipping")
             return
         }
-        container.view.layoutIfNeeded()
-        host.view.layoutIfNeeded()
+        container.view.setNeedsLayout()
+        host.view.setNeedsLayout()
         await assertContainedHost(state, host: host, window: window, stage: "contained-loaded-\(direction)")
         let target = "shelf-3"
         state.requestedShelf = .shelf(target)
@@ -549,12 +549,12 @@ final class SongShelfPageTests: XCTestCase {
                 state.size = size
                 checkpoint("host-frame-begin " + stage)
                 host.view.frame = CGRect(origin: .zero, size: size)
-                checkpoint("container-layout-begin " + stage)
+                // Let UIKit schedule the pass after SwiftUI observes the state/frame mutation.
+                // Existing predicates below still require the actual resized host, page and terminal geometry.
+                checkpoint("container-layout-scheduled " + stage)
                 container.view.setNeedsLayout()
-                container.view.layoutIfNeeded()
-                checkpoint("host-layout-begin " + stage)
+                checkpoint("host-layout-scheduled " + stage)
                 host.view.setNeedsLayout()
-                host.view.layoutIfNeeded()
                 checkpoint("containment-await-begin " + stage)
                 await assertContainedHost(state, host: host, window: window, stage: stage)
                 checkpoint("terminal-await-begin " + stage)

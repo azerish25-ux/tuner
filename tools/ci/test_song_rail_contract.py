@@ -397,7 +397,7 @@ class SongRailContractTests(unittest.TestCase):
         for forbidden in ['synchronizeDiagnosticCapture', 'XCTSkip', 'XCTExpectFailure', 'accuracy: 2']:
             self.assertNotIn(forbidden, terminal)
 
-    def test_synchronous_render_and_resize_boundaries_are_emitted_before_calls(self):
+    def test_render_boundaries_and_scheduled_resize_are_explicit(self):
         native = (ROOT / 'ios/TimbreAppTests/SongShelfPageTests.swift').read_text()
         record = native.split('private func record(', 1)[1].split('private func verify(', 1)[0]
         for before, call in [('renderer-begin', 'UIGraphicsImageRenderer('),
@@ -410,12 +410,13 @@ class SongRailContractTests(unittest.TestCase):
         resize = native.split('private func verifyContainedHost(', 1)[1].split('private func assertContainedHost(', 1)[0]
         resize = resize.split('for cycle in 0..<2', 1)[1]
         for before, call in [('state-size-begin', 'state.size = size'), ('host-frame-begin', 'host.view.frame ='),
-                             ('container-layout-begin', 'container.view.layoutIfNeeded()'),
-                             ('host-layout-begin', 'host.view.layoutIfNeeded()'),
+                             ('container-layout-scheduled', 'container.view.setNeedsLayout()'),
+                             ('host-layout-scheduled', 'host.view.setNeedsLayout()'),
                              ('containment-await-begin', 'await assertContainedHost('),
                              ('terminal-await-begin', 'await assertTerminal(')]:
             self.assertLess(resize.index(before), resize.index(call))
         self.assertIn('resize-complete', resize)
+        self.assertNotIn('layoutIfNeeded()', resize)
 
     def test_native_parent_traversal_keeps_nested_scroll_views(self):
         native = (ROOT / 'ios/TimbreAppTests/SongShelfPageTests.swift').read_text()
