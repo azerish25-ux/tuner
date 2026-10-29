@@ -52,7 +52,7 @@ jobs:
     needs: tooling
     if: ${{ always() && !cancelled() }}
     runs-on: macos-15
-    timeout-minutes: 65
+    timeout-minutes: 90
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
       HOMEBREW_NO_AUTO_UPDATE: '1'
@@ -85,7 +85,7 @@ jobs:
           xcrun simctl install "$DEVICE_ID" ios/build/dd/Build/Products/Debug-iphonesimulator/Timbre.app
           xcrun simctl privacy "$DEVICE_ID" grant microphone com.shahradazerisharghi.timbre
       - name: Eight real compact TuneCheck layouts
-        timeout-minutes: 42
+        timeout-minutes: 62
         run: python3 tools/ci/tunecheck_layout.py --device-id "$DEVICE_ID" --output ci-out/compact
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()

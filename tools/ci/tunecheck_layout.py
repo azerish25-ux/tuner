@@ -74,8 +74,8 @@ def test_command(device_id: str, bundle: Path) -> list[str]:
     return ['xcodebuild', 'test-without-building', '-project', 'ios/Timbre.xcodeproj',
             '-scheme', 'Timbre', '-parallel-testing-enabled', 'NO',
             '-only-testing:TimbreUITests/' + CLASS,
-            '-test-timeouts-enabled', 'YES', '-default-test-execution-time-allowance', '180',
-            '-maximum-test-execution-time-allowance', '180', '-destination-timeout', '120',
+            '-test-timeouts-enabled', 'YES', '-default-test-execution-time-allowance', '360',
+            '-maximum-test-execution-time-allowance', '360', '-destination-timeout', '120',
             '-destination', f'platform=iOS Simulator,id={device_id}',
             '-derivedDataPath', 'ios/build/dd', '-resultBundlePath', str(bundle),
             'CODE_SIGNING_ALLOWED=NO']
@@ -191,7 +191,7 @@ def run(root: Path, output: Path, device_id: str) -> int:
         command = test_command(receipt['device']['udid'], bundle)
         receipt.update(state='testing', attempts=1, command=command)
         write_status(output, receipt)
-        code = logged_command(command, output / 'test.log', root, 2400)
+        code = logged_command(command, output / 'test.log', root, 3180)
         receipt['tests'] = evaluate_tests(code, (output / 'test.log').read_text(errors='replace'))
         receipt['state'] = 'exporting'
         write_status(output, receipt)

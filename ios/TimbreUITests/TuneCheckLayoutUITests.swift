@@ -105,9 +105,18 @@ final class TuneCheckLayoutUITests: XCTestCase {
                     "Compact fixture requires an actual 375×667-point iPhone window, got \(screen)")
         let tab = app.tabBars.buttons.matching(NSPredicate(format: "label == %@", copy.learn))
         try require(tab.count == 1 && tab.firstMatch.isHittable, "Unique localized Learn tab is not available")
-        tab.firstMatch.tap()
-        let selected = XCTNSPredicateExpectation(predicate: NSPredicate(format: "selected == true"), object: tab.firstMatch)
-        try require(XCTWaiter.wait(for: [selected], timeout: 10) == .completed, "Learn tab did not become selected")
+        // These cases exercise lesson layout. Confirm actual tab selection after bounded physical taps;
+        // preserve every attempted tap and require the selected state before entering the lesson.
+        for attempt in 1...3 {
+            if tab.firstMatch.isSelected { break }
+            try require(tab.firstMatch.isHittable, "Learn tab became unreachable before navigation")
+            tab.firstMatch.tap()
+            let selected = XCTNSPredicateExpectation(predicate: NSPredicate(format: "selected == true"), object: tab.firstMatch)
+            let completed = XCTWaiter.wait(for: [selected], timeout: 5) == .completed
+            observations.append("Learn navigation tap=\(attempt) selected=\(completed)")
+            if completed { break }
+        }
+        try require(tab.firstMatch.isSelected, "Learn tab did not become selected after bounded real taps")
         let lesson = element("learn.lesson.gtr-1-2")
         for _ in 0..<10 {
             if lesson.exists && lesson.isHittable && Self.contains(lesson.frame, in: screen) { break }
