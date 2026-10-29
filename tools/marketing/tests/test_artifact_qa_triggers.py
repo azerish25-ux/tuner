@@ -97,7 +97,7 @@ class ArtifactQATriggerTests(unittest.TestCase):
                 self.assertEqual(len(set(locales)), count)
                 self.assertEqual(set(locales), set(assets.locale_rows()) if count == 50 else {'en-US', 'de-DE', 'ar-SA'})
 
-    def test_nightly_captures_keeps_sanitizer_and_cancels_only_superseded_prs(self):
+    def test_nightly_captures_keeps_sanitizer_and_preserves_running_native_checks(self):
         condition = job_condition('nightly.yml', 'tsan')
         self.assertFalse(enabled(condition, event='pull_request'))
         self.assertTrue(enabled(condition, event='pull_request', labels=['captures']))
@@ -106,8 +106,7 @@ class ArtifactQATriggerTests(unittest.TestCase):
         self.assertFalse(enabled(condition, event='pull_request', labels=['captures'], cancelled=True))
         for filename in ['nightly.yml', 'l10n.yml', 'caption-typography.yml']:
             source = (assets.ROOT / '.github/workflows' / filename).read_text()
-            expected = ("cancel-in-progress: ${{ github.event_name == 'pull_request' }}"
-                        if filename == 'nightly.yml' else 'cancel-in-progress: false')
+            expected = 'cancel-in-progress: false'
             self.assertIn(expected, source)
 
     def test_supersede_marker_alone_never_requests_captures_or_changes_pilot_scope(self):

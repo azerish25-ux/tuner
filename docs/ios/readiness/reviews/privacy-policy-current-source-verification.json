@@ -280,7 +280,7 @@
     "ios/Timbre/Songs/SongPageTrace.swift": "561a47681304d58507d70a55dcdfc95235509e050822790f7a21a97d0b97cccc",
     "ios/Timbre/Songs/SongRailMeasurement.swift": "74607dabc16d90803aaf1578037bf93db689b35100412199cb8bc425cb4e50f4",
     "ios/Timbre/Songs/SongShelfPage.swift": "5ef1e41b7afe6442e2ed9bbded7981fe9076302be9fa8731f905d7a319e3f6e7",
-    "ios/Timbre/Songs/SongShelfRail.swift": "7d254fa6dc7ec5ad0fb32f536b067bd95bb879da753d9915142f7a149a2df2fd",
+    "ios/Timbre/Songs/SongShelfRail.swift": "265ee58a29ab98ef822124c777b7192c51a04241ec046d04004377d0f588961b",
     "ios/Timbre/Songs/SongsView.swift": "c3047a0164e524ad66ff946d73eefeca3535f78ff665c7b6b6f24b1bc99f53ea",
     "ios/Timbre/Stage/InstrumentRig.swift": "63356f8555b6735c9c27e18c2c5d3b1475887d412544a703d6e18c0139227ba0",
     "ios/Timbre/Stage/InstrumentStage.swift": "b9a7469e6419aa5e117b609080d258d1bb0c3f66679e3549b5b61d1dbd9fdb2d",
@@ -1651,6 +1651,20 @@
         }
       ],
       "limits": "Source/privacy alignment review only. The unchanged eight real compact orientation/language/text-size cases and 180-second case budget require a fresh native run. Prior HTTP observations, source review history, original failures and release-ready flags remain unchanged."
+    },
+    {
+      "reviewed_utc": "2026-10-29T00:42:05Z",
+      "reviewer": "Codex /root; change independently reviewed by review_readiness_candidates",
+      "base_revision": "c800bb4feaa906cb0d1d33d80bfa6b408c37c8d4",
+      "changes": [
+        {
+          "path": "ios/Timbre/Songs/SongShelfRail.swift",
+          "previous_sha256": "7d254fa6dc7ec5ad0fb32f536b067bd95bb879da753d9915142f7a149a2df2fd",
+          "reviewed_sha256": "265ee58a29ab98ef822124c777b7192c51a04241ec046d04004377d0f588961b",
+          "assessment": "Changes the native identity-restoration anchor from trailing to center to agree with initial interior selection. Explicit semantic catalogue-edge commands remain unchanged. This SwiftUI-only layout change adds no network request, data collection, persistence, analytics, permission or account behavior."
+        }
+      ],
+      "limits": "Source/privacy delta alignment only. Original HTTP observation dates, listing text/content hashes and release-ready flags are unchanged. Native initial-selection regression and six geometry cases passed; final touch/full-candidate runs remain required."
     }
   ]
 }

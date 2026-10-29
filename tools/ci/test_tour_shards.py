@@ -141,7 +141,7 @@ class NightlySchedulingContracts(unittest.TestCase):
             self.assertEqual(job_field(self.jobs[name], 'timeout-minutes'), minutes)
             self.assertIsNone(job_field(self.jobs[name], 'continue-on-error'))
         self.assertEqual(self.source.count('contents: write'), 1)
-        self.assertIn("cancel-in-progress: ${{ github.event_name == 'pull_request' }}", self.source)
+        self.assertIn('cancel-in-progress: false', self.source)
 
 
 class TourShardContracts(unittest.TestCase):
