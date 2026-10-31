@@ -1,0 +1,40 @@
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -exclude Headers -exclude PrivateHeaders -exclude Modules -exclude \*.tbd -resolve-src-symlinks /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib/libXCTestSwiftSupport.dylib /Users/runner/work/tuner/tuner/ios/build/dd/Build/Products/Debug-iphonesimulator/TimbreUITests-Runner.app/Frameworks
+
+Copy /Users/runner/work/tuner/tuner/ios/build/dd/Build/Products/Debug-iphonesimulator/TimbreUITests-Runner.app/Frameworks/XCUnit.framework /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks/XCUnit.framework (in target 'TimbreUITests' from project 'Timbre')
+    cd /Users/runner/work/tuner/tuner/ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -exclude Headers -exclude PrivateHeaders -exclude Modules -exclude \*.tbd -resolve-src-symlinks /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks/XCUnit.framework /Users/runner/work/tuner/tuner/ios/build/dd/Build/Products/Debug-iphonesimulator/TimbreUITests-Runner.app/Frameworks
+
+Copy /Users/runner/work/tuner/tuner/ios/build/dd/Build/Products/Debug-iphonesimulator/TimbreUITests-Runner.app/Frameworks/XCUIAutomation.framework /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks/XCUIAutomation.framework (in target 'TimbreUITests' from project 'Timbre')
+    cd /Users/runner/work/tuner/tuner/ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -exclude Headers -exclude PrivateHeaders -exclude Modules -exclude \*.tbd -resolve-src-symlinks /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks/XCUIAutomation.framework /Users/runner/work/tuner/tuner/ios/build/dd/Build/Products/Debug-iphonesimulator/TimbreUITests-Runner.app/Frameworks
+
+Copy /Users/runner/work/tuner/tuner/ios/build/dd/Build/Products/Debug-iphonesimulator/TimbreUITests-Runner.app/Frameworks/XCTestSupport.framework /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks/XCTestSupport.framework (in target 'TimbreUITests' from project 'Timbre')
+    cd /Users/runner/work/tuner/tuner/ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -exclude Headers -exclude PrivateHeaders -exclude Modules -exclude \*.tbd -resolve-src-symlinks /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks/XCTestSupport.framework /Users/runner/work/tuner/tuner/ios/build/dd/Build/Products/Debug-iphonesimulator/TimbreUITests-Runner.app/Frameworks
+
+Copy /Users/runner/work/tuner/tuner/ios/build/dd/Build/Products/Debug-iphonesimulator/TimbreUITests-Runner.app/Frameworks/XCTestCore.framework /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks/XCTestCore.framework (in target 'TimbreUITests' from project 'Timbre')
+    cd /Users/runner/work/tuner/tuner/ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -exclude Headers -exclude PrivateHeaders -exclude Modules -exclude \*.tbd -resolve-src-symlinks /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks/XCTestCore.framework /Users/runner/work/tuner/tuner/ios/build/dd/Build/Products/Debug-iphonesimulator/TimbreUITests-Runner.app/Frameworks
+
+Copy /Users/runner/work/tuner/tuner/ios/build/dd/Build/Products/Debug-iphonesimulator/TimbreUITests-Runner.app/Frameworks/XCTest.framework /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks/XCTest.framework (in target 'TimbreUITests' from project 'Timbre')
+    cd /Users/runner/work/tuner/tuner/ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -exclude Headers -exclude PrivateHeaders -exclude Modules -exclude \*.tbd -resolve-src-symlinks /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks/XCTest.framework /Users/runner/work/tuner/tuner/ios/build/dd/Build/Products/Debug-iphonesimulator/TimbreUITests-Runner.app/Frameworks
+
+Copy /Users/runner/work/tuner/tuner/ios/build/dd/Build/Products/Debug-iphonesimulator/TimbreUITests-Runner.app/Frameworks/XCTAutomationSupport.framework /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks/XCTAutomationSupport.framework (in target 'TimbreUITests' from project 'Timbre')
+    cd /Users/runner/work/tuner/tuner/ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -exclude Headers -exclude PrivateHeaders -exclude Modules -exclude \*.tbd -resolve-src-symlinks /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks/XCTAutomationSupport.framework /Users/runner/work/tuner/tuner/ios/build/dd/Build/Products/Debug-iphonesimulator/TimbreUITests-Runner.app/Frameworks
+
+Copy /Users/runner/work/tuner/tuner/ios/build/dd/Build/Products/Debug-iphonesimulator/TimbreUITests-Runner.app/Frameworks/Testing.framework /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks/Testing.framework (in target 'TimbreUITests' from project 'Timbre')
+    cd /Users/runner/work/tuner/tuner/ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -exclude Headers -exclude PrivateHeaders -exclude Modules -exclude \*.tbd -resolve-src-symlinks /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks/Testing.framework /Users/runner/work/tuner/tuner/ios/build/dd/Build/Products/Debug-iphonesimulator/TimbreUITests-Runner.app/Frameworks
+
+RegisterExecutionPolicyException /Users/runner/work/tuner/tuner/ios/build/dd/Build/Products/Debug-iphonesimulator/TimbreUITests-Runner.app/PlugIns/TimbreUITests.xctest (in target 'TimbreUITests' from project 'Timbre')
+    cd /Users/runner/work/tuner/tuner/ios
+    builtin-RegisterExecutionPolicyException /Users/runner/work/tuner/tuner/ios/build/dd/Build/Products/Debug-iphonesimulator/TimbreUITests-Runner.app/PlugIns/TimbreUITests.xctest
+
+Touch /Users/runner/work/tuner/tuner/ios/build/dd/Build/Products/Debug-iphonesimulator/TimbreUITests-Runner.app/PlugIns/TimbreUITests.xctest (in target 'TimbreUITests' from project 'Timbre')
+    cd /Users/runner/work/tuner/tuner/ios
+    /usr/bin/touch -c /Users/runner/work/tuner/tuner/ios/build/dd/Build/Products/Debug-iphonesimulator/TimbreUITests-Runner.app/PlugIns/TimbreUITests.xctest
+
+** TEST BUILD SUCCEEDED **
+
