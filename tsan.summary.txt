@@ -1,0 +1,72 @@
+# Errors
+
+# Matches
+--- line 1221
+Chord recognition: 36 strums correct, lowest confidence 0.907
+Chord robustness bench: 134/135 (99.3%); misses: G 320003 variant 8 -> Gmaj7
+Accuracy bench worst error: harmonic 0.41327627229894515 cents, stiff 4.482261622544453 cents
+Onsets click track at 44100 Hz: 8/8, worst timing error 5.8 ms
+Onsets click track at 48000 Hz: 8/8, worst timing error 6.9 ms
+Onsets plucked notes at 44100 Hz: 7/7, worst timing error 5.5 ms
+
+# Tail
+Test Case '-[TimbreCoreTests.VoiceTests testOneRangeNoteDoesNotInventSpan]' started.
+Test Case '-[TimbreCoreTests.VoiceTests testOneRangeNoteDoesNotInventSpan]' passed (0.000 seconds).
+Test Case '-[TimbreCoreTests.VoiceTests testProgressionNeverLocksSelection]' started.
+Test Case '-[TimbreCoreTests.VoiceTests testProgressionNeverLocksSelection]' passed (0.000 seconds).
+Test Case '-[TimbreCoreTests.VoiceTests testRangeRequiresRepeatedHeldNearTargetNotes]' started.
+Test Case '-[TimbreCoreTests.VoiceTests testRangeRequiresRepeatedHeldNearTargetNotes]' passed (0.001 seconds).
+Test Case '-[TimbreCoreTests.VoiceTests testSilenceAndInvalidFrequenciesProduceNoScores]' started.
+Test Case '-[TimbreCoreTests.VoiceTests testSilenceAndInvalidFrequenciesProduceNoScores]' passed (0.000 seconds).
+Test Case '-[TimbreCoreTests.VoiceTests testSilenceBetweenFragmentsDoesNotCountAsSustainedSinging]' started.
+Test Case '-[TimbreCoreTests.VoiceTests testSilenceBetweenFragmentsDoesNotCountAsSustainedSinging]' passed (0.002 seconds).
+Test Case '-[TimbreCoreTests.VoiceTests testSustainedTargetDemonstratesButWarmupIsUnscored]' started.
+Test Case '-[TimbreCoreTests.VoiceTests testSustainedTargetDemonstratesButWarmupIsUnscored]' passed (0.002 seconds).
+Test Suite 'VoiceTests' passed at 2026-10-31 10:27:18.717.
+	 Executed 12 tests, with 0 failures (0 unexpected) in 0.012 (0.015) seconds
+Test Suite 'TimbreCorePackageTests.xctest' passed at 2026-10-31 10:27:18.717.
+	 Executed 472 tests, with 6 tests skipped and 0 failures (0 unexpected) in 1363.235 (1363.390) seconds
+Test Suite 'All tests' passed at 2026-10-31 10:27:18.718.
+	 Executed 472 tests, with 6 tests skipped and 0 failures (0 unexpected) in 1363.235 (1363.397) seconds
+Chord recognition: 40 strums correct, lowest confidence 0.907
+Chord finder bench: 93/96 chords (96.9%), roots 96/96; misses: Gmaj7 320002 -> G, Gsus2 300033 -> G5, C5 8-10-10-0-8-8 -> Csus2
+Chord recognition: 36 strums correct, lowest confidence 0.907
+Chord robustness bench: 134/135 (99.3%); misses: G 320003 variant 8 -> Gmaj7
+Accuracy bench worst error: harmonic 0.41327627229894515 cents, stiff 4.482261622544453 cents
+Onsets click track at 44100 Hz: 8/8, worst timing error 5.8 ms
+Onsets click track at 48000 Hz: 8/8, worst timing error 6.9 ms
+Onsets plucked notes at 44100 Hz: 7/7, worst timing error 5.5 ms
+Onsets plucked notes at 48000 Hz: 7/7, worst timing error 4.7 ms
+Onsets quiet clicks at 44100 Hz: 9/9, worst timing error 8.6 ms
+Onsets quiet clicks at 48000 Hz: 9/9, worst timing error 6.7 ms
+Onsets ringing note at 44100 Hz: 1/1, worst timing error 1.0 ms
+Onsets ringing note at 48000 Hz: 1/1, worst timing error 4.0 ms
+Onsets sixteenths at 44100 Hz: 16/16, worst timing error 7.2 ms
+Onsets sixteenths at 48000 Hz: 16/16, worst timing error 7.0 ms
+Onsets loud then soft at 44100 Hz: 3/3, worst timing error 1.9 ms
+Onsets loud then soft at 48000 Hz: 3/3, worst timing error 5.3 ms
+Strum lesson offsets (ms): ["0", "-5", "64", "miss", "11", "-59", "miss", "5"]
+Onsets strum at 44100 Hz: 1/1, worst timing error 3.4 ms
+Onsets strum at 48000 Hz: 1/1, worst timing error 2.7 ms
+PolyTuner bass E1 A1 D2 G2 at 48000 Hz, seed 1: worst 0.04 cents, ["fundamental", "fundamental", "fundamental", "fundamental"]
+PolyTuner bass E1 A1 D2 G2, weak fundamentals at 48000 Hz, seed 1: worst 0.27 cents, ["fundamental", "fundamental", "fundamental", "fundamental"]
+PolyTuner bass E1 A1 D2 G2 at 48000 Hz, seed 2: worst 0.01 cents, ["fundamental", "fundamental", "fundamental", "fundamental"]
+PolyTuner bass E1 A1 D2 G2, weak fundamentals at 48000 Hz, seed 2: worst 0.26 cents, ["fundamental", "fundamental", "fundamental", "fundamental"]
+PolyTuner guitar in tune at 48000 Hz, seed 1: worst 0.99 cents, ["fundamental", "fundamental", "fundamental", "fundamental", "fundamental", "fundamental"]
+PolyTuner guitar in tune at 48000 Hz, seed 2: worst 0.23 cents, ["fundamental", "fundamental", "fundamental", "fundamental", "fundamental", "fundamental"]
+PolyTuner guitar in tune at 48000 Hz, seed 3: worst 0.96 cents, ["fundamental", "fundamental", "fundamental", "fundamental", "fundamental", "fundamental"]
+PolyTuner guitar, G3 muted at 48000 Hz, seed 1: worst 0.13 cents, ["fundamental", "fundamental", "fundamental", "not heard", "fundamental", "fundamental"]
+PolyTuner guitar, E2 muted at 48000 Hz, seed 2: worst 0.38 cents, ["not heard", "fundamental", "fundamental", "fundamental", "fundamental", "fundamental"]
+PolyTuner ukulele G4 C4 E4 A4 at 48000 Hz, seed 1: worst 0.01 cents, ["fundamental", "fundamental", "fundamental", "fundamental"]
+PolyTuner ukulele G4 C4 E4 A4 at 48000 Hz, seed 2: worst 0.01 cents, ["fundamental", "fundamental", "fundamental", "fundamental"]
+PolyTuner low E alone at 48000 Hz, seed 1: worst 0.00 cents, ["fundamental", "not heard", "not heard", "not heard", "not heard", "not heard"]
+PolyTuner A alone at 48000 Hz, seed 2: worst 0.00 cents, ["not heard", "fundamental", "not heard", "not heard", "not heard", "not heard"]
+PolyTuner guitar E2 A2 D3 G3 B3 E4 at 48000 Hz, seed 1: worst 0.18 cents, ["fundamental", "fundamental", "fundamental", "fundamental", "fundamental", "fundamental"]
+PolyTuner guitar E2 A2 D3 G3 B3 E4 at 44100 Hz, seed 1: worst 0.25 cents, ["fundamental", "fundamental", "fundamental", "fundamental", "fundamental", "fundamental"]
+PolyTuner guitar E2 A2 D3 G3 B3 E4 at 48000 Hz, seed 2: worst 0.54 cents, ["fundamental", "fundamental", "fundamental", "fundamental", "fundamental", "fundamental"]
+PolyTuner guitar E2 A2 D3 G3 B3 E4 at 44100 Hz, seed 2: worst 0.43 cents, ["fundamental", "fundamental", "fundamental", "fundamental", "fundamental", "fundamental"]
+PolyTuner mandolin G3 D4 A4 E5 courses at 48000 Hz, seed 1: worst 0.01 cents, ["fundamental", "fundamental", "fundamental", "fundamental", "fundamental", "fundamental", "fundamental", "fundamental"]
+◇ Test run started.
+↳ Testing Library Version: 1501
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.
