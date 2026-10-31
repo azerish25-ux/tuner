@@ -1,0 +1,65 @@
+# Errors
+
+# Matches
+
+# Tail
+    t =   956.07s Find the "songs.song.bass-sb-song-mary" Button
+SONG-RAIL reveal: id=bass-sb-song-mary attempt=81 target=(585.9199999999983, 304.0666666666665, 136.1600000000035, 208.5333333333333) viewport=(0.0, 294.9999999999999, 402.0, 306.66666666666663) drag=-241.2
+    t =   956.20s Press "songs.rail.bass-songbook" ScrollView[0.00, 0.00] -> (321.6, 70.0) for 0.1 seconds, then drag to "songs.rail.bass-songbook" ScrollView[0.00, 0.00] -> (80.4, 70.0) with velocity of 250.00 pixels per second, and then hold for 0.3 seconds 
+    t =   956.20s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   956.20s     Find the "songs.rail.bass-songbook" ScrollView
+    t =   956.26s     Check for interrupting elements affecting "songs.rail.bass-songbook" ScrollView
+    t =   956.47s     Synthesize event
+    t =   956.53s         Find the "songs.rail.bass-songbook" ScrollView
+    t =   956.60s         Find the "songs.rail.bass-songbook" ScrollView
+    t =   956.69s         Find the "songs.rail.bass-songbook" ScrollView
+    t =   956.80s         Find the "songs.rail.bass-songbook" ScrollView
+    t =   956.89s         Find the "songs.rail.bass-songbook" ScrollView
+    t =   958.56s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   958.57s Find the "songs.rail.bass-songbook" ScrollView
+    t =   958.66s Checking existence of `"songs.song.bass-sb-song-mary" Button`
+    t =   958.75s Checking existence of `"songs.song.bass-sb-song-mary" Button`
+    t =   958.84s Find the "songs.song.bass-sb-song-mary" Button
+    t =   959.12s Checking existence of `"songs.song.bass-sb-song-mary" Button`
+    t =   959.21s Find the "songs.song.bass-sb-song-mary" Button
+SONG-RAIL reveal: id=bass-sb-song-mary attempt=82 target=(353.9694956461608, 303.12144978841127, 137.39434204101417, 210.42376708984375) viewport=(0.0, 294.9999999999999, 402.0, 306.66666666666663) drag=-221.66666666666788
+    t =   959.30s Press "songs.rail.bass-songbook" ScrollView[0.00, 0.00] -> (311.8, 70.0) for 0.1 seconds, then drag to "songs.rail.bass-songbook" ScrollView[0.00, 0.00] -> (90.2, 70.0) with velocity of 250.00 pixels per second, and then hold for 0.3 seconds 
+    t =   959.30s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   959.31s     Find the "songs.rail.bass-songbook" ScrollView
+    t =   959.43s     Check for interrupting elements affecting "songs.rail.bass-songbook" ScrollView
+    t =   959.65s     Synthesize event
+    t =   959.72s         Find the "songs.rail.bass-songbook" ScrollView
+    t =   959.80s         Find the "songs.rail.bass-songbook" ScrollView
+    t =   959.89s         Find the "songs.rail.bass-songbook" ScrollView
+    t =   959.97s         Find the "songs.rail.bass-songbook" ScrollView
+    t =   960.09s         Find the "songs.rail.bass-songbook" ScrollView
+    t =   961.66s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   962.06s Find the "songs.rail.bass-songbook" ScrollView
+    t =   962.37s Checking existence of `"songs.song.bass-sb-song-mary" Button`
+    t =   962.50s Checking existence of `"songs.song.bass-sb-song-mary" Button`
+    t =   962.61s Find the "songs.song.bass-sb-song-mary" Button
+    t =   962.90s Checking existence of `"songs.song.bass-sb-song-mary" Button`
+    t =   962.98s Find the "songs.song.bass-sb-song-mary" Button
+    t =   963.10s Find the "songs.song.bass-sb-song-mary" Button
+    t =   963.29s Find the "songs.rail.bass-songbook" ScrollView
+    t =   963.48s Tear Down
+    t =   963.48s     Terminate com.shahradazerisharghi.timbre:82519
+    t =   964.50s     Setting device orientation to Portrait
+    t =   964.56s         Wait for com.apple.springboard to idle
+Test Case '-[TimbreUITests.SongShelfRailUITests testFullCatalogueRemainsReachableRightToLeft]' passed (965.747 seconds).
+Test Suite 'SongShelfRailUITests' passed at 2026-10-31 10:41:56.432.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 3035.419 (3035.432) seconds
+Test Suite 'TimbreUITests.xctest' passed at 2026-10-31 10:41:56.435.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 3035.419 (3035.435) seconds
+Test Suite 'Selected tests' passed at 2026-10-31 10:41:56.436.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 3035.419 (3035.438) seconds
+2026-10-31 10:41:59.291 xcodebuild[3916:17300] [MT] IDETestOperationsObserverDebug: 3076.973 elapsed -- Testing started completed.
+2026-10-31 10:41:59.291 xcodebuild[3916:17300] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-31 10:41:59.291 xcodebuild[3916:17300] [MT] IDETestOperationsObserverDebug: 3076.973 sec, +3076.973 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/runner/work/tuner/tuner/ios/build/UITests.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

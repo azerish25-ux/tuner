@@ -1,0 +1,44 @@
+{
+  "architectures": {
+    "Debug-iphonesimulator/Timbre.app/Timbre": [
+      "arm64"
+    ],
+    "Debug-iphonesimulator/Timbre.app/Watch/TimbreWatch.app/TimbreWatch": [
+      "arm64",
+      "x86_64"
+    ],
+    "Debug-iphonesimulator/TimbreUITests-Runner.app/TimbreUITests-Runner": [
+      "arm64"
+    ],
+    "Debug-watchsimulator/TimbreWatch.app/TimbreWatch": [
+      "arm64",
+      "x86_64"
+    ]
+  },
+  "archive_sha256": "9099d08234467b543bb3e0ff786f5e1ca0572d957fa611043e8ee13e521621af",
+  "device_id": "B7CD7ED2-0DFF-42FE-A30F-21CD2E3D3D2C",
+  "fixtures": {
+    "ios/Tests/Fixtures/RealWorld/expected.json": "fa868bc81434953735b27a8a30258dbe62757cddfeeb7a81b150cd076a1e5ea9",
+    "ios/Tests/Fixtures/Timbre.storekit": "6a15a8012f61c536987cf28ae84cfec207703f96798d8e53bc38e5933f836be3",
+    "ios/Tests/Fixtures/state-v1-2026-10.json": "70c717758be82c5d7d00776390bd2c0dcd03fe51977c5f45a71007d5977c4cd5"
+  },
+  "identity": {
+    "run_attempt": "1",
+    "run_id": "41189765357",
+    "sha": "ae2c82cacaadb23288dd32b08cb274ad5835f393"
+  },
+  "simulator": {
+    "device_type": "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+    "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-2",
+    "runtime_build": "23C54",
+    "runtime_version": "26.2"
+  },
+  "toolchain": {
+    "machine": "arm64",
+    "macos": "15.8.2",
+    "sdk": "26.2",
+    "sdk_build": "23C57",
+    "xcode": "Xcode 26.3\nBuild version 17C529"
+  },
+  "xctestrun_sha256": "5d68270c03af4c1a820ab31839870319fb8e01cf492f65bb198ed05264a6a352"
+}

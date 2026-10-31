@@ -1,0 +1,72 @@
+Command line invocation:
+    /Applications/Xcode_26.3.app/Contents/Developer/usr/bin/xcodebuild test-without-building -xctestrun /Users/runner/work/tuner/tuner/ios/build/dd/Build/Products/Timbre_iphonesimulator26.2-arm64.xctestrun -parallel-testing-enabled NO "-only-testing:TimbreUITests/LaunchPerformanceUITests" -destination "platform=iOS Simulator,id=B7CD7ED2-0DFF-42FE-A30F-21CD2E3D3D2C" -resultBundlePath ios/build/UITests.xcresult CODE_SIGNING_ALLOWED=NO
+
+Build settings from command line:
+    CODE_SIGNING_ALLOWED = NO
+
+2026-10-31 09:59:33.639 xcodebuild[5257:20993] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+Writing result bundle at path:
+	/Users/runner/work/tuner/tuner/ios/build/UITests.xcresult
+
+2026-10-31 09:59:34.065 xcodebuild[5257:20993] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:iOS Simulator, arch:arm64, id:B7CD7ED2-0DFF-42FE-A30F-21CD2E3D3D2C, OS:26.2, name:iPhone 17 Pro }
+{ platform:iOS Simulator, arch:x86_64, id:B7CD7ED2-0DFF-42FE-A30F-21CD2E3D3D2C, OS:26.2, name:iPhone 17 Pro }
+2026-10-31 09:59:50.017 xcodebuild[5257:20993] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+2026-10-31 10:00:36.208255+0000 TimbreUITests-Runner[7805:27773] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'Selected tests' started at 2026-10-31 10:00:56.586.
+Test Suite 'TimbreUITests.xctest' started at 2026-10-31 10:00:56.587.
+Test Suite 'LaunchPerformanceUITests' started at 2026-10-31 10:00:56.587.
+Test Case '-[TimbreUITests.LaunchPerformanceUITests testLaunchTime]' started.
+    t =     0.00s Start Test at 2026-10-31 10:00:56.588
+    t =     1.22s Set Up
+    t =     1.36s Open com.shahradazerisharghi.timbre
+    t =     1.36s     Launch com.shahradazerisharghi.timbre
+    t =    21.16s         Setting up automation session
+    t =    25.82s         Wait for com.shahradazerisharghi.timbre to idle
+    t =    32.45s Open com.shahradazerisharghi.timbre
+    t =    32.46s     Launch com.shahradazerisharghi.timbre
+    t =    32.46s         Terminate com.shahradazerisharghi.timbre:8651
+    t =    38.96s         Setting up automation session
+    t =    41.88s         Wait for com.shahradazerisharghi.timbre to idle
+    t =    43.60s Open com.shahradazerisharghi.timbre
+    t =    43.61s     Launch com.shahradazerisharghi.timbre
+    t =    43.61s         Terminate com.shahradazerisharghi.timbre:8842
+    t =    45.34s         Setting up automation session
+    t =    47.76s         Wait for com.shahradazerisharghi.timbre to idle
+    t =    49.76s Open com.shahradazerisharghi.timbre
+    t =    49.76s     Launch com.shahradazerisharghi.timbre
+    t =    49.76s         Terminate com.shahradazerisharghi.timbre:8939
+    t =    51.99s         Setting up automation session
+    t =    54.55s         Wait for com.shahradazerisharghi.timbre to idle
+    t =    57.36s Open com.shahradazerisharghi.timbre
+    t =    57.39s     Launch com.shahradazerisharghi.timbre
+    t =    57.40s         Terminate com.shahradazerisharghi.timbre:9135
+    t =    62.66s         Setting up automation session
+    t =    66.05s         Wait for com.shahradazerisharghi.timbre to idle
+    t =    68.19s Open com.shahradazerisharghi.timbre
+    t =    68.19s     Launch com.shahradazerisharghi.timbre
+    t =    68.19s         Terminate com.shahradazerisharghi.timbre:9482
+    t =    70.32s         Setting up automation session
+    t =    72.70s         Wait for com.shahradazerisharghi.timbre to idle
+<unknown>:0: Test Case '-[TimbreUITests.LaunchPerformanceUITests testLaunchTime]' measured [Duration (ApplicationFirstFramePresentationResponsive), s] average: 4.015, relative standard deviation: 12.759%, values: [3.974171, 3.375924, 4.070639, 4.920847, 3.734703], performanceMetricID:com.apple.dt.XCTMetric_ApplicationLaunch-ApplicationFirstFramePresentationResponsive.duration, baselineName: "", baselineAverage: , polarity: prefers smaller, maxPercentRegression: 10.000%, maxPercentRelativeStandardDeviation: 10.000%, maxRegression: 0.000, maxStandardDeviation: 0.000
+    t =    76.87s Terminate com.shahradazerisharghi.timbre:9785
+    t =    77.90s Tear Down
+Test Case '-[TimbreUITests.LaunchPerformanceUITests testLaunchTime]' passed (78.098 seconds).
+Test Suite 'LaunchPerformanceUITests' passed at 2026-10-31 10:02:14.687.
+	 Executed 1 test, with 0 failures (0 unexpected) in 78.098 (78.100) seconds
+Test Suite 'TimbreUITests.xctest' passed at 2026-10-31 10:02:14.688.
+	 Executed 1 test, with 0 failures (0 unexpected) in 78.098 (78.101) seconds
+Test Suite 'Selected tests' passed at 2026-10-31 10:02:14.688.
+	 Executed 1 test, with 0 failures (0 unexpected) in 78.098 (78.102) seconds
+2026-10-31 10:02:15.704 xcodebuild[5257:20993] [MT] IDETestOperationsObserverDebug: 145.362 elapsed -- Testing started completed.
+2026-10-31 10:02:15.704 xcodebuild[5257:20993] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-31 10:02:15.704 xcodebuild[5257:20993] [MT] IDETestOperationsObserverDebug: 145.362 sec, +145.362 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/runner/work/tuner/tuner/ios/build/UITests.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

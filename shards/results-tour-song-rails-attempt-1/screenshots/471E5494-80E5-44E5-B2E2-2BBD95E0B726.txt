@@ -1,0 +1,565 @@
+Optional(Attributes: Application, 0x1149d8af0, pid: 82519, label: 'Timbre'
+Element subtree:
+ →Application, 0x1149d8af0, pid: 82519, label: 'Timbre'
+    Window (Main), 0x1149d8f40, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x1149b7780, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x1149a9e70, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x1149b0020, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x114990020, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x1149ba0c0, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x1149b9460, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x1149b6f40, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x11497eaa0, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x1149b7360, {{0.0, 0.0}, {402.0, 874.0}}
+                        Other, 0x114953f30, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x1149b83e0, {{0.0, 0.0}, {402.0, 874.0}}
+                            Other, 0x1149d1240, {{0.0, 0.0}, {402.0, 874.0}}
+                              Other, 0x11497cdc0, {{0.0, 0.0}, {402.0, 874.0}}
+                                Other, 0x1149ac400, {{0.0, 0.0}, {402.0, 874.0}}
+                                  Other, 0x1149ba4e0, {{0.0, 0.0}, {402.0, 874.0}}
+                                    ScrollView, 0x1149b0440, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'songs.page'
+                                      Other, 0x1149aa6d0, {{0.0, -941.7}, {402.0, 2587.0}}
+                                        Other, 0x1149b9880, {{0.0, -929.7}, {442.0, 2191.0}}
+                                          StaticText, 0x1149b0860, {{177.3, -929.7}, {204.7, 59.3}}, identifier: 'songs.header.title-songs.header.subtitle', label: 'الأغاني‏، اعزف اللحن، أو اضرب التآلفات وغنِّ'
+                                            StaticText, 0x1149a4170, {{303.0, -929.7}, {79.0, 35.3}}, identifier: 'songs.header.title', label: 'الأغاني'
+                                            StaticText, 0x1149aefa0, {{177.3, -890.3}, {204.7, 20.0}}, identifier: 'songs.header.subtitle', label: 'اعزف اللحن، أو اضرب التآلفات وغنِّ'
+                                          Button, 0x1149ec8e0, {{66.0, -922.0}, {52.3, 44.0}}, identifier: 'streak.chip', label: 'أيام متتالية: ٧', value: اليوم: ١ من ٣
+                                            Other, 0x11491b7a0, {{92.1, -908.1}, {12.4, 15.2}}
+                                            StaticText, 0x114956e30, {{66.0, -922.0}, {52.3, 44.0}}, identifier: 'songs.header.streak.count', label: '٧'
+                                          Button, 0x11493dd00, {{20.0, -922.0}, {44.0, 44.0}}, identifier: 'level.ring', label: 'المستوى ٥، ٢٤٠ من ٥٠٠ XP'
+                                            StaticText, 0x114975630, {{28.8, -911.2}, {26.3, 22.3}}, identifier: 'songs.header.level.mark', label: 'مس ٥'
+                                          ScrollView, 0x114965e70, {{0.0, -846.3}, {402.0, 44.0}}
+                                            Other, 0x114981720, {{-319.7, -846.3}, {832.3, 44.0}}
+                                              Button, 0x114970ef0, {{458.7, -846.3}, {54.0, 44.0}}, identifier: 'songs.filter.all', label: 'الكل'
+                                              Button, 0x114971b50, {{370.3, -846.3}, {80.3, 44.0}}, identifier: 'songs.filter.guitar.acoustic.6', label: 'جيتار'
+                                                Image, 0x114971f70, {{411.4, -844.6}, {40.5, 40.5}}, label: 'render_guitar_acoustic'
+                                                StaticText, 0x1149d9930, {{370.3, -846.3}, {80.3, 44.0}}, identifier: 'songs.filter.guitar.acoustic.6.title', label: 'جيتار'
+                                              Button, 0x114970ad0, {{262.7, -846.3}, {99.7, 44.0}}, identifier: 'songs.filter.ukulele.soprano.4', label: 'يوكوليلي'
+                                                Image, 0x1085ff170, {{331.7, -836.0}, {23.3, 23.3}}, label: '10_ukulele_soprano_ukulele'
+                                                StaticText, 0x1085f0870, {{262.7, -846.3}, {99.7, 44.0}}, identifier: 'songs.filter.ukulele.soprano.4.title', label: 'يوكوليلي'
+                                              Button, 0x1089dc300, {{147.3, -846.3}, {107.3, 44.0}}, identifier: 'songs.filter.bass.electric.4', label: 'غيتار باس', Selected
+                                                Image, 0x114985c20, {{215.4, -844.6}, {40.5, 40.5}}, label: 'render_bass_p4'
+                                                StaticText, 0x11498b260, {{147.3, -846.3}, {107.3, 44.0}}, identifier: 'songs.filter.bass.electric.4.title', label: 'غيتار باس'
+                                              Button, 0x114994c70, {{59.0, -846.3}, {80.3, 44.0}}, identifier: 'songs.filter.violin.standard.4', label: 'كمان'
+                                                Image, 0x11497abb0, {{100.1, -844.6}, {40.5, 40.5}}, label: 'render_violin'
+                                                StaticText, 0x114978ed0, {{59.0, -846.3}, {80.3, 44.0}}, identifier: 'songs.filter.violin.standard.4.title', label: 'كمان'
+                                              Button, 0x1149bfa80, {{-33.0, -846.3}, {84.0, 44.0}}, identifier: 'songs.filter.cello.standard.4', label: 'تشيلو'
+                                                Image, 0x1149bfba0, {{11.8, -844.6}, {40.5, 40.5}}, label: 'render_cello'
+                                                StaticText, 0x1149bfcc0, {{-33.0, -846.3}, {84.0, 44.0}}, identifier: 'songs.filter.cello.standard.4.title', label: 'تشيلو'
+                                              Button, 0x1149bfde0, {{-139.7, -846.3}, {98.7, 44.0}}, identifier: 'songs.filter.mandolin.standard.8', label: 'مندولين'
+                                                Image, 0x1149bff00, {{-80.2, -844.6}, {40.5, 40.5}}, label: 'render_mandolin'
+                                                StaticText, 0x1149c0020, {{-139.7, -846.3}, {98.7, 44.0}}, identifier: 'songs.filter.mandolin.standard.8.title', label: 'مندولين'
+                                              Button, 0x1149c0140, {{-229.0, -846.3}, {81.3, 44.0}}, identifier: 'songs.filter.banjo.five.5', label: 'بانجو'
+                                                Image, 0x1149c0260, {{-178.3, -836.0}, {23.3, 23.3}}, label: '22_folk_world_strings_banjo_5_string'
+                                                StaticText, 0x1149c0380, {{-229.0, -846.3}, {81.3, 44.0}}, identifier: 'songs.filter.banjo.five.5.title', label: 'بانجو'
+                                              Button, 0x1149c04a0, {{-319.7, -846.3}, {82.7, 44.0}}, identifier: 'songs.filter.voice', label: 'الغناء'
+                                                Other, 0x1149c05c0, {{-266.0, -834.3}, {20.0, 20.0}}
+                                                StaticText, 0x1149c06e0, {{-319.7, -846.3}, {82.7, 44.0}}, identifier: 'songs.filter.voice.title', label: 'الغناء'
+                                          Button, 0x1149c0800, {{20.0, -778.3}, {362.0, 248.0}}, identifier: 'songs.hero', label: 'أغنية اليوم, حين يسير القديسون, كتاب أغاني غيتار الباس', value: متاح
+                                            Other, 0x1149c0920, {{20.0, -778.3}, {362.0, 248.0}}
+                                            Other, 0x1149c0a40, {{62.7, -756.7}, {116.7, 116.7}}
+                                            Other, 0x1149c0b60, {{47.3, -738.0}, {105.3, 11.0}}
+                                            StaticText, 0x1149c0c80, {{62.8, -724.9}, {74.3, 25.0}}, identifier: 'songs.hero.bass-sb-song-saints.cover.title.0', label: 'حين يسير'
+                                            StaticText, 0x1149c0da0, {{64.0, -705.2}, {72.0, 25.0}}, identifier: 'songs.hero.bass-sb-song-saints.cover.title.1', label: 'القديسون'
+                                            Image, 0x1149c0ec0, {{341.0, -753.0}, {11.7, 13.0}}, identifier: 'waveform', label: 'waveform'
+                                            StaticText, 0x1149c0fe0, {{281.3, -754.3}, {52.3, 15.3}}, identifier: 'songs.hero.bass-sb-song-saints.eyebrow', label: 'أغنية اليوم'
+                                            StaticText, 0x1149c1100, {{253.0, -707.0}, {111.0, 70.7}}, identifier: 'songs.hero.bass-sb-song-saints.title', label: 'حين يسير القديسون'
+                                            Other, 0x1149c1220, {{20.0, -636.3}, {362.0, 106.0}}
+                                            Image, 0x1149c1340, {{337.1, -630.2}, {35.8, 35.8}}, label: 'render_bass_p4'
+                                            StaticText, 0x1149c1460, {{208.3, -622.3}, {131.7, 20.0}}, identifier: 'songs.hero.bass-sb-song-saints.course', label: 'كتاب أغاني غيتار الباس'
+                                            StaticText, 0x1149c1580, {{113.3, -622.3}, {89.0, 20.0}}, identifier: 'songs.hero.bass-sb-song-saints.metadata', label: '· ٢:٠٦ · +٣٠ XP'
+                                            Image, 0x1149c16a0, {{332.3, -577.7}, {13.3, 15.0}}, identifier: 'play.fill', label: 'تشغيل'
+                                            StaticText, 0x1149c17c0, {{288.3, -581.2}, {36.0, 21.7}}, identifier: 'songs.hero.bass-sb-song-saints.play.title', label: 'اعزف'
+                                            Other, 0x1149c18e0, {{122.7, -573.3}, {24.0, 6.0}}, label: 'سهل'
+                                            StaticText, 0x1149c1a00, {{98.0, -578.0}, {9.7, 15.3}}, identifier: 'songs.hero.bass-sb-song-saints.chords.chord.C', label: 'C'
+                                            StaticText, 0x1149c1b20, {{70.0, -578.0}, {10.0, 15.3}}, identifier: 'songs.hero.bass-sb-song-saints.chords.chord.G', label: 'G'
+                                            StaticText, 0x1149c1c40, {{45.0, -578.0}, {7.0, 15.3}}, identifier: 'songs.hero.bass-sb-song-saints.chords.chord.F', label: 'F'
+                                          Button, 0x1149c1d60, {{38.0, -680.3}, {44.0, 44.0}}, identifier: 'songs.hero.preview', label: 'استمع إليها'
+                                          Other, 0x1149c1e80, {{20.0, -506.3}, {362.0, 68.0}}, identifier: 'yoursongs.shelf'
+                                            Button, 0x1149c1fa0, {{20.0, -506.3}, {362.0, 68.0}}, identifier: 'yoursongs.add', label: 'إضافة أغنية'
+                                              Other, 0x1149c20c0, {{330.2, -500.3}, {41.6, 50.8}}
+                                              Other, 0x1149c21e0, {{305.5, -495.8}, {45.2, 45.1}}
+                                              Other, 0x1149c2300, {{323.4, -490.2}, {40.0, 38.2}}
+                                              StaticText, 0x1149c2420, {{254.0, -493.0}, {44.0, 21.7}}, identifier: 'songs.library.empty.title', label: 'أغانيك'
+                                              StaticText, 0x1149c2540, {{182.7, -469.3}, {115.3, 17.7}}, label: 'اعزف الأغاني التي تحبها'
+                                              Image, 0x1149c2660, {{116.0, -478.7}, {11.0, 11.0}}, identifier: 'plus', label: 'إضافة'
+                                              StaticText, 0x1149c2780, {{44.0, -480.7}, {83.0, 16.7}}, label: 'إضافة أغنية'
+                                          Image, 0x1149c28a0, {{357.3, -410.3}, {21.3, 19.7}}, identifier: 'heart.fill', label: 'أحببته'
+                                          StaticText, 0x1149c29c0, {{253.3, -413.0}, {90.7, 25.3}}, label: 'أغانٍ تعرفها'
+                                          ScrollView, 0x1149c2ae0, {{0.0, -374.3}, {402.0, 280.7}}, identifier: 'songs.rail.known'
+                                            Other, 0x1149c2c00, {{-1548.0, -374.3}, {1930.0, 280.7}}
+                                              Other, 0x1149c2d20, {{-408.1, -374.3}, {790.1, 269.4}}
+                                                Button, 0x1149c2e40, {{234.0, -374.3}, {148.0, 226.7}}, identifier: 'songs.known.bass-sb-song-ode-to-joy', label: 'نشيد الفرح, كتاب أغاني غيتار الباس', value: متاح, سهل, C G
+                                                  Other, 0x1149c2f60, {{245.0, -348.0}, {126.0, 12.0}}
+                                                  StaticText, 0x1149c3080, {{263.6, -333.2}, {107.3, 32.0}}, identifier: 'songs.tile.known.bass-sb-song-ode-to-joy.cover.title.0', label: 'نشيد الفرح'
+                                                  StaticText, 0x1149c31a0, {{365.3, -212.0}, {9.7, 15.3}}, identifier: 'songs.tile.known.bass-sb-song-ode-to-joy.chords.chord.C', label: 'C'
+                                                  StaticText, 0x1149c32c0, {{337.3, -212.0}, {10.0, 15.3}}, identifier: 'songs.tile.known.bass-sb-song-ode-to-joy.chords.chord.G', label: 'G'
+                                                  Other, 0x1149c33e0, {{358.0, -159.3}, {24.0, 6.0}}, label: 'سهل'
+                                                  StaticText, 0x1149c3500, {{328.7, -164.2}, {22.3, 15.3}}, identifier: 'songs.tile.known.bass-sb-song-ode-to-joy.duration', label: '٢:٠٧'
+                                                  StaticText, 0x1149c3620, {{281.7, -165.3}, {40.0, 17.7}}, identifier: 'songs.tile.known.bass-sb-song-ode-to-joy.xp', label: '+٣٠ XP'
+                                                Button, 0x1149c3740, {{238.0, -274.3}, {44.0, 44.0}}, identifier: 'songs.sample.bass-sb-song-ode-to-joy', label: 'استمع إليها', value: نشيد الفرح
+                                                Button, 0x1149c3860, {{234.0, -216.3}, {62.0, 44.0}}, identifier: 'songs.versions.bass-sb-song-ode-to-joy', label: 'الإصدارات', value: جيتار, الأغاني, يو...
+                                                  Button, 0x1149c3980, {{234.0, -216.3}, {62.0, 44.0}}
+                                                    Image, 0x1149c3aa0, {{264.5, -212.3}, {36.0, 36.0}}, label: 'render_guitar_acoustic'
+                                                    Other, 0x1149c3bc0, {{258.7, -203.3}, {18.0, 18.0}}
+                                                    StaticText, 0x1149c3ce0, {{234.0, -216.3}, {62.0, 44.0}}, identifier: 'songs.tile.known.bass-sb-song-ode-to-joy.versions.more', label: '+5'
+                                                Button, 0x1149c3e00, {{72.0, -374.3}, {148.0, 256.7}}, identifier: 'songs.known.bass-sb-song-amazing-grace', label: 'نعمة مذهلة, كتاب أغاني غيتار الباس', value: Pro, سهل, G D7 C D
+                                                  Other, 0x1149c3f20, {{83.0, -348.0}, {126.0, 12.0}}
+                                                  StaticText, 0x1149c4040, {{92.7, -333.2}, {106.7, 32.0}}, identifier: 'songs.tile.known.bass-sb-song-amazing-grace.cover.title.0', label: 'نعمة مذهلة'
+                                                  StaticText, 0x1149c4160, {{203.0, -162.0}, {10.0, 15.3}}, identifier: 'songs.tile.known.bass-sb-song-amazing-grace.chords.chord.G', label: 'G'
+                                                  StaticText, 0x1149c4280, {{168.3, -162.0}, {16.7, 15.3}}, identifier: 'songs.tile.known.bass-sb-song-amazing-grace.chords.chord.D7', label: 'D7'
+                                                  StaticText, 0x1149c43a0, {{140.7, -162.0}, {9.7, 15.3}}, identifier: 'songs.tile.known.bass-sb-song-amazing-grace.chords.chord.C', label: 'C'
+                                                  StaticText, 0x1149c44c0, {{113.0, -162.0}, {9.7, 15.3}}, identifier: 'songs.tile.known.bass-sb-song-amazing-grace.chords.chord.D', label: 'D'
+                                                  Other, 0x1149c45e0, {{196.0, -129.3}, {24.0, 6.0}}, label: 'سهل'
+                                                  StaticText, 0x1149c4700, {{166.7, -134.2}, {22.3, 15.3}}, identifier: 'songs.tile.known.bass-sb-song-amazing-grace.duration', label: '١:٥١'
+                                                  StaticText, 0x1149c4820, {{119.7, -135.3}, {40.0, 17.7}}, identifier: 'songs.tile.known.bass-sb-song-amazing-grace.xp', label: '+٣٠ XP'
+                                                Other, 0x1087395a0, {{87.0, -300.3}, {22.0, 22.0}}, label: 'Timbre Pro'
+                                                  Image, 0x10871c940, {{94.7, -294.0}, {7.0, 9.7}}, identifier: 'lock.fill', label: 'قفل'
+                                                Button, 0x108719be0, {{76.0, -274.3}, {44.0, 44.0}}, identifier: 'songs.sample.bass-sb-song-amazing-grace', label: 'استمع إليها', value: نعمة مذهلة
+                                                Button, 0x1087053c0, {{72.0, -216.3}, {62.0, 44.0}}, identifier: 'songs.versions.bass-sb-song-amazing-grace', label: 'الإصدارات', value: جيتار, الأغاني, كم...
+                                                  Button, 0x10871c100, {{72.0, -216.3}, {62.0, 44.0}}
+                                                    Image, 0x10877ac50, {{102.5, -212.3}, {36.0, 36.0}}, label: 'render_guitar_acoustic'
+                                                    Other, 0x10871b8c0, {{96.7, -203.3}, {18.0, 18.0}}
+                                                    StaticText, 0x1087318c0, {{72.0, -216.3}, {62.0, 44.0}}, identifier: 'songs.tile.known.bass-sb-song-amazing-grace.versions.more', label: '+5'
+                                                Button, 0x108731ce0, {{-84.9, -365.5}, {137.8, 238.9}}, identifier: 'songs.known.bass-sb-song-silent-night', label: 'ليلة صامتة, كتاب أغاني غيتار الباس', value: Pro, متوسط, A7 D G
+                                                  Other, 0x1149c4940, {{-74.6, -341.0}, {117.3, 11.2}}
+                                                  StaticText, 0x1087195a0, {{-55.5, -327.2}, {98.1, 29.8}}, identifier: 'songs.tile.known.bass-sb-song-silent-night.cover.title.0', label: 'ليلة صامتة'
+                                                  StaticText, 0x1087314a0, {{-74.6, -355.1}, {10.2, 9.6}}, identifier: 'songs.tile.known.bass-sb-song-silent-night.cover.catalogue', label: '75'
+                                                  StaticText, 0x108704b80, {{30.9, -167.8}, {15.5, 14.3}}, identifier: 'songs.tile.known.bass-sb-song-silent-night.chords.chord.A7', label: 'A7'
+                                                  StaticText, 0x10871b4a0, {{5.1, -167.8}, {9.0, 14.3}}, identifier: 'songs.tile.known.bass-sb-song-silent-night.chords.chord.D', label: 'D'
+                                                  StaticText, 0x1149c4a60, {{-21.0, -167.8}, {9.3, 14.3}}, identifier: 'songs.tile.known.bass-sb-song-silent-night.chords.chord.G', label: 'G'
+                                                  Other, 0x1149c4b80, {{30.5, -137.4}, {22.3, 5.6}}, label: 'متوسط'
+                                                  StaticText, 0x1149c4ca0, {{3.2, -141.9}, {20.8, 14.3}}, identifier: 'songs.tile.known.bass-sb-song-silent-night.duration', label: '٢:٥٣'
+                                                  StaticText, 0x1149c4dc0, {{-40.5, -143.0}, {37.2, 16.4}}, identifier: 'songs.tile.known.bass-sb-song-silent-night.xp', label: '+٣٠ XP'
+                                                Other, 0x1149c4ee0, {{-70.9, -296.6}, {20.5, 20.5}}, label: 'Timbre Pro'
+                                                  Image, 0x10871cd60, {{-63.8, -290.7}, {6.5, 9.0}}, identifier: 'lock.fill', label: 'قفل'
+                                                Button, 0x10871a000, {{-81.2, -272.4}, {41.0, 41.0}}, identifier: 'songs.sample.bass-sb-song-silent-night', label: 'استمع إليها', value: ليلة صامتة
+                                                Button, 0x10871a840, {{-84.9, -218.4}, {57.4, 41.0}}, identifier: 'songs.versions.bass-sb-song-silent-night', label: 'الإصدارات', value: الأغاني, كتاب أغان...
+                                                  Button, 0x10871c520, {{-84.9, -218.4}, {57.4, 41.0}}
+                                                    Other, 0x10871a420, {{-48.6, -206.3}, {17.1, 16.8}}
+                                                    Image, 0x108766fb0, {{-63.8, -207.5}, {19.5, 19.2}}, label: '10_ukulele_soprano_ukulele'
+                                                    StaticText, 0x1087670d0, {{-84.9, -218.4}, {57.4, 41.0}}, identifier: 'songs.tile.known.bass-sb-song-silent-night.versions.more', label: '+3'
+                                                Button, 0x1087671f0, {{-246.1, -363.1}, {136.2, 258.2}}, identifier: 'songs.known.bass-sb-song-canon-in-d', label: 'كانون في ⁨D⁩, كتاب أغاني غيتار الباس', value: Pro, متوسط, D A Bm...
+                                                  Other, 0x108767310, {{-236.0, -338.9}, {115.9, 11.0}}
+                                                  StaticText, 0x108767430, {{-225.3, -325.2}, {105.2, 29.4}}, identifier: 'songs.tile.known.bass-sb-song-canon-in-d.cover.title.0', label: 'كانون في ⁨D⁩'
+                                                  StaticText, 0x108767550, {{-125.3, -168.7}, {8.9, 14.1}}, identifier: 'songs.tile.known.bass-sb-song-canon-in-d.chords.chord.D', label: 'D'
+                                                  StaticText, 0x108767670, {{-150.4, -168.7}, {8.6, 14.1}}, identifier: 'songs.tile.known.bass-sb-song-canon-in-d.chords.chord.A', label: 'A'
+                                                  StaticText, 0x108767790, {{-185.4, -168.7}, {18.4, 14.1}}, identifier: 'songs.tile.known.bass-sb-song-canon-in-d.chords.chord.Bm', label: 'Bm'
+                                                  StaticText, 0x1087678b0, {{-226.8, -168.7}, {24.8, 14.1}}, identifier: 'songs.tile.known.bass-sb-song-canon-in-d.chords.chord.F#m', label: 'F#m'
+                                                  StaticText, 0x1087679d0, {{-125.6, -144.8}, {9.2, 14.1}}, identifier: 'songs.tile.known.bass-sb-song-canon-in-d.chords.chord.G', label: 'G'
+                                                  Other, 0x108767af0, {{-132.0, -115.6}, {22.1, 5.5}}, label: 'متوسط'
+                                                  StaticText, 0x108767c10, {{-159.0, -120.1}, {20.5, 14.1}}, identifier: 'songs.tile.known.bass-sb-song-canon-in-d.duration', label: '١:٤٢'
+                                                  StaticText, 0x108767d30, {{-202.2, -121.1}, {36.8, 16.3}}, identifier: 'songs.tile.known.bass-sb-song-canon-in-d.xp', label: '+٣٠ XP'
+                                                Other, 0x108767e50, {{-232.3, -295.0}, {20.2, 20.2}}, label: 'Timbre Pro'
+                                                  Image, 0x108767f70, {{-225.2, -289.2}, {6.4, 8.9}}, identifier: 'lock.fill', label: 'قفل'
+                                                Button, 0x108768090, {{-242.4, -271.1}, {40.5, 40.5}}, identifier: 'songs.sample.bass-sb-song-canon-in-d', label: 'استمع إليها', value: كانون في ⁨D⁩
+                                                Button, 0x1087681b0, {{-246.1, -217.7}, {56.7, 40.5}}, identifier: 'songs.versions.bass-sb-song-canon-in-d', label: 'الإصدارات', value: الأغاني, كتاب أغان...
+                                                  Button, 0x1087682d0, {{-246.1, -217.7}, {56.7, 40.5}}
+                                                    Other, 0x1087683f0, {{-210.2, -205.8}, {16.9, 16.6}}
+                                                    Image, 0x108768510, {{-225.2, -207.0}, {19.3, 19.0}}, label: '10_ukulele_soprano_ukulele'
+                                                    StaticText, 0x108768630, {{-246.1, -217.7}, {56.7, 40.5}}, identifier: 'songs.tile.known.bass-sb-song-canon-in-d.versions.more', label: '+3'
+                                                Button, 0x108768750, {{-408.1, -364.1}, {136.2, 236.1}}, identifier: 'songs.known.bass-sb-song-fur-elise', label: 'إلى إليزه, كتاب أغاني غيتار الباس', value: Pro, سهل, Am E C G
+                                                  Other, 0x108768870, {{-398.0, -339.8}, {115.9, 11.0}}
+                                                  StaticText, 0x108768990, {{-378.5, -326.2}, {77.0, 29.4}}, identifier: 'songs.tile.known.bass-sb-song-fur-elise.cover.title.0', label: 'إلى إليزه'
+                                                  StaticText, 0x108768ab0, {{-298.0, -168.7}, {19.6, 14.1}}, identifier: 'songs.tile.known.bass-sb-song-fur-elise.chords.chord.Am', label: 'Am'
+                                                  StaticText, 0x108768bd0, {{-321.3, -168.7}, {6.7, 14.1}}, identifier: 'songs.tile.known.bass-sb-song-fur-elise.chords.chord.E', label: 'E'
+                                                  StaticText, 0x108768cf0, {{-346.7, -168.7}, {8.9, 14.1}}, identifier: 'songs.tile.known.bass-sb-song-fur-elise.chords.chord.C', label: 'C'
+                                                  StaticText, 0x108768e10, {{-372.5, -168.7}, {9.2, 14.1}}, identifier: 'songs.tile.known.bass-sb-song-fur-elise.chords.chord.G', label: 'G'
+                                                  Other, 0x108768f30, {{-294.0, -138.7}, {22.1, 5.5}}, label: 'سهل'
+                                                  StaticText, 0x108769050, {{-321.0, -143.1}, {20.5, 14.1}}, identifier: 'songs.tile.known.bass-sb-song-fur-elise.duration', label: '١:٤١'
+                                                  StaticText, 0x108769170, {{-364.2, -144.2}, {36.8, 16.3}}, identifier: 'songs.tile.known.bass-sb-song-fur-elise.xp', label: '+٣٠ XP'
+                                                Other, 0x108769290, {{-394.3, -296.0}, {20.2, 20.2}}, label: 'Timbre Pro'
+                                                  Image, 0x1087693b0, {{-387.2, -290.2}, {6.4, 8.9}}, identifier: 'lock.fill', label: 'قفل'
+                                                Button, 0x1087694d0, {{-404.4, -272.1}, {40.5, 40.5}}, identifier: 'songs.sample.bass-sb-song-fur-elise', label: 'استمع إليها', value: إلى إليزه
+                                                Button, 0x1087695f0, {{-408.1, -218.7}, {56.7, 40.5}}, identifier: 'songs.versions.bass-sb-song-fur-elise', label: 'الإصدارات', value: الأغاني, كتاب أغان...
+                                                  Button, 0x108769710, {{-408.1, -218.7}, {56.7, 40.5}}
+                                                    Other, 0x108769830, {{-372.2, -206.7}, {16.9, 16.6}}
+                                                    Image, 0x108769950, {{-387.2, -208.0}, {19.3, 19.0}}, label: '10_ukulele_soprano_ukulele'
+                                                    StaticText, 0x108769a70, {{-408.1, -218.7}, {56.7, 40.5}}, identifier: 'songs.tile.known.bass-sb-song-fur-elise.versions.more', label: '+3'
+                                          Image, 0x108769b90, {{357.0, -66.7}, {22.0, 22.0}}, identifier: '3.circle.fill', label: '3.circle.fill'
+                                          StaticText, 0x108769cb0, {{199.0, -68.3}, {145.0, 25.3}}, label: 'تآلفات لا تتجاوز 3'
+                                          ScrollView, 0x108769dd0, {{0.0, -29.7}, {402.0, 256.7}}, identifier: 'songs.rail.few'
+                                            Other, 0x108769ef0, {{-900.0, -29.7}, {1282.0, 256.7}}
+                                              Other, 0x1149c5000, {{-408.1, -29.7}, {790.1, 256.7}}
+                                                Button, 0x108633aa0, {{234.0, -29.7}, {148.0, 206.7}}, identifier: 'songs.few.bass-3-5', label: 'نشيد الفرح على الباس, غيتار باس', value: Pro, سهل, G D
+                                                  Other, 0x108634f20, {{245.0, -3.3}, {126.0, 11.0}}
+                                                  StaticText, 0x108633d20, {{252.6, 10.5}, {118.3, 29.7}}, identifier: 'songs.tile.few.bass-3-5.cover.title.0', label: 'نشيد الفرح على'
+                                                  StaticText, 0x108634340, {{325.6, 33.8}, {45.3, 29.7}}, identifier: 'songs.tile.few.bass-3-5.cover.title.1', label: 'الباس'
+                                                  StaticText, 0x108633460, {{347.0, -18.6}, {11.0, 10.3}}, identifier: 'songs.tile.few.bass-3-5.cover.catalogue', label: '02'
+                                                  StaticText, 0x1086327c0, {{365.0, 132.7}, {10.0, 15.3}}, identifier: 'songs.tile.few.bass-3-5.chords.chord.G', label: 'G'
+                                                  StaticText, 0x1086346e0, {{337.3, 132.7}, {9.7, 15.3}}, identifier: 'songs.tile.few.bass-3-5.chords.chord.D', label: 'D'
+                                                  Other, 0x108634800, {{358.0, 165.3}, {24.0, 6.0}}, label: 'سهل'
+                                                  StaticText, 0x108634920, {{328.7, 160.5}, {22.3, 15.3}}, identifier: 'songs.tile.few.bass-3-5.duration', label: '٢:٤٠'
+                                                  StaticText, 0x1086b0900, {{281.7, 159.3}, {40.0, 17.7}}, identifier: 'songs.tile.few.bass-3-5.xp', label: '+٣٠ XP'
+                                                Other, 0x1086b0a20, {{249.0, 44.3}, {22.0, 22.0}}, label: 'Timbre Pro'
+                                                  Image, 0x1086b0b40, {{256.7, 50.7}, {7.0, 9.7}}, identifier: 'lock.fill', label: 'قفل'
+                                                Button, 0x1086b0c60, {{238.0, 70.3}, {44.0, 44.0}}, identifier: 'songs.sample.bass-3-5', label: 'استمع إليها', value: نشيد الفرح على الباس
+                                                Button, 0x1086b0d80, {{72.0, -29.7}, {148.0, 256.7}}, identifier: 'songs.few.bass-sb-song-oh-susanna', label: 'آه! سوزانا, كتاب أغاني غيتار الباس', value: Pro, سهل, D7 G C
+                                                  Other, 0x1086b0ea0, {{83.0, -3.3}, {126.0, 11.0}}
+                                                  StaticText, 0x1086b0fc0, {{112.2, 10.5}, {96.7, 32.0}}, identifier: 'songs.tile.few.bass-sb-song-oh-susanna.cover.title.0', label: 'آه! سوزانا'
+                                                  StaticText, 0x1086b10e0, {{185.0, -18.6}, {11.0, 10.3}}, identifier: 'songs.tile.few.bass-sb-song-oh-susanna.cover.catalogue', label: '07'
+                                                  StaticText, 0x1086b1200, {{196.3, 182.7}, {16.7, 15.3}}, identifier: 'songs.tile.few.bass-sb-song-oh-susanna.chords.chord.D7', label: 'D7'
+                                                  StaticText, 0x1086b1320, {{168.3, 182.7}, {10.0, 15.3}}, identifier: 'songs.tile.few.bass-sb-song-oh-susanna.chords.chord.G', label: 'G'
+                                                  StaticText, 0x1086b1440, {{140.7, 182.7}, {9.7, 15.3}}, identifier: 'songs.tile.few.bass-sb-song-oh-susanna.chords.chord.C', label: 'C'
+                                                  Other, 0x1086b1560, {{196.0, 215.3}, {24.0, 6.0}}, label: 'سهل'
+                                                  StaticText, 0x1086b1680, {{166.7, 210.5}, {22.3, 15.3}}, identifier: 'songs.tile.few.bass-sb-song-oh-susanna.duration', label: '٢:٤٢'
+                                                  StaticText, 0x1086b17a0, {{119.7, 209.3}, {40.0, 17.7}}, identifier: 'songs.tile.few.bass-sb-song-oh-susanna.xp', label: '+٣٠ XP'
+                                                Other, 0x1086b18c0, {{87.0, 44.3}, {22.0, 22.0}}, label: 'Timbre Pro'
+                                                  Image, 0x1086b19e0, {{94.7, 50.7}, {7.0, 9.7}}, identifier: 'lock.fill', label: 'قفل'
+                                                Button, 0x1086b1b00, {{76.0, 70.3}, {44.0, 44.0}}, identifier: 'songs.sample.bass-sb-song-oh-susanna', label: 'استمع إليها', value: آه! سوزانا
+                                                Button, 0x1086b1c20, {{72.0, 128.3}, {62.3, 44.0}}, identifier: 'songs.versions.bass-sb-song-oh-susanna', label: 'الإصدارات', value: جيتار, الأغاني, يو...
+                                                  Button, 0x1086b1d40, {{72.0, 128.3}, {62.3, 44.0}}
+                                                    Image, 0x1086b1e60, {{102.8, 132.3}, {36.0, 36.0}}, label: 'render_guitar_acoustic'
+                                                    Other, 0x1086b1f80, {{97.0, 141.3}, {18.0, 18.0}}
+                                                    StaticText, 0x1086b20a0, {{72.0, 128.3}, {62.3, 44.0}}, identifier: 'songs.tile.few.bass-sb-song-oh-susanna.versions.more', label: '+4'
+                                                Button, 0x1086b21c0, {{-84.9, -20.8}, {137.8, 238.9}}, identifier: 'songs.few.bass-sb-song-camptown-races', label: 'سباقات كامبتاون, كتاب أغاني غيتار الباس', value: Pro, سهل, D7 G C
+                                                  Other, 0x1086b22e0, {{-74.6, 3.7}, {117.3, 11.2}}
+                                                  StaticText, 0x1086b2400, {{-74.6, 17.5}, {63.6, 27.6}}, identifier: 'songs.tile.few.bass-sb-song-camptown-races.cover.title.0', label: 'سباقات'
+                                                  StaticText, 0x1086b2520, {{-74.6, 39.2}, {74.5, 27.6}}, identifier: 'songs.tile.few.bass-sb-song-camptown-races.cover.title.1', label: 'كامبتاون'
+                                                  StaticText, 0x1086b2640, {{30.9, 176.9}, {15.5, 14.3}}, identifier: 'songs.tile.few.bass-sb-song-camptown-races.chords.chord.D7', label: 'D7'
+                                                  StaticText, 0x1086b2760, {{4.8, 176.9}, {9.3, 14.3}}, identifier: 'songs.tile.few.bass-sb-song-camptown-races.chords.chord.G', label: 'G'
+                                                  StaticText, 0x1086b2880, {{-21.0, 176.9}, {9.0, 14.3}}, identifier: 'songs.tile.few.bass-sb-song-camptown-races.chords.chord.C', label: 'C'
+                                                  Other, 0x1086b29a0, {{30.5, 207.3}, {22.3, 5.6}}, label: 'سهل'
+                                                  StaticText, 0x1086b2ac0, {{3.2, 202.8}, {20.8, 14.3}}, identifier: 'songs.tile.few.bass-sb-song-camptown-races.duration', label: '١:٤٨'
+                                                  StaticText, 0x1086b2be0, {{-40.5, 201.7}, {37.2, 16.4}}, identifier: 'songs.tile.few.bass-sb-song-camptown-races.xp', label: '+٣٠ XP'
+                                                Other, 0x1086b2d00, {{-70.9, 48.1}, {20.5, 20.5}}, label: 'Timbre Pro'
+                                                  Image, 0x1086b2e20, {{-63.8, 54.0}, {6.5, 9.0}}, identifier: 'lock.fill', label: 'قفل'
+                                                Button, 0x1086b2f40, {{-81.2, 72.3}, {41.0, 41.0}}, identifier: 'songs.sample.bass-sb-song-camptown-races', label: 'استمع إليها', value: سباقات كامبتاون
+                                                Button, 0x1086b3060, {{-84.9, 126.3}, {57.4, 41.0}}, identifier: 'songs.versions.bass-sb-song-camptown-races', label: 'الإصدارات', value: الأغاني, يوكوليلي,...
+                                                  Button, 0x1086b3180, {{-84.9, 126.3}, {57.4, 41.0}}
+                                                    Other, 0x1086b32a0, {{-48.6, 138.4}, {17.1, 16.8}}
+                                                    Image, 0x1086b33c0, {{-63.8, 137.1}, {19.5, 19.2}}, label: '10_ukulele_soprano_ukulele'
+                                                    StaticText, 0x1086b34e0, {{-84.9, 126.3}, {57.4, 41.0}}, identifier: 'songs.tile.few.bass-sb-song-camptown-races.versions.more', label: '+3'
+                                                Button, 0x1086b3600, {{-246.1, -20.6}, {136.2, 208.5}}, identifier: 'songs.few.bass-sb-orig-dust-on-the-dashboard', label: 'غبار على لوحة القيادة, كتاب أغاني غيتار الباس', value: Pro, سهل, A D E
+                                                  Other, 0x1086b3720, {{-236.0, 3.6}, {115.9, 11.0}}
+                                                  StaticText, 0x1086b3840, {{-195.0, 17.3}, {74.8, 27.3}}, identifier: 'songs.tile.few.bass-sb-orig-dust-on-the-dashboard.cover.title.0', label: 'غبار على'
+                                                  StaticText, 0x1086b3960, {{-220.7, 38.7}, {100.6, 27.3}}, identifier: 'songs.tile.few.bass-sb-orig-dust-on-the-dashboard.cover.title.1', label: 'لوحة القيادة'
+                                                  StaticText, 0x1086b3a80, {{-124.9, 128.7}, {8.6, 14.1}}, identifier: 'songs.tile.few.bass-sb-orig-dust-on-the-dashboard.chords.chord.A', label: 'A'
+                                                  StaticText, 0x1086b3ba0, {{-150.4, 128.7}, {8.9, 14.1}}, identifier: 'songs.tile.few.bass-sb-orig-dust-on-the-dashboard.chords.chord.D', label: 'D'
+                                                  StaticText, 0x1086b3cc0, {{-173.7, 128.7}, {6.7, 14.1}}, identifier: 'songs.tile.few.bass-sb-orig-dust-on-the-dashboard.chords.chord.E', label: 'E'
+                                                  Other, 0x1086b3de0, {{-132.0, 177.2}, {22.1, 5.5}}, label: 'سهل'
+                                                  StaticText, 0x1086b3f00, {{-159.0, 172.8}, {20.5, 14.1}}, identifier: 'songs.tile.few.bass-sb-orig-dust-on-the-dashboard.duration', label: '٢:٠٥'
+                                                  StaticText, 0x1086b4020, {{-202.2, 171.7}, {36.8, 16.3}}, identifier: 'songs.tile.few.bass-sb-orig-dust-on-the-dashboard.xp', label: '+٣٠ XP'
+                                                Other, 0x1086b4140, {{-232.3, 47.5}, {20.2, 20.2}}, label: 'Timbre Pro'
+                                                  Image, 0x1086b4260, {{-225.2, 53.3}, {6.4, 8.9}}, identifier: 'lock.fill', label: 'قفل'
+                                                Button, 0x1086b4380, {{-242.4, 71.4}, {40.5, 40.5}}, identifier: 'songs.sample.bass-sb-orig-dust-on-the-dashboard', label: 'استمع إليها', value: غبار على لوحة القي...
+                                                Button, 0x1086b44a0, {{-246.1, 124.8}, {40.5, 40.5}}, identifier: 'songs.versions.bass-sb-orig-dust-on-the-dashboard', label: 'الإصدارات', value: أغانٍ أصلية, كتاب ...
+                                                  Button, 0x1086b45c0, {{-246.1, 124.8}, {40.5, 40.5}}
+                                                    Other, 0x1086b46e0, {{-228.0, 136.7}, {16.6, 16.6}}
+                                                    Image, 0x1086b4800, {{-243.3, 135.5}, {19.3, 19.0}}, label: '10_ukulele_soprano_ukulele'
+                                                Button, 0x1086b4920, {{-408.1, -20.6}, {136.2, 208.5}}, identifier: 'songs.few.bass-sb-orig-lantern-hill', label: 'تل الفوانيس, كتاب أغاني غيتار الباس', value: Pro, سهل, C G D
+                                                  StaticText, 0x1086b4a40, {{-417.3, -61.6}, {153.4, 177.1}}, identifier: 'songs.tile.few.bass-sb-orig-lantern-hill.cover.title.0', label: 'تل الفوانيس'
+                                                  StaticText, 0x1086b4b60, {{-287.3, 128.7}, {8.9, 14.1}}, identifier: 'songs.tile.few.bass-sb-orig-lantern-hill.chords.chord.C', label: 'C'
+                                                  StaticText, 0x1086b4c80, {{-313.0, 128.7}, {9.2, 14.1}}, identifier: 'songs.tile.few.bass-sb-orig-lantern-hill.chords.chord.G', label: 'G'
+                                                  StaticText, 0x1086b4da0, {{-338.5, 128.7}, {8.9, 14.1}}, identifier: 'songs.tile.few.bass-sb-orig-lantern-hill.chords.chord.D', label: 'D'
+                                                  Other, 0x1086b4ec0, {{-294.0, 177.2}, {22.1, 5.5}}, label: 'سهل'
+                                                  StaticText, 0x1086b4fe0, {{-321.0, 172.8}, {20.5, 14.1}}, identifier: 'songs.tile.few.bass-sb-orig-lantern-hill.duration', label: '٢:٢٦'
+                                                  StaticText, 0x1086b5100, {{-364.2, 171.7}, {36.8, 16.3}}, identifier: 'songs.tile.few.bass-sb-orig-lantern-hill.xp', label: '+٣٠ XP'
+                                                Other, 0x1086b5220, {{-394.3, 47.5}, {20.2, 20.2}}, label: 'Timbre Pro'
+                                                  Image, 0x1086b5340, {{-387.2, 53.3}, {6.4, 8.9}}, identifier: 'lock.fill', label: 'قفل'
+                                                Button, 0x1086b5460, {{-404.4, 71.4}, {40.5, 40.5}}, identifier: 'songs.sample.bass-sb-orig-lantern-hill', label: 'استمع إليها', value: تل الفوانيس
+                                                Button, 0x1086b5580, {{-408.1, 124.8}, {40.5, 40.5}}, identifier: 'songs.versions.bass-sb-orig-lantern-hill', label: 'الإصدارات', value: أغانٍ أصلية, كتاب ...
+                                                  Button, 0x1086b56a0, {{-408.1, 124.8}, {40.5, 40.5}}
+                                                    Other, 0x1086b57c0, {{-390.0, 136.7}, {16.6, 16.6}}
+                                                    Image, 0x1086b58e0, {{-405.3, 135.5}, {19.3, 19.0}}, label: '10_ukulele_soprano_ukulele'
+                                          Image, 0x1086b5a00, {{334.0, 235.0}, {64.0, 64.0}}, label: 'render_bass_p4'
+                                          StaticText, 0x1086b5b20, {{149.0, 254.3}, {191.0, 25.3}}, label: 'كتاب أغاني غيتار الباس'
+                                          Image, 0x1086b5c40, {{60.0, 262.7}, {13.3, 12.7}}, identifier: 'star.fill', label: 'المفضلة'
+                                          StaticText, 0x1086b5d60, {{20.0, 262.2}, {53.3, 15.3}}, label: '٠ من ٣٦٠'
+                                            StaticText, 0x1086b5e80, {{20.0, 262.2}, {6.3, 15.3}}, label: '٠'
+                                            StaticText, 0x1086b5fa0, {{26.3, 262.2}, {5.7, 15.3}}, label: ' / '
+                                            StaticText, 0x1086b60c0, {{32.0, 262.2}, {19.0, 15.3}}, label: '٣٦٠'
+                                          ScrollView, 0x1086b61e0, {{0.0, 295.0}, {402.0, 306.7}}, identifier: 'songs.rail.bass-songbook'
+                                            Other, 0x1086b6300, {{40.0, 295.0}, {19426.0, 306.7}}
+                                              Other, 0x1086b6420, {{40.0, 295.0}, {790.1, 269.8}}
+                                                Button, 0x1086b6540, {{693.9, 305.3}, {136.2, 236.1}}, identifier: 'songs.song.bass-sb-orig-slow-motion-strobe', label: 'وميض بالحركة البطيئة, كتاب أغاني غيتار الباس', value: Pro, صعب, F#m D A E
+                                                  Other, 0x1086b6660, {{704.0, 329.5}, {115.9, 10.1}}
+                                                  StaticText, 0x1086b6780, {{706.7, 342.2}, {113.2, 25.5}}, identifier: 'songs.tile.bass-sb-orig-slow-motion-strobe.cover.title.0', label: 'وميض بالحركة'
+                                                  StaticText, 0x1086b68a0, {{763.4, 362.3}, {56.4, 25.5}}, identifier: 'songs.tile.bass-sb-orig-slow-motion-strobe.cover.title.1', label: 'البطيئة'
+                                                  StaticText, 0x1086b69c0, {{792.6, 315.5}, {15.3, 9.5}}, identifier: 'songs.tile.bass-sb-orig-slow-motion-strobe.cover.catalogue', label: '116'
+                                                  StaticText, 0x1086b6ae0, {{798.8, 500.6}, {24.8, 14.1}}, identifier: 'songs.tile.bass-sb-orig-slow-motion-strobe.chords.chord.F#m', label: 'F#m'
+                                                  StaticText, 0x1086b6c00, {{773.3, 500.6}, {8.9, 14.1}}, identifier: 'songs.tile.bass-sb-orig-slow-motion-strobe.chords.chord.D', label: 'D'
+                                                  StaticText, 0x1086b6d20, {{748.2, 500.6}, {8.6, 14.1}}, identifier: 'songs.tile.bass-sb-orig-slow-motion-strobe.chords.chord.A', label: 'A'
+                                                  StaticText, 0x1086b6e40, {{724.9, 500.6}, {6.7, 14.1}}, identifier: 'songs.tile.bass-sb-orig-slow-motion-strobe.chords.chord.E', label: 'E'
+                                                  Other, 0x1086b6f60, {{808.0, 530.7}, {22.1, 5.5}}, label: 'صعب'
+                                                  StaticText, 0x1086b7080, {{781.0, 526.2}, {20.5, 14.1}}, identifier: 'songs.tile.bass-sb-orig-slow-motion-strobe.duration', label: '٢:١٠'
+                                                  StaticText, 0x1086b71a0, {{737.8, 525.1}, {36.8, 16.3}}, identifier: 'songs.tile.bass-sb-orig-slow-motion-strobe.xp', label: '+٣٠ XP'
+                                                Other, 0x1086b72c0, {{707.7, 373.3}, {20.2, 20.2}}, label: 'Timbre Pro'
+                                                  Image, 0x1086b73e0, {{714.8, 379.2}, {6.4, 8.9}}, identifier: 'lock.fill', label: 'قفل'
+                                                Button, 0x1086b7500, {{697.6, 397.3}, {40.5, 40.5}}, identifier: 'songs.sample.bass-sb-orig-slow-motion-strobe', label: 'استمع إليها', value: وميض بالحركة البطيئة
+                                                Button, 0x1086b7620, {{693.9, 450.6}, {40.5, 40.5}}, identifier: 'songs.versions.bass-sb-orig-slow-motion-strobe', label: 'الإصدارات', value: أغانٍ أصلية, كتاب ...
+                                                  Button, 0x1086b7740, {{693.9, 450.6}, {40.5, 40.5}}
+                                                    Other, 0x1086b7860, {{712.0, 462.6}, {16.6, 16.6}}
+                                                    Image, 0x1086b7980, {{696.7, 461.4}, {19.3, 19.0}}, label: '10_ukulele_soprano_ukulele'
+                                                Button, 0x1086b7aa0, {{531.9, 306.2}, {136.2, 258.2}}, identifier: 'songs.song.bass-sb-orig-bright-side-of-the-block', label: 'الجانب المشرق من الحي, كتاب أغاني غيتار الباس', value: Pro, صعب, G A F#m ...
+                                                  Other, 0x1086b7bc0, {{542.0, 330.5}, {115.9, 11.0}}
+                                                  StaticText, 0x1086b7ce0, {{547.8, 344.1}, {110.1, 25.5}}, identifier: 'songs.tile.bass-sb-orig-bright-side-of-the-block.cover.title.0', label: 'الجانب المشرق'
+                                                  StaticText, 0x1086b7e00, {{591.0, 364.1}, {66.9, 25.5}}, identifier: 'songs.tile.bass-sb-orig-bright-side-of-the-block.cover.title.1', label: 'من الحي'
+                                                  StaticText, 0x1086b7f20, {{542.1, 316.4}, {15.3, 9.5}}, identifier: 'songs.tile.bass-sb-orig-bright-side-of-the-block.cover.catalogue', label: '117'
+                                                  StaticText, 0x1086b8040, {{652.4, 500.7}, {9.2, 14.1}}, identifier: 'songs.tile.bass-sb-orig-bright-side-of-the-block.chords.chord.G', label: 'G'
+                                                  StaticText, 0x1086b8160, {{627.3, 500.7}, {8.6, 14.1}}, identifier: 'songs.tile.bass-sb-orig-bright-side-of-the-block.chords.chord.A', label: 'A'
+                                                  StaticText, 0x1086b8280, {{585.9, 500.7}, {24.8, 14.1}}, identifier: 'songs.tile.bass-sb-orig-bright-side-of-the-block.chords.chord.F#m', label: 'F#m'
+                                                  StaticText, 0x1086b83a0, {{550.9, 500.7}, {18.4, 14.1}}, identifier: 'songs.tile.bass-sb-orig-bright-side-of-the-block.chords.chord.Bm', label: 'Bm'
+                                                  StaticText, 0x1086b84c0, {{652.7, 524.6}, {8.9, 14.1}}, identifier: 'songs.tile.bass-sb-orig-bright-side-of-the-block.chords.chord.D', label: 'D'
+                                                  Other, 0x1086b85e0, {{646.0, 553.7}, {22.1, 5.5}}, label: 'صعب'
+                                                  StaticText, 0x1086b8700, {{619.0, 549.3}, {20.5, 14.1}}, identifier: 'songs.tile.bass-sb-orig-bright-side-of-the-block.duration', label: '٢:١٤'
+                                                  StaticText, 0x1086b8820, {{575.8, 548.2}, {36.8, 16.3}}, identifier: 'songs.tile.bass-sb-orig-bright-side-of-the-block.xp', label: '+٣٠ XP'
+                                                Other, 0x1086b8940, {{545.7, 374.3}, {20.2, 20.2}}, label: 'Timbre Pro'
+                                                  Image, 0x1086b8a60, {{552.8, 380.1}, {6.4, 8.9}}, identifier: 'lock.fill', label: 'قفل'
+                                                Button, 0x1086b8b80, {{535.6, 398.2}, {40.5, 40.5}}, identifier: 'songs.sample.bass-sb-orig-bright-side-of-the-block', label: 'استمع إليها', value: الجانب المشرق من ا...
+                                                Button, 0x1086b8ca0, {{531.9, 451.6}, {40.5, 40.5}}, identifier: 'songs.versions.bass-sb-orig-bright-side-of-the-block', label: 'الإصدارات', value: أغانٍ أصلية, كتاب ...
+                                                  Button, 0x1086b8dc0, {{531.9, 451.6}, {40.5, 40.5}}
+                                                    Other, 0x1086b8ee0, {{550.0, 463.5}, {16.6, 16.6}}
+                                                    Image, 0x1086b9000, {{534.7, 462.3}, {19.3, 19.0}}, label: '10_ukulele_soprano_ukulele'
+                                                Button, 0x1086b9120, {{369.7, 305.9}, {136.5, 258.9}}, identifier: 'songs.song.bass-sb-orig-over-you-soon', label: 'سأنساك قريبًا, كتاب أغاني غيتار الباس', value: Pro, صعب, G D A Bm...
+                                                  Other, 0x1086b9240, {{379.9, 330.2}, {116.2, 10.1}}
+                                                  StaticText, 0x1086b9360, {{382.6, 342.9}, {113.4, 27.4}}, identifier: 'songs.tile.bass-sb-orig-over-you-soon.cover.title.0', label: 'سأنساك قريبًا'
+                                                  StaticText, 0x1086b9480, {{468.7, 316.1}, {15.4, 9.5}}, identifier: 'songs.tile.bass-sb-orig-over-you-soon.cover.catalogue', label: '118'
+                                                  StaticText, 0x1086b95a0, {{490.6, 500.8}, {9.2, 14.1}}, identifier: 'songs.tile.bass-sb-orig-over-you-soon.chords.chord.G', label: 'G'
+                                                  StaticText, 0x1086b96c0, {{465.1, 500.8}, {8.9, 14.1}}, identifier: 'songs.tile.bass-sb-orig-over-you-soon.chords.chord.D', label: 'D'
+                                                  StaticText, 0x1086b97e0, {{439.8, 500.8}, {8.6, 14.1}}, identifier: 'songs.tile.bass-sb-orig-over-you-soon.chords.chord.A', label: 'A'
+                                                  StaticText, 0x1086b9900, {{404.8, 500.8}, {18.4, 14.1}}, identifier: 'songs.tile.bass-sb-orig-over-you-soon.chords.chord.Bm', label: 'Bm'
+                                                  StaticText, 0x1086b9a20, {{482.3, 524.8}, {17.5, 14.1}}, identifier: 'songs.tile.bass-sb-orig-over-you-soon.chords.chord.Em', label: 'Em'
+                                                  Other, 0x1086b9b40, {{484.1, 554.0}, {22.1, 5.5}}, label: 'صعب'
+                                                  StaticText, 0x1086b9c60, {{457.1, 549.6}, {20.6, 14.1}}, identifier: 'songs.tile.bass-sb-orig-over-you-soon.duration', label: '٢:٢٩'
+                                                  StaticText, 0x1086b9d80, {{413.7, 548.5}, {36.9, 16.3}}, identifier: 'songs.tile.bass-sb-orig-over-you-soon.xp', label: '+٣٠ XP'
+                                                Other, 0x1086b9ea0, {{383.6, 374.2}, {20.3, 20.3}}, label: 'Timbre Pro'
+                                                  Image, 0x1086b9fc0, {{390.7, 380.0}, {6.5, 8.9}}, identifier: 'lock.fill', label: 'قفل'
+                                                Button, 0x1086ba0e0, {{373.4, 398.1}, {40.6, 40.6}}, identifier: 'songs.sample.bass-sb-orig-over-you-soon', label: 'استمع إليها', value: سأنساك قريبًا
+                                                Button, 0x1086ba200, {{369.7, 451.6}, {40.6, 40.6}}, identifier: 'songs.versions.bass-sb-orig-over-you-soon', label: 'الإصدارات', value: أغانٍ أصلية, كتاب ...
+                                                  Button, 0x1086ba320, {{369.7, 451.6}, {40.6, 40.6}}
+                                                    Other, 0x1086ba440, {{387.9, 463.6}, {16.6, 16.6}}
+                                                    Image, 0x1086ba560, {{372.5, 462.4}, {19.4, 19.1}}, label: '10_ukulele_soprano_ukulele'
+                                                Button, 0x1086ba680, {{202.0, 295.0}, {148.0, 256.7}}, identifier: 'songs.song.bass-sb-orig-spray-paint-sunrise', label: 'شروق بطلاء الرش, كتاب أغاني غيتار الباس', value: Pro, صعب, E B C#m A
+                                                  Other, 0x1086ba7a0, {{213.0, 321.3}, {126.0, 11.0}}
+                                                  StaticText, 0x1086ba8c0, {{213.1, 335.2}, {109.7, 29.7}}, identifier: 'songs.tile.bass-sb-orig-spray-paint-sunrise.cover.title.0', label: 'شروق بطلاء'
+                                                  StaticText, 0x1086ba9e0, {{213.1, 358.5}, {45.3, 29.7}}, identifier: 'songs.tile.bass-sb-orig-spray-paint-sunrise.cover.title.1', label: 'الرش'
+                                                  StaticText, 0x1086bab00, {{309.3, 306.1}, {16.7, 10.3}}, identifier: 'songs.tile.bass-sb-orig-spray-paint-sunrise.cover.catalogue', label: '119'
+                                                  StaticText, 0x1086bac20, {{335.7, 507.3}, {7.3, 15.3}}, identifier: 'songs.tile.bass-sb-orig-spray-paint-sunrise.chords.chord.E', label: 'E'
+                                                  StaticText, 0x1086bad40, {{309.3, 507.3}, {8.3, 15.3}}, identifier: 'songs.tile.bass-sb-orig-spray-paint-sunrise.chords.chord.B', label: 'B'
+                                                  StaticText, 0x1086bae60, {{261.3, 507.3}, {30.0, 15.3}}, identifier: 'songs.tile.bass-sb-orig-spray-paint-sunrise.chords.chord.C#m', label: 'C#m'
+                                                  StaticText, 0x1086baf80, {{234.0, 507.3}, {9.3, 15.3}}, identifier: 'songs.tile.bass-sb-orig-spray-paint-sunrise.chords.chord.A', label: 'A'
+                                                  Other, 0x10876a010, {{326.0, 540.0}, {24.0, 6.0}}, label: 'صعب'
+                                                  StaticText, 0x10876a130, {{296.7, 535.2}, {22.3, 15.3}}, identifier: 'songs.tile.bass-sb-orig-spray-paint-sunrise.duration', label: '٢:٠٤'
+                                                  StaticText, 0x10876a250, {{249.7, 534.0}, {40.0, 17.7}}, identifier: 'songs.tile.bass-sb-orig-spray-paint-sunrise.xp', label: '+٣٠ XP'
+                                                Other, 0x10876a370, {{217.0, 369.0}, {22.0, 22.0}}, label: 'Timbre Pro'
+                                                  Image, 0x10876a490, {{224.7, 375.3}, {7.0, 9.7}}, identifier: 'lock.fill', label: 'قفل'
+                                                Button, 0x10876a5b0, {{206.0, 395.0}, {44.0, 44.0}}, identifier: 'songs.sample.bass-sb-orig-spray-paint-sunrise', label: 'استمع إليها', value: شروق بطلاء الرش
+                                                Button, 0x10876a6d0, {{202.0, 453.0}, {44.0, 44.0}}, identifier: 'songs.versions.bass-sb-orig-spray-paint-sunrise', label: 'الإصدارات', value: أغانٍ أصلية, كتاب ...
+                                                  Button, 0x10876a7f0, {{202.0, 453.0}, {44.0, 44.0}}
+                                                    Other, 0x10876a910, {{221.7, 466.0}, {18.0, 18.0}}
+                                                    Image, 0x10876aa30, {{205.0, 464.7}, {21.0, 20.7}}, label: '10_ukulele_soprano_ukulele'
+                                                Button, 0x10876ab50, {{40.0, 295.0}, {148.0, 256.7}}, identifier: 'songs.song.bass-sb-orig-constellation-prize', label: 'جائزة الكوكبة, كتاب أغاني غيتار الباس', value: Pro, متوسط, Bb F C...
+                                                  StaticText, 0x10876ac70, {{120.9, 374.7}, {56.0, 32.0}}, identifier: 'songs.tile.bass-sb-orig-constellation-prize.cover.title.0', label: 'جائزة'
+                                                  StaticText, 0x10876ad90, {{106.6, 399.9}, {70.3, 32.0}}, identifier: 'songs.tile.bass-sb-orig-constellation-prize.cover.title.1', label: 'الكوكبة'
+                                                  StaticText, 0x10876aeb0, {{164.3, 507.3}, {16.7, 15.3}}, identifier: 'songs.tile.bass-sb-orig-constellation-prize.chords.chord.Bb', label: 'Bb'
+                                                  StaticText, 0x10876afd0, {{139.3, 507.3}, {7.0, 15.3}}, identifier: 'songs.tile.bass-sb-orig-constellation-prize.chords.chord.F', label: 'F'
+                                                  StaticText, 0x10876b0f0, {{111.7, 507.3}, {9.7, 15.3}}, identifier: 'songs.tile.bass-sb-orig-constellation-prize.chords.chord.C', label: 'C'
+                                                  StaticText, 0x10876b210, {{72.3, 507.3}, {21.3, 15.3}}, identifier: 'songs.tile.bass-sb-orig-constellation-prize.chords.chord.Dm', label: 'Dm'
+                                                  Other, 0x10876b330, {{164.0, 540.0}, {24.0, 6.0}}, label: 'متوسط'
+                                                  StaticText, 0x10876b450, {{134.7, 535.2}, {22.3, 15.3}}, identifier: 'songs.tile.bass-sb-orig-constellation-prize.duration', label: '٢:٢٩'
+                                                  StaticText, 0x10876b570, {{87.7, 534.0}, {40.0, 17.7}}, identifier: 'songs.tile.bass-sb-orig-constellation-prize.xp', label: '+٣٠ XP'
+                                                Other, 0x10876b690, {{55.0, 369.0}, {22.0, 22.0}}, label: 'Timbre Pro'
+                                                  Image, 0x10876b7b0, {{62.7, 375.3}, {7.0, 9.7}}, identifier: 'lock.fill', label: 'قفل'
+                                                Button, 0x10876b8d0, {{44.0, 395.0}, {44.0, 44.0}}, identifier: 'songs.sample.bass-sb-orig-constellation-prize', label: 'استمع إليها', value: جائزة الكوكبة
+                                                Button, 0x10876b9f0, {{40.0, 453.0}, {44.0, 44.0}}, identifier: 'songs.versions.bass-sb-orig-constellation-prize', label: 'الإصدارات', value: أغانٍ أصلية, كتاب ...
+                                                  Button, 0x10876bb10, {{40.0, 453.0}, {44.0, 44.0}}
+                                                    Other, 0x10876bc30, {{59.7, 466.0}, {18.0, 18.0}}
+                                                    Image, 0x10876bd50, {{43.0, 464.7}, {21.0, 20.7}}, label: '10_ukulele_soprano_ukulele'
+                                          Image, 0x10876be70, {{359.0, 628.0}, {18.0, 23.3}}, identifier: 'flame.fill', label: 'لهب'
+                                          StaticText, 0x10876bf90, {{175.0, 627.0}, {169.0, 25.3}}, label: 'أغاني المخيم والأطفال'
+                                          ScrollView, 0x10876c0b0, {{0.0, 665.7}, {402.0, 256.7}}, identifier: 'songs.rail.campfire'
+                                            Other, 0x10876c1d0, {{-414.0, 665.7}, {796.0, 256.7}}
+                                              Other, 0x10876c2f0, {{-408.1, 665.7}, {790.1, 246.4}}
+                                                Button, 0x10876c410, {{234.0, 665.7}, {148.0, 226.7}}, identifier: 'songs.campfire.bass-sb-song-mary', label: 'كان لدى ماري حمل صغير, كتاب أغاني غيتار الباس', value: متاح, سهل, G C
+                                                  Other, 0x10876c530, {{245.0, 692.0}, {126.0, 12.0}}
+                                                  StaticText, 0x10876c650, {{252.9, 706.8}, {118.0, 29.7}}, identifier: 'songs.tile.campfire.bass-sb-song-mary.cover.title.0', label: 'كان لدى ماري'
+                                                  StaticText, 0x10876c770, {{270.9, 730.2}, {100.0, 29.7}}, identifier: 'songs.tile.campfire.bass-sb-song-mary.cover.title.1', label: 'حمل صغير'
+                                                  StaticText, 0x10876c890, {{245.1, 676.8}, {11.0, 10.3}}, identifier: 'songs.tile.campfire.bass-sb-song-mary.cover.catalogue', label: '01'
+                                                  StaticText, 0x10876c9b0, {{365.0, 828.0}, {10.0, 15.3}}, identifier: 'songs.tile.campfire.bass-sb-song-mary.chords.chord.G', label: 'G'
+                                                  StaticText, 0x10876cad0, {{337.3, 828.0}, {9.7, 15.3}}, identifier: 'songs.tile.campfire.bass-sb-song-mary.chords.chord.C', label: 'C'
+                                                  Other, 0x10876cbf0, {{358.0, 880.7}, {24.0, 6.0}}, label: 'سهل'
+                                                  StaticText, 0x10876cd10, {{328.7, 875.8}, {22.3, 15.3}}, identifier: 'songs.tile.campfire.bass-sb-song-mary.duration', label: '١:٥٤'
+                                                  StaticText, 0x10876ce30, {{281.7, 874.7}, {40.0, 17.7}}, identifier: 'songs.tile.campfire.bass-sb-song-mary.xp', label: '+٣٠ XP'
+                                                Button, 0x10876cf50, {{238.0, 765.7}, {44.0, 44.0}}, identifier: 'songs.sample.bass-sb-song-mary', label: 'استمع إليها', value: كان لدى ماري حمل ص...
+                                                Button, 0x11479fdb0, {{234.0, 823.7}, {68.3, 44.0}}, identifier: 'songs.versions.bass-sb-song-mary', label: 'الإصدارات', value: جيتار, الأغاني, غي...
+                                                  Button, 0x1147a0010, {{234.0, 823.7}, {68.3, 44.0}}
+                                                    Image, 0x1147a0130, {{270.8, 827.7}, {36.0, 36.0}}, label: 'render_guitar_acoustic'
+                                                    Other, 0x1147a0250, {{265.0, 836.7}, {18.0, 18.0}}
+                                                    StaticText, 0x1147a0370, {{234.0, 823.7}, {68.3, 44.0}}, identifier: 'songs.tile.campfire.bass-sb-song-mary.versions.more', label: '+10'
+                                                Button, 0x1147a0490, {{72.0, 665.7}, {148.0, 226.7}}, identifier: 'songs.campfire.bass-sb-song-twinkle', label: 'تلألئي، تلألئي، أيتها النجمة الصغيرة, كتاب أغاني غيتار الباس', value: متاح, سهل, C G D
+                                                  Other, 0x1147a05b0, {{83.0, 692.0}, {126.0, 12.0}}
+                                                  StaticText, 0x1147a06d0, {{86.9, 706.8}, {122.0, 24.0}}, identifier: 'songs.tile.campfire.bass-sb-song-twinkle.cover.title.0', label: 'تلألئي، تلألئي، أيتها'
+                                                  StaticText, 0x1147a07f0, {{114.9, 725.7}, {94.0, 24.0}}, identifier: 'songs.tile.campfire.bass-sb-song-twinkle.cover.title.1', label: 'النجمة الصغيرة'
+                                                  StaticText, 0x1147a0910, {{203.3, 828.0}, {9.7, 15.3}}, identifier: 'songs.tile.campfire.bass-sb-song-twinkle.chords.chord.C', label: 'C'
+                                                  StaticText, 0x1147a0a30, {{175.3, 828.0}, {10.0, 15.3}}, identifier: 'songs.tile.campfire.bass-sb-song-twinkle.chords.chord.G', label: 'G'
+                                                  StaticText, 0x1147a0b50, {{147.7, 828.0}, {9.7, 15.3}}, identifier: 'songs.tile.campfire.bass-sb-song-twinkle.chords.chord.D', label: 'D'
+                                                  Other, 0x1147a0c70, {{196.0, 880.7}, {24.0, 6.0}}, label: 'سهل'
+                                                  StaticText, 0x1147a0d90, {{166.7, 875.8}, {22.3, 15.3}}, identifier: 'songs.tile.campfire.bass-sb-song-twinkle.duration', label: '٢:٠٦'
+                                                  StaticText, 0x1147a0eb0, {{119.7, 874.7}, {40.0, 17.7}}, identifier: 'songs.tile.campfire.bass-sb-song-twinkle.xp', label: '+٣٠ XP'
+                                                Button, 0x1147a0fd0, {{76.0, 765.7}, {44.0, 44.0}}, identifier: 'songs.sample.bass-sb-song-twinkle', label: 'استمع إليها', value: تلألئي، تلألئي، أي...
+                                                Button, 0x1147a10f0, {{72.0, 823.7}, {62.3, 44.0}}, identifier: 'songs.versions.bass-sb-song-twinkle', label: 'الإصدارات', value: الأغاني, يوكوليلي,...
+                                                  Button, 0x1147a1210, {{72.0, 823.7}, {62.3, 44.0}}
+                                                    Other, 0x11479b470, {{111.7, 836.7}, {18.3, 18.0}}
+                                                    Image, 0x11479b590, {{95.3, 835.3}, {21.0, 20.7}}, label: '10_ukulele_soprano_ukulele'
+                                                    StaticText, 0x11479b6b0, {{72.0, 823.7}, {62.3, 44.0}}, identifier: 'songs.tile.campfire.bass-sb-song-twinkle.versions.more', label: '+4'
+                                                Button, 0x11479b7d0, {{-84.9, 673.5}, {137.8, 211.0}}, identifier: 'songs.campfire.bass-sb-song-frere-jacques', label: 'الأخ جاك, كتاب أغاني غيتار الباس', value: متاح, سهل, G
+                                                  Other, 0x11479b8f0, {{-74.6, 698.0}, {117.3, 11.2}}
+                                                  StaticText, 0x11479ba10, {{-25.1, 711.8}, {67.6, 29.8}}, identifier: 'songs.tile.campfire.bass-sb-song-frere-jacques.cover.title.0', label: 'الأخ جاك'
+                                                  StaticText, 0x11479bb30, {{30.5, 821.5}, {22.3, 20.5}}, identifier: 'songs.tile.campfire.bass-sb-song-frere-jacques.chords.chord.G', label: 'G'
+                                                  Other, 0x11479bc50, {{30.5, 873.6}, {22.3, 5.6}}, label: 'سهل'
+                                                  StaticText, 0x11479bd70, {{3.2, 869.1}, {20.8, 14.3}}, identifier: 'songs.tile.campfire.bass-sb-song-frere-jacques.duration', label: '١:٥٤'
+                                                  StaticText, 0x1147a39b0, {{-40.5, 868.1}, {37.2, 16.4}}, identifier: 'songs.tile.campfire.bass-sb-song-frere-jacques.xp', label: '+٣٠ XP'
+                                                Button, 0x1147a3ad0, {{-81.2, 766.6}, {41.0, 41.0}}, identifier: 'songs.sample.bass-sb-song-frere-jacques', label: 'استمع إليها', value: الأخ جاك
+                                                Button, 0x1147a3bf0, {{-84.9, 820.6}, {57.4, 41.0}}, identifier: 'songs.versions.bass-sb-song-frere-jacques', label: 'الإصدارات', value: الأغاني, كتاب أغان...
+                                                  Button, 0x1147a3d10, {{-84.9, 820.6}, {57.4, 41.0}}
+                                                    Other, 0x1147a3e30, {{-48.6, 832.7}, {17.1, 16.8}}
+                                                    Image, 0x1147a3f50, {{-63.8, 831.4}, {19.5, 19.2}}, label: '10_ukulele_soprano_ukulele'
+                                                    StaticText, 0x1147a4070, {{-84.9, 820.6}, {57.4, 41.0}}, identifier: 'songs.tile.campfire.bass-sb-song-frere-jacques.versions.more', label: '+3'
+                                                Button, 0x1147a4190, {{-246.1, 675.9}, {136.2, 236.1}}, identifier: 'songs.campfire.bass-sb-song-old-macdonald', label: 'كان لماكدونالد العجوز مزرعة, كتاب أغاني غيتار الباس', value: Pro, سهل, G D7 C
+                                                  Other, 0x1147a42b0, {{-236.0, 700.2}, {115.9, 11.0}}
+                                                  StaticText, 0x1086bb0a0, {{-231.4, 713.8}, {106.7, 27.3}}, identifier: 'songs.tile.campfire.bass-sb-song-old-macdonald.cover.title.0', label: 'كان لماكدونالد'
+                                                  StaticText, 0x1086bb1c0, {{-233.4, 735.3}, {110.7, 27.3}}, identifier: 'songs.tile.campfire.bass-sb-song-old-macdonald.cover.title.1', label: 'العجوز مزرعة'
+                                                  StaticText, 0x1086bb2e0, {{-125.6, 871.3}, {9.2, 14.1}}, identifier: 'songs.tile.campfire.bass-sb-song-old-macdonald.chords.chord.G', label: 'G'
+                                                  StaticText, 0x1086bb400, {{-157.5, 871.3}, {15.3, 14.1}}, identifier: 'songs.tile.campfire.bass-sb-song-old-macdonald.chords.chord.D7', label: 'D7'
+                                                  StaticText, 0x1086bb520, {{-182.9, 871.3}, {8.9, 14.1}}, identifier: 'songs.tile.campfire.bass-sb-song-old-macdonald.chords.chord.C', label: 'C'
+                                                  Other, 0x1086bb640, {{-132.0, 901.3}, {22.1, 5.5}}, label: 'سهل'
+                                                  StaticText, 0x1086bb760, {{-159.0, 896.9}, {20.5, 14.1}}, identifier: 'songs.tile.campfire.bass-sb-song-old-macdonald.duration', label: '٢:٣٦'
+                                                  StaticText, 0x1147a43d0, {{-202.2, 895.8}, {36.8, 16.3}}, identifier: 'songs.tile.campfire.bass-sb-song-old-macdonald.xp', label: '+٣٠ XP'
+                                                Other, 0x1147a44f0, {{-232.3, 744.0}, {20.2, 20.2}}, label: 'Timbre Pro'
+                                                  Image, 0x1147a4610, {{-225.2, 749.8}, {6.4, 8.9}}, identifier: 'lock.fill', label: 'قفل'
+                                                Button, 0x1149c5120, {{-242.4, 767.9}, {40.5, 40.5}}, identifier: 'songs.sample.bass-sb-song-old-macdonald', label: 'استمع إليها', value: كان لماكدونالد الع...
+                                                Button, 0x1147a4730, {{-246.1, 821.3}, {56.7, 40.5}}, identifier: 'songs.versions.bass-sb-song-old-macdonald', label: 'الإصدارات', value: الأغاني, كتاب أغان...
+                                                  Button, 0x1147a4850, {{-246.1, 821.3}, {56.7, 40.5}}
+                                                    Other, 0x1149c5240, {{-210.2, 833.3}, {16.9, 16.6}}
+                                                    Image, 0x1086bb880, {{-225.2, 832.0}, {19.3, 19.0}}, label: '10_ukulele_soprano_ukulele'
+                                                    StaticText, 0x1149c5360, {{-246.1, 821.3}, {56.7, 40.5}}, identifier: 'songs.tile.campfire.bass-sb-song-old-macdonald.versions.more', label: '+3'
+                                                Button, 0x1149c5480, {{-408.1, 675.9}, {136.2, 236.1}}, identifier: 'songs.campfire.bass-sb-song-bobby-shafto', label: 'بوبي شافتو, كتاب أغاني غيتار الباس', value: Pro, سهل, D7 G C
+                                                  Other, 0x1147a4970, {{-398.0, 700.2}, {115.9, 11.0}}
+                                                  StaticText, 0x1147a4a90, {{-394.3, 713.8}, {108.6, 29.4}}, identifier: 'songs.tile.campfire.bass-sb-song-bobby-shafto.cover.title.0', label: 'بوبي شافتو'
+                                                  StaticText, 0x1147a4bb0, {{-293.7, 871.3}, {15.3, 14.1}}, identifier: 'songs.tile.campfire.bass-sb-song-bobby-shafto.chords.chord.D7', label: 'D7'
+                                                  StaticText, 0x1147a4cd0, {{-319.5, 871.3}, {9.2, 14.1}}, identifier: 'songs.tile.campfire.bass-sb-song-bobby-shafto.chords.chord.G', label: 'G'
+                                                  StaticText, 0x1147a4df0, {{-344.9, 871.3}, {8.9, 14.1}}, identifier: 'songs.tile.campfire.bass-sb-song-bobby-shafto.chords.chord.C', label: 'C'
+                                                  Other, 0x1149c55a0, {{-294.0, 901.3}, {22.1, 5.5}}, label: 'سهل'
+                                                  StaticText, 0x1149c56c0, {{-321.0, 896.9}, {20.5, 14.1}}, identifier: 'songs.tile.campfire.bass-sb-song-bobby-shafto.duration', label: '١:٤٦'
+                                                  StaticText, 0x1149c57e0, {{-364.2, 895.8}, {36.8, 16.3}}, identifier: 'songs.tile.campfire.bass-sb-song-bobby-shafto.xp', label: '+٣٠ XP'
+                                                Other, 0x1149c5900, {{-394.3, 744.0}, {20.2, 20.2}}, label: 'Timbre Pro'
+                                                  Image, 0x1149c5a20, {{-387.2, 749.8}, {6.4, 8.9}}, identifier: 'lock.fill', label: 'قفل'
+                                                Button, 0x1149c5b40, {{-404.4, 767.9}, {40.5, 40.5}}, identifier: 'songs.sample.bass-sb-song-bobby-shafto', label: 'استمع إليها', value: بوبي شافتو
+                                                Button, 0x1149c5c60, {{-408.1, 821.3}, {56.7, 40.5}}, identifier: 'songs.versions.bass-sb-song-bobby-shafto', label: 'الإصدارات', value: الأغاني, كتاب أغان...
+                                                  Button, 0x1149c5d80, {{-408.1, 821.3}, {56.7, 40.5}}
+                                                    Other, 0x1149c5ea0, {{-372.2, 833.3}, {16.9, 16.6}}
+                                                    Image, 0x1149c5fc0, {{-387.2, 832.0}, {19.3, 19.0}}, label: '10_ukulele_soprano_ukulele'
+                                                    StaticText, 0x1149c60e0, {{-408.1, 821.3}, {56.7, 40.5}}, identifier: 'songs.tile.campfire.bass-sb-song-bobby-shafto.versions.more', label: '+3'
+                                          Image, 0x1149c6200, {{334.0, 930.3}, {64.0, 64.0}}, label: 'render_bass_p4'
+                                          StaticText, 0x1149c6320, {{257.0, 949.7}, {83.0, 25.3}}, label: 'غيتار باس'
+                                          Image, 0x1149c6440, {{47.3, 958.0}, {13.3, 12.7}}, identifier: 'star.fill', label: 'المفضلة'
+                                          StaticText, 0x1149c6560, {{20.0, 957.5}, {40.7, 15.3}}, label: '٠ من ٩'
+                                            StaticText, 0x1149c6680, {{20.0, 957.5}, {6.3, 15.3}}, label: '٠'
+                                            StaticText, 0x1149c67a0, {{26.3, 957.5}, {5.7, 15.3}}, label: ' / '
+                                            StaticText, 0x1086bb9a0, {{32.0, 957.5}, {6.3, 15.3}}, label: '٩'
+                                          ScrollView, 0x1086bbac0, {{0.0, 990.3}, {402.0, 271.0}}, identifier: 'songs.rail.bass'
+                                            Other, 0x1086bbbe0, {{-90.0, 990.3}, {472.0, 271.0}}
+                                              Other, 0x1086bbd00, {{-84.9, 990.3}, {466.9, 271.0}}
+                                                Button, 0x1086bbe20, {{234.0, 990.3}, {148.0, 271.0}}, identifier: 'songs.song.bass-1-6', label: 'كان لدى ماري حمل صغير, غيتار باس', value: مقفل, أكمل ⁨تعرّف ...
+                                                  Other, 0x1086bbf40, {{245.0, 1016.7}, {126.0, 11.0}}
+                                                  StaticText, 0x108659160, {{249.0, 1030.5}, {118.0, 29.7}}, identifier: 'songs.tile.bass-1-6.cover.title.0', label: 'كان لدى ماري'
+                                                  StaticText, 0x108659280, {{258.0, 1053.8}, {100.0, 29.7}}, identifier: 'songs.tile.bass-1-6.cover.title.1', label: 'حمل صغير'
+                                                  StaticText, 0x1086593a0, {{347.0, 1001.4}, {11.0, 10.3}}, identifier: 'songs.tile.bass-1-6.cover.catalogue', label: '01'
+                                                  Image, 0x1086594c0, {{365.3, 1205.3}, {7.3, 10.0}}, identifier: 'lock.fill', label: 'قفل'
+                                                  StaticText, 0x1086595e0, {{283.0, 1202.3}, {76.0, 30.3}}, label: 'أكمل ⁨تعرّف على غيتار الباس⁩'
+                                                  Other, 0x108659700, {{358.0, 1249.7}, {24.0, 6.0}}, label: 'سهل'
+                                                  StaticText, 0x108659820, {{328.7, 1244.8}, {22.3, 15.3}}, identifier: 'songs.tile.bass-1-6.duration', label: '٢:١١'
+                                                  StaticText, 0x108659940, {{281.7, 1243.7}, {40.0, 17.7}}, identifier: 'songs.tile.bass-1-6.xp', label: '+٣٠ XP'
+                                                Button, 0x108659a60, {{238.0, 1090.3}, {44.0, 44.0}}, identifier: 'songs.sample.bass-1-6', label: 'استمع إليها', value: كان لدى ماري حمل ص...
+                                                Button, 0x108659b80, {{234.0, 1148.3}, {68.3, 44.0}}, identifier: 'songs.versions.bass-1-6', label: 'الإصدارات', value: جيتار, الأغاني, كم...
+                                                  Button, 0x108659e00, {{234.0, 1148.3}, {68.3, 44.0}}
+                                                    Image, 0x1147a4f10, {{270.8, 1152.3}, {36.0, 36.0}}, label: 'render_guitar_acoustic'
+                                                    Other, 0x1147a5030, {{265.0, 1161.3}, {18.0, 18.0}}
+                                                    StaticText, 0x1147a5150, {{234.0, 1148.3}, {68.3, 44.0}}, identifier: 'songs.tile.bass-1-6.versions.more', label: '+10'
+                                                Button, 0x1147a5270, {{72.0, 990.3}, {148.0, 206.7}}, identifier: 'songs.song.bass-3-5', label: 'نشيد الفرح على الباس, غيتار باس', value: Pro, سهل, G D
+                                                  Other, 0x1147a5390, {{83.0, 1016.7}, {126.0, 11.0}}
+                                                  StaticText, 0x1149c68c0, {{90.6, 1030.5}, {118.3, 29.7}}, identifier: 'songs.tile.bass-3-5.cover.title.0', label: 'نشيد الفرح على'
+                                                  StaticText, 0x1149c69e0, {{163.6, 1053.8}, {45.3, 29.7}}, identifier: 'songs.tile.bass-3-5.cover.title.1', label: 'الباس'
+                                                  StaticText, 0x1149c6b00, {{185.0, 1001.4}, {11.0, 10.3}}, identifier: 'songs.tile.bass-3-5.cover.catalogue', label: '02'
+                                                  StaticText, 0x1149c6c20, {{203.0, 1152.7}, {10.0, 15.3}}, identifier: 'songs.tile.bass-3-5.chords.chord.G', label: 'G'
+                                                  StaticText, 0x1149c6d40, {{175.3, 1152.7}, {9.7, 15.3}}, identifier: 'songs.tile.bass-3-5.chords.chord.D', label: 'D'
+                                                  Other, 0x1149c6e60, {{196.0, 1185.3}, {24.0, 6.0}}, label: 'سهل'
+                                                  StaticText, 0x1149c6f80, {{166.7, 1180.5}, {22.3, 15.3}}, identifier: 'songs.tile.bass-3-5.duration', label: '٢:٤٠'
+                                                  StaticText, 0x1149c70a0, {{119.7, 1179.3}, {40.0, 17.7}}, identifier: 'songs.tile.bass-3-5.xp', label: '+٣٠ XP'
+                                                Other, 0x108659f20, {{87.0, 1064.3}, {22.0, 22.0}}, label: 'Timbre Pro'
+                                                  Image, 0x10865a040, {{94.7, 1070.7}, {7.0, 9.7}}, identifier: 'lock.fill', label: 'قفل'
+                                                Button, 0x10865a160, {{76.0, 1090.3}, {44.0, 44.0}}, identifier: 'songs.sample.bass-3-5', label: 'استمع إليها', value: نشيد الفرح على الباس
+                                                Button, 0x10865a280, {{-84.9, 997.5}, {137.8, 192.4}}, identifier: 'songs.song.bass-5-4', label: 'السير بالبلوز في ⁨A⁩, غيتار باس', value: Pro, متوسط, E7 D7 A7
+                                                  Other, 0x10865a3a0, {{-74.6, 1022.0}, {117.3, 10.2}}
+                                                  StaticText, 0x10865a4c0, {{-66.7, 1034.9}, {109.2, 27.6}}, identifier: 'songs.tile.bass-5-4.cover.title.0', label: 'السير بالبلوز'
+                                                  StaticText, 0x10865a5e0, {{-3.7, 1056.6}, {46.2, 27.6}}, identifier: 'songs.tile.bass-5-4.cover.title.1', label: 'في ⁨A⁩'
+                                                  StaticText, 0x10865a700, {{20.3, 1007.8}, {10.2, 9.6}}, identifier: 'songs.tile.bass-5-4.cover.catalogue', label: '03'
+                                                  StaticText, 0x10865a820, {{33.0, 1148.6}, {13.3, 14.3}}, identifier: 'songs.tile.bass-5-4.chords.chord.E7', label: 'E7'
+                                                  StaticText, 0x10865a940, {{0.8, 1148.6}, {15.5, 14.3}}, identifier: 'songs.tile.bass-5-4.chords.chord.D7', label: 'D7'
+                                                  StaticText, 0x10865aa60, {{-31.5, 1148.6}, {15.5, 14.3}}, identifier: 'songs.tile.bass-5-4.chords.chord.A7', label: 'A7'
+                                                  Other, 0x10865ab80, {{30.5, 1179.0}, {22.3, 5.6}}, label: 'متوسط'
+                                                  StaticText, 0x10865aca0, {{3.2, 1174.5}, {20.8, 14.3}}, identifier: 'songs.tile.bass-5-4.duration', label: '٢:٢٠'
+                                                  StaticText, 0x10865adc0, {{-40.5, 1173.4}, {37.2, 16.4}}, identifier: 'songs.tile.bass-5-4.xp', label: '+٣٠ XP'
+                                                Other, 0x10865aee0, {{-70.9, 1066.4}, {20.5, 20.5}}, label: 'Timbre Pro'
+                                                  Image, 0x10865b000, {{-63.8, 1072.3}, {6.5, 9.0}}, identifier: 'lock.fill', label: 'قفل'
+                                                Button, 0x10865b120, {{-81.2, 1090.6}, {41.0, 41.0}}, identifier: 'songs.sample.bass-5-4', label: 'استمع إليها', value: السير بالبلوز في ⁨A⁩
+                                      Other, 0x10865b440, {{0.0, -0.0}, {402.0, 874.0}}
+                                        Other, 0x10865b560, {{0.0, 726.2}, {402.0, 147.8}}
+                                      Other, 0x10865b680, {{0.0, -0.0}, {402.0, 874.0}}
+                                        Other, 0x10865b7a0, {{0.0, 726.2}, {402.0, 147.8}}
+                                          Other, 0x10865b8c0, {{0.0, 726.2}, {402.0, 147.8}}
+                                            Other, 0x10865b9e0, {{0.0, 726.2}, {402.0, 147.8}}
+                                          Other, 0x10865bb00, {{0.0, 726.2}, {402.0, 147.8}}
+                                            Other, 0x10865bc20, {{0.0, 726.2}, {402.0, 147.8}}
+                                            Other, 0x10865bd40, {{0.0, 726.2}, {402.0, 147.8}}
+                                          Image, 0x10865be60, {{-120.0, 731.0}, {642.0, 286.0}}, identifier: 'AdditionalDimmingOverlay'
+                                      Other, 0x10865bf80, {{-24.0, 62.0}, {30.0, 729.0}}, label: 'شريط تمرير رأسي, ‏٤ صفحات', value: ‏٥٤٪؜
+                                        Other, 0x10865c0a0, {{3.0, 330.7}, {3.0, 231.3}}
+                                      Other, 0x10865c1c0, {{-24.0, 62.0}, {30.0, 729.0}}, label: 'شريط تمرير رأسي, ‏٤ صفحات', value: ‏٥٤٪؜
+                                        Other, 0x10865c2e0, {{3.0, 330.7}, {3.0, 231.3}}
+                                    Other, 0x10865c400, {{0.0, 0.0}, {402.0, 80.0}}
+                            Other, 0x10865c520, {{0.0, 0.0}, {402.0, 874.0}}
+                              Other, 0x10865c640, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x10865c760, {{0.0, 791.0}, {402.0, 83.0}}
+                Other, 0x10865c880, {{0.0, 791.0}, {402.0, 83.0}}
+                  Other, 0x10865c9a0, {{0.0, 0.0}, {402.0, 874.0}}
+                    TabBar, 0x10865cac0, {{0.0, 791.0}, {402.0, 83.0}}, label: 'شريط علامات التبويب'
+                      Other, 0x10865cbe0, {{21.0, 791.0}, {360.0, 62.0}}
+                        Other, 0x10865cd00, {{162.5, 795.0}, {77.0, 54.0}}
+                          Other, 0x10865ce20, {{162.5, 795.0}, {77.0, 54.0}}
+                            Other, 0x10865cf40, {{162.5, 795.0}, {77.0, 54.0}}
+                            Other, 0x10865d060, {{162.5, 795.0}, {77.0, 54.0}}
+                              Other, 0x10865d180, {{162.5, 795.0}, {77.0, 54.0}}
+                                Other, 0x10865d2a0, {{162.5, 795.0}, {77.0, 54.0}}
+                                  Other, 0x10865d3c0, {{162.5, 795.0}, {77.0, 54.0}}
+                                Other, 0x10865d4e0, {{162.5, 795.0}, {77.0, 54.0}}
+                              Other, 0x10865d600, {{162.5, 795.0}, {77.0, 54.0}}
+                        Other, 0x10865d720, {{21.0, 791.0}, {77.0, 54.0}}
+                        Other, 0x10865d840, {{21.0, 791.0}, {360.0, 62.0}}
+                          Button, 0x10865d960, {{300.0, 795.0}, {77.0, 54.0}}, identifier: 'gauge.with.needle', label: 'ضبط'
+                            Image, 0x10865da80, {{325.0, 801.3}, {27.3, 27.3}}, identifier: 'gauge.with.needle.fill', label: 'gauge.with.needle.fill'
+                          Button, 0x10865dba0, {{231.2, 795.0}, {77.0, 54.0}}, identifier: 'graduationcap', label: 'تعلّم'
+                            Image, 0x10865dcc0, {{251.2, 801.7}, {36.7, 31.3}}, identifier: 'graduationcap.fill', label: 'itunes u'
+                          Button, 0x10865dde0, {{162.5, 795.0}, {77.0, 54.0}}, identifier: 'music.note.list', label: 'الأغاني', Selected
+                            Image, 0x10865df00, {{186.5, 801.7}, {29.3, 27.0}}, identifier: 'music.note.list', label: 'قائمة تشغيل'
+                          Button, 0x10865e020, {{93.8, 795.0}, {77.0, 54.0}}, identifier: 'metronome', label: 'التمرين'
+                            Image, 0x10865e140, {{117.8, 801.7}, {28.7, 26.0}}, identifier: 'metronome.fill', label: 'metronome.fill'
+                          Button, 0x10865e260, {{25.0, 795.0}, {77.0, 54.0}}, identifier: 'chart.bar', label: 'التقدّم'
+                            Image, 0x10865e380, {{46.0, 802.3}, {35.0, 25.3}}, identifier: 'chart.bar.fill', label: 'مخطط عمودي'
+                  Other, 0x10865e4a0, {{0.0, 791.0}, {402.0, 83.0}}
+                    Other, 0x10865e5c0, {{0.0, 791.0}, {402.0, 83.0}}
+                      Other, 0x10865e6e0, {{0.0, 791.0}, {402.0, 83.0}}
+                        Other, 0x10865e800, {{0.0, 791.0}, {402.0, 83.0}}
+                          Other, 0x10865e920, {{0.0, 791.0}, {402.0, 83.0}}
+                            Other, 0x10865ea40, {{0.0, 791.0}, {402.0, 83.0}}
+                        Other, 0x10865eb60, {{0.0, 791.0}, {402.0, 83.0}}
+                          Other, 0x10865ec80, {{0.0, 791.0}, {402.0, 83.0}}
+Path to element:
+ →Application, 0x1149d8af0, pid: 82519, label: 'Timbre'
+Query chain:
+ →Find: Target Application 'com.shahradazerisharghi.timbre'
+  Output: {
+    Application, 0x10871d5a0, pid: 82519, label: 'Timbre'
+  }
+)

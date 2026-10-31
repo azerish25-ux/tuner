@@ -1,0 +1,573 @@
+Optional(Attributes: Application, 0x1088c86b0, pid: 6801, label: 'Timbre'
+Element subtree:
+ →Application, 0x1088c86b0, pid: 6801, label: 'Timbre'
+    Window (Main), 0x1088c9570, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x1088c9930, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x1088c9a50, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x1088c9690, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x1088c97b0, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x1088c9b70, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x1088c9c90, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x1088c9db0, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x1088c9ed0, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x1088c9ff0, {{0.0, 0.0}, {402.0, 874.0}}
+                        Other, 0x1088ca110, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x1088ca230, {{0.0, 0.0}, {402.0, 874.0}}
+                            Other, 0x1088ca350, {{0.0, 0.0}, {402.0, 874.0}}
+                              Other, 0x1088ca470, {{0.0, 0.0}, {402.0, 874.0}}
+                                Other, 0x1088ca590, {{0.0, 0.0}, {402.0, 874.0}}
+                                  Other, 0x1088ca6b0, {{0.0, 0.0}, {402.0, 874.0}}
+                                    ScrollView, 0x1088ca7d0, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'songs.page'
+                                      Other, 0x1088ca8f0, {{0.0, -966.3}, {402.0, 2612.0}}
+                                        Other, 0x1088caa10, {{0.0, -954.3}, {442.0, 2211.3}}
+                                          StaticText, 0x1088cab30, {{20.0, -954.3}, {254.0, 77.3}}, identifier: 'songs.header.title-songs.header.subtitle', label: 'Songs, Play the melody, or strum the chords and sing'
+                                            StaticText, 0x1088cac50, {{20.0, -954.3}, {87.7, 35.3}}, identifier: 'songs.header.title', label: 'Songs'
+                                            StaticText, 0x1088cad70, {{20.0, -915.0}, {254.0, 38.0}}, identifier: 'songs.header.subtitle', label: 'Play the melody, or strum the chords and sing'
+                                          Button, 0x1088cae90, {{282.0, -937.7}, {54.0, 44.0}}, identifier: 'streak.chip', label: '7-day streak', value: Today: 1 of 3
+                                            Other, 0x1088cafb0, {{295.8, -923.8}, {12.4, 15.2}}
+                                            StaticText, 0x1088cb0d0, {{282.0, -937.7}, {54.0, 44.0}}, identifier: 'songs.header.streak.count', label: '7'
+                                          Button, 0x1088cb1f0, {{338.0, -937.7}, {44.0, 44.0}}, identifier: 'level.ring', label: 'Level 5, 240 of 500 XP'
+                                            StaticText, 0x1088cb310, {{347.8, -925.8}, {24.3, 20.3}}, identifier: 'songs.header.level.mark', label: 'LV 5'
+                                          ScrollView, 0x1088cb430, {{0.0, -853.0}, {402.0, 44.0}}
+                                            Other, 0x1088cb550, {{-106.7, -853.0}, {870.7, 44.0}}
+                                              Button, 0x1088cb670, {{-106.7, -853.0}, {46.0, 44.0}}, identifier: 'songs.filter.all', label: 'All'
+                                              Button, 0x1088cb790, {{-52.7, -853.0}, {93.3, 44.0}}, identifier: 'songs.filter.guitar.acoustic.6', label: 'Guitar'
+                                                Image, 0x1088cb8b0, {{-53.9, -851.2}, {40.5, 40.5}}, label: 'render_guitar_acoustic'
+                                                StaticText, 0x1088cb9d0, {{-52.7, -853.0}, {93.3, 44.0}}, identifier: 'songs.filter.guitar.acoustic.6.title', label: 'Guitar'
+                                              Button, 0x1088cbaf0, {{48.7, -853.0}, {102.7, 44.0}}, identifier: 'songs.filter.ukulele.soprano.4', label: 'Ukulele'
+                                                Image, 0x1088cbc10, {{56.0, -842.7}, {23.3, 23.3}}, label: '10_ukulele_soprano_ukulele'
+                                                StaticText, 0x1088cbd30, {{48.7, -853.0}, {102.7, 44.0}}, identifier: 'songs.filter.ukulele.soprano.4.title', label: 'Ukulele'
+                                              Button, 0x1088cbe50, {{159.3, -853.0}, {83.7, 44.0}}, identifier: 'songs.filter.bass.electric.4', label: 'Bass', Selected
+                                                Image, 0x1088cbf70, {{158.1, -851.2}, {40.5, 40.5}}, label: 'render_bass_p4'
+                                                StaticText, 0x1088cc090, {{159.3, -853.0}, {83.7, 44.0}}, identifier: 'songs.filter.bass.electric.4.title', label: 'Bass'
+                                              Button, 0x1088cc1b0, {{251.0, -853.0}, {89.0, 44.0}}, identifier: 'songs.filter.violin.standard.4', label: 'Violin'
+                                                Image, 0x1088cc2d0, {{249.8, -851.2}, {40.5, 40.5}}, label: 'render_violin'
+                                                StaticText, 0x1088cc3f0, {{251.0, -853.0}, {89.0, 44.0}}, identifier: 'songs.filter.violin.standard.4.title', label: 'Violin'
+                                              Button, 0x1088cc510, {{348.0, -853.0}, {85.7, 44.0}}, identifier: 'songs.filter.cello.standard.4', label: 'Cello'
+                                                Image, 0x1088cc630, {{346.8, -851.2}, {40.5, 40.5}}, label: 'render_cello'
+                                                StaticText, 0x1088cc750, {{348.0, -853.0}, {85.7, 44.0}}, identifier: 'songs.filter.cello.standard.4.title', label: 'Cello'
+                                              Button, 0x1088cc870, {{441.7, -853.0}, {114.3, 44.0}}, identifier: 'songs.filter.mandolin.standard.8', label: 'Mandolin'
+                                                Image, 0x1088cc990, {{440.4, -851.2}, {40.5, 40.5}}, label: 'render_mandolin'
+                                                StaticText, 0x1088ccab0, {{441.7, -853.0}, {114.3, 44.0}}, identifier: 'songs.filter.mandolin.standard.8.title', label: 'Mandolin'
+                                              Button, 0x1088ccbd0, {{564.0, -853.0}, {89.3, 44.0}}, identifier: 'songs.filter.banjo.five.5', label: 'Banjo'
+                                                Image, 0x1088cccf0, {{571.3, -842.7}, {23.3, 23.3}}, label: '22_folk_world_strings_banjo_5_string'
+                                                StaticText, 0x1088cce10, {{564.0, -853.0}, {89.3, 44.0}}, identifier: 'songs.filter.banjo.five.5.title', label: 'Banjo'
+                                              Button, 0x1088ccf30, {{661.3, -853.0}, {102.7, 44.0}}, identifier: 'songs.filter.voice', label: 'Singing'
+                                                Other, 0x1088cd050, {{670.3, -841.0}, {20.0, 20.0}}
+                                                StaticText, 0x1088cd170, {{661.3, -853.0}, {102.7, 44.0}}, identifier: 'songs.filter.voice.title', label: 'Singing'
+                                          Button, 0x1088cd290, {{20.0, -785.0}, {362.0, 246.0}}, identifier: 'songs.hero', label: 'Song of the day, Jingle Bells, Bass Songbook', value: Open
+                                            Other, 0x1088cd3b0, {{20.0, -785.0}, {362.0, 246.0}}
+                                            Other, 0x1088cd4d0, {{222.7, -763.3}, {116.7, 116.7}}
+                                            Other, 0x1088cd5f0, {{249.3, -744.7}, {105.3, 9.0}}
+                                            StaticText, 0x1088cd710, {{293.0, -733.6}, {61.7, 25.0}}, identifier: 'songs.hero.bass-sb-song-jingle-bells.cover.title.0', label: 'Jingle'
+                                            StaticText, 0x1088cd830, {{307.7, -713.9}, {47.0, 25.0}}, identifier: 'songs.hero.bass-sb-song-jingle-bells.cover.title.1', label: 'Bells'
+                                            StaticText, 0x1088cd950, {{260.1, -757.7}, {9.3, 8.7}}, identifier: 'songs.hero.bass-sb-song-jingle-bells.cover.catalogue', label: '05'
+                                            Image, 0x1088cda70, {{49.3, -759.7}, {11.7, 13.0}}, identifier: 'waveform', label: 'waveform'
+                                            StaticText, 0x1088cdb90, {{68.3, -761.0}, {95.3, 15.3}}, identifier: 'songs.hero.bass-sb-song-jingle-bells.eyebrow', label: 'Song of the day'
+                                            StaticText, 0x1088cdcb0, {{38.0, -678.3}, {158.3, 35.3}}, identifier: 'songs.hero.bass-sb-song-jingle-bells.title', label: 'Jingle Bells'
+                                            Other, 0x1088cddd0, {{20.0, -643.0}, {362.0, 104.0}}
+                                            Image, 0x1088cdef0, {{29.1, -637.9}, {35.8, 35.8}}, label: 'render_bass_p4'
+                                            StaticText, 0x1088ce010, {{62.0, -629.0}, {106.3, 18.0}}, identifier: 'songs.hero.bass-sb-song-jingle-bells.course', label: 'Bass Songbook'
+                                            StaticText, 0x1088ce130, {{174.3, -629.0}, {102.7, 18.0}}, identifier: 'songs.hero.bass-sb-song-jingle-bells.metadata', label: '· 2:36 · +30 XP'
+                                            Image, 0x1088ce250, {{58.0, -586.3}, {13.3, 15.0}}, identifier: 'play.fill', label: 'Play'
+                                            StaticText, 0x1088ce370, {{77.7, -589.8}, {36.0, 21.7}}, identifier: 'songs.hero.bass-sb-song-jingle-bells.play.title', label: 'Play'
+                                            Other, 0x1088ce490, {{220.7, -582.0}, {24.0, 6.0}}, label: 'Easy'
+                                            StaticText, 0x1088ce5b0, {{259.7, -586.7}, {10.0, 15.3}}, identifier: 'songs.hero.bass-sb-song-jingle-bells.chords.chord.G', label: 'G'
+                                            StaticText, 0x1088ce6d0, {{287.7, -586.7}, {9.7, 15.3}}, identifier: 'songs.hero.bass-sb-song-jingle-bells.chords.chord.C', label: 'C'
+                                            StaticText, 0x1088ce7f0, {{315.3, -586.7}, {7.0, 15.3}}, identifier: 'songs.hero.bass-sb-song-jingle-bells.chords.chord.F', label: 'F'
+                                            StaticText, 0x1088ce910, {{340.3, -586.7}, {16.7, 15.3}}, identifier: 'songs.hero.bass-sb-song-jingle-bells.chords.chord.D7', label: 'D7'
+                                          Button, 0x1088cea30, {{320.0, -687.0}, {44.0, 44.0}}, identifier: 'songs.hero.preview', label: 'Hear it'
+                                          Other, 0x1088ceb50, {{20.0, -515.0}, {362.0, 81.3}}, identifier: 'yoursongs.shelf'
+                                            Button, 0x1088cec70, {{20.0, -515.0}, {362.0, 81.3}}, identifier: 'yoursongs.add', label: 'Add a song'
+                                              Other, 0x1088ced90, {{30.2, -502.3}, {41.6, 50.8}}
+                                              Other, 0x1088ceeb0, {{51.3, -497.8}, {45.2, 45.1}}
+                                              Other, 0x1088cefd0, {{38.6, -492.2}, {40.0, 38.2}}
+                                              StaticText, 0x1088cf0f0, {{104.0, -503.0}, {96.3, 21.7}}, identifier: 'songs.library.empty.title', label: 'Your songs'
+                                              StaticText, 0x1088cf210, {{104.0, -479.3}, {92.0, 33.7}}, label: 'Play the songs you love'
+                                              Image, 0x1088cf330, {{262.7, -480.7}, {11.0, 11.0}}, identifier: 'plus', label: 'Add'
+                                              StaticText, 0x1088cf450, {{262.7, -482.7}, {95.3, 16.7}}, label: 'Add a song'
+                                          Image, 0x1088cf570, {{23.3, -405.3}, {21.3, 19.7}}, identifier: 'heart.fill', label: 'Love'
+                                          StaticText, 0x1088cf690, {{58.0, -408.3}, {167.3, 25.3}}, label: 'Songs you know'
+                                          ScrollView, 0x1088e7f30, {{0.0, -369.7}, {402.0, 279.0}}, identifier: 'songs.rail.known'
+                                            Other, 0x1088e8050, {{20.0, -369.7}, {1930.0, 279.0}}
+                                              Other, 0x1088e8170, {{20.0, -369.7}, {790.1, 267.5}}
+                                                Button, 0x1088e8290, {{20.0, -369.7}, {148.0, 224.7}}, identifier: 'songs.known.bass-sb-song-ode-to-joy', label: 'Ode to Joy, Bass Songbook', value: Open, Easy, C G
+                                                  Other, 0x1088e83b0, {{31.0, -343.3}, {126.0, 12.0}}
+                                                  StaticText, 0x1088e84d0, {{31.1, -328.5}, {79.3, 29.7}}, identifier: 'songs.tile.known.bass-sb-song-ode-to-joy.cover.title.0', label: 'Ode to'
+                                                  StaticText, 0x1088e85f0, {{31.1, -305.2}, {42.7, 29.7}}, identifier: 'songs.tile.known.bass-sb-song-ode-to-joy.cover.title.1', label: 'Joy'
+                                                  StaticText, 0x1088e8710, {{27.0, -207.3}, {9.7, 15.3}}, identifier: 'songs.tile.known.bass-sb-song-ode-to-joy.chords.chord.C', label: 'C'
+                                                  StaticText, 0x1088e8830, {{54.7, -207.3}, {10.0, 15.3}}, identifier: 'songs.tile.known.bass-sb-song-ode-to-joy.chords.chord.G', label: 'G'
+                                                  Other, 0x1088e8950, {{20.0, -155.7}, {24.0, 6.0}}, label: 'Easy'
+                                                  StaticText, 0x1088e8a70, {{51.0, -160.5}, {27.7, 15.3}}, identifier: 'songs.tile.known.bass-sb-song-ode-to-joy.duration', label: '2:07'
+                                                  StaticText, 0x1088e8b90, {{85.7, -160.7}, {45.0, 15.7}}, identifier: 'songs.tile.known.bass-sb-song-ode-to-joy.xp', label: '+30 XP'
+                                                Button, 0x1088e8cb0, {{120.0, -269.7}, {44.0, 44.0}}, identifier: 'songs.sample.bass-sb-song-ode-to-joy', label: 'Hear it', value: Ode to Joy
+                                                Button, 0x1088e8dd0, {{106.0, -211.7}, {62.0, 44.0}}, identifier: 'songs.versions.bass-sb-song-ode-to-joy', label: 'Versions', value: Guitar, Songs, Uku...
+                                                  Button, 0x1088e8ef0, {{106.0, -211.7}, {62.0, 44.0}}
+                                                    Image, 0x1088e9010, {{101.5, -207.7}, {36.0, 36.0}}, label: 'render_guitar_acoustic'
+                                                    Other, 0x1088e9130, {{125.7, -198.7}, {18.0, 18.0}}
+                                                    StaticText, 0x1088e9250, {{106.0, -211.7}, {62.0, 44.0}}, identifier: 'songs.tile.known.bass-sb-song-ode-to-joy.versions.more', label: '+5'
+                                                Button, 0x1088e9370, {{182.0, -369.7}, {148.0, 254.7}}, identifier: 'songs.known.bass-sb-song-amazing-grace', label: 'Amazing Grace, Bass Songbook', value: Pro, Easy, G D7 C D
+                                                  Other, 0x1088e9490, {{193.0, -343.3}, {126.0, 12.0}}
+                                                  StaticText, 0x1088e95b0, {{196.5, -328.5}, {119.0, 29.7}}, identifier: 'songs.tile.known.bass-sb-song-amazing-grace.cover.title.0', label: 'AMAZING'
+                                                  StaticText, 0x1088e96d0, {{213.7, -305.2}, {84.7, 29.7}}, identifier: 'songs.tile.known.bass-sb-song-amazing-grace.cover.title.1', label: 'GRACE'
+                                                  StaticText, 0x1088e97f0, {{189.0, -157.3}, {10.0, 15.3}}, identifier: 'songs.tile.known.bass-sb-song-amazing-grace.chords.chord.G', label: 'G'
+                                                  StaticText, 0x1088e9910, {{217.0, -157.3}, {16.7, 15.3}}, identifier: 'songs.tile.known.bass-sb-song-amazing-grace.chords.chord.D7', label: 'D7'
+                                                  StaticText, 0x1088e9a30, {{251.7, -157.3}, {9.7, 15.3}}, identifier: 'songs.tile.known.bass-sb-song-amazing-grace.chords.chord.C', label: 'C'
+                                                  StaticText, 0x1088e9b50, {{279.3, -157.3}, {9.7, 15.3}}, identifier: 'songs.tile.known.bass-sb-song-amazing-grace.chords.chord.D', label: 'D'
+                                                  Other, 0x1088e9c70, {{182.0, -125.7}, {24.0, 6.0}}, label: 'Easy'
+                                                  StaticText, 0x1088e9d90, {{213.0, -130.5}, {27.7, 15.3}}, identifier: 'songs.tile.known.bass-sb-song-amazing-grace.duration', label: '1:51'
+                                                  StaticText, 0x1088e9eb0, {{247.7, -130.7}, {45.0, 15.7}}, identifier: 'songs.tile.known.bass-sb-song-amazing-grace.xp', label: '+30 XP'
+                                                Other, 0x1088e9fd0, {{293.0, -295.7}, {22.0, 22.0}}, label: 'Timbre Pro'
+                                                  Image, 0x1088ea0f0, {{300.7, -289.3}, {7.0, 9.7}}, identifier: 'lock.fill', label: 'Lock'
+                                                Button, 0x1088ea210, {{282.0, -269.7}, {44.0, 44.0}}, identifier: 'songs.sample.bass-sb-song-amazing-grace', label: 'Hear it', value: Amazing Grace
+                                                Button, 0x1088ea330, {{268.0, -211.7}, {62.0, 44.0}}, identifier: 'songs.versions.bass-sb-song-amazing-grace', label: 'Versions', value: Guitar, Songs, Vio...
+                                                  Button, 0x1088ea450, {{268.0, -211.7}, {62.0, 44.0}}
+                                                    Image, 0x1088ea570, {{263.5, -207.7}, {36.0, 36.0}}, label: 'render_guitar_acoustic'
+                                                    Other, 0x1088ea690, {{287.7, -198.7}, {18.0, 18.0}}
+                                                    StaticText, 0x1088ea7b0, {{268.0, -211.7}, {62.0, 44.0}}, identifier: 'songs.tile.known.bass-sb-song-amazing-grace.versions.more', label: '+5'
+                                                Button, 0x1088ea8d0, {{349.1, -360.9}, {137.8, 237.1}}, identifier: 'songs.known.bass-sb-song-silent-night', label: 'Silent Night, Bass Songbook', value: Pro, Medium, A7 D G
+                                                  Other, 0x1088ea9f0, {{359.4, -336.4}, {117.3, 11.2}}
+                                                  StaticText, 0x1088eab10, {{359.4, -322.6}, {77.0, 27.6}}, identifier: 'songs.tile.known.bass-sb-song-silent-night.cover.title.0', label: 'SILENT'
+                                                  StaticText, 0x1088eac30, {{359.4, -300.8}, {73.2, 27.6}}, identifier: 'songs.tile.known.bass-sb-song-silent-night.cover.title.1', label: 'NIGHT'
+                                                  StaticText, 0x1088ead50, {{466.3, -350.5}, {10.2, 9.6}}, identifier: 'songs.tile.known.bass-sb-song-silent-night.cover.catalogue', label: '75'
+                                                  StaticText, 0x1088eae70, {{355.6, -163.2}, {15.5, 14.3}}, identifier: 'songs.tile.known.bass-sb-song-silent-night.chords.chord.A7', label: 'A7'
+                                                  StaticText, 0x1088eaf90, {{387.9, -163.2}, {9.0, 14.3}}, identifier: 'songs.tile.known.bass-sb-song-silent-night.chords.chord.D', label: 'D'
+                                                  StaticText, 0x1088eb0b0, {{413.7, -163.2}, {9.3, 14.3}}, identifier: 'songs.tile.known.bass-sb-song-silent-night.chords.chord.G', label: 'G'
+                                                  Other, 0x1087c9360, {{349.1, -133.7}, {22.3, 5.6}}, label: 'Medium'
+                                                  StaticText, 0x10879b250, {{378.0, -138.2}, {25.8, 14.3}}, identifier: 'songs.tile.known.bass-sb-song-silent-night.duration', label: '2:53'
+                                                  StaticText, 0x108783060, {{410.2, -138.4}, {41.9, 14.6}}, identifier: 'songs.tile.known.bass-sb-song-silent-night.xp', label: '+30 XP'
+                                                Other, 0x108783480, {{452.4, -292.0}, {20.5, 20.5}}, label: 'Timbre Pro'
+                                                  Image, 0x1087c3290, {{459.6, -286.1}, {6.5, 9.0}}, identifier: 'lock.fill', label: 'Lock'
+                                                Button, 0x108782c40, {{442.2, -267.8}, {41.0, 41.0}}, identifier: 'songs.sample.bass-sb-song-silent-night', label: 'Hear it', value: Silent Night
+                                                Button, 0x10878aaf0, {{429.5, -213.8}, {57.4, 41.0}}, identifier: 'songs.versions.bass-sb-song-silent-night', label: 'Versions', value: Songs, Ukulele Son...
+                                                  Button, 0x1087838a0, {{429.5, -213.8}, {57.4, 41.0}}
+                                                    Other, 0x1087857e0, {{433.8, -201.7}, {16.8, 16.8}}
+                                                    Image, 0x1087a6140, {{446.2, -202.9}, {19.5, 19.2}}, label: '10_ukulele_soprano_ukulele'
+                                                    StaticText, 0x1087a6980, {{429.5, -213.8}, {57.4, 41.0}}, identifier: 'songs.tile.known.bass-sb-song-silent-night.versions.more', label: '+3'
+                                                Button, 0x1087cb020, {{511.9, -358.5}, {136.2, 256.4}}, identifier: 'songs.known.bass-sb-song-canon-in-d', label: 'Canon in D, Bass Songbook', value: Pro, Medium, D A B...
+                                                  Other, 0x10878b330, {{522.0, -334.3}, {115.9, 11.0}}
+                                                  StaticText, 0x1087e8330, {{522.1, -320.7}, {115.3, 27.3}}, identifier: 'songs.tile.known.bass-sb-song-canon-in-d.cover.title.0', label: 'Canon in D'
+                                                  StaticText, 0x1087e8f90, {{518.4, -164.1}, {8.9, 14.1}}, identifier: 'songs.tile.known.bass-sb-song-canon-in-d.chords.chord.D', label: 'D'
+                                                  StaticText, 0x1087daec0, {{543.8, -164.1}, {8.6, 14.1}}, identifier: 'songs.tile.known.bass-sb-song-canon-in-d.chords.chord.A', label: 'A'
+                                                  StaticText, 0x1087feb30, {{569.0, -164.1}, {18.4, 14.1}}, identifier: 'songs.tile.known.bass-sb-song-canon-in-d.chords.chord.Bm', label: 'Bm'
+                                                  StaticText, 0x1087a2fc0, {{603.9, -164.1}, {24.8, 14.1}}, identifier: 'songs.tile.known.bass-sb-song-canon-in-d.chords.chord.F#m', label: 'F#m'
+                                                  StaticText, 0x1087e8b70, {{518.4, -140.2}, {9.2, 14.1}}, identifier: 'songs.tile.known.bass-sb-song-canon-in-d.chords.chord.G', label: 'G'
+                                                  Other, 0x1087a2ba0, {{511.9, -112.0}, {22.1, 5.5}}, label: 'Medium'
+                                                  StaticText, 0x1087a1d00, {{540.4, -116.4}, {25.5, 14.1}}, identifier: 'songs.tile.known.bass-sb-song-canon-in-d.duration', label: '1:42'
+                                                  StaticText, 0x1087a2780, {{572.3, -116.6}, {41.4, 14.4}}, identifier: 'songs.tile.known.bass-sb-song-canon-in-d.xp', label: '+30 XP'
+                                                Other, 0x1087e8750, {{614.0, -290.4}, {20.2, 20.2}}, label: 'Timbre Pro'
+                                                  Image, 0x1087e7f10, {{621.1, -284.6}, {6.4, 8.9}}, identifier: 'lock.fill', label: 'Lock'
+                                                Button, 0x1087e7af0, {{603.9, -266.5}, {40.5, 40.5}}, identifier: 'songs.sample.bass-sb-song-canon-in-d', label: 'Hear it', value: Canon in D
+                                                Button, 0x1087e76d0, {{591.3, -213.2}, {56.7, 40.5}}, identifier: 'songs.versions.bass-sb-song-canon-in-d', label: 'Versions', value: Songs, Ukulele Son...
+                                                  Button, 0x1087e72b0, {{591.3, -213.2}, {56.7, 40.5}}
+                                                    Other, 0x1087e6e90, {{595.6, -201.2}, {16.6, 16.6}}
+                                                    Image, 0x1087e6a70, {{607.9, -202.4}, {19.3, 19.0}}, label: '10_ukulele_soprano_ukulele'
+                                                    StaticText, 0x1087e6650, {{591.3, -213.2}, {56.7, 40.5}}, identifier: 'songs.tile.known.bass-sb-song-canon-in-d.versions.more', label: '+3'
+                                                Button, 0x1087e6230, {{673.9, -359.5}, {136.2, 234.3}}, identifier: 'songs.known.bass-sb-song-fur-elise', label: 'Für Elise, Bass Songbook', value: Pro, Easy, Am E C G
+                                                  Other, 0x1087e5e10, {{684.0, -335.3}, {115.9, 11.0}}
+                                                  StaticText, 0x1087e59f0, {{695.2, -321.6}, {93.5, 29.4}}, identifier: 'songs.tile.known.bass-sb-song-fur-elise.cover.title.0', label: 'Für Elise'
+                                                  StaticText, 0x1087e55d0, {{680.4, -164.1}, {19.6, 14.1}}, identifier: 'songs.tile.known.bass-sb-song-fur-elise.chords.chord.Am', label: 'Am'
+                                                  StaticText, 0x1087e1190, {{716.5, -164.1}, {6.7, 14.1}}, identifier: 'songs.tile.known.bass-sb-song-fur-elise.chords.chord.E', label: 'E'
+                                                  StaticText, 0x1087e3330, {{739.9, -164.1}, {8.9, 14.1}}, identifier: 'songs.tile.known.bass-sb-song-fur-elise.chords.chord.C', label: 'C'
+                                                  StaticText, 0x1087e3750, {{765.3, -164.1}, {9.2, 14.1}}, identifier: 'songs.tile.known.bass-sb-song-fur-elise.chords.chord.G', label: 'G'
+                                                  Other, 0x1087e3b70, {{673.9, -135.0}, {22.1, 5.5}}, label: 'Easy'
+                                                  StaticText, 0x1087e3f90, {{702.4, -139.4}, {25.5, 14.1}}, identifier: 'songs.tile.known.bass-sb-song-fur-elise.duration', label: '1:41'
+                                                  StaticText, 0x1087e4930, {{734.3, -139.6}, {41.4, 14.4}}, identifier: 'songs.tile.known.bass-sb-song-fur-elise.xp', label: '+30 XP'
+                                                Other, 0x1087ef9b0, {{776.0, -291.4}, {20.2, 20.2}}, label: 'Timbre Pro'
+                                                  Image, 0x1087efad0, {{783.1, -285.6}, {6.4, 8.9}}, identifier: 'lock.fill', label: 'Lock'
+                                                Button, 0x1087efbf0, {{765.9, -267.5}, {40.5, 40.5}}, identifier: 'songs.sample.bass-sb-song-fur-elise', label: 'Hear it', value: Für Elise
+                                                Button, 0x1087efd10, {{753.3, -214.1}, {56.7, 40.5}}, identifier: 'songs.versions.bass-sb-song-fur-elise', label: 'Versions', value: Songs, Ukulele Son...
+                                                  Button, 0x1087efe30, {{753.3, -214.1}, {56.7, 40.5}}
+                                                    Other, 0x1087eff50, {{757.6, -202.2}, {16.6, 16.6}}
+                                                    Image, 0x1087f0070, {{769.9, -203.4}, {19.3, 19.0}}, label: '10_ukulele_soprano_ukulele'
+                                                    StaticText, 0x1087f0190, {{753.3, -214.1}, {56.7, 40.5}}, identifier: 'songs.tile.known.bass-sb-song-fur-elise.versions.more', label: '+3'
+                                          Image, 0x1088eb1d0, {{23.0, -63.7}, {22.0, 22.0}}, identifier: '3.circle.fill', label: '3.circle.fill'
+                                          StaticText, 0x1088eb2f0, {{58.0, -65.3}, {177.7, 25.3}}, label: '3 chords or fewer'
+                                          ScrollView, 0x1088eb410, {{0.0, -26.7}, {402.0, 255.0}}, identifier: 'songs.rail.few'
+                                            Other, 0x1088eb530, {{20.0, -26.7}, {1282.0, 255.0}}
+                                              Other, 0x1088eb650, {{20.0, -26.7}, {790.1, 245.9}}
+                                                Button, 0x1088eb770, {{20.0, -26.7}, {148.0, 224.7}}, identifier: 'songs.few.bass-sb-song-saints', label: 'When the Saints Go Marching In, Bass Songbook', value: Open, Easy, C G F
+                                                  Other, 0x1088eb890, {{31.0, -0.3}, {126.0, 12.0}}
+                                                  StaticText, 0x1088eb9b0, {{55.3, 14.5}, {77.3, 20.7}}, identifier: 'songs.tile.few.bass-sb-song-saints.cover.title.0', label: 'When the'
+                                                  StaticText, 0x1088ebad0, {{55.2, 30.8}, {77.7, 20.7}}, identifier: 'songs.tile.few.bass-sb-song-saints.cover.title.1', label: 'Saints Go'
+                                                  StaticText, 0x1088ebbf0, {{46.3, 47.0}, {95.3, 20.7}}, identifier: 'songs.tile.few.bass-sb-song-saints.cover.title.2', label: 'Marching In'
+                                                  StaticText, 0x1088ebd10, {{27.0, 135.7}, {9.7, 15.3}}, identifier: 'songs.tile.few.bass-sb-song-saints.chords.chord.C', label: 'C'
+                                                  StaticText, 0x1088ebe30, {{54.7, 135.7}, {10.0, 15.3}}, identifier: 'songs.tile.few.bass-sb-song-saints.chords.chord.G', label: 'G'
+                                                  StaticText, 0x1088ebf50, {{82.7, 135.7}, {7.0, 15.3}}, identifier: 'songs.tile.few.bass-sb-song-saints.chords.chord.F', label: 'F'
+                                                  Other, 0x1088ec070, {{20.0, 187.3}, {24.0, 6.0}}, label: 'Easy'
+                                                  StaticText, 0x1088ec190, {{51.0, 182.5}, {27.7, 15.3}}, identifier: 'songs.tile.few.bass-sb-song-saints.duration', label: '2:06'
+                                                  StaticText, 0x1088ec2b0, {{85.7, 182.3}, {45.0, 15.7}}, identifier: 'songs.tile.few.bass-sb-song-saints.xp', label: '+30 XP'
+                                                Button, 0x1087f02b0, {{120.0, 73.3}, {44.0, 44.0}}, identifier: 'songs.sample.bass-sb-song-saints', label: 'Hear it', value: When the Saints Go...
+                                                Button, 0x1087f03d0, {{105.7, 131.3}, {62.3, 44.0}}, identifier: 'songs.versions.bass-sb-song-saints', label: 'Versions', value: Guitar, Songs, Uku...
+                                                  Button, 0x1087f04f0, {{105.7, 131.3}, {62.3, 44.0}}
+                                                    Image, 0x1087f0610, {{101.2, 135.3}, {36.0, 36.0}}, label: 'render_guitar_acoustic'
+                                                    Other, 0x1087f0730, {{125.3, 144.3}, {18.0, 18.0}}
+                                                    StaticText, 0x1087f0850, {{105.7, 131.3}, {62.3, 44.0}}, identifier: 'songs.tile.few.bass-sb-song-saints.versions.more', label: '+4'
+                                                Button, 0x1087f0970, {{182.0, -26.7}, {148.0, 204.7}}, identifier: 'songs.few.bass-3-5', label: 'Ode to Joy on bass, Bass', value: Pro, Easy, G D
+                                                  Other, 0x1087f0a90, {{193.0, -0.3}, {126.0, 11.0}}
+                                                  StaticText, 0x1087f0bb0, {{193.1, 13.5}, {123.0, 25.7}}, identifier: 'songs.tile.few.bass-3-5.cover.title.0', label: 'ODE TO JOY'
+                                                  StaticText, 0x1087f0cd0, {{193.1, 33.7}, {93.3, 25.7}}, identifier: 'songs.tile.few.bass-3-5.cover.title.1', label: 'ON BASS'
+                                                  StaticText, 0x1087f0df0, {{206.0, -15.6}, {11.0, 10.3}}, identifier: 'songs.tile.few.bass-3-5.cover.catalogue', label: '02'
+                                                  StaticText, 0x1087f0f10, {{189.0, 135.7}, {10.0, 15.3}}, identifier: 'songs.tile.few.bass-3-5.chords.chord.G', label: 'G'
+                                                  StaticText, 0x1087f1030, {{217.0, 135.7}, {9.7, 15.3}}, identifier: 'songs.tile.few.bass-3-5.chords.chord.D', label: 'D'
+                                                  Other, 0x1087f1150, {{182.0, 167.3}, {24.0, 6.0}}, label: 'Easy'
+                                                  StaticText, 0x1087f1270, {{213.0, 162.5}, {27.7, 15.3}}, identifier: 'songs.tile.few.bass-3-5.duration', label: '2:40'
+                                                  StaticText, 0x1087f1390, {{247.7, 162.3}, {45.0, 15.7}}, identifier: 'songs.tile.few.bass-3-5.xp', label: '+30 XP'
+                                                Other, 0x1087f14b0, {{293.0, 47.3}, {22.0, 22.0}}, label: 'Timbre Pro'
+                                                  Image, 0x1087f15d0, {{300.7, 53.7}, {7.0, 9.7}}, identifier: 'lock.fill', label: 'Lock'
+                                                Button, 0x1087f16f0, {{282.0, 73.3}, {44.0, 44.0}}, identifier: 'songs.sample.bass-3-5', label: 'Hear it', value: Ode to Joy on bass
+                                                Button, 0x1087f1810, {{349.1, -17.9}, {137.8, 237.1}}, identifier: 'songs.few.bass-sb-song-oh-susanna', label: 'Oh! Susanna, Bass Songbook', value: Pro, Easy, D7 G C
+                                                  Other, 0x1087f1930, {{359.4, 6.6}, {117.3, 10.2}}
+                                                  StaticText, 0x1087f1a50, {{359.4, 19.5}, {38.8, 27.6}}, identifier: 'songs.tile.few.bass-sb-song-oh-susanna.cover.title.0', label: 'Oh!'
+                                                  StaticText, 0x1087f90b0, {{359.4, 41.2}, {92.2, 27.6}}, identifier: 'songs.tile.few.bass-sb-song-oh-susanna.cover.title.1', label: 'Susanna'
+                                                  StaticText, 0x1087f91d0, {{371.5, -7.5}, {10.2, 9.6}}, identifier: 'songs.tile.few.bass-sb-song-oh-susanna.cover.catalogue', label: '07'
+                                                  StaticText, 0x1087f92f0, {{355.6, 179.8}, {15.5, 14.3}}, identifier: 'songs.tile.few.bass-sb-song-oh-susanna.chords.chord.D7', label: 'D7'
+                                                  StaticText, 0x1087f9410, {{387.9, 179.8}, {9.3, 14.3}}, identifier: 'songs.tile.few.bass-sb-song-oh-susanna.chords.chord.G', label: 'G'
+                                                  StaticText, 0x1087f9530, {{414.0, 179.8}, {9.0, 14.3}}, identifier: 'songs.tile.few.bass-sb-song-oh-susanna.chords.chord.C', label: 'C'
+                                                  Other, 0x1087f9650, {{349.1, 209.3}, {22.3, 5.6}}, label: 'Easy'
+                                                  StaticText, 0x1087f9770, {{378.0, 204.8}, {25.8, 14.3}}, identifier: 'songs.tile.few.bass-sb-song-oh-susanna.duration', label: '2:42'
+                                                  StaticText, 0x1087f9890, {{410.2, 204.6}, {41.9, 14.6}}, identifier: 'songs.tile.few.bass-sb-song-oh-susanna.xp', label: '+30 XP'
+                                                Other, 0x1087f99b0, {{452.4, 51.0}, {20.5, 20.5}}, label: 'Timbre Pro'
+                                                  Image, 0x1087f9ad0, {{459.6, 56.9}, {6.5, 9.0}}, identifier: 'lock.fill', label: 'Lock'
+                                                Button, 0x1087f9bf0, {{442.2, 75.2}, {41.0, 41.0}}, identifier: 'songs.sample.bass-sb-song-oh-susanna', label: 'Hear it', value: Oh! Susanna
+                                                Button, 0x1087f9d10, {{428.9, 129.2}, {58.0, 41.0}}, identifier: 'songs.versions.bass-sb-song-oh-susanna', label: 'Versions', value: Guitar, Songs, Uku...
+                                                  Button, 0x1087f9e30, {{428.9, 129.2}, {58.0, 41.0}}
+                                                    Image, 0x1087f9f50, {{424.7, 132.9}, {33.5, 33.5}}, label: 'render_guitar_acoustic'
+                                                    Other, 0x1087fa070, {{447.2, 141.3}, {16.8, 16.8}}
+                                                    StaticText, 0x1087fa190, {{428.9, 129.2}, {58.0, 41.0}}, identifier: 'songs.tile.few.bass-sb-song-oh-susanna.versions.more', label: '+4'
+                                                Button, 0x1087fa2b0, {{511.9, -16.5}, {136.2, 234.3}}, identifier: 'songs.few.bass-sb-song-camptown-races', label: 'Camptown Races, Bass Songbook', value: Pro, Easy, D7 G C
+                                                  Other, 0x1087fa3d0, {{522.0, 7.7}, {115.9, 11.0}}
+                                                  StaticText, 0x1087d7150, {{526.9, 21.4}, {111.0, 25.5}}, identifier: 'songs.tile.few.bass-sb-song-camptown-races.cover.title.0', label: 'Camptown'
+                                                  StaticText, 0x1087d7270, {{578.1, 41.4}, {59.8, 25.5}}, identifier: 'songs.tile.few.bass-sb-song-camptown-races.cover.title.1', label: 'Races'
+                                                  StaticText, 0x1087d7390, {{518.4, 178.9}, {15.3, 14.1}}, identifier: 'songs.tile.few.bass-sb-song-camptown-races.chords.chord.D7', label: 'D7'
+                                                  StaticText, 0x1087d74b0, {{550.3, 178.9}, {9.2, 14.1}}, identifier: 'songs.tile.few.bass-sb-song-camptown-races.chords.chord.G', label: 'G'
+                                                  StaticText, 0x1087d75d0, {{576.0, 178.9}, {8.9, 14.1}}, identifier: 'songs.tile.few.bass-sb-song-camptown-races.chords.chord.C', label: 'C'
+                                                  Other, 0x1087d5350, {{511.9, 208.0}, {22.1, 5.5}}, label: 'Easy'
+                                                  StaticText, 0x1087d5470, {{540.4, 203.6}, {25.5, 14.1}}, identifier: 'songs.tile.few.bass-sb-song-camptown-races.duration', label: '1:48'
+                                                  StaticText, 0x1087d5590, {{572.3, 203.4}, {41.4, 14.4}}, identifier: 'songs.tile.few.bass-sb-song-camptown-races.xp', label: '+30 XP'
+                                                Other, 0x1087d56b0, {{614.0, 51.6}, {20.2, 20.2}}, label: 'Timbre Pro'
+                                                  Image, 0x1087d57d0, {{621.1, 57.4}, {6.4, 8.9}}, identifier: 'lock.fill', label: 'Lock'
+                                                Button, 0x1087d58f0, {{603.9, 75.5}, {40.5, 40.5}}, identifier: 'songs.sample.bass-sb-song-camptown-races', label: 'Hear it', value: Camptown Races
+                                                Button, 0x1087b34d0, {{591.3, 128.9}, {56.7, 40.5}}, identifier: 'songs.versions.bass-sb-song-camptown-races', label: 'Versions', value: Songs, Ukulele, Ma...
+                                                  Button, 0x1087b35f0, {{591.3, 128.9}, {56.7, 40.5}}
+                                                    Other, 0x1087b3710, {{595.6, 140.8}, {16.6, 16.6}}
+                                                    Image, 0x1087b3830, {{607.9, 139.6}, {19.3, 19.0}}, label: '10_ukulele_soprano_ukulele'
+                                                    StaticText, 0x1087b3950, {{591.3, 128.9}, {56.7, 40.5}}, identifier: 'songs.tile.few.bass-sb-song-camptown-races.versions.more', label: '+3'
+                                                Button, 0x1087b3a70, {{673.9, -17.7}, {136.2, 206.7}}, identifier: 'songs.few.bass-sb-orig-lantern-hill', label: 'Lantern Hill, Bass Songbook', value: Pro, Easy, C G D
+                                                  StaticText, 0x1087b3b90, {{719.2, 6.7}, {80.7, 27.3}}, identifier: 'songs.tile.few.bass-sb-orig-lantern-hill.cover.title.0', label: 'Lantern'
+                                                  StaticText, 0x1087b3cb0, {{764.6, 28.1}, {35.3, 27.3}}, identifier: 'songs.tile.few.bass-sb-orig-lantern-hill.cover.title.1', label: 'Hill'
+                                                  StaticText, 0x1087b3dd0, {{680.4, 131.7}, {8.9, 14.1}}, identifier: 'songs.tile.few.bass-sb-orig-lantern-hill.chords.chord.C', label: 'C'
+                                                  StaticText, 0x1087b3ef0, {{705.8, 131.7}, {9.2, 14.1}}, identifier: 'songs.tile.few.bass-sb-orig-lantern-hill.chords.chord.G', label: 'G'
+                                                  StaticText, 0x1087b4010, {{731.6, 131.7}, {8.9, 14.1}}, identifier: 'songs.tile.few.bass-sb-orig-lantern-hill.chords.chord.D', label: 'D'
+                                                  Other, 0x1087b4130, {{673.9, 179.2}, {22.1, 5.5}}, label: 'Easy'
+                                                  StaticText, 0x1087b4250, {{702.4, 174.8}, {25.5, 14.1}}, identifier: 'songs.tile.few.bass-sb-orig-lantern-hill.duration', label: '2:26'
+                                                  StaticText, 0x1087b4370, {{734.3, 174.6}, {41.4, 14.4}}, identifier: 'songs.tile.few.bass-sb-orig-lantern-hill.xp', label: '+30 XP'
+                                                Other, 0x1087b4490, {{776.0, 50.4}, {20.2, 20.2}}, label: 'Timbre Pro'
+                                                  Image, 0x1087b45b0, {{783.1, 56.2}, {6.4, 8.9}}, identifier: 'lock.fill', label: 'Lock'
+                                                Button, 0x1087b46d0, {{765.9, 74.3}, {40.5, 40.5}}, identifier: 'songs.sample.bass-sb-orig-lantern-hill', label: 'Hear it', value: Lantern Hill
+                                                Button, 0x1087b47f0, {{769.6, 127.7}, {40.5, 40.5}}, identifier: 'songs.versions.bass-sb-orig-lantern-hill', label: 'Versions', value: Originals, Ukulele...
+                                                  Button, 0x1087b4910, {{769.6, 127.7}, {40.5, 40.5}}
+                                                    Other, 0x1087b4a30, {{775.7, 139.6}, {16.6, 16.6}}
+                                                    Image, 0x1087b4b50, {{788.0, 138.4}, {19.3, 19.0}}, label: '10_ukulele_soprano_ukulele'
+                                          Image, 0x1087b4c70, {{4.0, 236.3}, {64.0, 64.0}}, label: 'render_bass_p4'
+                                          StaticText, 0x1087b4d90, {{62.0, 255.7}, {159.0, 25.3}}, label: 'Bass Songbook'
+                                          Image, 0x1087b4eb0, {{321.0, 264.0}, {13.3, 12.7}}, identifier: 'star.fill', label: 'Favorite'
+                                          StaticText, 0x1087b4fd0, {{321.0, 263.5}, {61.0, 15.3}}, label: '0 of 360'
+                                            StaticText, 0x1087b50f0, {{343.3, 263.5}, {8.3, 15.3}}, label: '0'
+                                            StaticText, 0x1087b5210, {{351.7, 263.5}, {5.7, 15.3}}, label: ' / '
+                                            StaticText, 0x1087b5330, {{357.3, 263.5}, {24.7, 15.3}}, label: '360'
+                                          ScrollView, 0x1087b5450, {{0.0, 296.3}, {402.0, 304.7}}, identifier: 'songs.rail.bass-songbook'
+                                            Other, 0x1087b5570, {{-19064.0, 296.3}, {19426.0, 304.7}}
+                                              Other, 0x1087b5690, {{-428.1, 296.3}, {790.1, 267.8}}
+                                                Button, 0x1087b57b0, {{-428.1, 306.5}, {136.2, 234.3}}, identifier: 'songs.song.bass-sb-orig-slow-motion-strobe', label: 'Slow Motion Strobe, Bass Songbook', value: Pro, Hard, F#m D A E
+                                                  Other, 0x1087b58d0, {{-418.0, 330.7}, {115.9, 10.1}}
+                                                  StaticText, 0x1087b59f0, {{-417.9, 343.5}, {114.4, 19.0}}, identifier: 'songs.tile.bass-sb-orig-slow-motion-strobe.cover.title.0', label: 'SLOW MOTION'
+                                                  StaticText, 0x1087b5b10, {{-417.9, 358.4}, {60.4, 19.0}}, identifier: 'songs.tile.bass-sb-orig-slow-motion-strobe.cover.title.1', label: 'STROBE'
+                                                  StaticText, 0x1087b5c30, {{-406.0, 316.7}, {15.3, 9.5}}, identifier: 'songs.tile.bass-sb-orig-slow-motion-strobe.cover.catalogue', label: '116'
+                                                  StaticText, 0x1087b5d50, {{-421.6, 501.9}, {24.8, 14.1}}, identifier: 'songs.tile.bass-sb-orig-slow-motion-strobe.chords.chord.F#m', label: 'F#m'
+                                                  StaticText, 0x1087b5e70, {{-380.2, 501.9}, {8.9, 14.1}}, identifier: 'songs.tile.bass-sb-orig-slow-motion-strobe.chords.chord.D', label: 'D'
+                                                  StaticText, 0x1087b5f90, {{-354.8, 501.9}, {8.6, 14.1}}, identifier: 'songs.tile.bass-sb-orig-slow-motion-strobe.chords.chord.A', label: 'A'
+                                                  StaticText, 0x1087b60b0, {{-329.6, 501.9}, {6.7, 14.1}}, identifier: 'songs.tile.bass-sb-orig-slow-motion-strobe.chords.chord.E', label: 'E'
+                                                  Other, 0x1087b61d0, {{-428.1, 531.0}, {22.1, 5.5}}, label: 'Hard'
+                                                  StaticText, 0x1087b62f0, {{-399.6, 526.6}, {25.5, 14.1}}, identifier: 'songs.tile.bass-sb-orig-slow-motion-strobe.duration', label: '2:10'
+                                                  StaticText, 0x1087b6410, {{-367.7, 526.4}, {41.4, 14.4}}, identifier: 'songs.tile.bass-sb-orig-slow-motion-strobe.xp', label: '+30 XP'
+                                                Other, 0x1087b6530, {{-326.0, 374.6}, {20.2, 20.2}}, label: 'Timbre Pro'
+                                                  Image, 0x1087b6650, {{-318.9, 380.4}, {6.4, 8.9}}, identifier: 'lock.fill', label: 'Lock'
+                                                Button, 0x1087b6770, {{-336.1, 398.5}, {40.5, 40.5}}, identifier: 'songs.sample.bass-sb-orig-slow-motion-strobe', label: 'Hear it', value: Slow Motion Strobe
+                                                Button, 0x1087b6890, {{-332.4, 451.9}, {40.5, 40.5}}, identifier: 'songs.versions.bass-sb-orig-slow-motion-strobe', label: 'Versions', value: Originals, Ukulele...
+                                                  Button, 0x1087b69b0, {{-332.4, 451.9}, {40.5, 40.5}}
+                                                    Other, 0x1087b6ad0, {{-326.3, 463.8}, {16.6, 16.6}}
+                                                    Image, 0x1087b6bf0, {{-314.0, 462.6}, {19.3, 19.0}}, label: '10_ukulele_soprano_ukulele'
+                                                Button, 0x1087b6d10, {{-266.1, 307.5}, {136.2, 256.4}}, identifier: 'songs.song.bass-sb-orig-bright-side-of-the-block', label: 'Bright Side of the Block, Bass Songbook', value: Pro, Hard, G A F#m...
+                                                  Other, 0x1087b6e30, {{-256.0, 331.7}, {115.9, 11.0}}
+                                                  StaticText, 0x1087b6f50, {{-255.9, 345.3}, {95.7, 19.0}}, identifier: 'songs.tile.bass-sb-orig-bright-side-of-the-block.cover.title.0', label: 'BRIGHT SIDE'
+                                                  StaticText, 0x1087b7070, {{-255.9, 360.3}, {108.9, 19.0}}, identifier: 'songs.tile.bass-sb-orig-bright-side-of-the-block.cover.title.1', label: 'OF THE BLOCK'
+                                                  StaticText, 0x1087b7190, {{-155.5, 317.7}, {15.3, 9.5}}, identifier: 'songs.tile.bass-sb-orig-bright-side-of-the-block.cover.catalogue', label: '117'
+                                                  StaticText, 0x1087b72b0, {{-259.6, 501.9}, {9.2, 14.1}}, identifier: 'songs.tile.bass-sb-orig-bright-side-of-the-block.chords.chord.G', label: 'G'
+                                                  StaticText, 0x1087b73d0, {{-233.9, 501.9}, {8.6, 14.1}}, identifier: 'songs.tile.bass-sb-orig-bright-side-of-the-block.chords.chord.A', label: 'A'
+                                                  StaticText, 0x1087b74f0, {{-208.7, 501.9}, {24.8, 14.1}}, identifier: 'songs.tile.bass-sb-orig-bright-side-of-the-block.chords.chord.F#m', label: 'F#m'
+                                                  StaticText, 0x1087b7610, {{-167.3, 501.9}, {18.4, 14.1}}, identifier: 'songs.tile.bass-sb-orig-bright-side-of-the-block.chords.chord.Bm', label: 'Bm'
+                                                  StaticText, 0x1087b7730, {{-259.6, 525.8}, {8.9, 14.1}}, identifier: 'songs.tile.bass-sb-orig-bright-side-of-the-block.chords.chord.D', label: 'D'
+                                                  Other, 0x1087b7850, {{-266.1, 554.0}, {22.1, 5.5}}, label: 'Hard'
+                                                  StaticText, 0x1089528a0, {{-237.6, 549.6}, {25.5, 14.1}}, identifier: 'songs.tile.bass-sb-orig-bright-side-of-the-block.duration', label: '2:14'
+                                                  StaticText, 0x1089529c0, {{-205.7, 549.4}, {41.4, 14.4}}, identifier: 'songs.tile.bass-sb-orig-bright-side-of-the-block.xp', label: '+30 XP'
+                                                Other, 0x108952ae0, {{-164.0, 375.6}, {20.2, 20.2}}, label: 'Timbre Pro'
+                                                  Image, 0x108952c00, {{-156.9, 381.4}, {6.4, 8.9}}, identifier: 'lock.fill', label: 'Lock'
+                                                Button, 0x108952d20, {{-174.1, 399.5}, {40.5, 40.5}}, identifier: 'songs.sample.bass-sb-orig-bright-side-of-the-block', label: 'Hear it', value: Bright Side of the...
+                                                Button, 0x108904080, {{-170.4, 452.8}, {40.5, 40.5}}, identifier: 'songs.versions.bass-sb-orig-bright-side-of-the-block', label: 'Versions', value: Originals, Ukulele...
+                                                  Button, 0x1089041a0, {{-170.4, 452.8}, {40.5, 40.5}}
+                                                    Other, 0x1089042c0, {{-164.3, 464.8}, {16.6, 16.6}}
+                                                    Image, 0x1089043e0, {{-152.0, 463.6}, {19.3, 19.0}}, label: '10_ukulele_soprano_ukulele'
+                                                Button, 0x108904500, {{-104.3, 307.2}, {136.5, 257.0}}, identifier: 'songs.song.bass-sb-orig-over-you-soon', label: 'Over You Soon, Bass Songbook', value: Pro, Hard, G D A B...
+                                                  Other, 0x108904620, {{-94.1, 331.4}, {116.2, 10.1}}
+                                                  StaticText, 0x108904740, {{-94.0, 344.2}, {113.1, 27.4}}, identifier: 'songs.tile.bass-sb-orig-over-you-soon.cover.title.0', label: 'OVER YOU'
+                                                  StaticText, 0x108904860, {{-94.0, 365.7}, {68.9, 27.4}}, identifier: 'songs.tile.bass-sb-orig-over-you-soon.cover.title.1', label: 'SOON'
+                                                  StaticText, 0x108904980, {{-82.1, 317.4}, {15.4, 9.5}}, identifier: 'songs.tile.bass-sb-orig-over-you-soon.cover.catalogue', label: '118'
+                                                  StaticText, 0x108904aa0, {{-97.8, 502.1}, {9.2, 14.1}}, identifier: 'songs.tile.bass-sb-orig-over-you-soon.chords.chord.G', label: 'G'
+                                                  StaticText, 0x108904bc0, {{-72.0, 502.1}, {8.9, 14.1}}, identifier: 'songs.tile.bass-sb-orig-over-you-soon.chords.chord.D', label: 'D'
+                                                  StaticText, 0x108904ce0, {{-46.5, 502.1}, {8.6, 14.1}}, identifier: 'songs.tile.bass-sb-orig-over-you-soon.chords.chord.A', label: 'A'
+                                                  StaticText, 0x108904e00, {{-21.2, 502.1}, {18.4, 14.1}}, identifier: 'songs.tile.bass-sb-orig-over-you-soon.chords.chord.Bm', label: 'Bm'
+                                                  StaticText, 0x108904f20, {{-97.8, 526.1}, {17.5, 14.1}}, identifier: 'songs.tile.bass-sb-orig-over-you-soon.chords.chord.Em', label: 'Em'
+                                                  Other, 0x108905040, {{-104.3, 554.3}, {22.1, 5.5}}, label: 'Hard'
+                                                  StaticText, 0x108905160, {{-75.7, 549.9}, {25.5, 14.1}}, identifier: 'songs.tile.bass-sb-orig-over-you-soon.duration', label: '2:29'
+                                                  StaticText, 0x108905280, {{-43.7, 549.7}, {41.5, 14.5}}, identifier: 'songs.tile.bass-sb-orig-over-you-soon.xp', label: '+30 XP'
+                                                Other, 0x1089053a0, {{-1.9, 375.4}, {20.3, 20.3}}, label: 'Timbre Pro'
+                                                  Image, 0x1089054c0, {{5.2, 381.2}, {6.5, 8.9}}, identifier: 'lock.fill', label: 'Lock'
+                                                Button, 0x1089055e0, {{-12.0, 399.4}, {40.6, 40.6}}, identifier: 'songs.sample.bass-sb-orig-over-you-soon', label: 'Hear it', value: Over You Soon
+                                                Button, 0x108905700, {{-8.3, 452.9}, {40.6, 40.6}}, identifier: 'songs.versions.bass-sb-orig-over-you-soon', label: 'Versions', value: Originals, Ukulele...
+                                                  Button, 0x108905820, {{-8.3, 452.9}, {40.6, 40.6}}
+                                                    Other, 0x108905940, {{-2.2, 464.9}, {16.6, 16.6}}
+                                                    Image, 0x108905a60, {{10.1, 463.6}, {19.4, 19.1}}, label: '10_ukulele_soprano_ukulele'
+                                                Button, 0x108905b80, {{52.0, 296.3}, {148.0, 254.7}}, identifier: 'songs.song.bass-sb-orig-spray-paint-sunrise', label: 'Spray Paint Sunrise, Bass Songbook', value: Pro, Hard, E B C#m A
+                                                  Other, 0x108905ca0, {{63.0, 322.7}, {126.0, 11.0}}
+                                                  StaticText, 0x108905dc0, {{63.6, 336.5}, {125.3, 24.0}}, identifier: 'songs.tile.bass-sb-orig-spray-paint-sunrise.cover.title.0', label: 'SPRAY PAINT'
+                                                  StaticText, 0x108905ee0, {{103.9, 355.4}, {85.0, 24.0}}, identifier: 'songs.tile.bass-sb-orig-spray-paint-sunrise.cover.title.1', label: 'SUNRISE'
+                                                  StaticText, 0x108906000, {{76.0, 307.4}, {16.7, 10.3}}, identifier: 'songs.tile.bass-sb-orig-spray-paint-sunrise.cover.catalogue', label: '119'
+                                                  StaticText, 0x108906120, {{59.0, 508.7}, {7.3, 15.3}}, identifier: 'songs.tile.bass-sb-orig-spray-paint-sunrise.chords.chord.E', label: 'E'
+                                                  StaticText, 0x108906240, {{84.3, 508.7}, {8.3, 15.3}}, identifier: 'songs.tile.bass-sb-orig-spray-paint-sunrise.chords.chord.B', label: 'B'
+                                                  StaticText, 0x108906360, {{110.7, 508.7}, {30.0, 15.3}}, identifier: 'songs.tile.bass-sb-orig-spray-paint-sunrise.chords.chord.C#m', label: 'C#m'
+                                                  StaticText, 0x108906480, {{158.7, 508.7}, {9.3, 15.3}}, identifier: 'songs.tile.bass-sb-orig-spray-paint-sunrise.chords.chord.A', label: 'A'
+                                                  Other, 0x1089065a0, {{52.0, 540.3}, {24.0, 6.0}}, label: 'Hard'
+                                                  StaticText, 0x1089066c0, {{83.0, 535.5}, {27.7, 15.3}}, identifier: 'songs.tile.bass-sb-orig-spray-paint-sunrise.duration', label: '2:04'
+                                                  StaticText, 0x1089067e0, {{117.7, 535.3}, {45.0, 15.7}}, identifier: 'songs.tile.bass-sb-orig-spray-paint-sunrise.xp', label: '+30 XP'
+                                                Other, 0x108906900, {{163.0, 370.3}, {22.0, 22.0}}, label: 'Timbre Pro'
+                                                  Image, 0x108906a20, {{170.7, 376.7}, {7.0, 9.7}}, identifier: 'lock.fill', label: 'Lock'
+                                                Button, 0x108906b40, {{152.0, 396.3}, {44.0, 44.0}}, identifier: 'songs.sample.bass-sb-orig-spray-paint-sunrise', label: 'Hear it', value: Spray Paint Sunrise
+                                                Button, 0x108906c60, {{156.0, 454.3}, {44.0, 44.0}}, identifier: 'songs.versions.bass-sb-orig-spray-paint-sunrise', label: 'Versions', value: Originals, Ukulele...
+                                                  Button, 0x108906d80, {{156.0, 454.3}, {44.0, 44.0}}
+                                                Button, 0x108906ea0, {{214.0, 296.3}, {148.0, 254.7}}, identifier: 'songs.song.bass-sb-orig-constellation-prize', label: 'Constellation Prize, Bass Songbook', value: Pro, Medium, Bb F ...
+                                                  StaticText, 0x108906fc0, {{228.6, 322.8}, {122.3, 18.0}}, identifier: 'songs.tile.bass-sb-orig-constellation-prize.cover.title.0', label: 'CONSTELLATION'
+                                                  StaticText, 0x1089070e0, {{310.2, 337.0}, {40.7, 18.0}}, identifier: 'songs.tile.bass-sb-orig-constellation-prize.cover.title.1', label: 'PRIZE'
+                                                  StaticText, 0x108907200, {{221.0, 508.7}, {16.7, 15.3}}, identifier: 'songs.tile.bass-sb-orig-constellation-prize.chords.chord.Bb', label: 'Bb'
+                                                  StaticText, 0x108907320, {{255.7, 508.7}, {7.0, 15.3}}, identifier: 'songs.tile.bass-sb-orig-constellation-prize.chords.chord.F', label: 'F'
+                                                  StaticText, 0x108907440, {{280.7, 508.7}, {9.7, 15.3}}, identifier: 'songs.tile.bass-sb-orig-constellation-prize.chords.chord.C', label: 'C'
+                                                  StaticText, 0x108907560, {{308.3, 508.7}, {21.3, 15.3}}, identifier: 'songs.tile.bass-sb-orig-constellation-prize.chords.chord.Dm', label: 'Dm'
+                                                  Other, 0x108907680, {{214.0, 540.3}, {24.0, 6.0}}, label: 'Medium'
+                                                  StaticText, 0x1089077a0, {{245.0, 535.5}, {27.7, 15.3}}, identifier: 'songs.tile.bass-sb-orig-constellation-prize.duration', label: '2:29'
+                                                  StaticText, 0x1089078c0, {{279.7, 535.3}, {45.0, 15.7}}, identifier: 'songs.tile.bass-sb-orig-constellation-prize.xp', label: '+30 XP'
+                                                Other, 0x1089079e0, {{325.0, 370.3}, {22.0, 22.0}}, label: 'Timbre Pro'
+                                                  Image, 0x108907b00, {{332.7, 376.7}, {7.0, 9.7}}, identifier: 'lock.fill', label: 'Lock'
+                                                Button, 0x108907c20, {{314.0, 396.3}, {44.0, 44.0}}, identifier: 'songs.sample.bass-sb-orig-constellation-prize', label: 'Hear it', value: Constellation Prize
+                                                Button, 0x108907d40, {{318.0, 454.3}, {44.0, 44.0}}, identifier: 'songs.versions.bass-sb-orig-constellation-prize', label: 'Versions', value: Originals, Ukulele...
+                                                  Button, 0x108907e60, {{318.0, 454.3}, {44.0, 44.0}}
+                                          Image, 0x108907f80, {{25.0, 627.3}, {18.0, 23.3}}, identifier: 'flame.fill', label: 'Flame'
+                                          StaticText, 0x1089080a0, {{58.0, 626.3}, {162.7, 25.3}}, label: 'Campfire & kids'
+                                          ScrollView, 0x1089081c0, {{0.0, 665.0}, {402.0, 255.0}}, identifier: 'songs.rail.campfire'
+                                            Other, 0x1089082e0, {{20.0, 665.0}, {958.0, 255.0}}
+                                              Other, 0x108908400, {{20.0, 665.0}, {790.1, 244.5}}
+                                                Button, 0x108908520, {{20.0, 665.0}, {148.0, 224.7}}, identifier: 'songs.campfire.bass-sb-song-mary', label: 'Mary Had a Little Lamb, Bass Songbook', value: Open, Easy, G C
+                                                  Other, 0x108908640, {{31.0, 691.3}, {126.0, 12.0}}
+                                                  StaticText, 0x108908760, {{31.1, 706.2}, {119.7, 27.7}}, identifier: 'songs.tile.campfire.bass-sb-song-mary.cover.title.0', label: 'Mary Had a'
+                                                  StaticText, 0x108908880, {{31.1, 727.9}, {120.3, 27.7}}, identifier: 'songs.tile.campfire.bass-sb-song-mary.cover.title.1', label: 'Little Lamb'
+                                                  StaticText, 0x1089089a0, {{145.9, 676.1}, {11.0, 10.3}}, identifier: 'songs.tile.campfire.bass-sb-song-mary.cover.catalogue', label: '01'
+                                                  StaticText, 0x108908ac0, {{27.0, 827.3}, {10.0, 15.3}}, identifier: 'songs.tile.campfire.bass-sb-song-mary.chords.chord.G', label: 'G'
+                                                  StaticText, 0x108908be0, {{55.0, 827.3}, {9.7, 15.3}}, identifier: 'songs.tile.campfire.bass-sb-song-mary.chords.chord.C', label: 'C'
+                                                  Other, 0x108908d00, {{20.0, 879.0}, {24.0, 6.0}}, label: 'Easy'
+                                                  StaticText, 0x108908e20, {{51.0, 874.2}, {27.7, 15.3}}, identifier: 'songs.tile.campfire.bass-sb-song-mary.duration', label: '1:54'
+                                                  StaticText, 0x108908f40, {{85.7, 874.0}, {45.0, 15.7}}, identifier: 'songs.tile.campfire.bass-sb-song-mary.xp', label: '+30 XP'
+                                                Button, 0x108909060, {{120.0, 765.0}, {44.0, 44.0}}, identifier: 'songs.sample.bass-sb-song-mary', label: 'Hear it', value: Mary Had a Little ...
+                                                Button, 0x108909180, {{99.7, 823.0}, {68.3, 44.0}}, identifier: 'songs.versions.bass-sb-song-mary', label: 'Versions', value: Guitar, Songs, Bas...
+                                                  Button, 0x1089092a0, {{99.7, 823.0}, {68.3, 44.0}}
+                                                    Image, 0x1089093c0, {{95.2, 827.0}, {36.0, 36.0}}, label: 'render_guitar_acoustic'
+                                                    Other, 0x1089094e0, {{119.3, 836.0}, {18.0, 18.0}}
+                                                    StaticText, 0x108909600, {{99.7, 823.0}, {68.3, 44.0}}, identifier: 'songs.tile.campfire.bass-sb-song-mary.versions.more', label: '+10'
+                                                Button, 0x108909720, {{182.0, 665.0}, {148.0, 224.7}}, identifier: 'songs.campfire.bass-sb-song-twinkle', label: 'Twinkle, Twinkle, Little Star, Bass Songbook', value: Open, Easy, C G D
+                                                  Other, 0x108909840, {{193.0, 691.3}, {126.0, 12.0}}
+                                                  StaticText, 0x108909960, {{193.1, 706.2}, {65.3, 20.7}}, identifier: 'songs.tile.campfire.bass-sb-song-twinkle.cover.title.0', label: 'Twinkle,'
+                                                  StaticText, 0x108909a80, {{193.1, 722.4}, {109.3, 20.7}}, identifier: 'songs.tile.campfire.bass-sb-song-twinkle.cover.title.1', label: 'Twinkle, Little'
+                                                  StaticText, 0x108909ba0, {{193.1, 738.7}, {33.0, 20.7}}, identifier: 'songs.tile.campfire.bass-sb-song-twinkle.cover.title.2', label: 'Star'
+                                                  StaticText, 0x108909cc0, {{189.0, 827.3}, {9.7, 15.3}}, identifier: 'songs.tile.campfire.bass-sb-song-twinkle.chords.chord.C', label: 'C'
+                                                  StaticText, 0x108909de0, {{216.7, 827.3}, {10.0, 15.3}}, identifier: 'songs.tile.campfire.bass-sb-song-twinkle.chords.chord.G', label: 'G'
+                                                  StaticText, 0x108909f00, {{244.7, 827.3}, {9.7, 15.3}}, identifier: 'songs.tile.campfire.bass-sb-song-twinkle.chords.chord.D', label: 'D'
+                                                  Other, 0x10890a020, {{182.0, 879.0}, {24.0, 6.0}}, label: 'Easy'
+                                                  StaticText, 0x10890a140, {{213.0, 874.2}, {27.7, 15.3}}, identifier: 'songs.tile.campfire.bass-sb-song-twinkle.duration', label: '2:06'
+                                                  StaticText, 0x10890a260, {{247.7, 874.0}, {45.0, 15.7}}, identifier: 'songs.tile.campfire.bass-sb-song-twinkle.xp', label: '+30 XP'
+                                                Button, 0x10890a380, {{282.0, 765.0}, {44.0, 44.0}}, identifier: 'songs.sample.bass-sb-song-twinkle', label: 'Hear it', value: Twinkle, Twinkle, ...
+                                                Button, 0x10890a4a0, {{267.7, 823.0}, {62.3, 44.0}}, identifier: 'songs.versions.bass-sb-song-twinkle', label: 'Versions', value: Songs, Ukulele, Vi...
+                                                  Button, 0x10890a5c0, {{267.7, 823.0}, {62.3, 44.0}}
+                                                    Other, 0x10890a6e0, {{272.3, 836.0}, {18.0, 18.0}}
+                                                    Image, 0x10890a800, {{285.7, 834.7}, {21.0, 20.7}}, label: '10_ukulele_soprano_ukulele'
+                                                    StaticText, 0x10890a920, {{267.7, 823.0}, {62.3, 44.0}}, identifier: 'songs.tile.campfire.bass-sb-song-twinkle.versions.more', label: '+4'
+                                                Button, 0x10890aa40, {{349.1, 672.8}, {137.8, 209.1}}, identifier: 'songs.campfire.bass-sb-song-frere-jacques', label: 'Frère Jacques, Bass Songbook', value: Open, Easy, G
+                                                  Other, 0x10890ab60, {{359.4, 697.3}, {117.3, 11.2}}
+                                                  StaticText, 0x10890ac80, {{359.4, 711.1}, {54.6, 27.6}}, identifier: 'songs.tile.campfire.bass-sb-song-frere-jacques.cover.title.0', label: 'Frère'
+                                                  StaticText, 0x10890ada0, {{359.4, 732.8}, {91.2, 27.6}}, identifier: 'songs.tile.campfire.bass-sb-song-frere-jacques.cover.title.1', label: 'Jacques'
+                                                  StaticText, 0x10890aec0, {{349.1, 820.8}, {22.3, 20.5}}, identifier: 'songs.tile.campfire.bass-sb-song-frere-jacques.chords.chord.G', label: 'G'
+                                                  Other, 0x10890afe0, {{349.1, 872.0}, {22.3, 5.6}}, label: 'Easy'
+                                                  StaticText, 0x10890b100, {{378.0, 867.5}, {25.8, 14.3}}, identifier: 'songs.tile.campfire.bass-sb-song-frere-jacques.duration', label: '1:54'
+                                                  StaticText, 0x10890b220, {{410.2, 867.3}, {41.9, 14.6}}, identifier: 'songs.tile.campfire.bass-sb-song-frere-jacques.xp', label: '+30 XP'
+                                                Button, 0x10890b340, {{442.2, 765.9}, {41.0, 41.0}}, identifier: 'songs.sample.bass-sb-song-frere-jacques', label: 'Hear it', value: Frère Jacques
+                                                Button, 0x10890b460, {{429.5, 819.8}, {57.4, 41.0}}, identifier: 'songs.versions.bass-sb-song-frere-jacques', label: 'Versions', value: Songs, Ukulele Son...
+                                                  Button, 0x10890b580, {{429.5, 819.8}, {57.4, 41.0}}
+                                                    Other, 0x10890b6a0, {{433.8, 831.9}, {16.8, 16.8}}
+                                                    Image, 0x10890b7c0, {{446.2, 830.7}, {19.5, 19.2}}, label: '10_ukulele_soprano_ukulele'
+                                                    StaticText, 0x10890b8e0, {{429.5, 819.8}, {57.4, 41.0}}, identifier: 'songs.tile.campfire.bass-sb-song-frere-jacques.versions.more', label: '+3'
+                                                Button, 0x10890ba00, {{511.9, 675.2}, {136.2, 234.3}}, identifier: 'songs.campfire.bass-sb-song-old-macdonald', label: 'Old MacDonald Had a Farm, Bass Songbook', value: Pro, Easy, G D7 C
+                                                  Other, 0x10890bb20, {{522.0, 699.4}, {115.9, 11.0}}
+                                                  StaticText, 0x10890bc40, {{566.4, 713.0}, {27.3, 19.0}}, identifier: 'songs.tile.campfire.bass-sb-song-old-macdonald.cover.title.0', label: 'Old'
+                                                  StaticText, 0x10890bd60, {{537.1, 728.0}, {85.9, 19.0}}, identifier: 'songs.tile.campfire.bass-sb-song-old-macdonald.cover.title.1', label: 'MacDonald'
+                                                  StaticText, 0x10890be80, {{539.1, 743.0}, {81.9, 19.0}}, identifier: 'songs.tile.campfire.bass-sb-song-old-macdonald.cover.title.2', label: 'Had a Farm'
+                                                  StaticText, 0x10890bfa0, {{518.4, 870.5}, {9.2, 14.1}}, identifier: 'songs.tile.campfire.bass-sb-song-old-macdonald.chords.chord.G', label: 'G'
+                                                  StaticText, 0x10890c0c0, {{544.1, 870.5}, {15.3, 14.1}}, identifier: 'songs.tile.campfire.bass-sb-song-old-macdonald.chords.chord.D7', label: 'D7'
+                                                  StaticText, 0x10890c1e0, {{576.0, 870.5}, {8.9, 14.1}}, identifier: 'songs.tile.campfire.bass-sb-song-old-macdonald.chords.chord.C', label: 'C'
+                                                  Other, 0x10890c300, {{511.9, 899.7}, {22.1, 5.5}}, label: 'Easy'
+                                                  StaticText, 0x10890c420, {{540.4, 895.2}, {25.5, 14.1}}, identifier: 'songs.tile.campfire.bass-sb-song-old-macdonald.duration', label: '2:36'
+                                                  StaticText, 0x10890c540, {{572.3, 895.1}, {41.4, 14.4}}, identifier: 'songs.tile.campfire.bass-sb-song-old-macdonald.xp', label: '+30 XP'
+                                                Other, 0x10890c660, {{614.0, 743.3}, {20.2, 20.2}}, label: 'Timbre Pro'
+                                                  Image, 0x10890c780, {{621.1, 749.1}, {6.4, 8.9}}, identifier: 'lock.fill', label: 'Lock'
+                                                Button, 0x10890c8a0, {{603.9, 767.2}, {40.5, 40.5}}, identifier: 'songs.sample.bass-sb-song-old-macdonald', label: 'Hear it', value: Old MacDonald Had ...
+                                                Button, 0x10890c9c0, {{591.3, 820.5}, {56.7, 40.5}}, identifier: 'songs.versions.bass-sb-song-old-macdonald', label: 'Versions', value: Songs, Ukulele Son...
+                                                  Button, 0x10890cae0, {{591.3, 820.5}, {56.7, 40.5}}
+                                                    Other, 0x11472db50, {{595.6, 832.5}, {16.6, 16.6}}
+                                                    Image, 0x11478aeb0, {{607.9, 831.3}, {19.3, 19.0}}, label: '10_ukulele_soprano_ukulele'
+                                                    StaticText, 0x11478a870, {{591.3, 820.5}, {56.7, 40.5}}, identifier: 'songs.tile.campfire.bass-sb-song-old-macdonald.versions.more', label: '+3'
+                                                Button, 0x10890cc00, {{673.9, 675.2}, {136.2, 234.3}}, identifier: 'songs.campfire.bass-sb-song-bobby-shafto', label: 'Bobby Shafto, Bass Songbook', value: Pro, Easy, D7 G C
+                                                  Other, 0x10890cd20, {{684.0, 699.4}, {115.9, 11.0}}
+                                                  StaticText, 0x10890ce40, {{707.2, 713.0}, {69.6, 27.3}}, identifier: 'songs.tile.campfire.bass-sb-song-bobby-shafto.cover.title.0', label: 'Bobby'
+                                                  StaticText, 0x10890cf60, {{706.4, 734.5}, {71.1, 27.3}}, identifier: 'songs.tile.campfire.bass-sb-song-bobby-shafto.cover.title.1', label: 'Shafto'
+                                                  StaticText, 0x10890d080, {{680.4, 870.5}, {15.3, 14.1}}, identifier: 'songs.tile.campfire.bass-sb-song-bobby-shafto.chords.chord.D7', label: 'D7'
+                                                  StaticText, 0x10890d1a0, {{712.3, 870.5}, {9.2, 14.1}}, identifier: 'songs.tile.campfire.bass-sb-song-bobby-shafto.chords.chord.G', label: 'G'
+                                                  StaticText, 0x10890d2c0, {{738.0, 870.5}, {8.9, 14.1}}, identifier: 'songs.tile.campfire.bass-sb-song-bobby-shafto.chords.chord.C', label: 'C'
+                                                  Other, 0x10890d3e0, {{673.9, 899.7}, {22.1, 5.5}}, label: 'Easy'
+                                                  StaticText, 0x10890d500, {{702.4, 895.2}, {25.5, 14.1}}, identifier: 'songs.tile.campfire.bass-sb-song-bobby-shafto.duration', label: '1:46'
+                                                  StaticText, 0x10890d620, {{734.3, 895.1}, {41.4, 14.4}}, identifier: 'songs.tile.campfire.bass-sb-song-bobby-shafto.xp', label: '+30 XP'
+                                                Other, 0x10890d740, {{776.0, 743.3}, {20.2, 20.2}}, label: 'Timbre Pro'
+                                                  Image, 0x10890d860, {{783.1, 749.1}, {6.4, 8.9}}, identifier: 'lock.fill', label: 'Lock'
+                                                Button, 0x10890d980, {{765.9, 767.2}, {40.5, 40.5}}, identifier: 'songs.sample.bass-sb-song-bobby-shafto', label: 'Hear it', value: Bobby Shafto
+                                                Button, 0x10890daa0, {{753.3, 820.5}, {56.7, 40.5}}, identifier: 'songs.versions.bass-sb-song-bobby-shafto', label: 'Versions', value: Songs, Ukulele Son...
+                                                  Button, 0x10890dbc0, {{753.3, 820.5}, {56.7, 40.5}}
+                                                    Other, 0x10890dce0, {{757.6, 832.5}, {16.6, 16.6}}
+                                                    Image, 0x10890de00, {{769.9, 831.3}, {19.3, 19.0}}, label: '10_ukulele_soprano_ukulele'
+                                                    StaticText, 0x10890df20, {{753.3, 820.5}, {56.7, 40.5}}, identifier: 'songs.tile.campfire.bass-sb-song-bobby-shafto.versions.more', label: '+3'
+                                          Image, 0x10890e040, {{4.0, 928.0}, {64.0, 64.0}}, label: 'render_bass_p4'
+                                          StaticText, 0x10890e160, {{62.0, 947.3}, {47.7, 25.3}}, label: 'Bass'
+                                          Image, 0x10890e280, {{337.3, 955.7}, {13.3, 12.7}}, identifier: 'star.fill', label: 'Favorite'
+                                          StaticText, 0x10890e3a0, {{337.3, 955.2}, {44.7, 15.3}}, label: '0 of 9'
+                                            StaticText, 0x10890e4c0, {{359.7, 955.2}, {8.3, 15.3}}, label: '0'
+                                            StaticText, 0x10890e5e0, {{368.0, 955.2}, {5.7, 15.3}}, label: ' / '
+                                            StaticText, 0x10890e700, {{373.7, 955.2}, {8.3, 15.3}}, label: '9'
+                                          ScrollView, 0x10890e820, {{0.0, 988.0}, {402.0, 269.0}}, identifier: 'songs.rail.bass'
+                                            Other, 0x10890e940, {{20.0, 988.0}, {472.0, 269.0}}
+                                              Other, 0x10890ea60, {{20.0, 988.0}, {466.9, 269.0}}
+                                                Button, 0x10890eb80, {{20.0, 988.0}, {148.0, 269.0}}, identifier: 'songs.song.bass-1-6', label: 'Mary Had a Little Lamb, Bass', value: Locked, Finish Mee...
+                                                  Other, 0x10890eca0, {{31.0, 1014.3}, {126.0, 11.0}}
+                                                  StaticText, 0x10890edc0, {{33.0, 1028.2}, {122.0, 24.0}}, identifier: 'songs.tile.bass-1-6.cover.title.0', label: 'MARY HAD A'
+                                                  StaticText, 0x10890eee0, {{34.8, 1047.1}, {118.3, 24.0}}, identifier: 'songs.tile.bass-1-6.cover.title.1', label: 'LITTLE LAMB'
+                                                  StaticText, 0x10890f000, {{44.0, 999.1}, {11.0, 10.3}}, identifier: 'songs.tile.bass-1-6.cover.catalogue', label: '01'
+                                                  Image, 0x10890f120, {{29.3, 1203.0}, {7.3, 10.0}}, identifier: 'lock.fill', label: 'Lock'
+                                                  StaticText, 0x10890f240, {{43.0, 1200.0}, {73.3, 30.3}}, label: 'Finish Meet your bass'
+                                                  Other, 0x10890f360, {{20.0, 1246.3}, {24.0, 6.0}}, label: 'Easy'
+                                                  StaticText, 0x10890f480, {{51.0, 1241.5}, {27.7, 15.3}}, identifier: 'songs.tile.bass-1-6.duration', label: '2:11'
+                                                  StaticText, 0x10890f5a0, {{85.7, 1241.3}, {45.0, 15.7}}, identifier: 'songs.tile.bass-1-6.xp', label: '+30 XP'
+                                                Button, 0x10890f6c0, {{120.0, 1088.0}, {44.0, 44.0}}, identifier: 'songs.sample.bass-1-6', label: 'Hear it', value: Mary Had a Little ...
+                                                Button, 0x10890f7e0, {{99.7, 1146.0}, {68.3, 44.0}}, identifier: 'songs.versions.bass-1-6', label: 'Versions', value: Guitar, Songs, Vio...
+                                                  Button, 0x10890f900, {{99.7, 1146.0}, {68.3, 44.0}}
+                                                    Image, 0x10890fa20, {{95.2, 1150.0}, {36.0, 36.0}}, label: 'render_guitar_acoustic'
+                                                    Other, 0x10890fb40, {{119.3, 1159.0}, {18.0, 18.0}}
+                                                    StaticText, 0x10890fc60, {{99.7, 1146.0}, {68.3, 44.0}}, identifier: 'songs.tile.bass-1-6.versions.more', label: '+10'
+                                                Button, 0x10890fd80, {{182.0, 988.0}, {148.0, 204.7}}, identifier: 'songs.song.bass-3-5', label: 'Ode to Joy on bass, Bass', value: Pro, Easy, G D
+                                                  Other, 0x10890fea0, {{193.0, 1014.3}, {126.0, 11.0}}
+                                                  StaticText, 0x10890ffc0, {{193.1, 1028.2}, {123.0, 25.7}}, identifier: 'songs.tile.bass-3-5.cover.title.0', label: 'ODE TO JOY'
+                                                  StaticText, 0x1089100e0, {{193.1, 1048.4}, {93.3, 25.7}}, identifier: 'songs.tile.bass-3-5.cover.title.1', label: 'ON BASS'
+                                                  StaticText, 0x108910200, {{206.0, 999.1}, {11.0, 10.3}}, identifier: 'songs.tile.bass-3-5.cover.catalogue', label: '02'
+                                                  StaticText, 0x108910320, {{189.0, 1150.3}, {10.0, 15.3}}, identifier: 'songs.tile.bass-3-5.chords.chord.G', label: 'G'
+                                                  StaticText, 0x108910440, {{217.0, 1150.3}, {9.7, 15.3}}, identifier: 'songs.tile.bass-3-5.chords.chord.D', label: 'D'
+                                                  Other, 0x108910560, {{182.0, 1182.0}, {24.0, 6.0}}, label: 'Easy'
+                                                  StaticText, 0x108910680, {{213.0, 1177.2}, {27.7, 15.3}}, identifier: 'songs.tile.bass-3-5.duration', label: '2:40'
+                                                  StaticText, 0x1089107a0, {{247.7, 1177.0}, {45.0, 15.7}}, identifier: 'songs.tile.bass-3-5.xp', label: '+30 XP'
+                                                Other, 0x1089108c0, {{293.0, 1062.0}, {22.0, 22.0}}, label: 'Timbre Pro'
+                                                  Image, 0x1089109e0, {{300.7, 1068.3}, {7.0, 9.7}}, identifier: 'lock.fill', label: 'Lock'
+                                                Button, 0x108910b00, {{282.0, 1088.0}, {44.0, 44.0}}, identifier: 'songs.sample.bass-3-5', label: 'Hear it', value: Ode to Joy on bass
+                                                Button, 0x108910c20, {{349.1, 995.1}, {137.8, 190.5}}, identifier: 'songs.song.bass-5-4', label: 'Walking the blues in A, Bass', value: Pro, Medium, E7 D7...
+                                                  Other, 0x108910d40, {{359.4, 1019.6}, {117.3, 10.2}}
+                                                  StaticText, 0x108910e60, {{359.4, 1032.5}, {112.6, 23.9}}, identifier: 'songs.tile.bass-5-4.cover.title.0', label: 'Walking the'
+                                                  StaticText, 0x108910f80, {{359.4, 1051.3}, {91.2, 23.9}}, identifier: 'songs.tile.bass-5-4.cover.title.1', label: 'blues in A'
+                                                  StaticText, 0x1089110a0, {{371.5, 1005.4}, {10.2, 9.6}}, identifier: 'songs.tile.bass-5-4.cover.catalogue', label: '03'
+                                                  StaticText, 0x1089111c0, {{355.6, 1146.2}, {13.3, 14.3}}, identifier: 'songs.tile.bass-5-4.chords.chord.E7', label: 'E7'
+                                                  StaticText, 0x1089112e0, {{385.7, 1146.2}, {15.5, 14.3}}, identifier: 'songs.tile.bass-5-4.chords.chord.D7', label: 'D7'
+                                                  StaticText, 0x108911400, {{418.0, 1146.2}, {15.5, 14.3}}, identifier: 'songs.tile.bass-5-4.chords.chord.A7', label: 'A7'
+                                                  Other, 0x108911520, {{349.1, 1175.7}, {22.3, 5.6}}, label: 'Medium'
+                                                  StaticText, 0x108911640, {{378.0, 1171.2}, {25.8, 14.3}}, identifier: 'songs.tile.bass-5-4.duration', label: '2:20'
+                                                  StaticText, 0x108911760, {{410.2, 1171.0}, {41.9, 14.6}}, identifier: 'songs.tile.bass-5-4.xp', label: '+30 XP'
+                                                Other, 0x108911880, {{452.4, 1064.0}, {20.5, 20.5}}, label: 'Timbre Pro'
+                                                  Image, 0x1089119a0, {{459.6, 1069.9}, {6.5, 9.0}}, identifier: 'lock.fill', label: 'Lock'
+                                                Button, 0x108911ac0, {{442.2, 1088.2}, {41.0, 41.0}}, identifier: 'songs.sample.bass-5-4', label: 'Hear it', value: Walking the blues ...
+                                      Other, 0x108911de0, {{0.0, 0.0}, {402.0, 874.0}}
+                                        Other, 0x108911f00, {{0.0, 726.2}, {402.0, 147.8}}
+                                      Other, 0x108912020, {{0.0, 0.0}, {402.0, 874.0}}
+                                        Other, 0x108912140, {{0.0, 726.2}, {402.0, 147.8}}
+                                          Image, 0x108912260, {{-120.0, 731.0}, {642.0, 286.0}}, identifier: 'AdditionalDimmingOverlay'
+                                          Other, 0x108912380, {{0.0, 726.2}, {402.0, 147.8}}
+                                            Other, 0x1089124a0, {{0.0, 726.2}, {402.0, 147.8}}
+                                          Other, 0x1089125c0, {{0.0, 726.2}, {402.0, 147.8}}
+                                            Other, 0x1089126e0, {{0.0, 726.2}, {402.0, 147.8}}
+                                            Other, 0x108912800, {{0.0, 726.2}, {402.0, 147.8}}
+                                      Other, 0x108912920, {{369.0, 62.0}, {30.0, 729.0}}, label: 'Vertical scroll bar, 4 pages', value: 55%
+                                        Other, 0x108912a40, {{396.0, 334.7}, {3.0, 229.3}}
+                                      Other, 0x108912b60, {{369.0, 62.0}, {30.0, 729.0}}, label: 'Vertical scroll bar, 4 pages', value: 55%
+                                        Other, 0x108912c80, {{396.0, 334.7}, {3.0, 229.3}}
+                                    Other, 0x108912da0, {{0.0, 0.0}, {402.0, 80.0}}
+                            Other, 0x108912ec0, {{0.0, 0.0}, {402.0, 874.0}}
+                              Other, 0x108912fe0, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x108913100, {{0.0, 791.0}, {402.0, 83.0}}
+                Other, 0x108913220, {{0.0, 791.0}, {402.0, 83.0}}
+                  Other, 0x108913340, {{0.0, 0.0}, {402.0, 874.0}}
+                    TabBar, 0x108913460, {{0.0, 791.0}, {402.0, 83.0}}, label: 'Tab Bar'
+                      Other, 0x108913580, {{21.0, 791.0}, {360.0, 62.0}}
+                        Other, 0x1089136a0, {{21.0, 791.0}, {78.0, 54.0}}
+                        Other, 0x1089137c0, {{21.0, 791.0}, {360.0, 62.0}}
+                          Button, 0x1089138e0, {{25.0, 795.0}, {78.0, 54.0}}, identifier: 'gauge.with.needle', label: 'Tune'
+                            Image, 0x108913a00, {{50.0, 801.3}, {27.3, 27.3}}, identifier: 'gauge.with.needle.fill', label: 'gauge.with.needle.fill'
+                          Button, 0x108913b20, {{93.5, 795.0}, {78.0, 54.0}}, identifier: 'graduationcap', label: 'Learn'
+                            Image, 0x108913c40, {{114.5, 801.7}, {36.7, 31.3}}, identifier: 'graduationcap.fill', label: 'itunes u'
+                          Button, 0x108913d60, {{162.0, 795.0}, {78.0, 54.0}}, identifier: 'music.note.list', label: 'Songs', Selected
+                            Image, 0x108913e80, {{186.0, 801.7}, {29.3, 27.0}}, identifier: 'music.note.list', label: 'playlist'
+                          Button, 0x108913fa0, {{230.5, 795.0}, {78.0, 54.0}}, identifier: 'metronome', label: 'Practice'
+                            Image, 0x1089140c0, {{255.5, 801.7}, {28.7, 26.0}}, identifier: 'metronome.fill', label: 'metronome.fill'
+                          Button, 0x1089141e0, {{299.0, 795.0}, {78.0, 54.0}}, identifier: 'chart.bar', label: 'Progress'
+                            Image, 0x108914300, {{321.0, 802.3}, {35.0, 25.3}}, identifier: 'chart.bar.fill', label: 'chart column'
+                        Other, 0x108914420, {{162.0, 795.0}, {78.0, 54.0}}
+                          Other, 0x108914540, {{162.0, 795.0}, {78.0, 54.0}}
+                            Other, 0x108914660, {{162.0, 795.0}, {78.0, 54.0}}
+                            Other, 0x108914780, {{162.0, 795.0}, {78.0, 54.0}}
+                              Other, 0x1089148a0, {{162.0, 795.0}, {78.0, 54.0}}
+                                Other, 0x1089149c0, {{162.0, 795.0}, {78.0, 54.0}}
+                                  Other, 0x108914ae0, {{162.0, 795.0}, {78.0, 54.0}}
+                                Other, 0x108914c00, {{162.0, 795.0}, {78.0, 54.0}}
+                              Other, 0x108914d20, {{162.0, 795.0}, {78.0, 54.0}}
+                  Other, 0x108914e40, {{0.0, 791.0}, {402.0, 83.0}}
+                    Other, 0x108914f60, {{0.0, 791.0}, {402.0, 83.0}}
+                      Other, 0x108915080, {{0.0, 791.0}, {402.0, 83.0}}
+                        Other, 0x1089151a0, {{0.0, 791.0}, {402.0, 83.0}}
+                          Other, 0x1089152c0, {{0.0, 791.0}, {402.0, 83.0}}
+                            Other, 0x1089153e0, {{0.0, 791.0}, {402.0, 83.0}}
+                        Other, 0x108915500, {{0.0, 791.0}, {402.0, 83.0}}
+                          Other, 0x108915620, {{0.0, 791.0}, {402.0, 83.0}}
+Path to element:
+ →Application, 0x1088c86b0, pid: 6801, label: 'Timbre'
+Query chain:
+ →Find: Target Application 'com.shahradazerisharghi.timbre'
+  Output: {
+    Application, 0x1088c6110, pid: 6801, label: 'Timbre'
+  }
+)
