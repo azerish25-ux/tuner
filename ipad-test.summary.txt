@@ -1,0 +1,92 @@
+# Errors
+
+# Matches
+--- line 25003
+    t =   167.74s Collecting debug information to assist test failure triage
+    t =   167.75s     Requesting snapshot of accessibility hierarchy for app with pid 41155
+/Users/runner/work/tuner/tuner/ios/TimbreUITests/TabletScreenshotsUITests.swift:52: error: -[TimbreUITests.TabletScreenshotsUITests testTabletLayouts] : XCTAssertTrue failed
+    t =   212.11s Find the Window (First Match)
+    t =   217.15s Getting device orientation
+    t =   217.33s Checking existence of `"instrument.30_folk_world_strings_sitar" Any`
+--- line 25209
+    t =   462.49s Checking existence of `"tune.stage" Any`
+    t =   462.62s Find the "tune.stage" Any
+/Users/runner/work/tuner/tuner/ios/TimbreUITests/TabletScreenshotsUITests.swift:111: error: -[TimbreUITests.TabletScreenshotsUITests testTabletLayouts] : failed - ipad-landscape-instruments: the tuner is still on screen around the browser
+    t =   463.34s Added attachment named 'ipad-landscape-instruments-wrong'
+    t =   463.36s Waiting 6.0s for "instruments.done" Any to exist
+    t =   464.46s     Checking `Expect predicate `existsNoRetry == 1` for object "instruments.done" Any`
+--- line 25365
+    t =   740.60s     Setting device orientation to Portrait
+    t =   740.62s         Wait for com.shahradazerisharghi.timbre to idle
+Test Case '-[TimbreUITests.TabletScreenshotsUITests testTabletLayouts]' failed (743.470 seconds).
+Test Suite 'TabletScreenshotsUITests' failed at 2026-11-07 10:52:14.930.
+	 Executed 1 test, with 2 failures (0 unexpected) in 743.470 (743.478) seconds
+Test Suite 'TimbreUITests.xctest' failed at 2026-11-07 10:52:14.931.
+--- line 25401
+	/Users/runner/work/tuner/tuner/ios/build/TabletScreenshots.xcresult
+
+** TEST FAILED **
+
+Testing started
+
+# Tail
+    t =   708.42s     Checking `Expect predicate `existsNoRetry == 1` for object "learn.inspector" Any`
+    t =   708.42s         Checking existence of `"learn.inspector" Any`
+    t =   709.14s Checking existence of `"learn.inspector" Any`
+    t =   712.89s Added attachment named 'ipad-portrait-learn'
+    t =   712.89s Waiting 5.0s for "Songs" Button to exist
+    t =   713.97s     Checking `Expect predicate `existsNoRetry == 1` for object "Songs" Button`
+    t =   713.97s         Checking existence of `"Songs" Button`
+    t =   714.12s Tap "Songs" Button
+    t =   714.12s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   714.13s     Find the "Songs" Button
+    t =   714.21s     Check for interrupting elements affecting "music.note.list" Button
+    t =   714.65s     Synthesize event
+    t =   715.03s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   732.76s Waiting 6.0s for "songs.hero" Any to exist
+    t =   733.83s     Checking `Expect predicate `existsNoRetry == 1` for object "songs.hero" Any`
+    t =   733.83s         Checking existence of `"songs.hero" Any`
+    t =   734.91s Checking existence of `"songs.hero" Any`
+    t =   740.56s Added attachment named 'ipad-portrait-songs'
+    t =   740.60s Tear Down
+    t =   740.60s     Setting device orientation to Portrait
+    t =   740.62s         Wait for com.shahradazerisharghi.timbre to idle
+Test Case '-[TimbreUITests.TabletScreenshotsUITests testTabletLayouts]' failed (743.470 seconds).
+Test Suite 'TabletScreenshotsUITests' failed at 2026-11-07 10:52:14.930.
+	 Executed 1 test, with 2 failures (0 unexpected) in 743.470 (743.478) seconds
+Test Suite 'TimbreUITests.xctest' failed at 2026-11-07 10:52:14.931.
+	 Executed 1 test, with 2 failures (0 unexpected) in 743.470 (743.481) seconds
+Test Suite 'Selected tests' failed at 2026-11-07 10:52:14.934.
+	 Executed 1 test, with 2 failures (0 unexpected) in 743.470 (743.487) seconds
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+2026-11-07 10:53:07.974 xcodebuild[14570:49736] [MT] IDETestOperationsObserverDebug: 850.075 elapsed -- Testing started completed.
+2026-11-07 10:53:07.975 xcodebuild[14570:49736] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-11-07 10:53:07.975 xcodebuild[14570:49736] [MT] IDETestOperationsObserverDebug: 850.075 sec, +850.075 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/runner/work/tuner/tuner/ios/build/TabletScreenshots.xcresult
+
+** TEST FAILED **
+
+Testing started
