@@ -1,0 +1,966 @@
+Command line invocation:
+    /Applications/Xcode_26.3.app/Contents/Developer/usr/bin/xcodebuild test-without-building -xctestrun /Users/runner/work/tuner/tuner/ios/build/dd/Build/Products/Timbre_iphonesimulator26.2-arm64.xctestrun -parallel-testing-enabled NO "-only-testing:TimbreUITests/LessonAccessibilityLayoutUITests" -destination "platform=iOS Simulator,id=2FEACF5E-886C-4FB8-A137-C571FBA5CF5C" -resultBundlePath ios/build/UITests.xcresult CODE_SIGNING_ALLOWED=NO
+
+Build settings from command line:
+    CODE_SIGNING_ALLOWED = NO
+
+2026-11-07 10:26:23.979 xcodebuild[15669:52088] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+Writing result bundle at path:
+	/Users/runner/work/tuner/tuner/ios/build/UITests.xcresult
+
+2026-11-07 10:26:24.275 xcodebuild[15669:52088] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:iOS Simulator, arch:arm64, id:2FEACF5E-886C-4FB8-A137-C571FBA5CF5C, OS:26.2, name:iPhone 17 Pro }
+{ platform:iOS Simulator, arch:x86_64, id:2FEACF5E-886C-4FB8-A137-C571FBA5CF5C, OS:26.2, name:iPhone 17 Pro }
+2026-11-07 10:26:34.875 xcodebuild[15669:52088] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+2026-11-07 10:27:05.594821+0000 TimbreUITests-Runner[17850:57808] [Default] Running tests...
+2026-11-07 10:27:05.734221+0000 TimbreUITests-Runner[17850:58473] [General] Failed to send CA Event for app launch measurements for ca_event_type: 0 event_name: com.apple.app_launch_measurement.FirstFramePresentationMetric
+2026-11-07 10:27:05.777862+0000 TimbreUITests-Runner[17850:58478] [General] Failed to send CA Event for app launch measurements for ca_event_type: 1 event_name: com.apple.app_launch_measurement.ExtendedLaunchMetrics
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'Selected tests' started at 2026-11-07 10:27:17.306.
+Test Suite 'TimbreUITests.xctest' started at 2026-11-07 10:27:17.307.
+Test Suite 'LessonAccessibilityLayoutUITests' started at 2026-11-07 10:27:17.307.
+Test Case '-[TimbreUITests.LessonAccessibilityLayoutUITests testNotesAndTeachingContentRemainReachableAtAX5]' started.
+    t =     0.00s Start Test at 2026-11-07 10:27:17.308
+    t =     1.24s Set Up
+    t =     1.27s Open com.shahradazerisharghi.timbre
+    t =     1.27s     Launch com.shahradazerisharghi.timbre
+    t =    16.99s         Setting up automation session
+    t =    21.12s         Wait for com.shahradazerisharghi.timbre to idle
+    t =    23.14s Waiting 40.0s for "tune.stage" Any to exist
+    t =    24.21s     Checking `Expect predicate `existsNoRetry == 1` for object "tune.stage" Any`
+    t =    24.22s         Checking existence of `"tune.stage" Any`
+    t =    29.33s Tap Button (Element at index 1)
+    t =    29.33s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    32.25s     Find the Button (Element at index 1)
+    t =    34.09s     Check for interrupting elements affecting "Learn" Button
+    t =    35.99s     Synthesize event
+    t =    36.97s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    40.06s Find the "learn.lesson.gtr-1-2" Any
+    t =    42.45s Swipe up Target Application 'com.shahradazerisharghi.timbre'
+    t =    42.45s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    42.50s     Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    43.45s     Check for interrupting elements affecting "Timbre" Application
+    t =    43.57s     Synthesize event
+    t =    44.29s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    47.03s Find the "learn.lesson.gtr-1-2" Button
+    t =    48.93s Swipe up Target Application 'com.shahradazerisharghi.timbre'
+    t =    48.93s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    49.41s     Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    49.60s     Check for interrupting elements affecting "Timbre" Application
+    t =    49.81s     Synthesize event
+    t =    50.34s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    52.38s Find the "learn.lesson.gtr-1-2" Button
+    t =    53.94s Swipe up Target Application 'com.shahradazerisharghi.timbre'
+    t =    53.94s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    54.14s     Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    54.31s     Check for interrupting elements affecting "Timbre" Application
+    t =    54.47s     Synthesize event
+    t =    55.05s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    57.07s Find the "learn.lesson.gtr-1-2" Button
+    t =    58.59s Find the "learn.lesson.gtr-1-2" Button
+    t =    59.19s Find the "learn.lesson.gtr-1-2" Button
+    t =    59.54s Find the "learn.lesson.gtr-1-2" Button
+    t =    59.92s Find the "learn.lesson.gtr-1-2" Button
+    t =    60.18s Find the "learn.lesson.gtr-1-2" Button
+    t =    60.45s Find the "learn.lesson.gtr-1-2" Button
+    t =    61.08s Find the "learn.lesson.gtr-1-2" Button
+    t =    62.01s Tap "learn.lesson.gtr-1-2" Button
+    t =    62.01s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    62.13s     Find the "learn.lesson.gtr-1-2" Button
+    t =    62.89s     Check for interrupting elements affecting "learn.lesson.gtr-1-2" Button
+    t =    63.41s     Synthesize event
+    t =    63.74s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    64.44s Waiting 15.0s for "lesson.continue" Any to exist
+    t =    65.55s     Checking `Expect predicate `existsNoRetry == 1` for object "lesson.continue" Any`
+    t =    65.56s         Checking existence of `"lesson.continue" Any`
+    t =    66.35s Find the "lesson.hear" Any
+    t =    67.78s Checking existence of `ScrollView (First Match)`
+    t =    68.06s Find the ScrollView (First Match)
+    t =    68.54s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    68.68s Checking existence of `StaticText (First Match)`
+    t =    68.98s Find the StaticText (First Match)
+TIMBRE_SCROLL_GEOMETRY attempt=0 viewport=(0.0, 116.0, 402.0, 580.6666666666666) target=(20.0, 503.77333333333337, 343.3333333333333, 405.6666666666667) contained=false hittableWhenContained=false
+    t =    70.17s Press Target Application 'com.shahradazerisharghi.timbre'[0.00, 0.00] -> (24.0, 406.3) for 0.1 seconds, then drag to Target Application 'com.shahradazerisharghi.timbre'[0.00, 0.00] -> (24.0, 145.0) with velocity of 250.00 pixels per second, and then hold for 0.2 seconds 
+    t =    70.17s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    70.25s     Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    70.47s     Check for interrupting elements affecting "Timbre" Application
+    t =    70.74s     Synthesize event
+    t =    70.75s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    70.88s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    70.97s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    71.11s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    71.30s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    73.08s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    73.67s Find the ScrollView at {{0.0, 116.0}, {402.0, 580.7}}
+    t =    73.74s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    73.91s Checking existence of `"From thick to thin: E, A, D, G, B, E. Try: Every Amateur Does Get Better Eventually." StaticText`
+    t =    74.25s Find the "From thick to thin: E, A, D, G, B, E. Try: Every Amateur Does Get Better Eventually." StaticText
+    t =    74.56s Find the "From thick to thin: E, A, D, G, B, E. Try: Every Amateur Does Get Better Eventually." StaticText
+TIMBRE_SCROLL_GEOMETRY attempt=1 viewport=(0.0, 116.0, 402.0, 580.6666666666666) target=(20.0, 279.1066666666668, 343.3333333333333, 405.66666666666663) contained=true hittableWhenContained=true
+    t =    74.86s Find the "From thick to thin: E, A, D, G, B, E. Try: Every Amateur Does Get Better Eventually." StaticText
+    t =    75.27s Added attachment named 'layout-ax5-scroll-geometry-'
+    t =    75.86s Added attachment named 'layout-ax5-explanation-scroll-clear'
+    t =    75.88s Requesting snapshot of accessibility hierarchy for app with pid 18654
+    t =    77.25s Requesting snapshot of accessibility hierarchy for app with pid 18654
+    t =    77.44s Added attachment named 'layout-ax5-explanation-scroll-clear-hierarchy'
+    t =    77.44s Tap "lesson.continue" Any
+    t =    77.44s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    77.44s     Find the "lesson.continue" Any
+    t =    79.09s     Check for interrupting elements affecting "lesson.continue" Button
+    t =    80.18s     Synthesize event
+    t =    80.62s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    81.58s Waiting 10.0s for "lesson.tunecheck.skip" Any to exist
+    t =    82.71s     Checking `Expect predicate `existsNoRetry == 1` for object "lesson.tunecheck.skip" Any`
+    t =    82.71s         Checking existence of `"lesson.tunecheck.skip" Any`
+    t =    83.55s Added attachment named 'layout-ax5-tunecheck-arrival'
+    t =    83.55s Requesting snapshot of accessibility hierarchy for app with pid 18654
+    t =    84.72s Requesting snapshot of accessibility hierarchy for app with pid 18654
+    t =    85.08s Added attachment named 'layout-ax5-tunecheck-arrival-hierarchy'
+    t =    85.09s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    85.49s Checking existence of `"lesson.tunecheck.skip" Any`
+    t =    86.32s Find the "lesson.tunecheck.skip" Any
+    t =    87.11s Find the "lesson.tunecheck.skip" Button
+    t =    87.43s Find the "lesson.tunecheck.skip" Button
+    t =    88.03s Find the "lesson.tunecheck.instructions" Any
+    t =    88.44s Find the "lesson.tunecheck.skip" Button
+    t =    89.11s Checking existence of `ScrollView (First Match)`
+    t =    89.25s Find the ScrollView (First Match)
+    t =    89.36s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    90.84s Checking existence of `"lesson.tunecheck.title" Any`
+    t =    93.20s Find the "lesson.tunecheck.title" Any
+    t =    94.17s Find the "lesson.tunecheck.title" StaticText
+TIMBRE_SCROLL_GEOMETRY attempt=0 viewport=(0.0, 116.0, 402.0, 658.0) target=(20.0, 130.0, 322.0, 141.33333333333331) contained=true hittableWhenContained=true
+    t =    94.99s Find the "lesson.tunecheck.title" StaticText
+    t =    95.31s Added attachment named 'layout-ax5-scroll-geometry-lesson.tunecheck.title'
+    t =    95.32s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    95.49s Checking existence of `"lesson.tunecheck.skip" Button`
+    t =    95.65s Find the "lesson.tunecheck.skip" Button
+    t =    96.05s Find the "lesson.tunecheck.skip" Button
+    t =    96.25s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    96.44s Checking existence of `"lesson.close" Any`
+    t =    96.64s Find the "lesson.close" Any
+    t =    97.07s Find the "lesson.close" Button
+    t =    97.86s Added attachment named 'layout-ax5-tunecheck-scroll-clear-lesson.tunecheck.title'
+    t =    97.88s Requesting snapshot of accessibility hierarchy for app with pid 18654
+    t =    99.59s Requesting snapshot of accessibility hierarchy for app with pid 18654
+    t =    99.83s Added attachment named 'layout-ax5-tunecheck-scroll-clear-lesson.tunecheck.title-hierarchy'
+    t =    99.83s Find the "lesson.tunecheck.skip" Button
+    t =   100.00s Checking existence of `ScrollView (First Match)`
+    t =   100.13s Find the ScrollView (First Match)
+    t =   100.31s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   100.39s Checking existence of `"lesson.tunecheck.instructions" Any`
+    t =   100.89s Find the "lesson.tunecheck.instructions" Any
+    t =   101.55s Find the "lesson.tunecheck.instructions" StaticText
+TIMBRE_SCROLL_GEOMETRY attempt=0 viewport=(0.0, 116.0, 402.0, 658.0) target=(20.0, 277.3333333333333, 352.6666666666667, 290.6666666666667) contained=true hittableWhenContained=true
+    t =   102.06s Find the "lesson.tunecheck.instructions" StaticText
+    t =   102.66s Added attachment named 'layout-ax5-scroll-geometry-lesson.tunecheck.instructions'
+    t =   102.66s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   102.98s Checking existence of `"lesson.tunecheck.skip" Button`
+    t =   103.22s Find the "lesson.tunecheck.skip" Button
+    t =   103.43s Find the "lesson.tunecheck.skip" Button
+    t =   103.90s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   104.04s Checking existence of `"lesson.close" Any`
+    t =   104.14s Find the "lesson.close" Any
+    t =   104.38s Find the "lesson.close" Button
+    t =   105.32s Added attachment named 'layout-ax5-tunecheck-scroll-clear-lesson.tunecheck.instructions'
+    t =   105.32s Requesting snapshot of accessibility hierarchy for app with pid 18654
+    t =   107.10s Requesting snapshot of accessibility hierarchy for app with pid 18654
+    t =   107.38s Added attachment named 'layout-ax5-tunecheck-scroll-clear-lesson.tunecheck.instructions-hierarchy'
+    t =   107.38s Find the "lesson.tunecheck.skip" Button
+    t =   107.74s Checking existence of `ScrollView (First Match)`
+    t =   107.86s Find the ScrollView (First Match)
+    t =   108.01s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   108.17s Checking existence of `"lesson.tunecheck.hint" Any`
+    t =   108.46s Find the "lesson.tunecheck.hint" Any
+TIMBRE_SCROLL_GEOMETRY attempt=0 viewport=(0.0, 116.0, 402.0, 658.0) target=(17.833333333333343, 1093.6666666666665, 366.33333333333337, 63.333333333333485) contained=false hittableWhenContained=false
+    t =   108.76s Press Target Application 'com.shahradazerisharghi.timbre'[0.00, 0.00] -> (24.0, 445.0) for 0.1 seconds, then drag to Target Application 'com.shahradazerisharghi.timbre'[0.00, 0.00] -> (24.0, 148.9) with velocity of 250.00 pixels per second, and then hold for 0.2 seconds 
+    t =   108.76s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   108.77s     Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   108.92s     Check for interrupting elements affecting "Timbre" Application
+    t =   109.18s     Synthesize event
+    t =   109.19s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   109.34s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   109.54s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   109.73s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   109.99s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   111.96s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   112.33s Find the "lesson.tunecheck.scroll" ScrollView
+    t =   112.60s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   112.89s Checking existence of `"lesson.tunecheck.hint" StaticText`
+    t =   113.21s Find the "lesson.tunecheck.hint" StaticText
+TIMBRE_SCROLL_GEOMETRY attempt=1 viewport=(0.0, 116.0, 402.0, 658.0) target=(17.833333333333343, 829.6666666666666, 366.33333333333337, 63.33333333333337) contained=false hittableWhenContained=false
+    t =   113.60s Press Target Application 'com.shahradazerisharghi.timbre'[0.00, 0.00] -> (24.0, 445.0) for 0.1 seconds, then drag to Target Application 'com.shahradazerisharghi.timbre'[0.00, 0.00] -> (24.0, 148.9) with velocity of 250.00 pixels per second, and then hold for 0.2 seconds 
+    t =   113.60s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   113.89s     Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   114.16s     Check for interrupting elements affecting "Timbre" Application
+    t =   114.38s     Synthesize event
+    t =   114.40s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   114.59s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   114.86s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   114.99s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   115.32s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   117.26s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   117.36s Find the "lesson.tunecheck.scroll" ScrollView
+    t =   117.51s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   117.67s Checking existence of `"lesson.tunecheck.hint" StaticText`
+    t =   117.88s Find the "lesson.tunecheck.hint" StaticText
+    t =   118.11s Find the "lesson.tunecheck.hint" StaticText
+TIMBRE_SCROLL_GEOMETRY attempt=2 viewport=(0.0, 116.0, 402.0, 658.0) target=(17.833333333333343, 561.6666666666666, 366.33333333333337, 63.33333333333337) contained=true hittableWhenContained=true
+    t =   118.46s Find the "lesson.tunecheck.hint" StaticText
+    t =   118.74s Added attachment named 'layout-ax5-scroll-geometry-lesson.tunecheck.hint'
+    t =   118.74s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   118.96s Checking existence of `"lesson.tunecheck.skip" Button`
+    t =   119.05s Find the "lesson.tunecheck.skip" Button
+    t =   119.16s Find the "lesson.tunecheck.skip" Button
+    t =   119.25s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   119.34s Checking existence of `"lesson.close" Any`
+    t =   119.39s Find the "lesson.close" Any
+    t =   119.44s Find the "lesson.close" Button
+    t =   120.01s Added attachment named 'layout-ax5-tunecheck-scroll-clear-lesson.tunecheck.hint'
+    t =   120.06s Requesting snapshot of accessibility hierarchy for app with pid 18654
+    t =   122.84s Requesting snapshot of accessibility hierarchy for app with pid 18654
+    t =   123.14s Added attachment named 'layout-ax5-tunecheck-scroll-clear-lesson.tunecheck.hint-hierarchy'
+    t =   123.14s Find the "lesson.tunecheck.hint" Any
+    t =   123.39s Tap "lesson.tunecheck.skip" Button
+    t =   123.39s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   123.41s     Find the "lesson.tunecheck.skip" Button
+    t =   123.53s     Check for interrupting elements affecting "lesson.tunecheck.skip" Button
+    t =   123.73s     Synthesize event
+    t =   124.20s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   124.85s Waiting 20.0s for "lesson.override" Any to exist
+    t =   125.90s     Checking `Expect predicate `existsNoRetry == 1` for object "lesson.override" Any`
+    t =   125.91s         Checking existence of `"lesson.override" Any`
+    t =   127.32s         Capturing element debug description
+    t =   127.86s     Checking `Expect predicate `existsNoRetry == 1` for object "lesson.override" Any`
+    t =   127.86s         Checking existence of `"lesson.override" Any`
+    t =   129.42s         Capturing element debug description
+    t =   129.93s     Checking `Expect predicate `existsNoRetry == 1` for object "lesson.override" Any`
+    t =   129.93s         Checking existence of `"lesson.override" Any`
+    t =   131.08s         Capturing element debug description
+    t =   131.94s     Checking `Expect predicate `existsNoRetry == 1` for object "lesson.override" Any`
+    t =   131.95s         Checking existence of `"lesson.override" Any`
+    t =   132.23s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   132.49s Checking existence of `"lesson.close" Any`
+    t =   132.63s Find the "lesson.close" Any
+    t =   132.82s Find the "lesson.close" Button
+    t =   133.03s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   133.12s Checking existence of `"lesson.hear" Any`
+    t =   133.24s Find the "lesson.hear" Any
+    t =   133.36s Find the "lesson.hear" Button
+    t =   133.59s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   133.70s Checking existence of `"lesson.override" Any`
+    t =   133.83s Find the "lesson.override" Any
+    t =   133.99s Find the "lesson.override" Button
+    t =   134.20s Find the "lesson.override" Button
+    t =   134.43s Checking existence of `ScrollView (First Match)`
+    t =   134.51s Find the ScrollView (First Match)
+    t =   134.57s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   134.70s Checking existence of `"lesson.notes.target" Any`
+    t =   135.01s Find the "lesson.notes.target" Any
+TIMBRE_SCROLL_GEOMETRY attempt=0 viewport=(0.0, 116.0, 402.0, 580.6666666666666) target=(0.0, 460.0, 402.0, 356.66666666666663) contained=false hittableWhenContained=false
+    t =   135.33s Press Target Application 'com.shahradazerisharghi.timbre'[0.00, 0.00] -> (24.0, 406.3) for 0.1 seconds, then drag to Target Application 'com.shahradazerisharghi.timbre'[0.00, 0.00] -> (24.0, 174.3) with velocity of 250.00 pixels per second, and then hold for 0.2 seconds 
+    t =   135.33s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   135.37s     Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   135.89s     Check for interrupting elements affecting "Timbre" Application
+    t =   136.33s     Synthesize event
+    t =   136.34s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   136.52s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   136.68s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   136.74s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   136.87s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   138.46s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   138.51s Find the ScrollView at {{0.0, 116.0}, {402.0, 580.7}}
+    t =   138.57s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   138.63s Checking existence of `"lesson.notes.target" Other`
+    t =   138.93s Find the "lesson.notes.target" Other
+    t =   139.21s Find the "lesson.notes.target" Other
+TIMBRE_SCROLL_GEOMETRY attempt=1 viewport=(0.0, 116.0, 402.0, 580.6666666666666) target=(0.0, 256.66666666666663, 402.0, 356.66666666666663) contained=true hittableWhenContained=true
+    t =   139.49s Find the "lesson.notes.target" Other
+    t =   139.84s Added attachment named 'layout-ax5-scroll-geometry-lesson.notes.target'
+    t =   139.84s Find the "lesson.notes.target" Other
+    t =   140.04s Find the "lesson.notes.target" Other
+    t =   140.30s Find the "lesson.override" Button
+    t =   140.48s Find the ScrollView (First Match)
+    t =   140.60s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   140.76s Find the "lesson.notes.target" Other
+    t =   141.12s Checking existence of `StaticText (First Match)`
+    t =   141.44s Find the StaticText (First Match)
+    t =   141.81s Find the "lesson.notes.target" Other
+    t =   142.36s Find the "E" StaticText
+    t =   142.51s Checking existence of `StaticText (First Match)`
+    t =   142.71s Find the StaticText (First Match)
+    t =   142.89s Find the "lesson.notes.target" Other
+    t =   143.22s Find the "Listening…" StaticText
+    t =   143.79s Added attachment named 'layout-ax5-notes-status-scroll-clear'
+    t =   143.80s Requesting snapshot of accessibility hierarchy for app with pid 18654
+    t =   145.59s Requesting snapshot of accessibility hierarchy for app with pid 18654
+    t =   145.77s Added attachment named 'layout-ax5-notes-status-scroll-clear-hierarchy'
+    t =   145.77s Tap "lesson.hear" Button
+    t =   145.77s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   145.78s     Find the "lesson.hear" Button
+    t =   145.97s     Check for interrupting elements affecting "lesson.hear" Button
+    t =   146.64s     Synthesize event
+    t =   147.10s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   150.31s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   150.42s Checking existence of `"lesson.hear" Button`
+    t =   150.51s Find the "lesson.hear" Button
+    t =   150.63s Find the "lesson.hear" Button
+    t =   150.84s Tap "lesson.override" Button
+    t =   150.84s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   150.84s     Find the "lesson.override" Button
+    t =   150.93s     Check for interrupting elements affecting "lesson.override" Button
+    t =   151.20s     Synthesize event
+    t =   151.54s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   158.57s Waiting 20.0s for "lesson.override" Button to exist
+    t =   159.65s     Checking `Expect predicate `existsNoRetry == 1` for object "lesson.override" Button`
+    t =   159.66s         Checking existence of `"lesson.override" Button`
+    t =   159.82s Tap "lesson.override" Button
+    t =   159.83s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   159.86s     Find the "lesson.override" Button
+    t =   159.98s     Check for interrupting elements affecting "lesson.override" Button
+    t =   160.29s     Synthesize event
+    t =   160.62s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   160.64s Waiting 20.0s for "lesson.option.0" Button to exist
+    t =   161.66s     Checking `Expect predicate `existsNoRetry == 1` for object "lesson.option.0" Button`
+    t =   161.66s         Checking existence of `"lesson.option.0" Button`
+    t =   161.92s Get number of matches for: Elements matching predicate 'label == "What is string 5 called?"'
+    t =   162.10s Get number of matches for: Elements matching predicate 'label == "The open strings"'
+    t =   162.27s Find the Other (First Match)
+    t =   162.32s Get all elements bound by index for: Descendants matching type ScrollView
+    t =   162.41s Get number of matches for: Elements matching predicate 'label == "What is string 5 called?"'
+    t =   162.51s Get number of matches for: Elements matching predicate 'label == "What is string 5 called?"'
+    t =   162.66s Checking existence of `"lesson.option.0" Button`
+    t =   162.75s Get number of matches for: Elements matching predicate '"lesson.option.0" IN identifiers'
+    t =   162.87s Find the "lesson.option.0" Button
+    t =   162.99s Find the "lesson.continue" Button
+    t =   163.08s Checking existence of `ScrollView (First Match)`
+    t =   163.13s Find the ScrollView (First Match)
+    t =   163.15s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   163.24s Checking existence of `"lesson.option.0" Button`
+    t =   163.34s Find the "lesson.option.0" Button
+    t =   163.44s Find the "lesson.option.0" Button
+TIMBRE_SCROLL_GEOMETRY attempt=0 viewport=(0.0, 116.0, 402.0, 651.3333333333334) target=(20.0, 620.0, 176.0, 84.0) contained=true hittableWhenContained=true
+    t =   163.77s Find the "lesson.option.0" Button
+    t =   163.84s Added attachment named 'layout-ax5-scroll-geometry-lesson.option.0'
+    t =   163.84s Find the "lesson.option.0" Button
+    t =   164.20s Added attachment named 'layout-ax5-quiz-option-0-scroll-clear'
+    t =   164.20s Requesting snapshot of accessibility hierarchy for app with pid 18654
+    t =   164.93s Requesting snapshot of accessibility hierarchy for app with pid 18654
+    t =   165.06s Added attachment named 'layout-ax5-quiz-option-0-scroll-clear-hierarchy'
+    t =   165.06s Checking existence of `"lesson.option.1" Button`
+    t =   165.17s Get number of matches for: Elements matching predicate '"lesson.option.1" IN identifiers'
+    t =   165.51s Find the "lesson.option.1" Button
+    t =   165.66s Find the "lesson.continue" Button
+    t =   165.79s Checking existence of `ScrollView (First Match)`
+    t =   165.91s Find the ScrollView (First Match)
+    t =   166.12s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   166.21s Checking existence of `"lesson.option.1" Button`
+    t =   166.33s Find the "lesson.option.1" Button
+    t =   166.44s Find the "lesson.option.1" Button
+TIMBRE_SCROLL_GEOMETRY attempt=0 viewport=(0.0, 116.0, 402.0, 651.3333333333334) target=(206.0, 620.0, 176.0, 84.0) contained=true hittableWhenContained=true
+    t =   166.65s Find the "lesson.option.1" Button
+    t =   166.78s Added attachment named 'layout-ax5-scroll-geometry-lesson.option.1'
+    t =   166.78s Find the "lesson.option.1" Button
+    t =   167.16s Added attachment named 'layout-ax5-quiz-option-1-scroll-clear'
+    t =   167.16s Requesting snapshot of accessibility hierarchy for app with pid 18654
+    t =   167.69s Requesting snapshot of accessibility hierarchy for app with pid 18654
+    t =   167.82s Added attachment named 'layout-ax5-quiz-option-1-scroll-clear-hierarchy'
+    t =   167.82s Checking existence of `"lesson.option.2" Button`
+    t =   168.08s Get number of matches for: Elements matching predicate '"lesson.option.2" IN identifiers'
+    t =   168.18s Find the "lesson.option.2" Button
+    t =   168.28s Find the "lesson.continue" Button
+    t =   168.36s Checking existence of `ScrollView (First Match)`
+    t =   168.40s Find the ScrollView (First Match)
+    t =   168.63s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   168.68s Checking existence of `"lesson.option.2" Button`
+    t =   168.79s Find the "lesson.option.2" Button
+TIMBRE_SCROLL_GEOMETRY attempt=0 viewport=(0.0, 116.0, 402.0, 651.3333333333334) target=(20.0, 714.0, 176.0, 84.0) contained=false hittableWhenContained=false
+    t =   168.94s Press Target Application 'com.shahradazerisharghi.timbre'[0.00, 0.00] -> (24.0, 441.7) for 0.1 seconds, then drag to Target Application 'com.shahradazerisharghi.timbre'[0.00, 0.00] -> (24.0, 148.6) with velocity of 250.00 pixels per second, and then hold for 0.2 seconds 
+    t =   168.94s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   168.95s     Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   169.08s     Check for interrupting elements affecting "Timbre" Application
+    t =   169.19s     Synthesize event
+    t =   169.20s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   169.28s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   169.36s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   169.43s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   169.62s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   171.45s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   171.92s Find the ScrollView at {{0.0, 116.0}, {402.0, 651.3}}
+    t =   172.07s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   172.12s Checking existence of `"lesson.option.2" Button`
+    t =   172.38s Find the "lesson.option.2" Button
+    t =   172.59s Find the "lesson.option.2" Button
+TIMBRE_SCROLL_GEOMETRY attempt=1 viewport=(0.0, 116.0, 402.0, 651.3333333333334) target=(20.0, 671.3333333333334, 176.0, 84.0) contained=true hittableWhenContained=true
+    t =   172.79s Find the "lesson.option.2" Button
+    t =   172.97s Added attachment named 'layout-ax5-scroll-geometry-lesson.option.2'
+    t =   172.97s Find the "lesson.option.2" Button
+    t =   173.33s Added attachment named 'layout-ax5-quiz-option-2-scroll-clear'
+    t =   173.34s Requesting snapshot of accessibility hierarchy for app with pid 18654
+    t =   173.79s Requesting snapshot of accessibility hierarchy for app with pid 18654
+    t =   173.96s Added attachment named 'layout-ax5-quiz-option-2-scroll-clear-hierarchy'
+    t =   173.96s Checking existence of `"lesson.option.3" Button`
+    t =   174.22s Get number of matches for: Elements matching predicate '"lesson.option.3" IN identifiers'
+    t =   174.44s Find the "lesson.option.3" Button
+    t =   175.48s Find the "lesson.continue" Button
+    t =   175.81s Checking existence of `ScrollView (First Match)`
+    t =   175.92s Find the ScrollView (First Match)
+    t =   176.04s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   176.30s Checking existence of `"lesson.option.3" Button`
+    t =   176.47s Find the "lesson.option.3" Button
+    t =   176.56s Find the "lesson.option.3" Button
+TIMBRE_SCROLL_GEOMETRY attempt=0 viewport=(0.0, 116.0, 402.0, 651.3333333333334) target=(206.0, 671.3333333333334, 176.0, 84.0) contained=true hittableWhenContained=true
+    t =   176.66s Find the "lesson.option.3" Button
+    t =   176.75s Added attachment named 'layout-ax5-scroll-geometry-lesson.option.3'
+    t =   176.75s Find the "lesson.option.3" Button
+    t =   177.02s Added attachment named 'layout-ax5-quiz-option-3-scroll-clear'
+    t =   177.02s Requesting snapshot of accessibility hierarchy for app with pid 18654
+    t =   177.60s Requesting snapshot of accessibility hierarchy for app with pid 18654
+    t =   177.72s Added attachment named 'layout-ax5-quiz-option-3-scroll-clear-hierarchy'
+    t =   177.72s Find the "lesson.continue" Button
+    t =   177.89s Checking existence of `ScrollView (First Match)`
+    t =   178.02s Find the ScrollView (First Match)
+    t =   178.11s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   178.17s Checking existence of `"lesson.option.0" Button`
+    t =   178.36s Find the "lesson.option.0" Button
+    t =   178.59s Find the "lesson.option.0" Button
+TIMBRE_SCROLL_GEOMETRY attempt=0 viewport=(0.0, 116.0, 402.0, 651.3333333333334) target=(20.0, 577.3333333333333, 176.0, 84.00000000000011) contained=true hittableWhenContained=true
+    t =   178.86s Find the "lesson.option.0" Button
+    t =   179.06s Added attachment named 'layout-ax5-scroll-geometry-lesson.option.0'
+    t =   179.06s Find the "lesson.option.0" Button
+    t =   179.29s Find the "lesson.continue" Button
+    t =   179.41s Find the ScrollView (Element at index 0)
+    t =   179.54s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   179.59s Find the "lesson.option.0" Button
+    t =   179.77s Find the "lesson.option.0" Button
+    t =   179.91s Find the "lesson.option.0" Button
+    t =   180.07s Find the "lesson.option.0" Button
+    t =   180.23s Get number of matches for: Elements matching predicate '"lesson.option.0" IN identifiers'
+    t =   180.37s Find the "The open strings" Other
+    t =   180.46s Tap "lesson.option.0" Button
+    t =   180.46s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   180.46s     Find the "lesson.option.0" Button
+    t =   180.64s     Check for interrupting elements affecting "lesson.option.0" Button
+    t =   180.76s     Synthesize event
+    t =   181.11s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   181.12s Waiting 10.0s for StaticText (First Match) to exist
+    t =   182.20s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
+    t =   182.20s         Checking existence of `StaticText (First Match)`
+    t =   182.26s Find the "lesson.continue" Button
+    t =   182.42s Find the "lesson.continue" Button
+    t =   182.60s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   182.69s Checking existence of `"lesson.continue" Button`
+    t =   182.89s Find the "lesson.continue" Button
+    t =   183.09s Find the "lesson.continue" Button
+    t =   183.30s Checking existence of `"lesson.option.0" Button`
+    t =   184.58s Added attachment named 'layout-ax5-quiz-post-feedback-before-rediscovery'
+    t =   184.59s Requesting snapshot of accessibility hierarchy for app with pid 18654
+    t =   185.46s Requesting snapshot of accessibility hierarchy for app with pid 18654
+    t =   185.62s Added attachment named 'layout-ax5-quiz-post-feedback-before-rediscovery-hierarchy'
+    t =   185.66s Checking existence of `"The open strings" Other`
+    t =   185.82s Find the "The open strings" Other
+    t =   185.91s Find the "The open strings" Other
+    t =   186.08s Get number of matches for: Elements matching predicate 'label == "The open strings"'
+    t =   186.21s Checking existence of `StaticText (First Match)`
+    t =   186.61s Find the StaticText (First Match)
+    t =   186.84s Checking existence of `ScrollView at {{0.0, 116.0}, {402.0, 651.3}}`
+    t =   186.91s Get number of matches for: Elements matching predicate 'label == "What is string 5 called?"'
+    t =   187.21s Get number of matches for: Elements matching predicate 'label == "Nice — that’s right."'
+    t =   187.48s Checking existence of `"lesson.continue" Button`
+    t =   187.81s Find the "lesson.continue" Button
+    t =   188.06s Find the "lesson.continue" Button
+    t =   188.14s Find the "lesson.continue" Button
+    t =   188.33s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   188.42s Checking existence of `"lesson.continue" Button`
+    t =   188.58s Find the "lesson.continue" Button
+    t =   188.81s Find the "lesson.continue" Button
+    t =   189.07s Get all elements bound by index for: Descendants matching type ScrollView
+    t =   189.16s Get number of matches for: Elements matching predicate 'label == "What is string 5 called?"'
+    t =   189.25s Get number of matches for: Elements matching predicate 'label == "What is string 5 called?"'
+    t =   189.36s Checking existence of `"lesson.option.0" Button`
+    t =   190.28s Checking existence of `"lesson.option.0" Button`
+    t =   191.06s Find the "lesson.continue" Button
+    t =   191.28s Find the ScrollView at {{0.0, 116.0}, {402.0, 651.3}}
+    t =   191.40s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   191.46s Find the "What is string 5 called?" StaticText
+TIMBRE_QUIZ_REDISCOVERY attempt=0 missing=lesson.option.0 viewport=(0.0, 116.0, 402.0, 427.66666666666663) promptBefore=(20.0, 91.33333333333333, 227.33333333333334, 212.00000000000006) dragDelta=-120.0
+    t =   191.61s Press Target Application 'com.shahradazerisharghi.timbre'[0.00, 0.00] -> (12.0, 329.8) for 0.1 seconds, then drag to Target Application 'com.shahradazerisharghi.timbre'[0.00, 0.00] -> (12.0, 209.8) with velocity of 250.00 pixels per second, and then hold for 0.2 seconds 
+    t =   191.61s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   191.61s     Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   191.71s     Check for interrupting elements affecting "Timbre" Application
+    t =   191.82s     Synthesize event
+    t =   191.83s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   191.88s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   191.93s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   191.98s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   192.06s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   193.18s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   193.19s Checking existence of `"The open strings" Other`
+    t =   193.24s Find the "The open strings" Other
+    t =   193.36s Find the "The open strings" Other
+    t =   193.47s Get number of matches for: Elements matching predicate 'label == "The open strings"'
+    t =   193.59s Checking existence of `"What is string 5 called?" StaticText`
+    t =   193.72s Find the "What is string 5 called?" StaticText
+    t =   193.87s Checking existence of `ScrollView at {{0.0, 116.0}, {402.0, 427.7}}`
+    t =   193.92s Get number of matches for: Elements matching predicate 'label == "What is string 5 called?"'
+    t =   194.05s Get number of matches for: Elements matching predicate 'label == "Nice — that’s right."'
+    t =   194.15s Checking existence of `"lesson.continue" Button`
+    t =   194.26s Find the "lesson.continue" Button
+    t =   194.33s Find the "lesson.continue" Button
+    t =   194.39s Find the "lesson.continue" Button
+    t =   194.45s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   194.53s Checking existence of `"lesson.continue" Button`
+    t =   194.61s Find the "lesson.continue" Button
+    t =   194.67s Find the "lesson.continue" Button
+    t =   194.75s Get all elements bound by index for: Descendants matching type ScrollView
+    t =   194.82s Get number of matches for: Elements matching predicate 'label == "What is string 5 called?"'
+    t =   194.89s Get number of matches for: Elements matching predicate 'label == "What is string 5 called?"'
+    t =   194.99s Find the "What is string 5 called?" StaticText
+    t =   195.06s Checking existence of `"lesson.option.0" Button`
+    t =   195.14s Find the "lesson.continue" Button
+    t =   195.24s Find the ScrollView at {{0.0, 116.0}, {402.0, 427.7}}
+    t =   195.42s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   195.47s Checking existence of `"lesson.option.0" Button`
+    t =   195.57s Find the "lesson.option.0" Button
+    t =   195.74s Find the "lesson.option.0" Button
+    t =   195.84s Find the "lesson.option.0" Button
+    t =   195.92s Get number of matches for: Elements matching predicate 'label == "A"'
+    t =   196.01s Get number of matches for: Elements matching predicate '"lesson.option.0" IN identifiers'
+    t =   196.11s Get number of matches for: Elements matching predicate '"lesson.option.0" IN identifiers'
+    t =   196.19s Find the "lesson.option.0" Button
+    t =   196.34s Find the "lesson.option.0" Button
+    t =   196.41s Added attachment named 'layout-ax5-selected-quiz-rediscovery'
+    t =   196.41s Find the "lesson.continue" Button
+    t =   196.49s Checking existence of `ScrollView at {{0.0, 116.0}, {402.0, 427.7}}`
+    t =   196.54s Find the ScrollView at {{0.0, 116.0}, {402.0, 427.7}}
+    t =   196.62s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   196.66s Checking existence of `"lesson.option.0" Button`
+    t =   196.70s Find the "lesson.option.0" Button
+TIMBRE_SCROLL_GEOMETRY attempt=0 viewport=(0.0, 116.0, 402.0, 427.66666666666663) target=(20.0, 508.3333333333333, 176.33333333333334, 84.00000000000006) contained=false hittableWhenContained=false
+    t =   196.76s Press Target Application 'com.shahradazerisharghi.timbre'[0.00, 0.00] -> (24.0, 329.8) for 0.1 seconds, then drag to Target Application 'com.shahradazerisharghi.timbre'[0.00, 0.00] -> (24.0, 137.4) with velocity of 250.00 pixels per second, and then hold for 0.2 seconds 
+    t =   196.76s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   196.77s     Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   196.83s     Check for interrupting elements affecting "Timbre" Application
+    t =   196.89s     Synthesize event
+    t =   196.89s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   196.95s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   197.01s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   197.05s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   197.12s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   198.51s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   198.82s Find the ScrollView at {{0.0, 116.0}, {402.0, 427.7}}
+    t =   198.93s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   199.00s Checking existence of `"lesson.option.0" Button`
+    t =   199.09s Find the "lesson.option.0" Button
+    t =   199.18s Find the "lesson.option.0" Button
+TIMBRE_SCROLL_GEOMETRY attempt=1 viewport=(0.0, 116.0, 402.0, 427.66666666666674) target=(20.0, 353.6666666666667, 176.33333333333334, 84.0) contained=true hittableWhenContained=true
+    t =   199.31s Find the "lesson.option.0" Button
+    t =   199.41s Added attachment named 'layout-ax5-scroll-geometry-lesson.option.0'
+    t =   199.41s Get number of matches for: Elements matching predicate '"lesson.option.0" IN identifiers'
+    t =   199.53s Find the "lesson.option.0" Button
+    t =   199.64s Find the "lesson.option.0" Button
+    t =   199.72s Find the "lesson.option.0" Button
+    t =   199.83s Get number of matches for: Elements matching predicate 'label == "A"'
+    t =   199.96s Find the StaticText (First Match)
+    t =   200.11s Find the "lesson.option.0" Button
+    t =   200.21s Find the StaticText (First Match)
+    t =   200.31s Find the "lesson.continue" Button
+    t =   200.42s Find the ScrollView at {{0.0, 116.0}, {402.0, 427.7}}
+    t =   200.53s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   200.59s Find the "The open strings" Other
+    t =   200.79s Added attachment named 'layout-ax5-quiz-correct-answer-scroll-clear'
+    t =   200.79s Requesting snapshot of accessibility hierarchy for app with pid 18654
+    t =   201.31s Requesting snapshot of accessibility hierarchy for app with pid 18654
+    t =   201.41s Added attachment named 'layout-ax5-quiz-correct-answer-scroll-clear-hierarchy'
+    t =   201.43s Tear Down
+    t =   201.43s     Terminate com.shahradazerisharghi.timbre:18654
+Test Case '-[TimbreUITests.LessonAccessibilityLayoutUITests testNotesAndTeachingContentRemainReachableAtAX5]' passed (203.147 seconds).
+Test Case '-[TimbreUITests.LessonAccessibilityLayoutUITests testPlayAlongStartAndCompletedTakeAtAX5]' started.
+    t =     0.00s Start Test at 2026-11-07 10:30:40.456
+    t =     0.07s Set Up
+    t =     0.07s Open com.shahradazerisharghi.timbre
+    t =     0.07s     Launch com.shahradazerisharghi.timbre
+    t =     1.53s         Setting up automation session
+    t =     4.93s         Wait for com.shahradazerisharghi.timbre to idle
+    t =     6.44s Waiting 30.0s for "lesson.close" Any to exist
+    t =     7.51s     Checking `Expect predicate `existsNoRetry == 1` for object "lesson.close" Any`
+    t =     7.52s         Checking existence of `"lesson.close" Any`
+    t =     9.50s         Capturing element debug description
+    t =    10.45s     Checking `Expect predicate `existsNoRetry == 1` for object "lesson.close" Any`
+    t =    10.45s         Checking existence of `"lesson.close" Any`
+    t =    18.43s Waiting 15.0s for "lesson.continue" Any to exist
+    t =    19.50s     Checking `Expect predicate `existsNoRetry == 1` for object "lesson.continue" Any`
+    t =    19.50s         Checking existence of `"lesson.continue" Any`
+    t =    19.80s Waiting 15.0s for "along.next" Any to exist
+    t =    20.83s     Checking `Expect predicate `existsNoRetry == 1` for object "along.next" Any`
+    t =    20.83s         Checking existence of `"along.next" Any`
+    t =    20.90s Checking existence of `ScrollView (First Match)`
+    t =    20.91s Find the ScrollView (First Match)
+    t =    20.93s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    21.07s Checking existence of `"along.next" Any`
+    t =    21.14s Find the "along.next" Any
+TIMBRE_SCROLL_GEOMETRY attempt=0 viewport=(0.0, 116.0, 402.0, 758.0) target=(20.0, 899.0, 341.0, 141.3333740234375) contained=false hittableWhenContained=false
+    t =    21.24s Press Target Application 'com.shahradazerisharghi.timbre'[0.00, 0.00] -> (24.0, 495.0) for 0.1 seconds, then drag to Target Application 'com.shahradazerisharghi.timbre'[0.00, 0.00] -> (24.0, 153.9) with velocity of 250.00 pixels per second, and then hold for 0.2 seconds 
+    t =    21.24s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    21.25s     Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    21.41s     Check for interrupting elements affecting "Timbre" Application
+    t =    21.71s     Synthesize event
+    t =    21.72s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    21.82s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    21.96s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    22.07s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    22.19s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    24.21s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    24.22s Find the "along.scroll" ScrollView
+    t =    24.23s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    24.31s Checking existence of `"along.next" Other`
+    t =    24.36s Find the "along.next" Other
+    t =    24.44s Find the "along.next" Other
+TIMBRE_SCROLL_GEOMETRY attempt=1 viewport=(0.0, 116.0, 402.0, 758.0) target=(20.0, 585.3333129882812, 341.0, 141.3333740234375) contained=true hittableWhenContained=true
+    t =    24.51s Find the "along.next" Other
+    t =    24.56s Added attachment named 'layout-ax5-scroll-geometry-along.next'
+    t =    24.56s Find the "along.next" Other
+    t =    24.63s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    24.71s Checking existence of `"along.next" Other`
+    t =    24.78s Find the "along.next" Other
+    t =    24.83s Find the "along.next" Other
+    t =    25.09s Added attachment named 'layout-ax5-along-ready-cue-clear'
+    t =    25.09s Requesting snapshot of accessibility hierarchy for app with pid 22985
+    t =    25.72s Requesting snapshot of accessibility hierarchy for app with pid 22985
+    t =    25.89s Added attachment named 'layout-ax5-along-ready-cue-clear-hierarchy'
+    t =    25.89s Checking existence of `ScrollView (First Match)`
+    t =    25.90s Find the ScrollView (First Match)
+    t =    25.92s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    25.99s Checking existence of `"lesson.continue" Any`
+    t =    26.07s Find the "lesson.continue" Any
+TIMBRE_SCROLL_GEOMETRY attempt=0 viewport=(0.0, 116.0, 402.0, 758.0) target=(20.0, 1244.9999999999998, 362.0, 60.66666666666674) contained=false hittableWhenContained=false
+    t =    26.16s Press Target Application 'com.shahradazerisharghi.timbre'[0.00, 0.00] -> (24.0, 495.0) for 0.1 seconds, then drag to Target Application 'com.shahradazerisharghi.timbre'[0.00, 0.00] -> (24.0, 153.9) with velocity of 250.00 pixels per second, and then hold for 0.2 seconds 
+    t =    26.16s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    26.16s     Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    26.26s     Check for interrupting elements affecting "Timbre" Application
+    t =    26.36s     Synthesize event
+    t =    26.36s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    26.44s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    26.52s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    26.59s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    26.68s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    28.69s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    28.76s Find the "along.scroll" ScrollView
+    t =    28.81s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    29.05s Checking existence of `"lesson.continue" Button`
+    t =    29.51s Find the "lesson.continue" Button
+TIMBRE_SCROLL_GEOMETRY attempt=1 viewport=(0.0, 116.0, 402.0, 758.0) target=(20.0, 931.3333333333331, 362.0, 60.66666666666674) contained=false hittableWhenContained=false
+    t =    30.39s Press Target Application 'com.shahradazerisharghi.timbre'[0.00, 0.00] -> (24.0, 495.0) for 0.1 seconds, then drag to Target Application 'com.shahradazerisharghi.timbre'[0.00, 0.00] -> (24.0, 153.9) with velocity of 250.00 pixels per second, and then hold for 0.2 seconds 
+    t =    30.39s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    30.39s     Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    30.76s     Check for interrupting elements affecting "Timbre" Application
+    t =    31.04s     Synthesize event
+    t =    31.05s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    31.23s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    31.42s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    31.54s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    31.68s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    33.68s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    34.07s Find the "along.scroll" ScrollView
+    t =    34.10s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    34.23s Checking existence of `"lesson.continue" Button`
+    t =    34.43s Find the "lesson.continue" Button
+    t =    34.61s Find the "lesson.continue" Button
+TIMBRE_SCROLL_GEOMETRY attempt=2 viewport=(0.0, 116.0, 402.0, 758.0) target=(20.0, 767.3333333333331, 362.0, 60.66666666666674) contained=true hittableWhenContained=true
+    t =    34.77s Find the "lesson.continue" Button
+    t =    34.96s Added attachment named 'layout-ax5-scroll-geometry-lesson.continue'
+    t =    34.96s Find the "lesson.continue" Button
+    t =    35.23s Added attachment named 'layout-ax5-along-ready-start-clear'
+    t =    35.23s Requesting snapshot of accessibility hierarchy for app with pid 22985
+    t =    36.25s Requesting snapshot of accessibility hierarchy for app with pid 22985
+    t =    36.44s Added attachment named 'layout-ax5-along-ready-start-clear-hierarchy'
+    t =    36.44s Tap "lesson.continue" Button
+    t =    36.44s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    36.44s     Find the "lesson.continue" Button
+    t =    36.63s     Check for interrupting elements affecting "lesson.continue" Button
+    t =    36.76s     Synthesize event
+    t =    37.09s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    44.98s Added attachment named 'layout-ax5-along-playing'
+    t =    59.05s Waiting 30.0s for "along.again" Any to exist
+    t =    60.10s     Checking `Expect predicate `existsNoRetry == 1` for object "along.again" Any`
+    t =    60.10s         Checking existence of `"along.again" Any`
+    t =    60.62s Added attachment named 'layout-ax5-along-done-overlay'
+    t =    60.62s Requesting snapshot of accessibility hierarchy for app with pid 22985
+    t =    61.58s Requesting snapshot of accessibility hierarchy for app with pid 22985
+    t =    61.78s Added attachment named 'layout-ax5-along-done-overlay-hierarchy'
+    t =    61.78s Checking existence of `"along.scroll" ScrollView`
+    t =    61.95s Waiting 15.0s for "along.result.stat.perfect" Any to exist
+    t =    62.96s     Checking `Expect predicate `existsNoRetry == 1` for object "along.result.stat.perfect" Any`
+    t =    62.96s         Checking existence of `"along.result.stat.perfect" Any`
+    t =    63.10s Find the "along.result.stat.perfect" Any
+    t =    63.34s Checking existence of `"along.scroll" ScrollView`
+    t =    63.49s Find the "along.scroll" ScrollView
+    t =    63.71s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    63.87s Checking existence of `"along.result.stat.perfect" StaticText`
+    t =    64.00s Find the "along.result.stat.perfect" StaticText
+    t =    64.16s Find the "along.result.stat.perfect" StaticText
+TIMBRE_SCROLL_GEOMETRY attempt=0 viewport=(0.0, 116.0, 402.0, 758.0) target=(42.166666666666686, 409.6666666666667, 129.33333333333331, 51.333333333333314) contained=true hittableWhenContained=true
+    t =    64.37s Find the "along.result.stat.perfect" StaticText
+    t =    64.51s Added attachment named 'layout-ax5-scroll-geometry-along.result.stat.perfect'
+    t =    64.52s Find the "along.scroll" ScrollView
+    t =    64.69s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    64.83s Checking existence of `"along.result.stat.perfect" StaticText`
+    t =    64.93s Find the "along.result.stat.perfect" StaticText
+    t =    65.10s Find the "along.result.stat.perfect" StaticText
+    t =    65.43s Added attachment named 'layout-ax5-along-result-stat-perfect-clear'
+    t =    65.43s Requesting snapshot of accessibility hierarchy for app with pid 22985
+    t =    66.42s Requesting snapshot of accessibility hierarchy for app with pid 22985
+    t =    66.63s Added attachment named 'layout-ax5-along-result-stat-perfect-clear-hierarchy'
+    t =    66.63s Waiting 15.0s for "along.result.stat.good" Any to exist
+    t =    67.67s     Checking `Expect predicate `existsNoRetry == 1` for object "along.result.stat.good" Any`
+    t =    67.67s         Checking existence of `"along.result.stat.good" Any`
+    t =    68.07s Find the "along.result.stat.good" Any
+    t =    68.94s Checking existence of `"along.scroll" ScrollView`
+    t =    69.08s Find the "along.scroll" ScrollView
+    t =    69.31s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    69.44s Checking existence of `"along.result.stat.good" StaticText`
+    t =    69.57s Find the "along.result.stat.good" StaticText
+    t =    69.73s Find the "along.result.stat.good" StaticText
+TIMBRE_SCROLL_GEOMETRY attempt=0 viewport=(0.0, 116.0, 402.0, 758.0) target=(189.5, 409.6666666666667, 101.33333333333331, 51.333333333333314) contained=true hittableWhenContained=true
+    t =    70.34s Find the "along.result.stat.good" StaticText
+    t =    70.74s Added attachment named 'layout-ax5-scroll-geometry-along.result.stat.good'
+    t =    70.75s Find the "along.scroll" ScrollView
+    t =    70.96s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    71.12s Checking existence of `"along.result.stat.good" StaticText`
+    t =    72.02s Find the "along.result.stat.good" StaticText
+    t =    72.71s Find the "along.result.stat.good" StaticText
+    t =    73.78s Added attachment named 'layout-ax5-along-result-stat-good-clear'
+    t =    73.79s Requesting snapshot of accessibility hierarchy for app with pid 22985
+    t =    74.44s Requesting snapshot of accessibility hierarchy for app with pid 22985
+    t =    74.60s Added attachment named 'layout-ax5-along-result-stat-good-clear-hierarchy'
+    t =    74.60s Waiting 15.0s for "along.result.stat.early-late" Any to exist
+    t =    75.65s     Checking `Expect predicate `existsNoRetry == 1` for object "along.result.stat.early-late" Any`
+    t =    75.66s         Checking existence of `"along.result.stat.early-late" Any`
+    t =    75.91s Find the "along.result.stat.early-late" Any
+    t =    76.10s Checking existence of `"along.scroll" ScrollView`
+    t =    76.26s Find the "along.scroll" ScrollView
+    t =    76.40s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    76.51s Checking existence of `"along.result.stat.early-late" StaticText`
+    t =    76.62s Find the "along.result.stat.early-late" StaticText
+    t =    76.75s Find the "along.result.stat.early-late" StaticText
+TIMBRE_SCROLL_GEOMETRY attempt=0 viewport=(0.0, 116.0, 402.0, 758.0) target=(42.166666666666686, 538.6666666666666, 166.99999999999997, 51.33333333333337) contained=true hittableWhenContained=true
+    t =    76.92s Find the "along.result.stat.early-late" StaticText
+    t =    77.07s Added attachment named 'layout-ax5-scroll-geometry-along.result.stat.early-late'
+    t =    77.08s Find the "along.scroll" ScrollView
+    t =    77.20s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    77.30s Checking existence of `"along.result.stat.early-late" StaticText`
+    t =    77.43s Find the "along.result.stat.early-late" StaticText
+    t =    77.56s Find the "along.result.stat.early-late" StaticText
+    t =    77.90s Added attachment named 'layout-ax5-along-result-stat-early-late-clear'
+    t =    77.90s Requesting snapshot of accessibility hierarchy for app with pid 22985
+    t =    78.61s Requesting snapshot of accessibility hierarchy for app with pid 22985
+    t =    78.85s Added attachment named 'layout-ax5-along-result-stat-early-late-clear-hierarchy'
+    t =    78.85s Waiting 15.0s for "along.result.stat.missed" Any to exist
+    t =    79.90s     Checking `Expect predicate `existsNoRetry == 1` for object "along.result.stat.missed" Any`
+    t =    79.90s         Checking existence of `"along.result.stat.missed" Any`
+    t =    80.01s Find the "along.result.stat.missed" Any
+    t =    80.08s Checking existence of `"along.scroll" ScrollView`
+    t =    80.30s Find the "along.scroll" ScrollView
+    t =    80.51s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    80.64s Checking existence of `"along.result.stat.missed" StaticText`
+    t =    80.72s Find the "along.result.stat.missed" StaticText
+    t =    80.86s Find the "along.result.stat.missed" StaticText
+TIMBRE_SCROLL_GEOMETRY attempt=0 viewport=(0.0, 116.0, 402.0, 758.0) target=(227.16666666666666, 538.6666666666666, 132.66666666666666, 51.33333333333337) contained=true hittableWhenContained=true
+    t =    81.20s Find the "along.result.stat.missed" StaticText
+    t =    81.39s Added attachment named 'layout-ax5-scroll-geometry-along.result.stat.missed'
+    t =    81.39s Find the "along.scroll" ScrollView
+    t =    81.65s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    81.83s Checking existence of `"along.result.stat.missed" StaticText`
+    t =    82.01s Find the "along.result.stat.missed" StaticText
+    t =    82.19s Find the "along.result.stat.missed" StaticText
+    t =    82.63s Added attachment named 'layout-ax5-along-result-stat-missed-clear'
+    t =    82.63s Requesting snapshot of accessibility hierarchy for app with pid 22985
+    t =    83.42s Requesting snapshot of accessibility hierarchy for app with pid 22985
+    t =    83.65s Added attachment named 'layout-ax5-along-result-stat-missed-clear-hierarchy'
+    t =    83.65s Checking existence of `"along.result.tempo-up" Any`
+    t =    83.80s Find the "along.result.tempo-up" Any
+    t =    83.94s Find the "along.result.tempo-up" StaticText
+    t =    84.04s Checking existence of `"along.scroll" ScrollView`
+    t =    84.26s Find the "along.scroll" ScrollView
+    t =    84.49s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    84.62s Checking existence of `"along.result.tempo-up" StaticText`
+    t =    84.70s Find the "along.result.tempo-up" StaticText
+    t =    84.79s Find the "along.result.tempo-up" StaticText
+TIMBRE_SCROLL_GEOMETRY attempt=0 viewport=(0.0, 116.0, 402.0, 758.0) target=(70.66666666666666, 222.0, 261.0, 112.0) contained=true hittableWhenContained=true
+    t =    84.90s Find the "along.result.tempo-up" StaticText
+    t =    84.96s Added attachment named 'layout-ax5-scroll-geometry-along.result.tempo-up'
+    t =    85.25s Added attachment named 'layout-ax5-along-result-tempo-up-clear'
+    t =    85.26s Requesting snapshot of accessibility hierarchy for app with pid 22985
+    t =    86.59s Requesting snapshot of accessibility hierarchy for app with pid 22985
+    t =    86.91s Added attachment named 'layout-ax5-along-result-tempo-up-clear-hierarchy'
+    t =    86.91s Find the "along.result.timing" Any
+    t =    87.04s Checking existence of `"along.scroll" ScrollView`
+    t =    87.34s Find the "along.scroll" ScrollView
+    t =    87.64s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    87.78s Checking existence of `"along.result.timing" StaticText`
+    t =    87.87s Find the "along.result.timing" StaticText
+    t =    88.01s Find the "along.result.timing" StaticText
+TIMBRE_SCROLL_GEOMETRY attempt=0 viewport=(0.0, 116.0, 402.0, 758.0) target=(105.16666666666667, 598.0, 191.66666666666663, 116.66666666666663) contained=true hittableWhenContained=true
+    t =    88.17s Find the "along.result.timing" StaticText
+    t =    88.54s Added attachment named 'layout-ax5-scroll-geometry-along.result.timing'
+    t =    88.79s Added attachment named 'layout-ax5-along-result-timing-clear'
+    t =    88.79s Requesting snapshot of accessibility hierarchy for app with pid 22985
+    t =    89.86s Requesting snapshot of accessibility hierarchy for app with pid 22985
+    t =    90.16s Added attachment named 'layout-ax5-along-result-timing-clear-hierarchy'
+    t =    90.16s Waiting 15.0s for "along.share" Button to exist
+    t =    91.16s     Checking `Expect predicate `existsNoRetry == 1` for object "along.share" Button`
+    t =    91.17s         Checking existence of `"along.share" Button`
+    t =    91.34s Checking existence of `"along.scroll" ScrollView`
+    t =    91.48s Find the "along.scroll" ScrollView
+    t =    91.63s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    91.73s Checking existence of `"along.share" Button`
+    t =    91.86s Find the "along.share" Button
+    t =    92.00s Find the "along.share" Button
+TIMBRE_SCROLL_GEOMETRY attempt=0 viewport=(0.0, 116.0, 402.0, 758.0) target=(107.0, 785.3333333333334, 188.33333333333331, 48.0) contained=true hittableWhenContained=true
+    t =    92.18s Find the "along.share" Button
+    t =    92.36s Added attachment named 'layout-ax5-scroll-geometry-along.share'
+    t =    92.36s Find the "along.scroll" ScrollView
+    t =    92.54s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    92.67s Checking existence of `"along.share" Button`
+    t =    92.87s Find the "along.share" Button
+    t =    93.04s Find the "along.share" Button
+    t =    93.24s Find the "along.share" Button
+    t =    93.59s Added attachment named 'layout-ax5-along-result-share-clear'
+    t =    93.59s Requesting snapshot of accessibility hierarchy for app with pid 22985
+    t =    94.36s Requesting snapshot of accessibility hierarchy for app with pid 22985
+    t =    94.72s Added attachment named 'layout-ax5-along-result-share-clear-hierarchy'
+    t =    94.72s Checking existence of `ScrollView (First Match)`
+    t =    94.86s Find the ScrollView (First Match)
+    t =    94.89s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    94.99s Checking existence of `"along.again" Any`
+    t =    95.06s Find the "along.again" Any
+TIMBRE_SCROLL_GEOMETRY attempt=0 viewport=(0.0, 116.0, 402.0, 758.0) target=(20.0, 1447.3333333333333, 362.0, 76.66666666666674) contained=false hittableWhenContained=false
+    t =    95.15s Press Target Application 'com.shahradazerisharghi.timbre'[0.00, 0.00] -> (24.0, 495.0) for 0.1 seconds, then drag to Target Application 'com.shahradazerisharghi.timbre'[0.00, 0.00] -> (24.0, 153.9) with velocity of 250.00 pixels per second, and then hold for 0.2 seconds 
+    t =    95.15s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    95.15s     Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    95.26s     Check for interrupting elements affecting "Timbre" Application
+    t =    95.38s     Synthesize event
+    t =    95.38s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    95.49s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    95.61s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    95.69s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    95.80s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    97.85s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    97.87s Find the "along.scroll" ScrollView
+    t =    97.91s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    98.06s Checking existence of `"along.again" Button`
+    t =    98.19s Find the "along.again" Button
+TIMBRE_SCROLL_GEOMETRY attempt=1 viewport=(0.0, 116.0, 402.0, 757.9999999999999) target=(20.0, 1133.6666666666665, 362.0, 76.66666666666697) contained=false hittableWhenContained=false
+    t =    98.29s Press Target Application 'com.shahradazerisharghi.timbre'[0.00, 0.00] -> (24.0, 495.0) for 0.1 seconds, then drag to Target Application 'com.shahradazerisharghi.timbre'[0.00, 0.00] -> (24.0, 153.9) with velocity of 250.00 pixels per second, and then hold for 0.2 seconds 
+    t =    98.29s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    98.29s     Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    98.43s     Check for interrupting elements affecting "Timbre" Application
+    t =    98.59s     Synthesize event
+    t =    98.59s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    98.82s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    98.96s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    99.16s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    99.34s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   101.37s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   101.40s Find the "along.scroll" ScrollView
+    t =   101.42s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   101.60s Checking existence of `"along.again" Button`
+    t =   101.75s Find the "along.again" Button
+TIMBRE_SCROLL_GEOMETRY attempt=2 viewport=(0.0, 116.0, 402.0, 758.0) target=(20.0, 819.9999999999999, 362.0, 76.66666666666674) contained=false hittableWhenContained=false
+    t =   101.89s Press Target Application 'com.shahradazerisharghi.timbre'[0.00, 0.00] -> (24.0, 495.0) for 0.1 seconds, then drag to Target Application 'com.shahradazerisharghi.timbre'[0.00, 0.00] -> (24.0, 153.9) with velocity of 250.00 pixels per second, and then hold for 0.2 seconds 
+    t =   101.89s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   101.89s     Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   102.02s     Check for interrupting elements affecting "Timbre" Application
+    t =   102.15s     Synthesize event
+    t =   102.16s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   102.32s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   102.47s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   102.59s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   102.75s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   104.97s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   105.41s Find the "along.scroll" ScrollView
+    t =   105.58s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   105.97s Checking existence of `"along.again" Button`
+    t =   106.49s Find the "along.again" Button
+    t =   107.56s Find the "along.again" Button
+TIMBRE_SCROLL_GEOMETRY attempt=3 viewport=(0.0, 116.0, 402.0, 758.0) target=(20.0, 664.6666666666665, 362.0, 76.66666666666686) contained=true hittableWhenContained=true
+    t =   107.80s Find the "along.again" Button
+    t =   108.03s Added attachment named 'layout-ax5-scroll-geometry-along.again'
+    t =   108.03s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   108.17s Checking existence of `"along.again" Button`
+    t =   108.31s Find the "along.again" Button
+    t =   108.45s Find the "along.again" Button
+    t =   108.60s Checking existence of `ScrollView (First Match)`
+    t =   108.62s Find the ScrollView (First Match)
+    t =   108.64s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   108.74s Checking existence of `"lesson.continue" Button`
+    t =   108.87s Find the "lesson.continue" Button
+    t =   108.98s Find the "lesson.continue" Button
+TIMBRE_SCROLL_GEOMETRY attempt=0 viewport=(0.0, 116.0, 402.0, 758.0) target=(20.0, 751.3333333333334, 362.0, 76.66666666666663) contained=true hittableWhenContained=true
+    t =   109.11s Find the "lesson.continue" Button
+    t =   109.24s Added attachment named 'layout-ax5-scroll-geometry-lesson.continue'
+    t =   109.24s Find the "lesson.continue" Button
+    t =   109.34s Find the "along.again" Button
+    t =   109.47s Find the "lesson.continue" Button
+    t =   109.63s Find the "lesson.continue" Button
+    t =   109.94s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   110.07s Find the "along.again" Button
+    t =   110.20s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   110.51s Added attachment named 'layout-ax5-along-done-actions-clear'
+    t =   110.51s Requesting snapshot of accessibility hierarchy for app with pid 22985
+    t =   111.71s Requesting snapshot of accessibility hierarchy for app with pid 22985
+    t =   112.01s Added attachment named 'layout-ax5-along-done-actions-clear-hierarchy'
+    t =   112.01s Tap "lesson.continue" Button
+    t =   112.01s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   112.02s     Find the "lesson.continue" Button
+    t =   112.20s     Check for interrupting elements affecting "lesson.continue" Button
+    t =   112.38s     Synthesize event
+    t =   112.74s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   113.30s Waiting 20.0s for "lesson.results.level" Any to exist
+    t =   114.35s     Checking `Expect predicate `existsNoRetry == 1` for object "lesson.results.level" Any`
+    t =   114.38s         Checking existence of `"lesson.results.level" Any`
+    t =   116.63s         Capturing element debug description
+    t =   117.31s     Checking `Expect predicate `existsNoRetry == 1` for object "lesson.results.level" Any`
+    t =   117.32s         Checking existence of `"lesson.results.level" Any`
+    t =   119.17s         Capturing element debug description
+    t =   119.36s     Checking `Expect predicate `existsNoRetry == 1` for object "lesson.results.level" Any`
+    t =   119.36s         Checking existence of `"lesson.results.level" Any`
+    t =   121.08s         Capturing element debug description
+    t =   121.39s     Checking `Expect predicate `existsNoRetry == 1` for object "lesson.results.level" Any`
+    t =   121.39s         Checking existence of `"lesson.results.level" Any`
+    t =   122.12s Added attachment named 'layout-ax5-lesson-results'
+    t =   122.13s Requesting snapshot of accessibility hierarchy for app with pid 22985
+    t =   123.90s Requesting snapshot of accessibility hierarchy for app with pid 22985
+    t =   124.39s Added attachment named 'layout-ax5-lesson-results-hierarchy'
+    t =   124.42s Tear Down
+    t =   124.43s     Terminate com.shahradazerisharghi.timbre:22985
+Test Case '-[TimbreUITests.LessonAccessibilityLayoutUITests testPlayAlongStartAndCompletedTakeAtAX5]' passed (126.549 seconds).
+Test Case '-[TimbreUITests.LessonAccessibilityLayoutUITests testQuizRediscoveryRequiresPreviouslyClearTargetAndShrunkenViewport]' started.
+    t =     0.00s Start Test at 2026-11-07 10:32:47.011
+    t =     0.16s Set Up
+    t =     0.18s Tear Down
+    t =     0.18s     Terminate com.shahradazerisharghi.timbre:0
+Test Case '-[TimbreUITests.LessonAccessibilityLayoutUITests testQuizRediscoveryRequiresPreviouslyClearTargetAndShrunkenViewport]' passed (0.329 seconds).
+Test Case '-[TimbreUITests.LessonAccessibilityLayoutUITests testReachabilityPlanRequiresCompleteGeometry]' started.
+    t =     0.00s Start Test at 2026-11-07 10:32:47.339
+    t =     0.06s Set Up
+    t =     0.06s Tear Down
+    t =     0.06s     Terminate com.shahradazerisharghi.timbre:0
+Test Case '-[TimbreUITests.LessonAccessibilityLayoutUITests testReachabilityPlanRequiresCompleteGeometry]' passed (0.140 seconds).
+Test Suite 'LessonAccessibilityLayoutUITests' passed at 2026-11-07 10:32:47.479.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 330.165 (330.173) seconds
+Test Suite 'TimbreUITests.xctest' passed at 2026-11-07 10:32:47.481.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 330.165 (330.175) seconds
+Test Suite 'Selected tests' passed at 2026-11-07 10:32:47.482.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 330.165 (330.176) seconds
+2026-11-07 10:32:50.367 xcodebuild[15669:52088] [MT] IDETestOperationsObserverDebug: 375.363 elapsed -- Testing started completed.
+2026-11-07 10:32:50.368 xcodebuild[15669:52088] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-11-07 10:32:50.368 xcodebuild[15669:52088] [MT] IDETestOperationsObserverDebug: 375.363 sec, +375.363 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/runner/work/tuner/tuner/ios/build/UITests.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

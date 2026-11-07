@@ -1,0 +1,65 @@
+# Errors
+
+# Matches
+
+# Tail
+    t =   109.94s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   110.07s Find the "along.again" Button
+    t =   110.20s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   110.51s Added attachment named 'layout-ax5-along-done-actions-clear'
+    t =   110.51s Requesting snapshot of accessibility hierarchy for app with pid 22985
+    t =   111.71s Requesting snapshot of accessibility hierarchy for app with pid 22985
+    t =   112.01s Added attachment named 'layout-ax5-along-done-actions-clear-hierarchy'
+    t =   112.01s Tap "lesson.continue" Button
+    t =   112.01s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   112.02s     Find the "lesson.continue" Button
+    t =   112.20s     Check for interrupting elements affecting "lesson.continue" Button
+    t =   112.38s     Synthesize event
+    t =   112.74s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   113.30s Waiting 20.0s for "lesson.results.level" Any to exist
+    t =   114.35s     Checking `Expect predicate `existsNoRetry == 1` for object "lesson.results.level" Any`
+    t =   114.38s         Checking existence of `"lesson.results.level" Any`
+    t =   116.63s         Capturing element debug description
+    t =   117.31s     Checking `Expect predicate `existsNoRetry == 1` for object "lesson.results.level" Any`
+    t =   117.32s         Checking existence of `"lesson.results.level" Any`
+    t =   119.17s         Capturing element debug description
+    t =   119.36s     Checking `Expect predicate `existsNoRetry == 1` for object "lesson.results.level" Any`
+    t =   119.36s         Checking existence of `"lesson.results.level" Any`
+    t =   121.08s         Capturing element debug description
+    t =   121.39s     Checking `Expect predicate `existsNoRetry == 1` for object "lesson.results.level" Any`
+    t =   121.39s         Checking existence of `"lesson.results.level" Any`
+    t =   122.12s Added attachment named 'layout-ax5-lesson-results'
+    t =   122.13s Requesting snapshot of accessibility hierarchy for app with pid 22985
+    t =   123.90s Requesting snapshot of accessibility hierarchy for app with pid 22985
+    t =   124.39s Added attachment named 'layout-ax5-lesson-results-hierarchy'
+    t =   124.42s Tear Down
+    t =   124.43s     Terminate com.shahradazerisharghi.timbre:22985
+Test Case '-[TimbreUITests.LessonAccessibilityLayoutUITests testPlayAlongStartAndCompletedTakeAtAX5]' passed (126.549 seconds).
+Test Case '-[TimbreUITests.LessonAccessibilityLayoutUITests testQuizRediscoveryRequiresPreviouslyClearTargetAndShrunkenViewport]' started.
+    t =     0.00s Start Test at 2026-11-07 10:32:47.011
+    t =     0.16s Set Up
+    t =     0.18s Tear Down
+    t =     0.18s     Terminate com.shahradazerisharghi.timbre:0
+Test Case '-[TimbreUITests.LessonAccessibilityLayoutUITests testQuizRediscoveryRequiresPreviouslyClearTargetAndShrunkenViewport]' passed (0.329 seconds).
+Test Case '-[TimbreUITests.LessonAccessibilityLayoutUITests testReachabilityPlanRequiresCompleteGeometry]' started.
+    t =     0.00s Start Test at 2026-11-07 10:32:47.339
+    t =     0.06s Set Up
+    t =     0.06s Tear Down
+    t =     0.06s     Terminate com.shahradazerisharghi.timbre:0
+Test Case '-[TimbreUITests.LessonAccessibilityLayoutUITests testReachabilityPlanRequiresCompleteGeometry]' passed (0.140 seconds).
+Test Suite 'LessonAccessibilityLayoutUITests' passed at 2026-11-07 10:32:47.479.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 330.165 (330.173) seconds
+Test Suite 'TimbreUITests.xctest' passed at 2026-11-07 10:32:47.481.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 330.165 (330.175) seconds
+Test Suite 'Selected tests' passed at 2026-11-07 10:32:47.482.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 330.165 (330.176) seconds
+2026-11-07 10:32:50.367 xcodebuild[15669:52088] [MT] IDETestOperationsObserverDebug: 375.363 elapsed -- Testing started completed.
+2026-11-07 10:32:50.368 xcodebuild[15669:52088] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-11-07 10:32:50.368 xcodebuild[15669:52088] [MT] IDETestOperationsObserverDebug: 375.363 sec, +375.363 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/runner/work/tuner/tuner/ios/build/UITests.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started
