@@ -1,0 +1,28 @@
+{
+  "bundleID": "com.shahradazerisharghi.timbre",
+  "causalCompleteness": "not asserted",
+  "deviceID": "2FEACF5E-886C-4FB8-A137-C571FBA5CF5C",
+  "diagnosticOnly": true,
+  "errors": [],
+  "eventCount": 664,
+  "files": [
+    {
+      "bytes": 265963,
+      "events": 512,
+      "path": "53595B8F-9AA7-4CB5-9E88-EA7B5449A4A7/song-page-trace.ndjson",
+      "sha256": "b7bdd5c4471f47d7b0ff43d8a670db43e7fa1c9316a5a06456d05c2d617703e7"
+    },
+    {
+      "bytes": 78154,
+      "events": 152,
+      "path": "58D7F545-7891-4C10-A3B1-7BFD25DD75AD/song-page-trace.ndjson",
+      "sha256": "e1df5b7fd71a115da6e51758f827d17e113aa9cfbfe803e6e341c0766e40006d"
+    }
+  ],
+  "schema": 1,
+  "sessions": [
+    "53595B8F-9AA7-4CB5-9E88-EA7B5449A4A7",
+    "58D7F545-7891-4C10-A3B1-7BFD25DD75AD"
+  ],
+  "status": "collected"
+}

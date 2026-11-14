@@ -1,0 +1,130 @@
+Application, 0x1042682e0, pid: 25119, label: 'Timbre' <App element pid: 25119>
+  Window (Main), 0x104381e40, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 25119, elementOrHash.elementID: 4363155904.3>
+    Other, 0x1043827a0, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 25119, elementOrHash.elementID: 4363405808.4>
+      Other, 0x104385a10, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 25119, elementOrHash.elementID: 4363407584.5>
+        Other, 0x104385770, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 25119, elementOrHash.elementID: 4363061616.6>
+          Other, 0x104385890, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 25119, elementOrHash.elementID: 4790123776.7>
+            Other, 0x104385b30, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 25119, elementOrHash.elementID: 4362097344.8>
+              Other, 0x104385c50, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 25119, elementOrHash.elementID: 4351255168.9>
+                Other, 0x104268630, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 25119, elementOrHash.elementID: 4428758800.11>
+                  Other, 0x104268990, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 25119, elementOrHash.elementID: 4363670096.14>
+                    Other, 0x104269030, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 25119, elementOrHash.elementID: 4428735600.40>
+                      Other, 0x104267520, {{-108.0, 0.0}, {566.0, 874.0}} <AX element pid: 25119, elementOrHash.elementID: 4428734816.42>
+                        Other, 0x104268ce0, {{-108.0, 117.7}, {566.0, 598.0}}, identifier: 'tune.stage' <AX element pid: 25119, elementOrHash.elementID: 4830722416.45>
+                          Image, 0x1042693a0, {{-108.0, 149.7}, {566.0, 566.0}}, label: 'render_guitar_acoustic' <AX element pid: 25119, elementOrHash.elementID: 4831388416.136>
+                          Other, 0x104269a70, {{16.0, 117.7}, {370.0, 283.0}} <AX element pid: 25119, elementOrHash.elementID: 4831399696.137>
+                          StaticText, 0x104269fb0, {{59.0, 209.0}, {66.3, 28.7}}, label: 'Play E2' <AX element pid: 25119, elementOrHash.elementID: 4831397872.138>
+                          Other, 0x10426b0d0, {{181.3, 202.7}, {44.0, 44.0}} <AX element pid: 25119, elementOrHash.elementID: 4831394576.139>
+                          Other, 0x10426b450, {{183.0, 181.3}, {44.0, 44.0}} <AX element pid: 25119, elementOrHash.elementID: 4831396112.140>
+                          Other, 0x10426b7a0, {{185.7, 160.3}, {44.0, 44.0}} <AX element pid: 25119, elementOrHash.elementID: 4831410432.141>
+                          Other, 0x10426bb20, {{138.7, 159.7}, {44.0, 44.0}} <AX element pid: 25119, elementOrHash.elementID: 4831432496.142>
+                          Other, 0x104269700, {{138.0, 180.3}, {44.0, 44.0}} <AX element pid: 25119, elementOrHash.elementID: 4831433280.143>
+                          Other, 0x10426a320, {{137.3, 201.3}, {44.0, 44.0}} <AX element pid: 25119, elementOrHash.elementID: 4831434064.144>
+                          Other, 0x10426be70, {{334.0, 188.0}, {44.0, 62.3}} <AX element pid: 25119, elementOrHash.elementID: 4351545760.70>
+                          Button, 0x10426a690, {{334.0, 188.0}, {44.0, 62.3}}, identifier: 'tune.strum', label: 'Strum to tune' <AX element pid: 25119, elementOrHash.elementID: 4830710704.71>
+                            Other, 0x10426c550, {{345.0, 199.0}, {22.0, 22.0}} <AX element pid: 25119, elementOrHash.elementID: 4830709488.96>
+                            StaticText, 0x10426cc10, {{337.0, 235.0}, {38.0, 15.3}}, label: 'Strum' <AX element pid: 25119, elementOrHash.elementID: 4830710272.97>
+                          Button, 0x10426c1d0, {{330.0, 264.3}, {52.0, 66.3}}, identifier: 'listenButton', label: 'Pause listening' <AX element pid: 25119, elementOrHash.elementID: 4830708576.72>
+                            Image, 0x104182bc0, {{330.0, 264.3}, {52.0, 66.3}}, identifier: 'pause.fill', label: 'Pause' <AX element pid: 25119, elementOrHash.elementID: 4830713104.98>
+                            StaticText, 0x104182ce0, {{337.7, 315.2}, {36.7, 15.3}}, label: 'Pause' <AX element pid: 25119, elementOrHash.elementID: 4830713600.99>
+                          Other, 0x10426cf70, {{44.7, 407.7}, {165.3, 38.0}}, identifier: 'tune.detection' <AX element pid: 25119, elementOrHash.elementID: 4830718880.73>
+                            Button, 0x104182e00, {{44.7, 407.7}, {79.3, 38.0}}, identifier: 'tune.auto', label: 'Automatic', Selected <AX element pid: 25119, elementOrHash.elementID: 4830717088.100>
+                              Image, 0x104182f20, {{59.3, 423.7}, {6.3, 6.3}}, identifier: 'circle.fill', label: 'Circle' <AX element pid: 25119, elementOrHash.elementID: 4830715520.133>
+                              StaticText, 0x104183040, {{44.7, 407.7}, {79.3, 38.0}}, label: 'Auto' <AX element pid: 25119, elementOrHash.elementID: 4830716656.134>
+                            Button, 0x104183160, {{126.0, 407.7}, {84.0, 38.0}}, identifier: 'tune.manual', label: 'Manual' <AX element pid: 25119, elementOrHash.elementID: 4830717984.101>
+                          Button, 0x104183280, {{223.0, 404.7}, {137.7, 44.0}}, identifier: 'tune.tone', label: 'Play reference tone' <AX element pid: 25119, elementOrHash.elementID: 4830721520.74>
+                            Image, 0x1041833a0, {{241.7, 419.3}, {15.0, 15.0}}, identifier: 'tuningfork', label: 'Tune' <AX element pid: 25119, elementOrHash.elementID: 4830719984.102>
+                            StaticText, 0x1041834c0, {{223.0, 404.7}, {137.7, 44.0}}, label: 'Reference' <AX element pid: 25119, elementOrHash.elementID: 4830721088.103>
+                        Other, 0x1041837e0, {{141.0, 454.7}, {120.0, 138.0}}, label: 'Target E 2', value: No pitch <AX element pid: 25119, elementOrHash.elementID: 4830725744.46>
+                          StaticText, 0x10426d2c0, {{165.8, 454.7}, {48.7, 113.0}}, label: 'E' <AX element pid: 25119, elementOrHash.elementID: 4830723744.75>
+                          StaticText, 0x104385d70, {{217.5, 512.3}, {18.7, 38.0}}, label: '2' <AX element pid: 25119, elementOrHash.elementID: 4830724176.76>
+                          StaticText, 0x104385e90, {{141.0, 573.7}, {120.0, 19.0}}, label: 'Target 82.41 Hz' <AX element pid: 25119, elementOrHash.elementID: 4830724960.77>
+                        Other, 0x104183900, {{32.0, 606.7}, {338.0, 38.0}} <AX element pid: 25119, elementOrHash.elementID: 4830727200.47>
+                        StaticText, 0x104383e60, {{199.2, 658.7}, {3.7, 15.7}}, identifier: 'tune.status', label: 'Play E2' <AX element pid: 25119, elementOrHash.elementID: 4830727632.48>
+                        StaticText, 0x104383f80, {{22.0, 684.3}, {358.0, 15.3}}, label: 'Quest · tune every string, 0 of 6, +20 XP' <AX element pid: 25119, elementOrHash.elementID: 4830733328.49>
+                          StaticText, 0x1043840a0, {{22.0, 684.7}, {139.7, 14.3}}, label: 'Quest · tune every string' <AX element pid: 25119, elementOrHash.elementID: 4830728064.78>
+                          StaticText, 0x10426d650, {{167.7, 684.7}, {24.0, 14.3}}, label: '0 of 6' <AX element pid: 25119, elementOrHash.elementID: 4830731440.79>
+                            StaticText, 0x10426d9c0, {{167.7, 684.7}, {8.3, 14.3}}, label: '0' <AX element pid: 25119, elementOrHash.elementID: 4830729088.104>
+                            StaticText, 0x10426dd10, {{176.0, 684.7}, {7.3, 14.3}}, label: ' / ' <AX element pid: 25119, elementOrHash.elementID: 4830729872.105>
+                            StaticText, 0x10426e090, {{183.3, 684.7}, {8.3, 14.3}}, label: '6' <AX element pid: 25119, elementOrHash.elementID: 4830730656.106>
+                          StaticText, 0x10426e3e0, {{337.0, 684.3}, {43.0, 15.3}}, label: '+20 XP' <AX element pid: 25119, elementOrHash.elementID: 4830732896.80>
+                        Other, 0x10426e740, {{23.5, 709.2}, {354.5, 73.8}}, identifier: 'tune.string.rail' <AX element pid: 25119, elementOrHash.elementID: 4830767824.50>
+                          Button, 0x10426ea90, {{23.5, 709.2}, {55.0, 55.0}}, identifier: 'string.1', label: 'String 6, E 2', Selected <AX element pid: 25119, elementOrHash.elementID: 4830734544.81>
+                            StaticText, 0x10426ede0, {{40.5, 724.8}, {11.4, 23.8}}, label: 'E' <AX element pid: 25119, elementOrHash.elementID: 4830734112.107>
+                            StaticText, 0x10426f170, {{53.0, 729.9}, {8.4, 16.9}}, label: '2' <AX element pid: 25119, elementOrHash.elementID: 4830735072.108>
+                            StaticText, 0x10426f4d0, {{41.4, 725.7}, {10.5, 21.9}}, label: 'E' <AX element pid: 25119, elementOrHash.elementID: 4830735856.109>
+                            StaticText, 0x10426f820, {{52.9, 730.4}, {7.8, 15.5}}, label: '2' <AX element pid: 25119, elementOrHash.elementID: 4830736640.110>
+                          Button, 0x10426fba0, {{86.0, 711.7}, {50.0, 50.0}}, identifier: 'string.2', label: 'String 5, A 2' <AX element pid: 25119, elementOrHash.elementID: 4830743408.82>
+                            StaticText, 0x10426ff40, {{100.0, 725.8}, {13.3, 21.7}}, label: 'A' <AX element pid: 25119, elementOrHash.elementID: 4830738880.111>
+                            StaticText, 0x1042702b0, {{114.3, 730.5}, {7.7, 15.3}}, label: '2' <AX element pid: 25119, elementOrHash.elementID: 4830740064.112>
+                            StaticText, 0x1043841c0, {{100.9, 726.7}, {12.3, 19.9}}, label: 'A' <AX element pid: 25119, elementOrHash.elementID: 4830740496.113>
+                            StaticText, 0x1043842e0, {{114.1, 731.0}, {7.1, 14.1}}, label: '2' <AX element pid: 25119, elementOrHash.elementID: 4830741280.114>
+                          Button, 0x104384400, {{146.0, 711.7}, {50.0, 50.0}}, identifier: 'string.3', label: 'String 4, D 3' <AX element pid: 25119, elementOrHash.elementID: 4830748464.83>
+                            StaticText, 0x104384520, {{159.8, 725.8}, {13.7, 21.7}}, label: 'D' <AX element pid: 25119, elementOrHash.elementID: 4830745392.115>
+                            StaticText, 0x104183a20, {{174.5, 730.5}, {7.7, 15.3}}, label: '3' <AX element pid: 25119, elementOrHash.elementID: 4830745824.116>
+                            StaticText, 0x104183b40, {{160.7, 726.7}, {12.6, 19.9}}, label: 'D' <AX element pid: 25119, elementOrHash.elementID: 4830746256.117>
+                            StaticText, 0x104183c60, {{174.2, 731.0}, {7.1, 14.1}}, label: '3' <AX element pid: 25119, elementOrHash.elementID: 4830746688.118>
+                          Button, 0x104183d80, {{206.0, 711.7}, {50.0, 50.0}}, identifier: 'string.4', label: 'String 3, G 3' <AX element pid: 25119, elementOrHash.elementID: 4830753520.84>
+                            StaticText, 0x104183ea0, {{219.5, 725.8}, {14.3, 21.7}}, label: 'G' <AX element pid: 25119, elementOrHash.elementID: 4830750448.119>
+                            StaticText, 0x104183fc0, {{234.8, 730.5}, {7.7, 15.3}}, label: '3' <AX element pid: 25119, elementOrHash.elementID: 4830750880.120>
+                            StaticText, 0x1041840e0, {{220.4, 726.7}, {13.2, 19.9}}, label: 'G' <AX element pid: 25119, elementOrHash.elementID: 4830751312.121>
+                            StaticText, 0x104184200, {{234.5, 731.0}, {7.1, 14.1}}, label: '3' <AX element pid: 25119, elementOrHash.elementID: 4830751744.122>
+                          Button, 0x104184320, {{266.0, 711.7}, {50.0, 50.0}}, identifier: 'string.5', label: 'String 2, B 3' <AX element pid: 25119, elementOrHash.elementID: 4830758576.85>
+                            StaticText, 0x104184440, {{280.7, 725.8}, {12.0, 21.7}}, label: 'B' <AX element pid: 25119, elementOrHash.elementID: 4830755504.123>
+                            StaticText, 0x104184560, {{293.7, 730.5}, {7.7, 15.3}}, label: '3' <AX element pid: 25119, elementOrHash.elementID: 4830755936.124>
+                            StaticText, 0x104184680, {{281.5, 726.7}, {11.0, 19.9}}, label: 'B' <AX element pid: 25119, elementOrHash.elementID: 4830756368.125>
+                            StaticText, 0x1041847a0, {{293.5, 731.0}, {7.1, 14.1}}, label: '3' <AX element pid: 25119, elementOrHash.elementID: 4830756800.126>
+                          Button, 0x1041848c0, {{326.0, 711.7}, {50.0, 50.0}}, identifier: 'string.6', label: 'String 1, E 4' <AX element pid: 25119, elementOrHash.elementID: 4830763632.86>
+                            StaticText, 0x1041849e0, {{341.3, 725.8}, {10.3, 21.7}}, label: 'E' <AX element pid: 25119, elementOrHash.elementID: 4830760560.127>
+                            StaticText, 0x104270610, {{352.7, 730.5}, {8.0, 15.3}}, label: '4' <AX element pid: 25119, elementOrHash.elementID: 4830760992.128>
+                            StaticText, 0x104270970, {{342.1, 726.7}, {9.5, 19.9}}, label: 'E' <AX element pid: 25119, elementOrHash.elementID: 4830761424.129>
+                            StaticText, 0x104184b00, {{352.5, 731.0}, {7.4, 14.1}}, label: '4' <AX element pid: 25119, elementOrHash.elementID: 4830761856.130>
+                          StaticText, 0x104270ce0, {{24.0, 769.7}, {46.0, 13.3}}, label: 'Thickest' <AX element pid: 25119, elementOrHash.elementID: 4830765616.87>
+                          StaticText, 0x104271020, {{331.0, 769.7}, {47.0, 13.3}}, label: 'Thinnest' <AX element pid: 25119, elementOrHash.elementID: 4830766048.88>
+                        Button, 0x104271380, {{20.0, 68.0}, {158.0, 24.0}}, identifier: 'tune.instrument', label: 'Acoustic guitar' <AX element pid: 25119, elementOrHash.elementID: 4830770464.51>
+                          StaticText, 0x104184c20, {{20.0, 68.0}, {138.3, 24.0}}, identifier: 'tune.instrument.name', label: 'Acoustic guitar' <AX element pid: 25119, elementOrHash.elementID: 4830768928.89>
+                          Image, 0x104184d40, {{165.7, 76.7}, {11.0, 6.7}}, identifier: 'chevron.down', label: 'Go Down' <AX element pid: 25119, elementOrHash.elementID: 4830770032.90>
+                        Button, 0x104184e60, {{20.0, 94.0}, {146.3, 23.7}}, identifier: 'tunings.menu', label: 'Standard · A4 440 Hz' <AX element pid: 25119, elementOrHash.elementID: 4830774704.52>
+                          Button, 0x104384640, {{20.0, 94.0}, {146.3, 23.7}} <AX element pid: 25119, elementOrHash.elementID: 4790267328.91>
+                            StaticText, 0x104384760, {{20.0, 94.0}, {146.3, 23.7}}, label: 'Standard · A4 440 Hz' <AX element pid: 25119, elementOrHash.elementID: 4830771360.131>
+                            Image, 0x104384880, {{156.7, 100.0}, {8.3, 11.7}}, identifier: 'chevron.up.chevron.down', label: 'Up And Down Chevrons' <AX element pid: 25119, elementOrHash.elementID: 4830772496.132>
+                        Button, 0x1043849a0, {{236.0, 71.0}, {54.0, 44.0}}, identifier: 'streak.chip', label: '7-day streak', value: Today: 1 of 3 <AX element pid: 25119, elementOrHash.elementID: 4428854624.53>
+                          Other, 0x1042716e0, {{249.8, 84.9}, {12.4, 15.2}} <AX element pid: 25119, elementOrHash.elementID: 4428720672.92>
+                          StaticText, 0x104271a60, {{236.0, 71.0}, {54.0, 44.0}}, identifier: 'screen.header.streak.count', label: '7' <AX element pid: 25119, elementOrHash.elementID: 4428722128.93>
+                        Button, 0x104271de0, {{292.0, 71.0}, {44.0, 44.0}}, identifier: 'level.ring', label: 'Level 5, 240 of 500 XP' <AX element pid: 25119, elementOrHash.elementID: 4428726512.54>
+                          StaticText, 0x104272150, {{301.8, 82.7}, {24.3, 20.3}}, identifier: 'screen.header.level.mark', label: 'LV 5' <AX element pid: 25119, elementOrHash.elementID: 4428856192.94>
+                        Button, 0x1042724d0, {{338.0, 71.0}, {44.0, 44.0}}, identifier: 'settings.open', label: 'Settings' <AX element pid: 25119, elementOrHash.elementID: 4428733488.55>
+                        Other, 0x104272860, {{0.0, 791.0}, {402.0, 83.0}} <AX element pid: 25119, elementOrHash.elementID: 4428734384.56>
+              Other, 0x104384ac0, {{0.0, 791.0}, {402.0, 83.0}} <AX element pid: 25119, elementOrHash.elementID: 4363651136.10>
+                Other, 0x104384be0, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 25119, elementOrHash.elementID: 4351237216.12>
+                  TabBar, 0x104384d00, {{0.0, 791.0}, {402.0, 83.0}}, label: 'Tab Bar' <AX element pid: 25119, elementOrHash.elementID: 4363656480.15>
+                    Other, 0x104384e20, {{21.0, 791.0}, {360.0, 62.0}} <AX element pid: 25119, elementOrHash.elementID: 4363658976.16>
+                      Other, 0x104384f40, {{21.0, 791.0}, {78.0, 54.0}} <AX element pid: 25119, elementOrHash.elementID: 4363726912.17>
+                      Other, 0x104385060, {{21.0, 791.0}, {360.0, 62.0}} <AX element pid: 25119, elementOrHash.elementID: 4363659392.18>
+                        Button, 0x104272bb0, {{25.0, 795.0}, {78.0, 54.0}}, identifier: 'gauge.with.needle', label: 'Tune', Selected <AX element pid: 25119, elementOrHash.elementID: 4558157824.20>
+                          Image, 0x104272f50, {{50.0, 801.3}, {27.3, 27.3}}, identifier: 'gauge.with.needle.fill', label: 'gauge.with.needle.fill' <AX element pid: 25119, elementOrHash.elementID: 4351259408.27>
+                        Button, 0x1042732d0, {{93.5, 795.0}, {78.0, 54.0}}, identifier: 'graduationcap', label: 'Learn' <AX element pid: 25119, elementOrHash.elementID: 4558125056.21>
+                          Image, 0x104273660, {{114.5, 801.7}, {36.7, 31.3}}, identifier: 'graduationcap.fill', label: 'itunes u' <AX element pid: 25119, elementOrHash.elementID: 4428693968.28>
+                        Button, 0x104385180, {{162.0, 795.0}, {78.0, 54.0}}, identifier: 'music.note.list', label: 'Songs' <AX element pid: 25119, elementOrHash.elementID: 4558138880.22>
+                          Image, 0x104184f80, {{186.0, 801.7}, {29.3, 27.0}}, identifier: 'music.note.list', label: 'playlist' <AX element pid: 25119, elementOrHash.elementID: 4428722832.29>
+                        Button, 0x1041850a0, {{230.5, 795.0}, {78.0, 54.0}}, identifier: 'metronome', label: 'Practice' <AX element pid: 25119, elementOrHash.elementID: 4558204416.23>
+                          Image, 0x1041851c0, {{255.5, 801.7}, {28.7, 26.0}}, identifier: 'metronome.fill', label: 'metronome.fill' <AX element pid: 25119, elementOrHash.elementID: 4428752176.30>
+                        Button, 0x1043852a0, {{299.0, 795.0}, {78.0, 54.0}}, identifier: 'chart.bar', label: 'Progress' <AX element pid: 25119, elementOrHash.elementID: 4383212544.24>
+                          Image, 0x1043853c0, {{321.0, 802.3}, {35.0, 25.3}}, identifier: 'chart.bar.fill', label: 'chart column' <AX element pid: 25119, elementOrHash.elementID: 4363698672.31>
+                      Other, 0x104386050, {{25.0, 795.0}, {78.0, 54.0}} <AX element pid: 25119, elementOrHash.elementID: 4351252048.19>
+                        Other, 0x104386170, {{25.0, 795.0}, {78.0, 54.0}} <AX element pid: 25119, elementOrHash.elementID: 4363667296.26>
+                          Other, 0x104386290, {{25.0, 795.0}, {78.0, 54.0}} <AX element pid: 25119, elementOrHash.elementID: 4362650448.32>
+                          Other, 0x1043863b0, {{25.0, 795.0}, {78.0, 54.0}} <AX element pid: 25119, elementOrHash.elementID: 4428593264.33>
+                            Other, 0x1041852e0, {{25.0, 795.0}, {78.0, 54.0}} <AX element pid: 25119, elementOrHash.elementID: 4428608960.34>
+                              Other, 0x104185400, {{25.0, 795.0}, {78.0, 54.0}} <AX element pid: 25119, elementOrHash.elementID: 4428610096.36>
+                                Other, 0x104185520, {{25.0, 795.0}, {78.0, 54.0}} <AX element pid: 25119, elementOrHash.elementID: 4363122176.38>
+                              Other, 0x104185640, {{25.0, 795.0}, {78.0, 54.0}} <AX element pid: 25119, elementOrHash.elementID: 4428366144.37>
+                            Other, 0x104185760, {{25.0, 795.0}, {78.0, 54.0}} <AX element pid: 25119, elementOrHash.elementID: 4428608544.35>
+                Other, 0x104185880, {{0.0, 791.0}, {402.0, 83.0}} <AX element pid: 25119, elementOrHash.elementID: 4363652064.13>
+                  Other, 0x1041859a0, {{0.0, 791.0}, {402.0, 83.0}} <AX element pid: 25119, elementOrHash.elementID: 4351297664.39>
+                    Other, 0x1042739c0, {{0.0, 791.0}, {402.0, 83.0}} <AX element pid: 25119, elementOrHash.elementID: 4351303216.41>
+                      Other, 0x104273d30, {{0.0, 791.0}, {402.0, 83.0}} <AX element pid: 25119, elementOrHash.elementID: 4351303632.43>
+                        Other, 0x1042740a0, {{0.0, 791.0}, {402.0, 83.0}} <AX element pid: 25119, elementOrHash.elementID: 4350970896.57>
+                          Other, 0x104185ac0, {{0.0, 791.0}, {402.0, 83.0}} <AX element pid: 25119, elementOrHash.elementID: 4351304048.95>
+                      Other, 0x104185be0, {{0.0, 791.0}, {402.0, 83.0}} <AX element pid: 25119, elementOrHash.elementID: 4351309056.44>
+                        Other, 0x104185d00, {{0.0, 791.0}, {402.0, 83.0}} <AX element pid: 25119, elementOrHash.elementID: 4351317296.58>

@@ -1,0 +1,5 @@
+Query chain:
+ →Find: Target Application 'com.shahradazerisharghi.timbre'
+  ↪︎Find: Descendants matching type Any
+    ↪︎Find: Elements matching predicate '"lesson.results.level" IN identifiers'
+      ↪︎Find: First Match
