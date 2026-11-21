@@ -1,0 +1,169 @@
+Optional(Attributes: Application, 0x101b8f0d0, pid: 12057, label: 'Timbre'
+Element subtree:
+ →Application, 0x101b8f0d0, pid: 12057, label: 'Timbre'
+    Window (Main), 0x10196a1e0, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x1019787e0, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x1019799d0, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x101979880, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x1019765e0, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x101979af0, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x101979c10, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x101979d30, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x101979e50, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x101979f70, {{0.0, 0.0}, {402.0, 874.0}}
+                        Other, 0x10197a090, {{-22.3, 0.0}, {486.0, 874.0}}
+                          Other, 0x10197a1b0, {{-22.3, 130.3}, {486.0, 510.7}}, identifier: 'tune.stage'
+                            Image, 0x101c9a7f0, {{-22.3, 155.0}, {486.0, 486.0}}, label: 'render_guitar_acoustic'
+                            Other, 0x101c99340, {{16.0, 130.3}, {370.0, 276.3}}
+                            StaticText, 0x10197a2d0, {{137.3, 203.0}, {36.7, 31.0}}, label: 'E2'
+                            Other, 0x10197a3f0, {{223.0, 197.3}, {44.0, 44.0}}
+                            Other, 0x10197a510, {{224.3, 179.0}, {44.0, 44.0}}
+                            Other, 0x10197a630, {{226.7, 161.0}, {44.0, 44.0}}
+                            Other, 0x10197a750, {{186.3, 160.7}, {44.0, 44.0}}
+                            Other, 0x10197a870, {{186.0, 178.3}, {44.0, 44.0}}
+                            Other, 0x101c9aed0, {{185.3, 196.7}, {44.0, 44.0}}
+                            Other, 0x101c9b980, {{0.0, 130.3}, {402.0, 276.3}}
+                            Other, 0x101c9ab80, {{0.0, 0.0}, {0.0, 0.0}}
+                            Other, 0x101c9bce0, {{24.0, 197.3}, {44.0, 62.3}}
+                            Button, 0x101b79910, {{24.0, 197.3}, {44.0, 62.3}}, identifier: 'tune.strum', label: 'ٹیون کرنے کے لیے اسٹرم کریں'
+                              Other, 0x101b66c80, {{35.0, 208.3}, {22.0, 22.0}}
+                              StaticText, 0x101b75b40, {{32.5, 244.3}, {27.0, 15.3}}, label: 'اسٹرم'
+                            Button, 0x101b6a710, {{20.0, 273.7}, {52.0, 66.3}}, identifier: 'listenButton', label: 'سنیں'
+                              Image, 0x101b76900, {{20.0, 273.7}, {52.0, 66.3}}, identifier: 'mic.fill', label: 'مائکروفون'
+                              StaticText, 0x101b8bf70, {{33.8, 324.5}, {24.3, 15.3}}, label: 'سنیں'
+                            Other, 0x101b8c090, {{190.7, 413.7}, {119.0, 38.0}}, identifier: 'tune.detection'
+                              Button, 0x101b8c1b0, {{250.0, 413.7}, {59.7, 38.0}}, identifier: 'tune.auto', label: 'خودکار', Selected
+                                Image, 0x101b8c2d0, {{288.7, 429.7}, {6.3, 6.3}}, identifier: 'circle.fill', label: 'دائرہ'
+                                StaticText, 0x101b8c3f0, {{250.0, 413.7}, {59.7, 38.0}}, label: 'آٹو'
+                              Button, 0x101b78cb0, {{190.7, 413.7}, {57.3, 38.0}}, identifier: 'tune.manual', label: 'دستی'
+                            Button, 0x101b78dd0, {{89.7, 410.7}, {88.0, 44.0}}, identifier: 'tune.tone', label: 'حوالہ ٹون چلائیں'
+                              Image, 0x101b78ef0, {{144.3, 425.3}, {15.0, 15.0}}, identifier: 'tuningfork', label: 'ٹیون'
+                              StaticText, 0x101b79010, {{89.7, 410.7}, {88.0, 44.0}}, label: 'حوالہ'
+                          Other, 0x101b79330, {{152.7, 460.7}, {97.0, 117.7}}, label: 'ہدف ⁨E 2⁩', value: کوئی پچ نہیں
+                            StaticText, 0x101b79450, {{170.7, 460.7}, {39.0, 92.7}}, label: 'E'
+                            StaticText, 0x101b79570, {{212.7, 503.0}, {18.7, 38.0}}, label: '2'
+                            StaticText, 0x101b79690, {{152.7, 559.3}, {97.0, 19.0}}, label: 'ہدف ⁨82.41 Hz⁩'
+                          Other, 0x10197a990, {{32.0, 592.3}, {338.0, 38.0}}
+                          StaticText, 0x10197aab0, {{154.5, 644.3}, {93.0, 20.7}}, identifier: 'tune.status', label: 'سننے کے لیے ٹیپ کریں'
+                          StaticText, 0x10197abd0, {{22.0, 675.0}, {358.0, 19.7}}, label: 'ہدف · ہر تار ٹیون کریں‏، 0 از 6‏، +20 XP'
+                            StaticText, 0x10197acf0, {{295.3, 675.3}, {84.7, 19.3}}, label: 'ہدف · ہر تار ٹیون کریں'
+                            StaticText, 0x10197ae10, {{265.3, 675.0}, {24.0, 19.3}}, label: '0 از 6'
+                              StaticText, 0x10197af30, {{265.3, 675.0}, {8.3, 19.3}}, label: '0'
+                              StaticText, 0x10197b050, {{273.7, 675.0}, {7.3, 19.3}}, label: ' / '
+                              StaticText, 0x10197b170, {{281.0, 675.0}, {8.3, 19.3}}, label: '6'
+                            StaticText, 0x10197b290, {{22.0, 678.0}, {43.0, 15.3}}, label: '+20 XP'
+                          Other, 0x10197b3b0, {{23.5, 704.2}, {354.5, 78.8}}, identifier: 'tune.string.rail'
+                            Button, 0x10197b4d0, {{23.5, 704.2}, {55.0, 55.0}}, identifier: 'string.1', label: 'تار 6، ⁨E 2⁩', Selected
+                              StaticText, 0x10197b5f0, {{40.5, 719.8}, {11.4, 23.8}}, label: 'E'
+                              StaticText, 0x10197b710, {{53.0, 724.9}, {8.4, 16.9}}, label: '2'
+                              StaticText, 0x10197b830, {{41.4, 720.7}, {10.5, 21.9}}, label: 'E'
+                              StaticText, 0x10197b950, {{52.9, 725.4}, {7.8, 15.5}}, label: '2'
+                            Button, 0x10197ba70, {{86.0, 706.7}, {50.0, 50.0}}, identifier: 'string.2', label: 'تار 5، ⁨A 2⁩'
+                              StaticText, 0x10197bb90, {{100.0, 720.8}, {13.3, 21.7}}, label: 'A'
+                              StaticText, 0x10197bcb0, {{114.3, 725.5}, {7.7, 15.3}}, label: '2'
+                              StaticText, 0x10197bdd0, {{100.9, 721.7}, {12.3, 19.9}}, label: 'A'
+                              StaticText, 0x10197bef0, {{114.1, 726.0}, {7.1, 14.1}}, label: '2'
+                            Button, 0x10197c010, {{146.0, 706.7}, {50.0, 50.0}}, identifier: 'string.3', label: 'تار 4، ⁨D 3⁩'
+                              StaticText, 0x10197c130, {{159.8, 720.8}, {13.7, 21.7}}, label: 'D'
+                              StaticText, 0x10197c250, {{174.5, 725.5}, {7.7, 15.3}}, label: '3'
+                              StaticText, 0x10197c370, {{160.7, 721.7}, {12.6, 19.9}}, label: 'D'
+                              StaticText, 0x10197c490, {{174.2, 726.0}, {7.1, 14.1}}, label: '3'
+                            Button, 0x10197c5b0, {{206.0, 706.7}, {50.0, 50.0}}, identifier: 'string.4', label: 'تار 3، ⁨G 3⁩'
+                              StaticText, 0x10197c6d0, {{219.5, 720.8}, {14.3, 21.7}}, label: 'G'
+                              StaticText, 0x10197c7f0, {{234.8, 725.5}, {7.7, 15.3}}, label: '3'
+                              StaticText, 0x10197c910, {{220.4, 721.7}, {13.2, 19.9}}, label: 'G'
+                              StaticText, 0x10197ca30, {{234.5, 726.0}, {7.1, 14.1}}, label: '3'
+                            Button, 0x10197cb50, {{266.0, 706.7}, {50.0, 50.0}}, identifier: 'string.5', label: 'تار 2، ⁨B 3⁩'
+                              StaticText, 0x10197cc70, {{280.7, 720.8}, {12.0, 21.7}}, label: 'B'
+                              StaticText, 0x10197cd90, {{293.7, 725.5}, {7.7, 15.3}}, label: '3'
+                              StaticText, 0x10197ceb0, {{281.5, 721.7}, {11.0, 19.9}}, label: 'B'
+                              StaticText, 0x10197cfd0, {{293.5, 726.0}, {7.1, 14.1}}, label: '3'
+                            Button, 0x10197d0f0, {{326.0, 706.7}, {50.0, 50.0}}, identifier: 'string.6', label: 'تار 1، ⁨E 4⁩'
+                              StaticText, 0x10197d210, {{341.3, 720.8}, {10.3, 21.7}}, label: 'E'
+                              StaticText, 0x10197d330, {{352.7, 725.5}, {8.0, 15.3}}, label: '4'
+                              StaticText, 0x10197d450, {{342.1, 721.7}, {9.5, 19.9}}, label: 'E'
+                              StaticText, 0x10197d570, {{352.5, 726.0}, {7.4, 14.1}}, label: '4'
+                            StaticText, 0x10197d690, {{24.0, 764.7}, {37.0, 18.3}}, label: 'سب سے موٹا'
+                            StaticText, 0x10197d7b0, {{340.7, 764.7}, {37.3, 18.3}}, label: 'سب سے پتلا'
+                          Button, 0x10197d8d0, {{278.0, 68.0}, {104.0, 31.7}}, identifier: 'tune.instrument', label: 'اکوسٹک گٹار'
+                            StaticText, 0x10197d9f0, {{297.7, 68.0}, {84.3, 31.7}}, identifier: 'tune.instrument.name', label: 'اکوسٹک گٹار'
+                            Image, 0x10197db10, {{279.3, 80.7}, {11.0, 6.7}}, identifier: 'chevron.down', label: 'نیچے جائیں'
+                          Button, 0x10197dc30, {{261.7, 101.7}, {120.3, 28.7}}, identifier: 'tunings.menu', label: '⁨معیاری⁩ · A4 440 Hz'
+                            Button, 0x10197dd50, {{261.7, 101.7}, {120.3, 28.7}}
+                              StaticText, 0x10197de70, {{261.7, 101.7}, {120.3, 28.7}}, label: '⁨معیاری⁩ · A4 440 Hz'
+                              Image, 0x10197df90, {{263.0, 110.3}, {8.3, 11.7}}, identifier: 'chevron.up.chevron.down', label: 'اوپر اور نیچے شیوران'
+                          Button, 0x10197e0b0, {{112.0, 77.3}, {54.0, 44.0}}, identifier: 'streak.chip', label: '0 دن کا تسلسل', value: آج: 0 از 3
+                            Other, 0x10197e1d0, {{139.8, 91.2}, {12.4, 15.2}}
+                            StaticText, 0x10197e2f0, {{112.0, 77.3}, {54.0, 44.0}}, identifier: 'screen.header.streak.count', label: '0'
+                          Button, 0x10197e410, {{66.0, 77.3}, {44.0, 44.0}}, identifier: 'level.ring', label: 'لیول 1، 0 از 100 XP'
+                            StaticText, 0x10197e530, {{77.7, 85.5}, {20.7, 27.3}}, identifier: 'screen.header.level.mark', label: 'Lv 1'
+                          Button, 0x10197e650, {{20.0, 77.3}, {44.0, 44.0}}, identifier: 'settings.open', label: 'سیٹنگز'
+                          Other, 0x10197e770, {{0.0, 791.0}, {402.0, 83.0}}
+                Other, 0x10197e890, {{0.0, 791.0}, {402.0, 83.0}}
+                  Other, 0x10197e9b0, {{0.0, 0.0}, {402.0, 874.0}}
+                    TabBar, 0x10197ead0, {{0.0, 791.0}, {402.0, 83.0}}, label: 'ٹیب بار'
+                      Other, 0x10197ebf0, {{21.0, 791.0}, {360.0, 62.0}}
+                        Other, 0x10197ed10, {{300.0, 795.0}, {77.0, 54.0}}
+                          Other, 0x10197ee30, {{300.0, 795.0}, {77.0, 54.0}}
+                            Other, 0x10197ef50, {{300.0, 795.0}, {77.0, 54.0}}
+                            Other, 0x10197f070, {{300.0, 795.0}, {77.0, 54.0}}
+                              Other, 0x10197f190, {{300.0, 795.0}, {77.0, 54.0}}
+                                Other, 0x10197f2b0, {{300.0, 795.0}, {77.0, 54.0}}
+                                  Other, 0x10197f3d0, {{300.0, 795.0}, {77.0, 54.0}}
+                                Other, 0x10197f4f0, {{300.0, 795.0}, {77.0, 54.0}}
+                              Other, 0x10197f610, {{300.0, 795.0}, {77.0, 54.0}}
+                        Other, 0x10197f730, {{21.0, 791.0}, {77.0, 54.0}}
+                        Other, 0x10197f850, {{21.0, 791.0}, {360.0, 62.0}}
+                          Button, 0x10197f970, {{300.0, 795.0}, {77.0, 54.0}}, identifier: 'gauge.with.needle', label: 'ٹیون', Selected
+                            Image, 0x10197fa90, {{325.0, 801.3}, {27.3, 27.3}}, identifier: 'gauge.with.needle.fill', label: 'gauge.with.needle.fill'
+                          Button, 0x10197fbb0, {{231.2, 795.0}, {77.0, 54.0}}, identifier: 'graduationcap', label: 'سیکھیں'
+                            Image, 0x10197fcd0, {{251.2, 801.7}, {36.7, 31.3}}, identifier: 'graduationcap.fill', label: '‏⁨itunes u⁩'
+                          Button, 0x10197fdf0, {{162.5, 795.0}, {77.0, 54.0}}, identifier: 'music.note.list', label: 'گانے'
+                            Image, 0x10197ff10, {{186.5, 801.7}, {29.3, 27.0}}, identifier: 'music.note.list', label: 'پلے لسٹ'
+                          Button, 0x101980030, {{93.8, 795.0}, {77.0, 54.0}}, identifier: 'metronome', label: 'پریکٹس'
+                            Image, 0x101980150, {{117.8, 801.7}, {28.7, 26.0}}, identifier: 'metronome.fill', label: 'metronome.fill'
+                          Button, 0x101980270, {{25.0, 795.0}, {77.0, 54.0}}, identifier: 'chart.bar', label: 'پیش رفت'
+                            Image, 0x101980390, {{46.0, 802.3}, {35.0, 25.3}}, identifier: 'chart.bar.fill', label: 'چارٹ کالم'
+                  Other, 0x1019804b0, {{0.0, 791.0}, {402.0, 83.0}}
+                    Other, 0x1019805d0, {{0.0, 791.0}, {402.0, 83.0}}
+                      Other, 0x1019806f0, {{0.0, 791.0}, {402.0, 83.0}}
+                        Other, 0x101980810, {{0.0, 791.0}, {402.0, 83.0}}
+                          Other, 0x101980930, {{0.0, 791.0}, {402.0, 83.0}}
+                            Other, 0x101980a50, {{0.0, 791.0}, {402.0, 83.0}}
+                        Other, 0x101980b70, {{0.0, 791.0}, {402.0, 83.0}}
+                          Other, 0x101980c90, {{0.0, 791.0}, {402.0, 83.0}}
+      Other, 0x101980db0, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x101980ed0, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x101980ff0, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x101981110, {{20.0, 74.0}, {362.0, 4.0}}, label: 'مرحلہ 1 از 7'
+            ScrollView, 0x101981230, {{0.0, 78.0}, {402.0, 796.0}}, identifier: 'onboarding.welcome.scroll'
+              Other, 0x101981350, {{0.0, 78.0}, {402.0, 854.3}}
+                Other, 0x101981470, {{156.5, 112.0}, {85.5, 21.7}}, label: 'Timbre'
+                  Other, 0x101981590, {{221.5, 118.2}, {20.5, 7.7}}
+                  StaticText, 0x1019816b0, {{156.5, 112.0}, {59.7, 21.7}}, label: 'Timbre'
+                StaticText, 0x1019817d0, {{92.7, 340.1}, {271.3, 300.0}}, identifier: 'onboarding.headline', label: 'سیکنڈوں میں ٹیون کریں۔
+پھر بجانا سیکھیں۔'
+                StaticText, 0x1019818f0, {{46.3, 655.1}, {335.7, 27.3}}, label: 'آپ کو سن کر Timbre بالکل درست بتاتا ہے کہ آپ نے کیسا بجایا۔'
+                Button, 0x101981a10, {{333.0, 700.3}, {49.0, 44.0}}, identifier: 'onboarding.instrument.guitar.acoustic.6', label: 'گٹار', Selected
+                Button, 0x101981b30, {{278.0, 700.3}, {47.0, 44.0}}, identifier: 'onboarding.instrument.bass.electric.4', label: 'بیس'
+                Button, 0x101981c50, {{209.7, 700.3}, {60.3, 44.0}}, identifier: 'onboarding.instrument.ukulele.soprano.4', label: 'یوکولیلی'
+                Button, 0x101981d70, {{152.0, 700.3}, {49.7, 44.0}}, identifier: 'onboarding.instrument.violin.standard.4', label: 'وائلن'
+                Button, 0x101b79c10, {{99.3, 700.3}, {44.7, 44.0}}, identifier: 'onboarding.instrument.cello.standard.4', label: 'سیلو'
+                Button, 0x101b79d30, {{46.0, 700.3}, {45.3, 44.0}}, identifier: 'onboarding.instrument.more', label: 'مزید ساز'
+                Button, 0x101b79e50, {{20.0, 766.3}, {362.0, 54.0}}, identifier: 'onboarding.start', label: 'شروع کریں'
+                Button, 0x101b79f70, {{131.0, 830.3}, {140.3, 44.0}}, identifier: 'onboarding.justTune', label: 'صرف ٹیون کریں'
+                  Image, 0x101981e90, {{237.3, 844.7}, {16.3, 16.3}}, identifier: 'tuningfork', label: 'ٹیون'
+                  StaticText, 0x101981fb0, {{131.0, 830.3}, {140.3, 44.0}}, label: 'صرف ٹیون کریں'
+                Button, 0x1019820d0, {{107.0, 874.3}, {188.0, 44.0}}, identifier: 'onboarding.restore', label: 'میرے پاس پہلے سے Timbre Pro ہے'
+              Other, 0x1019821f0, {{-24.0, 78.0}, {30.0, 734.0}}, label: 'عمودی اسکرول بار, ‏‏2 صفحات', value: ‏0%
+                Other, 0x101982310, {{3.0, 81.0}, {3.0, 652.3}}
+              Other, 0x101982430, {{-24.0, 78.0}, {30.0, 734.0}}, label: 'عمودی اسکرول بار, ‏‏2 صفحات', value: ‏0%
+                Other, 0x101982550, {{3.0, 81.0}, {3.0, 652.3}}
+Path to element:
+ →Application, 0x101b8f0d0, pid: 12057, label: 'Timbre'
+Query chain:
+ →Find: Target Application 'com.shahradazerisharghi.timbre'
+  Output: {
+    Application, 0x101b7b390, pid: 12057, label: 'Timbre'
+  }
+)

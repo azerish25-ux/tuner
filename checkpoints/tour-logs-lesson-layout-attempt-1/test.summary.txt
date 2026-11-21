@@ -1,0 +1,79 @@
+# Errors
+
+# Matches
+--- line 232
+    t =   217.78s     Checking `Expect predicate `existsNoRetry == 1` for object "lesson.override" Any`
+    t =   217.91s         Checking existence of `"lesson.override" Any`
+<unknown>:0: error: -[TimbreUITests.LessonAccessibilityLayoutUITests testNotesAndTeachingContentRemainReachableAtAX5] : Failed to get matching snapshots: Lost connection to the application (pid 6731). (Underlying Error: Couldn’t communicate with a helper application. Try your operation again. If that fails, quit and relaunch the application and try again. connection to service with pid 6731 created from an endpoint)
+    t =   228.50s         Capturing element debug description
+    t =   228.52s Tear Down
+    t =   228.52s         Terminate com.shahradazerisharghi.timbre:0
+--- line 237
+    t =   228.52s         Terminate com.shahradazerisharghi.timbre:0
+    t =   258.58s     Checking for crash reports corresponding to unexpected termination of com.shahradazerisharghi.timbre
+Test Case '-[TimbreUITests.LessonAccessibilityLayoutUITests testNotesAndTeachingContentRemainReachableAtAX5]' failed (278.655 seconds).
+Test Case '-[TimbreUITests.LessonAccessibilityLayoutUITests testPlayAlongStartAndCompletedTakeAtAX5]' started.
+    t =     0.00s Start Test at 2026-11-21 11:34:56.563
+    t =     0.36s Set Up
+
+# Tail
+    t =   146.38s     Find the "along.again" Button
+    t =   146.87s     Find the "lesson.continue" Button
+    t =   147.22s     Find the "lesson.continue" Button
+    t =   147.45s     Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   147.57s     Find the "along.again" Button
+    t =   147.80s     Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   148.11s Added attachment named 'layout-ax5-along-done-actions-clear'
+    t =   148.12s     Requesting snapshot of accessibility hierarchy for app with pid 10720
+    t =   149.07s     Requesting snapshot of accessibility hierarchy for app with pid 10720
+    t =   149.39s Added attachment named 'layout-ax5-along-done-actions-clear-hierarchy'
+    t =   149.39s     Tap "lesson.continue" Button
+    t =   149.39s         Wait for com.shahradazerisharghi.timbre to idle
+    t =   149.39s         Find the "lesson.continue" Button
+    t =   149.65s         Check for interrupting elements affecting "lesson.continue" Button
+    t =   149.88s         Synthesize event
+    t =   150.34s         Wait for com.shahradazerisharghi.timbre to idle
+    t =   150.84s     Waiting 20.0s for "lesson.results.level" Any to exist
+    t =   151.91s         Checking `Expect predicate `existsNoRetry == 1` for object "lesson.results.level" Any`
+    t =   151.91s             Checking existence of `"lesson.results.level" Any`
+    t =   154.46s             Capturing element debug description
+    t =   154.85s         Checking `Expect predicate `existsNoRetry == 1` for object "lesson.results.level" Any`
+    t =   154.85s             Checking existence of `"lesson.results.level" Any`
+    t =   157.00s             Capturing element debug description
+    t =   157.85s         Checking `Expect predicate `existsNoRetry == 1` for object "lesson.results.level" Any`
+    t =   157.86s             Checking existence of `"lesson.results.level" Any`
+    t =   159.76s Added attachment named 'layout-ax5-lesson-results'
+    t =   159.76s     Requesting snapshot of accessibility hierarchy for app with pid 10720
+    t =   160.96s     Requesting snapshot of accessibility hierarchy for app with pid 10720
+    t =   161.43s Added attachment named 'layout-ax5-lesson-results-hierarchy'
+    t =   161.45s Tear Down
+    t =   161.45s         Terminate com.shahradazerisharghi.timbre:10720
+Test Case '-[TimbreUITests.LessonAccessibilityLayoutUITests testPlayAlongStartAndCompletedTakeAtAX5]' passed (166.485 seconds).
+Test Case '-[TimbreUITests.LessonAccessibilityLayoutUITests testQuizRediscoveryRequiresPreviouslyClearTargetAndShrunkenViewport]' started.
+    t =     0.00s Start Test at 2026-11-21 11:37:43.046
+    t =     0.05s Set Up
+    t =     0.05s Tear Down
+    t =     0.05s         Terminate com.shahradazerisharghi.timbre:0
+Test Case '-[TimbreUITests.LessonAccessibilityLayoutUITests testQuizRediscoveryRequiresPreviouslyClearTargetAndShrunkenViewport]' passed (4.033 seconds).
+Test Case '-[TimbreUITests.LessonAccessibilityLayoutUITests testReachabilityPlanRequiresCompleteGeometry]' started.
+    t =     0.00s Start Test at 2026-11-21 11:37:47.079
+    t =     0.04s Set Up
+    t =     0.04s Tear Down
+    t =     0.04s         Terminate com.shahradazerisharghi.timbre:0
+Test Case '-[TimbreUITests.LessonAccessibilityLayoutUITests testReachabilityPlanRequiresCompleteGeometry]' passed (0.147 seconds).
+Test Suite 'LessonAccessibilityLayoutUITests' failed at 2026-11-21 11:37:47.226.
+	 Executed 4 tests, with 1 failure (0 unexpected) in 449.320 (449.333) seconds
+Test Suite 'TimbreUITests.xctest' failed at 2026-11-21 11:37:47.228.
+	 Executed 4 tests, with 1 failure (0 unexpected) in 449.320 (449.335) seconds
+Test Suite 'Selected tests' failed at 2026-11-21 11:37:47.228.
+	 Executed 4 tests, with 1 failure (0 unexpected) in 449.320 (449.347) seconds
+2026-11-21 11:38:45.700 xcodebuild[3816:17602] [MT] IDETestOperationsObserverDebug: 552.807 elapsed -- Testing started completed.
+2026-11-21 11:38:45.702 xcodebuild[3816:17602] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-11-21 11:38:45.702 xcodebuild[3816:17602] [MT] IDETestOperationsObserverDebug: 552.807 sec, +552.807 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/runner/work/tuner/tuner/ios/build/UITests.xcresult
+
+** TEST EXECUTE FAILED **
+
+Testing started

@@ -1,0 +1,448 @@
+Command line invocation:
+    /Applications/Xcode_26.3.app/Contents/Developer/usr/bin/xcodebuild test-without-building -xctestrun /Users/runner/work/tuner/tuner/ios/build/dd/Build/Products/Timbre_iphonesimulator26.2-arm64.xctestrun -parallel-testing-enabled NO "-only-testing:TimbreUITests/FirstSessionUITests" -destination "platform=iOS Simulator,id=B290E327-433A-4878-BC55-828A994DCA6C" -resultBundlePath ios/build/UITests.xcresult CODE_SIGNING_ALLOWED=NO
+
+Build settings from command line:
+    CODE_SIGNING_ALLOWED = NO
+
+2026-11-21 11:48:18.534 xcodebuild[4516:19336] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+Writing result bundle at path:
+	/Users/runner/work/tuner/tuner/ios/build/UITests.xcresult
+
+2026-11-21 11:48:18.674 xcodebuild[4516:19336] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:iOS Simulator, arch:arm64, id:B290E327-433A-4878-BC55-828A994DCA6C, OS:26.2, name:iPhone 17 Pro }
+{ platform:iOS Simulator, arch:x86_64, id:B290E327-433A-4878-BC55-828A994DCA6C, OS:26.2, name:iPhone 17 Pro }
+2026-11-21 11:48:45.688 xcodebuild[4516:19336] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+2026-11-21 11:49:17.527122+0000 TimbreUITests-Runner[6925:25725] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'Selected tests' started at 2026-11-21 11:49:30.698.
+Test Suite 'TimbreUITests.xctest' started at 2026-11-21 11:49:30.699.
+Test Suite 'FirstSessionUITests' started at 2026-11-21 11:49:30.699.
+Test Case '-[TimbreUITests.FirstSessionUITests testADeadStringIsNamedWithoutCompletingTheChord]' started.
+    t =     0.01s Start Test at 2026-11-21 11:49:30.705
+    t =     0.92s Set Up
+    t =     1.89s Open com.shahradazerisharghi.timbre
+    t =     1.89s     Launch com.shahradazerisharghi.timbre
+    t =    80.36s         Setting up automation session
+    t =    80.76s         Wait for com.shahradazerisharghi.timbre to idle
+    t =    81.87s Waiting 30.0s for "lesson.close" Any to exist
+    t =    82.97s     Checking `Expect predicate `existsNoRetry == 1` for object "lesson.close" Any`
+    t =    82.97s         Checking existence of `"lesson.close" Any`
+    t =    84.09s Waiting 30.0s for "lesson.chord.string.3.silent" Any to exist
+    t =    85.18s     Checking `Expect predicate `existsNoRetry == 1` for object "lesson.chord.string.3.silent" Any`
+    t =    85.18s         Checking existence of `"lesson.chord.string.3.silent" Any`
+    t =    85.87s Checking existence of `"lesson.chord.pending" Any`
+    t =    86.22s Checking existence of `"lesson.chord.complete" Any`
+    t =   104.57s Checking existence of `"lesson.chord.string.6.heard" Any`
+    t =   105.16s Tear Down
+    t =   105.17s     Terminate com.shahradazerisharghi.timbre:7542
+Test Case '-[TimbreUITests.FirstSessionUITests testADeadStringIsNamedWithoutCompletingTheChord]' passed (107.046 seconds).
+Test Case '-[TimbreUITests.FirstSessionUITests testDeferredQuestionsPersistOnlyForTheInstallationThatSkippedThem]' started.
+    t =     0.00s Start Test at 2026-11-21 11:51:17.753
+    t =     0.10s Set Up
+    t =     0.17s Open com.shahradazerisharghi.timbre
+    t =     0.18s     Launch com.shahradazerisharghi.timbre
+    t =     3.60s         Setting up automation session
+    t =     7.84s         Wait for com.shahradazerisharghi.timbre to idle
+    t =     9.52s Waiting 25.0s for "onboarding.justTune" Any to exist
+    t =    10.56s     Checking `Expect predicate `existsNoRetry == 1` for object "onboarding.justTune" Any`
+    t =    10.56s         Checking existence of `"onboarding.justTune" Any`
+    t =    15.35s Tap "onboarding.justTune" Any
+    t =    15.35s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    17.25s     Find the "onboarding.justTune" Any
+    t =    17.86s     Check for interrupting elements affecting "onboarding.justTune" Button
+    t =    20.43s     Synthesize event
+    t =    21.68s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    22.81s Waiting 15.0s for "onboarding.justTune" Button to not exist
+    t =    23.84s     Checking `Expect predicate `existsNoRetry == 0` for object "onboarding.justTune" Button`
+    t =    23.84s         Checking existence of `"onboarding.justTune" Button`
+    t =    25.09s Waiting 15.0s for "tune.stage" Any to exist
+    t =    26.13s     Checking `Expect predicate `existsNoRetry == 1` for object "tune.stage" Any`
+    t =    26.13s         Checking existence of `"tune.stage" Any`
+    t =    28.22s Checking `Expect predicate `exists == 1 AND hittable == 1` for object "Learn" Button`
+    t =    28.23s     Checking existence of `"Learn" Button`
+    t =    28.71s     Find the "Learn" Button
+    t =    29.11s Terminate com.shahradazerisharghi.timbre:8684
+    t =    30.12s Open com.shahradazerisharghi.timbre
+    t =    30.12s     Launch com.shahradazerisharghi.timbre
+    t =    31.17s         Setting up automation session
+    t =    34.33s         Wait for com.shahradazerisharghi.timbre to idle
+    t =    35.82s Waiting 25.0s for "tune.stage" Any to exist
+    t =    36.85s     Checking `Expect predicate `existsNoRetry == 1` for object "tune.stage" Any`
+    t =    36.85s         Checking existence of `"tune.stage" Any`
+    t =    38.90s Waiting 10.0s for "onboarding.justTune" Button to not exist
+    t =    39.94s     Checking `Expect predicate `existsNoRetry == 0` for object "onboarding.justTune" Button`
+    t =    39.94s         Checking existence of `"onboarding.justTune" Button`
+    t =    42.25s Checking `Expect predicate `exists == 1 AND hittable == 1` for object "Learn" Button`
+    t =    42.25s     Checking existence of `"Learn" Button`
+    t =    43.03s     Find the "Learn" Button
+    t =    43.79s Tap "Learn" Button
+    t =    43.79s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    43.90s     Find the "Learn" Button
+    t =    44.50s     Check for interrupting elements affecting "graduationcap" Button
+    t =    45.09s     Synthesize event
+    t =    45.62s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    50.23s Waiting 10.0s for "onboarding.option.beginner" Any to exist
+    t =    51.31s     Checking `Expect predicate `existsNoRetry == 1` for object "onboarding.option.beginner" Any`
+    t =    51.32s         Checking existence of `"onboarding.option.beginner" Any`
+    t =    52.22s Terminate com.shahradazerisharghi.timbre:9201
+    t =    54.30s Open com.shahradazerisharghi.timbre
+    t =    54.30s     Launch com.shahradazerisharghi.timbre
+    t =    55.13s         Setting up automation session
+    t =    58.43s         Wait for com.shahradazerisharghi.timbre to idle
+    t =    60.15s Waiting 25.0s for "tune.stage" Any to exist
+    t =    61.17s     Checking `Expect predicate `existsNoRetry == 1` for object "tune.stage" Any`
+    t =    61.18s         Checking existence of `"tune.stage" Any`
+    t =    63.42s Tap "Learn" Button
+    t =    63.42s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    64.34s     Find the "Learn" Button
+    t =    64.94s     Check for interrupting elements affecting "graduationcap" Button
+    t =    66.09s     Synthesize event
+    t =    66.57s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    69.68s Waiting 10.0s for "learn.continue" Any to exist
+    t =    70.77s     Checking `Expect predicate `existsNoRetry == 1` for object "learn.continue" Any`
+    t =    70.77s         Checking existence of `"learn.continue" Any`
+    t =    72.83s Find the "learn.continue" Any
+    t =    73.65s Checking existence of `"onboarding.option.beginner" Any`
+    t =    77.19s Tear Down
+    t =    77.19s     Terminate com.shahradazerisharghi.timbre:9701
+Test Case '-[TimbreUITests.FirstSessionUITests testDeferredQuestionsPersistOnlyForTheInstallationThatSkippedThem]' passed (78.522 seconds).
+Test Case '-[TimbreUITests.FirstSessionUITests testJustTuneReachesAListeningTuner]' started.
+    t =     0.00s Start Test at 2026-11-21 11:52:36.278
+    t =     0.11s Set Up
+    t =     0.16s Open com.shahradazerisharghi.timbre
+    t =     0.16s     Launch com.shahradazerisharghi.timbre
+    t =     1.31s         Setting up automation session
+    t =     3.96s         Wait for com.shahradazerisharghi.timbre to idle
+    t =     5.55s Waiting 25.0s for "onboarding.justTune" Any to exist
+    t =     6.61s     Checking `Expect predicate `existsNoRetry == 1` for object "onboarding.justTune" Any`
+    t =     6.61s         Checking existence of `"onboarding.justTune" Any`
+    t =     8.74s Tap "onboarding.justTune" Any
+    t =     8.74s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    10.02s     Find the "onboarding.justTune" Any
+    t =    11.00s     Check for interrupting elements affecting "onboarding.justTune" Button
+    t =    12.60s     Synthesize event
+    t =    13.28s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    13.65s Waiting 15.0s for "onboarding.justTune" Button to not exist
+    t =    14.65s     Checking `Expect predicate `existsNoRetry == 0` for object "onboarding.justTune" Button`
+    t =    14.65s         Checking existence of `"onboarding.justTune" Button`
+    t =    18.47s Waiting 15.0s for "tune.stage" Any to exist
+    t =    19.55s     Checking `Expect predicate `existsNoRetry == 1` for object "tune.stage" Any`
+    t =    19.55s         Checking existence of `"tune.stage" Any`
+    t =    21.26s Checking `Expect predicate `exists == 1 AND hittable == 1` for object "Learn" Button`
+    t =    21.27s     Checking existence of `"Learn" Button`
+    t =    22.77s     Find the "Learn" Button
+    t =    25.15s Checking existence of `"onboarding.option.beginner" Any`
+    t =    29.88s Find the "stage.state" Any
+    t =    31.79s Tear Down
+    t =    31.79s     Terminate com.shahradazerisharghi.timbre:10269
+Test Case '-[TimbreUITests.FirstSessionUITests testJustTuneReachesAListeningTuner]' passed (34.034 seconds).
+Test Case '-[TimbreUITests.FirstSessionUITests testThePaywallFromSettingsShowsItsPlans]' started.
+    t =     0.00s Start Test at 2026-11-21 11:53:10.310
+    t =     0.05s Set Up
+    t =     0.07s Open com.shahradazerisharghi.timbre
+    t =     0.07s     Launch com.shahradazerisharghi.timbre
+    t =     1.20s         Setting up automation session
+    t =     3.54s         Wait for com.shahradazerisharghi.timbre to idle
+    t =     4.97s Waiting 25.0s for "settings.open" Any to exist
+    t =     6.01s     Checking `Expect predicate `existsNoRetry == 1` for object "settings.open" Any`
+    t =     6.01s         Checking existence of `"settings.open" Any`
+    t =     7.86s Tap "settings.open" Any
+    t =     7.86s     Wait for com.shahradazerisharghi.timbre to idle
+    t =     9.25s     Find the "settings.open" Any
+    t =    10.27s     Check for interrupting elements affecting "settings.open" Button
+    t =    13.46s     Synthesize event
+    t =    14.01s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    16.47s Waiting 10.0s for "settings.pro" Any to exist
+    t =    17.55s     Checking `Expect predicate `existsNoRetry == 1` for object "settings.pro" Any`
+    t =    17.55s         Checking existence of `"settings.pro" Any`
+    t =    22.40s Tap "settings.pro" Any
+    t =    22.40s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    22.59s     Find the "settings.pro" Any
+    t =    24.12s     Check for interrupting elements affecting "settings.pro" Button
+    t =    25.73s     Synthesize event
+    t =    26.20s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    27.66s Waiting 15.0s for "paywall.purchase" Any to exist
+    t =    28.70s     Checking `Expect predicate `existsNoRetry == 1` for object "paywall.purchase" Any`
+    t =    28.70s         Checking existence of `"paywall.purchase" Any`
+    t =    29.26s Waiting 15.0s for "paywall.plan.yearly" Any to exist
+    t =    30.34s     Checking `Expect predicate `existsNoRetry == 1` for object "paywall.plan.yearly" Any`
+    t =    30.36s         Checking existence of `"paywall.plan.yearly" Any`
+    t =    35.42s         Capturing element debug description
+    t =    36.29s     Checking `Expect predicate `existsNoRetry == 1` for object "paywall.plan.yearly" Any`
+    t =    36.29s         Checking existence of `"paywall.plan.yearly" Any`
+    t =    37.36s Find the "paywall.plan.yearly" Any
+    t =    38.82s Checking existence of `"paywall.plan.monthly" Any`
+    t =    39.87s Tap "paywall.plan.yearly" Button
+    t =    39.87s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    39.92s     Find the "paywall.plan.yearly" Button
+    t =    41.25s     Check for interrupting elements affecting "paywall.plan.yearly" Button
+    t =    46.42s     Synthesize event
+    t =    47.07s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    47.18s Find the "paywall.plan.yearly" Button
+    t =    48.16s Tear Down
+    t =    48.16s     Terminate com.shahradazerisharghi.timbre:11149
+Test Case '-[TimbreUITests.FirstSessionUITests testThePaywallFromSettingsShowsItsPlans]' passed (49.677 seconds).
+Test Case '-[TimbreUITests.FirstSessionUITests testUrduWelcomeKeepsItsFullHeadingAndReachableActionsAtNormalAndAX5]' started.
+    t =     0.00s Start Test at 2026-11-21 11:53:59.989
+    t =     0.09s Set Up
+    t =     0.22s Open com.shahradazerisharghi.timbre
+    t =     0.22s     Launch com.shahradazerisharghi.timbre
+    t =     1.85s         Setting up automation session
+    t =     8.54s         Wait for com.shahradazerisharghi.timbre to idle
+    t =    10.35s Waiting 30.0s for "onboarding.headline" Any to exist
+    t =    11.39s     Checking `Expect predicate `existsNoRetry == 1` for object "onboarding.headline" Any`
+    t =    11.39s         Checking existence of `"onboarding.headline" Any`
+    t =    15.81s Find the "onboarding.headline" Any
+    t =    17.21s Get number of matches for: Elements matching predicate '"onboarding.headline" IN identifiers'
+    t =    18.17s Checking existence of `"onboarding.welcome.scroll" ScrollView`
+    t =    18.24s Find the "onboarding.welcome.scroll" ScrollView
+    t =    18.68s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    19.19s Find the "onboarding.headline" StaticText
+    t =    19.81s Find the "onboarding.headline" StaticText
+    t =    20.36s Find the "onboarding.headline" StaticText
+    t =    20.79s Added attachment named 'urdu-welcome-scroll-onboarding.headline-top'
+    t =    20.79s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    21.78s Added attachment named 'urdu-welcome-UICTContentSizeCategoryL-heading-top'
+    t =    21.78s Requesting snapshot of accessibility hierarchy for app with pid 12057
+    t =    22.90s Requesting snapshot of accessibility hierarchy for app with pid 12057
+    t =    23.16s Added attachment named 'urdu-welcome-UICTContentSizeCategoryL-heading-top-hierarchy'
+    t =    23.16s Checking existence of `"onboarding.welcome.scroll" ScrollView`
+    t =    23.57s Find the "onboarding.welcome.scroll" ScrollView
+    t =    23.91s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    24.10s Find the "onboarding.headline" StaticText
+    t =    25.02s Find the "onboarding.headline" StaticText
+    t =    25.47s Find the "onboarding.headline" StaticText
+    t =    25.89s Added attachment named 'urdu-welcome-scroll-onboarding.headline-bottom'
+    t =    25.89s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    28.63s Added attachment named 'urdu-welcome-UICTContentSizeCategoryL-heading-bottom'
+    t =    28.63s Requesting snapshot of accessibility hierarchy for app with pid 12057
+    t =    30.04s Requesting snapshot of accessibility hierarchy for app with pid 12057
+    t =    30.23s Added attachment named 'urdu-welcome-UICTContentSizeCategoryL-heading-bottom-hierarchy'
+    t =    30.23s Find the "onboarding.start" Any
+    t =    30.90s Checking existence of `"onboarding.welcome.scroll" ScrollView`
+    t =    30.94s Find the "onboarding.welcome.scroll" ScrollView
+    t =    30.98s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    31.07s Find the "onboarding.start" Button
+    t =    31.41s Find the "onboarding.start" Button
+    t =    31.94s Find the "onboarding.start" Button
+    t =    33.47s Added attachment named 'urdu-welcome-scroll-onboarding.start-whole'
+    t =    33.47s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    34.01s Added attachment named 'urdu-welcome-UICTContentSizeCategoryL-onboarding.start'
+    t =    34.01s Requesting snapshot of accessibility hierarchy for app with pid 12057
+    t =    36.12s Requesting snapshot of accessibility hierarchy for app with pid 12057
+    t =    36.76s Added attachment named 'urdu-welcome-UICTContentSizeCategoryL-onboarding.start-hierarchy'
+    t =    36.76s Find the "onboarding.justTune" Any
+    t =    41.85s Checking existence of `"onboarding.welcome.scroll" ScrollView`
+    t =    41.93s Find the "onboarding.welcome.scroll" ScrollView
+    t =    42.02s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    42.16s Find the "onboarding.justTune" Button
+    t =    42.28s Press Target Application 'com.shahradazerisharghi.timbre'[0.00, 0.00] -> (201.0, 476.0) for 0.1 seconds, then drag to Target Application 'com.shahradazerisharghi.timbre'[0.00, 0.00] -> (201.0, 121.4) with velocity of 250.00 pixels per second, and then hold for 0.2 seconds 
+    t =    42.28s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    42.28s     Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    42.38s     Check for interrupting elements affecting "Timbre" Application
+    t =    42.57s     Synthesize event
+    t =    42.57s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    42.66s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    42.76s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    42.83s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    42.98s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    45.18s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    45.56s Find the "onboarding.welcome.scroll" ScrollView
+    t =    45.70s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    45.98s Find the "onboarding.justTune" Button
+    t =    46.82s Find the "onboarding.justTune" Button
+    t =    47.30s Find the "onboarding.justTune" Button
+    t =    47.65s Added attachment named 'urdu-welcome-scroll-onboarding.justTune-whole'
+    t =    47.65s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    48.41s Added attachment named 'urdu-welcome-UICTContentSizeCategoryL-onboarding.justTune'
+    t =    48.42s Requesting snapshot of accessibility hierarchy for app with pid 12057
+    t =    49.50s Requesting snapshot of accessibility hierarchy for app with pid 12057
+    t =    49.71s Added attachment named 'urdu-welcome-UICTContentSizeCategoryL-onboarding.justTune-hierarchy'
+    t =    49.71s Find the "onboarding.restore" Any
+    t =    49.89s Checking existence of `"onboarding.welcome.scroll" ScrollView`
+    t =    49.97s Find the "onboarding.welcome.scroll" ScrollView
+    t =    50.17s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    50.33s Find the "onboarding.restore" Button
+    t =    50.59s Find the "onboarding.restore" Button
+    t =    51.00s Find the "onboarding.restore" Button
+    t =    51.22s Added attachment named 'urdu-welcome-scroll-onboarding.restore-whole'
+    t =    51.22s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    51.75s Added attachment named 'urdu-welcome-UICTContentSizeCategoryL-onboarding.restore'
+    t =    51.76s Requesting snapshot of accessibility hierarchy for app with pid 12057
+    t =    52.54s Requesting snapshot of accessibility hierarchy for app with pid 12057
+    t =    52.80s Added attachment named 'urdu-welcome-UICTContentSizeCategoryL-onboarding.restore-hierarchy'
+    t =    52.80s Checking existence of `"onboarding.welcome.scroll" ScrollView`
+    t =    52.89s Find the "onboarding.welcome.scroll" ScrollView
+    t =    52.93s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    53.00s Find the "onboarding.start" Any
+    t =    53.42s Find the "onboarding.start" Button
+    t =    53.78s Find the "onboarding.start" Button
+    t =    54.24s Added attachment named 'urdu-welcome-scroll-onboarding.start-whole'
+    t =    54.25s Find the "onboarding.start" Button
+    t =    54.49s Tap "onboarding.start" Button
+    t =    54.49s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    54.50s     Find the "onboarding.start" Button
+    t =    54.78s     Check for interrupting elements affecting "onboarding.start" Button
+    t =    55.04s     Synthesize event
+    t =    55.36s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    55.39s Waiting 15.0s for "onboarding.headline" StaticText to not exist
+    t =    56.46s     Checking `Expect predicate `existsNoRetry == 0` for object "onboarding.headline" StaticText`
+    t =    56.46s         Checking existence of `"onboarding.headline" StaticText`
+    t =    57.25s Waiting 15.0s for "onboarding.option.beginner" Any to exist
+    t =    58.28s     Checking `Expect predicate `existsNoRetry == 1` for object "onboarding.option.beginner" Any`
+    t =    58.28s         Checking existence of `"onboarding.option.beginner" Any`
+    t =    58.40s Terminate com.shahradazerisharghi.timbre:12057
+    t =    59.51s Open com.shahradazerisharghi.timbre
+    t =    59.51s     Launch com.shahradazerisharghi.timbre
+    t =    61.28s         Setting up automation session
+    t =    64.54s         Wait for com.shahradazerisharghi.timbre to idle
+    t =    66.06s Waiting 30.0s for "onboarding.headline" Any to exist
+    t =    67.13s     Checking `Expect predicate `existsNoRetry == 1` for object "onboarding.headline" Any`
+    t =    67.13s         Checking existence of `"onboarding.headline" Any`
+    t =    69.16s Find the "onboarding.headline" Any
+    t =    69.65s Get number of matches for: Elements matching predicate '"onboarding.headline" IN identifiers'
+    t =    70.86s Checking existence of `"onboarding.welcome.scroll" ScrollView`
+    t =    71.98s Find the "onboarding.welcome.scroll" ScrollView
+    t =    72.37s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    72.44s Find the "onboarding.headline" StaticText
+    t =    72.62s Find the "onboarding.headline" StaticText
+    t =    73.10s Find the "onboarding.headline" StaticText
+    t =    73.28s Added attachment named 'urdu-welcome-scroll-onboarding.headline-top'
+    t =    73.29s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    75.61s Added attachment named 'urdu-welcome-UICTContentSizeCategoryAccessibilityXXXL-heading-top'
+    t =    75.61s Requesting snapshot of accessibility hierarchy for app with pid 13085
+    t =    76.31s Requesting snapshot of accessibility hierarchy for app with pid 13085
+    t =    76.49s Added attachment named 'urdu-welcome-UICTContentSizeCategoryAccessibilityXXXL-heading-top-hierarchy'
+    t =    76.50s Checking existence of `"onboarding.welcome.scroll" ScrollView`
+    t =    76.53s Find the "onboarding.welcome.scroll" ScrollView
+    t =    76.58s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    76.70s Find the "onboarding.headline" StaticText
+    t =    77.38s Press Target Application 'com.shahradazerisharghi.timbre'[0.00, 0.00] -> (201.0, 476.0) for 0.1 seconds, then drag to Target Application 'com.shahradazerisharghi.timbre'[0.00, 0.00] -> (201.0, 121.4) with velocity of 250.00 pixels per second, and then hold for 0.2 seconds 
+    t =    77.38s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    77.39s     Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    77.62s     Check for interrupting elements affecting "Timbre" Application
+    t =    77.87s     Synthesize event
+    t =    77.89s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    78.11s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    78.34s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    78.49s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    78.73s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    81.04s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    81.05s Find the "onboarding.welcome.scroll" ScrollView
+    t =    81.16s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    81.25s Find the "onboarding.headline" StaticText
+    t =    81.72s Find the "onboarding.headline" StaticText
+    t =    82.13s Find the "onboarding.headline" StaticText
+    t =    82.32s Added attachment named 'urdu-welcome-scroll-onboarding.headline-bottom'
+    t =    82.32s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    82.76s Added attachment named 'urdu-welcome-UICTContentSizeCategoryAccessibilityXXXL-heading-bottom'
+    t =    82.77s Requesting snapshot of accessibility hierarchy for app with pid 13085
+    t =    83.36s Requesting snapshot of accessibility hierarchy for app with pid 13085
+    t =    83.48s Added attachment named 'urdu-welcome-UICTContentSizeCategoryAccessibilityXXXL-heading-bottom-hierarchy'
+    t =    83.48s Find the "onboarding.start" Any
+    t =    83.59s Checking existence of `"onboarding.welcome.scroll" ScrollView`
+    t =    83.68s Find the "onboarding.welcome.scroll" ScrollView
+    t =    83.84s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    83.92s Find the "onboarding.start" Button
+    t =    84.09s Press Target Application 'com.shahradazerisharghi.timbre'[0.00, 0.00] -> (201.0, 476.0) for 0.1 seconds, then drag to Target Application 'com.shahradazerisharghi.timbre'[0.00, 0.00] -> (201.0, 121.4) with velocity of 250.00 pixels per second, and then hold for 0.2 seconds 
+    t =    84.09s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    84.10s     Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    84.22s     Check for interrupting elements affecting "Timbre" Application
+    t =    84.33s     Synthesize event
+    t =    84.33s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    84.42s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    84.52s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    84.61s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    84.69s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    86.75s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    86.76s Find the "onboarding.welcome.scroll" ScrollView
+    t =    86.79s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    86.90s Find the "onboarding.start" Button
+    t =    87.04s Press Target Application 'com.shahradazerisharghi.timbre'[0.00, 0.00] -> (201.0, 476.0) for 0.1 seconds, then drag to Target Application 'com.shahradazerisharghi.timbre'[0.00, 0.00] -> (201.0, 121.4) with velocity of 250.00 pixels per second, and then hold for 0.2 seconds 
+    t =    87.04s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    87.05s     Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    87.16s     Check for interrupting elements affecting "Timbre" Application
+    t =    87.31s     Synthesize event
+    t =    87.31s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    87.42s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    87.50s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    87.60s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    87.72s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    89.82s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    90.09s Find the "onboarding.welcome.scroll" ScrollView
+    t =    90.17s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    90.25s Find the "onboarding.start" Button
+    t =    90.36s Find the "onboarding.start" Button
+    t =    90.47s Find the "onboarding.start" Button
+    t =    90.56s Added attachment named 'urdu-welcome-scroll-onboarding.start-whole'
+    t =    90.56s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    90.92s Added attachment named 'urdu-welcome-UICTContentSizeCategoryAccessibilityXXXL-onboarding.start'
+    t =    90.93s Requesting snapshot of accessibility hierarchy for app with pid 13085
+    t =    91.53s Requesting snapshot of accessibility hierarchy for app with pid 13085
+    t =    91.69s Added attachment named 'urdu-welcome-UICTContentSizeCategoryAccessibilityXXXL-onboarding.start-hierarchy'
+    t =    91.69s Find the "onboarding.justTune" Any
+    t =    91.78s Checking existence of `"onboarding.welcome.scroll" ScrollView`
+    t =    91.83s Find the "onboarding.welcome.scroll" ScrollView
+    t =    91.87s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    91.94s Find the "onboarding.justTune" Button
+    t =    92.10s Find the "onboarding.justTune" Button
+    t =    92.35s Find the "onboarding.justTune" Button
+    t =    92.51s Added attachment named 'urdu-welcome-scroll-onboarding.justTune-whole'
+    t =    92.51s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    93.10s Added attachment named 'urdu-welcome-UICTContentSizeCategoryAccessibilityXXXL-onboarding.justTune'
+    t =    93.10s Requesting snapshot of accessibility hierarchy for app with pid 13085
+    t =    93.80s Requesting snapshot of accessibility hierarchy for app with pid 13085
+    t =    94.01s Added attachment named 'urdu-welcome-UICTContentSizeCategoryAccessibilityXXXL-onboarding.justTune-hierarchy'
+    t =    94.01s Find the "onboarding.restore" Any
+    t =    94.41s Checking existence of `"onboarding.welcome.scroll" ScrollView`
+    t =    94.45s Find the "onboarding.welcome.scroll" ScrollView
+    t =    94.72s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    95.03s Find the "onboarding.restore" Button
+    t =    95.49s Find the "onboarding.restore" Button
+    t =    95.92s Find the "onboarding.restore" Button
+    t =    96.60s Added attachment named 'urdu-welcome-scroll-onboarding.restore-whole'
+    t =    96.60s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    97.13s Added attachment named 'urdu-welcome-UICTContentSizeCategoryAccessibilityXXXL-onboarding.restore'
+    t =    97.14s Requesting snapshot of accessibility hierarchy for app with pid 13085
+    t =    98.16s Requesting snapshot of accessibility hierarchy for app with pid 13085
+    t =    98.49s Added attachment named 'urdu-welcome-UICTContentSizeCategoryAccessibilityXXXL-onboarding.restore-hierarchy'
+    t =    98.49s Checking existence of `"onboarding.welcome.scroll" ScrollView`
+    t =    99.33s Find the "onboarding.welcome.scroll" ScrollView
+    t =    99.63s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    99.81s Find the "onboarding.start" Any
+    t =   101.18s Find the "onboarding.start" Button
+    t =   102.03s Find the "onboarding.start" Button
+    t =   102.49s Added attachment named 'urdu-welcome-scroll-onboarding.start-whole'
+    t =   102.49s Find the "onboarding.start" Button
+    t =   103.05s Tap "onboarding.start" Button
+    t =   103.05s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   103.07s     Find the "onboarding.start" Button
+    t =   103.34s     Check for interrupting elements affecting "onboarding.start" Button
+    t =   103.56s     Synthesize event
+    t =   103.90s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   103.93s Waiting 15.0s for "onboarding.headline" StaticText to not exist
+    t =   104.94s     Checking `Expect predicate `existsNoRetry == 0` for object "onboarding.headline" StaticText`
+    t =   104.95s         Checking existence of `"onboarding.headline" StaticText`
+    t =   106.50s Waiting 15.0s for "onboarding.option.beginner" Any to exist
+    t =   107.55s     Checking `Expect predicate `existsNoRetry == 1` for object "onboarding.option.beginner" Any`
+    t =   107.55s         Checking existence of `"onboarding.option.beginner" Any`
+    t =   107.74s Terminate com.shahradazerisharghi.timbre:13085
+    t =   108.80s Tear Down
+Test Case '-[TimbreUITests.FirstSessionUITests testUrduWelcomeKeepsItsFullHeadingAndReachableActionsAtNormalAndAX5]' passed (109.165 seconds).
+Test Suite 'FirstSessionUITests' passed at 2026-11-21 11:55:49.155.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 378.444 (378.456) seconds
+Test Suite 'TimbreUITests.xctest' passed at 2026-11-21 11:55:49.156.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 378.444 (378.458) seconds
+Test Suite 'Selected tests' passed at 2026-11-21 11:55:49.156.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 378.444 (378.459) seconds
+2026-11-21 11:55:53.601 xcodebuild[4516:19336] [MT] IDETestOperationsObserverDebug: 427.667 elapsed -- Testing started completed.
+2026-11-21 11:55:53.602 xcodebuild[4516:19336] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-11-21 11:55:53.602 xcodebuild[4516:19336] [MT] IDETestOperationsObserverDebug: 427.667 sec, +427.667 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/runner/work/tuner/tuner/ios/build/UITests.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started
