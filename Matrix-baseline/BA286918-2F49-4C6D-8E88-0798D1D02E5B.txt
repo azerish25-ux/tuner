@@ -1,0 +1,145 @@
+Optional(Attributes: Application, 0x10377ae30, pid: 26257, label: 'Timbre'
+Element subtree:
+ →Application, 0x10377ae30, pid: 26257, label: 'Timbre'
+    Window (Main), 0x10487e390, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x10487e750, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10487ea00, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x10487e4b0, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x10487e5d0, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x10487eb20, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x10487ec40, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x10487ed60, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x10487ee80, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x10487efa0, {{0.0, 0.0}, {402.0, 874.0}}
+                        Other, 0x10487f0c0, {{-107.3, 0.0}, {565.0, 874.0}}
+                          Other, 0x10487f1e0, {{-107.3, 117.7}, {565.0, 597.0}}, identifier: 'tune.stage'
+                            Image, 0x10487f300, {{-107.3, 149.3}, {565.0, 565.3}}, label: 'render_guitar_acoustic'
+                            Other, 0x10487f420, {{16.0, 117.7}, {370.0, 283.0}}
+                            StaticText, 0x10487f540, {{59.0, 209.0}, {66.3, 28.7}}, label: 'Play E2'
+                            Other, 0x10487f900, {{181.3, 202.3}, {44.0, 44.0}}
+                            Other, 0x10487fa20, {{183.0, 181.0}, {44.0, 44.0}}
+                            Other, 0x10487fb40, {{185.7, 160.0}, {44.0, 44.0}}
+                            Other, 0x10487fc60, {{138.7, 159.7}, {44.0, 44.0}}
+                            Other, 0x10487fd80, {{138.0, 180.0}, {44.0, 44.0}}
+                            Other, 0x10487fea0, {{137.3, 201.3}, {44.0, 44.0}}
+                            Other, 0x10487ffc0, {{0.0, 117.7}, {402.0, 283.0}}
+                            Other, 0x1048800e0, {{0.0, 0.0}, {0.0, 0.0}}
+                            Other, 0x104880200, {{334.0, 188.0}, {44.0, 62.3}}
+                            Button, 0x104880320, {{334.0, 188.0}, {44.0, 62.3}}, identifier: 'tune.strum', label: 'Strum to tune'
+                              Other, 0x104880440, {{345.0, 199.0}, {22.0, 22.0}}
+                              StaticText, 0x10378dfb0, {{337.0, 235.0}, {38.0, 15.3}}, label: 'Strum'
+                            Button, 0x104880560, {{330.0, 264.3}, {52.0, 66.3}}, identifier: 'listenButton', label: 'Pause listening'
+                              Image, 0x104880680, {{330.0, 264.3}, {52.0, 66.3}}, identifier: 'pause.fill', label: 'Pause'
+                              StaticText, 0x1048807a0, {{337.7, 315.2}, {36.7, 15.3}}, label: 'Pause'
+                            Other, 0x1048808c0, {{44.7, 407.7}, {165.3, 38.0}}, identifier: 'tune.detection'
+                              Button, 0x1048809e0, {{44.7, 407.7}, {79.3, 38.0}}, identifier: 'tune.auto', label: 'Automatic', Selected
+                                Image, 0x104880b00, {{59.3, 423.7}, {6.3, 6.3}}, identifier: 'circle.fill', label: 'Circle'
+                                StaticText, 0x104880c20, {{44.7, 407.7}, {79.3, 38.0}}, label: 'Auto'
+                              Button, 0x104880d40, {{126.0, 407.7}, {84.0, 38.0}}, identifier: 'tune.manual', label: 'Manual'
+                            Button, 0x10378dc50, {{223.0, 404.7}, {137.7, 44.0}}, identifier: 'tune.tone', label: 'Play reference tone'
+                              Image, 0x10378d900, {{241.7, 419.3}, {15.0, 15.0}}, identifier: 'tuningfork', label: 'Tune'
+                              StaticText, 0x10378d580, {{223.0, 404.7}, {137.7, 44.0}}, label: 'Reference'
+                          Other, 0x10378d230, {{141.0, 454.7}, {120.0, 138.0}}, label: 'Target E 2', value: No pitch
+                            StaticText, 0x10378cec0, {{165.8, 454.7}, {48.7, 113.0}}, label: 'E'
+                            StaticText, 0x10378cb30, {{217.5, 512.3}, {18.7, 38.0}}, label: '2'
+                            StaticText, 0x10378c7e0, {{141.0, 573.7}, {120.0, 19.0}}, label: 'Target 82.41 Hz'
+                          Other, 0x10378c480, {{32.0, 606.7}, {338.0, 38.0}}
+                          StaticText, 0x10378c120, {{199.2, 658.7}, {3.7, 15.7}}, identifier: 'tune.status', label: 'Play E2'
+                          StaticText, 0x10378bdc0, {{22.0, 684.3}, {358.0, 15.3}}, label: 'Quest · tune every string, 0 of 6, +20 XP'
+                            StaticText, 0x10378ba40, {{22.0, 684.7}, {139.7, 14.3}}, label: 'Quest · tune every string'
+                            StaticText, 0x10378b6e0, {{167.7, 684.7}, {24.0, 14.3}}, label: '0 of 6'
+                              StaticText, 0x10378b010, {{167.7, 684.7}, {8.3, 14.3}}, label: '0'
+                              StaticText, 0x104880e60, {{176.0, 684.7}, {7.3, 14.3}}, label: ' / '
+                              StaticText, 0x104880f80, {{183.3, 684.7}, {8.3, 14.3}}, label: '6'
+                            StaticText, 0x1048810a0, {{337.0, 684.3}, {43.0, 15.3}}, label: '+20 XP'
+                          Other, 0x1048811c0, {{23.5, 709.2}, {354.5, 73.8}}, identifier: 'tune.string.rail'
+                            Button, 0x1048812e0, {{23.5, 709.2}, {55.0, 55.0}}, identifier: 'string.1', label: 'String 6, E 2', Selected
+                              StaticText, 0x104881400, {{40.5, 724.8}, {11.4, 23.8}}, label: 'E'
+                              StaticText, 0x104881520, {{53.0, 729.9}, {8.4, 16.9}}, label: '2'
+                              StaticText, 0x104881640, {{41.4, 725.7}, {10.5, 21.9}}, label: 'E'
+                              StaticText, 0x104881760, {{52.9, 730.4}, {7.8, 15.5}}, label: '2'
+                            Button, 0x104881880, {{86.0, 711.7}, {50.0, 50.0}}, identifier: 'string.2', label: 'String 5, A 2'
+                              StaticText, 0x1048819a0, {{100.0, 725.8}, {13.3, 21.7}}, label: 'A'
+                              StaticText, 0x104881ac0, {{114.3, 730.5}, {7.7, 15.3}}, label: '2'
+                              StaticText, 0x104881be0, {{100.9, 726.7}, {12.3, 19.9}}, label: 'A'
+                              StaticText, 0x104881d00, {{114.1, 731.0}, {7.1, 14.1}}, label: '2'
+                            Button, 0x104881e20, {{146.0, 711.7}, {50.0, 50.0}}, identifier: 'string.3', label: 'String 4, D 3'
+                              StaticText, 0x10496aff0, {{159.8, 725.8}, {13.7, 21.7}}, label: 'D'
+                              StaticText, 0x10496b610, {{174.5, 730.5}, {7.7, 15.3}}, label: '3'
+                              StaticText, 0x10496b730, {{160.7, 726.7}, {12.6, 19.9}}, label: 'D'
+                              StaticText, 0x10496b850, {{174.2, 731.0}, {7.1, 14.1}}, label: '3'
+                            Button, 0x10496b970, {{206.0, 711.7}, {50.0, 50.0}}, identifier: 'string.4', label: 'String 3, G 3'
+                              StaticText, 0x10496ba90, {{219.5, 725.8}, {14.3, 21.7}}, label: 'G'
+                              StaticText, 0x10496bbb0, {{234.8, 730.5}, {7.7, 15.3}}, label: '3'
+                              StaticText, 0x10496bcd0, {{220.4, 726.7}, {13.2, 19.9}}, label: 'G'
+                              StaticText, 0x10496bdf0, {{234.5, 731.0}, {7.1, 14.1}}, label: '3'
+                            Button, 0x10496bf10, {{266.0, 711.7}, {50.0, 50.0}}, identifier: 'string.5', label: 'String 2, B 3'
+                              StaticText, 0x10496c030, {{280.7, 725.8}, {12.0, 21.7}}, label: 'B'
+                              StaticText, 0x10496c150, {{293.7, 730.5}, {7.7, 15.3}}, label: '3'
+                              StaticText, 0x10496c270, {{281.5, 726.7}, {11.0, 19.9}}, label: 'B'
+                              StaticText, 0x10496c390, {{293.5, 731.0}, {7.1, 14.1}}, label: '3'
+                            Button, 0x104881f40, {{326.0, 711.7}, {50.0, 50.0}}, identifier: 'string.6', label: 'String 1, E 4'
+                              StaticText, 0x10378a5d0, {{341.3, 725.8}, {10.3, 21.7}}, label: 'E'
+                              StaticText, 0x10378acc0, {{352.7, 730.5}, {8.0, 15.3}}, label: '4'
+                              StaticText, 0x10378a940, {{342.1, 726.7}, {9.5, 19.9}}, label: 'E'
+                              StaticText, 0x104882060, {{352.5, 731.0}, {7.4, 14.1}}, label: '4'
+                            StaticText, 0x104882180, {{24.0, 769.7}, {46.0, 13.3}}, label: 'Thickest'
+                            StaticText, 0x1048822a0, {{331.0, 769.7}, {47.0, 13.3}}, label: 'Thinnest'
+                          Button, 0x1048823c0, {{20.0, 68.0}, {158.0, 24.0}}, identifier: 'tune.instrument', label: 'Acoustic guitar'
+                            StaticText, 0x1048824e0, {{20.0, 68.0}, {138.3, 24.0}}, identifier: 'tune.instrument.name', label: 'Acoustic guitar'
+                            Image, 0x104882600, {{165.7, 76.7}, {11.0, 6.7}}, identifier: 'chevron.down', label: 'Go Down'
+                          Button, 0x104882720, {{20.0, 94.0}, {146.3, 23.7}}, identifier: 'tunings.menu', label: 'Standard · A4 440 Hz'
+                            Button, 0x104882840, {{20.0, 94.0}, {146.3, 23.7}}
+                              StaticText, 0x104882960, {{20.0, 94.0}, {146.3, 23.7}}, label: 'Standard · A4 440 Hz'
+                              Image, 0x104882a80, {{156.7, 100.0}, {8.3, 11.7}}, identifier: 'chevron.up.chevron.down', label: 'Up And Down Chevrons'
+                          Button, 0x10496c4b0, {{236.0, 71.0}, {54.0, 44.0}}, identifier: 'streak.chip', label: '7-day streak', value: Today: 1 of 3
+                            Other, 0x104882ba0, {{249.8, 84.9}, {12.4, 15.2}}
+                            StaticText, 0x104882cc0, {{236.0, 71.0}, {54.0, 44.0}}, identifier: 'screen.header.streak.count', label: '7'
+                          Button, 0x104882de0, {{292.0, 71.0}, {44.0, 44.0}}, identifier: 'level.ring', label: 'Level 5, 240 of 500 XP'
+                            StaticText, 0x104882f00, {{301.8, 82.7}, {24.3, 20.3}}, identifier: 'screen.header.level.mark', label: 'LV 5'
+                          Button, 0x104883020, {{338.0, 71.0}, {44.0, 44.0}}, identifier: 'settings.open', label: 'Settings'
+                          Other, 0x104883140, {{0.0, 791.0}, {402.0, 83.0}}
+                Other, 0x104883260, {{0.0, 791.0}, {402.0, 83.0}}
+                  Other, 0x104883380, {{0.0, 0.0}, {402.0, 874.0}}
+                    TabBar, 0x1048834a0, {{0.0, 791.0}, {402.0, 83.0}}, label: 'Tab Bar'
+                      Other, 0x1048835c0, {{21.0, 791.0}, {360.0, 62.0}}
+                        Other, 0x1048836e0, {{21.0, 791.0}, {78.0, 54.0}}
+                        Other, 0x104883800, {{21.0, 791.0}, {360.0, 62.0}}
+                          Button, 0x104883920, {{25.0, 795.0}, {78.0, 54.0}}, identifier: 'gauge.with.needle', label: 'Tune', Selected
+                            Image, 0x104883a40, {{50.0, 801.3}, {27.3, 27.3}}, identifier: 'gauge.with.needle.fill', label: 'gauge.with.needle.fill'
+                          Button, 0x104883b60, {{93.5, 795.0}, {78.0, 54.0}}, identifier: 'graduationcap', label: 'Learn'
+                            Image, 0x104883c80, {{114.5, 801.7}, {36.7, 31.3}}, identifier: 'graduationcap.fill', label: 'itunes u'
+                          Button, 0x104883da0, {{162.0, 795.0}, {78.0, 54.0}}, identifier: 'music.note.list', label: 'Songs'
+                            Image, 0x104883ec0, {{186.0, 801.7}, {29.3, 27.0}}, identifier: 'music.note.list', label: 'playlist'
+                          Button, 0x104883fe0, {{230.5, 795.0}, {78.0, 54.0}}, identifier: 'metronome', label: 'Practice'
+                            Image, 0x104884100, {{255.5, 801.7}, {28.7, 26.0}}, identifier: 'metronome.fill', label: 'metronome.fill'
+                          Button, 0x104884220, {{299.0, 795.0}, {78.0, 54.0}}, identifier: 'chart.bar', label: 'Progress'
+                            Image, 0x104884340, {{321.0, 802.3}, {35.0, 25.3}}, identifier: 'chart.bar.fill', label: 'chart column'
+                        Other, 0x104884460, {{25.0, 795.0}, {78.0, 54.0}}
+                          Other, 0x10378a280, {{25.0, 795.0}, {78.0, 54.0}}
+                            Other, 0x10378b390, {{25.0, 795.0}, {78.0, 54.0}}
+                            Other, 0x103789f00, {{25.0, 795.0}, {78.0, 54.0}}
+                              Other, 0x103789b90, {{25.0, 795.0}, {78.0, 54.0}}
+                                Other, 0x103789820, {{25.0, 795.0}, {78.0, 54.0}}
+                                  Other, 0x1037892e0, {{25.0, 795.0}, {78.0, 54.0}}
+                                Other, 0x103788f70, {{25.0, 795.0}, {78.0, 54.0}}
+                              Other, 0x103788c10, {{25.0, 795.0}, {78.0, 54.0}}
+                  Other, 0x1037888a0, {{0.0, 791.0}, {402.0, 83.0}}
+                    Other, 0x103788550, {{0.0, 791.0}, {402.0, 83.0}}
+                      Other, 0x103788200, {{0.0, 791.0}, {402.0, 83.0}}
+                        Other, 0x103787ea0, {{0.0, 791.0}, {402.0, 83.0}}
+                          Other, 0x103787b50, {{0.0, 791.0}, {402.0, 83.0}}
+                            Other, 0x1037877c0, {{0.0, 791.0}, {402.0, 83.0}}
+                        Other, 0x103787470, {{0.0, 791.0}, {402.0, 83.0}}
+                          Other, 0x1037870e0, {{0.0, 791.0}, {402.0, 83.0}}
+              Image, 0x103786d90, {{35.5, 88.7}, {11.0, 14.7}}, identifier: 'rosette', label: 'rosette'
+              StaticText, 0x103786270, {{62.9, 76.5}, {117.9, 11.7}}, label: '3 achievements unlocked'
+              StaticText, 0x103785f00, {{62.9, 89.2}, {75.2, 26.4}}, label: 'Rising star, Warming up …'
+Path to element:
+ →Application, 0x10377ae30, pid: 26257, label: 'Timbre'
+Query chain:
+ →Find: Target Application 'com.shahradazerisharghi.timbre'
+  Output: {
+    Application, 0x104884950, pid: 26257, label: 'Timbre'
+  }
+)
