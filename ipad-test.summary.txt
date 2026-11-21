@@ -1,0 +1,65 @@
+# Errors
+
+# Matches
+
+# Tail
+    t =   560.63s Tap "Practice" Button
+    t =   560.63s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   560.64s     Find the "Practice" Button
+    t =   560.70s     Check for interrupting elements affecting "metronome" Button
+    t =   561.14s     Synthesize event
+    t =   561.55s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   579.16s Waiting 6.0s for "practice.sniper" Any to exist
+    t =   580.24s     Checking `Expect predicate `existsNoRetry == 1` for object "practice.sniper" Any`
+    t =   580.25s         Checking existence of `"practice.sniper" Any`
+    t =   580.79s Checking existence of `"practice.sniper" Any`
+    t =   585.79s Added attachment named 'ipad-portrait-practice'
+    t =   585.80s Waiting 5.0s for "Learn" Button to exist
+    t =   586.88s     Checking `Expect predicate `existsNoRetry == 1` for object "Learn" Button`
+    t =   586.88s         Checking existence of `"Learn" Button`
+    t =   586.96s Tap "Learn" Button
+    t =   586.96s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   586.98s     Find the "Learn" Button
+    t =   587.03s     Check for interrupting elements affecting "graduationcap" Button
+    t =   587.37s     Synthesize event
+    t =   587.84s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   616.02s Waiting 6.0s for "learn.inspector" Any to exist
+    t =   617.08s     Checking `Expect predicate `existsNoRetry == 1` for object "learn.inspector" Any`
+    t =   617.08s         Checking existence of `"learn.inspector" Any`
+    t =   617.32s Checking existence of `"learn.inspector" Any`
+    t =   620.86s Added attachment named 'ipad-portrait-learn'
+    t =   620.87s Waiting 5.0s for "Songs" Button to exist
+    t =   621.91s     Checking `Expect predicate `existsNoRetry == 1` for object "Songs" Button`
+    t =   621.92s         Checking existence of `"Songs" Button`
+    t =   622.06s Tap "Songs" Button
+    t =   622.06s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   622.06s     Find the "Songs" Button
+    t =   622.19s     Check for interrupting elements affecting "music.note.list" Button
+    t =   622.66s     Synthesize event
+    t =   623.07s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   636.29s Waiting 6.0s for "songs.hero" Any to exist
+    t =   637.33s     Checking `Expect predicate `existsNoRetry == 1` for object "songs.hero" Any`
+    t =   637.33s         Checking existence of `"songs.hero" Any`
+    t =   637.90s Checking existence of `"songs.hero" Any`
+    t =   642.83s Added attachment named 'ipad-portrait-songs'
+    t =   642.87s Tear Down
+    t =   642.87s     Setting device orientation to Portrait
+    t =   642.90s         Wait for com.shahradazerisharghi.timbre to idle
+Test Case '-[TimbreUITests.TabletScreenshotsUITests testTabletLayouts]' passed (645.115 seconds).
+Test Suite 'TabletScreenshotsUITests' passed at 2026-11-21 11:46:18.403.
+	 Executed 1 test, with 0 failures (0 unexpected) in 645.115 (645.117) seconds
+Test Suite 'TimbreUITests.xctest' passed at 2026-11-21 11:46:18.404.
+	 Executed 1 test, with 0 failures (0 unexpected) in 645.115 (645.118) seconds
+Test Suite 'Selected tests' passed at 2026-11-21 11:46:18.406.
+	 Executed 1 test, with 0 failures (0 unexpected) in 645.115 (645.121) seconds
+Resolve Package Graph
+2026-11-21 11:46:23.575 xcodebuild[14848:48143] [MT] IDETestOperationsObserverDebug: 703.224 elapsed -- Testing started completed.
+2026-11-21 11:46:23.575 xcodebuild[14848:48143] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-11-21 11:46:23.575 xcodebuild[14848:48143] [MT] IDETestOperationsObserverDebug: 703.224 sec, +703.224 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/runner/work/tuner/tuner/ios/build/TabletScreenshots.xcresult
+
+** TEST SUCCEEDED **
+
+Testing started
