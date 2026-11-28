@@ -1,0 +1,213 @@
+Optional(Attributes: Application, 0x105e9b630, pid: 34221, label: 'Timbre'
+Element subtree:
+ →Application, 0x105e9b630, pid: 34221, label: 'Timbre'
+    Window (Main), 0x105ef5480, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x105e81780, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x105ef46e0, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x105ef4350, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x105ef4000, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x105ef3c90, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x105e862d0, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x105ef4a30, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x105ec0e60, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x105e85850, {{0.0, 0.0}, {402.0, 874.0}}
+                        Other, 0x105ea20e0, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x105e821b0, {{0.0, 0.0}, {402.0, 874.0}}
+                            Other, 0x105ebf9a0, {{0.0, 0.0}, {402.0, 874.0}}
+                              Other, 0x105ec0af0, {{0.0, 0.0}, {402.0, 874.0}}
+                                Other, 0x105e8b8d0, {{0.0, 0.0}, {402.0, 874.0}}
+                                  Other, 0x105ec03e0, {{0.0, 0.0}, {402.0, 874.0}}
+                                    ScrollView, 0x105ef3900, {{0.0, 0.0}, {402.0, 874.0}}
+                                      Other, 0x105ef4dc0, {{0.0, -1548.0}, {402.0, 22277.0}}
+                                        Other, 0x105e9e350, {{20.0, -955.7}, {362.0, 3598.0}}
+                                          Button, 0x105ef0530, {{20.0, -955.7}, {362.0, 473.7}}, identifier: 'learn.continue', label: 'Unit 1 · Hello, guitar, Your first chord: E minor, 5 min · +25 XP, Continue'
+                                            StaticText, 0x105eea850, {{40.0, -935.7}, {196.3, 48.0}}, label: 'Unit 1 · Hello, guitar'
+                                            StaticText, 0x105ef08c0, {{40.0, -879.7}, {205.3, 120.0}}, label: 'Your first chord: E minor'
+                                            StaticText, 0x105ef0c40, {{40.0, -751.7}, {157.7, 116.7}}, label: '5 min · +25 XP'
+                                            Image, 0x105ef2100, {{64.0, -583.3}, {37.3, 42.0}}, identifier: 'play.fill', label: 'Play'
+                                            StaticText, 0x105ef1350, {{108.3, -623.0}, {123.0, 121.0}}, label: 'Continue'
+                                            Image, 0x105ef16d0, {{248.2, -787.5}, {137.6, 137.6}}, label: 'render_guitar_acoustic'
+                                          StaticText, 0x105ef2470, {{38.0, -442.0}, {107.7, 48.0}}, label: 'Unit 1'
+                                          StaticText, 0x105ef0fc0, {{38.0, -389.0}, {140.3, 262.3}}, label: 'Hello, guitar'
+                                          StaticText, 0x105eeb270, {{38.0, -121.7}, {150.0, 348.7}}, label: 'Hold it, tune it, play your first notes.'
+                                          Other, 0x105eeaf20, {{220.0, -442.0}, {144.3, 198.3}}, label: '8 of 18 stars, 3 of 6 lessons'
+                                            Image, 0x105eedf60, {{236.3, -439.3}, {41.7, 39.7}}, identifier: 'star.fill', label: 'Favorite'
+                                            StaticText, 0x105eee2c0, {{236.3, -441.5}, {128.0, 48.0}}, label: '8 of 18'
+                                              StaticText, 0x105eeabb0, {{289.7, -441.5}, {26.0, 48.0}}, label: '8'
+                                              StaticText, 0x105ef0190, {{315.7, -441.5}, {17.3, 48.0}}, label: ' / '
+                                              StaticText, 0x105eee990, {{333.0, -441.5}, {31.3, 48.0}}, label: '18'
+                                            Other, 0x105eefe10, {{220.0, -387.5}, {144.3, 143.7}}, label: '3 of 6 lessons'
+                                              StaticText, 0x105eef3d0, {{220.0, -387.5}, {69.3, 48.0}}, label: '3 of 6'
+                                                StaticText, 0x105eeed00, {{220.0, -387.5}, {26.0, 48.0}}, label: '3'
+                                                StaticText, 0x105eef070, {{246.0, -387.5}, {17.3, 48.0}}, label: ' / '
+                                                StaticText, 0x105eee620, {{263.3, -387.5}, {26.0, 48.0}}, label: '6'
+                                              StaticText, 0x105eed890, {{293.3, -387.5}, {71.0, 143.7}}, label: 'lessons'
+                                          Other, 0x105eeb960, {{126.0, 263.0}, {150.0, 624.0}}
+                                          Button, 0x105eedc10, {{187.7, 273.7}, {64.0, 82.0}}, identifier: 'learn.lesson.gtr-1-1', label: 'Meet your guitar', value: 3 of 3 stars, Selected
+                                            Image, 0x105eed1b0, {{210.0, 296.3}, {19.7, 19.0}}, identifier: 'checkmark', label: 'Selected', Selected
+                                            Image, 0x105eed530, {{198.3, 344.7}, {11.7, 11.0}}, identifier: 'star.fill', label: 'Favorite'
+                                            Image, 0x105eece10, {{214.0, 344.7}, {11.7, 11.0}}, identifier: 'star.fill', label: 'Favorite'
+                                            Image, 0x105eecab0, {{229.3, 344.7}, {11.7, 11.0}}, identifier: 'star.fill', label: 'Favorite'
+                                          Button, 0x105eebcc0, {{187.3, 377.7}, {64.0, 82.0}}, identifier: 'learn.lesson.gtr-1-2', label: 'The open strings', value: 2 of 3 stars, Selected
+                                            Image, 0x105eec050, {{209.7, 400.3}, {19.7, 19.0}}, identifier: 'checkmark', label: 'Selected', Selected
+                                            Image, 0x105eeb5d0, {{198.0, 448.7}, {11.7, 11.0}}, identifier: 'star.fill', label: 'Favorite'
+                                            Image, 0x105eec730, {{213.7, 448.7}, {11.7, 11.0}}, identifier: 'star.fill', label: 'Favorite'
+                                            Image, 0x105eec3b0, {{229.0, 448.7}, {11.7, 11.0}}, identifier: 'star.fill', label: 'Favorite'
+                                          Button, 0x105ee9e40, {{165.7, 481.7}, {64.0, 82.0}}, identifier: 'learn.lesson.gtr-1-3', label: 'Your first fretted notes', value: 3 of 3 stars, Selected
+                                            Image, 0x105eea4f0, {{188.0, 504.3}, {19.7, 19.0}}, identifier: 'checkmark', label: 'Selected', Selected
+                                            Image, 0x105eea190, {{176.3, 552.7}, {11.7, 11.0}}, identifier: 'star.fill', label: 'Favorite'
+                                            Image, 0x105ee9ab0, {{192.0, 552.7}, {11.7, 11.0}}, identifier: 'star.fill', label: 'Favorite'
+                                            Image, 0x105ee8bf0, {{207.3, 552.7}, {11.7, 11.0}}, identifier: 'star.fill', label: 'Favorite'
+                                          Button, 0x105ee8f50, {{120.4, 567.7}, {140.6, 118.6}}, identifier: 'learn.lesson.gtr-1-4', label: 'Your first chord: E minor', value: Next lesson
+                                            Image, 0x105ee8520, {{171.3, 613.7}, {17.0, 27.0}}, identifier: 'music.note', label: 'Song'
+                                            StaticText, 0x105ee8890, {{142.7, 603.0}, {97.0, 48.0}}, label: 'Start'
+                                            Image, 0x105ee7310, {{245.3, 623.0}, {5.3, 8.3}}, identifier: 'chevron.forward', label: 'Forward'
+                                          Button, 0x105ee81a0, {{151.0, 695.0}, {72.0, 78.0}}, identifier: 'learn.lesson.gtr-1-5', label: 'First-steps challenge', value: Locked
+                                          Button, 0x105ee7e50, {{179.0, 803.0}, {64.0, 70.0}}, identifier: 'learn.lesson.gtr-1-6', label: 'Mary Had a Little Lamb: three notes', value: Locked
+                                          StaticText, 0x105ee6c20, {{38.0, 927.0}, {115.3, 48.0}}, label: 'Unit 2'
+                                          StaticText, 0x105ee6f80, {{38.0, 980.0}, {134.3, 196.7}}, label: 'First melodies'
+                                          StaticText, 0x105ee6550, {{38.0, 1181.7}, {150.0, 696.7}}, label: 'Notes on strings 1 and 2, reading tab, and your first two tunes.'
+                                          Other, 0x105ee68c0, {{340.3, 927.0}, {24.0, 24.0}}, label: 'Timbre Pro'
+                                            Image, 0x105ee5e70, {{348.7, 933.7}, {7.7, 10.7}}, identifier: 'lock.fill', label: 'Lock'
+                                          Other, 0x105ee61c0, {{220.0, 957.0}, {144.3, 198.3}}, label: '0 of 21 stars, 0 of 7 lessons'
+                                            Image, 0x105ee4d30, {{236.3, 959.7}, {41.7, 39.7}}, identifier: 'star.fill', label: 'Favorite'
+                                            StaticText, 0x105ee57a0, {{236.3, 957.5}, {128.0, 48.0}}, label: '0 of 21'
+                                              StaticText, 0x105ee5b10, {{289.7, 957.5}, {26.0, 48.0}}, label: '0'
+                                              StaticText, 0x105ee5080, {{315.7, 957.5}, {17.3, 48.0}}, label: ' / '
+                                              StaticText, 0x105e82500, {{333.0, 957.5}, {31.3, 48.0}}, label: '21'
+                                            Other, 0x105e8bfe0, {{220.0, 1011.5}, {144.3, 143.7}}, label: '0 of 7 lessons'
+                                              StaticText, 0x105e8fb50, {{220.0, 1011.5}, {69.3, 48.0}}, label: '0 of 7'
+                                                StaticText, 0x105e90f90, {{220.0, 1011.5}, {26.0, 48.0}}, label: '0'
+                                                StaticText, 0x105e969d0, {{246.0, 1011.5}, {17.3, 48.0}}, label: ' / '
+                                                StaticText, 0x105e94aa0, {{263.3, 1011.5}, {26.0, 48.0}}, label: '7'
+                                              StaticText, 0x105e912f0, {{293.3, 1011.5}, {71.0, 143.7}}, label: 'lessons'
+                                          Other, 0x105e94020, {{126.0, 1914.3}, {150.0, 728.0}}
+                                          Button, 0x105e93ca0, {{189.0, 1930.3}, {68.0, 74.0}}, identifier: 'learn.lesson.gtr-2-1', label: 'Three notes on string 2', value: Timbre Pro
+                                            Image, 0x105e951a0, {{214.0, 1955.3}, {14.0, 22.3}}, identifier: 'music.note', label: 'Song'
+                                            Other, 0x105e94e20, {{233.0, 1930.3}, {24.0, 24.0}}, label: 'Timbre Pro'
+                                              Image, 0x105e94730, {{241.3, 1937.0}, {7.7, 10.7}}, identifier: 'lock.fill', label: 'Lock'
+                                          Button, 0x105e809e0, {{168.7, 2034.3}, {68.0, 74.0}}, identifier: 'learn.lesson.gtr-2-2', label: 'Reading tab', value: Timbre Pro
+                                            Image, 0x105e84a90, {{193.7, 2059.3}, {14.0, 22.3}}, identifier: 'music.note', label: 'Song'
+                                            Other, 0x105e943b0, {{212.7, 2034.3}, {24.0, 24.0}}, label: 'Timbre Pro'
+                                              Image, 0x105e85150, {{221.0, 2041.0}, {7.7, 10.7}}, identifier: 'lock.fill', label: 'Lock'
+                                          Button, 0x105e96660, {{149.0, 2138.3}, {68.0, 74.0}}, identifier: 'learn.lesson.gtr-2-3', label: 'Long and short notes', value: Timbre Pro
+                                            Image, 0x105e8f4a0, {{174.0, 2163.3}, {14.0, 22.3}}, identifier: 'music.note', label: 'Song'
+                                            Other, 0x105e90210, {{193.0, 2138.3}, {24.0, 24.0}}, label: 'Timbre Pro'
+                                              Image, 0x105e962e0, {{201.3, 2145.0}, {7.7, 10.7}}, identifier: 'lock.fill', label: 'Lock'
+                                          Button, 0x105e81e50, {{152.7, 2242.3}, {68.0, 74.0}}, identifier: 'learn.lesson.gtr-2-4', label: 'Ode to Joy', value: Timbre Pro
+                                            Image, 0x105e99350, {{172.0, 2267.3}, {25.3, 22.0}}, identifier: 'music.quarternote.3', label: 'music.quarternote.3'
+                                            Other, 0x105e97e20, {{196.7, 2242.3}, {24.0, 24.0}}, label: 'Timbre Pro'
+                                              Image, 0x105e86620, {{205.0, 2249.0}, {7.7, 10.7}}, identifier: 'lock.fill', label: 'Lock'
+                                          Button, 0x105e984d0, {{176.0, 2346.3}, {68.0, 74.0}}, identifier: 'learn.lesson.gtr-2-5', label: 'Mary Had a Little Lamb', value: Timbre Pro
+                                            Image, 0x105e973e0, {{195.3, 2371.3}, {25.3, 22.0}}, identifier: 'music.quarternote.3', label: 'music.quarternote.3'
+                                            Other, 0x105e97ac0, {{220.0, 2346.3}, {24.0, 24.0}}, label: 'Timbre Pro'
+                                              Image, 0x105e97090, {{228.3, 2353.0}, {7.7, 10.7}}, identifier: 'lock.fill', label: 'Lock'
+                                          Button, 0x105e96d30, {{191.0, 2450.3}, {68.0, 74.0}}, identifier: 'learn.lesson.gtr-2-spotlight', label: 'Song spotlight: Letters in a Shoebox', value: Timbre Pro
+                                            Image, 0x105e95890, {{216.0, 2475.3}, {14.0, 22.3}}, identifier: 'music.note', label: 'Song'
+                                            Other, 0x105e98180, {{235.0, 2450.3}, {24.0, 24.0}}, label: 'Timbre Pro'
+                                              Image, 0x105e97760, {{243.3, 2457.0}, {7.7, 10.7}}, identifier: 'lock.fill', label: 'Lock'
+                                          Button, 0x105e95f80, {{176.0, 2550.3}, {76.0, 82.0}}, identifier: 'learn.lesson.gtr-2-6', label: 'Melody challenge', value: Timbre Pro
+                                            Image, 0x105e95c30, {{195.7, 2577.7}, {32.7, 25.7}}, identifier: 'crown.fill', label: 'crown.fill'
+                                            Other, 0x105e98fd0, {{228.0, 2550.3}, {24.0, 24.0}}, label: 'Timbre Pro'
+                                              Image, 0x105e95510, {{236.3, 2557.0}, {7.7, 10.7}}, identifier: 'lock.fill', label: 'Lock'
+                                      Other, 0x105e996a0, {{0.0, 0.0}, {402.0, 874.0}}
+                                        Other, 0x105e99a00, {{0.0, 726.2}, {402.0, 147.8}}
+                                      Other, 0x105e9a0e0, {{0.0, 0.0}, {402.0, 874.0}}
+                                        Other, 0x105e9a440, {{0.0, 726.2}, {402.0, 147.8}}
+                                          Image, 0x105e9d910, {{-120.0, 731.0}, {642.0, 286.0}}, identifier: 'AdditionalDimmingOverlay'
+                                          Other, 0x105e9c090, {{0.0, 726.2}, {402.0, 147.8}}
+                                            Other, 0x105e9cea0, {{0.0, 726.2}, {402.0, 147.8}}
+                                          Other, 0x105e9dc60, {{0.0, 726.2}, {402.0, 147.8}}
+                                            Other, 0x105e9d210, {{0.0, 726.2}, {402.0, 147.8}}
+                                            Other, 0x105e9c7d0, {{0.0, 726.2}, {402.0, 147.8}}
+                                      Other, 0x105e9d590, {{369.0, 62.0}, {30.0, 729.0}}, label: 'Vertical scroll bar, 31 pages', value: 7%
+                                        Other, 0x105e9cb50, {{396.0, 128.7}, {3.0, 36.0}}
+                                      Other, 0x105e9e6c0, {{369.0, 62.0}, {30.0, 729.0}}, label: 'Vertical scroll bar, 31 pages', value: 7%
+                                        Other, 0x105e9bd10, {{396.0, 128.7}, {3.0, 36.0}}
+                                    Other, 0x105e9b2b0, {{0.0, 0.0}, {402.0, 20.0}}
+                            Other, 0x105e9a7a0, {{0.0, 0.0}, {402.0, 874.0}}
+                              Other, 0x105e9b9a0, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x105e99d70, {{0.0, 791.0}, {402.0, 83.0}}
+                Other, 0x105e9c430, {{0.0, 791.0}, {402.0, 83.0}}
+                  Other, 0x105e75fa0, {{0.0, 0.0}, {402.0, 874.0}}
+                    TabBar, 0x105ee9500, {{0.0, 791.0}, {402.0, 83.0}}, label: 'Tab Bar'
+                      Other, 0x10a43d6e0, {{21.0, 791.0}, {360.0, 62.0}}
+                        Other, 0x10a40c0f0, {{21.0, 791.0}, {78.0, 54.0}}
+                        Other, 0x10a41a330, {{21.0, 791.0}, {360.0, 62.0}}
+                          Button, 0x10a4ddad0, {{25.0, 795.0}, {78.0, 54.0}}, identifier: 'gauge.with.needle', label: 'Tune'
+                            Image, 0x10a4ddbf0, {{50.0, 801.3}, {27.3, 27.3}}, identifier: 'gauge.with.needle.fill', label: 'gauge.with.needle.fill'
+                          Button, 0x10a4ddd10, {{93.5, 795.0}, {78.0, 54.0}}, identifier: 'graduationcap', label: 'Learn', Selected
+                            Image, 0x10a4dde30, {{114.5, 801.7}, {36.7, 31.3}}, identifier: 'graduationcap.fill', label: 'itunes u'
+                          Button, 0x10a4ddf50, {{162.0, 795.0}, {78.0, 54.0}}, identifier: 'music.note.list', label: 'Songs'
+                            Image, 0x10a4de070, {{186.0, 801.7}, {29.3, 27.0}}, identifier: 'music.note.list', label: 'playlist'
+                          Button, 0x10a4de190, {{230.5, 795.0}, {78.0, 54.0}}, identifier: 'metronome', label: 'Practice'
+                            Image, 0x10a4de2b0, {{255.5, 801.7}, {28.7, 26.0}}, identifier: 'metronome.fill', label: 'metronome.fill'
+                          Button, 0x10a4de3d0, {{299.0, 795.0}, {78.0, 54.0}}, identifier: 'chart.bar', label: 'Progress'
+                            Image, 0x10a4de4f0, {{321.0, 802.3}, {35.0, 25.3}}, identifier: 'chart.bar.fill', label: 'chart column'
+                        Other, 0x10a4de610, {{93.5, 795.0}, {78.0, 54.0}}
+                          Other, 0x10a4de730, {{93.5, 795.0}, {78.0, 54.0}}
+                            Other, 0x10a4de850, {{93.5, 795.0}, {78.0, 54.0}}
+                            Other, 0x10a4de970, {{93.5, 795.0}, {78.0, 54.0}}
+                              Other, 0x10a4dea90, {{93.5, 795.0}, {78.0, 54.0}}
+                                Other, 0x10a4debb0, {{93.5, 795.0}, {78.0, 54.0}}
+                                  Other, 0x10a4decd0, {{93.5, 795.0}, {78.0, 54.0}}
+                                Other, 0x10a4dedf0, {{93.5, 795.0}, {78.0, 54.0}}
+                              Other, 0x10a4def10, {{93.5, 795.0}, {78.0, 54.0}}
+                  Other, 0x10a4df030, {{0.0, 791.0}, {402.0, 83.0}}
+                    Other, 0x10a4df150, {{0.0, 791.0}, {402.0, 83.0}}
+                      Other, 0x10a4df270, {{0.0, 791.0}, {402.0, 83.0}}
+                        Other, 0x10a4df390, {{0.0, 791.0}, {402.0, 83.0}}
+                          Other, 0x10a4df4b0, {{0.0, 791.0}, {402.0, 83.0}}
+                            Other, 0x10a4df5d0, {{0.0, 791.0}, {402.0, 83.0}}
+                        Other, 0x10a4df6f0, {{0.0, 791.0}, {402.0, 83.0}}
+                          Other, 0x10a4df810, {{0.0, 791.0}, {402.0, 83.0}}
+      Other, 0x10a4df930, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10a4dfa50, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x10a4dfb70, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x10a4dfc90, {{0.0, 62.0}, {402.0, 778.0}}
+            Button, 0x10a4dfdb0, {{8.0, 66.0}, {44.0, 44.0}}, identifier: 'lesson.close', label: 'Close lesson'
+            Other, 0x10a4dfed0, {{60.0, 68.2}, {322.0, 39.8}}, label: 'The open strings', value: Step 6 of 6
+              StaticText, 0x10a4dfff0, {{60.0, 68.2}, {180.0, 26.7}}, label: 'The open strings'
+              StaticText, 0x10a4e0110, {{272.0, 69.2}, {110.0, 25.3}}, label: 'Step 6 of 6'
+              Other, 0x10a4e0230, {{60.0, 102.0}, {322.0, 6.0}}
+            ScrollView, 0x10a4e0350, {{0.0, 116.0}, {402.0, 758.0}}, identifier: 'along.scroll'
+              Other, 0x10a4e0470, {{0.0, 116.0}, {402.0, 1497.0}}
+                StaticText, 0x10a4e0590, {{20.0, 124.0}, {310.0, 123.0}}, label: 'Open-string roll call'
+                Switch, 0x10a4e06b0, {{338.0, 124.0}, {44.0, 44.0}}, identifier: 'along.strumstart', label: 'Start on first strum', value: 0
+                StaticText, 0x10a4e07d0, {{20.0, 251.0}, {202.3, 116.7}}, label: '60 BPM · 6 notes'
+                Other, 0x10a4e08f0, {{230.3, 257.7}, {126.0, 54.0}}, label: 'Tempo', value: 100%
+                  StaticText, 0x10a4e0a10, {{238.3, 260.7}, {110.0, 48.0}}, label: '100%'
+                Button, 0x10a4e0b30, {{209.7, 382.3}, {44.0, 44.0}}, identifier: 'along.calibrate', label: 'Calibrate timing'
+                Image, 0x10a4e0c50, {{261.7, 375.7}, {68.3, 57.0}}, identifier: 'along.band.headphones', label: 'Full band in headphones'
+                Switch, 0x10a4e0d70, {{338.0, 382.3}, {44.0, 44.0}}, identifier: 'along.band', label: 'Backing band', value: 1
+                Other, 0x10a4e0e90, {{12.0, 446.7}, {378.0, 420.0}}, label: 'Play-along, 6 notes'
+                  Other, 0x10a4e0fb0, {{12.0, 446.7}, {378.0, 420.0}}
+                Other, 0x10a4e10d0, {{20.0, 880.7}, {341.0, 141.3}}, identifier: 'along.next', label: 'Next: E, String 6, open'
+                  StaticText, 0x10a4e11f0, {{20.0, 894.0}, {95.0, 48.0}}, label: 'Next'
+                  StaticText, 0x10a4e1310, {{125.0, 880.7}, {63.7, 65.7}}, label: 'E2'
+                  StaticText, 0x10a4e1430, {{32.0, 960.3}, {317.0, 55.7}}, label: 'String 6, open'
+                Image, 0x10a4e1550, {{21.3, 1048.3}, {11.3, 9.7}}, identifier: 'arrow.turn.down.right', label: 'Next'
+                StaticText, 0x10a4e1670, {{50.0, 1038.0}, {30.0, 55.7}}, label: '0'
+                StaticText, 0x10a4e1790, {{104.0, 1038.0}, {30.0, 55.7}}, label: '0'
+                StaticText, 0x10a4e18b0, {{158.8, 1038.0}, {30.0, 55.7}}, label: '0'
+                StaticText, 0x10a4e19d0, {{213.7, 1038.0}, {30.0, 55.7}}, label: '0'
+                StaticText, 0x10a4e1af0, {{267.7, 1038.0}, {30.0, 55.7}}, label: '0'
+                StaticText, 0x10a4e1c10, {{50.2, 1093.7}, {29.7, 48.0}}, label: 'A'
+                StaticText, 0x10a4e1d30, {{104.0, 1093.7}, {30.0, 48.0}}, label: 'D'
+                StaticText, 0x10a4e1e50, {{158.0, 1093.7}, {31.7, 48.0}}, label: 'G'
+                StaticText, 0x10a4e1f70, {{215.5, 1093.7}, {26.3, 48.0}}, label: 'B'
+                StaticText, 0x10a4e2090, {{271.3, 1093.7}, {22.7, 48.0}}, label: 'E'
+                Button, 0x10a4e21b0, {{20.0, 1540.3}, {362.0, 60.7}}, identifier: 'lesson.continue', label: 'Start'
+                Other, 0x10a4e22d0, {{0.0, 0.0}, {0.0, 0.0}}
+              Other, 0x10a4e23f0, {{369.0, 144.0}, {30.0, 674.0}}, label: 'Vertical scroll bar, 3 pages', value: 0%
+                Other, 0x10a4e2510, {{396.0, 119.0}, {3.0, 355.3}}
+              Other, 0x10a4e2630, {{369.0, 144.0}, {30.0, 674.0}}, label: 'Vertical scroll bar, 3 pages', value: 0%
+                Other, 0x10a4e2750, {{396.0, 119.0}, {3.0, 355.3}}
+Path to element:
+ →Application, 0x105e9b630, pid: 34221, label: 'Timbre'
+Query chain:
+ →Find: Target Application 'com.shahradazerisharghi.timbre'
+  Output: {
+    Application, 0x105ec3740, pid: 34221, label: 'Timbre'
+  }
+)
