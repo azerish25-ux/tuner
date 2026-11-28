@@ -1,0 +1,81 @@
+Attributes: Button, 0x108c96b00, {{314.0, 360.0}, {44.0, 44.0}}, identifier: 'songs.sample.bass-sb-orig-constellation-prize', label: 'Hear it', value: Constellation Prize
+Element subtree:
+ →Button, 0x108c96b00, {{314.0, 360.0}, {44.0, 44.0}}, identifier: 'songs.sample.bass-sb-orig-constellation-prize', label: 'Hear it', value: Constellation Prize
+Path to element:
+ →Application, 0x114c0c790, pid: 44865, label: 'Timbre'
+  ↳Window, 0x114c3fcd0, {{0.0, 0.0}, {402.0, 874.0}}
+   ↳Other, 0x108af8f00, {{0.0, 0.0}, {402.0, 874.0}}
+    ↳Other, 0x108ba2310, {{0.0, 0.0}, {402.0, 874.0}}
+     ↳Other, 0x108bb5a60, {{0.0, 0.0}, {402.0, 874.0}}
+      ↳Other, 0x108b84aa0, {{0.0, 0.0}, {402.0, 874.0}}
+       ↳Other, 0x108bb5220, {{0.0, 0.0}, {402.0, 874.0}}
+        ↳Other, 0x108bb6ae0, {{0.0, 0.0}, {402.0, 874.0}}
+         ↳Other, 0x108ba1ef0, {{0.0, 0.0}, {402.0, 874.0}}
+          ↳Other, 0x108ba8220, {{0.0, 0.0}, {402.0, 874.0}}
+           ↳Other, 0x108bc3ea0, {{0.0, 0.0}, {402.0, 874.0}}
+            ↳Other, 0x108bbb480, {{0.0, 0.0}, {402.0, 874.0}}
+             ↳Other, 0x108bbf9a0, {{0.0, 0.0}, {402.0, 874.0}}
+              ↳Other, 0x108bc0dc0, {{0.0, 0.0}, {402.0, 874.0}}
+               ↳Other, 0x108b94460, {{0.0, 0.0}, {402.0, 874.0}}
+                ↳Other, 0x108c08da0, {{0.0, 0.0}, {402.0, 874.0}}
+                 ↳Other, 0x108c31090, {{0.0, 0.0}, {402.0, 874.0}}
+                  ↳ScrollView, 0x108c6bdd0, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'songs.page'
+                   ↳Other, 0x108c6b590, {{0.0, -3197.3}, {402.0, 6298.0}}
+                    ↳Other, 0x108c09fb0, {{0.0, -1182.3}, {442.0, 3263.7}}
+                     ↳ScrollView, 0x108c15970, {{0.0, 260.0}, {402.0, 643.7}}, identifier: 'songs.rail.bass-songbook'
+                      ↳Other, 0x108c15d90, {{-19064.0, 260.0}, {19426.0, 643.7}}
+                       ↳Other, 0x108c966e0, {{-428.1, 260.0}, {790.1, 487.7}}
+                        ↳Button, 0x108c96b00, {{314.0, 360.0}, {44.0, 44.0}}, identifier: 'songs.sample.bass-sb-orig-constellation-prize', label: 'Hear it', value: Constellation Prize
+Query chain:
+ →Find: Target Application 'com.shahradazerisharghi.timbre'
+  Output: {
+    Application, 0x115128890, pid: 44865, label: 'Timbre'
+  }
+  ↪︎Find: Descendants matching type ScrollView
+    Output: {
+      ScrollView, 0x114cba860, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'songs.page'
+      ScrollView, 0x114cbae00, {{0.0, -1104.7}, {402.0, 539.7}}, identifier: 'songs.rail.carols'
+      ScrollView, 0x114cbf4e0, {{0.0, -397.7}, {402.0, 435.7}}, identifier: 'songs.rail.few'
+      ScrollView, 0x11511a310, {{0.0, 260.0}, {402.0, 643.7}}, identifier: 'songs.rail.bass-songbook'
+      ScrollView, 0x115121390, {{0.0, 1071.0}, {402.0, 435.7}}, identifier: 'songs.rail.campfire'
+      ScrollView, 0x1150089a0, {{0.0, 1662.7}, {402.0, 418.7}}, identifier: 'songs.rail.bass'
+    }
+    ↪︎Find: Elements matching predicate '"songs.rail.bass-songbook" IN identifiers'
+      Output: {
+        ScrollView, 0x114cb4b00, {{0.0, 260.0}, {402.0, 643.7}}, identifier: 'songs.rail.bass-songbook'
+      }
+      ↪︎Find: First Match
+        Output: {
+          ScrollView, 0x1151dfa20, {{0.0, 260.0}, {402.0, 643.7}}, identifier: 'songs.rail.bass-songbook'
+        }
+        ↪︎Find: Descendants matching type Button
+          Output: {
+            Button, 0x1151dae30, {{-428.1, 277.4}, {136.2, 400.8}}, identifier: 'songs.song.bass-sb-orig-slow-motion-strobe', label: 'Slow Motion Strobe, Bass Songbook', value: Pro, Hard, F#m D A E
+            Button, 0x108d04e70, {{-336.1, 369.4}, {40.5, 40.5}}, identifier: 'songs.sample.bass-sb-orig-slow-motion-strobe', label: 'Hear it', value: Slow Motion Strobe
+            Button, 0x108d04f90, {{-332.4, 422.8}, {40.5, 40.5}}, identifier: 'songs.versions.bass-sb-orig-slow-motion-strobe', label: 'Versions', value: Originals, Ukulele...
+            Button, 0x108d0fd30, {{-266.1, 279.5}, {136.2, 448.7}}, identifier: 'songs.song.bass-sb-orig-bright-side-of-the-block', label: 'Bright Side of the Block, Bass Songbook', value: Pro, Hard, G A F#m...
+            Button, 0x108d10ab0, {{-174.1, 371.5}, {40.5, 40.5}}, identifier: 'songs.sample.bass-sb-orig-bright-side-of-the-block', label: 'Hear it', value: Bright Side of the...
+            Button, 0x108d10bd0, {{-170.4, 424.9}, {40.5, 40.5}}, identifier: 'songs.versions.bass-sb-orig-bright-side-of-the-block', label: 'Versions', value: Originals, Ukulele...
+            Button, 0x1151db850, {{-104.3, 278.9}, {136.5, 449.8}}, identifier: 'songs.song.bass-sb-orig-over-you-soon', label: 'Over You Soon, Bass Songbook', value: Pro, Hard, G D A B...
+            Button, 0x114c8bf30, {{-12.0, 371.2}, {40.6, 40.6}}, identifier: 'songs.sample.bass-sb-orig-over-you-soon', label: 'Hear it', value: Over You Soon
+            Button, 0x1151dc270, {{-8.3, 424.7}, {40.6, 40.6}}, identifier: 'songs.versions.bass-sb-orig-over-you-soon', label: 'Versions', value: Originals, Ukulele...
+            Button, 0x114c8c290, {{52.0, 260.0}, {148.0, 487.7}}, identifier: 'songs.song.bass-sb-orig-spray-paint-sunrise', label: 'Spray Paint Sunrise, Bass Songbook', value: Pro, Hard, E B C#m A
+            Button, 0x108d11b90, {{152.0, 360.0}, {44.0, 44.0}}, identifier: 'songs.sample.bass-sb-orig-spray-paint-sunrise', label: 'Hear it', value: Spray Paint Sunrise
+            Button, 0x108d11cb0, {{156.0, 418.0}, {44.0, 44.0}}, identifier: 'songs.versions.bass-sb-orig-spray-paint-sunrise', label: 'Versions', value: Originals, Ukulele...
+            Button, 0x108d12130, {{214.0, 260.0}, {148.0, 435.7}}, identifier: 'songs.song.bass-sb-orig-constellation-prize', label: 'Constellation Prize, Bass Songbook', value: Pro, Medium, Bb F ...
+            Button, 0x114c8d370, {{314.0, 360.0}, {44.0, 44.0}}, identifier: 'songs.sample.bass-sb-orig-constellation-prize', label: 'Hear it', value: Constellation Prize
+            Button, 0x114c8d490, {{318.0, 418.0}, {44.0, 44.0}}, identifier: 'songs.versions.bass-sb-orig-constellation-prize', label: 'Versions', value: Originals, Ukulele...
+            Button, 0x108d0fc10, {{-332.4, 422.8}, {40.5, 40.5}}
+            Button, 0x108d10cf0, {{-170.4, 424.9}, {40.5, 40.5}}
+            Button, 0x108d11050, {{-8.3, 424.7}, {40.6, 40.6}}
+            Button, 0x108d11dd0, {{156.0, 418.0}, {44.0, 44.0}}
+            Button, 0x114c8d5b0, {{318.0, 418.0}, {44.0, 44.0}}
+          }
+          ↪︎Find: Elements matching predicate '"songs.sample.bass-sb-orig-constellation-prize" IN identifiers'
+            Output: {
+              Button, 0x108df4f90, {{314.0, 360.0}, {44.0, 44.0}}, identifier: 'songs.sample.bass-sb-orig-constellation-prize', label: 'Hear it', value: Constellation Prize
+            }
+            ↪︎Find: First Match
+              Output: {
+                Button, 0x108cd7e80, {{314.0, 360.0}, {44.0, 44.0}}, identifier: 'songs.sample.bass-sb-orig-constellation-prize', label: 'Hear it', value: Constellation Prize
+              }

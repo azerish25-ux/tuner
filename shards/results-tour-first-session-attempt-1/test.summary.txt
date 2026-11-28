@@ -1,0 +1,65 @@
+# Errors
+
+# Matches
+
+# Tail
+    t =    61.23s Find the "onboarding.justTune" Button
+    t =    61.34s Find the "onboarding.justTune" Button
+    t =    61.44s Added attachment named 'urdu-welcome-scroll-onboarding.justTune-whole'
+    t =    61.44s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    61.76s Added attachment named 'urdu-welcome-UICTContentSizeCategoryAccessibilityXXXL-onboarding.justTune'
+    t =    61.76s Requesting snapshot of accessibility hierarchy for app with pid 11068
+    t =    62.19s Requesting snapshot of accessibility hierarchy for app with pid 11068
+    t =    62.30s Added attachment named 'urdu-welcome-UICTContentSizeCategoryAccessibilityXXXL-onboarding.justTune-hierarchy'
+    t =    62.30s Find the "onboarding.restore" Any
+    t =    62.54s Checking existence of `"onboarding.welcome.scroll" ScrollView`
+    t =    62.57s Find the "onboarding.welcome.scroll" ScrollView
+    t =    62.64s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    62.69s Find the "onboarding.restore" Button
+    t =    62.89s Find the "onboarding.restore" Button
+    t =    63.30s Find the "onboarding.restore" Button
+    t =    63.45s Added attachment named 'urdu-welcome-scroll-onboarding.restore-whole'
+    t =    63.45s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    63.70s Added attachment named 'urdu-welcome-UICTContentSizeCategoryAccessibilityXXXL-onboarding.restore'
+    t =    63.71s Requesting snapshot of accessibility hierarchy for app with pid 11068
+    t =    64.14s Requesting snapshot of accessibility hierarchy for app with pid 11068
+    t =    64.35s Added attachment named 'urdu-welcome-UICTContentSizeCategoryAccessibilityXXXL-onboarding.restore-hierarchy'
+    t =    64.35s Checking existence of `"onboarding.welcome.scroll" ScrollView`
+    t =    64.51s Find the "onboarding.welcome.scroll" ScrollView
+    t =    64.84s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    64.98s Find the "onboarding.start" Any
+    t =    65.86s Find the "onboarding.start" Button
+    t =    66.35s Find the "onboarding.start" Button
+    t =    66.46s Added attachment named 'urdu-welcome-scroll-onboarding.start-whole'
+    t =    66.46s Find the "onboarding.start" Button
+    t =    66.64s Tap "onboarding.start" Button
+    t =    66.64s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    66.64s     Find the "onboarding.start" Button
+    t =    66.92s     Check for interrupting elements affecting "onboarding.start" Button
+    t =    67.04s     Synthesize event
+    t =    67.35s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    67.36s Waiting 15.0s for "onboarding.headline" StaticText to not exist
+    t =    68.37s     Checking `Expect predicate `existsNoRetry == 0` for object "onboarding.headline" StaticText`
+    t =    68.38s         Checking existence of `"onboarding.headline" StaticText`
+    t =    69.27s Waiting 15.0s for "onboarding.option.beginner" Any to exist
+    t =    70.31s     Checking `Expect predicate `existsNoRetry == 1` for object "onboarding.option.beginner" Any`
+    t =    70.31s         Checking existence of `"onboarding.option.beginner" Any`
+    t =    70.36s Terminate com.shahradazerisharghi.timbre:11068
+    t =    71.40s Tear Down
+Test Case '-[TimbreUITests.FirstSessionUITests testUrduWelcomeKeepsItsFullHeadingAndReachableActionsAtNormalAndAX5]' passed (71.500 seconds).
+Test Suite 'FirstSessionUITests' passed at 2026-11-28 12:40:27.455.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 268.576 (268.585) seconds
+Test Suite 'TimbreUITests.xctest' passed at 2026-11-28 12:40:27.456.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 268.576 (268.586) seconds
+Test Suite 'Selected tests' passed at 2026-11-28 12:40:27.456.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 268.576 (268.587) seconds
+2026-11-28 12:40:28.696 xcodebuild[3161:14240] [MT] IDETestOperationsObserverDebug: 315.217 elapsed -- Testing started completed.
+2026-11-28 12:40:28.696 xcodebuild[3161:14240] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-11-28 12:40:28.696 xcodebuild[3161:14240] [MT] IDETestOperationsObserverDebug: 315.217 sec, +315.217 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/runner/work/tuner/tuner/ios/build/UITests.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

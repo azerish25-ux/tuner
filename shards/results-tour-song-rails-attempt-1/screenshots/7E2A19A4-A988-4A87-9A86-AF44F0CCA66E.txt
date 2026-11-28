@@ -1,0 +1,36 @@
+Attributes: Button, 0x108c11370, {{inf, inf}, {0.0, 0.0}}, identifier: 'songs.sample.bass-sb-orig-constellation-prize', label: 'Hear it', value: Constellation Prize
+Element subtree:
+ →Button, 0x108c11370, {{inf, inf}, {0.0, 0.0}}, identifier: 'songs.sample.bass-sb-orig-constellation-prize', label: 'Hear it', value: Constellation Prize
+Path to element:
+ →Any, 0x1151eeab0, {{inf, inf}, {0.0, 0.0}}
+  ↳Window, 0x1151e0b60, {{inf, inf}, {0.0, 0.0}}
+   ↳Other, 0x1151289b0, {{inf, inf}, {0.0, 0.0}}
+    ↳Other, 0x108c70b80, {{inf, inf}, {0.0, 0.0}}
+     ↳Other, 0x115114f10, {{inf, inf}, {0.0, 0.0}}
+      ↳Other, 0x108cac730, {{inf, inf}, {0.0, 0.0}}
+       ↳Other, 0x108c10710, {{inf, inf}, {0.0, 0.0}}
+        ↳Other, 0x108caa360, {{inf, inf}, {0.0, 0.0}}
+         ↳Other, 0x108c11790, {{inf, inf}, {0.0, 0.0}}
+          ↳Other, 0x108c70720, {{inf, inf}, {0.0, 0.0}}
+           ↳Other, 0x108c102f0, {{inf, inf}, {0.0, 0.0}}
+            ↳Other, 0x108c11fd0, {{inf, inf}, {0.0, 0.0}}
+             ↳Other, 0x108c6fac0, {{inf, inf}, {0.0, 0.0}}
+              ↳Other, 0x108c11bb0, {{inf, inf}, {0.0, 0.0}}
+               ↳Other, 0x108c6c1f0, {{inf, inf}, {0.0, 0.0}}
+                ↳Other, 0x108c33c70, {{inf, inf}, {0.0, 0.0}}
+                 ↳Other, 0x108c10b30, {{inf, inf}, {0.0, 0.0}}
+                  ↳ScrollView, 0x108c0fab0, {{inf, inf}, {0.0, 0.0}}, identifier: 'songs.page'
+                   ↳Other, 0x108c6dde0, {{inf, inf}, {0.0, 0.0}}
+                    ↳Other, 0x108c0f690, {{inf, inf}, {0.0, 0.0}}
+                     ↳ScrollView, 0x108c70300, {{inf, inf}, {0.0, 0.0}}, identifier: 'songs.rail.bass-songbook'
+                      ↳Other, 0x108c0f270, {{inf, inf}, {0.0, 0.0}}
+                       ↳Other, 0x108c45e50, {{inf, inf}, {0.0, 0.0}}
+                        ↳Button, 0x108c11370, {{inf, inf}, {0.0, 0.0}}, identifier: 'songs.sample.bass-sb-orig-constellation-prize', label: 'Hear it', value: Constellation Prize
+Query chain:
+ →Find: Target Application 'com.shahradazerisharghi.timbre'
+  ↪︎Find: Descendants matching type ScrollView
+    ↪︎Find: Elements matching predicate '"songs.rail.bass-songbook" IN identifiers'
+      ↪︎Find: First Match
+        ↪︎Find: Descendants matching type Button
+          ↪︎Find: Elements matching predicate '"songs.sample.bass-sb-orig-constellation-prize" IN identifiers'
+            ↪︎Find: First Match

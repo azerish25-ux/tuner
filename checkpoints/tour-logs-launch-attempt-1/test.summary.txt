@@ -1,0 +1,65 @@
+# Errors
+
+# Matches
+
+# Tail
+{ platform:iOS Simulator, arch:arm64, id:40A21894-B2EA-46E8-86C3-96B6C28B749F, OS:26.2, name:iPhone 17 Pro }
+{ platform:iOS Simulator, arch:x86_64, id:40A21894-B2EA-46E8-86C3-96B6C28B749F, OS:26.2, name:iPhone 17 Pro }
+2026-11-28 12:36:30.101 xcodebuild[3705:17002] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+2026-11-28 12:36:58.438712+0000 TimbreUITests-Runner[5665:22485] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'Selected tests' started at 2026-11-28 12:37:11.581.
+Test Suite 'TimbreUITests.xctest' started at 2026-11-28 12:37:11.583.
+Test Suite 'LaunchPerformanceUITests' started at 2026-11-28 12:37:11.583.
+Test Case '-[TimbreUITests.LaunchPerformanceUITests testLaunchTime]' started.
+    t =     0.00s Start Test at 2026-11-28 12:37:11.585
+    t =     1.29s Set Up
+    t =     1.31s Open com.shahradazerisharghi.timbre
+    t =     1.31s     Launch com.shahradazerisharghi.timbre
+    t =    13.73s         Setting up automation session
+    t =    19.58s         Wait for com.shahradazerisharghi.timbre to idle
+    t =    50.46s Open com.shahradazerisharghi.timbre
+    t =    50.47s     Launch com.shahradazerisharghi.timbre
+    t =    50.47s         Terminate com.shahradazerisharghi.timbre:6333
+    t =    65.15s         Setting up automation session
+    t =    69.64s         Wait for com.shahradazerisharghi.timbre to idle
+    t =    72.11s Open com.shahradazerisharghi.timbre
+    t =    72.11s     Launch com.shahradazerisharghi.timbre
+    t =    72.11s         Terminate com.shahradazerisharghi.timbre:6683
+    t =    73.60s         Setting up automation session
+    t =    75.82s         Wait for com.shahradazerisharghi.timbre to idle
+    t =    77.80s Open com.shahradazerisharghi.timbre
+    t =    77.80s     Launch com.shahradazerisharghi.timbre
+    t =    77.80s         Terminate com.shahradazerisharghi.timbre:7009
+    t =    79.30s         Setting up automation session
+    t =    81.46s         Wait for com.shahradazerisharghi.timbre to idle
+    t =    83.45s Open com.shahradazerisharghi.timbre
+    t =    83.46s     Launch com.shahradazerisharghi.timbre
+    t =    83.46s         Terminate com.shahradazerisharghi.timbre:7091
+    t =    85.53s         Setting up automation session
+    t =    87.22s         Wait for com.shahradazerisharghi.timbre to idle
+    t =    89.30s Open com.shahradazerisharghi.timbre
+    t =    89.33s     Launch com.shahradazerisharghi.timbre
+    t =    89.33s         Terminate com.shahradazerisharghi.timbre:7191
+    t =   101.14s         Setting up automation session
+    t =   103.30s         Wait for com.shahradazerisharghi.timbre to idle
+<unknown>:0: Test Case '-[TimbreUITests.LaunchPerformanceUITests testLaunchTime]' measured [Duration (ApplicationFirstFramePresentationResponsive), s] average: 3.679, relative standard deviation: 37.892%, values: [6.463957, 2.912408, 2.907495, 3.039399, 3.071655], performanceMetricID:com.apple.dt.XCTMetric_ApplicationLaunch-ApplicationFirstFramePresentationResponsive.duration, baselineName: "", baselineAverage: , polarity: prefers smaller, maxPercentRegression: 10.000%, maxPercentRelativeStandardDeviation: 10.000%, maxRegression: 0.000, maxStandardDeviation: 0.000
+    t =   107.17s Terminate com.shahradazerisharghi.timbre:8117
+    t =   110.27s Tear Down
+Test Case '-[TimbreUITests.LaunchPerformanceUITests testLaunchTime]' passed (110.549 seconds).
+Test Suite 'LaunchPerformanceUITests' passed at 2026-11-28 12:39:02.136.
+	 Executed 1 test, with 0 failures (0 unexpected) in 110.549 (110.553) seconds
+Test Suite 'TimbreUITests.xctest' passed at 2026-11-28 12:39:02.136.
+	 Executed 1 test, with 0 failures (0 unexpected) in 110.549 (110.553) seconds
+Test Suite 'Selected tests' passed at 2026-11-28 12:39:02.137.
+	 Executed 1 test, with 0 failures (0 unexpected) in 110.549 (110.556) seconds
+2026-11-28 12:39:02.966 xcodebuild[3705:17002] [MT] IDETestOperationsObserverDebug: 152.609 elapsed -- Testing started completed.
+2026-11-28 12:39:02.966 xcodebuild[3705:17002] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-11-28 12:39:02.966 xcodebuild[3705:17002] [MT] IDETestOperationsObserverDebug: 152.609 sec, +152.609 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/runner/work/tuner/tuner/ios/build/UITests.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

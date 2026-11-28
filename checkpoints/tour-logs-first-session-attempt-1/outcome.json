@@ -1,0 +1,61 @@
+{
+  "shard": "first-session",
+  "test_class": "FirstSessionUITests",
+  "sha": "ae2c82cacaadb23288dd32b08cb274ad5835f393",
+  "run_id": "46141863418",
+  "run_attempt": "1",
+  "build": "success",
+  "tests": "success",
+  "device_id": "40A21894-B2EA-46E8-86C3-96B6C28B749F",
+  "job": "tour",
+  "runner_environment": "github-hosted",
+  "priming": {
+    "requested": false,
+    "outcome": "skipped",
+    "receipt": null
+  },
+  "shared_build": {
+    "architectures": {
+      "Debug-iphonesimulator/Timbre.app/Timbre": [
+        "arm64"
+      ],
+      "Debug-iphonesimulator/Timbre.app/Watch/TimbreWatch.app/TimbreWatch": [
+        "arm64",
+        "x86_64"
+      ],
+      "Debug-iphonesimulator/TimbreUITests-Runner.app/TimbreUITests-Runner": [
+        "arm64"
+      ],
+      "Debug-watchsimulator/TimbreWatch.app/TimbreWatch": [
+        "arm64",
+        "x86_64"
+      ]
+    },
+    "archive_sha256": "51e8f35dea4b8d805b36ea1dc85d2764dbf55987a51f5fe6d71316ccb09fc5e2",
+    "device_id": "40A21894-B2EA-46E8-86C3-96B6C28B749F",
+    "fixtures": {
+      "ios/Tests/Fixtures/RealWorld/expected.json": "fa868bc81434953735b27a8a30258dbe62757cddfeeb7a81b150cd076a1e5ea9",
+      "ios/Tests/Fixtures/Timbre.storekit": "6a15a8012f61c536987cf28ae84cfec207703f96798d8e53bc38e5933f836be3",
+      "ios/Tests/Fixtures/state-v1-2026-10.json": "70c717758be82c5d7d00776390bd2c0dcd03fe51977c5f45a71007d5977c4cd5"
+    },
+    "identity": {
+      "run_attempt": "1",
+      "run_id": "46141863418",
+      "sha": "ae2c82cacaadb23288dd32b08cb274ad5835f393"
+    },
+    "simulator": {
+      "device_type": "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+      "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-2",
+      "runtime_build": "23C54",
+      "runtime_version": "26.2"
+    },
+    "toolchain": {
+      "machine": "arm64",
+      "macos": "15.8.2",
+      "sdk": "26.2",
+      "sdk_build": "23C57",
+      "xcode": "Xcode 26.3\nBuild version 17C529"
+    },
+    "xctestrun_sha256": "5d68270c03af4c1a820ab31839870319fb8e01cf492f65bb198ed05264a6a352"
+  }
+}

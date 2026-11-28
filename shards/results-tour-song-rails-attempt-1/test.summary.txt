@@ -1,0 +1,79 @@
+# Errors
+
+# Matches
+--- line 5064
+    t =   821.08s         Requesting snapshot of accessibility hierarchy for app with pid 44865
+    t =   821.08s         Requesting snapshot of accessibility hierarchy for app with pid 44865
+/Users/runner/work/tuner/tuner/ios/TimbreUITests/SongShelfRailUITests.swift:190: error: -[TimbreUITests.SongShelfRailUITests testFirstMiddleLastSongActionsAtAX5] : XCTAssertTrue failed
+    t =   822.67s Tear Down
+    t =   822.67s     Terminate com.shahradazerisharghi.timbre:44865
+    t =   824.69s     Setting device orientation to Portrait
+--- line 5069
+    t =   824.69s     Setting device orientation to Portrait
+    t =   824.70s         Wait for com.apple.springboard to idle
+Test Case '-[TimbreUITests.SongShelfRailUITests testFirstMiddleLastSongActionsAtAX5]' failed (825.639 seconds).
+Test Case '-[TimbreUITests.SongShelfRailUITests testFullCatalogueRemainsReachableRightToLeft]' started.
+    t =     0.00s Start Test at 2026-11-28 12:33:12.755
+    t =     0.10s Set Up
+
+# Tail
+    t =   991.48s Find the "songs.song.bass-sb-song-mary" Button
+SONG-RAIL reveal: id=bass-sb-song-mary attempt=81 target=(585.9199999999983, 304.0666666666665, 136.1600000000035, 208.5333333333333) viewport=(0.0, 294.9999999999999, 402.0, 306.66666666666663) drag=-241.2
+    t =   991.58s Press "songs.rail.bass-songbook" ScrollView[0.00, 0.00] -> (321.6, 70.0) for 0.1 seconds, then drag to "songs.rail.bass-songbook" ScrollView[0.00, 0.00] -> (80.4, 70.0) with velocity of 250.00 pixels per second, and then hold for 0.3 seconds 
+    t =   991.58s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   991.58s     Find the "songs.rail.bass-songbook" ScrollView
+    t =   991.68s     Check for interrupting elements affecting "songs.rail.bass-songbook" ScrollView
+    t =   991.85s     Synthesize event
+    t =   991.90s         Find the "songs.rail.bass-songbook" ScrollView
+    t =   991.98s         Find the "songs.rail.bass-songbook" ScrollView
+    t =   992.05s         Find the "songs.rail.bass-songbook" ScrollView
+    t =   992.14s         Find the "songs.rail.bass-songbook" ScrollView
+    t =   992.24s         Find the "songs.rail.bass-songbook" ScrollView
+    t =   993.89s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   993.90s Find the "songs.rail.bass-songbook" ScrollView
+    t =   994.00s Checking existence of `"songs.song.bass-sb-song-mary" Button`
+    t =   994.13s Checking existence of `"songs.song.bass-sb-song-mary" Button`
+    t =   994.23s Find the "songs.song.bass-sb-song-mary" Button
+    t =   994.51s Checking existence of `"songs.song.bass-sb-song-mary" Button`
+    t =   994.62s Find the "songs.song.bass-sb-song-mary" Button
+SONG-RAIL reveal: id=bass-sb-song-mary attempt=82 target=(353.9694956461608, 303.12144978841127, 137.39434204101417, 210.42376708984375) viewport=(0.0, 294.9999999999999, 402.0, 306.66666666666663) drag=-221.66666666666788
+    t =   994.75s Press "songs.rail.bass-songbook" ScrollView[0.00, 0.00] -> (311.8, 70.0) for 0.1 seconds, then drag to "songs.rail.bass-songbook" ScrollView[0.00, 0.00] -> (90.2, 70.0) with velocity of 250.00 pixels per second, and then hold for 0.3 seconds 
+    t =   994.75s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   994.75s     Find the "songs.rail.bass-songbook" ScrollView
+    t =   994.87s     Check for interrupting elements affecting "songs.rail.bass-songbook" ScrollView
+    t =   995.07s     Synthesize event
+    t =   995.14s         Find the "songs.rail.bass-songbook" ScrollView
+    t =   995.25s         Find the "songs.rail.bass-songbook" ScrollView
+    t =   995.37s         Find the "songs.rail.bass-songbook" ScrollView
+    t =   995.51s         Find the "songs.rail.bass-songbook" ScrollView
+    t =   995.65s         Find the "songs.rail.bass-songbook" ScrollView
+    t =   997.27s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   997.63s Find the "songs.rail.bass-songbook" ScrollView
+    t =   997.83s Checking existence of `"songs.song.bass-sb-song-mary" Button`
+    t =   997.93s Checking existence of `"songs.song.bass-sb-song-mary" Button`
+    t =   998.04s Find the "songs.song.bass-sb-song-mary" Button
+    t =   998.28s Checking existence of `"songs.song.bass-sb-song-mary" Button`
+    t =   998.41s Find the "songs.song.bass-sb-song-mary" Button
+    t =   998.53s Find the "songs.song.bass-sb-song-mary" Button
+    t =   998.68s Find the "songs.rail.bass-songbook" ScrollView
+    t =   998.89s Tear Down
+    t =   998.90s     Terminate com.shahradazerisharghi.timbre:71617
+    t =   999.95s     Setting device orientation to Portrait
+    t =  1000.10s         Wait for com.apple.springboard to idle
+Test Case '-[TimbreUITests.SongShelfRailUITests testFullCatalogueRemainsReachableRightToLeft]' passed (1001.361 seconds).
+Test Suite 'SongShelfRailUITests' failed at 2026-11-28 12:49:54.119.
+	 Executed 3 tests, with 1 failure (0 unexpected) in 2939.285 (2939.297) seconds
+Test Suite 'TimbreUITests.xctest' failed at 2026-11-28 12:49:54.122.
+	 Executed 3 tests, with 1 failure (0 unexpected) in 2939.285 (2939.300) seconds
+Test Suite 'Selected tests' failed at 2026-11-28 12:49:54.123.
+	 Executed 3 tests, with 1 failure (0 unexpected) in 2939.285 (2939.301) seconds
+2026-11-28 12:50:28.786 xcodebuild[3703:16509] [MT] IDETestOperationsObserverDebug: 3008.896 elapsed -- Testing started completed.
+2026-11-28 12:50:28.787 xcodebuild[3703:16509] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-11-28 12:50:28.787 xcodebuild[3703:16509] [MT] IDETestOperationsObserverDebug: 3008.897 sec, +3008.897 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/runner/work/tuner/tuner/ios/build/UITests.xcresult
+
+** TEST EXECUTE FAILED **
+
+Testing started
